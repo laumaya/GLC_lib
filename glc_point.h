@@ -1,0 +1,100 @@
+/****************************************************************************
+
+ This file is part of the GLC-lib library.
+ Copyright (C) 2005 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 0.9, packaged on Novemeber, 2005.
+
+ http://glc-lib.sourceforge.net
+
+ GLC-lib is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ GLC-lib is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with GLC-lib; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*****************************************************************************/
+
+//! \file glc_point.h interface for the GLC_Point class.
+
+#ifndef GLC_POINT_H_
+#define GLC_POINT_H_
+
+
+#include "glc_geometrie.h"
+
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_Point
+/*! \brief GLC_Point : OpenGL 3D Point*/
+
+/*! An GLC_Point is just a simple 3D Point*/
+//////////////////////////////////////////////////////////////////////
+
+class GLC_Point : public GLC_Geometrie  
+{
+//////////////////////////////////////////////////////////////////////
+// Constructor Destructor
+//////////////////////////////////////////////////////////////////////
+public:	
+	//! Construct an GLC_Point
+	GLC_Point(const GLC_Vector4d &VectSetCoord, const char *pName= "Point", const GLfloat *pColor= 0);
+
+//////////////////////////////////////////////////////////////////////
+// Fonctions Get
+//////////////////////////////////////////////////////////////////////
+public:
+
+	//! Get a 4D vector represent point coordinate
+	GLC_Vector4d GetVectCoord(void) const
+	{
+		return m_VectCoord;
+	}
+
+//////////////////////////////////////////////////////////////////////
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Set Point coordinate by 4D Vector
+	void SetCoord(const GLC_Vector4d &Vect)
+	{
+		m_VectCoord= Vect;
+		m_bListeIsValid = false;
+	}
+	//! Set Point coordinate by 3 double
+	void SetCoord(double x, double y, double z)
+	{
+		m_VectCoord.SetVect(x, y, z);
+		m_bListeIsValid = false;
+	}
+
+//////////////////////////////////////////////////////////////////////
+// Fonctions OpenGL
+//////////////////////////////////////////////////////////////////////
+
+private:
+	//! Virtual interface for OpenGL Geometry set up.
+	/*! This Virtual function is implemented here.\n*/
+	virtual void GlDraw(void);
+
+	//! Virtual interface for OpenGL Geomtry properties.
+	/*! This Virtual function is implemented here.*/
+	virtual void GlPropGeom(void);
+
+
+//////////////////////////////////////////////////////////////////////
+// Private Member
+//////////////////////////////////////////////////////////////////////
+
+private:
+	//! 4d Vector for point coordinate
+	GLC_Vector4d m_VectCoord;
+	
+};
+#endif //GLC_POINT_H_

@@ -1,0 +1,91 @@
+/****************************************************************************
+
+ This file is part of the GLC-lib library.
+ Copyright (C) 2005 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 0.9, packaged on Novemeber, 2005.
+
+ http://glc-lib.sourceforge.net
+
+ GLC-lib is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ GLC-lib is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with GLC-lib; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*****************************************************************************/
+
+//! \file glc_face.h interface for the GLC_Face class.
+
+#ifndef GLC_FACE_H_
+#define GLC_FACE_H_
+
+#include "glc_vertex.h"
+//! \todo Replace static array by a dynamic one
+#define GLC_FACEVERTEXNBR 20
+
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_Face
+/*! \brief GLC_Face : OpenGL Face*/
+
+/*! An GLC_Face polygonal face composed by vertexs (GLC_Vertex)
+ */
+//////////////////////////////////////////////////////////////////////
+class GLC_Face
+{
+//////////////////////////////////////////////////////////////////////
+// Constructor Destructor
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Construct an empty Face
+	GLC_Face();
+	//! Delete Face's Vertexs (GLC_Vertex)
+	~GLC_Face(void);
+
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+public:
+	//! return the number of Face's vertexs
+	int GetNombre(void) const
+	{
+		return m_NbrVertex;
+	}
+
+/////////////////////////////////////////////////////////////////////
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+public:
+
+	//! Add a vertex to the face
+	void AddVertex(GLC_Vertex* pVertex);
+
+	//! Add an array of vertex to the face
+	void AddVertexs(GLC_Vertex** pVertex, int Nbr);
+
+//////////////////////////////////////////////////////////////////////
+// OpenGL Function
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Face SetUp
+	void GlDraw(void);
+
+//////////////////////////////////////////////////////////////////////
+// Private members
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Array of Vertex pointer
+	GLC_Vertex* m_Array_pVertex[GLC_FACEVERTEXNBR];
+
+	//! Number of Face's Vertex
+	int m_NbrVertex;
+
+};
+#endif //GLC_FACE_H_
