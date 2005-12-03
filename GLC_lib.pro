@@ -1,8 +1,11 @@
+#GLC_lib qmake configuration
+
 TEMPLATE = lib
 QT += opengl
-CONFIG += create_prl warn_on
+CONFIG += release create_prl warn_on
 
-TARGET += 
+TARGET += GLC_lib
+VERSION  = 09.01
 DEPENDPATH += .
 INCLUDEPATH += .
 
@@ -55,3 +58,25 @@ SOURCES +=  glc_vector4d.cpp \
             glc_viewport.cpp \
             glc_collection.cpp
             
+
+# Linux install configuration
+unix {
+  # Location of HEADERS and library
+  
+  LIB_DIR = /usr/lib
+  INCLUDE_DIR = /usr/include
+
+  # Adds a -P to preserve link
+  QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
+
+  # install header
+  include.path = $${INCLUDE_DIR}/GLC_lib
+  include.files = $${HEADERS}
+
+  # install library
+  target.path = $${LIB_DIR}
+
+  # "make install" configuration options
+  INSTALLS += target include
+
+}
