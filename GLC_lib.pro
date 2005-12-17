@@ -2,15 +2,16 @@
 
 TEMPLATE = lib
 QT += opengl
-CONFIG += release create_prl warn_on
+CONFIG *= release create_prl warn_on
 
-TARGET += GLC_lib
-VERSION  = 09.01
+TARGET = GLC_lib
+VERSION  = 0.9.2
 DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += glc_utils_maths.h \
+HEADERS += glc_maths.h \
+           glc_utils_maths.h \
            glc_vector4d.h \
            glc_matrix4x4.h \
            glc_interpolateur.h \
@@ -58,6 +59,10 @@ SOURCES +=  glc_vector4d.cpp \
             glc_viewport.cpp \
             glc_collection.cpp
             
+#Windows compilation configuration       
+win32 {
+    CONFIG *= dll
+}
 
 # Linux install configuration
 unix {
