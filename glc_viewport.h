@@ -33,12 +33,15 @@
 
 #define MAXZOOMFACTOR 3.0
 
-// Définition du Carré de selection
+// Define selection square
 #define SELECT_WIDTH 5.0
 
 #define SELECT_HEIGHT 5.0
 
-// Fin de la Définition du Carré de selection
+// end selection quare
+
+// Used by selection function member
+class QGLWidget;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Viewport
@@ -155,12 +158,10 @@ public:
 	//! Inform the viewport that the OpenGL Viewport has been modified
 	void SetWinGLSize(int HSize, int VSize);
 
-	//!Change to selection mode, save Visualisation state
-	void BeginSelection(GLdouble x, GLdouble y);
-
-	//! End of selection mode, restore Visualisation state
-	void EndSelection(void);
-
+	//! Select an object and return is UID
+	/*! Return UID of the nearest picked object */
+	GLC_uint Select(QGLWidget *pGLWidget, int x, int y);
+	
 	//! load background image
 	bool ChargeImagePlane(QGLWidget *GLWidget, const QString Image);
 
@@ -263,6 +264,11 @@ private:
 	//! Update orbit circle dimensions
 	void UpdateOrbitCircle();
 
+	//! Change to selection mode, save Visualisation state
+	void BeginSelection(GLdouble x, GLdouble y);
+
+	//! End of selection mode, restore Visualisation state
+	void EndSelection(void);
 
 //////////////////////////////////////////////////////////////////////
 // Publics Member

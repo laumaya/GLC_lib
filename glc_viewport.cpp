@@ -25,6 +25,9 @@
 //! \file glc_viewport.cpp implementation of the GLC_Viewport class.
 
 #include <QtDebug>
+
+// Used by selection function member
+#include <QGLWidget>
 #include "glc_viewport.h"
 #include "glc_orbitcercle.h"
 
@@ -280,37 +283,49 @@ void GLC_Viewport::SetWinGLSize(int HSize, int VSize)
 	glLoadIdentity();									// Reset The Modelview Matrix
 }
 
-// Change to selection mode, save Visualisation state
-void GLC_Viewport::BeginSelection(GLdouble x, GLdouble y)
+//! Select an object and return is UID
+GLC_uint GLC_Viewport::Select(QGLWidget *pGLWidget, int x, int y)
 {
-	// Change to projection mode
-	glMatrixMode(GL_PROJECTION);
-	// Save projection matrix
-	glPushMatrix();
-	glLoadIdentity();
-	GLint Viewport[4];
-	glGetIntegerv(GL_VIEWPORT, Viewport);
-	// Load selection matrix
-	gluPickMatrix(x, Viewport[3] - y, SELECT_WIDTH, SELECT_HEIGHT, Viewport);
+	const int BUFSIZE= 1024;
+	GLuint SelectBuf[BUFSIZE];
 
-	// Calculate The Aspect Ratio Of The Window
-	double AspectRatio;
-	AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
-	gluPerspective(m_dFov, AspectRatio, m_dCamDistMin, m_dCamDistMax);
+	// Change to selection mode
+	BeginSelection(x, y);
+	
+	glSelectBuffer(BUFSIZE, SelectBuf);
+	glRenderMode(GL_SELECT);
+	
+	// Init selection names
+	glInitNames();
+	glPushName(0);
+	// Draw the scene
+	pGLWidget->updateGL();
 
-	// Back to visualisation mode
-	glMatrixMode(GL_MODELVIEW);
-}
+	
+	// Compute number of hits
+	const GLint NbrHits= glRenderMode(GL_RENDER);	
+	qDebug() << "Nombre de hits : " << NbrHits;
 
-// End of selection mode, restore Visualisation state
-void GLC_Viewport::EndSelection(void)
-{
-	// Change to projection mode
-	glMatrixMode(GL_PROJECTION);
-	// retore projection matrix
-	glPopMatrix();
-	// Back to visualisation mode
-	glMatrixMode(GL_MODELVIEW);
+	// End of selection mode, restore Visualisation state
+	EndSelection();
+
+	GLC_uint ReturnID= 0;
+	if (NbrHits > 0)
+	{
+		GLuint zMin = SelectBuf[1];	// Min object depth value
+		ReturnID= SelectBuf[3];		// Object Name
+		
+		for (int i= 1; i < NbrHits; ++i)
+		{
+			if (SelectBuf[4*i+1] < zMin)
+		  	{
+		    	zMin = SelectBuf[4*i+1];	// Min object depth value
+		    	ReturnID= SelectBuf[4*i+3];	// Object Name
+		  	}
+		}
+	}
+	qDebug() << "ReturnID : " << ReturnID;
+	return ReturnID;
 
 }
 
@@ -529,5 +544,39 @@ void GLC_Viewport::UpdateOrbitCircle()
 	const double RayonSph= ((double)nRayonSph * ChampsVision / (double)m_nWinVSize);
 
 	m_pOrbitCircle->SetRayon(RayonSph);
+
+}
+
+// Change to selection mode, save Visualisation state
+void GLC_Viewport::BeginSelection(GLdouble x, GLdouble y)
+{
+	// Change to projection mode
+	glMatrixMode(GL_PROJECTION);
+	// Save projection matrix
+	glPushMatrix();
+	glLoadIdentity();
+	GLint Viewport[4];
+	glGetIntegerv(GL_VIEWPORT, Viewport);
+	// Load selection matrix
+	gluPickMatrix(x, Viewport[3] - y, SELECT_WIDTH, SELECT_HEIGHT, Viewport);
+
+	// Calculate The Aspect Ratio Of The Window
+	double AspectRatio;
+	AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
+	gluPerspective(m_dFov, AspectRatio, m_dCamDistMin, m_dCamDistMax);
+
+	// Back to visualisation mode
+	glMatrixMode(GL_MODELVIEW);
+}
+
+// End of selection mode, restore Visualisation state
+void GLC_Viewport::EndSelection(void)
+{
+	// Change to projection mode
+	glMatrixMode(GL_PROJECTION);
+	// retore projection matrix
+	glPopMatrix();
+	// Back to visualisation mode
+	glMatrixMode(GL_MODELVIEW);
 
 }
