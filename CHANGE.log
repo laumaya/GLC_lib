@@ -1,0 +1,36 @@
+--------------------------------------------------------------
+December 20 2005
+--------------------------------------------------------------
+
+GLC_lib-0.9.3
+--------------------------------------------------------------
+SIMPLIFY SELECTION
+FILES : glc_viexport.h - glc_viewport.cpp
+GLC_Viewport class
+Adding the public function :
+	- GLC_uint Select(QGLWidget *pGLWidget, int x, int y);
+Move the public method to private services functions
+	- void BeginSelection(GLdouble x, GLdouble y);
+	- void EndSelection(void);
+--------------------------------------------------------------
+CHANGE VERSION PATTERN
+Pattern XX.XX change to X.X.X
+--------------------------------------------------------------
+ENHANCE INSTALLATION
+Minor change to file : GLC_lib.pro
+
+
+--------------------------------------------------------------
+December 03 2005
+--------------------------------------------------------------
+GLC_lib-09.02
+ENHANCE LINUX INSTALLATION
+Minor change to file : GLC_lib.pro
+
+
+--------------------------------------------------------------
+November 21 2005
+--------------------------------------------------------------
+GLC_lib-09.01
+
+FIRST RELEASE
