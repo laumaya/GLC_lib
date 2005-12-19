@@ -39,6 +39,26 @@ GLC_Mesh::GLC_Mesh(const char *pName, const GLfloat *pColor)
 
 }
 
+// Copy Constructor
+GLC_Mesh::GLC_Mesh(GLC_Mesh *pMesh)
+:GLC_Geometrie(pMesh->GetName(), pMesh->GetfRGBA())
+, m_nNbrFaces(0)
+, m_PolyFace(pMesh->m_PolyFace)	// Default Faces style
+, m_PolyMode(pMesh->m_PolyMode)	// Default polyganal mode
+
+{
+	GLC_Face *pFace;	
+	for (int i = 0; i < pMesh->m_Liste_pFace.size(); ++i)
+	{
+		pFace= new GLC_Face(pMesh->m_Liste_pFace.at(i));
+		AddFace(pFace);
+	}
+	
+	SetMatiere(pMesh->GetMat());	
+	SetMatrice(pMesh->GetMatrice());
+}
+
+
 GLC_Mesh::~GLC_Mesh(void)
 {
 	while (!m_Liste_pFace.isEmpty())
@@ -64,7 +84,6 @@ void GLC_Mesh::AddFace(GLC_Face* pFace)
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh::GlDraw()
 {
-	CFaceList::iterator iEntry;
     for (int i = 0; i < m_Liste_pFace.size(); ++i)
     {
     	m_Liste_pFace.at(i)->GlDraw();

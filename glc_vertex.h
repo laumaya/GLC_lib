@@ -49,6 +49,8 @@ public:
 	GLC_Vertex(const GLC_Vector4d &VectPos, const GLC_Vector4d &VectNormale);
 	//! Create an Vertex, with normal and texture coordinate
 	GLC_Vertex(const GLC_Vector4d &VectPos, const GLC_Vector4d &VectNormale, const GLC_Vector4d &VectTexture);
+	//! Copy Constructor
+	GLC_Vertex(const GLC_Vertex *pVertex);
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions

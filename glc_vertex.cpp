@@ -49,6 +49,16 @@ GLC_Vertex::GLC_Vertex(const GLC_Vector4d &VectPos, const GLC_Vector4d &VectNorm
 {
 
 }
+// Copy Constructor
+GLC_Vertex::GLC_Vertex(const GLC_Vertex *pVertex)
+: m_VectPos(pVertex->m_VectPos)
+, m_VectTexture(pVertex->m_VectTexture)
+, m_VectNormale(pVertex->m_VectNormale)
+
+{
+	
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////

@@ -30,12 +30,28 @@
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
+
+// Construct an empty Face
 GLC_Face::GLC_Face()
 :m_NbrVertex(0)
 {
 
 }
 
+// Copy constructor
+GLC_Face::GLC_Face(const GLC_Face *pFaceToCopy)
+:m_NbrVertex(0)
+{
+	GLC_Vertex *pVertex;
+	for (int i= 0; i < pFaceToCopy->GetNombre(); i++)
+	{
+		pVertex= new GLC_Vertex(pFaceToCopy->m_Array_pVertex[i]);
+		AddVertex(pVertex);
+	}
+}
+
+
+// Delete Face's Vertexs (GLC_Vertex)
 GLC_Face::~GLC_Face(void)
 {
 

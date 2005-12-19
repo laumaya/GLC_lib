@@ -46,6 +46,8 @@ class GLC_Face
 public:
 	//! Construct an empty Face
 	GLC_Face();
+	//! Copy constructor
+	GLC_Face(const GLC_Face *pFaceToCopy);
 	//! Delete Face's Vertexs (GLC_Vertex)
 	~GLC_Face(void);
 

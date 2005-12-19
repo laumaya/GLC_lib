@@ -52,6 +52,9 @@ public:
 	//! Construct an empty Mesh
 	GLC_Mesh(const char *pName= "Mesh", const GLfloat *pColor= 0);
 	
+	//! Copy Constructor
+	GLC_Mesh(GLC_Mesh *pMesh);
+
 	//! Delete Mesh's faces and clear faces list
 	virtual ~GLC_Mesh(void);
 
