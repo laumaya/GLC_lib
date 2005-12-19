@@ -79,12 +79,12 @@ GLC_Mesh* GLC_ObjToMesh::CreateMeshFromObj(string sFile)
 
 	if (!ObjFile)
 	{
-		qDebug("ERROR File \"%s\" Not opened", m_sFile.c_str());
+		qDebug("GLC_ObjToMesh::CreateMeshFromObj ERROR File \"%s\" Not opened", m_sFile.c_str());
 		return NULL;
 	}
 	else
 	{
-		qDebug("OK fichier %s ouvert", m_sFile.c_str());
+		qDebug("GLC_ObjToMesh::CreateMeshFromObj OK File %s Open", m_sFile.c_str());
 	}
 
 	// Compute obj file size
