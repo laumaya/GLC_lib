@@ -304,7 +304,7 @@ GLC_uint GLC_Viewport::Select(QGLWidget *pGLWidget, int x, int y)
 	
 	// Compute number of hits
 	const GLint NbrHits= glRenderMode(GL_RENDER);	
-	qDebug() << "Nombre de hits : " << NbrHits;
+	//qDebug() << "Number of hits : " << NbrHits;
 
 	// End of selection mode, restore Visualisation state
 	EndSelection();
@@ -324,7 +324,7 @@ GLC_uint GLC_Viewport::Select(QGLWidget *pGLWidget, int x, int y)
 		  	}
 		}
 	}
-	qDebug() << "ReturnID : " << ReturnID;
+	//qDebug() << "ReturnID : " << ReturnID;
 	return ReturnID;
 
 }
