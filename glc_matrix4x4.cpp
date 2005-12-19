@@ -152,7 +152,7 @@ const double GLC_Matrix4x4::GetDeterminant(void) const
 //////////////////////////////////////////////////////////////////////
 
 // Set matrix to a rotation matrix define by a vector and an angle in radians
-void GLC_Matrix4x4::SetMatRot(const GLC_Vector4d &Vect, const double &dAngleRad)
+GLC_Matrix4x4& GLC_Matrix4x4::SetMatRot(const GLC_Vector4d &Vect, const double &dAngleRad)
 {
 	double q0;
 	double q1;
@@ -197,10 +197,11 @@ void GLC_Matrix4x4::SetMatRot(const GLC_Vector4d &Vect, const double &dAngleRad)
 	dMatrice[14]= 0;	//TZ
 	dMatrice[15]= 1;
 
+	return *this;
 }
 
 // Set matrix to a rotation matrix define by 2 vectors
-void GLC_Matrix4x4::SetMatRot(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2)
+GLC_Matrix4x4& GLC_Matrix4x4::SetMatRot(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2)
 {
 
 	// Calcul de la matrice de rotation
@@ -211,10 +212,12 @@ void GLC_Matrix4x4::SetMatRot(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vec
 		const double Angle= acos(Vect1 * Vect2);
 		SetMatRot(VectAxeRot, Angle);
 	}
+	
+	return *this;
 }
 
 // Set Matrix to a translation matrix by a vector
-void GLC_Matrix4x4::SetMatTranslate(const GLC_Vector4d &Vect)
+GLC_Matrix4x4& GLC_Matrix4x4::SetMatTranslate(const GLC_Vector4d &Vect)
 {
 	for (int i= 0; i < TAILLEMAT4X4 - DIMMAT4X4; i++)
 	{
@@ -228,10 +231,11 @@ void GLC_Matrix4x4::SetMatTranslate(const GLC_Vector4d &Vect)
 	dMatrice[14]= Vect.dVecteur[2];
 	dMatrice[15]= 1;
 
+	return *this;
 }
 
 // Set Matrix to a translation matrix by 3 coordinates
-void GLC_Matrix4x4::SetMatTranslate(double Tx, double Ty, double Tz)
+GLC_Matrix4x4& GLC_Matrix4x4::SetMatTranslate(double Tx, double Ty, double Tz)
 {
 	for (int i= 0; i < TAILLEMAT4X4 - DIMMAT4X4; i++)
 	{
@@ -244,11 +248,13 @@ void GLC_Matrix4x4::SetMatTranslate(double Tx, double Ty, double Tz)
 	dMatrice[13]= Ty;
 	dMatrice[14]= Tz;
 	dMatrice[15]= 1;
+	
+	return *this;
 
 }
 
 // Set Matrix to a scaling matrix define by 3 double
-void GLC_Matrix4x4::SetMatScaling(const double &sX, const double &sY, const double sZ)
+GLC_Matrix4x4& GLC_Matrix4x4::SetMatScaling(const double &sX, const double &sY, const double sZ)
 {
 	for (int i= 0; i < TAILLEMAT4X4; i++)
 	{
@@ -258,6 +264,8 @@ void GLC_Matrix4x4::SetMatScaling(const double &sX, const double &sY, const doub
 	dMatrice[5]= 1 * sY;
 	dMatrice[10]= 1 * sZ;
 	dMatrice[15]= 1;
+	
+	return *this;
 
 }
 
@@ -294,7 +302,7 @@ const bool GLC_Matrix4x4::SetInv(void)
 }
 
 // Set the matrix to identify matrix
-void GLC_Matrix4x4::SetIdentite()
+GLC_Matrix4x4& GLC_Matrix4x4::SetIdentite()
 {
 	for (int i= 0; i < TAILLEMAT4X4; i++)
 	{
@@ -303,10 +311,12 @@ void GLC_Matrix4x4::SetIdentite()
 		else
 			dMatrice[i]= 0;
 	}
+	
+	return *this;
 }
 
 // Set the matrix by its transpose
-void GLC_Matrix4x4::SetTranspose(void)
+GLC_Matrix4x4& GLC_Matrix4x4::SetTranspose(void)
 {
 	GLC_Matrix4x4 MatT(dMatrice);
 	int Colonne;
@@ -327,7 +337,8 @@ void GLC_Matrix4x4::SetTranspose(void)
 	// Charge la matrice transposé dans la matrice courante.
 	for (int Index= 0; Index < TAILLEMAT4X4; Index++)
 		dMatrice[Index]= MatT.dMatrice[Index];
-
+	
+	return *this;
 }
 	
 

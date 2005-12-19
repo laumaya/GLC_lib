@@ -108,29 +108,29 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! X Composante*/
-	GLC_Vector4d* SetX(const double &dX);
+	GLC_Vector4d& SetX(const double &dX);
 	
 	/*! Y Composante*/
-	GLC_Vector4d* SetY(const double &dY);
+	GLC_Vector4d& SetY(const double &dY);
 	
 	/*! Z Composante*/
-	GLC_Vector4d* SetZ(const double &dZ);
+	GLC_Vector4d& SetZ(const double &dZ);
 	
 	/*! W Composante*/
-	GLC_Vector4d* SetW(const double &dW);
+	GLC_Vector4d& SetW(const double &dW);
 	
 	/*! All Composante*/
-	GLC_Vector4d* SetVect(const double &dX, const double &dY,
+	GLC_Vector4d& SetVect(const double &dX, const double &dY,
 		const double &dZ, const double &dW= 1);
 		
 	/*! From another Vector*/
-	GLC_Vector4d* SetVect(const GLC_Vector4d &Vect);
+	GLC_Vector4d& SetVect(const GLC_Vector4d &Vect);
 	
 	/*! Vector Normal*/
 	GLC_Vector4d& SetNormal(const double &Norme);
 	
 	/*! Invert Vector*/
-	GLC_Vector4d* SetInv(void);
+	GLC_Vector4d& SetInv(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////

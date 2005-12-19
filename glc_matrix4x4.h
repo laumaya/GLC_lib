@@ -124,28 +124,28 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set matrix to a rotation matrix define by a vector and an angle in radians
-	void SetMatRot(const GLC_Vector4d &Vect, const double &dAngleRad);
+	GLC_Matrix4x4& SetMatRot(const GLC_Vector4d &Vect, const double &dAngleRad);
 
 	//! Set matrix to a rotation matrix define by 2 vectors
-	void SetMatRot(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2);
+	GLC_Matrix4x4& SetMatRot(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2);
 
 	//! Set Matrix to a translation matrix by a vector
-	void SetMatTranslate(const GLC_Vector4d &Vect);
+	GLC_Matrix4x4& SetMatTranslate(const GLC_Vector4d &Vect);
 	
 	//! Set Matrix to a translation matrix by 3 coordinates
-	void SetMatTranslate(double Tx, double Ty, double Tz);
+	GLC_Matrix4x4& SetMatTranslate(double Tx, double Ty, double Tz);
 
 	//! Set Matrix to a scaling matrix define by 3 double
-	void SetMatScaling(const double &sX, const double &sY, const double sZ);
+	GLC_Matrix4x4& SetMatScaling(const double &sX, const double &sY, const double sZ);
 
 	//! Reverse the Matrix
 	const bool SetInv(void);
 
 	//! Set the matrix to identify matrix
-	void SetIdentite();
+	GLC_Matrix4x4& SetIdentite();
 
 	//! Set the matrix by its transpose
-	void SetTranspose(void);
+	GLC_Matrix4x4& SetTranspose(void);
 
 //@}
 

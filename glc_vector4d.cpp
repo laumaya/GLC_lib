@@ -174,25 +174,25 @@ bool GLC_Vector4d::operator != (const GLC_Vector4d &Vect) const
 //////////////////////////////////////////////////////////////////////
 // Fonction Set
 //////////////////////////////////////////////////////////////////////
-GLC_Vector4d* GLC_Vector4d::SetX(const double &dX)
+GLC_Vector4d& GLC_Vector4d::SetX(const double &dX)
 {
 	dVecteur[0]= dX;
-	return this;
+	return *this;
 }
 
-GLC_Vector4d* GLC_Vector4d::SetY(const double &dY)
+GLC_Vector4d& GLC_Vector4d::SetY(const double &dY)
 {
 	dVecteur[1]= dY;
-	return this;
+	return *this;
 }
 
-GLC_Vector4d* GLC_Vector4d::SetZ(const double &dZ)
+GLC_Vector4d& GLC_Vector4d::SetZ(const double &dZ)
 {
 	dVecteur[2]= dZ;
-	return this;
+	return *this;
 }
 
-GLC_Vector4d* GLC_Vector4d::SetW(const double &dW)
+GLC_Vector4d& GLC_Vector4d::SetW(const double &dW)
 {		
 	if (dW != 0)
 	{
@@ -201,10 +201,10 @@ GLC_Vector4d* GLC_Vector4d::SetW(const double &dW)
 		dVecteur[2]/= dW;
 		dVecteur[3]= 1.0;		// Pour le calcul, W = 1.
 	}
-	return this;
+	return *this;
 }
 
-GLC_Vector4d* GLC_Vector4d::SetVect(const double &dX, const double &dY,
+GLC_Vector4d& GLC_Vector4d::SetVect(const double &dX, const double &dY,
 	const double &dZ, const double &dW)
 {
 	if ((dW == 1) || (dW <= 0))
@@ -222,15 +222,15 @@ GLC_Vector4d* GLC_Vector4d::SetVect(const double &dX, const double &dY,
 	
 	dVecteur[3]= 1.0;		// Pour le calcul, W = 1.
 
-	return this;
+	return *this;
 }
-GLC_Vector4d* GLC_Vector4d::SetVect(const GLC_Vector4d &Vect)
+GLC_Vector4d& GLC_Vector4d::SetVect(const GLC_Vector4d &Vect)
 {
 	dVecteur[0]= Vect.dVecteur[0];
 	dVecteur[1]= Vect.dVecteur[1];
 	dVecteur[2]= Vect.dVecteur[2];
 	dVecteur[3]= Vect.dVecteur[3];
-	return this;
+	return *this;
 }
 
 GLC_Vector4d& GLC_Vector4d::SetNormal(const double &Norme)
@@ -251,12 +251,12 @@ GLC_Vector4d& GLC_Vector4d::SetNormal(const double &Norme)
 	return *this;
 }
 
-GLC_Vector4d* GLC_Vector4d::SetInv(void)
+GLC_Vector4d& GLC_Vector4d::SetInv(void)
 {
 	dVecteur[0]= - dVecteur[0];
 	dVecteur[1]= - dVecteur[1];
 	dVecteur[2]= - dVecteur[2];
-	return this;
+	return *this;
 }
 
 //////////////////////////////////////////////////////////////////////
