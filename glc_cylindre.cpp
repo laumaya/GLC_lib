@@ -80,7 +80,7 @@ void GLC_Cylindre::GlDraw(void)
 		{
 			fCoordx= static_cast<float>(i) / static_cast<float>(m_nDiscret);
 
-			Vect.SetVect(TableauCos[i], TableauSin[i], 0.0)->SetNormal(1);
+			Vect.SetVect(TableauCos[i], TableauSin[i], 0.0).SetNormal(1);
 			glNormal3dv(Vect.Return_dVect());
 
 			Vect.SetVect(TableauCos[i], TableauSin[i], Longueur );
@@ -102,7 +102,7 @@ void GLC_Cylindre::GlDraw(void)
 
 			if(!Longueur)
 			{
-				Vect.SetVect(TableauCos[i], TableauSin[i], 0.0)->SetNormal(1);
+				Vect.SetVect(TableauCos[i], TableauSin[i], 0.0).SetNormal(1);
 				glNormal3dv(Vect.Return_dVect());
 				glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLg)); 
 
