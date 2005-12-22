@@ -1,9 +1,24 @@
 --------------------------------------------------------------
-December 20 2005
+December 22 2005
 --------------------------------------------------------------
 
 GLC_lib-0.9.3
 --------------------------------------------------------------
+CHANGE RETURN VALUE OF SET FUNCTIONS
+FILES : glc_matrix4x4.h - glc_matrix4x4.cpp
+		glc_vector4x4.h - glc_vector4x4.cpp
+Now GLC_Matrix4x4 and GLC_Vector4x4 set functions return
+reference to the class.
+--------------------------------------------------------------
+COPY CONSTRUCTOR ADDED
+FILES : glc_vertex.h - glc_vertex.cpp
+		glc_face.h - glc_face.cpp
+		glc_mesh.h - glc_mesh.cpp
+Adding copy constructor for these class :		
+	- GLC_Vertex
+	- GLC_Face
+	- GLC_Mesh
+--------------------------------------------------------------	
 SIMPLIFY SELECTION
 FILES : glc_viexport.h - glc_viewport.cpp
 GLC_Viewport class
