@@ -82,7 +82,7 @@ public:
 // OpenGL function
 //////////////////////////////////////////////////////////////////////
 	//! Virtual interface for OpenGL execution.
-	/*! This Virtual function have to be implemented in GLC_Geometrie class.*/
+	/*! This Virtual function have to be implemented in GLC_Geometry class.*/
 	virtual bool GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE) = 0;
 
 //////////////////////////////////////////////////////////////////////
