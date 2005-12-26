@@ -22,12 +22,12 @@
 
 *****************************************************************************/
 
-//! \file glc_cylindre.cpp implementation of the GLC_Cylindre class.
+//! \file glc_cylinder.cpp implementation of the GLC_Cylinder class.
 
 #include <QVector>
 #include <QtDebug>
 
-#include "glc_cylindre.h"
+#include "glc_cylinder.h"
 
 
 
@@ -36,11 +36,11 @@
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Cylindre::GLC_Cylindre(double dRayon, double dLongeur, const char *pName
+GLC_Cylinder::GLC_Cylinder(double dRayon, double dLongeur, const char *pName
 						   , const GLfloat *pColor)
 
 
-:GLC_Geometrie(pName, pColor)
+:GLC_Geometry(pName, pColor)
 , m_dRayon(dRayon)
 , m_dLg(dLongeur)
 , m_nDiscret(GLC_POLYDISCRET)	//GLC_DISCRET
@@ -55,8 +55,8 @@ GLC_Cylindre::GLC_Cylindre(double dRayon, double dLongeur, const char *pName
 // Fonctions OpenGL privées
 //////////////////////////////////////////////////////////////////////
 
-// Dessin du GLC_Cylindre
-void GLC_Cylindre::GlDraw(void)
+// Dessin du GLC_Cylinder
+void GLC_Cylinder::GlDraw(void)
 {
 	QVector<double> TableauCos;
 	QVector<double> TableauSin;
@@ -171,12 +171,12 @@ void GLC_Cylindre::GlDraw(void)
 	// Gestion erreur OpenGL
 	if (glGetError() != GL_NO_ERROR)
 	{
-		qDebug("GLC_Cylindre::GlDraw ERREUR OPENGL\n");
+		qDebug("GLC_Cylinder::GlDraw ERREUR OPENGL\n");
 	}
 
 }
 // Fonction définissant le propriétés de la géométrie (Couleur, position, epaisseur)
-void GLC_Cylindre::GlPropGeom(void)
+void GLC_Cylinder::GlPropGeom(void)
 {
 		// Modification de la matrice courante
 		glMultMatrixd(m_MatPos.Return_dMat());
@@ -243,7 +243,7 @@ void GLC_Cylindre::GlPropGeom(void)
 		// Gestion erreur OpenGL
 		if (glGetError() != GL_NO_ERROR)
 		{
-			qDebug("GLC_Cylindre::GlPropGeom ERREUR OPENGL\n");
+			qDebug("GLC_Cylinder::GlPropGeom ERREUR OPENGL\n");
 		}
 
 }

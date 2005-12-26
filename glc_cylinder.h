@@ -22,34 +22,34 @@
 
 *****************************************************************************/
 
-//! \file glc_cylindre.h interface for the GLC_Cylindre class.
+//! \file glc_cylinder.h interface for the GLC_Cylinder class.
 
-#ifndef GLC_CYLINDRE_H_
-#define GLC_CYLINDRE_H_
+#ifndef GLC_CYLINDER_H_
+#define GLC_CYLINDER_H_
 
 
-#include "glc_geometrie.h"
+#include "glc_geometry.h"
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_Cylindre
-/*! \brief GLC_Cylindre : OpenGL 3D Cylinder*/
+//! \class GLC_Cylinder
+/*! \brief GLC_Cylinder : OpenGL 3D Cylinder*/
 
-/*! An GLC_Cylindre is a polygonnal geometry \n
+/*! An GLC_Cylinder is a polygonnal geometry \n
  * It can be capped or not
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Cylindre : public GLC_Geometrie  
+class GLC_Cylinder : public GLC_Geometry  
 {
 //////////////////////////////////////////////////////////////////////
 // constructor destructor
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Construct an GLC_Cylindre
+	//! Construct an GLC_Cylinder
 	/*! By default, discretion is set to #GLC_POLYDISCRET \n
 	 *  By default, Axis of Cylinder is Z Axis*/
-	GLC_Cylindre(double dRayon, double dLongeur, const char *pName= "Cylindre", const GLfloat *pColor= 0);
+	GLC_Cylinder(double dRayon, double dLongeur, const char *pName= "Cylinder", const GLfloat *pColor= 0);
 
 //////////////////////////////////////////////////////////////////////
 // Fonctions Get
@@ -167,4 +167,4 @@ private:
 
 	
 };
-#endif //GLC_CYLINDRE_H_
+#endif //GLC_CYLINDER_H_
