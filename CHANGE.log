@@ -1,4 +1,22 @@
 --------------------------------------------------------------
+December 26 2005
+--------------------------------------------------------------
+
+GLC_lib-0.9.4
+--------------------------------------------------------------
+RENAME SOME CLASS
+FILES : GLC_lib.pro
+		glc_lumiere.h -> glc_light.h - glc_lumiere.cpp -> glc_light.cpp
+		glc_cylindre.h -> glc_cylinder.h - glc_cylindre.cpp -> glc_cylinder.cpp
+		glc_cercle.h -> glc_circle.h - glc_cercle.cpp -> glc_circle.cpp
+		glc_orbitcercle.h -> glc_orbitcircle.h - glc_orbitcercle.cpp -> glc_orbitcircle.cpp
+		glc_geometrie.h -> glc_geometry.h - glc_geometrie.cpp -> glc_geometry.cpp
+		glc_interpolateur.h -> glc_interpolator.h - glc_interpolateur.cpp -> glc_interpolator.cpp
+
+Translate these class name in english :
+		GLC_Lumiere -> GLC_Light
+		
+--------------------------------------------------------------
 December 22 2005
 --------------------------------------------------------------
 
