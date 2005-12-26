@@ -28,7 +28,7 @@
 #define GLC_VIEWPORT_H_
 
 #include "glc_camera.h"
-#include "glc_orbitcercle.h"
+#include "glc_orbitcircle.h"
 #include "glc_imageplane.h"
 
 #define MAXZOOMFACTOR 3.0
@@ -302,7 +302,7 @@ private:
 	double m_dPrevZoom;	
 	
 	//! Orbit Circle
-	GLC_OrbitCercle* m_pOrbitCircle;
+	GLC_OrbitCircle* m_pOrbitCircle;
 
 	//! Circle ratio size / window size
 	double m_dRatWinSph;

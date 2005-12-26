@@ -29,7 +29,6 @@
 // Used by selection function member
 #include <QGLWidget>
 #include "glc_viewport.h"
-#include "glc_orbitcercle.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
@@ -60,7 +59,7 @@ GLC_Viewport::GLC_Viewport()
 	// Color of orbit circle
 	const GLfloat color[4]= {1.0f, 0.11372f, 0.11372f, 0.0f};
 	// Create Orbit circle of specified color
-	m_pOrbitCircle= new GLC_OrbitCercle(1,"Cercle_Sph", color);
+	m_pOrbitCircle= new GLC_OrbitCircle(1,"Cercle_Sph", color);
 	
 	// Compute Orbit Circle
 	//UpdateOrbitCircle();

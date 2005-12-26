@@ -211,7 +211,7 @@ void GLC_Material::SetLightEmission(const GLfloat* pfCol)
 }
 
 // Add Geometry to where used hash table
-bool GLC_Material::AddGLC_Geom(GLC_Geometrie* pGeom)
+bool GLC_Material::AddGLC_Geom(GLC_Geometry* pGeom)
 {
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->GetID());
 	

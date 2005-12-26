@@ -32,9 +32,9 @@
 #include "glc_texture.h"
 #include <QHash>
 
-class GLC_Geometrie;
+class GLC_Geometry;
 
-typedef QHash< GLC_uint, GLC_Geometrie*> CWhereUsed;
+typedef QHash< GLC_uint, GLC_Geometry*> CWhereUsed;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Material
@@ -125,7 +125,7 @@ public:
 
 
 	//! Add Geometry to the "where used" hash table
-	bool AddGLC_Geom(GLC_Geometrie* pGeom);
+	bool AddGLC_Geom(GLC_Geometry* pGeom);
 
 	//! Remove Geometry to the "where used" hash table
 	bool DelGLC_Geom(GLC_uint Key);

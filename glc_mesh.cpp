@@ -31,7 +31,7 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_Mesh::GLC_Mesh(const char *pName, const GLfloat *pColor)
-:GLC_Geometrie(pName, pColor)
+:GLC_Geometry(pName, pColor)
 , m_nNbrFaces(0)
 , m_PolyFace(GL_FRONT_AND_BACK)	// Default Faces style
 , m_PolyMode(GL_FILL)			// Default polyganal mode
@@ -41,7 +41,7 @@ GLC_Mesh::GLC_Mesh(const char *pName, const GLfloat *pColor)
 
 // Copy Constructor
 GLC_Mesh::GLC_Mesh(GLC_Mesh *pMesh)
-:GLC_Geometrie(pMesh->GetName(), pMesh->GetfRGBA())
+:GLC_Geometry(pMesh->GetName(), pMesh->GetfRGBA())
 , m_nNbrFaces(0)
 , m_PolyFace(pMesh->m_PolyFace)	// Default Faces style
 , m_PolyMode(pMesh->m_PolyMode)	// Default polyganal mode

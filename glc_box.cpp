@@ -35,7 +35,7 @@
 GLC_Box::GLC_Box(double dLx, double dLy, double dlz
 					   , const char *pName, const GLfloat *pColor)
 
-:GLC_Geometrie(pName, pColor)
+:GLC_Geometry(pName, pColor)
 , m_dLgX(dLx)
 , m_dLgY(dLy)
 , m_dLgZ(dlz)

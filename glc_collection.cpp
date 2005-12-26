@@ -47,7 +47,7 @@ GLC_Collection::~GLC_Collection()
 // Fonctions Set
 //////////////////////////////////////////////////////////////////////
 // Ajoute une géométrie à la collection
-bool GLC_Collection::AddGLC_Geom(GLC_Geometrie* pGeom)
+bool GLC_Collection::AddGLC_Geom(GLC_Geometry* pGeom)
 {
 	CGeomMap::iterator iGeom= m_TheMap.find(pGeom->GetID());
 	
@@ -178,7 +178,7 @@ void GLC_Collection::Erase(void)
 }
 
 // Retourne le pointeur d'un élément de la collection
-GLC_Geometrie* GLC_Collection::GetElement(GLC_uint Key)
+GLC_Geometry* GLC_Collection::GetElement(GLC_uint Key)
 {
 	CGeomMap::iterator iGeom= m_TheMap.find(Key);
 	

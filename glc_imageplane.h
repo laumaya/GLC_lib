@@ -27,7 +27,7 @@
 #ifndef GLC_IMAGEPLANE_H_
 #define GLC_IMAGEPLANE_H_
 
-#include "glc_geometrie.h"
+#include "glc_geometry.h"
 
 
 class GLC_Viewport;
@@ -39,7 +39,7 @@ class GLC_Viewport;
 /*! An GLC_ImagePlane is just a plane with a image texture.*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_ImagePlane : public GLC_Geometrie
+class GLC_ImagePlane : public GLC_Geometry
 {
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor

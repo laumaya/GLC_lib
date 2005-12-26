@@ -30,7 +30,7 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport, const char* pName, const GLfloat *pColor)
-:GLC_Geometrie(pName, pColor)
+:GLC_Geometry(pName, pColor)
 , m_pImgTexture(NULL)
 , m_pViewport(pViewport)
 , m_dLgImage(0)

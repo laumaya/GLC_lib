@@ -5,7 +5,7 @@ QT += opengl
 CONFIG *= release create_prl warn_on
 
 TARGET = GLC_lib
-VERSION  = 0.9.2
+VERSION  = 0.9.4
 DEPENDPATH += .
 INCLUDEPATH += .
 
@@ -14,16 +14,16 @@ HEADERS += glc_maths.h \
            glc_utils_maths.h \
            glc_vector4d.h \
            glc_matrix4x4.h \
-           glc_interpolateur.h \
+           glc_interpolator.h \
            glc_enum.h \
            glc_object.h \
 		   glc_material.h \
            glc_texture.h \		   
-           glc_geometrie.h \
-           glc_cercle.h \
-           glc_orbitcercle.h \
-           glc_cylindre.h \
-           glc_lumiere.h \
+           glc_geometry.h \
+           glc_circle.h \
+           glc_orbitcircle.h \
+           glc_cylinder.h \
+           glc_light.h \
            glc_point.h \
            glc_box.h \
            glc_vertex.h \
@@ -38,16 +38,16 @@ HEADERS += glc_maths.h \
              
 SOURCES +=  glc_vector4d.cpp \
             glc_matrix4x4.cpp \
-            glc_interpolateur.cpp \
+            glc_interpolator.cpp \
             glc_enum.cpp \
 			glc_object.cpp \
 		    glc_material.cpp \
             glc_texture.cpp \		   
-            glc_geometrie.cpp \
-            glc_cercle.cpp \
-            glc_orbitcercle.cpp \
-            glc_cylindre.cpp \
-            glc_lumiere.cpp \
+            glc_geometry.cpp \
+            glc_circle.cpp \
+            glc_orbitcircle.cpp \
+            glc_cylinder.cpp \
+            glc_light.cpp \
             glc_point.cpp \
             glc_box.cpp \
             glc_vertex.cpp \

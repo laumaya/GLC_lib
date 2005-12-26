@@ -28,7 +28,7 @@
 #define GLC_MESH_H_
 #include <QList>
 
-#include "glc_geometrie.h"
+#include "glc_geometry.h"
 #include "glc_face.h"
 
 //! The mesh's faces list
@@ -43,7 +43,7 @@ typedef QList<GLC_Face*> CFaceList;
  * 		- Each face is composed by vertexs (GLC_Vertex)
  * */
 //////////////////////////////////////////////////////////////////////
-class GLC_Mesh : public GLC_Geometrie
+class GLC_Mesh : public GLC_Geometry
 {
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor

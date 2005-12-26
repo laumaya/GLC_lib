@@ -34,7 +34,7 @@
 
 GLC_Point::GLC_Point(const GLC_Vector4d &VectSetCoord, const char *pName, const GLfloat *pColor)
 
-:GLC_Geometrie(pName, pColor), m_VectCoord(VectSetCoord)
+:GLC_Geometry(pName, pColor), m_VectCoord(VectSetCoord)
 {
 	
 }

@@ -29,21 +29,21 @@
 
 
 #include <QHash>
-#include "glc_geometrie.h"
+#include "glc_geometry.h"
 #include "glc_enum.h"
 
 //! Geometry hash table
-typedef QHash< GLC_uint, GLC_Geometrie*> CGeomMap;
+typedef QHash< GLC_uint, GLC_Geometry*> CGeomMap;
 
 //! OpenGL Dsiplay list Hash Table
 typedef QHash< GLC_uint, GLuint> CListeMap;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Collection
-/*! \brief GLC_Collection : GLC_Geometrie flat collection */
+/*! \brief GLC_Collection : GLC_Geometry flat collection */
 
 /*! An GLC_Collection contain  :
- * 		- A hash table containing GLC_Geometrie pointer
+ * 		- A hash table containing GLC_Geometry pointer
  * 		- A Hash table containing OpenGL sub list ID
  */
 //////////////////////////////////////////////////////////////////////
@@ -79,13 +79,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Add a GLC_Geometrie in the collection
+	//! Add a GLC_Geometry in the collection
 	/*! return true if success false otherwise*/
-	bool AddGLC_Geom(GLC_Geometrie* pGeom);
+	bool AddGLC_Geom(GLC_Geometry* pGeom);
 
-	//! Remove a GLC_Geometrie from the collection and delete it
-	/*! 	- Find the GLC_Geometrie in the collection
-	 * 		- Delete the GLC_Geometrie
+	//! Remove a GLC_Geometry from the collection and delete it
+	/*! 	- Find the GLC_Geometry in the collection
+	 * 		- Delete the GLC_Geometry
 	 * 		- Remove the Geometry container from collection
 	 * 		- Delete the associated OpenGL Display list
 	 * 		- Remove the Display list container from collection
@@ -93,8 +93,8 @@ public:
 	 * return true if success false otherwise*/
 	bool DelGLC_Geom(GLC_uint Key);
 
-	//! Remove a GLC_Geometrie from the collection
-	/*! 	- Find the GLC_Geometrie in the collection
+	//! Remove a GLC_Geometry from the collection
+	/*! 	- Find the GLC_Geometry in the collection
 	 * 		- Remove the Geometry container from collection
 	 * 		- Delete the associated OpenGL Display list
 	 * 		- Remove the Display list container from collection
@@ -102,12 +102,12 @@ public:
 	 * return true if success false otherwise*/	
 	bool RemGLC_Geom(GLC_uint Key);
 
-	//! Remove and delete all GLC_Geometrie from the collection
+	//! Remove and delete all GLC_Geometry from the collection
 	void Erase(void);
 
-	//! return a pointer to an GLC_Geometrie from collection
+	//! return a pointer to an GLC_Geometry from collection
 	/*! If the element is not found in collection a NULL pointer is returned*/
-	GLC_Geometrie* GetElement(GLC_uint Key);
+	GLC_Geometry* GetElement(GLC_uint Key);
 
 	
 //////////////////////////////////////////////////////////////////////
@@ -156,7 +156,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 private:
-	//! GLC_Geometrie Hash Table
+	//! GLC_Geometry Hash Table
 	CGeomMap m_TheMap;
 
 	//! Sub list Hash Table
