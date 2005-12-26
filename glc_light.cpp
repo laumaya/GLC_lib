@@ -22,15 +22,15 @@
 
 *****************************************************************************/
 
-//! \file glc_lumiere.cpp implementation of the GLC_Lumiere class.
+//! \file glc_light.cpp implementation of the GLC_Light class.
 
 #include <QtDebug>
-#include "glc_lumiere.h"
+#include "glc_light.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
-GLC_Lumiere::GLC_Lumiere(const char *pName ,const GLfloat *pAmbiantColor)
+GLC_Light::GLC_Light(const char *pName ,const GLfloat *pAmbiantColor)
 :GLC_Object(pName)
 , m_LumiereID(GL_LIGHT1)	// Default Light ID
 , m_ListeID(0)				// By default display list ID= 0
@@ -73,7 +73,7 @@ GLC_Lumiere::GLC_Lumiere(const char *pName ,const GLfloat *pAmbiantColor)
 	m_fPos[3]= 1.0f;
 }
 
-GLC_Lumiere::~GLC_Lumiere(void)
+GLC_Light::~GLC_Light(void)
 {
 	DeleteListe();
 }
@@ -83,7 +83,7 @@ GLC_Lumiere::~GLC_Lumiere(void)
 //////////////////////////////////////////////////////////////////////
 
 // Set the lihgt position by a 4D vector
-void GLC_Lumiere::SetPos(const GLC_Vector4d &VectPos)
+void GLC_Light::SetPos(const GLC_Vector4d &VectPos)
 {
 	m_fPos[0]= static_cast<GLfloat>(VectPos.GetX());
 	m_fPos[1]= static_cast<GLfloat>(VectPos.GetY());
@@ -94,7 +94,7 @@ void GLC_Lumiere::SetPos(const GLC_Vector4d &VectPos)
 }
 
 // Set the lihgt position by a 3 GLfloat
-void GLC_Lumiere::SetPos(GLfloat x, GLfloat y, GLfloat z)
+void GLC_Light::SetPos(GLfloat x, GLfloat y, GLfloat z)
 {
 	m_fPos[0]= x;
 	m_fPos[1]= y;
@@ -104,7 +104,7 @@ void GLC_Lumiere::SetPos(GLfloat x, GLfloat y, GLfloat z)
 }
 
 // Set light's ambiant color by an array of GLfloat
-void GLC_Lumiere::SetColAmbiante(const GLfloat* pfCol)
+void GLC_Light::SetColAmbiante(const GLfloat* pfCol)
 {
 	m_fColAmbiente[0]= pfCol[0];
 	m_fColAmbiente[1]= pfCol[1];
@@ -115,7 +115,7 @@ void GLC_Lumiere::SetColAmbiante(const GLfloat* pfCol)
 }
 
 // Set light's diffuse color by an array of GLfloat
-void GLC_Lumiere::SetColDiffuse(const GLfloat* pfCol)
+void GLC_Light::SetColDiffuse(const GLfloat* pfCol)
 {
 	m_fColDiffuse[0]= pfCol[0];
 	m_fColDiffuse[1]= pfCol[1];
@@ -126,7 +126,7 @@ void GLC_Lumiere::SetColDiffuse(const GLfloat* pfCol)
 }
 
 // Set light's specular color by an array of GLfloat
-void GLC_Lumiere::SetColSpeculaire(const GLfloat* pfCol)
+void GLC_Light::SetColSpeculaire(const GLfloat* pfCol)
 {
 	m_fColSpeculaire[0]= pfCol[0];
 	m_fColSpeculaire[1]= pfCol[1];
@@ -142,7 +142,7 @@ void GLC_Lumiere::SetColSpeculaire(const GLfloat* pfCol)
 //////////////////////////////////////////////////////////////////////
 
 // Create light's OpenGL list
-bool GLC_Lumiere::CreationListe(GLenum Mode)
+bool GLC_Light::CreationListe(GLenum Mode)
 {
 	if(!m_ListeID)		// OpenGL list not created
 	{
@@ -156,7 +156,7 @@ bool GLC_Lumiere::CreationListe(GLenum Mode)
 		}
 	}
 	// OpenGL list creation and execution
-	glNewList(m_ListeID, GL_COMPILE_AND_EXECUTE);
+	glNewList(m_ListeID, Mode);
 				
 	// Light execution
 	GlDraw();
@@ -166,12 +166,12 @@ bool GLC_Lumiere::CreationListe(GLenum Mode)
 	// Indicateur de la validité de la liste
 	m_bListeIsValid= true;
 	
-	//! \todo add arror handler
+	//! \todo add error handler
 	return true;	// OpenGL list created
 }
 
 // Execute OpenGL light
-bool GLC_Lumiere::GlExecute(GLenum Mode)
+bool GLC_Light::GlExecute(GLenum Mode)
 {
 	// Object Name
 	glLoadName(GetID());
@@ -193,7 +193,7 @@ bool GLC_Lumiere::GlExecute(GLenum Mode)
 }
 
 // OpenGL light set up
-void GLC_Lumiere::GlDraw(void)
+void GLC_Light::GlDraw(void)
 {
 	// Color
 	glLightfv(m_LumiereID, GL_AMBIENT, m_fColAmbiente);		// Setup The Ambient Light

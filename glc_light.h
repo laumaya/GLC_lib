@@ -22,34 +22,34 @@
 
 *****************************************************************************/
 
-//! \file glc_lumiere.h interface for the GLC_Lumiere class.
+//! \file glc_light.h interface for the GLC_Light class.
 
-#ifndef GLC_LUMIERE_H_
-#define GLC_LUMIERE_H_
+#ifndef GLC_LIGHT_H_
+#define GLC_LIGHT_H_
 
 #include "glc_object.h"
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_Lumiere
-/*! \brief GLC_Lumiere : OpenGL Point Light*/
+//! \class GLC_Light
+/*! \brief GLC_Light : OpenGL Point Light*/
 
-/*! An GLC_Lumiere is an OpenGL point Light source at a 3D location\n
+/*! An GLC_Light is an OpenGL point Light source at a 3D location\n
  * Point light is omnidirectional and have color*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Lumiere :
+class GLC_Light :
 	public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Construct an GLC_Lumiere
+	//! Construct an GLC_Light
 	/*! By default, Ambiant Color is dark grey*/
-	GLC_Lumiere(const char *pName, const GLfloat *pAmbiantColor = NULL);
+	GLC_Light(const char *pName, const GLfloat *pAmbiantColor = NULL);
 	
 	//! Delete OpenGL list
-	virtual ~GLC_Lumiere(void);
+	virtual ~GLC_Light(void);
 
 //////////////////////////////////////////////////////////////////////
 // Fonctions Get
@@ -166,4 +166,4 @@ private:
 	GLfloat m_fPos[4];
 
 };
-#endif //GLC_LUMIERE_H_
+#endif //GLC_LIGHT_H_
