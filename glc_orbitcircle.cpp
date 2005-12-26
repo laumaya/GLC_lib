@@ -22,18 +22,18 @@
 
 *****************************************************************************/
 
-//! \file glc_orbitCercle.cpp implementation of the GLC_OrbitCercle class.
+//! \file glc_orbitCircle.cpp implementation of the GLC_OrbitCircle class.
 
-#include "glc_cercle.h"
-#include "glc_orbitcercle.h"
+#include "glc_circle.h"
+#include "glc_orbitcircle.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_OrbitCercle::GLC_OrbitCercle(const double &dRayon, const char *pName,
+GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const char *pName,
 					   const GLfloat *pColor)
-:GLC_Cercle(dRayon, pName, pColor),
+:GLC_Circle(dRayon, pName, pColor),
 m_Arc1(dRayon, "Arc1", pColor, ARCANGLE),
 m_Arc2(dRayon, "Arc2", pColor, ARCANGLE)
 {
@@ -59,7 +59,7 @@ m_Arc2(dRayon, "Arc2", pColor, ARCANGLE)
 //////////////////////////////////////////////////////////////////////
 
 // Set Arcs orientation and position in concordance with mouse position
-void GLC_OrbitCercle::SetOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 &Matrice)
+void GLC_OrbitCircle::SetOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 &Matrice)
 {	
 	VectAngle.SetZ(0);
 	VectAngle.SetNormal(1);
@@ -90,7 +90,7 @@ void GLC_OrbitCercle::SetOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 
 }
 
 // Set Arcs position in concordance with mouse position
-void GLC_OrbitCercle::MapArcs(const GLC_Matrix4x4 &Matrice)
+void GLC_OrbitCircle::MapArcs(const GLC_Matrix4x4 &Matrice)
 {
 	m_Arc1.MultMatrice(Matrice);
 	m_Arc2.MultMatrice(Matrice);
@@ -102,7 +102,7 @@ void GLC_OrbitCercle::MapArcs(const GLC_Matrix4x4 &Matrice)
 //////////////////////////////////////////////////////////////////////
 
 // Orbit circle OpenGL Execution
-bool GLC_OrbitCercle::GlExecute(double Profondeur)
+bool GLC_OrbitCircle::GlExecute(double Profondeur)
 
 {
 	if (GetVisible())
@@ -139,7 +139,7 @@ bool GLC_OrbitCercle::GlExecute(double Profondeur)
 		m_Arc2.SetMatrice(MatSavArc2);
 				
 		// Display base class (Main circle)
-		result= result && GLC_Cercle::GlExecute();
+		result= result && GLC_Circle::GlExecute();
 		
 		glPopMatrix();
 

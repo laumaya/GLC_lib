@@ -22,13 +22,13 @@
 
 *****************************************************************************/
 
-//! \file glc_orbitCercle.h interface for the GLC_OrbitCercle class.
+//! \file glc_orbitCircle.h interface for the GLC_OrbitCircle class.
 
-#ifndef GLC_ORBITCERCLE_H_
-#define GLC_ORBITCERCLE_H_
+#ifndef GLC_ORBITCIRCLE_H_
+#define GLC_ORBITCIRCLE_H_
 
 
-#include "glc_cercle.h"
+#include "glc_circle.h"
 
 //! The angle of arcs
 #define ARCANGLE (30 * PI / 180)	
@@ -37,16 +37,16 @@
 #define ARCDISCRET 6	
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_OrbitCercle
-/*! \brief GLC_OrbitCercle : OpenGL 3D Orbit Circle*/
+//! \class GLC_OrbitCircle
+/*! \brief GLC_OrbitCircle : OpenGL 3D Orbit Circle*/
 
-/*! An GLC_OrbitCercle is a wire geometry composed of 3d lines \n
- * It's an circle (GLC_Cercle) with 2 arcs (GLC_Cercle) of an angle of #ARCANGLE\n
+/*! An GLC_OrbitCircle is a wire geometry composed of 3d lines \n
+ * It's an circle (GLC_Circle) with 2 arcs (GLC_Circle) of an angle of #ARCANGLE\n
  * The orbit Circle represent camera orientation.
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_OrbitCercle : public GLC_Cercle  
+class GLC_OrbitCircle : public GLC_Circle  
 {
 
 //////////////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ class GLC_OrbitCercle : public GLC_Cercle
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an orbit Circle with a given radius, name and color.
-	GLC_OrbitCercle(const double &dRayon, const char *pName,
+	GLC_OrbitCircle(const double &dRayon, const char *pName,
 		const GLfloat *pColor);
 
 //////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ public:
 	{
 		bool Result;
 		
-		Result= GLC_Cercle::SetRayon(R);	// Rayon de la classe de base		
+		Result= GLC_Circle::SetRayon(R);	// Rayon de la classe de base		
 
 		m_Arc1.SetRayon(R);
 		m_Arc2.SetRayon(R);
@@ -93,15 +93,15 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Arc 1 showing orbit sphere orientation	
-	GLC_Cercle m_Arc1;
+	GLC_Circle m_Arc1;
 	//! Arc 1 positionning Matrix
 	GLC_Matrix4x4 m_MatArc1;
 	//! Arc 2 showing orbit sphere orientation
-	GLC_Cercle m_Arc2;
+	GLC_Circle m_Arc2;
 	//! Arc 2 positionning Matrix
 	GLC_Matrix4x4 m_MatArc2;
 
 
 };
 
-#endif //GLC_ORBITCERCLE_H_
+#endif //GLC_ORBITCIRCLE_H_
