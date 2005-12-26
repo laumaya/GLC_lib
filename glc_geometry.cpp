@@ -22,15 +22,15 @@
 
 *****************************************************************************/
 
-//! \file glc_geometrie.cpp Implementation of the GLC_Geometrie class.
+//! \file glc_geometry.cpp Implementation of the GLC_Geometry class.
 #include <QtDebug>
 
-#include "glc_geometrie.h"
+#include "glc_geometry.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
-GLC_Geometrie::GLC_Geometrie(const char *pName, const GLfloat *pColor)
+GLC_Geometry::GLC_Geometry(const char *pName, const GLfloat *pColor)
 :GLC_Object(pName)
 , m_ListeID(0)				// By default Display List = 0
 , m_bListeIsValid(false)	// By default Display List is invalid
@@ -60,7 +60,7 @@ GLC_Geometrie::GLC_Geometrie(const char *pName, const GLfloat *pColor)
 
 }
 
-GLC_Geometrie::~GLC_Geometrie(void)
+GLC_Geometry::~GLC_Geometry(void)
 {
 	DeleteListe();
 	if (!!m_pMatiere)
@@ -74,7 +74,7 @@ GLC_Geometrie::~GLC_Geometrie(void)
 //////////////////////////////////////////////////////////////////////
 
 // Geometry translation
-void GLC_Geometrie::Translate(double Tx, double Ty, double Tz)
+void GLC_Geometry::Translate(double Tx, double Ty, double Tz)
 {
 	GLC_Matrix4x4 MatTrans(Tx, Ty, Tz);
 	
@@ -82,7 +82,7 @@ void GLC_Geometrie::Translate(double Tx, double Ty, double Tz)
 }
 
 // Material
-void GLC_Geometrie::SetMatiere(GLC_Material* pMat)
+void GLC_Geometry::SetMatiere(GLC_Material* pMat)
 {
 	if (pMat != m_pMatiere)
 	{
@@ -112,7 +112,7 @@ void GLC_Geometrie::SetMatiere(GLC_Material* pMat)
 	}
 }
 // Remove Geometry from the material without update material usage table
-void GLC_Geometrie::DelMatiere(GLC_Geometrie* pGeom)
+void GLC_Geometry::DelMatiere(GLC_Geometry* pGeom)
 {
 	//! \todo modify this algo
 	
@@ -131,7 +131,7 @@ void GLC_Geometrie::DelMatiere(GLC_Geometrie* pGeom)
 //////////////////////////////////////////////////////////////////////
 
 // Create and execute Geometry's display list
-bool GLC_Geometrie::CreationListe(GLenum Mode)
+bool GLC_Geometry::CreationListe(GLenum Mode)
 {
 	if(!m_ListeID)		// The list doesn't exist
 	{
@@ -160,7 +160,7 @@ bool GLC_Geometrie::CreationListe(GLenum Mode)
 	//! \todo Add error handler
 }
 // Geometry display
-bool GLC_Geometrie::GlExecute(GLenum Mode)
+bool GLC_Geometry::GlExecute(GLenum Mode)
 {
 	if (GetVisible())
 	{

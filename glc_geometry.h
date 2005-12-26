@@ -22,44 +22,44 @@
 
 *****************************************************************************/
 
-//! \file glc_geometrie.h Interface for the GLC_Geometrie class.
+//! \file glc_geometry.h Interface for the GLC_Geometry class.
 
-#ifndef GLC_GEOMETRIE_H_
-#define GLC_GEOMETRIE_H_
+#ifndef GLC_GEOMETRY_H_
+#define GLC_GEOMETRY_H_
 
 #include "glc_object.h"
 #include "glc_material.h"
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_Geometrie
-/*! \brief GLC_Geometrie : parent class for all GLC class which contain
+//! \class GLC_Geometry
+/*! \brief GLC_Geometry : parent class for all GLC class which contain
  *  geometrical data*/
 
-/*! GLC_Geometrie is a abstract class. \n \n
- *  Main attributes of GLC_Geometrie:
+/*! GLC_Geometry is a abstract class. \n \n
+ *  Main attributes of GLC_Geometry:
  *		- Material : 	GLC_Material
  * 		- Graphic properties
  * 		- Transformation Matrix
  * 
- * GLC_Geometrie provide :
- * 		- Function to create OpenGL list : GLC_Geometrie::CreationListe
- * 		- Function to draw Geometrie : GLC_Geometrie::GlExecute
- * 		- Virtual function to overload for visual property: GLC_Geometrie::GlPropGeom
- * 		- Virtual function to overload for Object topologie: GLC_Geometrie::GlDraw
+ * GLC_Geometry provide :
+ * 		- Function to create OpenGL list : GLC_Geometry::CreationListe
+ * 		- Function to draw Geometrie : GLC_Geometry::GlExecute
+ * 		- Virtual function to overload for visual property: GLC_Geometry::GlPropGeom
+ * 		- Virtual function to overload for Object topologie: GLC_Geometry::GlDraw
  *
  * \todo Add link to a sample inherit class.
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Geometrie :
+class GLC_Geometry :
 	public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 public:
-	GLC_Geometrie(const char *pName, const GLfloat *pColor);
-	virtual ~GLC_Geometrie(void);
+	GLC_Geometry(const char *pName, const GLfloat *pColor);
+	virtual ~GLC_Geometry(void);
 
 //////////////////////////////////////////////////////////////////////
 // Get Function
@@ -225,7 +225,7 @@ public:
 	
 	//! Remove Geometry from the material without update material usage table
 	/*! This function is call by GLC_Material, do not call it manualy ! */
-	void DelMatiere(GLC_Geometrie* pGeom);
+	void DelMatiere(GLC_Geometry* pGeom);
 
 
 //////////////////////////////////////////////////////////////////////
@@ -235,15 +235,15 @@ public:
 	//! Virtual interface for OpenGL execution from GLC_Object.
 	/*! This Virtual function is implemented here.\n
 	 * At the first call, this function call virtual function
-	 * GLC_Geometrie::GlPropGeom and set up :
+	 * GLC_Geometry::GlPropGeom and set up :
 	 * 		- Geometry
 	 * 		- OpenGL list
 	 * .
 	 * AfterWard this function
-	 *		- Call virtual function GLC_Geometrie::GlPropGeom
+	 *		- Call virtual function GLC_Geometry::GlPropGeom
 	 * 		- If Display list exist or is Valid Call Display List
 	 * 		- If Display list doesn't exist try to create IT by calling
-	 *        virtual function GLC_Geometrie::GlDraw
+	 *        virtual function GLC_Geometry::GlDraw
 	 */
 	virtual bool GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 
@@ -266,7 +266,7 @@ protected:
 protected:
 
 	//! Delete OpenGL list
-	/*! Call by GLC_Geometrie::~GLC_Geometrie*/
+	/*! Call by GLC_Geometry::~GLC_Geometry*/
 	void DeleteListe()
 	{
 		// Si la liste d'affichage est valide, elle est supprimé
@@ -316,4 +316,4 @@ private:
 
 
 };
-#endif //GLC_GEOMETRIE_H_
+#endif //GLC_GEOMETRY_H_
