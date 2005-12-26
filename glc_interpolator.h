@@ -23,10 +23,10 @@
 *****************************************************************************/
 
 
-//! \file Interpolateur.h interface for the Interpolateur class.
+//! \file Interpolator.h interface for the GLC_Interpolator class.
 
-#ifndef GLC_INTERPOLATEUR_H_
-#define GLC_INTERPOLATEUR_H_
+#ifndef GLC_INTERPOLATOR_H_
+#define GLC_INTERPOLATOR_H_
 
 #include "glc_vector4d.h"
 #include "glc_matrix4x4.h"
@@ -43,7 +43,7 @@ enum INTERPOL_TYPE
 // La CLASSE
 //////////////////////////////////////////////////////////////////////
 
-class Interpolateur  
+class GLC_Interpolator  
 {
 
 //////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ class Interpolateur
 //////////////////////////////////////////////////////////////////////
 public:
 	// Contructeur par défaut Interpolation Linéaire
-	Interpolateur();
+	GLC_Interpolator();
 
 //////////////////////////////////////////////////////////////////////
 // Fonctions Set
@@ -109,4 +109,4 @@ private:
 	GLC_Matrix4x4 m_InterpolMat;
 };
 
-#endif /*GLC_INTERPOLATEUR_H_*/
+#endif /*GLC_INTERPOLATOR_H_*/

@@ -22,9 +22,9 @@
 
 *****************************************************************************/
 
-//! \file interpolateur.cpp implementation of the Interpolateur class.
+//! \file interpolator.cpp implementation of the GLC_Interpolator class.
 
-#include "glc_interpolateur.h"
+#include "glc_interpolator.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@
 //////////////////////////////////////////////////////////////////////
 
 // Contructeur par défaut Interpolation Linéaire
-Interpolateur::Interpolateur()
+GLC_Interpolator::GLC_Interpolator()
 : m_InterpolType(INTERPOL_LINEAIRE)
 , m_nNbrPas(1)
 {
@@ -43,14 +43,14 @@ Interpolateur::Interpolateur()
 // Fonction Set
 //////////////////////////////////////////////////////////////////////
 // Défini la matrice d'interpolation
-void Interpolateur::SetInterpolMat(int NbrPas, const GLC_Vector4d &VectDepart, const GLC_Vector4d &VectArrive
+void GLC_Interpolator::SetInterpolMat(int NbrPas, const GLC_Vector4d &VectDepart, const GLC_Vector4d &VectArrive
 								   , INTERPOL_TYPE Interpolation)
 {
 	// Mise à jour des données membre
 	m_InterpolType= Interpolation;
 	if (!NbrPas)
 	{
-		//TRACE("Interpolateur::SetInterpolMat -> NbrPas == 0 \n");		
+		//TRACE("GLC_Interpolator::SetInterpolMat -> NbrPas == 0 \n");		
 	}
 	else m_nNbrPas= NbrPas;
 
@@ -60,7 +60,7 @@ void Interpolateur::SetInterpolMat(int NbrPas, const GLC_Vector4d &VectDepart, c
 	CalcInterpolMat();
 }
 // Type d'interpolation
-void Interpolateur::SetType(INTERPOL_TYPE Interpolation)
+void GLC_Interpolator::SetType(INTERPOL_TYPE Interpolation)
 {
 	if (m_InterpolType != Interpolation)
 	{
@@ -70,11 +70,11 @@ void Interpolateur::SetType(INTERPOL_TYPE Interpolation)
 	}
 }
 // Nombre de pas
-void Interpolateur::SetNbrPas(int NbrPas)
+void GLC_Interpolator::SetNbrPas(int NbrPas)
 {
 	if (!NbrPas)
 	{
-		//TRACE("Interpolateur::SetNbrPas -> NbrPas == 0 \n");
+		//TRACE("GLC_Interpolator::SetNbrPas -> NbrPas == 0 \n");
 		return;
 	}
 
@@ -86,7 +86,7 @@ void Interpolateur::SetNbrPas(int NbrPas)
 	}
 }
 // Vecteur d'arrivée et de depart
-void Interpolateur::SetVecteurs(const GLC_Vector4d &VectDepart, const GLC_Vector4d &VectArrive)
+void GLC_Interpolator::SetVecteurs(const GLC_Vector4d &VectDepart, const GLC_Vector4d &VectArrive)
 {
 	m_VectDepart= VectDepart;
 	m_VectArrive= VectArrive;
@@ -104,12 +104,12 @@ void Interpolateur::SetVecteurs(const GLC_Vector4d &VectDepart, const GLC_Vector
 // Fonctions de Service privée
 //////////////////////////////////////////////////////////////////////
 // Calcul La matrice d'interpolation
-bool Interpolateur::CalcInterpolMat(void)
+bool GLC_Interpolator::CalcInterpolMat(void)
 {
 	// Verifie que les vecteur d'arrivé et de départ sont différent
 	if (m_VectDepart == m_VectArrive)
 	{
-		//TRACE("Interpolateur::CalcInterpolMat : Depart == Arrive\n");
+		//TRACE("GLC_Interpolator::CalcInterpolMat : Depart == Arrive\n");
 		return false;
 	}
 
@@ -128,20 +128,20 @@ bool Interpolateur::CalcInterpolMat(void)
 		break;
 
 	default:
-		//TRACE("Interpolateur::CalcInterpolMat : Type d'interpolation non valide\n");
+		//TRACE("GLC_Interpolator::CalcInterpolMat : Type d'interpolation non valide\n");
 		return false;
 	}
 }
 
 // Calcul la matrice d'interpolation linéaire
-bool Interpolateur::CalcInterpolLineaireMat(void)
+bool GLC_Interpolator::CalcInterpolLineaireMat(void)
 {	
 
 	// Calcul la matrice de translation
 	const GLC_Vector4d VectTrans= (m_VectArrive - m_VectDepart) * (1.0 / m_nNbrPas);	
 	if(VectTrans.IsNull())
 	{
-		//TRACE("Interpolateur::CalcInterpolLineaireMat -> Translation NULL\n");
+		//TRACE("GLC_Interpolator::CalcInterpolLineaireMat -> Translation NULL\n");
 		m_InterpolMat.SetIdentite();
 		return false;
 	}
@@ -153,7 +153,7 @@ bool Interpolateur::CalcInterpolLineaireMat(void)
 }
 
 // Calcul la matrice d'interpolation angulaire
-bool Interpolateur::CalcInterpolAngulaireMat(void)
+bool GLC_Interpolator::CalcInterpolAngulaireMat(void)
 {
 	// Calcul de l'axe de rotation
 	const GLC_Vector4d AxeRot(m_VectDepart ^ m_VectArrive);
@@ -162,7 +162,7 @@ bool Interpolateur::CalcInterpolAngulaireMat(void)
 	// Calcul de la matrice de rotation
 	if (fabs(Angle) < EPSILON)
 	{
-		//TRACE("Interpolateur::CalcInterpolAngulaireMat -> Rotation NULL\n");
+		//TRACE("GLC_Interpolator::CalcInterpolAngulaireMat -> Rotation NULL\n");
 		m_InterpolMat.SetIdentite();
 		return false;
 	}
