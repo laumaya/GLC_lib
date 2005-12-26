@@ -22,9 +22,9 @@
 
 *****************************************************************************/
 
-//! \file glc_cercle.cpp implementation of the GLC_Cercle class.
+//! \file glc_circle.cpp implementation of the GLC_Circle class.
 
-#include "glc_cercle.h"
+#include "glc_circle.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -32,10 +32,10 @@
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Cercle::GLC_Cercle(const double &dRayon, const char *pName,
+GLC_Circle::GLC_Circle(const double &dRayon, const char *pName,
 					   const GLfloat *pColor, double Angle)
 
-:GLC_Geometrie(pName, pColor)
+:GLC_Geometry(pName, pColor)
 {
 	//! \todo remade init
 	m_dRayon= dRayon;
@@ -43,7 +43,7 @@ GLC_Cercle::GLC_Cercle(const double &dRayon, const char *pName,
 	m_dAngle= Angle;
 }
 
-GLC_Cercle::~GLC_Cercle()
+GLC_Circle::~GLC_Circle()
 {
 }
 
@@ -52,7 +52,7 @@ GLC_Cercle::~GLC_Cercle()
 //////////////////////////////////////////////////////////////////////
 
 // Set Circle Radius
-bool GLC_Cercle::SetRayon(double R)
+bool GLC_Circle::SetRayon(double R)
 {
 	R = fabs(R);
 	if ( fabs(R - m_dRayon) > EPSILON)
@@ -70,7 +70,7 @@ bool GLC_Cercle::SetRayon(double R)
 }
 
 // Set Circle discret
-void GLC_Cercle::SetDiscretion(int TargetDiscret)
+void GLC_Circle::SetDiscretion(int TargetDiscret)
 {
 	TargetDiscret= abs(TargetDiscret);
 	if (TargetDiscret != m_nDiscret)
@@ -82,7 +82,7 @@ void GLC_Cercle::SetDiscretion(int TargetDiscret)
 }
 
 // Set Circle Angle
-bool GLC_Cercle::SetAngle(double AngleRadians)	// Angle in Radians
+bool GLC_Circle::SetAngle(double AngleRadians)	// Angle in Radians
 {
 	if ( fabs(AngleRadians - m_dAngle) > EPSILON)
 	{	// Angle is changing
@@ -105,7 +105,7 @@ bool GLC_Cercle::SetAngle(double AngleRadians)	// Angle in Radians
 //////////////////////////////////////////////////////////////////////
 
 // Dessin du Cercle
-void GLC_Cercle::GlDraw(void)
+void GLC_Circle::GlDraw(void)
 {
 	double MyCos;
 	double MySin;
@@ -126,7 +126,7 @@ void GLC_Cercle::GlDraw(void)
 	// Fin de l'affichage du cercle
 }
 // Fonction définissant le propriétés de la géométrie (Couleur, position, epaisseur)
-void GLC_Cercle::GlPropGeom(void)
+void GLC_Circle::GlPropGeom(void)
 {
 		// Modification de la matrice courante
 		glMultMatrixd(m_MatPos.Return_dMat());

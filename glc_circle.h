@@ -22,37 +22,37 @@
 
 *****************************************************************************/
 
-//! \file glc_cercle.h interface for the GLC_Cercle class.
+//! \file glc_circle.h interface for the GLC_Circle class.
 
-#ifndef GLC_CERCLE_H_
-#define GLC_CERCLE_H_
+#ifndef GLC_CIRCLE_H_
+#define GLC_CIRCLE_H_
 
-#include "glc_geometrie.h"
+#include "glc_geometry.h"
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_Cercle
-/*! \brief GLC_Cercle : OpenGL 3D Circle*/
+//! \class GLC_Circle
+/*! \brief GLC_Circle : OpenGL 3D Circle*/
 
-/*! An GLC_Cercle is a wire geometry composed of 3d lines \n
+/*! An GLC_Circle is a wire geometry composed of 3d lines \n
  * It can be an entire circle or an arc.
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Cercle : public GLC_Geometrie  
+class GLC_Circle : public GLC_Geometry  
 {
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 public:	
 
-	//! Construct an GLC_Cercle
+	//! Construct an GLC_Circle
 	/*! By default, discretion is set to #GLC_DISCRET*/
-	GLC_Cercle(const double &dRayon, const char *pName= "Cercle",
+	GLC_Circle(const double &dRayon, const char *pName= "Circle",
 		const GLfloat *pColor= 0, double Angle= 2 * PI);
 
 	//! Destructor
 	/*! \todo Check if this destructor is necessary*/
-	virtual ~GLC_Cercle();	// Delete display list
+	virtual ~GLC_Circle();	// Delete display list
 
 //////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -120,4 +120,4 @@ private:
 	double m_dAngle;
 		
 };
-#endif //GLC_CERCLE_H_
+#endif //GLC_CIRCLE_H_
