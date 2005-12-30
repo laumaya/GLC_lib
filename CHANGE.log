@@ -15,6 +15,11 @@ FILES : GLC_lib.pro
 
 Translate these class name in english :
 		GLC_Lumiere -> GLC_Light
+		GLC_Cylindre -> GLC_Cylinder
+		GLC_Cercle -> GLC_Circle
+		GLC_OrbitCercle -> GLC_OrbitCircle
+		GLC_Geometrie -> GLC_Geometry
+		Interpolateur -> GLC_Interpolator
 		
 --------------------------------------------------------------
 December 22 2005
