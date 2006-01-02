@@ -23,7 +23,7 @@
 *****************************************************************************/
 
 //! \file glc_imagePlane.cpp implementation of the GLC_ImagePlane class.
-
+#include <QtDebug>
 #include "glc_imageplane.h"
 #include "glc_viewport.h"
 //////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport, const char* pName, const
 , m_dLgImage(0)
 , m_dZpos(0)
 {
-
+	UpdateZPosition();
 }
 
 GLC_ImagePlane::~GLC_ImagePlane(void)
@@ -68,8 +68,6 @@ bool GLC_ImagePlane::ChargeImage(QGLWidget *GLWidget, const QString ImageName)
 // Update image size
 void GLC_ImagePlane::UpdatePlaneSize(void)
 {
-	// position Camera plane
-	m_dZpos= m_pViewport->GetDistMax();	
 
 	// compute quad size
 	int nCote;
@@ -90,7 +88,21 @@ void GLC_ImagePlane::UpdatePlaneSize(void)
 	m_dLgImage= ((double)nCote * ChampsVision / (double)m_pViewport->GetWinVSize());
 
 	// Invalidate OpenGL Display list
-	m_bListeIsValid= false;
+	m_ListIsValid= false;
+}
+
+// Update Plane Z position
+void GLC_ImagePlane::UpdateZPosition(void)
+{
+	// Compute Plane Z position
+	const double near= m_pViewport->GetDistMin();
+	const double far= m_pViewport->GetDistMax();
+	int nbrBits;
+	// Retrieve the number of bits of Depth Buffer
+	glGetIntegerv(GL_DEPTH_BITS, &nbrBits);
+	double zw= pow(2, static_cast<double>(nbrBits)) - 2.0;
+	
+	m_dZpos= -far * near / (((zw - 1) / zw) * (far - near) - far);	
 }
 
 

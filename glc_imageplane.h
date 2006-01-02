@@ -61,6 +61,9 @@ public:
 
 	//! Update image plane size
 	void UpdatePlaneSize(void);
+	
+	//! Update Plane Z position
+	void UpdateZPosition(void);
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions

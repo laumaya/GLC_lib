@@ -438,6 +438,11 @@ bool GLC_Viewport::SetDistMin(double DistMin)
 		
 		UpdateOrbitCircle();	// Update Orbit circle
 		
+		if (m_pImagePlane != NULL)
+		{
+			m_pImagePlane->UpdateZPosition();	// Update image plane Z Position
+		}
+		
 		return true;
 	}
 	else
@@ -459,6 +464,11 @@ bool GLC_Viewport::SetDistMax(double DistMax)
 		UpdateProjectionMat();	// Update OpenGL projection matrix
 		
 		UpdateOrbitCircle();	// Update Orbit circle
+		
+		if (m_pImagePlane != NULL)
+		{
+			m_pImagePlane->UpdateZPosition();	// Update image plane Z Position
+		}
 		
 		return true;
 	}
