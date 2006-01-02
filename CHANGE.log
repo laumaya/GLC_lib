@@ -4,7 +4,7 @@ December 26 2005
 
 GLC_lib-0.9.4
 --------------------------------------------------------------
-RENAME SOME CLASS
+TRANSLATE SOME CLASS ,FUNCTIONS AND MEMBERS
 FILES : GLC_lib.pro
 		glc_lumiere.h -> glc_light.h - glc_lumiere.cpp -> glc_light.cpp
 		glc_cylindre.h -> glc_cylinder.h - glc_cylindre.cpp -> glc_cylinder.cpp
@@ -12,6 +12,10 @@ FILES : GLC_lib.pro
 		glc_orbitcercle.h -> glc_orbitcircle.h - glc_orbitcercle.cpp -> glc_orbitcircle.cpp
 		glc_geometrie.h -> glc_geometry.h - glc_geometrie.cpp -> glc_geometry.cpp
 		glc_interpolateur.h -> glc_interpolator.h - glc_interpolateur.cpp -> glc_interpolator.cpp
+		
+		glc_box.h - glc_box.cpp
+		glc_mesh.cpp
+		glc_point.h - glc_point.cpp
 
 Translate these class name in english :
 		GLC_Lumiere -> GLC_Light
@@ -20,6 +24,13 @@ Translate these class name in english :
 		GLC_OrbitCercle -> GLC_OrbitCircle
 		GLC_Geometrie -> GLC_Geometry
 		Interpolateur -> GLC_Interpolator
+--------------------------------------------------------------
+IMAGE PLANE BUG CORRECTION
+FILES : glc_imageplane.h - glc_imageplane.cpp
+		glc_viewport.cpp
+
+Modifying the computation of the image plane Z coordinate
+to resolve hardware compatibility.
 		
 --------------------------------------------------------------
 December 22 2005
