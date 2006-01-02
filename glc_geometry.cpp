@@ -33,40 +33,40 @@
 GLC_Geometry::GLC_Geometry(const char *pName, const GLfloat *pColor)
 :GLC_Object(pName)
 , m_ListeID(0)				// By default Display List = 0
-, m_bListeIsValid(false)	// By default Display List is invalid
-, m_bValidite(false)		// By default geometry is invalid
-, m_pMatiere(NULL)			// By default No material
-, m_bBlending(false)		// By default No Blending
-, m_Epaisseur(1.0)			// By default thickness = 1.0
-, m_bVisible(true)			// By default Visibility is true
+, m_ListIsValid(false)	// By default Display List is invalid
+, m_GeometryIsValid(false)		// By default geometry is invalid
+, m_pMaterial(NULL)			// By default No material
+, m_IsBlended(false)		// By default No Blending
+, m_Thikness(1.0)			// By default thickness = 1.0
+, m_IsVisible(true)			// By default Visibility is true
 
 {
 
 	// Set Color Array
 	if (pColor != 0)
 	{
-		m_fColor[0]= pColor[0];
-		m_fColor[1]= pColor[1];
-		m_fColor[2]= pColor[2];
-		m_fColor[3]= pColor[3];
+		m_RGBAColor[0]= pColor[0];
+		m_RGBAColor[1]= pColor[1];
+		m_RGBAColor[2]= pColor[2];
+		m_RGBAColor[3]= pColor[3];
 	}
 	else
 	{	// By default color is white
-		m_fColor[0]= 1;
-		m_fColor[1]= 1;
-		m_fColor[2]= 1;
-		m_fColor[3]= 1;
+		m_RGBAColor[0]= 1;
+		m_RGBAColor[1]= 1;
+		m_RGBAColor[2]= 1;
+		m_RGBAColor[3]= 1;
 	}
 
 }
 
 GLC_Geometry::~GLC_Geometry(void)
 {
-	DeleteListe();
-	if (!!m_pMatiere)
+	DeleteList();
+	if (!!m_pMaterial)
 	{
-		m_pMatiere->DelGLC_Geom(GetID());	//Remove Geometry from the material usage collection
-		m_pMatiere= NULL;
+		m_pMaterial->DelGLC_Geom(GetID());	//Remove Geometry from the material usage collection
+		m_pMaterial= NULL;
 	}
 }
 /////////////////////////////////////////////////////////////////////
@@ -78,13 +78,13 @@ void GLC_Geometry::Translate(double Tx, double Ty, double Tz)
 {
 	GLC_Matrix4x4 MatTrans(Tx, Ty, Tz);
 	
-	MultMatrice(MatTrans);
+	MultMatrix(MatTrans);
 }
 
 // Material
-void GLC_Geometry::SetMatiere(GLC_Material* pMat)
+void GLC_Geometry::SetMaterial(GLC_Material* pMat)
 {
-	if (pMat != m_pMatiere)
+	if (pMat != m_pMaterial)
 	{
 		if (!!pMat)
 		{
@@ -94,31 +94,31 @@ void GLC_Geometry::SetMatiere(GLC_Material* pMat)
 			}
 		}
 	
-		if (!!m_pMatiere)
+		if (!!m_pMaterial)
 		{
-			m_pMatiere->DelGLC_Geom(GetID());
+			m_pMaterial->DelGLC_Geom(GetID());
 		}
 
-		m_pMatiere= pMat;
+		m_pMaterial= pMat;
 
-		pMat->GetColDiffuse(m_fColor);
+		pMat->GetColDiffuse(m_RGBAColor);
 
-		m_bValidite = false;
+		m_GeometryIsValid = false;
 	}
 	else
 	{	
 		// Force la mise à jour
-		m_bValidite = false;
+		m_GeometryIsValid = false;
 	}
 }
 // Remove Geometry from the material without update material usage table
-void GLC_Geometry::DelMatiere(GLC_Geometry* pGeom)
+void GLC_Geometry::DelMaterial(GLC_Geometry* pGeom)
 {
 	//! \todo modify this algo
 	
 	if (this == pGeom)
 	{
-		m_pMatiere= NULL;
+		m_pMaterial= NULL;
 	}
 	else
 	{
@@ -131,7 +131,7 @@ void GLC_Geometry::DelMatiere(GLC_Geometry* pGeom)
 //////////////////////////////////////////////////////////////////////
 
 // Create and execute Geometry's display list
-bool GLC_Geometry::CreationListe(GLenum Mode)
+bool GLC_Geometry::CreateList(GLenum Mode)
 {
 	if(!m_ListeID)		// The list doesn't exist
 	{
@@ -154,7 +154,7 @@ bool GLC_Geometry::CreationListe(GLenum Mode)
 
 	
 	// List is valid
-	m_bListeIsValid= true;
+	m_ListIsValid= true;
 	return true;	// Display geometry with OpenGL display list
 	
 	//! \todo Add error handler
@@ -162,7 +162,7 @@ bool GLC_Geometry::CreationListe(GLenum Mode)
 // Geometry display
 bool GLC_Geometry::GlExecute(GLenum Mode)
 {
-	if (GetVisible())
+	if (GetIsVisible())
 	{
 		// Object ID for selection purpose
 		glLoadName(GetID());
@@ -174,13 +174,13 @@ bool GLC_Geometry::GlExecute(GLenum Mode)
 		GlPropGeom();	// Virtual function defined in concrete class
 
 		// Geometry validity set to true
-		m_bValidite= true;
+		m_GeometryIsValid= true;
 
-		if (!GetListeValidite())
+		if (!GetListIsValid())
 		{
 			// The list is not up to date or doesn't exist
 
-			CreationListe(Mode);
+			CreateList(Mode);
 		}
 		else
 		{

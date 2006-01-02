@@ -180,12 +180,12 @@ void GLC_Cylinder::GlPropGeom(void)
 {
 		// Modification de la matrice courante
 		glMultMatrixd(m_MatPos.Return_dMat());
-		if(!m_pMatiere || (m_PolyMode != GL_FILL))
+		if(!m_pMaterial || (m_PolyMode != GL_FILL))
 		{
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_LIGHTING);
 
-			if (m_bBlending)
+			if (m_IsBlended)
 			{
 				glEnable(GL_BLEND);
 				glDepthMask(GL_FALSE);
@@ -197,12 +197,12 @@ void GLC_Cylinder::GlPropGeom(void)
 
 			glColor4fv(GetfRGBA());			// Sa Couleur
 		}
-		else if (m_pMatiere->GetAddRgbaTexture())
+		else if (m_pMaterial->GetAddRgbaTexture())
 		{
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
 
-			if (m_bBlending)
+			if (m_IsBlended)
 			{
 				glDisable(GL_LIGHTING);
 				glEnable(GL_BLEND);
@@ -214,7 +214,7 @@ void GLC_Cylinder::GlPropGeom(void)
 			}
 			glColor4fv(GetfRGBA());			// Sa Couleur
 
-			m_pMatiere->GlExecute();
+			m_pMaterial->GlExecute();
 		}
 
 		else
@@ -222,7 +222,7 @@ void GLC_Cylinder::GlPropGeom(void)
 			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
 
-			if (m_bBlending)
+			if (m_IsBlended)
 			{
 				glEnable(GL_BLEND);
 				glDepthMask(GL_FALSE);
@@ -232,10 +232,10 @@ void GLC_Cylinder::GlPropGeom(void)
 				glDisable(GL_BLEND);
 			}
 
-			m_pMatiere->GlExecute();
+			m_pMaterial->GlExecute();
 		}
 
-		glLineWidth(GetEpaisseur());	// Son Epaisseur
+		glLineWidth(GetThickness());	// Son Epaisseur
 
 		// Mode d'affichage des polygons
 		glPolygonMode(m_PolyFace, m_PolyMode);

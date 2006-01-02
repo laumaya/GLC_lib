@@ -113,7 +113,7 @@ GLC_Material::~GLC_Material(void)
     while (iEntry != m_WhereUsed.constEnd())
     {
         // Remove material from geometry
-        iEntry.value()->DelMatiere(iEntry.value());
+        iEntry.value()->DelMaterial(iEntry.value());
         ++iEntry;
     }
     // clear whereUSED Hash table
@@ -289,7 +289,7 @@ void GLC_Material::UpdateUsed(void)
     while (iEntry != m_WhereUsed.constEnd())
     {
         // Indique aux géométrie utilisant la matière que celle ci à changée
-        iEntry.value()->SetMatiere(this);
+        iEntry.value()->SetMaterial(this);
         ++iEntry;
     }
 	

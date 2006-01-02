@@ -60,7 +60,7 @@ bool GLC_Circle::SetRayon(double R)
 		if (R > EPSILON)
 		{
 			m_dRayon= R;
-			m_bListeIsValid= false;
+			m_ListIsValid= false;
 			return true;
 		}
 		else return false;	// Radius must be > 0
@@ -77,7 +77,7 @@ void GLC_Circle::SetDiscretion(int TargetDiscret)
 	{
 		m_nDiscret= TargetDiscret;
 		if (m_nDiscret < 6) m_nDiscret= 6;
-		m_bListeIsValid= false;
+		m_ListIsValid= false;
 	}
 }
 
@@ -89,7 +89,7 @@ bool GLC_Circle::SetAngle(double AngleRadians)	// Angle in Radians
 		if (AngleRadians > EPSILON)
 		{
 			m_dAngle= AngleRadians;
-			m_bListeIsValid= false;
+			m_ListIsValid= false;
 			return true;
 		}
 		else return false;	// Angle must be > 0
@@ -139,6 +139,6 @@ void GLC_Circle::GlPropGeom(void)
 			
 
 		glColor4fv(GetfRGBA());			// Sa Couleur
-		glLineWidth(GetEpaisseur());	// Son Epaisseur
+		glLineWidth(GetThickness());	// Son Epaisseur
 		
 }

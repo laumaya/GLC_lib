@@ -65,13 +65,13 @@ public:
 	void SetCoord(const GLC_Vector4d &Vect)
 	{
 		m_VectCoord= Vect;
-		m_bListeIsValid = false;
+		m_ListIsValid = false;
 	}
 	//! Set Point coordinate by 3 double
 	void SetCoord(double x, double y, double z)
 	{
 		m_VectCoord.SetVect(x, y, z);
-		m_bListeIsValid = false;
+		m_ListIsValid = false;
 	}
 
 //////////////////////////////////////////////////////////////////////

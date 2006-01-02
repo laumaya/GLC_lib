@@ -87,7 +87,7 @@ public:
 	{
 		 m_dLg= Lg;
 
-		 m_bListeIsValid= false;
+		 m_ListIsValid= false;
 	}
 
 	//! Set Cylinder radius
@@ -95,7 +95,7 @@ public:
 	{
 		m_dRayon= Rayon;
 		
-		m_bListeIsValid= false;
+		m_ListIsValid= false;
 	}
 
 	//! Set Discretion
@@ -107,7 +107,7 @@ public:
 			m_nDiscret= TargetDiscret;
 			if (m_nDiscret < 6) m_nDiscret= 6;
 
-			m_bListeIsValid= false;
+			m_ListIsValid= false;
 		}
 	}
 
@@ -116,7 +116,7 @@ public:
 	{
 		m_bCapEnded= CapsEnded;
 
-		m_bListeIsValid= false;
+		m_ListIsValid= false;
 	}
 
 // End of functions impacting display list
@@ -128,7 +128,7 @@ public:
 	{
 		m_PolyFace= Face;
 		m_PolyMode= Mode;
-		m_bValidite = false;
+		m_GeometryIsValid = false;
 	}
 
 //////////////////////////////////////////////////////////////////////

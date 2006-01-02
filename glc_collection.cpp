@@ -261,9 +261,9 @@ void GLC_Collection::CreateMemberList(void)
 	
     while (iEntry != m_TheMap.constEnd())
     {
-    	if(!iEntry.value()->GetListeValidite())
+    	if(!iEntry.value()->GetListIsValid())
     	{
-    		iEntry.value()->CreationListe(GL_COMPILE);    		
+    		iEntry.value()->CreateList(GL_COMPILE);    		
     	}
     	// Passe au Suivant
     	iEntry++;
@@ -285,7 +285,7 @@ void GLC_Collection::CreateSousList(void)
 	GLuint ListeID= 0;
     while (iEntry != m_TheMap.constEnd())
     {
-    	if(!iEntry.value()->GetValidite())
+    	if(!iEntry.value()->GetValidity())
     	{
     		iListEntry= m_ListeMap.find(iEntry.key());
     		if(iListEntry != m_ListeMap.constEnd())
@@ -323,7 +323,7 @@ bool GLC_Collection::MemberListIsUpToDate(void)
 	
     while (iEntry != m_TheMap.constEnd())
     {
-    	if(iEntry.value()->GetListeValidite() || !iEntry.value()->GetVisible())
+    	if(iEntry.value()->GetListIsValid() || !iEntry.value()->GetIsVisible())
     	{	// Géométrie valide ou non visible.
     		iEntry++;   		
     	}
@@ -346,7 +346,7 @@ bool GLC_Collection::MemberIsUpToDate(void)
 	
     while (iEntry != m_TheMap.constEnd())
     {
-    	if(iEntry.value()->GetValidite() || !iEntry.value()->GetVisible())
+    	if(iEntry.value()->GetValidity() || !iEntry.value()->GetIsVisible())
     	{	// Membre valide ou non visible.
     		iEntry++;   		
     	}
@@ -372,7 +372,7 @@ bool GLC_Collection::CreationListe(void)
 		if (!m_ListeID)	// ID de liste non obtenu
 		{
 			GlDraw();
-			//qDebug("GLC_Collection::CreationListe : ERREUR Liste d'affichage NON créé");
+			//qDebug("GLC_Collection::CreateList : ERREUR Liste d'affichage NON créé");
 			return false;	// Géométrie affiché mais pas de liste de créé
 		}
 	}
@@ -386,7 +386,7 @@ bool GLC_Collection::CreationListe(void)
 	// Validité de la liste
 	m_bListeIsValid= true;
 
-	//qDebug("GLC_Collection::CreationListe : Liste d'affichage %u créé", m_ListeID);	
+	//qDebug("GLC_Collection::CreateList : Liste d'affichage %u créé", m_ListeID);	
 
 	// Gestion erreur OpenGL
 	GLenum errCode;

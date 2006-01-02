@@ -84,21 +84,21 @@ public:
 	void SetLgX(double LgX)
 	{
 		 m_dLgX= LgX;
-		 m_bListeIsValid= false;
+		 m_ListIsValid= false;
 	}
 
 	//! Set Y length
 	void SetLgY(double LgY)
 	{
 		 m_dLgY= LgY;
-		 m_bListeIsValid= false;
+		 m_ListIsValid= false;
 	}
 
 	//! Set Z length
 	void SetLgZ(double LgZ)
 	{
 		 m_dLgZ= LgZ;
-		 m_bListeIsValid= false;
+		 m_ListIsValid= false;
 	}
 // Fin des fonctions modifiant la liste d'affichage
 
@@ -109,7 +109,7 @@ public:
 	{
 		m_PolyFace= Face;
 		m_PolyMode= Mode;
-		m_bValidite = false;
+		m_GeometryIsValid = false;
 	}
 
 //////////////////////////////////////////////////////////////////////

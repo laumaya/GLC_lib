@@ -147,7 +147,7 @@ private:
 		if (glIsList(m_ListeID))
 		{
 			glDeleteLists(m_ListeID, 1);
-			//qDebug() << "GLC_Collection::DeleteListe : Display list " << m_ListeID << " Deleted";			
+			//qDebug() << "GLC_Collection::DeleteList : Display list " << m_ListeID << " Deleted";			
 		}
 	}
 

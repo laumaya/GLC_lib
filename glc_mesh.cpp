@@ -54,8 +54,8 @@ GLC_Mesh::GLC_Mesh(GLC_Mesh *pMesh)
 		AddFace(pFace);
 	}
 	
-	SetMatiere(pMesh->GetMat());	
-	SetMatrice(pMesh->GetMatrice());
+	SetMaterial(pMesh->GetMaterial());	
+	SetMatrix(pMesh->GetMatrix());
 }
 
 
@@ -96,12 +96,12 @@ void GLC_Mesh::GlPropGeom()
 {
 		//! Change the current matrix
 		glMultMatrixd(m_MatPos.Return_dMat());
-		if(!m_pMatiere || (m_PolyMode != GL_FILL))
+		if(!m_pMaterial || (m_PolyMode != GL_FILL))
 		{
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_LIGHTING);
 
-			if (m_bBlending)
+			if (m_IsBlended)
 			{
 				glEnable(GL_BLEND);
 				glDepthMask(GL_FALSE);
@@ -113,12 +113,12 @@ void GLC_Mesh::GlPropGeom()
 
 			glColor4fv(GetfRGBA());			// is color
 		}
-		else if (m_pMatiere->GetAddRgbaTexture())
+		else if (m_pMaterial->GetAddRgbaTexture())
 		{
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
 
-			if (m_bBlending)
+			if (m_IsBlended)
 			{
 				glEnable(GL_BLEND);
 				glDepthMask(GL_FALSE);
@@ -128,14 +128,14 @@ void GLC_Mesh::GlPropGeom()
 				glDisable(GL_BLEND);
 			}
 
-			m_pMatiere->GlExecute();
+			m_pMaterial->GlExecute();
 		}
 		else
 		{
 			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
 
-			if (m_bBlending)
+			if (m_IsBlended)
 			{
 				glEnable(GL_BLEND);
 				glDepthMask(GL_FALSE);
@@ -145,10 +145,10 @@ void GLC_Mesh::GlPropGeom()
 				glDisable(GL_BLEND);
 			}
 
-			m_pMatiere->GlExecute();
+			m_pMaterial->GlExecute();
 		}
 
-		glLineWidth(GetEpaisseur());	// is thikness
+		glLineWidth(GetThickness());	// is thikness
 
 		// Polygons display mode
 		glPolygonMode(m_PolyFace, m_PolyMode);

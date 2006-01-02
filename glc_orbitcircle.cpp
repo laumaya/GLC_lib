@@ -83,8 +83,8 @@ void GLC_OrbitCircle::SetOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 
 	MatRot= Matrice * MatRot;
 
 	
-	m_Arc1.SetMatrice(MatRot * m_MatArc1);
-	m_Arc2.SetMatrice(MatRot * m_MatArc2);
+	m_Arc1.SetMatrix(MatRot * m_MatArc1);
+	m_Arc2.SetMatrix(MatRot * m_MatArc2);
 
 
 }
@@ -92,8 +92,8 @@ void GLC_OrbitCircle::SetOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 
 // Set Arcs position in concordance with mouse position
 void GLC_OrbitCircle::MapArcs(const GLC_Matrix4x4 &Matrice)
 {
-	m_Arc1.MultMatrice(Matrice);
-	m_Arc2.MultMatrice(Matrice);
+	m_Arc1.MultMatrix(Matrice);
+	m_Arc2.MultMatrix(Matrice);
 }
 
 
@@ -105,7 +105,7 @@ void GLC_OrbitCircle::MapArcs(const GLC_Matrix4x4 &Matrice)
 bool GLC_OrbitCircle::GlExecute(double Profondeur)
 
 {
-	if (GetVisible())
+	if (GetIsVisible())
 	{
 		bool result;
 
@@ -120,23 +120,23 @@ bool GLC_OrbitCircle::GlExecute(double Profondeur)
 		glTranslated(0, 0, - (Profondeur) );
 
 		// Save Positionning matrix of arcs
-		const GLC_Matrix4x4 MatSavArc1(m_Arc1.GetMatrice());
-		const GLC_Matrix4x4 MatSavArc2(m_Arc2.GetMatrice());
+		const GLC_Matrix4x4 MatSavArc1(m_Arc1.GetMatrix());
+		const GLC_Matrix4x4 MatSavArc2(m_Arc2.GetMatrix());
 
 		// Scale Z to 0. Preject arcs in the main circle plane
 		// Avoid perspective problems
 		GLC_Matrix4x4 MatScaling;
 		MatScaling.SetMatScaling(1,1,0);
-		m_Arc1.MultMatrice(MatScaling);
-		m_Arc2.MultMatrice(MatScaling);
+		m_Arc1.MultMatrix(MatScaling);
+		m_Arc2.MultMatrix(MatScaling);
 
 
 		// Display arcs
 		result= m_Arc1.GlExecute() && m_Arc2.GlExecute();
 
 		// Restore positionning matrix of arcs
-		m_Arc1.SetMatrice(MatSavArc1);
-		m_Arc2.SetMatrice(MatSavArc2);
+		m_Arc1.SetMatrix(MatSavArc1);
+		m_Arc2.SetMatrix(MatSavArc2);
 				
 		// Display base class (Main circle)
 		result= result && GLC_Circle::GlExecute();

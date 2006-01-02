@@ -62,6 +62,6 @@ void GLC_Point::GlPropGeom(void)
 		glDisable(GL_BLEND);
 
 		glColor4fv(GetfRGBA());			// Sa Couleur
-		glPointSize(GetEpaisseur());	// Son Epaisseur
+		glPointSize(GetThickness());	// Son Epaisseur
 }
 
