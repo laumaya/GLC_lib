@@ -98,8 +98,12 @@ void GLC_ImagePlane::UpdateZPosition(void)
 	const double near= m_pViewport->GetDistMin();
 	const double far= m_pViewport->GetDistMax();
 	int nbrBits;
-	// Retrieve the number of bits of Depth Buffer
-	glGetIntegerv(GL_DEPTH_BITS, &nbrBits);
+	
+	//glGetIntegerv(GL_DEPTH_BITS, &nbrBits);
+	// glGetIntegerv seems to not work
+	// force to minimum Depth : 16 bits
+	nbrBits= 16;
+	
 	double zw= pow(2, static_cast<double>(nbrBits)) - 2.0;
 	
 	m_dZpos= -far * near / (((zw - 1) / zw) * (far - near) - far);	
