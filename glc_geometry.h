@@ -55,15 +55,19 @@ class GLC_Geometry :
 	public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
-// Constructor Destructor
+/*! @name Constructor / Destructor */
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	GLC_Geometry(const char *pName, const GLfloat *pColor);
 	virtual ~GLC_Geometry(void);
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Get Function
+/*! \name Get Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
+
 public:
 
 	//! Return Visibility state of geometrie
@@ -110,7 +114,7 @@ public:
 	//! Return associated OpenGL list ID
 	GLuint GetListID(void)
 	{
-		return m_ListeID;
+		return m_ListID;
 	}
 
 	//! Return Validity of associated OpenGL list
@@ -136,11 +140,15 @@ public:
 	{
 		return m_IsBlended;
 	}
+//@}
 
-/////////////////////////////////////////////////////////////////////
-// Set function
 //////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+
 public:
+
 	//! Set visibility statement
 	void SetVisibility(bool v)
 	{
@@ -226,12 +234,15 @@ public:
 	//! Remove Geometry from the material without update material usage table
 	/*! This function is call by GLC_Material, do not call it manualy ! */
 	void DelMaterial(GLC_Geometry* pGeom);
-
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// OpenGL Function
+/*! \name OpenGL Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
+
 public:
+
 	//! Virtual interface for OpenGL execution from GLC_Object.
 	/*! This Virtual function is implemented here.\n
 	 * At the first call, this function call virtual function
@@ -249,8 +260,14 @@ public:
 
 	//! OpenGL list creation
 	bool CreateList(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+//@}
 
+//////////////////////////////////////////////////////////////////////
+/*! \name OpenGL Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
 protected:
+
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function have to be implemented in concrete class.*/
 	virtual void GlDraw(void) = 0;
@@ -258,6 +275,7 @@ protected:
 	//! Virtual interface for OpenGL Geomtry properties.
 	/*! This Virtual function have to be implemented in concrete class.*/
 	virtual void GlPropGeom(void) = 0;
+//@}
 
 //////////////////////////////////////////////////////////////////////
 // Protected services functions
@@ -269,9 +287,9 @@ protected:
 	void DeleteList()
 	{
 		// If display list is valid : delete it
-		if (glIsList(m_ListeID))
+		if (glIsList(m_ListID))
 		{
-			glDeleteLists(m_ListeID, 1);
+			glDeleteLists(m_ListID, 1);
 		}
 	//! \todo Add error handler
 	}
@@ -285,7 +303,7 @@ protected:
 	GLC_Matrix4x4	m_MatPos;
 
 	//! Display list ID
-	GLuint m_ListeID;
+	GLuint m_ListID;
 
 	//! Display list validity
 	bool m_ListIsValid;
