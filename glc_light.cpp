@@ -32,50 +32,50 @@
 //////////////////////////////////////////////////////////////////////
 GLC_Light::GLC_Light(const char *pName ,const GLfloat *pAmbiantColor)
 :GLC_Object(pName)
-, m_LumiereID(GL_LIGHT1)	// Default Light ID
-, m_ListeID(0)				// By default display list ID= 0
-, m_bListeIsValid(false)	// By default display list is not valid
+, m_LightID(GL_LIGHT1)	// Default Light ID
+, m_ListID(0)				// By default display list ID= 0
+, m_ListIsValid(false)	// By default display list is not valid
 {
 	//! \todo modify class to support multi light
 
 	// Color Initialisation
 	if (pAmbiantColor != 0)
 	{
-		m_fColAmbiente[0]= pAmbiantColor[0];
-		m_fColAmbiente[1]= pAmbiantColor[1];
-		m_fColAmbiente[2]= pAmbiantColor[2];
-		m_fColAmbiente[3]= pAmbiantColor[3];
+		m_AmbientColor[0]= pAmbiantColor[0];
+		m_AmbientColor[1]= pAmbiantColor[1];
+		m_AmbientColor[2]= pAmbiantColor[2];
+		m_AmbientColor[3]= pAmbiantColor[3];
 	}
 	else
 	{	// By default light's color is dark grey
-		m_fColAmbiente[0]= 0.2f;
-		m_fColAmbiente[1]= 0.2f;
-		m_fColAmbiente[2]= 0.2f;
-		m_fColAmbiente[3]= 1.0f;
+		m_AmbientColor[0]= 0.2f;
+		m_AmbientColor[1]= 0.2f;
+		m_AmbientColor[2]= 0.2f;
+		m_AmbientColor[3]= 1.0f;
 	}
 	// Other are white
 	// Diffuse Color
-	m_fColDiffuse[0]= 1.0f;
-	m_fColDiffuse[1]= 1.0f;
-	m_fColDiffuse[2]= 1.0f;
-	m_fColDiffuse[3]= 1.0f;
+	m_DiffuseColor[0]= 1.0f;
+	m_DiffuseColor[1]= 1.0f;
+	m_DiffuseColor[2]= 1.0f;
+	m_DiffuseColor[3]= 1.0f;
 
 	// Specular Color
-	m_fColSpeculaire[0]= 1.0f;
-	m_fColSpeculaire[1]= 1.0f;
-	m_fColSpeculaire[2]= 1.0f;
-	m_fColSpeculaire[3]= 1.0f;
+	m_SpecularColor[0]= 1.0f;
+	m_SpecularColor[1]= 1.0f;
+	m_SpecularColor[2]= 1.0f;
+	m_SpecularColor[3]= 1.0f;
 
 	// Color position
-	m_fPos[0]= 0.0f;
-	m_fPos[1]= 0.0f;
-	m_fPos[2]= 0.0f;
-	m_fPos[3]= 1.0f;
+	m_Position[0]= 0.0f;
+	m_Position[1]= 0.0f;
+	m_Position[2]= 0.0f;
+	m_Position[3]= 1.0f;
 }
 
 GLC_Light::~GLC_Light(void)
 {
-	DeleteListe();
+	DeleteList();
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -83,57 +83,57 @@ GLC_Light::~GLC_Light(void)
 //////////////////////////////////////////////////////////////////////
 
 // Set the lihgt position by a 4D vector
-void GLC_Light::SetPos(const GLC_Vector4d &VectPos)
+void GLC_Light::SetPosition(const GLC_Vector4d &VectPos)
 {
-	m_fPos[0]= static_cast<GLfloat>(VectPos.GetX());
-	m_fPos[1]= static_cast<GLfloat>(VectPos.GetY());
-	m_fPos[2]= static_cast<GLfloat>(VectPos.GetZ());
-	m_fPos[3]= static_cast<GLfloat>(VectPos.GetW());
+	m_Position[0]= static_cast<GLfloat>(VectPos.GetX());
+	m_Position[1]= static_cast<GLfloat>(VectPos.GetY());
+	m_Position[2]= static_cast<GLfloat>(VectPos.GetZ());
+	m_Position[3]= static_cast<GLfloat>(VectPos.GetW());
 
-	m_bListeIsValid = false;
+	m_ListIsValid = false;
 }
 
 // Set the lihgt position by a 3 GLfloat
-void GLC_Light::SetPos(GLfloat x, GLfloat y, GLfloat z)
+void GLC_Light::SetPosition(GLfloat x, GLfloat y, GLfloat z)
 {
-	m_fPos[0]= x;
-	m_fPos[1]= y;
-	m_fPos[2]= z;
+	m_Position[0]= x;
+	m_Position[1]= y;
+	m_Position[2]= z;
 
-	m_bListeIsValid = false;
+	m_ListIsValid = false;
 }
 
 // Set light's ambiant color by an array of GLfloat
-void GLC_Light::SetColAmbiante(const GLfloat* pfCol)
+void GLC_Light::SetAmbientColor(const GLfloat* pfCol)
 {
-	m_fColAmbiente[0]= pfCol[0];
-	m_fColAmbiente[1]= pfCol[1];
-	m_fColAmbiente[2]= pfCol[2];
-	m_fColAmbiente[3]= pfCol[3];
+	m_AmbientColor[0]= pfCol[0];
+	m_AmbientColor[1]= pfCol[1];
+	m_AmbientColor[2]= pfCol[2];
+	m_AmbientColor[3]= pfCol[3];
 
-	m_bListeIsValid = false;
+	m_ListIsValid = false;
 }
 
 // Set light's diffuse color by an array of GLfloat
-void GLC_Light::SetColDiffuse(const GLfloat* pfCol)
+void GLC_Light::SetDiffuseColor(const GLfloat* pfCol)
 {
-	m_fColDiffuse[0]= pfCol[0];
-	m_fColDiffuse[1]= pfCol[1];
-	m_fColDiffuse[2]= pfCol[2];
-	m_fColDiffuse[3]= pfCol[3];
+	m_DiffuseColor[0]= pfCol[0];
+	m_DiffuseColor[1]= pfCol[1];
+	m_DiffuseColor[2]= pfCol[2];
+	m_DiffuseColor[3]= pfCol[3];
 
-	m_bListeIsValid = false;
+	m_ListIsValid = false;
 }
 
 // Set light's specular color by an array of GLfloat
-void GLC_Light::SetColSpeculaire(const GLfloat* pfCol)
+void GLC_Light::SetSpecularColor(const GLfloat* pfCol)
 {
-	m_fColSpeculaire[0]= pfCol[0];
-	m_fColSpeculaire[1]= pfCol[1];
-	m_fColSpeculaire[2]= pfCol[2];
-	m_fColSpeculaire[3]= pfCol[3];
+	m_SpecularColor[0]= pfCol[0];
+	m_SpecularColor[1]= pfCol[1];
+	m_SpecularColor[2]= pfCol[2];
+	m_SpecularColor[3]= pfCol[3];
 
-	m_bListeIsValid = false;
+	m_ListIsValid = false;
 }
 
 
@@ -142,13 +142,13 @@ void GLC_Light::SetColSpeculaire(const GLfloat* pfCol)
 //////////////////////////////////////////////////////////////////////
 
 // Create light's OpenGL list
-bool GLC_Light::CreationListe(GLenum Mode)
+bool GLC_Light::CreationList(GLenum Mode)
 {
-	if(!m_ListeID)		// OpenGL list not created
+	if(!m_ListID)		// OpenGL list not created
 	{
-		m_ListeID= glGenLists(1);
+		m_ListID= glGenLists(1);
 
-		if (!m_ListeID)	// OpenGL List Id not get
+		if (!m_ListID)	// OpenGL List Id not get
 		{
 			GlDraw();
 			qDebug("GLC_Lumiere::CreationListe Display list not create");
@@ -156,7 +156,7 @@ bool GLC_Light::CreationListe(GLenum Mode)
 		}
 	}
 	// OpenGL list creation and execution
-	glNewList(m_ListeID, Mode);
+	glNewList(m_ListID, Mode);
 				
 	// Light execution
 	GlDraw();
@@ -164,7 +164,7 @@ bool GLC_Light::CreationListe(GLenum Mode)
 	glEndList();
 	
 	// Indicateur de la validité de la liste
-	m_bListeIsValid= true;
+	m_ListIsValid= true;
 	
 	//! \todo add error handler
 	return true;	// OpenGL list created
@@ -177,15 +177,15 @@ bool GLC_Light::GlExecute(GLenum Mode)
 	glLoadName(GetID());
 
 
-	if (!m_bListeIsValid)
+	if (!m_ListIsValid)
 	{
 		// OpenGL list is not valid
 
-		CreationListe(Mode);
+		CreationList(Mode);
 	}
 	else
 	{
-		glCallList(m_ListeID);
+		glCallList(m_ListID);
 	}
 
 	//! \todo Add error handler here
@@ -196,9 +196,9 @@ bool GLC_Light::GlExecute(GLenum Mode)
 void GLC_Light::GlDraw(void)
 {
 	// Color
-	glLightfv(m_LumiereID, GL_AMBIENT, m_fColAmbiente);		// Setup The Ambient Light
-	glLightfv(m_LumiereID, GL_DIFFUSE, m_fColDiffuse);		// Setup The Diffuse Light
-	glLightfv(m_LumiereID, GL_SPECULAR, m_fColSpeculaire);	// Setup The specular Light
+	glLightfv(m_LightID, GL_AMBIENT, m_AmbientColor);		// Setup The Ambient Light
+	glLightfv(m_LightID, GL_DIFFUSE, m_DiffuseColor);		// Setup The Diffuse Light
+	glLightfv(m_LightID, GL_SPECULAR, m_SpecularColor);	// Setup The specular Light
 	// Position
-	glLightfv(m_LumiereID, GL_POSITION, m_fPos);	// Position The Light
+	glLightfv(m_LightID, GL_POSITION, m_Position);	// Position The Light
 }
