@@ -39,6 +39,9 @@ VectEye(0,0,1), VectUp(0,1,0)
 {
 	
 }
+/////////////////////////////////////////////////////////////////////
+// Get Functions
+/////////////////////////////////////////////////////////////////////
 
 GLC_Camera::GLC_Camera(const GLC_Vector4d &Eye, const GLC_Vector4d &Target, const GLC_Vector4d &Up
 					   , const char *pName)
@@ -54,17 +57,6 @@ GLC_Camera::GLC_Camera(const GLC_Vector4d &Eye, const GLC_Vector4d &Target, cons
 		VectEye.SetVect(0,0,1);
 		VectUp.SetVect(0,1,0);
 	}
-}
-
-//////////////////////////////////////////////////////////////////////
-// OpenGL Functions
-//////////////////////////////////////////////////////////////////////
-bool GLC_Camera::GlExecute(GLenum Mode)
-{
-	gluLookAt(VectEye.GetX(), VectEye.GetY(), VectEye.GetZ(),
-		VectTarget.GetX(), VectTarget.GetY(), VectTarget.GetZ(),
-		VectUp.GetX(), VectUp.GetY(), VectUp.GetZ());
-	return true;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -246,6 +238,34 @@ bool GLC_Camera::SetCam(GLC_Vector4d Eye, GLC_Vector4d Target, GLC_Vector4d Up)
 	}
 }
 
+
+double GLC_Camera::GetDistEyeTarget(void) const
+{
+	return (VectEye - VectTarget).GetNorme();
+}
+
+void GLC_Camera::SetDistEyeTarget(double Longueur)
+{
+    GLC_Vector4d VectCam(VectEye - VectTarget);
+    VectCam.SetNormal(Longueur);
+    VectEye= VectCam + VectTarget;
+}
+
+//////////////////////////////////////////////////////////////////////
+// OpenGL Functions
+//////////////////////////////////////////////////////////////////////
+bool GLC_Camera::GlExecute(GLenum Mode)
+{
+	gluLookAt(VectEye.GetX(), VectEye.GetY(), VectEye.GetZ(),
+		VectTarget.GetX(), VectTarget.GetY(), VectTarget.GetZ(),
+		VectUp.GetX(), VectUp.GetY(), VectUp.GetZ());
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////
+// Private services Functions
+//////////////////////////////////////////////////////////////////////
+
 void GLC_Camera::CreateMatComp(void)
 {
 	// Calcule de la matrice de rotation entre VectZ et VectCam
@@ -293,15 +313,4 @@ void GLC_Camera::CreateMatComp(void)
 	MatCompOrbit= MatInt * MatCompOrbit;	
 }
 
-double GLC_Camera::GetDistEyeTarget(void) const
-{
-	return (VectEye - VectTarget).GetNorme();
-}
-
-void GLC_Camera::SetDistEyeTarget(double Longueur)
-{
-    GLC_Vector4d VectCam(VectEye - VectTarget);
-    VectCam.SetNormal(Longueur);
-    VectEye= VectCam + VectTarget;
-}
 
