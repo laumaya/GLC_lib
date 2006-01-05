@@ -41,7 +41,8 @@ class GLC_Light :
 	public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
-// Constructor Destructor
+/*! @name Constructor / Destructor */
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct an GLC_Light
@@ -50,96 +51,106 @@ public:
 	
 	//! Delete OpenGL list
 	virtual ~GLC_Light(void);
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Fonctions Get
+/*! \name Get Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get a 4D Vector representing light position
-	GLC_Vector4d GetPos(void) const
+	GLC_Vector4d GetPosition(void) const
 	{
-		GLC_Vector4d ReturnVect(m_fPos[0], m_fPos[1], m_fPos[2], m_fPos[3]);
+		GLC_Vector4d ReturnVect(m_Position[0], m_Position[1], m_Position[2], m_Position[3]);
 		return ReturnVect;
 	}
 
 	//! Get an array of GLfloat for the light's ambiant color
-	const GLfloat *GetColAmbiante()
+	const GLfloat *GetAmbientColor()
 	{
-		return m_fColAmbiente;
+		return m_AmbientColor;
 	}
 
 	//! Get an array of GLfloat for the light's Diffuse color
-	const GLfloat *GetColDiffuse()
+	const GLfloat *GetDiffuseColor()
 	{
-		return m_fColDiffuse;
+		return m_DiffuseColor;
 	}
 	//! Get an array of GLfloat for the light's Specular color
-	const GLfloat *GetSpeculaire()
+	const GLfloat *GetSpecularColor()
 	{
-		return m_fColSpeculaire;
+		return m_SpecularColor;
 	}
+//@}
 
-/////////////////////////////////////////////////////////////////////
-// Set Functions
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set lihgt's position by a 4D vector
-	void SetPos(const GLC_Vector4d &VectPos);
+	void SetPosition(const GLC_Vector4d &VectPos);
 
 	//! Set lihgt's position by a 3 GLfloat
-	void SetPos(GLfloat x, GLfloat y, GLfloat z);
+	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
 	
 	//! Set light's ambiant color by an array of GLfloat
-	void SetColAmbiante(const GLfloat* pfCol);
+	void SetAmbientColor(const GLfloat* pfCol);
 
 	//! Set light's diffuse color by an array of GLfloat
-	void SetColDiffuse(const GLfloat* pfCol);
+	void SetDiffuseColor(const GLfloat* pfCol);
 
 	//! Set light's specular color by an array of GLfloat
-	void SetColSpeculaire(const GLfloat* pfCol);
+	void SetSpecularColor(const GLfloat* pfCol);
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// OpenGL Functions
+/*! \name OpenGL Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Enable the light
 	void GlEnable(void)
 	{
-		glEnable(m_LumiereID);
+		glEnable(m_LightID);
 	}
 	
 	// Disable the light
 	void GlDisable(void)
 	{
-		glDisable(m_LumiereID);
+		glDisable(m_LightID);
 	}
 
 	//! Execute OpenGL light
 	virtual bool GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name OpenGL Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
 
 private:
 	//! OpenGL light set up 
 	void GlDraw(void);
 	
 	//! Display List creation
-	bool CreationListe(GLenum Mode);
+	bool CreationList(GLenum Mode);
 
-
-//////////////////////////////////////////////////////////////////////
-// Private services functions
-//////////////////////////////////////////////////////////////////////
 private:
 
 	//! Delete OpenGL Display list
-	void DeleteListe(void)
+	void DeleteList(void)
 	{
 		//! if the list is valid, the list is deleted
-		if (glIsList(m_ListeID))
+		if (glIsList(m_ListID))
 		{
-			glDeleteLists(m_ListeID, 1);
+			glDeleteLists(m_ListID, 1);
 		}
 		//! \todo Add error handler
 	}
+	
+//@}
 
 //////////////////////////////////////////////////////////////////////
 // Private Members
@@ -147,23 +158,23 @@ private:
 
 private:
 	//! OpenGL light ID
-	GLenum m_LumiereID;
+	GLenum m_LightID;
 
 	//! OpenGL Display list ID
-	GLuint m_ListeID;
+	GLuint m_ListID;
 
 	//! OpenGL list validity
-	bool m_bListeIsValid;
+	bool m_ListIsValid;
 
 	//! Light ambiant color
-	GLfloat m_fColAmbiente[4];
+	GLfloat m_AmbientColor[4];
 	//! Light diffuse color
-	GLfloat m_fColDiffuse[4];
+	GLfloat m_DiffuseColor[4];
 	//! Light specular color
-	GLfloat m_fColSpeculaire[4];
+	GLfloat m_SpecularColor[4];
 	
 	//! Light position
-	GLfloat m_fPos[4];
+	GLfloat m_Position[4];
 
 };
 #endif //GLC_LIGHT_H_
