@@ -32,7 +32,7 @@
 //////////////////////////////////////////////////////////////////////
 GLC_Geometry::GLC_Geometry(const char *pName, const GLfloat *pColor)
 :GLC_Object(pName)
-, m_ListeID(0)				// By default Display List = 0
+, m_ListID(0)				// By default Display List = 0
 , m_ListIsValid(false)	// By default Display List is invalid
 , m_GeometryIsValid(false)		// By default geometry is invalid
 , m_pMaterial(NULL)			// By default No material
@@ -133,11 +133,11 @@ void GLC_Geometry::DelMaterial(GLC_Geometry* pGeom)
 // Create and execute Geometry's display list
 bool GLC_Geometry::CreateList(GLenum Mode)
 {
-	if(!m_ListeID)		// The list doesn't exist
+	if(!m_ListID)		// The list doesn't exist
 	{
-		m_ListeID= glGenLists(1);
+		m_ListID= glGenLists(1);
 
-		if (!m_ListeID)	// List ID not obtain
+		if (!m_ListID)	// List ID not obtain
 		{
 			GlDraw();
 			qDebug("GLC_Geometrie::ERREUR Liste d'affichage NON créé");
@@ -145,7 +145,7 @@ bool GLC_Geometry::CreateList(GLenum Mode)
 		}
 	}
 	// List setting up
-	glNewList(m_ListeID, Mode);
+	glNewList(m_ListID, Mode);
 				
 		// Geometrie set up and display
 		GlDraw();	// Virtual function defined in concrete class
@@ -184,7 +184,7 @@ bool GLC_Geometry::GlExecute(GLenum Mode)
 		}
 		else
 		{
-			glCallList(m_ListeID);
+			glCallList(m_ListID);
 		}
 
 		// To avoid Blending issue

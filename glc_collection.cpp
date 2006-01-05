@@ -386,7 +386,7 @@ bool GLC_Collection::CreationListe(void)
 	// Validité de la liste
 	m_bListeIsValid= true;
 
-	//qDebug("GLC_Collection::CreateList : Liste d'affichage %u créé", m_ListeID);	
+	//qDebug("GLC_Collection::CreateList : Liste d'affichage %u créé", m_ListID);	
 
 	// Gestion erreur OpenGL
 	GLenum errCode;
