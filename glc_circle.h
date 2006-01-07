@@ -41,21 +41,25 @@
 class GLC_Circle : public GLC_Geometry  
 {
 //////////////////////////////////////////////////////////////////////
-// Constructor Destructor
+/*! @name Constructor / Destructor */
+//@{
 //////////////////////////////////////////////////////////////////////
 public:	
 
 	//! Construct an GLC_Circle
 	/*! By default, discretion is set to #GLC_DISCRET*/
-	GLC_Circle(const double &dRayon, const char *pName= "Circle",
+	GLC_Circle(const double &dRadius, const char *pName= "Circle",
 		const GLfloat *pColor= 0, double Angle= 2 * PI);
 
 	//! Destructor
 	/*! \todo Check if this destructor is necessary*/
 	virtual ~GLC_Circle();	// Delete display list
 
+//@}
+
 //////////////////////////////////////////////////////////////////////
-// Get Functions
+/*! \name Get Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	
@@ -65,36 +69,41 @@ public:
 		return m_nDiscret;
 	}
 	//! Return Circle radius
-	double GetRayon(void) const
+	double GetRadius(void) const
 	{
-		return m_dRayon;
+		return m_Radius;
 	}
 	//! return Circle diameter
-	double GetDiametre(void) const
+	double GetDiameter(void) const
 	{
-		return 2 * m_dRayon;
+		return 2 * m_Radius;
 	}
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Set  Functions
+/*! \name Set Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set Circle diameter
-	bool SetDiametre(double D)
+	bool SetDiameter(double D)
 	{
-		return !!(SetRayon(D / 2));
+		return !!(SetRadius(D / 2));
 	}
 	//! Set Circle Radius
-	bool SetRayon(double R);
+	bool SetRadius(double R);
 	
 	//! Set Circle discret
 	void SetDiscretion(int TargetDiscret);
 	
 	//! Set Circle Angle
 	bool SetAngle(double AngleRadians);	// Angle in Radians
+	
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// OpenGL Function
+/*! \name OpenGL Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 private:	
 
@@ -106,13 +115,15 @@ private:
 	/*! This Virtual function is implemented here.*/
 	virtual void GlPropGeom(void);
 
+//@}
+
 //////////////////////////////////////////////////////////////////////
 // private members
 //////////////////////////////////////////////////////////////////////
 private:
 
 	//! Circle Radius
-	double m_dRayon;
+	double m_Radius;
 	//! Circle Discretion
 	int m_nDiscret;
 

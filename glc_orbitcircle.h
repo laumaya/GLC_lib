@@ -62,15 +62,15 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Reimplented SetRayon Function
-	bool SetRayon(double R)
+	//! Reimplented SetRadius Function
+	bool SetRadius(double R)
 	{
 		bool Result;
 		
-		Result= GLC_Circle::SetRayon(R);	// Rayon de la classe de base		
+		Result= GLC_Circle::SetRadius(R);	// Rayon de la classe de base		
 
-		m_Arc1.SetRayon(R);
-		m_Arc2.SetRayon(R);
+		m_Arc1.SetRadius(R);
+		m_Arc2.SetRadius(R);
 		return Result;
 	}
 
