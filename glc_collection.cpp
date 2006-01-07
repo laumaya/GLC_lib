@@ -34,8 +34,8 @@
 //////////////////////////////////////////////////////////////////////
 
 GLC_Collection::GLC_Collection()
-: m_ListeID(0)
-, m_bListeIsValid(false)
+: m_ListID(0)
+, m_ListIsValid(false)
 {
 }
 
@@ -56,11 +56,11 @@ bool GLC_Collection::AddGLC_Geom(GLC_Geometry* pGeom)
 		// Ajoute la géométrie
 		m_TheMap[pGeom->GetID()]= pGeom;
 		// Ajoute la sous liste
-		m_ListeMap[pGeom->GetID()] = 0;
+		m_ListMap[pGeom->GetID()] = 0;
 		//TRACE("GLC_Collection::AddGLC_Geom : Element Ajouté avec succès\n");
 		
 		// Validité de la liste
-		m_bListeIsValid= false;
+		m_ListIsValid= false;
 		return true;
 		
 	}
@@ -83,17 +83,17 @@ bool GLC_Collection::DelGLC_Geom(GLC_uint Key)
 		delete iGeom.value();		// Supprime la géométrie
 		m_TheMap.remove(Key);		// Supprime le conteneur
 		// Recherche la liste
-		CListeMap::iterator iListe= m_ListeMap.find(Key);
+		CListeMap::iterator iListe= m_ListMap.find(Key);
 		// \todo Vérifier que la liste d'affichage est trouvée
 		if (!!iListe.value())
 		{
 			glDeleteLists(iListe.value(),1);
 			//qDebug("GLC_Collection::DelGLC_Geom : Sous liste %u Supprimée\n", RemListe);
 		}
-		m_ListeMap.remove(Key);		// Supprime le conteneur
+		m_ListMap.remove(Key);		// Supprime le conteneur
 			
 		// Validité de la liste
-		m_bListeIsValid= false;
+		m_ListIsValid= false;
 		
 		//qDebug("GLC_Collection::DelGLC_Geom : Element succesfuly deleted);
 		return true;
@@ -117,17 +117,17 @@ bool GLC_Collection::RemGLC_Geom(GLC_uint Key)
 		// On ne Supprime pas la géométrie
 		m_TheMap.remove(Key);		// Supprime le conteneur
 		// Recherche la liste
-		CListeMap::iterator iListe= m_ListeMap.find(Key);
+		CListeMap::iterator iListe= m_ListMap.find(Key);
 		// TODO Vérifier que la liste d'affichage est trouvée
 		if (!!iListe.value())
 		{
 			glDeleteLists(iListe.value(),1);
 			//qDebug("GLC_Collection::RemGLC_Geom : Sous liste %u Supprimée", RemListe);
 		}
-		m_ListeMap.remove(Key);		// Supprime le conteneur
+		m_ListMap.remove(Key);		// Supprime le conteneur
 			
 		// Validité de la liste
-		m_bListeIsValid= false;
+		m_ListIsValid= false;
 		
 		//qDebug("GLC_Collection::RemGLC_Geom : Element Supprimé avec succès");
 		return true;
@@ -160,19 +160,19 @@ void GLC_Collection::Erase(void)
 	// Fin de la Suppression des géométries
 
 	// Suppression des sous listes d'affichages
-	CListeMap::iterator iListEntry= m_ListeMap.begin();
+	CListeMap::iterator iListEntry= m_ListMap.begin();
 	
-    while (iListEntry != m_ListeMap.constEnd())
+    while (iListEntry != m_ListMap.constEnd())
     {
         // Supprime l'objet
         if (!!iListEntry.value()) glDeleteLists(iListEntry.value(), 1);
         ++iListEntry;
     }
     // Vide la table de hachage de liste
-    m_ListeMap.clear();
+    m_ListMap.clear();
 
 	// Supprime la liste d'affichage
-	DeleteListe();
+	DeleteList();
 	// Fin des Suppressions des sous listes d'affichages
 
 }
@@ -199,23 +199,23 @@ void GLC_Collection::GlExecute(void)
 {
 	if (GetNumber() > 0)
 	{
-		CreateMemberList();		// Si nécessaire
+		CreateMemberLists();		// Si nécessaire
 
-		CreateSousList();		// Si nécessaire
+		CreateSubLists();		// Si nécessaire
 
-		if (m_bListeIsValid)
+		if (m_ListIsValid)
 		{	// La liste de la collection OK
-			glCallList(m_ListeID);
+			glCallList(m_ListID);
 		}
 		else
 		{
 			if(MemberIsUpToDate())
 			{
-				CreationListe();
+				CreateList();
 			}
 			else
 			{
-				m_bListeIsValid= false;
+				m_ListIsValid= false;
 				qDebug("GLC_Collection::DrawGl : CreatMemberList KO -> Affichage éléments\n");
 			}
 		}
@@ -234,9 +234,9 @@ void GLC_Collection::GlExecute(void)
 // Affiche les éléments de la collection
 void GLC_Collection::GlDraw(void)
 {
-	CListeMap::iterator iEntry= m_ListeMap.begin();
+	CListeMap::iterator iEntry= m_ListMap.begin();
 	
-    while (iEntry != m_ListeMap.constEnd())
+    while (iEntry != m_ListMap.constEnd())
     {
         glCallList(iEntry.value());
         ++iEntry;
@@ -255,7 +255,7 @@ void GLC_Collection::GlDraw(void)
 }
 
 // Création des listes d'affichages des membres
-void GLC_Collection::CreateMemberList(void)
+void GLC_Collection::CreateMemberLists(void)
 {
 	CGeomMap::iterator iEntry= m_TheMap.begin();
 	
@@ -277,7 +277,7 @@ void GLC_Collection::CreateMemberList(void)
 
 }
 // Création des sous listes d'affichages
-void GLC_Collection::CreateSousList(void)
+void GLC_Collection::CreateSubLists(void)
 {
 	CGeomMap::iterator iEntry= m_TheMap.begin();
 	CListeMap::iterator iListEntry;
@@ -287,18 +287,18 @@ void GLC_Collection::CreateSousList(void)
     {
     	if(!iEntry.value()->GetValidity())
     	{
-    		iListEntry= m_ListeMap.find(iEntry.key());
-    		if(iListEntry != m_ListeMap.constEnd())
+    		iListEntry= m_ListMap.find(iEntry.key());
+    		if(iListEntry != m_ListMap.constEnd())
     		{	// Numéro non généré
     			ListeID= glGenLists(1);
-    			m_ListeMap[iEntry.key()]= ListeID;
-    			m_bListeIsValid= false;
+    			m_ListMap[iEntry.key()]= ListeID;
+    			m_ListIsValid= false;
     		}
     		// Création de la liste
     		glNewList(ListeID, GL_COMPILE);
     			iEntry.value()->GlExecute(GL_COMPILE);
     		glEndList();
-    		//qDebug("GLC_Collection::CreateSousList : Liste d'affichage %u créé", ListeID);
+    		//qDebug("GLC_Collection::CreateSubLists : Liste d'affichage %u créé", ListeID);
      	}
     	// Passe au Suivant
     	iEntry++;
@@ -362,14 +362,14 @@ bool GLC_Collection::MemberIsUpToDate(void)
 }
 
 // Création de la liste d'affichage de la collection
-bool GLC_Collection::CreationListe(void)
+bool GLC_Collection::CreateList(void)
 {
 	
-	if(!m_ListeID)		// La liste n'a jamais été créé
+	if(!m_ListID)		// La liste n'a jamais été créé
 	{
-		m_ListeID= glGenLists(1);
+		m_ListID= glGenLists(1);
 
-		if (!m_ListeID)	// ID de liste non obtenu
+		if (!m_ListID)	// ID de liste non obtenu
 		{
 			GlDraw();
 			//qDebug("GLC_Collection::CreateList : ERREUR Liste d'affichage NON créé");
@@ -378,13 +378,13 @@ bool GLC_Collection::CreationListe(void)
 	}
 
 	// Création de la liste
-	glNewList(m_ListeID, GL_COMPILE_AND_EXECUTE);				
+	glNewList(m_ListID, GL_COMPILE_AND_EXECUTE);				
 		// Affichage des éléments de la collection
 		GlDraw();
 	glEndList();
 	
 	// Validité de la liste
-	m_bListeIsValid= true;
+	m_ListIsValid= true;
 
 	//qDebug("GLC_Collection::CreateList : Liste d'affichage %u créé", m_ListID);	
 
