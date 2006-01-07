@@ -61,7 +61,8 @@ class GLC_Viewport
 {
 
 //////////////////////////////////////////////////////////////////////
-// Constructor Destructor
+/*! @name Constructor / Destructor */
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
@@ -77,10 +78,12 @@ public:
 	
 	//! Delete Camera, Image Plane and Orbit circle
 	virtual ~GLC_Viewport();
-
+	
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Get Functions
+/*! \name Get Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get The viewport Horizontal size
@@ -116,9 +119,11 @@ public:
 		return m_dCamDistMax;
 	}
 
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Public OpenGL Functions
+/*! \name OpenGL Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:	
 	//! Load camera's transformation Matrix and if image plane exist, display it
@@ -136,10 +141,12 @@ public:
 	
 	//! Define camera's target position
 	void GlPointing(GLint x, GLint y);
+//@}
 	
 //////////////////////////////////////////////////////////////////////
-// private OpenGL Functions
-//////////////////////////////////////////////////////////////////////	
+/*! \name OpenGL Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
 private:
 	//! Display orbit circle
 	void GlExecuteOrbitCircle();
@@ -150,9 +157,12 @@ private:
 	//! display image plane
 	void GLExecuteImagePlane();
 
-/////////////////////////////////////////////////////////////////////
-// Set Functions
-/////////////////////////////////////////////////////////////////////
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
 public:
 
 	//! Inform the viewport that the OpenGL Viewport has been modified
@@ -163,10 +173,28 @@ public:
 	GLC_uint Select(QGLWidget *pGLWidget, int x, int y);
 	
 	//! load background image
-	bool ChargeImagePlane(QGLWidget *GLWidget, const QString Image);
+	bool LoadBackGroundImage(QGLWidget *GLWidget, const QString Image);
 
 	//! delete background image
-	void RemoveImagePlane();
+	void DeleteBackGroundImage();
+
+	//! Set Camera's angle of view
+	void SetFov(double TargetFov)
+	{
+		m_dFov= TargetFov;
+
+		UpdateProjectionMat();	// Mise à jour de la matrice de projection opengl
+		
+		UpdateOrbitCircle();	// Mise à jour du diamètre du cercle de la sphere de rotation
+	}
+
+	//! Set near clipping distance
+	bool SetDistMin(double DistMin);
+
+	//! Set far clipping distance
+	bool SetDistMax(double DistMax);
+	
+//@}
 
 /////////////////////////////////////////////////////////////////////	
 //! @name  Panning Functions
@@ -178,7 +206,7 @@ public:
 	void  PreparePanning(double Cx, double Cy)
 	{
 		m_VectPrevPan.SetVect(MapPosMouse(Cx,Cy));
-		m_bAfficheTargetCam= true;
+		m_CameraTargetIsVisible= true;
 	}
 	//! Pan to the position (Cx, Cy)
 	void Pan(double Cx, double Cy);
@@ -186,7 +214,7 @@ public:
 	//! Hide Camera'target
 	void EndPanning()
 	{
-		m_bAfficheTargetCam= false;
+		m_CameraTargetIsVisible= false;
 	}
 //@} End of panning functions
 /////////////////////////////////////////////////////////////////////
@@ -207,8 +235,8 @@ public:
 	//! Hide camera's target and orbit circle
 	void EndOrbit()
 	{
-		m_bAfficheOrbitCircle= false;
-		m_bAfficheTargetCam= false;
+		m_OrbitCircleIsVisible= false;
+		m_CameraTargetIsVisible= false;
 	}
 //@} End of orbit functions
 /////////////////////////////////////////////////////////////////////
@@ -228,27 +256,10 @@ public:
 	//! Hide Camera's target
 	void EndZooming()
 	{
-		m_bAfficheTargetCam= false;
+		m_CameraTargetIsVisible= false;
 	}
 //@} End Zooming functions
 /////////////////////////////////////////////////////////////////////
-
-	//! Set Camera's angle of view
-	void SetFov(double TargetFov)
-	{
-		m_dFov= TargetFov;
-
-		UpdateProjectionMat();	// Mise à jour de la matrice de projection opengl
-		
-		UpdateOrbitCircle();	// Mise à jour du diamètre du cercle de la sphere de rotation
-	}
-
-
-	//! Set near clipping distance
-	bool SetDistMin(double DistMin);
-
-	//! Set far clipping distance
-	bool SetDistMax(double DistMax);
 
 
 //////////////////////////////////////////////////////////////////////
@@ -283,15 +294,15 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	GLdouble m_dCamDistMax;		//!< Camera Maximum distance
-	GLdouble m_dCamDistMin;		//!< Camera Minimum distance
+	GLdouble m_dCamDistMax;		//!< Camera Maximum distance (far clipping plane)
+	GLdouble m_dCamDistMin;		//!< Camera Minimum distance (near clipping plane)
 	GLdouble m_dFov;			//!< Camera angle of view
 	
 	//! Image plane (Background image)
 	GLC_ImagePlane* m_pImagePlane;
 
 	//! Show state of camera's target
-	bool m_bAfficheTargetCam;
+	bool m_CameraTargetIsVisible;
 
 
 	// OpenGL View Definition
@@ -308,7 +319,7 @@ private:
 	double m_dRatWinSph;
 	
 	//! Show state of orbit Circle
-	bool m_bAfficheOrbitCircle;
+	bool m_OrbitCircleIsVisible;
 
 	//! Panning Vector
 	GLC_Vector4d m_VectPrevPan;
