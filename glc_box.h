@@ -43,16 +43,19 @@
 class GLC_Box : public GLC_Geometry  
 {
 //////////////////////////////////////////////////////////////////////
-// Constructor Destructor
+/*! @name Constructor */
+//@{
 //////////////////////////////////////////////////////////////////////
 public:	
 	//! Construct an GLC_Box
 	/*! By default, discretion is set to #GLC_POLYDISCRET*/
 	GLC_Box(double dLongueur, double dLargeur, double dHauteur
 		, const char *pName= "Cuboid", const GLfloat *pColor= 0);
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Get Functions
+/*! \name Get Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get X length
@@ -73,14 +76,17 @@ public:
 		return m_dLgZ;
 	}
 
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Set Functions
+/*! \name Set Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 
-// Fonction modifiant la liste d'affichage
+// Display List modifying functions
 	//! Set X length
+	/*! This Function invalid OpenGL display list*/
 	void SetLgX(double LgX)
 	{
 		 m_dLgX= LgX;
@@ -88,6 +94,7 @@ public:
 	}
 
 	//! Set Y length
+	/*! This Function invalid OpenGL display list*/
 	void SetLgY(double LgY)
 	{
 		 m_dLgY= LgY;
@@ -95,25 +102,29 @@ public:
 	}
 
 	//! Set Z length
+	/*! This Function invalid OpenGL display list*/
 	void SetLgZ(double LgZ)
 	{
 		 m_dLgZ= LgZ;
 		 m_ListIsValid= false;
 	}
-// Fin des fonctions modifiant la liste d'affichage
+// End of Display List modifying functions
 
-// Fonction modifiant les proprièté géométrique
+// Graphic properties modifying functions
 	
 	//! Set Drawing style of polygons
+	/*! This Function invalid graphic properties*/
 	void SetPolygonMode(GLenum Face, GLenum Mode)
 	{
 		m_PolyFace= Face;
 		m_PolyMode= Mode;
 		m_GeometryIsValid = false;
 	}
+//@}
 
 //////////////////////////////////////////////////////////////////////
-//  OpenGL Functions
+/*! \name OpenGL Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Virtual interface for OpenGL Geometry set up.
@@ -123,6 +134,7 @@ private:
 	//! Virtual interface for OpenGL Geomtry properties.
 	/*! This Virtual function is implemented here.*/
 	virtual void GlPropGeom(void);
+//@}
 
 //////////////////////////////////////////////////////////////////////
 // Private members
