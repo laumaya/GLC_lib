@@ -42,30 +42,34 @@
 class GLC_Cylinder : public GLC_Geometry  
 {
 //////////////////////////////////////////////////////////////////////
-// constructor destructor
+/*! @name Constructor / Destructor */
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 
 	//! Construct an GLC_Cylinder
 	/*! By default, discretion is set to #GLC_POLYDISCRET \n
 	 *  By default, Axis of Cylinder is Z Axis*/
-	GLC_Cylinder(double dRayon, double dLongeur, const char *pName= "Cylinder", const GLfloat *pColor= 0);
+	GLC_Cylinder(double dRadius, double dLength, const char *pName= "Cylinder", const GLfloat *pColor= 0);
+
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Fonctions Get
+/*! \name Get Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 
 	//! Get Lenght of the Cylinder
-	double GetLg(void) const
+	double GetLength(void) const
 	{
-		return m_dLg;
+		return m_dLength;
 	}
 
 	//! Get Radius of cylinder
-	double GetRayon(void) const
+	double GetRadius(void) const
 	{
-		return m_dRayon;
+		return m_Radius;
 	}
 
 	//! Get Cylinder discretion
@@ -73,27 +77,29 @@ public:
 	{
 		return m_nDiscret;
 	}
-
+	
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Set Functions
+/*! \name Set Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 
 // Functions impacting Display List
 
 	//! Set Cylinder length
-	void SetLgAxe(double Lg)
+	void SetLength(double Length)
 	{
-		 m_dLg= Lg;
+		 m_dLength= Length;
 
 		 m_ListIsValid= false;
 	}
 
 	//! Set Cylinder radius
-	void SetRayon(double Rayon)
+	void SetRadius(double Radius)
 	{
-		m_dRayon= Rayon;
+		m_Radius= Radius;
 		
 		m_ListIsValid= false;
 	}
@@ -130,9 +136,12 @@ public:
 		m_PolyMode= Mode;
 		m_GeometryIsValid = false;
 	}
+	
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// OpenGL Functions
+/*! \name OpenGL Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Virtual interface for OpenGL Geometry set up.
@@ -142,6 +151,7 @@ private:
 	//! Virtual interface for OpenGL Geomtry properties.
 	/*! This Virtual function is implemented here.*/
 	virtual void GlPropGeom(void);
+//@}
 
 //////////////////////////////////////////////////////////////////////
 // Private members
@@ -150,10 +160,10 @@ private:
 private:
 
 	//! Cylinder's radius
-	double m_dRayon;
+	double m_Radius;
 
 	//! Cylinder length (Z Axis direction)
-	double m_dLg;
+	double m_dLength;
 
 	//! Cylinder polygon discretisation
 	int m_nDiscret;
