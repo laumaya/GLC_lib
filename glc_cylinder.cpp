@@ -36,13 +36,13 @@
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Cylinder::GLC_Cylinder(double dRayon, double dLongeur, const char *pName
+GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, const char *pName
 						   , const GLfloat *pColor)
 
 
 :GLC_Geometry(pName, pColor)
-, m_dRayon(dRayon)
-, m_dLg(dLongeur)
+, m_Radius(dRadius)
+, m_dLength(dLength)
 , m_nDiscret(GLC_POLYDISCRET)	//GLC_DISCRET
 , m_bCapEnded(true)				// Bouts fermés par défaut	
 , m_PolyFace(GL_FRONT_AND_BACK)	// Style par défaut des faces
@@ -65,8 +65,8 @@ void GLC_Cylinder::GlDraw(void)
 	// Calcul des coordonnées des points du pourtour
 	for (int i= 0; i <= m_nDiscret; i++)
 	{
-		TableauCos.append(m_dRayon * cos(i * (2 * PI) / m_nDiscret));
-		TableauSin.append(m_dRayon * sin(i * (2 * PI) / m_nDiscret));
+		TableauCos.append(m_Radius * cos(i * (2 * PI) / m_nDiscret));
+		TableauSin.append(m_Radius * sin(i * (2 * PI) / m_nDiscret));
 	}
 
 	double Longueur= 0;
@@ -85,18 +85,18 @@ void GLC_Cylinder::GlDraw(void)
 
 			Vect.SetVect(TableauCos[i], TableauSin[i], Longueur );
 
-			glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLg)); 
+			glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLength)); 
 
 			glVertex3dv(Vect.Return_dVect());
 
 			if(!Longueur)
-				Longueur= m_dLg;
+				Longueur= m_dLength;
 			else
 				Longueur= 0;
 
 			Vect.SetVect(TableauCos[i], TableauSin[i], Longueur );
 
-			glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLg)); 
+			glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLength)); 
 
 			glVertex3dv(Vect.Return_dVect());
 
@@ -104,13 +104,13 @@ void GLC_Cylinder::GlDraw(void)
 			{
 				Vect.SetVect(TableauCos[i], TableauSin[i], 0.0).SetNormal(1);
 				glNormal3dv(Vect.Return_dVect());
-				glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLg)); 
+				glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLength)); 
 
 
 				Vect.SetVect(TableauCos[i], TableauSin[i], Longueur );
 				glVertex3dv(Vect.Return_dVect());
-				Longueur= m_dLg;
-				glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLg));
+				Longueur= m_dLength;
+				glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLength));
 				Vect.SetVect(TableauCos[i], TableauSin[i], Longueur );
 				glVertex3dv(Vect.Return_dVect());
 			}
@@ -125,7 +125,7 @@ void GLC_Cylinder::GlDraw(void)
 		// Coordonnées de texture
 		float TextureX= 0.5f;	// Centre
 		float TextureY= 0.5f;	// Centre
-		float fRayon= static_cast<float>(m_dRayon); // Pour éviter trop de conversion de données
+		float fRayon= static_cast<float>(m_Radius); // Pour éviter trop de conversion de données
 
 		glBegin(GL_TRIANGLE_FAN);
 			glTexCoord2f(TextureX, TextureY);
@@ -151,7 +151,7 @@ void GLC_Cylinder::GlDraw(void)
 			glTexCoord2f(TextureX, TextureY);
 			// Normal et fermeture du haut
 			glNormal3d(0.0, 0.0, 1.0);
-			glVertex3d(0.0, 0.0, m_dLg);
+			glVertex3d(0.0, 0.0, m_dLength);
 			for (int i= 0; i <= m_nDiscret; i++)
 			{
 				// Calcul des coordonnées de texture
@@ -159,7 +159,7 @@ void GLC_Cylinder::GlDraw(void)
 				TextureY= (static_cast<float>(TableauSin[i]) + fRayon) / (2 * fRayon);
 				glTexCoord2f(TextureX, TextureY);
 				// coordonnées du vertex
-				Vect.SetVect(TableauCos[i], TableauSin[i], m_dLg );
+				Vect.SetVect(TableauCos[i], TableauSin[i], m_dLength );
 				glVertex3dv(Vect.Return_dVect());
 			}
 		glEnd();
@@ -171,7 +171,7 @@ void GLC_Cylinder::GlDraw(void)
 	// Gestion erreur OpenGL
 	if (glGetError() != GL_NO_ERROR)
 	{
-		qDebug("GLC_Cylinder::GlDraw ERREUR OPENGL\n");
+		qDebug("GLC_Cylinder::GlDraw ERROR OPENGL\n");
 	}
 
 }
@@ -243,7 +243,7 @@ void GLC_Cylinder::GlPropGeom(void)
 		// Gestion erreur OpenGL
 		if (glGetError() != GL_NO_ERROR)
 		{
-			qDebug("GLC_Cylinder::GlPropGeom ERREUR OPENGL\n");
+			qDebug("GLC_Cylinder::GlPropGeom ERROR OPENGL\n");
 		}
 
 }
