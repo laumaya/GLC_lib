@@ -41,7 +41,8 @@
 class GLC_Texture  
 {
 //////////////////////////////////////////////////////////////////////
-// Constructor destructor
+/*! @name Constructor / Destructor */
+//@{
 //////////////////////////////////////////////////////////////////////
 
 public:
@@ -50,18 +51,20 @@ public:
 
 	//! Default Destructor
 	virtual ~GLC_Texture();
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// OpenGL Functions
+/*! \name OpenGL Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:	
 
 	//! Bind texture in 2D mode
 	void GlBindTexture(void)
 	{
-		glBindTexture(GL_TEXTURE_2D, m_nTextureID);
+		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 	}
-
+//@}
 	
 //////////////////////////////////////////////////////////////////////
 // Private members
@@ -69,7 +72,7 @@ public:
 
 private:
 	//! OpenGL Texture ID
-	GLuint	m_nTextureID;
+	GLuint	m_TextureID;
 };
 
 #endif //GLC_TEXTURE_H_
