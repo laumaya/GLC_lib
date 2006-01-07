@@ -42,7 +42,7 @@ GLC_Viewport::GLC_Viewport()
 , m_dCamDistMin(0.01)			// Camera Minimum distance
 , m_dFov(35)					// Camera angle of view
 , m_pImagePlane(NULL)			// Background image
-, m_bAfficheTargetCam(false)	// Show state of camera's target
+, m_CameraTargetIsVisible(false)	// Show state of camera's target
 // OpenGL Window size
 , m_nWinHSize(0)				// Horizontal OpenGL viewport size
 , m_nWinVSize(0)				// Vertical OpenGL viewport size
@@ -51,7 +51,7 @@ GLC_Viewport::GLC_Viewport()
 // Orbit circle definition
 , m_pOrbitCircle(NULL)			// Orbit circle
 , m_dRatWinSph(0.90)			// Circle ratio size / window size
-, m_bAfficheOrbitCircle(false)	// Show state of orbit Circle
+, m_OrbitCircleIsVisible(false)	// Show state of orbit Circle
 {
 	// create a camera
 	m_pViewCam= new GLC_Camera;
@@ -82,12 +82,8 @@ GLC_Viewport::~GLC_Viewport()
 		m_pOrbitCircle= NULL;
 	}
 
-	// delete image plane
-	if (m_pImagePlane != NULL)
-	{
-		delete m_pImagePlane;
-		m_pImagePlane= NULL;
-	}
+	// delete background image
+	DeleteBackGroundImage();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -170,7 +166,7 @@ void GLC_Viewport::GlPointing(GLint x, GLint y)
 // Display Orbit Circle
 void GLC_Viewport::GlExecuteOrbitCircle()
 {
-	if (m_bAfficheOrbitCircle)
+	if (m_OrbitCircleIsVisible)
 	{
 
 		m_pOrbitCircle->GlExecute(m_dCamDistMax - m_dCamDistMin);
@@ -179,7 +175,7 @@ void GLC_Viewport::GlExecuteOrbitCircle()
 // Display Camera's target
 void GLC_Viewport::GlExecuteTargetCam()	//! \todo Create a display list
 {
-	if (m_bAfficheTargetCam)
+	if (m_CameraTargetIsVisible)
 	{
 
 		int nLgAxe;
@@ -329,18 +325,15 @@ GLC_uint GLC_Viewport::Select(QGLWidget *pGLWidget, int x, int y)
 }
 
 // load background image
-bool GLC_Viewport::ChargeImagePlane(QGLWidget *GLWidget, const QString Image)
+bool GLC_Viewport::LoadBackGroundImage(QGLWidget *GLWidget, const QString Image)
 {
-	if (m_pImagePlane != NULL)
-	{
-		delete m_pImagePlane;
-	}
+	DeleteBackGroundImage();
 	m_pImagePlane= new GLC_ImagePlane(this);
-	return m_pImagePlane->ChargeImage(GLWidget, Image);
+	return m_pImagePlane->LoadImageFile(GLWidget, Image);
 }
 
 // delete background image
-void GLC_Viewport::RemoveImagePlane()
+void GLC_Viewport::DeleteBackGroundImage()
 {
 	if (m_pImagePlane != NULL)
 	{
@@ -366,8 +359,8 @@ void GLC_Viewport::Pan(double Cx, double Cy)
 void GLC_Viewport::PrepareOrbiting(double Cx, double Cy)
 {
 	m_VectPrevOrbit.SetVect(MapForOrbit(Cx,Cy));
-	m_bAfficheOrbitCircle= true;
-	m_bAfficheTargetCam= true;
+	m_OrbitCircleIsVisible= true;
+	m_CameraTargetIsVisible= true;
 
 	const double Angle= acos(AxeZ * m_VectPrevOrbit);
 	const GLC_Vector4d AxeRot(AxeZ ^ m_VectPrevOrbit);
@@ -398,7 +391,7 @@ void GLC_Viewport::Orbit(double Cx, double Cy)
 // Prepare Zooming operation
 void GLC_Viewport::PrepareZooming(int Cy)
 {
-	m_bAfficheTargetCam= true;
+	m_CameraTargetIsVisible= true;
 	// Change origine (view center) and cover between -1 and 1
 	m_dPrevZoom= ((double)m_nWinVSize / 2 - Cy) / ( (double)m_nWinVSize / 2);;
 }
