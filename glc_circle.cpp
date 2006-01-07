@@ -32,13 +32,13 @@
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Circle::GLC_Circle(const double &dRayon, const char *pName,
+GLC_Circle::GLC_Circle(const double &dRadius, const char *pName,
 					   const GLfloat *pColor, double Angle)
 
 :GLC_Geometry(pName, pColor)
 {
 	//! \todo remade init
-	m_dRayon= dRayon;
+	m_Radius= dRadius;
 	m_nDiscret= GLC_DISCRET;
 	m_dAngle= Angle;
 }
@@ -52,14 +52,14 @@ GLC_Circle::~GLC_Circle()
 //////////////////////////////////////////////////////////////////////
 
 // Set Circle Radius
-bool GLC_Circle::SetRayon(double R)
+bool GLC_Circle::SetRadius(double R)
 {
 	R = fabs(R);
-	if ( fabs(R - m_dRayon) > EPSILON)
+	if ( fabs(R - m_Radius) > EPSILON)
 	{	// Radius is changing
 		if (R > EPSILON)
 		{
-			m_dRayon= R;
+			m_Radius= R;
 			m_ListIsValid= false;
 			return true;
 		}
@@ -116,8 +116,8 @@ void GLC_Circle::GlDraw(void)
 
 		for (int i= 0; i <= m_nDiscret; i++)
 		{
-			MyCos= m_dRayon * cos(i * m_dAngle / m_nDiscret);
-			MySin= m_dRayon * sin(i * m_dAngle / m_nDiscret);
+			MyCos= m_Radius * cos(i * m_dAngle / m_nDiscret);
+			MySin= m_Radius * sin(i * m_dAngle / m_nDiscret);
 			Vect.SetVect(MyCos, MySin, 0);
 			glVertex3dv(Vect.Return_dVect());
 		}
