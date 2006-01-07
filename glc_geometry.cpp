@@ -101,7 +101,7 @@ void GLC_Geometry::SetMaterial(GLC_Material* pMat)
 
 		m_pMaterial= pMat;
 
-		pMat->GetColDiffuse(m_RGBAColor);
+		pMat->GetDiffuseColor(m_RGBAColor);
 
 		m_GeometryIsValid = false;
 	}
