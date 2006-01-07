@@ -35,7 +35,7 @@
 //! Geometry hash table
 typedef QHash< GLC_uint, GLC_Geometry*> CGeomMap;
 
-//! OpenGL Dsiplay list Hash Table
+//! OpenGL Display list Hash Table
 typedef QHash< GLC_uint, GLuint> CListeMap;
 
 //////////////////////////////////////////////////////////////////////
@@ -52,7 +52,8 @@ class GLC_Collection
 {
 
 //////////////////////////////////////////////////////////////////////
-// Constructor Destructor
+/*! @name Constructor / Destructor */
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
@@ -62,8 +63,11 @@ public:
 	/*! Delete all geometry in the Hash Table and clear the Hash Table*/
 	virtual ~GLC_Collection();
 
+//@}
+
 //////////////////////////////////////////////////////////////////////
-// Get Functions
+/*! \name Get Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 
@@ -72,10 +76,16 @@ public:
 	{
 		return m_TheMap.size();
 	}
+	
+	//! return a pointer to an GLC_Geometry from collection
+	/*! If the element is not found in collection a NULL pointer is returned*/
+	GLC_Geometry* GetElement(GLC_uint Key);
 
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Set Functions
+/*! \name Set Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 
@@ -105,27 +115,34 @@ public:
 	//! Remove and delete all GLC_Geometry from the collection
 	void Erase(void);
 
-	//! return a pointer to an GLC_Geometry from collection
-	/*! If the element is not found in collection a NULL pointer is returned*/
-	GLC_Geometry* GetElement(GLC_uint Key);
-
+//@}
 	
 //////////////////////////////////////////////////////////////////////
-// OpenGL Functions
+/*! \name OpenGL Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the collection
 	void GlExecute(void);
 
 	//! Create member's OpenGL display list
-	void CreateMemberList(void);
+	void CreateMemberLists(void);
 
 	//! Create Collection sub OpenGL list
-	void CreateSousList(void);
+	void CreateSubLists(void);
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name OpenGL Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
 
 private:
 	//! Display collection's member
 	void GlDraw(void);
+
+//@}
 
 //////////////////////////////////////////////////////////////////////
 // private services functions
@@ -138,15 +155,15 @@ private:
 	bool MemberIsUpToDate(void);
 
 	//! Create Collection's OpenGL display list
-	bool CreationListe(void);
+	bool CreateList(void);
 
 	//! Delete Collection's OpenGL display list
-	void DeleteListe(void)
+	void DeleteList(void)
 	{
 		//! if the display list is valid it's deleted
-		if (glIsList(m_ListeID))
+		if (glIsList(m_ListID))
 		{
-			glDeleteLists(m_ListeID, 1);
+			glDeleteLists(m_ListID, 1);
 			//qDebug() << "GLC_Collection::DeleteList : Display list " << m_ListID << " Deleted";			
 		}
 	}
@@ -160,13 +177,13 @@ private:
 	CGeomMap m_TheMap;
 
 	//! Sub list Hash Table
-	CListeMap m_ListeMap;
+	CListeMap m_ListMap;
 
 	//! Collection's OpenGL list ID
-	GLuint m_ListeID;
+	GLuint m_ListID;
 
 	//! Validity of collection's OpenGL list
-	bool m_bListeIsValid;
+	bool m_ListIsValid;
 	
 };
 #endif //GLC_COLLECTION_H_
