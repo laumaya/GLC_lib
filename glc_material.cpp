@@ -41,36 +41,36 @@ GLC_Material::GLC_Material(const char *pName ,const GLfloat *pAmbiantColor)
 	// Initialisation de tableau contenant la couleur
 	if (pAmbiantColor != 0)
 	{
-		m_fColAmbiente[0]= pAmbiantColor[0];
-		m_fColAmbiente[1]= pAmbiantColor[1];
-		m_fColAmbiente[2]= pAmbiantColor[2];
-		m_fColAmbiente[3]= pAmbiantColor[3];
+		m_AmbientColor[0]= pAmbiantColor[0];
+		m_AmbientColor[1]= pAmbiantColor[1];
+		m_AmbientColor[2]= pAmbiantColor[2];
+		m_AmbientColor[3]= pAmbiantColor[3];
 	}
 	else
 	{	// By default light's color is dark grey.
-		m_fColAmbiente[0]= 0.2f;
-		m_fColAmbiente[1]= 0.2f;
-		m_fColAmbiente[2]= 0.2f;
-		m_fColAmbiente[3]= 1.0f;
+		m_AmbientColor[0]= 0.2f;
+		m_AmbientColor[1]= 0.2f;
+		m_AmbientColor[2]= 0.2f;
+		m_AmbientColor[3]= 1.0f;
 	}
 	// Les autres 
 	// Couleur diffuse
-	m_fColDiffuse[0]= 1.0f;
-	m_fColDiffuse[1]= 1.0f;
-	m_fColDiffuse[2]= 1.0f;
-	m_fColDiffuse[3]= 1.0f;
+	m_DiffuseColor[0]= 1.0f;
+	m_DiffuseColor[1]= 1.0f;
+	m_DiffuseColor[2]= 1.0f;
+	m_DiffuseColor[3]= 1.0f;
 
 	// Couleur spéculaire
-	m_fColSpeculaire[0]= 1.0f;
-	m_fColSpeculaire[1]= 1.0f;
-	m_fColSpeculaire[2]= 1.0f;
-	m_fColSpeculaire[3]= 1.0f;
+	m_SpecularColor[0]= 1.0f;
+	m_SpecularColor[1]= 1.0f;
+	m_SpecularColor[2]= 1.0f;
+	m_SpecularColor[3]= 1.0f;
 
 	// Emission de lumière
-	m_fColEmission[0]= 0.0f;
-	m_fColEmission[1]= 0.0f;
-	m_fColEmission[2]= 0.0f;
-	m_fColEmission[3]= 1.0f;
+	m_LightEmission[0]= 0.0f;
+	m_LightEmission[1]= 0.0f;
+	m_LightEmission[2]= 0.0f;
+	m_LightEmission[3]= 1.0f;
 
 }
 GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
@@ -79,28 +79,28 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 , m_pTexture(pTexture)			// Init texture
 {
 	// Ambiente Color
-	m_fColAmbiente[0]= 0.2f;
-	m_fColAmbiente[1]= 0.2f;
-	m_fColAmbiente[2]= 0.2f;
-	m_fColAmbiente[3]= 1.0f;
+	m_AmbientColor[0]= 0.2f;
+	m_AmbientColor[1]= 0.2f;
+	m_AmbientColor[2]= 0.2f;
+	m_AmbientColor[3]= 1.0f;
 
 	// Diffuse Color
-	m_fColDiffuse[0]= 1.0f;
-	m_fColDiffuse[1]= 1.0f;
-	m_fColDiffuse[2]= 1.0f;
-	m_fColDiffuse[3]= 1.0f;
+	m_DiffuseColor[0]= 1.0f;
+	m_DiffuseColor[1]= 1.0f;
+	m_DiffuseColor[2]= 1.0f;
+	m_DiffuseColor[3]= 1.0f;
 
 	// Specular Color
-	m_fColSpeculaire[0]= 1.0f;
-	m_fColSpeculaire[1]= 1.0f;
-	m_fColSpeculaire[2]= 1.0f;
-	m_fColSpeculaire[3]= 1.0f;
+	m_SpecularColor[0]= 1.0f;
+	m_SpecularColor[1]= 1.0f;
+	m_SpecularColor[2]= 1.0f;
+	m_SpecularColor[3]= 1.0f;
 
 	// Lighting emit
-	m_fColEmission[0]= 0.0f;
-	m_fColEmission[1]= 0.0f;
-	m_fColEmission[2]= 0.0f;
-	m_fColEmission[3]= 1.0f;
+	m_LightEmission[0]= 0.0f;
+	m_LightEmission[1]= 0.0f;
+	m_LightEmission[2]= 0.0f;
+	m_LightEmission[3]= 1.0f;
 
 }
 
@@ -127,39 +127,39 @@ GLC_Material::~GLC_Material(void)
 //////////////////////////////////////////////////////////////////////
 
 // Get Ambiant color
-void GLC_Material::GetColAmbiante(GLfloat* pfCol) const	// pfCol[4]
+void GLC_Material::GetAmbientColor(GLfloat* pfCol) const	// pfCol[4]
 {
-	pfCol[0]= m_fColAmbiente[0];
-	pfCol[1]= m_fColAmbiente[1];
-	pfCol[2]= m_fColAmbiente[2];
-	pfCol[3]= m_fColAmbiente[3];
+	pfCol[0]= m_AmbientColor[0];
+	pfCol[1]= m_AmbientColor[1];
+	pfCol[2]= m_AmbientColor[2];
+	pfCol[3]= m_AmbientColor[3];
 }
 
 // Get diffuse color
-void GLC_Material::GetColDiffuse(GLfloat* pfCol) const	// pfCol[4]
+void GLC_Material::GetDiffuseColor(GLfloat* pfCol) const	// pfCol[4]
 {
-	pfCol[0]= m_fColDiffuse[0];
-	pfCol[1]= m_fColDiffuse[1];
-	pfCol[2]= m_fColDiffuse[2];
-	pfCol[3]= m_fColDiffuse[3];
+	pfCol[0]= m_DiffuseColor[0];
+	pfCol[1]= m_DiffuseColor[1];
+	pfCol[2]= m_DiffuseColor[2];
+	pfCol[3]= m_DiffuseColor[3];
 }
 
 // Get specular color
-void GLC_Material::GetColSpeculaire(GLfloat* pfCol) const	// pfCol[4]
+void GLC_Material::GetSpecularColor(GLfloat* pfCol) const	// pfCol[4]
 {
-	pfCol[0]= m_fColSpeculaire[0];
-	pfCol[1]= m_fColSpeculaire[1];
-	pfCol[2]= m_fColSpeculaire[2];
-	pfCol[3]= m_fColSpeculaire[3];
+	pfCol[0]= m_SpecularColor[0];
+	pfCol[1]= m_SpecularColor[1];
+	pfCol[2]= m_SpecularColor[2];
+	pfCol[3]= m_SpecularColor[3];
 }
 
 // Get the emissive color
 void GLC_Material::GetLightEmission(GLfloat* pfCol) const	// pfCol[4]
 {
-	pfCol[0]= m_fColEmission[0];
-	pfCol[1]= m_fColEmission[1];
-	pfCol[2]= m_fColEmission[2];
-	pfCol[3]= m_fColEmission[3];
+	pfCol[0]= m_LightEmission[0];
+	pfCol[1]= m_LightEmission[1];
+	pfCol[2]= m_LightEmission[2];
+	pfCol[3]= m_LightEmission[3];
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -167,34 +167,34 @@ void GLC_Material::GetLightEmission(GLfloat* pfCol) const	// pfCol[4]
 //////////////////////////////////////////////////////////////////////
 
 // Set Ambiant Color
-void GLC_Material::SetColAmbiante(const GLfloat* pfCol)
+void GLC_Material::SetAmbientColor(const GLfloat* pfCol)
 {
-	m_fColAmbiente[0]= pfCol[0];
-	m_fColAmbiente[1]= pfCol[1];
-	m_fColAmbiente[2]= pfCol[2];
-	m_fColAmbiente[3]= pfCol[3];
+	m_AmbientColor[0]= pfCol[0];
+	m_AmbientColor[1]= pfCol[1];
+	m_AmbientColor[2]= pfCol[2];
+	m_AmbientColor[3]= pfCol[3];
 
 	UpdateUsed();
 }
 
 // Set Diffuse color
-void GLC_Material::SetColDiffuse(const GLfloat* pfCol)
+void GLC_Material::SetDiffuseColor(const GLfloat* pfCol)
 {
-	m_fColDiffuse[0]= pfCol[0];
-	m_fColDiffuse[1]= pfCol[1];
-	m_fColDiffuse[2]= pfCol[2];
-	m_fColDiffuse[3]= pfCol[3];
+	m_DiffuseColor[0]= pfCol[0];
+	m_DiffuseColor[1]= pfCol[1];
+	m_DiffuseColor[2]= pfCol[2];
+	m_DiffuseColor[3]= pfCol[3];
 
 	UpdateUsed();
 }
 
 // Set Specular color
-void GLC_Material::SetColSpeculaire(const GLfloat* pfCol)
+void GLC_Material::SetSpecularColor(const GLfloat* pfCol)
 {
-	m_fColSpeculaire[0]= pfCol[0];
-	m_fColSpeculaire[1]= pfCol[1];
-	m_fColSpeculaire[2]= pfCol[2];
-	m_fColSpeculaire[3]= pfCol[3];
+	m_SpecularColor[0]= pfCol[0];
+	m_SpecularColor[1]= pfCol[1];
+	m_SpecularColor[2]= pfCol[2];
+	m_SpecularColor[3]= pfCol[3];
 
 	UpdateUsed();
 }
@@ -202,10 +202,10 @@ void GLC_Material::SetColSpeculaire(const GLfloat* pfCol)
 // Set Emissive
 void GLC_Material::SetLightEmission(const GLfloat* pfCol)
 {
-	m_fColEmission[0]= pfCol[0];
-	m_fColEmission[1]= pfCol[1];
-	m_fColEmission[2]= pfCol[2];
-	m_fColEmission[3]= pfCol[3];
+	m_LightEmission[0]= pfCol[0];
+	m_LightEmission[1]= pfCol[1];
+	m_LightEmission[2]= pfCol[2];
+	m_LightEmission[3]= pfCol[3];
 
 	UpdateUsed();
 }
@@ -260,10 +260,10 @@ bool GLC_Material::GlExecute(GLenum Mode)
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 		m_pTexture->GlBindTexture();
 	}
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_fColAmbiente);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_fColDiffuse);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m_fColSpeculaire);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, m_fColEmission);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_AmbientColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_DiffuseColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m_SpecularColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, m_LightEmission);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &m_fShininess);
 
 	// OpenGL Error handler
