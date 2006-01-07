@@ -47,7 +47,8 @@ class GLC_Material :
 	public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
-// Constructor Destructor
+/*! @name Constructor / Destructor */
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 
@@ -60,9 +61,11 @@ public:
 	
 	//! Remove material where used geometry
 	virtual ~GLC_Material(void);
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Get Functions
+/*! \name Get Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 
@@ -72,13 +75,13 @@ public:
 		return m_pTexture != NULL;
 	}
 	//! Get Ambiant color
-	void GetColAmbiante(GLfloat* pfCol) const;	// pfCol[4]
+	void GetAmbientColor(GLfloat* pfCol) const;	// pfCol[4]
 
 	//! Get diffuse color
-	void GetColDiffuse(GLfloat* pfCol) const;	// pfCol[4]
+	void GetDiffuseColor(GLfloat* pfCol) const;	// pfCol[4]
 
 	//! Get specular color
-	void GetColSpeculaire(GLfloat* pfCol) const;	// pfCol[4]
+	void GetSpecularColor(GLfloat* pfCol) const;	// pfCol[4]
 
 	//! Get the emissive color
 	void GetLightEmission(GLfloat* pfCol) const;	// pfCol[4]
@@ -88,21 +91,22 @@ public:
 	{
 		return m_fShininess;
 	}
+//@}
 
-
-/////////////////////////////////////////////////////////////////////
-// Set Functions
-/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
 public:
 
 	//! Set Ambiant Color
-	void SetColAmbiante(const GLfloat* pfCol);
+	void SetAmbientColor(const GLfloat* pfCol);
 
 	//! Set Diffuse color
-	void SetColDiffuse(const GLfloat* pfCol);
+	void SetDiffuseColor(const GLfloat* pfCol);
 	
 	//! Set Specular color
-	void SetColSpeculaire(const GLfloat* pfCol);
+	void SetSpecularColor(const GLfloat* pfCol);
 
 	//! Set Emissive
 	void SetLightEmission(const GLfloat* pfCol);
@@ -129,15 +133,18 @@ public:
 
 	//! Remove Geometry to the "where used" hash table
 	bool DelGLC_Geom(GLC_uint Key);
-
+	
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// OpenGL Functions
+/*! \name OpenGL Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Execute OpenGL Material
 	virtual bool GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 
+//@}
 
 //////////////////////////////////////////////////////////////////////
 // Private services Functions
@@ -154,14 +161,14 @@ private:
 private:
 
 	//! Ambiant Color
-	GLfloat m_fColAmbiente[4];
+	GLfloat m_AmbientColor[4];
 	//! Diffuse Color
-	GLfloat m_fColDiffuse[4];
+	GLfloat m_DiffuseColor[4];
 	//! Specular Color
-	GLfloat m_fColSpeculaire[4];
+	GLfloat m_SpecularColor[4];
 
 	//! emmisive lighting
-	GLfloat m_fColEmission[4];
+	GLfloat m_LightEmission[4];
 
 	//! Shiness
 	GLfloat m_fShininess;
