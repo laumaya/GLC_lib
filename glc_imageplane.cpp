@@ -53,7 +53,7 @@ GLC_ImagePlane::~GLC_ImagePlane(void)
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 // Load image
-bool GLC_ImagePlane::ChargeImage(QGLWidget *GLWidget, const QString ImageName)
+bool GLC_ImagePlane::LoadImageFile(QGLWidget *GLWidget, const QString ImageName)
 {
 	if (m_pImgTexture != NULL)
 	{
@@ -95,8 +95,8 @@ void GLC_ImagePlane::UpdatePlaneSize(void)
 void GLC_ImagePlane::UpdateZPosition(void)
 {
 	// Compute Plane Z position
-	const double near= m_pViewport->GetDistMin();
-	const double far= m_pViewport->GetDistMax();
+	const double n= m_pViewport->GetDistMin();
+	const double f= m_pViewport->GetDistMax();
 	int nbrBits;
 	
 	//glGetIntegerv(GL_DEPTH_BITS, &nbrBits);
@@ -106,7 +106,7 @@ void GLC_ImagePlane::UpdateZPosition(void)
 	
 	double zw= pow(2, static_cast<double>(nbrBits)) - 2.0;
 	
-	m_dZpos= -far * near / (((zw - 1) / zw) * (far - near) - far);	
+	m_dZpos= -f * n / (((zw - 1) / zw) * (f - n) - f);	
 }
 
 

@@ -60,7 +60,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Load image
-	bool ChargeImage(QGLWidget *GLWidget, const QString ImageName);
+	bool LoadImageFile(QGLWidget *GLWidget, const QString ImageName);
 
 	//! Update image plane size
 	void UpdatePlaneSize(void);
