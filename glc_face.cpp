@@ -43,7 +43,7 @@ GLC_Face::GLC_Face(const GLC_Face *pFaceToCopy)
 :m_NbrVertex(0)
 {
 	GLC_Vertex *pVertex;
-	for (int i= 0; i < pFaceToCopy->GetNombre(); i++)
+	for (int i= 0; i < pFaceToCopy->GetVertexNumber(); i++)
 	{
 		pVertex= new GLC_Vertex(pFaceToCopy->m_Array_pVertex[i]);
 		AddVertex(pVertex);
