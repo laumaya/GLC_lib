@@ -545,7 +545,7 @@ void GLC_Viewport::UpdateOrbitCircle()
 	// Circle radius in OpenGL unit = Radius(Pixel) * (dimend GL / dimens Pixel)
 	const double RayonSph= ((double)nRayonSph * ChampsVision / (double)m_nWinVSize);
 
-	m_pOrbitCircle->SetRayon(RayonSph);
+	m_pOrbitCircle->SetRadius(RayonSph);
 
 }
 
