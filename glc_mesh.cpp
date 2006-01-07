@@ -48,9 +48,9 @@ GLC_Mesh::GLC_Mesh(GLC_Mesh *pMesh)
 
 {
 	GLC_Face *pFace;	
-	for (int i = 0; i < pMesh->m_Liste_pFace.size(); ++i)
+	for (int i = 0; i < pMesh->m_pFaceList.size(); ++i)
 	{
-		pFace= new GLC_Face(pMesh->m_Liste_pFace.at(i));
+		pFace= new GLC_Face(pMesh->m_pFaceList.at(i));
 		AddFace(pFace);
 	}
 	
@@ -61,8 +61,8 @@ GLC_Mesh::GLC_Mesh(GLC_Mesh *pMesh)
 
 GLC_Mesh::~GLC_Mesh(void)
 {
-	while (!m_Liste_pFace.isEmpty())
-		delete m_Liste_pFace.takeFirst();
+	while (!m_pFaceList.isEmpty())
+		delete m_pFaceList.takeFirst();
 	m_nNbrFaces= 0;
 	
 }
@@ -73,7 +73,7 @@ GLC_Mesh::~GLC_Mesh(void)
 // Add a face to the Mesh
 void GLC_Mesh::AddFace(GLC_Face* pFace)
 {
-	m_Liste_pFace.append(pFace);
+	m_pFaceList.append(pFace);
 	m_nNbrFaces++;
 }
 
@@ -84,9 +84,9 @@ void GLC_Mesh::AddFace(GLC_Face* pFace)
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh::GlDraw()
 {
-    for (int i = 0; i < m_Liste_pFace.size(); ++i)
+    for (int i = 0; i < m_pFaceList.size(); ++i)
     {
-    	m_Liste_pFace.at(i)->GlDraw();
+    	m_pFaceList.at(i)->GlDraw();
     }
     
 }
