@@ -32,7 +32,7 @@
 //////////////////////////////////////////////////////////////////////
 
 GLC_Texture::GLC_Texture(QGLWidget *GLWidget, const QString Filename)
-: m_nTextureID(0)
+: m_TextureID(0)
 {
 	QImage image(Filename);
 	if (image.isNull())
@@ -41,14 +41,14 @@ GLC_Texture::GLC_Texture(QGLWidget *GLWidget, const QString Filename)
 	}	
 	else
 	{
-		m_nTextureID= GLWidget->bindTexture(image);
-		qDebug() << "GLC_Texture::GLC_Texture Texture ID = " << m_nTextureID;
+		m_TextureID= GLWidget->bindTexture(image);
+		qDebug() << "GLC_Texture::GLC_Texture Texture ID = " << m_TextureID;
 	}
 	//! \todo Add Error handler
 }
 
 GLC_Texture::~GLC_Texture()
 {
-	glDeleteTextures(1, &m_nTextureID);
+	glDeleteTextures(1, &m_TextureID);
 }
 
