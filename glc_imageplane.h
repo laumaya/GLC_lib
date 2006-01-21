@@ -100,6 +100,10 @@ private:
 
 	//! Plane Position in Z direction
 	double m_dZpos;
+	
+	//! Polygons display style
+	GLenum m_PolyFace;
+	GLenum m_PolyMode;
 
 };
 
