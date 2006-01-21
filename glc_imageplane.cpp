@@ -35,6 +35,9 @@ GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport, const char* pName, const
 , m_pViewport(pViewport)
 , m_dLgImage(0)
 , m_dZpos(0)
+, m_PolyFace(GL_FRONT_AND_BACK)	// Default Faces style
+, m_PolyMode(GL_FILL)			// Default polyganal mode
+
 {
 	UpdateZPosition();
 }
@@ -154,6 +157,10 @@ void GLC_ImagePlane::GlPropGeom(void)
 		glDisable(GL_TEXTURE_2D);
 		glColor4fv(GetfRGBA());
 	}
+	
+		// Polygons display mode
+		glPolygonMode(m_PolyFace, m_PolyMode);
+	
 
 }
 
