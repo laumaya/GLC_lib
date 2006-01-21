@@ -80,6 +80,15 @@ public:
 
 	//! Add a face to the Mesh
 	void AddFace(GLC_Face* pFace);
+	
+	//! Polygon's display style
+	void SetPolygonMode(GLenum Face, GLenum Mode)
+	{
+		m_PolyFace= Face;
+		m_PolyMode= Mode;
+		m_GeometryIsValid = false;
+	}
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
