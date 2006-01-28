@@ -37,6 +37,8 @@ GLC_Geometry::GLC_Geometry(const char *pName, const GLfloat *pColor)
 , m_GeometryIsValid(false)		// By default geometry is invalid
 , m_pMaterial(NULL)			// By default No material
 , m_IsBlended(false)		// By default No Blending
+, m_PolyFace(GL_FRONT_AND_BACK)	// Default Faces style
+, m_PolyMode(GL_FILL)			// Default polyganal mode
 , m_Thikness(1.0)			// By default thickness = 1.0
 , m_IsVisible(true)			// By default Visibility is true
 

@@ -226,6 +226,15 @@ public:
 		m_GeometryIsValid= false;
 
 	}
+	
+	//! Polygon's display style
+	void SetPolygonMode(GLenum Face, GLenum Mode)
+	{
+		m_PolyFace= Face;
+		m_PolyMode= Mode;
+		m_GeometryIsValid = false;
+	}
+	
 
 	// Material
 	//! Set the Geometry material
@@ -316,6 +325,10 @@ protected:
 
 	//! Blending
 	bool m_IsBlended;
+
+	//! Polygons display style
+	GLenum m_PolyFace;
+	GLenum m_PolyMode;
 
 //////////////////////////////////////////////////////////////////////
 // Private members 
