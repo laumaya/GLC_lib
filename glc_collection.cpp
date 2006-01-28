@@ -57,7 +57,7 @@ bool GLC_Collection::AddGLC_Geom(GLC_Geometry* pGeom)
 		m_TheMap[pGeom->GetID()]= pGeom;
 		// Ajoute la sous liste
 		m_ListMap[pGeom->GetID()] = 0;
-		//TRACE("GLC_Collection::AddGLC_Geom : Element Ajouté avec succès\n");
+		qDebug("GLC_Collection::AddGLC_Geom : Element Ajouté avec succès");
 		
 		// Validité de la liste
 		m_ListIsValid= false;
@@ -88,14 +88,14 @@ bool GLC_Collection::DelGLC_Geom(GLC_uint Key)
 		if (!!iListe.value())
 		{
 			glDeleteLists(iListe.value(),1);
-			//qDebug("GLC_Collection::DelGLC_Geom : Sous liste %u Supprimée\n", RemListe);
+			qDebug("GLC_Collection::DelGLC_Geom : Sous liste Supprimée");
 		}
 		m_ListMap.remove(Key);		// Supprime le conteneur
 			
 		// Validité de la liste
 		m_ListIsValid= false;
 		
-		//qDebug("GLC_Collection::DelGLC_Geom : Element succesfuly deleted);
+		qDebug("GLC_Collection::DelGLC_Geom : Element succesfuly deleted");
 		return true;
 		
 	}
@@ -118,11 +118,15 @@ bool GLC_Collection::RemGLC_Geom(GLC_uint Key)
 		m_TheMap.remove(Key);		// Supprime le conteneur
 		// Recherche la liste
 		CListeMap::iterator iListe= m_ListMap.find(Key);
+		if (iListe != m_ListMap.end())
+		{
+			qDebug("GLC_Collection::RemGLC_Geom : List not found!!");
+		}
 		// TODO Vérifier que la liste d'affichage est trouvée
 		if (!!iListe.value())
 		{
 			glDeleteLists(iListe.value(),1);
-			//qDebug("GLC_Collection::RemGLC_Geom : Sous liste %u Supprimée", RemListe);
+			qDebug("GLC_Collection::RemGLC_Geom : Sous liste Supprimée");
 		}
 		m_ListMap.remove(Key);		// Supprime le conteneur
 			
@@ -164,8 +168,13 @@ void GLC_Collection::Erase(void)
 	
     while (iListEntry != m_ListMap.constEnd())
     {
+        qDebug() << "GLC_Collection::Erase : Try to delete display list ";
         // Supprime l'objet
-        if (!!iListEntry.value()) glDeleteLists(iListEntry.value(), 1);
+        if (!!iListEntry.value())
+        {
+        	qDebug() << "GLC_Collection::Erase : delete display list";
+        	glDeleteLists(iListEntry.value(), 1);
+        }
         ++iListEntry;
     }
     // Vide la table de hachage de liste
@@ -191,6 +200,26 @@ GLC_Geometry* GLC_Collection::GetElement(GLC_uint Key)
 		return NULL;
 	}
 }
+
+// Retourne le pointeur d'un élément de la collection
+GLC_Geometry* GLC_Collection::GetElement(int Index)
+{
+	// Warning, performance will be poor
+	int CurrentPos= 0;
+	CGeomMap::iterator iEntry= m_TheMap.begin();
+	GLC_Geometry* pGeom= NULL;
+	
+    while ((iEntry != m_TheMap.constEnd()) && (CurrentPos <= Index ))
+    {
+        // retrieve the object        
+        if(CurrentPos == Index) pGeom= iEntry.value();
+        ++iEntry;
+        ++CurrentPos;
+    }
+ 	
+ 	return pGeom;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // Fonctions OpenGL
@@ -288,17 +317,22 @@ void GLC_Collection::CreateSubLists(void)
     	if(!iEntry.value()->GetValidity())
     	{
     		iListEntry= m_ListMap.find(iEntry.key());
-    		if(iListEntry != m_ListMap.constEnd())
-    		{	// Numéro non généré
+    		if (iListEntry.value() == 0)
+    		{// Numéro non généré
+   				qDebug() << "GLC_Collection::CreateSubLists: List not found";
     			ListeID= glGenLists(1);
-    			m_ListMap[iEntry.key()]= ListeID;
-    			m_ListIsValid= false;
+    			m_ListMap[iListEntry.key()]= ListeID;
+    			m_ListIsValid= false;    			
+    		}
+    		else
+    		{
+    			ListeID= iListEntry.value();
     		}
     		// Création de la liste
     		glNewList(ListeID, GL_COMPILE);
     			iEntry.value()->GlExecute(GL_COMPILE);
     		glEndList();
-    		//qDebug("GLC_Collection::CreateSubLists : Liste d'affichage %u créé", ListeID);
+    		qDebug("GLC_Collection::CreateSubLists : Liste d'affichage %u créé", ListeID);
      	}
     	// Passe au Suivant
     	iEntry++;
@@ -308,7 +342,7 @@ void GLC_Collection::CreateSubLists(void)
 	// Gestion erreur OpenGL
 	if (glGetError() != GL_NO_ERROR)
 	{
-		qDebug("GLC_Collection::CreateSousList ERREUR OPENGL\n");
+		qDebug("GLC_Collection::CreateSubLists ERREUR OPENGL\n");
 	}
 
 }
@@ -329,7 +363,7 @@ bool GLC_Collection::MemberListIsUpToDate(void)
     	}
     	else
     	{
- 			//qDebug("GLC_Collection::MemberListIsUpToDate : Liste d'affichage d'un enfant non à jour");
+ 			qDebug("GLC_Collection::MemberListIsUpToDate : Liste d'affichage d'un enfant non à jour");
 			return false;
     	}
      }
@@ -372,7 +406,7 @@ bool GLC_Collection::CreateList(void)
 		if (!m_ListID)	// ID de liste non obtenu
 		{
 			GlDraw();
-			//qDebug("GLC_Collection::CreateList : ERREUR Liste d'affichage NON créé");
+			qDebug("GLC_Collection::CreateList : ERREUR Liste d'affichage NON créé");
 			return false;	// Géométrie affiché mais pas de liste de créé
 		}
 	}
