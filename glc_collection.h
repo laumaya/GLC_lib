@@ -80,6 +80,11 @@ public:
 	//! return a pointer to an GLC_Geometry from collection
 	/*! If the element is not found in collection a NULL pointer is returned*/
 	GLC_Geometry* GetElement(GLC_uint Key);
+	
+	//! return a pointer to an GLC_Geometry from collection
+	/*! If the element is not found in collection a NULL pointer is returned*/
+	GLC_Geometry* GetElement(int Index);
+	
 
 //@}
 
