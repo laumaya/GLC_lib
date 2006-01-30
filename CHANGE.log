@@ -1,5 +1,5 @@
 --------------------------------------------------------------
-December 26 2005
+January 30 2006
 --------------------------------------------------------------
 
 GLC_lib-0.9.4
@@ -31,7 +31,21 @@ FILES : glc_imageplane.h - glc_imageplane.cpp
 
 Modifying the computation of the image plane Z coordinate
 to resolve hardware compatibility.
+
+--------------------------------------------------------------
+FIX GLC_Collection Sub list creation bug
+FILES : glc_collection.h - glc_collection.cpp
+
+Now, in case of modification, the same list number is
+generated.
+--------------------------------------------------------------
+Move SetPolygonMode method from end class to GLC_Geometry class
+FIELS : GLC_Geometry.h - GLC_Geometry.cpp
+		GLC_Mesh.h - GLC_Mesh.cpp
 		
+To preserve polymophisme, the method SetPolygonMode have been
+moved from end class to GLC_Geometry class.
+
 --------------------------------------------------------------
 December 22 2005
 --------------------------------------------------------------
