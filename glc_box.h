@@ -110,16 +110,6 @@ public:
 	}
 // End of Display List modifying functions
 
-// Graphic properties modifying functions
-	
-	//! Set Drawing style of polygons
-	/*! This Function invalid graphic properties*/
-	void SetPolygonMode(GLenum Face, GLenum Mode)
-	{
-		m_PolyFace= Face;
-		m_PolyMode= Mode;
-		m_GeometryIsValid = false;
-	}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -150,11 +140,6 @@ private:
 
 	//! Z Length
 	double m_dLgZ;
-
-	//! Drawing style of polygons
-	GLenum m_PolyFace;
-	//! Drawing style of polygons
-	GLenum m_PolyMode;
 
 	
 };

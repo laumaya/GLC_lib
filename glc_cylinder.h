@@ -127,15 +127,6 @@ public:
 
 // End of functions impacting display list
 
-// Fonction modifiant les proprièté géométrique
-	
-	//! Polygon's display style
-	void SetPolygonMode(GLenum Face, GLenum Mode)
-	{
-		m_PolyFace= Face;
-		m_PolyMode= Mode;
-		m_GeometryIsValid = false;
-	}
 	
 //@}
 
@@ -170,10 +161,6 @@ private:
 
 	//! Cylinder is capped
 	bool m_bCapEnded;
-
-	//! polygons display style
-	GLenum m_PolyFace;
-	GLenum m_PolyMode;
 
 	
 };
