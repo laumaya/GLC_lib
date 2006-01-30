@@ -92,57 +92,38 @@ void GLC_Mesh::GlPropGeom()
 {
 		//! Change the current matrix
 		glMultMatrixd(m_MatPos.Return_dMat());
+		
+		if (m_IsBlended)
+		{
+			glEnable(GL_BLEND);
+			glDepthMask(GL_FALSE);
+		}
+		else
+		{
+			glDisable(GL_BLEND);
+		}
+		
+		
 		if(!m_pMaterial || (m_PolyMode != GL_FILL))
 		{
+			qDebug() << "GLC_Mesh::GlPropGeom : Wireframe Mode";
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_LIGHTING);
-
-			if (m_IsBlended)
-			{
-				glEnable(GL_BLEND);
-				glDepthMask(GL_FALSE);
-			}
-			else
-			{
-				glDisable(GL_BLEND);
-			}
-
 			glColor4fv(GetfRGBA());			// is color
 		}
 		else if (m_pMaterial->GetAddRgbaTexture())
 		{
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
-
-			if (m_IsBlended)
-			{
-				glEnable(GL_BLEND);
-				glDepthMask(GL_FALSE);
-			}
-			else
-			{
-				glDisable(GL_BLEND);
-			}
-
 			m_pMaterial->GlExecute();
 		}
 		else
 		{
 			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
-
-			if (m_IsBlended)
-			{
-				glEnable(GL_BLEND);
-				glDepthMask(GL_FALSE);
-			}
-			else
-			{
-				glDisable(GL_BLEND);
-			}
-
 			m_pMaterial->GlExecute();
 		}
+		
 
 		glLineWidth(GetThickness());	// is thikness
 
