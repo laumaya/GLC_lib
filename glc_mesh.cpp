@@ -87,7 +87,7 @@ void GLC_Mesh::GlDraw()
     
 }
 
-// Virtual interface for OpenGL Geomtry properties.
+// Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
 void GLC_Mesh::GlPropGeom()
 {
 		//! Change the current matrix
@@ -129,5 +129,12 @@ void GLC_Mesh::GlPropGeom()
 
 		// Polygons display mode
 		glPolygonMode(m_PolyFace, m_PolyMode);
+		
+		// OpenGL error management
+		if (glGetError() != GL_NO_ERROR)
+		{
+			qDebug("GLC_Cylinder::GlPropGeom ERROR OPENGL\n");
+		}
+		
 
 }
