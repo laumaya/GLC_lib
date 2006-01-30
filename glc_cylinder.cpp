@@ -45,8 +45,6 @@ GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, const char *pName
 , m_dLength(dLength)
 , m_nDiscret(GLC_POLYDISCRET)	//GLC_DISCRET
 , m_bCapEnded(true)				// Bouts fermés par défaut	
-, m_PolyFace(GL_FRONT_AND_BACK)	// Style par défaut des faces
-, m_PolyMode(GL_FILL)			// Style par défaut du mode
 {
 
 }
@@ -175,10 +173,10 @@ void GLC_Cylinder::GlDraw(void)
 	}
 
 }
-// Fonction définissant le propriétés de la géométrie (Couleur, position, epaisseur)
+// Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
 void GLC_Cylinder::GlPropGeom(void)
 {
-		// Modification de la matrice courante
+		// Update Current matrix
 		glMultMatrixd(m_MatPos.Return_dMat());
 		if(!m_pMaterial || (m_PolyMode != GL_FILL))
 		{
@@ -237,10 +235,10 @@ void GLC_Cylinder::GlPropGeom(void)
 
 		glLineWidth(GetThickness());	// Son Epaisseur
 
-		// Mode d'affichage des polygons
+		// Polygons display mode
 		glPolygonMode(m_PolyFace, m_PolyMode);
 
-		// Gestion erreur OpenGL
+		// OpenGL error management
 		if (glGetError() != GL_NO_ERROR)
 		{
 			qDebug("GLC_Cylinder::GlPropGeom ERROR OPENGL\n");

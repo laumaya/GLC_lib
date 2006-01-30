@@ -39,8 +39,6 @@ GLC_Box::GLC_Box(double dLx, double dLy, double dlz
 , m_dLgX(dLx)
 , m_dLgY(dLy)
 , m_dLgZ(dlz)
-, m_PolyFace(GL_FRONT_AND_BACK)	// Style par défaut des faces
-, m_PolyMode(GL_FILL)			// Style par défaut du mode
 {
 
 }
@@ -92,26 +90,16 @@ void GLC_Box::GlDraw(void)
 	glEnd();
 
 }
-// Fonction définissant le propriétés de la géométrie (Couleur, position, epaisseur)
+// Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
 void GLC_Box::GlPropGeom(void)
 {
-		// Modification de la matrice courante
+		// Update Current matrix
 		glMultMatrixd(m_MatPos.Return_dMat());
+				
 		if(!m_pMaterial || (m_PolyMode != GL_FILL))
 		{
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_LIGHTING);
-
-			if (m_IsBlended)
-			{
-				glEnable(GL_BLEND);
-				glDisable(GL_DEPTH_TEST);
-			}
-			else
-			{
-				glDisable(GL_BLEND);
-				glEnable(GL_DEPTH_TEST);
-			}
 
 			glColor4fv(GetfRGBA());			// Sa Couleur
 		}
@@ -120,16 +108,6 @@ void GLC_Box::GlPropGeom(void)
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
 
-			if (m_IsBlended)
-			{
-				glEnable(GL_BLEND);
-				glDisable(GL_DEPTH_TEST);
-			}
-			else
-			{
-				glDisable(GL_BLEND);
-				glEnable(GL_DEPTH_TEST);
-			}
 
 			m_pMaterial->GlExecute();
 		}
@@ -137,23 +115,20 @@ void GLC_Box::GlPropGeom(void)
 		{
 			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
-
-			if (m_IsBlended)
-			{
-				glEnable(GL_BLEND);
-				glDisable(GL_DEPTH_TEST);
-			}
-			else
-			{
-				glDisable(GL_BLEND);
-				glEnable(GL_DEPTH_TEST);
-			}
-
+			
 			m_pMaterial->GlExecute();
+
 		}
 
 		glLineWidth(GetThickness());	// Son Epaisseur
 
-		// Mode d'affichage des polygons
+		// Polygons display mode
 		glPolygonMode(m_PolyFace, m_PolyMode);
+		
+		// OpenGL error management
+		if (glGetError() != GL_NO_ERROR)
+		{
+			qDebug("GLC_Cylinder::GlPropGeom ERROR OPENGL\n");
+		}
+		
 }
