@@ -54,7 +54,7 @@ public:
 
 	//! Construct Colored GLC_Material
 	/*! By default, Ambiant Color is dark grey*/
-	GLC_Material(const char *pName, const GLfloat *pAmbiantColor = NULL);
+	GLC_Material(const char *pName= "Mat", const GLfloat *pAmbiantColor = NULL);
 	
 	//! Construct textured GLC_Material
 	GLC_Material(GLC_Texture* pTexture, const char *pName= "TextureMat");
