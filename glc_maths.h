@@ -25,6 +25,8 @@
 #ifndef GLC_MATHS_H_
 #define GLC_MATHS_H_
 
+#include "glc_vector2d.h"
+#include "glc_vector3d.h"
 #include "glc_vector4d.h"
 #include "glc_matrix4x4.h"
 #include "glc_interpolator.h"
