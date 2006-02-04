@@ -1,0 +1,126 @@
+/****************************************************************************
+
+ This file is part of the GLC-lib library.
+ Copyright (C) 2005-2006 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 0.9.4, packaged on January, 2006.
+
+ http://glc-lib.sourceforge.net
+
+ GLC-lib is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ GLC-lib is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with GLC-lib; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+*****************************************************************************/
+
+//! \file glc_objToMesh.h interface for the GLC_ObjToMesh2 class.
+
+#ifndef GLC_OBJ_TO_MESH2_H_
+#define GLC_OBJ_TO_MESH2_H_
+
+#include "glc_mesh2.h"
+#include <string>
+
+
+
+#define GLC_OBJ_LIGNE_LENGHT 100
+
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_ObjToMesh2
+/*! \brief GLC_ObjToMesh2 : Create an GLC_Mesh from obj file */
+
+/*! An GLC_ObjToMesh2 extract a single mesh from an .obj file \n
+ * 	List of elements extracted from the OBJ
+ * 		- Vertex
+ * 		- Face
+ * 		- Texture coordinate
+ * 		- Normal coordinate
+  */
+//////////////////////////////////////////////////////////////////////
+
+class GLC_ObjToMesh2
+{
+//////////////////////////////////////////////////////////////////////
+/*! @name Constructor / Destructor */
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Default constructor
+	/*! Create an empty ObjToMesh object */
+	GLC_ObjToMesh2(void);
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Create an GLC_Mesh from an input OBJ File
+	GLC_Mesh2* CreateMeshFromObj(std::string sFile);
+//@}
+
+//////////////////////////////////////////////////////////////////////
+// Private services functions
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Scan a line previously extracted from OBJ file
+	void ScanLigne(const char* c_strLigne);
+
+	//! Extract a 3D Vector from a string
+	GLC_Vector3d Extract3dVect(const char* c_strLigne);
+
+	//! Extract a 2D Vector from a string
+	GLC_Vector2d Extract2dVect(const char* c_strLigne);
+
+	//! Extract a face from a string
+	void ExtractFaceIndex(const char* c_strLigne);
+
+	//! Extract a vertex from a string
+	void ExtractVertexIndex(std::string sLigne, int &Coordinate, int &Normal, int &TextureCoordinate);
+
+
+//////////////////////////////////////////////////////////////////////
+// Private members
+//////////////////////////////////////////////////////////////////////
+private:
+	//! pointer to a GLC_Mesh
+	GLC_Mesh2* m_pMesh;
+	
+//! @name Array of Vertex Vector
+//@{
+	//! Number of Vertex Vector to extract
+	int m_nNbrVectPos;
+	//! Index of current vertex vector
+	int m_nCurVectPos;
+//@} End of Array of Vertex Vector
+
+//! @name Array of Nomal Vector
+//@{
+	//! Number of normal vector to extract
+	int m_nNbrVectNorm;
+	//! Index of current normal vector
+	int m_nCurVectNorm;
+//@} End of array of normal vector
+
+//! @name Array of texture coordinate vector
+//@{
+	//! Number of Texture coordinate vector to extract
+	int m_nNbrVectTexture;
+	//! Index of current Texture coordinate vector
+	int m_nCurVectTexture;
+//@} End of array of texture coordinate vector
+
+	//! OBJ File name
+	std::string m_sFile;
+
+};
+#endif //GLC_OBJ_TO_MESH2_H_
