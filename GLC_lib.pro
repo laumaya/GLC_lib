@@ -5,13 +5,15 @@ QT += opengl
 CONFIG *= release create_prl warn_on
 
 TARGET = GLC_lib
-VERSION  = 0.9.4
+VERSION  = 0.9.5
 DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
 HEADERS += glc_maths.h \
            glc_utils_maths.h \
+           glc_vector2d.h\
+           glc_vector3d.h\
            glc_vector4d.h \
            glc_matrix4x4.h \
            glc_interpolator.h \
@@ -29,7 +31,9 @@ HEADERS += glc_maths.h \
            glc_vertex.h \
            glc_face.h \
            glc_mesh.h \
+           glc_mesh2.h\
            glc_objtomesh.h \
+           glc_objtomesh2.h \
            glc_camera.h \
            glc_imageplane.h \
            glc_viewport.h \
@@ -37,6 +41,8 @@ HEADERS += glc_maths.h \
            
              
 SOURCES +=  glc_vector4d.cpp \
+			glc_vector3d.cpp \
+			glc_vector2d.cpp \
             glc_matrix4x4.cpp \
             glc_interpolator.cpp \
             glc_enum.cpp \
@@ -53,7 +59,9 @@ SOURCES +=  glc_vector4d.cpp \
             glc_vertex.cpp \
             glc_face.cpp \
             glc_mesh.cpp \
-           	glc_objtomesh.cpp \            
+            glc_mesh2.cpp \
+           	glc_objtomesh.cpp \
+           	glc_objtomesh2.cpp \
             glc_camera.cpp \
             glc_imageplane.cpp \
             glc_viewport.cpp \
