@@ -226,6 +226,7 @@ GLC_Geometry* GLC_Collection::GetElement(int Index)
 //////////////////////////////////////////////////////////////////////
 void GLC_Collection::GlExecute(void)
 {
+	//qDebug() << "GLC_Collection::GlExecute";
 	if (GetNumber() > 0)
 	{
 		CreateMemberLists();		// Si nécessaire
@@ -245,7 +246,7 @@ void GLC_Collection::GlExecute(void)
 			else
 			{
 				m_ListIsValid= false;
-				qDebug("GLC_Collection::DrawGl : CreatMemberList KO -> Affichage éléments\n");
+				qDebug("GLC_Collection::GlExecute : CreatMemberList KO -> display list not use");
 			}
 		}
 
@@ -255,7 +256,7 @@ void GLC_Collection::GlExecute(void)
 		{
 			const GLubyte* errString;
 			errString = gluErrorString(errCode);
-			qDebug("GLC_Collection::DrawGl ERREUR OPENGL %s\n", errString);
+			qDebug("GLC_Collection::GlExecute OPENGL ERROR %s", errString);
 		}
 	}
 }
@@ -278,7 +279,7 @@ void GLC_Collection::GlDraw(void)
 	{
 		const GLubyte* errString;
 		errString = gluErrorString(errCode);
-		qDebug("GLC_Collection::GlDraw ERREUR OPENGL %s\n", errString);
+		qDebug("GLC_Collection::GlDraw OPENGL ERROR %s", errString);
 	}
 
 }
@@ -287,12 +288,13 @@ void GLC_Collection::GlDraw(void)
 void GLC_Collection::CreateMemberLists(void)
 {
 	CGeomMap::iterator iEntry= m_TheMap.begin();
+	//qDebug("GLC_Collection::CreateMemberList ENTER");
 	
     while (iEntry != m_TheMap.constEnd())
     {
     	if(!iEntry.value()->GetListIsValid())
     	{
-    		iEntry.value()->CreateList(GL_COMPILE);    		
+     		iEntry.value()->CreateList(GL_COMPILE);
     	}
     	// Passe au Suivant
     	iEntry++;
@@ -301,13 +303,15 @@ void GLC_Collection::CreateMemberLists(void)
 	// Gestion erreur OpenGL
 	if (glGetError() != GL_NO_ERROR)
 	{
-		qDebug("GLC_Collection::CreateMemberList ERREUR OPENGL");
+		qDebug("GLC_Collection::CreateMemberList OPENGL ERROR");
 	}
+
 
 }
 // Création des sous listes d'affichages
 void GLC_Collection::CreateSubLists(void)
 {
+	//qDebug() << "GLC_Collection::CreateSubLists";
 	CGeomMap::iterator iEntry= m_TheMap.begin();
 	CListeMap::iterator iListEntry;
 	
@@ -317,6 +321,7 @@ void GLC_Collection::CreateSubLists(void)
     	if(!iEntry.value()->GetValidity())
     	{
     		iListEntry= m_ListMap.find(iEntry.key());
+    		assert(iListEntry != m_ListMap.constEnd());
     		if (iListEntry.value() == 0)
     		{// Numéro non généré
    				qDebug() << "GLC_Collection::CreateSubLists: List not found";
@@ -332,7 +337,7 @@ void GLC_Collection::CreateSubLists(void)
     		glNewList(ListeID, GL_COMPILE);
     			iEntry.value()->GlExecute(GL_COMPILE);
     		glEndList();
-    		qDebug("GLC_Collection::CreateSubLists : Liste d'affichage %u créé", ListeID);
+    		qDebug("GLC_Collection::CreateSubLists : Display list %u created", ListeID);
      	}
     	// Passe au Suivant
     	iEntry++;
@@ -342,7 +347,7 @@ void GLC_Collection::CreateSubLists(void)
 	// Gestion erreur OpenGL
 	if (glGetError() != GL_NO_ERROR)
 	{
-		qDebug("GLC_Collection::CreateSubLists ERREUR OPENGL\n");
+		qDebug("GLC_Collection::CreateSubLists ERREUR OPENGL");
 	}
 
 }
@@ -363,7 +368,7 @@ bool GLC_Collection::MemberListIsUpToDate(void)
     	}
     	else
     	{
- 			qDebug("GLC_Collection::MemberListIsUpToDate : Liste d'affichage d'un enfant non à jour");
+ 			qDebug("GLC_Collection::MemberListIsUpToDate : Child display list not updated");
 			return false;
     	}
      }
@@ -398,6 +403,7 @@ bool GLC_Collection::MemberIsUpToDate(void)
 // Création de la liste d'affichage de la collection
 bool GLC_Collection::CreateList(void)
 {
+	qDebug("GLC_Collection::CreateList");
 	
 	if(!m_ListID)		// La liste n'a jamais été créé
 	{
@@ -406,7 +412,7 @@ bool GLC_Collection::CreateList(void)
 		if (!m_ListID)	// ID de liste non obtenu
 		{
 			GlDraw();
-			qDebug("GLC_Collection::CreateList : ERREUR Liste d'affichage NON créé");
+			qDebug("GLC_Collection::CreateList : Display list nor created");
 			return false;	// Géométrie affiché mais pas de liste de créé
 		}
 	}
@@ -428,7 +434,7 @@ bool GLC_Collection::CreateList(void)
 	{
 		const GLubyte* errString;
 		errString = gluErrorString(errCode);
-		qDebug("GLC_Collection::CreationListe ERREUR OPENGL %s\n", errString);
+		qDebug("GLC_Collection::CreateList OPENGL ERROR %s\n", errString);
 	}
 
 	return true;	// Géométrie affiché et liste créé
