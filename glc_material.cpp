@@ -76,7 +76,8 @@ GLC_Material::GLC_Material(const char *pName ,const GLfloat *pAmbiantColor)
 GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 :GLC_Object(pName)
 , m_fShininess(50.0)		// By default shininess 50
-, m_pTexture(pTexture)			// Init texture
+//! \todo something to do about texture memory allocation.
+, m_pTexture(pTexture)		// Init texture 
 {
 	// Ambiente Color
 	m_AmbientColor[0]= 0.2f;
@@ -104,6 +105,39 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 
 }
 
+// Copy constructor
+GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
+:GLC_Object(InitMaterial.GetName())
+, m_fShininess(InitMaterial.m_fShininess)
+, m_pTexture(InitMaterial.m_pTexture)	//! \todo something to do about texture memory allocation.
+{
+	// Ambiente Color
+	m_AmbientColor[0]= InitMaterial.m_AmbientColor[0];
+	m_AmbientColor[1]= InitMaterial.m_AmbientColor[1];
+	m_AmbientColor[2]= InitMaterial.m_AmbientColor[2];
+	m_AmbientColor[3]= InitMaterial.m_AmbientColor[3];
+
+	// Diffuse Color
+	m_DiffuseColor[0]= InitMaterial.m_DiffuseColor[0];
+	m_DiffuseColor[1]= InitMaterial.m_DiffuseColor[1];
+	m_DiffuseColor[2]= InitMaterial.m_DiffuseColor[2];
+	m_DiffuseColor[3]= InitMaterial.m_DiffuseColor[3];
+
+	// Specular Color
+	m_SpecularColor[0]= InitMaterial.m_SpecularColor[0];
+	m_SpecularColor[1]= InitMaterial.m_SpecularColor[1];
+	m_SpecularColor[2]= InitMaterial.m_SpecularColor[2];
+	m_SpecularColor[3]= InitMaterial.m_SpecularColor[3];
+
+	// Lighting emit
+	m_LightEmission[0]= InitMaterial.m_LightEmission[0];
+	m_LightEmission[1]= InitMaterial.m_LightEmission[1];
+	m_LightEmission[2]= InitMaterial.m_LightEmission[2];
+	m_LightEmission[3]= InitMaterial.m_LightEmission[3];
+		
+}
+
+// Destructor
 GLC_Material::~GLC_Material(void)
 {
 

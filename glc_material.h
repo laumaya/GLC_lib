@@ -43,6 +43,7 @@ typedef QHash< GLC_uint, GLC_Geometry*> CWhereUsed;
 /*! An GLC_Material specifies surface material properties */
 //////////////////////////////////////////////////////////////////////
 
+
 class GLC_Material :
 	public GLC_Object
 {
@@ -58,6 +59,9 @@ public:
 	
 	//! Construct textured GLC_Material
 	GLC_Material(GLC_Texture* pTexture, const char *pName= "TextureMat");
+	
+	//! Copy constructor
+	GLC_Material(const GLC_Material &InitMaterial);
 	
 	//! Remove material where used geometry
 	virtual ~GLC_Material(void);
