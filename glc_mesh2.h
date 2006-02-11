@@ -69,6 +69,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Get mesh material
+	void GetMaterial(int Index, GLC_Material &Material);
 
 //@}
 
@@ -79,6 +81,9 @@ public:
 public:
 	//! Add material to mesh
 	void AddMaterial(int Index, GLC_Material &Material);
+	
+	//! Modify mesh material
+	void ModifyMaterial(int Index, GLC_Material &Material);
 	
 	//! Add a vertex to mesh
 	void AddCoordinate(int Index, GLC_Vector3d Coordinate);
