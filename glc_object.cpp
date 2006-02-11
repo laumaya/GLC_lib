@@ -66,7 +66,7 @@ const char* GLC_Object::GetName() const
 //////////////////////////////////////////////////////////////////////
 
 // Nom de l'objet
-void GLC_Object::SetName(char *SetName)
+void GLC_Object::SetName(const char *SetName)
 {
 	m_Name.assign(SetName);
 }
