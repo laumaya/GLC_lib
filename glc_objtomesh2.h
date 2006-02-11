@@ -27,9 +27,14 @@
 #ifndef GLC_OBJ_TO_MESH2_H_
 #define GLC_OBJ_TO_MESH2_H_
 
-#include "glc_mesh2.h"
-#include <string>
 
+#include <string>
+#include <QString>
+#include <QHash>
+
+#include "glc_mesh2.h"
+
+typedef QHash<QString, int> MaterialHashMap;
 
 
 #define GLC_OBJ_LIGNE_LENGHT 100
@@ -56,7 +61,7 @@ class GLC_ObjToMesh2
 public:
 	//! Default constructor
 	/*! Create an empty ObjToMesh object */
-	GLC_ObjToMesh2(void);
+	GLC_ObjToMesh2(QGLWidget *GLWidget);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -83,10 +88,25 @@ private:
 
 	//! Extract a face from a string
 	void ExtractFaceIndex(const char* c_strLigne);
+	
+	//! Set Current material index
+	void SetCurrentMaterial(const char* c_strLigne);	
 
 	//! Extract a vertex from a string
 	void ExtractVertexIndex(std::string sLigne, int &Coordinate, int &Normal, int &TextureCoordinate);
-
+	
+	//! Check if a material file exist
+	void LoadMaterial(std::string FileName);
+	
+	//! Extract String
+	void ExtractString(const std::string &Ligne, GLC_Material *pMaterial);
+	
+	//! Extract RGB value
+	void ExtractRGBValue(const std::string &Ligne, GLC_Material *pMaterial);
+	
+	//! Extract One value
+	void ExtractOneValue(const std::string &Ligne, GLC_Material *pMaterial);
+	
 
 //////////////////////////////////////////////////////////////////////
 // Private members
@@ -94,6 +114,13 @@ private:
 private:
 	//! pointer to a GLC_Mesh
 	GLC_Mesh2* m_pMesh;
+	
+	//! Current material
+	GLC_Material* m_pCurrentMaterial;
+	
+	//! Current material Index
+	int m_CurrentMaterialIndex;
+	
 	
 //! @name Array of Vertex Vector
 //@{
@@ -121,6 +148,12 @@ private:
 
 	//! OBJ File name
 	std::string m_sFile;
+	
+	//! Material name <=> index Hash table
+	MaterialHashMap m_MaterialNameIndex;
+	
+	//! GLWidget handle
+	QGLWidget *m_pGLWidget;
 
 };
 #endif //GLC_OBJ_TO_MESH2_H_

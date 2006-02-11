@@ -30,24 +30,28 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-
+#include <QString>
 #include <assert.h>
 
 #include "glc_objtomesh2.h"
+#include "glc_texture.h"
 
 using namespace std;
 
 //////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////
-GLC_ObjToMesh2::GLC_ObjToMesh2(void)
+GLC_ObjToMesh2::GLC_ObjToMesh2(QGLWidget *GLWidget)
 : m_pMesh(NULL)
+, m_pCurrentMaterial(NULL)
+, m_CurrentMaterialIndex(-1)
 , m_nNbrVectPos(0)
 , m_nCurVectPos(0)
 , m_nNbrVectNorm(0)
 , m_nCurVectNorm(0)
 , m_nNbrVectTexture(0)
 , m_nCurVectTexture(0)
+, m_pGLWidget(GLWidget)
 {
 
 }
@@ -80,12 +84,14 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 
 	if (!ObjFile)
 	{
-		qDebug("GLC_ObjToMesh::CreateMeshFromObj ERROR File \"%s\" Not opened", m_sFile.c_str());
+		qDebug("GLC_ObjToMesh2::CreateMeshFromObj ERROR File \"%s\" Not opened", m_sFile.c_str());
 		return NULL;
 	}
 	else
 	{
-		qDebug("GLC_ObjToMesh::CreateMeshFromObj OK File %s Open", m_sFile.c_str());
+		qDebug("GLC_ObjToMesh2::CreateMeshFromObj OK File %s Open", m_sFile.c_str());
+		LoadMaterial(m_sFile);
+		qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj Material loaded";
 	}
 
 	// Compute obj file size
@@ -93,18 +99,21 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 	Taille = ObjFile.tellg();
 	Buffer= new char[Taille + 1];
 	ObjFile.seekg (0, ios::beg);
+	qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj File size computed";
 
 	// Read the file at once
 	ObjFile.read(Buffer, Taille);
 	// Close input file stream
 	ObjFile.close();
 	Buffer[Taille]= '\0'; //Null termination caracter
+	qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj File read";
 
 	// Create Buffer input string stream
 	istringstream StreamStringBuf(Buffer);
 	delete [] Buffer;
 	Buffer= NULL;
-
+	qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj buffer input stream created";
+	
 	while (!StreamStringBuf.eof())
 	{
 		StreamStringBuf.getline(strBuff, GLC_OBJ_LIGNE_LENGHT);
@@ -124,7 +133,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 	// Check the validity of OBJ file
 	if (!m_nNbrVectNorm || !m_nNbrVectPos)
 	{
-		qDebug("GLC_ObjToMesh::CreateMeshFromObj OBJ file without Normals not emplemented!");
+		qDebug("GLC_ObjToMesh2::CreateMeshFromObj OBJ file without Normals not emplemented!");
 		return NULL;
 	}
 	qDebug() << "Coordinate number : " << m_nNbrVectPos;
@@ -139,7 +148,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 		ScanLigne(strBuff);		
 	}
 
-	qDebug("GLC_ObjToMesh::CreateMeshFromObj End of mesh creation");
+	qDebug("GLC_ObjToMesh2::CreateMeshFromObj End of mesh creation");
 
 	return m_pMesh;
 }
@@ -172,6 +181,12 @@ void GLC_ObjToMesh2::ScanLigne(const char* c_strLigne)
 	else if (strncmp(c_strLigne, "f ", 2) == 0)
 	{
 		ExtractFaceIndex(&c_strLigne[2]);	// On elève les 2 premier char
+	}
+
+	// Search Material
+	else if (strncmp(c_strLigne, "usemtl ", 7) == 0)
+	{
+		SetCurrentMaterial(&c_strLigne[7]);	// On elève les 7 premier char
 	}
 
 }
@@ -231,10 +246,10 @@ void GLC_ObjToMesh2::ExtractFaceIndex(const char* c_strLigne)
 		{	// There is a texture coordinate
 			VectorTextureCoordinate.append(TextureCoordinate);
 		}
-
+		
 		VectorCoordinate.append(Coordinate);
 		VectorNormal.append(Normal);
-		VectorMaterial.append(0);
+		VectorMaterial.append(m_CurrentMaterialIndex);
 	}
 	
 	if (VectorTextureCoordinate.isEmpty())
@@ -250,6 +265,29 @@ void GLC_ObjToMesh2::ExtractFaceIndex(const char* c_strLigne)
 	
 
 }
+
+//! Set Current material index
+void GLC_ObjToMesh2::SetCurrentMaterial(const char* c_strLigne)
+{
+	istringstream StreamString(c_strLigne);
+	string MaterialName;
+
+	if (!(StreamString >> MaterialName))
+	{
+		qDebug() << "GLC_ObjToMesh2::SetCurrentMaterial : something is wrong!!";
+		assert(false);
+	}
+	
+	MaterialHashMap::const_iterator iMaterial= m_MaterialNameIndex.find(QString::fromStdString (MaterialName));
+	// Check if the material name is find
+	if(iMaterial != m_MaterialNameIndex.end());
+	{
+		// Retrieve the material index
+		m_CurrentMaterialIndex= m_MaterialNameIndex[QString::fromStdString(MaterialName)];
+		//qDebug() << "GLC_ObjToMesh2::SetCurrentMaterial : " << m_CurrentMaterialIndex;
+	}		
+}
+
 
 // Extract a vertex from a string
 void GLC_ObjToMesh2::ExtractVertexIndex(string sLigne, int &Coordinate, int &Normal, int &TextureCoordinate)
@@ -282,3 +320,212 @@ void GLC_ObjToMesh2::ExtractVertexIndex(string sLigne, int &Coordinate, int &Nor
 	Normal--;		
 	
 }
+
+//! Check if a material file exist
+void GLC_ObjToMesh2::LoadMaterial(std::string FileName)
+{
+	
+	FileName.replace(FileName.length() - 3, 3, "mtl");
+
+	// Create the input file stream
+	ifstream MtlFile;
+
+	MtlFile.open(FileName.c_str(), ios::binary | ios::in);
+
+	if (!MtlFile)
+	{
+		qDebug("GLC_ObjToMesh2::LoadMaterial File \"%s\" Not opened", FileName.c_str());
+		return;
+	}
+	else
+	{
+		qDebug("GLC_ObjToMesh2::LoadMaterial OK File %s Open", FileName.c_str());
+	}
+
+	// static caracters array
+	char strBuff[GLC_OBJ_LIGNE_LENGHT];
+	string Header;
+	
+	int MaterialIndex= -1;
+	
+	while (!MtlFile.eof())
+	{
+		MtlFile.getline(strBuff, GLC_OBJ_LIGNE_LENGHT);
+		
+		istringstream StreamLine(strBuff);
+		
+		if ((StreamLine >> Header))
+		{
+		
+			// Search New material
+			if (Header =="newmtl")
+			{			
+				qDebug() << "New material find";
+				
+				if (NULL != m_pCurrentMaterial)
+				{
+					MaterialIndex++;
+					qDebug() << "Add material : " << MaterialIndex;
+					m_pMesh->AddMaterial(MaterialIndex,*m_pCurrentMaterial);					
+					delete m_pCurrentMaterial;
+					m_pCurrentMaterial= NULL;
+				}
+								
+				m_pCurrentMaterial= new GLC_Material;
+				
+				ExtractString(strBuff, m_pCurrentMaterial);
+				
+				QString MaterialName(m_pCurrentMaterial->GetName());
+				
+				MaterialHashMap::const_iterator iMaterial= m_MaterialNameIndex.find(MaterialName);
+				// Check if the key is already use
+				assert(iMaterial == m_MaterialNameIndex.end());
+				
+				// Add the Material to Material hash table
+				m_MaterialNameIndex[MaterialName]= MaterialIndex + 1;
+				
+								
+				//m_pMesh->AddMaterial(1,NewMaterial)
+			}
+			else if ((Header == "Ka") || (Header == "Kd") || (Header == "Ks"))
+			{
+				ExtractRGBValue(strBuff, m_pCurrentMaterial);
+			}
+	
+			else if ((Header == "Ns"))
+			{
+				ExtractOneValue(strBuff, m_pCurrentMaterial);
+			}
+			else if ((Header == "map_Kd"))
+			{
+				qDebug() << "Texture detected";
+				ExtractString(strBuff, m_pCurrentMaterial);
+			}
+						
+		}
+	}
+
+	if (NULL != m_pCurrentMaterial)
+	{
+		MaterialIndex++;
+		qDebug() << "Add material : " << MaterialIndex;
+		m_pMesh->AddMaterial(MaterialIndex,*m_pCurrentMaterial);					
+		delete m_pCurrentMaterial;
+		m_pCurrentMaterial= NULL;
+	}
+
+	
+	MtlFile.close();
+	
+		
+}
+
+// Extract String
+void GLC_ObjToMesh2::ExtractString(const std::string &Ligne, GLC_Material *pMaterial)
+{
+	istringstream StreamString(Ligne);
+	string Header;
+	string Value;
+	
+	StreamString >> Header >> Value;
+	if (Header == "newmtl")
+	{
+		string Value2;
+		while (StreamString >> Value2)
+		{
+			Value.append(" ");
+			Value.append(Value2);
+		}
+		
+		pMaterial->SetName(Value.c_str());
+		qDebug() << "Material name is : " << Value.c_str();
+	}
+	else if (Header == "map_Kd")// Texture file to load
+	{
+		// create the texture
+		string TextureFile(m_sFile);
+		int start= m_sFile.find_last_of('/');
+		start++;
+		
+		TextureFile.erase(start);
+		TextureFile.append(Value);
+		
+		GLC_Texture *pTexture = new GLC_Texture(m_pGLWidget, QString::fromStdString(TextureFile));
+		pMaterial->SetTexture(pTexture);
+		qDebug() << "Texture File is : " << Value.c_str();
+	}
+	
+}
+
+// Extract RGB value
+void GLC_ObjToMesh2::ExtractRGBValue(const std::string &Ligne, GLC_Material *pMaterial)
+{
+	istringstream StreamString(Ligne);
+	string Header;
+	GLfloat RgbaColor[4];
+
+	if (!(StreamString >> Header >> RgbaColor[0] >> RgbaColor[1] >> RgbaColor[2]))
+	{
+		qDebug() << "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
+		assert(false);
+	}
+	RgbaColor[3]= 1.0f;
+	
+	if (Header == "Ka") // Ambiant Color
+	{
+		pMaterial->SetAmbientColor(RgbaColor);
+		qDebug() << "Ambiant Color : " <<  (RgbaColor[0]) << " " << (RgbaColor[1]) << " " << (RgbaColor[2]);
+	}
+	
+	else if (Header == "Kd") // Diffuse Color
+	{
+		pMaterial->SetDiffuseColor(RgbaColor);
+		qDebug() << "Diffuse Color : " <<  RgbaColor[0] << " " << RgbaColor[1] << " " << RgbaColor[2];
+	}
+	
+	else if (Header == "Ks") // Specular Color
+	{
+		pMaterial->SetSpecularColor(RgbaColor);
+		qDebug() << "Specular Color : " <<  RgbaColor[0] << " " << RgbaColor[1] << " " << RgbaColor[2];
+	}
+	
+	else
+	{
+		qDebug() << "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
+		assert(false);
+	}
+
+		
+}
+
+// Extract One value
+void GLC_ObjToMesh2::ExtractOneValue(const std::string &Ligne, GLC_Material *pMaterial)
+{
+	istringstream StreamString(Ligne);
+	string Header;
+	GLfloat Value;
+
+	if (!(StreamString >> Header >> Value))
+	{
+		qDebug() << "GLC_ObjToMesh2::ExtractOneValue : something is wrong!!";
+		qDebug() << "Current mtl file line is : " << Ligne.c_str();
+		assert(false);
+	}
+	
+	if (Header == "Ns") // Ambiant Color
+	{
+		pMaterial->SetShininess(Value);
+		qDebug() << "Shininess : " <<  Value;
+	}		
+	
+	else
+	{
+		qDebug() << "GLC_ObjToMesh2::ExtractOneValue : something is wrong!!";
+		assert(false);
+	}
+
+		
+
+}
+
+
