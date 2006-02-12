@@ -47,8 +47,11 @@ class GLC_Texture
 
 public:
 	//! Default constructor
-	GLC_Texture(QGLWidget *GLWidget, const QString Filename);
+	GLC_Texture(QGLWidget *GLWidget, const QString &Filename);
 
+	//! Copy constructor
+	GLC_Texture(const GLC_Texture &TextureToCopy);
+	
 	//! Default Destructor
 	virtual ~GLC_Texture();
 //@}
@@ -72,7 +75,11 @@ public:
 
 private:
 	//! OpenGL Texture ID
+	QGLWidget *m_pQGLWidget;
+	QString m_FileName;
 	GLuint	m_TextureID;
+	
+	
 };
 
 #endif //GLC_TEXTURE_H_
