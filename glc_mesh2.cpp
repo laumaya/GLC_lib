@@ -212,7 +212,7 @@ void GLC_Mesh2::GlDraw()
 						if (m_MaterialHash[CurrentMaterialIndex].GetAddRgbaTexture())
 						{
 							glEnable(GL_TEXTURE_2D);
-							qDebug() << "GLC_Mesh2::GlDraw : Texture enabled";
+							//qDebug() << "GLC_Mesh2::GlDraw : Texture enabled";
 						}
 						else
 						{

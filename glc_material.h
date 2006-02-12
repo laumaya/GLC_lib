@@ -126,6 +126,7 @@ public:
 	//! Set Texture
 	void SetTexture(GLC_Texture* pTexture)
 	{
+		qDebug() << "GLC_Material::SetTexture";
 		m_pTexture= pTexture;
 		
 		UpdateUsed();
