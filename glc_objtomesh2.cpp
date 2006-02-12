@@ -148,6 +148,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 		ScanLigne(strBuff);		
 	}
 
+	m_MaterialNameIndex.clear();
 	qDebug("GLC_ObjToMesh2::CreateMeshFromObj End of mesh creation");
 
 	return m_pMesh;
