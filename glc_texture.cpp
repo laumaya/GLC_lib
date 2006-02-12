@@ -70,6 +70,7 @@ GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 
 GLC_Texture::~GLC_Texture()
 {
-	glDeleteTextures(1, &m_TextureID);
+	qDebug() << "GLC_Texture::~GLC_Texture Texture ID : " << m_TextureID;
+	m_pQGLWidget->deleteTexture(m_TextureID);
 }
 
