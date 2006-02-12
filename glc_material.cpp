@@ -109,8 +109,14 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 :GLC_Object(InitMaterial.GetName())
 , m_fShininess(InitMaterial.m_fShininess)
-, m_pTexture(InitMaterial.m_pTexture)	//! \todo something to do about texture memory allocation.
+, m_pTexture(NULL)
 {
+	if (NULL != InitMaterial.m_pTexture)
+	{
+		m_pTexture= new GLC_Texture(*(InitMaterial.m_pTexture));
+		assert(m_pTexture != NULL);
+	}
+	
 	// Ambiente Color
 	m_AmbientColor[0]= InitMaterial.m_AmbientColor[0];
 	m_AmbientColor[1]= InitMaterial.m_AmbientColor[1];
@@ -152,6 +158,13 @@ GLC_Material::~GLC_Material(void)
     }
     // clear whereUSED Hash table
     m_WhereUsed.clear();
+    
+    if (NULL != m_pTexture)
+    {
+   		delete m_pTexture;
+    	m_pTexture= NULL;
+    }
+    
 
 }
 
