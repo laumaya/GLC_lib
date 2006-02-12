@@ -76,12 +76,8 @@ void GLC_Mesh2::GetMaterial(int Index, GLC_Material &Material)
 //! Add material to mesh
 void GLC_Mesh2::AddMaterial(int Index, GLC_Material &Material)
 {
-	//! \todo GLC_Material should have copy constructor
-	MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
-	// Check if the key is already use
-	assert(iMaterial == m_MaterialHash.end());
-	
-	// Add the Material to Material hash table
+		
+	// Add or replace the Material to Material hash table
 	m_MaterialHash.insert(Index, Material);
 
 }
