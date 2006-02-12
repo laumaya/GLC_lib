@@ -48,7 +48,9 @@ GLC_Mesh2::~GLC_Mesh2(void)
 	
 	m_TextCoordinateHash.clear();
 	m_TextureIndex.clear();
-	
+
+	m_MaterialHash.clear();
+	m_MaterialIndex.clear();
 }
 /////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -80,7 +82,7 @@ void GLC_Mesh2::AddMaterial(int Index, GLC_Material &Material)
 	assert(iMaterial == m_MaterialHash.end());
 	
 	// Add the Material to Material hash table
-	m_MaterialHash[Index]= Material;
+	m_MaterialHash.insert(Index, Material);
 
 }
 
@@ -93,7 +95,7 @@ void GLC_Mesh2::ModifyMaterial(int Index, GLC_Material &Material)
 	assert(iMaterial != m_MaterialHash.end());
 	
 	// Modify the material
-	m_MaterialHash[Index]= Material;
+	m_MaterialHash.insert(Index, Material);
 
 }
 
@@ -107,7 +109,7 @@ void GLC_Mesh2::AddCoordinate(int Index, GLC_Vector3d Coordinate)
 	assert(iVector == m_CoordinateHash.end());
 	
 	// Add the coordinate to coordinate hash table
-	m_CoordinateHash[Index]= Coordinate;
+	m_CoordinateHash.insert(Index, Coordinate);
 	
 }
 
@@ -120,7 +122,7 @@ void GLC_Mesh2::AddNormal(int Index, GLC_Vector3d Normal)
 	assert(iVector == m_NormalHash.end());
 	
 	// Add the coordinate to coordinate hash table
-	m_NormalHash[Index]= Normal;
+	m_NormalHash.insert(Index, Normal);
 	
 }
 
@@ -133,7 +135,7 @@ void GLC_Mesh2::AddTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate)
 	assert(iVector == m_TextCoordinateHash.end());
 	
 	// Add the coordinate to coordinate hash table
-	m_TextCoordinateHash[Index]= TextureCoordinate;
+	m_TextCoordinateHash.insert(Index, TextureCoordinate);
 	
 }
 
@@ -160,11 +162,7 @@ void GLC_Mesh2::AddFace(const QVector<int> &Material, const QVector<int> &Coordi
 	AddMaterialIndex(Material);
 	AddCoordAndNormIndex(Coordinate, Normal);
 	AddTextureIndex(TextureCoordinate);
-	
-	// Check if indexed list have the same size
-	//assert(m_TextureIndex.size() == m_NormalIndex.size());
-	//assert(m_TextureIndex.size() == m_CoordinateIndex.size());
-	
+		
 	// Increment number of faces
 	m_NumberOfFaces++;
 }
@@ -209,7 +207,6 @@ void GLC_Mesh2::GlDraw()
 					
 					MaterialHash::const_iterator iMaterial= m_MaterialHash.find(CurrentMaterialIndex);
 					// Check if the key is already use
-					//assert(iMaterial != m_MaterialHash.end());
 					if (iMaterial != m_MaterialHash.end())
 					{
 						if (m_MaterialHash[CurrentMaterialIndex].GetAddRgbaTexture())

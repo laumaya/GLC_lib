@@ -54,9 +54,9 @@ bool GLC_Collection::AddGLC_Geom(GLC_Geometry* pGeom)
 	if (iGeom == m_TheMap.end())
 	{	// Ok, la clé n'est pas prise
 		// Ajoute la géométrie
-		m_TheMap[pGeom->GetID()]= pGeom;
+		m_TheMap.insert(pGeom->GetID(), pGeom);
 		// Ajoute la sous liste
-		m_ListMap[pGeom->GetID()] = 0;
+		m_ListMap.insert(pGeom->GetID(), 0);
 		qDebug("GLC_Collection::AddGLC_Geom : Element Ajouté avec succès");
 		
 		// Validité de la liste
