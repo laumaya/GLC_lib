@@ -378,15 +378,14 @@ void GLC_ObjToMesh2::LoadMaterial(std::string FileName)
 				
 				QString MaterialName(m_pCurrentMaterial->GetName());
 				
-				MaterialHashMap::const_iterator iMaterial= m_MaterialNameIndex.find(MaterialName);
+				//MaterialHashMap::const_iterator iMaterial= m_MaterialNameIndex.find(MaterialName);
 				// Check if the key is already use
-				assert(iMaterial == m_MaterialNameIndex.end());
+				//assert(iMaterial == m_MaterialNameIndex.end());
 				
 				// Add the Material to Material hash table
-				m_MaterialNameIndex[MaterialName]= MaterialIndex + 1;
+				m_MaterialNameIndex.insert(MaterialName, MaterialIndex + 1);
 				
 								
-				//m_pMesh->AddMaterial(1,NewMaterial)
 			}
 			else if ((Header == "Ka") || (Header == "Kd") || (Header == "Ks"))
 			{
