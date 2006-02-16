@@ -70,9 +70,6 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 	// Allocate Mesh memmory
 	m_pMesh= new GLC_Mesh2();
 	
-	// Read Buffer
-	char* Buffer;
-	int Taille;
 	
 	// Create the input file stream
 	ifstream ObjFile;
@@ -93,30 +90,10 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 		LoadMaterial(m_sFile);
 		qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj Material loaded";
 	}
-
-	// Compute obj file size
-	ObjFile.seekg (0, ios::end);
-	Taille = ObjFile.tellg();
-	Buffer= new char[Taille + 1];
-	ObjFile.seekg (0, ios::beg);
-	qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj File size computed";
-
-	// Read the file at once
-	ObjFile.read(Buffer, Taille);
-	// Close input file stream
-	ObjFile.close();
-	Buffer[Taille]= '\0'; //Null termination caracter
-	qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj File read";
-
-	// Create Buffer input string stream
-	istringstream StreamStringBuf(Buffer);
-	delete [] Buffer;
-	Buffer= NULL;
-	qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj buffer input stream created";
 	
-	while (!StreamStringBuf.eof())
+	while (!ObjFile.eof())
 	{
-		StreamStringBuf.getline(strBuff, GLC_OBJ_LIGNE_LENGHT);
+		ObjFile.getline(strBuff, GLC_OBJ_LIGNE_LENGHT);
 		// Search a vertex vector
 		if (strncmp(strBuff, ("v "), 2) == 0)
 			m_nNbrVectPos++;
@@ -139,14 +116,16 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 	qDebug() << "Coordinate number : " << m_nNbrVectPos;
 	qDebug() << "Normal number : " << m_nNbrVectNorm;
 	
-	StreamStringBuf.clear();
-	StreamStringBuf.seekg (0, ios::beg);
+	ObjFile.clear();
+	ObjFile.seekg (0, ios::beg);
 	// Read Buffer and create mesh
-	while (!StreamStringBuf.eof())
+	while (!ObjFile.eof())
 	{
-		StreamStringBuf.getline(strBuff, GLC_OBJ_LIGNE_LENGHT);
+		ObjFile.getline(strBuff, GLC_OBJ_LIGNE_LENGHT);
 		ScanLigne(strBuff);		
 	}
+	
+	ObjFile.close();
 
 	m_MaterialNameIndex.clear();
 	qDebug("GLC_ObjToMesh2::CreateMeshFromObj End of mesh creation");
@@ -430,7 +409,7 @@ void GLC_ObjToMesh2::ExtractString(const std::string &Ligne, GLC_Material *pMate
 	assert((StreamString >> Header >> Value));
 	// If There is an space in the string to extracts
 	string Value2;
-	while (StreamString >> Value2)
+	while ((StreamString >> Value2))
 	{
 		Value.append(" ");
 		Value.append(Value2);
