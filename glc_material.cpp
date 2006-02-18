@@ -76,7 +76,6 @@ GLC_Material::GLC_Material(const char *pName ,const GLfloat *pAmbiantColor)
 GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 :GLC_Object(pName)
 , m_fShininess(50.0)		// By default shininess 50
-//! \todo something to do about texture memory allocation.
 , m_pTexture(pTexture)		// Init texture 
 {
 	// Ambiente Color
