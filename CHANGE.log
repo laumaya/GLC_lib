@@ -1,4 +1,50 @@
 --------------------------------------------------------------
+February  2006
+--------------------------------------------------------------
+
+GLC_lib-0.9.5
+--------------------------------------------------------------
+BETTER MESH DATA STRUCTURE AND FEATURE: MESH2
+
+FILES : GLC_lib.pro
+	New glc_mesh2.h - glc_mesh2.cpp - glc_objtomesh2.h - glc_objtomesh2.cpp
+New class:
+	GLC_Mesh2 - GLC_ObjToMesh2
+	
+New Mesh2 features :
+	- Each face can have a different material with or without texture.
+	- Memmory usage enhanced (Vertex are shared).
+
+New ObjToMesh2 features :
+	- Support the .mtl file associated to the obj file.
+	
+--------------------------------------------------------------
+MINOR CHANGE AND IMPROVEMENT
+
+FILES : glc_material.g - glc_material.cpp
+CLASS : GLC_Material
+Add a copy constructor and delete associated texture in the destructor.
+
+FILES : glc_object.h - glc_object.cpp
+CLASS : GLC_Object
+Set GLC_Object name with const char* instead of char*
+
+FILES : glc_texture.h - glc_texture.cpp
+CLASS : GLC_Texture
+Add filename member and QGLWidget member
+
+--------------------------------------------------------------
+NEW VECTOR2D AND VECTOR3D
+FILES : glc_vector2d.h - glc_vector2d.cpp
+		glc_vector3d.h - glc_vector3d.cpp
+		glc_maths.h
+
+CLASS : GLC_Vector2d - GLC_Vector3d
+
+These new class are used by GLC_Mesh2 to improve
+memory usage.
+
+--------------------------------------------------------------
 January 30 2006
 --------------------------------------------------------------
 
