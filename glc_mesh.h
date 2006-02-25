@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2006 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 0.9.4, packaged on January, 2006.
+ Version 0.9.5, packaged on February, 2006.
 
  http://glc-lib.sourceforge.net
 
@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_mesh.h interface for the GLC_Mesh class.
+//! \file glc_mesh.h interface for the GLC_Mesh class DEPRECATED SEE GLC_mesh2.
 
 #ifndef GLC_MESH_H_
 #define GLC_MESH_H_
@@ -36,7 +36,7 @@ typedef QList<GLC_Face*> CFaceList;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Mesh
-/*! \brief GLC_Mesh : OpenGL 3D Mesh*/
+/*! \brief GLC_Mesh : OpenGL 3D Mesh DEPRECATED SEE GLC_mesh2*/
 
 /*! An GLC_Mesh is Mesh composed of polygons
  * 		- Each polygon must be a planar Face (GLC_Face)

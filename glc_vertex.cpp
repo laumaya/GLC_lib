@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2006 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 0.9.4, packaged on January, 2006.
+ Version 0.9.5, packaged on February, 2006.
 
  http://glc-lib.sourceforge.net
 
@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_vertex.cpp implementation of the GLC_Vertex class.
+//! \file glc_vertex.cpp implementation of the GLC_Vertex class DEPRECATED SEE GLC_mesh2.
 
 #include <QtDebug>
 #include "glc_vertex.h"

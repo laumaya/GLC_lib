@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2006 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 0.9.4, packaged on January, 2006.
+ Version 0.9.5, packaged on February, 2006.
 
  http://glc-lib.sourceforge.net
 
@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_face.h interface for the GLC_Face class.
+//! \file glc_face.h interface for the GLC_Face class DEPRECATED SEE GLC_mesh2.
 
 #ifndef GLC_FACE_H_
 #define GLC_FACE_H_
@@ -33,7 +33,7 @@
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Face
-/*! \brief GLC_Face : OpenGL Face*/
+/*! \brief GLC_Face : OpenGL Face DEPRECATED SEE GLC_mesh2*/
 
 /*! An GLC_Face polygonal face composed by vertexs (GLC_Vertex)
  */
