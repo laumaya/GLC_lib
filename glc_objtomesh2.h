@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_objToMesh.h interface for the GLC_ObjToMesh2 class.
+//! \file glc_objToMesh2.h interface for the GLC_ObjToMesh2 class.
 
 #ifndef GLC_OBJ_TO_MESH2_H_
 #define GLC_OBJ_TO_MESH2_H_

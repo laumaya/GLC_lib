@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_vector2.h interface for the GLC_Vector2d class.
+//! \file glc_vector2d.h interface for the GLC_Vector2d class.
 
 #ifndef GLC_VECTOR2D_H_
 #define GLC_VECTOR2D_H_

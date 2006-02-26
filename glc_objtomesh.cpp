@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_objToMesh.cpp implementation of the GLC_ObjToMesh class.
+//! \file glc_objToMesh.cpp implementation of the GLC_ObjToMesh class  DEPRECATED SEE GLC_ObjToMesh2..
 
 #include <QtDebug>
 #include <iostream>

@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_face.cpp implementation of the GLC_Face class DEPRECATED SEE GLC_mesh2.
+//! \file glc_face.cpp implementation of the GLC_Face class DEPRECATED SEE GLC_Mesh2.
 
 #include <QtDebug>
 #include "glc_face.h"

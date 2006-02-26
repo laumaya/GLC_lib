@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_vertex.h interface for the GLC_Vertex class DEPRECATED SEE GLC_mesh2.
+//! \file glc_vertex.h interface for the GLC_Vertex class DEPRECATED SEE GLC_Mesh2.
 
 #ifndef GLC_VERTEX_H_
 #define GLC_VERTEX_H_
@@ -33,7 +33,7 @@
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Vertex
-/*! \brief GLC_Vertex : OpenGL Vertex, Normal, Texture coordinate DEPRECATED SEE GLC_mesh2*/
+/*! \brief GLC_Vertex : OpenGL Vertex, Normal, Texture coordinate DEPRECATED SEE GLC_Mesh2*/
 
 /*! An GLC_Vertex polygonal face composed by vertexs (GLC_Vertex)
  */

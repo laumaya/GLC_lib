@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_objToMesh.cpp implementation of the GLC_ObjToMesh2 class.
+//! \file glc_objToMesh2.cpp implementation of the GLC_ObjToMesh2 class.
 
 #include <QtDebug>
 #include <QVector>
@@ -65,6 +65,15 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 	// Initialisation
 	m_sFile= sFile;
 	m_pMesh= NULL;	// In case of multi obj read
+
+	m_pCurrentMaterial= NULL;
+	m_CurrentMaterialIndex= -1;
+	m_nNbrVectPos= 0;
+	m_nCurVectPos= 0;
+	m_nNbrVectNorm= 0;
+	m_nCurVectNorm= 0;
+	m_nNbrVectTexture= 0;
+	m_nCurVectTexture= 0;
 
 	// Allocate Mesh memmory
 	m_pMesh= new GLC_Mesh2();

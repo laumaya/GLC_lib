@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_vertex.cpp implementation of the GLC_Vertex class DEPRECATED SEE GLC_mesh2.
+//! \file glc_vertex.cpp implementation of the GLC_Vertex class DEPRECATED SEE GLC_Mesh2.
 
 #include <QtDebug>
 #include "glc_vertex.h"

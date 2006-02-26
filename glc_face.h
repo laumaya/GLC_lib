@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_face.h interface for the GLC_Face class DEPRECATED SEE GLC_mesh2.
+//! \file glc_face.h interface for the GLC_Face class DEPRECATED SEE GLC_Mesh2.
 
 #ifndef GLC_FACE_H_
 #define GLC_FACE_H_
@@ -33,7 +33,7 @@
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Face
-/*! \brief GLC_Face : OpenGL Face DEPRECATED SEE GLC_mesh2*/
+/*! \brief GLC_Face : OpenGL Face DEPRECATED SEE GLC_Mesh2*/
 
 /*! An GLC_Face polygonal face composed by vertexs (GLC_Vertex)
  */

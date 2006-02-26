@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_objToMesh.h interface for the GLC_ObjToMesh class.
+//! \file glc_objToMesh.h interface for the GLC_ObjToMesh class DEPRECATED SEE GLC_ObjToMesh2.
 
 #ifndef GLC_OBJ_TO_MESH_H_
 #define GLC_OBJ_TO_MESH_H_
@@ -36,7 +36,7 @@
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ObjToMesh
-/*! \brief GLC_ObjToMesh : Create an GLC_Mesh from obj file */
+/*! \brief GLC_ObjToMesh : Create an GLC_Mesh from obj file  DEPRECATED SEE GLC_ObjToMesh2.*/
 
 /*! An GLC_ObjToMesh extract a single mesh from an .obj file \n
  * 	List of elements extracted from the OBJ
