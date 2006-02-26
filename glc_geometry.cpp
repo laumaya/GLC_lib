@@ -106,11 +106,14 @@ void GLC_Geometry::SetMaterial(GLC_Material* pMat)
 		pMat->GetDiffuseColor(m_RGBAColor);
 
 		m_GeometryIsValid = false;
+		m_ListIsValid= false;	// GLC_Mesh2 compatibility
+		
 	}
 	else
 	{	
 		// Force la mise à jour
 		m_GeometryIsValid = false;
+		m_ListIsValid= false;	// GLC_Mesh2 compatibility
 	}
 }
 // Remove Geometry from the material without update material usage table
