@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_mesh.h interface for the GLC_Mesh2 class.
+//! \file glc_mesh2.h interface for the GLC_Mesh2 class.
 
 #ifndef GLC_MESH2_H_
 #define GLC_MESH2_H_
@@ -60,6 +60,9 @@ public:
 	//! Construct an empty Mesh
 	explicit GLC_Mesh2(const GLfloat *pColor= 0);
 	
+	//! Copy constructor
+	explicit GLC_Mesh2(const GLC_Mesh2 &meshToCopy);
+	
 	//! Delete Mesh's faces and clear faces list
 	virtual ~GLC_Mesh2(void);
 //@}
@@ -70,7 +73,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get mesh material
-	void GetMaterial(int Index, GLC_Material &Material);
+	void GetOneMaterial(int Index, GLC_Material &Material);
 
 //@}
 

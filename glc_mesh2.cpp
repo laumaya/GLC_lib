@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_mesh.cpp implementation of the GLC_Mesh2 class.
+//! \file glc_mesh2.cpp implementation of the GLC_Mesh2 class.
 
 #include <QtDebug>
 #include <assert.h>
@@ -33,8 +33,27 @@
 //////////////////////////////////////////////////////////////////////
 GLC_Mesh2::GLC_Mesh2(const GLfloat *pColor)
 :GLC_Geometry("Mesh", pColor)
+, m_NumberOfFaces(0)
 {
 
+}
+
+GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
+: GLC_Geometry(meshToCopy.GetName(), meshToCopy.GetfRGBA())
+, m_CoordinateHash(meshToCopy.m_CoordinateHash)
+, m_CoordinateIndex(meshToCopy.m_CoordinateIndex)
+, m_MaterialHash(meshToCopy.m_MaterialHash)
+, m_MaterialIndex(meshToCopy.m_MaterialIndex)
+, m_NormalHash(meshToCopy.m_NormalHash)
+, m_NormalIndex(meshToCopy.m_NormalIndex)
+, m_TextCoordinateHash(meshToCopy.m_TextCoordinateHash)
+, m_TextureIndex(meshToCopy.m_TextureIndex)
+
+, m_NumberOfFaces(meshToCopy.m_NumberOfFaces)
+{
+	SetMaterial(meshToCopy.GetMaterial());	
+	SetMatrix(meshToCopy.GetMatrix());
+	
 }
 
 
@@ -57,7 +76,7 @@ GLC_Mesh2::~GLC_Mesh2(void)
 //////////////////////////////////////////////////////////////////////
 
 //! Get material from mesh
-void GLC_Mesh2::GetMaterial(int Index, GLC_Material &Material)
+void GLC_Mesh2::GetOneMaterial(int Index, GLC_Material &Material)
 {
 	MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
 	// Check if the key is find
