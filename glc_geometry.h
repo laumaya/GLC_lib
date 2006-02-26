@@ -130,7 +130,7 @@ public:
 	}
 
 	//! Return material of geometry
-	GLC_Material* GetMaterial(void)
+	GLC_Material* GetMaterial(void) const
 	{
 		return m_pMaterial;
 	}
