@@ -59,7 +59,7 @@ public:
 	/*! Create a GLC_Object , Generate is UID GLC_Object::m_Uid 
 	 * and set GLC_Object::m_Name to pName*/
 	//! \todo Add a constructor without name definition.
-	GLC_Object(const char *pName);
+	GLC_Object(const char *pName= "");
 	
 	//! Virtual destructor
 	virtual ~GLC_Object();
