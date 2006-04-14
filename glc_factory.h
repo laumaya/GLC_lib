@@ -29,16 +29,16 @@
 
 #include <string>
 #include <QtOpenGL>
+#include "glc_maths.h"
 
-// Declartion of class to built
-class GLC_Point;
-class GLC_Circle;
-class GLC_Box;
-class GLC_Cylinder;
-class GLC_Mesh2;
-class GLC_Material;
-class GLC_Texture;
-// end of declaration of class to built
+//class to built
+#include "glc_point.h"
+#include "glc_circle.h"
+#include "glc_box.h"
+#include "glc_cylinder.h"
+#include "glc_mesh2.h"
+#include "glc_objtomesh2.h"
+// end of class to built
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Factory
@@ -64,7 +64,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an GLC_Point
-	GLC_Point* createPoint(const GLC_Vector3d coord) const;
+	GLC_Point* createPoint(const GLC_Vector4d &coord) const;
 	GLC_Point* createPoint(double x, double y, double z) const;
 		
 	//!  Create an GLC_Circle
@@ -102,8 +102,8 @@ private:
 	QGLWidget* m_pQGLWidget;
 	
 	//! Class which can read a Mesh from File System
-	GLC_MeshLoader* m_pMeshLoader;
+	GLC_ObjToMesh2* m_pMeshLoader;
 		
-}
+};
 
 #endif /*GLC_FACTORY_*/

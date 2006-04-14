@@ -27,13 +27,13 @@
 #include "glc_factory.h"
 
 // init static member
-GLC_Factory* GLC_Factory::m_Factory= NULL;
+GLC_Factory* GLC_Factory::m_pFactory= NULL;
 
 //////////////////////////////////////////////////////////////////////
 // static method
 //////////////////////////////////////////////////////////////////////
 // Return the unique instance of the factory
-GLC_Factory* GLC_Factory::instance(QGLWidget *GLWidget))
+GLC_Factory* GLC_Factory::instance(QGLWidget *GLWidget)
 {
 	if(m_pFactory == NULL)
 	{
@@ -47,7 +47,7 @@ GLC_Factory* GLC_Factory::instance(QGLWidget *GLWidget))
 //////////////////////////////////////////////////////////////////////
 
 // Protected constructor
-GLC_Factory::GLC_Factory(QGLWidget *GLWidget))
+GLC_Factory::GLC_Factory(QGLWidget *GLWidget)
 : m_pQGLWidget(GLWidget)
 , m_pMeshLoader(NULL)
 {
@@ -75,7 +75,7 @@ GLC_Factory::~GLC_Factory()
 //////////////////////////////////////////////////////////////////////
 
 // Create an GLC_Point
-GLC_Point* GLC_Factory::createPoint(const GLC_Vector3d coord) const
+GLC_Point* GLC_Factory::createPoint(const GLC_Vector4d &coord) const
 {
 	return new GLC_Point(coord);
 }
@@ -86,7 +86,7 @@ GLC_Point* GLC_Factory::createPoint(double x, double y, double z) const
 }
 
 //  Create an GLC_Circle
-GLC_Circle* GLC_Factory::createCircle(double radius, double angle= 2 * PI) const
+GLC_Circle* GLC_Factory::createCircle(double radius, double angle) const
 {
 	return new GLC_Circle(radius, angle);
 }
