@@ -37,7 +37,8 @@ HEADERS += glc_maths.h \
            glc_camera.h \
            glc_imageplane.h \
            glc_viewport.h \
-           glc_collection.h
+           glc_collection.h \
+           glc_factory.h
            
              
 SOURCES +=  glc_vector4d.cpp \
@@ -65,7 +66,8 @@ SOURCES +=  glc_vector4d.cpp \
             glc_camera.cpp \
             glc_imageplane.cpp \
             glc_viewport.cpp \
-            glc_collection.cpp
+            glc_collection.cpp \
+            glc_factory.cpp
             
 #Windows compilation configuration       
 win32 {
