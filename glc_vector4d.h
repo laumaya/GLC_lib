@@ -28,6 +28,8 @@
 #define GLC_VECTOR4D_H_
 
 #include "glc_utils_maths.h"
+#include "glc_vector2d.h"
+#include "glc_vector3d.h"
 //////////////////////////////////////////////////////////////////////
 // définition global
 //////////////////////////////////////////////////////////////////////
@@ -65,6 +67,13 @@ public:
 	}
 	// Recopy constructor
 	GLC_Vector4d(const GLC_Vector4d &Vect);
+	
+	// Copy from an GLC_Vector3d
+	GLC_Vector4d(const GLC_Vector3d &Vect);
+
+	// Copy from an GLC_Vector2d
+	GLC_Vector4d(const GLC_Vector2d &Vect);
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -76,6 +85,9 @@ public:
 
 	/*! Overload binary "+" operator*/
 	GLC_Vector4d operator + (const GLC_Vector4d &Vect) const;
+
+	/*! Overload "=" operator*/
+	GLC_Vector4d& operator = (const GLC_Vector4d &Vect);
 
 	/*! Overload "+=" operator*/
 	GLC_Vector4d* operator += (const GLC_Vector4d &Vect);
