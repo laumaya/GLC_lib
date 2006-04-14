@@ -32,9 +32,8 @@
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Circle::GLC_Circle(const double &dRadius, const char *pName,
-					   const GLfloat *pColor, double Angle)
-
+GLC_Circle::GLC_Circle(const double &dRadius, double Angle,
+const char *pName, const GLfloat *pColor)
 :GLC_Geometry(pName, pColor)
 {
 	//! \todo remade init
