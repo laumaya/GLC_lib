@@ -76,6 +76,25 @@ GLC_Vector4d::GLC_Vector4d(const GLC_Vector4d &Vect)
 	dVecteur[3]= Vect.dVecteur[3];
 
 }
+// Copy from an GLC_Vector3d
+GLC_Vector4d::GLC_Vector4d(const GLC_Vector3d &Vect)
+{
+	dVecteur[0]= Vect.GetX();
+	dVecteur[1]= Vect.GetY();
+	dVecteur[2]= Vect.GetZ();
+	dVecteur[3]= 1.0;
+
+}
+
+// Copy from an GLC_Vector3d
+GLC_Vector4d::GLC_Vector4d(const GLC_Vector2d &Vect)
+{
+	dVecteur[0]= Vect.GetX();
+	dVecteur[1]= Vect.GetY();
+	dVecteur[2]= 0.0;
+	dVecteur[3]= 1.0;
+
+}
 
 //////////////////////////////////////////////////////////////////////
 // Surdéfinition des opérateurs
@@ -90,6 +109,17 @@ GLC_Vector4d GLC_Vector4d::operator + (const GLC_Vector4d &Vect) const
 		dVecteur[2] + Vect.dVecteur[2]);
 
 	return VectResult;
+}
+
+// Surcharge opérateur d'affectation "="
+GLC_Vector4d& GLC_Vector4d::operator = (const GLC_Vector4d &Vect)
+{
+	dVecteur[0]= Vect.dVecteur[0];
+	dVecteur[1]= Vect.dVecteur[1];
+	dVecteur[2]= Vect.dVecteur[2];
+	dVecteur[3]= Vect.dVecteur[3];
+	
+	return *this;
 }
 
 // Surcharge opérateur adition affectation "+="
