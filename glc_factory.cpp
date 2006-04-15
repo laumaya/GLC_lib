@@ -91,8 +91,20 @@ GLC_Circle* GLC_Factory::createCircle(double radius, double angle) const
 	return new GLC_Circle(radius, angle);
 }
 
-//! Create an GLC_Box
+// Create an GLC_Box
 GLC_Box* GLC_Factory::createBox(double lx, double ly, double lz) const
 {
 	return new GLC_Box(lx, ly, lz);
+}
+
+// Create an GLC_Cylinder
+GLC_Cylinder* GLC_Factory::createCylinder(double radius, double length) const
+{
+	return new GLC_Cylinder(radius, length);
+}
+// Create an GLC_Mesh2
+GLC_Mesh2* GLC_Factory::createMesh(std::string fullfileName) const
+{
+	GLC_ObjToMesh2 objToMesh(m_pQGLWidget);
+	return objToMesh.CreateMeshFromObj(fullfileName);
 }
