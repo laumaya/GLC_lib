@@ -87,6 +87,19 @@ GLC_Box* GLC_Factory::createBox(double lx, double ly, double lz) const
 	return new GLC_Box(lx, ly, lz);
 }
 
+// Create an GLC_Box
+GLC_Box* GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
+{
+	const double lx= boundingBox.getUpper().GetX() - boundingBox.getLower().GetX();
+	const double ly= boundingBox.getUpper().GetY() - boundingBox.getLower().GetY();
+	const double lz= boundingBox.getUpper().GetZ() - boundingBox.getLower().GetZ();
+	GLC_Box* pBox= new GLC_Box(lx, ly, lz);
+	pBox->Translate(boundingBox.getLower().GetX(), boundingBox.getLower().GetY()
+					, boundingBox.getLower().GetZ());
+					
+	return pBox;
+}
+
 // Create an GLC_Cylinder
 GLC_Cylinder* GLC_Factory::createCylinder(double radius, double length) const
 {

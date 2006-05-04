@@ -40,6 +40,8 @@
 #include "glc_mesh2.h"
 #include "glc_material.h"
 #include "glc_texture.h"
+#include "glc_boundingbox.h"
+
 // end of class to built
 
 //////////////////////////////////////////////////////////////////////
@@ -74,6 +76,7 @@ public:
 	
 	//! Create an GLC_Box
 	GLC_Box* createBox(double lx, double ly, double lz) const;
+	GLC_Box* createBox(const GLC_BoundingBox& boundingBox) const;
 	
 	//! Create an GLC_Cylinder
 	GLC_Cylinder* createCylinder(double radius, double length) const;
