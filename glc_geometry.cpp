@@ -71,6 +71,13 @@ GLC_Geometry::~GLC_Geometry(void)
 		m_pMaterial= NULL;
 	}
 }
+
+// return the geometry bounding box
+GLC_BoundingBox* GLC_Geometry::getBoundingBox(void) const
+{
+	return NULL;	
+}
+
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

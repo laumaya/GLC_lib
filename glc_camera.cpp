@@ -70,7 +70,7 @@ void GLC_Camera::Orbit(GLC_Vector4d VectOldPoss, GLC_Vector4d VectCurPoss)
 	
 	// Compute rotation matrix
 	const GLC_Vector4d VectAxeRot(VectCurPoss ^ VectOldPoss);
-	// Check if ratation vector is not null
+	// Check if rotation vector is not null
 	if (!VectAxeRot.IsNull())
 	{  // Ok, is not null
 		const double Angle= acos(VectCurPoss * VectOldPoss);

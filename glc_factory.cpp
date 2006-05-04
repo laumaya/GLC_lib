@@ -25,6 +25,7 @@
 //! \file glc_factory.cpp implementation of the GLC_Factory class.
 
 #include "glc_factory.h"
+#include "glc_objtomesh2.h"
 
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
@@ -49,7 +50,6 @@ GLC_Factory* GLC_Factory::instance(QGLWidget *GLWidget)
 // Protected constructor
 GLC_Factory::GLC_Factory(QGLWidget *GLWidget)
 : m_pQGLWidget(GLWidget)
-, m_pMeshLoader(NULL)
 {
 	
 }
@@ -57,17 +57,7 @@ GLC_Factory::GLC_Factory(QGLWidget *GLWidget)
 // Destructor
 GLC_Factory::~GLC_Factory()
 {
-	if (m_pFactory != NULL)
-	{
-		delete m_pFactory;
-		m_pFactory= NULL;
-	}
-
-	if (m_pMeshLoader != NULL)
-	{
-		delete m_pMeshLoader;
-		m_pMeshLoader= NULL;
-	}
+	m_pFactory= NULL;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -103,8 +93,57 @@ GLC_Cylinder* GLC_Factory::createCylinder(double radius, double length) const
 	return new GLC_Cylinder(radius, length);
 }
 // Create an GLC_Mesh2
-GLC_Mesh2* GLC_Factory::createMesh(std::string fullfileName) const
+GLC_Mesh2* GLC_Factory::createMesh(const std::string &fullfileName)
 {
 	GLC_ObjToMesh2 objToMesh(m_pQGLWidget);
 	return objToMesh.CreateMeshFromObj(fullfileName);
+}
+
+// Create an GLC_Mesh by copying another mesh
+GLC_Mesh2* GLC_Factory::createMesh(const GLC_Geometry* pMesh)
+{	
+	const GLC_Mesh2* pTempMesh= dynamic_cast<const GLC_Mesh2*>(pMesh);
+	if (pTempMesh != NULL)
+	{
+		return new GLC_Mesh2(*pTempMesh);
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+// Create an GLC_Material
+GLC_Material* GLC_Factory::createMaterial()
+{
+	return new GLC_Material();
+}
+
+// Create an GLC_Material
+GLC_Material* GLC_Factory::createMaterial(const GLfloat *pAmbiantColor)
+{
+	return new GLC_Material("Material", pAmbiantColor);
+}
+// Create an GLC_Material
+GLC_Material* GLC_Factory::createMaterial(const QColor &color)
+{
+	return new GLC_Material(color);
+}
+
+GLC_Material* GLC_Factory::createMaterial(GLC_Texture* pTexture)
+{
+	return new GLC_Material(pTexture, "TextureMaterial");
+}
+// create an material textured with a image file name
+GLC_Material* GLC_Factory::createMaterial(const QString &textureFullFileName)
+{
+	GLC_Texture* pTexture= createTexture(textureFullFileName);
+	return createMaterial(pTexture);	
+}
+
+// Create an GLC_Texture
+
+GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName)
+{
+	return new GLC_Texture(m_pQGLWidget, textureFullFileName);
 }

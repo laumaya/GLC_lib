@@ -28,17 +28,15 @@ HEADERS += glc_maths.h \
            glc_light.h \
            glc_point.h \
            glc_box.h \
-           glc_vertex.h \
-           glc_face.h \
-           glc_mesh.h \
            glc_mesh2.h\
-           glc_objtomesh.h \
            glc_objtomesh2.h \
            glc_camera.h \
            glc_imageplane.h \
            glc_viewport.h \
            glc_collection.h \
-           glc_factory.h
+           glc_factory.h \
+           glc_boundingbox.h \
+           glc_collectionnode.h
            
              
 SOURCES +=  glc_vector4d.cpp \
@@ -57,17 +55,15 @@ SOURCES +=  glc_vector4d.cpp \
             glc_light.cpp \
             glc_point.cpp \
             glc_box.cpp \
-            glc_vertex.cpp \
-            glc_face.cpp \
-            glc_mesh.cpp \
             glc_mesh2.cpp \
-           	glc_objtomesh.cpp \
            	glc_objtomesh2.cpp \
             glc_camera.cpp \
             glc_imageplane.cpp \
             glc_viewport.cpp \
             glc_collection.cpp \
-            glc_factory.cpp
+            glc_factory.cpp \
+            glc_boundingbox.cpp \
+            glc_collectionnode.cpp
             
 #Windows compilation configuration       
 win32 {

@@ -22,42 +22,43 @@
 
 *****************************************************************************/
 
-//! \file glc_mesh.h interface for the GLC_Mesh class DEPRECATED SEE GLC_Mesh2.
+//! \file glc_collectionnode.h interface for the GLC_CollectionNode class.
 
-#ifndef GLC_MESH_H_
-#define GLC_MESH_H_
-#include <QList>
+#ifndef GLC_COLLECTIONNODE_H_
+#define GLC_COLLECTIONNODE_H_
 
 #include "glc_geometry.h"
-#include "glc_face.h"
+#include "glc_enum.h"
+#include "glc_boundingbox.h"
 
-//! The mesh's faces list
-typedef QList<GLC_Face*> CFaceList;
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_Mesh
-/*! \brief GLC_Mesh : OpenGL 3D Mesh DEPRECATED SEE GLC_Mesh2*/
+//! \class GLC_CollectionNode
+/*! \brief GLC_CollectionNode : GLC_Geometry + OpenGL list + bounding box*/
 
-/*! An GLC_Mesh is Mesh composed of polygons
- * 		- Each polygon must be a planar Face (GLC_Face)
- * 		- Each face is composed by vertexs (GLC_Vertex)
- * */
+/*! An GLC_CollectionNode contain  :
+ * 		- GLC_Geometry pointer
+ * 		- OpenGL sub list ID
+ * 		- Geomtry Bounding box
+ */
 //////////////////////////////////////////////////////////////////////
-class GLC_Mesh : public GLC_Geometry
+
+class GLC_CollectionNode
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Construct an empty Mesh
-	GLC_Mesh(const char *pName= "Mesh", const GLfloat *pColor= 0);
+	//! Default constructor
+	GLC_CollectionNode();
 	
-	//! Copy Constructor
-	GLC_Mesh(GLC_Mesh *pMesh);
+	//! Contruct node with a geometry
+	GLC_CollectionNode(GLC_Geometry* pGeom);
 
-	//! Delete Mesh's faces and clear faces list
-	virtual ~GLC_Mesh(void);
+	//! Destructor
+	~GLC_CollectionNode();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -65,48 +66,65 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the number of mesh's face
-	int GetNbrFaces(void) const
-	{
-		return m_nNbrFaces;
-	}
-//@}
+	//! Get the geometry of the node
+	GLC_Geometry* getGeometry(void);
+	
+	//! Get the validity of the OpenGL list
+	bool getListValidity(void) const;
+	
+	//! Get the bounding box
+	GLC_BoundingBox* getBoundingBox(void);
 
+	//! Get the validity of the Bounding Box
+	bool getBoundingBoxValidity(void) const;
+	
+//@}	
+	
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-
-	//! Add a face to the Mesh
-	void AddFace(GLC_Face* pFace);
-		
+	//! Set the node Geometry
+	void setGeometry(GLC_Geometry* pGeom);
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-private:
-	//! Virtual interface for OpenGL Geometry set up.
-	/*! This Virtual function is implemented here.\n*/
-	virtual void GlDraw(void);
-
-	//! Virtual interface for OpenGL Geomtry properties.
-	/*! This Virtual function is implemented here.*/
-	virtual void GlPropGeom(void);
+public:
+	//! Display the Node
+	void GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 //@}
+
+//////////////////////////////////////////////////////////////////////
+// private services functions
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Erase the Node
+	void erase(void);
+
+	//! compute the node bounding box
+	void computeBoundingBox(void);
 
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-
-	//! Mesh's list of GLC_Face
-	CFaceList m_pFaceList;
 	
-	//! Mesh's Number of faces
-	int m_nNbrFaces;
+	//! Geometry of the node
+	GLC_Geometry* m_pGeom;
+	
+	//! OpenGL list of the node
+	GLuint m_ListID;
+	
+	//! BoundingBox of the node
+	GLC_BoundingBox* m_pBoundingBox;
+
 	
 };
-#endif //GLC_MESH_H_
+
+
+#endif /*GLC_COLLECTIONNODE_H_*/

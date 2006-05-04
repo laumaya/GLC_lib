@@ -44,7 +44,7 @@ GLC_Collection::~GLC_Collection()
 	Erase();
 }
 //////////////////////////////////////////////////////////////////////
-// Fonctions Set
+// Set Functions
 //////////////////////////////////////////////////////////////////////
 // Ajoute une géométrie à la collection
 bool GLC_Collection::AddGLC_Geom(GLC_Geometry* pGeom)
@@ -53,10 +53,11 @@ bool GLC_Collection::AddGLC_Geom(GLC_Geometry* pGeom)
 	
 	if (iGeom == m_TheMap.end())
 	{	// Ok, la clé n'est pas prise
-		// Ajoute la géométrie
-		m_TheMap.insert(pGeom->GetID(), pGeom);
-		// Ajoute la sous liste
-		m_ListMap.insert(pGeom->GetID(), 0);
+		// Create an GLC_CollectionNode
+		GLC_CollectionNode* p_CollectionNode= new GLC_CollectionNode(pGeom);
+		// Add the collection Node
+		m_TheMap.insert(pGeom->GetID(), p_CollectionNode);
+		
 		qDebug("GLC_Collection::AddGLC_Geom : Element Ajouté avec succès");
 		
 		// Validité de la liste
@@ -79,18 +80,10 @@ bool GLC_Collection::DelGLC_Geom(GLC_uint Key)
 	CGeomMap::iterator iGeom= m_TheMap.find(Key);
 		
 	if (iGeom != m_TheMap.end())
-	{	// Ok, la clé existe
-		delete iGeom.value();		// Supprime la géométrie
-		m_TheMap.remove(Key);		// Supprime le conteneur
-		// Recherche la liste
-		CListeMap::iterator iListe= m_ListMap.find(Key);
-		// \todo Vérifier que la liste d'affichage est trouvée
-		if (!!iListe.value())
-		{
-			glDeleteLists(iListe.value(),1);
-			qDebug("GLC_Collection::DelGLC_Geom : Sous liste Supprimée");
-		}
-		m_ListMap.remove(Key);		// Supprime le conteneur
+	{	// Ok, the key exist
+		delete iGeom.value();		// delete the collection Node
+		m_TheMap.remove(Key);		// Delete the conteneur
+		// Search the list
 			
 		// Validité de la liste
 		m_ListIsValid= false;
@@ -100,8 +93,8 @@ bool GLC_Collection::DelGLC_Geom(GLC_uint Key)
 		
 	}
 	else
-	{	// KO, la clé n'existe pas
-		qDebug("GLC_Collection::DelGLC_Geom : Elément non Supprimé");
+	{	// KO, key doesn't exist
+		qDebug("GLC_Collection::DelGLC_Geom : Element not deleted");
 		return false;
 	}
 	
@@ -116,19 +109,6 @@ bool GLC_Collection::RemGLC_Geom(GLC_uint Key)
 	{	// Ok, la clé existe
 		// On ne Supprime pas la géométrie
 		m_TheMap.remove(Key);		// Supprime le conteneur
-		// Recherche la liste
-		CListeMap::iterator iListe= m_ListMap.find(Key);
-		if (iListe != m_ListMap.end())
-		{
-			qDebug("GLC_Collection::RemGLC_Geom : List not found!!");
-		}
-		// TODO Vérifier que la liste d'affichage est trouvée
-		if (!!iListe.value())
-		{
-			glDeleteLists(iListe.value(),1);
-			qDebug("GLC_Collection::RemGLC_Geom : Sous liste Supprimée");
-		}
-		m_ListMap.remove(Key);		// Supprime le conteneur
 			
 		// Validité de la liste
 		m_ListIsValid= false;
@@ -138,8 +118,8 @@ bool GLC_Collection::RemGLC_Geom(GLC_uint Key)
 		
 	}
 	else
-	{	// KO, la clé n'existe pas
-		qDebug("GLC_Collection::RemGLC_Geom : Elément non Supprimé");
+	{	// KO, key doesn't exist
+		qDebug("GLC_Collection::RemGLC_Geom : Element not deleted");
 		return false;
 	}
 	
@@ -163,23 +143,6 @@ void GLC_Collection::Erase(void)
 	
 	// Fin de la Suppression des géométries
 
-	// Suppression des sous listes d'affichages
-	CListeMap::iterator iListEntry= m_ListMap.begin();
-	
-    while (iListEntry != m_ListMap.constEnd())
-    {
-        qDebug() << "GLC_Collection::Erase : Try to delete display list ";
-        // Supprime l'objet
-        if (!!iListEntry.value())
-        {
-        	qDebug() << "GLC_Collection::Erase : delete display list";
-        	glDeleteLists(iListEntry.value(), 1);
-        }
-        ++iListEntry;
-    }
-    // Vide la table de hachage de liste
-    m_ListMap.clear();
-
 	// Supprime la liste d'affichage
 	DeleteList();
 	// Fin des Suppressions des sous listes d'affichages
@@ -193,7 +156,7 @@ GLC_Geometry* GLC_Collection::GetElement(GLC_uint Key)
 	
 	if (iGeom != m_TheMap.end())
 	{	// Ok, la clé est trouvé
-		return iGeom.value();
+		return iGeom.value()->getGeometry();
 	}
 	else
 	{	// KO, la clé n'est pas trouvé
@@ -212,7 +175,7 @@ GLC_Geometry* GLC_Collection::GetElement(int Index)
     while ((iEntry != m_TheMap.constEnd()) && (CurrentPos <= Index ))
     {
         // retrieve the object        
-        if(CurrentPos == Index) pGeom= iEntry.value();
+        if(CurrentPos == Index) pGeom= iEntry.value()->getGeometry();
         ++iEntry;
         ++CurrentPos;
     }
@@ -231,7 +194,7 @@ void GLC_Collection::GlExecute(void)
 	{
 		CreateMemberLists();		// Si nécessaire
 
-		CreateSubLists();		// Si nécessaire
+		//CreateSubLists();		// Si nécessaire
 
 		if (m_ListIsValid)
 		{	// La liste de la collection OK
@@ -264,11 +227,11 @@ void GLC_Collection::GlExecute(void)
 // Affiche les éléments de la collection
 void GLC_Collection::GlDraw(void)
 {
-	CListeMap::iterator iEntry= m_ListMap.begin();
+	CGeomMap::iterator iEntry= m_TheMap.begin();
 	
-    while (iEntry != m_ListMap.constEnd())
+    while (iEntry != m_TheMap.constEnd())
     {
-        glCallList(iEntry.value());
+        iEntry.value()->GlExecute();
         ++iEntry;
     }
 	
@@ -292,9 +255,9 @@ void GLC_Collection::CreateMemberLists(void)
 	
     while (iEntry != m_TheMap.constEnd())
     {
-    	if(!iEntry.value()->GetListIsValid())
+    	if(!iEntry.value()->getListValidity())
     	{
-     		iEntry.value()->CreateList(GL_COMPILE);
+     		iEntry.value()->GlExecute(GL_COMPILE);
     	}
     	// Passe au Suivant
     	iEntry++;
@@ -308,6 +271,7 @@ void GLC_Collection::CreateMemberLists(void)
 
 
 }
+/*
 // Création des sous listes d'affichages
 void GLC_Collection::CreateSubLists(void)
 {
@@ -351,18 +315,18 @@ void GLC_Collection::CreateSubLists(void)
 	}
 
 }
-
+*/
 //////////////////////////////////////////////////////////////////////
 // Fonctions de services privées
 //////////////////////////////////////////////////////////////////////
-// Verifie si les listes d'affichage des membres sont à jour
-bool GLC_Collection::MemberListIsUpToDate(void)
+// Verifie si les listes membres sont à jour
+bool GLC_Collection::MemberIsUpToDate(void)
 {
 	CGeomMap::iterator iEntry= m_TheMap.begin();
 	
     while (iEntry != m_TheMap.constEnd())
     {
-    	if(iEntry.value()->GetListIsValid() || !iEntry.value()->GetIsVisible())
+    	if(iEntry.value()->getListValidity() || !iEntry.value()->getGeometry()->GetIsVisible())
     	{	// Géométrie valide ou non visible.
     		iEntry++;   		
     	}
@@ -376,7 +340,7 @@ bool GLC_Collection::MemberListIsUpToDate(void)
 	return true;	// Toutes les listes sont à jour
 
 }
-
+/*
 // Verifie si les membres sont à jour
 bool GLC_Collection::MemberIsUpToDate(void)
 {
@@ -399,6 +363,7 @@ bool GLC_Collection::MemberIsUpToDate(void)
 	return true;	// Toutes les Membres sont à jour
 
 }
+*/
 
 // Création de la liste d'affichage de la collection
 bool GLC_Collection::CreateList(void)

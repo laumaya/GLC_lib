@@ -22,61 +22,87 @@
 
 *****************************************************************************/
 
-//! \file glc_vertex.h interface for the GLC_Vertex class DEPRECATED SEE GLC_Mesh2.
+//! \file glc_boundingbox.h interface for the GLC_BoundingBox class.
 
-#ifndef GLC_VERTEX_H_
-#define GLC_VERTEX_H_
-
-#include <QtOpenGL>
+#ifndef GLC_BOUNDINGBOX_
+#define GLC_BOUNDINGBOX_
 
 #include "glc_maths.h"
+#include "glc_utils_maths.h"
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_Vertex
-/*! \brief GLC_Vertex : OpenGL Vertex, Normal, Texture coordinate DEPRECATED SEE GLC_Mesh2*/
+//! \class GLC_BoundingBox
+/*! \brief GLC_BoundingBox : Geometry bounding box*/
 
-/*! An GLC_Vertex polygonal face composed by vertexs (GLC_Vertex)
- */
+/*! An GLC_BoundingBox is a non oriented bounding box
+*/
+ 
 //////////////////////////////////////////////////////////////////////
-class GLC_Vertex
+
+class GLC_BoundingBox
 {
-
 //////////////////////////////////////////////////////////////////////
-/*! @name Constructor / Destructor */
+/*! @name Constructor */
 //@{
 //////////////////////////////////////////////////////////////////////
-public:
-	//! Create an Vertex, with normal
-	GLC_Vertex(const GLC_Vector4d &VectPos, const GLC_Vector4d &VectNormale);
-	//! Create an Vertex, with normal and texture coordinate
-	GLC_Vertex(const GLC_Vector4d &VectPos, const GLC_Vector4d &VectNormale, const GLC_Vector4d &VectTexture);
-	//! Copy Constructor
-	GLC_Vertex(const GLC_Vertex *pVertex);
+public:	
+	//! Default constructor
+	GLC_BoundingBox();
+	
+	//! Copy constructor
+	GLC_BoundingBox(const GLC_BoundingBox& boundingBox);
+	
+	//! Constructor with 2 points.
+	GLC_BoundingBox(const GLC_Vector4d& lower, const GLC_Vector4d& upper);
+	
+//@}
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+
+	//! Test if a point is in the bounding Box
+	bool intersect(const GLC_Vector4d& point) const;
+
+	//! Return the max distance between a point and a corner of the bounding box
+	//double maxDistance(const GLC_Vector4d& point) const;
+	
+	//! Get the lower corner of the bounding box
+	GLC_Vector4d getLower(void);
+	
+	//! Get the upper corner of the bounding box
+	GLC_Vector4d getUpper(void);
+	
+	//! Get the center of the bounding box
+	GLC_Vector4d getCenter(void);
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
-/*! \name OpenGL Functions*/
+/*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Vertex SetUp
-	void GlDraw(void) const;
+	//! Combine the bounding Box with new geometry point
+	void combine(const GLC_Vector4d& point);
+
+	//! Combine the bounding Box with new geometry point
+	void combine(const GLC_Vector3d& point);
+
+	//! Combine the bounding Box with another bounding box
+	void combine(const GLC_BoundingBox& box);
+
+	
 
 //@}
 
+
 //////////////////////////////////////////////////////////////////////
-// Private Members
+// Private members
 //////////////////////////////////////////////////////////////////////
 private:
-
-	//! Vertex 3D coordinate
-	GLC_Vector4d m_VectPos;
-
-	//! Vertex's 2D texture coordinate
-	GLC_Vector4d m_VectTexture;
-
-	//! Vertex's normal vector
-	GLC_Vector4d m_VectNormale;
+	GLC_Vector4d m_Lower;
+	GLC_Vector4d m_Upper;
 
 };
-#endif //GLC_VERTEX_H_
+#endif /*GLC_BOUNDINGBOX_*/

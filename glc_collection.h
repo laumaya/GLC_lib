@@ -29,22 +29,18 @@
 
 
 #include <QHash>
-#include "glc_geometry.h"
+#include "glc_collectionnode.h"
 #include "glc_enum.h"
 
 //! Geometry hash table
-typedef QHash< GLC_uint, GLC_Geometry*> CGeomMap;
-
-//! OpenGL Display list Hash Table
-typedef QHash< GLC_uint, GLuint> CListeMap;
+typedef QHash< GLC_uint, GLC_CollectionNode*> CGeomMap;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Collection
 /*! \brief GLC_Collection : GLC_Geometry flat collection */
 
 /*! An GLC_Collection contain  :
- * 		- A hash table containing GLC_Geometry pointer
- * 		- A Hash table containing OpenGL sub list ID
+ * 		- A hash table containing GLC_CollectionNode pointer
  */
 //////////////////////////////////////////////////////////////////////
 
@@ -134,7 +130,7 @@ public:
 	void CreateMemberLists(void);
 
 	//! Create Collection sub OpenGL list
-	void CreateSubLists(void);
+	//void CreateSubLists(void);
 
 //@}
 
@@ -153,8 +149,6 @@ private:
 // private services functions
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Check if members'list are up to date
-	bool MemberListIsUpToDate(void);
 
 	//! Check if Members are up to date (List + Geometry properties)
 	bool MemberIsUpToDate(void);
@@ -180,9 +174,6 @@ private:
 private:
 	//! GLC_Geometry Hash Table
 	CGeomMap m_TheMap;
-
-	//! Sub list Hash Table
-	CListeMap m_ListMap;
 
 	//! Collection's OpenGL list ID
 	GLuint m_ListID;

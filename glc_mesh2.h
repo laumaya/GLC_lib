@@ -75,6 +75,9 @@ public:
 	//! Get mesh material
 	void GetOneMaterial(int Index, GLC_Material &Material);
 
+	//! return the mesh bounding box
+	virtual GLC_BoundingBox* getBoundingBox(void) const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

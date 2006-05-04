@@ -31,6 +31,7 @@
 #include "glc_object.h"
 #include "glc_texture.h"
 #include <QHash>
+#include <QColor>
 
 class GLC_Geometry;
 
@@ -54,11 +55,17 @@ class GLC_Material :
 public:
 
 	//! Construct Colored GLC_Material
+	//! Default constructor
+	GLC_Material();
+	
 	/*! By default, Ambiant Color is dark grey*/
-	GLC_Material(const char *pName= "Mat", const GLfloat *pAmbiantColor = NULL);
+	GLC_Material(const QColor &ambientColor);
+
+	/*! By default, Ambiant Color is dark grey*/
+	GLC_Material(const char *pName, const GLfloat *pAmbientColor);
 	
 	//! Construct textured GLC_Material
-	GLC_Material(GLC_Texture* pTexture, const char *pName= "TextureMat");
+	GLC_Material(GLC_Texture* pTexture, const char *pName);
 	
 	//! Copy constructor
 	GLC_Material(const GLC_Material &InitMaterial);
@@ -157,6 +164,12 @@ public:
 private:
 	//! Update geometries which used material
 	void UpdateUsed(void);
+	
+	//! Init Ambiant Color
+	void initAmbientColor(void);
+	
+	//! Init other color
+	void initOtherColor(void);
 
 
 //////////////////////////////////////////////////////////////////////
@@ -166,14 +179,14 @@ private:
 private:
 
 	//! Ambiant Color
-	GLfloat m_AmbientColor[4];
+	QColor m_AmbientColor;
 	//! Diffuse Color
-	GLfloat m_DiffuseColor[4];
+	QColor m_DiffuseColor;
 	//! Specular Color
-	GLfloat m_SpecularColor[4];
+	QColor m_SpecularColor;
 
 	//! emmisive lighting
-	GLfloat m_LightEmission[4];
+	QColor m_LightEmission;
 
 	//! Shiness
 	GLfloat m_fShininess;

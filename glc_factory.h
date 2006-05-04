@@ -29,6 +29,7 @@
 
 #include <string>
 #include <QtOpenGL>
+#include <QString>
 #include "glc_maths.h"
 
 //class to built
@@ -37,7 +38,8 @@
 #include "glc_box.h"
 #include "glc_cylinder.h"
 #include "glc_mesh2.h"
-#include "glc_objtomesh2.h"
+#include "glc_material.h"
+#include "glc_texture.h"
 // end of class to built
 
 //////////////////////////////////////////////////////////////////////
@@ -77,16 +79,23 @@ public:
 	GLC_Cylinder* createCylinder(double radius, double length) const;
 	
 	//! Create an GLC_Mesh
-	GLC_Mesh2* createMesh(std::string fullfileName) const;
+	GLC_Mesh2* createMesh(const std::string &fullfileName);
+	//! Create an GLC_Mesh by copying another mesh
+	GLC_Mesh2* createMesh(const GLC_Geometry* pMesh);
 	
-	//! Create an GLC_Material
-	GLC_Material* createMaterial(const GLfloat *pAmbiantColor=NULL) const;
-	GLC_Material* createMaterial(const QColor *pColor) const;
-	GLC_Material* createMaterial(const GLC_Texture* pTexture) const;
-	GLC_Material* createMaterial(std::string textureFullFileName) const;
+	//! Create default material
+	GLC_Material* createMaterial();
+	//! create a material with an ambient color
+	GLC_Material* createMaterial(const GLfloat *pAmbiantColor);
+	//! create a material with an ambient color
+	GLC_Material* createMaterial(const QColor &color);
+	//! create an material textured with a texture
+	GLC_Material* createMaterial(GLC_Texture* pTexture);
+	//! create an material textured with a image file name
+	GLC_Material* createMaterial(const QString &textureFullFileName);
 	
 	//! Create an GLC_Texture
-	GLC_Texture* createTexture(std::string textureFullFileName) const;
+	GLC_Texture* createTexture(const QString &textureFullFileName);
 	
 //@}
 
@@ -100,10 +109,7 @@ private:
 	
 	//! The QGLWidget attached to the factory (rendering context)
 	QGLWidget* m_pQGLWidget;
-	
-	//! Class which can read a Mesh from File System
-	GLC_ObjToMesh2* m_pMeshLoader;
-		
+			
 };
 
 #endif /*GLC_FACTORY_*/

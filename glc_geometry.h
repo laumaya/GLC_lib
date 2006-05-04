@@ -29,6 +29,7 @@
 
 #include "glc_object.h"
 #include "glc_material.h"
+#include "glc_boundingbox.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Geometry
@@ -140,6 +141,10 @@ public:
 	{
 		return m_IsBlended;
 	}
+	
+	//! return the geometry bounding box
+	virtual GLC_BoundingBox* getBoundingBox(void) const;
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////

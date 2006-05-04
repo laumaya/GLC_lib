@@ -61,10 +61,10 @@ GLC_Mesh2::~GLC_Mesh2(void)
 {
 	m_CoordinateHash.clear();
 	m_CoordinateIndex.clear();
-	
+
 	m_NormalHash.clear();
 	m_NormalIndex.clear();
-	
+
 	m_TextCoordinateHash.clear();
 	m_TextureIndex.clear();
 
@@ -85,6 +85,22 @@ void GLC_Mesh2::GetOneMaterial(int Index, GLC_Material &Material)
 	// Retrieve the material
 	Material= m_MaterialHash[Index];
 
+}
+// return the mesh bounding box
+GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
+{
+	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
+	
+	Vector3dHash::const_iterator iEntry= m_CoordinateHash.begin();
+	
+    while (iEntry != m_CoordinateHash.constEnd())
+    {
+        // Combine the vertex with the bounding box        
+        pBoundingBox->combine(iEntry.value());
+        ++iEntry;
+    }
+	
+	return pBoundingBox;	
 }
 
 /////////////////////////////////////////////////////////////////////

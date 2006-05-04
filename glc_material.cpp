@@ -32,46 +32,52 @@
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
-GLC_Material::GLC_Material(const char *pName ,const GLfloat *pAmbiantColor)
-:GLC_Object(pName)
-, m_fShininess(50.0)		// Par défaut, shininess 50
-, m_pTexture(NULL)			// Pas de texture
+
+GLC_Material::GLC_Material()
+:GLC_Object("Material")
+, m_fShininess(50.0)		// By default shininess 50
+, m_pTexture(NULL)			// no texture 
+{
+	// Ambient Color
+	initAmbientColor();
+
+	// Others
+	initOtherColor();
+}
+
+GLC_Material::GLC_Material(const QColor &ambientColor)
+:GLC_Object("Material")
+, m_fShininess(50.0)		// default : shininess 50
+, m_pTexture(NULL)			// no texture
 {
 
-	// Initialisation de tableau contenant la couleur
-	if (pAmbiantColor != 0)
+	m_AmbientColor= ambientColor;
+	
+	// Others
+	initOtherColor();
+}
+
+
+GLC_Material::GLC_Material(const char *pName ,const GLfloat *pAmbientColor)
+:GLC_Object(pName)
+, m_fShininess(50.0)		// default : shininess 50
+, m_pTexture(NULL)			// no texture
+{
+
+	// Init Ambiant Color
+	if (pAmbientColor != 0)
 	{
-		m_AmbientColor[0]= pAmbiantColor[0];
-		m_AmbientColor[1]= pAmbiantColor[1];
-		m_AmbientColor[2]= pAmbiantColor[2];
-		m_AmbientColor[3]= pAmbiantColor[3];
+		m_AmbientColor.setRgbF(static_cast<qreal>(pAmbientColor[0]),
+								static_cast<qreal>(pAmbientColor[1]), 
+								static_cast<qreal>(pAmbientColor[2]),
+								static_cast<qreal>(pAmbientColor[3]));
 	}
 	else
-	{	// By default light's color is dark grey.
-		m_AmbientColor[0]= 0.2f;
-		m_AmbientColor[1]= 0.2f;
-		m_AmbientColor[2]= 0.2f;
-		m_AmbientColor[3]= 1.0f;
+	{	
+		initAmbientColor();
 	}
-	// Les autres 
-	// Couleur diffuse
-	m_DiffuseColor[0]= 1.0f;
-	m_DiffuseColor[1]= 1.0f;
-	m_DiffuseColor[2]= 1.0f;
-	m_DiffuseColor[3]= 1.0f;
-
-	// Couleur spéculaire
-	m_SpecularColor[0]= 1.0f;
-	m_SpecularColor[1]= 1.0f;
-	m_SpecularColor[2]= 1.0f;
-	m_SpecularColor[3]= 1.0f;
-
-	// Emission de lumière
-	m_LightEmission[0]= 0.0f;
-	m_LightEmission[1]= 0.0f;
-	m_LightEmission[2]= 0.0f;
-	m_LightEmission[3]= 1.0f;
-
+	// Others
+	initOtherColor();
 }
 GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 :GLC_Object(pName)
@@ -79,29 +85,10 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 , m_pTexture(pTexture)		// Init texture 
 {
 	// Ambiente Color
-	m_AmbientColor[0]= 0.2f;
-	m_AmbientColor[1]= 0.2f;
-	m_AmbientColor[2]= 0.2f;
-	m_AmbientColor[3]= 1.0f;
+	initAmbientColor();
 
-	// Diffuse Color
-	m_DiffuseColor[0]= 1.0f;
-	m_DiffuseColor[1]= 1.0f;
-	m_DiffuseColor[2]= 1.0f;
-	m_DiffuseColor[3]= 1.0f;
-
-	// Specular Color
-	m_SpecularColor[0]= 1.0f;
-	m_SpecularColor[1]= 1.0f;
-	m_SpecularColor[2]= 1.0f;
-	m_SpecularColor[3]= 1.0f;
-
-	// Lighting emit
-	m_LightEmission[0]= 0.0f;
-	m_LightEmission[1]= 0.0f;
-	m_LightEmission[2]= 0.0f;
-	m_LightEmission[3]= 1.0f;
-
+	// Others
+	initOtherColor();
 }
 
 // Copy constructor
@@ -116,29 +103,17 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 		assert(m_pTexture != NULL);
 	}
 	
-	// Ambiente Color
-	m_AmbientColor[0]= InitMaterial.m_AmbientColor[0];
-	m_AmbientColor[1]= InitMaterial.m_AmbientColor[1];
-	m_AmbientColor[2]= InitMaterial.m_AmbientColor[2];
-	m_AmbientColor[3]= InitMaterial.m_AmbientColor[3];
+	// Ambient Color
+	m_AmbientColor= InitMaterial.m_AmbientColor;
 
 	// Diffuse Color
-	m_DiffuseColor[0]= InitMaterial.m_DiffuseColor[0];
-	m_DiffuseColor[1]= InitMaterial.m_DiffuseColor[1];
-	m_DiffuseColor[2]= InitMaterial.m_DiffuseColor[2];
-	m_DiffuseColor[3]= InitMaterial.m_DiffuseColor[3];
+	m_DiffuseColor= InitMaterial.m_DiffuseColor;
 
 	// Specular Color
-	m_SpecularColor[0]= InitMaterial.m_SpecularColor[0];
-	m_SpecularColor[1]= InitMaterial.m_SpecularColor[1];
-	m_SpecularColor[2]= InitMaterial.m_SpecularColor[2];
-	m_SpecularColor[3]= InitMaterial.m_SpecularColor[3];
+	m_SpecularColor= InitMaterial.m_SpecularColor;
 
 	// Lighting emit
-	m_LightEmission[0]= InitMaterial.m_LightEmission[0];
-	m_LightEmission[1]= InitMaterial.m_LightEmission[1];
-	m_LightEmission[2]= InitMaterial.m_LightEmission[2];
-	m_LightEmission[3]= InitMaterial.m_LightEmission[3];
+	m_LightEmission= InitMaterial.m_LightEmission;
 		
 }
 
@@ -147,7 +122,7 @@ GLC_Material::~GLC_Material(void)
 {
 
 	// Remove material from Geometries
-	CGeomMap::iterator iEntry= m_WhereUsed.begin();
+	CWhereUsed::iterator iEntry= m_WhereUsed.begin();
 	
     while (iEntry != m_WhereUsed.constEnd())
     {
@@ -175,37 +150,37 @@ GLC_Material::~GLC_Material(void)
 // Get Ambiant color
 void GLC_Material::GetAmbientColor(GLfloat* pfCol) const	// pfCol[4]
 {
-	pfCol[0]= m_AmbientColor[0];
-	pfCol[1]= m_AmbientColor[1];
-	pfCol[2]= m_AmbientColor[2];
-	pfCol[3]= m_AmbientColor[3];
+	pfCol[0]= static_cast<GLfloat>(m_AmbientColor.redF());
+	pfCol[1]= static_cast<GLfloat>(m_AmbientColor.greenF());
+	pfCol[2]= static_cast<GLfloat>(m_AmbientColor.blueF());
+	pfCol[3]= static_cast<GLfloat>(m_AmbientColor.alphaF());
 }
 
 // Get diffuse color
 void GLC_Material::GetDiffuseColor(GLfloat* pfCol) const	// pfCol[4]
 {
-	pfCol[0]= m_DiffuseColor[0];
-	pfCol[1]= m_DiffuseColor[1];
-	pfCol[2]= m_DiffuseColor[2];
-	pfCol[3]= m_DiffuseColor[3];
+	pfCol[0]= static_cast<GLfloat>(m_DiffuseColor.redF());
+	pfCol[1]= static_cast<GLfloat>(m_DiffuseColor.greenF());
+	pfCol[2]= static_cast<GLfloat>(m_DiffuseColor.blueF());
+	pfCol[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());
 }
 
 // Get specular color
 void GLC_Material::GetSpecularColor(GLfloat* pfCol) const	// pfCol[4]
 {
-	pfCol[0]= m_SpecularColor[0];
-	pfCol[1]= m_SpecularColor[1];
-	pfCol[2]= m_SpecularColor[2];
-	pfCol[3]= m_SpecularColor[3];
+	pfCol[0]= static_cast<GLfloat>(m_SpecularColor.redF());
+	pfCol[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
+	pfCol[2]= static_cast<GLfloat>(m_SpecularColor.blueF());
+	pfCol[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());
 }
 
 // Get the emissive color
 void GLC_Material::GetLightEmission(GLfloat* pfCol) const	// pfCol[4]
 {
-	pfCol[0]= m_LightEmission[0];
-	pfCol[1]= m_LightEmission[1];
-	pfCol[2]= m_LightEmission[2];
-	pfCol[3]= m_LightEmission[3];
+	pfCol[0]= static_cast<GLfloat>(m_LightEmission.redF());
+	pfCol[1]= static_cast<GLfloat>(m_LightEmission.greenF());
+	pfCol[2]= static_cast<GLfloat>(m_LightEmission.blueF());
+	pfCol[3]= static_cast<GLfloat>(m_LightEmission.alphaF());
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -213,46 +188,46 @@ void GLC_Material::GetLightEmission(GLfloat* pfCol) const	// pfCol[4]
 //////////////////////////////////////////////////////////////////////
 
 // Set Ambiant Color
-void GLC_Material::SetAmbientColor(const GLfloat* pfCol)
+void GLC_Material::SetAmbientColor(const GLfloat* pfCol) // pfCol[4]
 {
-	m_AmbientColor[0]= pfCol[0];
-	m_AmbientColor[1]= pfCol[1];
-	m_AmbientColor[2]= pfCol[2];
-	m_AmbientColor[3]= pfCol[3];
-
+	m_AmbientColor.setRgbF(static_cast<qreal>(pfCol[0]),
+							static_cast<qreal>(pfCol[1]), 
+							static_cast<qreal>(pfCol[2]),
+							static_cast<qreal>(pfCol[3]));
+	
 	UpdateUsed();
 }
 
 // Set Diffuse color
-void GLC_Material::SetDiffuseColor(const GLfloat* pfCol)
+void GLC_Material::SetDiffuseColor(const GLfloat* pfCol) // pfCol[4]
 {
-	m_DiffuseColor[0]= pfCol[0];
-	m_DiffuseColor[1]= pfCol[1];
-	m_DiffuseColor[2]= pfCol[2];
-	m_DiffuseColor[3]= pfCol[3];
-
+	m_DiffuseColor.setRgbF(static_cast<qreal>(pfCol[0]),
+							static_cast<qreal>(pfCol[1]), 
+							static_cast<qreal>(pfCol[2]),
+							static_cast<qreal>(pfCol[3]));
+	
 	UpdateUsed();
 }
 
 // Set Specular color
-void GLC_Material::SetSpecularColor(const GLfloat* pfCol)
+void GLC_Material::SetSpecularColor(const GLfloat* pfCol) // pfCol[4]
 {
-	m_SpecularColor[0]= pfCol[0];
-	m_SpecularColor[1]= pfCol[1];
-	m_SpecularColor[2]= pfCol[2];
-	m_SpecularColor[3]= pfCol[3];
-
+	m_SpecularColor.setRgbF(static_cast<qreal>(pfCol[0]),
+							static_cast<qreal>(pfCol[1]), 
+							static_cast<qreal>(pfCol[2]),
+							static_cast<qreal>(pfCol[3]));
+	
 	UpdateUsed();
 }
 
 // Set Emissive
-void GLC_Material::SetLightEmission(const GLfloat* pfCol)
+void GLC_Material::SetLightEmission(const GLfloat* pfCol) // pfCol[4]
 {
-	m_LightEmission[0]= pfCol[0];
-	m_LightEmission[1]= pfCol[1];
-	m_LightEmission[2]= pfCol[2];
-	m_LightEmission[3]= pfCol[3];
-
+	m_LightEmission.setRgbF(static_cast<qreal>(pfCol[0]),
+							static_cast<qreal>(pfCol[1]), 
+							static_cast<qreal>(pfCol[2]),
+							static_cast<qreal>(pfCol[3]));
+	
 	UpdateUsed();
 }
 
@@ -300,16 +275,25 @@ bool GLC_Material::DelGLC_Geom(GLC_uint Key)
 // Execute OpenGL Material
 bool GLC_Material::GlExecute(GLenum Mode)
 {
+	GLfloat pAmbientColor[4];
+	GetAmbientColor(pAmbientColor);
+	GLfloat pDiffuseColor[4];
+	GetDiffuseColor(pDiffuseColor);
+	GLfloat pSpecularColor[4];
+	GetSpecularColor(pSpecularColor);
+	GLfloat pLightEmission[4];
+	GetLightEmission(pLightEmission);
+	
 	if (m_pTexture != NULL)
 	{
 		// for blend managing
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 		m_pTexture->GlBindTexture();
 	}
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_AmbientColor);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_DiffuseColor);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m_SpecularColor);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, m_LightEmission);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, pAmbientColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pDiffuseColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pSpecularColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, pLightEmission);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &m_fShininess);
 
 	// OpenGL Error handler
@@ -330,7 +314,7 @@ bool GLC_Material::GlExecute(GLenum Mode)
 // Update geometries which used material
 void GLC_Material::UpdateUsed(void)
 {
-	CGeomMap::iterator iEntry= m_WhereUsed.begin();
+	CWhereUsed::iterator iEntry= m_WhereUsed.begin();
 	
     while (iEntry != m_WhereUsed.constEnd())
     {
@@ -339,6 +323,25 @@ void GLC_Material::UpdateUsed(void)
         ++iEntry;
     }
 	
+}
 
+// Init Ambiant Color
+void GLC_Material::initAmbientColor(void)
+{
+	m_AmbientColor.setRgbF(0.2, 0.2, 0.2, 1.0);
+}
+
+// Init default color
+void GLC_Material::initOtherColor(void)
+{
+	// Diffuse Color
+	m_DiffuseColor.setRgbF(1.0, 1.0, 1.0, 1.0);
+
+	// Specular Color
+	m_SpecularColor.setRgbF(1.0, 1.0, 1.0, 1.0);
+
+	// Lighting emit
+	m_LightEmission.setRgbF(0.0, 0.0, 0.0, 1.0);
+	
 }
 
