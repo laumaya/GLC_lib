@@ -75,9 +75,17 @@ bool GLC_CollectionNode::getListValidity(void) const
 }
 
 // Get the bounding box
-GLC_BoundingBox* GLC_CollectionNode::getBoundingBox(void)
+GLC_BoundingBox GLC_CollectionNode::getBoundingBox(void) const
 {
-	return m_pBoundingBox;
+	if (m_pBoundingBox != NULL)
+	{
+		return *m_pBoundingBox;
+	}
+	else
+	{
+		GLC_BoundingBox nullBoundingBox;
+		return nullBoundingBox;
+	}
 }
 
 // Get the validity of the Bounding Box
@@ -108,9 +116,12 @@ void GLC_CollectionNode::setGeometry(GLC_Geometry* pGeom)
 // Display the Node
 void GLC_CollectionNode::GlExecute(GLenum Mode)
 {
+	bool computeBox= false;
+	
 	if (!m_pGeom->GetListIsValid())
 	{
 		m_pGeom->CreateList(GL_COMPILE);
+		computeBox= true;
 	}
 	
 	if ((!m_pGeom->GetValidity()) || (m_ListID == 0))
@@ -124,11 +135,16 @@ void GLC_CollectionNode::GlExecute(GLenum Mode)
 			m_pGeom->GlExecute(Mode);
 		glEndList();
 		qDebug() << "GLC_Collection::CreateSubLists : Display list " << m_ListID << " created";
-			
+		computeBox= true;	
 	}
 	else
 	{
 		glCallList(m_ListID);
+	}
+	
+	if (computeBox)
+	{
+		computeBoundingBox();
 	}
 	
 }
