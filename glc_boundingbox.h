@@ -68,13 +68,13 @@ public:
 	//double maxDistance(const GLC_Vector4d& point) const;
 	
 	//! Get the lower corner of the bounding box
-	GLC_Vector4d getLower(void);
+	GLC_Vector4d getLower(void) const;
 	
 	//! Get the upper corner of the bounding box
-	GLC_Vector4d getUpper(void);
+	GLC_Vector4d getUpper(void) const;
 	
 	//! Get the center of the bounding box
-	GLC_Vector4d getCenter(void);
+	GLC_Vector4d getCenter(void) const;
 	
 //@}
 
