@@ -36,6 +36,7 @@
 GLC_Collection::GLC_Collection()
 : m_ListID(0)
 , m_ListIsValid(false)
+, m_pBoundingBox(NULL)
 {
 }
 
@@ -146,7 +147,14 @@ void GLC_Collection::Erase(void)
 	// Supprime la liste d'affichage
 	DeleteList();
 	// Fin des Suppressions des sous listes d'affichages
-
+	
+	// delete the boundingBox
+	if (m_pBoundingBox != NULL)
+	{
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+	}
+	
 }
 
 // Retourne le pointeur d'un élément de la collection
@@ -181,6 +189,20 @@ GLC_Geometry* GLC_Collection::GetElement(int Index)
     }
  	
  	return pGeom;
+}
+
+//! return the collection Bounding Box
+GLC_BoundingBox GLC_Collection::getBoundingBox(void) const
+{
+	if (m_pBoundingBox != NULL)
+	{
+		return *m_pBoundingBox;
+	}
+	else
+	{
+		GLC_BoundingBox boundingBox;
+		return boundingBox;
+	}
 }
 
 
@@ -228,10 +250,19 @@ void GLC_Collection::GlExecute(void)
 void GLC_Collection::GlDraw(void)
 {
 	CGeomMap::iterator iEntry= m_TheMap.begin();
+	if (m_pBoundingBox != NULL)
+	{
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+	}
+	m_pBoundingBox= new GLC_BoundingBox();
 	
     while (iEntry != m_TheMap.constEnd())
     {
         iEntry.value()->GlExecute();
+        // Combine Collection BoundingBox with element Bounding Box
+        m_pBoundingBox->combine(iEntry.value()->getBoundingBox());
+        
         ++iEntry;
     }
 	

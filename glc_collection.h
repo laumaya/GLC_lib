@@ -81,6 +81,9 @@ public:
 	/*! If the element is not found in collection a NULL pointer is returned*/
 	GLC_Geometry* GetElement(int Index);
 	
+	//! return the collection Bounding Box
+	GLC_BoundingBox getBoundingBox(void) const;
+	
 
 //@}
 
@@ -180,6 +183,10 @@ private:
 
 	//! Validity of collection's OpenGL list
 	bool m_ListIsValid;
+	
+	//! BoundingBox of the collection
+	GLC_BoundingBox* m_pBoundingBox;
+	
 	
 };
 #endif //GLC_COLLECTION_H_
