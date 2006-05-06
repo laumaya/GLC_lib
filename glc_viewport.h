@@ -30,6 +30,7 @@
 #include "glc_camera.h"
 #include "glc_orbitcircle.h"
 #include "glc_imageplane.h"
+#include "glc_boundingbox.h"
 
 #define MAXZOOMFACTOR 3.0
 
@@ -258,6 +259,10 @@ public:
 	{
 		m_CameraTargetIsVisible= false;
 	}
+	
+	//! reframe the current scene
+	void reframe(const GLC_BoundingBox& box);
+	
 //@} End Zooming functions
 /////////////////////////////////////////////////////////////////////
 
