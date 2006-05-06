@@ -419,6 +419,40 @@ void GLC_Viewport::Zoom(int Cy)
 	m_dPrevZoom = Posy;
 }
 
+// reframe the current scene
+void GLC_Viewport::reframe(const GLC_BoundingBox& box)
+{
+	// Center view on the BoundingBox
+	m_pViewCam->SetTargetCam(box.getCenter());
+	
+	// Camera composition matrix
+	GLC_Matrix4x4 matCam(m_pViewCam->GetMatCompOrbit());
+	
+	// Compute Transformed BoundingBox Corner
+	GLC_Vector4d corner1(matCam * box.getLower());
+	GLC_Vector4d corner2(matCam * box.getUpper());
+	
+	// Compute the new BoundingBox
+	GLC_BoundingBox boundingBox;
+	boundingBox.combine(corner1);
+	boundingBox.combine(corner2);
+	
+	// Compute camera's cover
+	double cameraCoverX= fabs(boundingBox.getUpper().GetX()
+						- boundingBox.getLower().GetX());
+
+	double cameraCoverY= fabs(boundingBox.getUpper().GetY()
+						- boundingBox.getLower().GetY());
+
+	double cameraCover= fmax(cameraCoverX, cameraCoverY);
+	
+	// Compute Camera distance
+	const double distance = cameraCover / (2 * tan((m_dFov * PI / 180) / 2));
+	
+	// Update Camera position
+	m_pViewCam->SetDistEyeTarget(distance);
+}
+
 // Set near clipping distance
 bool GLC_Viewport::SetDistMin(double DistMin)
 {
