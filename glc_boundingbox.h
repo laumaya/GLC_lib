@@ -103,6 +103,7 @@ public:
 private:
 	GLC_Vector4d m_Lower;
 	GLC_Vector4d m_Upper;
+	bool m_IsEmpty;
 
 };
 #endif /*GLC_BOUNDINGBOX_*/
