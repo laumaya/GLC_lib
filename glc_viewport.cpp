@@ -427,6 +427,7 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	
 	// Camera composition matrix
 	GLC_Matrix4x4 matCam(m_pViewCam->GetMatCompOrbit());
+	//matCam.SetInv();
 	
 	// Compute Transformed BoundingBox Corner
 	GLC_Vector4d corner1(matCam * box.getLower());
@@ -445,12 +446,15 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 						- boundingBox.getLower().GetY());
 
 	double cameraCover= fmax(cameraCoverX, cameraCoverY);
+
+	double boxProf= fabs(boundingBox.getUpper().GetZ()
+						- boundingBox.getLower().GetZ());
 	
 	// Compute Camera distance
 	const double distance = cameraCover / (2 * tan((m_dFov * PI / 180) / 2));
 	
 	// Update Camera position
-	m_pViewCam->SetDistEyeTarget(distance);
+	m_pViewCam->SetDistEyeTarget(distance + boxProf / 2.0);
 }
 
 // Set near clipping distance
