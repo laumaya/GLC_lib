@@ -25,9 +25,6 @@
 //! \file glc_viewport.cpp implementation of the GLC_Viewport class.
 
 #include <QtDebug>
-
-// Used by selection function member
-#include <QGLWidget>
 #include "glc_viewport.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -35,7 +32,7 @@
 //////////////////////////////////////////////////////////////////////
 
 // Default constructor
-GLC_Viewport::GLC_Viewport()
+GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // Camera definition
 : m_pViewCam(NULL)				// Camera
 , m_dCamDistMax(500)			// Camera Maximum distance
@@ -52,6 +49,9 @@ GLC_Viewport::GLC_Viewport()
 , m_pOrbitCircle(NULL)			// Orbit circle
 , m_dRatWinSph(0.90)			// Circle ratio size / window size
 , m_OrbitCircleIsVisible(false)	// Show state of orbit Circle
+, m_pQGLWidget(GLWidget)		// Attached QGLWidget
+// the default backGroundColor
+, m_BackGroundColor((QColor::fromRgbF(0.39, 0.39, 0.39, 0.0)))
 {
 	// create a camera
 	m_pViewCam= new GLC_Camera;
@@ -114,6 +114,17 @@ GLC_Vector4d GLC_Viewport::MapPosMouse( GLdouble Posx, GLdouble Posy) const
 //////////////////////////////////////////////////////////////////////
 // Public OpenGL Functions
 //////////////////////////////////////////////////////////////////////
+// Initialize OpenGL with default values
+void GLC_Viewport::initGl()
+{
+	// OpenGL initialisation from NEHE production
+	m_pQGLWidget->qglClearColor(m_BackGroundColor);                     // Background
+	glClearDepth(1.0f);                                   // Depth Buffer Setup
+	glShadeModel(GL_SMOOTH);                              // Enable Smooth Shading
+	glEnable(GL_DEPTH_TEST);                              // Enables Depth Testing
+	glDepthFunc(GL_LEQUAL);                               // The Type Of Depth Testing To Do
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation	
+}
 
 // Define camera's target position
 void GLC_Viewport::GlPointing(GLint x, GLint y)
@@ -422,12 +433,17 @@ void GLC_Viewport::Zoom(int Cy)
 // reframe the current scene
 void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 {
+	// Ratio between screen size and bounding box size
+	const double boundingBoxCover= 1.2;
+	
 	// Center view on the BoundingBox
-	m_pViewCam->SetTargetCam(box.getCenter());
+	const GLC_Vector4d deltaVector(box.getCenter() - m_pViewCam->GetVectTarget());
+	m_pViewCam->Translate(deltaVector);
+	//m_pViewCam->SetTargetCam(box.getCenter());
 	
 	// Camera composition matrix
 	GLC_Matrix4x4 matCam(m_pViewCam->GetMatCompOrbit());
-	//matCam.SetInv();
+	matCam.SetInv();
 	
 	// Compute Transformed BoundingBox Corner
 	GLC_Vector4d corner1(matCam * box.getLower());
@@ -445,7 +461,7 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	double cameraCoverY= fabs(boundingBox.getUpper().GetY()
 						- boundingBox.getLower().GetY());
 
-	double cameraCover= fmax(cameraCoverX, cameraCoverY);
+	double cameraCover= boundingBoxCover * fmax(cameraCoverX, cameraCoverY);
 
 	double boxProf= fabs(boundingBox.getUpper().GetZ()
 						- boundingBox.getLower().GetZ());

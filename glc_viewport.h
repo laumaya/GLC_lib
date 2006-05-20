@@ -26,7 +26,7 @@
 
 #ifndef GLC_VIEWPORT_H_
 #define GLC_VIEWPORT_H_
-
+#include <QGLWidget>
 #include "glc_camera.h"
 #include "glc_orbitcircle.h"
 #include "glc_imageplane.h"
@@ -41,8 +41,6 @@
 
 // end selection quare
 
-// Used by selection function member
-class QGLWidget;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Viewport
@@ -75,7 +73,7 @@ public:
 	 * 		- Selection square		: <b>5.0</b>
 	 * 		- Maximum zoom factor	: <b>3.0</b>
 	 * */
-	GLC_Viewport();
+	GLC_Viewport(QGLWidget *GLWidget);
 	
 	//! Delete Camera, Image Plane and Orbit circle
 	virtual ~GLC_Viewport();
@@ -127,6 +125,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:	
+	//! Initialize OpenGL with default values
+	void initGl();
+	
 	//! Load camera's transformation Matrix and if image plane exist, display it
 	void GlExecuteCam(void)
 	{
@@ -332,6 +333,11 @@ private:
 	//! Orbiting Vector
 	GLC_Vector4d m_VectPrevOrbit;	
 
+	//! The QGLWidget attached to the viewport (rendering context)
+	QGLWidget* m_pQGLWidget;
+	
+	//! Viewport Background color
+	QColor m_BackGroundColor;
 
 };
 
