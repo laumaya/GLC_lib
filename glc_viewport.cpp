@@ -434,7 +434,7 @@ void GLC_Viewport::Zoom(int Cy)
 void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 {
 	// Ratio between screen size and bounding box size
-	const double boundingBoxCover= 1.2;
+	const double boundingBoxCover= 1.0;
 	
 	// Center view on the BoundingBox
 	const GLC_Vector4d deltaVector(box.getCenter() - m_pViewCam->GetVectTarget());
@@ -446,13 +446,34 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	matCam.SetInv();
 	
 	// Compute Transformed BoundingBox Corner
-	GLC_Vector4d corner1(matCam * box.getLower());
-	GLC_Vector4d corner2(matCam * box.getUpper());
+	GLC_Vector4d corner1(box.getLower());
+	GLC_Vector4d corner7(box.getUpper());
+	GLC_Vector4d corner2(corner7.GetX(), corner1.GetY(), corner1.GetZ());
+	GLC_Vector4d corner3(corner7.GetX(), corner7.GetY(), corner1.GetZ());
+	GLC_Vector4d corner4(corner1.GetX(), corner7.GetY(), corner1.GetZ());
+	GLC_Vector4d corner5(corner1.GetX(), corner1.GetY(), corner7.GetZ());
+	GLC_Vector4d corner6(corner7.GetX(), corner1.GetY(), corner7.GetZ());
+	GLC_Vector4d corner8(corner1.GetX(), corner7.GetY(), corner7.GetZ());
+
+	corner1 = matCam * corner1;
+	corner2 = matCam * corner2;
+	corner3 = matCam * corner3;
+	corner4 = matCam * corner4;
+	corner5 = matCam * corner5;
+	corner6 = matCam * corner6;
+	corner7 = matCam * corner7;
+	corner8 = matCam * corner8;
 	
 	// Compute the new BoundingBox
 	GLC_BoundingBox boundingBox;
 	boundingBox.combine(corner1);
 	boundingBox.combine(corner2);
+	boundingBox.combine(corner3);
+	boundingBox.combine(corner4);
+	boundingBox.combine(corner5);
+	boundingBox.combine(corner6);
+	boundingBox.combine(corner7);
+	boundingBox.combine(corner8);
 	
 	// Compute camera's cover
 	double cameraCoverX= fabs(boundingBox.getUpper().GetX()
