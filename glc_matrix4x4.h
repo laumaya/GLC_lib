@@ -139,7 +139,7 @@ public:
 	GLC_Matrix4x4& SetMatScaling(const double &sX, const double &sY, const double sZ);
 
 	//! Reverse the Matrix
-	const bool SetInv(void);
+	GLC_Matrix4x4& SetInv(void);
 
 	//! Set the matrix to identify matrix
 	GLC_Matrix4x4& SetIdentite();

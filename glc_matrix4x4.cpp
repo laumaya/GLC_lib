@@ -271,7 +271,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::SetMatScaling(const double &sX, const double &sY, 
 
 
 // Reverse the Matrix
-const bool GLC_Matrix4x4::SetInv(void)
+GLC_Matrix4x4& GLC_Matrix4x4::SetInv(void)
 {
 	
 	double Determinant= GetDeterminant();
@@ -279,16 +279,7 @@ const bool GLC_Matrix4x4::SetInv(void)
 
 	// Verifie si l'inversion est possible
 	if ( ( fabs(Determinant) ) < EPSILON)
-		return false;
-	/*
-	// Si le déterminant est à 1 -> Matrice de rotation ; Inv == Transpose. PAS TOUJOURS...
-	if ((Determinant <= 1.000001) && (Determinant >= 0.999999))
-	{
-		GLC_Matrix4x4 MatT(dMatrice);
-		*this= MatT.ReturnTranspose();
-		return true;
-	}
-	*/
+		return *this;
 
 	double InvDet = 1 / Determinant;
 	GLC_Matrix4x4 TCoMat= ReturnCoMat4x4().ReturnTranspose();
@@ -298,7 +289,7 @@ const bool GLC_Matrix4x4::SetInv(void)
 		dMatrice[i]= TCoMat.dMatrice[i] * InvDet;
 	}
 
-	return true;
+	return *this;
 }
 
 // Set the matrix to identify matrix
