@@ -92,12 +92,45 @@ GLC_Vector4d GLC_BoundingBox::getUpper(void) const
 // Get the center of the bounding box
 GLC_Vector4d GLC_BoundingBox::getCenter(void) const
 {
-	const double x= (m_Lower.GetX() + m_Upper.GetX()) / 2.0;
-	const double y= (m_Lower.GetY() + m_Upper.GetY()) / 2.0;
-	const double z= (m_Lower.GetZ() + m_Upper.GetZ()) / 2.0;
-	
-	GLC_Vector4d vectResult(x, y, z);
+	GLC_Vector4d vectResult = (m_Lower + m_Upper) * (1.0 / 2.0);
 	return vectResult;
+	
+}
+
+// Return a bounding box in new cordinate system
+GLC_BoundingBox GLC_BoundingBox::inToCoordinate(const GLC_Matrix4x4& matrix) const
+{
+	// Compute Transformed BoundingBox Corner
+	GLC_Vector4d corner1(m_Lower);
+	GLC_Vector4d corner7(m_Upper);
+	GLC_Vector4d corner2(corner7.GetX(), corner1.GetY(), corner1.GetZ());
+	GLC_Vector4d corner3(corner7.GetX(), corner7.GetY(), corner1.GetZ());
+	GLC_Vector4d corner4(corner1.GetX(), corner7.GetY(), corner1.GetZ());
+	GLC_Vector4d corner5(corner1.GetX(), corner1.GetY(), corner7.GetZ());
+	GLC_Vector4d corner6(corner7.GetX(), corner1.GetY(), corner7.GetZ());
+	GLC_Vector4d corner8(corner1.GetX(), corner7.GetY(), corner7.GetZ());
+
+	corner1 = (matrix * corner1);
+	corner2 = (matrix * corner2);
+	corner3 = (matrix * corner3);
+	corner4 = (matrix * corner4);
+	corner5 = (matrix * corner5);
+	corner6 = (matrix * corner6);
+	corner7 = (matrix * corner7);
+	corner8 = (matrix * corner8);
+	
+	// Compute the new BoundingBox
+	GLC_BoundingBox boundingBox;
+	boundingBox.combine(corner1);
+	boundingBox.combine(corner2);
+	boundingBox.combine(corner3);
+	boundingBox.combine(corner4);
+	boundingBox.combine(corner5);
+	boundingBox.combine(corner6);
+	boundingBox.combine(corner7);
+	boundingBox.combine(corner8);
+	
+	return boundingBox;
 	
 }
 
