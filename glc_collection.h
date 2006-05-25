@@ -82,7 +82,7 @@ public:
 	GLC_Geometry* GetElement(int Index);
 	
 	//! return the collection Bounding Box
-	GLC_BoundingBox getBoundingBox(void) const;
+	GLC_BoundingBox getBoundingBox(void);
 	
 
 //@}

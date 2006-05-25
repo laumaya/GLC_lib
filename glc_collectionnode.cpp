@@ -75,17 +75,24 @@ bool GLC_CollectionNode::getListValidity(void) const
 }
 
 // Get the bounding box
-GLC_BoundingBox GLC_CollectionNode::getBoundingBox(void) const
+GLC_BoundingBox GLC_CollectionNode::getBoundingBox(void)
 {
 	if (m_pBoundingBox != NULL)
 	{
 		return *m_pBoundingBox;
 	}
-	else
+	else if (m_pGeom != NULL)
 	{
-		GLC_BoundingBox nullBoundingBox;
-		return nullBoundingBox;
+		computeBoundingBox();
+		if (m_pBoundingBox != NULL)
+		{
+			return *m_pBoundingBox;
+		}
+		
 	}
+	
+	GLC_BoundingBox nullBoundingBox;
+	return nullBoundingBox;
 }
 
 // Get the validity of the Bounding Box

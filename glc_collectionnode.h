@@ -73,7 +73,7 @@ public:
 	bool getListValidity(void) const;
 	
 	//! Get the bounding box
-	GLC_BoundingBox getBoundingBox(void) const;
+	GLC_BoundingBox getBoundingBox(void);
 
 	//! Get the validity of the Bounding Box
 	bool getBoundingBoxValidity(void) const;

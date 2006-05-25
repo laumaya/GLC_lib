@@ -192,17 +192,39 @@ GLC_Geometry* GLC_Collection::GetElement(int Index)
 }
 
 //! return the collection Bounding Box
-GLC_BoundingBox GLC_Collection::getBoundingBox(void) const
+GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 {
 	if (m_pBoundingBox != NULL)
 	{
 		return *m_pBoundingBox;
 	}
-	else
+	else if (GetNumber() > 0)
 	{
-		GLC_BoundingBox boundingBox;
-		return boundingBox;
+		CGeomMap::iterator iEntry= m_TheMap.begin();
+		m_pBoundingBox= new GLC_BoundingBox();
+		
+	    while (iEntry != m_TheMap.constEnd())
+	    {
+	        iEntry.value()->GlExecute();
+	        // Combine Collection BoundingBox with element Bounding Box
+	        m_pBoundingBox->combine(iEntry.value()->getBoundingBox());	        
+	        ++iEntry;
+	    }
+	    if (m_pBoundingBox->isEmpty())
+	    {
+	    	delete m_pBoundingBox;
+	    	m_pBoundingBox= NULL;
+	    }
+	    else
+	    {
+	    	return *m_pBoundingBox;
+	    }
+				
 	}
+	
+	GLC_BoundingBox boundingBox;
+	return boundingBox;
+	
 }
 
 
