@@ -116,14 +116,14 @@ bool GLC_OrbitCircle::GlExecute(double Profondeur)
 		
 		glLoadIdentity();
 
-		// Put cicle at the middle of camera range of depth
+		// Put circle at the middle of camera range of depth
 		glTranslated(0, 0, - (Profondeur) );
 
 		// Save Positionning matrix of arcs
 		const GLC_Matrix4x4 MatSavArc1(m_Arc1.GetMatrix());
 		const GLC_Matrix4x4 MatSavArc2(m_Arc2.GetMatrix());
 
-		// Scale Z to 0. Preject arcs in the main circle plane
+		// Scale Z to 0. Project arcs in the main circle plane
 		// Avoid perspective problems
 		GLC_Matrix4x4 MatScaling;
 		MatScaling.SetMatScaling(1,1,0);
