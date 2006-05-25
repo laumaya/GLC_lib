@@ -61,6 +61,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 
+	//! Get the empty state of the bounding Box
+	bool isEmpty(void) const
+	{
+		return m_IsEmpty;
+	}
+	
 	//! Test if a point is in the bounding Box
 	bool intersect(const GLC_Vector4d& point) const;
 
