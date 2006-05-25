@@ -196,6 +196,9 @@ public:
 	//! Set far clipping distance
 	bool SetDistMax(double DistMax);
 	
+	//! Set Near and Far clipping distance
+	void setDistMinAndMax(const GLC_BoundingBox& bBox);
+
 //@}
 
 /////////////////////////////////////////////////////////////////////	
