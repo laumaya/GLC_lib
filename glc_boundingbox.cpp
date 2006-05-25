@@ -193,7 +193,7 @@ void GLC_BoundingBox::combine(const GLC_BoundingBox& box)
 	{
 		m_Lower= box.m_Lower;
 		m_Upper= box.m_Upper;
-		m_IsEmpty= false;
+		m_IsEmpty= box.m_IsEmpty;
 	}
 	else
 	{
