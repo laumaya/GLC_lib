@@ -180,7 +180,7 @@ void GLC_Viewport::GlExecuteOrbitCircle()
 	if (m_OrbitCircleIsVisible)
 	{
 
-		m_pOrbitCircle->GlExecute(m_dCamDistMax - m_dCamDistMin);
+		m_pOrbitCircle->GlExecute(m_dCamDistMin + (m_dCamDistMax - m_dCamDistMin) / 2);
 	}
 }
 // Display Camera's target
@@ -441,39 +441,14 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	m_pViewCam->Translate(deltaVector);
 	//m_pViewCam->SetTargetCam(box.getCenter());
 	
-	// Camera composition matrix
-	GLC_Matrix4x4 matCam(m_pViewCam->GetMatCompOrbit());
-	matCam.SetInv();
-	
-	// Compute Transformed BoundingBox Corner
-	GLC_Vector4d corner1(box.getLower());
-	GLC_Vector4d corner7(box.getUpper());
-	GLC_Vector4d corner2(corner7.GetX(), corner1.GetY(), corner1.GetZ());
-	GLC_Vector4d corner3(corner7.GetX(), corner7.GetY(), corner1.GetZ());
-	GLC_Vector4d corner4(corner1.GetX(), corner7.GetY(), corner1.GetZ());
-	GLC_Vector4d corner5(corner1.GetX(), corner1.GetY(), corner7.GetZ());
-	GLC_Vector4d corner6(corner7.GetX(), corner1.GetY(), corner7.GetZ());
-	GLC_Vector4d corner8(corner1.GetX(), corner7.GetY(), corner7.GetZ());
-
-	corner1 = matCam * corner1;
-	corner2 = matCam * corner2;
-	corner3 = matCam * corner3;
-	corner4 = matCam * corner4;
-	corner5 = matCam * corner5;
-	corner6 = matCam * corner6;
-	corner7 = matCam * corner7;
-	corner8 = matCam * corner8;
-	
 	// Compute the new BoundingBox
-	GLC_BoundingBox boundingBox;
-	boundingBox.combine(corner1);
-	boundingBox.combine(corner2);
-	boundingBox.combine(corner3);
-	boundingBox.combine(corner4);
-	boundingBox.combine(corner5);
-	boundingBox.combine(corner6);
-	boundingBox.combine(corner7);
-	boundingBox.combine(corner8);
+	GLC_Matrix4x4 matTranslateCam(m_pViewCam->GetVectEye());
+	GLC_Matrix4x4 matRotateCam(m_pViewCam->GetMatCompOrbit());
+	
+	GLC_Matrix4x4 matComp(matRotateCam.SetInv() * matTranslateCam.SetInv());	
+	
+	// The bounding Box in Camera coordinate
+	GLC_BoundingBox boundingBox(box.inToCoordinate(matComp));
 	
 	// Compute camera's cover
 	double cameraCoverX= fabs(boundingBox.getUpper().GetX()
@@ -547,6 +522,46 @@ bool GLC_Viewport::SetDistMax(double DistMax)
 	}
 }
 
+// Set Near and Far clipping distance
+void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
+{
+	GLC_Matrix4x4 matTranslateCam(m_pViewCam->GetVectEye());
+	GLC_Matrix4x4 matRotateCam(m_pViewCam->GetMatCompOrbit());
+	
+	GLC_Matrix4x4 matComp(matRotateCam.SetInv() * matTranslateCam.SetInv());	
+	
+	// The bounding Box in Camera coordinate
+	GLC_BoundingBox boundingBox(bBox.inToCoordinate(matComp));
+	// Increase size of the bounding box
+	const double increaseFactor= 1.1;
+
+	double d1= fabs(boundingBox.getLower().GetZ());
+	double d2= fabs(boundingBox.getUpper().GetZ());
+	double min= fmin(d1,d2)* (2.0 - increaseFactor);
+	double max= fmax(d1,d2) * increaseFactor;
+	GLC_Vector4d vectCamEye(m_pViewCam->GetVectEye());
+	
+	vectCamEye= matComp * vectCamEye;
+	
+	if (!boundingBox.intersect(vectCamEye))
+	{
+	
+		m_dCamDistMin= min;
+		m_dCamDistMax= max;
+		qDebug() << "distmin" << m_dCamDistMin;
+		qDebug() << "distmax" << m_dCamDistMax;		
+	}
+	else
+	{
+		m_dCamDistMin= (max + min) * 0.001;
+		m_dCamDistMax= max;
+		qDebug() << "inside distmin" << m_dCamDistMin;
+		qDebug() << "inside distmax" << m_dCamDistMax;		
+	}
+		
+		UpdateProjectionMat();	// Update OpenGL projection matrix		
+		UpdateOrbitCircle();	// Update Orbit circle		
+}
 
 //////////////////////////////////////////////////////////////////////
 // Private services functions
@@ -614,7 +629,7 @@ void GLC_Viewport::UpdateOrbitCircle()
 	}
 
 	// Compute the length of camera's field of view
-	const double ChampsVision = 2 * (m_dCamDistMax - m_dCamDistMin) *  tan((m_dFov * PI / 180) / 2);
+	const double ChampsVision = 2 * (m_dCamDistMin + (m_dCamDistMax - m_dCamDistMin) / 2) *  tan((m_dFov * PI / 180) / 2);
 	
 	// the side of camera's square is mapped on Vertical length of window
 	// Circle radius in OpenGL unit = Radius(Pixel) * (dimend GL / dimens Pixel)
