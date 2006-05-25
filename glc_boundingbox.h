@@ -76,6 +76,9 @@ public:
 	//! Get the center of the bounding box
 	GLC_Vector4d getCenter(void) const;
 	
+	//! return a bounding box in new cordinate system
+	GLC_BoundingBox inToCoordinate(const GLC_Matrix4x4& matrix) const;
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
