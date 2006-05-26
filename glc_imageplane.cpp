@@ -109,7 +109,12 @@ void GLC_ImagePlane::UpdateZPosition(void)
 	
 	double zw= pow(2, static_cast<double>(nbrBits)) - 2.0;
 	
-	m_dZpos= -f * n / (((zw - 1) / zw) * (f - n) - f);	
+	m_dZpos= -f * n / (((zw - 1) / zw) * (f - n) - f);
+
+	UpdatePlaneSize();
+	// Invalidate OpenGL Display list
+	m_ListIsValid= false;
+	
 }
 
 
@@ -121,7 +126,7 @@ void GLC_ImagePlane::GlDraw(void)
 {
 
 	const double LgImgSur2= m_dLgImage / 2;
-
+	
 	glLoadIdentity();
 	glTranslated(0.0, 0.0, -m_dZpos);
 	glBegin(GL_QUADS);
