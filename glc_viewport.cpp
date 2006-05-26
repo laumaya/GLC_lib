@@ -212,6 +212,8 @@ void GLC_Viewport::GlExecuteTargetCam()	//! \todo Create a display list
 			m_pViewCam->GetVectTarget().GetZ() );
 
 		// Graphic propertys
+		glDisable(GL_BLEND);
+		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
 		glColor4fv(m_pOrbitCircle->GetfRGBA());
 		glLineWidth(1.0);
@@ -560,7 +562,12 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	}
 		
 		UpdateProjectionMat();	// Update OpenGL projection matrix		
-		UpdateOrbitCircle();	// Update Orbit circle		
+		UpdateOrbitCircle();	// Update Orbit circle
+		if (m_pImagePlane != NULL)
+		{
+			m_pImagePlane->UpdateZPosition();	// Update image plane Z Position
+		}
+		
 }
 
 //////////////////////////////////////////////////////////////////////
