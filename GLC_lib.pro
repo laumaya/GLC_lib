@@ -2,7 +2,7 @@
 
 TEMPLATE = lib
 QT += opengl
-CONFIG *= release create_prl warn_on
+CONFIG += release create_prl warn_on
 
 TARGET = GLC_lib
 VERSION  = 0.9.5
