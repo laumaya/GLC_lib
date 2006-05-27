@@ -42,6 +42,7 @@ GLC_Collection::GLC_Collection()
 
 GLC_Collection::~GLC_Collection()
 {
+	// Delete all collection's elements and the collection bounding box
 	Erase();
 }
 //////////////////////////////////////////////////////////////////////
@@ -194,18 +195,22 @@ GLC_Geometry* GLC_Collection::GetElement(int Index)
 //! return the collection Bounding Box
 GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 {
-	if (m_pBoundingBox != NULL)
+	if ((m_pBoundingBox != NULL) && m_ListIsValid)
 	{
 		return *m_pBoundingBox;
 	}
 	else if (GetNumber() > 0)
 	{
 		CGeomMap::iterator iEntry= m_TheMap.begin();
+		if (m_pBoundingBox != NULL)
+		{
+			delete m_pBoundingBox;
+			m_pBoundingBox= NULL;
+		}
 		m_pBoundingBox= new GLC_BoundingBox();
 		
 	    while (iEntry != m_TheMap.constEnd())
 	    {
-	        iEntry.value()->GlExecute();
 	        // Combine Collection BoundingBox with element Bounding Box
 	        m_pBoundingBox->combine(iEntry.value()->getBoundingBox());	        
 	        ++iEntry;

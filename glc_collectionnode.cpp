@@ -77,7 +77,7 @@ bool GLC_CollectionNode::getListValidity(void) const
 // Get the bounding box
 GLC_BoundingBox GLC_CollectionNode::getBoundingBox(void)
 {
-	if (m_pBoundingBox != NULL)
+	if (getBoundingBoxValidity())
 	{
 		return *m_pBoundingBox;
 	}
@@ -125,12 +125,14 @@ void GLC_CollectionNode::GlExecute(GLenum Mode)
 {
 	bool computeBox= false;
 	
+	// Geometry OpenGl list invalid
 	if (!m_pGeom->GetListIsValid())
 	{
 		m_pGeom->CreateList(GL_COMPILE);
 		computeBox= true;
 	}
 	
+	// Geometry invalid or collection node list ID == 0
 	if ((!m_pGeom->GetValidity()) || (m_ListID == 0))
 	{
 		if (m_ListID == 0)
@@ -184,6 +186,7 @@ void GLC_CollectionNode::erase(void)
 }
 
 // compute the node bounding box
+// m_pGeom should be not null
 void GLC_CollectionNode::computeBoundingBox(void)
 {
 	if (m_pBoundingBox != NULL)
