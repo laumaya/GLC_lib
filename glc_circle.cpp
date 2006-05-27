@@ -45,7 +45,23 @@ const char *pName, const GLfloat *pColor)
 GLC_Circle::~GLC_Circle()
 {
 }
-
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+// return the circle bounding box
+GLC_BoundingBox* GLC_Circle::getBoundingBox(void) const
+{
+	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
+	
+	GLC_Vector3d lower(-m_Radius, -m_Radius, -2.0 * EPSILON);
+	GLC_Vector3d upper(m_Radius, m_Radius, 2.0 * EPSILON);
+	pBoundingBox->combine(lower);
+	pBoundingBox->combine(upper);
+	
+    
+    pBoundingBox->transform(m_MatPos);	
+	return pBoundingBox;	
+}
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

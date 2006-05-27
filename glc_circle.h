@@ -78,6 +78,10 @@ public:
 	{
 		return 2 * m_Radius;
 	}
+	
+	//! return the circle bounding box
+	virtual GLC_BoundingBox* getBoundingBox(void) const;
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////

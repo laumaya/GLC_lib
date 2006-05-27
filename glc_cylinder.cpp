@@ -50,6 +50,24 @@ GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, const char *pName
 }
 
 //////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+// return the cylinder bounding box
+GLC_BoundingBox* GLC_Cylinder::getBoundingBox(void) const
+{
+	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
+	
+	GLC_Vector3d lower(-m_Radius, -m_Radius, 0.0);
+	GLC_Vector3d upper(m_Radius, m_Radius, m_dLength);
+	pBoundingBox->combine(lower);
+	pBoundingBox->combine(upper);
+	
+    
+    pBoundingBox->transform(m_MatPos);	
+	return pBoundingBox;	
+}
+
+//////////////////////////////////////////////////////////////////////
 // Fonctions OpenGL privées
 //////////////////////////////////////////////////////////////////////
 

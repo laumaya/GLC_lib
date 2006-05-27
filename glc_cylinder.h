@@ -78,6 +78,9 @@ public:
 		return m_nDiscret;
 	}
 	
+	//! return the cylinder bounding box
+	virtual GLC_BoundingBox* getBoundingBox(void) const;
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////

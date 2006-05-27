@@ -44,6 +44,24 @@ GLC_Box::GLC_Box(double dLx, double dLy, double dlz
 }
 
 //////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+// return the circle bounding box
+GLC_BoundingBox* GLC_Box::getBoundingBox(void) const
+{
+	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
+	
+	GLC_Vector3d lower(-m_dLgX / 2.0, -m_dLgY / 2.0, -m_dLgZ / 2.0);
+	GLC_Vector3d upper(m_dLgX / 2.0, m_dLgY / 2.0, m_dLgZ / 2.0);
+	pBoundingBox->combine(lower);
+	pBoundingBox->combine(upper);
+	
+    
+    pBoundingBox->transform(m_MatPos);	
+	return pBoundingBox;	
+}
+
+//////////////////////////////////////////////////////////////////////
 // Private OpenGL functions
 //////////////////////////////////////////////////////////////////////
 

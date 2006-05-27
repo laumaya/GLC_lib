@@ -44,6 +44,28 @@ GLC_Point::GLC_Point(double x, double y, double z, const char *pName, const GLfl
 }
 
 //////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+// return the point bounding box
+GLC_BoundingBox* GLC_Point::getBoundingBox(void) const
+{
+	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
+	
+	GLC_Vector3d lower(m_VectCoord.GetX() - EPSILON,
+						 m_VectCoord.GetY() - EPSILON,
+						  m_VectCoord.GetZ() - EPSILON);
+	GLC_Vector3d upper(m_VectCoord.GetX() + EPSILON,
+						 m_VectCoord.GetY() + EPSILON,
+						  m_VectCoord.GetZ() + EPSILON);
+	pBoundingBox->combine(lower);
+	pBoundingBox->combine(upper);
+	
+    
+    pBoundingBox->transform(m_MatPos);	
+	return pBoundingBox;	
+}
+
+//////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 

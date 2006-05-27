@@ -63,6 +63,10 @@ public:
 	{
 		return m_VectCoord;
 	}
+	
+	//! return the point bounding box
+	virtual GLC_BoundingBox* getBoundingBox(void) const;
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////

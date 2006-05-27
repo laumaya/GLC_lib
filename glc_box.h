@@ -75,6 +75,8 @@ public:
 	{
 		return m_dLgZ;
 	}
+	//! return the box bounding box
+	virtual GLC_BoundingBox* getBoundingBox(void) const;
 
 //@}
 
