@@ -99,7 +99,8 @@ GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
         pBoundingBox->combine(iEntry.value());
         ++iEntry;
     }
-	
+    
+    pBoundingBox->transform(m_MatPos);	
 	return pBoundingBox;	
 }
 
