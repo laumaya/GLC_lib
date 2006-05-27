@@ -450,8 +450,8 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	GLC_Matrix4x4 matComp(matRotateCam.SetInv() * matTranslateCam.SetInv());	
 	
 	// The bounding Box in Camera coordinate
-	GLC_BoundingBox boundingBox(box.inToCoordinate(matComp));
-	
+	GLC_BoundingBox boundingBox(box);
+	boundingBox.transform(matComp);
 	// Compute camera's cover
 	double cameraCoverX= fabs(boundingBox.getUpper().GetX()
 						- boundingBox.getLower().GetX());
@@ -533,7 +533,8 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	GLC_Matrix4x4 matComp(matRotateCam.SetInv() * matTranslateCam.SetInv());	
 	
 	// The bounding Box in Camera coordinate
-	GLC_BoundingBox boundingBox(bBox.inToCoordinate(matComp));
+	GLC_BoundingBox boundingBox(bBox);
+	boundingBox.transform(matComp);
 	// Increase size of the bounding box
 	const double increaseFactor= 1.1;
 
