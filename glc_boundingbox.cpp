@@ -97,8 +97,86 @@ GLC_Vector4d GLC_BoundingBox::getCenter(void) const
 	
 }
 
-// Return a bounding box in new cordinate system
-GLC_BoundingBox GLC_BoundingBox::inToCoordinate(const GLC_Matrix4x4& matrix) const
+
+//////////////////////////////////////////////////////////////////////
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+
+// Combine the bounding Box with new geometry point
+GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Vector4d& point)
+{
+	if (m_IsEmpty)
+	{
+		m_Lower= point;
+		m_Upper= point;
+		m_IsEmpty= false;
+	}
+	else
+	{
+		double lowerX= fmin(point.GetX(), m_Lower.GetX());
+		double lowerY= fmin(point.GetY(), m_Lower.GetY());
+		double lowerZ= fmin(point.GetZ(), m_Lower.GetZ());
+		m_Lower.SetVect(lowerX, lowerY, lowerZ);
+		
+		double upperX= fmax(point.GetX(), m_Upper.GetX());
+		double upperY= fmax(point.GetY(), m_Upper.GetY());
+		double upperZ= fmax(point.GetZ(), m_Upper.GetZ());	
+		m_Upper.SetVect(upperX, upperY, upperZ);
+	}
+	return *this;
+}
+
+// Combine the bounding Box with new geometry point
+GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Vector3d& point)
+{
+	if (m_IsEmpty)
+	{
+		m_Lower= point;
+		m_Upper= point;
+		m_IsEmpty= false;
+	}
+	else
+	{	
+		double lowerX= fmin(point.GetX(), m_Lower.GetX());
+		double lowerY= fmin(point.GetY(), m_Lower.GetY());
+		double lowerZ= fmin(point.GetZ(), m_Lower.GetZ());
+		m_Lower.SetVect(lowerX, lowerY, lowerZ);
+		
+		double upperX= fmax(point.GetX(), m_Upper.GetX());
+		double upperY= fmax(point.GetY(), m_Upper.GetY());
+		double upperZ= fmax(point.GetZ(), m_Upper.GetZ());	
+		m_Upper.SetVect(upperX, upperY, upperZ);
+	}
+	return *this;
+}
+
+// Combine the bounding Box with another bounding box
+GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
+{
+	if (m_IsEmpty)
+	{
+		m_Lower= box.m_Lower;
+		m_Upper= box.m_Upper;
+		m_IsEmpty= box.m_IsEmpty;
+	}
+	else
+	{
+		double lowerX= fmin(box.m_Lower.GetX(), m_Lower.GetX());
+		double lowerY= fmin(box.m_Lower.GetY(), m_Lower.GetY());
+		double lowerZ= fmin(box.m_Lower.GetZ(), m_Lower.GetZ());
+		m_Lower.SetVect(lowerX, lowerY, lowerZ);
+		
+		double upperX= fmax(box.m_Upper.GetX(), m_Upper.GetX());
+		double upperY= fmax(box.m_Upper.GetY(), m_Upper.GetY());
+		double upperZ= fmax(box.m_Upper.GetZ(), m_Upper.GetZ());	
+		m_Upper.SetVect(upperX, upperY, upperZ);
+	}
+	
+	return *this;
+}
+
+// Transform the bounding Box
+GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
 {
 	// Compute Transformed BoundingBox Corner
 	GLC_Vector4d corner1(m_Lower);
@@ -130,83 +208,8 @@ GLC_BoundingBox GLC_BoundingBox::inToCoordinate(const GLC_Matrix4x4& matrix) con
 	boundingBox.combine(corner7);
 	boundingBox.combine(corner8);
 	
-	return boundingBox;
-	
-}
-
-//////////////////////////////////////////////////////////////////////
-// Set Functions
-//////////////////////////////////////////////////////////////////////
-
-// Combine the bounding Box with new geometry point
-void GLC_BoundingBox::combine(const GLC_Vector4d& point)
-{
-	if (m_IsEmpty)
-	{
-		m_Lower= point;
-		m_Upper= point;
-		m_IsEmpty= false;
-	}
-	else
-	{
-		double lowerX= fmin(point.GetX(), m_Lower.GetX());
-		double lowerY= fmin(point.GetY(), m_Lower.GetY());
-		double lowerZ= fmin(point.GetZ(), m_Lower.GetZ());
-		m_Lower.SetVect(lowerX, lowerY, lowerZ);
-		
-		double upperX= fmax(point.GetX(), m_Upper.GetX());
-		double upperY= fmax(point.GetY(), m_Upper.GetY());
-		double upperZ= fmax(point.GetZ(), m_Upper.GetZ());	
-		m_Upper.SetVect(upperX, upperY, upperZ);
-	}
-
-}
-
-// Combine the bounding Box with new geometry point
-void GLC_BoundingBox::combine(const GLC_Vector3d& point)
-{
-	if (m_IsEmpty)
-	{
-		m_Lower= point;
-		m_Upper= point;
-		m_IsEmpty= false;
-	}
-	else
-	{	
-		double lowerX= fmin(point.GetX(), m_Lower.GetX());
-		double lowerY= fmin(point.GetY(), m_Lower.GetY());
-		double lowerZ= fmin(point.GetZ(), m_Lower.GetZ());
-		m_Lower.SetVect(lowerX, lowerY, lowerZ);
-		
-		double upperX= fmax(point.GetX(), m_Upper.GetX());
-		double upperY= fmax(point.GetY(), m_Upper.GetY());
-		double upperZ= fmax(point.GetZ(), m_Upper.GetZ());	
-		m_Upper.SetVect(upperX, upperY, upperZ);
-	}
-
-}
-
-// Combine the bounding Box with another bounding box
-void GLC_BoundingBox::combine(const GLC_BoundingBox& box)
-{
-	if (m_IsEmpty)
-	{
-		m_Lower= box.m_Lower;
-		m_Upper= box.m_Upper;
-		m_IsEmpty= box.m_IsEmpty;
-	}
-	else
-	{
-		double lowerX= fmin(box.m_Lower.GetX(), m_Lower.GetX());
-		double lowerY= fmin(box.m_Lower.GetY(), m_Lower.GetY());
-		double lowerZ= fmin(box.m_Lower.GetZ(), m_Lower.GetZ());
-		m_Lower.SetVect(lowerX, lowerY, lowerZ);
-		
-		double upperX= fmax(box.m_Upper.GetX(), m_Upper.GetX());
-		double upperY= fmax(box.m_Upper.GetY(), m_Upper.GetY());
-		double upperZ= fmax(box.m_Upper.GetZ(), m_Upper.GetZ());	
-		m_Upper.SetVect(upperX, upperY, upperZ);
-	}
-	
+	m_Lower= boundingBox.m_Lower;
+	m_Upper= boundingBox.m_Upper;
+	return *this;	
 }
 

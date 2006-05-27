@@ -81,10 +81,7 @@ public:
 	
 	//! Get the center of the bounding box
 	GLC_Vector4d getCenter(void) const;
-	
-	//! return a bounding box in new cordinate system
-	GLC_BoundingBox inToCoordinate(const GLC_Matrix4x4& matrix) const;
-	
+		
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -93,14 +90,16 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Combine the bounding Box with new geometry point
-	void combine(const GLC_Vector4d& point);
+	GLC_BoundingBox& combine(const GLC_Vector4d& point);
 
 	//! Combine the bounding Box with new geometry point
-	void combine(const GLC_Vector3d& point);
+	GLC_BoundingBox& combine(const GLC_Vector3d& point);
 
 	//! Combine the bounding Box with another bounding box
-	void combine(const GLC_BoundingBox& box);
+	GLC_BoundingBox& combine(const GLC_BoundingBox& box);
 
+	//! Transform the bounding Box
+	GLC_BoundingBox& transform(const GLC_Matrix4x4& matrix);
 	
 
 //@}
