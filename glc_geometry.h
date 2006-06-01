@@ -60,7 +60,12 @@ class GLC_Geometry :
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	// default constructor
 	GLC_Geometry(const char *pName, const GLfloat *pColor);
+	//! Copy constructor
+	GLC_Geometry(const GLC_Geometry& sourceGeom);
+	
+	//! Destructor
 	virtual ~GLC_Geometry(void);
 //@}
 

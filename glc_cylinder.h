@@ -51,6 +51,9 @@ public:
 	/*! By default, discretion is set to #GLC_POLYDISCRET \n
 	 *  By default, Axis of Cylinder is Z Axis*/
 	GLC_Cylinder(double dRadius, double dLength, const char *pName= "Cylinder", const GLfloat *pColor= 0);
+	
+	//! Copy contructor
+	GLC_Cylinder(const GLC_Cylinder& sourceCylinder);
 
 //@}
 

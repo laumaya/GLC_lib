@@ -38,8 +38,6 @@
 
 GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, const char *pName
 						   , const GLfloat *pColor)
-
-
 :GLC_Geometry(pName, pColor)
 , m_Radius(dRadius)
 , m_dLength(dLength)
@@ -49,6 +47,15 @@ GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, const char *pName
 
 }
 
+GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
+:GLC_Geometry(sourceCylinder)
+, m_Radius(sourceCylinder.m_Radius)
+, m_dLength(sourceCylinder.m_dLength)
+, m_nDiscret(sourceCylinder.m_nDiscret)
+, m_bCapEnded(sourceCylinder.m_bCapEnded)
+{
+	
+}
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////

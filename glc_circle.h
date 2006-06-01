@@ -51,6 +51,9 @@ public:
 	GLC_Circle(const double &dRadius, double Angle= 2 * PI,
 	const char *pName= "Circle", const GLfloat *pColor= 0);
 
+	//! Copy constructor
+	GLC_Circle(const GLC_Circle& sourceCircle);
+	
 	//! Destructor
 	/*! \todo Check if this destructor is necessary*/
 	virtual ~GLC_Circle();	// Delete display list
@@ -130,7 +133,6 @@ private:
 	double m_Radius;
 	//! Circle Discretion
 	int m_nDiscret;
-
 	//! Angle of circle in radians
 	double m_dAngle;
 		

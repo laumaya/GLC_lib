@@ -32,13 +32,14 @@
 //////////////////////////////////////////////////////////////////////
 GLC_Geometry::GLC_Geometry(const char *pName, const GLfloat *pColor)
 :GLC_Object(pName)
+, m_MatPos()				// default constructor identity matrix
 , m_ListID(0)				// By default Display List = 0
-, m_ListIsValid(false)	// By default Display List is invalid
-, m_GeometryIsValid(false)		// By default geometry is invalid
+, m_ListIsValid(false)		// By default Display List is invalid
+, m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pMaterial(NULL)			// By default No material
 , m_IsBlended(false)		// By default No Blending
 , m_PolyFace(GL_FRONT_AND_BACK)	// Default Faces style
-, m_PolyMode(GL_FILL)			// Default polyganal mode
+, m_PolyMode(GL_FILL)		// Default polyganal mode
 , m_Thikness(1.0)			// By default thickness = 1.0
 , m_IsVisible(true)			// By default Visibility is true
 
@@ -60,6 +61,29 @@ GLC_Geometry::GLC_Geometry(const char *pName, const GLfloat *pColor)
 		m_RGBAColor[3]= 1;
 	}
 
+}
+
+GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
+:GLC_Object(sourceGeom)
+, m_MatPos(sourceGeom.m_MatPos)
+, m_ListID(0)				// By default Display List = 0
+, m_ListIsValid(false)	// By default Display List is invalid
+, m_GeometryIsValid(false)		// By default geometry is invalid
+, m_pMaterial(NULL)			// have to be set later in constructor
+, m_IsBlended(sourceGeom.m_IsBlended)
+, m_PolyFace(sourceGeom.m_PolyFace)
+, m_PolyMode(sourceGeom.m_PolyMode)
+, m_Thikness(sourceGeom.m_Thikness)
+, m_IsVisible(sourceGeom.m_IsVisible)
+
+{
+	m_RGBAColor[0]= sourceGeom.m_RGBAColor[0];
+	m_RGBAColor[1]= sourceGeom.m_RGBAColor[1];
+	m_RGBAColor[2]= sourceGeom.m_RGBAColor[2];
+	m_RGBAColor[3]= sourceGeom.m_RGBAColor[3];
+	
+	// Material is set here
+	SetMaterial(sourceGeom.GetMaterial());
 }
 
 GLC_Geometry::~GLC_Geometry(void)
