@@ -80,7 +80,19 @@ GLC_Circle* GLC_Factory::createCircle(double radius, double angle) const
 {
 	return new GLC_Circle(radius, angle);
 }
-
+// Create an GLC_Circle by copying another GLC_Circle
+GLC_Circle* GLC_Factory::createCircle(const GLC_Geometry* pCircle) const
+{
+	const GLC_Circle* pTempCircle= dynamic_cast<const GLC_Circle*>(pCircle);
+	if (pTempCircle != NULL)
+	{
+		return new GLC_Circle(*pTempCircle);
+	}
+	else
+	{
+		return NULL;
+	}	
+}
 // Create an GLC_Box
 GLC_Box* GLC_Factory::createBox(double lx, double ly, double lz) const
 {
@@ -105,15 +117,29 @@ GLC_Cylinder* GLC_Factory::createCylinder(double radius, double length) const
 {
 	return new GLC_Cylinder(radius, length);
 }
+// Create an GLC_Cylinder by copying another GLC_Cylinder
+GLC_Cylinder* GLC_Factory::createCylinder(const GLC_Geometry* pCylinder) const
+{
+	const GLC_Cylinder* pTempCylinder= dynamic_cast<const GLC_Cylinder*>(pCylinder);
+	if (pTempCylinder != NULL)
+	{
+		return new GLC_Cylinder(*pTempCylinder);
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
 // Create an GLC_Mesh2
-GLC_Mesh2* GLC_Factory::createMesh(const std::string &fullfileName)
+GLC_Mesh2* GLC_Factory::createMesh(const std::string &fullfileName) const
 {
 	GLC_ObjToMesh2 objToMesh(m_pQGLWidget);
 	return objToMesh.CreateMeshFromObj(fullfileName);
 }
 
 // Create an GLC_Mesh by copying another mesh
-GLC_Mesh2* GLC_Factory::createMesh(const GLC_Geometry* pMesh)
+GLC_Mesh2* GLC_Factory::createMesh(const GLC_Geometry* pMesh) const
 {	
 	const GLC_Mesh2* pTempMesh= dynamic_cast<const GLC_Mesh2*>(pMesh);
 	if (pTempMesh != NULL)
@@ -127,28 +153,28 @@ GLC_Mesh2* GLC_Factory::createMesh(const GLC_Geometry* pMesh)
 }
 
 // Create an GLC_Material
-GLC_Material* GLC_Factory::createMaterial()
+GLC_Material* GLC_Factory::createMaterial() const
 {
 	return new GLC_Material();
 }
 
 // Create an GLC_Material
-GLC_Material* GLC_Factory::createMaterial(const GLfloat *pAmbiantColor)
+GLC_Material* GLC_Factory::createMaterial(const GLfloat *pAmbiantColor) const
 {
 	return new GLC_Material("Material", pAmbiantColor);
 }
 // Create an GLC_Material
-GLC_Material* GLC_Factory::createMaterial(const QColor &color)
+GLC_Material* GLC_Factory::createMaterial(const QColor &color) const
 {
 	return new GLC_Material(color);
 }
 
-GLC_Material* GLC_Factory::createMaterial(GLC_Texture* pTexture)
+GLC_Material* GLC_Factory::createMaterial(GLC_Texture* pTexture) const
 {
 	return new GLC_Material(pTexture, "TextureMaterial");
 }
 // create an material textured with a image file name
-GLC_Material* GLC_Factory::createMaterial(const QString &textureFullFileName)
+GLC_Material* GLC_Factory::createMaterial(const QString &textureFullFileName) const
 {
 	GLC_Texture* pTexture= createTexture(textureFullFileName);
 	return createMaterial(pTexture);	
@@ -156,7 +182,7 @@ GLC_Material* GLC_Factory::createMaterial(const QString &textureFullFileName)
 
 // Create an GLC_Texture
 
-GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName)
+GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName) const
 {
 	return new GLC_Texture(m_pQGLWidget, textureFullFileName);
 }

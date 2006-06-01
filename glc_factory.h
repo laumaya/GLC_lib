@@ -73,6 +73,8 @@ public:
 		
 	//!  Create an GLC_Circle
 	GLC_Circle* createCircle(double radius, double angle= 2 * PI) const;
+	//! Create an GLC_Circle by copying another GLC_Circle
+	GLC_Circle* createCircle(const GLC_Geometry* pCircle) const;
 	
 	//! Create an GLC_Box
 	GLC_Box* createBox(double lx, double ly, double lz) const;
@@ -80,25 +82,27 @@ public:
 	
 	//! Create an GLC_Cylinder
 	GLC_Cylinder* createCylinder(double radius, double length) const;
+	//! Create an GLC_Cylinder by copying another GLC_Cylinder
+	GLC_Cylinder* createCylinder(const GLC_Geometry* pCylinder) const;
 	
 	//! Create an GLC_Mesh
-	GLC_Mesh2* createMesh(const std::string &fullfileName);
+	GLC_Mesh2* createMesh(const std::string &fullfileName) const;
 	//! Create an GLC_Mesh by copying another mesh
-	GLC_Mesh2* createMesh(const GLC_Geometry* pMesh);
+	GLC_Mesh2* createMesh(const GLC_Geometry* pMesh) const;
 	
 	//! Create default material
-	GLC_Material* createMaterial();
+	GLC_Material* createMaterial() const;
 	//! create a material with an ambient color
-	GLC_Material* createMaterial(const GLfloat *pAmbiantColor);
+	GLC_Material* createMaterial(const GLfloat *pAmbiantColor) const;
 	//! create a material with an ambient color
-	GLC_Material* createMaterial(const QColor &color);
+	GLC_Material* createMaterial(const QColor &color) const;
 	//! create an material textured with a texture
-	GLC_Material* createMaterial(GLC_Texture* pTexture);
+	GLC_Material* createMaterial(GLC_Texture* pTexture) const;
 	//! create an material textured with a image file name
-	GLC_Material* createMaterial(const QString &textureFullFileName);
+	GLC_Material* createMaterial(const QString &textureFullFileName) const;
 	
 	//! Create an GLC_Texture
-	GLC_Texture* createTexture(const QString &textureFullFileName);
+	GLC_Texture* createTexture(const QString &textureFullFileName) const;
 	
 //@}
 
