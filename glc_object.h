@@ -60,6 +60,9 @@ public:
 	 * and set GLC_Object::m_Name to pName*/
 	GLC_Object(const char *pName= "");
 	
+	//! Copy constructor
+	GLC_Object(const GLC_Object& sourceObject);
+	
 	//! Virtual destructor
 	virtual ~GLC_Object();
 //@}
