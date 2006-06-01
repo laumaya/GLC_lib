@@ -35,13 +35,20 @@
 GLC_Circle::GLC_Circle(const double &dRadius, double Angle,
 const char *pName, const GLfloat *pColor)
 :GLC_Geometry(pName, pColor)
+, m_Radius(dRadius)
+, m_nDiscret(GLC_DISCRET)
+, m_dAngle(Angle)
 {
-	//! \todo remade init
-	m_Radius= dRadius;
-	m_nDiscret= GLC_DISCRET;
-	m_dAngle= Angle;
+	
 }
 
+GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
+:GLC_Geometry(sourceCircle)
+, m_Radius(sourceCircle.m_Radius)
+, m_nDiscret(sourceCircle.m_nDiscret)
+, m_dAngle(sourceCircle.m_dAngle)
+{
+}
 GLC_Circle::~GLC_Circle()
 {
 }
