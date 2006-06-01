@@ -39,7 +39,7 @@ GLC_Mesh2::GLC_Mesh2(const GLfloat *pColor)
 }
 
 GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
-: GLC_Geometry(meshToCopy.GetName(), meshToCopy.GetfRGBA())
+: GLC_Geometry(meshToCopy)
 , m_CoordinateHash(meshToCopy.m_CoordinateHash)
 , m_CoordinateIndex(meshToCopy.m_CoordinateIndex)
 , m_MaterialHash(meshToCopy.m_MaterialHash)
@@ -51,8 +51,6 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 
 , m_NumberOfFaces(meshToCopy.m_NumberOfFaces)
 {
-	SetMaterial(meshToCopy.GetMaterial());	
-	SetMatrix(meshToCopy.GetMatrix());
 	
 }
 
