@@ -537,7 +537,8 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	boundingBox.transform(matComp);
 	// Increase size of the bounding box
 	const double increaseFactor= 1.1;
-
+	// Convert box distance in sphere distance
+	const double sqrThree= sqrt(3);
 	double d1= fabs(boundingBox.getLower().GetZ());
 	double d2= fabs(boundingBox.getUpper().GetZ());
 	double min= fmin(d1,d2)* (2.0 - increaseFactor);
@@ -551,15 +552,15 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	
 		m_dCamDistMin= min;
 		m_dCamDistMax= max;
-		qDebug() << "distmin" << m_dCamDistMin;
-		qDebug() << "distmax" << m_dCamDistMax;		
+		//qDebug() << "distmin" << m_dCamDistMin;
+		//qDebug() << "distmax" << m_dCamDistMax;		
 	}
 	else
 	{
 		m_dCamDistMin= (max + min) * 0.001;
 		m_dCamDistMax= max;
-		qDebug() << "inside distmin" << m_dCamDistMin;
-		qDebug() << "inside distmax" << m_dCamDistMax;		
+		//qDebug() << "inside distmin" << m_dCamDistMin;
+		//qDebug() << "inside distmax" << m_dCamDistMax;		
 	}
 		
 		UpdateProjectionMat();	// Update OpenGL projection matrix		
