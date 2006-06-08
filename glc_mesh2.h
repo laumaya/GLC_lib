@@ -118,11 +118,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Virtual interface for OpenGL Geometry set up.
-	/*! This Virtual function is implemented here.\n*/
+	/*! This Virtual function is implemented here.\n
+	 *  Throw GLC_OpenGlException*/
 	virtual void GlDraw(void);
 
 	//! Virtual interface for OpenGL Geomtry properties.
-	/*! This Virtual function is implemented here.*/
+	/*! This Virtual function is implemented here.\n
+	 *  Throw GLC_OpenGlException*/
 	virtual void GlPropGeom(void);
 //@}
 

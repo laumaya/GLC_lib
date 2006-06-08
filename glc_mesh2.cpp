@@ -24,9 +24,9 @@
 
 //! \file glc_mesh2.cpp implementation of the GLC_Mesh2 class.
 
-#include <QtDebug>
 #include <assert.h>
 #include "glc_mesh2.h"
+#include "glc_openglexception.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
@@ -205,7 +205,7 @@ void GLC_Mesh2::AddFace(const QVector<int> &Material, const QVector<int> &Coordi
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh2::GlDraw()
 {
-	qDebug() << "GLC_Mesh2::GlDraw ENTER";
+	//qDebug() << "GLC_Mesh2::GlDraw ENTER";
 	
 	// If the mesh is empty there is noting to do
 	if (m_CoordinateIndex.isEmpty()) return;
@@ -258,75 +258,80 @@ void GLC_Mesh2::GlDraw()
 				IsNewFace= false;
 				// New polygon creation
 				glBegin(GL_POLYGON);
+			} // end if isNewFace
+			
+			// Vertex texture coordinate if necessary
+			if (i < m_TextureIndex.size())
+			{
+				glTexCoord2dv(m_TextCoordinateHash[m_TextureIndex.at(i)].Return_dVect());
 			}
-				// Vertex texture coordinate if necessary
-				if (i < m_TextureIndex.size())
-				{
-					glTexCoord2dv(m_TextCoordinateHash[m_TextureIndex.at(i)].Return_dVect());
-				}
-					
-				// Vertex Normal
-				if (i < m_NormalIndex.size())
-				{
-					glNormal3dv(m_NormalHash[m_NormalIndex.at(i)].Return_dVect());
-				}
-				else
-				{
-					qDebug() << "GLC_Mesh2::GlDraw : m_NormalIndex out of bound";
-				}
-								
-				// Vertex 3D coordinate
-				if (i < m_CoordinateIndex.size())
-				{
-					glVertex3dv(m_CoordinateHash[m_CoordinateIndex.at(i)].Return_dVect());
-				}
-				else
-				{
-					qDebug() << "GLC_Mesh2::GlDraw : m_CoordinateIndex out of bound";
-				}
-
+				
+			// Vertex Normal
+			assert(i < m_NormalIndex.size());
+			glNormal3dv(m_NormalHash[m_NormalIndex.at(i)].Return_dVect());
+			
+			// Vertex 3D coordinate
+			assert(i < m_CoordinateIndex.size());
+			glVertex3dv(m_CoordinateHash[m_CoordinateIndex.at(i)].Return_dVect());
 		}		
 	}
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Mesh2::GlDraw ", error);
+		throw(OpenGlException);
+	}
+	
 }
 
-// Virtual interface for OpenGL Geomtry properties.
+// Virtual interface for OpenGL Geometry properties.
 void GLC_Mesh2::GlPropGeom()
 {
-		//! Change the current matrix
-		glMultMatrixd(m_MatPos.Return_dMat());
+	//! Change the current matrix
+	glMultMatrixd(m_MatPos.Return_dMat());
+	
+	// Polygons display mode
+	glPolygonMode(m_PolyFace, m_PolyMode);
+	
+	if (m_IsBlended)
+	{
+		glEnable(GL_BLEND);
+		glDepthMask(GL_FALSE);
+	}
+	else
+	{
+		glDisable(GL_BLEND);
+	}		
+	
+	if(!m_pMaterial || (m_PolyMode != GL_FILL))
+	{
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_LIGHTING);
+		glLineWidth(GetThickness());	// is thikness
+		glColor4fv(GetfRGBA());			// is color
+	}
+	else if (m_pMaterial->GetAddRgbaTexture())
+	{
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_LIGHTING);
+		m_pMaterial->GlExecute();
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+		glEnable(GL_LIGHTING);
+		m_pMaterial->GlExecute();
+	}
 		
-		// Polygons display mode
-		glPolygonMode(m_PolyFace, m_PolyMode);
-		
-		if (m_IsBlended)
-		{
-			glEnable(GL_BLEND);
-			glDepthMask(GL_FALSE);
-		}
-		else
-		{
-			glDisable(GL_BLEND);
-		}		
-		
-		if(!m_pMaterial || (m_PolyMode != GL_FILL))
-		{
-			glDisable(GL_TEXTURE_2D);
-			glDisable(GL_LIGHTING);
-			glLineWidth(GetThickness());	// is thikness
-			glColor4fv(GetfRGBA());			// is color
-		}
-		else if (m_pMaterial->GetAddRgbaTexture())
-		{
-			glEnable(GL_TEXTURE_2D);
-			glEnable(GL_LIGHTING);
-			m_pMaterial->GlExecute();
-		}
-		else
-		{
-			glDisable(GL_TEXTURE_2D);
-			glEnable(GL_LIGHTING);
-			m_pMaterial->GlExecute();
-		}
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Mesh2::GlPropGeom ", error);
+		throw(OpenGlException);
+	}
 		
 }
 
