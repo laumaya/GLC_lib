@@ -26,6 +26,8 @@
 #include <QtDebug>
 #include "glc_imageplane.h"
 #include "glc_viewport.h"
+#include "glc_openglexception.h"
+
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
@@ -124,7 +126,6 @@ void GLC_ImagePlane::UpdateZPosition(void)
 // Plane Display
 void GLC_ImagePlane::GlDraw(void)
 {
-
 	const double LgImgSur2= m_dLgImage / 2;
 	
 	glLoadIdentity();
@@ -138,7 +139,14 @@ void GLC_ImagePlane::GlDraw(void)
 		glTexCoord2f(0.0f, 1.0f); glVertex3d(-LgImgSur2, LgImgSur2, 0.0);
 
 	glEnd();
-
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_ImagePlane::GlDraw ", error);
+		throw(OpenGlException);
+	}
 }
 // Define Geometry property (Couleur, position, epaisseur)
 void GLC_ImagePlane::GlPropGeom(void)
@@ -163,9 +171,16 @@ void GLC_ImagePlane::GlPropGeom(void)
 		glColor4fv(GetfRGBA());
 	}
 	
-		// Polygons display mode
-		glPolygonMode(m_PolyFace, m_PolyMode);
+	// Polygons display mode
+	glPolygonMode(m_PolyFace, m_PolyMode);
 	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_ImagePlane::GlPropGeom ", error);
+		throw(OpenGlException);
+	}
 
 }
 
