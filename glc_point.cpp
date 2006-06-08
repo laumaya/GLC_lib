@@ -25,6 +25,7 @@
 //! \file glc_point.cpp implementation of the GLC_Point class.
 
 #include "glc_point.h"
+#include "glc_openglexception.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -46,6 +47,13 @@ GLC_Point::GLC_Point(double x, double y, double z, const char *pName, const GLfl
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+
+// Get a 4D vector represent point coordinate
+GLC_Vector4d GLC_Point::GetVectCoord(void) const
+{
+	return m_VectCoord;
+}
+
 // return the point bounding box
 GLC_BoundingBox* GLC_Point::getBoundingBox(void) const
 {
@@ -66,6 +74,23 @@ GLC_BoundingBox* GLC_Point::getBoundingBox(void) const
 }
 
 //////////////////////////////////////////////////////////////////////
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+
+// Set Point coordinate by 4D Vector
+void GLC_Point::SetCoord(const GLC_Vector4d &Vect)
+{
+	m_VectCoord= Vect;
+	m_ListIsValid = false;
+}
+// Set Point coordinate by 3 double
+void GLC_Point::SetCoord(double x, double y, double z)
+{
+	m_VectCoord.SetVect(x, y, z);
+	m_ListIsValid = false;
+}
+
+//////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
@@ -75,19 +100,37 @@ void GLC_Point::GlDraw(void)
 	glBegin(GL_POINTS);
 		glVertex3dv(m_VectCoord.Return_dVect());
 	glEnd();
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Point::GlDraw ", error);
+		throw(OpenGlException);
+	}
+	
 }
 
 void GLC_Point::GlPropGeom(void)
 {
-		// Change current Matrix
-		glMultMatrixd(m_MatPos.Return_dMat());
-		
-		// Disable lighting
-		glDisable(GL_LIGHTING);
-		// Disable blending
-		glDisable(GL_BLEND);
+	// Change current Matrix
+	glMultMatrixd(m_MatPos.Return_dMat());
+	
+	// Disable lighting
+	glDisable(GL_LIGHTING);
+	// Disable blending
+	glDisable(GL_BLEND);
 
-		glColor4fv(GetfRGBA());			// Sa Couleur
-		glPointSize(GetThickness());	// Son Epaisseur
+	glColor4fv(GetfRGBA());			// Sa Couleur
+	glPointSize(GetThickness());	// Son Epaisseur
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Point::GlPropGeom ", error);
+		throw(OpenGlException);
+	}
+	
 }
 

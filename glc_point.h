@@ -59,10 +59,7 @@ public:
 public:
 
 	//! Get a 4D vector represent point coordinate
-	GLC_Vector4d GetVectCoord(void) const
-	{
-		return m_VectCoord;
-	}
+	GLC_Vector4d GetVectCoord(void) const;
 	
 	//! return the point bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
@@ -75,17 +72,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set Point coordinate by 4D Vector
-	void SetCoord(const GLC_Vector4d &Vect)
-	{
-		m_VectCoord= Vect;
-		m_ListIsValid = false;
-	}
+	void SetCoord(const GLC_Vector4d &Vect);
+
 	//! Set Point coordinate by 3 double
-	void SetCoord(double x, double y, double z)
-	{
-		m_VectCoord.SetVect(x, y, z);
-		m_ListIsValid = false;
-	}
+	void SetCoord(double x, double y, double z);
 //@}
 
 //////////////////////////////////////////////////////////////////////
