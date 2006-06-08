@@ -26,6 +26,7 @@
 #include <QtDebug>
 
 #include "glc_geometry.h"
+#include "glc_openglexception.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
@@ -95,6 +96,80 @@ GLC_Geometry::~GLC_Geometry(void)
 		m_pMaterial= NULL;
 	}
 }
+/////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Return Visibility state of geometry
+const bool GLC_Geometry::GetIsVisible(void) const
+{
+	return m_IsVisible;
+}
+
+// Return an array of 4 GLfloat which represent the color
+const GLfloat *GLC_Geometry::GetfRGBA(void) const
+{
+	return m_RGBAColor;
+}	
+// Return Color Red component
+GLfloat GLC_Geometry::GetfRed(void) const
+{
+	return m_RGBAColor[0];
+}
+// Return Color Green component
+GLfloat GLC_Geometry::GetfGreen(void) const
+{
+	return m_RGBAColor[1];
+}
+// Return Color blue component
+GLfloat GLC_Geometry::GetfBlue(void) const
+{
+	return m_RGBAColor[2];
+}
+// Return Color Alpha component
+GLfloat GLC_Geometry::GetfAlpha(void) const
+{
+	return m_RGBAColor[3];
+}
+// Return transfomation 4x4Matrix
+const GLC_Matrix4x4 GLC_Geometry::GetMatrix(void) const
+{
+	return m_MatPos;
+}
+// Return thickness
+const float GLC_Geometry::GetThickness(void) const
+{
+	return m_Thikness;
+}
+// Return associated OpenGL list ID
+GLuint GLC_Geometry::GetListID(void)
+{
+	return m_ListID;
+}
+
+// Return Validity of associated OpenGL list
+bool GLC_Geometry::GetListIsValid(void) const
+{
+	return m_ListIsValid;
+}
+
+// Return Validity of geometry
+bool GLC_Geometry::GetValidity(void) const
+{
+	return (m_GeometryIsValid && m_ListIsValid);
+}
+
+// Return material of geometry
+GLC_Material* GLC_Geometry::GetMaterial(void) const
+{
+	return m_pMaterial;
+}
+
+// Return true if blending is enable
+bool GLC_Geometry::GetBlending(void) const
+{
+	return m_IsBlended;
+}
 
 // return the geometry bounding box
 GLC_BoundingBox* GLC_Geometry::getBoundingBox(void) const
@@ -106,12 +181,93 @@ GLC_BoundingBox* GLC_Geometry::getBoundingBox(void) const
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
+// Set visibility statement
+void GLC_Geometry::SetVisibility(bool v)
+{
+	m_IsVisible= v;
+
+	m_GeometryIsValid= false;
+}
+
+// Set Color RGBA component
+void GLC_Geometry::SetRGBAColor(GLfloat Rouge, GLfloat Vert, GLfloat Bleu, GLfloat Alpha)
+{
+	m_RGBAColor[0]= Rouge;
+	m_RGBAColor[1]= Vert;
+	m_RGBAColor[2]= Bleu;
+	m_RGBAColor[3]= Alpha;
+
+	m_GeometryIsValid= false;		
+}
+
+// Set Color RGBA component with an array of 4 GLfloat
+void GLC_Geometry::SetRGBAColor(const GLfloat* SetCol)	// SetCol[4]
+{
+	m_RGBAColor[0]= SetCol[0];
+	m_RGBAColor[1]= SetCol[1];
+	m_RGBAColor[2]= SetCol[2];
+	m_RGBAColor[3]= SetCol[3];
+
+	m_GeometryIsValid= false;		
+}
+
+
 // Geometry translation
 void GLC_Geometry::Translate(double Tx, double Ty, double Tz)
 {
 	GLC_Matrix4x4 MatTrans(Tx, Ty, Tz);
 	
 	MultMatrix(MatTrans);
+}
+
+
+// Move Geometry with a 4x4Matrix
+void GLC_Geometry::MultMatrix(const GLC_Matrix4x4 &MultMat)
+{
+	m_MatPos= MultMat * m_MatPos;
+
+	m_GeometryIsValid= false;
+}
+
+// Replace the Geometry Matrix
+void GLC_Geometry::SetMatrix(const GLC_Matrix4x4 &SetMat)
+{
+	m_MatPos= SetMat;
+
+	m_GeometryIsValid= false;
+}
+
+// Reset the Geometry Matrix
+void GLC_Geometry::ResetMatrix(void)
+{
+	m_MatPos.SetIdentite();
+
+	m_GeometryIsValid= false;
+}
+
+// Set Wire thickness
+void GLC_Geometry::SetThikness(float SetEp)
+{
+	SetEp= fabs(SetEp);		
+	m_Thikness= SetEp;
+
+	m_GeometryIsValid= false;
+}
+
+// Set Blending
+void GLC_Geometry::SetBlending(bool Blending)
+{
+	m_IsBlended= Blending;
+
+	m_GeometryIsValid= false;
+}
+
+// Polygon's display style
+void GLC_Geometry::SetPolygonMode(GLenum Face, GLenum Mode)
+{
+	m_PolyFace= Face;
+	m_PolyMode= Mode;
+	m_GeometryIsValid = false;
 }
 
 // Material
@@ -196,7 +352,7 @@ bool GLC_Geometry::CreateList(GLenum Mode)
 	//! \todo Add error handler
 }
 // Geometry display
-bool GLC_Geometry::GlExecute(GLenum Mode)
+void GLC_Geometry::GlExecute(GLenum Mode)
 {
 	if (GetIsVisible())
 	{
@@ -228,8 +384,41 @@ bool GLC_Geometry::GlExecute(GLenum Mode)
 
 		glPopMatrix();
 		
-		//! \todo Add Error handler
-		return true;
+		// OpenGL error handler
+		GLenum error= glGetError();	
+		if (error != GL_NO_ERROR)
+		{
+			GLC_OpenGlException OpenGlException("GLC_Geometry::GlExecute ", error);
+			throw(OpenGlException);
+		}
 	}
-	else return true;
 }
+
+//////////////////////////////////////////////////////////////////////
+// Protected services functions
+//////////////////////////////////////////////////////////////////////
+// Delete OpenGL list
+/* Call by GLC_Geometry::~GLC_Geometry*/
+void GLC_Geometry::DeleteList()
+{
+	// If display list is valid : delete it
+	if (glIsList(m_ListID))
+	{
+		glDeleteLists(m_ListID, 1);
+	}
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Geometry::DeleteList ", error);
+		throw(OpenGlException);
+	}
+
+}
+
+
+
+
+
+

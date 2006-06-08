@@ -76,76 +76,44 @@ public:
 
 public:
 
-	//! Return Visibility state of geometrie
-	const bool GetIsVisible(void) const
-	{
-		return m_IsVisible;
-	}
+	//! Return Visibility state of geometry
+	const bool GetIsVisible(void) const;
 
 	//! Return an array of 4 GLfloat which represent the color
-	const GLfloat *GetfRGBA(void) const
-	{
-		return m_RGBAColor;
-	}	
-	//! Return Color Red component
-	GLfloat GetfRed(void) const
-	{
-		return m_RGBAColor[0];
-	}
-	//! Return Color Green component
-	GLfloat GetfGreen(void) const
-	{
-		return m_RGBAColor[1];
-	}
-	//! Return Color blue component
-	GLfloat GetfBlue(void) const
-	{
-		return m_RGBAColor[2];
-	}
-	//! Return Color Alpha component
-	GLfloat GetfAlpha(void) const
-	{
-		return m_RGBAColor[3];
-	}
-	//! Return transfomation 4x4Matrix
-	const GLC_Matrix4x4 GetMatrix(void) const
-	{
-		return m_MatPos;
-	}
-	//! Return thickness
-	const float GetThickness(void) const
-	{
-		return m_Thikness;
-	}
-	//! Return associated OpenGL list ID
-	GLuint GetListID(void)
-	{
-		return m_ListID;
-	}
+	const GLfloat *GetfRGBA(void) const;
 
+	//! Return Color Red component
+	GLfloat GetfRed(void) const;
+
+	//! Return Color Green component
+	GLfloat GetfGreen(void) const;
+	
+	//! Return Color blue component
+	GLfloat GetfBlue(void) const;
+	
+	//! Return Color Alpha component
+	GLfloat GetfAlpha(void) const;
+	
+	//! Return transfomation 4x4Matrix
+	const GLC_Matrix4x4 GetMatrix(void) const;
+	
+	//! Return thickness
+	const float GetThickness(void) const;
+	
+	//! Return associated OpenGL list ID
+	GLuint GetListID(void);
+	
 	//! Return Validity of associated OpenGL list
-	bool GetListIsValid(void) const
-	{
-		return m_ListIsValid;
-	}
+	bool GetListIsValid(void) const;
 
 	//! Return Validity of geometry
-	bool GetValidity(void) const
-	{
-		return (m_GeometryIsValid && m_ListIsValid);
-	}
+	bool GetValidity(void) const;
 
 	//! Return material of geometry
-	GLC_Material* GetMaterial(void) const
-	{
-		return m_pMaterial;
-	}
+	GLC_Material* GetMaterial(void) const;
 
 	//! Return true if blending is enable
-	bool GetBlending(void) const
-	{
-		return m_IsBlended;
-	}
+	bool GetBlending(void) const;
 	
 	//! return the geometry bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
@@ -160,34 +128,13 @@ public:
 public:
 
 	//! Set visibility statement
-	void SetVisibility(bool v)
-	{
-		m_IsVisible= v;
-
-		m_GeometryIsValid= false;
-	}
+	void SetVisibility(bool v);
 
 	//! Set Color RGBA component
-	void SetRGBAColor(GLfloat Rouge, GLfloat Vert, GLfloat Bleu, GLfloat Alpha= 1)
-	{
-		m_RGBAColor[0]= Rouge;
-		m_RGBAColor[1]= Vert;
-		m_RGBAColor[2]= Bleu;
-		m_RGBAColor[3]= Alpha;
-
-		m_GeometryIsValid= false;		
-	}
+	void SetRGBAColor(GLfloat Rouge, GLfloat Vert, GLfloat Bleu, GLfloat Alpha= 1);
 
 	//! Set Color RGBA component with an array of 4 GLfloat
-	void SetRGBAColor(const GLfloat* SetCol)	// SetCol[4]
-	{
-		m_RGBAColor[0]= SetCol[0];
-		m_RGBAColor[1]= SetCol[1];
-		m_RGBAColor[2]= SetCol[2];
-		m_RGBAColor[3]= SetCol[3];
-
-		m_GeometryIsValid= false;		
-	}
+	void SetRGBAColor(const GLfloat* SetCol);	// SetCol[4]
 
 
 // Set Position	
@@ -196,55 +143,22 @@ public:
 	void Translate(double Tx, double Ty, double Tz);
 
 	//! Move Geometry with a 4x4Matrix
-	void MultMatrix(const GLC_Matrix4x4 &MultMat)
-	{
-		m_MatPos= MultMat * m_MatPos;
-
-		m_GeometryIsValid= false;
-	}
+	void MultMatrix(const GLC_Matrix4x4 &MultMat);
 	
 	//! Replace the Geometry Matrix
-	void SetMatrix(const GLC_Matrix4x4 &SetMat)
-	{
-		m_MatPos= SetMat;
-
-		m_GeometryIsValid= false;
-	}
+	void SetMatrix(const GLC_Matrix4x4 &SetMat);
 	
 	//! Reset the Geometry Matrix
-	void ResetMatrix(void)
-	{
-		m_MatPos.SetIdentite();
-
-		m_GeometryIsValid= false;
-	}
+	void ResetMatrix(void);
 	
 	//! Set Wire thickness
-	void SetThikness(float SetEp)
-	{
-		SetEp= fabs(SetEp);		
-		m_Thikness= SetEp;
-
-		m_GeometryIsValid= false;
-	}
+	void SetThikness(float SetEp);
 
 	//! Set Blending
-	void SetBlending(bool Blending)
-	{
-		m_IsBlended= Blending;
-
-		m_GeometryIsValid= false;
-
-	}
+	void SetBlending(bool Blending);
 	
 	//! Polygon's display style
-	void SetPolygonMode(GLenum Face, GLenum Mode)
-	{
-		m_PolyFace= Face;
-		m_PolyMode= Mode;
-		m_GeometryIsValid = false;
-	}
-	
+	void SetPolygonMode(GLenum Face, GLenum Mode);
 
 	// Material
 	//! Set the Geometry material
@@ -275,7 +189,7 @@ public:
 	 * 		- If Display list doesn't exist try to create IT by calling
 	 *        virtual function GLC_Geometry::GlDraw
 	 */
-	virtual bool GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	virtual void GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 
 	//! OpenGL list creation
 	bool CreateList(GLenum Mode= GL_COMPILE_AND_EXECUTE);
@@ -303,15 +217,7 @@ protected:
 
 	//! Delete OpenGL list
 	/*! Call by GLC_Geometry::~GLC_Geometry*/
-	void DeleteList()
-	{
-		// If display list is valid : delete it
-		if (glIsList(m_ListID))
-		{
-			glDeleteLists(m_ListID, 1);
-		}
-	//! \todo Add error handler
-	}
+	void DeleteList();
 
 //////////////////////////////////////////////////////////////////////
 // Protected members
@@ -343,7 +249,6 @@ protected:
 //////////////////////////////////////////////////////////////////////
 // Private members 
 //////////////////////////////////////////////////////////////////////
-
 private:
 
 	// RGBA geometry color
@@ -354,8 +259,6 @@ private:
 	
 	// Geometry visibility
 	bool m_IsVisible;
-
-
 
 };
 #endif //GLC_GEOMETRY_H_
