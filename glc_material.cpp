@@ -273,7 +273,7 @@ bool GLC_Material::DelGLC_Geom(GLC_uint Key)
 //////////////////////////////////////////////////////////////////////
 
 // Execute OpenGL Material
-bool GLC_Material::GlExecute(GLenum Mode)
+void GLC_Material::GlExecute(GLenum Mode)
 {
 	GLfloat pAmbientColor[4];
 	GetAmbientColor(pAmbientColor);
@@ -305,7 +305,6 @@ bool GLC_Material::GlExecute(GLenum Mode)
 		qDebug("GLC_Material::GlExecute OpenGL Error %s", errString);
 	}
 
-	return true;
 }
 //////////////////////////////////////////////////////////////////////
 // Private servicies Functions

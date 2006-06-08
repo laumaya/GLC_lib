@@ -81,11 +81,9 @@ void GLC_OrbitCircle::SetOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 
 
 	// Composition of orientation matrix and mapping matrix
 	MatRot= Matrice * MatRot;
-
 	
 	m_Arc1.SetMatrix(MatRot * m_MatArc1);
 	m_Arc2.SetMatrix(MatRot * m_MatArc2);
-
 
 }
 
@@ -96,19 +94,16 @@ void GLC_OrbitCircle::MapArcs(const GLC_Matrix4x4 &Matrice)
 	m_Arc2.MultMatrix(Matrice);
 }
 
-
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
 // Orbit circle OpenGL Execution
-bool GLC_OrbitCircle::GlExecute(double Profondeur)
+void GLC_OrbitCircle::GlExecute(double Profondeur)
 
 {
 	if (GetIsVisible())
 	{
-		bool result;
-
 		// Orbit circle must be shown
 		glDisable(GL_DEPTH_TEST);
 
@@ -130,22 +125,19 @@ bool GLC_OrbitCircle::GlExecute(double Profondeur)
 		m_Arc1.MultMatrix(MatScaling);
 		m_Arc2.MultMatrix(MatScaling);
 
-
 		// Display arcs
-		result= m_Arc1.GlExecute() && m_Arc2.GlExecute();
+		m_Arc1.GlExecute();
+		m_Arc2.GlExecute();
 
 		// Restore positionning matrix of arcs
 		m_Arc1.SetMatrix(MatSavArc1);
 		m_Arc2.SetMatrix(MatSavArc2);
 				
 		// Display base class (Main circle)
-		result= result && GLC_Circle::GlExecute();
+		GLC_Circle::GlExecute();
 		
 		glPopMatrix();
 
 		glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-		return result;
 	}
-	else
-		return true;
 }

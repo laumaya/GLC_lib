@@ -66,15 +66,13 @@ public:
 public:
 
 	//! Reimplented SetRadius Function
-	bool SetRadius(double R)
+	void SetRadius(double R)
 	{
-		bool Result;
 		
-		Result= GLC_Circle::SetRadius(R);	// Rayon de la classe de base		
+		GLC_Circle::SetRadius(R);	// Rayon de la classe de base		
 
 		m_Arc1.SetRadius(R);
 		m_Arc2.SetRadius(R);
-		return Result;
 	}
 
 	//! Set Arcs orientation and position in concordance with mouse position
@@ -91,7 +89,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:	
 	//! Orbit circle OpenGL Execution
-	bool GlExecute(double Profondeur);
+	virtual void GlExecute(double Profondeur);
 	
 //@}
 

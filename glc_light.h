@@ -122,7 +122,7 @@ public:
 	}
 
 	//! Execute OpenGL light
-	virtual bool GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	virtual void GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 //@}
 
 //////////////////////////////////////////////////////////////////////

@@ -136,7 +136,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
    //! Execute OpenGL Camera
-   bool GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+   void GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 
 //@}
 

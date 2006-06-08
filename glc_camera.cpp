@@ -254,12 +254,11 @@ void GLC_Camera::SetDistEyeTarget(double Longueur)
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
-bool GLC_Camera::GlExecute(GLenum Mode)
+void GLC_Camera::GlExecute(GLenum Mode)
 {
 	gluLookAt(VectEye.GetX(), VectEye.GetY(), VectEye.GetZ(),
 		VectTarget.GetX(), VectTarget.GetY(), VectTarget.GetZ(),
 		VectUp.GetX(), VectUp.GetY(), VectUp.GetZ());
-	return true;
 }
 
 //////////////////////////////////////////////////////////////////////

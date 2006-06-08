@@ -154,7 +154,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Execute OpenGL Material
-	virtual bool GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	virtual void GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 
 //@}
 

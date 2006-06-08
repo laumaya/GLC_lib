@@ -171,7 +171,7 @@ bool GLC_Light::CreationList(GLenum Mode)
 }
 
 // Execute OpenGL light
-bool GLC_Light::GlExecute(GLenum Mode)
+void GLC_Light::GlExecute(GLenum Mode)
 {
 	// Object Name
 	glLoadName(GetID());
@@ -189,7 +189,6 @@ bool GLC_Light::GlExecute(GLenum Mode)
 	}
 
 	//! \todo Add error handler here
-	return true;
 }
 
 // OpenGL light set up
