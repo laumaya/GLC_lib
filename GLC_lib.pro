@@ -2,7 +2,7 @@
 
 TEMPLATE = lib
 QT += opengl
-CONFIG += release create_prl warn_on
+CONFIG += exceptions release create_prl warn_on
 
 TARGET = GLC_lib
 VERSION  = 0.9.6
@@ -36,7 +36,9 @@ HEADERS += glc_maths.h \
            glc_collection.h \
            glc_factory.h \
            glc_boundingbox.h \
-           glc_collectionnode.h
+           glc_collectionnode.h \
+           glc_exception.h \
+           glc_openglexception.h
            
              
 SOURCES +=  glc_vector4d.cpp \
@@ -63,7 +65,10 @@ SOURCES +=  glc_vector4d.cpp \
             glc_collection.cpp \
             glc_factory.cpp \
             glc_boundingbox.cpp \
-            glc_collectionnode.cpp
+            glc_collectionnode.cpp \
+            glc_exception.cpp \
+            glc_openglexception.cpp
+            
             
 #Windows compilation configuration       
 win32 {
