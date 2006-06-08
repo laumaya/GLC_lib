@@ -67,24 +67,16 @@ public:
 public:
 	
 	//! Return Circle Discretion
-	int GetDiscretion(void) const
-	{
-		return m_nDiscret;
-	}
+	int GetDiscretion(void) const;
+	
 	//! Return Circle radius
-	double GetRadius(void) const
-	{
-		return m_Radius;
-	}
+	double GetRadius(void) const;
+	
 	//! return Circle diameter
-	double GetDiameter(void) const
-	{
-		return 2 * m_Radius;
-	}
+	double GetDiameter(void) const;
 	
 	//! return the circle bounding box
-	virtual GLC_BoundingBox* getBoundingBox(void) const;
-	
+	virtual GLC_BoundingBox* getBoundingBox(void) const;	
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -93,18 +85,21 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set Circle diameter
-	bool SetDiameter(double D)
-	{
-		return !!(SetRadius(D / 2));
-	}
+	/*! Diameter must be > 2 * EPSILON*/
+	void SetDiameter(double D);
+
 	//! Set Circle Radius
-	bool SetRadius(double R);
+	/*! Radius must be > EPSILON*/
+	void SetRadius(double R);
 	
 	//! Set Circle discret
+	/*! TargetDiscret must be > 0
+	 *  if TargetDiscret < 6 discretion is set to 6*/
 	void SetDiscretion(int TargetDiscret);
 	
 	//! Set Circle Angle
-	bool SetAngle(double AngleRadians);	// Angle in Radians
+	/*! AngleRadians must be > EPSILON and < 2 PI*/
+	void SetAngle(double AngleRadians);	// Angle in Radians
 	
 //@}
 
@@ -115,11 +110,13 @@ public:
 private:	
 
 	//! Virtual interface for OpenGL Geometry set up.
-	/*! This Virtual function is implemented here.\n*/
+	/*! This Virtual function is implemented here.\n
+	 *  Throw GLC_OpenGlException*/
 	virtual void GlDraw(void);
 
 	//! Virtual interface for OpenGL Geomtry properties.
-	/*! This Virtual function is implemented here.*/
+	/*! This Virtual function is implemented here.\n
+	 *  Throw GLC_OpenGlException*/
 	virtual void GlPropGeom(void);
 
 //@}

@@ -25,10 +25,9 @@
 //! \file glc_cylinder.cpp implementation of the GLC_Cylinder class.
 
 #include <QVector>
-#include <QtDebug>
-
+#include <assert.h>
 #include "glc_cylinder.h"
-
+#include "glc_openglexception.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -41,10 +40,10 @@ GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, const char *pName
 :GLC_Geometry(pName, pColor)
 , m_Radius(dRadius)
 , m_dLength(dLength)
-, m_nDiscret(GLC_POLYDISCRET)	//GLC_DISCRET
-, m_bCapEnded(true)				// Bouts fermés par défaut	
+, m_nDiscret(GLC_POLYDISCRET)	// Default discretion
+, m_bCapEnded(true)				// Cylinder ended are closed	
 {
-
+	assert((m_Radius > 0.0) && (m_dLength > 0.0));
 }
 
 GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
@@ -54,11 +53,31 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
 , m_nDiscret(sourceCylinder.m_nDiscret)
 , m_bCapEnded(sourceCylinder.m_bCapEnded)
 {
-	
+	assert((m_Radius > 0.0) && (m_dLength > 0.0) && (m_nDiscret > 0));
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+
+// Get Lenght of the Cylinder
+double GLC_Cylinder::GetLength(void) const
+{
+	return m_dLength;
+}
+
+// Get Radius of cylinder
+double GLC_Cylinder::GetRadius(void) const
+{
+	return m_Radius;
+}
+
+// Get Cylinder discretion
+int GLC_Cylinder::GetDiscretion(void) const
+{
+	return m_nDiscret;
+}
+
+
 // return the cylinder bounding box
 GLC_BoundingBox* GLC_Cylinder::getBoundingBox(void) const
 {
@@ -75,7 +94,51 @@ GLC_BoundingBox* GLC_Cylinder::getBoundingBox(void) const
 }
 
 //////////////////////////////////////////////////////////////////////
-// Fonctions OpenGL privées
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+// Set Cylinder length
+void GLC_Cylinder::SetLength(double Length)
+{
+	assert(Length > 0.0);
+	m_dLength= Length;
+
+	m_ListIsValid= false;	 
+}
+
+// Set Cylinder radius
+void GLC_Cylinder::SetRadius(double Radius)
+{
+	assert(Radius > 0.0);
+	m_Radius= Radius;
+	
+	m_ListIsValid= false;
+}
+
+// Set Discretion
+void GLC_Cylinder::SetDiscretion(int TargetDiscret)
+{
+	assert(TargetDiscret > 0);
+	if (TargetDiscret != m_nDiscret)
+	{
+		m_nDiscret= TargetDiscret;
+		if (m_nDiscret < 6) m_nDiscret= 6;
+
+		m_ListIsValid= false;
+	}
+}
+
+// End Caps
+void GLC_Cylinder::SetEndedCaps(bool CapsEnded)
+{
+	if (m_bCapEnded != CapsEnded)
+	{
+		m_bCapEnded= CapsEnded;
+		m_ListIsValid= false;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+// Private Opengl functions
 //////////////////////////////////////////////////////////////////////
 
 // Dessin du GLC_Cylinder
@@ -143,45 +206,45 @@ void GLC_Cylinder::GlDraw(void)
 	glEnd();
 
 	if (m_bCapEnded)
-	{	// Les bouts doivent être fermés
-	// Fermeture du cylindre
-		// Coordonnées de texture
-		float TextureX= 0.5f;	// Centre
-		float TextureY= 0.5f;	// Centre
-		float fRayon= static_cast<float>(m_Radius); // Pour éviter trop de conversion de données
+	{	// Ended must be closed
+	// Cylinder cap
+		// Testure coordinate
+		float TextureX= 0.5f;	// Center
+		float TextureY= 0.5f;	// Center
+		float fRayon= static_cast<float>(m_Radius); // To avoid many casting
 
 		glBegin(GL_TRIANGLE_FAN);
 			glTexCoord2f(TextureX, TextureY);
-			// Normal et fermeture du bas
+			// Normals and closed lower
 			glNormal3d(0.0, 0.0, -1.0);
 			glVertex3d(0.0, 0.0, 0.0);
 			for (int i= 0; i <= m_nDiscret; i++)
 			{
-				// Calcule des coordonnées de textures
+				// Calculate texture coordinates
 				TextureX= (static_cast<float>(TableauCos[i]) + fRayon) / (2 * fRayon);
 				TextureY= (static_cast<float>(TableauSin[i]) + fRayon) / (2 * fRayon);
 				glTexCoord2f(TextureX, TextureY);
-				// coordonnées du vertex
+				// Vertex coordinates
 				Vect.SetVect(TableauCos[i], TableauSin[i], 0.0 );
 				glVertex3dv(Vect.Return_dVect());
 			}
 		glEnd();
 
 		glBegin(GL_TRIANGLE_FAN);
-			// Coordonnées de texture
+			// Texture coordinate
 			TextureX= 0.5f;	// Centre
 			TextureY= 0.5f;	// Centre
 			glTexCoord2f(TextureX, TextureY);
-			// Normal et fermeture du haut
+			// Normals and closed upper
 			glNormal3d(0.0, 0.0, 1.0);
 			glVertex3d(0.0, 0.0, m_dLength);
 			for (int i= 0; i <= m_nDiscret; i++)
 			{
-				// Calcul des coordonnées de texture
+				// Calculate texture coordinates
 				TextureX= (static_cast<float>(TableauCos[i]) + fRayon) / (2 * fRayon);
 				TextureY= (static_cast<float>(TableauSin[i]) + fRayon) / (2 * fRayon);
 				glTexCoord2f(TextureX, TextureY);
-				// coordonnées du vertex
+				// Vertex coordinates
 				Vect.SetVect(TableauCos[i], TableauSin[i], m_dLength );
 				glVertex3dv(Vect.Return_dVect());
 			}
@@ -190,11 +253,14 @@ void GLC_Cylinder::GlDraw(void)
 	TableauCos.clear();
 	TableauSin.clear();
 
-	// Fin de l'affichage du cylindre
-	// Gestion erreur OpenGL
-	if (glGetError() != GL_NO_ERROR)
+	// End of cylinder draw
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
 	{
-		qDebug("GLC_Cylinder::GlDraw ERROR OPENGL\n");
+		GLC_OpenGlException OpenGlException("GLC_Cylinder::GlDraw ", error);
+		throw(OpenGlException);
 	}
 
 }
@@ -218,7 +284,7 @@ void GLC_Cylinder::GlPropGeom(void)
 				glDisable(GL_BLEND);
 			}
 
-			glColor4fv(GetfRGBA());			// Sa Couleur
+			glColor4fv(GetfRGBA());			// Color
 		}
 		else if (m_pMaterial->GetAddRgbaTexture())
 		{
@@ -235,7 +301,7 @@ void GLC_Cylinder::GlPropGeom(void)
 			{
 				glDisable(GL_BLEND);
 			}
-			glColor4fv(GetfRGBA());			// Sa Couleur
+			glColor4fv(GetfRGBA());			// Color
 
 			m_pMaterial->GlExecute();
 		}
@@ -258,15 +324,17 @@ void GLC_Cylinder::GlPropGeom(void)
 			m_pMaterial->GlExecute();
 		}
 
-		glLineWidth(GetThickness());	// Son Epaisseur
+		glLineWidth(GetThickness());	// Thickness
 
 		// Polygons display mode
 		glPolygonMode(m_PolyFace, m_PolyMode);
 
-		// OpenGL error management
-		if (glGetError() != GL_NO_ERROR)
+		// OpenGL error handler
+		GLenum error= glGetError();	
+		if (error != GL_NO_ERROR)
 		{
-			qDebug("GLC_Cylinder::GlPropGeom ERROR OPENGL\n");
+			GLC_OpenGlException OpenGlException("GLC_Cylinder::GlPropGeom ", error);
+			throw(OpenGlException);
 		}
 
 }

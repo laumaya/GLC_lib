@@ -49,7 +49,9 @@ public:
 
 	//! Construct an GLC_Cylinder
 	/*! By default, discretion is set to #GLC_POLYDISCRET \n
-	 *  By default, Axis of Cylinder is Z Axis*/
+	 *  By default, Axis of Cylinder is Z Axis
+	 *  dRadius must be > 0
+	 *  dLength must be > 0*/
 	GLC_Cylinder(double dRadius, double dLength, const char *pName= "Cylinder", const GLfloat *pColor= 0);
 	
 	//! Copy contructor
@@ -64,22 +66,13 @@ public:
 public:
 
 	//! Get Lenght of the Cylinder
-	double GetLength(void) const
-	{
-		return m_dLength;
-	}
+	double GetLength(void) const;
 
 	//! Get Radius of cylinder
-	double GetRadius(void) const
-	{
-		return m_Radius;
-	}
+	double GetRadius(void) const;
 
 	//! Get Cylinder discretion
-	int GetDiscretion(void) const
-	{
-		return m_nDiscret;
-	}
+	int GetDiscretion(void) const;
 	
 	//! return the cylinder bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
@@ -91,48 +84,24 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-
 // Functions impacting Display List
 
 	//! Set Cylinder length
-	void SetLength(double Length)
-	{
-		 m_dLength= Length;
-
-		 m_ListIsValid= false;
-	}
+	/*! Length must be > 0*/
+	void SetLength(double Length);
 
 	//! Set Cylinder radius
-	void SetRadius(double Radius)
-	{
-		m_Radius= Radius;
-		
-		m_ListIsValid= false;
-	}
+	/*! Radius must be > 0*/
+	void SetRadius(double Radius);
 
 	//! Set Discretion
-	void SetDiscretion(int TargetDiscret)
-	{
-		TargetDiscret= abs(TargetDiscret);
-		if (TargetDiscret != m_nDiscret)
-		{
-			m_nDiscret= TargetDiscret;
-			if (m_nDiscret < 6) m_nDiscret= 6;
-
-			m_ListIsValid= false;
-		}
-	}
+	/*! Discretion must be > 0*/
+	void SetDiscretion(int TargetDiscret);
 
 	//! End Caps
-	void SetEndedCaps(bool CapsEnded)
-	{
-		m_bCapEnded= CapsEnded;
-
-		m_ListIsValid= false;
-	}
+	void SetEndedCaps(bool CapsEnded);
 
 // End of functions impacting display list
-
 	
 //@}
 
@@ -142,18 +111,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Virtual interface for OpenGL Geometry set up.
-	/*! This Virtual function is implemented here.\n*/
+	/*! This Virtual function is implemented here.\n
+	 *  Throw GLC_OpenGlException*/
 	virtual void GlDraw(void);
 
 	//! Virtual interface for OpenGL Geomtry properties.
-	/*! This Virtual function is implemented here.*/
+	/*! This Virtual function is implemented here.\n
+	 *  Throw GLC_OpenGlException*/
 	virtual void GlPropGeom(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
-
 private:
 
 	//! Cylinder's radius
@@ -167,7 +137,6 @@ private:
 
 	//! Cylinder is capped
 	bool m_bCapEnded;
-
 	
 };
 #endif //GLC_CYLINDER_H_

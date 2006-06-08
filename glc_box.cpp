@@ -25,7 +25,8 @@
 //! \file glc_box.cpp implementation of the GLC_Box class.
 
 #include "glc_box.h"
-
+#include <assert.h>
+#include "glc_openglexception.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
@@ -46,7 +47,26 @@ GLC_Box::GLC_Box(double dLx, double dLy, double dlz
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
-// return the circle bounding box
+
+// Get X length
+double GLC_Box::GetLgX(void) const
+{
+	return m_dLgX;
+}
+
+// Get Y length
+double GLC_Box::GetLgY(void) const
+{
+	return m_dLgY;
+}
+
+// Get Z length
+double GLC_Box::GetLgZ(void) const
+{
+	return m_dLgZ;
+}
+
+// return the box bounding box
 GLC_BoundingBox* GLC_Box::getBoundingBox(void) const
 {
 	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
@@ -59,6 +79,34 @@ GLC_BoundingBox* GLC_Box::getBoundingBox(void) const
     
     pBoundingBox->transform(m_MatPos);	
 	return pBoundingBox;	
+}
+
+//////////////////////////////////////////////////////////////////////
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+
+// Set X length
+void GLC_Box::SetLgX(double LgX)
+{
+	assert(LgX > 0);
+	m_dLgX= LgX;
+	m_ListIsValid= false;
+}
+
+// Set Y length
+void GLC_Box::SetLgY(double LgY)
+{
+	assert(LgY > 0);
+	m_dLgY= LgY;
+	m_ListIsValid= false;
+}
+
+// Set Z length
+void GLC_Box::SetLgZ(double LgZ)
+{
+	assert(LgZ > 0);
+	m_dLgZ= LgZ;
+	m_ListIsValid= false;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -104,49 +152,60 @@ void GLC_Box::GlDraw(void)
 		glTexCoord2f(0.0f, 0.0f); glVertex3d(0.0,		m_dLgY,	0.0);
 		glTexCoord2f(0.0f, 1.0f); glVertex3d(0.0,		m_dLgY,	m_dLgZ);
 		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX,	m_dLgY,	m_dLgZ);
-		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX,		m_dLgY,	0.0);
+		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX,	m_dLgY,	0.0);
 	glEnd();
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Box::GlDraw ", error);
+		throw(OpenGlException);
+	}
+	
 
 }
 // Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
 void GLC_Box::GlPropGeom(void)
 {
-		// Update Current matrix
-		glMultMatrixd(m_MatPos.Return_dMat());
-				
-		if(!m_pMaterial || (m_PolyMode != GL_FILL))
-		{
-			glDisable(GL_TEXTURE_2D);
-			glDisable(GL_LIGHTING);
-
-			glColor4fv(GetfRGBA());			// Sa Couleur
-		}
-		else if (m_pMaterial->GetAddRgbaTexture())
-		{
-			glEnable(GL_TEXTURE_2D);
-			glEnable(GL_LIGHTING);
-
-
-			m_pMaterial->GlExecute();
-		}
-		else
-		{
-			glDisable(GL_TEXTURE_2D);
-			glEnable(GL_LIGHTING);
+	// Update Current matrix
+	glMultMatrixd(m_MatPos.Return_dMat());
 			
-			m_pMaterial->GlExecute();
+	if(!m_pMaterial || (m_PolyMode != GL_FILL))
+	{
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_LIGHTING);
 
-		}
+		glColor4fv(GetfRGBA());			// Sa Couleur
+	}
+	else if (m_pMaterial->GetAddRgbaTexture())
+	{
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_LIGHTING);
 
-		glLineWidth(GetThickness());	// Son Epaisseur
 
-		// Polygons display mode
-		glPolygonMode(m_PolyFace, m_PolyMode);
+		m_pMaterial->GlExecute();
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+		glEnable(GL_LIGHTING);
 		
-		// OpenGL error management
-		if (glGetError() != GL_NO_ERROR)
-		{
-			qDebug("GLC_Cylinder::GlPropGeom ERROR OPENGL\n");
-		}
+		m_pMaterial->GlExecute();
+
+	}
+
+	glLineWidth(GetThickness());	// Son Epaisseur
+
+	// Polygons display mode
+	glPolygonMode(m_PolyFace, m_PolyMode);
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Box::GlDraw ", error);
+		throw(OpenGlException);
+	}
 		
 }

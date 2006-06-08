@@ -25,10 +25,11 @@
 //! \file glc_circle.cpp implementation of the GLC_Circle class.
 
 #include "glc_circle.h"
-
+#include "assert.h"
+#include "glc_openglexception.h"
 
 //////////////////////////////////////////////////////////////////////
-// Construction/Destruction
+// Constructor destructor
 //////////////////////////////////////////////////////////////////////
 
 
@@ -55,6 +56,23 @@ GLC_Circle::~GLC_Circle()
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+
+// Return Circle Discretion
+int GLC_Circle::GetDiscretion(void) const
+{
+	return m_nDiscret;
+}
+// Return Circle radius
+double GLC_Circle::GetRadius(void) const
+{
+	return m_Radius;
+}
+// return Circle diameter
+double GLC_Circle::GetDiameter(void) const
+{
+	return 2 * m_Radius;
+}
+
 // return the circle bounding box
 GLC_BoundingBox* GLC_Circle::getBoundingBox(void) const
 {
@@ -73,28 +91,28 @@ GLC_BoundingBox* GLC_Circle::getBoundingBox(void) const
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Set Circle Radius
-bool GLC_Circle::SetRadius(double R)
+// Set Circle diameter
+void GLC_Circle::SetDiameter(double D)
 {
-	R = fabs(R);
+	assert(D > (2 * EPSILON));
+	SetRadius(D / 2);
+}
+
+// Set Circle Radius
+void GLC_Circle::SetRadius(double R)
+{
+	assert(R > EPSILON);
 	if ( fabs(R - m_Radius) > EPSILON)
 	{	// Radius is changing
-		if (R > EPSILON)
-		{
-			m_Radius= R;
-			m_ListIsValid= false;
-			return true;
-		}
-		else return false;	// Radius must be > 0
+		m_Radius= R;
+		m_ListIsValid= false;
 	}
-	else return true;		// Radius doesn't change
-	//! \todo Add error handler in case of invalid radius
 }
 
 // Set Circle discret
 void GLC_Circle::SetDiscretion(int TargetDiscret)
 {
-	TargetDiscret= abs(TargetDiscret);
+	assert(TargetDiscret > 0);
 	if (TargetDiscret != m_nDiscret)
 	{
 		m_nDiscret= TargetDiscret;
@@ -104,36 +122,27 @@ void GLC_Circle::SetDiscretion(int TargetDiscret)
 }
 
 // Set Circle Angle
-bool GLC_Circle::SetAngle(double AngleRadians)	// Angle in Radians
+void GLC_Circle::SetAngle(double AngleRadians)	// Angle in Radians
 {
+	assert((AngleRadians > EPSILON) && (AngleRadians < 2 * PI));
 	if ( fabs(AngleRadians - m_dAngle) > EPSILON)
 	{	// Angle is changing
-		if (AngleRadians > EPSILON)
-		{
 			m_dAngle= AngleRadians;
 			m_ListIsValid= false;
-			return true;
-		}
-		else return false;	// Angle must be > 0
 	}
-	else return true;		// Radius doesn't change
-	//! \todo Add error handler in case of invalid angle
-
 }
-
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-// Dessin du Cercle
+// Circle drawing
 void GLC_Circle::GlDraw(void)
 {
 	double MyCos;
 	double MySin;
 	GLC_Vector4d Vect;
 
-	// Affichage du Cercle
 	glBegin(GL_LINE_STRIP);
 
 		for (int i= 0; i <= m_nDiscret; i++)
@@ -145,22 +154,35 @@ void GLC_Circle::GlDraw(void)
 		}
 
 	glEnd();
-	// Fin de l'affichage du cercle
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Circle::GlDraw ", error);
+		throw(OpenGlException);
+	}
 }
-// Fonction définissant le propriétés de la géométrie (Couleur, position, epaisseur)
+// Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
 void GLC_Circle::GlPropGeom(void)
 {
-		// Modification de la matrice courante
-		glMultMatrixd(m_MatPos.Return_dMat());
+	// Update Current matrix
+	glMultMatrixd(m_MatPos.Return_dMat());
+	
+	// Circle graphic properties
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_LIGHTING);
+	// Pas de transparence
+	glDisable(GL_BLEND);
 		
-		// Proprièté Graphique du cercle
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_LIGHTING);
-		// Pas de transparence
-		glDisable(GL_BLEND);
+	glColor4fv(GetfRGBA());			// Color
+	glLineWidth(GetThickness());	// Thikness
 			
-
-		glColor4fv(GetfRGBA());			// Sa Couleur
-		glLineWidth(GetThickness());	// Son Epaisseur
-		
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Circle::GlPropGeom ", error);
+		throw(OpenGlException);
+	}				
 }
