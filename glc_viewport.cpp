@@ -538,7 +538,6 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	// Increase size of the bounding box
 	const double increaseFactor= 1.1;
 	// Convert box distance in sphere distance
-	const double sqrThree= sqrt(3);
 	double d1= fabs(boundingBox.getLower().GetZ());
 	double d2= fabs(boundingBox.getUpper().GetZ());
 	double min= fmin(d1,d2)* (2.0 - increaseFactor);
