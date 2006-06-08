@@ -32,9 +32,9 @@ using namespace std;
 // Constructor/Destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_Object::GLC_Object(const char *pName)
+GLC_Object::GLC_Object(const std::string name)
 : m_Uid(GLC_GenID())	// Object ID
-, m_Name(pName)			// Object Name
+, m_Name(name)			// Object Name
 {
 
 }
@@ -55,25 +55,25 @@ GLC_Object::~GLC_Object()
 // Get function
 //////////////////////////////////////////////////////////////////////
 
-// Identifiant de l'objet
+// Object ID
 GLC_uint GLC_Object::GetID() const
 {
 	return m_Uid;
 }
 
-// Nom de l'objet
+// Object Name
 const char* GLC_Object::GetName() const
 {
 	return m_Name.c_str();
 }
 
 //////////////////////////////////////////////////////////////////////
-// SET function
+// Set function
 //////////////////////////////////////////////////////////////////////
 
-// Nom de l'objet
-void GLC_Object::SetName(const char *SetName)
+// Object Name
+void GLC_Object::SetName(const std::string name)
 {
-	m_Name.assign(SetName);
+	m_Name.assign(name);
 }
 

@@ -31,9 +31,7 @@
 #include <string>
 
 #include "glc_maths.h"
-
 #include "glc_enum.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Object
@@ -46,7 +44,6 @@
  */
 //////////////////////////////////////////////////////////////////////
 
-
 class GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
@@ -58,7 +55,8 @@ public:
 	//! Default constructor
 	/*! Create a GLC_Object , Generate is UID GLC_Object::m_Uid 
 	 * and set GLC_Object::m_Name to pName*/
-	GLC_Object(const char *pName= "");
+	//GLC_Object(const char *pName= "");
+	GLC_Object(const std::string name= "");
 	
 	//! Copy constructor
 	GLC_Object(const GLC_Object& sourceObject);
@@ -84,7 +82,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set Object Name
-	void SetName(const char *SetName);
+	void SetName(const std::string name);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -94,7 +92,7 @@ public:
 public:
 	//! Virtual interface for OpenGL execution.
 	/*! This Virtual function have to be implemented in GLC_Geometry class.*/
-	virtual bool GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE) = 0;
+	virtual void GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE) = 0;
 
 //@}
 
