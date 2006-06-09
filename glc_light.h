@@ -135,20 +135,12 @@ private:
 	void GlDraw(void);
 	
 	//! Display List creation
-	bool CreationList(GLenum Mode);
+	void CreationList(GLenum Mode);
 
 private:
 
 	//! Delete OpenGL Display list
-	void DeleteList(void)
-	{
-		//! if the list is valid, the list is deleted
-		if (glIsList(m_ListID))
-		{
-			glDeleteLists(m_ListID, 1);
-		}
-		//! \todo Add error handler
-	}
+	void DeleteList(void);
 	
 //@}
 

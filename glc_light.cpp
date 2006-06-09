@@ -26,6 +26,7 @@
 
 #include <QtDebug>
 #include "glc_light.h"
+#include "glc_openglexception.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
@@ -142,7 +143,7 @@ void GLC_Light::SetSpecularColor(const GLfloat* pfCol)
 //////////////////////////////////////////////////////////////////////
 
 // Create light's OpenGL list
-bool GLC_Light::CreationList(GLenum Mode)
+void GLC_Light::CreationList(GLenum Mode)
 {
 	if(!m_ListID)		// OpenGL list not created
 	{
@@ -152,7 +153,6 @@ bool GLC_Light::CreationList(GLenum Mode)
 		{
 			GlDraw();
 			qDebug("GLC_Lumiere::CreationListe Display list not create");
-			return false;	// Light execution without OpenGL list creation
 		}
 	}
 	// OpenGL list creation and execution
@@ -166,8 +166,13 @@ bool GLC_Light::CreationList(GLenum Mode)
 	// Indicateur de la validité de la liste
 	m_ListIsValid= true;
 	
-	//! \todo add error handler
-	return true;	// OpenGL list created
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Light::CreationList ", error);
+		throw(OpenGlException);
+	}
 }
 
 // Execute OpenGL light
@@ -188,7 +193,14 @@ void GLC_Light::GlExecute(GLenum Mode)
 		glCallList(m_ListID);
 	}
 
-	//! \todo Add error handler here
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Light::GlExecute ", error);
+		throw(OpenGlException);
+	}
+
 }
 
 // OpenGL light set up
@@ -200,4 +212,27 @@ void GLC_Light::GlDraw(void)
 	glLightfv(m_LightID, GL_SPECULAR, m_SpecularColor);	// Setup The specular Light
 	// Position
 	glLightfv(m_LightID, GL_POSITION, m_Position);	// Position The Light
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Light::GlDraw ", error);
+		throw(OpenGlException);
+	}
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// Private services Functions
+//////////////////////////////////////////////////////////////////////
+
+// Delete OpenGL Display list
+void GLC_Light::DeleteList(void)
+{
+	//! if the list is valid, the list is deleted
+	if (glIsList(m_ListID))
+	{
+		glDeleteLists(m_ListID, 1);
+	}
 }
