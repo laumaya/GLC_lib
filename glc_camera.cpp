@@ -28,7 +28,7 @@
 
 #include "glc_maths.h"
 #include "glc_camera.h"
-
+#include "glc_openglexception.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
@@ -39,25 +39,55 @@ VectEye(0,0,1), VectUp(0,1,0)
 {
 	
 }
-/////////////////////////////////////////////////////////////////////
-// Get Functions
-/////////////////////////////////////////////////////////////////////
 
 GLC_Camera::GLC_Camera(const GLC_Vector4d &Eye, const GLC_Vector4d &Target, const GLC_Vector4d &Up
 					   , const char *pName)
 :GLC_Object(pName)
 {
-	if (SetCam(Eye, Target, Up) )
-	{
-		CreateMatComp();
-	}
-	else
-	{
-		qDebug("GLC_Camera::GLC_Camera(Eye, Target, Up) : CTRL Vecteur KO");
-		VectEye.SetVect(0,0,1);
-		VectUp.SetVect(0,1,0);
-	}
+	SetCam(Eye, Target, Up);	
+	CreateMatComp();
 }
+
+/////////////////////////////////////////////////////////////////////
+// Get Functions
+/////////////////////////////////////////////////////////////////////
+
+// Get the distance between the eye and the target of camera
+double GLC_Camera::GetDistEyeTarget(void) const
+{
+	return (VectEye - VectTarget).GetNorme();
+}
+
+// Get camera's eye coordinate vector
+const GLC_Vector4d GLC_Camera::GetVectEye(void) const
+{
+	return VectEye;
+}
+
+// Get camera's target coordinate vector
+const GLC_Vector4d GLC_Camera::GetVectTarget(void) const
+{
+	return VectTarget;
+}
+
+// Get camera's Up vector
+const GLC_Vector4d GLC_Camera::GetVectUp(void) const
+{
+	return VectUp;
+}
+
+// Get camera's Vector (from eye to target)
+GLC_Vector4d GLC_Camera::GetVectCam(void) const
+{
+	return VectEye - VectTarget;
+}
+
+// Get camera's orbit composition matrix
+const GLC_Matrix4x4 GLC_Camera::GetMatCompOrbit(void) const
+{
+	return MatCompOrbit;
+}
+
 
 /////////////////////////////////////////////////////////////////////
 // Set Functions
@@ -93,19 +123,17 @@ void GLC_Camera::Pan(GLC_Vector4d VectDep)
 	VectTarget= VectTarget + VectDep;
 }
 
-void GLC_Camera::Zoom(double Facteur)
+void GLC_Camera::Zoom(double factor)
 {
-	if (Facteur != 0)
-	{
-		// Eye->target vector
-		GLC_Vector4d VectCam(VectEye - VectTarget);
-		
-		// Compute new vector length
-		double Norme= VectCam.GetNorme() * 1 / fabs(Facteur);
-		VectCam.SetNormal(Norme);
-		
-		VectEye= VectCam + VectTarget;
-	}
+	assert(factor > 0);
+	// Eye->target vector
+	GLC_Vector4d VectCam(VectEye - VectTarget);
+	
+	// Compute new vector length
+	const double Norme= VectCam.GetNorme() * 1 / factor;
+	VectCam.SetNormal(Norme);
+	
+	VectEye= VectCam + VectTarget;
 	
 }
 
@@ -129,7 +157,7 @@ void GLC_Camera::Translate(const GLC_Vector4d &VectTrans)
 	VectTarget= VectTarget + VectTrans;
 }
 
-bool GLC_Camera::SetEyeCam(const GLC_Vector4d &Eye)
+void GLC_Camera::SetEyeCam(const GLC_Vector4d &Eye)
 {
 	// Old camera's vector
 	GLC_Vector4d VectOldCam(VectEye - VectTarget);
@@ -154,16 +182,11 @@ bool GLC_Camera::SetEyeCam(const GLC_Vector4d &Eye)
 			}
 		}
 		
-		return SetCam(Eye, VectTarget, VectUp);
+		SetCam(Eye, VectTarget, VectUp);
 	}
-	else
-	{
-		qDebug("GLC_Camera::SetEyeCam : No change to compute");
-		return false;
-	}	
 }
 
-bool GLC_Camera::SetTargetCam(const GLC_Vector4d &Target)
+void GLC_Camera::SetTargetCam(const GLC_Vector4d &Target)
 {
 	// Old camera's vector
 	GLC_Vector4d VectOldCam(VectEye - VectTarget);
@@ -188,61 +211,42 @@ bool GLC_Camera::SetTargetCam(const GLC_Vector4d &Target)
 			}
 		}
 		
-		return SetCam(VectEye, Target, VectUp);
-	}
-	else
-	{
-		qDebug("GLC_Camera::SetTargetCam : No change to compute");
-		return false;
+		SetCam(VectEye, Target, VectUp);
 	}
 }
 
-bool GLC_Camera::SetUpCam(const GLC_Vector4d &Up)
+void GLC_Camera::SetUpCam(const GLC_Vector4d &Up)
 {
 	if ( !(VectUp - Up).IsNull() )
 	{
-		return SetCam(VectEye, VectTarget, Up);
-	}
-	else
-	{
-		qDebug("GLC_Camera::SetUpCam : No change to compute");
-		return false;
+		SetCam(VectEye, VectTarget, Up);
 	}
 }
 
-bool GLC_Camera::SetCam(GLC_Vector4d Eye, GLC_Vector4d Target, GLC_Vector4d Up)
+void GLC_Camera::SetCam(GLC_Vector4d Eye, GLC_Vector4d Target, GLC_Vector4d Up)
 {
 	Up.SetNormal(1);
 
 	const GLC_Vector4d VectCam((Eye - Target).SetNormal(1));
 	const double Angle= acos(VectCam * Up);
-	if ( (Angle > EPSILON) && ((PI - Angle) > EPSILON) )
-	{	// Angle not equal to 0 or 180°
-		if ( fabs(Angle - (PI / 2)) > EPSILON)
-		{	// Angle not equal to 90°
-			const GLC_Vector4d AxeRot(VectCam ^ Up);
-			GLC_Matrix4x4 MatRot(AxeRot, PI / 2);
-			Up= MatRot * VectCam;
-		}	
+	
+	/* VectUp and VectCam could not be parallel
+	 * VectUp could not be NULL
+	 * VectCam could not be NULL */
+	assert((Angle > EPSILON) && ((PI - Angle) > EPSILON));
+	if ( fabs(Angle - (PI / 2)) > EPSILON)
+	{	// Angle not equal to 90°
+		const GLC_Vector4d AxeRot(VectCam ^ Up);
+		GLC_Matrix4x4 MatRot(AxeRot, PI / 2);
+		Up= MatRot * VectCam;
+	}	
 
-		VectEye= Eye;
-		VectTarget= Target;
-		VectUp= Up;
-		CreateMatComp();
-		return true;
-	}
-	else
-	{	// Angle = 0 or 180 or VectCam = 0 or VectUp = 0
-		qDebug("GLC_Camera::SetCam : Bad camera definition VectUp parallel to VectCam");
-		return false;
-	}
+	VectEye= Eye;
+	VectTarget= Target;
+	VectUp= Up;
+	CreateMatComp();
 }
 
-
-double GLC_Camera::GetDistEyeTarget(void) const
-{
-	return (VectEye - VectTarget).GetNorme();
-}
 
 void GLC_Camera::SetDistEyeTarget(double Longueur)
 {
@@ -259,6 +263,15 @@ void GLC_Camera::GlExecute(GLenum Mode)
 	gluLookAt(VectEye.GetX(), VectEye.GetY(), VectEye.GetZ(),
 		VectTarget.GetX(), VectTarget.GetY(), VectTarget.GetZ(),
 		VectUp.GetX(), VectUp.GetY(), VectUp.GetZ());
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Camera::GlExecute ", error);
+		throw(OpenGlException);
+	}
+		
 }
 
 //////////////////////////////////////////////////////////////////////

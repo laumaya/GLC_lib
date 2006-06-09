@@ -50,6 +50,9 @@ public:
    /*! Point of view (0, 0, 1) Up Vector (0, 1, 0)*/
    GLC_Camera();
    //! Explicit constructor
+	/* VectUp and VectCam could not be parallel
+	 * VectUp could not be NULL
+	 * VectCam could not be NULL */   
    GLC_Camera(const GLC_Vector4d &Eye, const GLC_Vector4d &Target, const GLC_Vector4d &Up,
 	   const char *pName="Caméra" );
 //@}
@@ -63,34 +66,19 @@ public:
 	double GetDistEyeTarget(void) const;
 
 	//! Get camera's eye coordinate vector
-	const GLC_Vector4d GetVectEye(void) const
-	{
-		return VectEye;
-	}
+	const GLC_Vector4d GetVectEye(void) const;
 
 	//! Get camera's target coordinate vector
-	const GLC_Vector4d GetVectTarget(void) const
-	{
-		return VectTarget;
-	}
+	const GLC_Vector4d GetVectTarget(void) const;
 
 	//! Get camera's Up vector
-	const GLC_Vector4d GetVectUp(void) const
-	{
-		return VectUp;
-	}
+	const GLC_Vector4d GetVectUp(void) const;
 
 	//! Get camera's Vector (from eye to target)
-	GLC_Vector4d GetVectCam(void) const
-	{
-		return VectEye - VectTarget;
-	}
+	GLC_Vector4d GetVectCam(void) const;
 
 	//! Get camera's orbit composition matrix
-	const GLC_Matrix4x4 GetMatCompOrbit(void) const
-	{
-		return MatCompOrbit;
-	}
+	const GLC_Matrix4x4 GetMatCompOrbit(void) const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -105,7 +93,8 @@ public:
    void Pan(GLC_Vector4d VectDep);
 
    //! Move camera's eye along camera vector (eye -> target)
-   void Zoom(double Facteur);
+   /*! Factor must be > 0*/
+   void Zoom(double factor);
 
    //! Move camera
 	void Move(const GLC_Matrix4x4 &MatMove);
@@ -114,16 +103,19 @@ public:
   	void Translate(const GLC_Vector4d &VectTrans);
 
    //! Set the camera
-   bool SetCam(GLC_Vector4d Eye, GLC_Vector4d Target, GLC_Vector4d Up);
+	/* VectUp and VectCam could not be parallel
+	 * VectUp could not be NULL
+	 * VectCam could not be NULL */   
+   void SetCam(GLC_Vector4d Eye, GLC_Vector4d Target, GLC_Vector4d Up);
 
    //! Set camera's eye coordinate vector
-   bool SetEyeCam(const GLC_Vector4d &Eye);
+   void SetEyeCam(const GLC_Vector4d &Eye);
   
    //! Set camera's target coordinate vector
-   bool SetTargetCam(const GLC_Vector4d &Target);
+   void SetTargetCam(const GLC_Vector4d &Target);
  
    //! Set camera's Up vector
-   bool SetUpCam(const GLC_Vector4d &Up);
+   void SetUpCam(const GLC_Vector4d &Up);
  
    //! Set the distance between eye and target (Move eye)
    void SetDistEyeTarget(double Longueur);
@@ -136,6 +128,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
    //! Execute OpenGL Camera
+   /*! Throw GLC_OpenGlException*/
    void GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 
 //@}
