@@ -25,7 +25,9 @@
 //! \file glc_viewport.cpp implementation of the GLC_Viewport class.
 
 #include <QtDebug>
+#include <assert.h>
 #include "glc_viewport.h"
+#include "glc_openglexception.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
@@ -149,7 +151,15 @@ void GLC_Viewport::GlPointing(GLint x, GLint y)
 	gluUnProject((GLdouble) x, (GLdouble) (GetWinVSize() - y) , Depth
 		, ViewMatrix, ProjMatrix, Viewport, &pX, &pY, &pZ);
 
-	qDebug("Return depth: %e, z= %e\n", Depth, pZ);
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Viewport::GlPointing ", error);
+		throw(OpenGlException);
+	}
+
+	//qDebug("Return depth: %e, z= %e\n", Depth, pZ);
 
 	// Test if there is geometry under picking point
 	if (fabs(Depth - 1.0) > EPSILON)
@@ -241,6 +251,15 @@ void GLC_Viewport::GlExecuteTargetCam()	//! \todo Create a display list
 		glEnd();
 
 		glPopMatrix();
+		
+		// OpenGL error handler
+		GLenum error= glGetError();	
+		if (error != GL_NO_ERROR)
+		{
+			GLC_OpenGlException OpenGlException("GLC_Viewport::GlExecuteTargetCam ", error);
+			throw(OpenGlException);
+		}		
+		
 	}
 }
 
@@ -435,6 +454,7 @@ void GLC_Viewport::Zoom(int Cy)
 // reframe the current scene
 void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 {
+	assert(!box.isEmpty());
 	// Ratio between screen size and bounding box size
 	const double boundingBoxCover= 1.0;
 	
@@ -527,6 +547,7 @@ bool GLC_Viewport::SetDistMax(double DistMax)
 // Set Near and Far clipping distance
 void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 {
+	assert(!bBox.isEmpty());
 	GLC_Matrix4x4 matTranslateCam(m_pViewCam->GetVectEye());
 	GLC_Matrix4x4 matRotateCam(m_pViewCam->GetMatCompOrbit());
 	

@@ -197,6 +197,7 @@ public:
 	bool SetDistMax(double DistMax);
 	
 	//! Set Near and Far clipping distance
+	/*! box shouldn't be empty*/
 	void setDistMinAndMax(const GLC_BoundingBox& bBox);
 
 //@}
@@ -265,6 +266,7 @@ public:
 	}
 	
 	//! reframe the current scene
+	/*! box shouldn't be empty*/
 	void reframe(const GLC_BoundingBox& box);
 	
 //@} End Zooming functions
