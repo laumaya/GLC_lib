@@ -64,26 +64,26 @@ GLC_Vector3d::GLC_Vector3d(const GLC_Vector3d &Vect)
 //////////////////////////////////////////////////////////////////////
 // Fonction Set
 //////////////////////////////////////////////////////////////////////
-GLC_Vector3d& GLC_Vector3d::SetX(const double &dX)
+GLC_Vector3d& GLC_Vector3d::setX(const double &dX)
 {
 	dVecteur[0]= dX;
 	return *this;
 }
 
-GLC_Vector3d& GLC_Vector3d::SetY(const double &dY)
+GLC_Vector3d& GLC_Vector3d::setY(const double &dY)
 {
 	dVecteur[1]= dY;
 	return *this;
 }
 
-GLC_Vector3d& GLC_Vector3d::SetZ(const double &dZ)
+GLC_Vector3d& GLC_Vector3d::setZ(const double &dZ)
 {
 	dVecteur[2]= dZ;
 	return *this;
 }
 
 
-GLC_Vector3d& GLC_Vector3d::SetVect(const double &dX, const double &dY, const double &dZ)
+GLC_Vector3d& GLC_Vector3d::setVect(const double &dX, const double &dY, const double &dZ)
 {
 	dVecteur[0]= dX;
 	dVecteur[1]= dY;
@@ -91,7 +91,7 @@ GLC_Vector3d& GLC_Vector3d::SetVect(const double &dX, const double &dY, const do
 
 	return *this;
 }
-GLC_Vector3d& GLC_Vector3d::SetVect(const GLC_Vector3d &Vect)
+GLC_Vector3d& GLC_Vector3d::setVect(const GLC_Vector3d &Vect)
 {
 	dVecteur[0]= Vect.dVecteur[0];
 	dVecteur[1]= Vect.dVecteur[1];

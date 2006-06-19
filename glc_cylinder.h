@@ -66,13 +66,13 @@ public:
 public:
 
 	//! Get Lenght of the Cylinder
-	double GetLength(void) const;
+	double getLength(void) const;
 
 	//! Get Radius of cylinder
-	double GetRadius(void) const;
+	double getRadius(void) const;
 
 	//! Get Cylinder discretion
-	int GetDiscretion(void) const;
+	int getDiscretion(void) const;
 	
 	//! return the cylinder bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
@@ -88,18 +88,18 @@ public:
 
 	//! Set Cylinder length
 	/*! Length must be > 0*/
-	void SetLength(double Length);
+	void setLength(double Length);
 
 	//! Set Cylinder radius
 	/*! Radius must be > 0*/
-	void SetRadius(double Radius);
+	void setRadius(double Radius);
 
 	//! Set Discretion
 	/*! Discretion must be > 0*/
-	void SetDiscretion(int TargetDiscret);
+	void setDiscretion(int TargetDiscret);
 
 	//! End Caps
-	void SetEndedCaps(bool CapsEnded);
+	void setEndedCaps(bool CapsEnded);
 
 // End of functions impacting display list
 	
@@ -113,12 +113,12 @@ private:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
-	virtual void GlDraw(void);
+	virtual void glDraw(void);
 
 	//! Virtual interface for OpenGL Geomtry properties.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
-	virtual void GlPropGeom(void);
+	virtual void glPropGeom(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////

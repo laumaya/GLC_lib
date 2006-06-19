@@ -69,7 +69,7 @@ bool GLC_CollectionNode::getListValidity(void) const
 {
 	if ((m_pGeom != NULL) && (m_ListID != 0))
 	{
-		return m_pGeom->GetValidity();
+		return m_pGeom->getValidity();
 	}
 	else return false;
 }
@@ -100,7 +100,7 @@ bool GLC_CollectionNode::getBoundingBoxValidity(void) const
 {
 	if ((m_pGeom != NULL) && (m_pBoundingBox != NULL))
 	{
-		return (m_pGeom->GetListIsValid()) && (m_pGeom->GetValidity());
+		return (m_pGeom->getListIsValid()) && (m_pGeom->getValidity());
 	}
 	else return false;
 }
@@ -121,19 +121,19 @@ void GLC_CollectionNode::setGeometry(GLC_Geometry* pGeom)
 //////////////////////////////////////////////////////////////////////
 
 // Display the Node
-void GLC_CollectionNode::GlExecute(GLenum Mode)
+void GLC_CollectionNode::glExecute(GLenum Mode)
 {
 	bool computeBox= false;
 	
 	// Geometry OpenGl list invalid
-	if (!m_pGeom->GetListIsValid())
+	if (!m_pGeom->getListIsValid())
 	{
-		m_pGeom->CreateList(GL_COMPILE);
+		m_pGeom->createList(GL_COMPILE);
 		computeBox= true;
 	}
 	
 	// Geometry invalid or collection node list ID == 0
-	if ((!m_pGeom->GetValidity()) || (m_ListID == 0))
+	if ((!m_pGeom->getValidity()) || (m_ListID == 0))
 	{
 		if (m_ListID == 0)
 		{
@@ -141,7 +141,7 @@ void GLC_CollectionNode::GlExecute(GLenum Mode)
 			m_ListID= glGenLists(1);
 		}
 		glNewList(m_ListID, Mode);
-			m_pGeom->GlExecute(Mode);
+			m_pGeom->glExecute(Mode);
 		glEndList();
 		qDebug() << "GLC_Collection::CreateSubLists : Display list " << m_ListID << " created";
 		computeBox= true;	
@@ -162,7 +162,7 @@ void GLC_CollectionNode::GlExecute(GLenum Mode)
 // private services functions
 //////////////////////////////////////////////////////////////////////
 
-// Erase the Node
+// erase the Node
 void GLC_CollectionNode::erase(void)
 {
 	if (m_pGeom != NULL)

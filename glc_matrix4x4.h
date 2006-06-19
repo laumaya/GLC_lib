@@ -68,25 +68,25 @@ public:
 	//! Construct rotation matrix by a vector and an angle
 	GLC_Matrix4x4(const GLC_Vector4d &Vect, const double &dAngleRad)
 	{
-		SetMatRot(Vect, dAngleRad);		
+		setMatRot(Vect, dAngleRad);		
 	}
 
 	//! Construct rotation matrix by 2 vectors
 	GLC_Matrix4x4(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2)
 	{
-		SetMatRot(Vect1, Vect2);		
+		setMatRot(Vect1, Vect2);		
 	}
 	
 	//! Construct translation matrix by a vector
 	GLC_Matrix4x4(const GLC_Vector4d &Vect)
 	{
-		SetMatTranslate(Vect);
+		setMatTranslate(Vect);
 	}
 
 	//! Construct translation matrix by 3 coordinates 
 	GLC_Matrix4x4(double Tx, double Ty, double Tz)
 	{
-		SetMatTranslate(Tx, Ty, Tz);
+		setMatTranslate(Tx, Ty, Tz);
 	}
 //@}
 
@@ -109,10 +109,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Compute matrix determinant
-	const double GetDeterminant(void) const;
+	const double getDeterminant(void) const;
 
 	//! return a pointer to a row first array of 16 elements
-	const double *Return_dMat(void) const
+	const double *return_dMat(void) const
 	{
 		return dMatrice;
 	}
@@ -124,28 +124,28 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set matrix to a rotation matrix define by a vector and an angle in radians
-	GLC_Matrix4x4& SetMatRot(const GLC_Vector4d &Vect, const double &dAngleRad);
+	GLC_Matrix4x4& setMatRot(const GLC_Vector4d &Vect, const double &dAngleRad);
 
 	//! Set matrix to a rotation matrix define by 2 vectors
-	GLC_Matrix4x4& SetMatRot(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2);
+	GLC_Matrix4x4& setMatRot(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2);
 
 	//! Set Matrix to a translation matrix by a vector
-	GLC_Matrix4x4& SetMatTranslate(const GLC_Vector4d &Vect);
+	GLC_Matrix4x4& setMatTranslate(const GLC_Vector4d &Vect);
 	
 	//! Set Matrix to a translation matrix by 3 coordinates
-	GLC_Matrix4x4& SetMatTranslate(double Tx, double Ty, double Tz);
+	GLC_Matrix4x4& setMatTranslate(double Tx, double Ty, double Tz);
 
 	//! Set Matrix to a scaling matrix define by 3 double
-	GLC_Matrix4x4& SetMatScaling(const double &sX, const double &sY, const double sZ);
+	GLC_Matrix4x4& setMatScaling(const double &sX, const double &sY, const double sZ);
 
 	//! Reverse the Matrix
-	GLC_Matrix4x4& SetInv(void);
+	GLC_Matrix4x4& invert(void);
 
 	//! Set the matrix to identify matrix
-	GLC_Matrix4x4& SetIdentite();
+	GLC_Matrix4x4& setToIdentity();
 
 	//! Set the matrix by its transpose
-	GLC_Matrix4x4& SetTranspose(void);
+	GLC_Matrix4x4& transpose(void);
 
 //@}
 
@@ -155,7 +155,7 @@ public:
 private:
 	
 	//! Return true if the index (argument) is in the diagonal of the matrix
-	const bool bIsDiagonal(const int index) const
+	const bool isDiagonal(const int index) const
 	{
 		if ((index == 0) || (index == 5) || (index == 10) || (index == 15))
 			return true;
@@ -164,19 +164,19 @@ private:
 	}
 
 	// Calcul du déterminant d'une céllule de la matrice 4x4
-	const double DeterminantLC(const int &Ligne, const int &Colonne) const;
+	const double getDeterminantLC(const int &Ligne, const int &Colonne) const;
 
 	// Calcul d'une sous matrice 3x3
-	void SubMat(const int &Ligne, const int &Colonne, double *ResultMat) const;
+	void getSubMat(const int &Ligne, const int &Colonne, double *ResultMat) const;
 
 	// Calcul du déterminant d'une matrice 3x3
-	const double Determinant3x3(const double *Mat3x3) const;
+	const double getDeterminant3x3(const double *Mat3x3) const;
 	
 	//! Return the transpose matrix
-	const GLC_Matrix4x4 ReturnTranspose(void) const;
+	const GLC_Matrix4x4 getTranspose(void) const;
 
-	// Retourne la comatrice
-	const GLC_Matrix4x4 ReturnCoMat4x4(void) const;
+	//! Return the co-matrix
+	const GLC_Matrix4x4 getCoMat4x4(void) const;
 	
 
 

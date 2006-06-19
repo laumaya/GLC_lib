@@ -41,7 +41,7 @@ GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport, const char* pName, const
 , m_PolyMode(GL_FILL)			// Default polyganal mode
 
 {
-	UpdateZPosition();
+	updateZPosition();
 }
 
 GLC_ImagePlane::~GLC_ImagePlane(void)
@@ -58,7 +58,7 @@ GLC_ImagePlane::~GLC_ImagePlane(void)
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 // Load image
-bool GLC_ImagePlane::LoadImageFile(QGLWidget *GLWidget, const QString ImageName)
+bool GLC_ImagePlane::loadImageFile(QGLWidget *GLWidget, const QString ImageName)
 {
 	if (m_pImgTexture != NULL)
 	{
@@ -71,37 +71,37 @@ bool GLC_ImagePlane::LoadImageFile(QGLWidget *GLWidget, const QString ImageName)
 }
 
 // Update image size
-void GLC_ImagePlane::UpdatePlaneSize(void)
+void GLC_ImagePlane::updatePlaneSize(void)
 {
 
 	// compute quad size
 	int nCote;
-	if (m_pViewport->GetWinHSize() < m_pViewport->GetWinVSize())
+	if (m_pViewport->getWinHSize() < m_pViewport->getWinVSize())
 	{
-		nCote= m_pViewport->GetWinVSize();
+		nCote= m_pViewport->getWinVSize();
 	}
 	else
 	{
-		nCote= m_pViewport->GetWinHSize();
+		nCote= m_pViewport->getWinHSize();
 	}
 
 	// Calcul du coté du carré de vision de la caméra
 	// Le coté du carré de la caméra est mappé sur la hauteur de la fenètre
-	const double ChampsVision = 2 * m_dZpos *  tan((m_pViewport->GetFov() * PI / 180)/ 2);
+	const double ChampsVision = 2 * m_dZpos *  tan((m_pViewport->getFov() * PI / 180)/ 2);
 	
 	// Circle radius in openGL unit = RayonPixel * (dimens GL / dimens Pixel)
-	m_dLgImage= ((double)nCote * ChampsVision / (double)m_pViewport->GetWinVSize());
+	m_dLgImage= ((double)nCote * ChampsVision / (double)m_pViewport->getWinVSize());
 
 	// Invalidate OpenGL Display list
 	m_ListIsValid= false;
 }
 
 // Update Plane Z position
-void GLC_ImagePlane::UpdateZPosition(void)
+void GLC_ImagePlane::updateZPosition(void)
 {
 	// Compute Plane Z position
-	const double n= m_pViewport->GetDistMin();
-	const double f= m_pViewport->GetDistMax();
+	const double n= m_pViewport->getDistMin();
+	const double f= m_pViewport->getDistMax();
 	int nbrBits;
 	
 	//glGetIntegerv(GL_DEPTH_BITS, &nbrBits);
@@ -113,7 +113,7 @@ void GLC_ImagePlane::UpdateZPosition(void)
 	
 	m_dZpos= -f * n / (((zw - 1) / zw) * (f - n) - f);
 
-	UpdatePlaneSize();
+	updatePlaneSize();
 	// Invalidate OpenGL Display list
 	m_ListIsValid= false;
 	
@@ -124,7 +124,7 @@ void GLC_ImagePlane::UpdateZPosition(void)
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 // Plane Display
-void GLC_ImagePlane::GlDraw(void)
+void GLC_ImagePlane::glDraw(void)
 {
 	const double LgImgSur2= m_dLgImage / 2;
 	
@@ -149,7 +149,7 @@ void GLC_ImagePlane::GlDraw(void)
 	}
 }
 // Define Geometry property (Couleur, position, epaisseur)
-void GLC_ImagePlane::GlPropGeom(void)
+void GLC_ImagePlane::glPropGeom(void)
 {
 	glDisable(GL_LIGHTING);
 
@@ -159,8 +159,8 @@ void GLC_ImagePlane::GlPropGeom(void)
 		glDepthMask(GL_TRUE);
 		//glEnable(GL_DEPTH_TEST);
 		glEnable(GL_TEXTURE_2D);
-		glColor4fv(GetfRGBA());
-		m_pImgTexture->GlBindTexture();
+		glColor4fv(getfRGBA());
+		m_pImgTexture->glcBindTexture();
 	}
 	else
 	{
@@ -168,7 +168,7 @@ void GLC_ImagePlane::GlPropGeom(void)
 		glDepthMask(GL_TRUE);
 		//glEnable(GL_DEPTH_TEST);
 		glDisable(GL_TEXTURE_2D);
-		glColor4fv(GetfRGBA());
+		glColor4fv(getfRGBA());
 	}
 	
 	// Polygons display mode

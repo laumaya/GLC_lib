@@ -63,7 +63,7 @@ public:
 	/*! Standard constructor With x, y, z and w with default value of 1.0*/
 	GLC_Vector4d(const double &dX, const double &dY, const double &dZ, const double &dW= 1.0)
 	{
-		SetVect(dX, dY, dZ, dW);
+		setVect(dX, dY, dZ, dW);
 	}
 	// Recopy constructor
 	GLC_Vector4d(const GLC_Vector4d &Vect);
@@ -120,29 +120,29 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! X Composante*/
-	GLC_Vector4d& SetX(const double &dX);
+	GLC_Vector4d& setX(const double &dX);
 	
 	/*! Y Composante*/
-	GLC_Vector4d& SetY(const double &dY);
+	GLC_Vector4d& setY(const double &dY);
 	
 	/*! Z Composante*/
-	GLC_Vector4d& SetZ(const double &dZ);
+	GLC_Vector4d& setZ(const double &dZ);
 	
 	/*! W Composante*/
-	GLC_Vector4d& SetW(const double &dW);
+	GLC_Vector4d& setW(const double &dW);
 	
 	/*! All Composante*/
-	GLC_Vector4d& SetVect(const double &dX, const double &dY,
+	GLC_Vector4d& setVect(const double &dX, const double &dY,
 		const double &dZ, const double &dW= 1);
 		
 	/*! From another Vector*/
-	GLC_Vector4d& SetVect(const GLC_Vector4d &Vect);
+	GLC_Vector4d& setVect(const GLC_Vector4d &Vect);
 	
 	/*! Vector Normal*/
-	GLC_Vector4d& SetNormal(const double &Norme);
+	GLC_Vector4d& setNormal(const double &Norme);
 	
 	/*! Invert Vector*/
-	GLC_Vector4d& SetInv(void);
+	GLC_Vector4d& setInv(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -151,37 +151,37 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! X Composante*/
-	inline const double GetX(void) const
+	inline const double getX(void) const
 	{
 		return dVecteur[0];
 	}
 	/*! Y Composante*/
-	inline const double GetY(void) const
+	inline const double getY(void) const
 	{
 		return dVecteur[1];
 	}
 	/*! Z Composante*/
-	inline const double GetZ(void) const
+	inline const double getZ(void) const
 	{
 		return dVecteur[2];
 	}
 	/*! W Composante*/
-	inline const double GetW(void) const
+	inline const double getW(void) const
 	{
 		return dVecteur[3];
 	}
 	/*! retourne un pointeur constant vers le tableau du vecteur.*/
-	inline const double *Return_dVect(void) const
+	inline const double *return_dVect(void) const
 	{
 		return dVecteur;
 	}
 	/*! Vector Norm*/
-	inline const double GetNorme(void) const
+	inline const double getNorm(void) const
 	{
-		return CalcNorme();
+		return calcNorme();
 	}
 	/*! Vector is null*/
-	inline const bool IsNull(void) const
+	inline const bool isNull(void) const
 	{
 		bool result;
 
@@ -192,7 +192,7 @@ public:
 	}
 
 	/*! Angle between another vector*/
-	const double GetAngleWithVect(GLC_Vector4d Vect) const;
+	const double getAngleWithVect(GLC_Vector4d Vect) const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -200,14 +200,14 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	/*! Compute Vector normal*/
-	inline const double CalcNorme(void) const
+	inline const double calcNorme(void) const
 	{
 		return sqrt(dVecteur[0] * dVecteur[0] + dVecteur[1] * dVecteur[1]
 			+ dVecteur[2] * dVecteur[2]);
 	}
 	
 	/*! Normalize Vector w <- 0*/
-	void Normalise(void);
+	void setWToNull(void);
 
 //////////////////////////////////////////////////////////////////////
 //name Private attributes

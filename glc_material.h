@@ -81,24 +81,24 @@ public:
 public:
 
 	//! Return true is material add attached texture
-	bool GetAddRgbaTexture()
+	bool getAddRgbaTexture()
 	{
 		return m_pTexture != NULL;
 	}
 	//! Get Ambiant color
-	void GetAmbientColor(GLfloat* pfCol) const;	// pfCol[4]
+	void getAmbientColor(GLfloat* pfCol) const;	// pfCol[4]
 
 	//! Get diffuse color
-	void GetDiffuseColor(GLfloat* pfCol) const;	// pfCol[4]
+	void getDiffuseColor(GLfloat* pfCol) const;	// pfCol[4]
 
 	//! Get specular color
-	void GetSpecularColor(GLfloat* pfCol) const;	// pfCol[4]
+	void getSpecularColor(GLfloat* pfCol) const;	// pfCol[4]
 
 	//! Get the emissive color
-	void GetLightEmission(GLfloat* pfCol) const;	// pfCol[4]
+	void getLightEmission(GLfloat* pfCol) const;	// pfCol[4]
 
 	//! Get Shininess
-	GLfloat GetShininess() const
+	GLfloat getShininess() const
 	{
 		return m_fShininess;
 	}
@@ -111,40 +111,40 @@ public:
 public:
 
 	//! Set Ambiant Color
-	void SetAmbientColor(const GLfloat* pfCol);
+	void setAmbientColor(const GLfloat* pfCol);
 
 	//! Set Diffuse color
-	void SetDiffuseColor(const GLfloat* pfCol);
+	void setDiffuseColor(const GLfloat* pfCol);
 	
 	//! Set Specular color
-	void SetSpecularColor(const GLfloat* pfCol);
+	void setSpecularColor(const GLfloat* pfCol);
 
 	//! Set Emissive
-	void SetLightEmission(const GLfloat* pfCol);
+	void setLightEmission(const GLfloat* pfCol);
 
 	//! Set Shininess
-	void SetShininess(GLfloat Shininess)
+	void setShininess(GLfloat Shininess)
 	{
 		m_fShininess= Shininess;
 
-		UpdateUsed();
+		updateUsed();
 	}
 
 	//! Set Texture
-	void SetTexture(GLC_Texture* pTexture)
+	void setTexture(GLC_Texture* pTexture)
 	{
 		qDebug() << "GLC_Material::SetTexture";
 		m_pTexture= pTexture;
 		
-		UpdateUsed();
+		updateUsed();
 	}
 
 
 	//! Add Geometry to the "where used" hash table
-	bool AddGLC_Geom(GLC_Geometry* pGeom);
+	bool addGLC_Geom(GLC_Geometry* pGeom);
 
 	//! Remove Geometry to the "where used" hash table
-	bool DelGLC_Geom(GLC_uint Key);
+	bool delGLC_Geom(GLC_uint Key);
 	
 //@}
 
@@ -154,7 +154,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Execute OpenGL Material
-	virtual void GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	virtual void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 
 //@}
 
@@ -163,7 +163,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Update geometries which used material
-	void UpdateUsed(void);
+	void updateUsed(void);
 	
 	//! Init Ambiant Color
 	void initAmbientColor(void);

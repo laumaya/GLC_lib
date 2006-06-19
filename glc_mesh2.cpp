@@ -74,7 +74,7 @@ GLC_Mesh2::~GLC_Mesh2(void)
 //////////////////////////////////////////////////////////////////////
 
 //! Get material from mesh
-void GLC_Mesh2::GetOneMaterial(int Index, GLC_Material &Material)
+void GLC_Mesh2::getOneMaterial(int Index, GLC_Material &Material)
 {
 	MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
 	// Check if the key is find
@@ -108,7 +108,7 @@ GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
 
 
 //! Add material to mesh
-void GLC_Mesh2::AddMaterial(int Index, GLC_Material &Material)
+void GLC_Mesh2::addMaterial(int Index, GLC_Material &Material)
 {
 		
 	// Add or replace the Material to Material hash table
@@ -117,7 +117,7 @@ void GLC_Mesh2::AddMaterial(int Index, GLC_Material &Material)
 }
 
 //! Modify material from mesh
-void GLC_Mesh2::ModifyMaterial(int Index, GLC_Material &Material)
+void GLC_Mesh2::modifyMaterial(int Index, GLC_Material &Material)
 {
 	//! \todo GLC_Material should have copy constructor
 	MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
@@ -131,7 +131,7 @@ void GLC_Mesh2::ModifyMaterial(int Index, GLC_Material &Material)
 
 
 // Add a vertex to mesh
-void GLC_Mesh2::AddCoordinate(int Index, GLC_Vector3d Coordinate)
+void GLC_Mesh2::addVertex(int Index, GLC_Vector3d Coordinate)
 {
 	Vector3dHash::const_iterator iVector= m_CoordinateHash.find(Index);
 	// Check if the key is already use
@@ -144,7 +144,7 @@ void GLC_Mesh2::AddCoordinate(int Index, GLC_Vector3d Coordinate)
 }
 
 // Add Normal
-void GLC_Mesh2::AddNormal(int Index, GLC_Vector3d Normal)
+void GLC_Mesh2::addNormal(int Index, GLC_Vector3d Normal)
 {
 	Vector3dHash::const_iterator iVector= m_NormalHash.find(Index);
 	// Check if the key is already use
@@ -157,7 +157,7 @@ void GLC_Mesh2::AddNormal(int Index, GLC_Vector3d Normal)
 }
 
 // Add texture coordinate
-void GLC_Mesh2::AddTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate)
+void GLC_Mesh2::addTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate)
 {
 	Vector2dHash::const_iterator iVector= m_TextCoordinateHash.find(Index);
 	
@@ -171,11 +171,11 @@ void GLC_Mesh2::AddTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate)
 
 
 //! Add a face without texture coordinate
-void GLC_Mesh2::AddFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal)
+void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal)
 {
 	
-	AddMaterialIndex(Material);
-	AddCoordAndNormIndex(Coordinate, Normal);
+	addMaterialIndex(Material);
+	addCoordAndNormIndex(Coordinate, Normal);
 	
 	// The testture index should be empty
 	//assert(m_TextureIndex.isEmpty());
@@ -186,12 +186,12 @@ void GLC_Mesh2::AddFace(const QVector<int> &Material, const QVector<int> &Coordi
 }
 
 // Add a face with texture coordinate
-void GLC_Mesh2::AddFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
+void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
 						const QVector<int> &TextureCoordinate)
 {
-	AddMaterialIndex(Material);
-	AddCoordAndNormIndex(Coordinate, Normal);
-	AddTextureIndex(TextureCoordinate);
+	addMaterialIndex(Material);
+	addCoordAndNormIndex(Coordinate, Normal);
+	addTextureIndex(TextureCoordinate);
 		
 	// Increment number of faces
 	m_NumberOfFaces++;
@@ -203,9 +203,9 @@ void GLC_Mesh2::AddFace(const QVector<int> &Material, const QVector<int> &Coordi
 //////////////////////////////////////////////////////////////////////
 
 // Virtual interface for OpenGL Geometry set up.
-void GLC_Mesh2::GlDraw()
+void GLC_Mesh2::glDraw()
 {
-	//qDebug() << "GLC_Mesh2::GlDraw ENTER";
+	//qDebug() << "GLC_Mesh2::glDraw ENTER";
 	
 	// If the mesh is empty there is noting to do
 	if (m_CoordinateIndex.isEmpty()) return;
@@ -233,26 +233,26 @@ void GLC_Mesh2::GlDraw()
 				if (CurrentMaterialIndex != m_MaterialIndex.at(i))
 				{	// If the material change, make it current
 					CurrentMaterialIndex= m_MaterialIndex.at(i);
-					//qDebug() << "GLC_Mesh2::GlDraw : CurrentMaterialIndex" << CurrentMaterialIndex;
+					//qDebug() << "GLC_Mesh2::glDraw : CurrentMaterialIndex" << CurrentMaterialIndex;
 					
 					MaterialHash::const_iterator iMaterial= m_MaterialHash.find(CurrentMaterialIndex);
 					// Check if the key is already use
 					if (iMaterial != m_MaterialHash.end())
 					{
-						if (m_MaterialHash[CurrentMaterialIndex].GetAddRgbaTexture())
+						if (m_MaterialHash[CurrentMaterialIndex].getAddRgbaTexture())
 						{
 							glEnable(GL_TEXTURE_2D);
-							//qDebug() << "GLC_Mesh2::GlDraw : Texture enabled";
+							//qDebug() << "GLC_Mesh2::glDraw : Texture enabled";
 						}
 						else
 						{
 							glDisable(GL_TEXTURE_2D);
 						}
-						m_MaterialHash[CurrentMaterialIndex].GlExecute();
+						m_MaterialHash[CurrentMaterialIndex].glExecute();
 					}
 					else
 					{
-						m_pMaterial->GlExecute();
+						m_pMaterial->glExecute();
 					}
 				}
 				IsNewFace= false;
@@ -263,16 +263,16 @@ void GLC_Mesh2::GlDraw()
 			// Vertex texture coordinate if necessary
 			if (i < m_TextureIndex.size())
 			{
-				glTexCoord2dv(m_TextCoordinateHash[m_TextureIndex.at(i)].Return_dVect());
+				glTexCoord2dv(m_TextCoordinateHash[m_TextureIndex.at(i)].return_dVect());
 			}
 				
 			// Vertex Normal
 			assert(i < m_NormalIndex.size());
-			glNormal3dv(m_NormalHash[m_NormalIndex.at(i)].Return_dVect());
+			glNormal3dv(m_NormalHash[m_NormalIndex.at(i)].return_dVect());
 			
 			// Vertex 3D coordinate
 			assert(i < m_CoordinateIndex.size());
-			glVertex3dv(m_CoordinateHash[m_CoordinateIndex.at(i)].Return_dVect());
+			glVertex3dv(m_CoordinateHash[m_CoordinateIndex.at(i)].return_dVect());
 		}		
 	}
 	
@@ -287,10 +287,10 @@ void GLC_Mesh2::GlDraw()
 }
 
 // Virtual interface for OpenGL Geometry properties.
-void GLC_Mesh2::GlPropGeom()
+void GLC_Mesh2::glPropGeom()
 {
 	//! Change the current matrix
-	glMultMatrixd(m_MatPos.Return_dMat());
+	glMultMatrixd(m_MatPos.return_dMat());
 	
 	// Polygons display mode
 	glPolygonMode(m_PolyFace, m_PolyMode);
@@ -309,20 +309,20 @@ void GLC_Mesh2::GlPropGeom()
 	{
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
-		glLineWidth(GetThickness());	// is thikness
-		glColor4fv(GetfRGBA());			// is color
+		glLineWidth(getThickness());	// is thikness
+		glColor4fv(getfRGBA());			// is color
 	}
-	else if (m_pMaterial->GetAddRgbaTexture())
+	else if (m_pMaterial->getAddRgbaTexture())
 	{
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
-		m_pMaterial->GlExecute();
+		m_pMaterial->glExecute();
 	}
 	else
 	{
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
-		m_pMaterial->GlExecute();
+		m_pMaterial->glExecute();
 	}
 		
 	// OpenGL error handler
@@ -336,7 +336,7 @@ void GLC_Mesh2::GlPropGeom()
 }
 
 // Add coordinate and normal index of a face
-void GLC_Mesh2::AddCoordAndNormIndex(const QVector<int> &Coordinate, const QVector<int> &Normal)
+void GLC_Mesh2::addCoordAndNormIndex(const QVector<int> &Coordinate, const QVector<int> &Normal)
 {	
 	// Number of coordinate to add
 	const int size= Coordinate.size();
@@ -361,7 +361,7 @@ void GLC_Mesh2::AddCoordAndNormIndex(const QVector<int> &Coordinate, const QVect
 }
 
 // Add Texture coordinate index of a face
-void GLC_Mesh2::AddTextureIndex(const QVector<int> &TextureCoordinate)
+void GLC_Mesh2::addTextureIndex(const QVector<int> &TextureCoordinate)
 {
 	for (int i= 0; i < TextureCoordinate.size(); ++i)
 	{
@@ -372,7 +372,7 @@ void GLC_Mesh2::AddTextureIndex(const QVector<int> &TextureCoordinate)
 }
 
 // Add Material index of a face
-void GLC_Mesh2::AddMaterialIndex(const QVector<int> &Material)
+void GLC_Mesh2::addMaterialIndex(const QVector<int> &Material)
 {
 	for (int i= 0; i < Material.size(); ++i)
 	{

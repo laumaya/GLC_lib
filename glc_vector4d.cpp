@@ -79,9 +79,9 @@ GLC_Vector4d::GLC_Vector4d(const GLC_Vector4d &Vect)
 // Copy from an GLC_Vector3d
 GLC_Vector4d::GLC_Vector4d(const GLC_Vector3d &Vect)
 {
-	dVecteur[0]= Vect.GetX();
-	dVecteur[1]= Vect.GetY();
-	dVecteur[2]= Vect.GetZ();
+	dVecteur[0]= Vect.getX();
+	dVecteur[1]= Vect.getY();
+	dVecteur[2]= Vect.getZ();
 	dVecteur[3]= 1.0;
 
 }
@@ -89,8 +89,8 @@ GLC_Vector4d::GLC_Vector4d(const GLC_Vector3d &Vect)
 // Copy from an GLC_Vector3d
 GLC_Vector4d::GLC_Vector4d(const GLC_Vector2d &Vect)
 {
-	dVecteur[0]= Vect.GetX();
-	dVecteur[1]= Vect.GetY();
+	dVecteur[0]= Vect.getX();
+	dVecteur[1]= Vect.getY();
 	dVecteur[2]= 0.0;
 	dVecteur[3]= 1.0;
 
@@ -155,7 +155,7 @@ GLC_Vector4d GLC_Vector4d::operator^ (const GLC_Vector4d &Vect) const
 	VectResult.dVecteur[1]= dVecteur[2] * Vect.dVecteur[0] - dVecteur[0] * Vect.dVecteur[2];
 	VectResult.dVecteur[2]= dVecteur[0] * Vect.dVecteur[1] - dVecteur[1] * Vect.dVecteur[0];
 		
-	if (VectResult.IsNull() )
+	if (VectResult.isNull() )
 	{
 		qDebug("Vecteur4d::operator^ : Retourne un vecteur Null");
 	}
@@ -204,25 +204,25 @@ bool GLC_Vector4d::operator != (const GLC_Vector4d &Vect) const
 //////////////////////////////////////////////////////////////////////
 // Fonction Set
 //////////////////////////////////////////////////////////////////////
-GLC_Vector4d& GLC_Vector4d::SetX(const double &dX)
+GLC_Vector4d& GLC_Vector4d::setX(const double &dX)
 {
 	dVecteur[0]= dX;
 	return *this;
 }
 
-GLC_Vector4d& GLC_Vector4d::SetY(const double &dY)
+GLC_Vector4d& GLC_Vector4d::setY(const double &dY)
 {
 	dVecteur[1]= dY;
 	return *this;
 }
 
-GLC_Vector4d& GLC_Vector4d::SetZ(const double &dZ)
+GLC_Vector4d& GLC_Vector4d::setZ(const double &dZ)
 {
 	dVecteur[2]= dZ;
 	return *this;
 }
 
-GLC_Vector4d& GLC_Vector4d::SetW(const double &dW)
+GLC_Vector4d& GLC_Vector4d::setW(const double &dW)
 {		
 	if (dW != 0)
 	{
@@ -234,7 +234,7 @@ GLC_Vector4d& GLC_Vector4d::SetW(const double &dW)
 	return *this;
 }
 
-GLC_Vector4d& GLC_Vector4d::SetVect(const double &dX, const double &dY,
+GLC_Vector4d& GLC_Vector4d::setVect(const double &dX, const double &dY,
 	const double &dZ, const double &dW)
 {
 	if ((dW == 1) || (dW <= 0))
@@ -254,7 +254,7 @@ GLC_Vector4d& GLC_Vector4d::SetVect(const double &dX, const double &dY,
 
 	return *this;
 }
-GLC_Vector4d& GLC_Vector4d::SetVect(const GLC_Vector4d &Vect)
+GLC_Vector4d& GLC_Vector4d::setVect(const GLC_Vector4d &Vect)
 {
 	dVecteur[0]= Vect.dVecteur[0];
 	dVecteur[1]= Vect.dVecteur[1];
@@ -263,7 +263,7 @@ GLC_Vector4d& GLC_Vector4d::SetVect(const GLC_Vector4d &Vect)
 	return *this;
 }
 
-GLC_Vector4d& GLC_Vector4d::SetNormal(const double &Norme)
+GLC_Vector4d& GLC_Vector4d::setNormal(const double &Norme)
 {
 	double Coef;
 	double dNormeCur;
@@ -281,7 +281,7 @@ GLC_Vector4d& GLC_Vector4d::SetNormal(const double &Norme)
 	return *this;
 }
 
-GLC_Vector4d& GLC_Vector4d::SetInv(void)
+GLC_Vector4d& GLC_Vector4d::setInv(void)
 {
 	dVecteur[0]= - dVecteur[0];
 	dVecteur[1]= - dVecteur[1];
@@ -294,16 +294,16 @@ GLC_Vector4d& GLC_Vector4d::SetInv(void)
 //////////////////////////////////////////////////////////////////////
 
 // Angle avec un autre vecteur
-const double GLC_Vector4d::GetAngleWithVect(GLC_Vector4d Vect) const
+const double GLC_Vector4d::getAngleWithVect(GLC_Vector4d Vect) const
 {
 	// Mise en Conformité des vecteurs
 	GLC_Vector4d ThisVect(*this);
-	ThisVect.SetNormal(1);
-	Vect.SetNormal(1);
+	ThisVect.setNormal(1);
+	Vect.setNormal(1);
 	// Axe de rotation
 	const GLC_Vector4d VectAxeRot(ThisVect ^ Vect);
 	// Vérifie que le Vecteur de l'axe de rotation n'est pas null
-	if (!VectAxeRot.IsNull())
+	if (!VectAxeRot.isNull())
 	{  // Ok, il n'est pas null
 		const double Angle= acos(ThisVect * Vect);
 		return Angle;
@@ -315,8 +315,8 @@ const double GLC_Vector4d::GetAngleWithVect(GLC_Vector4d Vect) const
 // Fonctions de Service privée
 //////////////////////////////////////////////////////////////////////
 
-// Normalise le vecteur -> Composante W=1
-void GLC_Vector4d::Normalise(void)
+// setWToNull le vecteur -> Composante W=1
+void GLC_Vector4d::setWToNull(void)
 {
 	if (fabs(dVecteur[3]) > 0.00001)
 	{

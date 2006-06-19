@@ -84,15 +84,15 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 	m_RGBAColor[3]= sourceGeom.m_RGBAColor[3];
 	
 	// Material is set here
-	SetMaterial(sourceGeom.GetMaterial());
+	setMaterial(sourceGeom.getMaterial());
 }
 
 GLC_Geometry::~GLC_Geometry(void)
 {
-	DeleteList();
+	deleteList();
 	if (!!m_pMaterial)
 	{
-		m_pMaterial->DelGLC_Geom(GetID());	//Remove Geometry from the material usage collection
+		m_pMaterial->delGLC_Geom(getID());	//Remove Geometry from the material usage collection
 		m_pMaterial= NULL;
 	}
 }
@@ -101,72 +101,72 @@ GLC_Geometry::~GLC_Geometry(void)
 //////////////////////////////////////////////////////////////////////
 
 // Return Visibility state of geometry
-const bool GLC_Geometry::GetIsVisible(void) const
+const bool GLC_Geometry::isVisible(void) const
 {
 	return m_IsVisible;
 }
 
 // Return an array of 4 GLfloat which represent the color
-const GLfloat *GLC_Geometry::GetfRGBA(void) const
+const GLfloat *GLC_Geometry::getfRGBA(void) const
 {
 	return m_RGBAColor;
 }	
 // Return Color Red component
-GLfloat GLC_Geometry::GetfRed(void) const
+GLfloat GLC_Geometry::getfRed(void) const
 {
 	return m_RGBAColor[0];
 }
 // Return Color Green component
-GLfloat GLC_Geometry::GetfGreen(void) const
+GLfloat GLC_Geometry::getfGreen(void) const
 {
 	return m_RGBAColor[1];
 }
 // Return Color blue component
-GLfloat GLC_Geometry::GetfBlue(void) const
+GLfloat GLC_Geometry::getfBlue(void) const
 {
 	return m_RGBAColor[2];
 }
 // Return Color Alpha component
-GLfloat GLC_Geometry::GetfAlpha(void) const
+GLfloat GLC_Geometry::getfAlpha(void) const
 {
 	return m_RGBAColor[3];
 }
 // Return transfomation 4x4Matrix
-const GLC_Matrix4x4 GLC_Geometry::GetMatrix(void) const
+const GLC_Matrix4x4 GLC_Geometry::getMatrix(void) const
 {
 	return m_MatPos;
 }
 // Return thickness
-const float GLC_Geometry::GetThickness(void) const
+const float GLC_Geometry::getThickness(void) const
 {
 	return m_Thikness;
 }
 // Return associated OpenGL list ID
-GLuint GLC_Geometry::GetListID(void)
+GLuint GLC_Geometry::getListID(void)
 {
 	return m_ListID;
 }
 
 // Return Validity of associated OpenGL list
-bool GLC_Geometry::GetListIsValid(void) const
+bool GLC_Geometry::getListIsValid(void) const
 {
 	return m_ListIsValid;
 }
 
 // Return Validity of geometry
-bool GLC_Geometry::GetValidity(void) const
+bool GLC_Geometry::getValidity(void) const
 {
 	return (m_GeometryIsValid && m_ListIsValid);
 }
 
 // Return material of geometry
-GLC_Material* GLC_Geometry::GetMaterial(void) const
+GLC_Material* GLC_Geometry::getMaterial(void) const
 {
 	return m_pMaterial;
 }
 
 // Return true if blending is enable
-bool GLC_Geometry::GetBlending(void) const
+bool GLC_Geometry::getBlending(void) const
 {
 	return m_IsBlended;
 }
@@ -182,7 +182,7 @@ GLC_BoundingBox* GLC_Geometry::getBoundingBox(void) const
 //////////////////////////////////////////////////////////////////////
 
 // Set visibility statement
-void GLC_Geometry::SetVisibility(bool v)
+void GLC_Geometry::setVisibility(bool v)
 {
 	m_IsVisible= v;
 
@@ -190,7 +190,7 @@ void GLC_Geometry::SetVisibility(bool v)
 }
 
 // Set Color RGBA component
-void GLC_Geometry::SetRGBAColor(GLfloat Rouge, GLfloat Vert, GLfloat Bleu, GLfloat Alpha)
+void GLC_Geometry::setRGBAColor(GLfloat Rouge, GLfloat Vert, GLfloat Bleu, GLfloat Alpha)
 {
 	m_RGBAColor[0]= Rouge;
 	m_RGBAColor[1]= Vert;
@@ -201,7 +201,7 @@ void GLC_Geometry::SetRGBAColor(GLfloat Rouge, GLfloat Vert, GLfloat Bleu, GLflo
 }
 
 // Set Color RGBA component with an array of 4 GLfloat
-void GLC_Geometry::SetRGBAColor(const GLfloat* SetCol)	// SetCol[4]
+void GLC_Geometry::setRGBAColor(const GLfloat* SetCol)	// SetCol[4]
 {
 	m_RGBAColor[0]= SetCol[0];
 	m_RGBAColor[1]= SetCol[1];
@@ -213,16 +213,16 @@ void GLC_Geometry::SetRGBAColor(const GLfloat* SetCol)	// SetCol[4]
 
 
 // Geometry translation
-void GLC_Geometry::Translate(double Tx, double Ty, double Tz)
+void GLC_Geometry::translate(double Tx, double Ty, double Tz)
 {
 	GLC_Matrix4x4 MatTrans(Tx, Ty, Tz);
 	
-	MultMatrix(MatTrans);
+	multMatrix(MatTrans);
 }
 
 
-// Move Geometry with a 4x4Matrix
-void GLC_Geometry::MultMatrix(const GLC_Matrix4x4 &MultMat)
+// move Geometry with a 4x4Matrix
+void GLC_Geometry::multMatrix(const GLC_Matrix4x4 &MultMat)
 {
 	m_MatPos= MultMat * m_MatPos;
 
@@ -230,7 +230,7 @@ void GLC_Geometry::MultMatrix(const GLC_Matrix4x4 &MultMat)
 }
 
 // Replace the Geometry Matrix
-void GLC_Geometry::SetMatrix(const GLC_Matrix4x4 &SetMat)
+void GLC_Geometry::setMatrix(const GLC_Matrix4x4 &SetMat)
 {
 	m_MatPos= SetMat;
 
@@ -238,15 +238,15 @@ void GLC_Geometry::SetMatrix(const GLC_Matrix4x4 &SetMat)
 }
 
 // Reset the Geometry Matrix
-void GLC_Geometry::ResetMatrix(void)
+void GLC_Geometry::resetMatrix(void)
 {
-	m_MatPos.SetIdentite();
+	m_MatPos.setToIdentity();
 
 	m_GeometryIsValid= false;
 }
 
 // Set Wire thickness
-void GLC_Geometry::SetThikness(float SetEp)
+void GLC_Geometry::setThikness(float SetEp)
 {
 	SetEp= fabs(SetEp);		
 	m_Thikness= SetEp;
@@ -255,7 +255,7 @@ void GLC_Geometry::SetThikness(float SetEp)
 }
 
 // Set Blending
-void GLC_Geometry::SetBlending(bool Blending)
+void GLC_Geometry::setBlending(bool Blending)
 {
 	m_IsBlended= Blending;
 
@@ -263,7 +263,7 @@ void GLC_Geometry::SetBlending(bool Blending)
 }
 
 // Polygon's display style
-void GLC_Geometry::SetPolygonMode(GLenum Face, GLenum Mode)
+void GLC_Geometry::setPolygonMode(GLenum Face, GLenum Mode)
 {
 	m_PolyFace= Face;
 	m_PolyMode= Mode;
@@ -271,13 +271,13 @@ void GLC_Geometry::SetPolygonMode(GLenum Face, GLenum Mode)
 }
 
 // Material
-void GLC_Geometry::SetMaterial(GLC_Material* pMat)
+void GLC_Geometry::setMaterial(GLC_Material* pMat)
 {
 	if (pMat != m_pMaterial)
 	{
 		if (!!pMat)
 		{
-			if (!pMat->AddGLC_Geom(this))
+			if (!pMat->addGLC_Geom(this))
 			{
 				return;
 			}
@@ -285,12 +285,12 @@ void GLC_Geometry::SetMaterial(GLC_Material* pMat)
 	
 		if (!!m_pMaterial)
 		{
-			m_pMaterial->DelGLC_Geom(GetID());
+			m_pMaterial->delGLC_Geom(getID());
 		}
 
 		m_pMaterial= pMat;
 
-		pMat->GetDiffuseColor(m_RGBAColor);
+		pMat->getDiffuseColor(m_RGBAColor);
 
 		m_GeometryIsValid = false;
 		m_ListIsValid= false;	// GLC_Mesh2 compatibility
@@ -304,7 +304,7 @@ void GLC_Geometry::SetMaterial(GLC_Material* pMat)
 	}
 }
 // Remove Geometry from the material without update material usage table
-void GLC_Geometry::DelMaterial(GLC_Geometry* pGeom)
+void GLC_Geometry::delMaterial(GLC_Geometry* pGeom)
 {
 	//! \todo modify this algo
 	
@@ -323,7 +323,7 @@ void GLC_Geometry::DelMaterial(GLC_Geometry* pGeom)
 //////////////////////////////////////////////////////////////////////
 
 // Create and execute Geometry's display list
-bool GLC_Geometry::CreateList(GLenum Mode)
+bool GLC_Geometry::createList(GLenum Mode)
 {
 	if(!m_ListID)		// The list doesn't exist
 	{
@@ -331,7 +331,7 @@ bool GLC_Geometry::CreateList(GLenum Mode)
 
 		if (!m_ListID)	// List ID not obtain
 		{
-			GlDraw();
+			glDraw();
 			qDebug("GLC_Geometrie::ERREUR Liste d'affichage NON créé");
 			return false;	// Display geometry whithout OpenGL display list
 		}
@@ -340,7 +340,7 @@ bool GLC_Geometry::CreateList(GLenum Mode)
 	glNewList(m_ListID, Mode);
 				
 		// Geometrie set up and display
-		GlDraw();	// Virtual function defined in concrete class
+		glDraw();	// Virtual function defined in concrete class
 
 	glEndList();
 
@@ -352,27 +352,27 @@ bool GLC_Geometry::CreateList(GLenum Mode)
 	//! \todo Add error handler
 }
 // Geometry display
-void GLC_Geometry::GlExecute(GLenum Mode)
+void GLC_Geometry::glExecute(GLenum Mode)
 {
-	if (GetIsVisible())
+	if (isVisible())
 	{
 		// Object ID for selection purpose
-		glLoadName(GetID());
+		glLoadName(getID());
 
 		// Save current OpenGL Matrix
 		glPushMatrix();
 
 		// Define Geometry's property
-		GlPropGeom();	// Virtual function defined in concrete class
+		glPropGeom();	// Virtual function defined in concrete class
 
 		// Geometry validity set to true
 		m_GeometryIsValid= true;
 
-		if (!GetListIsValid())
+		if (!getListIsValid())
 		{
 			// The list is not up to date or doesn't exist
 
-			CreateList(Mode);
+			createList(Mode);
 		}
 		else
 		{
@@ -399,7 +399,7 @@ void GLC_Geometry::GlExecute(GLenum Mode)
 //////////////////////////////////////////////////////////////////////
 // Delete OpenGL list
 /* Call by GLC_Geometry::~GLC_Geometry*/
-void GLC_Geometry::DeleteList()
+void GLC_Geometry::deleteList()
 {
 	// If display list is valid : delete it
 	if (glIsList(m_ListID))

@@ -76,7 +76,7 @@ GLC_Light::GLC_Light(const char *pName ,const GLfloat *pAmbiantColor)
 
 GLC_Light::~GLC_Light(void)
 {
-	DeleteList();
+	deleteList();
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -84,18 +84,18 @@ GLC_Light::~GLC_Light(void)
 //////////////////////////////////////////////////////////////////////
 
 // Set the lihgt position by a 4D vector
-void GLC_Light::SetPosition(const GLC_Vector4d &VectPos)
+void GLC_Light::setPosition(const GLC_Vector4d &VectPos)
 {
-	m_Position[0]= static_cast<GLfloat>(VectPos.GetX());
-	m_Position[1]= static_cast<GLfloat>(VectPos.GetY());
-	m_Position[2]= static_cast<GLfloat>(VectPos.GetZ());
-	m_Position[3]= static_cast<GLfloat>(VectPos.GetW());
+	m_Position[0]= static_cast<GLfloat>(VectPos.getX());
+	m_Position[1]= static_cast<GLfloat>(VectPos.getY());
+	m_Position[2]= static_cast<GLfloat>(VectPos.getZ());
+	m_Position[3]= static_cast<GLfloat>(VectPos.getW());
 
 	m_ListIsValid = false;
 }
 
 // Set the lihgt position by a 3 GLfloat
-void GLC_Light::SetPosition(GLfloat x, GLfloat y, GLfloat z)
+void GLC_Light::setPosition(GLfloat x, GLfloat y, GLfloat z)
 {
 	m_Position[0]= x;
 	m_Position[1]= y;
@@ -105,7 +105,7 @@ void GLC_Light::SetPosition(GLfloat x, GLfloat y, GLfloat z)
 }
 
 // Set light's ambiant color by an array of GLfloat
-void GLC_Light::SetAmbientColor(const GLfloat* pfCol)
+void GLC_Light::setAmbientColor(const GLfloat* pfCol)
 {
 	m_AmbientColor[0]= pfCol[0];
 	m_AmbientColor[1]= pfCol[1];
@@ -116,7 +116,7 @@ void GLC_Light::SetAmbientColor(const GLfloat* pfCol)
 }
 
 // Set light's diffuse color by an array of GLfloat
-void GLC_Light::SetDiffuseColor(const GLfloat* pfCol)
+void GLC_Light::setDiffuseColor(const GLfloat* pfCol)
 {
 	m_DiffuseColor[0]= pfCol[0];
 	m_DiffuseColor[1]= pfCol[1];
@@ -127,7 +127,7 @@ void GLC_Light::SetDiffuseColor(const GLfloat* pfCol)
 }
 
 // Set light's specular color by an array of GLfloat
-void GLC_Light::SetSpecularColor(const GLfloat* pfCol)
+void GLC_Light::setSpecularColor(const GLfloat* pfCol)
 {
 	m_SpecularColor[0]= pfCol[0];
 	m_SpecularColor[1]= pfCol[1];
@@ -143,7 +143,7 @@ void GLC_Light::SetSpecularColor(const GLfloat* pfCol)
 //////////////////////////////////////////////////////////////////////
 
 // Create light's OpenGL list
-void GLC_Light::CreationList(GLenum Mode)
+void GLC_Light::creationList(GLenum Mode)
 {
 	if(!m_ListID)		// OpenGL list not created
 	{
@@ -151,7 +151,7 @@ void GLC_Light::CreationList(GLenum Mode)
 
 		if (!m_ListID)	// OpenGL List Id not get
 		{
-			GlDraw();
+			glDraw();
 			qDebug("GLC_Lumiere::CreationListe Display list not create");
 		}
 	}
@@ -159,7 +159,7 @@ void GLC_Light::CreationList(GLenum Mode)
 	glNewList(m_ListID, Mode);
 				
 	// Light execution
-	GlDraw();
+	glDraw();
 
 	glEndList();
 	
@@ -176,17 +176,17 @@ void GLC_Light::CreationList(GLenum Mode)
 }
 
 // Execute OpenGL light
-void GLC_Light::GlExecute(GLenum Mode)
+void GLC_Light::glExecute(GLenum Mode)
 {
 	// Object Name
-	glLoadName(GetID());
+	glLoadName(getID());
 
 
 	if (!m_ListIsValid)
 	{
 		// OpenGL list is not valid
 
-		CreationList(Mode);
+		creationList(Mode);
 	}
 	else
 	{
@@ -204,7 +204,7 @@ void GLC_Light::GlExecute(GLenum Mode)
 }
 
 // OpenGL light set up
-void GLC_Light::GlDraw(void)
+void GLC_Light::glDraw(void)
 {
 	// Color
 	glLightfv(m_LightID, GL_AMBIENT, m_AmbientColor);		// Setup The Ambient Light
@@ -228,7 +228,7 @@ void GLC_Light::GlDraw(void)
 //////////////////////////////////////////////////////////////////////
 
 // Delete OpenGL Display list
-void GLC_Light::DeleteList(void)
+void GLC_Light::deleteList(void)
 {
 	//! if the list is valid, the list is deleted
 	if (glIsList(m_ListID))

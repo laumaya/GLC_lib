@@ -49,7 +49,7 @@ GLC_Point::GLC_Point(double x, double y, double z, const char *pName, const GLfl
 //////////////////////////////////////////////////////////////////////
 
 // Get a 4D vector represent point coordinate
-GLC_Vector4d GLC_Point::GetVectCoord(void) const
+GLC_Vector4d GLC_Point::getVectCoord(void) const
 {
 	return m_VectCoord;
 }
@@ -59,12 +59,12 @@ GLC_BoundingBox* GLC_Point::getBoundingBox(void) const
 {
 	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
 	
-	GLC_Vector3d lower(m_VectCoord.GetX() - EPSILON,
-						 m_VectCoord.GetY() - EPSILON,
-						  m_VectCoord.GetZ() - EPSILON);
-	GLC_Vector3d upper(m_VectCoord.GetX() + EPSILON,
-						 m_VectCoord.GetY() + EPSILON,
-						  m_VectCoord.GetZ() + EPSILON);
+	GLC_Vector3d lower(m_VectCoord.getX() - EPSILON,
+						 m_VectCoord.getY() - EPSILON,
+						  m_VectCoord.getZ() - EPSILON);
+	GLC_Vector3d upper(m_VectCoord.getX() + EPSILON,
+						 m_VectCoord.getY() + EPSILON,
+						  m_VectCoord.getZ() + EPSILON);
 	pBoundingBox->combine(lower);
 	pBoundingBox->combine(upper);
 	
@@ -78,15 +78,15 @@ GLC_BoundingBox* GLC_Point::getBoundingBox(void) const
 //////////////////////////////////////////////////////////////////////
 
 // Set Point coordinate by 4D Vector
-void GLC_Point::SetCoord(const GLC_Vector4d &Vect)
+void GLC_Point::setCoord(const GLC_Vector4d &Vect)
 {
 	m_VectCoord= Vect;
 	m_ListIsValid = false;
 }
 // Set Point coordinate by 3 double
-void GLC_Point::SetCoord(double x, double y, double z)
+void GLC_Point::setCoord(double x, double y, double z)
 {
-	m_VectCoord.SetVect(x, y, z);
+	m_VectCoord.setVect(x, y, z);
 	m_ListIsValid = false;
 }
 
@@ -94,11 +94,11 @@ void GLC_Point::SetCoord(double x, double y, double z)
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Point::GlDraw(void)
+void GLC_Point::glDraw(void)
 {
 	// Point Display
 	glBegin(GL_POINTS);
-		glVertex3dv(m_VectCoord.Return_dVect());
+		glVertex3dv(m_VectCoord.return_dVect());
 	glEnd();
 	
 	// OpenGL error handler
@@ -111,18 +111,18 @@ void GLC_Point::GlDraw(void)
 	
 }
 
-void GLC_Point::GlPropGeom(void)
+void GLC_Point::glPropGeom(void)
 {
 	// Change current Matrix
-	glMultMatrixd(m_MatPos.Return_dMat());
+	glMultMatrixd(m_MatPos.return_dMat());
 	
 	// Disable lighting
 	glDisable(GL_LIGHTING);
 	// Disable blending
 	glDisable(GL_BLEND);
 
-	glColor4fv(GetfRGBA());			// Sa Couleur
-	glPointSize(GetThickness());	// Son Epaisseur
+	glColor4fv(getfRGBA());			// Sa Couleur
+	glPointSize(getThickness());	// Son Epaisseur
 	
 	// OpenGL error handler
 	GLenum error= glGetError();	

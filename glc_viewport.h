@@ -75,7 +75,7 @@ public:
 	 * */
 	GLC_Viewport(QGLWidget *GLWidget);
 	
-	//! Delete Camera, Image Plane and Orbit circle
+	//! Delete Camera, Image Plane and orbit circle
 	virtual ~GLC_Viewport();
 	
 //@}
@@ -86,34 +86,34 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get The viewport Horizontal size
-	int GetWinHSize() const
+	int getWinHSize() const
 	{
 		return m_nWinHSize;
 	}
 	
 	//! Get The viewport Vertical size
-	int GetWinVSize() const
+	int getWinVSize() const
 	{
 		return m_nWinVSize;
 	}
 
 	//! Map Screen position to OpenGL position (On image Plane)
-	GLC_Vector4d MapPosMouse( GLdouble Posx, GLdouble Posy) const;
+	GLC_Vector4d mapPosMouse( GLdouble Posx, GLdouble Posy) const;
 	
 	//! Get camera's angle of view
-	double GetFov() const
+	double getFov() const
 	{
 		return m_dFov;
 	}
 
 	//! Get near clipping distance
-	double GetDistMin(void) const
+	double getDistMin(void) const
 	{
 		return m_dCamDistMin;
 	}
 
 	//! Get far clipping distance
-	double GetDistMax(void) const
+	double getDistMax(void) const
 	{
 		return m_dCamDistMax;
 	}
@@ -129,20 +129,20 @@ public:
 	void initGl();
 	
 	//! Load camera's transformation Matrix and if image plane exist, display it
-	void GlExecuteCam(void)
+	void glExecuteCam(void)
 	{
-		m_pViewCam->GlExecute();
-		GLExecuteImagePlane();
+		m_pViewCam->glExecute();
+		glExecuteImagePlane();
 	}
 	//! If necessary, display orbit circle and camera's target
-	void GlExecute()
+	void glExecute()
 	{
-		GlExecuteOrbitCircle();
-		GlExecuteTargetCam();
+		glExecuteOrbitCircle();
+		glExecuteTargetCam();
 	}
 	
 	//! Define camera's target position
-	void GlPointing(GLint x, GLint y);
+	void glPointing(GLint x, GLint y);
 //@}
 	
 //////////////////////////////////////////////////////////////////////
@@ -151,13 +151,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Display orbit circle
-	void GlExecuteOrbitCircle();
+	void glExecuteOrbitCircle();
 
 	//! Display camera's target
-	void GlExecuteTargetCam();
+	void glExecuteTargetCam();
 
 	//! display image plane
-	void GLExecuteImagePlane();
+	void glExecuteImagePlane();
 
 //@}
 
@@ -168,33 +168,33 @@ private:
 public:
 
 	//! Inform the viewport that the OpenGL Viewport has been modified
-	void SetWinGLSize(int HSize, int VSize);
+	void setWinGLSize(int HSize, int VSize);
 
-	//! Select an object and return is UID
+	//! select an object and return is UID
 	/*! Return UID of the nearest picked object */
-	GLC_uint Select(QGLWidget *pGLWidget, int x, int y);
+	GLC_uint select(QGLWidget *pGLWidget, int x, int y);
 	
 	//! load background image
-	bool LoadBackGroundImage(QGLWidget *GLWidget, const QString Image);
+	bool loadBackGroundImage(QGLWidget *GLWidget, const QString Image);
 
 	//! delete background image
-	void DeleteBackGroundImage();
+	void deleteBackGroundImage();
 
 	//! Set Camera's angle of view
-	void SetFov(double TargetFov)
+	void setFov(double TargetFov)
 	{
 		m_dFov= TargetFov;
 
-		UpdateProjectionMat();	// Mise à jour de la matrice de projection opengl
+		updateProjectionMat();	// Mise à jour de la matrice de projection opengl
 		
-		UpdateOrbitCircle();	// Mise à jour du diamètre du cercle de la sphere de rotation
+		updateOrbitCircle();	// Mise à jour du diamètre du cercle de la sphere de rotation
 	}
 
 	//! Set near clipping distance
-	bool SetDistMin(double DistMin);
+	bool setDistMin(double DistMin);
 
 	//! Set far clipping distance
-	bool SetDistMax(double DistMax);
+	bool setDistMax(double DistMax);
 	
 	//! Set Near and Far clipping distance
 	/*! box shouldn't be empty*/
@@ -209,16 +209,16 @@ public:
 	/*!	- Save the initial mouse position
 	 * 	- Show Camera's target
 	 */
-	void  PreparePanning(double Cx, double Cy)
+	void  preparePanning(double Cx, double Cy)
 	{
-		m_VectPrevPan.SetVect(MapPosMouse(Cx,Cy));
+		m_VectPrevPan.setVect(mapPosMouse(Cx,Cy));
 		m_CameraTargetIsVisible= true;
 	}
-	//! Pan to the position (Cx, Cy)
-	void Pan(double Cx, double Cy);
+	//! pan to the position (Cx, Cy)
+	void pan(double Cx, double Cy);
 
 	//! Hide Camera'target
-	void EndPanning()
+	void endPanning()
 	{
 		m_CameraTargetIsVisible= false;
 	}
@@ -226,20 +226,20 @@ public:
 /////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
-//! @name Orbit Functions
+//! @name orbit Functions
 //@{
 	//! Prepare orbiting operation
 	/*!	- Save initial mouse position
-	 * 	- Show Orbit Circle
+	 * 	- Show orbit Circle
 	 * 	- Show Camera's Target
 	 */
-	void PrepareOrbiting(double Cx, double Cy);
+	void prepareOrbiting(double Cx, double Cy);
 	
-	//! Orbit in accordance of mouse position
-	void Orbit(double Cx, double Cy);
+	//! orbit in accordance of mouse position
+	void orbit(double Cx, double Cy);
 
 	//! Hide camera's target and orbit circle
-	void EndOrbit()
+	void endOrbit()
 	{
 		m_OrbitCircleIsVisible= false;
 		m_CameraTargetIsVisible= false;
@@ -248,16 +248,16 @@ public:
 /////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
-//! @name Zoom Functions
+//! @name zoom Functions
 //{@
 	//! Prepare Zooming operation
 	/*!	- Save Y mouse position
 	 * 	- Show Camera's target
 	 */
-	void PrepareZooming(int Cy);
+	void prepareZooming(int Cy);
 	
-	//! Zoom in accordance of Y mouse position
-	void Zoom(int Cy);
+	//! zoom in accordance of Y mouse position
+	void zoom(int Cy);
 	
 	//! Hide Camera's target
 	void EndZooming()
@@ -278,19 +278,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Convert mouse View coordinate to orbit coordinate (Centred and betwen (-1,-1) and (1,1))
-	GLC_Vector4d MapForOrbit( double Posx, double Posy) const;
+	GLC_Vector4d mapForOrbit( double Posx, double Posy) const;
 	
 	//! Update OpenGL Projection Matrix
-	void UpdateProjectionMat(void) const;
+	void updateProjectionMat(void) const;
 
 	//! Update orbit circle dimensions
-	void UpdateOrbitCircle();
+	void updateOrbitCircle();
 
 	//! Change to selection mode, save Visualisation state
-	void BeginSelection(GLdouble x, GLdouble y);
+	void beginSelection(GLdouble x, GLdouble y);
 
 	//! End of selection mode, restore Visualisation state
-	void EndSelection(void);
+	void endSelection(void);
 
 //////////////////////////////////////////////////////////////////////
 // Publics Member
@@ -320,10 +320,10 @@ private:
 	int m_nWinHSize;			//!< Horizontal OpenGL viewport size
 	int m_nWinVSize;			//!< Vertical OpenGL viewport size
 
-	//! Previous Zoom Factor
+	//! Previous zoom Factor
 	double m_dPrevZoom;	
 	
-	//! Orbit Circle
+	//! orbit Circle
 	GLC_OrbitCircle* m_pOrbitCircle;
 
 	//! Circle ratio size / window size

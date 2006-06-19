@@ -49,19 +49,19 @@ GLC_Box::GLC_Box(double dLx, double dLy, double dlz
 //////////////////////////////////////////////////////////////////////
 
 // Get X length
-double GLC_Box::GetLgX(void) const
+double GLC_Box::getLgX(void) const
 {
 	return m_dLgX;
 }
 
 // Get Y length
-double GLC_Box::GetLgY(void) const
+double GLC_Box::getLgY(void) const
 {
 	return m_dLgY;
 }
 
 // Get Z length
-double GLC_Box::GetLgZ(void) const
+double GLC_Box::getLgZ(void) const
 {
 	return m_dLgZ;
 }
@@ -86,7 +86,7 @@ GLC_BoundingBox* GLC_Box::getBoundingBox(void) const
 //////////////////////////////////////////////////////////////////////
 
 // Set X length
-void GLC_Box::SetLgX(double LgX)
+void GLC_Box::setLgX(double LgX)
 {
 	assert(LgX > 0);
 	m_dLgX= LgX;
@@ -94,7 +94,7 @@ void GLC_Box::SetLgX(double LgX)
 }
 
 // Set Y length
-void GLC_Box::SetLgY(double LgY)
+void GLC_Box::setLgY(double LgY)
 {
 	assert(LgY > 0);
 	m_dLgY= LgY;
@@ -102,7 +102,7 @@ void GLC_Box::SetLgY(double LgY)
 }
 
 // Set Z length
-void GLC_Box::SetLgZ(double LgZ)
+void GLC_Box::setLgZ(double LgZ)
 {
 	assert(LgZ > 0);
 	m_dLgZ= LgZ;
@@ -114,7 +114,7 @@ void GLC_Box::SetLgZ(double LgZ)
 //////////////////////////////////////////////////////////////////////
 
 // Box Set Up
-void GLC_Box::GlDraw(void)
+void GLC_Box::glDraw(void)
 {
 	// Polygon 1	
 	glBegin(GL_QUADS);		
@@ -166,36 +166,36 @@ void GLC_Box::GlDraw(void)
 
 }
 // Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
-void GLC_Box::GlPropGeom(void)
+void GLC_Box::glPropGeom(void)
 {
 	// Update Current matrix
-	glMultMatrixd(m_MatPos.Return_dMat());
+	glMultMatrixd(m_MatPos.return_dMat());
 			
 	if(!m_pMaterial || (m_PolyMode != GL_FILL))
 	{
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
 
-		glColor4fv(GetfRGBA());			// Sa Couleur
+		glColor4fv(getfRGBA());			// Sa Couleur
 	}
-	else if (m_pMaterial->GetAddRgbaTexture())
+	else if (m_pMaterial->getAddRgbaTexture())
 	{
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
 
 
-		m_pMaterial->GlExecute();
+		m_pMaterial->glExecute();
 	}
 	else
 	{
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
 		
-		m_pMaterial->GlExecute();
+		m_pMaterial->glExecute();
 
 	}
 
-	glLineWidth(GetThickness());	// Son Epaisseur
+	glLineWidth(getThickness());	// Son Epaisseur
 
 	// Polygons display mode
 	glPolygonMode(m_PolyFace, m_PolyMode);

@@ -59,25 +59,25 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get a 4D Vector representing light position
-	GLC_Vector4d GetPosition(void) const
+	GLC_Vector4d getPosition(void) const
 	{
 		GLC_Vector4d ReturnVect(m_Position[0], m_Position[1], m_Position[2], m_Position[3]);
 		return ReturnVect;
 	}
 
 	//! Get an array of GLfloat for the light's ambiant color
-	const GLfloat *GetAmbientColor()
+	const GLfloat *getAmbientColor()
 	{
 		return m_AmbientColor;
 	}
 
 	//! Get an array of GLfloat for the light's Diffuse color
-	const GLfloat *GetDiffuseColor()
+	const GLfloat *getDiffuseColor()
 	{
 		return m_DiffuseColor;
 	}
 	//! Get an array of GLfloat for the light's Specular color
-	const GLfloat *GetSpecularColor()
+	const GLfloat *getSpecularColor()
 	{
 		return m_SpecularColor;
 	}
@@ -89,19 +89,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set lihgt's position by a 4D vector
-	void SetPosition(const GLC_Vector4d &VectPos);
+	void setPosition(const GLC_Vector4d &VectPos);
 
 	//! Set lihgt's position by a 3 GLfloat
-	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
+	void setPosition(GLfloat x, GLfloat y, GLfloat z);
 	
 	//! Set light's ambiant color by an array of GLfloat
-	void SetAmbientColor(const GLfloat* pfCol);
+	void setAmbientColor(const GLfloat* pfCol);
 
 	//! Set light's diffuse color by an array of GLfloat
-	void SetDiffuseColor(const GLfloat* pfCol);
+	void setDiffuseColor(const GLfloat* pfCol);
 
 	//! Set light's specular color by an array of GLfloat
-	void SetSpecularColor(const GLfloat* pfCol);
+	void setSpecularColor(const GLfloat* pfCol);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -110,19 +110,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Enable the light
-	void GlEnable(void)
+	void enable(void)
 	{
 		glEnable(m_LightID);
 	}
 	
 	// Disable the light
-	void GlDisable(void)
+	void disable(void)
 	{
 		glDisable(m_LightID);
 	}
 
 	//! Execute OpenGL light
-	virtual void GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	virtual void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -132,15 +132,15 @@ public:
 
 private:
 	//! OpenGL light set up 
-	void GlDraw(void);
+	void glDraw(void);
 	
 	//! Display List creation
-	void CreationList(GLenum Mode);
+	void creationList(GLenum Mode);
 
 private:
 
 	//! Delete OpenGL Display list
-	void DeleteList(void);
+	void deleteList(void);
 	
 //@}
 

@@ -60,19 +60,19 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
 //////////////////////////////////////////////////////////////////////
 
 // Get Lenght of the Cylinder
-double GLC_Cylinder::GetLength(void) const
+double GLC_Cylinder::getLength(void) const
 {
 	return m_dLength;
 }
 
 // Get Radius of cylinder
-double GLC_Cylinder::GetRadius(void) const
+double GLC_Cylinder::getRadius(void) const
 {
 	return m_Radius;
 }
 
 // Get Cylinder discretion
-int GLC_Cylinder::GetDiscretion(void) const
+int GLC_Cylinder::getDiscretion(void) const
 {
 	return m_nDiscret;
 }
@@ -97,7 +97,7 @@ GLC_BoundingBox* GLC_Cylinder::getBoundingBox(void) const
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 // Set Cylinder length
-void GLC_Cylinder::SetLength(double Length)
+void GLC_Cylinder::setLength(double Length)
 {
 	assert(Length > 0.0);
 	m_dLength= Length;
@@ -106,7 +106,7 @@ void GLC_Cylinder::SetLength(double Length)
 }
 
 // Set Cylinder radius
-void GLC_Cylinder::SetRadius(double Radius)
+void GLC_Cylinder::setRadius(double Radius)
 {
 	assert(Radius > 0.0);
 	m_Radius= Radius;
@@ -115,7 +115,7 @@ void GLC_Cylinder::SetRadius(double Radius)
 }
 
 // Set Discretion
-void GLC_Cylinder::SetDiscretion(int TargetDiscret)
+void GLC_Cylinder::setDiscretion(int TargetDiscret)
 {
 	assert(TargetDiscret > 0);
 	if (TargetDiscret != m_nDiscret)
@@ -128,7 +128,7 @@ void GLC_Cylinder::SetDiscretion(int TargetDiscret)
 }
 
 // End Caps
-void GLC_Cylinder::SetEndedCaps(bool CapsEnded)
+void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 {
 	if (m_bCapEnded != CapsEnded)
 	{
@@ -142,7 +142,7 @@ void GLC_Cylinder::SetEndedCaps(bool CapsEnded)
 //////////////////////////////////////////////////////////////////////
 
 // Dessin du GLC_Cylinder
-void GLC_Cylinder::GlDraw(void)
+void GLC_Cylinder::glDraw(void)
 {
 	QVector<double> TableauCos;
 	QVector<double> TableauSin;
@@ -166,39 +166,39 @@ void GLC_Cylinder::GlDraw(void)
 		{
 			fCoordx= static_cast<float>(i) / static_cast<float>(m_nDiscret);
 
-			Vect.SetVect(TableauCos[i], TableauSin[i], 0.0).SetNormal(1);
-			glNormal3dv(Vect.Return_dVect());
+			Vect.setVect(TableauCos[i], TableauSin[i], 0.0).setNormal(1);
+			glNormal3dv(Vect.return_dVect());
 
-			Vect.SetVect(TableauCos[i], TableauSin[i], Longueur );
+			Vect.setVect(TableauCos[i], TableauSin[i], Longueur );
 
 			glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLength)); 
 
-			glVertex3dv(Vect.Return_dVect());
+			glVertex3dv(Vect.return_dVect());
 
 			if(!Longueur)
 				Longueur= m_dLength;
 			else
 				Longueur= 0;
 
-			Vect.SetVect(TableauCos[i], TableauSin[i], Longueur );
+			Vect.setVect(TableauCos[i], TableauSin[i], Longueur );
 
 			glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLength)); 
 
-			glVertex3dv(Vect.Return_dVect());
+			glVertex3dv(Vect.return_dVect());
 
 			if(!Longueur)
 			{
-				Vect.SetVect(TableauCos[i], TableauSin[i], 0.0).SetNormal(1);
-				glNormal3dv(Vect.Return_dVect());
+				Vect.setVect(TableauCos[i], TableauSin[i], 0.0).setNormal(1);
+				glNormal3dv(Vect.return_dVect());
 				glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLength)); 
 
 
-				Vect.SetVect(TableauCos[i], TableauSin[i], Longueur );
-				glVertex3dv(Vect.Return_dVect());
+				Vect.setVect(TableauCos[i], TableauSin[i], Longueur );
+				glVertex3dv(Vect.return_dVect());
 				Longueur= m_dLength;
 				glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_dLength));
-				Vect.SetVect(TableauCos[i], TableauSin[i], Longueur );
-				glVertex3dv(Vect.Return_dVect());
+				Vect.setVect(TableauCos[i], TableauSin[i], Longueur );
+				glVertex3dv(Vect.return_dVect());
 			}
 
 		}
@@ -225,8 +225,8 @@ void GLC_Cylinder::GlDraw(void)
 				TextureY= (static_cast<float>(TableauSin[i]) + fRayon) / (2 * fRayon);
 				glTexCoord2f(TextureX, TextureY);
 				// Vertex coordinates
-				Vect.SetVect(TableauCos[i], TableauSin[i], 0.0 );
-				glVertex3dv(Vect.Return_dVect());
+				Vect.setVect(TableauCos[i], TableauSin[i], 0.0 );
+				glVertex3dv(Vect.return_dVect());
 			}
 		glEnd();
 
@@ -245,8 +245,8 @@ void GLC_Cylinder::GlDraw(void)
 				TextureY= (static_cast<float>(TableauSin[i]) + fRayon) / (2 * fRayon);
 				glTexCoord2f(TextureX, TextureY);
 				// Vertex coordinates
-				Vect.SetVect(TableauCos[i], TableauSin[i], m_dLength );
-				glVertex3dv(Vect.Return_dVect());
+				Vect.setVect(TableauCos[i], TableauSin[i], m_dLength );
+				glVertex3dv(Vect.return_dVect());
 			}
 		glEnd();
 	}
@@ -265,10 +265,10 @@ void GLC_Cylinder::GlDraw(void)
 
 }
 // Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
-void GLC_Cylinder::GlPropGeom(void)
+void GLC_Cylinder::glPropGeom(void)
 {
 		// Update Current matrix
-		glMultMatrixd(m_MatPos.Return_dMat());
+		glMultMatrixd(m_MatPos.return_dMat());
 		if(!m_pMaterial || (m_PolyMode != GL_FILL))
 		{
 			glDisable(GL_TEXTURE_2D);
@@ -284,9 +284,9 @@ void GLC_Cylinder::GlPropGeom(void)
 				glDisable(GL_BLEND);
 			}
 
-			glColor4fv(GetfRGBA());			// Color
+			glColor4fv(getfRGBA());			// Color
 		}
-		else if (m_pMaterial->GetAddRgbaTexture())
+		else if (m_pMaterial->getAddRgbaTexture())
 		{
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
@@ -301,9 +301,9 @@ void GLC_Cylinder::GlPropGeom(void)
 			{
 				glDisable(GL_BLEND);
 			}
-			glColor4fv(GetfRGBA());			// Color
+			glColor4fv(getfRGBA());			// Color
 
-			m_pMaterial->GlExecute();
+			m_pMaterial->glExecute();
 		}
 
 		else
@@ -321,10 +321,10 @@ void GLC_Cylinder::GlPropGeom(void)
 				glDisable(GL_BLEND);
 			}
 
-			m_pMaterial->GlExecute();
+			m_pMaterial->glExecute();
 		}
 
-		glLineWidth(GetThickness());	// Thickness
+		glLineWidth(getThickness());	// Thickness
 
 		// Polygons display mode
 		glPolygonMode(m_PolyFace, m_PolyMode);

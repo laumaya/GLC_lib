@@ -52,7 +52,7 @@ public:
 	/*! Standard constructor With x, y, z and w with default value of 1.0*/
 	GLC_Vector3d(const double &dX, const double &dY, const double &dZ)
 	{
-		SetVect(dX, dY, dZ);
+		setVect(dX, dY, dZ);
 	}
 	// Recopy constructor
 	GLC_Vector3d(const GLC_Vector3d &Vect);
@@ -65,20 +65,20 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! X Composante*/
-	GLC_Vector3d& SetX(const double &dX);
+	GLC_Vector3d& setX(const double &dX);
 	
 	/*! Y Composante*/
-	GLC_Vector3d& SetY(const double &dY);
+	GLC_Vector3d& setY(const double &dY);
 	
 	/*! Z Composante*/
-	GLC_Vector3d& SetZ(const double &dZ);
+	GLC_Vector3d& setZ(const double &dZ);
 	
 	/*! All Composante*/
-	GLC_Vector3d& SetVect(const double &dX, const double &dY,
+	GLC_Vector3d& setVect(const double &dX, const double &dY,
 		const double &dZ);
 		
 	/*! From another Vector*/
-	GLC_Vector3d& SetVect(const GLC_Vector3d &Vect);
+	GLC_Vector3d& setVect(const GLC_Vector3d &Vect);
 	
 //@}
 
@@ -88,27 +88,27 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! X Composante*/
-	inline const double GetX(void) const
+	inline const double getX(void) const
 	{
 		return dVecteur[0];
 	}
 	/*! Y Composante*/
-	inline const double GetY(void) const
+	inline const double getY(void) const
 	{
 		return dVecteur[1];
 	}
 	/*! Z Composante*/
-	inline const double GetZ(void) const
+	inline const double getZ(void) const
 	{
 		return dVecteur[2];
 	}
 	/*! retourne un pointeur constant vers le tableau du vecteur.*/
-	inline const double *Return_dVect(void) const
+	inline const double *return_dVect(void) const
 	{
 		return dVecteur;
 	}
 	/*! Vector is null*/
-	inline const bool IsNull(void) const
+	inline const bool isNull(void) const
 	{
 		bool result;
 

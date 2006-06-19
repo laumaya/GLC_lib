@@ -38,7 +38,7 @@
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_OrbitCircle
-/*! \brief GLC_OrbitCircle : OpenGL 3D Orbit Circle*/
+/*! \brief GLC_OrbitCircle : OpenGL 3D orbit Circle*/
 
 /*! An GLC_OrbitCircle is a wire geometry composed of 3d lines \n
  * It's an circle (GLC_Circle) with 2 arcs (GLC_Circle) of an angle of #ARCANGLE\n
@@ -65,21 +65,21 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Reimplented SetRadius Function
-	void SetRadius(double R)
+	//! Reimplented setRadius Function
+	void setRadius(double R)
 	{
 		
-		GLC_Circle::SetRadius(R);	// Rayon de la classe de base		
+		GLC_Circle::setRadius(R);	// Rayon de la classe de base		
 
-		m_Arc1.SetRadius(R);
-		m_Arc2.SetRadius(R);
+		m_Arc1.setRadius(R);
+		m_Arc2.setRadius(R);
 	}
 
 	//! Set Arcs orientation and position in concordance with mouse position
-	void SetOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 &Matrice);
+	void setOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 &Matrice);
 
 	//! Set Arcs position in concordance with mouse position
-	void MapArcs(const GLC_Matrix4x4 &Matrice);
+	void mapArcs(const GLC_Matrix4x4 &Matrice);
 	
 //@}
 
@@ -88,8 +88,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:	
-	//! Orbit circle OpenGL Execution
-	virtual void GlExecute(double Profondeur);
+	//! orbit circle OpenGL Execution
+	virtual void glExecute(double Profondeur);
 	
 //@}
 

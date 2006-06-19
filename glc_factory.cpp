@@ -102,12 +102,12 @@ GLC_Box* GLC_Factory::createBox(double lx, double ly, double lz) const
 // Create an GLC_Box
 GLC_Box* GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 {
-	const double lx= boundingBox.getUpper().GetX() - boundingBox.getLower().GetX();
-	const double ly= boundingBox.getUpper().GetY() - boundingBox.getLower().GetY();
-	const double lz= boundingBox.getUpper().GetZ() - boundingBox.getLower().GetZ();
+	const double lx= boundingBox.getUpper().getX() - boundingBox.getLower().getX();
+	const double ly= boundingBox.getUpper().getY() - boundingBox.getLower().getY();
+	const double lz= boundingBox.getUpper().getZ() - boundingBox.getLower().getZ();
 	GLC_Box* pBox= new GLC_Box(lx, ly, lz);
-	pBox->Translate(boundingBox.getLower().GetX(), boundingBox.getLower().GetY()
-					, boundingBox.getLower().GetZ());
+	pBox->translate(boundingBox.getLower().getX(), boundingBox.getLower().getY()
+					, boundingBox.getLower().getZ());
 					
 	return pBox;
 }

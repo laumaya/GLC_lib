@@ -58,17 +58,17 @@ GLC_Circle::~GLC_Circle()
 //////////////////////////////////////////////////////////////////////
 
 // Return Circle Discretion
-int GLC_Circle::GetDiscretion(void) const
+int GLC_Circle::getDiscretion(void) const
 {
 	return m_nDiscret;
 }
 // Return Circle radius
-double GLC_Circle::GetRadius(void) const
+double GLC_Circle::getRadius(void) const
 {
 	return m_Radius;
 }
 // return Circle diameter
-double GLC_Circle::GetDiameter(void) const
+double GLC_Circle::getDiameter(void) const
 {
 	return 2 * m_Radius;
 }
@@ -92,14 +92,14 @@ GLC_BoundingBox* GLC_Circle::getBoundingBox(void) const
 //////////////////////////////////////////////////////////////////////
 
 // Set Circle diameter
-void GLC_Circle::SetDiameter(double D)
+void GLC_Circle::setDiameter(double D)
 {
 	assert(D > (2 * EPSILON));
-	SetRadius(D / 2);
+	setRadius(D / 2);
 }
 
 // Set Circle Radius
-void GLC_Circle::SetRadius(double R)
+void GLC_Circle::setRadius(double R)
 {
 	assert(R > EPSILON);
 	if ( fabs(R - m_Radius) > EPSILON)
@@ -110,7 +110,7 @@ void GLC_Circle::SetRadius(double R)
 }
 
 // Set Circle discret
-void GLC_Circle::SetDiscretion(int TargetDiscret)
+void GLC_Circle::setDiscretion(int TargetDiscret)
 {
 	assert(TargetDiscret > 0);
 	if (TargetDiscret != m_nDiscret)
@@ -122,7 +122,7 @@ void GLC_Circle::SetDiscretion(int TargetDiscret)
 }
 
 // Set Circle Angle
-void GLC_Circle::SetAngle(double AngleRadians)	// Angle in Radians
+void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 {
 	assert((AngleRadians > EPSILON) && (AngleRadians < 2 * PI));
 	if ( fabs(AngleRadians - m_dAngle) > EPSILON)
@@ -137,7 +137,7 @@ void GLC_Circle::SetAngle(double AngleRadians)	// Angle in Radians
 //////////////////////////////////////////////////////////////////////
 
 // Circle drawing
-void GLC_Circle::GlDraw(void)
+void GLC_Circle::glDraw(void)
 {
 	double MyCos;
 	double MySin;
@@ -149,8 +149,8 @@ void GLC_Circle::GlDraw(void)
 		{
 			MyCos= m_Radius * cos(i * m_dAngle / m_nDiscret);
 			MySin= m_Radius * sin(i * m_dAngle / m_nDiscret);
-			Vect.SetVect(MyCos, MySin, 0);
-			glVertex3dv(Vect.Return_dVect());
+			Vect.setVect(MyCos, MySin, 0);
+			glVertex3dv(Vect.return_dVect());
 		}
 
 	glEnd();
@@ -164,10 +164,10 @@ void GLC_Circle::GlDraw(void)
 	}
 }
 // Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
-void GLC_Circle::GlPropGeom(void)
+void GLC_Circle::glPropGeom(void)
 {
 	// Update Current matrix
-	glMultMatrixd(m_MatPos.Return_dMat());
+	glMultMatrixd(m_MatPos.return_dMat());
 	
 	// Circle graphic properties
 	glDisable(GL_TEXTURE_2D);
@@ -175,8 +175,8 @@ void GLC_Circle::GlPropGeom(void)
 	// Pas de transparence
 	glDisable(GL_BLEND);
 		
-	glColor4fv(GetfRGBA());			// Color
-	glLineWidth(GetThickness());	// Thikness
+	glColor4fv(getfRGBA());			// Color
+	glLineWidth(getThickness());	// Thikness
 			
 	// OpenGL error handler
 	GLenum error= glGetError();	

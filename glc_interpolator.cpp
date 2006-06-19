@@ -139,15 +139,15 @@ bool GLC_Interpolator::CalcInterpolLineaireMat(void)
 
 	// Calcul la matrice de translation
 	const GLC_Vector4d VectTrans= (m_VectArrive - m_VectDepart) * (1.0 / m_nNbrPas);	
-	if(VectTrans.IsNull())
+	if(VectTrans.isNull())
 	{
 		//TRACE("GLC_Interpolator::CalcInterpolLineaireMat -> Translation NULL\n");
-		m_InterpolMat.SetIdentite();
+		m_InterpolMat.setToIdentity();
 		return false;
 	}
 	else
 	{
-		m_InterpolMat.SetMatTranslate(VectTrans);
+		m_InterpolMat.setMatTranslate(VectTrans);
 		return true;
 	}
 }
@@ -158,17 +158,17 @@ bool GLC_Interpolator::CalcInterpolAngulaireMat(void)
 	// Calcul de l'axe de rotation
 	const GLC_Vector4d AxeRot(m_VectDepart ^ m_VectArrive);
 	// Calcul de l'angle entre les vecteurs
-	const double Angle= m_VectArrive.GetAngleWithVect(m_VectDepart) / m_nNbrPas;
+	const double Angle= m_VectArrive.getAngleWithVect(m_VectDepart) / m_nNbrPas;
 	// Calcul de la matrice de rotation
 	if (fabs(Angle) < EPSILON)
 	{
 		//TRACE("GLC_Interpolator::CalcInterpolAngulaireMat -> Rotation NULL\n");
-		m_InterpolMat.SetIdentite();
+		m_InterpolMat.setToIdentity();
 		return false;
 	}
 	else
 	{
-		m_InterpolMat.SetMatRot( AxeRot, Angle);
+		m_InterpolMat.setMatRot( AxeRot, Angle);
 		return true;
 	}
 }

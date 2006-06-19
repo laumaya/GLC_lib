@@ -44,14 +44,14 @@ m_Arc2(dRayon, ARCANGLE, "Arc2", pColor)
 
 	m_MatArc1= MatRot;
 
-	MatInt.SetMatRot(AxeZ, PI/2);
+	MatInt.setMatRot(AxeZ, PI/2);
 	MatRot= MatInt * MatRot;
 
 	m_MatArc2= MatRot;
 	
 	// Set arc discretion
-	m_Arc1.SetDiscretion(ARCDISCRET);
-	m_Arc2.SetDiscretion(ARCDISCRET);
+	m_Arc1.setDiscretion(ARCDISCRET);
+	m_Arc2.setDiscretion(ARCDISCRET);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -59,52 +59,52 @@ m_Arc2(dRayon, ARCANGLE, "Arc2", pColor)
 //////////////////////////////////////////////////////////////////////
 
 // Set Arcs orientation and position in concordance with mouse position
-void GLC_OrbitCircle::SetOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 &Matrice)
+void GLC_OrbitCircle::setOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 &Matrice)
 {	
-	VectAngle.SetZ(0);
-	VectAngle.SetNormal(1);
+	VectAngle.setZ(0);
+	VectAngle.setNormal(1);
 	
 	GLC_Matrix4x4 MatRot;
 	double Angle;
 	
 	// Compute the 2 arcs orientation
-	if (VectAngle.GetY() > 0)
+	if (VectAngle.getY() > 0)
 	{	// Angle entre 0 et PI
-		Angle= acos(VectAngle.GetX());
-		MatRot.SetMatRot(AxeZ, Angle);		
+		Angle= acos(VectAngle.getX());
+		MatRot.setMatRot(AxeZ, Angle);		
 	}
 	else
 	{	// Angle between 0 et -PI
-		Angle= -acos(VectAngle.GetX());
-		MatRot.SetMatRot(AxeZ, Angle);		
+		Angle= -acos(VectAngle.getX());
+		MatRot.setMatRot(AxeZ, Angle);		
 	}
 
 	// Composition of orientation matrix and mapping matrix
 	MatRot= Matrice * MatRot;
 	
-	m_Arc1.SetMatrix(MatRot * m_MatArc1);
-	m_Arc2.SetMatrix(MatRot * m_MatArc2);
+	m_Arc1.setMatrix(MatRot * m_MatArc1);
+	m_Arc2.setMatrix(MatRot * m_MatArc2);
 
 }
 
 // Set Arcs position in concordance with mouse position
-void GLC_OrbitCircle::MapArcs(const GLC_Matrix4x4 &Matrice)
+void GLC_OrbitCircle::mapArcs(const GLC_Matrix4x4 &Matrice)
 {
-	m_Arc1.MultMatrix(Matrice);
-	m_Arc2.MultMatrix(Matrice);
+	m_Arc1.multMatrix(Matrice);
+	m_Arc2.multMatrix(Matrice);
 }
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-// Orbit circle OpenGL Execution
-void GLC_OrbitCircle::GlExecute(double Profondeur)
+// orbit circle OpenGL Execution
+void GLC_OrbitCircle::glExecute(double Profondeur)
 
 {
-	if (GetIsVisible())
+	if (isVisible())
 	{
-		// Orbit circle must be shown
+		// orbit circle must be shown
 		glDisable(GL_DEPTH_TEST);
 
 		glPushMatrix();
@@ -115,26 +115,26 @@ void GLC_OrbitCircle::GlExecute(double Profondeur)
 		glTranslated(0, 0, - (Profondeur) );
 
 		// Save Positionning matrix of arcs
-		const GLC_Matrix4x4 MatSavArc1(m_Arc1.GetMatrix());
-		const GLC_Matrix4x4 MatSavArc2(m_Arc2.GetMatrix());
+		const GLC_Matrix4x4 MatSavArc1(m_Arc1.getMatrix());
+		const GLC_Matrix4x4 MatSavArc2(m_Arc2.getMatrix());
 
 		// Scale Z to 0. Project arcs in the main circle plane
 		// Avoid perspective problems
 		GLC_Matrix4x4 MatScaling;
-		MatScaling.SetMatScaling(1,1,0);
-		m_Arc1.MultMatrix(MatScaling);
-		m_Arc2.MultMatrix(MatScaling);
+		MatScaling.setMatScaling(1,1,0);
+		m_Arc1.multMatrix(MatScaling);
+		m_Arc2.multMatrix(MatScaling);
 
 		// Display arcs
-		m_Arc1.GlExecute();
-		m_Arc2.GlExecute();
+		m_Arc1.glExecute();
+		m_Arc2.glExecute();
 
 		// Restore positionning matrix of arcs
-		m_Arc1.SetMatrix(MatSavArc1);
-		m_Arc2.SetMatrix(MatSavArc2);
+		m_Arc1.setMatrix(MatSavArc1);
+		m_Arc2.setMatrix(MatSavArc2);
 				
 		// Display base class (Main circle)
-		GLC_Circle::GlExecute();
+		GLC_Circle::glExecute();
 		
 		glPopMatrix();
 

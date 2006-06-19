@@ -73,7 +73,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get mesh material
-	void GetOneMaterial(int Index, GLC_Material &Material);
+	void getOneMaterial(int Index, GLC_Material &Material);
 
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
@@ -86,29 +86,29 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Add material to mesh
-	void AddMaterial(int Index, GLC_Material &Material);
+	void addMaterial(int Index, GLC_Material &Material);
 	
 	//! Modify mesh material
-	void ModifyMaterial(int Index, GLC_Material &Material);
+	void modifyMaterial(int Index, GLC_Material &Material);
 	
 	//! Add a vertex to mesh
-	void AddCoordinate(int Index, GLC_Vector3d Coordinate);
+	void addVertex(int Index, GLC_Vector3d Coordinate);
 	
 	//! Add Normal
-	void AddNormal(int index, GLC_Vector3d Normal);
+	void addNormal(int index, GLC_Vector3d Normal);
 	
 	//! Add texture coordinate
-	void AddTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate);
+	void addTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate);
 		 
 	//! Add a face without texture coordinate
 	/*! Mesh list of texture index must be empty.
 	 */  
-	void AddFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal);
+	void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal);
 
 	//! Add a face with texture coordinate
 	/*! Number of coordinate, Normal and texture must be equal
 	 */
-	void AddFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
+	void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
 				const QVector<int> &TextureCoordinate);
 //@}
 
@@ -120,12 +120,12 @@ private:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
-	virtual void GlDraw(void);
+	virtual void glDraw(void);
 
 	//! Virtual interface for OpenGL Geomtry properties.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
-	virtual void GlPropGeom(void);
+	virtual void glPropGeom(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -134,13 +134,13 @@ private:
 private:
 
 	//! Add coordinate and normal index of a face
-	void AddCoordAndNormIndex(const QVector<int> &Coordinate, const QVector<int> &Normal);
+	void addCoordAndNormIndex(const QVector<int> &Coordinate, const QVector<int> &Normal);
 	
 	//! Add Texture coordinate index of a face
-	void AddTextureIndex(const QVector<int> &TextureCoordinate);
+	void addTextureIndex(const QVector<int> &TextureCoordinate);
 	
 	//! Add Material index of a face
-	void AddMaterialIndex(const QVector<int> &Material);
+	void addMaterialIndex(const QVector<int> &Material);
 	
 //////////////////////////////////////////////////////////////////////
 // Private members

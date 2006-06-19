@@ -93,7 +93,7 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 
 // Copy constructor
 GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
-:GLC_Object(InitMaterial.GetName())
+:GLC_Object(InitMaterial.getName())
 , m_fShininess(InitMaterial.m_fShininess)
 , m_pTexture(NULL)
 {
@@ -127,7 +127,7 @@ GLC_Material::~GLC_Material(void)
     while (iEntry != m_WhereUsed.constEnd())
     {
         // Remove material from geometry
-        iEntry.value()->DelMaterial(iEntry.value());
+        iEntry.value()->delMaterial(iEntry.value());
         ++iEntry;
     }
     // clear whereUSED Hash table
@@ -148,7 +148,7 @@ GLC_Material::~GLC_Material(void)
 //////////////////////////////////////////////////////////////////////
 
 // Get Ambiant color
-void GLC_Material::GetAmbientColor(GLfloat* pfCol) const	// pfCol[4]
+void GLC_Material::getAmbientColor(GLfloat* pfCol) const	// pfCol[4]
 {
 	pfCol[0]= static_cast<GLfloat>(m_AmbientColor.redF());
 	pfCol[1]= static_cast<GLfloat>(m_AmbientColor.greenF());
@@ -157,7 +157,7 @@ void GLC_Material::GetAmbientColor(GLfloat* pfCol) const	// pfCol[4]
 }
 
 // Get diffuse color
-void GLC_Material::GetDiffuseColor(GLfloat* pfCol) const	// pfCol[4]
+void GLC_Material::getDiffuseColor(GLfloat* pfCol) const	// pfCol[4]
 {
 	pfCol[0]= static_cast<GLfloat>(m_DiffuseColor.redF());
 	pfCol[1]= static_cast<GLfloat>(m_DiffuseColor.greenF());
@@ -166,7 +166,7 @@ void GLC_Material::GetDiffuseColor(GLfloat* pfCol) const	// pfCol[4]
 }
 
 // Get specular color
-void GLC_Material::GetSpecularColor(GLfloat* pfCol) const	// pfCol[4]
+void GLC_Material::getSpecularColor(GLfloat* pfCol) const	// pfCol[4]
 {
 	pfCol[0]= static_cast<GLfloat>(m_SpecularColor.redF());
 	pfCol[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
@@ -175,7 +175,7 @@ void GLC_Material::GetSpecularColor(GLfloat* pfCol) const	// pfCol[4]
 }
 
 // Get the emissive color
-void GLC_Material::GetLightEmission(GLfloat* pfCol) const	// pfCol[4]
+void GLC_Material::getLightEmission(GLfloat* pfCol) const	// pfCol[4]
 {
 	pfCol[0]= static_cast<GLfloat>(m_LightEmission.redF());
 	pfCol[1]= static_cast<GLfloat>(m_LightEmission.greenF());
@@ -188,58 +188,58 @@ void GLC_Material::GetLightEmission(GLfloat* pfCol) const	// pfCol[4]
 //////////////////////////////////////////////////////////////////////
 
 // Set Ambiant Color
-void GLC_Material::SetAmbientColor(const GLfloat* pfCol) // pfCol[4]
+void GLC_Material::setAmbientColor(const GLfloat* pfCol) // pfCol[4]
 {
 	m_AmbientColor.setRgbF(static_cast<qreal>(pfCol[0]),
 							static_cast<qreal>(pfCol[1]), 
 							static_cast<qreal>(pfCol[2]),
 							static_cast<qreal>(pfCol[3]));
 	
-	UpdateUsed();
+	updateUsed();
 }
 
 // Set Diffuse color
-void GLC_Material::SetDiffuseColor(const GLfloat* pfCol) // pfCol[4]
+void GLC_Material::setDiffuseColor(const GLfloat* pfCol) // pfCol[4]
 {
 	m_DiffuseColor.setRgbF(static_cast<qreal>(pfCol[0]),
 							static_cast<qreal>(pfCol[1]), 
 							static_cast<qreal>(pfCol[2]),
 							static_cast<qreal>(pfCol[3]));
 	
-	UpdateUsed();
+	updateUsed();
 }
 
 // Set Specular color
-void GLC_Material::SetSpecularColor(const GLfloat* pfCol) // pfCol[4]
+void GLC_Material::setSpecularColor(const GLfloat* pfCol) // pfCol[4]
 {
 	m_SpecularColor.setRgbF(static_cast<qreal>(pfCol[0]),
 							static_cast<qreal>(pfCol[1]), 
 							static_cast<qreal>(pfCol[2]),
 							static_cast<qreal>(pfCol[3]));
 	
-	UpdateUsed();
+	updateUsed();
 }
 
 // Set Emissive
-void GLC_Material::SetLightEmission(const GLfloat* pfCol) // pfCol[4]
+void GLC_Material::setLightEmission(const GLfloat* pfCol) // pfCol[4]
 {
 	m_LightEmission.setRgbF(static_cast<qreal>(pfCol[0]),
 							static_cast<qreal>(pfCol[1]), 
 							static_cast<qreal>(pfCol[2]),
 							static_cast<qreal>(pfCol[3]));
 	
-	UpdateUsed();
+	updateUsed();
 }
 
 // Add Geometry to where used hash table
-bool GLC_Material::AddGLC_Geom(GLC_Geometry* pGeom)
+bool GLC_Material::addGLC_Geom(GLC_Geometry* pGeom)
 {
-	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->GetID());
+	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->getID());
 	
 	if (iGeom == m_WhereUsed.end())
 	{	// Ok, ID doesn't exist		
 		// Add Geometry to where used hash table
-		m_WhereUsed.insert(pGeom->GetID(), pGeom);		
+		m_WhereUsed.insert(pGeom->getID(), pGeom);		
 		return true;
 	}
 	else
@@ -250,7 +250,7 @@ bool GLC_Material::AddGLC_Geom(GLC_Geometry* pGeom)
 	
 }
 // Supprime une géométrie de la collection
-bool GLC_Material::DelGLC_Geom(GLC_uint Key)
+bool GLC_Material::delGLC_Geom(GLC_uint Key)
 {
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(Key);
 	
@@ -273,22 +273,22 @@ bool GLC_Material::DelGLC_Geom(GLC_uint Key)
 //////////////////////////////////////////////////////////////////////
 
 // Execute OpenGL Material
-void GLC_Material::GlExecute(GLenum Mode)
+void GLC_Material::glExecute(GLenum Mode)
 {
 	GLfloat pAmbientColor[4];
-	GetAmbientColor(pAmbientColor);
+	getAmbientColor(pAmbientColor);
 	GLfloat pDiffuseColor[4];
-	GetDiffuseColor(pDiffuseColor);
+	getDiffuseColor(pDiffuseColor);
 	GLfloat pSpecularColor[4];
-	GetSpecularColor(pSpecularColor);
+	getSpecularColor(pSpecularColor);
 	GLfloat pLightEmission[4];
-	GetLightEmission(pLightEmission);
+	getLightEmission(pLightEmission);
 	
 	if (m_pTexture != NULL)
 	{
 		// for blend managing
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-		m_pTexture->GlBindTexture();
+		m_pTexture->glcBindTexture();
 	}
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, pAmbientColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pDiffuseColor);
@@ -311,14 +311,14 @@ void GLC_Material::GlExecute(GLenum Mode)
 //////////////////////////////////////////////////////////////////////
 
 // Update geometries which used material
-void GLC_Material::UpdateUsed(void)
+void GLC_Material::updateUsed(void)
 {
 	CWhereUsed::iterator iEntry= m_WhereUsed.begin();
 	
     while (iEntry != m_WhereUsed.constEnd())
     {
         // Indique aux géométrie utilisant la matière que celle ci à changée
-        iEntry.value()->SetMaterial(this);
+        iEntry.value()->setMaterial(this);
         ++iEntry;
     }
 	

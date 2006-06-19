@@ -68,18 +68,18 @@ public:
 public:
 
 	//! Return the number of elements in the collection
-	int GetNumber(void) const
+	int getNumber(void) const
 	{
 		return m_TheMap.size();
 	}
 	
 	//! return a pointer to an GLC_Geometry from collection
 	/*! If the element is not found in collection a NULL pointer is returned*/
-	GLC_Geometry* GetElement(GLC_uint Key);
+	GLC_Geometry* getElement(GLC_uint Key);
 	
 	//! return a pointer to an GLC_Geometry from collection
 	/*! If the element is not found in collection a NULL pointer is returned*/
-	GLC_Geometry* GetElement(int Index);
+	GLC_Geometry* getElement(int Index);
 	
 	//! return the collection Bounding Box
 	GLC_BoundingBox getBoundingBox(void);
@@ -95,7 +95,7 @@ public:
 
 	//! Add a GLC_Geometry in the collection
 	/*! return true if success false otherwise*/
-	bool AddGLC_Geom(GLC_Geometry* pGeom);
+	bool addGLC_Geom(GLC_Geometry* pGeom);
 
 	//! Remove a GLC_Geometry from the collection and delete it
 	/*! 	- Find the GLC_Geometry in the collection
@@ -105,7 +105,7 @@ public:
 	 * 		- Remove the Display list container from collection
 	 * 		- Invalidate the collection OpenGL Display list
 	 * return true if success false otherwise*/
-	bool DelGLC_Geom(GLC_uint Key);
+	bool delGLC_Geom(GLC_uint Key);
 
 	//! Remove a GLC_Geometry from the collection
 	/*! 	- Find the GLC_Geometry in the collection
@@ -114,10 +114,10 @@ public:
 	 * 		- Remove the Display list container from collection
 	 * 		- Invalidate the collection OpenGL Display list
 	 * return true if success false otherwise*/	
-	bool RemGLC_Geom(GLC_uint Key);
+	bool remGLC_Geom(GLC_uint Key);
 
 	//! Remove and delete all GLC_Geometry from the collection
-	void Erase(void);
+	void erase(void);
 
 //@}
 	
@@ -127,13 +127,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the collection
-	void GlExecute(void);
+	void glExecute(void);
 
 	//! Create member's OpenGL display list
-	void CreateMemberLists(void);
+	void createMemberLists(void);
 
-	//! Create Collection sub OpenGL list
-	//void CreateSubLists(void);
 
 //@}
 
@@ -144,7 +142,7 @@ public:
 
 private:
 	//! Display collection's member
-	void GlDraw(void);
+	void glDraw(void);
 
 //@}
 
@@ -154,19 +152,19 @@ private:
 private:
 
 	//! Check if Members are up to date (List + Geometry properties)
-	bool MemberIsUpToDate(void);
+	bool memberIsUpToDate(void);
 
 	//! Create Collection's OpenGL display list
-	bool CreateList(void);
+	bool createList(void);
 
 	//! Delete Collection's OpenGL display list
-	void DeleteList(void)
+	void deleteList(void)
 	{
 		//! if the display list is valid it's deleted
 		if (glIsList(m_ListID))
 		{
 			glDeleteLists(m_ListID, 1);
-			//qDebug() << "GLC_Collection::DeleteList : Display list " << m_ListID << " Deleted";			
+			//qDebug() << "GLC_Collection::deleteList : Display list " << m_ListID << " Deleted";			
 		}
 	}
 

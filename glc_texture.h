@@ -63,7 +63,7 @@ public:
 public:	
 
 	//! Bind texture in 2D mode
-	void GlBindTexture(void)
+	void glcBindTexture(void)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 	}

@@ -60,13 +60,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Load image
-	bool LoadImageFile(QGLWidget *GLWidget, const QString ImageName);
+	bool loadImageFile(QGLWidget *GLWidget, const QString ImageName);
 
 	//! Update image plane size
-	void UpdatePlaneSize(void);
+	void updatePlaneSize(void);
 	
 	//! Update Plane Z position
-	void UpdateZPosition(void);
+	void updateZPosition(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -76,11 +76,11 @@ public:
 public:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n*/
-	virtual void GlDraw(void);
+	virtual void glDraw(void);
 
 	//! Virtual interface for OpenGL Geomtry properties.
 	/*! This Virtual function is implemented here.*/
-	virtual void GlPropGeom(void);
+	virtual void glPropGeom(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////

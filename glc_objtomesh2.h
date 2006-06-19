@@ -78,34 +78,34 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Scan a line previously extracted from OBJ file
-	void ScanLigne(const char* c_strLigne);
+	void scanLigne(const char* c_strLigne);
 
 	//! Extract a 3D Vector from a string
-	GLC_Vector3d Extract3dVect(const char* c_strLigne);
+	GLC_Vector3d extract3dVect(const char* c_strLigne);
 
 	//! Extract a 2D Vector from a string
-	GLC_Vector2d Extract2dVect(const char* c_strLigne);
+	GLC_Vector2d extract2dVect(const char* c_strLigne);
 
 	//! Extract a face from a string
-	void ExtractFaceIndex(const char* c_strLigne);
+	void extractFaceIndex(const char* c_strLigne);
 	
 	//! Set Current material index
-	void SetCurrentMaterial(const char* c_strLigne);	
+	void setCurrentMaterial(const char* c_strLigne);	
 
 	//! Extract a vertex from a string
-	void ExtractVertexIndex(std::string sLigne, int &Coordinate, int &Normal, int &TextureCoordinate);
+	void extractVertexIndex(std::string sLigne, int &Coordinate, int &Normal, int &TextureCoordinate);
 	
 	//! Check if a material file exist
-	void LoadMaterial(std::string FileName);
+	void loadMaterial(std::string FileName);
 	
 	//! Extract String
-	void ExtractString(const std::string &Ligne, GLC_Material *pMaterial);
+	void extractString(const std::string &Ligne, GLC_Material *pMaterial);
 	
 	//! Extract RGB value
-	void ExtractRGBValue(const std::string &Ligne, GLC_Material *pMaterial);
+	void extractRGBValue(const std::string &Ligne, GLC_Material *pMaterial);
 	
 	//! Extract One value
-	void ExtractOneValue(const std::string &Ligne, GLC_Material *pMaterial);
+	void extractOneValue(const std::string &Ligne, GLC_Material *pMaterial);
 	
 
 //////////////////////////////////////////////////////////////////////

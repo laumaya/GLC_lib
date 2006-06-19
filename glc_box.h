@@ -59,13 +59,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get X length
-	double GetLgX(void) const;
+	double getLgX(void) const;
 
 	//! Get Y length
-	double GetLgY(void) const;
+	double getLgY(void) const;
 
 	//! Get Z length
-	double GetLgZ(void) const;
+	double getLgZ(void) const;
 	
 	//! return the box bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
@@ -82,17 +82,17 @@ public:
 	//! Set X length
 	/*! This Function invalid OpenGL display list
 	 * LgX must be > 0*/
-	void SetLgX(double LgX);
+	void setLgX(double LgX);
 
 	//! Set Y length
 	/*! This Function invalid OpenGL display list
 	 * LgY must be > 0*/
-	void SetLgY(double LgY);
+	void setLgY(double LgY);
 
 	//! Set Z length
 	/*! This Function invalid OpenGL display list
 	 * LgZ must be > 0*/
-	void SetLgZ(double LgZ);
+	void setLgZ(double LgZ);
 	
 // End of Display List modifying functions
 
@@ -106,12 +106,12 @@ private:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
-	virtual void GlDraw(void);
+	virtual void glDraw(void);
 
 	//! Virtual interface for OpenGL Geomtry properties.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
-	virtual void GlPropGeom(void);
+	virtual void glPropGeom(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////

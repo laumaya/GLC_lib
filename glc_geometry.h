@@ -43,10 +43,10 @@
  * 		- Transformation Matrix
  * 
  * GLC_Geometry provide :
- * 		- Function to create OpenGL list : GLC_Geometry::CreateList
- * 		- Function to draw Geometrie : GLC_Geometry::GlExecute
- * 		- Virtual function to overload for visual property: GLC_Geometry::GlPropGeom
- * 		- Virtual function to overload for Object topologie: GLC_Geometry::GlDraw
+ * 		- Function to create OpenGL list : GLC_Geometry::createList
+ * 		- Function to draw Geometrie : GLC_Geometry::glExecute
+ * 		- Virtual function to overload for visual property: GLC_Geometry::glPropGeom
+ * 		- Virtual function to overload for Object topologie: GLC_Geometry::glDraw
  *
  * \todo Add link to a sample inherit class.
  */
@@ -77,43 +77,43 @@ public:
 public:
 
 	//! Return Visibility state of geometry
-	const bool GetIsVisible(void) const;
+	const bool isVisible(void) const;
 
 	//! Return an array of 4 GLfloat which represent the color
-	const GLfloat *GetfRGBA(void) const;
+	const GLfloat *getfRGBA(void) const;
 
 	//! Return Color Red component
-	GLfloat GetfRed(void) const;
+	GLfloat getfRed(void) const;
 
 	//! Return Color Green component
-	GLfloat GetfGreen(void) const;
+	GLfloat getfGreen(void) const;
 	
 	//! Return Color blue component
-	GLfloat GetfBlue(void) const;
+	GLfloat getfBlue(void) const;
 	
 	//! Return Color Alpha component
-	GLfloat GetfAlpha(void) const;
+	GLfloat getfAlpha(void) const;
 	
 	//! Return transfomation 4x4Matrix
-	const GLC_Matrix4x4 GetMatrix(void) const;
+	const GLC_Matrix4x4 getMatrix(void) const;
 	
 	//! Return thickness
-	const float GetThickness(void) const;
+	const float getThickness(void) const;
 	
 	//! Return associated OpenGL list ID
-	GLuint GetListID(void);
+	GLuint getListID(void);
 	
 	//! Return Validity of associated OpenGL list
-	bool GetListIsValid(void) const;
+	bool getListIsValid(void) const;
 
 	//! Return Validity of geometry
-	bool GetValidity(void) const;
+	bool getValidity(void) const;
 
 	//! Return material of geometry
-	GLC_Material* GetMaterial(void) const;
+	GLC_Material* getMaterial(void) const;
 
 	//! Return true if blending is enable
-	bool GetBlending(void) const;
+	bool getBlending(void) const;
 	
 	//! return the geometry bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
@@ -128,45 +128,45 @@ public:
 public:
 
 	//! Set visibility statement
-	void SetVisibility(bool v);
+	void setVisibility(bool v);
 
 	//! Set Color RGBA component
-	void SetRGBAColor(GLfloat Rouge, GLfloat Vert, GLfloat Bleu, GLfloat Alpha= 1);
+	void setRGBAColor(GLfloat Rouge, GLfloat Vert, GLfloat Bleu, GLfloat Alpha= 1);
 
 	//! Set Color RGBA component with an array of 4 GLfloat
-	void SetRGBAColor(const GLfloat* SetCol);	// SetCol[4]
+	void setRGBAColor(const GLfloat* SetCol);	// SetCol[4]
 
 
 // Set Position	
 
-	//! Translate Geometry
-	void Translate(double Tx, double Ty, double Tz);
+	//! translate Geometry
+	void translate(double Tx, double Ty, double Tz);
 
-	//! Move Geometry with a 4x4Matrix
-	void MultMatrix(const GLC_Matrix4x4 &MultMat);
+	//! move Geometry with a 4x4Matrix
+	void multMatrix(const GLC_Matrix4x4 &MultMat);
 	
 	//! Replace the Geometry Matrix
-	void SetMatrix(const GLC_Matrix4x4 &SetMat);
+	void setMatrix(const GLC_Matrix4x4 &SetMat);
 	
 	//! Reset the Geometry Matrix
-	void ResetMatrix(void);
+	void resetMatrix(void);
 	
 	//! Set Wire thickness
-	void SetThikness(float SetEp);
+	void setThikness(float SetEp);
 
 	//! Set Blending
-	void SetBlending(bool Blending);
+	void setBlending(bool Blending);
 	
 	//! Polygon's display style
-	void SetPolygonMode(GLenum Face, GLenum Mode);
+	void setPolygonMode(GLenum Face, GLenum Mode);
 
 	// Material
 	//! Set the Geometry material
-	void SetMaterial(GLC_Material* pMat);
+	void setMaterial(GLC_Material* pMat);
 	
 	//! Remove Geometry from the material without update material usage table
 	/*! This function is call by GLC_Material, do not call it manualy ! */
-	void DelMaterial(GLC_Geometry* pGeom);
+	void delMaterial(GLC_Geometry* pGeom);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -179,20 +179,20 @@ public:
 	//! Virtual interface for OpenGL execution from GLC_Object.
 	/*! This Virtual function is implemented here.\n
 	 * At the first call, this function call virtual function
-	 * GLC_Geometry::GlPropGeom and set up :
+	 * GLC_Geometry::glPropGeom and set up :
 	 * 		- Geometry
 	 * 		- OpenGL list
 	 * .
 	 * AfterWard this function
-	 *		- Call virtual function GLC_Geometry::GlPropGeom
+	 *		- Call virtual function GLC_Geometry::glPropGeom
 	 * 		- If Display list exist or is Valid Call Display List
 	 * 		- If Display list doesn't exist try to create IT by calling
-	 *        virtual function GLC_Geometry::GlDraw
+	 *        virtual function GLC_Geometry::glDraw
 	 */
-	virtual void GlExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	virtual void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 
 	//! OpenGL list creation
-	bool CreateList(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	bool createList(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -203,11 +203,11 @@ protected:
 
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function have to be implemented in concrete class.*/
-	virtual void GlDraw(void) = 0;
+	virtual void glDraw(void) = 0;
 
 	//! Virtual interface for OpenGL Geomtry properties.
 	/*! This Virtual function have to be implemented in concrete class.*/
-	virtual void GlPropGeom(void) = 0;
+	virtual void glPropGeom(void) = 0;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -217,7 +217,7 @@ protected:
 
 	//! Delete OpenGL list
 	/*! Call by GLC_Geometry::~GLC_Geometry*/
-	void DeleteList();
+	void deleteList();
 
 //////////////////////////////////////////////////////////////////////
 // Protected members

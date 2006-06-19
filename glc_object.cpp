@@ -56,13 +56,13 @@ GLC_Object::~GLC_Object()
 //////////////////////////////////////////////////////////////////////
 
 // Object ID
-GLC_uint GLC_Object::GetID() const
+GLC_uint GLC_Object::getID() const
 {
 	return m_Uid;
 }
 
 // Object Name
-const char* GLC_Object::GetName() const
+const char* GLC_Object::getName() const
 {
 	return m_Name.c_str();
 }
@@ -72,7 +72,7 @@ const char* GLC_Object::GetName() const
 //////////////////////////////////////////////////////////////////////
 
 // Object Name
-void GLC_Object::SetName(const std::string name)
+void GLC_Object::setName(const std::string name)
 {
 	m_Name.assign(name);
 }

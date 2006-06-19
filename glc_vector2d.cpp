@@ -60,27 +60,27 @@ GLC_Vector2d::GLC_Vector2d(const GLC_Vector2d &Vect)
 //////////////////////////////////////////////////////////////////////
 // Fonction Set
 //////////////////////////////////////////////////////////////////////
-GLC_Vector2d& GLC_Vector2d::SetX(const double &dX)
+GLC_Vector2d& GLC_Vector2d::setX(const double &dX)
 {
 	dVecteur[0]= dX;
 	return *this;
 }
 
-GLC_Vector2d& GLC_Vector2d::SetY(const double &dY)
+GLC_Vector2d& GLC_Vector2d::setY(const double &dY)
 {
 	dVecteur[1]= dY;
 	return *this;
 }
 
 
-GLC_Vector2d& GLC_Vector2d::SetVect(const double &dX, const double &dY)
+GLC_Vector2d& GLC_Vector2d::setVect(const double &dX, const double &dY)
 {
 	dVecteur[0]= dX;
 	dVecteur[1]= dY;
 
 	return *this;
 }
-GLC_Vector2d& GLC_Vector2d::SetVect(const GLC_Vector2d &Vect)
+GLC_Vector2d& GLC_Vector2d::setVect(const GLC_Vector2d &Vect)
 {
 	dVecteur[0]= Vect.dVecteur[0];
 	dVecteur[1]= Vect.dVecteur[1];

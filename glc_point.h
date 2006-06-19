@@ -59,7 +59,7 @@ public:
 public:
 
 	//! Get a 4D vector represent point coordinate
-	GLC_Vector4d GetVectCoord(void) const;
+	GLC_Vector4d getVectCoord(void) const;
 	
 	//! return the point bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
@@ -72,10 +72,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set Point coordinate by 4D Vector
-	void SetCoord(const GLC_Vector4d &Vect);
+	void setCoord(const GLC_Vector4d &Vect);
 
 	//! Set Point coordinate by 3 double
-	void SetCoord(double x, double y, double z);
+	void setCoord(double x, double y, double z);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -86,11 +86,11 @@ public:
 private:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n*/
-	virtual void GlDraw(void);
+	virtual void glDraw(void);
 
 	//! Virtual interface for OpenGL Geomtry properties.
 	/*! This Virtual function is implemented here.*/
-	virtual void GlPropGeom(void);
+	virtual void glPropGeom(void);
 
 //@}
 
