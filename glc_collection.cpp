@@ -30,7 +30,7 @@
 
 
 //////////////////////////////////////////////////////////////////////
-// Construction/Destruction
+// Constructor/Destructor
 //////////////////////////////////////////////////////////////////////
 
 GLC_Collection::GLC_Collection()
@@ -48,7 +48,7 @@ GLC_Collection::~GLC_Collection()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-// Ajoute une géométrie à la collection
+// Add geometrys to the collection
 bool GLC_Collection::addGLC_Geom(GLC_Geometry* pGeom)
 {
 	CGeomMap::iterator iGeom= m_TheMap.find(pGeom->getID());
@@ -75,7 +75,7 @@ bool GLC_Collection::addGLC_Geom(GLC_Geometry* pGeom)
 	
 }
 
-// Supprime une géométrie de la collection et la géométrie
+// Delete geometry from the collection
 bool GLC_Collection::delGLC_Geom(GLC_uint Key)
 {
 
@@ -87,7 +87,7 @@ bool GLC_Collection::delGLC_Geom(GLC_uint Key)
 		m_TheMap.remove(Key);		// Delete the conteneur
 		// Search the list
 			
-		// Validité de la liste
+		// List validity
 		m_ListIsValid= false;
 		
 		qDebug("GLC_Collection::DelGLC_Geom : Element succesfuly deleted");
@@ -102,17 +102,17 @@ bool GLC_Collection::delGLC_Geom(GLC_uint Key)
 	
 }
 
-// Supprime une géométrie de la collection
+// Remove geometry from the collection
 bool GLC_Collection::remGLC_Geom(GLC_uint Key)
 {
 	CGeomMap::iterator iGeom= m_TheMap.find(Key);
 		
 	if (iGeom != m_TheMap.end())
-	{	// Ok, la clé existe
-		// On ne Supprime pas la géométrie
+	{	// Ok, the key exist
+		// don't delete collection node
 		m_TheMap.remove(Key);		// Supprime le conteneur
 			
-		// Validité de la liste
+		// List validity
 		m_ListIsValid= false;
 		
 		//qDebug("GLC_Collection::remGLC_Geom : Element Supprimé avec succès");
@@ -128,7 +128,7 @@ bool GLC_Collection::remGLC_Geom(GLC_uint Key)
 }
 
 
-// Vide la collection
+// Clear the collection
 void GLC_Collection::erase(void)
 {
 	// Suppression des géométries
