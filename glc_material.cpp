@@ -25,7 +25,7 @@
 //! \file glc_material.cpp implementation of the GLC_Material class.
 
 #include <QtDebug>
-
+#include <assert.h>
 #include "glc_material.h"
 #include "glc_collection.h"
 
