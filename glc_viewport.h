@@ -117,6 +117,12 @@ public:
 	{
 		return m_dCamDistMax;
 	}
+	
+	//! Get background Color
+	QColor getBackgroundColor(void) const
+	{
+		return m_BackgroundColor;
+	}
 
 //@}
 
@@ -199,6 +205,11 @@ public:
 	//! Set Near and Far clipping distance
 	/*! box shouldn't be empty*/
 	void setDistMinAndMax(const GLC_BoundingBox& bBox);
+	
+	void setBackgroundColor(QColor setColor)
+	{
+		m_BackgroundColor= setColor;
+	}
 
 //@}
 
@@ -342,7 +353,7 @@ private:
 	QGLWidget* m_pQGLWidget;
 	
 	//! Viewport Background color
-	QColor m_BackGroundColor;
+	QColor m_BackgroundColor;
 
 };
 
