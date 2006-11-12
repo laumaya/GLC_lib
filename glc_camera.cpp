@@ -25,7 +25,7 @@
 //! \file glc_camera.cpp Implementation of the GLC_Camera class.
 
 #include <QtDebug>
-
+#include <assert.h>
 #include "glc_maths.h"
 #include "glc_camera.h"
 #include "glc_openglexception.h"
@@ -34,7 +34,7 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_Camera::GLC_Camera()
-:GLC_Object("Caméra"),
+:GLC_Object("Camï¿½ra"),
 VectEye(0,0,1), VectUp(0,1,0)
 {
 	
@@ -177,7 +177,7 @@ void GLC_Camera::setEyeCam(const GLC_Vector4d &Eye)
 		else
 		{
 			if ( (PI - Angle) < EPSILON)
-			{	// Angle de 180°
+			{	// Angle de 180ï¿½
 				VectUp.setInv();
 			}
 		}
@@ -206,7 +206,7 @@ void GLC_Camera::setTargetCam(const GLC_Vector4d &Target)
 		else
 		{
 			if ( (PI - Angle) < EPSILON)
-			{	// Angle of 180°
+			{	// Angle of 180ï¿½
 				VectUp.setInv();
 			}
 		}
@@ -235,7 +235,7 @@ void GLC_Camera::setCam(GLC_Vector4d Eye, GLC_Vector4d Target, GLC_Vector4d Up)
 	 * VectCam could not be NULL */
 	assert((Angle > EPSILON) && ((PI - Angle) > EPSILON));
 	if ( fabs(Angle - (PI / 2)) > EPSILON)
-	{	// Angle not equal to 90°
+	{	// Angle not equal to 90ï¿½
 		const GLC_Vector4d AxeRot(VectCam ^ Up);
 		GLC_Matrix4x4 MatRot(AxeRot, PI / 2);
 		Up= MatRot * VectCam;
@@ -303,7 +303,7 @@ void GLC_Camera::createMatComp(void)
 	}
 
 	// Angle between InitVectUp and VectUp
-	GLC_Vector4d InitVectUp(0,1,0); // Par défaut VectUp est Y
+	GLC_Vector4d InitVectUp(0,1,0); // Par dï¿½faut VectUp est Y
 	InitVectUp= MatCompOrbit * InitVectUp;
 	// Compute the angle
 	const double AngleVectUp= acos(InitVectUp * VectUp);
@@ -312,12 +312,12 @@ void GLC_Camera::createMatComp(void)
 
 	if (( AngleVectUp > EPSILON) && ( (PI - AngleVectUp) > EPSILON) )
 
-	{ // Angle not equal to 0 or 180°
+	{ // Angle not equal to 0 or 180ï¿½
 		const GLC_Vector4d VectAxeRot(InitVectUp ^ VectUp);
 
 		MatInt.setMatRot(VectAxeRot, AngleVectUp);
 	}
-	else	// Angle equal to 0 or 180°
+	else	// Angle equal to 0 or 180ï¿½
 	{
 		MatInt.setMatRot(VectCam, AngleVectUp);
 	}
