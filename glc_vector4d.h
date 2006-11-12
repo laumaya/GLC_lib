@@ -105,7 +105,7 @@ public:
 	const double operator * (const GLC_Vector4d &Vect) const;
 
 	/*! Overload scalar product "*" operator between 1 vector and one scalar*/
-	GLC_Vector4d GLC_Vector4d::operator * (double Scalaire) const;
+	GLC_Vector4d operator * (double Scalaire) const;
 	
 	/*! Overload dot product "==" operator*/
 	bool operator == (const GLC_Vector4d &Vect) const;
