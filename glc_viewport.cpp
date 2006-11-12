@@ -52,8 +52,8 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_dRatWinSph(0.90)			// Circle ratio size / window size
 , m_OrbitCircleIsVisible(false)	// Show state of orbit Circle
 , m_pQGLWidget(GLWidget)		// Attached QGLWidget
-// the default backGroundColor
-, m_BackGroundColor((QColor::fromRgbF(0.39, 0.39, 0.39, 0.0)))
+// the default backgroundColor
+, m_BackgroundColor((QColor::fromRgbF(0.39, 0.39, 0.39, 0.0)))
 {
 	// create a camera
 	m_pViewCam= new GLC_Camera;
@@ -120,7 +120,7 @@ GLC_Vector4d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 void GLC_Viewport::initGl()
 {
 	// OpenGL initialisation from NEHE production
-	m_pQGLWidget->qglClearColor(m_BackGroundColor);                     // Background
+	m_pQGLWidget->qglClearColor(m_BackgroundColor);       // Background
 	glClearDepth(1.0f);                                   // Depth Buffer Setup
 	glShadeModel(GL_SMOOTH);                              // Enable Smooth Shading
 	glEnable(GL_DEPTH_TEST);                              // Enables Depth Testing
