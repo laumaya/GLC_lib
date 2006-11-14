@@ -53,7 +53,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_OrbitCircleIsVisible(false)	// Show state of orbit Circle
 , m_pQGLWidget(GLWidget)		// Attached QGLWidget
 // the default backgroundColor
-, m_BackgroundColor((QColor::fromRgbF(0.39, 0.39, 0.39, 0.0)))
+, m_BackgroundColor((QColor::fromRgbF(0.39, 0.39, 0.39, 1.0)))
 {
 	// create a camera
 	m_pViewCam= new GLC_Camera;
@@ -592,6 +592,11 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		
 }
 
+void GLC_Viewport::setBackgroundColor(QColor setColor)
+{
+	m_BackgroundColor= setColor;
+	m_pQGLWidget->qglClearColor(m_BackgroundColor);
+}
 //////////////////////////////////////////////////////////////////////
 // Private services functions
 //////////////////////////////////////////////////////////////////////
