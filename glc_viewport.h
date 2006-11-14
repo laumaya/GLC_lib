@@ -206,10 +206,8 @@ public:
 	/*! box shouldn't be empty*/
 	void setDistMinAndMax(const GLC_BoundingBox& bBox);
 	
-	void setBackgroundColor(QColor setColor)
-	{
-		m_BackgroundColor= setColor;
-	}
+	//! Set the Background color
+	void setBackgroundColor(QColor setColor);
 
 //@}
 
