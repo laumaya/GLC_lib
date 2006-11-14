@@ -73,7 +73,7 @@ GLC_Mesh2::~GLC_Mesh2(void)
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-//! Get material from mesh
+// Get material from mesh
 void GLC_Mesh2::getOneMaterial(int Index, GLC_Material &Material)
 {
 	MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
@@ -107,7 +107,7 @@ GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
 //////////////////////////////////////////////////////////////////////
 
 
-//! Add material to mesh
+// Add material to mesh
 void GLC_Mesh2::addMaterial(int Index, GLC_Material &Material)
 {
 		
@@ -116,7 +116,7 @@ void GLC_Mesh2::addMaterial(int Index, GLC_Material &Material)
 
 }
 
-//! Modify material from mesh
+// Modify material from mesh
 void GLC_Mesh2::modifyMaterial(int Index, GLC_Material &Material)
 {
 	//! \todo GLC_Material should have copy constructor
