@@ -128,13 +128,16 @@ void GLC_CollectionNode::glExecute(GLenum Mode)
 	// Geometry OpenGl list invalid
 	if (!m_pGeom->getListIsValid())
 	{
-		m_pGeom->createList(GL_COMPILE);
+		m_pGeom->createList(Mode);
 		computeBox= true;
 	}
 	
 	// Geometry invalid or collection node list ID == 0
 	if ((!m_pGeom->getValidity()) || (m_ListID == 0))
 	{
+		qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pGeom->getValidity();
+		qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ListID;
+		
 		if (m_ListID == 0)
 		{
 			qDebug() << "GLC_CollectionNode::GlExecute: List not found";
@@ -143,7 +146,7 @@ void GLC_CollectionNode::glExecute(GLenum Mode)
 		glNewList(m_ListID, Mode);
 			m_pGeom->glExecute(Mode);
 		glEndList();
-		qDebug() << "GLC_Collection::CreateSubLists : Display list " << m_ListID << " created";
+		qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ListID << " created";
 		computeBox= true;	
 	}
 	else
