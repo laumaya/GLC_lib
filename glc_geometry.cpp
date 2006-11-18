@@ -298,7 +298,7 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 	}
 	else
 	{	
-		// Force la mise à jour
+		// Force la mise ï¿½ jour
 		m_GeometryIsValid = false;
 		m_ListIsValid= false;	// GLC_Mesh2 compatibility
 	}
@@ -332,7 +332,7 @@ bool GLC_Geometry::createList(GLenum Mode)
 		if (!m_ListID)	// List ID not obtain
 		{
 			glDraw();
-			qDebug("GLC_Geometrie::ERREUR Liste d'affichage NON créé");
+			qDebug("GLC_Geometry::createList ERROR Display list not created");
 			return false;	// Display geometry whithout OpenGL display list
 		}
 	}
@@ -349,7 +349,13 @@ bool GLC_Geometry::createList(GLenum Mode)
 	m_ListIsValid= true;
 	return true;	// Display geometry with OpenGL display list
 	
-	//! \todo Add error handler
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Geometry::createList ", error);
+		throw(OpenGlException);
+	}
 }
 // Geometry display
 void GLC_Geometry::glExecute(GLenum Mode)
