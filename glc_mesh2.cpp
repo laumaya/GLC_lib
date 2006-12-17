@@ -119,7 +119,6 @@ void GLC_Mesh2::addMaterial(int Index, GLC_Material &Material)
 // Modify material from mesh
 void GLC_Mesh2::modifyMaterial(int Index, GLC_Material &Material)
 {
-	//! \todo GLC_Material should have copy constructor
 	MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
 	// Check if the key is find
 	assert(iMaterial != m_MaterialHash.end());
