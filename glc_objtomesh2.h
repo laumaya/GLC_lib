@@ -36,9 +36,6 @@
 
 typedef QHash<QString, int> MaterialHashMap;
 
-
-#define GLC_OBJ_LIGNE_LENGHT 100
-
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ObjToMesh2
 /*! \brief GLC_ObjToMesh2 : Create an GLC_Mesh from obj file */
@@ -78,19 +75,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Scan a line previously extracted from OBJ file
-	void scanLigne(const char* c_strLigne);
+	void scanLigne(std::string &line);
 
 	//! Extract a 3D Vector from a string
-	GLC_Vector3d extract3dVect(const char* c_strLigne);
+	GLC_Vector3d extract3dVect(const std::string &line);
 
 	//! Extract a 2D Vector from a string
-	GLC_Vector2d extract2dVect(const char* c_strLigne);
+	GLC_Vector2d extract2dVect(const std::string &line);
 
 	//! Extract a face from a string
-	void extractFaceIndex(const char* c_strLigne);
+	void extractFaceIndex(const std::string &line);
 	
 	//! Set Current material index
-	void setCurrentMaterial(const char* c_strLigne);	
+	void setCurrentMaterial(const std::string &line);	
 
 	//! Extract a vertex from a string
 	void extractVertexIndex(std::string sLigne, int &Coordinate, int &Normal, int &TextureCoordinate);
