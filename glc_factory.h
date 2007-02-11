@@ -84,9 +84,11 @@ public:
 	GLC_Cylinder* createCylinder(double radius, double length) const;
 	//! Create an GLC_Cylinder by copying another GLC_Cylinder
 	GLC_Cylinder* createCylinder(const GLC_Geometry* pCylinder) const;
-	
-	//! Create an GLC_Mesh
-	GLC_Mesh2* createMesh(const std::string &fullfileName) const;
+
+	//! Create an GLC_Mesh with the name of the obj file
+	GLC_Mesh2* createMesh(const std::string &fullfileName) const;	
+	//! Create an GLC_Mesh with a QFile
+	GLC_Mesh2* createMesh(const QFile &file) const;
 	//! Create an GLC_Mesh by copying another mesh
 	GLC_Mesh2* createMesh(const GLC_Geometry* pMesh) const;
 	

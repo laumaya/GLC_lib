@@ -130,12 +130,18 @@ GLC_Cylinder* GLC_Factory::createCylinder(const GLC_Geometry* pCylinder) const
 		return NULL;
 	}
 }
-
-// Create an GLC_Mesh2
+// Create an GLC_Mesh with the name of the obj file
 GLC_Mesh2* GLC_Factory::createMesh(const std::string &fullfileName) const
 {
 	GLC_ObjToMesh2 objToMesh(m_pQGLWidget);
 	return objToMesh.CreateMeshFromObj(fullfileName);
+}
+
+// Create an GLC_Mesh with a QFile
+GLC_Mesh2* GLC_Factory::createMesh(const QFile &file) const
+{
+	GLC_ObjToMesh2 objToMesh(m_pQGLWidget);
+	return objToMesh.CreateMeshFromObj(file.fileName().toStdString());
 }
 
 // Create an GLC_Mesh by copying another mesh
