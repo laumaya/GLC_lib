@@ -628,7 +628,7 @@ GLC_Vector4d GLC_Viewport::mapForOrbit( double Posx, double Posy) const
 	}
 	else
 	{
-		VectMouse.setZ(sqrt(1 - VectMouse.getX() *  VectMouse.getX() - VectMouse.getY() * VectMouse.getY()));
+		VectMouse.setZ(sqrt(1.0 - VectMouse.getX() *  VectMouse.getX() - VectMouse.getY() * VectMouse.getY()));
 	}
 	
 	return VectMouse;
