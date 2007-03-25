@@ -63,10 +63,7 @@ public:
 public:	
 
 	//! Bind texture in 2D mode
-	void glcBindTexture(void)
-	{
-		glBindTexture(GL_TEXTURE_2D, m_TextureID);
-	}
+	void glcBindTexture(void);
 //@}
 	
 //////////////////////////////////////////////////////////////////////
@@ -78,6 +75,8 @@ private:
 	QGLWidget *m_pQGLWidget;
 	QString m_FileName;
 	GLuint	m_TextureID;
+	
+	QImage *m_pTextureImage;
 	
 	
 };
