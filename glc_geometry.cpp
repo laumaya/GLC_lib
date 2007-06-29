@@ -398,6 +398,10 @@ void GLC_Geometry::glExecute(GLenum Mode)
 			throw(OpenGlException);
 		}
 	}
+	else
+	{
+		m_GeometryIsValid= true; // Used to avoid multi list creation
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
