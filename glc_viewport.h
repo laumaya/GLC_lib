@@ -216,12 +216,12 @@ public:
 //@{
 	//! Prepare panning operation
 	/*!	- Save the initial mouse position
-	 * 	- Show Camera's target
+	 * 	- Show Camera's target if required
 	 */
-	void  preparePanning(double Cx, double Cy)
+	void  preparePanning(double Cx, double Cy, bool targetVisibility= true)
 	{
 		m_VectPrevPan.setVect(mapPosMouse(Cx,Cy));
-		m_CameraTargetIsVisible= true;
+		m_CameraTargetIsVisible= targetVisibility;
 	}
 	//! pan to the position (Cx, Cy)
 	void pan(double Cx, double Cy);
@@ -242,7 +242,7 @@ public:
 	 * 	- Show orbit Circle
 	 * 	- Show Camera's Target
 	 */
-	void prepareOrbiting(double Cx, double Cy);
+	void prepareOrbiting(double Cx, double Cy, bool circleVisibility= true, bool targetVisibility= true);
 	
 	//! orbit in accordance of mouse position
 	void orbit(double Cx, double Cy);
@@ -263,7 +263,7 @@ public:
 	/*!	- Save Y mouse position
 	 * 	- Show Camera's target
 	 */
-	void prepareZooming(int Cy);
+	void prepareZooming(int Cy, bool tragetVisibility= true);
 	
 	//! zoom in accordance of Y mouse position
 	void zoom(int Cy);

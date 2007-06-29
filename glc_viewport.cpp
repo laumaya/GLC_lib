@@ -388,11 +388,11 @@ void GLC_Viewport::pan(double Cx, double Cy)
 }
 
 // Prepare orbiting operation
-void GLC_Viewport::prepareOrbiting(double Cx, double Cy)
+void GLC_Viewport::prepareOrbiting(double Cx, double Cy, bool circleVisibility, bool targetVisibility)
 {
 	m_VectPrevOrbit.setVect(mapForOrbit(Cx,Cy));
-	m_OrbitCircleIsVisible= true;
-	m_CameraTargetIsVisible= true;
+	m_OrbitCircleIsVisible= circleVisibility;
+	m_CameraTargetIsVisible= targetVisibility;
 
 	const double Angle= acos(AxeZ * m_VectPrevOrbit);
 	const GLC_Vector4d AxeRot(AxeZ ^ m_VectPrevOrbit);
@@ -421,9 +421,9 @@ void GLC_Viewport::orbit(double Cx, double Cy)
 
 }
 // Prepare Zooming operation
-void GLC_Viewport::prepareZooming(int Cy)
+void GLC_Viewport::prepareZooming(int Cy, bool tragetVisibility)
 {
-	m_CameraTargetIsVisible= true;
+	m_CameraTargetIsVisible= tragetVisibility;
 	// Change origine (view center) and cover between -1 and 1
 	m_dPrevZoom= ((double)m_nWinVSize / 2 - Cy) / ( (double)m_nWinVSize / 2);;
 }
