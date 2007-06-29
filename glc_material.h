@@ -113,8 +113,14 @@ public:
 	//! Set Ambiant Color
 	void setAmbientColor(const GLfloat* pfCol);
 
+	//! Set Ambiant Color
+	void setAmbientColor(const QColor& ambientColor);
+
 	//! Set Diffuse color
 	void setDiffuseColor(const GLfloat* pfCol);
+
+	//! Set Diffuse color
+	void setDiffuseColor(const QColor& diffuseColor);
 	
 	//! Set Specular color
 	void setSpecularColor(const GLfloat* pfCol);
