@@ -33,7 +33,7 @@
 #include "glc_enum.h"
 
 //! Geometry hash table
-typedef QHash< GLC_uint, GLC_CollectionNode*> CGeomMap;
+typedef QHash< GLC_uint, GLC_CollectionNode*> CNodeMap;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Collection
@@ -175,7 +175,7 @@ private:
 
 private:
 	//! GLC_Geometry Hash Table
-	CGeomMap m_TheMap;
+	CNodeMap m_TheMap;
 
 	//! Collection's OpenGL list ID
 	GLuint m_ListID;

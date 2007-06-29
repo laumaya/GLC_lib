@@ -51,7 +51,7 @@ GLC_Collection::~GLC_Collection()
 // Add geometrys to the collection
 bool GLC_Collection::addGLC_Geom(GLC_Geometry* pGeom)
 {
-	CGeomMap::iterator iGeom= m_TheMap.find(pGeom->getID());
+	CNodeMap::iterator iGeom= m_TheMap.find(pGeom->getID());
 	
 	if (iGeom == m_TheMap.end())
 	{	// Ok, la clé n'est pas prise
@@ -79,7 +79,7 @@ bool GLC_Collection::addGLC_Geom(GLC_Geometry* pGeom)
 bool GLC_Collection::delGLC_Geom(GLC_uint Key)
 {
 
-	CGeomMap::iterator iGeom= m_TheMap.find(Key);
+	CNodeMap::iterator iGeom= m_TheMap.find(Key);
 		
 	if (iGeom != m_TheMap.end())
 	{	// Ok, the key exist
@@ -105,7 +105,7 @@ bool GLC_Collection::delGLC_Geom(GLC_uint Key)
 // Remove geometry from the collection
 bool GLC_Collection::remGLC_Geom(GLC_uint Key)
 {
-	CGeomMap::iterator iGeom= m_TheMap.find(Key);
+	CNodeMap::iterator iGeom= m_TheMap.find(Key);
 		
 	if (iGeom != m_TheMap.end())
 	{	// Ok, the key exist
@@ -132,7 +132,7 @@ bool GLC_Collection::remGLC_Geom(GLC_uint Key)
 void GLC_Collection::erase(void)
 {
 	// Suppression des géométries
-	CGeomMap::iterator iEntry= m_TheMap.begin();
+	CNodeMap::iterator iEntry= m_TheMap.begin();
 	
     while (iEntry != m_TheMap.constEnd())
     {
@@ -161,7 +161,7 @@ void GLC_Collection::erase(void)
 // Retourne le pointeur d'un élément de la collection
 GLC_Geometry* GLC_Collection::getElement(GLC_uint Key)
 {
-	CGeomMap::iterator iGeom= m_TheMap.find(Key);
+	CNodeMap::iterator iGeom= m_TheMap.find(Key);
 	
 	if (iGeom != m_TheMap.end())
 	{	// Ok, la clé est trouvé
@@ -178,7 +178,7 @@ GLC_Geometry* GLC_Collection::getElement(int Index)
 {
 	// Warning, performance will be poor
 	int CurrentPos= 0;
-	CGeomMap::iterator iEntry= m_TheMap.begin();
+	CNodeMap::iterator iEntry= m_TheMap.begin();
 	GLC_Geometry* pGeom= NULL;
 	
     while ((iEntry != m_TheMap.constEnd()) && (CurrentPos <= Index ))
@@ -201,7 +201,7 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 	}
 	else if (getNumber() > 0)
 	{
-		CGeomMap::iterator iEntry= m_TheMap.begin();
+		CNodeMap::iterator iEntry= m_TheMap.begin();
 		if (m_pBoundingBox != NULL)
 		{
 			delete m_pBoundingBox;
@@ -276,7 +276,7 @@ void GLC_Collection::glExecute(void)
 // Affiche les éléments de la collection
 void GLC_Collection::glDraw(void)
 {
-	CGeomMap::iterator iEntry= m_TheMap.begin();
+	CNodeMap::iterator iEntry= m_TheMap.begin();
 	if (m_pBoundingBox != NULL)
 	{
 		delete m_pBoundingBox;
@@ -308,7 +308,7 @@ void GLC_Collection::glDraw(void)
 // Création des listes d'affichages des membres
 void GLC_Collection::createMemberLists(void)
 {
-	CGeomMap::iterator iEntry= m_TheMap.begin();
+	CNodeMap::iterator iEntry= m_TheMap.begin();
 	//qDebug("GLC_Collection::CreateMemberList ENTER");
 	
     while (iEntry != m_TheMap.constEnd())
@@ -334,7 +334,7 @@ void GLC_Collection::createMemberLists(void)
 void GLC_Collection::CreateSubLists(void)
 {
 	//qDebug() << "GLC_Collection::CreateSubLists";
-	CGeomMap::iterator iEntry= m_TheMap.begin();
+	CNodeMap::iterator iEntry= m_TheMap.begin();
 	CListeMap::iterator iListEntry;
 	
 	GLuint ListeID= 0;
@@ -380,7 +380,7 @@ void GLC_Collection::CreateSubLists(void)
 // Verifie si les listes membres sont à jour
 bool GLC_Collection::memberIsUpToDate(void)
 {
-	CGeomMap::iterator iEntry= m_TheMap.begin();
+	CNodeMap::iterator iEntry= m_TheMap.begin();
 	
     while (iEntry != m_TheMap.constEnd())
     {
@@ -403,7 +403,7 @@ bool GLC_Collection::memberIsUpToDate(void)
 bool GLC_Collection::memberIsUpToDate(void)
 {
 		
-	CGeomMap::iterator iEntry= m_TheMap.begin();
+	CNodeMap::iterator iEntry= m_TheMap.begin();
 	
     while (iEntry != m_TheMap.constEnd())
     {
