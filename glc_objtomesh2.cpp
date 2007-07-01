@@ -64,7 +64,7 @@ GLC_ObjToMesh2::GLC_ObjToMesh2(QGLWidget *GLWidget)
 GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 {
 	// Initialisation
-	m_sFile= sFile;
+	m_sFile= QString::fromStdString(sFile);
 	m_pMesh= NULL;	// In case of multi obj read
 
 	m_pCurrentMaterial= NULL;
@@ -81,9 +81,10 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 	
 	
 	// Create the input file stream
+	qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj Create an input file Stream";
 	ifstream ObjFile;
 	
-	ObjFile.open(m_sFile.c_str(), ios::binary | ios::in);
+	ObjFile.open(m_sFile.toAscii().data(), ios::binary | ios::in);
 	
 	// QString buffer	
 	string lineBuff;
@@ -91,13 +92,13 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 
 	if (!ObjFile)
 	{
-		qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj ERROR File " << m_sFile.c_str() << " not opened";
+		qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj ERROR File " << m_sFile << " not opened";
 		return NULL;
 	}
 	else
 	{
-		qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj OK File " << m_sFile.c_str() << " Open";
-		loadMaterial(m_sFile);		
+		qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj OK File " << m_sFile << " Open";
+		loadMaterial(m_sFile.toStdString());		
 	}
 	
 	while (!ObjFile.eof())
@@ -419,40 +420,44 @@ void GLC_ObjToMesh2::loadMaterial(std::string FileName)
 // Extract String
 void GLC_ObjToMesh2::extractString(const std::string &Ligne, GLC_Material *pMaterial)
 {
-	istringstream StreamString(Ligne);
-	string Header;
-	string Value;
-	
-	assert((StreamString >> Header >> Value));
-	// If There is an space in the string to extracts
-	string Value2;
-	while ((StreamString >> Value2))
+	QTextStream stream(QString::fromStdString(Ligne).toAscii());
+	QString valueString;
+	QString header;
+	if ((stream >> header >> valueString).status() == QTextStream::Ok)
 	{
-		Value.append(" ");
-		Value.append(Value2);
+		// If There is an space in the string to extracts
+		QString valueString2;
+		while ((stream >> valueString2).status() == QTextStream::Ok)
+		{
+			valueString.append(" ");
+			valueString.append(valueString2);
+		}
+		if (header == "newmtl")	// The string to extract is the material name
+		{		
+			pMaterial->setName(valueString);
+			qDebug() << "Material name is : " << valueString;
+		}
+		else if (header == "map_Kd")// The string to extract is the texture file name
+		{
+			// Retrieve the .obj file path
+			QString textureFile(m_sFile);
+			int start= m_sFile.lastIndexOf('/');
+			start++;
+			textureFile.remove(start, textureFile.size());
+			
+			// concatenate File Path with texture filename
+			textureFile.append(valueString);
+			
+			// Create the texture and assign it to current material
+			GLC_Texture *pTexture = new GLC_Texture(m_pGLWidget, textureFile);
+			pMaterial->setTexture(pTexture);
+			qDebug() << "Texture File is : " << valueString;
 	}
-	
 		
-	if (Header == "newmtl")	// The string to extract is the material name
-	{		
-		pMaterial->setName(Value.c_str());
-		qDebug() << "Material name is : " << Value.c_str();
-	}
-	else if (Header == "map_Kd")// The string to extract is the texture file name
+	}else
 	{
-		// Retrieve the .obj file path
-		string TextureFile(m_sFile);
-		int start= m_sFile.find_last_of('/');
-		start++;
-		TextureFile.erase(start);
-		
-		// concatenate File Path with texture filename
-		TextureFile.append(Value);
-		
-		// Create the texture and assign it to current material
-		GLC_Texture *pTexture = new GLC_Texture(m_pGLWidget, QString::fromStdString(TextureFile));
-		pMaterial->setTexture(pTexture);
-		qDebug() << "Texture File is : " << Value.c_str();
+		qDebug() << "GLC_ObjToMesh2::extractString : something is wrong!!";
+		assert(false);		
 	}
 	
 }
@@ -460,39 +465,54 @@ void GLC_ObjToMesh2::extractString(const std::string &Ligne, GLC_Material *pMate
 // Extract RGB value
 void GLC_ObjToMesh2::extractRGBValue(const std::string &Ligne, GLC_Material *pMaterial)
 {
-	istringstream StreamString(Ligne);
-	string Header;
+	QTextStream stream(QString::fromStdString(Ligne).toAscii());
+	QString header;
+	QString rColor, gColor, bColor;
 	GLfloat RgbaColor[4];
-
-	if (!(StreamString >> Header >> RgbaColor[0] >> RgbaColor[1] >> RgbaColor[2]))
+	
+	if ((stream >> header >> rColor >> gColor >> bColor).status() == QTextStream::Ok)
+	{
+		bool okr, okg, okb;
+		RgbaColor[0]= rColor.toFloat(&okr);
+		RgbaColor[1]= gColor.toFloat(&okg);
+		RgbaColor[2]= bColor.toFloat(&okb);
+		if (!(okr && okg && okb))
+		{
+			qDebug() << "GLC_ObjToMesh2::ExtractRGBValue : Wrong format of rgb color value!!";
+			qDebug() << "Current mtl file line is : " << Ligne.c_str();
+			assert(false);
+		}		
+		RgbaColor[3]= 1.0f;
+		if (header == "Ka") // Ambiant Color
+		{
+			pMaterial->setAmbientColor(RgbaColor);
+			qDebug() << "Ambiant Color : " <<  (RgbaColor[0]) << " " << (RgbaColor[1]) << " " << (RgbaColor[2]);
+		}
+		
+		else if (header == "Kd") // Diffuse Color
+		{
+			pMaterial->setDiffuseColor(RgbaColor);
+			qDebug() << "Diffuse Color : " <<  RgbaColor[0] << " " << RgbaColor[1] << " " << RgbaColor[2];
+		}
+		
+		else if (header == "Ks") // Specular Color
+		{
+			pMaterial->setSpecularColor(RgbaColor);
+			qDebug() << "Specular Color : " <<  RgbaColor[0] << " " << RgbaColor[1] << " " << RgbaColor[2];
+		}
+		
+		else
+		{
+			qDebug() << "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
+			assert(false);
+		}
+		
+	}else
 	{
 		qDebug() << "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
+		qDebug() << "Current mtl file line is : " << Ligne.c_str();		
 		assert(false);
-	}
-	RgbaColor[3]= 1.0f;
-	
-	if (Header == "Ka") // Ambiant Color
-	{
-		pMaterial->setAmbientColor(RgbaColor);
-		qDebug() << "Ambiant Color : " <<  (RgbaColor[0]) << " " << (RgbaColor[1]) << " " << (RgbaColor[2]);
-	}
-	
-	else if (Header == "Kd") // Diffuse Color
-	{
-		pMaterial->setDiffuseColor(RgbaColor);
-		qDebug() << "Diffuse Color : " <<  RgbaColor[0] << " " << RgbaColor[1] << " " << RgbaColor[2];
-	}
-	
-	else if (Header == "Ks") // Specular Color
-	{
-		pMaterial->setSpecularColor(RgbaColor);
-		qDebug() << "Specular Color : " <<  RgbaColor[0] << " " << RgbaColor[1] << " " << RgbaColor[2];
-	}
-	
-	else
-	{
-		qDebug() << "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
-		assert(false);
+		
 	}
 
 		
@@ -501,31 +521,37 @@ void GLC_ObjToMesh2::extractRGBValue(const std::string &Ligne, GLC_Material *pMa
 // Extract One value
 void GLC_ObjToMesh2::extractOneValue(const std::string &Ligne, GLC_Material *pMaterial)
 {
-	istringstream StreamString(Ligne);
-	string Header;
-	GLfloat Value;
-
-	if (!(StreamString >> Header >> Value))
+	QTextStream stream(QString::fromStdString(Ligne).toAscii());
+	QString valueString;
+	QString header;
+	GLfloat value;
+	
+	if ((stream >> header >> valueString).status() == QTextStream::Ok)
+	{
+		if (header == "Ns") // Ambient color
+		{
+			bool ok;
+			value= valueString.toFloat(&ok);
+			if (!ok)
+			{
+				qDebug() << "GLC_ObjToMesh2::ExtractOneValue : Wrong format of Ambient color value!!";
+				qDebug() << "Current mtl file line is : " << Ligne.c_str();
+				assert(false);
+			}
+			pMaterial->setShininess(value);
+			qDebug() << "Shininess : " <<  value;
+		}else
+		{
+			qDebug() << "GLC_ObjToMesh2::ExtractOneValue : Ambient Color not found!!";
+			assert(false);			
+		}
+	}else
 	{
 		qDebug() << "GLC_ObjToMesh2::ExtractOneValue : something is wrong!!";
 		qDebug() << "Current mtl file line is : " << Ligne.c_str();
-		assert(false);
+		assert(false);		
 	}
 	
-	if (Header == "Ns") // Ambiant Color
-	{
-		pMaterial->setShininess(Value);
-		qDebug() << "Shininess : " <<  Value;
-	}		
-	
-	else
-	{
-		qDebug() << "GLC_ObjToMesh2::ExtractOneValue : something is wrong!!";
-		assert(false);
-	}
-
-		
-
 }
 
 

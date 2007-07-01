@@ -144,7 +144,7 @@ private:
 //@} End of array of texture coordinate vector
 
 	//! OBJ File name
-	std::string m_sFile;
+	QString m_sFile;
 	
 	//! Material name <=> index Hash table
 	MaterialHashMap m_MaterialNameIndex;
