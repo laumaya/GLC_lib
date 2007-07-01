@@ -28,7 +28,7 @@
 #define GLC_OBJECT_H_
 
 #include <QtOpenGL>
-#include <string>
+#include <QString>
 
 #include "glc_maths.h"
 #include "glc_enum.h"
@@ -56,7 +56,7 @@ public:
 	/*! Create a GLC_Object , Generate is UID GLC_Object::m_Uid 
 	 * and set GLC_Object::m_Name to pName*/
 	//GLC_Object(const char *pName= "");
-	GLC_Object(const std::string name= "");
+	GLC_Object(const QString name= "");
 	
 	//! Copy constructor
 	GLC_Object(const GLC_Object& sourceObject);
@@ -82,7 +82,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set Object Name
-	void setName(const std::string name);
+	void setName(const QString name);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -105,6 +105,6 @@ private:
 	/*! Generated on GLC_Object creation*/
 	GLC_uint		m_Uid;
 	//! Name of an GLC_Object
-	std::string		m_Name;
+	QString		m_Name;
 };
 #endif //GLC_OBJECT_H_
