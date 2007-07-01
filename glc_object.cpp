@@ -32,7 +32,7 @@ using namespace std;
 // Constructor/Destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_Object::GLC_Object(const std::string name)
+GLC_Object::GLC_Object(const QString name)
 : m_Uid(GLC_GenID())	// Object ID
 , m_Name(name)			// Object Name
 {
@@ -64,7 +64,7 @@ GLC_uint GLC_Object::getID() const
 // Object Name
 const char* GLC_Object::getName() const
 {
-	return m_Name.c_str();
+	return m_Name.toAscii().data();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -72,8 +72,8 @@ const char* GLC_Object::getName() const
 //////////////////////////////////////////////////////////////////////
 
 // Object Name
-void GLC_Object::setName(const std::string name)
+void GLC_Object::setName(const QString name)
 {
-	m_Name.assign(name);
+	m_Name= name;
 }
 
