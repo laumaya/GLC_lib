@@ -28,7 +28,6 @@
 #define GLC_OBJ_TO_MESH2_H_
 
 
-#include <string>
 #include <QString>
 #include <QHash>
 
@@ -67,7 +66,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an GLC_Mesh from an input OBJ File
-	GLC_Mesh2* CreateMeshFromObj(std::string sFile);
+	GLC_Mesh2* CreateMeshFromObj(QFile &file);
 //@}
 
 //////////////////////////////////////////////////////////////////////

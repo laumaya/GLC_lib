@@ -27,16 +27,11 @@
 #include <QtDebug>
 #include <QVector>
 #include <QFile>
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <sstream>
 #include <assert.h>
 
 #include "glc_objtomesh2.h"
 #include "glc_texture.h"
 
-using namespace std;
 
 //////////////////////////////////////////////////////////////////////
 // Constructor
@@ -61,10 +56,10 @@ GLC_ObjToMesh2::GLC_ObjToMesh2(QGLWidget *GLWidget)
 //////////////////////////////////////////////////////////////////////
 
 // Create an GLC_Mesh from an input OBJ File
-GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
+GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 {
 	// Initialisation
-	m_sFile= QString::fromStdString(sFile);
+	m_sFile= file.fileName();
 	m_pMesh= NULL;	// In case of multi obj read
 
 	m_pCurrentMaterial= NULL;
@@ -79,14 +74,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 	// Allocate Mesh memmory
 	m_pMesh= new GLC_Mesh2();
 	
-	
-	// Create the input file stream
-	qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj Create an input file Stream";
-	QFile objFile(m_sFile);
-	
-	
-	
-	if (!objFile.open(QIODevice::ReadOnly))
+	if (!file.open(QIODevice::ReadOnly))
 	{
 		qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj File " << m_sFile << " doesn't exist";
 		return NULL;
@@ -96,7 +84,8 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 		qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj OK File " << m_sFile << " exist";
 	}
 	loadMaterial(m_sFile);
-	QTextStream objStream(&objFile);
+	// Create the input file stream
+	QTextStream objStream(&file);
 	
 	// QString buffer	
 	QString lineBuff;
@@ -137,7 +126,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(string sFile)
 		scanLigne(lineBuff);		
 	}
 	
-	objFile.close();
+	file.close();
 
 	m_MaterialNameIndex.clear();
 	qDebug("GLC_ObjToMesh2::CreateMeshFromObj End of mesh creation");
@@ -264,7 +253,6 @@ void GLC_ObjToMesh2::extractFaceIndex(const QString &line)
 
 	while ((!streamFace.atEnd()))
 	{
-		qDebug() << line;
 		streamFace >> buff;
 		extractVertexIndex(buff, coordinate, normal, textureCoordinate);
 		if (-1 != textureCoordinate)
