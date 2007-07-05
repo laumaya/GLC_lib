@@ -107,7 +107,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 			m_nNbrVectNorm++;
 			
 	}
-
+	
 	// Check the validity of OBJ file
 	if (!m_nNbrVectNorm || !m_nNbrVectPos)
 	{
@@ -130,8 +130,9 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 
 	m_MaterialNameIndex.clear();
 	qDebug("GLC_ObjToMesh2::CreateMeshFromObj End of mesh creation");
-
+	
 	return m_pMesh;
+	
 }
 
 /////////////////////////////////////////////////////////////////////
