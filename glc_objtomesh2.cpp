@@ -180,14 +180,14 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 }
 
 // Extract a Vector from a string
-GLC_Vector3d GLC_ObjToMesh2::extract3dVect(const QString &line)
+GLC_Vector3d GLC_ObjToMesh2::extract3dVect(QString &line)
 {
 	double x=0.0;
 	double y=0.0;
 	double z=0.0;
 	
 	GLC_Vector3d vectResult;
-	QTextStream stringVecteur(line.toAscii());
+	QTextStream stringVecteur(&line);
 
 	QString xString, yString, zString;
 	
@@ -210,12 +210,12 @@ GLC_Vector3d GLC_ObjToMesh2::extract3dVect(const QString &line)
 }
 
 // Extract a Vector from a string
-GLC_Vector2d GLC_ObjToMesh2::extract2dVect(const QString &line)
+GLC_Vector2d GLC_ObjToMesh2::extract2dVect(QString &line)
 {
 	double x=0.0;
 	double y=0.0;
 	GLC_Vector2d vectResult;
-	QTextStream stringVecteur(line.toAscii());
+	QTextStream stringVecteur(&line);
 
 	QString xString, yString;
 	
@@ -236,7 +236,7 @@ GLC_Vector2d GLC_ObjToMesh2::extract2dVect(const QString &line)
 }
 
 // Extract a face from a string
-void GLC_ObjToMesh2::extractFaceIndex(const QString &line)
+void GLC_ObjToMesh2::extractFaceIndex(QString &line)
 {
 	QString buff;
 	
@@ -250,7 +250,7 @@ void GLC_ObjToMesh2::extractFaceIndex(const QString &line)
 	int normal;
 	int textureCoordinate;
 	
-	QTextStream streamFace(line.toAscii());
+	QTextStream streamFace(&line);
 
 	while ((!streamFace.atEnd()))
 	{
@@ -281,9 +281,9 @@ void GLC_ObjToMesh2::extractFaceIndex(const QString &line)
 }
 
 //! Set Current material index
-void GLC_ObjToMesh2::setCurrentMaterial(const QString &line)
+void GLC_ObjToMesh2::setCurrentMaterial(QString &line)
 {
-	QTextStream streamString(line.toAscii());
+	QTextStream streamString(&line);
 	QString materialName;
 
 	if (!((streamString >> materialName).status() == QTextStream::Ok))
@@ -311,7 +311,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 	ligne.replace('/', ' ');
 	// End of "/" replacement
 
-	QTextStream streamVertex(ligne.toAscii());
+	QTextStream streamVertex(&ligne);
 	QString coordinateString, textureCoordinateString;
 	
 	if ((streamVertex >> coordinateString >> textureCoordinateString).status() ==QTextStream::Ok)
@@ -458,9 +458,9 @@ void GLC_ObjToMesh2::loadMaterial(QString fileName)
 }
 
 // Extract String
-void GLC_ObjToMesh2::extractString(const QString &ligne, GLC_Material *pMaterial)
+void GLC_ObjToMesh2::extractString(QString &ligne, GLC_Material *pMaterial)
 {
-	QTextStream stream(ligne.toAscii());
+	QTextStream stream(&ligne);
 	QString valueString;
 	QString header;
 	if ((stream >> header >> valueString).status() == QTextStream::Ok)
@@ -503,9 +503,9 @@ void GLC_ObjToMesh2::extractString(const QString &ligne, GLC_Material *pMaterial
 }
 
 // Extract RGB value
-void GLC_ObjToMesh2::extractRGBValue(const QString &ligne, GLC_Material *pMaterial)
+void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 {
-	QTextStream stream(ligne.toAscii());
+	QTextStream stream(&ligne);
 	QString header;
 	QString rColor, gColor, bColor;
 	GLfloat RgbaColor[4];
@@ -559,9 +559,9 @@ void GLC_ObjToMesh2::extractRGBValue(const QString &ligne, GLC_Material *pMateri
 }
 
 // Extract One value
-void GLC_ObjToMesh2::extractOneValue(const QString &ligne, GLC_Material *pMaterial)
+void GLC_ObjToMesh2::extractOneValue(QString &ligne, GLC_Material *pMaterial)
 {
-	QTextStream stream(ligne.toAscii());
+	QTextStream stream(&ligne);
 	QString valueString;
 	QString header;
 	GLfloat value;

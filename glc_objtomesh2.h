@@ -77,16 +77,16 @@ private:
 	void scanLigne(QString &line);
 
 	//! Extract a 3D Vector from a string
-	GLC_Vector3d extract3dVect(const QString &line);
+	GLC_Vector3d extract3dVect(QString &line);
 
 	//! Extract a 2D Vector from a string
-	GLC_Vector2d extract2dVect(const QString &line);
+	GLC_Vector2d extract2dVect(QString &line);
 
 	//! Extract a face from a string
-	void extractFaceIndex(const QString &line);
+	void extractFaceIndex(QString &line);
 	
 	//! Set Current material index
-	void setCurrentMaterial(const QString &line);	
+	void setCurrentMaterial(QString &line);	
 
 	//! Extract a vertex from a string
 	void extractVertexIndex(QString ligne, int &Coordinate, int &Normal, int &TextureCoordinate);
@@ -95,13 +95,13 @@ private:
 	void loadMaterial(QString fileName);
 	
 	//! Extract String
-	void extractString(const QString &ligne, GLC_Material *pMaterial);
+	void extractString(QString &ligne, GLC_Material *pMaterial);
 	
 	//! Extract RGB value
-	void extractRGBValue(const QString &ligne, GLC_Material *pMaterial);
+	void extractRGBValue(QString &ligne, GLC_Material *pMaterial);
 	
 	//! Extract One value
-	void extractOneValue(const QString &ligne, GLC_Material *pMaterial);
+	void extractOneValue(QString &ligne, GLC_Material *pMaterial);
 	
 
 //////////////////////////////////////////////////////////////////////
