@@ -37,7 +37,8 @@
 // Constructor
 //////////////////////////////////////////////////////////////////////
 GLC_ObjToMesh2::GLC_ObjToMesh2(QGLWidget *GLWidget)
-: m_pMesh(NULL)
+: QObject()
+, m_pMesh(NULL)
 , m_pCurrentMaterial(NULL)
 , m_CurrentMaterialIndex(-1)
 , m_nNbrVectPos(0)
@@ -50,7 +51,6 @@ GLC_ObjToMesh2::GLC_ObjToMesh2(QGLWidget *GLWidget)
 {
 
 }
-
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -89,9 +89,11 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	
 	// QString buffer	
 	QString lineBuff;
-		
+	
+	int numberOfLine= 0;	
 	while (!objStream.atEnd())
 	{
+		++numberOfLine;
 		lineBuff= objStream.readLine();
 		lineBuff= lineBuff.trimmed();
 		// Search a vertex vector
@@ -119,11 +121,24 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	
 	objStream.resetStatus();
 	objStream.seek(0);
+	
+	int currentLineNumber= 0;
+	int currentQuantumValue= 0;
+	int previousQuantumValue= 0;
 	// Read Buffer and create mesh
+	emit currentQuantum(currentQuantumValue);
 	while (!objStream.atEnd())
 	{
+		++currentLineNumber;
 		lineBuff= objStream.readLine();
-		scanLigne(lineBuff);		
+		scanLigne(lineBuff);
+		currentQuantumValue = static_cast<int>((static_cast<double>(currentLineNumber) / numberOfLine) * 100);
+		if (currentQuantumValue > previousQuantumValue)
+		{
+			emit currentQuantum(currentQuantumValue);
+		}
+		previousQuantumValue= currentQuantumValue;
+					
 	}
 	
 	file.close();
