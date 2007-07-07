@@ -134,6 +134,7 @@ GLC_Cylinder* GLC_Factory::createCylinder(const GLC_Geometry* pCylinder) const
 GLC_Mesh2* GLC_Factory::createMesh(QFile &file) const
 {
 	GLC_ObjToMesh2 objToMesh(m_pQGLWidget);
+	connect(&objToMesh, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 	return objToMesh.CreateMeshFromObj(file);
 }
 

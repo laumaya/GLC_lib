@@ -27,7 +27,7 @@
 #ifndef GLC_FACTORY_
 #define GLC_FACTORY_
 
-#include <string>
+#include <QObject>
 #include <QtOpenGL>
 #include <QString>
 #include "glc_maths.h"
@@ -50,8 +50,10 @@
  *  this class is a singleton
  */
 //////////////////////////////////////////////////////////////////////
-class GLC_Factory
+class GLC_Factory : public QObject
 {
+	Q_OBJECT
+	
 public:
 	//! Get unique instance of the factory
 	static GLC_Factory* instance(QGLWidget *GLWidget);
@@ -105,6 +107,9 @@ public:
 	GLC_Texture* createTexture(const QString &textureFullFileName) const;
 	
 //@}
+
+	signals:
+	void currentQuantum(int);
 
 //////////////////////////////////////////////////////////////////////
 // Private members 
