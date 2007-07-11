@@ -44,7 +44,7 @@ class GLC_OpenGlException : public GLC_Exception
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_OpenGlException(const std::string& message, GLenum glError);
+	GLC_OpenGlException(const QString& message, GLenum glError);
 	
 	//! Destructor
 	virtual ~GLC_OpenGlException() throw();
@@ -65,7 +65,7 @@ public:
 protected:
 	
 	//! Opengl Error description
-	std::string m_GlErrorDescription;
+	QString m_GlErrorDescription;
 
 };
 

@@ -30,7 +30,7 @@
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_OpenGlException::GLC_OpenGlException(const std::string& message, GLenum glError)
+GLC_OpenGlException::GLC_OpenGlException(const QString& message, GLenum glError)
 :GLC_Exception(message)
 {
 	switch (glError)
@@ -73,8 +73,8 @@ GLC_OpenGlException::~GLC_OpenGlException() throw()
 // Return exception description
 const char* GLC_OpenGlException::what() const throw()
 {
-	std::string exceptionmsg("GLC_OpenGlException : ");
+	QString exceptionmsg("GLC_OpenGlException : ");
 	exceptionmsg.append(m_ErrorDescription);
 	exceptionmsg.append(m_GlErrorDescription);
-	return exceptionmsg.c_str();
+	return exceptionmsg.toAscii().data();
 }
