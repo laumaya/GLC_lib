@@ -195,11 +195,7 @@ GLC_Geometry* GLC_Collection::getElement(int Index)
 //! return the collection Bounding Box
 GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 {
-	if ((m_pBoundingBox != NULL) && m_ListIsValid)
-	{
-		return *m_pBoundingBox;
-	}
-	else if (getNumber() > 0)
+	if (!((m_pBoundingBox != NULL) && m_ListIsValid) && (getNumber() > 0))
 	{
 		CNodeMap::iterator iEntry= m_TheMap.begin();
 		if (m_pBoundingBox != NULL)
@@ -218,17 +214,26 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 	    if (m_pBoundingBox->isEmpty())
 	    {
 	    	delete m_pBoundingBox;
-	    	m_pBoundingBox= NULL;
-	    }
-	    else
-	    {
-	    	return *m_pBoundingBox;
+			GLC_Vector4d lower(-0.5, -0.5, -0.5);
+			GLC_Vector4d upper(0.5, 0.5, 0.5);
+			m_pBoundingBox= new GLC_BoundingBox(lower, upper);
 	    }
 				
 	}
+	else if (!((m_pBoundingBox != NULL) && m_ListIsValid))
+	{
+		if (m_pBoundingBox != NULL)
+		{
+			delete m_pBoundingBox;
+			m_pBoundingBox= NULL;
+		}		
+		GLC_Vector4d lower(-0.5, -0.5, -0.5);
+		GLC_Vector4d upper(0.5, 0.5, 0.5);
+		m_pBoundingBox= new GLC_BoundingBox(lower, upper);
+		
+	}
 	
-	GLC_BoundingBox boundingBox;
-	return boundingBox;
+	return *m_pBoundingBox;
 	
 }
 
