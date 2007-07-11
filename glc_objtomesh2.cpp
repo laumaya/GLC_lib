@@ -31,6 +31,7 @@
 
 #include "glc_objtomesh2.h"
 #include "glc_texture.h"
+#include "glc_fileformatexception.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -109,12 +110,12 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 			m_nNbrVectNorm++;
 			
 	}
-	
 	// Check the validity of OBJ file
 	if (!m_nNbrVectNorm || !m_nNbrVectPos)
 	{
-		qDebug("GLC_ObjToMesh2::CreateMeshFromObj OBJ file without Normals not emplemented!");
-		return NULL;
+		const QString message= "GLC_ObjToMesh2::CreateMeshFromObj OBJ file without Normals not emplemented!";
+		GLC_FileFormatException fileFormatException(message, m_sFile);
+		throw(fileFormatException);
 	}
 	qDebug() << "Coordinate number : " << m_nNbrVectPos;
 	qDebug() << "Normal number : " << m_nNbrVectNorm;
