@@ -28,7 +28,7 @@
 #define GLC_EXCEPTION_H_
 
 #include <exception>
-#include <string>
+#include <QString>
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Exception
@@ -43,7 +43,7 @@ class GLC_Exception : public std::exception
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_Exception(const std::string &message);
+	GLC_Exception(const QString &message);
 	
 	//! Destructor
 	virtual ~GLC_Exception() throw();
@@ -65,7 +65,7 @@ public:
 protected:
 	
 	//! Error description
-	std::string m_ErrorDescription;
+	QString m_ErrorDescription;
 };
 	
 #endif /*GLC_EXCEPTION_H_*/

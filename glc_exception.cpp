@@ -30,7 +30,7 @@
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_Exception::GLC_Exception(const std::string &message)
+GLC_Exception::GLC_Exception(const QString &message)
 : m_ErrorDescription(message)
 {
 	
@@ -46,7 +46,7 @@ GLC_Exception::~GLC_Exception() throw()
 //! Return exception description
 const char* GLC_Exception::what() const throw()
 {
-	std::string exceptionmsg("GLC_Exception : ");
+	QString exceptionmsg("GLC_Exception : ");
 	
-	return exceptionmsg.c_str();
+	return exceptionmsg.toAscii().data();
 }
