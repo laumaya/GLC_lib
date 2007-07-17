@@ -31,8 +31,8 @@
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
-GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport, const char* pName, const GLfloat *pColor)
-:GLC_Geometry(pName, pColor)
+GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport, const QColor& color)
+:GLC_Geometry("Image Plane", color)
 , m_pImgTexture(NULL)
 , m_pViewport(pViewport)
 , m_dLgImage(0)
@@ -159,7 +159,7 @@ void GLC_ImagePlane::glPropGeom(void)
 		glDepthMask(GL_TRUE);
 		//glEnable(GL_DEPTH_TEST);
 		glEnable(GL_TEXTURE_2D);
-		glColor4fv(getfRGBA());
+		glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
 		m_pImgTexture->glcBindTexture();
 	}
 	else
@@ -168,7 +168,7 @@ void GLC_ImagePlane::glPropGeom(void)
 		glDepthMask(GL_TRUE);
 		//glEnable(GL_DEPTH_TEST);
 		glDisable(GL_TEXTURE_2D);
-		glColor4fv(getfRGBA());
+		glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
 	}
 	
 	// Polygons display mode
