@@ -27,6 +27,7 @@
 #ifndef GLC_GEOMETRY_H_
 #define GLC_GEOMETRY_H_
 
+#include <QColor>
 #include "glc_object.h"
 #include "glc_material.h"
 #include "glc_boundingbox.h"
@@ -61,7 +62,7 @@ class GLC_Geometry :
 //////////////////////////////////////////////////////////////////////
 public:
 	// default constructor
-	GLC_Geometry(const char *pName, const GLfloat *pColor);
+	GLC_Geometry(const QString &name, const QColor &color);
 	//! Copy constructor
 	GLC_Geometry(const GLC_Geometry& sourceGeom);
 	
@@ -80,19 +81,19 @@ public:
 	const bool isVisible(void) const;
 
 	//! Return an array of 4 GLfloat which represent the color
-	const GLfloat *getfRGBA(void) const;
+	QColor getRGBA(void) const;
 
 	//! Return Color Red component
-	GLfloat getfRed(void) const;
+	GLdouble getdRed(void) const;
 
 	//! Return Color Green component
-	GLfloat getfGreen(void) const;
+	GLdouble getdGreen(void) const;
 	
 	//! Return Color blue component
-	GLfloat getfBlue(void) const;
+	GLdouble getdBlue(void) const;
 	
 	//! Return Color Alpha component
-	GLfloat getfAlpha(void) const;
+	GLdouble getdAlpha(void) const;
 	
 	//! Return transfomation 4x4Matrix
 	const GLC_Matrix4x4 getMatrix(void) const;
@@ -131,10 +132,10 @@ public:
 	void setVisibility(bool v);
 
 	//! Set Color RGBA component
-	void setRGBAColor(GLfloat Rouge, GLfloat Vert, GLfloat Bleu, GLfloat Alpha= 1);
+	void setRGBAColor(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha= 1.0);
 
-	//! Set Color RGBA component with an array of 4 GLfloat
-	void setRGBAColor(const GLfloat* SetCol);	// SetCol[4]
+	//! Set Color RGBA component with an QColor Object
+	void setRGBAColor(const QColor&);
 
 
 // Set Position	
@@ -252,7 +253,7 @@ protected:
 private:
 
 	// RGBA geometry color
-	GLfloat	m_RGBAColor[4];
+	QColor	m_Color;
 
 	// Thikness of geometry's Edge
 	float m_Thikness;
