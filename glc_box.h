@@ -49,8 +49,7 @@ class GLC_Box : public GLC_Geometry
 public:	
 	//! Construct an GLC_Box
 	/*! By default, discretion is set to #GLC_POLYDISCRET*/
-	GLC_Box(double dLongueur, double dLargeur, double dHauteur
-		, const char *pName= "Cuboid", const GLfloat *pColor= 0);
+	GLC_Box(double dLongueur, double dLargeur, double dHauteur, const QColor& color);
 //@}
 
 //////////////////////////////////////////////////////////////////////
