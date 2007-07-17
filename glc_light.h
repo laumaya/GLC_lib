@@ -27,6 +27,7 @@
 #ifndef GLC_LIGHT_H_
 #define GLC_LIGHT_H_
 
+#include <QColor>
 #include "glc_object.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -47,7 +48,8 @@ class GLC_Light :
 public:
 	//! Construct an GLC_Light
 	/*! By default, Ambiant Color is dark grey*/
-	GLC_Light(const char *pName, const GLfloat *pAmbiantColor = NULL);
+	GLC_Light();
+	GLC_Light(const QColor& );
 	
 	//! Delete OpenGL list
 	virtual ~GLC_Light(void);
@@ -59,25 +61,21 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get a 4D Vector representing light position
-	GLC_Vector4d getPosition(void) const
-	{
-		GLC_Vector4d ReturnVect(m_Position[0], m_Position[1], m_Position[2], m_Position[3]);
-		return ReturnVect;
-	}
+	GLC_Vector4d getPosition(void) const {return m_Position;}
 
-	//! Get an array of GLfloat for the light's ambiant color
-	const GLfloat *getAmbientColor()
+	//! Get a QColor of the light's ambiant color
+	const QColor getAmbientColor()
 	{
 		return m_AmbientColor;
 	}
 
-	//! Get an array of GLfloat for the light's Diffuse color
-	const GLfloat *getDiffuseColor()
+	//! Get  a QColor of the light's Diffuse color
+	const QColor getDiffuseColor()
 	{
 		return m_DiffuseColor;
 	}
-	//! Get an array of GLfloat for the light's Specular color
-	const GLfloat *getSpecularColor()
+	//! Get  a QColor of the light's Specular color
+	const QColor getSpecularColor()
 	{
 		return m_SpecularColor;
 	}
@@ -94,14 +92,14 @@ public:
 	//! Set lihgt's position by a 3 GLfloat
 	void setPosition(GLfloat x, GLfloat y, GLfloat z);
 	
-	//! Set light's ambiant color by an array of GLfloat
-	void setAmbientColor(const GLfloat* pfCol);
+	//! Set light's ambiant color by a QColor
+	void setAmbientColor(const QColor &);
 
-	//! Set light's diffuse color by an array of GLfloat
-	void setDiffuseColor(const GLfloat* pfCol);
+	//! Set light's diffuse color by a QColor
+	void setDiffuseColor(const QColor &);
 
-	//! Set light's specular color by an array of GLfloat
-	void setSpecularColor(const GLfloat* pfCol);
+	//! Set light's specular color by a QColor
+	void setSpecularColor(const QColor &);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -159,14 +157,14 @@ private:
 	bool m_ListIsValid;
 
 	//! Light ambiant color
-	GLfloat m_AmbientColor[4];
+	QColor m_AmbientColor;
 	//! Light diffuse color
-	GLfloat m_DiffuseColor[4];
+	QColor m_DiffuseColor;
 	//! Light specular color
-	GLfloat m_SpecularColor[4];
+	QColor m_SpecularColor;
 	
 	//! Light position
-	GLfloat m_Position[4];
+	GLC_Vector4d m_Position;
 
 };
 #endif //GLC_LIGHT_H_

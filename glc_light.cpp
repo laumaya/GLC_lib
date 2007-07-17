@@ -31,47 +31,31 @@
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
-GLC_Light::GLC_Light(const char *pName ,const GLfloat *pAmbiantColor)
-:GLC_Object(pName)
+GLC_Light::GLC_Light()
+:GLC_Object("Light")
 , m_LightID(GL_LIGHT1)	// Default Light ID
-, m_ListID(0)				// By default display list ID= 0
+, m_ListID(0)			// By default display list ID= 0
 , m_ListIsValid(false)	// By default display list is not valid
+, m_AmbientColor()		// Ambient color will be set in the constructor
+, m_DiffuseColor(Qt::white)		// By default diffuse color is set to white
+, m_SpecularColor(Qt::white)	// By default specular color is set to white
+, m_Position()
 {
 	//! \todo modify class to support multi light
+	m_AmbientColor.setRgbF(0.2, 0.2, 0.2, 1.0); // By default light's color is dark grey
+}
 
-	// Color Initialisation
-	if (pAmbiantColor != 0)
-	{
-		m_AmbientColor[0]= pAmbiantColor[0];
-		m_AmbientColor[1]= pAmbiantColor[1];
-		m_AmbientColor[2]= pAmbiantColor[2];
-		m_AmbientColor[3]= pAmbiantColor[3];
-	}
-	else
-	{	// By default light's color is dark grey
-		m_AmbientColor[0]= 0.2f;
-		m_AmbientColor[1]= 0.2f;
-		m_AmbientColor[2]= 0.2f;
-		m_AmbientColor[3]= 1.0f;
-	}
-	// Other are white
-	// Diffuse Color
-	m_DiffuseColor[0]= 1.0f;
-	m_DiffuseColor[1]= 1.0f;
-	m_DiffuseColor[2]= 1.0f;
-	m_DiffuseColor[3]= 1.0f;
-
-	// Specular Color
-	m_SpecularColor[0]= 1.0f;
-	m_SpecularColor[1]= 1.0f;
-	m_SpecularColor[2]= 1.0f;
-	m_SpecularColor[3]= 1.0f;
-
-	// Color position
-	m_Position[0]= 0.0f;
-	m_Position[1]= 0.0f;
-	m_Position[2]= 0.0f;
-	m_Position[3]= 1.0f;
+GLC_Light::GLC_Light(const QColor& color)
+:GLC_Object("Light")
+, m_LightID(GL_LIGHT1)	// Default Light ID
+, m_ListID(0)			// By default display list ID= 0
+, m_ListIsValid(false)	// By default display list is not valid
+, m_AmbientColor(color) // the ambiant color of the light
+, m_DiffuseColor(Qt::white)		// By default diffuse color is set to white
+, m_SpecularColor(Qt::white)	// By default specular color is set to white
+, m_Position()
+{
+	//! \todo modify class to support multi light
 }
 
 GLC_Light::~GLC_Light(void)
@@ -84,56 +68,39 @@ GLC_Light::~GLC_Light(void)
 //////////////////////////////////////////////////////////////////////
 
 // Set the lihgt position by a 4D vector
-void GLC_Light::setPosition(const GLC_Vector4d &VectPos)
+void GLC_Light::setPosition(const GLC_Vector4d &vectPos)
 {
-	m_Position[0]= static_cast<GLfloat>(VectPos.getX());
-	m_Position[1]= static_cast<GLfloat>(VectPos.getY());
-	m_Position[2]= static_cast<GLfloat>(VectPos.getZ());
-	m_Position[3]= static_cast<GLfloat>(VectPos.getW());
-
+	m_Position= vectPos;
 	m_ListIsValid = false;
 }
 
 // Set the lihgt position by a 3 GLfloat
 void GLC_Light::setPosition(GLfloat x, GLfloat y, GLfloat z)
 {
-	m_Position[0]= x;
-	m_Position[1]= y;
-	m_Position[2]= z;
-
+	m_Position.setX(x);
+	m_Position.setY(y);
+	m_Position.setZ(z);
 	m_ListIsValid = false;
 }
 
-// Set light's ambiant color by an array of GLfloat
-void GLC_Light::setAmbientColor(const GLfloat* pfCol)
+// Set light's ambiant color by a QColor
+void GLC_Light::setAmbientColor(const QColor& color)
 {
-	m_AmbientColor[0]= pfCol[0];
-	m_AmbientColor[1]= pfCol[1];
-	m_AmbientColor[2]= pfCol[2];
-	m_AmbientColor[3]= pfCol[3];
-
+	m_AmbientColor= color;
 	m_ListIsValid = false;
 }
 
-// Set light's diffuse color by an array of GLfloat
-void GLC_Light::setDiffuseColor(const GLfloat* pfCol)
+// Set light's diffuse color by a QColor
+void GLC_Light::setDiffuseColor(const QColor& color)
 {
-	m_DiffuseColor[0]= pfCol[0];
-	m_DiffuseColor[1]= pfCol[1];
-	m_DiffuseColor[2]= pfCol[2];
-	m_DiffuseColor[3]= pfCol[3];
-
+	m_DiffuseColor= color;
 	m_ListIsValid = false;
 }
 
-// Set light's specular color by an array of GLfloat
-void GLC_Light::setSpecularColor(const GLfloat* pfCol)
+// Set light's specular color by a QColor
+void GLC_Light::setSpecularColor(const QColor& color)
 {
-	m_SpecularColor[0]= pfCol[0];
-	m_SpecularColor[1]= pfCol[1];
-	m_SpecularColor[2]= pfCol[2];
-	m_SpecularColor[3]= pfCol[3];
-
+	m_SpecularColor= color;
 	m_ListIsValid = false;
 }
 
@@ -207,11 +174,31 @@ void GLC_Light::glExecute(GLenum Mode)
 void GLC_Light::glDraw(void)
 {
 	// Color
-	glLightfv(m_LightID, GL_AMBIENT, m_AmbientColor);		// Setup The Ambient Light
-	glLightfv(m_LightID, GL_DIFFUSE, m_DiffuseColor);		// Setup The Diffuse Light
-	glLightfv(m_LightID, GL_SPECULAR, m_SpecularColor);	// Setup The specular Light
+	GLfloat setArray[4]= {static_cast<GLfloat>(m_AmbientColor.redF()),
+									static_cast<GLfloat>(m_AmbientColor.greenF()),
+									static_cast<GLfloat>(m_AmbientColor.blueF()),
+									static_cast<GLfloat>(m_AmbientColor.alphaF())};
+	glLightfv(m_LightID, GL_AMBIENT, setArray);		// Setup The Ambient Light
+	
+	setArray[0]= static_cast<GLfloat>(m_DiffuseColor.redF());
+	setArray[1]= static_cast<GLfloat>(m_DiffuseColor.greenF());
+	setArray[2]= static_cast<GLfloat>(m_DiffuseColor.blueF());
+	setArray[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());	
+	glLightfv(m_LightID, GL_DIFFUSE, setArray);		// Setup The Diffuse Light
+
+	setArray[0]= static_cast<GLfloat>(m_SpecularColor.redF());
+	setArray[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
+	setArray[2]= static_cast<GLfloat>(m_SpecularColor.blueF());
+	setArray[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());		
+	glLightfv(m_LightID, GL_SPECULAR, setArray);	// Setup The specular Light
+	
 	// Position
-	glLightfv(m_LightID, GL_POSITION, m_Position);	// Position The Light
+	setArray[0]= static_cast<GLfloat>(m_Position.getX());
+	setArray[1]= static_cast<GLfloat>(m_Position.getY());
+	setArray[2]= static_cast<GLfloat>(m_Position.getZ());
+	setArray[3]= static_cast<GLfloat>(m_Position.getW());		
+	
+	glLightfv(m_LightID, GL_POSITION, setArray);	// Position The Light
 	
 	// OpenGL error handler
 	GLenum error= glGetError();	
