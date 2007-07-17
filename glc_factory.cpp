@@ -67,18 +67,18 @@ GLC_Factory::~GLC_Factory()
 // Create an GLC_Point
 GLC_Point* GLC_Factory::createPoint(const GLC_Vector4d &coord) const
 {
-	return new GLC_Point(coord);
+	return new GLC_Point(coord,  Qt::white);
 }
 // Create an GLC_Point
 GLC_Point* GLC_Factory::createPoint(double x, double y, double z) const
 {
-	return new GLC_Point(x, y, z);
+	return new GLC_Point(x, y, z,  Qt::white);
 }
 
 //  Create an GLC_Circle
 GLC_Circle* GLC_Factory::createCircle(double radius, double angle) const
 {
-	return new GLC_Circle(radius, angle);
+	return new GLC_Circle(radius, angle,  Qt::white);
 }
 // Create an GLC_Circle by copying another GLC_Circle
 GLC_Circle* GLC_Factory::createCircle(const GLC_Geometry* pCircle) const
@@ -96,7 +96,7 @@ GLC_Circle* GLC_Factory::createCircle(const GLC_Geometry* pCircle) const
 // Create an GLC_Box
 GLC_Box* GLC_Factory::createBox(double lx, double ly, double lz) const
 {
-	return new GLC_Box(lx, ly, lz);
+	return new GLC_Box(lx, ly, lz,  Qt::white);
 }
 
 // Create an GLC_Box
@@ -105,7 +105,7 @@ GLC_Box* GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 	const double lx= boundingBox.getUpper().getX() - boundingBox.getLower().getX();
 	const double ly= boundingBox.getUpper().getY() - boundingBox.getLower().getY();
 	const double lz= boundingBox.getUpper().getZ() - boundingBox.getLower().getZ();
-	GLC_Box* pBox= new GLC_Box(lx, ly, lz);
+	GLC_Box* pBox= new GLC_Box(lx, ly, lz,  Qt::white);
 	pBox->translate(boundingBox.getLower().getX(), boundingBox.getLower().getY()
 					, boundingBox.getLower().getZ());
 					
@@ -115,7 +115,7 @@ GLC_Box* GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 // Create an GLC_Cylinder
 GLC_Cylinder* GLC_Factory::createCylinder(double radius, double length) const
 {
-	return new GLC_Cylinder(radius, length);
+	return new GLC_Cylinder(radius, length,  Qt::white);
 }
 // Create an GLC_Cylinder by copying another GLC_Cylinder
 GLC_Cylinder* GLC_Factory::createCylinder(const GLC_Geometry* pCylinder) const
