@@ -33,9 +33,8 @@
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Circle::GLC_Circle(const double &dRadius, double Angle,
-const char *pName, const GLfloat *pColor)
-:GLC_Geometry(pName, pColor)
+GLC_Circle::GLC_Circle(const double &dRadius, const QColor& color, double Angle)
+:GLC_Geometry("Circle", color)
 , m_Radius(dRadius)
 , m_nDiscret(GLC_DISCRET)
 , m_dAngle(Angle)
@@ -175,7 +174,7 @@ void GLC_Circle::glPropGeom(void)
 	// Pas de transparence
 	glDisable(GL_BLEND);
 		
-	glColor4fv(getfRGBA());			// Color
+	glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// Color
 	glLineWidth(getThickness());	// Thikness
 			
 	// OpenGL error handler

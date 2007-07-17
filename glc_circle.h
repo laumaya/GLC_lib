@@ -48,8 +48,7 @@ public:
 
 	//! Construct an GLC_Circle
 	/*! By default, discretion is set to #GLC_DISCRET*/
-	GLC_Circle(const double &dRadius, double Angle= 2 * PI,
-	const char *pName= "Circle", const GLfloat *pColor= 0);
+	GLC_Circle(const double &dRadius, const QColor& color, double Angle= 2 * PI);
 
 	//! Copy constructor
 	GLC_Circle(const GLC_Circle& sourceCircle);

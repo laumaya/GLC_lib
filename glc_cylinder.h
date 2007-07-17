@@ -52,7 +52,7 @@ public:
 	 *  By default, Axis of Cylinder is Z Axis
 	 *  dRadius must be > 0
 	 *  dLength must be > 0*/
-	GLC_Cylinder(double dRadius, double dLength, const char *pName= "Cylinder", const GLfloat *pColor= 0);
+	GLC_Cylinder(double dRadius, double dLength, const QColor& color);
 	
 	//! Copy contructor
 	GLC_Cylinder(const GLC_Cylinder& sourceCylinder);

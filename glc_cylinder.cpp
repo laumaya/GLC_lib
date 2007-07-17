@@ -35,9 +35,8 @@
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, const char *pName
-						   , const GLfloat *pColor)
-:GLC_Geometry(pName, pColor)
+GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, const QColor& color)
+:GLC_Geometry("Cylinder", color)
 , m_Radius(dRadius)
 , m_dLength(dLength)
 , m_nDiscret(GLC_POLYDISCRET)	// Default discretion
@@ -284,7 +283,7 @@ void GLC_Cylinder::glPropGeom(void)
 				glDisable(GL_BLEND);
 			}
 
-			glColor4fv(getfRGBA());			// Color
+			glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// Color
 		}
 		else if (m_pMaterial->getAddRgbaTexture())
 		{
@@ -301,7 +300,7 @@ void GLC_Cylinder::glPropGeom(void)
 			{
 				glDisable(GL_BLEND);
 			}
-			glColor4fv(getfRGBA());			// Color
+			glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// Color
 
 			m_pMaterial->glExecute();
 		}
