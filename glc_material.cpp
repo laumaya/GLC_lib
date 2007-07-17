@@ -148,39 +148,27 @@ GLC_Material::~GLC_Material(void)
 //////////////////////////////////////////////////////////////////////
 
 // Get Ambiant color
-void GLC_Material::getAmbientColor(GLfloat* pfCol) const	// pfCol[4]
+QColor GLC_Material::getAmbientColor() const
 {
-	pfCol[0]= static_cast<GLfloat>(m_AmbientColor.redF());
-	pfCol[1]= static_cast<GLfloat>(m_AmbientColor.greenF());
-	pfCol[2]= static_cast<GLfloat>(m_AmbientColor.blueF());
-	pfCol[3]= static_cast<GLfloat>(m_AmbientColor.alphaF());
+	return m_AmbientColor;
 }
 
 // Get diffuse color
-void GLC_Material::getDiffuseColor(GLfloat* pfCol) const	// pfCol[4]
+QColor GLC_Material::getDiffuseColor() const
 {
-	pfCol[0]= static_cast<GLfloat>(m_DiffuseColor.redF());
-	pfCol[1]= static_cast<GLfloat>(m_DiffuseColor.greenF());
-	pfCol[2]= static_cast<GLfloat>(m_DiffuseColor.blueF());
-	pfCol[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());
+	return m_DiffuseColor; 
 }
 
 // Get specular color
-void GLC_Material::getSpecularColor(GLfloat* pfCol) const	// pfCol[4]
+QColor GLC_Material::getSpecularColor() const
 {
-	pfCol[0]= static_cast<GLfloat>(m_SpecularColor.redF());
-	pfCol[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
-	pfCol[2]= static_cast<GLfloat>(m_SpecularColor.blueF());
-	pfCol[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());
+	return m_SpecularColor;
 }
 
 // Get the emissive color
-void GLC_Material::getLightEmission(GLfloat* pfCol) const	// pfCol[4]
+QColor GLC_Material::getLightEmission() const
 {
-	pfCol[0]= static_cast<GLfloat>(m_LightEmission.redF());
-	pfCol[1]= static_cast<GLfloat>(m_LightEmission.greenF());
-	pfCol[2]= static_cast<GLfloat>(m_LightEmission.blueF());
-	pfCol[3]= static_cast<GLfloat>(m_LightEmission.alphaF());
+	return m_LightEmission;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -188,46 +176,30 @@ void GLC_Material::getLightEmission(GLfloat* pfCol) const	// pfCol[4]
 //////////////////////////////////////////////////////////////////////
 
 // Set Ambiant Color
-void GLC_Material::setAmbientColor(const GLfloat* pfCol) // pfCol[4]
+void GLC_Material::setAmbientColor(const QColor& ambientColor)
 {
-	m_AmbientColor.setRgbF(static_cast<qreal>(pfCol[0]),
-							static_cast<qreal>(pfCol[1]), 
-							static_cast<qreal>(pfCol[2]),
-							static_cast<qreal>(pfCol[3]));
-	
+	m_AmbientColor= ambientColor;
 	updateUsed();
 }
 
 // Set Diffuse color
-void GLC_Material::setDiffuseColor(const GLfloat* pfCol) // pfCol[4]
+void GLC_Material::setDiffuseColor(const QColor& diffuseColor)
 {
-	m_DiffuseColor.setRgbF(static_cast<qreal>(pfCol[0]),
-							static_cast<qreal>(pfCol[1]), 
-							static_cast<qreal>(pfCol[2]),
-							static_cast<qreal>(pfCol[3]));
-	
+	m_DiffuseColor= diffuseColor;
 	updateUsed();
 }
 
 // Set Specular color
-void GLC_Material::setSpecularColor(const GLfloat* pfCol) // pfCol[4]
+void GLC_Material::setSpecularColor(const QColor& specularColor)
 {
-	m_SpecularColor.setRgbF(static_cast<qreal>(pfCol[0]),
-							static_cast<qreal>(pfCol[1]), 
-							static_cast<qreal>(pfCol[2]),
-							static_cast<qreal>(pfCol[3]));
-	
+	m_SpecularColor= specularColor;
 	updateUsed();
 }
 
 // Set Emissive
-void GLC_Material::setLightEmission(const GLfloat* pfCol) // pfCol[4]
+void GLC_Material::setLightEmission(const QColor& lightEmission)
 {
-	m_LightEmission.setRgbF(static_cast<qreal>(pfCol[0]),
-							static_cast<qreal>(pfCol[1]), 
-							static_cast<qreal>(pfCol[2]),
-							static_cast<qreal>(pfCol[3]));
-	
+	m_LightEmission= lightEmission;
 	updateUsed();
 }
 
@@ -275,15 +247,26 @@ bool GLC_Material::delGLC_Geom(GLC_uint Key)
 // Execute OpenGL Material
 void GLC_Material::glExecute(GLenum Mode)
 {
-	GLfloat pAmbientColor[4];
-	getAmbientColor(pAmbientColor);
-	GLfloat pDiffuseColor[4];
-	getDiffuseColor(pDiffuseColor);
-	GLfloat pSpecularColor[4];
-	getSpecularColor(pSpecularColor);
-	GLfloat pLightEmission[4];
-	getLightEmission(pLightEmission);
+	GLfloat pAmbientColor[4]= {getAmbientColor().redF(),
+								getAmbientColor().greenF(),
+								getAmbientColor().blueF(),
+								getAmbientColor().alphaF()};
 	
+	GLfloat pDiffuseColor[4]= {getDiffuseColor().redF(),
+								getDiffuseColor().greenF(),
+								getDiffuseColor().blueF(),
+								getDiffuseColor().alphaF()};
+	
+	GLfloat pSpecularColor[4]= {getSpecularColor().redF(),
+								getSpecularColor().greenF(),
+								getSpecularColor().blueF(),
+								getSpecularColor().alphaF()};
+
+	GLfloat pLightEmission[4]= {getLightEmission().redF(),
+								getLightEmission().greenF(),
+								getLightEmission().blueF(),
+								getLightEmission().alphaF()};
+
 	if (m_pTexture != NULL)
 	{
 		// for blend managing

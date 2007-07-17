@@ -31,11 +31,10 @@
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const char *pName,
-					   const GLfloat *pColor)
-:GLC_Circle(dRayon, 2 * PI, pName, pColor),
-m_Arc1(dRayon, ARCANGLE, "Arc1", pColor),
-m_Arc2(dRayon, ARCANGLE, "Arc2", pColor)
+GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const QColor& color)
+: GLC_Circle(dRayon, color)
+, m_Arc1(dRayon, color, ARCANGLE)
+, m_Arc2(dRayon, color, ARCANGLE)
 {
 	// 2 circle arcs position
 	GLC_Matrix4x4 MatRot(AxeZ, -ARCANGLE / 2);

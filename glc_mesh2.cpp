@@ -31,8 +31,8 @@
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
-GLC_Mesh2::GLC_Mesh2(const GLfloat *pColor)
-:GLC_Geometry("Mesh", pColor)
+GLC_Mesh2::GLC_Mesh2(const QColor& color)
+:GLC_Geometry("Mesh", color)
 , m_NumberOfFaces(0)
 {
 
@@ -309,7 +309,7 @@ void GLC_Mesh2::glPropGeom()
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
 		glLineWidth(getThickness());	// is thikness
-		glColor4fv(getfRGBA());			// is color
+		glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
 	}
 	else if (m_pMaterial->getAddRgbaTexture())
 	{

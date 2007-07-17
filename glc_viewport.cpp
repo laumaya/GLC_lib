@@ -59,9 +59,10 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 	m_pViewCam= new GLC_Camera;
 
 	// Color of orbit circle
-	const GLfloat color[4]= {1.0f, 0.11372f, 0.11372f, 0.0f};
+	QColor color;
+	color.setRgbF(1.0, 0.11372, 0.11372, 0.0);
 	// Create orbit circle of specified color
-	m_pOrbitCircle= new GLC_OrbitCircle(1.0,"Cercle_Sph", color);
+	m_pOrbitCircle= new GLC_OrbitCircle(1.0, color);
 	
 	// Compute orbit Circle
 	//updateOrbitCircle();
@@ -225,7 +226,7 @@ void GLC_Viewport::glExecuteTargetCam()	//! \todo Create a display list
 		glDisable(GL_BLEND);
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
-		glColor4fv(m_pOrbitCircle->getfRGBA());
+		glColor4d(m_pOrbitCircle->getdRed(), m_pOrbitCircle->getdGreen(), m_pOrbitCircle->getdBlue(), m_pOrbitCircle->getdAlpha());
 		glLineWidth(1.0);
 
 		// Display camera's target lines
@@ -360,7 +361,7 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 bool GLC_Viewport::loadBackGroundImage(QGLWidget *GLWidget, const QString Image)
 {
 	deleteBackGroundImage();
-	m_pImagePlane= new GLC_ImagePlane(this);
+	m_pImagePlane= new GLC_ImagePlane(this, Qt::white);
 	return m_pImagePlane->loadImageFile(GLWidget, Image);
 }
 

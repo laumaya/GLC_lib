@@ -55,8 +55,7 @@ class GLC_OrbitCircle : public GLC_Circle
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an orbit Circle with a given radius, name and color.
-	GLC_OrbitCircle(const double &dRayon, const char *pName,
-		const GLfloat *pColor);
+	GLC_OrbitCircle(const double &dRayon,const QColor& color);
 //@}
 
 //////////////////////////////////////////////////////////////////////

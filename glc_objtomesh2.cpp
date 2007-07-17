@@ -73,7 +73,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	m_nCurVectTexture= 0;
 
 	// Allocate Mesh memmory
-	m_pMesh= new GLC_Mesh2();
+	m_pMesh= new GLC_Mesh2(Qt::white);
 	
 	if (!file.open(QIODevice::ReadOnly))
 	{
@@ -524,37 +524,37 @@ void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 	QTextStream stream(&ligne);
 	QString header;
 	QString rColor, gColor, bColor;
-	GLfloat RgbaColor[4];
+	QColor color(Qt::white);
 	
 	if ((stream >> header >> rColor >> gColor >> bColor).status() == QTextStream::Ok)
 	{
 		bool okr, okg, okb;
-		RgbaColor[0]= rColor.toFloat(&okr);
-		RgbaColor[1]= gColor.toFloat(&okg);
-		RgbaColor[2]= bColor.toFloat(&okb);
+		color.setRedF(rColor.toDouble(&okr));
+		color.setGreenF(gColor.toDouble(&okg));
+		color.setBlueF(bColor.toDouble(&okb));
 		if (!(okr && okg && okb))
 		{
 			qDebug() << "GLC_ObjToMesh2::ExtractRGBValue : Wrong format of rgb color value!!";
 			qDebug() << "Current mtl file line is : " << ligne;
 			assert(false);
 		}		
-		RgbaColor[3]= 1.0f;
+		color.setAlphaF(1.0);
 		if (header == "Ka") // Ambiant Color
 		{
-			pMaterial->setAmbientColor(RgbaColor);
-			qDebug() << "Ambiant Color : " <<  (RgbaColor[0]) << " " << (RgbaColor[1]) << " " << (RgbaColor[2]);
+			pMaterial->setAmbientColor(color);
+			qDebug() << "Ambiant Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
 		}
 		
 		else if (header == "Kd") // Diffuse Color
 		{
-			pMaterial->setDiffuseColor(RgbaColor);
-			qDebug() << "Diffuse Color : " <<  RgbaColor[0] << " " << RgbaColor[1] << " " << RgbaColor[2];
+			pMaterial->setDiffuseColor(color);
+			qDebug() << "Diffuse Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
 		}
 		
 		else if (header == "Ks") // Specular Color
 		{
-			pMaterial->setSpecularColor(RgbaColor);
-			qDebug() << "Specular Color : " <<  RgbaColor[0] << " " << RgbaColor[1] << " " << RgbaColor[2];
+			pMaterial->setSpecularColor(color);
+			qDebug() << "Specular Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
 		}
 		
 		else

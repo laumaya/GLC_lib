@@ -45,10 +45,10 @@ class GLC_Point : public GLC_Geometry
 //////////////////////////////////////////////////////////////////////
 public:	
 	//! Construct an GLC_Point
-	GLC_Point(const GLC_Vector4d &VectSetCoord, const char *pName= "Point", const GLfloat *pColor= 0);
+	GLC_Point(const GLC_Vector4d &VectSetCoord, const QColor &color);
 
 	//! Construct an GLC_Point
-	GLC_Point(double x, double y, double z, const char *pName= "Point", const GLfloat *pColor= 0);
+	GLC_Point(double x, double y, double z, const QColor &color);
 
 //@}
 

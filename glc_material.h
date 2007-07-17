@@ -86,16 +86,16 @@ public:
 		return m_pTexture != NULL;
 	}
 	//! Get Ambiant color
-	void getAmbientColor(GLfloat* pfCol) const;	// pfCol[4]
+	QColor getAmbientColor() const;
 
 	//! Get diffuse color
-	void getDiffuseColor(GLfloat* pfCol) const;	// pfCol[4]
+	QColor getDiffuseColor() const;
 
 	//! Get specular color
-	void getSpecularColor(GLfloat* pfCol) const;	// pfCol[4]
+	QColor getSpecularColor() const;
 
 	//! Get the emissive color
-	void getLightEmission(GLfloat* pfCol) const;	// pfCol[4]
+	QColor getLightEmission() const;
 
 	//! Get Shininess
 	GLfloat getShininess() const
@@ -111,22 +111,16 @@ public:
 public:
 
 	//! Set Ambiant Color
-	void setAmbientColor(const GLfloat* pfCol);
-
-	//! Set Ambiant Color
 	void setAmbientColor(const QColor& ambientColor);
-
-	//! Set Diffuse color
-	void setDiffuseColor(const GLfloat* pfCol);
 
 	//! Set Diffuse color
 	void setDiffuseColor(const QColor& diffuseColor);
 	
 	//! Set Specular color
-	void setSpecularColor(const GLfloat* pfCol);
+	void setSpecularColor(const QColor& specularColor);
 
 	//! Set Emissive
-	void setLightEmission(const GLfloat* pfCol);
+	void setLightEmission(const QColor& lightEmission);
 
 	//! Set Shininess
 	void setShininess(GLfloat Shininess)
