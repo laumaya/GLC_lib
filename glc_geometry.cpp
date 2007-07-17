@@ -31,8 +31,8 @@
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
-GLC_Geometry::GLC_Geometry(const char *pName, const GLfloat *pColor)
-:GLC_Object(pName)
+GLC_Geometry::GLC_Geometry(const QString& name, const QColor &color)
+:GLC_Object(name)
 , m_MatPos()				// default constructor identity matrix
 , m_ListID(0)				// By default Display List = 0
 , m_ListIsValid(false)		// By default Display List is invalid
@@ -41,27 +41,16 @@ GLC_Geometry::GLC_Geometry(const char *pName, const GLfloat *pColor)
 , m_IsBlended(false)		// By default No Blending
 , m_PolyFace(GL_FRONT_AND_BACK)	// Default Faces style
 , m_PolyMode(GL_FILL)		// Default polyganal mode
+, m_Color(color)			// the Color
 , m_Thikness(1.0)			// By default thickness = 1.0
 , m_IsVisible(true)			// By default Visibility is true
 
 {
 
-	// Set Color Array
-	if (pColor != 0)
+	if (!m_Color.isValid())
 	{
-		m_RGBAColor[0]= pColor[0];
-		m_RGBAColor[1]= pColor[1];
-		m_RGBAColor[2]= pColor[2];
-		m_RGBAColor[3]= pColor[3];
+		m_Color= Qt::white;
 	}
-	else
-	{	// By default color is white
-		m_RGBAColor[0]= 1;
-		m_RGBAColor[1]= 1;
-		m_RGBAColor[2]= 1;
-		m_RGBAColor[3]= 1;
-	}
-
 }
 
 GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
@@ -78,10 +67,7 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_IsVisible(sourceGeom.m_IsVisible)
 
 {
-	m_RGBAColor[0]= sourceGeom.m_RGBAColor[0];
-	m_RGBAColor[1]= sourceGeom.m_RGBAColor[1];
-	m_RGBAColor[2]= sourceGeom.m_RGBAColor[2];
-	m_RGBAColor[3]= sourceGeom.m_RGBAColor[3];
+	m_Color= sourceGeom.m_Color;
 	
 	// Material is set here
 	setMaterial(sourceGeom.getMaterial());
@@ -107,29 +93,29 @@ const bool GLC_Geometry::isVisible(void) const
 }
 
 // Return an array of 4 GLfloat which represent the color
-const GLfloat *GLC_Geometry::getfRGBA(void) const
+QColor GLC_Geometry::getRGBA(void) const
 {
-	return m_RGBAColor;
+	return m_Color;
 }	
 // Return Color Red component
-GLfloat GLC_Geometry::getfRed(void) const
+GLdouble GLC_Geometry::getdRed(void) const
 {
-	return m_RGBAColor[0];
+	return static_cast<GLdouble>(m_Color.redF());
 }
 // Return Color Green component
-GLfloat GLC_Geometry::getfGreen(void) const
+GLdouble GLC_Geometry::getdGreen(void) const
 {
-	return m_RGBAColor[1];
+	return static_cast<GLdouble>(m_Color.greenF());
 }
 // Return Color blue component
-GLfloat GLC_Geometry::getfBlue(void) const
+GLdouble GLC_Geometry::getdBlue(void) const
 {
-	return m_RGBAColor[2];
+	return static_cast<GLdouble>(m_Color.blueF());
 }
 // Return Color Alpha component
-GLfloat GLC_Geometry::getfAlpha(void) const
+GLdouble GLC_Geometry::getdAlpha(void) const
 {
-	return m_RGBAColor[3];
+	return static_cast<GLdouble>(m_Color.alphaF());
 }
 // Return transfomation 4x4Matrix
 const GLC_Matrix4x4 GLC_Geometry::getMatrix(void) const
@@ -190,24 +176,16 @@ void GLC_Geometry::setVisibility(bool v)
 }
 
 // Set Color RGBA component
-void GLC_Geometry::setRGBAColor(GLfloat Rouge, GLfloat Vert, GLfloat Bleu, GLfloat Alpha)
+void GLC_Geometry::setRGBAColor(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha)
 {
-	m_RGBAColor[0]= Rouge;
-	m_RGBAColor[1]= Vert;
-	m_RGBAColor[2]= Bleu;
-	m_RGBAColor[3]= Alpha;
-
+	m_Color.setRgbF(red, green, blue, alpha);
 	m_GeometryIsValid= false;		
 }
 
 // Set Color RGBA component with an array of 4 GLfloat
-void GLC_Geometry::setRGBAColor(const GLfloat* SetCol)	// SetCol[4]
+void GLC_Geometry::setRGBAColor(const QColor& setCol)
 {
-	m_RGBAColor[0]= SetCol[0];
-	m_RGBAColor[1]= SetCol[1];
-	m_RGBAColor[2]= SetCol[2];
-	m_RGBAColor[3]= SetCol[3];
-
+	m_Color= setCol;
 	m_GeometryIsValid= false;		
 }
 
@@ -290,7 +268,7 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 
 		m_pMaterial= pMat;
 
-		pMat->getDiffuseColor(m_RGBAColor);
+		m_Color= pMat->getDiffuseColor();
 
 		m_GeometryIsValid = false;
 		m_ListIsValid= false;	// GLC_Mesh2 compatibility
