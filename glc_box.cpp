@@ -33,10 +33,9 @@
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Box::GLC_Box(double dLx, double dLy, double dlz
-					   , const char *pName, const GLfloat *pColor)
+GLC_Box::GLC_Box(double dLx, double dLy, double dlz, const QColor& color)
 
-:GLC_Geometry(pName, pColor)
+:GLC_Geometry("Box", color)
 , m_dLgX(dLx)
 , m_dLgY(dLy)
 , m_dLgZ(dlz)
@@ -176,7 +175,7 @@ void GLC_Box::glPropGeom(void)
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
 
-		glColor4fv(getfRGBA());			// Sa Couleur
+		glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());	// is color
 	}
 	else if (m_pMaterial->getAddRgbaTexture())
 	{
@@ -195,7 +194,7 @@ void GLC_Box::glPropGeom(void)
 
 	}
 
-	glLineWidth(getThickness());	// Son Epaisseur
+	glLineWidth(getThickness());	// Is thikness
 
 	// Polygons display mode
 	glPolygonMode(m_PolyFace, m_PolyMode);
