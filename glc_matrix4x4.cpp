@@ -117,7 +117,7 @@ GLC_Vector4d GLC_Matrix4x4::operator * (const GLC_Vector4d &Vect) const
 	
 	if (VectResult.dVecteur[3] != 1)
 	{
-		qDebug("Matrice4x4::operator * : Changement de W");
+		//qDebug("Matrice4x4::operator * : Changement de W");
 		VectResult.setWToNull();
 	}
 
@@ -159,7 +159,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector4d &Vect, const double &
 	double q2;
 	double q3;
 	
-	// La norme du Vecteur doit être à un
+	// La norme du Vecteur doit ï¿½tre ï¿½ un
 	GLC_Vector4d VectRot(Vect);
 	VectRot.setNormal(1);
 
@@ -206,7 +206,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector4d &Vect1, const GLC_Vec
 
 	// Calcul de la matrice de rotation
 	const GLC_Vector4d VectAxeRot(Vect1 ^ Vect2);
-	// Vérifie que le Vecteur de l'axe de rotation n'est pas null
+	// Vï¿½rifie que le Vecteur de l'axe de rotation n'est pas null
 	if (!VectAxeRot.isNull())
 	{  // Ok, il n'est pas null
 		const double Angle= acos(Vect1 * Vect2);
@@ -325,7 +325,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::transpose(void)
 		}
 	}
 	
-	// Charge la matrice transposé dans la matrice courante.
+	// Charge la matrice transposï¿½ dans la matrice courante.
 	for (int Index= 0; Index < TAILLEMAT4X4; Index++)
 		dMatrice[Index]= MatT.dMatrice[Index];
 	
@@ -338,7 +338,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::transpose(void)
 // Private services function
 //////////////////////////////////////////////////////////////////////
 
-// Calcul du déterminant d'une céllule de la matrice 4x4
+// Calcul du dï¿½terminant d'une cï¿½llule de la matrice 4x4
 const double GLC_Matrix4x4::getDeterminantLC(const int &Ligne, const int &Colonne) const
 {
 	int Signe;
@@ -393,7 +393,7 @@ void GLC_Matrix4x4::getSubMat(const int &Ligne, const int &Colonne, double *Resu
 	}
 }
 
-// Calcul du déterminant d'une matrice 3x3
+// Calcul du dï¿½terminant d'une matrice 3x3
 const double GLC_Matrix4x4::getDeterminant3x3(const double *Mat3x3) const
 {
 	double Determinant;
@@ -405,7 +405,7 @@ const double GLC_Matrix4x4::getDeterminant3x3(const double *Mat3x3) const
 	return Determinant;
 }
 
-// Retourne la matrice transposée
+// Retourne la matrice transposï¿½e
 const GLC_Matrix4x4 GLC_Matrix4x4::getTranspose(void) const
 {
 	GLC_Matrix4x4 MatT(dMatrice);
