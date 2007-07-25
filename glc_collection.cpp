@@ -259,6 +259,12 @@ void GLC_Collection::glExecute(void)
 			if(memberIsUpToDate())
 			{
 				createList();
+				// delete the boundingBox
+				if (m_pBoundingBox != NULL)
+				{
+					delete m_pBoundingBox;
+					m_pBoundingBox= NULL;
+				}				
 			}
 			else
 			{
