@@ -326,7 +326,12 @@ void GLC_Collection::createMemberLists(void)
     {
     	if(!iEntry.value()->getListValidity())
     	{
-     		iEntry.value()->glExecute(GL_COMPILE);
+    		iEntry.value()->glExecute(GL_COMPILE);
+			if (m_pBoundingBox != NULL)
+			{
+				delete m_pBoundingBox;
+				m_pBoundingBox= NULL;
+			}				
     	}
     	// Passe au Suivant
     	iEntry++;
