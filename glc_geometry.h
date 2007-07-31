@@ -77,6 +77,9 @@ public:
 
 public:
 
+	//! Return true if the geometry is selected
+	const bool isSelected(void) const {return m_IsSelected;}
+	
 	//! Return Visibility state of geometry
 	const bool isVisible(void) const;
 
@@ -128,6 +131,12 @@ public:
 
 public:
 
+	//! Select the Geometry
+	void select(void);
+	
+	//! Unselect the Geometry
+	void unselect(void);
+	
 	//! Set visibility statement
 	void setVisibility(bool v);
 
@@ -224,6 +233,9 @@ protected:
 // Protected members
 //////////////////////////////////////////////////////////////////////
 protected:
+
+	//! Selection state
+	bool m_IsSelected;
 	
 	//! Geometry matrix
 	GLC_Matrix4x4	m_MatPos;
@@ -252,14 +264,14 @@ protected:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	// RGBA geometry color
+	//! RGBA geometry color
 	QColor	m_Color;
 
-	// Thikness of geometry's Edge
+	//! Thikness of geometry's Edge
 	float m_Thikness;
 	
-	// Geometry visibility
+	//! Geometry visibility
 	bool m_IsVisible;
-
+	
 };
 #endif //GLC_GEOMETRY_H_

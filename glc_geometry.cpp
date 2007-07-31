@@ -33,6 +33,7 @@
 //////////////////////////////////////////////////////////////////////
 GLC_Geometry::GLC_Geometry(const QString& name, const QColor &color)
 :GLC_Object(name)
+, m_IsSelected(false)		// By default geometry is not selected
 , m_MatPos()				// default constructor identity matrix
 , m_ListID(0)				// By default Display List = 0
 , m_ListIsValid(false)		// By default Display List is invalid
@@ -167,6 +168,24 @@ GLC_BoundingBox* GLC_Geometry::getBoundingBox(void) const
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
+// Select the Geometry
+void GLC_Geometry::select(void)
+{
+	m_IsSelected= true;
+	m_GeometryIsValid = false;
+	m_ListIsValid= false;	// GLC_Mesh2 compatibility
+	
+}
+
+// Unselect the Geometry
+void GLC_Geometry::unselect(void)
+{
+	m_IsSelected= false;
+	m_GeometryIsValid = false;
+	m_ListIsValid= false;	// GLC_Mesh2 compatibility
+	
+}
+
 // Set visibility statement
 void GLC_Geometry::setVisibility(bool v)
 {
@@ -268,7 +287,7 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 
 		m_pMaterial= pMat;
 
-		m_Color= pMat->getDiffuseColor();
+		m_Color= pMat->getAmbientColor();
 
 		m_GeometryIsValid = false;
 		m_ListIsValid= false;	// GLC_Mesh2 compatibility
