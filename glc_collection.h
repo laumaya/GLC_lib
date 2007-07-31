@@ -90,6 +90,11 @@ public:
 	//! return the number of geometry in the selection Hash
 	int getNumberOfSelectedGeom(void) const {return m_SelectedGeom.size();}
 	
+	//! Get the Hash table of Selected Object
+	SelectedGeometryHash* getSelections() {return &m_SelectedGeom;}
+	
+	//! return true if the element is selected
+	bool isSelected(GLC_uint key) const {return m_SelectedGeom.contains(key);}
 
 //@}
 
