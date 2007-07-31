@@ -27,31 +27,29 @@
 
 #include "glc_geometry.h"
 #include "glc_openglexception.h"
+#include "glc_selectionmaterial.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
-GLC_Geometry::GLC_Geometry(const QString& name, const QColor &color)
+GLC_Geometry::GLC_Geometry(const QString& name, const QColor &color, const bool typeIsWire)
 :GLC_Object(name)
 , m_IsSelected(false)		// By default geometry is not selected
 , m_MatPos()				// default constructor identity matrix
 , m_ListID(0)				// By default Display List = 0
 , m_ListIsValid(false)		// By default Display List is invalid
 , m_GeometryIsValid(false)	// By default geometry is invalid
-, m_pMaterial(NULL)			// By default No material
+, m_pMaterial(NULL)			// have to be set later in constructor
 , m_IsBlended(false)		// By default No Blending
 , m_PolyFace(GL_FRONT_AND_BACK)	// Default Faces style
 , m_PolyMode(GL_FILL)		// Default polyganal mode
-, m_Color(color)			// the Color
 , m_Thikness(1.0)			// By default thickness = 1.0
 , m_IsVisible(true)			// By default Visibility is true
+, m_IsWire(typeIsWire)			// the geometry type
 
 {
-
-	if (!m_Color.isValid())
-	{
-		m_Color= Qt::white;
-	}
+		// Material is set here
+	setMaterial(new GLC_Material(color));	
 }
 
 GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
@@ -66,10 +64,9 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_PolyMode(sourceGeom.m_PolyMode)
 , m_Thikness(sourceGeom.m_Thikness)
 , m_IsVisible(sourceGeom.m_IsVisible)
+, m_IsWire(sourceGeom.m_IsWire)
 
-{
-	m_Color= sourceGeom.m_Color;
-	
+{	
 	// Material is set here
 	setMaterial(sourceGeom.getMaterial());
 }
@@ -80,6 +77,7 @@ GLC_Geometry::~GLC_Geometry(void)
 	if (!!m_pMaterial)
 	{
 		m_pMaterial->delGLC_Geom(getID());	//Remove Geometry from the material usage collection
+		if (m_pMaterial->isUnused()) delete m_pMaterial;
 		m_pMaterial= NULL;
 	}
 }
@@ -96,27 +94,27 @@ const bool GLC_Geometry::isVisible(void) const
 // Return an array of 4 GLfloat which represent the color
 QColor GLC_Geometry::getRGBA(void) const
 {
-	return m_Color;
+	return m_pMaterial->getAmbientColor();
 }	
 // Return Color Red component
 GLdouble GLC_Geometry::getdRed(void) const
 {
-	return static_cast<GLdouble>(m_Color.redF());
+	return static_cast<GLdouble>(m_pMaterial->getAmbientColor().redF());
 }
 // Return Color Green component
 GLdouble GLC_Geometry::getdGreen(void) const
 {
-	return static_cast<GLdouble>(m_Color.greenF());
+	return static_cast<GLdouble>(m_pMaterial->getAmbientColor().greenF());
 }
 // Return Color blue component
 GLdouble GLC_Geometry::getdBlue(void) const
 {
-	return static_cast<GLdouble>(m_Color.blueF());
+	return static_cast<GLdouble>(m_pMaterial->getAmbientColor().blueF());
 }
 // Return Color Alpha component
 GLdouble GLC_Geometry::getdAlpha(void) const
 {
-	return static_cast<GLdouble>(m_Color.alphaF());
+	return static_cast<GLdouble>(m_pMaterial->getAmbientColor().alphaF());
 }
 // Return transfomation 4x4Matrix
 const GLC_Matrix4x4 GLC_Geometry::getMatrix(void) const
@@ -197,14 +195,16 @@ void GLC_Geometry::setVisibility(bool v)
 // Set Color RGBA component
 void GLC_Geometry::setRGBAColor(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha)
 {
-	m_Color.setRgbF(red, green, blue, alpha);
+	QColor setColor;
+	setColor.setRgbF(red, green, blue, alpha);
+	m_pMaterial->setAmbientColor(setColor);
 	m_GeometryIsValid= false;		
 }
 
 // Set Color RGBA component with an array of 4 GLfloat
 void GLC_Geometry::setRGBAColor(const QColor& setCol)
 {
-	m_Color= setCol;
+	m_pMaterial->setAmbientColor(setCol);
 	m_GeometryIsValid= false;		
 }
 
@@ -283,11 +283,10 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 		if (!!m_pMaterial)
 		{
 			m_pMaterial->delGLC_Geom(getID());
+			if (m_pMaterial->isUnused()) delete m_pMaterial;
 		}
 
 		m_pMaterial= pMat;
-
-		m_Color= pMat->getAmbientColor();
 
 		m_GeometryIsValid = false;
 		m_ListIsValid= false;	// GLC_Mesh2 compatibility
@@ -422,6 +421,57 @@ void GLC_Geometry::deleteList()
 		throw(OpenGlException);
 	}
 
+}
+
+// Virtual interface for OpenGL Geometry properties.
+void GLC_Geometry::glPropGeom()
+{
+	//! Change the current matrix
+	glMultMatrixd(m_MatPos.return_dMat());
+	
+	// Polygons display mode
+	glPolygonMode(m_PolyFace, m_PolyMode);
+	if (m_IsBlended && !m_IsSelected)
+	{
+		glEnable(GL_BLEND);
+		glDepthMask(GL_FALSE);
+	}
+	else
+	{
+		glDisable(GL_BLEND);
+	}		
+	
+	if((m_PolyMode != GL_FILL) || m_IsWire)
+	{
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_LIGHTING);
+		glLineWidth(getThickness());	// is thikness
+		
+		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		else glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
+	}
+	else if (m_pMaterial->getAddRgbaTexture() && !m_IsSelected)
+	{
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_LIGHTING);
+		m_pMaterial->glExecute();
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+		glEnable(GL_LIGHTING);
+		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		else m_pMaterial->glExecute();
+	}
+		
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Geometry::GlPropGeom ", error);
+		throw(OpenGlException);
+	}
+		
 }
 
 
