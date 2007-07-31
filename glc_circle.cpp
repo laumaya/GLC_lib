@@ -27,6 +27,7 @@
 #include "glc_circle.h"
 #include "assert.h"
 #include "glc_openglexception.h"
+#include "glc_selectionmaterial.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
@@ -173,8 +174,10 @@ void GLC_Circle::glPropGeom(void)
 	glDisable(GL_LIGHTING);
 	// Pas de transparence
 	glDisable(GL_BLEND);
-		
-	glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// Color
+	
+	if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+	else glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// Color
+	
 	glLineWidth(getThickness());	// Thikness
 			
 	// OpenGL error handler

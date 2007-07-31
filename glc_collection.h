@@ -32,8 +32,11 @@
 #include "glc_collectionnode.h"
 #include "glc_enum.h"
 
+class GLC_Material;
+
 //! Geometry hash table
 typedef QHash< GLC_uint, GLC_CollectionNode*> CNodeMap;
+typedef QHash< GLC_uint, GLC_Geometry*> SelectedGeometryHash;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Collection
@@ -84,6 +87,9 @@ public:
 	//! return the collection Bounding Box
 	GLC_BoundingBox getBoundingBox(void);
 	
+	//! return the number of geometry in the selection Hash
+	int getNumberOfSelectedGeom(void) const {return m_SelectedGeom.size();}
+	
 
 //@}
 
@@ -118,6 +124,15 @@ public:
 
 	//! Remove and delete all GLC_Geometry from the collection
 	void erase(void);
+	
+	//! Select a geometry
+	bool selectGeom(GLC_uint);
+	
+	//! unselect a geometry
+	bool unselectGeom(GLC_uint);
+	
+	//! unselect all geomtery
+	void unselectAll();
 
 //@}
 	
@@ -174,7 +189,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 private:
-	//! GLC_Geometry Hash Table
+	//! GLC_CollectionNode Hash Table
 	CNodeMap m_TheMap;
 
 	//! Collection's OpenGL list ID
@@ -185,7 +200,9 @@ private:
 	
 	//! BoundingBox of the collection
 	GLC_BoundingBox* m_pBoundingBox;
-	
-	
+		
+	//! Selected Geometry Hash Table
+	SelectedGeometryHash m_SelectedGeom;
+		
 };
 #endif //GLC_COLLECTION_H_

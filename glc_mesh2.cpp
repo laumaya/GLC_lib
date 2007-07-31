@@ -27,6 +27,7 @@
 #include <assert.h>
 #include "glc_mesh2.h"
 #include "glc_openglexception.h"
+#include "glc_selectionmaterial.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
@@ -236,7 +237,7 @@ void GLC_Mesh2::glDraw()
 					
 					MaterialHash::const_iterator iMaterial= m_MaterialHash.find(CurrentMaterialIndex);
 					// Check if the key is already use
-					if (iMaterial != m_MaterialHash.end())
+					if (iMaterial != m_MaterialHash.end() && !m_IsSelected)
 					{
 						if (m_MaterialHash[CurrentMaterialIndex].getAddRgbaTexture())
 						{
@@ -248,6 +249,10 @@ void GLC_Mesh2::glDraw()
 							glDisable(GL_TEXTURE_2D);
 						}
 						m_MaterialHash[CurrentMaterialIndex].glExecute();
+					}
+					else if (m_IsSelected)
+					{
+						GLC_SelectionMaterial::glExecute();
 					}
 					else
 					{
@@ -293,8 +298,7 @@ void GLC_Mesh2::glPropGeom()
 	
 	// Polygons display mode
 	glPolygonMode(m_PolyFace, m_PolyMode);
-	
-	if (m_IsBlended)
+	if (m_IsBlended && !m_IsSelected)
 	{
 		glEnable(GL_BLEND);
 		glDepthMask(GL_FALSE);
@@ -309,9 +313,11 @@ void GLC_Mesh2::glPropGeom()
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
 		glLineWidth(getThickness());	// is thikness
-		glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
+		
+		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		else glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
 	}
-	else if (m_pMaterial->getAddRgbaTexture())
+	else if (m_pMaterial->getAddRgbaTexture() && !m_IsSelected)
 	{
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
@@ -321,7 +327,8 @@ void GLC_Mesh2::glPropGeom()
 	{
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
-		m_pMaterial->glExecute();
+		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		else m_pMaterial->glExecute();
 	}
 		
 	// OpenGL error handler

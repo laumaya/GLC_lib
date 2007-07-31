@@ -27,6 +27,7 @@
 #include "glc_box.h"
 #include <assert.h>
 #include "glc_openglexception.h"
+#include "glc_selectionmaterial.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
@@ -169,15 +170,22 @@ void GLC_Box::glPropGeom(void)
 {
 	// Update Current matrix
 	glMultMatrixd(m_MatPos.return_dMat());
+
+	glLineWidth(getThickness());	// Is thikness
+
+	// Polygons display mode
+	glPolygonMode(m_PolyFace, m_PolyMode);
 			
 	if(!m_pMaterial || (m_PolyMode != GL_FILL))
 	{
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
+		
+		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		else glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// Color
 
-		glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());	// is color
 	}
-	else if (m_pMaterial->getAddRgbaTexture())
+	else if (m_pMaterial->getAddRgbaTexture() && !m_IsSelected)
 	{
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
@@ -189,15 +197,11 @@ void GLC_Box::glPropGeom(void)
 	{
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
+
+		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		else m_pMaterial->glExecute();
 		
-		m_pMaterial->glExecute();
-
 	}
-
-	glLineWidth(getThickness());	// Is thikness
-
-	// Polygons display mode
-	glPolygonMode(m_PolyFace, m_PolyMode);
 	
 	// OpenGL error handler
 	GLenum error= glGetError();	

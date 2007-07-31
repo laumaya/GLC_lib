@@ -27,7 +27,7 @@
 #include <QtDebug>
 
 #include "glc_collection.h"
-
+#include "glc_material.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor/Destructor
@@ -83,6 +83,13 @@ bool GLC_Collection::delGLC_Geom(GLC_uint Key)
 		
 	if (iGeom != m_TheMap.end())
 	{	// Ok, the key exist
+		
+		if (getNumberOfSelectedGeom() > 0)
+		{
+			// if the geometry is selected, unselect it
+			unselectGeom(Key);
+		}
+		
 		delete iGeom.value();		// delete the collection Node
 		m_TheMap.remove(Key);		// Delete the conteneur
 		// Search the list
@@ -110,6 +117,12 @@ bool GLC_Collection::remGLC_Geom(GLC_uint Key)
 	if (iGeom != m_TheMap.end())
 	{	// Ok, the key exist
 		// don't delete collection node
+		if (getNumberOfSelectedGeom() > 0)
+		{
+			// if the geometry is selected, unselect it
+			unselectGeom(Key);
+		}
+		
 		m_TheMap.remove(Key);		// Supprime le conteneur
 			
 		// List validity
@@ -131,6 +144,12 @@ bool GLC_Collection::remGLC_Geom(GLC_uint Key)
 // Clear the collection
 void GLC_Collection::erase(void)
 {
+	if (getNumberOfSelectedGeom() > 0)
+	{
+		// if the geometry is selected, unselect it
+		unselectAll();
+	}
+		
 	// Suppression des géométries
 	CNodeMap::iterator iEntry= m_TheMap.begin();
 	
@@ -156,7 +175,77 @@ void GLC_Collection::erase(void)
 		m_pBoundingBox= NULL;
 	}
 	
+	// Clear Selected Geometry Hash Table
+	m_SelectedGeom.clear();
+		
 }
+// Select a geometry
+bool GLC_Collection::selectGeom(GLC_uint key)
+{
+	GLC_Geometry* pSelectedGeom;
+	CNodeMap::iterator iGeom= m_TheMap.find(key);
+	SelectedGeometryHash::iterator iSelectedGeom= m_SelectedGeom.find(key);
+		
+	if ((iGeom != m_TheMap.end()) && (iSelectedGeom == m_SelectedGeom.end()))
+	{	// Ok, the key exist and the geomtry is not selected
+		pSelectedGeom= iGeom.value()->getGeometry();
+		m_SelectedGeom.insert(pSelectedGeom->getID(), pSelectedGeom);
+				
+		pSelectedGeom->select();		
+		m_ListIsValid= false;
+		
+		qDebug("GLC_Collection::selectGeom : Element succesfuly selected");
+		return true;
+		
+	}
+	else
+	{	// KO, key doesn't exist or geomtry allready selected
+		qDebug("GLC_Collection::selectGeom : Element not selected");
+		return false;
+	}
+	
+}
+
+// unselect a geometry
+bool GLC_Collection::unselectGeom(GLC_uint key)
+{
+	SelectedGeometryHash::iterator iSelectedGeom= m_SelectedGeom.find(key);
+		
+	if (iSelectedGeom != m_SelectedGeom.end())
+	{	// Ok, the key exist and the geomtry is selected
+		iSelectedGeom.value()->unselect();
+		
+		m_SelectedGeom.remove(key);
+		
+		m_ListIsValid= false;
+		
+		qDebug("GLC_Collection::unselectGeom : Element succesfuly unselected");
+		return true;
+		
+	}
+	else
+	{	// KO, key doesn't exist or geomtry allready selected
+		qDebug("GLC_Collection::unselectGeom : Element not unselected");
+		return false;
+	}
+	
+}
+
+
+// unselect all geomtery
+void GLC_Collection::unselectAll()
+{
+	SelectedGeometryHash::iterator iSelectedGeom= m_SelectedGeom.begin();
+	
+    while (iSelectedGeom != m_SelectedGeom.end())
+    {
+		iSelectedGeom.value()->unselect();    	
+        ++iSelectedGeom;
+    }
+    // Clear hash table
+    m_SelectedGeom.clear();	
+}
+
 
 // Retourne le pointeur d'un élément de la collection
 GLC_Geometry* GLC_Collection::getElement(GLC_uint Key)
