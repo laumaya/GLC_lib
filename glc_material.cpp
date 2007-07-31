@@ -273,6 +273,7 @@ void GLC_Material::glExecute(GLenum Mode)
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 		m_pTexture->glcBindTexture();
 	}
+	glColor4fv(pAmbientColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, pAmbientColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pDiffuseColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pSpecularColor);
