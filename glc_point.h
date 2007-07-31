@@ -88,10 +88,6 @@ private:
 	/*! This Virtual function is implemented here.\n*/
 	virtual void glDraw(void);
 
-	//! Virtual interface for OpenGL Geomtry properties.
-	/*! This Virtual function is implemented here.*/
-	virtual void glPropGeom(void);
-
 //@}
 
 //////////////////////////////////////////////////////////////////////

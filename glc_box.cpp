@@ -27,7 +27,6 @@
 #include "glc_box.h"
 #include <assert.h>
 #include "glc_openglexception.h"
-#include "glc_selectionmaterial.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
@@ -35,8 +34,7 @@
 
 
 GLC_Box::GLC_Box(double dLx, double dLy, double dlz, const QColor& color)
-
-:GLC_Geometry("Box", color)
+:GLC_Geometry("Box", color, false)
 , m_dLgX(dLx)
 , m_dLgY(dLy)
 , m_dLgZ(dlz)
@@ -164,51 +162,4 @@ void GLC_Box::glDraw(void)
 	}
 	
 
-}
-// Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
-void GLC_Box::glPropGeom(void)
-{
-	// Update Current matrix
-	glMultMatrixd(m_MatPos.return_dMat());
-
-	glLineWidth(getThickness());	// Is thikness
-
-	// Polygons display mode
-	glPolygonMode(m_PolyFace, m_PolyMode);
-			
-	if(!m_pMaterial || (m_PolyMode != GL_FILL))
-	{
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_LIGHTING);
-		
-		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-		else glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// Color
-
-	}
-	else if (m_pMaterial->getAddRgbaTexture() && !m_IsSelected)
-	{
-		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_LIGHTING);
-
-
-		m_pMaterial->glExecute();
-	}
-	else
-	{
-		glDisable(GL_TEXTURE_2D);
-		glEnable(GL_LIGHTING);
-
-		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-		else m_pMaterial->glExecute();
-		
-	}
-	
-	// OpenGL error handler
-	GLenum error= glGetError();	
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Box::GlDraw ", error);
-		throw(OpenGlException);
-	}
-		
 }

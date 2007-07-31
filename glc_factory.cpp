@@ -78,7 +78,7 @@ GLC_Point* GLC_Factory::createPoint(double x, double y, double z) const
 //  Create an GLC_Circle
 GLC_Circle* GLC_Factory::createCircle(double radius, double angle) const
 {
-	return new GLC_Circle(radius, angle,  Qt::white);
+	return new GLC_Circle(radius, Qt::white, angle);
 }
 // Create an GLC_Circle by copying another GLC_Circle
 GLC_Circle* GLC_Factory::createCircle(const GLC_Geometry* pCircle) const

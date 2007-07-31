@@ -122,10 +122,6 @@ private:
 	 *  Throw GLC_OpenGlException*/
 	virtual void glDraw(void);
 
-	//! Virtual interface for OpenGL Geomtry properties.
-	/*! This Virtual function is implemented here.\n
-	 *  Throw GLC_OpenGlException*/
-	virtual void glPropGeom(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////

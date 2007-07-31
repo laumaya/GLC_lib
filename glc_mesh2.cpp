@@ -33,7 +33,7 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_Mesh2::GLC_Mesh2(const QColor& color)
-:GLC_Geometry("Mesh", color)
+:GLC_Geometry("Mesh", color, false)
 , m_NumberOfFaces(0)
 {
 
@@ -290,56 +290,6 @@ void GLC_Mesh2::glDraw()
 	
 }
 
-// Virtual interface for OpenGL Geometry properties.
-void GLC_Mesh2::glPropGeom()
-{
-	//! Change the current matrix
-	glMultMatrixd(m_MatPos.return_dMat());
-	
-	// Polygons display mode
-	glPolygonMode(m_PolyFace, m_PolyMode);
-	if (m_IsBlended && !m_IsSelected)
-	{
-		glEnable(GL_BLEND);
-		glDepthMask(GL_FALSE);
-	}
-	else
-	{
-		glDisable(GL_BLEND);
-	}		
-	
-	if(!m_pMaterial || (m_PolyMode != GL_FILL))
-	{
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_LIGHTING);
-		glLineWidth(getThickness());	// is thikness
-		
-		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-		else glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
-	}
-	else if (m_pMaterial->getAddRgbaTexture() && !m_IsSelected)
-	{
-		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_LIGHTING);
-		m_pMaterial->glExecute();
-	}
-	else
-	{
-		glDisable(GL_TEXTURE_2D);
-		glEnable(GL_LIGHTING);
-		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-		else m_pMaterial->glExecute();
-	}
-		
-	// OpenGL error handler
-	GLenum error= glGetError();	
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Mesh2::GlPropGeom ", error);
-		throw(OpenGlException);
-	}
-		
-}
 
 // Add coordinate and normal index of a face
 void GLC_Mesh2::addCoordAndNormIndex(const QVector<int> &Coordinate, const QVector<int> &Normal)

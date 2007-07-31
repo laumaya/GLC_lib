@@ -32,7 +32,7 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport, const QColor& color)
-:GLC_Geometry("Image Plane", color)
+:GLC_Geometry("Image Plane", color, false)
 , m_pImgTexture(NULL)
 , m_pViewport(pViewport)
 , m_dLgImage(0)

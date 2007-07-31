@@ -62,7 +62,7 @@ class GLC_Geometry :
 //////////////////////////////////////////////////////////////////////
 public:
 	// default constructor
-	GLC_Geometry(const QString &name, const QColor &color);
+	GLC_Geometry(const QString &name, const QColor &color, const bool typeIsWire);
 	//! Copy constructor
 	GLC_Geometry(const GLC_Geometry& sourceGeom);
 	
@@ -215,9 +215,9 @@ protected:
 	/*! This Virtual function have to be implemented in concrete class.*/
 	virtual void glDraw(void) = 0;
 
-	//! Virtual interface for OpenGL Geomtry properties.
-	/*! This Virtual function have to be implemented in concrete class.*/
-	virtual void glPropGeom(void) = 0;
+	//! Virtual interface for OpenGL Geometry properties.
+	/*! This Virtual function can be modify in concrete class.*/
+	virtual void glPropGeom(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -264,14 +264,14 @@ protected:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! RGBA geometry color
-	QColor	m_Color;
-
 	//! Thikness of geometry's Edge
 	float m_Thikness;
 	
 	//! Geometry visibility
 	bool m_IsVisible;
+	
+	//! Geometry type is wire
+	bool m_IsWire;
 	
 };
 #endif //GLC_GEOMETRY_H_

@@ -34,13 +34,13 @@
 
 
 GLC_Point::GLC_Point(const GLC_Vector4d &VectSetCoord, const QColor &color)
-:GLC_Geometry("Point", color), m_VectCoord(VectSetCoord)
+:GLC_Geometry("Point", color, true), m_VectCoord(VectSetCoord)
 {
 	
 }
 //! Construct an GLC_Point
 GLC_Point::GLC_Point(double x, double y, double z, const QColor &color)
-:GLC_Geometry("Point", color), m_VectCoord(x, y, z)
+:GLC_Geometry("Point", color, true), m_VectCoord(x, y, z)
 {
 }
 
@@ -106,29 +106,6 @@ void GLC_Point::glDraw(void)
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_Point::GlDraw ", error);
-		throw(OpenGlException);
-	}
-	
-}
-
-void GLC_Point::glPropGeom(void)
-{
-	// Change current Matrix
-	glMultMatrixd(m_MatPos.return_dMat());
-	
-	// Disable lighting
-	glDisable(GL_LIGHTING);
-	// Disable blending
-	glDisable(GL_BLEND);
-
-	glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());	// Color
-	glPointSize(getThickness());	// Thikness
-	
-	// OpenGL error handler
-	GLenum error= glGetError();	
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Point::GlPropGeom ", error);
 		throw(OpenGlException);
 	}
 	

@@ -28,7 +28,7 @@
 #include <assert.h>
 #include "glc_cylinder.h"
 #include "glc_openglexception.h"
-
+#include "glc_selectionmaterial.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
@@ -36,7 +36,7 @@
 
 
 GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, const QColor& color)
-:GLC_Geometry("Cylinder", color)
+:GLC_Geometry("Cylinder", color, false)
 , m_Radius(dRadius)
 , m_dLength(dLength)
 , m_nDiscret(GLC_POLYDISCRET)	// Default discretion
@@ -261,79 +261,5 @@ void GLC_Cylinder::glDraw(void)
 		GLC_OpenGlException OpenGlException("GLC_Cylinder::GlDraw ", error);
 		throw(OpenGlException);
 	}
-
-}
-// Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
-void GLC_Cylinder::glPropGeom(void)
-{
-		// Update Current matrix
-		glMultMatrixd(m_MatPos.return_dMat());
-		if(!m_pMaterial || (m_PolyMode != GL_FILL))
-		{
-			glDisable(GL_TEXTURE_2D);
-			glDisable(GL_LIGHTING);
-
-			if (m_IsBlended)
-			{
-				glEnable(GL_BLEND);
-				glDepthMask(GL_FALSE);
-			}
-			else
-			{
-				glDisable(GL_BLEND);
-			}
-
-			glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// Color
-		}
-		else if (m_pMaterial->getAddRgbaTexture())
-		{
-			glEnable(GL_TEXTURE_2D);
-			glEnable(GL_LIGHTING);
-
-			if (m_IsBlended)
-			{
-				glDisable(GL_LIGHTING);
-				glEnable(GL_BLEND);
-				glDepthMask(GL_FALSE);
-			}
-			else
-			{
-				glDisable(GL_BLEND);
-			}
-			glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// Color
-
-			m_pMaterial->glExecute();
-		}
-
-		else
-		{
-			glDisable(GL_TEXTURE_2D);
-			glEnable(GL_LIGHTING);
-
-			if (m_IsBlended)
-			{
-				glEnable(GL_BLEND);
-				glDepthMask(GL_FALSE);
-			}
-			else
-			{
-				glDisable(GL_BLEND);
-			}
-
-			m_pMaterial->glExecute();
-		}
-
-		glLineWidth(getThickness());	// Thickness
-
-		// Polygons display mode
-		glPolygonMode(m_PolyFace, m_PolyMode);
-
-		// OpenGL error handler
-		GLenum error= glGetError();	
-		if (error != GL_NO_ERROR)
-		{
-			GLC_OpenGlException OpenGlException("GLC_Cylinder::GlPropGeom ", error);
-			throw(OpenGlException);
-		}
 
 }

@@ -27,7 +27,7 @@
 #include "glc_circle.h"
 #include "assert.h"
 #include "glc_openglexception.h"
-#include "glc_selectionmaterial.h"
+
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
@@ -35,7 +35,7 @@
 
 
 GLC_Circle::GLC_Circle(const double &dRadius, const QColor& color, double Angle)
-:GLC_Geometry("Circle", color)
+:GLC_Geometry("Circle", color, true)
 , m_Radius(dRadius)
 , m_nDiscret(GLC_DISCRET)
 , m_dAngle(Angle)
@@ -162,29 +162,4 @@ void GLC_Circle::glDraw(void)
 		GLC_OpenGlException OpenGlException("GLC_Circle::GlDraw ", error);
 		throw(OpenGlException);
 	}
-}
-// Virtual interface for OpenGL Geomtry properties. (Color, thiknness, position..)
-void GLC_Circle::glPropGeom(void)
-{
-	// Update Current matrix
-	glMultMatrixd(m_MatPos.return_dMat());
-	
-	// Circle graphic properties
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_LIGHTING);
-	// Pas de transparence
-	glDisable(GL_BLEND);
-	
-	if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-	else glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// Color
-	
-	glLineWidth(getThickness());	// Thikness
-			
-	// OpenGL error handler
-	GLenum error= glGetError();	
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Circle::GlPropGeom ", error);
-		throw(OpenGlException);
-	}				
 }
