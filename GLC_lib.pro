@@ -41,7 +41,9 @@ HEADERS += glc_maths.h \
     glc_collectionnode.h \
     glc_exception.h \
     glc_openglexception.h \
-    glc_fileformatexception.h
+    glc_fileformatexception.h \
+    glc_selectionmaterial.h
+    
 SOURCES += glc_vector4d.cpp \
     glc_vector3d.cpp \
     glc_vector2d.cpp \
@@ -69,7 +71,8 @@ SOURCES += glc_vector4d.cpp \
     glc_collectionnode.cpp \
     glc_exception.cpp \
     glc_openglexception.cpp \
-    glc_fileformatexception.cpp
+    glc_fileformatexception.cpp \
+    glc_selectionmaterial.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
