@@ -73,7 +73,7 @@ public:
 	//! Get Object ID
 	GLC_uint	getID() const;
 	//! Get Object Name
-	const char	*getName() const;
+	const QString getName() const;
 //@}
 
 //////////////////////////////////////////////////////////////////////

@@ -62,9 +62,9 @@ GLC_uint GLC_Object::getID() const
 }
 
 // Object Name
-const char* GLC_Object::getName() const
+const QString GLC_Object::getName() const
 {
-	return m_Name.toAscii().data();
+	return m_Name;
 }
 
 //////////////////////////////////////////////////////////////////////
