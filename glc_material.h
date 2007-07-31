@@ -72,6 +72,9 @@ public:
 	
 	//! Remove material where used geometry
 	virtual ~GLC_Material(void);
+	
+	//! Return true if the material is used
+	bool isUnused() const {return m_WhereUsed.isEmpty();}
 //@}
 
 //////////////////////////////////////////////////////////////////////
