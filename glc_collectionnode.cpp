@@ -128,6 +128,7 @@ void GLC_CollectionNode::glExecute(GLenum Mode)
 	// Geometry OpenGl list invalid
 	if (!m_pGeom->getListIsValid())
 	{
+		m_pGeom->glLoadTexture();
 		m_pGeom->createList(Mode);
 		computeBox= true;
 	}
@@ -142,7 +143,7 @@ void GLC_CollectionNode::glExecute(GLenum Mode)
 		{
 			qDebug() << "GLC_CollectionNode::GlExecute: List not found";
 			m_ListID= glGenLists(1);
-		}
+		}		
 		glNewList(m_ListID, Mode);
 			m_pGeom->glExecute(Mode);
 		glEndList();
