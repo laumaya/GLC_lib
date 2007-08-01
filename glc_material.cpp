@@ -203,6 +203,25 @@ void GLC_Material::setLightEmission(const QColor& lightEmission)
 	updateUsed();
 }
 
+// Set Texture
+void GLC_Material::setTexture(GLC_Texture* pTexture)
+{
+	qDebug() << "GLC_Material::SetTexture";
+	if (m_pTexture != NULL)
+	{
+		delete m_pTexture;
+		m_pTexture= pTexture;
+		glLoadTexture();
+	}
+	else
+	{
+		// It is not sure that there is OpenGL context
+		m_pTexture= pTexture;
+	}
+		
+	updateUsed();
+}
+
 // Add Geometry to where used hash table
 bool GLC_Material::addGLC_Geom(GLC_Geometry* pGeom)
 {
@@ -243,6 +262,15 @@ bool GLC_Material::delGLC_Geom(GLC_uint Key)
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
+
+// Load the texture
+void GLC_Material::glLoadTexture(void)
+{
+	if (m_pTexture != NULL)
+	{
+		m_pTexture->glLoadTexture();
+	}
+}
 
 // Execute OpenGL Material
 void GLC_Material::glExecute(GLenum Mode)

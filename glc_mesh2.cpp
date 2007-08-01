@@ -201,6 +201,22 @@ void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordi
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
+// if the geometry have a texture, load it
+void GLC_Mesh2::glLoadTexture(void)
+{
+	// Load texture of the master material 
+	m_pMaterial->glLoadTexture();
+
+	MaterialHash::iterator iMaterial= m_MaterialHash.begin();
+	
+    while (iMaterial != m_MaterialHash.constEnd())
+    {
+        // Load texture of mesh materials    
+        iMaterial.value().glLoadTexture();
+        ++iMaterial;
+    }
+	
+}
 
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh2::glDraw()

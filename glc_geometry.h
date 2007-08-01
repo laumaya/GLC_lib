@@ -186,6 +186,9 @@ public:
 
 public:
 
+	//! if the geometry have a texture, load it
+	virtual void glLoadTexture(void);
+	
 	//! Virtual interface for OpenGL execution from GLC_Object.
 	/*! This Virtual function is implemented here.\n
 	 * At the first call, this function call virtual function

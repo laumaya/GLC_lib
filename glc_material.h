@@ -134,14 +134,7 @@ public:
 	}
 
 	//! Set Texture
-	void setTexture(GLC_Texture* pTexture)
-	{
-		qDebug() << "GLC_Material::SetTexture";
-		m_pTexture= pTexture;
-		
-		updateUsed();
-	}
-
+	void setTexture(GLC_Texture* pTexture);
 
 	//! Add Geometry to the "where used" hash table
 	bool addGLC_Geom(GLC_Geometry* pGeom);
@@ -156,6 +149,10 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+
+	//! Load the texture
+	void glLoadTexture(void);
+	
 	//! Execute OpenGL Material
 	virtual void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
 

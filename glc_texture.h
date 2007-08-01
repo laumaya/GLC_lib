@@ -61,7 +61,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:	
-
+	//! Load the texture
+	void glLoadTexture(void);
 	//! Bind texture in 2D mode
 	void glcBindTexture(void);
 //@}

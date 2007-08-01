@@ -353,6 +353,13 @@ bool GLC_Geometry::createList(GLenum Mode)
 		throw(OpenGlException);
 	}
 }
+
+// if the geometry have a texture, load it
+void GLC_Geometry::glLoadTexture(void)
+{
+	m_pMaterial->glLoadTexture();
+}
+
 // Geometry display
 void GLC_Geometry::glExecute(GLenum Mode)
 {
@@ -365,7 +372,7 @@ void GLC_Geometry::glExecute(GLenum Mode)
 		glPushMatrix();
 
 		// Define Geometry's property
-		glPropGeom();	// Virtual function defined in concrete class
+		glPropGeom();
 
 		// Geometry validity set to true
 		m_GeometryIsValid= true;

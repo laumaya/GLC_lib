@@ -73,9 +73,8 @@ GLC_Texture::~GLC_Texture()
 		m_pTextureImage = NULL;
 	}
 }
-
-// Bind texture in 2D mode
-void GLC_Texture::glcBindTexture(void)
+// Load the texture
+void GLC_Texture::glLoadTexture(void)
 {
 	if (m_TextureID == 0)
 	{
@@ -84,6 +83,20 @@ void GLC_Texture::glcBindTexture(void)
 		m_pTextureImage= NULL;
 		qDebug() << "GLC_Texture::glcBindTexture Texture ID = " << m_TextureID;
 	}
-	glBindTexture(GL_TEXTURE_2D, m_TextureID);
+}
+
+// Bind texture in 2D mode
+void GLC_Texture::glcBindTexture(void)
+{
+	if (m_TextureID != 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, m_TextureID);
+	}
+	else
+	{
+		GLC_Exception e("GLC_Texture::glcBindTexture Texture not loaded");
+		throw(e);
+	}
+	
 }
 
