@@ -59,7 +59,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Load image
-	bool loadImageFile(QGLWidget *GLWidget, const QString ImageName);
+	void loadImageFile(QGLWidget *GLWidget, const QString ImageName);
 
 	//! Update image plane size
 	void updatePlaneSize(void);
@@ -76,10 +76,6 @@ public:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n*/
 	virtual void glDraw(void);
-
-	//! Virtual interface for OpenGL Geomtry properties.
-	/*! This Virtual function is implemented here.*/
-	virtual void glPropGeom(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -87,9 +83,6 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 private:
-
-	//! Image texture to bind on plane
-	GLC_Texture* m_pImgTexture;
 
 	//! ViewPort
 	GLC_Viewport* m_pViewport;

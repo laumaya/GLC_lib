@@ -33,7 +33,6 @@
 //////////////////////////////////////////////////////////////////////
 GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport, const QColor& color)
 :GLC_Geometry("Image Plane", color, false)
-, m_pImgTexture(NULL)
 , m_pViewport(pViewport)
 , m_dLgImage(0)
 , m_dZpos(0)
@@ -46,28 +45,16 @@ GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport, const QColor& color)
 
 GLC_ImagePlane::~GLC_ImagePlane(void)
 {
-	// Libération de la mémoire de la texture
-	if (m_pImgTexture != NULL)
-	{
-		delete m_pImgTexture;
-		m_pImgTexture= NULL;
-	}
 
 }
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 // Load image
-bool GLC_ImagePlane::loadImageFile(QGLWidget *GLWidget, const QString ImageName)
+void GLC_ImagePlane::loadImageFile(QGLWidget *GLWidget, const QString ImageName)
 {
-	if (m_pImgTexture != NULL)
-	{
-		delete m_pImgTexture;
-	}
-
-	m_pImgTexture= new GLC_Texture(GLWidget, ImageName);
-
-	return (m_pImgTexture != NULL);
+	GLC_Texture* pImgTexture= new GLC_Texture(GLWidget, ImageName);
+	m_pMaterial->setTexture(pImgTexture);
 }
 
 // Update image size
@@ -147,41 +134,6 @@ void GLC_ImagePlane::glDraw(void)
 		GLC_OpenGlException OpenGlException("GLC_ImagePlane::GlDraw ", error);
 		throw(OpenGlException);
 	}
-}
-// Define Geometry property (Couleur, position, epaisseur)
-void GLC_ImagePlane::glPropGeom(void)
-{
-	glDisable(GL_LIGHTING);
-
-	if (m_pImgTexture != NULL)
-	{		
-		glDisable(GL_BLEND);
-		glDepthMask(GL_TRUE);
-		//glEnable(GL_DEPTH_TEST);
-		glEnable(GL_TEXTURE_2D);
-		glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
-		m_pImgTexture->glcBindTexture();
-	}
-	else
-	{
-		glDisable(GL_BLEND);
-		glDepthMask(GL_TRUE);
-		//glEnable(GL_DEPTH_TEST);
-		glDisable(GL_TEXTURE_2D);
-		glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
-	}
-	
-	// Polygons display mode
-	glPolygonMode(m_PolyFace, m_PolyMode);
-	
-	// OpenGL error handler
-	GLenum error= glGetError();	
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_ImagePlane::GlPropGeom ", error);
-		throw(OpenGlException);
-	}
-
 }
 
 

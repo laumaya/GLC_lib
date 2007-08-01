@@ -54,6 +54,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_pQGLWidget(GLWidget)		// Attached QGLWidget
 // the default backgroundColor
 , m_BackgroundColor((QColor::fromRgbF(0.39, 0.39, 0.39, 1.0)))
+, m_ImagePlaneListID(0)
 {
 	// create a camera
 	m_pViewCam= new GLC_Camera;
@@ -266,11 +267,57 @@ void GLC_Viewport::glExecuteTargetCam()	//! \todo Create a display list
 
 // Display background image
 void GLC_Viewport::glExecuteImagePlane()
-{
+{	
+	/*
+	if (m_ImagePlaneListID == 0)
+	{
+		if (m_pImagePlane != NULL)
+		{			
+			m_pImagePlane->glLoadTexture();
+			//m_ImagePlaneListID= glGenLists(1);
+			qDebug() << "GLC_Viewport::glExecuteImagePlane : Display list " << m_ImagePlaneListID << " created";
+			//m_pImagePlane->createList(GL_COMPILE);
+			//glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
+				m_pImagePlane->glExecute();
+			//glEndList();					
+		}		
+	}
+	else
+	{
+		glCallList(m_ImagePlaneListID);
+	}*/
+	
 	if (m_pImagePlane != NULL)
 	{
-		m_pImagePlane->glExecute();
-	}
+		// Geometry OpenGl list invalid
+		if (!m_pImagePlane->getListIsValid())
+		{
+			m_pImagePlane->glLoadTexture();
+			m_pImagePlane->createList(GL_COMPILE);
+		}
+		
+		// Geometry invalid or collection node list ID == 0
+		if ((!m_pImagePlane->getValidity()) || (m_ImagePlaneListID == 0))
+		{
+			qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pImagePlane->getValidity();
+			qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ImagePlaneListID;
+			
+			if (m_ImagePlaneListID == 0)
+			{
+				qDebug() << "GLC_CollectionNode::GlExecute: List not found";
+				m_ImagePlaneListID= glGenLists(1);
+			}		
+			glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
+				m_pImagePlane->glExecute(GL_COMPILE_AND_EXECUTE);
+			glEndList();
+			qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ImagePlaneListID << " created";
+		}
+		else
+		{
+			glCallList(m_ImagePlaneListID);
+		}
+	}	
+		
 }
 
 
@@ -358,16 +405,22 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 }
 
 // load background image
-bool GLC_Viewport::loadBackGroundImage(QGLWidget *GLWidget, const QString Image)
+void GLC_Viewport::loadBackGroundImage(QGLWidget *GLWidget, const QString Image)
 {
 	deleteBackGroundImage();
 	m_pImagePlane= new GLC_ImagePlane(this, Qt::white);
-	return m_pImagePlane->loadImageFile(GLWidget, Image);
+	m_pImagePlane->loadImageFile(GLWidget, Image);
 }
 
 // delete background image
 void GLC_Viewport::deleteBackGroundImage()
 {
+	if (m_ImagePlaneListID != 0)
+	{
+		glDeleteLists(m_ImagePlaneListID, 1);
+		m_ImagePlaneListID= 0;
+		
+	}
 	if (m_pImagePlane != NULL)
 	{
 		delete m_pImagePlane;

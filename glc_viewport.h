@@ -181,7 +181,7 @@ public:
 	GLC_uint select(QGLWidget *pGLWidget, int x, int y);
 	
 	//! load background image
-	bool loadBackGroundImage(QGLWidget *GLWidget, const QString Image);
+	void loadBackGroundImage(QGLWidget *GLWidget, const QString Image);
 
 	//! delete background image
 	void deleteBackGroundImage();
@@ -352,6 +352,10 @@ private:
 	
 	//! Viewport Background color
 	QColor m_BackgroundColor;
+	
+	//! OpenGL list of the Image Plane
+	GLuint m_ImagePlaneListID;
+	
 
 };
 
