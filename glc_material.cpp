@@ -170,10 +170,71 @@ QColor GLC_Material::getLightEmission() const
 {
 	return m_LightEmission;
 }
+// Get the texture File Name
+QString GLC_Material::getTextureFileName() const
+{
+	if (m_pTexture != NULL)
+	{
+		return m_pTexture->getTextureFileName();
+	}
+	else
+	{
+		return "";
+	}
+}
+
+// Get Texture Id
+GLuint GLC_Material::getTextureID() const
+{
+	if (m_pTexture != NULL)
+	{
+		return m_pTexture->getTextureID();
+	}
+	else
+	{
+		return 0;
+	}
+	
+}
+
+// return true if the texture is loaded
+bool GLC_Material::textureIsLoaded() const
+{
+	if (m_pTexture != NULL)
+	{
+		return m_pTexture->isLoaded();
+	}
+	else
+	{
+		return false;
+	}	
+}
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+
+// Set Material properties
+ void GLC_Material::setMaterial(const GLC_Material* pMat)
+ {
+	if (NULL != pMat->m_pTexture)
+	{
+		GLC_Texture* pTexture= new GLC_Texture(*(pMat->m_pTexture));
+		setTexture(pTexture);
+	}	
+	// Ambient Color
+	m_AmbientColor= pMat->m_AmbientColor;
+	// Diffuse Color
+	m_DiffuseColor= pMat->m_DiffuseColor;
+	// Specular Color
+	m_SpecularColor= pMat->m_SpecularColor;
+	// Lighting emit
+	m_LightEmission= pMat->m_LightEmission;
+ 	
+ 	m_fShininess= pMat->m_fShininess;
+ 	
+ 	updateUsed();
+ }
 
 // Set Ambiant Color
 void GLC_Material::setAmbientColor(const QColor& ambientColor)
@@ -339,7 +400,7 @@ void GLC_Material::updateUsed(void)
 // Init Ambiant Color
 void GLC_Material::initAmbientColor(void)
 {
-	m_AmbientColor.setRgbF(0.2, 0.2, 0.2, 1.0);
+	m_AmbientColor.setRgbF(0.8, 0.8, 0.8, 1.0);
 }
 
 // Init default color

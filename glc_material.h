@@ -68,6 +68,8 @@ public:
 	GLC_Material(GLC_Texture* pTexture, const char *pName);
 	
 	//! Copy constructor
+	/*! Hast usage table are not copying
+	 */
 	GLC_Material(const GLC_Material &InitMaterial);
 	
 	//! Remove material where used geometry
@@ -105,6 +107,16 @@ public:
 	{
 		return m_fShininess;
 	}
+	
+	//! Get the texture File Name
+	QString getTextureFileName() const;
+	
+	//! Get Texture Id
+	GLuint getTextureID() const;
+	
+	//! return true if the texture is loaded
+	bool textureIsLoaded() const;
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -113,6 +125,12 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+	//! Set Material properties
+	/*! The Hash Table WhereUse
+	 *  is not modified
+	 */
+	 void setMaterial(const GLC_Material*);
+	 
 	//! Set Ambiant Color
 	void setAmbientColor(const QColor& ambientColor);
 
