@@ -37,7 +37,7 @@
 //////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////
-GLC_ObjToMesh2::GLC_ObjToMesh2(QGLWidget *GLWidget)
+GLC_ObjToMesh2::GLC_ObjToMesh2(const QGLContext *pContext)
 : QObject()
 , m_pMesh(NULL)
 , m_pCurrentMaterial(NULL)
@@ -48,7 +48,7 @@ GLC_ObjToMesh2::GLC_ObjToMesh2(QGLWidget *GLWidget)
 , m_nCurVectNorm(0)
 , m_nNbrVectTexture(0)
 , m_nCurVectTexture(0)
-, m_pGLWidget(GLWidget)
+, m_pQGLContext(pContext)
 {
 
 }
@@ -505,7 +505,7 @@ void GLC_ObjToMesh2::extractString(QString &ligne, GLC_Material *pMaterial)
 			textureFile.append(valueString);
 			
 			// Create the texture and assign it to current material
-			GLC_Texture *pTexture = new GLC_Texture(m_pGLWidget, textureFile);
+			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
 			pMaterial->setTexture(pTexture);
 			qDebug() << "Texture File is : " << valueString;
 	}

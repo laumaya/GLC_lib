@@ -32,8 +32,8 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_Texture::GLC_Texture(QGLWidget *GLWidget, const QString &Filename)
-: m_pQGLWidget(GLWidget)
+GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
+: m_pQGLContext(const_cast<QGLContext*>(pContext))
 , m_FileName(Filename)
 , m_TextureID(0)
 , m_pTextureImage(new QImage(m_FileName))
@@ -46,7 +46,7 @@ GLC_Texture::GLC_Texture(QGLWidget *GLWidget, const QString &Filename)
 }
 
 GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
-: m_pQGLWidget(TextureToCopy.m_pQGLWidget)
+: m_pQGLContext(TextureToCopy.m_pQGLContext)
 , m_FileName(TextureToCopy.m_FileName)
 , m_TextureID(0)
 , m_pTextureImage(new QImage(m_FileName))
@@ -64,7 +64,7 @@ GLC_Texture::~GLC_Texture()
 	qDebug() << "GLC_Texture::~GLC_Texture Texture ID : " << m_TextureID;
 	if (m_TextureID != 0)
 	{
-		m_pQGLWidget->deleteTexture(m_TextureID);
+		m_pQGLContext->deleteTexture(m_TextureID);
 		m_TextureID= 0;
 	}
 	else
@@ -78,7 +78,7 @@ void GLC_Texture::glLoadTexture(void)
 {
 	if (m_TextureID == 0)
 	{
-		m_TextureID= m_pQGLWidget->bindTexture(*m_pTextureImage);
+		m_TextureID= m_pQGLContext->bindTexture(*m_pTextureImage);
 		delete m_pTextureImage;
 		m_pTextureImage= NULL;
 		qDebug() << "GLC_Texture::glcBindTexture Texture ID = " << m_TextureID;

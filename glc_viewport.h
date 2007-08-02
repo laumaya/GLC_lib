@@ -181,7 +181,7 @@ public:
 	GLC_uint select(QGLWidget *pGLWidget, int x, int y);
 	
 	//! load background image
-	void loadBackGroundImage(QGLWidget *GLWidget, const QString Image);
+	void loadBackGroundImage(const QString Image);
 
 	//! delete background image
 	void deleteBackGroundImage();

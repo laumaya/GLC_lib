@@ -58,7 +58,7 @@ class GLC_ObjToMesh2 : public QObject
 public:
 	//! Default constructor
 	/*! Create an empty ObjToMesh object */
-	GLC_ObjToMesh2(QGLWidget *GLWidget);
+	GLC_ObjToMesh2(const QGLContext *pContext);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -154,8 +154,8 @@ private:
 	//! Material name <=> index Hash table
 	MaterialHashMap m_MaterialNameIndex;
 	
-	//! GLWidget handle
-	QGLWidget *m_pGLWidget;
+	//! OpenGL Context
+	const QGLContext *m_pQGLContext;
 
 };
 #endif //GLC_OBJ_TO_MESH2_H_

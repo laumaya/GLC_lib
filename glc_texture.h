@@ -47,7 +47,7 @@ class GLC_Texture
 
 public:
 	//! Default constructor
-	GLC_Texture(QGLWidget *GLWidget, const QString &Filename);
+	GLC_Texture(const QGLContext *pContext, const QString &Filename);
 
 	//! Copy constructor
 	GLC_Texture(const GLC_Texture &TextureToCopy);
@@ -56,6 +56,21 @@ public:
 	virtual ~GLC_Texture();
 //@}
 
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Get the texture File Name
+	QString getTextureFileName() const {return m_FileName;}
+	
+	//! Get Texture Id
+	GLuint getTextureID() const {return m_TextureID;}
+	
+	//! return true if the texture is loaded
+	bool isLoaded() const {return (m_TextureID != 0);}
+
+//@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
@@ -73,7 +88,7 @@ public:
 
 private:
 	//! OpenGL Texture ID
-	QGLWidget *m_pQGLWidget;
+	QGLContext *m_pQGLContext;
 	QString m_FileName;
 	GLuint	m_TextureID;
 	

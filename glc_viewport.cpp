@@ -405,11 +405,11 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 }
 
 // load background image
-void GLC_Viewport::loadBackGroundImage(QGLWidget *GLWidget, const QString Image)
+void GLC_Viewport::loadBackGroundImage(const QString Image)
 {
 	deleteBackGroundImage();
 	m_pImagePlane= new GLC_ImagePlane(this, Qt::white);
-	m_pImagePlane->loadImageFile(GLWidget, Image);
+	m_pImagePlane->loadImageFile(m_pQGLWidget->context(), Image);
 }
 
 // delete background image
