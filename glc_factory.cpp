@@ -34,11 +34,11 @@ GLC_Factory* GLC_Factory::m_pFactory= NULL;
 // static method
 //////////////////////////////////////////////////////////////////////
 // Return the unique instance of the factory
-GLC_Factory* GLC_Factory::instance(QGLWidget *GLWidget)
+GLC_Factory* GLC_Factory::instance(const QGLContext *pContext)
 {
 	if(m_pFactory == NULL)
 	{
-		m_pFactory= new GLC_Factory(GLWidget);
+		m_pFactory= new GLC_Factory(pContext);
 	}
 	return m_pFactory;
 }
@@ -48,8 +48,8 @@ GLC_Factory* GLC_Factory::instance(QGLWidget *GLWidget)
 //////////////////////////////////////////////////////////////////////
 
 // Protected constructor
-GLC_Factory::GLC_Factory(QGLWidget *GLWidget)
-: m_pQGLWidget(GLWidget)
+GLC_Factory::GLC_Factory(const QGLContext *pContext)
+: m_pQGLContext(pContext)
 {
 	
 }
@@ -133,7 +133,7 @@ GLC_Cylinder* GLC_Factory::createCylinder(const GLC_Geometry* pCylinder) const
 // Create an GLC_Mesh with a QFile
 GLC_Mesh2* GLC_Factory::createMesh(QFile &file) const
 {
-	GLC_ObjToMesh2 objToMesh(m_pQGLWidget);
+	GLC_ObjToMesh2 objToMesh(m_pQGLContext);
 	connect(&objToMesh, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 	return objToMesh.CreateMeshFromObj(file);
 }
@@ -184,5 +184,5 @@ GLC_Material* GLC_Factory::createMaterial(const QString &textureFullFileName) co
 
 GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName) const
 {
-	return new GLC_Texture(m_pQGLWidget, textureFullFileName);
+	return new GLC_Texture(m_pQGLContext, textureFullFileName);
 }
