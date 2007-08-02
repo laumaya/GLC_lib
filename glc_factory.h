@@ -56,10 +56,10 @@ class GLC_Factory : public QObject
 	
 public:
 	//! Get unique instance of the factory
-	static GLC_Factory* instance(QGLWidget *GLWidget);
+	static GLC_Factory* instance(const QGLContext *);
 protected:	
 	//! Constructor
-	GLC_Factory(QGLWidget *GLWidget);
+	GLC_Factory(const QGLContext *);
 public:
 	//! Destructor
 	~GLC_Factory();
@@ -119,8 +119,8 @@ private:
 	//! The unique instance of the factory
 	static GLC_Factory* m_pFactory;
 	
-	//! The QGLWidget attached to the factory (rendering context)
-	QGLWidget* m_pQGLWidget;
+	//! The QGLContext attached to the factory (rendering context)
+	const QGLContext* m_pQGLContext;
 			
 };
 

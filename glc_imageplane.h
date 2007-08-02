@@ -59,7 +59,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Load image
-	void loadImageFile(QGLWidget *GLWidget, const QString ImageName);
+	void loadImageFile(const QGLContext *pContext, const QString ImageName);
 
 	//! Update image plane size
 	void updatePlaneSize(void);

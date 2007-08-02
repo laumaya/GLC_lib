@@ -51,9 +51,9 @@ GLC_ImagePlane::~GLC_ImagePlane(void)
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 // Load image
-void GLC_ImagePlane::loadImageFile(QGLWidget *GLWidget, const QString ImageName)
+void GLC_ImagePlane::loadImageFile(const QGLContext *pContext, const QString ImageName)
 {
-	GLC_Texture* pImgTexture= new GLC_Texture(GLWidget, ImageName);
+	GLC_Texture* pImgTexture= new GLC_Texture(pContext, ImageName);
 	m_pMaterial->setTexture(pImgTexture);
 }
 
