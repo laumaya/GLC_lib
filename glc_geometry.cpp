@@ -245,8 +245,7 @@ void GLC_Geometry::resetMatrix(void)
 // Set Wire thickness
 void GLC_Geometry::setThikness(float SetEp)
 {
-	SetEp= fabs(SetEp);		
-	m_Thikness= SetEp;
+	m_Thikness= fabs(SetEp);
 
 	m_GeometryIsValid= false;
 }
@@ -453,6 +452,7 @@ void GLC_Geometry::glPropGeom()
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
 		glLineWidth(getThickness());	// is thikness
+		glPointSize(getThickness());
 		
 		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 		else glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
