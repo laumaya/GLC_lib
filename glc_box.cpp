@@ -32,7 +32,6 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 
-
 GLC_Box::GLC_Box(double dLx, double dLy, double dlz, const QColor& color)
 :GLC_Geometry("Box", color, false)
 , m_dLgX(dLx)
@@ -117,40 +116,40 @@ void GLC_Box::glDraw(void)
 	// Polygon 1	
 	glBegin(GL_QUADS);		
 		glNormal3d(0.0, 0.0, 1.0);	// Z
-		glTexCoord2f(0.0f, 0.0f); glVertex3d(0,		0.0,	m_dLgZ);
-		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX,	0.0,	m_dLgZ);
-		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX,	m_dLgY, m_dLgZ);
-		glTexCoord2f(0.0f, 1.0f); glVertex3d(0,		m_dLgY, m_dLgZ);
+		glTexCoord2f(0.0f, 0.0f); glVertex3d(-m_dLgX / 2, -m_dLgY / 2, m_dLgZ / 2);
+		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX / 2, -m_dLgY / 2, m_dLgZ / 2);
+		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX / 2, m_dLgY / 2, m_dLgZ / 2);
+		glTexCoord2f(0.0f, 1.0f); glVertex3d(-m_dLgX / 2, m_dLgY / 2, m_dLgZ / 2);
 	// Polygon 2
 		glNormal3d(1.0, 0.0, 0.0);	// X
-		glTexCoord2f(0.0f, 1.0f); glVertex3d(m_dLgX,	0.0,	m_dLgZ);
-		glTexCoord2f(0.0f, 0.0f); glVertex3d(m_dLgX,	0.0,	0.0);
-		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX,	m_dLgY, 0.0);
-		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX,	m_dLgY, m_dLgZ);
+		glTexCoord2f(0.0f, 1.0f); glVertex3d(m_dLgX / 2, -m_dLgY / 2, m_dLgZ / 2);
+		glTexCoord2f(0.0f, 0.0f); glVertex3d(m_dLgX / 2, -m_dLgY / 2, -m_dLgZ / 2);
+		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX / 2, m_dLgY / 2, -m_dLgZ / 2);
+		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX / 2, m_dLgY / 2, m_dLgZ / 2);
 	// Polygon 3	
 		glNormal3d(0.0, 0.0, -1.0);	// -Z
-		glTexCoord2f(0.0f, 0.0f); glVertex3d(0.0,		0.0,	0.0);
-		glTexCoord2f(0.0f, 1.0f); glVertex3d(0.0,		m_dLgY,	0.0);
-		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX,	m_dLgY,	0.0);
-		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX,	0.0,	0.0);
+		glTexCoord2f(0.0f, 0.0f); glVertex3d(-m_dLgX / 2, -m_dLgY / 2, -m_dLgZ / 2);
+		glTexCoord2f(0.0f, 1.0f); glVertex3d(-m_dLgX / 2, m_dLgY / 2, -m_dLgZ / 2);
+		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX / 2, m_dLgY / 2, -m_dLgZ / 2);
+		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX / 2, -m_dLgY / 2, -m_dLgZ / 2);
 	// Polygon 4
 		glNormal3d(-1.0, 0.0, 0.0);	// -X	
-		glTexCoord2f(0.0f, 0.0f); glVertex3d(0.0,		0.0,	0.0);
-		glTexCoord2f(0.0f, 1.0f); glVertex3d(0.0,		0.0,	m_dLgZ);
-		glTexCoord2f(1.0f, 1.0f); glVertex3d(0.0,		m_dLgY,	m_dLgZ);
-		glTexCoord2f(1.0f, 0.0f); glVertex3d(0.0,		m_dLgY,	0.0);
+		glTexCoord2f(0.0f, 0.0f); glVertex3d(-m_dLgX / 2, -m_dLgY / 2, -m_dLgZ / 2);
+		glTexCoord2f(0.0f, 1.0f); glVertex3d(-m_dLgX / 2, -m_dLgY / 2, m_dLgZ / 2);
+		glTexCoord2f(1.0f, 1.0f); glVertex3d(-m_dLgX / 2, m_dLgY / 2, m_dLgZ / 2);
+		glTexCoord2f(1.0f, 0.0f); glVertex3d(-m_dLgX / 2, m_dLgY / 2, -m_dLgZ / 2);
 	// Polygon 5
 		glNormal3d(0.0, -1.0, 0.0);	// -Y
-		glTexCoord2f(0.0f, 0.0f); glVertex3d(0.0,		0.0,	0.0);
-		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX,	0.0,	0.0);
-		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX,	0.0,	m_dLgZ);
-		glTexCoord2f(0.0f, 1.0f); glVertex3d(0.0,		0.0,	m_dLgZ);
+		glTexCoord2f(0.0f, 0.0f); glVertex3d(-m_dLgX / 2, -m_dLgY / 2, -m_dLgZ / 2);
+		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX / 2, -m_dLgY / 2, -m_dLgZ / 2);
+		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX / 2, -m_dLgY / 2,	m_dLgZ / 2);
+		glTexCoord2f(0.0f, 1.0f); glVertex3d(-m_dLgX / 2, -m_dLgY / 2,	m_dLgZ / 2);
 	// Polygon 6
 		glNormal3d(0.0, 1.0, 0.0);	// Y
-		glTexCoord2f(0.0f, 0.0f); glVertex3d(0.0,		m_dLgY,	0.0);
-		glTexCoord2f(0.0f, 1.0f); glVertex3d(0.0,		m_dLgY,	m_dLgZ);
-		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX,	m_dLgY,	m_dLgZ);
-		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX,	m_dLgY,	0.0);
+		glTexCoord2f(0.0f, 0.0f); glVertex3d(-m_dLgX / 2, m_dLgY / 2, -m_dLgZ / 2);
+		glTexCoord2f(0.0f, 1.0f); glVertex3d(-m_dLgX / 2, m_dLgY / 2, m_dLgZ / 2);
+		glTexCoord2f(1.0f, 1.0f); glVertex3d(m_dLgX / 2, m_dLgY / 2, m_dLgZ / 2);
+		glTexCoord2f(1.0f, 0.0f); glVertex3d(m_dLgX / 2, m_dLgY / 2, -m_dLgZ / 2);
 	glEnd();
 	
 	// OpenGL error handler
