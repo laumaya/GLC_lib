@@ -47,7 +47,7 @@ class GLC_ImagePlane : public GLC_Geometry
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct an Image plane linked to a viewport
-	GLC_ImagePlane(GLC_Viewport* pViewport, const QColor& color);
+	GLC_ImagePlane(GLC_Viewport* pViewport);
 
 	//! Remove OpenGL Texture from memmory
 	virtual ~GLC_ImagePlane(void);

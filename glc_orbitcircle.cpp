@@ -31,10 +31,10 @@
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const QColor& color)
-: GLC_Circle(dRayon, color)
-, m_Arc1(dRayon, color, ARCANGLE)
-, m_Arc2(dRayon, color, ARCANGLE)
+GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon)
+: GLC_Circle(dRayon)
+, m_Arc1(dRayon, ARCANGLE)
+, m_Arc2(dRayon, ARCANGLE)
 {
 	// 2 circle arcs position
 	GLC_Matrix4x4 MatRot(AxeZ, -ARCANGLE / 2);
@@ -91,6 +91,14 @@ void GLC_OrbitCircle::mapArcs(const GLC_Matrix4x4 &Matrice)
 {
 	m_Arc1.multMatrix(Matrice);
 	m_Arc2.multMatrix(Matrice);
+}
+
+// overload function setRGBAColor(color);
+void GLC_OrbitCircle::setRGBAColor(const QColor& color)
+{
+	m_Arc1.setRGBAColor(color);
+	m_Arc2.setRGBAColor(color);
+	GLC_Geometry::setRGBAColor(color);
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -153,6 +153,9 @@ public:
 
 	//! Set Texture
 	void setTexture(GLC_Texture* pTexture);
+	
+	//! remove Material Texture
+	void removeTexture();
 
 	//! Add Geometry to the "where used" hash table
 	bool addGLC_Geom(GLC_Geometry* pGeom);

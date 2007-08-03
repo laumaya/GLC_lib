@@ -32,8 +32,8 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_Box::GLC_Box(double dLx, double dLy, double dlz, const QColor& color)
-:GLC_Geometry("Box", color, false)
+GLC_Box::GLC_Box(double dLx, double dLy, double dlz)
+:GLC_Geometry("Box", false)
 , m_dLgX(dLx)
 , m_dLgY(dLy)
 , m_dLgZ(dlz)

@@ -63,7 +63,8 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 	QColor color;
 	color.setRgbF(1.0, 0.11372, 0.11372, 0.0);
 	// Create orbit circle of specified color
-	m_pOrbitCircle= new GLC_OrbitCircle(1.0, color);
+	m_pOrbitCircle= new GLC_OrbitCircle(1.0);
+	m_pOrbitCircle->setRGBAColor(color);
 	
 	// Compute orbit Circle
 	//updateOrbitCircle();
@@ -408,7 +409,7 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 void GLC_Viewport::loadBackGroundImage(const QString Image)
 {
 	deleteBackGroundImage();
-	m_pImagePlane= new GLC_ImagePlane(this, Qt::white);
+	m_pImagePlane= new GLC_ImagePlane(this);
 	m_pImagePlane->loadImageFile(m_pQGLWidget->context(), Image);
 }
 

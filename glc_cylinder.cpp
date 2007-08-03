@@ -35,8 +35,8 @@
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, const QColor& color)
-:GLC_Geometry("Cylinder", color, false)
+GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength)
+:GLC_Geometry("Cylinder", false)
 , m_Radius(dRadius)
 , m_dLength(dLength)
 , m_nDiscret(GLC_POLYDISCRET)	// Default discretion

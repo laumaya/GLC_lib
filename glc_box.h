@@ -49,7 +49,7 @@ class GLC_Box : public GLC_Geometry
 public:	
 	//! Construct an GLC_Box
 	/*! By default, discretion is set to #GLC_POLYDISCRET*/
-	GLC_Box(double, double, double, const QColor&);
+	GLC_Box(double, double, double);
 //@}
 
 //////////////////////////////////////////////////////////////////////

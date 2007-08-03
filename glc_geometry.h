@@ -62,7 +62,7 @@ class GLC_Geometry :
 //////////////////////////////////////////////////////////////////////
 public:
 	// default constructor
-	GLC_Geometry(const QString &name, const QColor &color, const bool typeIsWire);
+	GLC_Geometry(const QString &name, const bool typeIsWire);
 	//! Copy constructor
 	GLC_Geometry(const GLC_Geometry& sourceGeom);
 	

@@ -283,6 +283,17 @@ void GLC_Material::setTexture(GLC_Texture* pTexture)
 	updateUsed();
 }
 
+// remove Material Texture
+void GLC_Material::removeTexture()
+{
+	if (m_pTexture != NULL)
+	{
+		delete m_pTexture;
+		m_pTexture= NULL;
+		updateUsed();
+	}
+}
+
 // Add Geometry to where used hash table
 bool GLC_Material::addGLC_Geom(GLC_Geometry* pGeom)
 {
@@ -407,10 +418,10 @@ void GLC_Material::initAmbientColor(void)
 void GLC_Material::initOtherColor(void)
 {
 	// Diffuse Color
-	m_DiffuseColor.setRgbF(1.0, 1.0, 1.0, 1.0);
+	m_DiffuseColor.setRgbF(0.7, 0.7, 0.7, 1.0);
 
 	// Specular Color
-	m_SpecularColor.setRgbF(1.0, 1.0, 1.0, 1.0);
+	m_SpecularColor.setRgbF(0.5, 0.5, 0.5, 1.0);
 
 	// Lighting emit
 	m_LightEmission.setRgbF(0.0, 0.0, 0.0, 1.0);

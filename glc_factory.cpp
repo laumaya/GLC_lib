@@ -67,18 +67,18 @@ GLC_Factory::~GLC_Factory()
 // Create an GLC_Point
 GLC_Point* GLC_Factory::createPoint(const GLC_Vector4d &coord) const
 {
-	return new GLC_Point(coord,  Qt::white);
+	return new GLC_Point(coord);
 }
 // Create an GLC_Point
 GLC_Point* GLC_Factory::createPoint(double x, double y, double z) const
 {
-	return new GLC_Point(x, y, z,  Qt::white);
+	return new GLC_Point(x, y, z);
 }
 
 //  Create an GLC_Circle
 GLC_Circle* GLC_Factory::createCircle(double radius, double angle) const
 {
-	return new GLC_Circle(radius, Qt::white, angle);
+	return new GLC_Circle(radius, angle);
 }
 // Create an GLC_Circle by copying another GLC_Circle
 GLC_Circle* GLC_Factory::createCircle(const GLC_Geometry* pCircle) const
@@ -96,7 +96,7 @@ GLC_Circle* GLC_Factory::createCircle(const GLC_Geometry* pCircle) const
 // Create an GLC_Box
 GLC_Box* GLC_Factory::createBox(double lx, double ly, double lz) const
 {
-	return new GLC_Box(lx, ly, lz,  Qt::white);
+	return new GLC_Box(lx, ly, lz);
 }
 
 // Create an GLC_Box
@@ -105,9 +105,9 @@ GLC_Box* GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 	const double lx= boundingBox.getUpper().getX() - boundingBox.getLower().getX();
 	const double ly= boundingBox.getUpper().getY() - boundingBox.getLower().getY();
 	const double lz= boundingBox.getUpper().getZ() - boundingBox.getLower().getZ();
-	GLC_Box* pBox= new GLC_Box(lx, ly, lz,  Qt::white);
-	pBox->translate(boundingBox.getLower().getX(), boundingBox.getLower().getY()
-					, boundingBox.getLower().getZ());
+	GLC_Box* pBox= new GLC_Box(lx, ly, lz);
+	pBox->translate(boundingBox.getCenter().getX(), boundingBox.getCenter().getY()
+					, boundingBox.getCenter().getZ());
 					
 	return pBox;
 }
@@ -115,7 +115,7 @@ GLC_Box* GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 // Create an GLC_Cylinder
 GLC_Cylinder* GLC_Factory::createCylinder(double radius, double length) const
 {
-	return new GLC_Cylinder(radius, length,  Qt::white);
+	return new GLC_Cylinder(radius, length);
 }
 // Create an GLC_Cylinder by copying another GLC_Cylinder
 GLC_Cylinder* GLC_Factory::createCylinder(const GLC_Geometry* pCylinder) const

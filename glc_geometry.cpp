@@ -32,7 +32,7 @@
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
-GLC_Geometry::GLC_Geometry(const QString& name, const QColor &color, const bool typeIsWire)
+GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 :GLC_Object(name)
 , m_IsSelected(false)		// By default geometry is not selected
 , m_MatPos()				// default constructor identity matrix
@@ -49,7 +49,7 @@ GLC_Geometry::GLC_Geometry(const QString& name, const QColor &color, const bool 
 
 {
 		// Material is set here
-	setMaterial(new GLC_Material(color));	
+	setMaterial(new GLC_Material());	
 }
 
 GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)

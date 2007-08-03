@@ -34,8 +34,8 @@
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Circle::GLC_Circle(const double &dRadius, const QColor& color, double Angle)
-:GLC_Geometry("Circle", color, true)
+GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
+:GLC_Geometry("Circle", true)
 , m_Radius(dRadius)
 , m_nDiscret(GLC_DISCRET)
 , m_dAngle(Angle)

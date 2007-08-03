@@ -55,7 +55,7 @@ class GLC_OrbitCircle : public GLC_Circle
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an orbit Circle with a given radius, name and color.
-	GLC_OrbitCircle(const double &dRayon,const QColor& color);
+	GLC_OrbitCircle(const double &dRayon);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -79,6 +79,9 @@ public:
 
 	//! Set Arcs position in concordance with mouse position
 	void mapArcs(const GLC_Matrix4x4 &Matrice);
+	
+	//! overload function setRGBAColor(color);
+	void setRGBAColor(const QColor&);
 	
 //@}
 

@@ -58,7 +58,7 @@ class GLC_Mesh2 : public GLC_Geometry
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct an empty Mesh
-	explicit GLC_Mesh2(const QColor& color);
+	explicit GLC_Mesh2();
 	
 	//! Copy constructor
 	explicit GLC_Mesh2(const GLC_Mesh2 &meshToCopy);

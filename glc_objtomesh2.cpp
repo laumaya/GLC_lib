@@ -73,7 +73,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	m_nCurVectTexture= 0;
 
 	// Allocate Mesh memmory
-	m_pMesh= new GLC_Mesh2(Qt::white);
+	m_pMesh= new GLC_Mesh2();
 	
 	if (!file.open(QIODevice::ReadOnly))
 	{
