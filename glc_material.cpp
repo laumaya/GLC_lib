@@ -121,15 +121,6 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 GLC_Material::~GLC_Material(void)
 {
 
-	// Remove material from Geometries
-	CWhereUsed::iterator iEntry= m_WhereUsed.begin();
-	
-    while (iEntry != m_WhereUsed.constEnd())
-    {
-        // Remove material from geometry
-        iEntry.value()->delMaterial(iEntry.value());
-        ++iEntry;
-    }
     // clear whereUSED Hash table
     m_WhereUsed.clear();
     
