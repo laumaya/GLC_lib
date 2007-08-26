@@ -111,9 +111,9 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 			
 	}
 	// Check the validity of OBJ file
-	if (!m_nNbrVectNorm || !m_nNbrVectPos)
+	if (!m_nNbrVectPos)
 	{
-		const QString message= "GLC_ObjToMesh2::CreateMeshFromObj OBJ file without Normals not emplemented!";
+		const QString message= "GLC_ObjToMesh2::CreateMeshFromObj OBJ file format not reconize!!";
 		GLC_FileFormatException fileFormatException(message, m_sFile);
 		throw(fileFormatException);
 	}
@@ -146,7 +146,10 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 
 	m_MaterialNameIndex.clear();
 	qDebug("GLC_ObjToMesh2::CreateMeshFromObj End of mesh creation");
-	
+	if (m_nNbrVectNorm == 0)
+	{
+		m_pMesh->computeNormal();
+	}
 	return m_pMesh;
 	
 }
@@ -215,8 +218,10 @@ GLC_Vector3d GLC_ObjToMesh2::extract3dVect(QString &line)
 		z= zString.toDouble(&zOk);
 		if (!(xOk && yOk && zOk))
 		{
-			qDebug() << "GLC_Vector2d GLC_ObjToMesh2 : failed to convert vector component to double";
-			assert(false);
+			const QString message= "GLC_Vector2d GLC_ObjToMesh2 : failed to convert vector component to double";
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			throw(fileFormatException);		
 		}
 		vectResult.setVect(x, y, z);		
 	}
@@ -242,8 +247,10 @@ GLC_Vector2d GLC_ObjToMesh2::extract2dVect(QString &line)
 		y= yString.toDouble(&yOk);
 		if (!(xOk && yOk))
 		{
-			qDebug() << "GLC_Vector2d GLC_ObjToMesh2 : failed to convert vector component to double";
-			assert(false);
+			const QString message= "GLC_Vector2d GLC_ObjToMesh2 : failed to convert vector component to double";
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			throw(fileFormatException);
 		}
 		vectResult.setVect(x, y);		
 	}
@@ -278,14 +285,28 @@ void GLC_ObjToMesh2::extractFaceIndex(QString &line)
 		}
 		
 		vectorCoordinate.append(coordinate);
-		vectorNormal.append(normal);
+		if (-1 != normal)
+		{	// There is a normal index
+			vectorNormal.append(normal);
+		}
+		
 		vectorMaterial.append(m_CurrentMaterialIndex);
 	}
 	
-	if (vectorTextureCoordinate.isEmpty())
+	if (vectorTextureCoordinate.isEmpty() && !vectorNormal.isEmpty())
 	{
 		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 	}
+	else if (vectorNormal.isEmpty() && vectorTextureCoordinate.isEmpty())
+	{
+		m_pMesh->addFace(vectorMaterial, vectorCoordinate);
+	}
+	else if (vectorNormal.isEmpty() && !vectorTextureCoordinate.isEmpty())
+	{
+		assert(vectorTextureCoordinate.size() == vectorCoordinate.size());
+		
+		m_pMesh->addFaceWithTexture(vectorMaterial, vectorCoordinate, vectorTextureCoordinate);
+	}	
 	else
 	{
 		assert(vectorTextureCoordinate.size() == vectorCoordinate.size());
@@ -304,8 +325,10 @@ void GLC_ObjToMesh2::setCurrentMaterial(QString &line)
 
 	if (!((streamString >> materialName).status() == QTextStream::Ok))
 	{
-		qDebug() << "GLC_ObjToMesh2::SetCurrentMaterial : failed to extract materialName";
-		assert(false);
+		const QString message= "GLC_ObjToMesh2::SetCurrentMaterial : failed to extract materialName";
+		qDebug() << message;
+		GLC_FileFormatException fileFormatException(message, m_sFile);
+		throw(fileFormatException);
 	}
 	
 	MaterialHashMap::const_iterator iMaterial= m_MaterialNameIndex.find(materialName);
@@ -323,58 +346,122 @@ void GLC_ObjToMesh2::setCurrentMaterial(QString &line)
 // Extract a vertex from a string
 void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Normal, int &TextureCoordinate)
 {
-	// Replace "/" with " "
-	ligne.replace('/', ' ');
-	// End of "/" replacement
-
-	QTextStream streamVertex(&ligne);
-	QString coordinateString, textureCoordinateString;
-	
-	if ((streamVertex >> coordinateString >> textureCoordinateString).status() ==QTextStream::Ok)
-	{
-		bool coordinateOk, textureCoordinateOk;
-		Coordinate= coordinateString.toInt(&coordinateOk);
-		TextureCoordinate= textureCoordinateString.toInt(&textureCoordinateOk);
-		if (!(coordinateOk && textureCoordinateOk))
+	const QRegExp coordinateOnlyRegExp("^\\d{1,}$"); // ex. 10
+ 	const QRegExp coordinateTextureNormalRegExp("^\\d{1,}/\\d{1,}/\\d{1,}$"); // ex. 10/30/54
+ 	const QRegExp coordinateNormalRegExp("^\\d{1,}//\\d{1,}$"); // ex. 10//54
+ 	const QRegExp coordinateTextureRegExp("^\\d{1,}/\\d{1,}$"); // ex. 10/56
+ 	
+ 	if (coordinateTextureNormalRegExp.exactMatch(ligne))
+ 	{
+		// Replace "/" with " "
+		ligne.replace('/', ' ');
+		QTextStream streamVertex(&ligne);
+		QString coordinateString, textureCoordinateString, normalString;
+	 	if ((streamVertex >> coordinateString >> textureCoordinateString >> normalString).status() ==QTextStream::Ok)
 		{
-			qDebug() << "GLC_ObjToMesh2::extractVertexIndex failed to convert coordinate or textureCoordinate to int";
-			qDebug() << "At ligne : " << ligne;
-			assert(false);
-		}
-		
-		// When there isn't texture coordinate information the pattern is like "1//2"
-		QString normalString;
-		if ((streamVertex >> normalString).status() == QTextStream::Ok)
-		{
-			bool normalOk;
+			bool coordinateOk, textureCoordinateOk, normalOk;
+			Coordinate= coordinateString.toInt(&coordinateOk);
+			--Coordinate;
+			TextureCoordinate= textureCoordinateString.toInt(&textureCoordinateOk);
+			--TextureCoordinate;
 			Normal= normalString.toInt(&normalOk);
-			if (!normalOk)
+			--Normal;
+			if (!(coordinateOk && textureCoordinateOk && normalOk))
 			{
-				qDebug() << "GLC_ObjToMesh2::extractVertexIndex failed to convert normal to int";
-				qDebug() << "At ligne : " << ligne;
-				assert(false);
+				QString message= "GLC_ObjToMesh2::extractVertexIndex failed to convert String to int";
+				message.append("At ligne : ");
+				message.append(ligne);
+				qDebug() << message;
+				GLC_FileFormatException fileFormatException(message, m_sFile);
+				throw(fileFormatException);
 			}
-			TextureCoordinate--;
-						
 		}
-		else
+		else Q_ASSERT(false);		
+ 	}
+ 	else if (coordinateTextureRegExp.exactMatch(ligne))
+ 	{
+		// Replace "/" with " "
+		ligne.replace('/', ' ');
+		QTextStream streamVertex(&ligne);
+		QString coordinateString, textureCoordinateString;
+	 	if ((streamVertex >> coordinateString >> textureCoordinateString).status() ==QTextStream::Ok)
 		{
-			Normal= TextureCoordinate;
-			TextureCoordinate= -1;
-			
+			bool coordinateOk, textureCoordinateOk;
+			Coordinate= coordinateString.toInt(&coordinateOk);
+			--Coordinate;
+			TextureCoordinate= textureCoordinateString.toInt(&textureCoordinateOk);
+			--TextureCoordinate;
+			Normal= -1;
+			if (!(coordinateOk && textureCoordinateOk))
+			{
+				QString message= "GLC_ObjToMesh2::extractVertexIndex failed to convert String to int";
+				message.append("At ligne : ");
+				message.append(ligne);
+				qDebug() << message;
+				GLC_FileFormatException fileFormatException(message, m_sFile);
+				throw(fileFormatException);
+			}
 		}
-		Coordinate--;
-		Normal--;
-		
-	}else
-	{
-		qDebug() << "GLC_ObjToMesh2::extractVertexIndex failed to extract coordinate or textureCoordinate";
-		qDebug() << "At ligne : " << ligne;
-		assert(false);
-	}
-	
-			
-	
+		else Q_ASSERT(false);		
+ 	}	
+ 	else if (coordinateNormalRegExp.exactMatch(ligne))
+ 	{
+		// Replace "/" with " "
+		ligne.replace('/', ' ');
+		QTextStream streamVertex(&ligne);
+		QString coordinateString, normalString;
+	 	if ((streamVertex >> coordinateString >> normalString).status() ==QTextStream::Ok)
+		{
+			bool coordinateOk, normalOk;
+			Coordinate= coordinateString.toInt(&coordinateOk);
+			--Coordinate;
+			TextureCoordinate= -1;
+			Normal= normalString.toInt(&normalOk);
+			--Normal;
+			if (!(coordinateOk && normalOk))
+			{
+				QString message= "GLC_ObjToMesh2::extractVertexIndex failed to convert String to int";
+				message.append("At ligne : ");
+				message.append(ligne);
+				qDebug() << message;
+				GLC_FileFormatException fileFormatException(message, m_sFile);
+				throw(fileFormatException);
+			}
+		}
+		else Q_ASSERT(false);	
+ 	}
+  	else if (coordinateOnlyRegExp.exactMatch(ligne))
+ 	{
+ 		QTextStream streamVertex(&ligne);
+ 		QString coordinateString;
+	 	if ((streamVertex >> coordinateString).status() ==QTextStream::Ok)
+		{
+			bool coordinateOk;
+			Coordinate= coordinateString.toInt(&coordinateOk);
+			--Coordinate;
+			TextureCoordinate= -1;
+			Normal= -1;
+			if (!coordinateOk)
+			{
+				QString message= "GLC_ObjToMesh2::extractVertexIndex failed to convert String to int";
+				message.append("At ligne : ");
+				message.append(ligne);
+				qDebug() << message;
+				GLC_FileFormatException fileFormatException(message, m_sFile);
+				throw(fileFormatException);
+			}
+		}
+		else Q_ASSERT(false);
+ 	}
+ 	else
+ 	{
+		QString message= "GLC_ObjToMesh2::extractVertexIndex OBJ file not reconize";
+		message.append("At ligne : ");
+		message.append(ligne);
+		qDebug() << message;
+		GLC_FileFormatException fileFormatException(message, m_sFile);
+		throw(fileFormatException);
+ 	}
 }
 
 //! Check if a material file exist
@@ -512,8 +599,9 @@ void GLC_ObjToMesh2::extractString(QString &ligne, GLC_Material *pMaterial)
 		
 	}else
 	{
-		qDebug() << "GLC_ObjToMesh2::extractString : something is wrong!!";
-		assert(false);		
+		const QString message= "GLC_ObjToMesh2::extractString : something is wrong!!";
+		GLC_FileFormatException fileFormatException(message, m_sFile);
+		throw(fileFormatException);
 	}
 	
 }
@@ -534,9 +622,12 @@ void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 		color.setBlueF(bColor.toDouble(&okb));
 		if (!(okr && okg && okb))
 		{
-			qDebug() << "GLC_ObjToMesh2::ExtractRGBValue : Wrong format of rgb color value!!";
-			qDebug() << "Current mtl file line is : " << ligne;
-			assert(false);
+			QString message= "GLC_ObjToMesh2::ExtractRGBValue : Wrong format of rgb color value!!";
+			message.append("Current mtl file line is : ");
+			message.append(ligne);
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			throw(fileFormatException);
 		}		
 		color.setAlphaF(1.0);
 		if (header == "Ka") // Ambiant Color
@@ -559,16 +650,19 @@ void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 		
 		else
 		{
-			qDebug() << "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
-			assert(false);
+			const QString message= "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			throw(fileFormatException);
 		}
 		
 	}else
 	{
-		qDebug() << "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
-		qDebug() << "Current mtl file line is : " << ligne;		
-		assert(false);
-		
+		QString message= "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
+		message.append("Current mtl file line is : ");
+		message.append(ligne);
+		qDebug() << message;
+		GLC_FileFormatException fileFormatException(message, m_sFile);
+		throw(fileFormatException);	
 	}
 
 		
@@ -590,22 +684,30 @@ void GLC_ObjToMesh2::extractOneValue(QString &ligne, GLC_Material *pMaterial)
 			value= valueString.toFloat(&ok);
 			if (!ok)
 			{
-				qDebug() << "GLC_ObjToMesh2::ExtractOneValue : Wrong format of Ambient color value!!";
-				qDebug() << "Current mtl file line is : " << ligne;
-				assert(false);
+				QString message= "GLC_ObjToMesh2::ExtractOneValue : Wrong format of Ambient color value!!";
+				message.append("Current mtl file line is : ");
+				message.append(ligne);
+				qDebug() << message;
+				GLC_FileFormatException fileFormatException(message, m_sFile);
+				throw(fileFormatException);
 			}
 			pMaterial->setShininess(value);
 			qDebug() << "Shininess : " <<  value;
 		}else
 		{
-			qDebug() << "GLC_ObjToMesh2::ExtractOneValue : Ambient Color not found!!";
-			assert(false);			
+			const QString message= "GLC_ObjToMesh2::ExtractOneValue : Ambient Color not found!!";
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			throw(fileFormatException);
 		}
 	}else
 	{
-		qDebug() << "GLC_ObjToMesh2::ExtractOneValue : something is wrong!!";
-		qDebug() << "Current mtl file line is : " << ligne;
-		assert(false);		
+		QString message= "GLC_ObjToMesh2::ExtractOneValue : something is wrong!!";
+		message.append("Current mtl file line is : ");
+		message.append(ligne);
+		qDebug() << message;
+		GLC_FileFormatException fileFormatException(message, m_sFile);
+		throw(fileFormatException);
 	}
 	
 }
