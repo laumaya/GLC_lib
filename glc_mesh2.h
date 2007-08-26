@@ -99,17 +99,29 @@ public:
 	
 	//! Add texture coordinate
 	void addTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate);
+
+	//! Add a face without texture coordinate and Normal
+	/*! Mesh list of texture index must be empty.
+	 */  
+	void addFace(const QVector<int> &Material, const QVector<int> &Coordinate);
 		 
 	//! Add a face without texture coordinate
 	/*! Mesh list of texture index must be empty.
 	 */  
 	void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal);
+	
+	//! Add a face with texture coordinate and without normal
+	void addFaceWithTexture(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &TextureCoordinate);
 
 	//! Add a face with texture coordinate
 	/*! Number of coordinate, Normal and texture must be equal
 	 */
 	void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
 				const QVector<int> &TextureCoordinate);
+	//! Compute the mesh normal
+	/*! The number of normal must be equal to 0
+	 */
+	 void computeNormal();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -132,6 +144,11 @@ private:
 //! Private services Functions
 //////////////////////////////////////////////////////////////////////
 private:
+	//! Add coordinate index of a face
+	void addCoordIndex(const QVector<int> &Coordinate);
+	
+	//! Add coordinate index of a face
+	void addNormalIndex(const QVector<int> &Normal);
 
 	//! Add coordinate and normal index of a face
 	void addCoordAndNormIndex(const QVector<int> &Coordinate, const QVector<int> &Normal);

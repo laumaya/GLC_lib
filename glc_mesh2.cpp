@@ -169,23 +169,41 @@ void GLC_Mesh2::addTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate)
 	
 }
 
-
-//! Add a face without texture coordinate
-void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal)
+//! Add a face without texture coordinate and normal
+void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordinate)
 {
 	
 	addMaterialIndex(Material);
-	addCoordAndNormIndex(Coordinate, Normal);
-	
-	// The testture index should be empty
-	//assert(m_TextureIndex.isEmpty());
-	
+	addCoordIndex(Coordinate);
+		
 	// Increment number of faces
 	m_NumberOfFaces++;
 	
 }
 
-// Add a face with texture coordinate
+//! Add a face without texture coordinate and normal
+void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal)
+{
+	
+	addMaterialIndex(Material);
+	addCoordAndNormIndex(Coordinate, Normal);
+		
+	// Increment number of faces
+	m_NumberOfFaces++;
+	
+}
+// Add a face with texture coordinate and without normal
+void GLC_Mesh2::addFaceWithTexture(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &TextureCoordinate)
+{
+	addMaterialIndex(Material);
+	addCoordIndex(Coordinate);
+	addTextureIndex(TextureCoordinate);
+		
+	// Increment number of faces
+	m_NumberOfFaces++;
+}
+
+// Add a face with texture coordinate and normal
 void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
 						const QVector<int> &TextureCoordinate)
 {
@@ -196,6 +214,53 @@ void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordi
 	// Increment number of faces
 	m_NumberOfFaces++;
 }
+
+// Compute the mesh normal
+ void GLC_Mesh2::computeNormal()
+ {
+ 	// Number of normal to add
+	const int size= m_CoordinateIndex.size();
+	qDebug() << "Size = " << size;
+	int index= 0;
+	int coordIndex= 0;
+	int normalIndex= 0;
+	while (index < size)
+	{
+		// get the coordinate of 3 face vertex
+		coordIndex= m_CoordinateIndex.at(index);
+		const GLC_Vector4d vect1(m_CoordinateHash[coordIndex]);
+		++index;
+		coordIndex= m_CoordinateIndex.at(index);
+		const GLC_Vector4d vect2(m_CoordinateHash[coordIndex]);
+		++index;
+		coordIndex= m_CoordinateIndex.at(index);
+		const GLC_Vector4d vect3(m_CoordinateHash[coordIndex]);
+		// compute 2 edges with the 3 vertex
+		const GLC_Vector4d edge1(vect2 - vect1);
+		const GLC_Vector4d edge2(vect3 - vect2);
+		GLC_Vector4d normal(edge1 ^ edge2);
+		normal.setNormal(1);
+		//normal.setInv();
+		const GLC_Vector3d normal3d(normal.getX(), normal.getY(), normal.getZ());
+		m_NormalHash.insert(normalIndex, normal3d);
+		
+		m_NormalIndex.append(normalIndex);
+		m_NormalIndex.append(normalIndex);
+		m_NormalIndex.append(normalIndex);
+		
+		++index;
+		coordIndex= m_CoordinateIndex.at(index);
+		while (coordIndex != -1)
+		{
+			m_NormalIndex.append(normalIndex);
+			++index;
+			coordIndex= m_CoordinateIndex.at(index);
+		}
+		m_NormalIndex.append(-1); // End of the face's normal index
+		++normalIndex;
+		++index;
+	}
+ }
 
 
 //////////////////////////////////////////////////////////////////////
@@ -306,6 +371,33 @@ void GLC_Mesh2::glDraw()
 	
 }
 
+// Add coordinate index of a face
+void GLC_Mesh2::addCoordIndex(const QVector<int> &Coordinate)
+{	
+	// Number of coordinate to add
+	const int size= Coordinate.size();
+	
+	// Add Coordinate index of the face
+	for (int i= 0; i < size; ++i)
+	{
+		m_CoordinateIndex.append(Coordinate[i]);		
+	}
+	m_CoordinateIndex.append(-1); // End of the face's coordinate index
+}
+
+// Add normal index of a face
+void GLC_Mesh2::addNormalIndex(const QVector<int> &Normal)
+{	
+	// Number of normal to add
+	const int size= Normal.size();
+	
+	// Add Normal index of the face
+	for (int i= 0; i < size; ++i)
+	{
+		m_NormalIndex.append(Normal[i]);		
+	}
+	m_NormalIndex.append(-1); // End of the face's normal index
+}
 
 // Add coordinate and normal index of a face
 void GLC_Mesh2::addCoordAndNormIndex(const QVector<int> &Coordinate, const QVector<int> &Normal)
