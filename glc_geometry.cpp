@@ -54,10 +54,11 @@ GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 
 GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 :GLC_Object(sourceGeom)
+, m_IsSelected(sourceGeom.m_IsSelected)		// By default geometry is not selected
 , m_MatPos(sourceGeom.m_MatPos)
 , m_ListID(0)				// By default Display List = 0
-, m_ListIsValid(false)	// By default Display List is invalid
-, m_GeometryIsValid(false)		// By default geometry is invalid
+, m_ListIsValid(false)		// By default Display List is invalid
+, m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pMaterial(NULL)			// have to be set later in constructor
 , m_IsBlended(sourceGeom.m_IsBlended)
 , m_PolyFace(sourceGeom.m_PolyFace)
@@ -67,8 +68,9 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_IsWire(sourceGeom.m_IsWire)
 
 {	
-	// Material is set here
-	setMaterial(sourceGeom.getMaterial());
+	// Material is copy here
+	setMaterial(new GLC_Material());
+	m_pMaterial->setMaterial(sourceGeom.getMaterial());
 }
 
 GLC_Geometry::~GLC_Geometry(void)
@@ -271,15 +273,12 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 {
 	if (pMat != m_pMaterial)
 	{
-		if (!!pMat)
+		if (pMat != NULL)
 		{
-			if (!pMat->addGLC_Geom(this))
-			{
-				return;
-			}
+			pMat->addGLC_Geom(this);
 		}
 	
-		if (!!m_pMaterial)
+		if (m_pMaterial != NULL)
 		{
 			m_pMaterial->delGLC_Geom(getID());
 			if (m_pMaterial->isUnused()) delete m_pMaterial;
@@ -293,23 +292,9 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 	}
 	else
 	{	
-		// Force la mise � jour
+		// Force update
 		m_GeometryIsValid = false;
 		m_ListIsValid= false;	// GLC_Mesh2 compatibility
-	}
-}
-// Remove Geometry from the material without update material usage table
-void GLC_Geometry::delMaterial(GLC_Geometry* pGeom)
-{
-	//! \todo modify this algo
-	
-	if (this == pGeom)
-	{
-		m_pMaterial= NULL;
-	}
-	else
-	{
-		qDebug("GLC_Geometrie::DelMatiere : Erreur GLC_Geometrie* not Match");
 	}
 }
 

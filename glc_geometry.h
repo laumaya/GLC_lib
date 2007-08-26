@@ -174,9 +174,6 @@ public:
 	//! Set the Geometry material
 	void setMaterial(GLC_Material* pMat);
 	
-	//! Remove Geometry from the material without update material usage table
-	/*! This function is call by GLC_Material, do not call it manualy ! */
-	void delMaterial(GLC_Geometry* pGeom);
 //@}
 
 //////////////////////////////////////////////////////////////////////
