@@ -36,13 +36,12 @@ GLC_Light::GLC_Light()
 , m_LightID(GL_LIGHT1)	// Default Light ID
 , m_ListID(0)			// By default display list ID= 0
 , m_ListIsValid(false)	// By default display list is not valid
-, m_AmbientColor()		// Ambient color will be set in the constructor
+, m_AmbientColor(Qt::black)		// By default diffuse color is set to black
 , m_DiffuseColor(Qt::white)		// By default diffuse color is set to white
 , m_SpecularColor(Qt::white)	// By default specular color is set to white
 , m_Position()
 {
 	//! \todo modify class to support multi light
-	m_AmbientColor.setRgbF(0.2, 0.2, 0.2, 1.0); // By default light's color is dark grey
 }
 
 GLC_Light::GLC_Light(const QColor& color)
@@ -50,8 +49,8 @@ GLC_Light::GLC_Light(const QColor& color)
 , m_LightID(GL_LIGHT1)	// Default Light ID
 , m_ListID(0)			// By default display list ID= 0
 , m_ListIsValid(false)	// By default display list is not valid
-, m_AmbientColor(color) // the ambiant color of the light
-, m_DiffuseColor(Qt::white)		// By default diffuse color is set to white
+, m_AmbientColor(Qt::black)		// By default diffuse color is set to black
+, m_DiffuseColor(color)			// Diffuse color is set to color
 , m_SpecularColor(Qt::white)	// By default specular color is set to white
 , m_Position()
 {
