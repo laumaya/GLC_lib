@@ -166,7 +166,8 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	if (line.startsWith("v "))
 	{
 		line.remove(0,2); // Remove first 2 char
-		m_pMesh->addVertex(m_nCurVectPos++, extract3dVect(line));		
+		m_pMesh->addVertex(m_nCurVectPos++, extract3dVect(line));
+		m_ObjType = notSet;		
 	}
 
 	// Search texture coordinate vectors
@@ -174,6 +175,7 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	{
 		line.remove(0,3); // Remove first 3 char
 		m_pMesh->addTextureCoordinate(m_nCurVectTexture++, extract2dVect(line));
+		m_ObjType = notSet;
 	}
 
 	// Search normals vectors
@@ -181,6 +183,7 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	{
 		line.remove(0,3); // Remove first 3 char
 		m_pMesh->addNormal(m_nCurVectNorm++, extract3dVect(line));
+		m_ObjType = notSet;
 	}
 
 	// Search faces to update index
