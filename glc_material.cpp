@@ -409,7 +409,7 @@ void GLC_Material::initAmbientColor(void)
 void GLC_Material::initOtherColor(void)
 {
 	// Diffuse Color
-	m_DiffuseColor.setRgbF(0.7, 0.7, 0.7, 1.0);
+	m_DiffuseColor.setRgbF(1.0, 1.0, 1.0, 1.0);
 
 	// Specular Color
 	m_SpecularColor.setRgbF(0.5, 0.5, 0.5, 1.0);
