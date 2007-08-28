@@ -99,4 +99,12 @@ GLC_Vector3d& GLC_Vector3d::setVect(const GLC_Vector3d &Vect)
 	return *this;
 }
 
+GLC_Vector3d& GLC_Vector3d::setInv(void)
+{
+	dVecteur[0]= - dVecteur[0];
+	dVecteur[1]= - dVecteur[1];
+	dVecteur[2]= - dVecteur[2];
+	return *this;
+}
+
 

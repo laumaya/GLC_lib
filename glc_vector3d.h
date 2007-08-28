@@ -80,6 +80,10 @@ public:
 	/*! From another Vector*/
 	GLC_Vector3d& setVect(const GLC_Vector3d &Vect);
 	
+	/*! Invert Vector*/
+	GLC_Vector3d& setInv(void);
+	
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
