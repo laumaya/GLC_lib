@@ -46,9 +46,10 @@ class GLC_Light :
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Construct an GLC_Light
-	/*! By default, Ambiant Color is dark grey*/
+	//! Construct a default GLC_Light
+	/*! By default, ambient color is black, diffuse Color is white and specular color is white*/
 	GLC_Light();
+	//* Construct GLC_Light with specified diffuse color
 	GLC_Light(const QColor& );
 	
 	//! Delete OpenGL list
