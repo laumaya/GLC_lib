@@ -140,11 +140,11 @@ public:
 	//! Set visibility statement
 	void setVisibility(bool v);
 
-	//! Set Color RGBA component
-	void setRGBAColor(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha= 1.0);
+	//! Set Diffuse Color RGBA component
+	void setColor(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha= 1.0);
 
-	//! Set Color RGBA component with an QColor Object
-	void setRGBAColor(const QColor&);
+	//! Set Diffuse Color RGBA component with an QColor Object
+	void setColor(const QColor&);
 
 
 // Set Position	
