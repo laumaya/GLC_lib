@@ -34,7 +34,7 @@ void GLC_SelectionMaterial::glExecute()
 {
 	static GLfloat pAmbientColor[4]= {1.0f, 0.376f, 0.223f, 1.0f};
 								
-	static GLfloat pDiffuseColor[4]= {1.0f, 1.0f, 1.0f, 1.0f};
+	static GLfloat pDiffuseColor[4]= {1.0f, 0.376f, 0.223f, 1.0f};
 	
 	static GLfloat pSpecularColor[4]= {1.0f, 1.0f, 1.0f, 1.0f};
 
