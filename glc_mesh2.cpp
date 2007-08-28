@@ -178,7 +178,7 @@ void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordi
 		
 	// Increment number of faces
 	m_NumberOfFaces++;
-	
+	m_ListIsValid= false;
 }
 
 //! Add a face without texture coordinate and normal
@@ -190,6 +190,7 @@ void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordi
 		
 	// Increment number of faces
 	m_NumberOfFaces++;
+	m_ListIsValid= false;
 	
 }
 // Add a face with texture coordinate and without normal
@@ -201,6 +202,7 @@ void GLC_Mesh2::addFaceWithTexture(const QVector<int> &Material, const QVector<i
 		
 	// Increment number of faces
 	m_NumberOfFaces++;
+	m_ListIsValid= false;
 }
 
 // Add a face with texture coordinate and normal
@@ -213,6 +215,7 @@ void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordi
 		
 	// Increment number of faces
 	m_NumberOfFaces++;
+	m_ListIsValid= false;
 }
 
 // Compute the mesh normal
@@ -260,7 +263,22 @@ void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordi
 		++normalIndex;
 		++index;
 	}
+	m_ListIsValid= false;
  }
+
+// Reverse mesh normal
+void GLC_Mesh2::reverseNormal()
+{
+	Vector3dHash::iterator iNormal= m_NormalHash.begin();
+    while (iNormal != m_NormalHash.constEnd())
+    {
+        // Reverse normal    
+        iNormal.value().setInv();
+        ++iNormal;
+    }
+    m_ListIsValid= false;
+	
+}
 
 
 //////////////////////////////////////////////////////////////////////
@@ -318,7 +336,7 @@ void GLC_Mesh2::glDraw()
 					
 					MaterialHash::const_iterator iMaterial= m_MaterialHash.find(CurrentMaterialIndex);
 					// Check if the key is already use
-					if (iMaterial != m_MaterialHash.end() && !m_IsSelected)
+					if (iMaterial != m_MaterialHash.end())
 					{
 						if (m_MaterialHash[CurrentMaterialIndex].getAddRgbaTexture())
 						{
@@ -330,14 +348,13 @@ void GLC_Mesh2::glDraw()
 							glDisable(GL_TEXTURE_2D);
 						}
 						m_MaterialHash[CurrentMaterialIndex].glExecute();
-					}
-					else if (m_IsSelected)
-					{
-						GLC_SelectionMaterial::glExecute();
+						
+						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 					}
 					else
 					{
 						m_pMaterial->glExecute();
+						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 					}
 				}
 				IsNewFace= false;
