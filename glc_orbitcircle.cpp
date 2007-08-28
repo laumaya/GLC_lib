@@ -93,12 +93,12 @@ void GLC_OrbitCircle::mapArcs(const GLC_Matrix4x4 &Matrice)
 	m_Arc2.multMatrix(Matrice);
 }
 
-// overload function setRGBAColor(color);
+// overload function setColor(color);
 void GLC_OrbitCircle::setRGBAColor(const QColor& color)
 {
-	m_Arc1.setRGBAColor(color);
-	m_Arc2.setRGBAColor(color);
-	GLC_Geometry::setRGBAColor(color);
+	m_Arc1.setColor(color);
+	m_Arc2.setColor(color);
+	GLC_Geometry::setColor(color);
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -80,7 +80,7 @@ public:
 	//! Set Arcs position in concordance with mouse position
 	void mapArcs(const GLC_Matrix4x4 &Matrice);
 	
-	//! overload function setRGBAColor(color);
+	//! overload function setColor(color);
 	void setRGBAColor(const QColor&);
 	
 //@}
