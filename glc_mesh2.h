@@ -72,9 +72,14 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Get number of faces
+	int getNumberOfFaces() const {return m_NumberOfFaces;}
+	//! Get number of vertex
+	int getNumberOfVertex() const {return m_CoordinateHash.size();}
+	//! Get number of submaterial
+	int getNumberOfSubMaterial() const {return m_MaterialHash.size();}
 	//! Get mesh material
 	void getOneMaterial(int Index, GLC_Material &Material);
-
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 
@@ -121,7 +126,10 @@ public:
 	//! Compute the mesh normal
 	/*! The number of normal must be equal to 0
 	 */
-	 void computeNormal();
+	void computeNormal();
+	//! Reverse mesh normal
+	void reverseNormal();
+	 
 //@}
 
 //////////////////////////////////////////////////////////////////////
