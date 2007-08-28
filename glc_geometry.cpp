@@ -101,22 +101,22 @@ QColor GLC_Geometry::getRGBA(void) const
 // Return Color Red component
 GLdouble GLC_Geometry::getdRed(void) const
 {
-	return static_cast<GLdouble>(m_pMaterial->getAmbientColor().redF());
+	return static_cast<GLdouble>(m_pMaterial->getDiffuseColor().redF());
 }
 // Return Color Green component
 GLdouble GLC_Geometry::getdGreen(void) const
 {
-	return static_cast<GLdouble>(m_pMaterial->getAmbientColor().greenF());
+	return static_cast<GLdouble>(m_pMaterial->getDiffuseColor().greenF());
 }
 // Return Color blue component
 GLdouble GLC_Geometry::getdBlue(void) const
 {
-	return static_cast<GLdouble>(m_pMaterial->getAmbientColor().blueF());
+	return static_cast<GLdouble>(m_pMaterial->getDiffuseColor().blueF());
 }
 // Return Color Alpha component
 GLdouble GLC_Geometry::getdAlpha(void) const
 {
-	return static_cast<GLdouble>(m_pMaterial->getAmbientColor().alphaF());
+	return static_cast<GLdouble>(m_pMaterial->getDiffuseColor().alphaF());
 }
 // Return transfomation 4x4Matrix
 const GLC_Matrix4x4 GLC_Geometry::getMatrix(void) const
@@ -194,19 +194,19 @@ void GLC_Geometry::setVisibility(bool v)
 	m_GeometryIsValid= false;
 }
 
-// Set Color RGBA component
-void GLC_Geometry::setRGBAColor(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha)
+// Set Diffuse Color RGBA component
+void GLC_Geometry::setColor(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha)
 {
 	QColor setColor;
 	setColor.setRgbF(red, green, blue, alpha);
-	m_pMaterial->setAmbientColor(setColor);
+	m_pMaterial->setDiffuseColor(setColor);
 	m_GeometryIsValid= false;		
 }
 
-// Set Color RGBA component with an array of 4 GLfloat
-void GLC_Geometry::setRGBAColor(const QColor& setCol)
+// Set Diffuse Color RGBA component with an QColor Object
+void GLC_Geometry::setColor(const QColor& setCol)
 {
-	m_pMaterial->setAmbientColor(setCol);
+	m_pMaterial->setDiffuseColor(setCol);
 	m_GeometryIsValid= false;		
 }
 
@@ -442,11 +442,12 @@ void GLC_Geometry::glPropGeom()
 		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 		else glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
 	}
-	else if (m_pMaterial->getAddRgbaTexture() && !m_IsSelected)
+	else if (m_pMaterial->getAddRgbaTexture())
 	{
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
 		m_pMaterial->glExecute();
+		if (m_IsSelected) GLC_SelectionMaterial::glExecute();		
 	}
 	else
 	{
