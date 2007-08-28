@@ -49,6 +49,7 @@ GLC_ObjToMesh2::GLC_ObjToMesh2(const QGLContext *pContext)
 , m_nNbrVectTexture(0)
 , m_nCurVectTexture(0)
 , m_pQGLContext(pContext)
+, m_ObjType(notSet)
 {
 
 }
@@ -279,12 +280,14 @@ void GLC_ObjToMesh2::extractFaceIndex(QString &line)
 	{
 		streamFace >> buff;
 		extractVertexIndex(buff, coordinate, normal, textureCoordinate);
+		
+		vectorCoordinate.append(coordinate);
+		
 		if (-1 != textureCoordinate)
 		{	// There is a texture coordinate
 			vectorTextureCoordinate.append(textureCoordinate);
 		}
 		
-		vectorCoordinate.append(coordinate);
 		if (-1 != normal)
 		{	// There is a normal index
 			vectorNormal.append(normal);
@@ -345,19 +348,19 @@ void GLC_ObjToMesh2::setCurrentMaterial(QString &line)
 
 // Extract a vertex from a string
 void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Normal, int &TextureCoordinate)
-{
-	const QRegExp coordinateOnlyRegExp("^\\d{1,}$"); // ex. 10
- 	const QRegExp coordinateTextureNormalRegExp("^\\d{1,}/\\d{1,}/\\d{1,}$"); // ex. 10/30/54
- 	const QRegExp coordinateNormalRegExp("^\\d{1,}//\\d{1,}$"); // ex. 10//54
- 	const QRegExp coordinateTextureRegExp("^\\d{1,}/\\d{1,}$"); // ex. 10/56
+{ 	
+ 	if (m_ObjType == notSet)
+ 	{
+ 		setObjType(ligne);
+ 	}
  	
- 	if (coordinateTextureNormalRegExp.exactMatch(ligne))
+ 	if (m_ObjType == coordinateAndTextureAndNormal)
  	{
 		// Replace "/" with " "
 		ligne.replace('/', ' ');
 		QTextStream streamVertex(&ligne);
 		QString coordinateString, textureCoordinateString, normalString;
-	 	if ((streamVertex >> coordinateString >> textureCoordinateString >> normalString).status() ==QTextStream::Ok)
+	 	if ((streamVertex >> coordinateString >> textureCoordinateString >> normalString).status() == QTextStream::Ok)
 		{
 			bool coordinateOk, textureCoordinateOk, normalOk;
 			Coordinate= coordinateString.toInt(&coordinateOk);
@@ -376,15 +379,22 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				throw(fileFormatException);
 			}
 		}
-		else Q_ASSERT(false);		
+		else
+		{
+			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			throw(fileFormatException);
+		}
+				
  	}
- 	else if (coordinateTextureRegExp.exactMatch(ligne))
+ 	else if (m_ObjType == coordinateAndTexture)
  	{
 		// Replace "/" with " "
 		ligne.replace('/', ' ');
 		QTextStream streamVertex(&ligne);
 		QString coordinateString, textureCoordinateString;
-	 	if ((streamVertex >> coordinateString >> textureCoordinateString).status() ==QTextStream::Ok)
+	 	if ((streamVertex >> coordinateString >> textureCoordinateString).status() == QTextStream::Ok)
 		{
 			bool coordinateOk, textureCoordinateOk;
 			Coordinate= coordinateString.toInt(&coordinateOk);
@@ -402,15 +412,21 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				throw(fileFormatException);
 			}
 		}
-		else Q_ASSERT(false);		
+		else
+		{
+			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			throw(fileFormatException);
+		}
  	}	
- 	else if (coordinateNormalRegExp.exactMatch(ligne))
+ 	else if (m_ObjType == coordinateAndNormal)
  	{
 		// Replace "/" with " "
 		ligne.replace('/', ' ');
 		QTextStream streamVertex(&ligne);
 		QString coordinateString, normalString;
-	 	if ((streamVertex >> coordinateString >> normalString).status() ==QTextStream::Ok)
+	 	if ((streamVertex >> coordinateString >> normalString).status() == QTextStream::Ok)
 		{
 			bool coordinateOk, normalOk;
 			Coordinate= coordinateString.toInt(&coordinateOk);
@@ -428,13 +444,19 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				throw(fileFormatException);
 			}
 		}
-		else Q_ASSERT(false);	
+		else
+		{
+			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			throw(fileFormatException);
+		}
  	}
-  	else if (coordinateOnlyRegExp.exactMatch(ligne))
+  	else if (m_ObjType == coordinate)
  	{
  		QTextStream streamVertex(&ligne);
  		QString coordinateString;
-	 	if ((streamVertex >> coordinateString).status() ==QTextStream::Ok)
+	 	if ((streamVertex >> coordinateString).status() == QTextStream::Ok)
 		{
 			bool coordinateOk;
 			Coordinate= coordinateString.toInt(&coordinateOk);
@@ -451,7 +473,13 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				throw(fileFormatException);
 			}
 		}
-		else Q_ASSERT(false);
+		else
+		{
+			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			throw(fileFormatException);
+		}
  	}
  	else
  	{
@@ -711,5 +739,41 @@ void GLC_ObjToMesh2::extractOneValue(QString &ligne, GLC_Material *pMaterial)
 	}
 	
 }
+
+// set the OBJ File type
+void GLC_ObjToMesh2::setObjType(QString& ligne)
+{
+	const QRegExp coordinateOnlyRegExp("^\\d{1,}$"); // ex. 10
+ 	const QRegExp coordinateTextureNormalRegExp("^\\d{1,}/\\d{1,}/\\d{1,}$"); // ex. 10/30/54
+ 	const QRegExp coordinateNormalRegExp("^\\d{1,}//\\d{1,}$"); // ex. 10//54
+ 	const QRegExp coordinateTextureRegExp("^\\d{1,}/\\d{1,}$"); // ex. 10/56
+ 	
+ 	if (coordinateTextureNormalRegExp.exactMatch(ligne))
+ 	{
+ 		m_ObjType= coordinateAndTextureAndNormal;
+ 	}
+ 	else if (coordinateTextureRegExp.exactMatch(ligne))
+ 	{
+ 		m_ObjType= coordinateAndTexture;
+ 	}
+ 	else if (coordinateNormalRegExp.exactMatch(ligne))
+ 	{
+ 		m_ObjType= coordinateAndNormal;
+ 	}
+  	else if (coordinateOnlyRegExp.exactMatch(ligne))
+ 	{
+ 		m_ObjType= coordinate;
+ 	}
+ 	else
+ 	{
+		QString message= "GLC_ObjToMesh2::extractVertexIndex OBJ file not reconize";
+		message.append("At ligne : ");
+		message.append(ligne);
+		qDebug() << message;
+		GLC_FileFormatException fileFormatException(message, m_sFile);
+		throw(fileFormatException);
+ 	}
+}
+
 
 

@@ -35,6 +35,15 @@
 
 typedef QHash<QString, int> MaterialHashMap;
 
+enum ObjType
+{
+	notSet,
+	coordinate,
+	coordinateAndTexture,
+	coordinateAndNormal,
+	coordinateAndTextureAndNormal
+};
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ObjToMesh2
 /*! \brief GLC_ObjToMesh2 : Create an GLC_Mesh from obj file */
@@ -103,6 +112,9 @@ private:
 	
 	//! Extract One value
 	void extractOneValue(QString &ligne, GLC_Material *pMaterial);
+	
+	//! set the OBJ File type
+	void setObjType(QString &);
 
 //////////////////////////////////////////////////////////////////////
 // Qt Signals
@@ -156,6 +168,9 @@ private:
 	
 	//! OpenGL Context
 	const QGLContext *m_pQGLContext;
+	
+	//! Obj type
+	ObjType m_ObjType;
 
 };
 #endif //GLC_OBJ_TO_MESH2_H_
