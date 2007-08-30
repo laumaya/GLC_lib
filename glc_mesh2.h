@@ -78,10 +78,20 @@ public:
 	int getNumberOfVertex() const {return m_CoordinateHash.size();}
 	//! Get number of submaterial
 	int getNumberOfSubMaterial() const {return m_MaterialHash.size();}
-	//! Get mesh material
-	void getOneMaterial(int Index, GLC_Material &Material);
+	//! Get specified mesh sub material
+	GLC_Material* getSubMaterial(const int key) {return &(m_MaterialHash[key]);}
+	//! return true if Material key is in the mesh
+	const bool containsMaterial(const int key) const {return m_MaterialHash.contains(key);}	
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
+	//! return a vertex with key
+	const GLC_Vector3d getVertex(const int key) const {return m_CoordinateHash.value(key);}
+	//! return true if vertex key is in the mesh
+	const bool containsVertex(const int key) const {return m_CoordinateHash.contains(key);}
+	//! return a normal with key
+	const GLC_Vector3d getNormal(const int key) const {return m_NormalHash.value(key);}
+	//! return true if normal key is in the mesh
+	const bool containsNormal(const int key) const {return m_NormalHash.contains(key);}
 
 //@}
 
@@ -115,18 +125,11 @@ public:
 	 */  
 	void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal);
 	
-	//! Add a face with texture coordinate and without normal
-	void addFaceWithTexture(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &TextureCoordinate);
-
 	//! Add a face with texture coordinate
 	/*! Number of coordinate, Normal and texture must be equal
 	 */
 	void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
 				const QVector<int> &TextureCoordinate);
-	//! Compute the mesh normal
-	/*! The number of normal must be equal to 0
-	 */
-	void computeNormal();
 	//! Reverse mesh normal
 	void reverseNormal();
 	 

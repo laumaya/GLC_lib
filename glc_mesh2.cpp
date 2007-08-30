@@ -74,17 +74,6 @@ GLC_Mesh2::~GLC_Mesh2(void)
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Get material from mesh
-void GLC_Mesh2::getOneMaterial(int Index, GLC_Material &Material)
-{
-	MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
-	// Check if the key is find
-	assert(iMaterial != m_MaterialHash.end());
-	
-	// Retrieve the material
-	Material= m_MaterialHash[Index];
-
-}
 // return the mesh bounding box
 GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
 {
@@ -193,17 +182,6 @@ void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordi
 	m_ListIsValid= false;
 	
 }
-// Add a face with texture coordinate and without normal
-void GLC_Mesh2::addFaceWithTexture(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &TextureCoordinate)
-{
-	addMaterialIndex(Material);
-	addCoordIndex(Coordinate);
-	addTextureIndex(TextureCoordinate);
-		
-	// Increment number of faces
-	m_NumberOfFaces++;
-	m_ListIsValid= false;
-}
 
 // Add a face with texture coordinate and normal
 void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
@@ -218,53 +196,6 @@ void GLC_Mesh2::addFace(const QVector<int> &Material, const QVector<int> &Coordi
 	m_ListIsValid= false;
 }
 
-// Compute the mesh normal
- void GLC_Mesh2::computeNormal()
- {
- 	// Number of normal to add
-	const int size= m_CoordinateIndex.size();
-	qDebug() << "Size = " << size;
-	int index= 0;
-	int coordIndex= 0;
-	int normalIndex= 0;
-	while (index < size)
-	{
-		// get the coordinate of 3 face vertex
-		coordIndex= m_CoordinateIndex.at(index);
-		const GLC_Vector4d vect1(m_CoordinateHash[coordIndex]);
-		++index;
-		coordIndex= m_CoordinateIndex.at(index);
-		const GLC_Vector4d vect2(m_CoordinateHash[coordIndex]);
-		++index;
-		coordIndex= m_CoordinateIndex.at(index);
-		const GLC_Vector4d vect3(m_CoordinateHash[coordIndex]);
-		// compute 2 edges with the 3 vertex
-		const GLC_Vector4d edge1(vect2 - vect1);
-		const GLC_Vector4d edge2(vect3 - vect2);
-		GLC_Vector4d normal(edge1 ^ edge2);
-		normal.setNormal(1);
-		//normal.setInv();
-		const GLC_Vector3d normal3d(normal.getX(), normal.getY(), normal.getZ());
-		m_NormalHash.insert(normalIndex, normal3d);
-		
-		m_NormalIndex.append(normalIndex);
-		m_NormalIndex.append(normalIndex);
-		m_NormalIndex.append(normalIndex);
-		
-		++index;
-		coordIndex= m_CoordinateIndex.at(index);
-		while (coordIndex != -1)
-		{
-			m_NormalIndex.append(normalIndex);
-			++index;
-			coordIndex= m_CoordinateIndex.at(index);
-		}
-		m_NormalIndex.append(-1); // End of the face's normal index
-		++normalIndex;
-		++index;
-	}
-	m_ListIsValid= false;
- }
 
 // Reverse mesh normal
 void GLC_Mesh2::reverseNormal()
