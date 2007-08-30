@@ -96,7 +96,7 @@ const bool GLC_Geometry::isVisible(void) const
 // Return an array of 4 GLfloat which represent the color
 QColor GLC_Geometry::getRGBA(void) const
 {
-	return m_pMaterial->getAmbientColor();
+	return m_pMaterial->getDiffuseColor();
 }	
 // Return Color Red component
 GLdouble GLC_Geometry::getdRed(void) const
