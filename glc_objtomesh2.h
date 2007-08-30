@@ -35,7 +35,7 @@
 
 typedef QHash<QString, int> MaterialHashMap;
 
-enum ObjType
+enum FaceType
 {
 	notSet,
 	coordinate,
@@ -115,6 +115,9 @@ private:
 	
 	//! set the OBJ File type
 	void setObjType(QString &);
+	
+	//! compute face normal
+	GLC_Vector3d computeNormal(QVector<int> &, GLC_Mesh2*); 
 
 //////////////////////////////////////////////////////////////////////
 // Qt Signals
@@ -150,6 +153,8 @@ private:
 	int m_nNbrVectNorm;
 	//! Index of current normal vector
 	int m_nCurVectNorm;
+	//! Index of current computed normal vector
+	int m_CurComputedVectNorm;
 //@} End of array of normal vector
 
 //! @name Array of texture coordinate vector
@@ -169,8 +174,8 @@ private:
 	//! OpenGL Context
 	const QGLContext *m_pQGLContext;
 	
-	//! Obj type
-	ObjType m_ObjType;
+	//! Face type
+	FaceType m_FaceType;
 
 };
 #endif //GLC_OBJ_TO_MESH2_H_

@@ -46,10 +46,11 @@ GLC_ObjToMesh2::GLC_ObjToMesh2(const QGLContext *pContext)
 , m_nCurVectPos(0)
 , m_nNbrVectNorm(0)
 , m_nCurVectNorm(0)
+, m_CurComputedVectNorm(0)
 , m_nNbrVectTexture(0)
 , m_nCurVectTexture(0)
 , m_pQGLContext(pContext)
-, m_ObjType(notSet)
+, m_FaceType(notSet)
 {
 
 }
@@ -69,6 +70,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	m_nNbrVectPos= 0;
 	m_nCurVectPos= 0;
 	m_nNbrVectNorm= 0;
+	m_CurComputedVectNorm= 0;
 	m_nCurVectNorm= 0;
 	m_nNbrVectTexture= 0;
 	m_nCurVectTexture= 0;
@@ -112,7 +114,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 			
 	}
 	// Check the validity of OBJ file
-	if (!m_nNbrVectPos)
+	if (m_nNbrVectPos == 0)
 	{
 		const QString message= "GLC_ObjToMesh2::CreateMeshFromObj OBJ file format not reconize!!";
 		GLC_FileFormatException fileFormatException(message, m_sFile);
@@ -120,6 +122,17 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	}
 	qDebug() << "Coordinate number : " << m_nNbrVectPos;
 	qDebug() << "Normal number : " << m_nNbrVectNorm;
+	
+	if (m_nNbrVectNorm == 0)
+	{
+		//First index of computed normal vector
+		m_CurComputedVectNorm= m_nNbrVectNorm;		
+	}
+	else
+	{
+		//First index of computed normal vector
+		m_CurComputedVectNorm= m_nNbrVectNorm + 1;		
+	}
 	
 	objStream.resetStatus();
 	objStream.seek(0);
@@ -147,10 +160,12 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 
 	m_MaterialNameIndex.clear();
 	qDebug("GLC_ObjToMesh2::CreateMeshFromObj End of mesh creation");
+	/*
 	if (m_nNbrVectNorm == 0)
 	{
 		m_pMesh->computeNormal();
 	}
+	*/
 	return m_pMesh;
 	
 }
@@ -167,7 +182,7 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	{
 		line.remove(0,2); // Remove first 2 char
 		m_pMesh->addVertex(m_nCurVectPos++, extract3dVect(line));
-		m_ObjType = notSet;		
+		m_FaceType = notSet;		
 	}
 
 	// Search texture coordinate vectors
@@ -175,7 +190,7 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	{
 		line.remove(0,3); // Remove first 3 char
 		m_pMesh->addTextureCoordinate(m_nCurVectTexture++, extract2dVect(line));
-		m_ObjType = notSet;
+		m_FaceType = notSet;
 	}
 
 	// Search normals vectors
@@ -183,7 +198,7 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	{
 		line.remove(0,3); // Remove first 3 char
 		m_pMesh->addNormal(m_nCurVectNorm++, extract3dVect(line));
-		m_ObjType = notSet;
+		m_FaceType = notSet;
 	}
 
 	// Search faces to update index
@@ -198,6 +213,7 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	{
 		line.remove(0,7); // Remove first 7 char
 		setCurrentMaterial(line);
+		m_FaceType = notSet;
 	}
 
 }
@@ -273,51 +289,69 @@ void GLC_ObjToMesh2::extractFaceIndex(QString &line)
 	QVector<int> vectorTextureCoordinate;
 	
 	//int Material;
-	int coordinate;
-	int normal;
-	int textureCoordinate;
+	int coordinateIndex;
+	int normalIndex;
+	int textureCoordinateIndex;
 	
 	QTextStream streamFace(&line);
 
 	while ((!streamFace.atEnd()))
 	{
 		streamFace >> buff;
-		extractVertexIndex(buff, coordinate, normal, textureCoordinate);
+		extractVertexIndex(buff, coordinateIndex, normalIndex, textureCoordinateIndex);
 		
-		vectorCoordinate.append(coordinate);
+		vectorCoordinate.append(coordinateIndex);
 		
-		if (-1 != textureCoordinate)
+		if (-1 != textureCoordinateIndex)
 		{	// There is a texture coordinate
-			vectorTextureCoordinate.append(textureCoordinate);
+			vectorTextureCoordinate.append(textureCoordinateIndex);
 		}
 		
-		if (-1 != normal)
+		if (-1 != normalIndex)
 		{	// There is a normal index
-			vectorNormal.append(normal);
+			vectorNormal.append(normalIndex);
 		}
 		
 		vectorMaterial.append(m_CurrentMaterialIndex);
 	}
-	
-	if (vectorTextureCoordinate.isEmpty() && !vectorNormal.isEmpty())
+	if (m_FaceType == coordinateAndNormal)
 	{
 		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 	}
-	else if (vectorNormal.isEmpty() && vectorTextureCoordinate.isEmpty())
+	else if (m_FaceType == coordinate)
 	{
-		m_pMesh->addFace(vectorMaterial, vectorCoordinate);
+		m_pMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
+		for (int i= 0; i < vectorCoordinate.size(); ++i)
+		{
+			vectorNormal.append(m_CurComputedVectNorm);
+		}
+		m_CurComputedVectNorm++;
+		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 	}
-	else if (vectorNormal.isEmpty() && !vectorTextureCoordinate.isEmpty())
+	else if (m_FaceType == coordinateAndTexture)
 	{
 		assert(vectorTextureCoordinate.size() == vectorCoordinate.size());
 		
-		m_pMesh->addFaceWithTexture(vectorMaterial, vectorCoordinate, vectorTextureCoordinate);
+		m_pMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
+		for (int i= 0; i < vectorCoordinate.size(); ++i)
+		{
+			vectorNormal.append(m_CurComputedVectNorm);
+		}
+		m_CurComputedVectNorm++;
+		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
 	}	
-	else
+	else if (m_FaceType == coordinateAndTextureAndNormal)
 	{
 		assert(vectorTextureCoordinate.size() == vectorCoordinate.size());
 		
 		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+	}
+	else
+	{
+		const QString message= "GLC_ObjToMesh2::extractFaceIndex : unknow face type";
+		qDebug() << message;
+		GLC_FileFormatException fileFormatException(message, m_sFile);
+		throw(fileFormatException);
 	}
 	
 
@@ -352,12 +386,12 @@ void GLC_ObjToMesh2::setCurrentMaterial(QString &line)
 // Extract a vertex from a string
 void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Normal, int &TextureCoordinate)
 { 	
- 	if (m_ObjType == notSet)
+ 	if (m_FaceType == notSet)
  	{
  		setObjType(ligne);
  	}
  	
- 	if (m_ObjType == coordinateAndTextureAndNormal)
+ 	if (m_FaceType == coordinateAndTextureAndNormal)
  	{
 		// Replace "/" with " "
 		ligne.replace('/', ' ');
@@ -391,7 +425,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		}
 				
  	}
- 	else if (m_ObjType == coordinateAndTexture)
+ 	else if (m_FaceType == coordinateAndTexture)
  	{
 		// Replace "/" with " "
 		ligne.replace('/', ' ');
@@ -423,7 +457,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			throw(fileFormatException);
 		}
  	}	
- 	else if (m_ObjType == coordinateAndNormal)
+ 	else if (m_FaceType == coordinateAndNormal)
  	{
 		// Replace "/" with " "
 		ligne.replace('/', ' ');
@@ -455,7 +489,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			throw(fileFormatException);
 		}
  	}
-  	else if (m_ObjType == coordinate)
+  	else if (m_FaceType == coordinate)
  	{
  		QTextStream streamVertex(&ligne);
  		QString coordinateString;
@@ -501,11 +535,8 @@ void GLC_ObjToMesh2::loadMaterial(QString fileName)
 	// Material filename is the same that OBJ filename	
 	fileName.replace(m_sFile.size() - 3, 3, "mtl");
 
-
 	// Create the input file stream
 	QFile mtlFile(fileName);
-	
-	
 	
 	if (!mtlFile.open(QIODevice::ReadOnly))
 	{
@@ -753,19 +784,19 @@ void GLC_ObjToMesh2::setObjType(QString& ligne)
  	
  	if (coordinateTextureNormalRegExp.exactMatch(ligne))
  	{
- 		m_ObjType= coordinateAndTextureAndNormal;
+ 		m_FaceType= coordinateAndTextureAndNormal;
  	}
  	else if (coordinateTextureRegExp.exactMatch(ligne))
  	{
- 		m_ObjType= coordinateAndTexture;
+ 		m_FaceType= coordinateAndTexture;
  	}
  	else if (coordinateNormalRegExp.exactMatch(ligne))
  	{
- 		m_ObjType= coordinateAndNormal;
+ 		m_FaceType= coordinateAndNormal;
  	}
   	else if (coordinateOnlyRegExp.exactMatch(ligne))
  	{
- 		m_ObjType= coordinate;
+ 		m_FaceType= coordinate;
  	}
  	else
  	{
@@ -777,6 +808,27 @@ void GLC_ObjToMesh2::setObjType(QString& ligne)
 		throw(fileFormatException);
  	}
 }
+
+// compute face normal
+GLC_Vector3d GLC_ObjToMesh2::computeNormal(QVector<int> &listIndex, GLC_Mesh2* pMesh)
+{
+	const GLC_Vector4d vect1(pMesh->getVertex(listIndex[0]));
+	qDebug() << "Vertex x= " << vect1.getX() << " y= " << vect1.getY() << " z= " << vect1.getZ();
+	const GLC_Vector4d vect2(pMesh->getVertex(listIndex[1]));
+	qDebug() << "Vertex x= " << vect2.getX() << " y= " << vect2.getY() << " z= " << vect2.getZ();
+	const GLC_Vector4d vect3(pMesh->getVertex(listIndex[2]));
+	qDebug() << "Vertex x= " << vect3.getX() << " y= " << vect3.getY() << " z= " << vect3.getZ();
+	
+	const GLC_Vector4d edge1(vect2 - vect1);
+	const GLC_Vector4d edge2(vect3 - vect2);
+	
+	GLC_Vector4d normal(edge1 ^ edge2);
+	normal.setNormal(1);
+	qDebug() << "index " << listIndex[0] << "  " << listIndex[1] << "  " << listIndex[2];
+	qDebug() << "Normal x= " << normal.getX() << " y= " << normal.getY() << " z= " << normal.getZ();
+	GLC_Vector3d resultNormal(normal.getX(), normal.getY(), normal.getZ());
+	return resultNormal;
+} 
 
 
 
