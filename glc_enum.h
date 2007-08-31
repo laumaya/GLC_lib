@@ -36,6 +36,11 @@ GLC_uint GLC_GenID(void);
 #define GLC_DISCRET 80
 #define GLC_POLYDISCRET 60
 
+// GLC_Lib version
+
+#define GLC_VERSION "0.9.7"
+#define GLC_DESCRIPTION "GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4."
+
 
 #endif //GLC_ENUM_H_
 
