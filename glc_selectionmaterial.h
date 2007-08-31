@@ -21,12 +21,19 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 *****************************************************************************/
+//! \file glc_selectionmaterial.h interface for the GLC_SelectionMaterial class.
 
 #ifndef GLC_SELECTIONMATERIAL_H_
 #define GLC_SELECTIONMATERIAL_H_
 
 #include <QColor>
 #include <QtOpenGL>
+
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_SelectionMaterial
+/*! \brief GLC_SelectionMaterial : Material used for selection feedback*/
+
+//////////////////////////////////////////////////////////////////////
 
 class GLC_SelectionMaterial
 {
