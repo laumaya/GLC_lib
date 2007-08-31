@@ -77,6 +77,9 @@ public:
 	//! return the cylinder bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 	
+	//! return true if cylinder's ended are capped
+	bool EndedIsCaped() const {return m_EndedIsCaped;}
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -125,13 +128,13 @@ private:
 	double m_Radius;
 
 	//! Cylinder length (Z Axis direction)
-	double m_dLength;
+	double m_Length;
 
 	//! Cylinder polygon discretisation
-	int m_nDiscret;
+	int m_Discret;
 
 	//! Cylinder is capped
-	bool m_bCapEnded;
+	bool m_EndedIsCaped;
 	
 };
 #endif //GLC_CYLINDER_H_
