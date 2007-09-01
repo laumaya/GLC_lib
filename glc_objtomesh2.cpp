@@ -813,19 +813,14 @@ void GLC_ObjToMesh2::setObjType(QString& ligne)
 GLC_Vector3d GLC_ObjToMesh2::computeNormal(QVector<int> &listIndex, GLC_Mesh2* pMesh)
 {
 	const GLC_Vector4d vect1(pMesh->getVertex(listIndex[0]));
-	qDebug() << "Vertex x= " << vect1.getX() << " y= " << vect1.getY() << " z= " << vect1.getZ();
 	const GLC_Vector4d vect2(pMesh->getVertex(listIndex[1]));
-	qDebug() << "Vertex x= " << vect2.getX() << " y= " << vect2.getY() << " z= " << vect2.getZ();
 	const GLC_Vector4d vect3(pMesh->getVertex(listIndex[2]));
-	qDebug() << "Vertex x= " << vect3.getX() << " y= " << vect3.getY() << " z= " << vect3.getZ();
 	
 	const GLC_Vector4d edge1(vect2 - vect1);
 	const GLC_Vector4d edge2(vect3 - vect2);
 	
 	GLC_Vector4d normal(edge1 ^ edge2);
 	normal.setNormal(1);
-	qDebug() << "index " << listIndex[0] << "  " << listIndex[1] << "  " << listIndex[2];
-	qDebug() << "Normal x= " << normal.getX() << " y= " << normal.getY() << " z= " << normal.getZ();
 	GLC_Vector3d resultNormal(normal.getX(), normal.getY(), normal.getZ());
 	return resultNormal;
 } 
