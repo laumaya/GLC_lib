@@ -642,7 +642,7 @@ void GLC_ObjToMesh2::extractString(QString &ligne, GLC_Material *pMaterial)
 			pMaterial->setName(valueString);
 			qDebug() << "Material name is : " << valueString;
 		}
-		else if (header == "map_Kd")// The string to extract is the texture file name
+		else if ((header == "map_Kd") || (header == "map_Ka"))// The string to extract is the texture file name
 		{
 			// Retrieve the .obj file path
 			QString textureFile(m_sFile);
