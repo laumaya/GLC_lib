@@ -649,51 +649,9 @@ void GLC_ObjToMesh2::extractString(QString &ligne, GLC_Material *pMaterial)
 			int start= m_sFile.lastIndexOf('/');
 			start++;
 			textureFile.remove(start, textureFile.size());
-			
-			int numberOfStringToSkip= 0;
-			// Check if there is a map parameter and count
-			if ((valueString == "-o") || (valueString == "-s") || (valueString == "-t"))
-			{
-				numberOfStringToSkip= 3;
-			}
-			else if (valueString == "-mm")
-			{
-				numberOfStringToSkip= 2;
-			}
-			else if ((valueString == "-blendu") || (valueString == "-blendv") || (valueString == "-cc")
-					|| (valueString == "-clamp") || (valueString == "-texres"))
-			{
-				numberOfStringToSkip= 1;
-			}
-			
-			if (numberOfStringToSkip != 0)
-			{
-				// Skip unread map parameters
-				for (int i= 0; i < numberOfStringToSkip; ++i)
-				{
-					stream >> valueString;
-				}
-				
-				if ((stream >> valueString).status() == QTextStream::Ok)
-				{
-					// If There is an space in the string to extracts
-					QString valueString2;					
-					while ((stream >> valueString2).status() == QTextStream::Ok)
-					{
-						valueString.append(" ");
-						valueString.append(valueString2);
-					}								
-				}
-				else
-				{
-					const QString message= "GLC_ObjToMesh2::extractString : Error occur when trying to decode map option";
-					GLC_FileFormatException fileFormatException(message, m_sFile);
-					throw(fileFormatException);					
-				}
-			}
-			
+						
 			// concatenate File Path with texture filename
-			textureFile.append(valueString);
+			textureFile.append(getTextureName(stream, valueString));
 			
 			// Create the texture and assign it to current material
 			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
@@ -866,6 +824,53 @@ GLC_Vector3d GLC_ObjToMesh2::computeNormal(QVector<int> &listIndex, GLC_Mesh2* p
 	GLC_Vector3d resultNormal(normal.getX(), normal.getY(), normal.getZ());
 	return resultNormal;
 } 
+
+// Get texture file name without parameters
+QString GLC_ObjToMesh2::getTextureName(QTextStream &inputStream, const QString &input)
+{
+	QString textureName(input);
+	int numberOfStringToSkip= 0;
+	// Check if there is a map parameter and count
+	if ((input == "-o") || (input == "-s") || (input == "-t"))
+	{
+		numberOfStringToSkip= 3;
+	}
+	else if (input == "-mm")
+	{
+		numberOfStringToSkip= 2;
+	}
+	else if ((input == "-blendu") || (input == "-blendv") || (input == "-cc")
+			|| (input == "-clamp") || (input == "-texres"))
+	{
+		numberOfStringToSkip= 1;
+	}
+	
+	if (numberOfStringToSkip != 0)
+	{
+		// Skip unread map parameters
+		for (int i= 0; i < numberOfStringToSkip; ++i)
+		{
+			inputStream >> textureName;
+		}
+		
+		if ((inputStream >> textureName).status() == QTextStream::Ok)
+		{
+			QString valueString2;					
+			if ((inputStream >> valueString2).status() == QTextStream::Ok)
+			{
+				textureName= getTextureName(inputStream, valueString2);
+			}								
+		}
+		else
+		{
+			const QString message= "GLC_ObjToMesh2::extractString : Error occur when trying to decode map option";
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			throw(fileFormatException);					
+		}
+	}
+	return textureName;
+}
+
 
 
 

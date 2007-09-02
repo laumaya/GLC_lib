@@ -117,7 +117,10 @@ private:
 	void setObjType(QString &);
 	
 	//! compute face normal
-	GLC_Vector3d computeNormal(QVector<int> &, GLC_Mesh2*); 
+	GLC_Vector3d computeNormal(QVector<int> &, GLC_Mesh2*);
+	
+	//! Get texture file name without parameters
+	QString getTextureName(QTextStream &, const QString &);
 
 //////////////////////////////////////////////////////////////////////
 // Qt Signals
