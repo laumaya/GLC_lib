@@ -855,11 +855,7 @@ QString GLC_ObjToMesh2::getTextureName(QTextStream &inputStream, const QString &
 		
 		if ((inputStream >> textureName).status() == QTextStream::Ok)
 		{
-			QString valueString2;					
-			if ((inputStream >> valueString2).status() == QTextStream::Ok)
-			{
-				textureName= getTextureName(inputStream, valueString2);
-			}								
+			textureName= getTextureName(inputStream, textureName);
 		}
 		else
 		{
