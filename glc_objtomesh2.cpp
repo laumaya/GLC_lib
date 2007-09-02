@@ -630,15 +630,15 @@ void GLC_ObjToMesh2::extractString(QString &ligne, GLC_Material *pMaterial)
 	QString header;
 	if ((stream >> header >> valueString).status() == QTextStream::Ok)
 	{
-		// If There is an space in the string to extracts
-		QString valueString2;
-		while ((stream >> valueString2).status() == QTextStream::Ok)
-		{
-			valueString.append(" ");
-			valueString.append(valueString2);
-		}
 		if (header == "newmtl")	// The string to extract is the material name
-		{		
+		{
+			// If There is an space in the string to extracts
+			QString valueString2;
+			while ((stream >> valueString2).status() == QTextStream::Ok)
+			{
+				valueString.append(" ");
+				valueString.append(valueString2);
+			}			
 			pMaterial->setName(valueString);
 			qDebug() << "Material name is : " << valueString;
 		}
@@ -650,6 +650,48 @@ void GLC_ObjToMesh2::extractString(QString &ligne, GLC_Material *pMaterial)
 			start++;
 			textureFile.remove(start, textureFile.size());
 			
+			int numberOfStringToSkip= 0;
+			// Check if there is a map parameter and count
+			if ((valueString == "-o") || (valueString == "-s") || (valueString == "-t"))
+			{
+				numberOfStringToSkip= 3;
+			}
+			else if (valueString == "-mm")
+			{
+				numberOfStringToSkip= 2;
+			}
+			else if ((valueString == "-blendu") || (valueString == "-blendv") || (valueString == "-cc")
+					|| (valueString == "-clamp") || (valueString == "-texres"))
+			{
+				numberOfStringToSkip= 1;
+			}
+			
+			if (numberOfStringToSkip != 0)
+			{
+				// Skip unread map parameters
+				for (int i= 0; i < numberOfStringToSkip; ++i)
+				{
+					stream >> valueString;
+				}
+				
+				if ((stream >> valueString).status() == QTextStream::Ok)
+				{
+					// If There is an space in the string to extracts
+					QString valueString2;					
+					while ((stream >> valueString2).status() == QTextStream::Ok)
+					{
+						valueString.append(" ");
+						valueString.append(valueString2);
+					}								
+				}
+				else
+				{
+					const QString message= "GLC_ObjToMesh2::extractString : Error occur when trying to decode map option";
+					GLC_FileFormatException fileFormatException(message, m_sFile);
+					throw(fileFormatException);					
+				}
+			}
+			
 			// concatenate File Path with texture filename
 			textureFile.append(valueString);
 			
@@ -657,9 +699,9 @@ void GLC_ObjToMesh2::extractString(QString &ligne, GLC_Material *pMaterial)
 			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
 			pMaterial->setTexture(pTexture);
 			qDebug() << "Texture File is : " << valueString;
+		}
 	}
-		
-	}else
+	else
 	{
 		const QString message= "GLC_ObjToMesh2::extractString : something is wrong!!";
 		GLC_FileFormatException fileFormatException(message, m_sFile);
