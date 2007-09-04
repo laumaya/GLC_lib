@@ -105,7 +105,10 @@ private:
 	void loadMaterial(QString fileName);
 	
 	//! Extract String
-	void extractString(QString &ligne, GLC_Material *pMaterial);
+	void extractMaterialName(QString &ligne, GLC_Material *pMaterial);
+	
+	//! Extract String
+	void extractTextureFileName(QString &ligne, GLC_Material *pMaterial);
 	
 	//! Extract RGB value
 	void extractRGBValue(QString &ligne, GLC_Material *pMaterial);

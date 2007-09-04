@@ -582,7 +582,7 @@ void GLC_ObjToMesh2::loadMaterial(QString fileName)
 				m_pCurrentMaterial= new GLC_Material;
 				
 				// Extract the material name
-				extractString(lineBuff, m_pCurrentMaterial);
+				extractMaterialName(lineBuff, m_pCurrentMaterial);
 				
 				QString materialName(m_pCurrentMaterial->getName());
 								
@@ -600,10 +600,10 @@ void GLC_ObjToMesh2::loadMaterial(QString fileName)
 			{
 				extractOneValue(lineBuff, m_pCurrentMaterial);
 			}
-			else if ((header == "map_Kd"))	// Texture
+			else if ((header == "map_Kd") || (header == "map_Ka"))	// Texture
 			{
 				qDebug() << "Texture detected";
-				extractString(lineBuff, m_pCurrentMaterial);
+				extractTextureFileName(lineBuff, m_pCurrentMaterial);
 			}
 						
 		}
@@ -621,47 +621,57 @@ void GLC_ObjToMesh2::loadMaterial(QString fileName)
 	mtlFile.close();
 
 }
-
 // Extract String
-void GLC_ObjToMesh2::extractString(QString &ligne, GLC_Material *pMaterial)
+void GLC_ObjToMesh2::extractMaterialName(QString &ligne, GLC_Material *pMaterial)
 {
 	QTextStream stream(&ligne);
 	QString valueString;
 	QString header;
 	if ((stream >> header >> valueString).status() == QTextStream::Ok)
 	{
-		if (header == "newmtl")	// The string to extract is the material name
+		// If There is an space in the string to extracts
+		QString valueString2;
+		while ((stream >> valueString2).status() == QTextStream::Ok)
 		{
-			// If There is an space in the string to extracts
-			QString valueString2;
-			while ((stream >> valueString2).status() == QTextStream::Ok)
-			{
-				valueString.append(" ");
-				valueString.append(valueString2);
-			}			
-			pMaterial->setName(valueString);
-			qDebug() << "Material name is : " << valueString;
-		}
-		else if ((header == "map_Kd") || (header == "map_Ka"))// The string to extract is the texture file name
-		{
-			// Retrieve the .obj file path
-			QString textureFile(m_sFile);
-			int start= m_sFile.lastIndexOf('/');
-			start++;
-			textureFile.remove(start, textureFile.size());
-						
-			// concatenate File Path with texture filename
-			textureFile.append(getTextureName(stream, valueString));
-			
-			// Create the texture and assign it to current material
-			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
-			pMaterial->setTexture(pTexture);
-			qDebug() << "Texture File is : " << valueString;
-		}
+			valueString.append(" ");
+			valueString.append(valueString2);
+		}			
+		pMaterial->setName(valueString);
+		qDebug() << "Material name is : " << valueString;
 	}
 	else
 	{
-		const QString message= "GLC_ObjToMesh2::extractString : something is wrong!!";
+		const QString message= "GLC_ObjToMesh2::extractMaterialName : something is wrong!!";
+		GLC_FileFormatException fileFormatException(message, m_sFile);
+		throw(fileFormatException);
+	}
+}
+
+// Extract String
+void GLC_ObjToMesh2::extractTextureFileName(QString &ligne, GLC_Material *pMaterial)
+{
+	QTextStream stream(&ligne);
+	QString valueString;
+	QString header;
+	if ((stream >> header >> valueString).status() == QTextStream::Ok)
+	{
+		// Retrieve the .obj file path
+		QString textureFile(m_sFile);
+		int start= m_sFile.lastIndexOf('/');
+		start++;
+		textureFile.remove(start, textureFile.size());
+					
+		// concatenate File Path with texture filename
+		textureFile.append(getTextureName(stream, valueString));
+		
+		// Create the texture and assign it to current material
+		GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
+		pMaterial->setTexture(pTexture);
+		qDebug() << "Texture File is : " << valueString;
+	}
+	else
+	{
+		const QString message= "GLC_ObjToMesh2::extractTextureFileName : something is wrong!!";
 		GLC_FileFormatException fileFormatException(message, m_sFile);
 		throw(fileFormatException);
 	}
