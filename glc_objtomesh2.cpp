@@ -656,18 +656,33 @@ void GLC_ObjToMesh2::extractTextureFileName(QString &ligne, GLC_Material *pMater
 	if ((stream >> header >> valueString).status() == QTextStream::Ok)
 	{
 		// Retrieve the .obj file path
-		QString textureFile(m_sFile);
+		QString textureFileName(m_sFile);
 		int start= m_sFile.lastIndexOf('/');
 		start++;
-		textureFile.remove(start, textureFile.size());
+		textureFileName.remove(start, textureFileName.size());
 					
 		// concatenate File Path with texture filename
-		textureFile.append(getTextureName(stream, valueString));
+		textureFileName.append(getTextureName(stream, valueString));
 		
-		// Create the texture and assign it to current material
-		GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
-		pMaterial->setTexture(pTexture);
-		qDebug() << "Texture File is : " << valueString;
+		QFile textureFile(textureFileName);
+		
+		if (!textureFile.open(QIODevice::ReadOnly))
+		{
+			QString message= "GLC_ObjToMesh2::extractTextureFileName File ";
+			message.append(textureFileName).append(" doesn't exist");
+			qDebug() << message;
+			//GLC_FileFormatException fileFormatException(message, m_sFile);
+			//throw(fileFormatException);			
+		}
+		else
+		{
+			// Create the texture and assign it to current material
+			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFileName);
+			pMaterial->setTexture(pTexture);
+			qDebug() << "Texture File is : " << valueString;
+		}
+		textureFile.close();
+		
 	}
 	else
 	{
