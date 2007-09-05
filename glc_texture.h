@@ -27,7 +27,7 @@
 #ifndef GLC_TEXTURE_H_
 #define GLC_TEXTURE_H_
 
-#include <QString>
+#include <QFile>
 #include <QtOpenGL>
 
 /////////////////////////////////////////////////////////////////////
@@ -46,8 +46,11 @@ class GLC_Texture
 //////////////////////////////////////////////////////////////////////
 
 public:
-	//! Default constructor
-	GLC_Texture(const QGLContext *pContext, const QString &Filename);
+	//! Constructor with fileName
+	GLC_Texture(const QGLContext *, const QString &);
+
+	//! Constructor with QFile
+	GLC_Texture(const QGLContext *, const QFile &);
 
 	//! Copy constructor
 	GLC_Texture(const GLC_Texture &TextureToCopy);
@@ -62,7 +65,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get the texture File Name
-	QString getTextureFileName() const {return m_FileName;}
+	QString getTextureFileName() const {return m_File.fileName();}
 	
 	//! Get Texture Id
 	GLuint getTextureID() const {return m_TextureID;}
@@ -89,7 +92,7 @@ public:
 private:
 	//! OpenGL Texture ID
 	QGLContext *m_pQGLContext;
-	QString m_FileName;
+	QFile m_File;
 	GLuint	m_TextureID;
 	
 	QImage *m_pTextureImage;

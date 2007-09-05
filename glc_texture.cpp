@@ -34,27 +34,50 @@
 
 GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
 : m_pQGLContext(const_cast<QGLContext*>(pContext))
-, m_FileName(Filename)
+, m_File(Filename)
 , m_TextureID(0)
-, m_pTextureImage(new QImage(m_FileName))
+, m_pTextureImage(new QImage(m_File.fileName()))
 {
 	if (m_pTextureImage->isNull())
 	{
-		qDebug() << "GLC_Texture::GLC_Texture open image : " << m_FileName << " Failed";		
+		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
+		ErrorMess.append(m_File.fileName()).append(" Failed");
+		qDebug() << ErrorMess;
+		GLC_Exception e(ErrorMess);
+		throw(e);		
 	}	
-	//! \todo Add Error handler
+}
+
+GLC_Texture::GLC_Texture(const QGLContext *pContext, const QFile &file)
+: m_pQGLContext(const_cast<QGLContext*>(pContext))
+, m_File(file.fileName())
+, m_TextureID(0)
+, m_pTextureImage(new QImage(file.fileName()))
+{
+	if (m_pTextureImage->isNull())
+	{
+		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
+		ErrorMess.append(m_File.fileName()).append(" Failed");
+		qDebug() << ErrorMess;
+		GLC_Exception e(ErrorMess);
+		throw(e);		
+	}	
 }
 
 GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 : m_pQGLContext(TextureToCopy.m_pQGLContext)
-, m_FileName(TextureToCopy.m_FileName)
+, m_File(TextureToCopy.m_File.fileName())
 , m_TextureID(0)
-, m_pTextureImage(new QImage(m_FileName))
+, m_pTextureImage(new QImage(*TextureToCopy.m_pTextureImage))
 
 {
 	if (m_pTextureImage->isNull())
 	{
-		qDebug() << "GLC_Texture::GLC_Texture open image : " << m_FileName << " Failed";		
+		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
+		ErrorMess.append(m_File.fileName()).append(" Failed");
+		qDebug() << ErrorMess;
+		GLC_Exception e(ErrorMess);
+		throw(e);		
 	}	
 	
 }
