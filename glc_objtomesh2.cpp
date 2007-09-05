@@ -677,7 +677,7 @@ void GLC_ObjToMesh2::extractTextureFileName(QString &ligne, GLC_Material *pMater
 		else
 		{
 			// Create the texture and assign it to current material
-			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFileName);
+			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
 			pMaterial->setTexture(pTexture);
 			qDebug() << "Texture File is : " << valueString;
 		}
