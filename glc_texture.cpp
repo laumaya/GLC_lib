@@ -68,7 +68,7 @@ GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 : m_pQGLContext(TextureToCopy.m_pQGLContext)
 , m_File(TextureToCopy.m_File.fileName())
 , m_TextureID(0)
-, m_pTextureImage(new QImage(*TextureToCopy.m_pTextureImage))
+, m_pTextureImage(new QImage(TextureToCopy.m_File.fileName()))
 
 {
 	if (m_pTextureImage->isNull())
