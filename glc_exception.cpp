@@ -47,6 +47,6 @@ GLC_Exception::~GLC_Exception() throw()
 const char* GLC_Exception::what() const throw()
 {
 	QString exceptionmsg("GLC_Exception : ");
-	
+	exceptionmsg.append(m_ErrorDescription);
 	return exceptionmsg.toAscii().data();
 }
