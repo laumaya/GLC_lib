@@ -118,6 +118,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	{
 		const QString message= "GLC_ObjToMesh2::CreateMeshFromObj OBJ file format not reconize!!";
 		GLC_FileFormatException fileFormatException(message, m_sFile);
+		delete m_pMesh;
 		throw(fileFormatException);
 	}
 	qDebug() << "Coordinate number : " << m_nNbrVectPos;
@@ -241,6 +242,7 @@ GLC_Vector3d GLC_ObjToMesh2::extract3dVect(QString &line)
 			const QString message= "GLC_Vector2d GLC_ObjToMesh2 : failed to convert vector component to double";
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pMesh;
 			throw(fileFormatException);		
 		}
 		vectResult.setVect(x, y, z);		
@@ -270,6 +272,7 @@ GLC_Vector2d GLC_ObjToMesh2::extract2dVect(QString &line)
 			const QString message= "GLC_Vector2d GLC_ObjToMesh2 : failed to convert vector component to double";
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pMesh;
 			throw(fileFormatException);
 		}
 		vectResult.setVect(x, y);		
@@ -351,6 +354,7 @@ void GLC_ObjToMesh2::extractFaceIndex(QString &line)
 		const QString message= "GLC_ObjToMesh2::extractFaceIndex : unknow face type";
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
+		delete m_pMesh;
 		throw(fileFormatException);
 	}
 	
@@ -368,6 +372,7 @@ void GLC_ObjToMesh2::setCurrentMaterial(QString &line)
 		const QString message= "GLC_ObjToMesh2::SetCurrentMaterial : failed to extract materialName";
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
+		delete m_pMesh;
 		throw(fileFormatException);
 	}
 	
@@ -413,6 +418,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append(ligne);
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_sFile);
+				delete m_pMesh;
 				throw(fileFormatException);
 			}
 		}
@@ -421,6 +427,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pMesh;
 			throw(fileFormatException);
 		}
 				
@@ -446,6 +453,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append(ligne);
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_sFile);
+				delete m_pMesh;
 				throw(fileFormatException);
 			}
 		}
@@ -454,6 +462,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pMesh;
 			throw(fileFormatException);
 		}
  	}	
@@ -478,6 +487,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append(ligne);
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_sFile);
+				delete m_pMesh;
 				throw(fileFormatException);
 			}
 		}
@@ -486,6 +496,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pMesh;
 			throw(fileFormatException);
 		}
  	}
@@ -507,6 +518,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append(ligne);
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_sFile);
+				delete m_pMesh;
 				throw(fileFormatException);
 			}
 		}
@@ -515,6 +527,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pMesh;
 			throw(fileFormatException);
 		}
  	}
@@ -525,6 +538,7 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		message.append(ligne);
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
+		delete m_pMesh;
 		throw(fileFormatException);
  	}
 }
@@ -643,6 +657,8 @@ void GLC_ObjToMesh2::extractMaterialName(QString &ligne, GLC_Material *pMaterial
 	{
 		const QString message= "GLC_ObjToMesh2::extractMaterialName : something is wrong!!";
 		GLC_FileFormatException fileFormatException(message, m_sFile);
+		delete m_pCurrentMaterial;
+		delete m_pMesh;
 		throw(fileFormatException);
 	}
 }
@@ -688,6 +704,8 @@ void GLC_ObjToMesh2::extractTextureFileName(QString &ligne, GLC_Material *pMater
 	{
 		const QString message= "GLC_ObjToMesh2::extractTextureFileName : something is wrong!!";
 		GLC_FileFormatException fileFormatException(message, m_sFile);
+		delete m_pCurrentMaterial;
+		delete m_pMesh;
 		throw(fileFormatException);
 	}
 	
@@ -714,6 +732,8 @@ void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 			message.append(ligne);
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pCurrentMaterial;
+			delete m_pMesh;
 			throw(fileFormatException);
 		}		
 		color.setAlphaF(1.0);
@@ -739,6 +759,8 @@ void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 		{
 			const QString message= "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
 			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pCurrentMaterial;
+			delete m_pMesh;
 			throw(fileFormatException);
 		}
 		
@@ -749,6 +771,8 @@ void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 		message.append(ligne);
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
+		delete m_pCurrentMaterial;
+		delete m_pMesh;
 		throw(fileFormatException);	
 	}
 
@@ -776,6 +800,8 @@ void GLC_ObjToMesh2::extractOneValue(QString &ligne, GLC_Material *pMaterial)
 				message.append(ligne);
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_sFile);
+				delete m_pCurrentMaterial;
+				delete m_pMesh;
 				throw(fileFormatException);
 			}
 			pMaterial->setShininess(value);
@@ -785,6 +811,8 @@ void GLC_ObjToMesh2::extractOneValue(QString &ligne, GLC_Material *pMaterial)
 			const QString message= "GLC_ObjToMesh2::ExtractOneValue : Ambient Color not found!!";
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pCurrentMaterial;
+			delete m_pMesh;
 			throw(fileFormatException);
 		}
 	}else
@@ -794,6 +822,8 @@ void GLC_ObjToMesh2::extractOneValue(QString &ligne, GLC_Material *pMaterial)
 		message.append(ligne);
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
+		delete m_pCurrentMaterial;
+		delete m_pMesh;
 		throw(fileFormatException);
 	}
 	
@@ -830,6 +860,7 @@ void GLC_ObjToMesh2::setObjType(QString& ligne)
 		message.append(ligne);
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
+		delete m_pMesh;
 		throw(fileFormatException);
  	}
 }
@@ -886,6 +917,7 @@ QString GLC_ObjToMesh2::getTextureName(QTextStream &inputStream, const QString &
 		{
 			const QString message= "GLC_ObjToMesh2::extractString : Error occur when trying to decode map option";
 			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pMesh;
 			throw(fileFormatException);					
 		}
 	}
