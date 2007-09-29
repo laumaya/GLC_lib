@@ -75,7 +75,12 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 
 GLC_Geometry::~GLC_Geometry(void)
 {
-	deleteList();
+	// If display list is valid : delete it
+	if (0 != m_ListID)
+	{
+		glDeleteLists(m_ListID, 1);
+	}
+	
 	if (!!m_pMaterial)
 	{
 		m_pMaterial->delGLC_Geom(getID());	//Remove Geometry from the material usage collection
@@ -394,25 +399,6 @@ void GLC_Geometry::glExecute(GLenum Mode)
 //////////////////////////////////////////////////////////////////////
 // Protected services functions
 //////////////////////////////////////////////////////////////////////
-// Delete OpenGL list
-/* Call by GLC_Geometry::~GLC_Geometry*/
-void GLC_Geometry::deleteList()
-{
-	// If display list is valid : delete it
-	if (glIsList(m_ListID))
-	{
-		glDeleteLists(m_ListID, 1);
-	}
-	
-	// OpenGL error handler
-	GLenum error= glGetError();	
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Geometry::DeleteList ", error);
-		throw(OpenGlException);
-	}
-
-}
 
 // Virtual interface for OpenGL Geometry properties.
 void GLC_Geometry::glPropGeom()
