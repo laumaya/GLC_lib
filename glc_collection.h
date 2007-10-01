@@ -35,7 +35,7 @@
 class GLC_Material;
 
 //! Geometry hash table
-typedef QHash< GLC_uint, GLC_CollectionNode*> CNodeMap;
+typedef QHash< GLC_uint, GLC_CollectionNode> CNodeMap;
 typedef QHash< GLC_uint, GLC_Geometry*> SelectedGeometryHash;
 
 //////////////////////////////////////////////////////////////////////
