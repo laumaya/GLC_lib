@@ -35,6 +35,7 @@ GLC_CollectionNode::GLC_CollectionNode()
 : m_pGeom(NULL)
 , m_ListID(0)
 , m_pBoundingBox(NULL)
+, m_pNumberOfInstance(new int(1))
 {
 	
 }
@@ -44,14 +45,48 @@ GLC_CollectionNode::GLC_CollectionNode(GLC_Geometry* pGeom)
 : m_pGeom(pGeom)
 , m_ListID(0)
 , m_pBoundingBox(NULL)
+, m_pNumberOfInstance(new int(1))
 {
 	
+}
+
+// Copy constructor
+GLC_CollectionNode::GLC_CollectionNode(const GLC_CollectionNode& inputNode)
+: m_pGeom(inputNode.m_pGeom)
+, m_ListID(0)
+, m_pBoundingBox(NULL)
+, m_pNumberOfInstance(inputNode.m_pNumberOfInstance)
+{
+	// Increment the number of instance
+	++(*m_pNumberOfInstance);
 }
 
 // Destructor
 GLC_CollectionNode::~GLC_CollectionNode()
 {
-	erase();	
+	if ((--(*m_pNumberOfInstance)) == 0)
+	{
+		// this is the last instance, delete the geometry
+		if (m_pGeom != NULL)
+		{
+			delete m_pGeom;
+			m_pGeom= NULL;
+		}
+		// delete instance counter
+		delete m_pNumberOfInstance;
+	}
+	
+	if (m_pBoundingBox != NULL)
+	{
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+	}
+	
+	if (m_ListID != 0)
+	{
+		glDeleteLists(m_ListID, 1);
+		m_ListID= 0;
+	}		
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -110,10 +145,14 @@ bool GLC_CollectionNode::getBoundingBoxValidity(void) const
 //////////////////////////////////////////////////////////////////////
 
 // Set the node Geometry
-void GLC_CollectionNode::setGeometry(GLC_Geometry* pGeom)
+bool GLC_CollectionNode::setGeometry(GLC_Geometry* pGeom)
 {
-		erase();
-		m_pGeom= pGeom;
+		if (NULL == m_pGeom) return false;
+		else
+		{
+			m_pGeom= pGeom;
+			return true;
+		}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -166,28 +205,6 @@ void GLC_CollectionNode::glExecute(GLenum Mode)
 // private services functions
 //////////////////////////////////////////////////////////////////////
 
-// erase the Node
-void GLC_CollectionNode::erase(void)
-{
-	if (m_pGeom != NULL)
-	{
-		delete m_pGeom;
-		m_pGeom= NULL;
-	}
-	
-	if (m_pBoundingBox != NULL)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
-	
-	if (m_ListID != 0)
-	{
-		glDeleteLists(m_ListID, 1);
-		m_ListID= 0;
-	}
-	
-}
 
 // compute the node bounding box
 // m_pGeom should be not null

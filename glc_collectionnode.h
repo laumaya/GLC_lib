@@ -30,7 +30,7 @@
 #include "glc_geometry.h"
 #include "glc_enum.h"
 #include "glc_boundingbox.h"
-
+#include "glc_object.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_CollectionNode
@@ -43,7 +43,7 @@
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_CollectionNode
+class GLC_CollectionNode : public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -55,6 +55,9 @@ public:
 	
 	//! Contruct node with a geometry
 	GLC_CollectionNode(GLC_Geometry* pGeom);
+
+	//! Copy constructor
+	GLC_CollectionNode(const GLC_CollectionNode& );
 
 	//! Destructor
 	~GLC_CollectionNode();
@@ -86,7 +89,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set the node Geometry
-	void setGeometry(GLC_Geometry* pGeom);
+	/*! 
+	 *  Geometry haven't to be already set
+	 */
+	bool setGeometry(GLC_Geometry* pGeom);
 	
 //@}
 
@@ -103,9 +109,6 @@ public:
 // private services functions
 //////////////////////////////////////////////////////////////////////
 private:
-	//! erase the Node
-	void erase(void);
-
 	//! compute the node bounding box
 	void computeBoundingBox(void);
 
@@ -122,6 +125,9 @@ private:
 	
 	//! BoundingBox of the node
 	GLC_BoundingBox* m_pBoundingBox;
+	
+	//! Number of collection node instance
+	int* m_pNumberOfInstance;
 
 	
 };
