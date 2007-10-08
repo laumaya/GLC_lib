@@ -27,7 +27,6 @@
 #include <QtDebug>
 #include <QVector>
 #include <QFile>
-#include <assert.h>
 
 #include "glc_objtomesh2.h"
 #include "glc_texture.h"
@@ -51,6 +50,7 @@ GLC_ObjToMesh2::GLC_ObjToMesh2(const QGLContext *pContext)
 , m_nCurVectTexture(0)
 , m_pQGLContext(pContext)
 , m_FaceType(notSet)
+, m_CurrentLineNumber(0)
 {
 
 }
@@ -74,6 +74,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	m_nCurVectNorm= 0;
 	m_nNbrVectTexture= 0;
 	m_nCurVectTexture= 0;
+	m_CurrentLineNumber= 0;
 
 	// Allocate Mesh memmory
 	m_pMesh= new GLC_Mesh2();
@@ -116,7 +117,9 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	// Check the validity of OBJ file
 	if (m_nNbrVectPos == 0)
 	{
-		const QString message= "GLC_ObjToMesh2::CreateMeshFromObj OBJ file format not reconize!!";
+		QString message= "GLC_ObjToMesh2::CreateMeshFromObj OBJ file format not reconize!!";
+		message.append("\nAt ligne : ");
+		message.append(QString::number(m_CurrentLineNumber));
 		GLC_FileFormatException fileFormatException(message, m_sFile);
 		delete m_pMesh;
 		throw(fileFormatException);
@@ -138,17 +141,24 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	objStream.resetStatus();
 	objStream.seek(0);
 	
-	int currentLineNumber= 0;
 	int currentQuantumValue= 0;
 	int previousQuantumValue= 0;
 	// Read Buffer and create mesh
 	emit currentQuantum(currentQuantumValue);
 	while (!objStream.atEnd())
 	{
-		++currentLineNumber;
+		++m_CurrentLineNumber;
 		lineBuff= objStream.readLine();
+		
+		if (lineBuff.endsWith(QChar('\\')))
+		{
+			lineBuff.replace(QChar('\\'), QChar(' '));
+			lineBuff.append(objStream.readLine());
+			++m_CurrentLineNumber;
+		}
+		
 		scanLigne(lineBuff);
-		currentQuantumValue = static_cast<int>((static_cast<double>(currentLineNumber) / numberOfLine) * 100);
+		currentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentLineNumber) / numberOfLine) * 100);
 		if (currentQuantumValue > previousQuantumValue)
 		{
 			emit currentQuantum(currentQuantumValue);
@@ -216,6 +226,12 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 		setCurrentMaterial(line);
 		m_FaceType = notSet;
 	}
+	
+	// Search Group
+	if (line.startsWith("g"))
+	{
+		m_FaceType = notSet;		
+	}
 
 }
 
@@ -239,13 +255,18 @@ GLC_Vector3d GLC_ObjToMesh2::extract3dVect(QString &line)
 		z= zString.toDouble(&zOk);
 		if (!(xOk && yOk && zOk))
 		{
-			const QString message= "GLC_Vector2d GLC_ObjToMesh2 : failed to convert vector component to double";
+			QString message= "GLC_ObjToMesh2::extract3dVect : failed to convert vector component to double";
+			message.append("\nAt ligne : ");
+			message.append(QString::number(m_CurrentLineNumber));				
 			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_sFile);
-			delete m_pMesh;
-			throw(fileFormatException);		
+			//GLC_FileFormatException fileFormatException(message, m_sFile);
+			//delete m_pMesh;
+			//throw(fileFormatException);		
 		}
-		vectResult.setVect(x, y, z);		
+		else
+		{
+			vectResult.setVect(x, y, z);
+		}		
 	}
 
 	return vectResult;
@@ -269,7 +290,9 @@ GLC_Vector2d GLC_ObjToMesh2::extract2dVect(QString &line)
 		y= yString.toDouble(&yOk);
 		if (!(xOk && yOk))
 		{
-			const QString message= "GLC_Vector2d GLC_ObjToMesh2 : failed to convert vector component to double";
+			QString message= "GLC_Vector2d GLC_ObjToMesh2 : failed to convert vector component to double";
+			message.append("\nAt ligne : ");
+			message.append(QString::number(m_CurrentLineNumber));	
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
 			delete m_pMesh;
@@ -317,6 +340,11 @@ void GLC_ObjToMesh2::extractFaceIndex(QString &line)
 		
 		vectorMaterial.append(m_CurrentMaterialIndex);
 	}
+	if (vectorCoordinate.size() < 3)
+	{
+		qDebug() << "GLC_ObjToMesh2::extractFaceIndex Face with less than 3 vertex found";
+		return;
+	}
 	if (m_FaceType == coordinateAndNormal)
 	{
 		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
@@ -333,8 +361,6 @@ void GLC_ObjToMesh2::extractFaceIndex(QString &line)
 	}
 	else if (m_FaceType == coordinateAndTexture)
 	{
-		assert(vectorTextureCoordinate.size() == vectorCoordinate.size());
-		
 		m_pMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
 		for (int i= 0; i < vectorCoordinate.size(); ++i)
 		{
@@ -345,13 +371,13 @@ void GLC_ObjToMesh2::extractFaceIndex(QString &line)
 	}	
 	else if (m_FaceType == coordinateAndTextureAndNormal)
 	{
-		assert(vectorTextureCoordinate.size() == vectorCoordinate.size());
-		
 		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
 	}
 	else
 	{
-		const QString message= "GLC_ObjToMesh2::extractFaceIndex : unknow face type";
+		QString message= "GLC_ObjToMesh2::extractFaceIndex : unknow face type";
+		message.append("\nAt line : ");
+		message.append(QString::number(m_CurrentLineNumber));		
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
 		delete m_pMesh;
@@ -369,7 +395,9 @@ void GLC_ObjToMesh2::setCurrentMaterial(QString &line)
 
 	if (!((streamString >> materialName).status() == QTextStream::Ok))
 	{
-		const QString message= "GLC_ObjToMesh2::SetCurrentMaterial : failed to extract materialName";
+		QString message= "GLC_ObjToMesh2::SetCurrentMaterial : failed to extract materialName";
+		message.append("\nAt line : ");
+		message.append(QString::number(m_CurrentLineNumber));		
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
 		delete m_pMesh;
@@ -414,8 +442,8 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			if (!(coordinateOk && textureCoordinateOk && normalOk))
 			{
 				QString message= "GLC_ObjToMesh2::extractVertexIndex failed to convert String to int";
-				message.append("At ligne : ");
-				message.append(ligne);
+				message.append("\nAt line : ");
+				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_sFile);
 				delete m_pMesh;
@@ -425,6 +453,8 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		else
 		{
 			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
+			message.append("\nAt line : ");
+			message.append(QString::number(m_CurrentLineNumber));			
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
 			delete m_pMesh;
@@ -449,8 +479,8 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			if (!(coordinateOk && textureCoordinateOk))
 			{
 				QString message= "GLC_ObjToMesh2::extractVertexIndex failed to convert String to int";
-				message.append("At ligne : ");
-				message.append(ligne);
+				message.append("\nAt line : ");
+				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_sFile);
 				delete m_pMesh;
@@ -460,6 +490,8 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		else
 		{
 			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
+			message.append("\nAt line : ");
+			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
 			delete m_pMesh;
@@ -483,8 +515,8 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			if (!(coordinateOk && normalOk))
 			{
 				QString message= "GLC_ObjToMesh2::extractVertexIndex failed to convert String to int";
-				message.append("At ligne : ");
-				message.append(ligne);
+				message.append("\nAt line : ");
+				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_sFile);
 				delete m_pMesh;
@@ -494,6 +526,8 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		else
 		{
 			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
+			message.append("\nAt line : ");
+			message.append(QString::number(m_CurrentLineNumber));			
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
 			delete m_pMesh;
@@ -514,8 +548,8 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			if (!coordinateOk)
 			{
 				QString message= "GLC_ObjToMesh2::extractVertexIndex failed to convert String to int";
-				message.append("At ligne : ");
-				message.append(ligne);
+				message.append("\nAt line : ");
+				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_sFile);
 				delete m_pMesh;
@@ -525,6 +559,8 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		else
 		{
 			QString message= "GLC_ObjToMesh2::extractVertexIndex this Obj file type is not supported";
+			message.append("\nAt line : ");
+			message.append(QString::number(m_CurrentLineNumber));			
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
 			delete m_pMesh;
@@ -534,8 +570,8 @@ void GLC_ObjToMesh2::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
  	else
  	{
 		QString message= "GLC_ObjToMesh2::extractVertexIndex OBJ file not reconize";
-		message.append("At ligne : ");
-		message.append(ligne);
+		message.append("\nAt line : ");
+		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
 		delete m_pMesh;
@@ -655,7 +691,9 @@ void GLC_ObjToMesh2::extractMaterialName(QString &ligne, GLC_Material *pMaterial
 	}
 	else
 	{
-		const QString message= "GLC_ObjToMesh2::extractMaterialName : something is wrong!!";
+		QString message= "GLC_ObjToMesh2::extractMaterialName : something is wrong!!";
+		message.append("\nAt line : ");
+		message.append(QString::number(m_CurrentLineNumber));		
 		GLC_FileFormatException fileFormatException(message, m_sFile);
 		delete m_pCurrentMaterial;
 		delete m_pMesh;
@@ -702,7 +740,9 @@ void GLC_ObjToMesh2::extractTextureFileName(QString &ligne, GLC_Material *pMater
 	}
 	else
 	{
-		const QString message= "GLC_ObjToMesh2::extractTextureFileName : something is wrong!!";
+		QString message= "GLC_ObjToMesh2::extractTextureFileName : something is wrong!!";
+		message.append("\nAt line : ");
+		message.append(QString::number(m_CurrentLineNumber));		
 		GLC_FileFormatException fileFormatException(message, m_sFile);
 		delete m_pCurrentMaterial;
 		delete m_pMesh;
@@ -757,7 +797,7 @@ void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 		
 		else
 		{
-			const QString message= "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
+			QString message= "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
 			GLC_FileFormatException fileFormatException(message, m_sFile);
 			delete m_pCurrentMaterial;
 			delete m_pMesh;
@@ -856,8 +896,8 @@ void GLC_ObjToMesh2::setObjType(QString& ligne)
  	else
  	{
 		QString message= "GLC_ObjToMesh2::extractVertexIndex OBJ file not reconize";
-		message.append("At ligne : ");
-		message.append(ligne);
+		message.append("\nAt line : ");
+		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
 		delete m_pMesh;
@@ -868,6 +908,8 @@ void GLC_ObjToMesh2::setObjType(QString& ligne)
 // compute face normal
 GLC_Vector3d GLC_ObjToMesh2::computeNormal(QVector<int> &listIndex, GLC_Mesh2* pMesh)
 {
+	Q_ASSERT(listIndex.size() > 2);
+	
 	const GLC_Vector4d vect1(pMesh->getVertex(listIndex[0]));
 	const GLC_Vector4d vect2(pMesh->getVertex(listIndex[1]));
 	const GLC_Vector4d vect3(pMesh->getVertex(listIndex[2]));

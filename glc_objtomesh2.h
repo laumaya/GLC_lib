@@ -182,6 +182,9 @@ private:
 	
 	//! Face type
 	FaceType m_FaceType;
+	
+	//! Current Line number
+	int m_CurrentLineNumber;
 
 };
 #endif //GLC_OBJ_TO_MESH2_H_
