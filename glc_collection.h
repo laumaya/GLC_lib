@@ -75,6 +75,9 @@ public:
 	{
 		return m_TheMap.size();
 	}
+	//! return a GLC_CollectionNode from collection
+	/*! If the element is not found in collection a empty node is return*/
+	GLC_CollectionNode& getNode(GLC_uint Key) {return m_TheMap[Key];}
 	
 	//! return a pointer to an GLC_Geometry from collection
 	/*! If the element is not found in collection a NULL pointer is returned*/
