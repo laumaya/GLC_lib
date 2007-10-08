@@ -36,6 +36,8 @@ GLC_CollectionNode::GLC_CollectionNode()
 , m_ListID(0)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
+, m_MatPos()
+, m_NodeIsValid(false)
 {
 	
 }
@@ -46,6 +48,8 @@ GLC_CollectionNode::GLC_CollectionNode(GLC_Geometry* pGeom)
 , m_ListID(0)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
+, m_MatPos()
+, m_NodeIsValid(false)
 {
 	
 }
@@ -56,6 +60,9 @@ GLC_CollectionNode::GLC_CollectionNode(const GLC_CollectionNode& inputNode)
 , m_ListID(0)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(inputNode.m_pNumberOfInstance)
+, m_MatPos(inputNode.m_MatPos)
+, m_NodeIsValid(false)
+
 {
 	// Increment the number of instance
 	++(*m_pNumberOfInstance);
@@ -98,6 +105,7 @@ GLC_Geometry* GLC_CollectionNode::getGeometry(void)
 {
 	return m_pGeom;
 }
+
 
 // Get the validity of the OpenGL list
 bool GLC_CollectionNode::getListValidity(void) const
@@ -155,6 +163,39 @@ bool GLC_CollectionNode::setGeometry(GLC_Geometry* pGeom)
 		}
 }
 
+// Geometry translation
+void GLC_CollectionNode::translate(double Tx, double Ty, double Tz)
+{
+	GLC_Matrix4x4 MatTrans(Tx, Ty, Tz);
+	
+	multMatrix(MatTrans);
+}
+
+
+// move Geometry with a 4x4Matrix
+void GLC_CollectionNode::multMatrix(const GLC_Matrix4x4 &MultMat)
+{
+	m_MatPos= MultMat * m_MatPos;
+
+	m_NodeIsValid= false;
+}
+
+// Replace the Geometry Matrix
+void GLC_CollectionNode::setMatrix(const GLC_Matrix4x4 &SetMat)
+{
+	m_MatPos= SetMat;
+
+	m_NodeIsValid= false;
+}
+
+// Reset the Geometry Matrix
+void GLC_CollectionNode::resetMatrix(void)
+{
+	m_MatPos.setToIdentity();
+
+	m_NodeIsValid= false;
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
@@ -173,7 +214,7 @@ void GLC_CollectionNode::glExecute(GLenum Mode)
 	}
 	
 	// Geometry invalid or collection node list ID == 0
-	if ((!m_pGeom->getValidity()) || (m_ListID == 0))
+	if ((!m_pGeom->getValidity()) || (!m_NodeIsValid))
 	{
 		qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pGeom->getValidity();
 		qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ListID;
@@ -184,10 +225,18 @@ void GLC_CollectionNode::glExecute(GLenum Mode)
 			m_ListID= glGenLists(1);
 		}		
 		glNewList(m_ListID, Mode);
+			// Save current OpenGL Matrix
+			glPushMatrix();
+			
+			// Change the current matrix
+			glMultMatrixd(m_MatPos.return_dMat());
 			m_pGeom->glExecute(Mode);
+			
+			glPopMatrix();
 		glEndList();
 		qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ListID << " created";
-		computeBox= true;	
+		m_NodeIsValid= true;
+		computeBox= true;
 	}
 	else
 	{

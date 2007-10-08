@@ -81,6 +81,12 @@ public:
 	//! Get the validity of the Bounding Box
 	bool getBoundingBoxValidity(void) const;
 	
+	//! Return transfomation 4x4Matrix
+	const GLC_Matrix4x4 getMatrix(void) const
+	{return m_MatPos;}
+	
+	
+	
 //@}	
 	
 //////////////////////////////////////////////////////////////////////
@@ -93,6 +99,19 @@ public:
 	 *  Geometry haven't to be already set
 	 */
 	bool setGeometry(GLC_Geometry* pGeom);
+
+	//! translate Geometry
+	void translate(double Tx, double Ty, double Tz);
+
+	//! move Geometry with a 4x4Matrix
+	void multMatrix(const GLC_Matrix4x4 &MultMat);
+	
+	//! Replace the Geometry Matrix
+	void setMatrix(const GLC_Matrix4x4 &SetMat);
+	
+	//! Reset the Geometry Matrix
+	void resetMatrix(void);
+	
 	
 //@}
 
@@ -128,6 +147,12 @@ private:
 	
 	//! Number of collection node instance
 	int* m_pNumberOfInstance;
+
+	//! Geometry matrix
+	GLC_Matrix4x4 m_MatPos;
+
+	//! Node validity
+	bool m_NodeIsValid;
 
 	
 };
