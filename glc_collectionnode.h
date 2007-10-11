@@ -40,6 +40,7 @@
  * 		- GLC_Geometry pointer
  * 		- OpenGL sub list ID
  * 		- Geomtry Bounding box
+ * 		- Positionning 4 x 4 matrix
  */
 //////////////////////////////////////////////////////////////////////
 
@@ -58,6 +59,9 @@ public:
 
 	//! Copy constructor
 	GLC_CollectionNode(const GLC_CollectionNode& );
+
+	//! Assignement operator
+	GLC_CollectionNode &operator=(const GLC_CollectionNode&);	
 
 	//! Destructor
 	~GLC_CollectionNode();
@@ -130,6 +134,9 @@ public:
 private:
 	//! compute the node bounding box
 	void computeBoundingBox(void);
+	
+	//! Clear current node
+	void clear();
 
 //////////////////////////////////////////////////////////////////////
 // Private members

@@ -68,32 +68,23 @@ GLC_CollectionNode::GLC_CollectionNode(const GLC_CollectionNode& inputNode)
 	++(*m_pNumberOfInstance);
 }
 
+// Assignement operator
+GLC_CollectionNode& GLC_CollectionNode::operator=(const GLC_CollectionNode& inputNode)
+{	
+	if (m_pGeom != inputNode.m_pGeom)
+	{
+		clear();
+		m_pGeom= inputNode.m_pGeom;
+		m_pNumberOfInstance= inputNode.m_pNumberOfInstance;
+		++(*m_pNumberOfInstance);
+	}
+	return *this;
+}
+
 // Destructor
 GLC_CollectionNode::~GLC_CollectionNode()
 {
-	if ((--(*m_pNumberOfInstance)) == 0)
-	{
-		// this is the last instance, delete the geometry
-		if (m_pGeom != NULL)
-		{
-			delete m_pGeom;
-			m_pGeom= NULL;
-		}
-		// delete instance counter
-		delete m_pNumberOfInstance;
-	}
-	
-	if (m_pBoundingBox != NULL)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
-	
-	if (m_ListID != 0)
-	{
-		glDeleteLists(m_ListID, 1);
-		m_ListID= 0;
-	}		
+	clear();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -267,6 +258,40 @@ void GLC_CollectionNode::computeBoundingBox(void)
 	
 	m_pBoundingBox= m_pGeom->getBoundingBox();
 	
+}
+
+// Clear current node
+void GLC_CollectionNode::clear()
+{
+	Q_ASSERT(m_pNumberOfInstance != NULL);
+	
+	if ((--(*m_pNumberOfInstance)) == 0)
+	{
+		// this is the last instance, delete the geometry
+		if (m_pGeom != NULL)
+		{
+			delete m_pGeom;
+			m_pGeom= NULL;
+		}
+		// delete instance counter
+		delete m_pNumberOfInstance;
+		m_pNumberOfInstance= NULL;
+	}
+	
+	if (m_pBoundingBox != NULL)
+	{
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+	}
+	
+	if (m_ListID != 0)
+	{
+		glDeleteLists(m_ListID, 1);
+		m_ListID= 0;
+	}
+	
+	m_NodeIsValid= false;
+
 }
 
 
