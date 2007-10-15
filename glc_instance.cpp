@@ -65,7 +65,8 @@ GLC_Instance::GLC_Instance(GLC_Geometry* pGeom)
 
 // Copy constructor
 GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
-: m_pGeom(inputNode.m_pGeom)
+: GLC_Object(inputNode)
+, m_pGeom(inputNode.m_pGeom)
 , m_ListID(0)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(inputNode.m_pNumberOfInstance)
@@ -89,6 +90,8 @@ GLC_Instance& GLC_Instance::operator=(const GLC_Instance& inputNode)
 	{
 		clear();
 		m_pGeom= inputNode.m_pGeom;
+		m_Uid= inputNode.m_Uid;
+		m_Name= inputNode.m_Name;
 	}
 	else
 	{
@@ -323,6 +326,7 @@ void GLC_Instance::computeBoundingBox(void)
 	}
 	
 	m_pBoundingBox= m_pGeom->getBoundingBox();
+	m_pBoundingBox->transform(m_MatPos);
 	
 }
 
