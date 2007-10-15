@@ -38,7 +38,7 @@ HEADERS += glc_maths.h \
     glc_collection.h \
     glc_factory.h \
     glc_boundingbox.h \
-    glc_collectionnode.h \
+    glc_instance.h \
     glc_exception.h \
     glc_openglexception.h \
     glc_fileformatexception.h \
@@ -68,7 +68,7 @@ SOURCES += glc_vector4d.cpp \
     glc_collection.cpp \
     glc_factory.cpp \
     glc_boundingbox.cpp \
-    glc_collectionnode.cpp \
+    glc_instance.cpp \
     glc_exception.cpp \
     glc_openglexception.cpp \
     glc_fileformatexception.cpp \
