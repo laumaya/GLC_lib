@@ -78,6 +78,12 @@ GLC_BoundingBox* GLC_Box::getBoundingBox(void) const
 	return pBoundingBox;	
 }
 
+// Return a copy of the current geometry
+GLC_Geometry* GLC_Box::clone() const
+{
+	return new GLC_Box(*this);
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

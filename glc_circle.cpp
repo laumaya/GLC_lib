@@ -87,6 +87,13 @@ GLC_BoundingBox* GLC_Circle::getBoundingBox(void) const
     pBoundingBox->transform(m_MatPos);	
 	return pBoundingBox;	
 }
+
+// Return a copy of the current geometry
+GLC_Geometry* GLC_Circle::clone() const
+{
+	return new GLC_Circle(*this);
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
