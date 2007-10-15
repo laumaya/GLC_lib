@@ -64,6 +64,9 @@ public:
 	//! return the point bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 	
+	//! Return a copy of the geometry
+	virtual GLC_Geometry* clone() const;
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
