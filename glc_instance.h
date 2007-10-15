@@ -22,10 +22,10 @@
 
 *****************************************************************************/
 
-//! \file glc_collectionnode.h interface for the GLC_CollectionNode class.
+//! \file glc_instance.h interface for the GLC_Instance class.
 
-#ifndef GLC_COLLECTIONNODE_H_
-#define GLC_COLLECTIONNODE_H_
+#ifndef GLC_INSTANCE_H_
+#define GLC_INSTANCE_H_
 
 #include "glc_geometry.h"
 #include "glc_enum.h"
@@ -33,10 +33,10 @@
 #include "glc_object.h"
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_CollectionNode
-/*! \brief GLC_CollectionNode : GLC_Geometry + OpenGL list + bounding box*/
+//! \class GLC_Instance
+/*! \brief GLC_Instance : GLC_Geometry + OpenGL list + bounding box*/
 
-/*! An GLC_CollectionNode contain  :
+/*! An GLC_Instance contain  :
  * 		- GLC_Geometry pointer
  * 		- OpenGL sub list ID
  * 		- Geomtry Bounding box
@@ -44,7 +44,7 @@
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_CollectionNode : public GLC_Object
+class GLC_Instance : public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -52,19 +52,19 @@ class GLC_CollectionNode : public GLC_Object
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_CollectionNode();
+	GLC_Instance();
 	
 	//! Contruct node with a geometry
-	GLC_CollectionNode(GLC_Geometry* pGeom);
+	GLC_Instance(GLC_Geometry* pGeom);
 
 	//! Copy constructor
-	GLC_CollectionNode(const GLC_CollectionNode& );
+	GLC_Instance(const GLC_Instance& );
 
 	//! Assignement operator
-	GLC_CollectionNode &operator=(const GLC_CollectionNode&);	
+	GLC_Instance &operator=(const GLC_Instance&);	
 
 	//! Destructor
-	~GLC_CollectionNode();
+	~GLC_Instance();
 
 //@}
 
@@ -73,22 +73,31 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Get the geometry of the node
+
+	//! Return true if the instance as no geometry
+	const bool isNull() const {return (NULL == m_pGeom);}
+	
+	//! Return true if the instance is selected
+	const bool isSelected(void) const {return m_IsSelected;}
+
+	//! Get the geometry of the instance
 	GLC_Geometry* getGeometry(void);
 	
 	//! Get the validity of the OpenGL list
-	bool getListValidity(void) const;
+	const bool getListValidity(void) const;
 	
 	//! Get the bounding box
 	GLC_BoundingBox getBoundingBox(void);
 
 	//! Get the validity of the Bounding Box
-	bool getBoundingBoxValidity(void) const;
+	const bool getBoundingBoxValidity(void) const;
 	
 	//! Return transfomation 4x4Matrix
 	const GLC_Matrix4x4 getMatrix(void) const
 	{return m_MatPos;}
 	
+	//! Clone the instance
+	GLC_Instance clone() const;
 	
 	
 //@}	
@@ -98,23 +107,33 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set the node Geometry
+
+	//! Set the instance Geometry
 	/*! 
-	 *  Geometry haven't to be already set
+	 *  instance must be null
 	 */
 	bool setGeometry(GLC_Geometry* pGeom);
 
 	//! translate Geometry
 	void translate(double Tx, double Ty, double Tz);
 
-	//! move Geometry with a 4x4Matrix
+	//! move instance with a 4x4Matrix
 	void multMatrix(const GLC_Matrix4x4 &MultMat);
 	
-	//! Replace the Geometry Matrix
+	//! Replace the instance Matrix
 	void setMatrix(const GLC_Matrix4x4 &SetMat);
 	
-	//! Reset the Geometry Matrix
+	//! Reset the instance Matrix
 	void resetMatrix(void);
+
+	//! Polygon's display style
+	void setPolygonMode(GLenum Face, GLenum Mode);
+
+	//! Select the instance
+	void select(void);
+	
+	//! Unselect the instance
+	void unselect(void);
 	
 	
 //@}
@@ -124,18 +143,23 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Display the Node
+	//! Display the instance
 	void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	
+private:
+	//! Set instance visualisation properties
+	void glVisProperties();
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
 // private services functions
 //////////////////////////////////////////////////////////////////////
 private:
-	//! compute the node bounding box
+	//! compute the instance bounding box
 	void computeBoundingBox(void);
 	
-	//! Clear current node
+	//! Clear current instance
 	void clear();
 
 //////////////////////////////////////////////////////////////////////
@@ -143,26 +167,32 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	
-	//! Geometry of the node
+	//! Geometry of the instance
 	GLC_Geometry* m_pGeom;
 	
-	//! OpenGL list of the node
+	//! OpenGL list of the instance
 	GLuint m_ListID;
 	
-	//! BoundingBox of the node
+	//! BoundingBox of the instance
 	GLC_BoundingBox* m_pBoundingBox;
 	
-	//! Number of collection node instance
+	//! Number of this instance
 	int* m_pNumberOfInstance;
 
 	//! Geometry matrix
 	GLC_Matrix4x4 m_MatPos;
 
-	//! Node validity
-	bool m_NodeIsValid;
+	//! instance validity
+	bool m_InstanceIsValid;
 
+	//! Selection state
+	bool m_IsSelected;
+
+	//! Polygons display style
+	GLenum m_PolyFace;
+	GLenum m_PolyMode;
 	
 };
 
 
-#endif /*GLC_COLLECTIONNODE_H_*/
+#endif /*GLC_INSTANCE_H_*/
