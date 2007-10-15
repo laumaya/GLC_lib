@@ -76,13 +76,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 public:
-
-	//! Return true if the geometry is selected
-	const bool isSelected(void) const {return m_IsSelected;}
 	
-	//! Return Visibility state of geometry
-	const bool isVisible(void) const;
-
 	//! Return an array of 4 GLfloat which represent the color
 	QColor getRGBA(void) const;
 
@@ -115,12 +109,12 @@ public:
 
 	//! Return material of geometry
 	GLC_Material* getMaterial(void) const;
-
-	//! Return true if blending is enable
-	bool getBlending(void) const;
 	
 	//! return the geometry bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
+	
+	//! clone the geometry
+	virtual GLC_Geometry* clone() const = 0;
 	
 //@}
 
@@ -130,15 +124,6 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 public:
-
-	//! Select the Geometry
-	void select(void);
-	
-	//! Unselect the Geometry
-	void unselect(void);
-	
-	//! Set visibility statement
-	void setVisibility(bool v);
 
 	//! Set Diffuse Color RGBA component
 	void setColor(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha= 1.0);
@@ -163,12 +148,6 @@ public:
 	
 	//! Set Wire thickness
 	void setThikness(float SetEp);
-
-	//! Set Blending
-	void setBlending(bool Blending);
-	
-	//! Polygon's display style
-	void setPolygonMode(GLenum Face, GLenum Mode);
 
 	// Material
 	//! Set the Geometry material
@@ -199,10 +178,10 @@ public:
 	 * 		- If Display list doesn't exist try to create IT by calling
 	 *        virtual function GLC_Geometry::glDraw
 	 */
-	virtual void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
-
+	void glExecute(GLenum Mode, bool);
+	//GL_COMPILE_AND_EXECUTE
 	//! OpenGL list creation
-	bool createList(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	bool createList(GLenum Mode);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -217,7 +196,7 @@ protected:
 
 	//! Virtual interface for OpenGL Geometry properties.
 	/*! This Virtual function can be modify in concrete class.*/
-	virtual void glPropGeom(void);
+	virtual void glPropGeom(bool);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -225,9 +204,6 @@ protected:
 //////////////////////////////////////////////////////////////////////
 protected:
 
-	//! Selection state
-	bool m_IsSelected;
-	
 	//! Geometry matrix
 	GLC_Matrix4x4	m_MatPos;
 
@@ -243,13 +219,6 @@ protected:
 	//! Material
 	GLC_Material* m_pMaterial;
 
-	//! Blending
-	bool m_IsBlended;
-
-	//! Polygons display style
-	GLenum m_PolyFace;
-	GLenum m_PolyMode;
-
 //////////////////////////////////////////////////////////////////////
 // Private members 
 //////////////////////////////////////////////////////////////////////
@@ -257,10 +226,7 @@ private:
 
 	//! Thikness of geometry's Edge
 	float m_Thikness;
-	
-	//! Geometry visibility
-	bool m_IsVisible;
-	
+		
 	//! Geometry type is wire
 	bool m_IsWire;
 	

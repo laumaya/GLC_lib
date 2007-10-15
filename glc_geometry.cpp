@@ -34,37 +34,27 @@
 //////////////////////////////////////////////////////////////////////
 GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 :GLC_Object(name)
-, m_IsSelected(false)		// By default geometry is not selected
 , m_MatPos()				// default constructor identity matrix
 , m_ListID(0)				// By default Display List = 0
 , m_ListIsValid(false)		// By default Display List is invalid
 , m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pMaterial(NULL)			// have to be set later in constructor
-, m_IsBlended(false)		// By default No Blending
-, m_PolyFace(GL_FRONT_AND_BACK)	// Default Faces style
-, m_PolyMode(GL_FILL)		// Default polyganal mode
 , m_Thikness(1.0)			// By default thickness = 1.0
-, m_IsVisible(true)			// By default Visibility is true
 , m_IsWire(typeIsWire)			// the geometry type
 
 {
-		// Material is set here
+	// Material is set here
 	setMaterial(new GLC_Material());	
 }
 
 GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 :GLC_Object(sourceGeom)
-, m_IsSelected(sourceGeom.m_IsSelected)		// By default geometry is not selected
 , m_MatPos(sourceGeom.m_MatPos)
 , m_ListID(0)				// By default Display List = 0
 , m_ListIsValid(false)		// By default Display List is invalid
 , m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pMaterial(NULL)			// have to be set later in constructor
-, m_IsBlended(sourceGeom.m_IsBlended)
-, m_PolyFace(sourceGeom.m_PolyFace)
-, m_PolyMode(sourceGeom.m_PolyMode)
 , m_Thikness(sourceGeom.m_Thikness)
-, m_IsVisible(sourceGeom.m_IsVisible)
 , m_IsWire(sourceGeom.m_IsWire)
 
 {	
@@ -92,11 +82,6 @@ GLC_Geometry::~GLC_Geometry(void)
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Return Visibility state of geometry
-const bool GLC_Geometry::isVisible(void) const
-{
-	return m_IsVisible;
-}
 
 // Return an array of 4 GLfloat which represent the color
 QColor GLC_Geometry::getRGBA(void) const
@@ -157,47 +142,17 @@ GLC_Material* GLC_Geometry::getMaterial(void) const
 	return m_pMaterial;
 }
 
-// Return true if blending is enable
-bool GLC_Geometry::getBlending(void) const
-{
-	return m_IsBlended;
-}
-
 // return the geometry bounding box
 GLC_BoundingBox* GLC_Geometry::getBoundingBox(void) const
 {
 	return NULL;	
 }
 
+
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Select the Geometry
-void GLC_Geometry::select(void)
-{
-	m_IsSelected= true;
-	m_GeometryIsValid = false;
-	m_ListIsValid= false;	// GLC_Mesh2 compatibility
-	
-}
-
-// Unselect the Geometry
-void GLC_Geometry::unselect(void)
-{
-	m_IsSelected= false;
-	m_GeometryIsValid = false;
-	m_ListIsValid= false;	// GLC_Mesh2 compatibility
-	
-}
-
-// Set visibility statement
-void GLC_Geometry::setVisibility(bool v)
-{
-	m_IsVisible= v;
-
-	m_GeometryIsValid= false;
-}
 
 // Set Diffuse Color RGBA component
 void GLC_Geometry::setColor(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha)
@@ -257,21 +212,6 @@ void GLC_Geometry::setThikness(float SetEp)
 	m_GeometryIsValid= false;
 }
 
-// Set Blending
-void GLC_Geometry::setBlending(bool Blending)
-{
-	m_IsBlended= Blending;
-
-	m_GeometryIsValid= false;
-}
-
-// Polygon's display style
-void GLC_Geometry::setPolygonMode(GLenum Face, GLenum Mode)
-{
-	m_PolyFace= Face;
-	m_PolyMode= Mode;
-	m_GeometryIsValid = false;
-}
 
 // Material
 void GLC_Geometry::setMaterial(GLC_Material* pMat)
@@ -350,49 +290,39 @@ void GLC_Geometry::glLoadTexture(void)
 }
 
 // Geometry display
-void GLC_Geometry::glExecute(GLenum Mode)
+void GLC_Geometry::glExecute(GLenum Mode, bool isSelected)
 {
-	if (isVisible())
+	// Object ID for selection purpose
+	glLoadName(getID());
+
+	// Save current OpenGL Matrix
+	glPushMatrix();
+
+	// Define Geometry's property
+	glPropGeom(isSelected);
+
+	// Geometry validity set to true
+	m_GeometryIsValid= true;
+
+	if (!getListIsValid())
 	{
-		// Object ID for selection purpose
-		glLoadName(getID());
+		// The list is not up to date or doesn't exist
 
-		// Save current OpenGL Matrix
-		glPushMatrix();
-
-		// Define Geometry's property
-		glPropGeom();
-
-		// Geometry validity set to true
-		m_GeometryIsValid= true;
-
-		if (!getListIsValid())
-		{
-			// The list is not up to date or doesn't exist
-
-			createList(Mode);
-		}
-		else
-		{
-			glCallList(m_ListID);
-		}
-
-		// To avoid Blending issue
-		glDepthMask(GL_TRUE);
-
-		glPopMatrix();
-		
-		// OpenGL error handler
-		GLenum error= glGetError();	
-		if (error != GL_NO_ERROR)
-		{
-			GLC_OpenGlException OpenGlException("GLC_Geometry::GlExecute ", error);
-			throw(OpenGlException);
-		}
+		createList(Mode);
 	}
 	else
 	{
-		m_GeometryIsValid= true; // Used to avoid multi list creation
+		glCallList(m_ListID);
+	}
+
+	glPopMatrix();
+	
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Geometry::GlExecute ", error);
+		throw(OpenGlException);
 	}
 }
 
@@ -401,31 +331,19 @@ void GLC_Geometry::glExecute(GLenum Mode)
 //////////////////////////////////////////////////////////////////////
 
 // Virtual interface for OpenGL Geometry properties.
-void GLC_Geometry::glPropGeom()
+void GLC_Geometry::glPropGeom(bool isSelected)
 {
 	//! Change the current matrix
 	glMultMatrixd(m_MatPos.return_dMat());
-	
-	// Polygons display mode
-	glPolygonMode(m_PolyFace, m_PolyMode);
-	if (m_IsBlended && !m_IsSelected)
-	{
-		glEnable(GL_BLEND);
-		glDepthMask(GL_FALSE);
-	}
-	else
-	{
-		glDisable(GL_BLEND);
-	}		
-	
-	if((m_PolyMode != GL_FILL) || m_IsWire)
+		
+	if(m_IsWire)
 	{
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
 		glLineWidth(getThickness());	// is thikness
 		glPointSize(getThickness());
 		
-		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		if (isSelected) GLC_SelectionMaterial::glExecute();
 		else glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
 	}
 	else if (m_pMaterial->getAddRgbaTexture())
@@ -433,13 +351,13 @@ void GLC_Geometry::glPropGeom()
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
 		m_pMaterial->glExecute();
-		if (m_IsSelected) GLC_SelectionMaterial::glExecute();		
+		if (isSelected) GLC_SelectionMaterial::glExecute();		
 	}
 	else
 	{
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
-		if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		if (isSelected) GLC_SelectionMaterial::glExecute();
 		else m_pMaterial->glExecute();
 	}
 		
