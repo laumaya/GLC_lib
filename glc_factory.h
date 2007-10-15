@@ -41,6 +41,7 @@
 #include "glc_material.h"
 #include "glc_texture.h"
 #include "glc_boundingbox.h"
+#include "glc_instance.h"
 
 // end of class to built
 
@@ -70,27 +71,21 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an GLC_Point
-	GLC_Point* createPoint(const GLC_Vector4d &coord) const;
-	GLC_Point* createPoint(double x, double y, double z) const;
+	GLC_Instance createPoint(const GLC_Vector4d &coord) const;
+	GLC_Instance createPoint(double x, double y, double z) const;
 		
 	//!  Create an GLC_Circle
-	GLC_Circle* createCircle(double radius, double angle= 2 * PI) const;
-	//! Create an GLC_Circle by copying another GLC_Circle
-	GLC_Circle* createCircle(const GLC_Geometry* pCircle) const;
+	GLC_Instance createCircle(double radius, double angle= 2 * PI) const;
 	
 	//! Create an GLC_Box
-	GLC_Box* createBox(double lx, double ly, double lz) const;
-	GLC_Box* createBox(const GLC_BoundingBox& boundingBox) const;
+	GLC_Instance createBox(double lx, double ly, double lz) const;
+	GLC_Instance createBox(const GLC_BoundingBox& boundingBox) const;
 	
 	//! Create an GLC_Cylinder
-	GLC_Cylinder* createCylinder(double radius, double length) const;
-	//! Create an GLC_Cylinder by copying another GLC_Cylinder
-	GLC_Cylinder* createCylinder(const GLC_Geometry* pCylinder) const;
+	GLC_Instance createCylinder(double radius, double length) const;
 
 	//! Create an GLC_Mesh with a QFile
-	GLC_Mesh2* createMesh(QFile &file) const;
-	//! Create an GLC_Mesh by copying another mesh
-	GLC_Mesh2* createMesh(const GLC_Geometry* pMesh) const;
+	GLC_Instance createMesh(QFile &file) const;
 	
 	//! Create default material
 	GLC_Material* createMaterial() const;

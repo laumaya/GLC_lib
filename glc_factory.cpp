@@ -65,42 +65,33 @@ GLC_Factory::~GLC_Factory()
 //////////////////////////////////////////////////////////////////////
 
 // Create an GLC_Point
-GLC_Point* GLC_Factory::createPoint(const GLC_Vector4d &coord) const
+GLC_Instance GLC_Factory::createPoint(const GLC_Vector4d &coord) const
 {
-	return new GLC_Point(coord);
+	GLC_Instance newPoint(new GLC_Point(coord));
+	return newPoint;
 }
 // Create an GLC_Point
-GLC_Point* GLC_Factory::createPoint(double x, double y, double z) const
+GLC_Instance GLC_Factory::createPoint(double x, double y, double z) const
 {
-	return new GLC_Point(x, y, z);
+	GLC_Instance newPoint(new GLC_Point(x, y, z));
+	return newPoint;
 }
 
 //  Create an GLC_Circle
-GLC_Circle* GLC_Factory::createCircle(double radius, double angle) const
+GLC_Instance GLC_Factory::createCircle(double radius, double angle) const
 {
-	return new GLC_Circle(radius, angle);
-}
-// Create an GLC_Circle by copying another GLC_Circle
-GLC_Circle* GLC_Factory::createCircle(const GLC_Geometry* pCircle) const
-{
-	const GLC_Circle* pTempCircle= dynamic_cast<const GLC_Circle*>(pCircle);
-	if (pTempCircle != NULL)
-	{
-		return new GLC_Circle(*pTempCircle);
-	}
-	else
-	{
-		return NULL;
-	}	
+	GLC_Instance newCircle(new GLC_Circle(radius, angle));
+	return newCircle;
 }
 // Create an GLC_Box
-GLC_Box* GLC_Factory::createBox(double lx, double ly, double lz) const
+GLC_Instance GLC_Factory::createBox(double lx, double ly, double lz) const
 {
-	return new GLC_Box(lx, ly, lz);
+	GLC_Instance newBox(new GLC_Box(lx, ly, lz));
+	return newBox;
 }
 
 // Create an GLC_Box
-GLC_Box* GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
+GLC_Instance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 {
 	const double lx= boundingBox.getUpper().getX() - boundingBox.getLower().getX();
 	const double ly= boundingBox.getUpper().getY() - boundingBox.getLower().getY();
@@ -108,48 +99,23 @@ GLC_Box* GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 	GLC_Box* pBox= new GLC_Box(lx, ly, lz);
 	pBox->translate(boundingBox.getCenter().getX(), boundingBox.getCenter().getY()
 					, boundingBox.getCenter().getZ());
-					
-	return pBox;
+	GLC_Instance newBox(pBox);				
+	return newBox;
 }
 
 // Create an GLC_Cylinder
-GLC_Cylinder* GLC_Factory::createCylinder(double radius, double length) const
+GLC_Instance GLC_Factory::createCylinder(double radius, double length) const
 {
-	return new GLC_Cylinder(radius, length);
-}
-// Create an GLC_Cylinder by copying another GLC_Cylinder
-GLC_Cylinder* GLC_Factory::createCylinder(const GLC_Geometry* pCylinder) const
-{
-	const GLC_Cylinder* pTempCylinder= dynamic_cast<const GLC_Cylinder*>(pCylinder);
-	if (pTempCylinder != NULL)
-	{
-		return new GLC_Cylinder(*pTempCylinder);
-	}
-	else
-	{
-		return NULL;
-	}
+	GLC_Instance newCylinder(new GLC_Cylinder(radius, length));
+	return newCylinder;
 }
 // Create an GLC_Mesh with a QFile
-GLC_Mesh2* GLC_Factory::createMesh(QFile &file) const
+GLC_Instance GLC_Factory::createMesh(QFile &file) const
 {
 	GLC_ObjToMesh2 objToMesh(m_pQGLContext);
 	connect(&objToMesh, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-	return objToMesh.CreateMeshFromObj(file);
-}
-
-// Create an GLC_Mesh by copying another mesh
-GLC_Mesh2* GLC_Factory::createMesh(const GLC_Geometry* pMesh) const
-{	
-	const GLC_Mesh2* pTempMesh= dynamic_cast<const GLC_Mesh2*>(pMesh);
-	if (pTempMesh != NULL)
-	{
-		return new GLC_Mesh2(*pTempMesh);
-	}
-	else
-	{
-		return NULL;
-	}
+	GLC_Instance newMesh(objToMesh.CreateMeshFromObj(file));
+	return newMesh;
 }
 
 // Create an GLC_Material
