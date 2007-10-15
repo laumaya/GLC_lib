@@ -90,11 +90,11 @@ public:
 // Private member
 //////////////////////////////////////////////////////////////////////
 
-private:
+protected:
 	//! The Unique ID of an GLC_Object
 	/*! Generated on GLC_Object creation*/
-	GLC_uint		m_Uid;
+	GLC_uint m_Uid;
 	//! Name of an GLC_Object
-	QString		m_Name;
+	QString m_Name;
 };
 #endif //GLC_OBJECT_H_
