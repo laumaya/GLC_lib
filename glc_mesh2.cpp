@@ -92,6 +92,12 @@ GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
 	return pBoundingBox;	
 }
 
+// Return a copy of the current geometry
+GLC_Geometry* GLC_Mesh2::clone() const
+{
+	return new GLC_Mesh2(*this);
+}
+
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -280,12 +286,12 @@ void GLC_Mesh2::glDraw()
 						}
 						m_MaterialHash[CurrentMaterialIndex].glExecute();
 						
-						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+						//if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 					}
 					else
 					{
 						m_pMaterial->glExecute();
-						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+						//if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 					}
 				}
 				IsNewFace= false;

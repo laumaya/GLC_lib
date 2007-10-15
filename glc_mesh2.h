@@ -84,6 +84,8 @@ public:
 	const bool containsMaterial(const int key) const {return m_MaterialHash.contains(key);}	
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
+	//! Return a copy of the geometry
+	virtual GLC_Geometry* clone() const;
 	//! return a vertex with key
 	const GLC_Vector3d getVertex(const int key) const {return m_CoordinateHash.value(key);}
 	//! return true if vertex key is in the mesh
