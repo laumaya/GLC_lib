@@ -85,16 +85,6 @@ public:
 	void setName(const QString name);
 //@}
 
-//////////////////////////////////////////////////////////////////////
-/*! \name OpenGL Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-public:
-	//! Virtual interface for OpenGL execution.
-	/*! This Virtual function have to be implemented in GLC_Geometry class.*/
-	virtual void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE) = 0;
-
-//@}
 
 //////////////////////////////////////////////////////////////////////
 // Private member
