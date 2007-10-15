@@ -28,6 +28,7 @@
 
 #include "glc_collection.h"
 #include "glc_material.h"
+#include "glc_openglexception.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor/Destructor
@@ -43,24 +44,21 @@ GLC_Collection::GLC_Collection()
 GLC_Collection::~GLC_Collection()
 {
 	// Delete all collection's elements and the collection bounding box
-	erase();
+	clear();
 }
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-// Add geometrys to the collection
-bool GLC_Collection::addGLC_Geom(GLC_Geometry* pGeom)
+// Add GLC_Instance in the collection
+bool GLC_Collection::add(GLC_Instance& node)
 {
-	CNodeMap::iterator iGeom= m_TheMap.find(pGeom->getID());
+	CNodeMap::iterator iNode= m_NodeMap.find(node.getID());
 	
-	if (iGeom == m_TheMap.end())
-	{	// Ok, la clé n'est pas prise
-		// Create an GLC_CollectionNode
-		GLC_CollectionNode collectionNode(pGeom);
-		// Add the collection Node
-		m_TheMap.insert(pGeom->getID(), collectionNode);
+	if (iNode == m_NodeMap.end())
+	{	// Ok, the key is not in the collection
+		m_NodeMap.insert(node.getID(), node);
 		
-		qDebug("GLC_Collection::AddGLC_Geom : Element Ajouté avec succès");
+		qDebug("GLC_Collection::addNode : Node succesfuly added");
 		
 		// Validité de la liste
 		m_ListIsValid= false;
@@ -68,225 +66,143 @@ bool GLC_Collection::addGLC_Geom(GLC_Geometry* pGeom)
 		
 	}
 	else
-	{	// KO, la clé est prise
-		qDebug("GLC_Collection::AddGLC_Geom : Element already in collection");
+	{	// KO, key aleady in the collection
+		qDebug("GLC_Collection::addNode : Node already in collection");
 		return false;
 	}
 	
 }
 
 // Delete geometry from the collection
-bool GLC_Collection::delGLC_Geom(GLC_uint Key)
+bool GLC_Collection::removeNode(GLC_uint Key)
 {
 
-	CNodeMap::iterator iGeom= m_TheMap.find(Key);
+	CNodeMap::iterator iNode= m_NodeMap.find(Key);
 		
-	if (iGeom != m_TheMap.end())
+	if (iNode != m_NodeMap.end())
 	{	// Ok, the key exist
 		
-		if (getNumberOfSelectedGeom() > 0)
+		if (getNumberOfSelectedNode() > 0)
 		{
 			// if the geometry is selected, unselect it
-			unselectGeom(Key);
+			unselectNode(Key);
 		}
 		
-		//delete iGeom.value();		// delete the collection Node
-		m_TheMap.remove(Key);		// Delete the conteneur
+		m_NodeMap.remove(Key);		// Delete the conteneur
 		// Search the list
 			
 		// List validity
 		m_ListIsValid= false;
 		
-		qDebug("GLC_Collection::DelGLC_Geom : Element succesfuly deleted");
+		qDebug("GLC_Collection::removeNode : Element succesfuly deleted");
 		return true;
 		
 	}
 	else
 	{	// KO, key doesn't exist
-		qDebug("GLC_Collection::DelGLC_Geom : Element not deleted");
+		qDebug("GLC_Collection::removeNode : Element not deleted");
 		return false;
 	}
 	
 }
-
-// Remove geometry from the collection
-bool GLC_Collection::remGLC_Geom(GLC_uint Key)
-{
-	CNodeMap::iterator iGeom= m_TheMap.find(Key);
-		
-	if (iGeom != m_TheMap.end())
-	{	// Ok, the key exist
-		// don't delete collection node
-		if (getNumberOfSelectedGeom() > 0)
-		{
-			// if the geometry is selected, unselect it
-			unselectGeom(Key);
-		}
-		
-		m_TheMap.remove(Key);		// Supprime le conteneur
-			
-		// List validity
-		m_ListIsValid= false;
-		
-		//qDebug("GLC_Collection::remGLC_Geom : Element Supprimé avec succès");
-		return true;
-		
-	}
-	else
-	{	// KO, key doesn't exist
-		qDebug("GLC_Collection::RemGLC_Geom : Element not deleted");
-		return false;
-	}
-	
-}
-
 
 // Clear the collection
-void GLC_Collection::erase(void)
+void GLC_Collection::clear(void)
 {
-	if (getNumberOfSelectedGeom() > 0)
-	{
-		// if the geometry is selected, unselect it
-		unselectAll();
-	}
-		
-	// Suppression des géométries
-	CNodeMap::iterator iEntry= m_TheMap.begin();
-	
-    while (iEntry != m_TheMap.constEnd())
-    {
-        // Supprime l'objet        
-        //delete iEntry.value();
-        ++iEntry;
-    }
-    // Vide la table de hachage principale
-    m_TheMap.clear();
-	
-	// Fin de la Suppression des géométries
+	// Clear Selected node Hash Table
+	m_SelectedNodes.clear();
+	// Clear main Hash table
+    m_NodeMap.clear();
 
-	// Supprime la liste d'affichage
-	deleteList();
-	// Fin des Suppressions des sous listes d'affichages
-	
+	// Delete display list
+	if (0 != m_ListID)
+	{
+		glDeleteLists(m_ListID, 1);
+		//qDebug() << "GLC_Collection::deleteList : Display list " << m_ListID << " Deleted";
+		m_ListID= 0;			
+	}
 	// delete the boundingBox
 	if (m_pBoundingBox != NULL)
 	{
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
-	}
-	
-	// Clear Selected Geometry Hash Table
-	m_SelectedGeom.clear();
-		
+	}		
 }
-// Select a geometry
-bool GLC_Collection::selectGeom(GLC_uint key)
+
+// Select a node
+bool GLC_Collection::selectNode(GLC_uint key)
 {
-	GLC_Geometry* pSelectedGeom;
-	CNodeMap::iterator iGeom= m_TheMap.find(key);
-	SelectedGeometryHash::iterator iSelectedGeom= m_SelectedGeom.find(key);
+	GLC_Instance* pSelectedNode;
+	CNodeMap::iterator iNode= m_NodeMap.find(key);
+	SelectedNodeHash::iterator iSelectedNode= m_SelectedNodes.find(key);
 		
-	if ((iGeom != m_TheMap.end()) && (iSelectedGeom == m_SelectedGeom.end()))
-	{	// Ok, the key exist and the geomtry is not selected
-		pSelectedGeom= iGeom.value().getGeometry();
-		m_SelectedGeom.insert(pSelectedGeom->getID(), pSelectedGeom);
+	if ((iNode != m_NodeMap.end()) && (iSelectedNode == m_SelectedNodes.end()))
+	{	// Ok, the key exist and the node is not selected
+		pSelectedNode= &(iNode.value());
+		m_SelectedNodes.insert(pSelectedNode->getID(), pSelectedNode);
 				
-		pSelectedGeom->select();		
+		pSelectedNode->select();		
 		m_ListIsValid= false;
 		
-		qDebug("GLC_Collection::selectGeom : Element succesfuly selected");
+		qDebug("GLC_Collection::selectNode : Element succesfuly selected");
 		return true;
 		
 	}
 	else
-	{	// KO, key doesn't exist or geomtry allready selected
-		qDebug("GLC_Collection::selectGeom : Element not selected");
+	{	// KO, key doesn't exist or node allready selected
+		qDebug("GLC_Collection::selectNode : Element not selected");
 		return false;
 	}
 	
 }
 
-// unselect a geometry
-bool GLC_Collection::unselectGeom(GLC_uint key)
+// unselect a node
+bool GLC_Collection::unselectNode(GLC_uint key)
 {
-	SelectedGeometryHash::iterator iSelectedGeom= m_SelectedGeom.find(key);
+	SelectedNodeHash::iterator iSelectedNode= m_SelectedNodes.find(key);
 		
-	if (iSelectedGeom != m_SelectedGeom.end())
-	{	// Ok, the key exist and the geomtry is selected
-		iSelectedGeom.value()->unselect();
+	if (iSelectedNode != m_SelectedNodes.end())
+	{	// Ok, the key exist and the node is selected
+		iSelectedNode.value()->unselect();
 		
-		m_SelectedGeom.remove(key);
+		m_SelectedNodes.remove(key);
 		
 		m_ListIsValid= false;
 		
-		qDebug("GLC_Collection::unselectGeom : Element succesfuly unselected");
+		qDebug("GLC_Collection::unselectNode : Node succesfuly unselected");
 		return true;
 		
 	}
 	else
-	{	// KO, key doesn't exist or geomtry allready selected
-		qDebug("GLC_Collection::unselectGeom : Element not unselected");
+	{	// KO, key doesn't exist or node allready selected
+		qDebug("GLC_Collection::unselectNode : Node not unselected");
 		return false;
 	}
 	
 }
 
 
-// unselect all geomtery
+// Unselect all Node
 void GLC_Collection::unselectAll()
 {
-	SelectedGeometryHash::iterator iSelectedGeom= m_SelectedGeom.begin();
+	SelectedNodeHash::iterator iSelectedNode= m_SelectedNodes.begin();
 	
-    while (iSelectedGeom != m_SelectedGeom.end())
+    while (iSelectedNode != m_SelectedNodes.end())
     {
-		iSelectedGeom.value()->unselect();    	
-        ++iSelectedGeom;
+		iSelectedNode.value()->unselect();    	
+        ++iSelectedNode;
     }
-    // Clear hash table
-    m_SelectedGeom.clear();	
+    // Clear selcted node hash table
+    m_SelectedNodes.clear();	
 }
 
-
-// Retourne le pointeur d'un élément de la collection
-GLC_Geometry* GLC_Collection::getElement(GLC_uint Key)
-{
-	CNodeMap::iterator iGeom= m_TheMap.find(Key);
-	
-	if (iGeom != m_TheMap.end())
-	{	// Ok, la clé est trouvé
-		return iGeom.value().getGeometry();
-	}
-	else
-	{	// KO, la clé n'est pas trouvé
-		return NULL;
-	}
-}
-
-// Retourne le pointeur d'un élément de la collection
-GLC_Geometry* GLC_Collection::getElement(int Index)
-{
-	// Warning, performance will be poor
-	int CurrentPos= 0;
-	CNodeMap::iterator iEntry= m_TheMap.begin();
-	GLC_Geometry* pGeom= NULL;
-	
-    while ((iEntry != m_TheMap.constEnd()) && (CurrentPos <= Index ))
-    {
-        // retrieve the object        
-        if(CurrentPos == Index) pGeom= iEntry.value().getGeometry();
-        ++iEntry;
-        ++CurrentPos;
-    }
- 	
- 	return pGeom;
-}
 
 //! return the collection Bounding Box
 GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 {
 	if (!((m_pBoundingBox != NULL) && m_ListIsValid) && (getNumber() > 0))
 	{
-		CNodeMap::iterator iEntry= m_TheMap.begin();
+		CNodeMap::iterator iEntry= m_NodeMap.begin();
 		if (m_pBoundingBox != NULL)
 		{
 			delete m_pBoundingBox;
@@ -294,7 +210,7 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 		}
 		m_pBoundingBox= new GLC_BoundingBox();
 		
-	    while (iEntry != m_TheMap.constEnd())
+	    while (iEntry != m_NodeMap.constEnd())
 	    {
 	        // Combine Collection BoundingBox with element Bounding Box
 	        m_pBoundingBox->combine(iEntry.value().getBoundingBox());	        
@@ -376,7 +292,7 @@ void GLC_Collection::glExecute(void)
 // Affiche les éléments de la collection
 void GLC_Collection::glDraw(void)
 {
-	CNodeMap::iterator iEntry= m_TheMap.begin();
+	CNodeMap::iterator iEntry= m_NodeMap.begin();
 	if (m_pBoundingBox != NULL)
 	{
 		delete m_pBoundingBox;
@@ -384,7 +300,7 @@ void GLC_Collection::glDraw(void)
 	}
 	m_pBoundingBox= new GLC_BoundingBox();
 	
-    while (iEntry != m_TheMap.constEnd())
+    while (iEntry != m_NodeMap.constEnd())
     {
         iEntry.value().glExecute();
         // Combine Collection BoundingBox with element Bounding Box
@@ -408,10 +324,10 @@ void GLC_Collection::glDraw(void)
 // Création des listes d'affichages des membres
 void GLC_Collection::createMemberLists(void)
 {
-	CNodeMap::iterator iEntry= m_TheMap.begin();
+	CNodeMap::iterator iEntry= m_NodeMap.begin();
 	//qDebug("GLC_Collection::CreateMemberList ENTER");
 	
-    while (iEntry != m_TheMap.constEnd())
+    while (iEntry != m_NodeMap.constEnd())
     {
     	if(!iEntry.value().getListValidity())
     	{
@@ -440,11 +356,11 @@ void GLC_Collection::createMemberLists(void)
 // Verifie si les listes membres sont à jour
 bool GLC_Collection::memberIsUpToDate(void)
 {
-	CNodeMap::iterator iEntry= m_TheMap.begin();
+	CNodeMap::iterator iEntry= m_NodeMap.begin();
 	
-    while (iEntry != m_TheMap.constEnd())
+    while (iEntry != m_NodeMap.constEnd())
     {
-    	if(iEntry.value().getListValidity() || !iEntry.value().getGeometry()->isVisible())
+    	if(iEntry.value().getListValidity())
     	{	// Géométrie valide ou non visible.
     		iEntry++;   		
     	}
@@ -465,38 +381,27 @@ bool GLC_Collection::createList(void)
 {
 	qDebug("GLC_Collection::CreateList");
 	
-	if(!m_ListID)		// La liste n'a jamais été créé
+	if(0 == m_ListID)		// list doesn't exist
 	{
 		m_ListID= glGenLists(1);
-
-		if (!m_ListID)	// ID de liste non obtenu
-		{
-			glDraw();
-			qDebug("GLC_Collection::CreateList : Display list nor created");
-			return false;	// Géométrie affiché mais pas de liste de créé
-		}
 	}
 
 	// Création de la liste
 	glNewList(m_ListID, GL_COMPILE_AND_EXECUTE);				
-		// Affichage des éléments de la collection
 		glDraw();
 	glEndList();
 	
-	// Validité de la liste
 	m_ListIsValid= true;
 
 	//qDebug("GLC_Collection::createList : Liste d'affichage %u créé", m_ListID);	
 
-	// Gestion erreur OpenGL
-	GLenum errCode;
-	if ((errCode= glGetError()) != GL_NO_ERROR)
+	// OpenGl error handling
+	GLenum error= glGetError();
+	if (error != GL_NO_ERROR)
 	{
-		const GLubyte* errString;
-		errString = gluErrorString(errCode);
-		qDebug("GLC_Collection::CreateList OPENGL ERROR %s\n", errString);
+		GLC_OpenGlException OpenGlException("GLC_Geometry::GlExecute ", error);
+		throw(OpenGlException);
 	}
 
-	return true;	// Géométrie affiché et liste créé
-
+	return true;
 }

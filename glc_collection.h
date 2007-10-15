@@ -29,21 +29,21 @@
 
 
 #include <QHash>
-#include "glc_collectionnode.h"
+#include "glc_instance.h"
 #include "glc_enum.h"
 
 class GLC_Material;
 
 //! Geometry hash table
-typedef QHash< GLC_uint, GLC_CollectionNode> CNodeMap;
-typedef QHash< GLC_uint, GLC_Geometry*> SelectedGeometryHash;
+typedef QHash< GLC_uint, GLC_Instance> CNodeMap;
+typedef QHash< GLC_uint, GLC_Instance*> SelectedNodeHash;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Collection
-/*! \brief GLC_Collection : GLC_Geometry flat collection */
+/*! \brief GLC_Collection : GLC_Instance flat collection */
 
 /*! An GLC_Collection contain  :
- * 		- A hash table containing GLC_CollectionNode pointer
+ * 		- A hash table containing GLC_Instance Class
  */
 //////////////////////////////////////////////////////////////////////
 
@@ -59,7 +59,7 @@ public:
 	GLC_Collection();
 	
 	//! Destructor
-	/*! Delete all geometry in the Hash Table and clear the Hash Table*/
+	/*! Delete all Node in the Hash Table and clear the Hash Table*/
 	virtual ~GLC_Collection();
 
 //@}
@@ -70,34 +70,29 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Return the number of elements in the collection
+	//! Return the number of Node in the collection
 	int getNumber(void) const
 	{
-		return m_TheMap.size();
+		return m_NodeMap.size();
 	}
-	//! return a GLC_CollectionNode from collection
+	//! Return a GLC_Instance from collection
 	/*! If the element is not found in collection a empty node is return*/
-	GLC_CollectionNode& getNode(GLC_uint Key) {return m_TheMap[Key];}
+	GLC_Instance& getNode(GLC_uint Key) {return m_NodeMap[Key];}
 	
-	//! return a pointer to an GLC_Geometry from collection
-	/*! If the element is not found in collection a NULL pointer is returned*/
-	GLC_Geometry* getElement(GLC_uint Key);
-	
-	//! return a pointer to an GLC_Geometry from collection
-	/*! If the element is not found in collection a NULL pointer is returned*/
-	GLC_Geometry* getElement(int Index);
-	
-	//! return the collection Bounding Box
+	//! Return the collection Bounding Box
 	GLC_BoundingBox getBoundingBox(void);
 	
-	//! return the number of geometry in the selection Hash
-	int getNumberOfSelectedGeom(void) const {return m_SelectedGeom.size();}
+	//! Return the number of Node in the selection Hash
+	int getNumberOfSelectedNode(void) const {return m_SelectedNodes.size();}
 	
-	//! Get the Hash table of Selected Object
-	SelectedGeometryHash* getSelections() {return &m_SelectedGeom;}
+	//! Get the Hash table of Selected Nodes
+	SelectedNodeHash* getSelections() {return &m_SelectedNodes;}
 	
-	//! return true if the element is selected
-	bool isSelected(GLC_uint key) const {return m_SelectedGeom.contains(key);}
+	//! Return true if the Node is in the collection
+	bool isInCollection(GLC_uint key) const {return m_NodeMap.contains(key);}
+
+	//! Return true if the element is selected
+	bool isSelected(GLC_uint key) const {return m_SelectedNodes.contains(key);}
 
 //@}
 
@@ -107,9 +102,9 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Add a GLC_Geometry in the collection
+	//! Add a GLC_Instance in the collection
 	/*! return true if success false otherwise*/
-	bool addGLC_Geom(GLC_Geometry* pGeom);
+	bool add(GLC_Instance& node);
 
 	//! Remove a GLC_Geometry from the collection and delete it
 	/*! 	- Find the GLC_Geometry in the collection
@@ -119,27 +114,18 @@ public:
 	 * 		- Remove the Display list container from collection
 	 * 		- Invalidate the collection OpenGL Display list
 	 * return true if success false otherwise*/
-	bool delGLC_Geom(GLC_uint Key);
-
-	//! Remove a GLC_Geometry from the collection
-	/*! 	- Find the GLC_Geometry in the collection
-	 * 		- Remove the Geometry container from collection
-	 * 		- Delete the associated OpenGL Display list
-	 * 		- Remove the Display list container from collection
-	 * 		- Invalidate the collection OpenGL Display list
-	 * return true if success false otherwise*/	
-	bool remGLC_Geom(GLC_uint Key);
+	bool removeNode(GLC_uint Key);
 
 	//! Remove and delete all GLC_Geometry from the collection
-	void erase(void);
+	void clear(void);
 	
-	//! Select a geometry
-	bool selectGeom(GLC_uint);
+	//! Select a Node
+	bool selectNode(GLC_uint);
 	
-	//! unselect a geometry
-	bool unselectGeom(GLC_uint);
+	//! unselect a node
+	bool unselectNode(GLC_uint);
 	
-	//! unselect all geomtery
+	//! unselect all node
 	void unselectAll();
 
 //@}
@@ -180,25 +166,13 @@ private:
 	//! Create Collection's OpenGL display list
 	bool createList(void);
 
-	//! Delete Collection's OpenGL display list
-	void deleteList(void)
-	{
-		//! if the display list is valid it's deleted
-		if (glIsList(m_ListID))
-		{
-			glDeleteLists(m_ListID, 1);
-			//qDebug() << "GLC_Collection::deleteList : Display list " << m_ListID << " Deleted";
-			m_ListID= 0;			
-		}
-	}
-
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 
 private:
-	//! GLC_CollectionNode Hash Table
-	CNodeMap m_TheMap;
+	//! GLC_Instance Hash Table
+	CNodeMap m_NodeMap;
 
 	//! Collection's OpenGL list ID
 	GLuint m_ListID;
@@ -209,8 +183,8 @@ private:
 	//! BoundingBox of the collection
 	GLC_BoundingBox* m_pBoundingBox;
 		
-	//! Selected Geometry Hash Table
-	SelectedGeometryHash m_SelectedGeom;
+	//! Selected Node Hash Table
+	SelectedNodeHash m_SelectedNodes;
 		
 };
 #endif //GLC_COLLECTION_H_
