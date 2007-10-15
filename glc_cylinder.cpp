@@ -92,6 +92,12 @@ GLC_BoundingBox* GLC_Cylinder::getBoundingBox(void) const
 	return pBoundingBox;	
 }
 
+// Return a copy of the current geometry
+GLC_Geometry* GLC_Cylinder::clone() const
+{
+	return new GLC_Cylinder(*this);
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

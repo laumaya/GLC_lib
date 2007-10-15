@@ -77,6 +77,9 @@ public:
 	//! return the cylinder bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 	
+	//! Return a copy of the geometry
+	virtual GLC_Geometry* clone() const;	
+	
 	//! return true if cylinder's ended are capped
 	bool EndedIsCaped() const {return m_EndedIsCaped;}
 	
