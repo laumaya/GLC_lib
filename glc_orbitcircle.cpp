@@ -109,42 +109,39 @@ void GLC_OrbitCircle::setRGBAColor(const QColor& color)
 void GLC_OrbitCircle::glExecute(double Profondeur)
 
 {
-	if (isVisible())
-	{
-		// orbit circle must be shown
-		glDisable(GL_DEPTH_TEST);
+	// orbit circle must be shown
+	glDisable(GL_DEPTH_TEST);
 
-		glPushMatrix();
-		
-		glLoadIdentity();
+	glPushMatrix();
+	
+	glLoadIdentity();
 
-		// Put circle at the middle of camera range of depth
-		glTranslated(0, 0, - (Profondeur) );
+	// Put circle at the middle of camera range of depth
+	glTranslated(0, 0, - (Profondeur) );
 
-		// Save Positionning matrix of arcs
-		const GLC_Matrix4x4 MatSavArc1(m_Arc1.getMatrix());
-		const GLC_Matrix4x4 MatSavArc2(m_Arc2.getMatrix());
+	// Save Positionning matrix of arcs
+	const GLC_Matrix4x4 MatSavArc1(m_Arc1.getMatrix());
+	const GLC_Matrix4x4 MatSavArc2(m_Arc2.getMatrix());
 
-		// Scale Z to 0. Project arcs in the main circle plane
-		// Avoid perspective problems
-		GLC_Matrix4x4 MatScaling;
-		MatScaling.setMatScaling(1,1,0);
-		m_Arc1.multMatrix(MatScaling);
-		m_Arc2.multMatrix(MatScaling);
+	// Scale Z to 0. Project arcs in the main circle plane
+	// Avoid perspective problems
+	GLC_Matrix4x4 MatScaling;
+	MatScaling.setMatScaling(1,1,0);
+	m_Arc1.multMatrix(MatScaling);
+	m_Arc2.multMatrix(MatScaling);
 
-		// Display arcs
-		m_Arc1.glExecute();
-		m_Arc2.glExecute();
+	// Display arcs
+	m_Arc1.glExecute(GL_COMPILE_AND_EXECUTE, false);
+	m_Arc2.glExecute(GL_COMPILE_AND_EXECUTE, false);
 
-		// Restore positionning matrix of arcs
-		m_Arc1.setMatrix(MatSavArc1);
-		m_Arc2.setMatrix(MatSavArc2);
-				
-		// Display base class (Main circle)
-		GLC_Circle::glExecute();
-		
-		glPopMatrix();
+	// Restore positionning matrix of arcs
+	m_Arc1.setMatrix(MatSavArc1);
+	m_Arc2.setMatrix(MatSavArc2);
+			
+	// Display base class (Main circle)
+	GLC_Circle::glExecute(GL_COMPILE_AND_EXECUTE, false);
+	
+	glPopMatrix();
 
-		glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-	}
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 }

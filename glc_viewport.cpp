@@ -309,7 +309,7 @@ void GLC_Viewport::glExecuteImagePlane()
 				m_ImagePlaneListID= glGenLists(1);
 			}		
 			glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
-				m_pImagePlane->glExecute(GL_COMPILE_AND_EXECUTE);
+				m_pImagePlane->glExecute(GL_COMPILE_AND_EXECUTE, false);
 			glEndList();
 			qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ImagePlaneListID << " created";
 		}
