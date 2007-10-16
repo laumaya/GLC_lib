@@ -292,9 +292,6 @@ void GLC_Geometry::glLoadTexture(void)
 // Geometry display
 void GLC_Geometry::glExecute(GLenum Mode, bool isSelected)
 {
-	// Object ID for selection purpose
-	glLoadName(getID());
-
 	// Save current OpenGL Matrix
 	glPushMatrix();
 
