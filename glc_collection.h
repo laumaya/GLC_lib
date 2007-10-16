@@ -77,7 +77,7 @@ public:
 	}
 	//! Return a GLC_Instance from collection
 	/*! If the element is not found in collection a empty node is return*/
-	GLC_Instance& getNode(GLC_uint Key) {return m_NodeMap[Key];}
+	GLC_Instance& getNode(GLC_uint Key);
 	
 	//! Return the collection Bounding Box
 	GLC_BoundingBox getBoundingBox(void);
@@ -114,16 +114,16 @@ public:
 	 * 		- Remove the Display list container from collection
 	 * 		- Invalidate the collection OpenGL Display list
 	 * return true if success false otherwise*/
-	bool removeNode(GLC_uint Key);
+	bool remove(GLC_uint Key);
 
 	//! Remove and delete all GLC_Geometry from the collection
 	void clear(void);
 	
 	//! Select a Node
-	bool selectNode(GLC_uint);
+	bool select(GLC_uint);
 	
 	//! unselect a node
-	bool unselectNode(GLC_uint);
+	bool unselect(GLC_uint);
 	
 	//! unselect all node
 	void unselectAll();
