@@ -40,7 +40,7 @@ GLC_Object::GLC_Object(const QString name)
 }
 // Copy constructor
 GLC_Object::GLC_Object(const GLC_Object& sourceObject)
-: m_Uid(GLC_GenID())
+: m_Uid(sourceObject.m_Uid)
 , m_Name(sourceObject.m_Name)
 {
 }
