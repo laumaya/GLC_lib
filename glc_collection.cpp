@@ -74,7 +74,7 @@ bool GLC_Collection::add(GLC_Instance& node)
 }
 
 // Delete geometry from the collection
-bool GLC_Collection::removeNode(GLC_uint Key)
+bool GLC_Collection::remove(GLC_uint Key)
 {
 
 	CNodeMap::iterator iNode= m_NodeMap.find(Key);
@@ -85,7 +85,7 @@ bool GLC_Collection::removeNode(GLC_uint Key)
 		if (getNumberOfSelectedNode() > 0)
 		{
 			// if the geometry is selected, unselect it
-			unselectNode(Key);
+			unselect(Key);
 		}
 		
 		m_NodeMap.remove(Key);		// Delete the conteneur
@@ -130,7 +130,7 @@ void GLC_Collection::clear(void)
 }
 
 // Select a node
-bool GLC_Collection::selectNode(GLC_uint key)
+bool GLC_Collection::select(GLC_uint key)
 {
 	GLC_Instance* pSelectedNode;
 	CNodeMap::iterator iNode= m_NodeMap.find(key);
@@ -157,7 +157,7 @@ bool GLC_Collection::selectNode(GLC_uint key)
 }
 
 // unselect a node
-bool GLC_Collection::unselectNode(GLC_uint key)
+bool GLC_Collection::unselect(GLC_uint key)
 {
 	SelectedNodeHash::iterator iSelectedNode= m_SelectedNodes.find(key);
 		
@@ -192,10 +192,15 @@ void GLC_Collection::unselectAll()
 		iSelectedNode.value()->unselect();    	
         ++iSelectedNode;
     }
-    // Clear selcted node hash table
+    // Clear selected node hash table
     m_SelectedNodes.clear();	
 }
 
+// Return a GLC_Instance from collection
+GLC_Instance& GLC_Collection::getNode(GLC_uint Key)
+{
+	return m_NodeMap[Key];
+}
 
 //! return the collection Bounding Box
 GLC_BoundingBox GLC_Collection::getBoundingBox(void)
@@ -329,7 +334,7 @@ void GLC_Collection::createMemberLists(void)
 	
     while (iEntry != m_NodeMap.constEnd())
     {
-    	if(!iEntry.value().getListValidity())
+    	if(!iEntry.value().getValidity())
     	{
     		iEntry.value().glExecute(GL_COMPILE);
 			if (m_pBoundingBox != NULL)
@@ -360,7 +365,7 @@ bool GLC_Collection::memberIsUpToDate(void)
 	
     while (iEntry != m_NodeMap.constEnd())
     {
-    	if(iEntry.value().getListValidity())
+    	if(iEntry.value().getValidity())
     	{	// Géométrie valide ou non visible.
     		iEntry++;   		
     	}
