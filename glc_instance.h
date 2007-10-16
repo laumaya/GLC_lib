@@ -83,8 +83,8 @@ public:
 	//! Get the geometry of the instance
 	GLC_Geometry* getGeometry(void);
 	
-	//! Get the validity of the OpenGL list
-	const bool getListValidity(void) const;
+	//! Get the validity of the Insatnce
+	const bool getValidity(void) const;
 	
 	//! Get the bounding box
 	GLC_BoundingBox getBoundingBox(void);
@@ -134,7 +134,7 @@ public:
 	
 	//! Unselect the instance
 	void unselect(void);
-	
+		
 	
 //@}
 
@@ -158,10 +158,9 @@ private:
 private:
 	//! compute the instance bounding box
 	void computeBoundingBox(void);
-	
 	//! Clear current instance
 	void clear();
-
+	
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
@@ -183,7 +182,7 @@ private:
 	GLC_Matrix4x4 m_MatPos;
 
 	//! instance validity
-	bool m_InstanceIsValid;
+	bool m_IsValid;
 
 	//! Selection state
 	bool m_IsSelected;
