@@ -52,25 +52,9 @@ GLC_Collection::~GLC_Collection()
 // Add GLC_Instance in the collection
 bool GLC_Collection::add(GLC_Instance& node)
 {
-	CNodeMap::iterator iNode= m_NodeMap.find(node.getID());
-	
-	if (iNode == m_NodeMap.end())
-	{	// Ok, the key is not in the collection
-		m_NodeMap.insert(node.getID(), node);
-		
-		qDebug("GLC_Collection::addNode : Node succesfuly added");
-		
-		// Validité de la liste
-		m_ListIsValid= false;
-		return true;
-		
-	}
-	else
-	{	// KO, key aleady in the collection
-		qDebug("GLC_Collection::addNode : Node already in collection");
-		return false;
-	}
-	
+	m_NodeMap.insert(node.getID(), node);
+	m_ListIsValid= false;
+	return true;	
 }
 
 // Delete geometry from the collection
@@ -196,10 +180,10 @@ void GLC_Collection::unselectAll()
     m_SelectedNodes.clear();	
 }
 
-// Return a GLC_Instance from collection
-GLC_Instance& GLC_Collection::getNode(GLC_uint Key)
+// Return a GLC_Instance pointer from the collection
+GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 {
-	return m_NodeMap[Key];
+	return &(m_NodeMap[Key]);
 }
 
 //! return the collection Bounding Box
@@ -314,7 +298,6 @@ void GLC_Collection::glDraw(void)
         ++iEntry;
     }
 	
-
 	// Gestion erreur OpenGL
 	GLenum errCode;
 	if ((errCode= glGetError()) != GL_NO_ERROR)
