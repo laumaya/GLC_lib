@@ -212,7 +212,12 @@ bool GLC_Material::textureIsLoaded() const
 	{
 		GLC_Texture* pTexture= new GLC_Texture(*(pMat->m_pTexture));
 		setTexture(pTexture);
-	}	
+	}
+	else if (NULL != m_pTexture)
+	{
+		delete m_pTexture;
+		m_pTexture= NULL;
+	}
 	// Ambient Color
 	m_AmbientColor= pMat->m_AmbientColor;
 	// Diffuse Color
