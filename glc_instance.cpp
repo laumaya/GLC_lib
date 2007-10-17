@@ -44,8 +44,8 @@ GLC_Instance::GLC_Instance()
 , m_PolyMode(GL_FILL)
 
 {
-	qDebug() << "GLC_Instance::GLC_Instance null instance ID = " << m_Uid;
-	qDebug() << "Number of instance" << (*m_pNumberOfInstance);
+	//qDebug() << "GLC_Instance::GLC_Instance null instance ID = " << m_Uid;
+	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
 }
 
 // Contruct instance with a geometry
@@ -61,8 +61,8 @@ GLC_Instance::GLC_Instance(GLC_Geometry* pGeom)
 , m_PolyMode(GL_FILL)
 
 {
-	qDebug() << "GLC_Instance::GLC_Instance ID = " << m_Uid;
-	qDebug() << "Number of instance" << (*m_pNumberOfInstance);
+	//qDebug() << "GLC_Instance::GLC_Instance ID = " << m_Uid;
+	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
 }
 
 // Copy constructor
@@ -82,8 +82,8 @@ GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
 {
 	// Increment the number of instance
 	++(*m_pNumberOfInstance);
-	qDebug() << "GLC_Instance::GLC_Instance CopyConstructor ID = " << m_Uid;
-	qDebug() << "Number of instance" << (*m_pNumberOfInstance);
+	//qDebug() << "GLC_Instance::GLC_Instance CopyConstructor ID = " << m_Uid;
+	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
 }
 
 
@@ -98,8 +98,8 @@ GLC_Instance& GLC_Instance::operator=(const GLC_Instance& inputNode)
 	
 	m_pNumberOfInstance= inputNode.m_pNumberOfInstance;
 	++(*m_pNumberOfInstance);
-	qDebug() << "GLC_Instance::operator= :ID = " << m_Uid;
-	qDebug() << "Number of instance" << (*m_pNumberOfInstance);
+	//qDebug() << "GLC_Instance::operator= :ID = " << m_Uid;
+	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
 	m_MatPos= inputNode.m_MatPos;
 	return *this;
 }
@@ -268,12 +268,12 @@ void GLC_Instance::glExecute(GLenum Mode)
 	// Geometry invalid or instance list ID == 0
 	if ((!m_pGeom->getValidity()) || (!m_IsValid))
 	{
-		qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pGeom->getValidity();
-		qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ListID;
+		qDebug() << "GLC_Instance::GlExecute: geometry validity : " << m_pGeom->getValidity();
+		qDebug() << "GLC_Instance::GlExecute: list ID : " << m_ListID;
 		
 		if (m_ListID == 0)
 		{
-			qDebug() << "GLC_CollectionNode::GlExecute: List not found";
+			qDebug() << "GLC_Instance::GlExecute: List not found";
 			m_ListID= glGenLists(1);
 		}		
 		glNewList(m_ListID, Mode);
@@ -286,7 +286,7 @@ void GLC_Instance::glExecute(GLenum Mode)
 			// Restore OpenGL Matrix
 			glPopMatrix();
 		glEndList();
-		qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ListID << " created";
+		qDebug() << "GLC_Instance::GlExecute : Display list " << m_ListID << " created";
 		m_IsValid= true;
 		computeBox= true;
 	}
@@ -346,16 +346,16 @@ void GLC_Instance::clear()
 			m_pGeom= NULL;
 		}
 		// delete instance counter
-		qDebug() << "GLC_Instance::clear ID = " << m_Uid;
-		qDebug() << "- Number of instance" << (*m_pNumberOfInstance);
+		//qDebug() << "GLC_Instance::clear ID = " << m_Uid;
+		//qDebug() << "- Number of instance" << (*m_pNumberOfInstance);
 		delete m_pNumberOfInstance;
 		m_pNumberOfInstance= NULL;
 		
 	}
 	else
 	{
-		qDebug() << "GLC_Instance::clear ID = " << m_Uid;
-		qDebug() << " - Number of instance" << (*m_pNumberOfInstance);
+		//qDebug() << "GLC_Instance::clear ID = " << m_Uid;
+		//qDebug() << " - Number of instance" << (*m_pNumberOfInstance);
 	}
 	
 	
