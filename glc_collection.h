@@ -77,7 +77,7 @@ public:
 	}
 	//! Return a GLC_Instance from collection
 	/*! If the element is not found in collection a empty node is return*/
-	GLC_Instance& getNode(GLC_uint Key);
+	GLC_Instance* getInstanceHandle(GLC_uint Key);
 	
 	//! Return the collection Bounding Box
 	GLC_BoundingBox getBoundingBox(void);
