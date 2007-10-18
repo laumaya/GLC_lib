@@ -250,21 +250,13 @@ void GLC_Collection::glExecute(void)
 		}
 		else
 		{
-			if(memberIsUpToDate())
+			createList();
+			// delete the boundingBox
+			if (m_pBoundingBox != NULL)
 			{
-				createList();
-				// delete the boundingBox
-				if (m_pBoundingBox != NULL)
-				{
-					delete m_pBoundingBox;
-					m_pBoundingBox= NULL;
-				}				
-			}
-			else
-			{
-				m_ListIsValid= false;
-				qDebug("GLC_Collection::GlExecute : CreatMemberList KO -> display list not use");
-			}
+				delete m_pBoundingBox;
+				m_pBoundingBox= NULL;
+			}				
 		}
 
 		// Gestion erreur OpenGL
@@ -341,28 +333,6 @@ void GLC_Collection::createMemberLists(void)
 //////////////////////////////////////////////////////////////////////
 // Fonctions de services privées
 //////////////////////////////////////////////////////////////////////
-// Verifie si les listes membres sont à jour
-bool GLC_Collection::memberIsUpToDate(void)
-{
-	CNodeMap::iterator iEntry= m_NodeMap.begin();
-	
-    while (iEntry != m_NodeMap.constEnd())
-    {
-    	if(iEntry.value().getValidity())
-    	{	// Géométrie valide ou non visible.
-    		iEntry++;   		
-    	}
-    	else
-    	{
- 			qDebug("GLC_Collection::MemberListIsUpToDate : Child display list not updated");
-			return false;
-    	}
-     }
-		
-	return true;	// Toutes les listes sont à jour
-
-}
-
 
 // Création de la liste d'affichage de la collection
 bool GLC_Collection::createList(void)

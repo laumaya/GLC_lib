@@ -160,9 +160,6 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! Check if Members are up to date (List + Geometry properties)
-	bool memberIsUpToDate(void);
-
 	//! Create Collection's OpenGL display list
 	bool createList(void);
 
