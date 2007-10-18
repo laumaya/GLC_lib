@@ -97,9 +97,9 @@ GLC_Instance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 	const double ly= boundingBox.getUpper().getY() - boundingBox.getLower().getY();
 	const double lz= boundingBox.getUpper().getZ() - boundingBox.getLower().getZ();
 	GLC_Box* pBox= new GLC_Box(lx, ly, lz);
-	pBox->translate(boundingBox.getCenter().getX(), boundingBox.getCenter().getY()
+	GLC_Instance newBox(pBox);
+	newBox.translate(boundingBox.getCenter().getX(), boundingBox.getCenter().getY()
 					, boundingBox.getCenter().getZ());
-	GLC_Instance newBox(pBox);				
 	return newBox;
 }
 
