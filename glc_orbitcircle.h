@@ -29,24 +29,26 @@
 
 
 #include "glc_circle.h"
-
+#include "glc_instance.h"
 //! The angle of arcs
 #define ARCANGLE (30 * PI / 180)	
 
-// Arc discretiisation
+// Arc discretisation
 #define ARCDISCRET 6	
 
+class GLC_Factory;
+class QGLContext;
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_OrbitCircle
 /*! \brief GLC_OrbitCircle : OpenGL 3D orbit Circle*/
 
 /*! An GLC_OrbitCircle is a wire geometry composed of 3d lines \n
- * It's an circle (GLC_Circle) with 2 arcs (GLC_Circle) of an angle of #ARCANGLE\n
+ * It's as a circle (GLC_Circle) with 2 arcs (GLC_Circle) of an angle of #ARCANGLE\n
  * The orbit Circle represent camera orientation.
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_OrbitCircle : public GLC_Circle  
+class GLC_OrbitCircle
 {
 
 //////////////////////////////////////////////////////////////////////
@@ -55,7 +57,28 @@ class GLC_OrbitCircle : public GLC_Circle
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an orbit Circle with a given radius, name and color.
-	GLC_OrbitCircle(const double &dRayon);
+	GLC_OrbitCircle(const double &, const QGLContext*);
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+	//! Return Color Red component
+	GLdouble getdRed(void)
+	{return m_MainCircle.getdRed();}
+
+	//! Return Color Green component
+	GLdouble getdGreen(void)
+	{return m_MainCircle.getdGreen();}
+	
+	//! Return Color blue component
+	GLdouble getdBlue(void)
+	{return m_MainCircle.getdBlue();}
+	
+	//! Return Color Alpha component
+	GLdouble getdAlpha(void)
+	{return m_MainCircle.getdAlpha();}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -64,15 +87,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Reimplented setRadius Function
-	void setRadius(double R)
-	{
-		
-		GLC_Circle::setRadius(R);	// Rayon de la classe de base		
-
-		m_Arc1.setRadius(R);
-		m_Arc2.setRadius(R);
-	}
+	//! Change the radius of the orbit circle
+	void setRadius(double);
 
 	//! Set Arcs orientation and position in concordance with mouse position
 	void setOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 &Matrice);
@@ -91,7 +107,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:	
 	//! orbit circle OpenGL Execution
-	virtual void glExecute(double Profondeur);
+	void glExecute(double Profondeur);
 	
 //@}
 
@@ -99,12 +115,16 @@ public:
 // Private Members
 //////////////////////////////////////////////////////////////////////
 private:
+	//! OpenGl context
+	GLC_Factory* m_pFactory;
+	//! Main Circle
+	GLC_Circle m_MainCircle;
 	//! Arc 1 showing orbit sphere orientation	
-	GLC_Circle m_Arc1;
+	GLC_Instance m_Arc1;
 	//! Arc 1 positionning Matrix
 	GLC_Matrix4x4 m_MatArc1;
 	//! Arc 2 showing orbit sphere orientation
-	GLC_Circle m_Arc2;
+	GLC_Instance m_Arc2;
 	//! Arc 2 positionning Matrix
 	GLC_Matrix4x4 m_MatArc2;
 

@@ -23,7 +23,8 @@
 *****************************************************************************/
 
 //! \file glc_orbitCircle.cpp implementation of the GLC_OrbitCircle class.
-
+#include <QGLContext>
+#include <glc_factory.h>
 #include "glc_circle.h"
 #include "glc_orbitcircle.h"
 
@@ -31,10 +32,13 @@
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon)
-: GLC_Circle(dRayon)
-, m_Arc1(dRayon, ARCANGLE)
-, m_Arc2(dRayon, ARCANGLE)
+GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const QGLContext *pContext)
+: m_pFactory(GLC_Factory::instance(pContext))
+, m_MainCircle(dRayon)
+, m_Arc1(m_pFactory->createCircle(dRayon, ARCANGLE))
+, m_MatArc1()
+, m_Arc2(m_pFactory->createCircle(dRayon, ARCANGLE))
+, m_MatArc2()
 {
 	// 2 circle arcs position
 	GLC_Matrix4x4 MatRot(AxeZ, -ARCANGLE / 2);
@@ -49,8 +53,26 @@ GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon)
 	m_MatArc2= MatRot;
 	
 	// Set arc discretion
-	m_Arc1.setDiscretion(ARCDISCRET);
-	m_Arc2.setDiscretion(ARCDISCRET);
+	GLC_Circle* pCircle;
+	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry());
+	pCircle->setDiscretion(ARCDISCRET);
+	pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry());
+	pCircle->setDiscretion(ARCDISCRET);
+}
+// Change the radius of the orbit circle
+void GLC_OrbitCircle::setRadius(double R)
+{
+	
+	// Main circle radius
+	m_MainCircle.setRadius(R);
+	
+	GLC_Circle* pCircle;	
+	// Arc 1 radius
+	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry());
+	pCircle->setRadius(R); 		
+	// Arc 2 radius
+	pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry());
+	pCircle->setRadius(R); 		
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -96,9 +118,9 @@ void GLC_OrbitCircle::mapArcs(const GLC_Matrix4x4 &Matrice)
 // overload function setColor(color);
 void GLC_OrbitCircle::setRGBAColor(const QColor& color)
 {
-	m_Arc1.setColor(color);
-	m_Arc2.setColor(color);
-	GLC_Geometry::setColor(color);
+	m_MainCircle.setColor(color);
+	m_Arc1.getGeometry()->setColor(color);
+	m_Arc2.getGeometry()->setColor(color);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -131,15 +153,15 @@ void GLC_OrbitCircle::glExecute(double Profondeur)
 	m_Arc2.multMatrix(MatScaling);
 
 	// Display arcs
-	m_Arc1.glExecute(GL_COMPILE_AND_EXECUTE, false);
-	m_Arc2.glExecute(GL_COMPILE_AND_EXECUTE, false);
+	m_Arc1.glExecute(GL_COMPILE_AND_EXECUTE);
+	m_Arc2.glExecute(GL_COMPILE_AND_EXECUTE);
 
 	// Restore positionning matrix of arcs
 	m_Arc1.setMatrix(MatSavArc1);
 	m_Arc2.setMatrix(MatSavArc2);
 			
 	// Display base class (Main circle)
-	GLC_Circle::glExecute(GL_COMPILE_AND_EXECUTE, false);
+	m_MainCircle.glExecute(GL_COMPILE_AND_EXECUTE, false);
 	
 	glPopMatrix();
 
