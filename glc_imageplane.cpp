@@ -124,7 +124,7 @@ void GLC_ImagePlane::updateZPosition(void)
 void GLC_ImagePlane::glDraw(void)
 {
 	const double LgImgSur2= m_dLgImage / 2;
-	
+	glPushMatrix();
 	glLoadIdentity();
 	glTranslated(0.0, 0.0, -m_dZpos);
 	glBegin(GL_QUADS);
@@ -136,7 +136,7 @@ void GLC_ImagePlane::glDraw(void)
 		glTexCoord2f(0.0f, 1.0f); glVertex3d(-LgImgSur2, LgImgSur2, 0.0);
 
 	glEnd();
-	
+	glPopMatrix();
 	// OpenGL error handler
 	GLenum error= glGetError();	
 	if (error != GL_NO_ERROR)
