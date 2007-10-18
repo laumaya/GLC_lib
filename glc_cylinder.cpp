@@ -87,8 +87,6 @@ GLC_BoundingBox* GLC_Cylinder::getBoundingBox(void) const
 	pBoundingBox->combine(lower);
 	pBoundingBox->combine(upper);
 	
-    
-    pBoundingBox->transform(m_MatPos);	
 	return pBoundingBox;	
 }
 

@@ -72,9 +72,7 @@ GLC_BoundingBox* GLC_Box::getBoundingBox(void) const
 	GLC_Vector3d upper(m_dLgX / 2.0, m_dLgY / 2.0, m_dLgZ / 2.0);
 	pBoundingBox->combine(lower);
 	pBoundingBox->combine(upper);
-	
-    
-    pBoundingBox->transform(m_MatPos);	
+	    
 	return pBoundingBox;	
 }
 
