@@ -34,7 +34,6 @@
 //////////////////////////////////////////////////////////////////////
 GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 :GLC_Object(name)
-, m_MatPos()				// default constructor identity matrix
 , m_ListID(0)				// By default Display List = 0
 , m_ListIsValid(false)		// By default Display List is invalid
 , m_GeometryIsValid(false)	// By default geometry is invalid
@@ -49,7 +48,6 @@ GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 
 GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 :GLC_Object(sourceGeom)
-, m_MatPos(sourceGeom.m_MatPos)
 , m_ListID(0)				// By default Display List = 0
 , m_ListIsValid(false)		// By default Display List is invalid
 , m_GeometryIsValid(false)	// By default geometry is invalid
@@ -107,11 +105,6 @@ GLdouble GLC_Geometry::getdBlue(void) const
 GLdouble GLC_Geometry::getdAlpha(void) const
 {
 	return static_cast<GLdouble>(m_pMaterial->getDiffuseColor().alphaF());
-}
-// Return transfomation 4x4Matrix
-const GLC_Matrix4x4 GLC_Geometry::getMatrix(void) const
-{
-	return m_MatPos;
 }
 // Return thickness
 const float GLC_Geometry::getThickness(void) const
@@ -171,39 +164,6 @@ void GLC_Geometry::setColor(const QColor& setCol)
 }
 
 
-// Geometry translation
-void GLC_Geometry::translate(double Tx, double Ty, double Tz)
-{
-	GLC_Matrix4x4 MatTrans(Tx, Ty, Tz);
-	
-	multMatrix(MatTrans);
-}
-
-
-// move Geometry with a 4x4Matrix
-void GLC_Geometry::multMatrix(const GLC_Matrix4x4 &MultMat)
-{
-	m_MatPos= MultMat * m_MatPos;
-
-	m_GeometryIsValid= false;
-}
-
-// Replace the Geometry Matrix
-void GLC_Geometry::setMatrix(const GLC_Matrix4x4 &SetMat)
-{
-	m_MatPos= SetMat;
-
-	m_GeometryIsValid= false;
-}
-
-// Reset the Geometry Matrix
-void GLC_Geometry::resetMatrix(void)
-{
-	m_MatPos.setToIdentity();
-
-	m_GeometryIsValid= false;
-}
-
 // Set Wire thickness
 void GLC_Geometry::setThikness(float SetEp)
 {
@@ -248,31 +208,21 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 //////////////////////////////////////////////////////////////////////
 
 // Create and execute Geometry's display list
-bool GLC_Geometry::createList(GLenum Mode)
+void GLC_Geometry::createList(GLenum Mode)
 {
 	if(!m_ListID)		// The list doesn't exist
 	{
 		m_ListID= glGenLists(1);
-
-		if (!m_ListID)	// List ID not obtain
-		{
-			glDraw();
-			qDebug("GLC_Geometry::createList ERROR Display list not created");
-			return false;	// Display geometry whithout OpenGL display list
-		}
+		Q_ASSERT(0 != m_ListID);
 	}
 	// List setting up
 	glNewList(m_ListID, Mode);
-				
-		// Geometrie set up and display
+		// Geometry set up and display
 		glDraw();	// Virtual function defined in concrete class
-
 	glEndList();
 
-	
 	// List is valid
 	m_ListIsValid= true;
-	return true;	// Display geometry with OpenGL display list
 	
 	// OpenGL error handler
 	GLenum error= glGetError();	
@@ -292,19 +242,16 @@ void GLC_Geometry::glLoadTexture(void)
 // Geometry display
 void GLC_Geometry::glExecute(GLenum Mode, bool isSelected)
 {
-	// Save current OpenGL Matrix
-	glPushMatrix();
-
 	// Define Geometry's property
 	glPropGeom(isSelected);
 
 	// Geometry validity set to true
 	m_GeometryIsValid= true;
 
-	if (!getListIsValid())
+	if (!m_ListIsValid)
 	{
 		// The list is not up to date or doesn't exist
-
+	
 		createList(Mode);
 	}
 	else
@@ -312,8 +259,6 @@ void GLC_Geometry::glExecute(GLenum Mode, bool isSelected)
 		glCallList(m_ListID);
 	}
 
-	glPopMatrix();
-	
 	// OpenGL error handler
 	GLenum error= glGetError();	
 	if (error != GL_NO_ERROR)
@@ -330,9 +275,7 @@ void GLC_Geometry::glExecute(GLenum Mode, bool isSelected)
 // Virtual interface for OpenGL Geometry properties.
 void GLC_Geometry::glPropGeom(bool isSelected)
 {
-	//! Change the current matrix
-	glMultMatrixd(m_MatPos.return_dMat());
-		
+	
 	if(m_IsWire)
 	{
 		glDisable(GL_TEXTURE_2D);

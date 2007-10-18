@@ -92,9 +92,6 @@ public:
 	//! Return Color Alpha component
 	GLdouble getdAlpha(void) const;
 	
-	//! Return transfomation 4x4Matrix
-	const GLC_Matrix4x4 getMatrix(void) const;
-	
 	//! Return thickness
 	const float getThickness(void) const;
 	
@@ -134,18 +131,6 @@ public:
 
 // Set Position	
 
-	//! translate Geometry
-	void translate(double Tx, double Ty, double Tz);
-
-	//! move Geometry with a 4x4Matrix
-	void multMatrix(const GLC_Matrix4x4 &MultMat);
-	
-	//! Replace the Geometry Matrix
-	void setMatrix(const GLC_Matrix4x4 &SetMat);
-	
-	//! Reset the Geometry Matrix
-	void resetMatrix(void);
-	
 	//! Set Wire thickness
 	void setThikness(float SetEp);
 
@@ -178,10 +163,10 @@ public:
 	 * 		- If Display list doesn't exist try to create IT by calling
 	 *        virtual function GLC_Geometry::glDraw
 	 */
-	void glExecute(GLenum Mode, bool);
+	virtual void glExecute(GLenum Mode, bool);
 	//GL_COMPILE_AND_EXECUTE
 	//! OpenGL list creation
-	bool createList(GLenum Mode);
+	virtual void createList(GLenum Mode);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -197,15 +182,13 @@ protected:
 	//! Virtual interface for OpenGL Geometry properties.
 	/*! This Virtual function can be modify in concrete class.*/
 	virtual void glPropGeom(bool);
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
 // Protected members
 //////////////////////////////////////////////////////////////////////
 protected:
-
-	//! Geometry matrix
-	GLC_Matrix4x4	m_MatPos;
 
 	//! Display list ID
 	GLuint m_ListID;
