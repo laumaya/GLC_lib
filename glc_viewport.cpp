@@ -63,7 +63,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 	QColor color;
 	color.setRgbF(1.0, 0.11372, 0.11372, 0.0);
 	// Create orbit circle of specified color
-	m_pOrbitCircle= new GLC_OrbitCircle(1.0);
+	m_pOrbitCircle= new GLC_OrbitCircle(1.0, m_pQGLWidget->context());
 	m_pOrbitCircle->setRGBAColor(color);
 	
 	// Compute orbit Circle
@@ -269,24 +269,6 @@ void GLC_Viewport::glExecuteTargetCam()	//! \todo Create a display list
 // Display background image
 void GLC_Viewport::glExecuteImagePlane()
 {	
-	/*
-	if (m_ImagePlaneListID == 0)
-	{
-		if (m_pImagePlane != NULL)
-		{			
-			m_pImagePlane->glLoadTexture();
-			//m_ImagePlaneListID= glGenLists(1);
-			qDebug() << "GLC_Viewport::glExecuteImagePlane : Display list " << m_ImagePlaneListID << " created";
-			//m_pImagePlane->createList(GL_COMPILE);
-			//glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
-				m_pImagePlane->glExecute();
-			//glEndList();					
-		}		
-	}
-	else
-	{
-		glCallList(m_ImagePlaneListID);
-	}*/
 	
 	if (m_pImagePlane != NULL)
 	{
