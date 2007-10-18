@@ -145,11 +145,17 @@ private:
 
 	//! if the geometry have a texture, load it
 	virtual void glLoadTexture(void);
+	
+	//! Specific glExecute method
+	virtual void glExecute(GLenum Mode, bool);
 
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
 	virtual void glDraw(void);
+	
+	//! Specific createList method
+	virtual void createList(GLenum Mode);
 
 //@}
 
@@ -157,6 +163,10 @@ private:
 //! Private services Functions
 //////////////////////////////////////////////////////////////////////
 private:
+
+	//! Create selection lis
+	void createSelectionList(GLenum Mode);
+	
 	//! Add coordinate index of a face
 	void addCoordIndex(const QVector<int> &Coordinate);
 	
@@ -198,7 +208,14 @@ private:
 	//! Texture index
 	IndexedList m_TextureIndex;
 	
+	//! Mesh number of faces
 	int m_NumberOfFaces;
+	
+	//! Selection Display list ID
+	GLuint m_SelectionListID;
+	
+	//! Selection state
+	bool m_IsSelected;
 	
 };
 #endif //GLC_MESH2_H_

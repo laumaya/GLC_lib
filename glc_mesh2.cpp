@@ -34,7 +34,17 @@
 //////////////////////////////////////////////////////////////////////
 GLC_Mesh2::GLC_Mesh2()
 :GLC_Geometry("Mesh", false)
+, m_CoordinateHash()
+, m_CoordinateIndex()
+, m_MaterialHash()
+, m_MaterialIndex()
+, m_NormalHash()
+, m_NormalIndex()
+, m_TextCoordinateHash()
+, m_TextureIndex()
 , m_NumberOfFaces(0)
+, m_SelectionListID(0)
+, m_IsSelected(false)
 {
 
 }
@@ -49,8 +59,9 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 , m_NormalIndex(meshToCopy.m_NormalIndex)
 , m_TextCoordinateHash(meshToCopy.m_TextCoordinateHash)
 , m_TextureIndex(meshToCopy.m_TextureIndex)
-
 , m_NumberOfFaces(meshToCopy.m_NumberOfFaces)
+, m_SelectionListID(0)
+, m_IsSelected(false)
 {
 	
 }
@@ -69,6 +80,13 @@ GLC_Mesh2::~GLC_Mesh2(void)
 
 	m_MaterialHash.clear();
 	m_MaterialIndex.clear();
+	
+	// If display list is valid : delete it
+	if (0 != m_SelectionListID)
+	{
+		glDeleteLists(m_SelectionListID, 1);
+	}
+	
 }
 /////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -88,8 +106,7 @@ GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
         ++iEntry;
     }
     
-    pBoundingBox->transform(m_MatPos);	
-	return pBoundingBox;	
+	return pBoundingBox;
 }
 
 // Return a copy of the current geometry
@@ -234,8 +251,76 @@ void GLC_Mesh2::glLoadTexture(void)
         // Load texture of mesh materials    
         iMaterial.value().glLoadTexture();
         ++iMaterial;
-    }
+    }	
+}
+
+// Specific glExecute method
+void GLC_Mesh2::glExecute(GLenum Mode, bool isSelected)
+{
+
+	if (isSelected)
+	{	
+		m_IsSelected= true;
+		// Define Geometry's property
+		glPropGeom(isSelected);
 	
+		// Geometry validity set to true
+		m_GeometryIsValid= true;
+	
+		if (!m_ListIsValid)
+		{
+			// The list is not up to date or doesn't exist
+		
+			createList(Mode);
+		}
+		else
+		{
+			glCallList(m_SelectionListID);
+		}
+	
+		// OpenGL error handler
+		GLenum error= glGetError();	
+		if (error != GL_NO_ERROR)
+		{
+			GLC_OpenGlException OpenGlException("GLC_Geometry::GlExecute ", error);
+			throw(OpenGlException);
+		}
+		m_IsSelected= false;
+	}
+	else
+	{	
+		GLC_Geometry::glExecute(Mode, isSelected);
+	}
+}
+
+// Specific createList method
+void GLC_Mesh2::createList(GLenum Mode)
+{
+	createSelectionList(Mode);
+	GLC_Geometry::createList(Mode);
+}
+// Create selection lis
+void GLC_Mesh2::createSelectionList(GLenum Mode)
+{
+	m_IsSelected= true;
+	if(!m_SelectionListID)		// The list doesn't exist
+	{
+		m_SelectionListID= glGenLists(1);
+		Q_ASSERT(0 != m_SelectionListID);
+	}
+	// List setting up
+	glNewList(m_SelectionListID, Mode);
+		// Geometry set up and display
+		glDraw();	// Virtual function defined in concrete class
+	glEndList();
+	m_IsSelected= false;
+	// OpenGL error handler
+	GLenum error= glGetError();	
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Mesh2::createList ", error);
+		throw(OpenGlException);
+	}		
 }
 
 // Virtual interface for OpenGL Geometry set up.
@@ -286,12 +371,12 @@ void GLC_Mesh2::glDraw()
 						}
 						m_MaterialHash[CurrentMaterialIndex].glExecute();
 						
-						//if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 					}
 					else
 					{
 						m_pMaterial->glExecute();
-						//if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 					}
 				}
 				IsNewFace= false;
