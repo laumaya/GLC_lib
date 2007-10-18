@@ -268,12 +268,12 @@ void GLC_Instance::glExecute(GLenum Mode)
 	// Geometry invalid or instance list ID == 0
 	if ((!m_pGeom->getValidity()) || (!m_IsValid))
 	{
-		qDebug() << "GLC_Instance::GlExecute: geometry validity : " << m_pGeom->getValidity();
-		qDebug() << "GLC_Instance::GlExecute: list ID : " << m_ListID;
+		//qDebug() << "GLC_Instance::GlExecute: geometry validity : " << m_pGeom->getValidity();
+		//qDebug() << "GLC_Instance::GlExecute: list ID : " << m_ListID;
 		
 		if (m_ListID == 0)
 		{
-			qDebug() << "GLC_Instance::GlExecute: List not found";
+			//qDebug() << "GLC_Instance::GlExecute: List not found";
 			m_ListID= glGenLists(1);
 		}		
 		glNewList(m_ListID, Mode);
@@ -286,7 +286,7 @@ void GLC_Instance::glExecute(GLenum Mode)
 			// Restore OpenGL Matrix
 			glPopMatrix();
 		glEndList();
-		qDebug() << "GLC_Instance::GlExecute : Display list " << m_ListID << " created";
+		//qDebug() << "GLC_Instance::GlExecute : Display list " << m_ListID << " created";
 		m_IsValid= true;
 		computeBox= true;
 	}
