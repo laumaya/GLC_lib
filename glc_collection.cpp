@@ -309,6 +309,14 @@ void GLC_Collection::createMemberLists(void)
 	
     while (iEntry != m_NodeMap.constEnd())
     {
+    	// Update Instance validity
+    	iEntry.value().setInstanceValidity();
+    	iEntry++;
+    }
+    
+	iEntry= m_NodeMap.begin();
+    while (iEntry != m_NodeMap.constEnd())
+    {
     	if(!iEntry.value().getValidity())
     	{
     		iEntry.value().glExecute(GL_COMPILE);
