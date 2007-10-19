@@ -56,6 +56,7 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_IsWire(sourceGeom.m_IsWire)
 
 {	
+	m_Uid= GLC_GenID();
 	// Material is copy here
 	setMaterial(new GLC_Material());
 	m_pMaterial->setMaterial(sourceGeom.getMaterial());
