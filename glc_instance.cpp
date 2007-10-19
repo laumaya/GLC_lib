@@ -256,6 +256,15 @@ void GLC_Instance::unselect(void)
 	m_IsValid= false;
 }
 
+// set Instance validity in case of multiple instance.
+void GLC_Instance::setInstanceValidity(void)
+{
+	if ((m_pGeom != NULL) && (m_IsValid))
+	{
+		m_IsValid= m_pGeom->getValidity();
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////

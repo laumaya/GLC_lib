@@ -136,6 +136,9 @@ public:
 	
 	//! Unselect the instance
 	void unselect(void);
+	
+	//! set Instance validity in case of multiple instance.
+	void setInstanceValidity(void);
 		
 	
 //@}
