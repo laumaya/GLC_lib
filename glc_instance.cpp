@@ -177,6 +177,14 @@ GLC_Instance GLC_Instance::clone() const
 	return cloneInstance;
 }
 
+// Instanciate the instance
+GLC_Instance GLC_Instance::instanciate()
+{
+	GLC_Instance instance(*this);
+	instance.m_Uid= GLC_GenID();
+	return instance;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

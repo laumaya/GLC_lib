@@ -99,6 +99,8 @@ public:
 	//! Clone the instance
 	GLC_Instance clone() const;
 	
+	GLC_Instance instanciate();
+	
 	
 //@}	
 	
