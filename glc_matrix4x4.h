@@ -27,6 +27,7 @@
 #ifndef GLC_MATRIX4X4_H_
 #define GLC_MATRIX4X4_H_
 
+#include <QVector>
 #include "glc_vector4d.h"
 
 //! Number of element in the matrix
@@ -116,6 +117,8 @@ public:
 	{
 		return dMatrice;
 	}
+	//! Return a vector which contains radians Euler angle of the matrix
+	QVector<double> toEuler(void) const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -146,6 +149,10 @@ public:
 
 	//! Set the matrix by its transpose
 	GLC_Matrix4x4& transpose(void);
+	
+	//! Set the matrix with Euler angle
+	GLC_Matrix4x4& fromEuler(double, double, double);
+	
 
 //@}
 

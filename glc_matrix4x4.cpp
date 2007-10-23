@@ -331,6 +331,35 @@ GLC_Matrix4x4& GLC_Matrix4x4::transpose(void)
 	
 	return *this;
 }
+
+// Set the matrix with Euler angle
+GLC_Matrix4x4& GLC_Matrix4x4::fromEuler(double angle_x, double angle_y, double angle_z)
+{
+    const double A= cos(angle_x);
+    const double B= sin(angle_x);
+    const double C= cos(angle_y);
+    const double D= sin(angle_y);
+    const double E= cos(angle_z);
+    const double F= sin(angle_z);
+ 
+    const double AD= A * D;
+    const double BD= B * D;
+ 
+    dMatrice[0]  = C * E;
+    dMatrice[4]  = -C * F;
+    dMatrice[8]  = -D;
+    dMatrice[1]  = -BD * E + A * F;
+    dMatrice[5]  = BD * F + A * E;
+    dMatrice[9]  = -B * C;
+    dMatrice[2]  = AD * E + B * F;
+    dMatrice[6]  = -AD * F + B * E;
+    dMatrice[10] = A * C;
+ 
+    dMatrice[12]  =  dMatrice[13] = dMatrice[14] = dMatrice[3] = dMatrice[7] = dMatrice[11] = 0.0;
+    dMatrice[15] =  1.0;
+	
+	return *this;
+}
 	
 
 
@@ -338,7 +367,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::transpose(void)
 // Private services function
 //////////////////////////////////////////////////////////////////////
 
-// Calcul du d�terminant d'une c�llule de la matrice 4x4
+// Compute matrix determinant
 const double GLC_Matrix4x4::getDeterminantLC(const int &Ligne, const int &Colonne) const
 {
 	int Signe;
@@ -352,6 +381,41 @@ const double GLC_Matrix4x4::getDeterminantLC(const int &Ligne, const int &Colonn
 
 	return Determinant;
 }		
+
+// Return a vector which contains radians Euler angle of the matrix
+QVector<double> GLC_Matrix4x4::toEuler(void) const
+{
+	double angle_x;
+	double angle_y;
+	double angle_z;
+	double tracex, tracey;
+	angle_y= -asin(dMatrice[8]);
+	double C= cos(angle_y);
+	
+	if (fabs(C) > EPSILON) // Gimball lock?
+	{
+		tracex= dMatrice[10] / C;
+		tracey= - dMatrice[9] / C;
+		angle_x= atan2( tracey, tracex); 
+		
+		tracex= dMatrice[0] / C;
+		tracey= - dMatrice[4] / C;
+		angle_z= atan2( tracey, tracex); 
+	}
+	else // Gimball lock?
+	{
+		angle_x= 0;
+		tracex= dMatrice[5] / C;
+		tracey= dMatrice[1] / C;
+		angle_z= atan2( tracey, tracex);
+	}
+	QVector<double> result;
+	result.append(fmod(angle_x, 2.0 * PI));
+	result.append(fmod(angle_y, 2.0 * PI));
+	result.append(fmod(angle_z, 2.0 * PI));
+	
+	return result;
+}
 
 
 
