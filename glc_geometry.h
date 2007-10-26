@@ -163,7 +163,7 @@ public:
 	 * 		- If Display list doesn't exist try to create IT by calling
 	 *        virtual function GLC_Geometry::glDraw
 	 */
-	virtual void glExecute(GLenum Mode, bool);
+	virtual void glExecute(GLenum Mode, bool, bool forceWire= false);
 	//GL_COMPILE_AND_EXECUTE
 	//! OpenGL list creation
 	virtual void createList(GLenum Mode);
@@ -181,7 +181,7 @@ protected:
 
 	//! Virtual interface for OpenGL Geometry properties.
 	/*! This Virtual function can be modify in concrete class.*/
-	virtual void glPropGeom(bool);
+	virtual void glPropGeom(bool, bool);
 	
 //@}
 

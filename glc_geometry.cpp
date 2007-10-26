@@ -241,10 +241,10 @@ void GLC_Geometry::glLoadTexture(void)
 }
 
 // Geometry display
-void GLC_Geometry::glExecute(GLenum Mode, bool isSelected)
+void GLC_Geometry::glExecute(GLenum Mode, bool isSelected, bool forceWire)
 {
 	// Define Geometry's property
-	glPropGeom(isSelected);
+	glPropGeom(isSelected, forceWire);
 
 	// Geometry validity set to true
 	m_GeometryIsValid= true;
@@ -274,10 +274,10 @@ void GLC_Geometry::glExecute(GLenum Mode, bool isSelected)
 //////////////////////////////////////////////////////////////////////
 
 // Virtual interface for OpenGL Geometry properties.
-void GLC_Geometry::glPropGeom(bool isSelected)
+void GLC_Geometry::glPropGeom(bool isSelected, bool forceWire)
 {
 	
-	if(m_IsWire)
+	if(m_IsWire || forceWire)
 	{
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
