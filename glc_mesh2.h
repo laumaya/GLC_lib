@@ -147,7 +147,7 @@ private:
 	virtual void glLoadTexture(void);
 	
 	//! Specific glExecute method
-	virtual void glExecute(GLenum Mode, bool);
+	virtual void glExecute(GLenum Mode, bool, bool forceWire= false);
 
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n

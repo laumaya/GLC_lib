@@ -255,14 +255,14 @@ void GLC_Mesh2::glLoadTexture(void)
 }
 
 // Specific glExecute method
-void GLC_Mesh2::glExecute(GLenum Mode, bool isSelected)
+void GLC_Mesh2::glExecute(GLenum Mode, bool isSelected, bool forceWire)
 {
 
 	if (isSelected)
 	{	
 		m_IsSelected= true;
 		// Define Geometry's property
-		glPropGeom(isSelected);
+		glPropGeom(isSelected, forceWire);
 	
 		// Geometry validity set to true
 		m_GeometryIsValid= true;
@@ -289,7 +289,7 @@ void GLC_Mesh2::glExecute(GLenum Mode, bool isSelected)
 	}
 	else
 	{	
-		GLC_Geometry::glExecute(Mode, isSelected);
+		GLC_Geometry::glExecute(Mode, isSelected, forceWire);
 	}
 }
 
@@ -355,7 +355,6 @@ void GLC_Mesh2::glDraw()
 				{	// If the material change, make it current
 					CurrentMaterialIndex= m_MaterialIndex.at(i);
 					//qDebug() << "GLC_Mesh2::glDraw : CurrentMaterialIndex" << CurrentMaterialIndex;
-					
 					MaterialHash::const_iterator iMaterial= m_MaterialHash.find(CurrentMaterialIndex);
 					// Check if the key is already use
 					if (iMaterial != m_MaterialHash.end())
@@ -370,12 +369,13 @@ void GLC_Mesh2::glDraw()
 							glDisable(GL_TEXTURE_2D);
 						}
 						m_MaterialHash[CurrentMaterialIndex].glExecute();
-						
+						glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());
 						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 					}
 					else
 					{
 						m_pMaterial->glExecute();
+						glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());
 						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 					}
 				}
