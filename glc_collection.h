@@ -127,6 +127,9 @@ public:
 	
 	//! unselect all node
 	void unselectAll();
+	
+	//! Set the polygon mode for all Instance
+	void setPolygonModeForAll(GLenum, GLenum);
 
 //@}
 	
