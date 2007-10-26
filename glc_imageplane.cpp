@@ -127,6 +127,7 @@ void GLC_ImagePlane::glDraw(void)
 	glPushMatrix();
 	glLoadIdentity();
 	glTranslated(0.0, 0.0, -m_dZpos);
+	glPolygonMode(m_PolyFace, m_PolyMode);
 	glBegin(GL_QUADS);
 
 		glNormal3d(0.0, 0.0, 1.0);	// Z
