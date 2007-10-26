@@ -180,6 +180,20 @@ void GLC_Collection::unselectAll()
     m_SelectedNodes.clear();	
 }
 
+// Set the polygon mode for all Instance
+void GLC_Collection::setPolygonModeForAll(GLenum face, GLenum mode)
+{
+	CNodeMap::iterator iEntry= m_NodeMap.begin();
+	
+    while (iEntry != m_NodeMap.constEnd())
+    {
+    	// Update Instance Polygon Mode
+    	iEntry.value().setPolygonMode(face, mode);
+    	iEntry++;
+    }
+
+}
+
 // Return a GLC_Instance pointer from the collection
 GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 {
