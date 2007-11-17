@@ -70,11 +70,12 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+	//! Return true if the collection is empty
+	bool isEmpty() const {return m_NodeMap.size() == 0;}
+	
 	//! Return the number of Node in the collection
-	int getNumber(void) const
-	{
-		return m_NodeMap.size();
-	}
+	int getNumber(void) const{return m_NodeMap.size();}
+	
 	//! Return a GLC_Instance from collection
 	/*! If the element is not found in collection a empty node is return*/
 	GLC_Instance* getInstanceHandle(GLC_uint Key);
