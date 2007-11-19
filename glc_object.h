@@ -83,6 +83,10 @@ public:
 public:
 	//! Set Object Name
 	void setName(const QString name);
+	
+	//! Assignement operator
+	GLC_Object &operator=(const GLC_Object&);	
+	
 //@}
 
 
