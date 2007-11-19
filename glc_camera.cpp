@@ -25,7 +25,6 @@
 //! \file glc_camera.cpp Implementation of the GLC_Camera class.
 
 #include <QtDebug>
-#include <assert.h>
 #include "glc_maths.h"
 #include "glc_camera.h"
 #include "glc_openglexception.h"
@@ -34,7 +33,7 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_Camera::GLC_Camera()
-:GLC_Object("Cam�ra"),
+: GLC_Object("Camera"),
 VectEye(0,0,1), VectUp(0,1,0)
 {
 	
@@ -42,10 +41,21 @@ VectEye(0,0,1), VectUp(0,1,0)
 
 GLC_Camera::GLC_Camera(const GLC_Vector4d &Eye, const GLC_Vector4d &Target, const GLC_Vector4d &Up
 					   , const char *pName)
-:GLC_Object(pName)
+: GLC_Object(pName)
 {
 	setCam(Eye, Target, Up);	
 	createMatComp();
+}
+
+// Copy constructor
+GLC_Camera::GLC_Camera(const GLC_Camera& cam)
+: GLC_Object(cam)
+, VectEye(cam.VectEye)
+, VectTarget(cam.VectTarget)
+, VectUp(cam.VectUp)
+, MatCompOrbit(cam.MatCompOrbit)
+{
+	
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -233,7 +243,7 @@ void GLC_Camera::setCam(GLC_Vector4d Eye, GLC_Vector4d Target, GLC_Vector4d Up)
 	/* VectUp and VectCam could not be parallel
 	 * VectUp could not be NULL
 	 * VectCam could not be NULL */
-	assert((Angle > EPSILON) && ((PI - Angle) > EPSILON));
+	//Q_ASSERT((Angle > EPSILON) && ((PI - Angle) > EPSILON));
 	if ( fabs(Angle - (PI / 2)) > EPSILON)
 	{	// Angle not equal to 90�
 		const GLC_Vector4d AxeRot(VectCam ^ Up);
@@ -254,6 +264,16 @@ void GLC_Camera::setDistEyeTarget(double Longueur)
     VectCam.setNormal(Longueur);
     VectEye= VectCam + VectTarget;
 }
+// Assignement operator
+GLC_Camera &GLC_Camera::operator=(const GLC_Camera& cam)
+{
+	GLC_Object::operator=(cam);
+	VectEye= cam.VectEye;
+	VectTarget= cam.VectTarget;
+	VectUp= cam.VectUp;
+	MatCompOrbit= cam.MatCompOrbit;
+	return *this;
+}	
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions

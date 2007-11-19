@@ -55,6 +55,8 @@ public:
 	 * VectCam could not be NULL */   
    GLC_Camera(const GLC_Vector4d &Eye, const GLC_Vector4d &Target, const GLC_Vector4d &Up,
 	   const char *pName="Caméra" );
+	//! Copy constructor
+	GLC_Camera(const GLC_Camera&);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -119,6 +121,10 @@ public:
  
    //! Set the distance between eye and target (move eye)
    void setDistEyeTarget(double Longueur);
+   
+	//! Assignement operator
+	GLC_Camera &operator=(const GLC_Camera&);	
+   
 
 //@}
    
