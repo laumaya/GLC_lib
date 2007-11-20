@@ -98,6 +98,13 @@ const GLC_Matrix4x4 GLC_Camera::getMatCompOrbit(void) const
 	return MatCompOrbit;
 }
 
+// equality operator
+bool GLC_Camera::operator==(const GLC_Camera& cam) const
+{
+	return (VectEye == cam.VectEye) && (VectTarget == cam.VectTarget)
+			&& (VectUp == cam.VectUp);
+}
+
 
 /////////////////////////////////////////////////////////////////////
 // Set Functions

@@ -81,6 +81,10 @@ public:
 
 	//! Get camera's orbit composition matrix
 	const GLC_Matrix4x4 getMatCompOrbit(void) const;
+	
+	//! equality operator
+	bool operator==(const GLC_Camera&) const;	
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
