@@ -237,9 +237,13 @@ void GLC_Instance::resetMatrix(void)
 // Polygon's display style
 void GLC_Instance::setPolygonMode(GLenum Face, GLenum Mode)
 {
-	m_PolyFace= Face;
-	m_PolyMode= Mode;
-	m_IsValid = false;
+	// Change the polygon mode only if there is a change
+	if ((m_PolyFace != Face) || (m_PolyMode != Mode))
+	{
+		m_PolyFace= Face;
+		m_PolyMode= Mode;
+		m_IsValid = false;
+	}
 }
 
 // Select the instance
