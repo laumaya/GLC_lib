@@ -303,7 +303,7 @@ void GLC_Instance::glExecute(GLenum Mode)
 			// Save current OpenGL Matrix
 			glPushMatrix();
 			glVisProperties();
-			m_pGeom->glExecute(Mode, m_IsSelected, (m_PolyMode == GL_LINE));
+			m_pGeom->glExecute(Mode, m_IsSelected, ((m_PolyMode != GL_FILL)));
 			// Restore OpenGL Matrix
 			glPopMatrix();
 		glEndList();
