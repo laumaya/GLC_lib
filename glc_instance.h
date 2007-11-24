@@ -99,7 +99,12 @@ public:
 	//! Clone the instance
 	GLC_Instance clone() const;
 	
+	//! Instanciate the instance
 	GLC_Instance instanciate();
+	
+	//! Get the Polygon mode off the instance
+	/*! Polygon Mode can Be : GL_POINT, GL_LINE, or GL_FILL*/
+	GLenum getPolygonMode() const {return m_PolyMode;}
 	
 	
 //@}	
@@ -129,6 +134,8 @@ public:
 	void resetMatrix(void);
 
 	//! Polygon's display style
+	/*! Face Polygon Mode can be : GL_FRONT_AND_BACK, GL_FRONT, or GL_BACK
+	 *  mode can be : GL_POINT, GL_LINE, or GL_FILL */
 	void setPolygonMode(GLenum Face, GLenum Mode);
 
 	//! Select the instance
