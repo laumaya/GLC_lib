@@ -82,6 +82,7 @@ GLC_Object &GLC_Object::operator=(const GLC_Object& object)
 {
 	m_Name= object.m_Name;
 	m_Uid= object.m_Uid;
+	return *this;
 }
 
 
