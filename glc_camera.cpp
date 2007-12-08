@@ -142,7 +142,7 @@ void GLC_Camera::pan(GLC_Vector4d VectDep)
 
 void GLC_Camera::zoom(double factor)
 {
-	assert(factor > 0);
+	Q_ASSERT(factor > 0);
 	// Eye->target vector
 	GLC_Vector4d VectCam(VectEye - VectTarget);
 	
