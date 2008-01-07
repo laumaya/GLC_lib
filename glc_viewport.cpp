@@ -49,7 +49,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_dPrevZoom(0)				// Previous zoom Factor
 // orbit circle definition
 , m_pOrbitCircle(NULL)			// orbit circle
-, m_dRatWinSph(0.90)			// Circle ratio size / window size
+, m_dRatWinSph(0.95)			// Circle ratio size / window size
 , m_OrbitCircleIsVisible(false)	// Show state of orbit Circle
 , m_pQGLWidget(GLWidget)		// Attached QGLWidget
 // the default backgroundColor
