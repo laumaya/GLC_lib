@@ -344,7 +344,7 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 //! select an object and return is UID
 GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 {
-	pGLWidget->updateGL(); // To avoid problem in some machine
+	//pGLWidget->updateGL(); // To avoid problem in some machine
 	const int BUFSIZE= 1024;
 	GLuint SelectBuf[BUFSIZE];
 
@@ -367,7 +367,6 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 
 	// End of selection mode, restore Visualisation state
 	endSelection();
-
 	GLC_uint ReturnID= 0;
 	if (NbrHits > 0)
 	{
