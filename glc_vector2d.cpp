@@ -1,8 +1,8 @@
 /****************************************************************************
 
  This file is part of the GLC-lib library.
- Copyright (C) 2005-2006 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 0.9.7, packaged on September, 2007.
+ Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 0.9.8, packaged on January, 2008.
 
  http://glc-lib.sourceforge.net
 
