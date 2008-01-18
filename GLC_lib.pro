@@ -7,7 +7,7 @@ CONFIG += exceptions \
     create_prl \
     warn_on
 TARGET = GLC_lib
-VERSION = 0.9.7.1
+VERSION = 0.9.8
 DEPENDPATH += .
 INCLUDEPATH += .
 
