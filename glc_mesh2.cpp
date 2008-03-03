@@ -24,7 +24,7 @@
 
 //! \file glc_mesh2.cpp implementation of the GLC_Mesh2 class.
 
-#include <assert.h>
+#include <QtDebug>
 #include "glc_mesh2.h"
 #include "glc_openglexception.h"
 #include "glc_selectionmaterial.h"
@@ -134,7 +134,7 @@ void GLC_Mesh2::modifyMaterial(int Index, GLC_Material &Material)
 {
 	MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
 	// Check if the key is find
-	assert(iMaterial != m_MaterialHash.end());
+	Q_ASSERT(iMaterial != m_MaterialHash.end());
 	
 	// Modify the material
 	m_MaterialHash.insert(Index, Material);
@@ -148,7 +148,7 @@ void GLC_Mesh2::addVertex(int Index, GLC_Vector3d Coordinate)
 	Vector3dHash::const_iterator iVector= m_CoordinateHash.find(Index);
 	// Check if the key is already use
 	
-	assert(iVector == m_CoordinateHash.end());
+	Q_ASSERT(iVector == m_CoordinateHash.end());
 	
 	// Add the coordinate to coordinate hash table
 	m_CoordinateHash.insert(Index, Coordinate);
@@ -161,7 +161,7 @@ void GLC_Mesh2::addNormal(int Index, GLC_Vector3d Normal)
 	Vector3dHash::const_iterator iVector= m_NormalHash.find(Index);
 	// Check if the key is already use
 	
-	assert(iVector == m_NormalHash.end());
+	Q_ASSERT(iVector == m_NormalHash.end());
 	
 	// Add the coordinate to coordinate hash table
 	m_NormalHash.insert(Index, Normal);
@@ -174,7 +174,7 @@ void GLC_Mesh2::addTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate)
 	Vector2dHash::const_iterator iVector= m_TextCoordinateHash.find(Index);
 	
 	// Check if the key is already in use	
-	assert(iVector == m_TextCoordinateHash.end());
+	Q_ASSERT(iVector == m_TextCoordinateHash.end());
 	
 	// Add the coordinate to coordinate hash table
 	m_TextCoordinateHash.insert(Index, TextureCoordinate);
@@ -299,7 +299,8 @@ void GLC_Mesh2::createList(GLenum Mode)
 	createSelectionList(Mode);
 	GLC_Geometry::createList(Mode);
 }
-// Create selection lis
+
+// Create selection list
 void GLC_Mesh2::createSelectionList(GLenum Mode)
 {
 	m_IsSelected= true;
@@ -341,7 +342,7 @@ void GLC_Mesh2::glDraw()
 	{
 		if (m_CoordinateIndex.at(i) == separator)
 		{			
-			assert((i != 0) && (!IsNewFace));	// the first index couldn't be a separator
+			Q_ASSERT((i != 0) && (!IsNewFace));	// the first index couldn't be a separator
 			// End of current face
 			glEnd();
 			// At the next round a new face will be create
@@ -391,11 +392,11 @@ void GLC_Mesh2::glDraw()
 			}
 				
 			// Vertex Normal
-			assert(i < m_NormalIndex.size());
+			Q_ASSERT(i < m_NormalIndex.size());
 			glNormal3dv(m_NormalHash[m_NormalIndex.at(i)].return_dVect());
 			
 			// Vertex 3D coordinate
-			assert(i < m_CoordinateIndex.size());
+			Q_ASSERT(i < m_CoordinateIndex.size());
 			glVertex3dv(m_CoordinateHash[m_CoordinateIndex.at(i)].return_dVect());
 		}		
 	}
@@ -459,7 +460,7 @@ void GLC_Mesh2::addCoordAndNormIndex(const QVector<int> &Coordinate, const QVect
 	m_NormalIndex.append(-1); // End of the face's normal index
 	
 	// Check if indexed list have the same size
-	assert(m_NormalIndex.size() == m_CoordinateIndex.size());
+	Q_ASSERT(m_NormalIndex.size() == m_CoordinateIndex.size());
 	
 }
 
