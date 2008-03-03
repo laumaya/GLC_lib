@@ -370,14 +370,15 @@ GLC_Matrix4x4& GLC_Matrix4x4::fromEuler(double angle_x, double angle_y, double a
 // Compute matrix determinant
 const double GLC_Matrix4x4::getDeterminantLC(const int &Ligne, const int &Colonne) const
 {
-	int Signe;
 	double Mat3x3[9];
 	double Determinant;
-
-	Signe= static_cast<int>(pow(-1, (Ligne + Colonne) ) );
+	
 	getSubMat(Ligne, Colonne, Mat3x3);
 	
-	Determinant= Signe * dMatrice[(Colonne + DIMMAT4X4) + Ligne] * getDeterminant3x3(Mat3x3);
+	if ( 0 == ((Ligne + Colonne) % 2)) // Even number
+		Determinant= dMatrice[(Colonne + DIMMAT4X4) + Ligne] * getDeterminant3x3(Mat3x3);
+	else
+		Determinant= - dMatrice[(Colonne + DIMMAT4X4) + Ligne] * getDeterminant3x3(Mat3x3);
 
 	return Determinant;
 }		
@@ -457,7 +458,7 @@ void GLC_Matrix4x4::getSubMat(const int &Ligne, const int &Colonne, double *Resu
 	}
 }
 
-// Calcul du dï¿½terminant d'une matrice 3x3
+// Calcul du déterminant d'une matrice 3x3
 const double GLC_Matrix4x4::getDeterminant3x3(const double *Mat3x3) const
 {
 	double Determinant;
@@ -501,17 +502,18 @@ const GLC_Matrix4x4 GLC_Matrix4x4::getCoMat4x4(void) const
 	int Colonne;
 	int Ligne;
 	int Index;
-	int Signe;
 
 	for (Colonne= 0; Colonne < DIMMAT4X4; Colonne++)
 	{
 		for (Ligne=0 ; Ligne < DIMMAT4X4; Ligne++)
 		{
-			Signe= static_cast<int>(pow(-1, Colonne + Ligne + 2));
-
+			
 			getSubMat(Ligne, Colonne, SubMat3x3);
 			Index= (Colonne * DIMMAT4X4) + Ligne;
-			CoMat.dMatrice[Index]=  Signe * getDeterminant3x3(SubMat3x3);
+			if (((Colonne + Ligne + 2) % 2) == 0) // Even Number
+				CoMat.dMatrice[Index]= getDeterminant3x3(SubMat3x3);
+			else
+				CoMat.dMatrice[Index]= -getDeterminant3x3(SubMat3x3);			
 		}
 	}
 
