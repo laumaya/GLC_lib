@@ -53,6 +53,40 @@ GLC_Product::~GLC_Product()
  	m_ChildParts.clear();
 	
 }
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// return true if product is parent of node
+bool GLC_Product::isParentOf(const GLC_uint key) const
+{
+	return m_ChildProducts.contains(key) || m_ChildParts.contains(key);
+}
+
+// Return the child product associated with the key
+GLC_Product* GLC_Product::childProduct(const GLC_uint key)
+{
+	if (m_ChildProducts.contains(key))
+	{
+		return m_ChildProducts[key];
+	}
+	else
+	{
+		return NULL;
+	}
+}
+// Return the child part associated with the key
+GLC_Part* GLC_Product::childPart(const GLC_uint key)
+{
+	if (m_ChildParts.contains(key))
+	{
+		return m_ChildParts[key];
+	}
+	else
+	{
+		return NULL;
+	}
+}
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
@@ -84,7 +118,7 @@ GLC_Product* GLC_Product::addChildProduct()
 {
 	GLC_Product* pChild= new GLC_Product(m_pWorld);
 	m_ChildProducts.insert(pChild->getID(), pChild);
-	pChild->setFather(this);	
+	pChild->setParent(this);	
 	return pChild;
 }
 
@@ -93,7 +127,7 @@ GLC_Product* GLC_Product::addChildProduct()
  {
  	GLC_Part* pChild= new GLC_Part(m_pWorld, instance);
 	m_ChildParts.insert(pChild->getID(), pChild);
-	pChild->setFather(this);	
+	pChild->setParent(this);	
 	return pChild; 		
  }
  
@@ -117,9 +151,9 @@ GLC_Product* GLC_Product::addChildProduct()
 // Update Product absolute matrix
 void GLC_Product::updateAbsoluteMatrix()
 {
-	if (NULL != m_pFather)
+	if (NULL != m_pParent)
 	{
-		m_AbsoluteMatrix= m_pFather->absoluteMatrix() * m_RelativeMatrix;
+		m_AbsoluteMatrix= m_pParent->absoluteMatrix() * m_RelativeMatrix;
 	} 
 }	
 
