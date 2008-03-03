@@ -73,10 +73,7 @@ public:
 	GLC_Material(const GLC_Material &InitMaterial);
 	
 	//! Remove material where used geometry
-	virtual ~GLC_Material(void);
-	
-	//! Return true if the material is used
-	bool isUnused() const {return m_WhereUsed.isEmpty();}
+	virtual ~GLC_Material(void);	
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -84,6 +81,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return true if the material is used
+	bool isUnused() const {return m_WhereUsed.isEmpty();}
 
 	//! Return true is material add attached texture
 	bool getAddRgbaTexture()
@@ -124,6 +123,15 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Assignement operator
+	/*! The Hash Table WhereUse
+	 *  is not modified
+	 */	
+	inline GLC_Material &operator=(const GLC_Material& mat)
+	{
+		setMaterial(&mat);
+		return *this;
+	}	
 
 	//! Set Material properties
 	/*! The Hash Table WhereUse
