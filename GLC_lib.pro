@@ -46,7 +46,9 @@ HEADERS += glc_maths.h \
     glc_world.h \
     glc_node.h \
     glc_product.h \
-    glc_part.h
+    glc_part.h \
+    glc_objmtlloader.h \
+    glc_objtoworld.h
     
 SOURCES += glc_vector4d.cpp \
     glc_vector3d.cpp \
@@ -80,7 +82,9 @@ SOURCES += glc_vector4d.cpp \
     glc_world.cpp \
     glc_node.cpp \
     glc_product.cpp \
-    glc_part.cpp
+    glc_part.cpp \
+    glc_objmtlloader.cpp \
+    glc_objtoworld.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
