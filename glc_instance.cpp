@@ -61,6 +61,7 @@ GLC_Instance::GLC_Instance(GLC_Geometry* pGeom)
 , m_PolyMode(GL_FILL)
 
 {
+	setName(pGeom->getName());
 	//qDebug() << "GLC_Instance::GLC_Instance ID = " << m_Uid;
 	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
 }
