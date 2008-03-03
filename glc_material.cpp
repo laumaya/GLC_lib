@@ -204,7 +204,6 @@ bool GLC_Material::textureIsLoaded() const
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-
 // Set Material properties
  void GLC_Material::setMaterial(const GLC_Material* pMat)
  {
@@ -226,7 +225,7 @@ bool GLC_Material::textureIsLoaded() const
 	m_SpecularColor= pMat->m_SpecularColor;
 	// Lighting emit
 	m_LightEmission= pMat->m_LightEmission;
- 	
+ 	// Shininess
  	m_fShininess= pMat->m_fShininess;
  	
  	updateUsed();
