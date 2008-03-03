@@ -29,6 +29,7 @@
 
 #include "glc_node.h"
 #include <QHash>
+#include <QList>
 #include "glc_instance.h"
 
 class GLC_Part;
@@ -52,6 +53,29 @@ public:
 	GLC_Product(GLC_World *);
 	//! Destructor
 	virtual ~GLC_Product();
+//@}
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! return true if product is parent of node
+	bool isParentOf(const GLC_uint) const;
+	//! Return the number of child
+	inline int childCount() const {return m_ChildProducts.size() + m_ChildParts.size();}
+	//! Return the number of product child
+	inline int productChildCount() const {return m_ChildProducts.size();}
+	//! Return the number of part child
+	inline int partChildCount() const {return m_ChildParts.size();}
+	//! Return the child product associated with the key
+	GLC_Product* childProduct(const GLC_uint);
+	//! Return the productChildList
+	inline QList<GLC_Product*> childProducts() {return m_ChildProducts.values();}
+	//! Return the child part associated with the key
+	GLC_Part* childPart(const GLC_uint);
+	//! Return the partChildList
+	inline QList<GLC_Part*> childParts() {return m_ChildParts.values();}
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
