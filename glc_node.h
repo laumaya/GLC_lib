@@ -67,6 +67,10 @@ public:
 	
 	//! Return the absolute matrix of the node
 	inline GLC_Matrix4x4 absoluteMatrix() const {return m_AbsoluteMatrix;}
+	
+	//! Return the parent
+	inline GLC_Node* parent() {return m_pParent;}
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -74,8 +78,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set the father of this node
-	void setFather(GLC_Node* );
+	//! Set the parent of this node
+	void setParent(GLC_Node* );
 	
 	//! Update Node absolute matrix
 	virtual void updateAbsoluteMatrix()= 0;	
@@ -92,8 +96,8 @@ private:
 protected:
 	//! the node's world
 	GLC_World* m_pWorld;
-	//! The father of this node
-	GLC_Node* m_pFather;	
+	//! The parent of this node
+	GLC_Node* m_pParent;	
 	//! Node reference
 	QString m_Ref;
 	//! Node relative Matrix

@@ -34,7 +34,7 @@
 GLC_Node::GLC_Node(GLC_World *pWorld)
 : m_Uid(GLC_GenID())
 , m_pWorld(pWorld)
-, m_pFather(NULL)
+, m_pParent(NULL)
 , m_Ref()
 , m_RelativeMatrix()
 , m_AbsoluteMatrix()
@@ -45,10 +45,10 @@ GLC_Node::~GLC_Node()
 {
 }
 
-// Set the father of this node
-void GLC_Node::setFather(GLC_Node* pNode)
+// Set the parent of this node
+void GLC_Node::setParent(GLC_Node* pNode)
 {
-	m_pFather= pNode;
+	m_pParent= pNode;
 	updateAbsoluteMatrix();
 }
 
