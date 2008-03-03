@@ -126,6 +126,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	}
 	qDebug() << "Coordinate number : " << m_nNbrVectPos;
 	qDebug() << "Normal number : " << m_nNbrVectNorm;
+	qDebug() << "Texture coordinate number : " << m_nNbrVectTexture;
 	
 	if (m_nNbrVectNorm == 0)
 	{
@@ -228,7 +229,7 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	}
 	
 	// Search Group
-	if (line.startsWith("g"))
+	else if (line.startsWith("g "))
 	{
 		m_FaceType = notSet;		
 	}
@@ -259,9 +260,9 @@ GLC_Vector3d GLC_ObjToMesh2::extract3dVect(QString &line)
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));				
 			qDebug() << message;
-			//GLC_FileFormatException fileFormatException(message, m_sFile);
-			//delete m_pMesh;
-			//throw(fileFormatException);		
+			GLC_FileFormatException fileFormatException(message, m_sFile);
+			delete m_pMesh;
+			throw(fileFormatException);		
 		}
 		else
 		{
