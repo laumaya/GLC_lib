@@ -53,9 +53,9 @@ void GLC_Part::move(const GLC_Matrix4x4 &matrix)
 // Update Part absolute matrix
 void GLC_Part::updateAbsoluteMatrix()
 {
-	if (NULL != m_pFather)
+	if (NULL != m_pParent)
 	{
-		m_AbsoluteMatrix= m_pFather->absoluteMatrix() * m_RelativeMatrix;
+		m_AbsoluteMatrix= m_pParent->absoluteMatrix() * m_RelativeMatrix;
 		m_pWorld->collection()->getInstanceHandle(m_RepID)->setMatrix(m_AbsoluteMatrix);
 	}
 }	
