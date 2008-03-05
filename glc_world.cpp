@@ -38,3 +38,18 @@ GLC_World::~GLC_World()
 	delete m_pRoot;
 	delete m_pCollection;
 }
+
+// Merge this world with another world
+void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
+{
+	GLC_Product* pAnotherRoot= anotherWorld.rootProduct();
+	if (pAnotherRoot->productChildCount() > 0)
+	{
+		m_pRoot->addChildProducts(pAnotherRoot->childProducts(), this);
+	}
+	if (pAnotherRoot->partChildCount() > 0)
+	{
+		m_pRoot->addChildParts(pAnotherRoot->childParts(), this);
+	}
+	
+}
