@@ -70,11 +70,13 @@ public:
 	//! Return the child product associated with the key
 	GLC_Product* childProduct(const GLC_uint);
 	//! Return the productChildList
-	inline QList<GLC_Product*> childProducts() {return m_ChildProducts.values();}
+	inline QList<GLC_Product*> childProducts() const {return m_ChildProducts.values();}
 	//! Return the child part associated with the key
 	GLC_Part* childPart(const GLC_uint);
 	//! Return the partChildList
-	inline QList<GLC_Part*> childParts() {return m_ChildParts.values();}
+	inline QList<GLC_Part*> childParts() const {return m_ChildParts.values();}
+	//! Clone the product
+	GLC_Product* clone(GLC_World *) const;
 	
 //@}
 
@@ -86,15 +88,21 @@ public:
 	//! Move the Product with specified matrix
 	void move(const GLC_Matrix4x4 &);
 	
-	//! Add a child product
+	//! Add a new child product
 	/*! Return the added product Uid
 	 */
-	GLC_Product* addChildProduct();
-	
+	GLC_Product* addNewChildProduct();
+
+	//! Add child products
+	void addChildProducts(QList<GLC_Product*>, GLC_World *);
+		
 	//! Add child part containing specified instance
 	/*! Return the added part Uid
 	 */
 	 GLC_Part* addChildPart(GLC_Instance&);
+
+	//! Add child parts
+	void addChildParts(QList<GLC_Part*>, GLC_World *);
 	 
 	 //! Remove a child with the specified UID
 	 /*! Return true if the child as been succesfully removed
