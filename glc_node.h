@@ -83,6 +83,9 @@ public:
 	
 	//! Update Node absolute matrix
 	virtual void updateAbsoluteMatrix()= 0;	
+	
+	//! Set the reference of this node
+	inline void setReference(const QString& ref) {m_Ref= ref;}
 //@}
 //////////////////////////////////////////////////////////////////////
 // private members
