@@ -35,6 +35,8 @@
 #include <glc_vector3d.h>
 #include <glc_vector2d.h>
 
+#include "glc_mesh2.h"
+
 enum FaceType
 {
 	notSet,
@@ -47,7 +49,6 @@ enum FaceType
 class GLC_World;
 class GLC_ObjMtlLoader;
 class QGLContext;
-class GLC_Mesh2;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ObjToWorld
@@ -108,6 +109,14 @@ private:
 	void setObjType(QString &);
 	//! compute face normal
 	GLC_Vector3d computeNormal(QVector<int> &);
+	//! Add Vertexs in the current mesh
+	void addVertexsToCurrentMesh(QVector<int> &);
+	//! Add Normals in the current mesh
+	void addNormalsToCurrentMesh(QVector<int> &);
+	//! Add Materials in the current mesh
+	void addMaterialsToCurrentMesh(QVector<int> &);
+	//! Add TextureCoordinate in the current mesh
+	void addTextureCoordinatesToCurrentMesh(QVector<int> &);
 		
 //////////////////////////////////////////////////////////////////////
 // Qt Signals
@@ -133,11 +142,11 @@ private:
 	GLC_Mesh2* m_pCurrentMesh;
 	
 	//! Coordinate hash table
-	QHash<int, GLC_Vector3d> m_VertexHash;
+	Vector3dHash m_VertexHash;
 	//! Normal hash table
-	QHash<int, GLC_Vector3d> m_NormalHash;
+	Vector3dHash m_NormalHash;
 	//! Texture coordinate Hash table
-	QHash<int, GLC_Vector2d> m_TextCoordinateHash;
+	Vector2dHash m_TextCoordinateHash;
 	
 	//! Index of the current vertex
 	int m_CurVertexIndex;

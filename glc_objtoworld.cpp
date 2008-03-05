@@ -32,7 +32,6 @@
 #include "glc_world.h"
 #include "glc_objmtlloader.h"
 #include "glc_fileformatexception.h"
-#include "glc_mesh2.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor
@@ -52,7 +51,7 @@ GLC_ObjToWorld::GLC_ObjToWorld(const QGLContext *pContext)
 , m_CurTextureCoordinateIndex(0)
 , m_FaceType(notSet)
 , m_CurrentMeshMaterials()
-, m_CurrentMeshMaterialIndex(0)
+, m_CurrentMeshMaterialIndex(-1)
 {
 }
 
@@ -177,8 +176,17 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	}
 	
 	file.close();
-
-		
+	
+	if (NULL != m_pCurrentMesh)
+	{
+		GLC_Instance instance(m_pCurrentMesh);
+		m_pCurrentMesh= NULL;
+		m_pWorld->rootProduct()->addChildPart(instance);
+		// Clear the list of material already used
+		m_CurrentMeshMaterials.clear();
+		m_CurrentMeshMaterialIndex= -1;
+	}
+			
 	return m_pWorld;
 		
 }
@@ -250,6 +258,8 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	// Search faces to update index
 	else if (line.startsWith("f "))
 	{
+		// If there is no group or object in the OBJ file
+		if (NULL == m_pCurrentMesh) changeGroup("GLC_Default");
 		line.remove(0,2); // Remove first 2 char
 		extractFaceIndex(line);	
 	}
@@ -263,7 +273,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	}
 	
 	// Search Group
-	else if (line.startsWith("g "))
+	else if (line.startsWith("g ") || line.startsWith("o "))
 	{
 		m_FaceType = notSet;
 		line.remove(0,2); // Remove first 2 char
@@ -274,13 +284,13 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 // Change current group
 void GLC_ObjToWorld::changeGroup(QString line)
 {
+	qDebug() << "GLC_ObjToWorld::changeGroup";
 	//////////////////////////////////////////////////////////////////
 	// Parse the line containing the group name
 	//////////////////////////////////////////////////////////////////		
 	QTextStream stream(&line);
 	QString groupName;
-	QString header;
-	if ((stream >> header >> groupName).status() == QTextStream::Ok)
+	if ((stream >> groupName).status() == QTextStream::Ok)
 	{
 		// If There is an space in the string to extracts
 		QString valueString2;
@@ -299,7 +309,7 @@ void GLC_ObjToWorld::changeGroup(QString line)
 			m_pWorld->rootProduct()->addChildPart(instance);
 			// Clear the list of material already used
 			m_CurrentMeshMaterials.clear();
-			m_CurrentMeshMaterialIndex= 0;
+			m_CurrentMeshMaterialIndex= -1;
 		}
 		m_pCurrentMesh= new GLC_Mesh2();
 		m_pCurrentMesh->setName(groupName);
@@ -417,7 +427,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 			vectorNormal.append(normalIndex);
 		}
 		
-		vectorMaterial.append(m_CurrentMaterialIndex);
+		vectorMaterial.append(m_CurrentMeshMaterialIndex);
 	}
 	//////////////////////////////////////////////////////////////////
 	// Check the number of face's vertex
@@ -432,10 +442,12 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 	//////////////////////////////////////////////////////////////////				
 	if (m_FaceType == coordinateAndNormal)
 	{
+		addVertexsToCurrentMesh(vectorCoordinate);
+		addNormalsToCurrentMesh(vectorNormal);
 		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 	}
 	else if (m_FaceType == coordinate)
-	{
+	{/*
 		m_pCurrentMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
 		for (int i= 0; i < vectorCoordinate.size(); ++i)
 		{
@@ -443,9 +455,10 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		}
 		m_CurComputedVectNorm++;
 		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		*/
 	}
 	else if (m_FaceType == coordinateAndTexture)
-	{
+	{/*
 		m_pCurrentMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
 		for (int i= 0; i < vectorCoordinate.size(); ++i)
 		{
@@ -453,9 +466,13 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		}
 		m_CurComputedVectNorm++;
 		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+		*/
 	}	
 	else if (m_FaceType == coordinateAndTextureAndNormal)
 	{
+		addVertexsToCurrentMesh(vectorCoordinate);
+		addNormalsToCurrentMesh(vectorNormal);
+		addTextureCoordinatesToCurrentMesh(vectorTextureCoordinate);
 		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
 	}
 	else
@@ -484,17 +501,18 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 		throw(fileFormatException);
 	}
 	//////////////////////////////////////////////////////////////////
-	// Check the number of face's vertex
+	// Check if the material is already loaded from the current mesh
 	//////////////////////////////////////////////////////////////////				
-	
+	qDebug() << "Material Name" << materialName;
 	if (m_CurrentMeshMaterials.contains(materialName))
 	{
 		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.value(materialName);
 	}
-	else
+	else if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
 	{
+		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.size();
 		m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex,*(m_pMtlLoader->getMaterial(materialName)));
-		m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterials.size());
+		m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterialIndex);
 	}
 			
 }
@@ -704,3 +722,46 @@ GLC_Vector3d GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
 	GLC_Vector3d resultNormal(normal.getX(), normal.getY(), normal.getZ());
 	return resultNormal;
 }
+
+// Add Vertexs in the current mesh
+void GLC_ObjToWorld::addVertexsToCurrentMesh(QVector<int> & vertexs)
+{
+	const int max= vertexs.count();
+	for (int i= 0; i < max; ++i)
+	{
+		m_pCurrentMesh->addVertex(vertexs[i], m_VertexHash[vertexs[i]]);
+	}
+}
+
+// Add Normals in the current mesh
+void GLC_ObjToWorld::addNormalsToCurrentMesh(QVector<int> & normals)
+{
+	const int max= normals.count();
+	for (int i= 0; i < max; ++i)
+	{
+		m_pCurrentMesh->addNormal(normals[i], m_NormalHash[normals[i]]);
+	}
+}
+
+// Add Materials in the current mesh
+void GLC_ObjToWorld::addMaterialsToCurrentMesh(QVector<int> & materials)
+{/*
+	const int max= materials.count();
+	for (int i= 0; i < max; ++i)
+	{
+		m_pCurrentMesh->addMaterial(materials[i], m_NormalHash[materials[i]]);
+	}
+	*/
+}
+// Add TextureCoordinate in the current mesh
+void GLC_ObjToWorld::addTextureCoordinatesToCurrentMesh(QVector<int> & textureCoordinates)
+{
+	const int max= textureCoordinates.count();
+	for (int i= 0; i < max; ++i)
+	{
+		m_pCurrentMesh->addTextureCoordinate(textureCoordinates[i], m_TextCoordinateHash[textureCoordinates[i]]);
+	}
+}
+
+
+
