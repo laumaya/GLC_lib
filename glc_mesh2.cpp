@@ -132,9 +132,9 @@ void GLC_Mesh2::addMaterial(int Index, GLC_Material &Material)
 // Modify material from mesh
 void GLC_Mesh2::modifyMaterial(int Index, GLC_Material &Material)
 {
-	MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
+	//MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
 	// Check if the key is find
-	Q_ASSERT(iMaterial != m_MaterialHash.end());
+	//Q_ASSERT(iMaterial != m_MaterialHash.end());
 	
 	// Modify the material
 	m_MaterialHash.insert(Index, Material);
@@ -148,11 +148,11 @@ void GLC_Mesh2::addVertex(int Index, GLC_Vector3d Coordinate)
 	Vector3dHash::const_iterator iVector= m_CoordinateHash.find(Index);
 	// Check if the key is already use
 	
-	Q_ASSERT(iVector == m_CoordinateHash.end());
-	
-	// Add the coordinate to coordinate hash table
-	m_CoordinateHash.insert(Index, Coordinate);
-	
+	if (iVector == m_CoordinateHash.end())
+	{
+		// Add the coordinate to coordinate hash table
+		m_CoordinateHash.insert(Index, Coordinate);
+	}
 }
 
 // Add Normal
@@ -161,10 +161,11 @@ void GLC_Mesh2::addNormal(int Index, GLC_Vector3d Normal)
 	Vector3dHash::const_iterator iVector= m_NormalHash.find(Index);
 	// Check if the key is already use
 	
-	Q_ASSERT(iVector == m_NormalHash.end());
-	
-	// Add the coordinate to coordinate hash table
-	m_NormalHash.insert(Index, Normal);
+	if (iVector == m_NormalHash.end())
+	{
+		// Add the coordinate to coordinate hash table
+		m_NormalHash.insert(Index, Normal);
+	}
 	
 }
 
@@ -174,10 +175,11 @@ void GLC_Mesh2::addTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate)
 	Vector2dHash::const_iterator iVector= m_TextCoordinateHash.find(Index);
 	
 	// Check if the key is already in use	
-	Q_ASSERT(iVector == m_TextCoordinateHash.end());
-	
-	// Add the coordinate to coordinate hash table
-	m_TextCoordinateHash.insert(Index, TextureCoordinate);
+	if (iVector == m_TextCoordinateHash.end())
+	{	
+		// Add the coordinate to coordinate hash table
+		m_TextCoordinateHash.insert(Index, TextureCoordinate);
+	}
 	
 }
 
