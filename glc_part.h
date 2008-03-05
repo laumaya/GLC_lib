@@ -57,6 +57,9 @@ public:
 public:
 	//! return the part's representation ID
 	inline GLC_uint getRepID() const {return m_RepID;}
+	//! Clone the part
+	GLC_Part* clone(GLC_World *) const;
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////

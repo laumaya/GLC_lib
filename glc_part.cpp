@@ -38,6 +38,17 @@ GLC_Part::~GLC_Part()
 {
 	m_pWorld->collection()->remove(m_RepID);
 }
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Clone the part
+GLC_Part* GLC_Part::clone(GLC_World * pWorld) const
+{
+	GLC_Instance instance(m_pWorld->collection()->getInstanceHandle(m_RepID)->instanciate());
+	GLC_Part* pReturnPart= new GLC_Part(pWorld, instance);
+	return pReturnPart;
+}
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
