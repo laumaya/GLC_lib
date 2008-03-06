@@ -71,7 +71,7 @@ public:
 	void move(const GLC_Matrix4x4 &);
 	
 	//! Update Part absolute matrix
-	void updateAbsoluteMatrix();	
+	void updateAbsoluteMatrix();
 	
 //@}
 
