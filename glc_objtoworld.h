@@ -37,15 +37,6 @@
 
 #include "glc_mesh2.h"
 
-enum FaceType
-{
-	notSet,
-	coordinate,
-	coordinateAndTexture,
-	coordinateAndNormal,
-	coordinateAndTextureAndNormal
-};
-
 class GLC_World;
 class GLC_ObjMtlLoader;
 class QGLContext;
@@ -113,8 +104,6 @@ private:
 	void addVertexsToCurrentMesh(QVector<int> &);
 	//! Add Normals in the current mesh
 	void addNormalsToCurrentMesh(QVector<int> &);
-	//! Add Materials in the current mesh
-	void addMaterialsToCurrentMesh(QVector<int> &);
 	//! Add TextureCoordinate in the current mesh
 	void addTextureCoordinatesToCurrentMesh(QVector<int> &);
 		
@@ -163,6 +152,9 @@ private:
 	
 	//! current mesh material index
 	int m_CurrentMeshMaterialIndex;
+	
+	//! Current Computed vector normal index
+	int m_CurComputedVectNormIndex;
 
 };
 
