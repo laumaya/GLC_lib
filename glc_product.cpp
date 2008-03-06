@@ -29,29 +29,24 @@
 
 GLC_Product::GLC_Product(GLC_World *pWorld)
 : GLC_Node(pWorld)
+, m_ChildProducts()
+, m_ChildParts()
 {
+}
+
+// Copy constructor
+GLC_Product::GLC_Product(const GLC_Product& product)
+: GLC_Node(product)
+, m_ChildProducts()
+, m_ChildParts()
+{
+	addChildProducts(product.childProducts(), m_pWorld);
+	addChildParts(product.childParts(), m_pWorld);
 }
 
 GLC_Product::~GLC_Product()
 {
-	// Delete Child product
- 	QHashIterator<GLC_uint, GLC_Product*> productIterator(m_ChildProducts);
- 	while (productIterator.hasNext())
- 	{
-     	productIterator.next();
-     	delete productIterator.value();
- 	}
- 	m_ChildProducts.clear();
- 	
-	// Delete Child part
- 	QHashIterator<GLC_uint, GLC_Part*> partIterator(m_ChildParts);
- 	while (partIterator.hasNext())
- 	{
-     	partIterator.next();
-     	delete partIterator.value();
- 	}
- 	m_ChildParts.clear();
-	
+	removeChilds();
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -189,5 +184,36 @@ void GLC_Product::updateAbsoluteMatrix()
 	{
 		m_AbsoluteMatrix= m_pParent->absoluteMatrix() * m_RelativeMatrix;
 	} 
-}	
+}
 
+// Clear child part and child product
+void GLC_Product::removeChilds()
+{
+	// Delete Child product
+ 	QHashIterator<GLC_uint, GLC_Product*> productIterator(m_ChildProducts);
+ 	while (productIterator.hasNext())
+ 	{
+     	productIterator.next();
+     	delete productIterator.value();
+ 	}
+ 	m_ChildProducts.clear();
+ 	
+	// Delete Child part
+ 	QHashIterator<GLC_uint, GLC_Part*> partIterator(m_ChildParts);
+ 	while (partIterator.hasNext())
+ 	{
+     	partIterator.next();
+     	delete partIterator.value();
+ 	}
+ 	m_ChildParts.clear();	
+}
+
+// Assignement operator
+GLC_Product& GLC_Product::operator=(const GLC_Product& product)
+{
+	removeChilds();
+	GLC_Node::operator=(product);
+	addChildProducts(product.childProducts(), m_pWorld);
+	addChildParts(product.childParts(), m_pWorld);
+	return *this;
+}
