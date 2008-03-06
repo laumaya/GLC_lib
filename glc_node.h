@@ -50,6 +50,8 @@ class GLC_Node
 public:
 	//! Constructor of the node
 	GLC_Node(GLC_World *);
+	//! Copy Constructor
+	GLC_Node(const GLC_Node&);
 	//! Destructor of the node
 	virtual ~GLC_Node();	
 //@}
@@ -87,6 +89,16 @@ public:
 	//! Set the reference of this node
 	inline void setReference(const QString& ref) {m_Ref= ref;}
 //@}
+
+//////////////////////////////////////////////////////////////////////
+/*! @name Operator Overload */
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Assignement operator
+	GLC_Node& operator=(const GLC_Node&);
+//@}
+
 //////////////////////////////////////////////////////////////////////
 // private members
 //////////////////////////////////////////////////////////////////////
