@@ -35,15 +35,6 @@
 
 typedef QHash<QString, int> MaterialHashMap;
 
-enum FaceType
-{
-	notSet,
-	coordinate,
-	coordinateAndTexture,
-	coordinateAndNormal,
-	coordinateAndTextureAndNormal
-};
-
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ObjToMesh2
 /*! \brief GLC_ObjToMesh2 : Create an GLC_Mesh from obj file */
