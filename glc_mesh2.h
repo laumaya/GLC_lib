@@ -41,6 +41,15 @@ typedef QHash<int, GLC_Material> MaterialHash;
 
 typedef QList<int> IndexedList;
 
+enum FaceType
+{
+	notSet,
+	coordinate,
+	coordinateAndTexture,
+	coordinateAndNormal,
+	coordinateAndTextureAndNormal
+};
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Mesh2
 /*! \brief GLC_Mesh2 : OpenGL 3D Mesh*/
