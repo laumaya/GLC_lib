@@ -40,6 +40,16 @@ GLC_Node::GLC_Node(GLC_World *pWorld)
 , m_AbsoluteMatrix()
 {
 }
+// Copy constructor
+GLC_Node::GLC_Node(const GLC_Node& node)
+: m_Uid(node.m_Uid)
+, m_pWorld(node.m_pWorld)
+, m_pParent(node.m_pParent)
+, m_Ref(node.m_Ref)
+, m_RelativeMatrix(node.m_RelativeMatrix)
+, m_AbsoluteMatrix(node.m_AbsoluteMatrix)
+{
+}
 
 GLC_Node::~GLC_Node()
 {
@@ -52,6 +62,17 @@ void GLC_Node::setParent(GLC_Node* pNode)
 	updateAbsoluteMatrix();
 }
 
+// Assignement operator
+GLC_Node& GLC_Node::operator=(const GLC_Node& node)
+{
+	m_Uid= node.m_Uid;
+	m_pWorld= node.m_pWorld;
+	m_pParent= node.m_pParent;
+	m_Ref= node.m_Ref;
+	m_RelativeMatrix= node.m_RelativeMatrix;
+	m_AbsoluteMatrix= node.m_AbsoluteMatrix;
+	return *this;	
+}
 
 
 
