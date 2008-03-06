@@ -42,6 +42,7 @@
 #include "glc_texture.h"
 #include "glc_boundingbox.h"
 #include "glc_instance.h"
+#include "glc_world.h"
 
 // end of class to built
 
@@ -86,6 +87,9 @@ public:
 
 	//! Create an GLC_Mesh with a QFile
 	GLC_Instance createMesh(QFile &file) const;
+	
+	//! Create an GLC_World* with a QFile
+	GLC_World* createWorld(QFile &file) const;	
 	
 	//! Create default material
 	GLC_Material* createMaterial() const;
