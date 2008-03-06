@@ -52,6 +52,7 @@ GLC_ObjToWorld::GLC_ObjToWorld(const QGLContext *pContext)
 , m_FaceType(notSet)
 , m_CurrentMeshMaterials()
 , m_CurrentMeshMaterialIndex(-1)
+, m_CurComputedVectNormIndex(0)
 {
 }
 
@@ -300,20 +301,23 @@ void GLC_ObjToWorld::changeGroup(QString line)
 			groupName.append(valueString2);
 		}
 		//////////////////////////////////////////////////////////////
-		// If there is a current mesh add it as part in world
+		// If the groupName == "default" nothing to do
 		//////////////////////////////////////////////////////////////		
-		if (NULL != m_pCurrentMesh)
+		if("default" != groupName)
 		{
-			GLC_Instance instance(m_pCurrentMesh);
-			m_pCurrentMesh= NULL;
-			m_pWorld->rootProduct()->addChildPart(instance);
-			// Clear the list of material already used
-			m_CurrentMeshMaterials.clear();
-			m_CurrentMeshMaterialIndex= -1;
+			if (NULL != m_pCurrentMesh) // If there is a current mesh add it as part in world
+			{
+				GLC_Instance instance(m_pCurrentMesh);
+				m_pCurrentMesh= NULL;
+				m_pWorld->rootProduct()->addChildPart(instance);
+				// Clear the list of material already used
+				m_CurrentMeshMaterials.clear();
+				m_CurrentMeshMaterialIndex= -1;
+				m_CurComputedVectNormIndex= 0;
+			}
+			m_pCurrentMesh= new GLC_Mesh2();
+			m_pCurrentMesh->setName(groupName);
 		}
-		m_pCurrentMesh= new GLC_Mesh2();
-		m_pCurrentMesh->setName(groupName);
-
 	}
 	else
 	{
@@ -447,26 +451,28 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 	}
 	else if (m_FaceType == coordinate)
-	{/*
-		m_pCurrentMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
+	{
+		addVertexsToCurrentMesh(vectorCoordinate);
+		m_pCurrentMesh->addNormal(m_CurComputedVectNormIndex, computeNormal(vectorCoordinate));
 		for (int i= 0; i < vectorCoordinate.size(); ++i)
 		{
-			vectorNormal.append(m_CurComputedVectNorm);
+			vectorNormal.append(m_CurComputedVectNormIndex);
 		}
-		m_CurComputedVectNorm++;
+		m_CurComputedVectNormIndex++;
 		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
-		*/
+		
 	}
 	else if (m_FaceType == coordinateAndTexture)
-	{/*
-		m_pCurrentMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
+	{
+		addVertexsToCurrentMesh(vectorCoordinate);
+		addTextureCoordinatesToCurrentMesh(vectorTextureCoordinate);
+		m_pCurrentMesh->addNormal(m_CurComputedVectNormIndex, computeNormal(vectorCoordinate));
 		for (int i= 0; i < vectorCoordinate.size(); ++i)
 		{
-			vectorNormal.append(m_CurComputedVectNorm);
+			vectorNormal.append(m_CurComputedVectNormIndex);
 		}
-		m_CurComputedVectNorm++;
+		m_CurComputedVectNormIndex++;
 		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
-		*/
 	}	
 	else if (m_FaceType == coordinateAndTextureAndNormal)
 	{
@@ -719,8 +725,7 @@ GLC_Vector3d GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
 	
 	GLC_Vector4d normal(edge1 ^ edge2);
 	normal.setNormal(1);
-	GLC_Vector3d resultNormal(normal.getX(), normal.getY(), normal.getZ());
-	return resultNormal;
+	return normal.toVector3d();
 }
 
 // Add Vertexs in the current mesh
@@ -743,16 +748,6 @@ void GLC_ObjToWorld::addNormalsToCurrentMesh(QVector<int> & normals)
 	}
 }
 
-// Add Materials in the current mesh
-void GLC_ObjToWorld::addMaterialsToCurrentMesh(QVector<int> & materials)
-{/*
-	const int max= materials.count();
-	for (int i= 0; i < max; ++i)
-	{
-		m_pCurrentMesh->addMaterial(materials[i], m_NormalHash[materials[i]]);
-	}
-	*/
-}
 // Add TextureCoordinate in the current mesh
 void GLC_ObjToWorld::addTextureCoordinatesToCurrentMesh(QVector<int> & textureCoordinates)
 {
