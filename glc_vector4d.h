@@ -170,6 +170,10 @@ public:
 	{
 		return dVecteur[3];
 	}
+	inline GLC_Vector3d toVector3d() const
+	{
+		return GLC_Vector3d(dVecteur[0], dVecteur[1], dVecteur[2]);
+	}	
 	/*! retourne un pointeur constant vers le tableau du vecteur.*/
 	inline const double *return_dVect(void) const
 	{
