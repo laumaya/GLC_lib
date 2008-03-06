@@ -51,6 +51,8 @@ class GLC_Product : public GLC_Node
 public:
 	//! Constructor
 	GLC_Product(GLC_World *);
+	//! Copy constructor
+	GLC_Product(const GLC_Product&);
 	//! Destructor
 	virtual ~GLC_Product();
 //@}
@@ -110,10 +112,21 @@ public:
 	 bool removeChild(const GLC_uint);
 	 
 	//! Update Product absolute matrix
-	void updateAbsoluteMatrix();	
-	 
+	void updateAbsoluteMatrix();
+	
+	//! Remove child part, child product and update world collection
+	void removeChilds();
+
 //@}
 
+//////////////////////////////////////////////////////////////////////
+/*! @name Operator Overload */
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Assignement operator
+	GLC_Product& operator=(const GLC_Product&);
+//@}
 //////////////////////////////////////////////////////////////////////
 // private members
 //////////////////////////////////////////////////////////////////////
