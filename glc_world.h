@@ -42,7 +42,11 @@ class GLC_World
 //@{
 //////////////////////////////////////////////////////////////////////	
 public:
+	//! Default constructor
 	GLC_World();
+	//! Copy constructor
+	GLC_World(const GLC_World&);
+	//! Destructor
 	virtual ~GLC_World();
 //@}
 
@@ -52,9 +56,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get the root product of the world
-	inline GLC_Product* rootProduct() {return m_pRoot;}
+	inline GLC_Product* rootProduct() const {return m_pRoot;}
 	//! Get the world collection
 	inline GLC_Collection* collection() {return m_pCollection;}
+	//! return true if the world is empty
+	inline bool isEmpty() const {return  m_pCollection->isEmpty();}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -63,8 +69,18 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Merge this world with another world
-	void mergeWithAnotherWorld(GLC_World &);
+	void mergeWithAnotherWorld(const GLC_World &);
 //@}
+	
+//////////////////////////////////////////////////////////////////////
+/*! @name Operator Overload */
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Assignement operator
+	GLC_World& operator=(const GLC_World&);
+//@}
+
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{

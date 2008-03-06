@@ -27,10 +27,19 @@
 #include "glc_world.h"
 #include "glc_product.h"
 
+// Default constructor
 GLC_World::GLC_World()
 : m_pRoot(new GLC_Product(this))
 , m_pCollection( new GLC_Collection())
 {
+}
+
+// Copy constructor
+GLC_World::GLC_World(const GLC_World& world)
+: m_pRoot(new GLC_Product(this))
+, m_pCollection( new GLC_Collection())
+{
+	mergeWithAnotherWorld(world);
 }
 
 GLC_World::~GLC_World()
@@ -40,7 +49,7 @@ GLC_World::~GLC_World()
 }
 
 // Merge this world with another world
-void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
+void GLC_World::mergeWithAnotherWorld(const GLC_World& anotherWorld)
 {
 	GLC_Product* pAnotherRoot= anotherWorld.rootProduct();
 	if (pAnotherRoot->productChildCount() > 0)
@@ -52,4 +61,13 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 		m_pRoot->addChildParts(pAnotherRoot->childParts(), this);
 	}
 	
+}
+
+// Assignement operator
+GLC_World& GLC_World::operator=(const GLC_World& world)
+{
+	// Remove Childs from the root product
+	m_pRoot->removeChilds();
+	mergeWithAnotherWorld(world);
+	return *this;
 }
