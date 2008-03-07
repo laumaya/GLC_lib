@@ -625,8 +625,7 @@ void GLC_ObjToMesh2::loadMaterial(QString fileName)
 				{	// It's not the first material
 					MaterialIndex++;
 					qDebug() << "Add material : " << MaterialIndex;
-					m_pMesh->addMaterial(MaterialIndex,*m_pCurrentMaterial);					
-					delete m_pCurrentMaterial;
+					m_pMesh->addMaterial(MaterialIndex,m_pCurrentMaterial);					
 					m_pCurrentMaterial= NULL;
 				}
 								
@@ -664,7 +663,7 @@ void GLC_ObjToMesh2::loadMaterial(QString fileName)
 	{
 		MaterialIndex++;
 		qDebug() << "Add material : " << MaterialIndex;
-		m_pMesh->addMaterial(MaterialIndex,*m_pCurrentMaterial);					
+		m_pMesh->addMaterial(MaterialIndex, m_pCurrentMaterial);					
 		delete m_pCurrentMaterial;
 		m_pCurrentMaterial= NULL;
 	}
@@ -896,7 +895,7 @@ void GLC_ObjToMesh2::setObjType(QString& ligne)
  	}
  	else
  	{
-		QString message= "GLC_ObjToMesh2::extractVertexIndex OBJ file not reconize";
+		QString message= "GLC_ObjToMesh2::setObjType OBJ file not reconize";
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
