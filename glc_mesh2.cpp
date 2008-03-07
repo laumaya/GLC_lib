@@ -63,7 +63,14 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 , m_SelectionListID(0)
 , m_IsSelected(false)
 {
-	
+	// Add this mesh to inner material
+	MaterialHash::const_iterator i= m_MaterialHash.begin();
+    while (i != m_MaterialHash.constEnd())
+    {
+        // update inner material use table
+        i.value()->addGLC_Geom(this);
+        ++i;
+    }	
 }
 
 
@@ -77,7 +84,16 @@ GLC_Mesh2::~GLC_Mesh2(void)
 
 	m_TextCoordinateHash.clear();
 	m_TextureIndex.clear();
-
+	
+	// delete mesh inner material
+	MaterialHash::const_iterator i= m_MaterialHash.begin();
+    while (i != m_MaterialHash.constEnd())
+    {
+        // delete the material if necessary
+        i.value()->delGLC_Geom(getID());
+        if (i.value()->isUnused()) delete i.value();
+        ++i;
+    }
 	m_MaterialHash.clear();
 	m_MaterialIndex.clear();
 	
@@ -121,24 +137,22 @@ GLC_Geometry* GLC_Mesh2::clone() const
 
 
 // Add material to mesh
-void GLC_Mesh2::addMaterial(int Index, GLC_Material &Material)
+void GLC_Mesh2::addMaterial(int Index, GLC_Material* pMaterial)
 {
+	if (pMaterial != NULL)
+	{
+		MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
+		// Check if there is a material at specified index
+		Q_ASSERT(iMaterial == m_MaterialHash.end());
 		
-	// Add or replace the Material to Material hash table
-	m_MaterialHash.insert(Index, Material);
-
-}
-
-// Modify material from mesh
-void GLC_Mesh2::modifyMaterial(int Index, GLC_Material &Material)
-{
-	//MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
-	// Check if the key is find
-	//Q_ASSERT(iMaterial != m_MaterialHash.end());
-	
-	// Modify the material
-	m_MaterialHash.insert(Index, Material);
-
+		// Add this geometry in the material use table
+		pMaterial->addGLC_Geom(this);
+		// Add the Material to Material hash table
+		m_MaterialHash.insert(Index, pMaterial);
+		// Invalid the geometry
+		m_GeometryIsValid = false;
+		m_ListIsValid= false;	// GLC_Mesh2 compatibility		
+	}
 }
 
 
@@ -251,7 +265,7 @@ void GLC_Mesh2::glLoadTexture(void)
     while (iMaterial != m_MaterialHash.constEnd())
     {
         // Load texture of mesh materials    
-        iMaterial.value().glLoadTexture();
+        iMaterial.value()->glLoadTexture();
         ++iMaterial;
     }	
 }
@@ -362,7 +376,7 @@ void GLC_Mesh2::glDraw()
 					// Check if the key is already use
 					if (iMaterial != m_MaterialHash.end())
 					{
-						if (m_MaterialHash[CurrentMaterialIndex].getAddRgbaTexture())
+						if (m_MaterialHash[CurrentMaterialIndex]->getAddRgbaTexture())
 						{
 							glEnable(GL_TEXTURE_2D);
 							//qDebug() << "GLC_Mesh2::glDraw : Texture enabled";
@@ -371,7 +385,7 @@ void GLC_Mesh2::glDraw()
 						{
 							glDisable(GL_TEXTURE_2D);
 						}
-						m_MaterialHash[CurrentMaterialIndex].glExecute();
+						m_MaterialHash[CurrentMaterialIndex]->glExecute();
 						glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());
 						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 					}

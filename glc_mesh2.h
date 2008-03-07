@@ -37,7 +37,7 @@
 typedef QHash<int, GLC_Vector3d> Vector3dHash;
 typedef QHash<int, GLC_Vector2d> Vector2dHash;
 
-typedef QHash<int, GLC_Material> MaterialHash;
+typedef QHash<int, GLC_Material*> MaterialHash;
 
 typedef QList<int> IndexedList;
 
@@ -88,7 +88,7 @@ public:
 	//! Get number of submaterial
 	int getNumberOfSubMaterial() const {return m_MaterialHash.size();}
 	//! Get specified mesh sub material
-	GLC_Material* getSubMaterial(const int key) {return &(m_MaterialHash[key]);}
+	GLC_Material* getSubMaterial(const int key) {return m_MaterialHash[key];}
 	//! return true if Material key is in the mesh
 	const bool containsMaterial(const int key) const {return m_MaterialHash.contains(key);}	
 	//! return the mesh bounding box
@@ -112,11 +112,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Add material to mesh
-	void addMaterial(int Index, GLC_Material &Material);
-	
-	//! Modify mesh material
-	void modifyMaterial(int Index, GLC_Material &Material);
-	
+	void addMaterial(int Index, GLC_Material *);
+		
 	//! Add a vertex to mesh
 	void addVertex(int Index, GLC_Vector3d Coordinate);
 	
