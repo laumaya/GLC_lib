@@ -106,6 +106,9 @@ private:
 	void addNormalsToCurrentMesh(QVector<int> &);
 	//! Add TextureCoordinate in the current mesh
 	void addTextureCoordinatesToCurrentMesh(QVector<int> &);
+	//! clear objToWorld allocate memmory
+	void clear();
+	
 		
 //////////////////////////////////////////////////////////////////////
 // Qt Signals

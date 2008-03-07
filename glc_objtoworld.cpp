@@ -58,10 +58,7 @@ GLC_ObjToWorld::GLC_ObjToWorld(const QGLContext *pContext)
 
 GLC_ObjToWorld::~GLC_ObjToWorld()
 {
-	m_VertexHash.clear();
-	m_NormalHash.clear();
-	m_TextCoordinateHash.clear();
-	if (NULL != m_pMtlLoader) delete m_pMtlLoader;
+	clear();
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -325,6 +322,7 @@ void GLC_ObjToWorld::changeGroup(QString line)
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));		
 		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
 		throw(fileFormatException);
 	}
 		
@@ -355,6 +353,7 @@ GLC_Vector3d GLC_ObjToWorld::extract3dVect(QString &line)
 			message.append(QString::number(m_CurrentLineNumber));				
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName);
+			clear();
 			throw(fileFormatException);		
 		}
 		else
@@ -389,6 +388,7 @@ GLC_Vector2d GLC_ObjToWorld::extract2dVect(QString &line)
 			message.append(QString::number(m_CurrentLineNumber));	
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName);
+			clear();
 			throw(fileFormatException);
 		}
 		vectResult.setVect(x, y);		
@@ -488,6 +488,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		message.append(QString::number(m_CurrentLineNumber));		
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
 		throw(fileFormatException);
 	}
 }
@@ -504,6 +505,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 		message.append(QString::number(m_CurrentLineNumber));		
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
 		throw(fileFormatException);
 	}
 	//////////////////////////////////////////////////////////////////
@@ -517,7 +519,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	else if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
 	{
 		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.size();
-		m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex,*(m_pMtlLoader->getMaterial(materialName)));
+		m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
 		m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterialIndex);
 	}
 			
@@ -552,6 +554,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_FileName);
+				clear();
 				throw(fileFormatException);
 			}
 		}
@@ -562,6 +565,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			message.append(QString::number(m_CurrentLineNumber));			
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName);
+			clear();
 			throw(fileFormatException);
 		}
 				
@@ -587,6 +591,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_FileName);
+				clear();
 				throw(fileFormatException);
 			}
 		}
@@ -597,6 +602,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName);
+			clear();
 			throw(fileFormatException);
 		}
  	}	
@@ -621,6 +627,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_FileName);
+				clear();
 				throw(fileFormatException);
 			}
 		}
@@ -631,6 +638,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			message.append(QString::number(m_CurrentLineNumber));			
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName);
+			clear();
 			throw(fileFormatException);
 		}
  	}
@@ -652,6 +660,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_FileName);
+				clear();
 				throw(fileFormatException);
 			}
 		}
@@ -662,6 +671,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			message.append(QString::number(m_CurrentLineNumber));			
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName);
+			clear();
 			throw(fileFormatException);
 		}
  	}
@@ -672,6 +682,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
 		throw(fileFormatException);
  	}
 }
@@ -702,11 +713,12 @@ void GLC_ObjToWorld::setObjType(QString& ligne)
  	}
  	else
  	{
-		QString message= "GLC_ObjToWorld::extractVertexIndex OBJ file not reconize";
+		QString message= "GLC_ObjToWorld::setObjType OBJ file not reconize";
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
 		throw(fileFormatException);
  	}
 }
@@ -756,6 +768,27 @@ void GLC_ObjToWorld::addTextureCoordinatesToCurrentMesh(QVector<int> & textureCo
 	{
 		m_pCurrentMesh->addTextureCoordinate(textureCoordinates[i], m_TextCoordinateHash[textureCoordinates[i]]);
 	}
+}
+
+// clear objToWorld allocate memmory
+void GLC_ObjToWorld::clear()
+{
+	m_VertexHash.clear();
+	m_NormalHash.clear();
+	m_TextCoordinateHash.clear();
+	m_CurrentMeshMaterials.clear();
+	
+	if (NULL != m_pMtlLoader)
+	{
+		delete m_pMtlLoader;
+		m_pMtlLoader= NULL;
+	}
+	if (NULL != m_pCurrentMesh)
+	{
+		delete m_pCurrentMesh;
+		m_pCurrentMesh= NULL;
+	}
+	
 }
 
 
