@@ -86,7 +86,7 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	}
 	else
 	{
-		qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj OK File " << m_sFile << " exist";
+		//qDebug() << "GLC_ObjToMesh2::CreateMeshFromObj OK File " << m_sFile << " exist";
 	}
 	loadMaterial(m_sFile);
 	// Create the input file stream
@@ -260,9 +260,9 @@ GLC_Vector3d GLC_ObjToMesh2::extract3dVect(QString &line)
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));				
 			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_sFile);
-			delete m_pMesh;
-			throw(fileFormatException);		
+			//GLC_FileFormatException fileFormatException(message, m_sFile);
+			//delete m_pMesh;
+			//throw(fileFormatException);		
 		}
 		else
 		{

@@ -81,7 +81,7 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	}
 	else
 	{
-		qDebug() << "GLC_ObjToWorld::CreateWorldFromObj OK File " << m_FileName << " exist";
+		//qDebug() << "GLC_ObjToWorld::CreateWorldFromObj OK File " << m_FileName << " exist";
 	}
 	
 	//////////////////////////////////////////////////////////////////
@@ -282,7 +282,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 // Change current group
 void GLC_ObjToWorld::changeGroup(QString line)
 {
-	qDebug() << "GLC_ObjToWorld::changeGroup";
+	//qDebug() << "GLC_ObjToWorld::changeGroup";
 	//////////////////////////////////////////////////////////////////
 	// Parse the line containing the group name
 	//////////////////////////////////////////////////////////////////		
@@ -352,9 +352,9 @@ GLC_Vector3d GLC_ObjToWorld::extract3dVect(QString &line)
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));				
 			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_FileName);
-			clear();
-			throw(fileFormatException);		
+			//GLC_FileFormatException fileFormatException(message, m_FileName);
+			//clear();
+			//throw(fileFormatException);		
 		}
 		else
 		{
@@ -511,7 +511,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	//////////////////////////////////////////////////////////////////
 	// Check if the material is already loaded from the current mesh
 	//////////////////////////////////////////////////////////////////				
-	qDebug() << "Material Name" << materialName;
+	//qDebug() << "Material Name" << materialName;
 	if (m_CurrentMeshMaterials.contains(materialName))
 	{
 		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.value(materialName);

@@ -282,18 +282,18 @@ void GLC_Viewport::glExecuteImagePlane()
 		// Geometry invalid or collection node list ID == 0
 		if ((!m_pImagePlane->getValidity()) || (m_ImagePlaneListID == 0))
 		{
-			qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pImagePlane->getValidity();
-			qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ImagePlaneListID;
+			//qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pImagePlane->getValidity();
+			//qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ImagePlaneListID;
 			
 			if (m_ImagePlaneListID == 0)
 			{
-				qDebug() << "GLC_CollectionNode::GlExecute: List not found";
+				//qDebug() << "GLC_CollectionNode::GlExecute: List not found";
 				m_ImagePlaneListID= glGenLists(1);
 			}		
 			glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
 				m_pImagePlane->glExecute(GL_COMPILE_AND_EXECUTE, false);
 			glEndList();
-			qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ImagePlaneListID << " created";
+			//qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ImagePlaneListID << " created";
 		}
 		else
 		{

@@ -84,7 +84,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 	}
 	else
 	{
-		qDebug() << "GLC_ObjMtlLoader::LoadMaterial OK File " << m_FileName << " exist";
+		//qDebug() << "GLC_ObjMtlLoader::LoadMaterial OK File " << m_FileName << " exist";
 	}
 	
 	QTextStream mtlStream(&mtlFile);
@@ -104,11 +104,11 @@ bool GLC_ObjMtlLoader::loadMaterials()
 			// Search New material
 			if (header =="newmtl")
 			{			
-				qDebug() << "New material find";
+				//qDebug() << "New material find";
 				
 				if (NULL != m_pCurrentMaterial)
 				{	// It's not the first material
-					qDebug() << "Add material : " << m_pCurrentMaterial->getName();
+					//qDebug() << "Add material : " << m_pCurrentMaterial->getName();
 					m_Materials.insert(m_pCurrentMaterial->getName(), m_pCurrentMaterial);
 					m_pCurrentMaterial= NULL;
 				}
@@ -128,7 +128,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 			}
 			else if ((header == "map_Kd") || (header == "map_Ka"))	// Texture
 			{
-				qDebug() << "Texture detected";
+				//qDebug() << "Texture detected";
 				if (!extractTextureFileName(lineBuff)) return false;
 			}
 						
@@ -137,7 +137,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 
 	if (NULL != m_pCurrentMaterial)
 	{
-		qDebug() << "Add material : " << m_pCurrentMaterial->getName();
+		//qDebug() << "Add material : " << m_pCurrentMaterial->getName();
 		m_Materials.insert(m_pCurrentMaterial->getName(), m_pCurrentMaterial);					
 		m_pCurrentMaterial= NULL;
 	}
@@ -167,7 +167,7 @@ bool GLC_ObjMtlLoader::extractMaterialName(QString &ligne)
 			valueString.append(valueString2);
 		}			
 		m_pCurrentMaterial->setName(valueString);
-		qDebug() << "Material name is : " << valueString;
+		//qDebug() << "Material name is : " << valueString;
 		result= true;
 	}
 	else
@@ -198,7 +198,7 @@ bool GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 		if (!textureFile.open(QIODevice::ReadOnly))
 		{
 			m_LoadStatus= "GLC_ObjMtlLoader::extractTextureFileName File ";
-			qDebug() << m_LoadStatus;
+			//qDebug() << m_LoadStatus;
 			// Skip texture and continu loading
 		}
 		else
@@ -206,7 +206,7 @@ bool GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 			// Create the texture and assign it to current material
 			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
 			m_pCurrentMaterial->setTexture(pTexture);
-			qDebug() << "Texture File is : " << valueString;
+			//qDebug() << "Texture File is : " << valueString;
 		}
 		textureFile.close();
 		result= true;
@@ -247,21 +247,21 @@ bool GLC_ObjMtlLoader::extractRGBValue(QString &ligne)
 			if (header == "Ka") // Ambiant Color
 			{
 				m_pCurrentMaterial->setAmbientColor(color);
-				qDebug() << "Ambiant Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
+				//qDebug() << "Ambiant Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
 				result= true;
 			}
 			
 			else if (header == "Kd") // Diffuse Color
 			{
 				m_pCurrentMaterial->setDiffuseColor(color);
-				qDebug() << "Diffuse Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
+				//qDebug() << "Diffuse Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
 				result= true;
 			}
 			
 			else if (header == "Ks") // Specular Color
 			{
 				m_pCurrentMaterial->setSpecularColor(color);
-				qDebug() << "Specular Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
+				//qDebug() << "Specular Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
 				result= true;
 			}
 			
@@ -304,7 +304,7 @@ bool GLC_ObjMtlLoader::extractOneValue(QString &ligne)
 				return false;
 			}
 			m_pCurrentMaterial->setShininess(value);
-			qDebug() << "Shininess : " <<  value;
+			//qDebug() << "Shininess : " <<  value;
 			return true;
 		}else
 		{
