@@ -84,7 +84,7 @@ GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 
 GLC_Texture::~GLC_Texture()
 {
-	qDebug() << "GLC_Texture::~GLC_Texture Texture ID : " << m_TextureID;
+	//qDebug() << "GLC_Texture::~GLC_Texture Texture ID : " << m_TextureID;
 	if (m_TextureID != 0)
 	{
 		m_pQGLContext->deleteTexture(m_TextureID);
@@ -104,7 +104,7 @@ void GLC_Texture::glLoadTexture(void)
 		m_TextureID= m_pQGLContext->bindTexture(*m_pTextureImage);
 		delete m_pTextureImage;
 		m_pTextureImage= NULL;
-		qDebug() << "GLC_Texture::glcBindTexture Texture ID = " << m_TextureID;
+		//qDebug() << "GLC_Texture::glcBindTexture Texture ID = " << m_TextureID;
 	}
 }
 
