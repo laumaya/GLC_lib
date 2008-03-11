@@ -262,7 +262,7 @@ void GLC_Material::setLightEmission(const QColor& lightEmission)
 // Set Texture
 void GLC_Material::setTexture(GLC_Texture* pTexture)
 {
-	qDebug() << "GLC_Material::SetTexture";
+	//qDebug() << "GLC_Material::SetTexture";
 	if (m_pTexture != NULL)
 	{
 		delete m_pTexture;
