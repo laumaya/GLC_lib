@@ -27,8 +27,8 @@
 #include "glc_product.h"
 #include "glc_part.h"
 
-GLC_Product::GLC_Product(GLC_World *pWorld)
-: GLC_Node(pWorld)
+GLC_Product::GLC_Product(GLC_Collection *pCollection)
+: GLC_Node(pCollection)
 , m_ChildProducts()
 , m_ChildParts()
 {
@@ -40,8 +40,8 @@ GLC_Product::GLC_Product(const GLC_Product& product)
 , m_ChildProducts()
 , m_ChildParts()
 {
-	addChildProducts(product.childProducts(), m_pWorld);
-	addChildParts(product.childParts(), m_pWorld);
+	addChildProducts(product.childProducts(), m_pCollection);
+	addChildParts(product.childParts(), m_pCollection);
 }
 
 GLC_Product::~GLC_Product()
@@ -59,12 +59,12 @@ bool GLC_Product::isParentOf(const GLC_uint key) const
 }
 
 // Clone the product
-GLC_Product* GLC_Product::clone(GLC_World * pWorld) const
+GLC_Product* GLC_Product::clone(GLC_Collection * pCollection) const
 {
-	GLC_Product* pResult= new GLC_Product(pWorld);
+	GLC_Product* pResult= new GLC_Product(pCollection);
 	pResult->setReference(this->m_Ref);
-	pResult->addChildProducts(this->childProducts(), pWorld);
-	pResult->addChildParts(this->childParts(), pWorld);
+	pResult->addChildProducts(this->childProducts(), pCollection);
+	pResult->addChildParts(this->childParts(), pCollection);
 	return pResult;
 }
 
@@ -121,19 +121,19 @@ void GLC_Product::move(const GLC_Matrix4x4& matrix)
 // Add a new child product
 GLC_Product* GLC_Product::addNewChildProduct()
 {
-	GLC_Product* pChild= new GLC_Product(m_pWorld);
+	GLC_Product* pChild= new GLC_Product(m_pCollection);
 	m_ChildProducts.insert(pChild->getID(), pChild);
 	pChild->setParent(this);	
 	return pChild;
 }
 
 // Add child products
-void GLC_Product::addChildProducts(QList<GLC_Product*> products, GLC_World* pWorld)
+void GLC_Product::addChildProducts(QList<GLC_Product*> products, GLC_Collection* pCollection)
 {
 	const int max= products.size();
 	for (int i= 0; i < max; ++i)
 	{
-		GLC_Product* pProduct= products[i]->clone(pWorld);
+		GLC_Product* pProduct= products[i]->clone(pCollection);
 		m_ChildProducts.insert(pProduct->getID(), pProduct);
 		pProduct->setParent(this);
 	}
@@ -142,19 +142,19 @@ void GLC_Product::addChildProducts(QList<GLC_Product*> products, GLC_World* pWor
 // Add child part containing specified instance
  GLC_Part* GLC_Product::addChildPart(GLC_Instance& instance)
  {
- 	GLC_Part* pChild= new GLC_Part(m_pWorld, instance);
+ 	GLC_Part* pChild= new GLC_Part(m_pCollection, instance);
 	m_ChildParts.insert(pChild->getID(), pChild);
 	pChild->setParent(this);	
 	return pChild; 		
  }
  
  // Add child parts
-void GLC_Product::addChildParts(QList<GLC_Part*> parts, GLC_World* pWorld)
+void GLC_Product::addChildParts(QList<GLC_Part*> parts, GLC_Collection* pCollection)
 {
 	const int max= parts.size();
 	for (int i= 0; i < max; ++i)
 	{
-		GLC_Part* pPart= parts[i]->clone(pWorld);
+		GLC_Part* pPart= parts[i]->clone(pCollection);
 		m_ChildParts.insert(pPart->getID(), pPart);
 		pPart->setParent(this);
 	}	
@@ -213,7 +213,7 @@ GLC_Product& GLC_Product::operator=(const GLC_Product& product)
 {
 	removeChilds();
 	GLC_Node::operator=(product);
-	addChildProducts(product.childProducts(), m_pWorld);
-	addChildParts(product.childParts(), m_pWorld);
+	addChildProducts(product.childProducts(), m_pCollection);
+	addChildParts(product.childParts(), m_pCollection);
 	return *this;
 }

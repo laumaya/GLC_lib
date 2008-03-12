@@ -32,7 +32,7 @@
 
 #include <QString>
 
-class GLC_World;
+class GLC_Collection;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Node
@@ -49,7 +49,7 @@ class GLC_Node
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Constructor of the node
-	GLC_Node(GLC_World *);
+	GLC_Node(GLC_Collection *);
 	//! Copy Constructor
 	GLC_Node(const GLC_Node&);
 	//! Destructor of the node
@@ -109,8 +109,8 @@ private:
 // protected members
 //////////////////////////////////////////////////////////////////////
 protected:
-	//! the node's world
-	GLC_World* m_pWorld;
+	//! the node's collection
+	GLC_Collection* m_pCollection;
 	//! The parent of this node
 	GLC_Node* m_pParent;	
 	//! Node reference

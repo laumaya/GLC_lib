@@ -304,16 +304,43 @@ void GLC_ObjToWorld::changeGroup(QString line)
 		{
 			if (NULL != m_pCurrentMesh) // If there is a current mesh add it as part in world
 			{
-				GLC_Instance instance(m_pCurrentMesh);
-				m_pCurrentMesh= NULL;
-				m_pWorld->rootProduct()->addChildPart(instance);
-				// Clear the list of material already used
-				m_CurrentMeshMaterials.clear();
-				m_CurrentMeshMaterialIndex= -1;
+				if (m_pCurrentMesh->getNumberOfFaces() > 0)
+				{
+					GLC_Instance instance(m_pCurrentMesh);
+					m_pCurrentMesh= NULL;
+					m_pWorld->rootProduct()->addChildPart(instance);
+				}
+				else
+				{
+					delete m_pCurrentMesh;
+					m_pCurrentMesh= NULL;
+				}
 				m_CurComputedVectNormIndex= 0;
 			}
 			m_pCurrentMesh= new GLC_Mesh2();
 			m_pCurrentMesh->setName(groupName);
+			
+			// Test if there is a current material
+			if (m_CurrentMeshMaterialIndex != -1)
+			{
+				// Get the name of the current material
+				QString materialName= m_CurrentMeshMaterials.key(m_CurrentMeshMaterialIndex);				
+				// There is a material loader with desired material
+				if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
+				{
+					// Clear the list of material already used
+					m_CurrentMeshMaterials.clear();
+					m_CurrentMeshMaterialIndex= 0;
+					m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
+					m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterialIndex);
+				}
+				else
+				{
+					m_CurrentMeshMaterials.clear();
+					m_CurrentMeshMaterialIndex= -1;
+				}				
+			}
+			
 		}
 	}
 	else
@@ -516,11 +543,16 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	{
 		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.value(materialName);
 	}
-	else if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
+	else if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName) && (NULL != m_pCurrentMesh))
 	{
+		if (m_pCurrentMesh->getNumberOfFaces() == 0) // This is the first material to assign to mesh
+		{
+			m_CurrentMeshMaterials.clear();
+			m_pCurrentMesh->removeMaterial(m_CurrentMeshMaterialIndex);
+		}
 		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.size();
 		m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
-		m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterialIndex);
+		m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterialIndex);	
 	}
 			
 }

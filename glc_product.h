@@ -50,7 +50,7 @@ class GLC_Product : public GLC_Node
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Constructor
-	GLC_Product(GLC_World *);
+	GLC_Product(GLC_Collection *);
 	//! Copy constructor
 	GLC_Product(const GLC_Product&);
 	//! Destructor
@@ -78,7 +78,7 @@ public:
 	//! Return the partChildList
 	inline QList<GLC_Part*> childParts() const {return m_ChildParts.values();}
 	//! Clone the product
-	GLC_Product* clone(GLC_World *) const;
+	GLC_Product* clone(GLC_Collection *) const;
 	
 //@}
 
@@ -96,7 +96,7 @@ public:
 	GLC_Product* addNewChildProduct();
 
 	//! Add child products
-	void addChildProducts(QList<GLC_Product*>, GLC_World *);
+	void addChildProducts(QList<GLC_Product*>, GLC_Collection *);
 		
 	//! Add child part containing specified instance
 	/*! Return the added part Uid
@@ -104,7 +104,7 @@ public:
 	 GLC_Part* addChildPart(GLC_Instance&);
 
 	//! Add child parts
-	void addChildParts(QList<GLC_Part*>, GLC_World *);
+	void addChildParts(QList<GLC_Part*>, GLC_Collection *);
 	 
 	 //! Remove a child with the specified UID
 	 /*! Return true if the child as been succesfully removed

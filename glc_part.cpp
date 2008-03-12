@@ -27,26 +27,26 @@
 #include "glc_part.h"
 #include "glc_world.h"
 
-GLC_Part::GLC_Part(GLC_World *pWorld, GLC_Instance& instance)
-: GLC_Node(pWorld)
+GLC_Part::GLC_Part(GLC_Collection *pCollection, GLC_Instance& instance)
+: GLC_Node(pCollection)
 , m_RepID(instance.getID())
 {
-	m_pWorld->collection()->add(instance);
+	m_pCollection->add(instance);
 }
 
 GLC_Part::~GLC_Part()
 {
-	m_pWorld->collection()->remove(m_RepID);
+	m_pCollection->remove(m_RepID);
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
 // Clone the part
-GLC_Part* GLC_Part::clone(GLC_World * pWorld) const
+GLC_Part* GLC_Part::clone(GLC_Collection * pCollection) const
 {
-	GLC_Instance instance(m_pWorld->collection()->getInstanceHandle(m_RepID)->instanciate());
-	GLC_Part* pReturnPart= new GLC_Part(pWorld, instance);
+	GLC_Instance instance(m_pCollection->getInstanceHandle(m_RepID)->instanciate());
+	GLC_Part* pReturnPart= new GLC_Part(pCollection, instance);
 	return pReturnPart;
 }
 
@@ -59,7 +59,7 @@ void GLC_Part::move(const GLC_Matrix4x4 &matrix)
 {
 	m_RelativeMatrix= matrix * m_RelativeMatrix;
 	m_AbsoluteMatrix= matrix * m_AbsoluteMatrix;
-	m_pWorld->collection()->getInstanceHandle(m_RepID)->setMatrix(m_AbsoluteMatrix);
+	m_pCollection->getInstanceHandle(m_RepID)->setMatrix(m_AbsoluteMatrix);
 }
 // Update Part absolute matrix
 void GLC_Part::updateAbsoluteMatrix()
@@ -67,7 +67,7 @@ void GLC_Part::updateAbsoluteMatrix()
 	if (NULL != m_pParent)
 	{
 		m_AbsoluteMatrix= m_pParent->absoluteMatrix() * m_RelativeMatrix;
-		m_pWorld->collection()->getInstanceHandle(m_RepID)->setMatrix(m_AbsoluteMatrix);
+		m_pCollection->getInstanceHandle(m_RepID)->setMatrix(m_AbsoluteMatrix);
 	}
 }	
 

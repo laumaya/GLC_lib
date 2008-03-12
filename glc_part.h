@@ -45,7 +45,7 @@ class GLC_Part : public GLC_Node
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Constructor
-	GLC_Part(GLC_World *, GLC_Instance&);
+	GLC_Part(GLC_Collection *, GLC_Instance&);
 	//! Destructor
 	virtual ~GLC_Part();
 //@}
@@ -58,7 +58,7 @@ public:
 	//! return the part's representation ID
 	inline GLC_uint getRepID() const {return m_RepID;}
 	//! Clone the part
-	GLC_Part* clone(GLC_World *) const;
+	GLC_Part* clone(GLC_Collection *) const;
 	
 //@}
 

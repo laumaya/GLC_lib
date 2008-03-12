@@ -31,9 +31,9 @@
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_Node::GLC_Node(GLC_World *pWorld)
+GLC_Node::GLC_Node(GLC_Collection *pCollection)
 : m_Uid(GLC_GenID())
-, m_pWorld(pWorld)
+, m_pCollection(pCollection)
 , m_pParent(NULL)
 , m_Ref()
 , m_RelativeMatrix()
@@ -43,7 +43,7 @@ GLC_Node::GLC_Node(GLC_World *pWorld)
 // Copy constructor
 GLC_Node::GLC_Node(const GLC_Node& node)
 : m_Uid(node.m_Uid)
-, m_pWorld(node.m_pWorld)
+, m_pCollection(node.m_pCollection)
 , m_pParent(node.m_pParent)
 , m_Ref(node.m_Ref)
 , m_RelativeMatrix(node.m_RelativeMatrix)
@@ -66,7 +66,7 @@ void GLC_Node::setParent(GLC_Node* pNode)
 GLC_Node& GLC_Node::operator=(const GLC_Node& node)
 {
 	m_Uid= node.m_Uid;
-	m_pWorld= node.m_pWorld;
+	m_pCollection= node.m_pCollection;
 	m_pParent= node.m_pParent;
 	m_Ref= node.m_Ref;
 	m_RelativeMatrix= node.m_RelativeMatrix;
