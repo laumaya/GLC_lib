@@ -94,10 +94,13 @@ public:
 // private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! The root of the product structure
-	GLC_Product* m_pRoot;
 	//! The instance Collection
 	GLC_Collection* m_pCollection;
+	//! The root of the product structure
+	GLC_Product* m_pRoot;	
+	//! Number of this world
+	int* m_pNumberOfWorld;
+	
 };
 
 #endif /*GLC_WORLD_H_*/

@@ -29,23 +29,33 @@
 
 // Default constructor
 GLC_World::GLC_World()
-: m_pRoot(new GLC_Product(this))
-, m_pCollection( new GLC_Collection())
+: m_pCollection(new GLC_Collection())
+, m_pRoot(new GLC_Product(m_pCollection))
+, m_pNumberOfWorld(new int(1))
 {
 }
 
 // Copy constructor
 GLC_World::GLC_World(const GLC_World& world)
-: m_pRoot(new GLC_Product(this))
-, m_pCollection( new GLC_Collection())
+: m_pCollection(world.m_pCollection)
+, m_pRoot(world.m_pRoot)
+, m_pNumberOfWorld(world.m_pNumberOfWorld)
 {
-	mergeWithAnotherWorld(world);
+	// Increment the nummber of world
+	++(*m_pNumberOfWorld);
 }
 
 GLC_World::~GLC_World()
 {
-	delete m_pRoot;
-	delete m_pCollection;
+	// Decrement the number of world
+	--(*m_pNumberOfWorld);
+	if ((*m_pNumberOfWorld) == 0)
+	{
+		// this is the last World, delete the root product and collection
+		delete m_pRoot;
+		delete m_pCollection;
+		delete m_pNumberOfWorld;
+	}
 }
 
 // Merge this world with another world
@@ -54,11 +64,11 @@ void GLC_World::mergeWithAnotherWorld(const GLC_World& anotherWorld)
 	GLC_Product* pAnotherRoot= anotherWorld.rootProduct();
 	if (pAnotherRoot->productChildCount() > 0)
 	{
-		m_pRoot->addChildProducts(pAnotherRoot->childProducts(), this);
+		m_pRoot->addChildProducts(pAnotherRoot->childProducts(), m_pCollection);
 	}
 	if (pAnotherRoot->partChildCount() > 0)
 	{
-		m_pRoot->addChildParts(pAnotherRoot->childParts(), this);
+		m_pRoot->addChildParts(pAnotherRoot->childParts(), m_pCollection);
 	}
 	
 }
@@ -66,8 +76,18 @@ void GLC_World::mergeWithAnotherWorld(const GLC_World& anotherWorld)
 // Assignement operator
 GLC_World& GLC_World::operator=(const GLC_World& world)
 {
-	// Remove Childs from the root product
-	m_pRoot->removeChilds();
-	mergeWithAnotherWorld(world);
+	// Decrement the number of world
+	--(*m_pNumberOfWorld);
+	if ((*m_pNumberOfWorld) == 0)
+	{
+		// this is the last World, delete the root product and collection
+		delete m_pRoot;
+		delete m_pCollection;
+		delete m_pNumberOfWorld;
+	}
+	m_pRoot= world.m_pRoot;
+	m_pCollection= world.m_pCollection;
+	m_pNumberOfWorld= world.m_pNumberOfWorld;
+	++(*m_pNumberOfWorld);
 	return *this;
 }
