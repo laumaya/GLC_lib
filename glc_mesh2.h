@@ -115,7 +115,7 @@ public:
 	void addMaterial(int Index, GLC_Material *);
 	
 	//! Remove material from the mesh
-	int removeMaterial(int index) {return m_MaterialHash.remove(index);}
+	int removeMaterial(int);
 		
 	//! Add a vertex to mesh
 	void addVertex(int Index, GLC_Vector3d Coordinate);
