@@ -545,7 +545,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	}
 	else if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName) && (NULL != m_pCurrentMesh))
 	{
-		if (m_pCurrentMesh->getNumberOfFaces() == 0) // This is the first material to assign to mesh
+		if (m_pCurrentMesh->getNumberOfFaces() == 0 && (m_CurrentMeshMaterialIndex != -1)) // This is the first material to assign to mesh
 		{
 			m_CurrentMeshMaterials.clear();
 			m_pCurrentMesh->removeMaterial(m_CurrentMeshMaterialIndex);
