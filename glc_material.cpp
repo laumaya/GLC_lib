@@ -38,6 +38,7 @@ GLC_Material::GLC_Material()
 , m_fShininess(50.0)		// By default shininess 50
 , m_pTexture(NULL)			// no texture 
 {
+	//qDebug() << "GLC_Material::GLC_Material" << getID();
 	// Ambient Color
 	initAmbientColor();
 
@@ -50,7 +51,7 @@ GLC_Material::GLC_Material(const QColor &ambientColor)
 , m_fShininess(50.0)		// default : shininess 50
 , m_pTexture(NULL)			// no texture
 {
-
+	//qDebug() << "GLC_Material::GLC_Material" << getID();
 	m_AmbientColor= ambientColor;
 	
 	// Others
@@ -63,7 +64,7 @@ GLC_Material::GLC_Material(const char *pName ,const GLfloat *pAmbientColor)
 , m_fShininess(50.0)		// default : shininess 50
 , m_pTexture(NULL)			// no texture
 {
-
+	//qDebug() << "GLC_Material::GLC_Material" << getID();
 	// Init Ambiant Color
 	if (pAmbientColor != 0)
 	{
@@ -84,6 +85,8 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 , m_fShininess(50.0)		// By default shininess 50
 , m_pTexture(pTexture)		// Init texture 
 {
+	//qDebug() << "GLC_Material::GLC_Material" << getID();
+	
 	// Ambiente Color
 	initAmbientColor();
 
@@ -97,6 +100,7 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 , m_fShininess(InitMaterial.m_fShininess)
 , m_pTexture(NULL)
 {
+	//qDebug() << "GLC_Material::GLC_Material" << getID();
 	if (NULL != InitMaterial.m_pTexture)
 	{
 		m_pTexture= new GLC_Texture(*(InitMaterial.m_pTexture));
@@ -120,7 +124,7 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 // Destructor
 GLC_Material::~GLC_Material(void)
 {
-
+	//qDebug() << "GLC_Material::~GLC_Material" << getID();
     // clear whereUSED Hash table
     m_WhereUsed.clear();
     

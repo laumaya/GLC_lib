@@ -46,7 +46,7 @@ GLC_Mesh2::GLC_Mesh2()
 , m_SelectionListID(0)
 , m_IsSelected(false)
 {
-
+	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << getID();
 }
 
 GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
@@ -63,6 +63,7 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 , m_SelectionListID(0)
 , m_IsSelected(false)
 {
+	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << getID();
 	// Add this mesh to inner material
 	MaterialHash::const_iterator i= m_MaterialHash.begin();
     while (i != m_MaterialHash.constEnd())
@@ -76,6 +77,7 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 
 GLC_Mesh2::~GLC_Mesh2(void)
 {
+	//qDebug() << "GLC_Mesh2::~GLC_Mesh2" << getID();
 	m_CoordinateHash.clear();
 	m_CoordinateIndex.clear();
 
@@ -155,6 +157,13 @@ void GLC_Mesh2::addMaterial(int Index, GLC_Material* pMaterial)
 	}
 }
 
+// Remove material from the mesh
+int GLC_Mesh2::removeMaterial(int index)
+{
+	//qDebug() << "GLC_Mesh2::removeMaterial" << getID();
+	m_MaterialHash[index]->delGLC_Geom(getID());
+	return m_MaterialHash.remove(index);
+}
 
 // Add a vertex to mesh
 void GLC_Mesh2::addVertex(int Index, GLC_Vector3d Coordinate)
