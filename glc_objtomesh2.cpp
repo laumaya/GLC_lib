@@ -407,7 +407,7 @@ void GLC_ObjToMesh2::setCurrentMaterial(QString &line)
 	
 	MaterialHashMap::const_iterator iMaterial= m_MaterialNameIndex.find(materialName);
 	// Check if the material name is find
-	if(iMaterial != m_MaterialNameIndex.end());
+	if(iMaterial != m_MaterialNameIndex.end())
 	{
 		// Retrieve the material index
 		m_CurrentMaterialIndex= m_MaterialNameIndex[materialName];
