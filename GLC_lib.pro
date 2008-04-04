@@ -8,6 +8,11 @@ CONFIG += exceptions \
     warn_on
 TARGET = GLC_lib
 VERSION = 0.9.8
+
+unix:OBJECTS_DIR = ./Build
+unix:MOC_DIR = ./Build
+unix:UI_DIR = ./Build
+
 DEPENDPATH += .
 INCLUDEPATH += .
 
