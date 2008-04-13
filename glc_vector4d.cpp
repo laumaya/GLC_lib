@@ -154,11 +154,12 @@ GLC_Vector4d GLC_Vector4d::operator^ (const GLC_Vector4d &Vect) const
 	VectResult.dVecteur[0]= dVecteur[1] * Vect.dVecteur[2] - dVecteur[2] * Vect.dVecteur[1];
 	VectResult.dVecteur[1]= dVecteur[2] * Vect.dVecteur[0] - dVecteur[0] * Vect.dVecteur[2];
 	VectResult.dVecteur[2]= dVecteur[0] * Vect.dVecteur[1] - dVecteur[1] * Vect.dVecteur[0];
-		
+	/*	
 	if (VectResult.isNull() )
 	{
 		qDebug("Vecteur4d::operator^ : Retourne un vecteur Null");
 	}
+	*/
 	return VectResult;
 }
 

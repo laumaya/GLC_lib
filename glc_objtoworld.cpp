@@ -75,7 +75,7 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	if (!file.open(QIODevice::ReadOnly))
 	{
 		QString message(QString("GLC_ObjToWorld::CreateWorldFromObj File ") + m_FileName + QString(" doesn't exist"));
-		qDebug() << message;		
+		//qDebug() << message;		
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		throw(fileFormatException);
 	}
@@ -138,12 +138,12 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 		{
 			delete m_pMtlLoader;
 			m_pMtlLoader= NULL;
-			qDebug() << "GLC_ObjToWorld::CreateWorldFromObj: Failed to load materials";
+			//qDebug() << "GLC_ObjToWorld::CreateWorldFromObj: Failed to load materials";
 		}
 	}
 	else
 	{
-		qDebug() << "GLC_ObjToWorld::CreateWorldFromObj: mtl file not found";
+		//qDebug() << "GLC_ObjToWorld::CreateWorldFromObj: mtl file not found";
 	}
 		
 	//////////////////////////////////////////////////////////////////
@@ -378,7 +378,7 @@ GLC_Vector3d GLC_ObjToWorld::extract3dVect(QString &line)
 			QString message= "GLC_ObjToWorld::extract3dVect : failed to convert vector component to double";
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));				
-			qDebug() << message;
+			//qDebug() << message;
 			//GLC_FileFormatException fileFormatException(message, m_FileName);
 			//clear();
 			//throw(fileFormatException);		
@@ -465,7 +465,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 	//////////////////////////////////////////////////////////////////				
 	if (vectorCoordinate.size() < 3)
 	{
-		qDebug() << "GLC_ObjToWorld::extractFaceIndex Face with less than 3 vertex found";
+		//qDebug() << "GLC_ObjToWorld::extractFaceIndex Face with less than 3 vertex found";
 		return;
 	}
 	//////////////////////////////////////////////////////////////////

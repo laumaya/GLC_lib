@@ -78,7 +78,7 @@ bool GLC_Collection::remove(GLC_uint Key)
 		// List validity
 		m_ListIsValid= false;
 		
-		qDebug("GLC_Collection::removeNode : Element succesfuly deleted");
+		//qDebug("GLC_Collection::removeNode : Element succesfuly deleted");
 		return true;
 		
 	}
@@ -128,13 +128,13 @@ bool GLC_Collection::select(GLC_uint key)
 		pSelectedNode->select();		
 		m_ListIsValid= false;
 		
-		qDebug("GLC_Collection::selectNode : Element succesfuly selected");
+		//qDebug("GLC_Collection::selectNode : Element succesfuly selected");
 		return true;
 		
 	}
 	else
 	{	// KO, key doesn't exist or node allready selected
-		qDebug("GLC_Collection::selectNode : Element not selected");
+		//qDebug("GLC_Collection::selectNode : Element not selected");
 		return false;
 	}
 	
@@ -153,13 +153,13 @@ bool GLC_Collection::unselect(GLC_uint key)
 		
 		m_ListIsValid= false;
 		
-		qDebug("GLC_Collection::unselectNode : Node succesfuly unselected");
+		//qDebug("GLC_Collection::unselectNode : Node succesfuly unselected");
 		return true;
 		
 	}
 	else
 	{	// KO, key doesn't exist or node allready selected
-		qDebug("GLC_Collection::unselectNode : Node not unselected");
+		//qDebug("GLC_Collection::unselectNode : Node not unselected");
 		return false;
 	}
 	
@@ -359,7 +359,7 @@ void GLC_Collection::createMemberLists(void)
 // Création de la liste d'affichage de la collection
 bool GLC_Collection::createList(void)
 {
-	qDebug("GLC_Collection::CreateList");
+	//qDebug("GLC_Collection::CreateList");
 	
 	if(0 == m_ListID)		// list doesn't exist
 	{
