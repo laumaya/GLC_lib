@@ -79,6 +79,10 @@ public:
 	inline QList<GLC_Part*> childParts() const {return m_ChildParts.values();}
 	//! Clone the product
 	GLC_Product* clone(GLC_Collection *) const;
+	//! Get number of faces
+	int getNumberOfFaces() const;
+	//! Get number of vertex
+	int getNumberOfVertex() const;
 	
 //@}
 
@@ -116,6 +120,9 @@ public:
 	
 	//! Remove child part, child product and update world collection
 	void removeChilds();
+	
+	//! Reverse child part normal
+	void reverseChildPartNormal();
 
 //@}
 

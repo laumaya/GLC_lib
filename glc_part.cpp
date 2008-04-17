@@ -26,6 +26,7 @@
 
 #include "glc_part.h"
 #include "glc_world.h"
+#include "glc_mesh2.h"
 
 GLC_Part::GLC_Part(GLC_Collection *pCollection, GLC_Instance& instance)
 : GLC_Node(pCollection)
@@ -50,6 +51,30 @@ GLC_Part* GLC_Part::clone(GLC_Collection * pCollection) const
 	return pReturnPart;
 }
 
+//! Get number of Faces
+int GLC_Part::getNumberOfFaces() const
+{
+	int number= 0;
+	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
+	if (NULL != pMesh)
+	{
+		number= pMesh->getNumberOfFaces();
+	}
+	return number;
+}
+//! Get number of vertex
+int GLC_Part::getNumberOfVertex() const
+{
+	int number= 0;
+	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
+	if (NULL != pMesh)
+	{
+		number= pMesh->getNumberOfVertex();
+	}
+	return number;
+}
+
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -70,4 +95,13 @@ void GLC_Part::updateAbsoluteMatrix()
 		m_pCollection->getInstanceHandle(m_RepID)->setMatrix(m_AbsoluteMatrix);
 	}
 }	
+//! Reverse representation normal
+void GLC_Part::reverseMeshNormal()
+{
+	GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
+	if (NULL != pMesh)
+	{
+		pMesh->reverseNormal();
+	}	
+}
 

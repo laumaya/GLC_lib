@@ -59,6 +59,10 @@ public:
 	inline GLC_uint getRepID() const {return m_RepID;}
 	//! Clone the part
 	GLC_Part* clone(GLC_Collection *) const;
+	//! Get number of Faces
+	int getNumberOfFaces() const;
+	//! Get number of vertex
+	int getNumberOfVertex() const;
 	
 //@}
 
@@ -72,6 +76,9 @@ public:
 	
 	//! Update Part absolute matrix
 	void updateAbsoluteMatrix();
+	
+	//! Reverse representation normal if representation is a mesh
+	void reverseMeshNormal();
 	
 //@}
 

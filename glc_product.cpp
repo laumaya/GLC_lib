@@ -68,6 +68,50 @@ GLC_Product* GLC_Product::clone(GLC_Collection * pCollection) const
 	return pResult;
 }
 
+// Get number of faces
+int GLC_Product::getNumberOfFaces() const
+{
+	int number= 0;
+	// Get the number of faces of child product
+	QHashIterator<GLC_uint, GLC_Product*> productIterator(m_ChildProducts);
+ 	while (productIterator.hasNext())
+ 	{
+     	productIterator.next();
+     	number+= productIterator.value()->getNumberOfFaces();
+ 	}
+	// Get the number of faces of child parts
+ 	QHashIterator<GLC_uint, GLC_Part*> partIterator(m_ChildParts);
+ 	while (partIterator.hasNext())
+ 	{
+     	partIterator.next();
+     	number+= partIterator.value()->getNumberOfFaces();
+ 	}
+ 	
+ 	return number;
+}
+// Get number of vertex
+int GLC_Product::getNumberOfVertex() const
+{
+	int number= 0;
+	// Get the number of vertex of child product
+	QHashIterator<GLC_uint, GLC_Product*> productIterator(m_ChildProducts);
+ 	while (productIterator.hasNext())
+ 	{
+     	productIterator.next();
+     	number+= productIterator.value()->getNumberOfVertex();
+ 	}
+	// Get the number of vertex of child parts
+ 	QHashIterator<GLC_uint, GLC_Part*> partIterator(m_ChildParts);
+ 	while (partIterator.hasNext())
+ 	{
+     	partIterator.next();
+     	number+= partIterator.value()->getNumberOfVertex();
+ 	}
+ 	
+ 	return number;
+	
+}
+
 // Return the child product associated with the key
 GLC_Product* GLC_Product::childProduct(const GLC_uint key)
 {
@@ -206,6 +250,26 @@ void GLC_Product::removeChilds()
      	delete partIterator.value();
  	}
  	m_ChildParts.clear();	
+}
+
+// Reverse child part normal
+void GLC_Product::reverseChildPartNormal()
+{
+	// Reverse child part normal of child product
+	QHashIterator<GLC_uint, GLC_Product*> productIterator(m_ChildProducts);
+ 	while (productIterator.hasNext())
+ 	{
+     	productIterator.next();
+     	productIterator.value()->reverseChildPartNormal();
+ 	}
+	// Reverse child part normal
+ 	QHashIterator<GLC_uint, GLC_Part*> partIterator(m_ChildParts);
+ 	while (partIterator.hasNext())
+ 	{
+     	partIterator.next();
+     	partIterator.value()->reverseMeshNormal();
+ 	}
+	
 }
 
 // Assignement operator

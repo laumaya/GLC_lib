@@ -61,6 +61,11 @@ public:
 	inline GLC_Collection* collection() {return m_pCollection;}
 	//! return true if the world is empty
 	inline bool isEmpty() const {return  m_pCollection->isEmpty();}
+	//! Get number of faces
+	inline int getNumberOfFaces() const {return m_pRoot->getNumberOfFaces();}
+	//! Get number of vertex
+	inline int getNumberOfVertex() const{return m_pRoot->getNumberOfVertex();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -70,6 +75,8 @@ public:
 public:
 	//! Merge this world with another world
 	void mergeWithAnotherWorld(const GLC_World &);
+	//! Reverse worlds part normal
+	inline void reversePartNormal() {m_pRoot->reverseChildPartNormal();}
 //@}
 	
 //////////////////////////////////////////////////////////////////////
