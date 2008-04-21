@@ -128,7 +128,8 @@ void GLC_Viewport::initGl()
 	glShadeModel(GL_SMOOTH);                              // Enable Smooth Shading
 	glEnable(GL_DEPTH_TEST);                              // Enables Depth Testing
 	glDepthFunc(GL_LEQUAL);                               // The Type Of Depth Testing To Do
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation	
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 
 // Define camera's target position
