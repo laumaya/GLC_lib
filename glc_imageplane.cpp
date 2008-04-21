@@ -123,6 +123,7 @@ void GLC_ImagePlane::updateZPosition(void)
 // Plane Display
 void GLC_ImagePlane::glDraw(void)
 {
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	const double LgImgSur2= m_dLgImage / 2;
 	glPushMatrix();
 	glLoadIdentity();
@@ -138,6 +139,7 @@ void GLC_ImagePlane::glDraw(void)
 
 	glEnd();
 	glPopMatrix();
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	// OpenGL error handler
 	GLenum error= glGetError();	
 	if (error != GL_NO_ERROR)
