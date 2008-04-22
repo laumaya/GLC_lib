@@ -80,7 +80,7 @@ private:
 	bool extractMaterialName(QString &);
 	
 	//! Extract the texture file name
-	bool extractTextureFileName(QString &);
+	void extractTextureFileName(QString &);
 	
 	//! Extract RGB value
 	bool extractRGBValue(QString &);
@@ -90,6 +90,9 @@ private:
 	
 	//! Get texture file name without parameters
 	QString getTextureName(QTextStream &, const QString &);
+	
+	//! Process Maya specific obj
+	void processMayaSpecific();
 	
 
 //@}

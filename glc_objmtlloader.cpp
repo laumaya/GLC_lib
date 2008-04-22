@@ -109,6 +109,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 				if (NULL != m_pCurrentMaterial)
 				{	// It's not the first material
 					//qDebug() << "Add material : " << m_pCurrentMaterial->getName();
+					processMayaSpecific();
 					m_Materials.insert(m_pCurrentMaterial->getName(), m_pCurrentMaterial);
 					m_pCurrentMaterial= NULL;
 				}
@@ -129,7 +130,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 			else if ((header == "map_Kd") || (header == "map_Ka"))	// Texture
 			{
 				//qDebug() << "Texture detected";
-				if (!extractTextureFileName(lineBuff)) return false;
+				extractTextureFileName(lineBuff);
 			}
 						
 		}
@@ -178,9 +179,8 @@ bool GLC_ObjMtlLoader::extractMaterialName(QString &ligne)
 	return result;
 }
 // Extract the texture file name
-bool GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
+void GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 {
-	bool result= false;
 	QTextStream stream(&ligne);
 	QString valueString;
 	QString header;
@@ -209,15 +209,7 @@ bool GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 			//qDebug() << "Texture File is : " << valueString;
 		}
 		textureFile.close();
-		result= true;
-		
 	}
-	else
-	{
-		m_LoadStatus= "GLC_ObjMtlLoader::extractTextureFileName : something is wrong!!";
-		result= false;
-	}
-	return result;
 }
 
 // Extract RGB value
@@ -363,4 +355,18 @@ QString GLC_ObjMtlLoader::getTextureName(QTextStream &inputStream, const QString
 		}
 	}
 	return textureName;
+}
+// Process Maya specific obj
+void GLC_ObjMtlLoader::processMayaSpecific()
+{
+	// Test if the current material have a texture
+	if (m_pCurrentMaterial->getAddRgbaTexture())
+	{
+		// Test if the diffuse color of material is black
+		if (m_pCurrentMaterial->getDiffuseColor() == Qt::black)
+		{
+			// Change the material's diffuse color in order to see the texture
+			m_pCurrentMaterial->setDiffuseColor(Qt::lightGray);
+		}
+	}	
 }
