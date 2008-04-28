@@ -79,10 +79,6 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		throw(fileFormatException);
 	}
-	else
-	{
-		//qDebug() << "GLC_ObjToWorld::CreateWorldFromObj OK File " << m_FileName << " exist";
-	}
 	
 	//////////////////////////////////////////////////////////////////
 	// Init member
@@ -177,14 +173,29 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	
 	if (NULL != m_pCurrentMesh)
 	{
-		GLC_Instance instance(m_pCurrentMesh);
-		m_pCurrentMesh= NULL;
-		m_pWorld->rootProduct()->addChildPart(instance);
-		// Clear the list of material already used
-		m_CurrentMeshMaterials.clear();
-		m_CurrentMeshMaterialIndex= -1;
+		if (0 == m_pCurrentMesh->getNumberOfFaces())
+		{
+			delete m_pCurrentMesh;
+			m_pCurrentMesh= NULL;
+		}
+		else
+		{
+			GLC_Instance instance(m_pCurrentMesh);
+			m_pCurrentMesh= NULL;
+			m_pWorld->rootProduct()->addChildPart(instance);
+			// Clear the list of material already used
+			m_CurrentMeshMaterials.clear();
+			m_CurrentMeshMaterialIndex= -1;
+		}
 	}
-			
+	//! Test if there is meshes in the world
+	if (m_pWorld->rootProduct()->childCount() == 0)
+	{
+		QString message= "GLC_ObjToWorld::CreateWorldFromObj : No mesh found!";
+		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
+		throw(fileFormatException);		
+	}
 	return m_pWorld;
 		
 }
@@ -230,7 +241,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 {
 	line= line.trimmed();
 	// Search Vertexs vectors
-	if (line.startsWith("v "))
+	if (line.startsWith("v ")|| line.startsWith(QString("v") + QString(QChar(9))))
 	{
 		line.remove(0,2); // Remove first 2 char
 		m_VertexHash.insert(m_CurVertexIndex++, extract3dVect(line));
@@ -238,7 +249,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	}
 
 	// Search texture coordinate vectors
-	else if (line.startsWith("vt "))
+	else if (line.startsWith("vt ")|| line.startsWith(QString("vt") + QString(QChar(9))))
 	{
 		line.remove(0,3); // Remove first 3 char
 		m_TextCoordinateHash.insert(m_CurTextureCoordinateIndex++, extract2dVect(line));
@@ -246,7 +257,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	}
 
 	// Search normals vectors
-	else if (line.startsWith("vn "))
+	else if (line.startsWith("vn ") || line.startsWith(QString("vn") + QString(QChar(9))))
 	{
 		line.remove(0,3); // Remove first 3 char
 		m_NormalHash.insert(m_CurNormalIndex++, extract3dVect(line));
@@ -254,7 +265,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	}
 
 	// Search faces to update index
-	else if (line.startsWith("f "))
+	else if (line.startsWith("f ") || line.startsWith(QString("f") + QString(QChar(9))))
 	{
 		// If there is no group or object in the OBJ file
 		if (NULL == m_pCurrentMesh) changeGroup("GLC_Default");
@@ -263,7 +274,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	}
 
 	// Search Material
-	else if (line.startsWith("usemtl "))
+	else if (line.startsWith("usemtl ") || line.startsWith(QString("usemtl") + QString(QChar(9))))
 	{
 		line.remove(0,7); // Remove first 7 char
 		setCurrentMaterial(line);
@@ -271,7 +282,8 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	}
 	
 	// Search Group
-	else if (line.startsWith("g ") || line.startsWith("o "))
+	else if (line.startsWith("g ") || line.startsWith("o ") || line.startsWith(QString("g") + QString(QChar(9)))
+			|| line.startsWith(QString("o") + QString(QChar(9))))
 	{
 		m_FaceType = notSet;
 		line.remove(0,2); // Remove first 2 char
