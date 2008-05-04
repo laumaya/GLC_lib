@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 0.9.8, packaged on January, 2008.
+ Version 0.9.9, packaged on May, 2008.
 
  http://glc-lib.sourceforge.net
 
