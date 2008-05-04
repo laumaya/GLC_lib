@@ -7,7 +7,7 @@ CONFIG += exceptions \
     create_prl \
     warn_on
 TARGET = GLC_lib
-VERSION = 0.9.8
+VERSION = 0.9.9
 
 unix:OBJECTS_DIR = ./Build
 unix:MOC_DIR = ./Build
