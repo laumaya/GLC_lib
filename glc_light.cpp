@@ -184,20 +184,22 @@ void GLC_Light::glDraw(void)
 	setArray[2]= static_cast<GLfloat>(m_DiffuseColor.blueF());
 	setArray[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());	
 	glLightfv(m_LightID, GL_DIFFUSE, setArray);		// Setup The Diffuse Light
+	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, setArray);
 
 	setArray[0]= static_cast<GLfloat>(m_SpecularColor.redF());
 	setArray[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
 	setArray[2]= static_cast<GLfloat>(m_SpecularColor.blueF());
 	setArray[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());		
 	glLightfv(m_LightID, GL_SPECULAR, setArray);	// Setup The specular Light
+	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, setArray);
 	
 	// Position
 	setArray[0]= static_cast<GLfloat>(m_Position.getX());
 	setArray[1]= static_cast<GLfloat>(m_Position.getY());
 	setArray[2]= static_cast<GLfloat>(m_Position.getZ());
 	setArray[3]= static_cast<GLfloat>(m_Position.getW());		
-	
 	glLightfv(m_LightID, GL_POSITION, setArray);	// Position The Light
+	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, setArray);
 	
 	// OpenGL error handler
 	GLenum error= glGetError();	
