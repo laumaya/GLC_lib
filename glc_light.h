@@ -101,6 +101,13 @@ public:
 
 	//! Set light's specular color by a QColor
 	void setSpecularColor(const QColor &);
+	
+	//! Set Mode
+	inline void setTwoSided(const bool mode)
+	{
+		m_TwoSided= mode;
+		m_ListIsValid = false;	
+	}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -166,6 +173,9 @@ private:
 	
 	//! Light position
 	GLC_Vector4d m_Position;
+	
+	//! Lighting mode
+	bool m_TwoSided;
 
 };
 #endif //GLC_LIGHT_H_

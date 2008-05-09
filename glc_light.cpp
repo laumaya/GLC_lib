@@ -40,6 +40,7 @@ GLC_Light::GLC_Light()
 , m_DiffuseColor(Qt::white)		// By default diffuse color is set to white
 , m_SpecularColor(Qt::white)	// By default specular color is set to white
 , m_Position()
+, m_TwoSided(false)
 {
 	//! \todo modify class to support multi light
 }
@@ -53,6 +54,7 @@ GLC_Light::GLC_Light(const QColor& color)
 , m_DiffuseColor(color)			// Diffuse color is set to color
 , m_SpecularColor(Qt::white)	// By default specular color is set to white
 , m_Position()
+, m_TwoSided(false)
 {
 	//! \todo modify class to support multi light
 }
@@ -102,6 +104,9 @@ void GLC_Light::setSpecularColor(const QColor& color)
 	m_SpecularColor= color;
 	m_ListIsValid = false;
 }
+
+//! Set Mode
+void setMode(const GLenum);
 
 
 //////////////////////////////////////////////////////////////////////
@@ -172,6 +177,18 @@ void GLC_Light::glExecute(GLenum Mode)
 // OpenGL light set up
 void GLC_Light::glDraw(void)
 {
+	// Set the lighting model
+	if (m_TwoSided)
+	{
+		qDebug() << "Two sided";
+		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+	}
+	else
+	{
+		qDebug() << "One Sided";
+		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+	}
+
 	// Color
 	GLfloat setArray[4]= {static_cast<GLfloat>(m_AmbientColor.redF()),
 									static_cast<GLfloat>(m_AmbientColor.greenF()),
@@ -184,14 +201,13 @@ void GLC_Light::glDraw(void)
 	setArray[2]= static_cast<GLfloat>(m_DiffuseColor.blueF());
 	setArray[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());	
 	glLightfv(m_LightID, GL_DIFFUSE, setArray);		// Setup The Diffuse Light
-	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, setArray);
+	
 
 	setArray[0]= static_cast<GLfloat>(m_SpecularColor.redF());
 	setArray[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
 	setArray[2]= static_cast<GLfloat>(m_SpecularColor.blueF());
 	setArray[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());		
 	glLightfv(m_LightID, GL_SPECULAR, setArray);	// Setup The specular Light
-	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, setArray);
 	
 	// Position
 	setArray[0]= static_cast<GLfloat>(m_Position.getX());
@@ -199,7 +215,6 @@ void GLC_Light::glDraw(void)
 	setArray[2]= static_cast<GLfloat>(m_Position.getZ());
 	setArray[3]= static_cast<GLfloat>(m_Position.getW());		
 	glLightfv(m_LightID, GL_POSITION, setArray);	// Position The Light
-	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, setArray);
 	
 	// OpenGL error handler
 	GLenum error= glGetError();	
