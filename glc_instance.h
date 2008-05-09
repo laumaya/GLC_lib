@@ -106,6 +106,9 @@ public:
 	/*! Polygon Mode can Be : GL_POINT, GL_LINE, or GL_FILL*/
 	GLenum getPolygonMode() const {return m_PolyMode;}
 	
+	//! Get the visibility state of instance
+	inline bool isVisible() const {return m_IsVisible;} 
+	
 	
 //@}	
 	
@@ -146,6 +149,9 @@ public:
 	
 	//! set Instance validity in case of multiple instance.
 	void setInstanceValidity(void);
+	
+	//! Set instance visibility
+	inline void setVisibility(const bool visibility) {m_IsVisible= visibility;}
 		
 	
 //@}
@@ -202,6 +208,9 @@ private:
 	//! Polygons display style
 	GLenum m_PolyFace;
 	GLenum m_PolyMode;
+	
+	//! Visibility
+	bool m_IsVisible;
 	
 };
 

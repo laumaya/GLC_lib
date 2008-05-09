@@ -194,6 +194,31 @@ void GLC_Collection::setPolygonModeForAll(GLenum face, GLenum mode)
 
 }
 
+// Set Instance visibility
+void GLC_Collection::setVisibility(const GLC_uint key, const bool visibility)
+{
+	CNodeMap::iterator iNode= m_NodeMap.find(key);		
+	if (iNode != m_NodeMap.end())
+	{	// Ok, the key exist
+		iNode.value().setVisibility(visibility);
+		m_ListIsValid= false;
+	}
+}
+
+// Make visible all instance of the collection
+void GLC_Collection::showAll()
+{
+	CNodeMap::iterator iEntry= m_NodeMap.begin();
+	
+    while (iEntry != m_NodeMap.constEnd())
+    {
+    	// Update Instance Polygon Mode
+    	iEntry.value().setVisibility(true);
+    	iEntry++;
+    }
+    m_ListIsValid= false;
+}
+
 // Return a GLC_Instance pointer from the collection
 GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 {
@@ -297,10 +322,12 @@ void GLC_Collection::glDraw(void)
 	
     while (iEntry != m_NodeMap.constEnd())
     {
-        iEntry.value().glExecute();
-        // Combine Collection BoundingBox with element Bounding Box
-        m_pBoundingBox->combine(iEntry.value().getBoundingBox());
-        
+        if (iEntry.value().isVisible())
+        {
+        	iEntry.value().glExecute();
+            // Combine Collection BoundingBox with element Bounding Box
+            m_pBoundingBox->combine(iEntry.value().getBoundingBox());       	
+        }        
         ++iEntry;
     }
 	

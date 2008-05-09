@@ -120,17 +120,24 @@ public:
 	//! Remove and delete all GLC_Geometry from the collection
 	void clear(void);
 	
-	//! Select a Node
+	//! Select a Instance
 	bool select(GLC_uint);
 	
-	//! unselect a node
+	//! unselect a Instance
 	bool unselect(GLC_uint);
 	
-	//! unselect all node
+	//! unselect all Instance
 	void unselectAll();
 	
 	//! Set the polygon mode for all Instance
 	void setPolygonModeForAll(GLenum, GLenum);
+	
+	//! Set Instance visibility
+	void setVisibility(const GLC_uint, const bool);
+	
+	//! Make visible all instance of the collection
+	void showAll();
+	
 
 //@}
 	

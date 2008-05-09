@@ -42,7 +42,7 @@ GLC_Instance::GLC_Instance()
 , m_IsSelected(false)
 , m_PolyFace(GL_FRONT_AND_BACK)
 , m_PolyMode(GL_FILL)
-
+, m_IsVisible(true)
 {
 	//qDebug() << "GLC_Instance::GLC_Instance null instance ID = " << m_Uid;
 	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
@@ -59,7 +59,7 @@ GLC_Instance::GLC_Instance(GLC_Geometry* pGeom)
 , m_IsSelected(false)
 , m_PolyFace(GL_FRONT_AND_BACK)
 , m_PolyMode(GL_FILL)
-
+, m_IsVisible(true)
 {
 	setName(pGeom->getName());
 	//qDebug() << "GLC_Instance::GLC_Instance ID = " << m_Uid;
@@ -78,7 +78,7 @@ GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
 , m_IsSelected(false)
 , m_PolyFace(inputNode.m_PolyFace)
 , m_PolyMode(inputNode.m_PolyMode)
-
+, m_IsVisible(inputNode.m_IsVisible)
 
 {
 	// Increment the number of instance
