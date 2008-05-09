@@ -135,9 +135,11 @@ public:
 	//! Set Instance visibility
 	void setVisibility(const GLC_uint, const bool);
 	
-	//! Make visible all instance of the collection
+	//! Show all instances of the collection
 	void showAll();
 	
+	//! Hide all instances of collection
+	void hideAll();
 
 //@}
 	

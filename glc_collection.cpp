@@ -205,7 +205,7 @@ void GLC_Collection::setVisibility(const GLC_uint key, const bool visibility)
 	}
 }
 
-// Make visible all instance of the collection
+// Show all instance of the collection
 void GLC_Collection::showAll()
 {
 	CNodeMap::iterator iEntry= m_NodeMap.begin();
@@ -214,6 +214,20 @@ void GLC_Collection::showAll()
     {
     	// Update Instance Polygon Mode
     	iEntry.value().setVisibility(true);
+    	iEntry++;
+    }
+    m_ListIsValid= false;
+}
+
+// Hide all instance of the collection
+void GLC_Collection::hideAll()
+{
+	CNodeMap::iterator iEntry= m_NodeMap.begin();
+	
+    while (iEntry != m_NodeMap.constEnd())
+    {
+    	// Update Instance Polygon Mode
+    	iEntry.value().setVisibility(false);
     	iEntry++;
     }
     m_ListIsValid= false;
@@ -228,7 +242,7 @@ GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 //! return the collection Bounding Box
 GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 {
-	if (!((m_pBoundingBox != NULL) && m_ListIsValid) && (getNumber() > 0))
+	if (((m_pBoundingBox == NULL) || !m_ListIsValid) && (getNumber() > 0))
 	{
 		CNodeMap::iterator iEntry= m_NodeMap.begin();
 		if (m_pBoundingBox != NULL)
@@ -240,8 +254,11 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 		
 	    while (iEntry != m_NodeMap.constEnd())
 	    {
-	        // Combine Collection BoundingBox with element Bounding Box
-	        m_pBoundingBox->combine(iEntry.value().getBoundingBox());	        
+	        if(iEntry.value().isVisible())
+	        {
+	        	// Combine Collection BoundingBox with element Bounding Box
+	        	m_pBoundingBox->combine(iEntry.value().getBoundingBox());
+	        }
 	        ++iEntry;
 	    }
 	    if (m_pBoundingBox->isEmpty())
@@ -253,7 +270,7 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 	    }
 				
 	}
-	else if (!((m_pBoundingBox != NULL) && m_ListIsValid))
+	else if ((m_pBoundingBox == NULL) || !m_ListIsValid)
 	{
 		if (m_pBoundingBox != NULL)
 		{
@@ -262,12 +279,10 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 		}		
 		GLC_Vector4d lower(-0.5, -0.5, -0.5);
 		GLC_Vector4d upper(0.5, 0.5, 0.5);
-		m_pBoundingBox= new GLC_BoundingBox(lower, upper);
-		
+		m_pBoundingBox= new GLC_BoundingBox(lower, upper);		
 	}
 	
 	return *m_pBoundingBox;
-	
 }
 
 
@@ -313,25 +328,16 @@ void GLC_Collection::glExecute(void)
 void GLC_Collection::glDraw(void)
 {
 	CNodeMap::iterator iEntry= m_NodeMap.begin();
-	if (m_pBoundingBox != NULL)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
-	m_pBoundingBox= new GLC_BoundingBox();
-	
     while (iEntry != m_NodeMap.constEnd())
     {
         if (iEntry.value().isVisible())
         {
         	iEntry.value().glExecute();
-            // Combine Collection BoundingBox with element Bounding Box
-            m_pBoundingBox->combine(iEntry.value().getBoundingBox());       	
         }        
         ++iEntry;
     }
 	
-	// Gestion erreur OpenGL
+	// OpenGL error handler
 	GLenum errCode;
 	if ((errCode= glGetError()) != GL_NO_ERROR)
 	{
