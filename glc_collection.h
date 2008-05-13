@@ -71,10 +71,10 @@ public:
 public:
 
 	//! Return true if the collection is empty
-	bool isEmpty() const {return m_NodeMap.size() == 0;}
+	inline bool isEmpty() const {return m_NodeMap.size() == 0;}
 	
 	//! Return the number of Node in the collection
-	int getNumber(void) const{return m_NodeMap.size();}
+	inline int getNumber(void) const{return m_NodeMap.size();}
 	
 	//! Return a GLC_Instance from collection
 	/*! If the element is not found in collection a empty node is return*/
@@ -84,16 +84,19 @@ public:
 	GLC_BoundingBox getBoundingBox(void);
 	
 	//! Return the number of Node in the selection Hash
-	int getNumberOfSelectedNode(void) const {return m_SelectedNodes.size();}
+	inline int getNumberOfSelectedNode(void) const {return m_SelectedNodes.size();}
 	
 	//! Get the Hash table of Selected Nodes
-	SelectedNodeHash* getSelections() {return &m_SelectedNodes;}
+	inline SelectedNodeHash* getSelections() {return &m_SelectedNodes;}
 	
 	//! Return true if the Node is in the collection
-	bool isInCollection(GLC_uint key) const {return m_NodeMap.contains(key);}
+	inline bool isInCollection(GLC_uint key) const {return m_NodeMap.contains(key);}
 
 	//! Return true if the element is selected
-	bool isSelected(GLC_uint key) const {return m_SelectedNodes.contains(key);}
+	inline bool isSelected(GLC_uint key) const {return m_SelectedNodes.contains(key);}
+	
+	//! Return the showing state
+	inline bool getShowState() const {return m_IsInShowSate;}
 
 //@}
 
@@ -140,6 +143,13 @@ public:
 	
 	//! Hide all instances of collection
 	void hideAll();
+	
+	//! Set the Show or noShow state
+	inline void swapShowState()
+	{
+		m_IsInShowSate= !m_IsInShowSate;
+		m_ListIsValid= false;
+	}
 
 //@}
 	
@@ -195,6 +205,9 @@ private:
 		
 	//! Selected Node Hash Table
 	SelectedNodeHash m_SelectedNodes;
+	
+	//! Show State
+	bool m_IsInShowSate;
 		
 };
 #endif //GLC_COLLECTION_H_

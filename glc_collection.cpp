@@ -35,9 +35,12 @@
 //////////////////////////////////////////////////////////////////////
 
 GLC_Collection::GLC_Collection()
-: m_ListID(0)
+: m_NodeMap()
+, m_ListID(0)
 , m_ListIsValid(false)
 , m_pBoundingBox(NULL)
+, m_SelectedNodes()
+, m_IsInShowSate(true)
 {
 }
 
@@ -254,7 +257,7 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 		
 	    while (iEntry != m_NodeMap.constEnd())
 	    {
-	        if(iEntry.value().isVisible())
+	        if(iEntry.value().isVisible() == m_IsInShowSate)
 	        {
 	        	// Combine Collection BoundingBox with element Bounding Box
 	        	m_pBoundingBox->combine(iEntry.value().getBoundingBox());
@@ -330,7 +333,7 @@ void GLC_Collection::glDraw(void)
 	CNodeMap::iterator iEntry= m_NodeMap.begin();
     while (iEntry != m_NodeMap.constEnd())
     {
-        if (iEntry.value().isVisible())
+        if (iEntry.value().isVisible() == m_IsInShowSate)
         {
         	iEntry.value().glExecute();
         }        
