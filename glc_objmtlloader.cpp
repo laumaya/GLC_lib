@@ -95,7 +95,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 	while (!mtlStream.atEnd())
 	{
 		lineBuff= mtlStream.readLine();
-				
+		//qDebug() << lineBuff;		
 		QTextStream streamLine(lineBuff.toAscii());
 		
 		if ((streamLine >> header).status() ==QTextStream::Ok)
@@ -116,6 +116,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 								
 				m_pCurrentMaterial= new GLC_Material;
 				if (!extractMaterialName(lineBuff)) return false;
+				//qDebug() << "New Material " << m_pCurrentMaterial->getName();
 								
 			}
 			else if ((header == "Ka") || (header == "Kd") || (header == "Ks")) // ambiant, diffuse and specular color
@@ -123,7 +124,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 				if (!extractRGBValue(lineBuff)) return false;
 			}
 	
-			else if ((header == "Ns"))	// shiness
+			else if ((header == "Ns") || (header == "d"))	// shiness Or transparency
 			{
 				if (!extractOneValue(lineBuff)) return false;
 			}
@@ -291,14 +292,28 @@ bool GLC_ObjMtlLoader::extractOneValue(QString &ligne)
 			value= valueString.toFloat(&ok);
 			if (!ok)
 			{
-				m_LoadStatus= "GLC_ObjMtlLoader::ExtractOneValue : Wrong format of Ambient color value!";
+				m_LoadStatus= "GLC_ObjMtlLoader::ExtractOneValue : Wrong format of Shiness !";
 				qDebug() << m_LoadStatus;
 				return false;
 			}
 			m_pCurrentMaterial->setShininess(value);
-			//qDebug() << "Shininess : " <<  value;
 			return true;
-		}else
+		}
+		else if (header == "d") // Transparancy
+		{
+			bool ok;
+			value= valueString.toFloat(&ok);
+			if (!ok)
+			{
+				m_LoadStatus= "GLC_ObjMtlLoader::ExtractOneValue : Wrong format Transparency!";
+				qDebug() << m_LoadStatus;
+				return false;
+			}
+			m_pCurrentMaterial->setTransparency(static_cast<qreal>(value));
+			return true;
+		}
+
+		else
 		{
 			m_LoadStatus= "GLC_ObjMtlLoader::ExtractOneValue : Ambient Color not found!!";
 			qDebug() << m_LoadStatus;

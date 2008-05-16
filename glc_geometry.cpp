@@ -40,6 +40,7 @@ GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 , m_pMaterial(NULL)			// have to be set later in constructor
 , m_Thikness(1.0)			// By default thickness = 1.0
 , m_IsWire(typeIsWire)			// the geometry type
+, m_IsTransparent(false)	// Not transparent by default
 
 {
 	// Material is set here
@@ -54,6 +55,7 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_pMaterial(NULL)			// have to be set later in constructor
 , m_Thikness(sourceGeom.m_Thikness)
 , m_IsWire(sourceGeom.m_IsWire)
+, m_IsTransparent(sourceGeom.m_IsTransparent)
 
 {	
 	m_Uid= GLC_GenID();
@@ -191,6 +193,12 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 		}
 
 		m_pMaterial= pMat;
+		
+		// Test if the material is transparent
+		if (m_pMaterial->isTranparent())
+		{
+			setTransparency(true);
+		}
 
 		m_GeometryIsValid = false;
 		m_ListIsValid= false;	// GLC_Mesh2 compatibility

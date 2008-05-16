@@ -36,7 +36,7 @@ class GLC_Material;
 
 //! Geometry hash table
 typedef QHash< GLC_uint, GLC_Instance> CNodeMap;
-typedef QHash< GLC_uint, GLC_Instance*> SelectedNodeHash;
+typedef QHash< GLC_uint, GLC_Instance*> PointerNodeHash;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Collection
@@ -76,6 +76,9 @@ public:
 	//! Return the number of Node in the collection
 	inline int getNumber(void) const{return m_NodeMap.size();}
 	
+	//! Return all GLC_Instance from collection
+	QList<GLC_Instance*> getInstancesHandle();
+	
 	//! Return a GLC_Instance from collection
 	/*! If the element is not found in collection a empty node is return*/
 	GLC_Instance* getInstanceHandle(GLC_uint Key);
@@ -87,7 +90,7 @@ public:
 	inline int getNumberOfSelectedNode(void) const {return m_SelectedNodes.size();}
 	
 	//! Get the Hash table of Selected Nodes
-	inline SelectedNodeHash* getSelections() {return &m_SelectedNodes;}
+	inline PointerNodeHash* getSelections() {return &m_SelectedNodes;}
 	
 	//! Return true if the Node is in the collection
 	inline bool isInCollection(GLC_uint key) const {return m_NodeMap.contains(key);}
@@ -204,7 +207,14 @@ private:
 	GLC_BoundingBox* m_pBoundingBox;
 		
 	//! Selected Node Hash Table
-	SelectedNodeHash m_SelectedNodes;
+	PointerNodeHash m_SelectedNodes;
+	
+	//! Not transparent Node Hash Table
+	PointerNodeHash m_NotTransparentNodes;
+
+	//! Transparent Node Hash Table
+	PointerNodeHash m_TransparentNodes;
+
 	
 	//! Show State
 	bool m_IsInShowSate;

@@ -116,6 +116,9 @@ public:
 	//! return true if the texture is loaded
 	bool textureIsLoaded() const;
 	
+	//! Return true if the material is transparent
+	inline bool isTranparent() const {return  m_Transparency < 1.0;}
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -171,6 +174,9 @@ public:
 	//! Remove Geometry to the "where used" hash table
 	bool delGLC_Geom(GLC_uint Key);
 	
+	//! Set the material transparency
+	void setTransparency(const qreal);
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -225,6 +231,9 @@ private:
 
 	//! material's texture
 	GLC_Texture* m_pTexture;
+	
+	//! material transparency
+	qreal m_Transparency;
 
 };
 

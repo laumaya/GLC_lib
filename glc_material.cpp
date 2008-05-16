@@ -35,8 +35,14 @@
 
 GLC_Material::GLC_Material()
 :GLC_Object("Material")
+, m_AmbientColor()
+, m_DiffuseColor()
+, m_SpecularColor()
+, m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
-, m_pTexture(NULL)			// no texture 
+, m_WhereUsed()
+, m_pTexture(NULL)			// no texture
+, m_Transparency(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << getID();
 	// Ambient Color
@@ -48,12 +54,15 @@ GLC_Material::GLC_Material()
 
 GLC_Material::GLC_Material(const QColor &ambientColor)
 :GLC_Object("Material")
-, m_fShininess(50.0)		// default : shininess 50
+, m_AmbientColor(ambientColor)
+, m_DiffuseColor()
+, m_SpecularColor()
+, m_LightEmission()
+, m_fShininess(50.0)		// By default shininess 50
+, m_WhereUsed()
 , m_pTexture(NULL)			// no texture
+, m_Transparency(1.0)
 {
-	//qDebug() << "GLC_Material::GLC_Material" << getID();
-	m_AmbientColor= ambientColor;
-	
 	// Others
 	initOtherColor();
 }
@@ -61,8 +70,14 @@ GLC_Material::GLC_Material(const QColor &ambientColor)
 
 GLC_Material::GLC_Material(const char *pName ,const GLfloat *pAmbientColor)
 :GLC_Object(pName)
-, m_fShininess(50.0)		// default : shininess 50
+, m_AmbientColor()
+, m_DiffuseColor()
+, m_SpecularColor()
+, m_LightEmission()
+, m_fShininess(50.0)		// By default shininess 50
+, m_WhereUsed()
 , m_pTexture(NULL)			// no texture
+, m_Transparency(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << getID();
 	// Init Ambiant Color
@@ -82,8 +97,14 @@ GLC_Material::GLC_Material(const char *pName ,const GLfloat *pAmbientColor)
 }
 GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 :GLC_Object(pName)
+, m_AmbientColor()
+, m_DiffuseColor()
+, m_SpecularColor()
+, m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
-, m_pTexture(pTexture)		// Init texture 
+, m_WhereUsed()
+, m_pTexture(pTexture)			// init texture
+, m_Transparency(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << getID();
 	
@@ -97,8 +118,14 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 // Copy constructor
 GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 :GLC_Object(InitMaterial.getName())
+, m_AmbientColor(InitMaterial.m_AmbientColor)
+, m_DiffuseColor(InitMaterial.m_DiffuseColor)
+, m_SpecularColor(InitMaterial.m_SpecularColor)
+, m_LightEmission(InitMaterial.m_LightEmission)
 , m_fShininess(InitMaterial.m_fShininess)
+, m_WhereUsed()
 , m_pTexture(NULL)
+, m_Transparency(InitMaterial.m_Transparency)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << getID();
 	if (NULL != InitMaterial.m_pTexture)
@@ -106,18 +133,6 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 		m_pTexture= new GLC_Texture(*(InitMaterial.m_pTexture));
 		assert(m_pTexture != NULL);
 	}
-	
-	// Ambient Color
-	m_AmbientColor= InitMaterial.m_AmbientColor;
-
-	// Diffuse Color
-	m_DiffuseColor= InitMaterial.m_DiffuseColor;
-
-	// Specular Color
-	m_SpecularColor= InitMaterial.m_SpecularColor;
-
-	// Lighting emit
-	m_LightEmission= InitMaterial.m_LightEmission;
 		
 }
 
@@ -231,7 +246,8 @@ bool GLC_Material::textureIsLoaded() const
 	m_LightEmission= pMat->m_LightEmission;
  	// Shininess
  	m_fShininess= pMat->m_fShininess;
- 	
+ 	// Transparency
+ 	m_Transparency= pMat->m_Transparency;
  	updateUsed();
  }
 
@@ -239,6 +255,7 @@ bool GLC_Material::textureIsLoaded() const
 void GLC_Material::setAmbientColor(const QColor& ambientColor)
 {
 	m_AmbientColor= ambientColor;
+	m_AmbientColor.setAlphaF(m_Transparency);
 	updateUsed();
 }
 
@@ -246,6 +263,7 @@ void GLC_Material::setAmbientColor(const QColor& ambientColor)
 void GLC_Material::setDiffuseColor(const QColor& diffuseColor)
 {
 	m_DiffuseColor= diffuseColor;
+	m_DiffuseColor.setAlphaF(m_Transparency);
 	updateUsed();
 }
 
@@ -253,6 +271,7 @@ void GLC_Material::setDiffuseColor(const QColor& diffuseColor)
 void GLC_Material::setSpecularColor(const QColor& specularColor)
 {
 	m_SpecularColor= specularColor;
+	m_SpecularColor.setAlphaF(m_Transparency);
 	updateUsed();
 }
 
@@ -260,6 +279,7 @@ void GLC_Material::setSpecularColor(const QColor& specularColor)
 void GLC_Material::setLightEmission(const QColor& lightEmission)
 {
 	m_LightEmission= lightEmission;
+	m_LightEmission.setAlphaF(m_Transparency);
 	updateUsed();
 }
 
@@ -328,6 +348,17 @@ bool GLC_Material::delGLC_Geom(GLC_uint Key)
 		return false;
 	}
 	
+}
+
+// Set the material transparency
+void GLC_Material::setTransparency(const qreal alpha)
+{
+	m_Transparency= alpha;
+	m_AmbientColor.setAlphaF(m_Transparency);
+	m_DiffuseColor.setAlphaF(m_Transparency);
+	m_SpecularColor.setAlphaF(m_Transparency);
+	m_LightEmission.setAlphaF(m_Transparency);
+	updateUsed();
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -268,7 +268,11 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	else if (line.startsWith("f ") || line.startsWith(QString("f") + QString(QChar(9))))
 	{
 		// If there is no group or object in the OBJ file
-		if (NULL == m_pCurrentMesh) changeGroup("GLC_Default");
+		if (NULL == m_pCurrentMesh)
+			{
+				changeGroup("GLC_Default");
+				//qDebug() << "Default group " << line;
+			}
 		line.remove(0,2); // Remove first 2 char
 		extractFaceIndex(line);	
 	}
@@ -294,7 +298,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 // Change current group
 void GLC_ObjToWorld::changeGroup(QString line)
 {
-	//qDebug() << "GLC_ObjToWorld::changeGroup";
+	//qDebug() << "GLC_ObjToWorld::changeGroup at Line :" << line;
 	//////////////////////////////////////////////////////////////////
 	// Parse the line containing the group name
 	//////////////////////////////////////////////////////////////////		
@@ -342,6 +346,7 @@ void GLC_ObjToWorld::changeGroup(QString line)
 				{
 					// Clear the list of material already used
 					m_CurrentMeshMaterials.clear();
+					//m_CurrentMeshMaterialIndex= -1;
 					m_CurrentMeshMaterialIndex= 0;
 					m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
 					m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterialIndex);
@@ -559,8 +564,10 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	{
 		if (m_pCurrentMesh->getNumberOfFaces() == 0 && (m_CurrentMeshMaterialIndex != -1)) // This is the first material to assign to mesh
 		{
+			//qDebug() << "remove material" << m_CurrentMeshMaterials.key(m_CurrentMeshMaterialIndex);
 			m_CurrentMeshMaterials.clear();
 			m_pCurrentMesh->removeMaterial(m_CurrentMeshMaterialIndex);
+			m_pCurrentMesh->setTransparency(false);
 		}
 		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.size();
 		m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));

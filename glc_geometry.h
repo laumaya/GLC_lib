@@ -113,6 +113,9 @@ public:
 	//! clone the geometry
 	virtual GLC_Geometry* clone() const = 0;
 	
+	//! Get the geometry transparency
+	bool isTransparent() const {return m_IsTransparent;}
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -137,6 +140,13 @@ public:
 	// Material
 	//! Set the Geometry material
 	void setMaterial(GLC_Material* pMat);
+	
+	//! Set the transprency property
+	inline void setTransparency(const bool transparency)
+	{
+		m_IsTransparent= transparency;
+		m_GeometryIsValid= false;
+	}
 	
 //@}
 
@@ -201,6 +211,7 @@ protected:
 
 	//! Material
 	GLC_Material* m_pMaterial;
+	
 
 //////////////////////////////////////////////////////////////////////
 // Private members 
@@ -212,6 +223,9 @@ private:
 		
 	//! Geometry type is wire
 	bool m_IsWire;
+
+	//! Transparency
+	bool m_IsTransparent;
 	
 };
 #endif //GLC_GEOMETRY_H_

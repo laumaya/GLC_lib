@@ -664,7 +664,7 @@ void GLC_ObjToMesh2::loadMaterial(QString fileName)
 		MaterialIndex++;
 		qDebug() << "Add material : " << MaterialIndex;
 		m_pMesh->addMaterial(MaterialIndex, m_pCurrentMaterial);					
-		delete m_pCurrentMaterial;
+		//delete m_pCurrentMaterial;
 		m_pCurrentMaterial= NULL;
 	}
 	
@@ -695,7 +695,7 @@ void GLC_ObjToMesh2::extractMaterialName(QString &ligne, GLC_Material *pMaterial
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));		
 		GLC_FileFormatException fileFormatException(message, m_sFile);
-		delete m_pCurrentMaterial;
+		//delete m_pCurrentMaterial;
 		delete m_pMesh;
 		throw(fileFormatException);
 	}
@@ -744,7 +744,7 @@ void GLC_ObjToMesh2::extractTextureFileName(QString &ligne, GLC_Material *pMater
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));		
 		GLC_FileFormatException fileFormatException(message, m_sFile);
-		delete m_pCurrentMaterial;
+		//delete m_pCurrentMaterial;
 		delete m_pMesh;
 		throw(fileFormatException);
 	}
@@ -772,7 +772,7 @@ void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 			message.append(ligne);
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
-			delete m_pCurrentMaterial;
+			//delete m_pCurrentMaterial;
 			delete m_pMesh;
 			throw(fileFormatException);
 		}		
@@ -799,7 +799,7 @@ void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 		{
 			QString message= "GLC_ObjToMesh2::ExtractRGBValue : something is wrong!!";
 			GLC_FileFormatException fileFormatException(message, m_sFile);
-			delete m_pCurrentMaterial;
+			//delete m_pCurrentMaterial;
 			delete m_pMesh;
 			throw(fileFormatException);
 		}
@@ -811,7 +811,7 @@ void GLC_ObjToMesh2::extractRGBValue(QString &ligne, GLC_Material *pMaterial)
 		message.append(ligne);
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
-		delete m_pCurrentMaterial;
+		//delete m_pCurrentMaterial;
 		delete m_pMesh;
 		throw(fileFormatException);	
 	}
@@ -840,7 +840,7 @@ void GLC_ObjToMesh2::extractOneValue(QString &ligne, GLC_Material *pMaterial)
 				message.append(ligne);
 				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_sFile);
-				delete m_pCurrentMaterial;
+				//delete m_pCurrentMaterial;
 				delete m_pMesh;
 				throw(fileFormatException);
 			}
@@ -851,7 +851,7 @@ void GLC_ObjToMesh2::extractOneValue(QString &ligne, GLC_Material *pMaterial)
 			const QString message= "GLC_ObjToMesh2::ExtractOneValue : Ambient Color not found!!";
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_sFile);
-			delete m_pCurrentMaterial;
+			//delete m_pCurrentMaterial;
 			delete m_pMesh;
 			throw(fileFormatException);
 		}
@@ -862,7 +862,7 @@ void GLC_ObjToMesh2::extractOneValue(QString &ligne, GLC_Material *pMaterial)
 		message.append(ligne);
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_sFile);
-		delete m_pCurrentMaterial;
+		//delete m_pCurrentMaterial;
 		delete m_pMesh;
 		throw(fileFormatException);
 	}
