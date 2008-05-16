@@ -74,7 +74,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Merge this world with another world
-	void mergeWithAnotherWorld(const GLC_World &);
+	void mergeWithAnotherWorld(GLC_World &);
 	//! Reverse worlds part normal
 	inline void reversePartNormal() {m_pRoot->reverseChildPartNormal();}
 //@}
