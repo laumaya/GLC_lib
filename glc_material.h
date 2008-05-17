@@ -117,7 +117,7 @@ public:
 	bool textureIsLoaded() const;
 	
 	//! Return true if the material is transparent
-	inline bool isTranparent() const {return  m_Transparency < 1.0;}
+	inline bool isTransparent() const {return  m_Transparency < 1.0;}
 	
 //@}
 
