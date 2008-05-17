@@ -567,7 +567,6 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 			//qDebug() << "remove material" << m_CurrentMeshMaterials.key(m_CurrentMeshMaterialIndex);
 			m_CurrentMeshMaterials.clear();
 			m_pCurrentMesh->removeMaterial(m_CurrentMeshMaterialIndex);
-			m_pCurrentMesh->setTransparency(false);
 		}
 		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.size();
 		m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
