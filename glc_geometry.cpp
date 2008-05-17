@@ -195,7 +195,7 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 		m_pMaterial= pMat;
 		
 		// Test if the material is transparent
-		if (m_pMaterial->isTranparent())
+		if (m_pMaterial->isTransparent())
 		{
 			setTransparency(true);
 		}
