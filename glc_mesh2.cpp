@@ -152,7 +152,7 @@ void GLC_Mesh2::addMaterial(int Index, GLC_Material* pMaterial)
 		// Add the Material to Material hash table
 		m_MaterialHash.insert(Index, pMaterial);
 		// Test if the material is transparent
-		if (pMaterial->isTranparent())
+		if (pMaterial->isTransparent())
 		{
 			setTransparency(true);
 		}
@@ -167,6 +167,11 @@ int GLC_Mesh2::removeMaterial(int index)
 {
 	//qDebug() << "GLC_Mesh2::removeMaterial" << getID();
 	m_MaterialHash[index]->delGLC_Geom(getID());
+	// If the removed material is the last, change transparency
+	if((m_MaterialHash.size() == 1) && !getMaterial()->isTransparent())
+	{
+		setTransparency(false);
+	}
 	return m_MaterialHash.remove(index);
 }
 
