@@ -33,7 +33,13 @@
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_World
-/*! \brief GLC_World : */
+/*! \brief GLC_World : The Root of GLC_Lib Scene Graph*/
+/*!
+ *  GLC_World contain :
+ * 		- The Scene root GLC_Product.
+ * 		- a GLC_Collection which manage all scene shapes (GLC_Instance)
+ * 
+ */
 //////////////////////////////////////////////////////////////////////
 class GLC_World
 {
