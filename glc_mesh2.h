@@ -82,27 +82,27 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get number of faces
-	int getNumberOfFaces() const {return m_NumberOfFaces;}
+	inline int getNumberOfFaces() const {return m_NumberOfFaces;}
 	//! Get number of vertex
-	int getNumberOfVertex() const {return m_CoordinateHash.size();}
+	inline int getNumberOfVertex() const {return m_CoordinateHash.size();}
 	//! Get number of submaterial
-	int getNumberOfSubMaterial() const {return m_MaterialHash.size();}
+	inline int getNumberOfSubMaterial() const {return m_MaterialHash.size();}
 	//! Get specified mesh sub material
-	GLC_Material* getSubMaterial(const int key) {return m_MaterialHash[key];}
+	inline GLC_Material* getSubMaterial(const int key) {return m_MaterialHash[key];}
 	//! return true if Material key is in the mesh
-	const bool containsMaterial(const int key) const {return m_MaterialHash.contains(key);}	
+	inline const bool containsMaterial(const int key) const {return m_MaterialHash.contains(key);}	
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 	//! Return a copy of the geometry
 	virtual GLC_Geometry* clone() const;
 	//! return a vertex with key
-	const GLC_Vector3d getVertex(const int key) const {return m_CoordinateHash.value(key);}
+	inline const GLC_Vector3d getVertex(const int key) const {return m_CoordinateHash.value(key);}
 	//! return true if vertex key is in the mesh
-	const bool containsVertex(const int key) const {return m_CoordinateHash.contains(key);}
+	inline const bool containsVertex(const int key) const {return m_CoordinateHash.contains(key);}
 	//! return a normal with key
-	const GLC_Vector3d getNormal(const int key) const {return m_NormalHash.value(key);}
+	inline const GLC_Vector3d getNormal(const int key) const {return m_NormalHash.value(key);}
 	//! return true if normal key is in the mesh
-	const bool containsNormal(const int key) const {return m_NormalHash.contains(key);}
+	inline const bool containsNormal(const int key) const {return m_NormalHash.contains(key);}
 
 //@}
 
@@ -118,29 +118,81 @@ public:
 	int removeMaterial(int);
 		
 	//! Add a vertex to mesh
-	void addVertex(int Index, GLC_Vector3d Coordinate);
+	inline void addVertex(const int Index, const GLC_Vector3d& Coordinate)
+	{
+		// Check if the key is already use		
+		if (m_CoordinateHash.find(Index) == m_CoordinateHash.end())
+		{
+			// Add the coordinate to coordinate hash table
+			m_CoordinateHash.insert(Index, Coordinate);
+		}
+	}
 	
 	//! Add Normal
-	void addNormal(int index, GLC_Vector3d Normal);
+	inline void addNormal(const int index, const GLC_Vector3d& Normal)
+	{
+		// Check if the key is already use		
+		if (m_NormalHash.find(index) == m_NormalHash.end())
+		{
+			// Add the coordinate to coordinate hash table
+			m_NormalHash.insert(index, Normal);
+		}
+	}
 	
 	//! Add texture coordinate
-	void addTextureCoordinate(int Index, GLC_Vector2d TextureCoordinate);
+	inline void addTextureCoordinate(const int index, const GLC_Vector2d& textureCoordinate)
+	{
+		// Check if the key is already in use	
+		if (m_TextCoordinateHash.find(index) == m_TextCoordinateHash.end())
+		{	
+			// Add the coordinate to coordinate hash table
+			m_TextCoordinateHash.insert(index, textureCoordinate);
+		}		
+	}
 
 	//! Add a face without texture coordinate and Normal
 	/*! Mesh list of texture index must be empty.
 	 */  
-	void addFace(const QVector<int> &Material, const QVector<int> &Coordinate);
+	inline void addFace(const QVector<int> &Material, const QVector<int> &Coordinate)
+	{		
+		addMaterialIndex(Material);
+		addCoordIndex(Coordinate);
+			
+		// Increment number of faces
+		m_NumberOfFaces++;
+		m_ListIsValid= false;
+	}
+
 		 
 	//! Add a face without texture coordinate
 	/*! Mesh list of texture index must be empty.
 	 */  
-	void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal);
+	inline void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal)
+	{
+		addMaterialIndex(Material);
+		addCoordAndNormIndex(Coordinate, Normal);
+			
+		// Increment number of faces
+		m_NumberOfFaces++;
+		m_ListIsValid= false;		
+	}
+
 	
 	//! Add a face with texture coordinate
 	/*! Number of coordinate, Normal and texture must be equal
 	 */
-	void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
-				const QVector<int> &TextureCoordinate);
+	inline void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
+				const QVector<int> &TextureCoordinate)
+	{
+		addMaterialIndex(Material);
+		addCoordAndNormIndex(Coordinate, Normal);
+		addTextureIndex(TextureCoordinate);
+			
+		// Increment number of faces
+		m_NumberOfFaces++;
+		m_ListIsValid= false;
+	}
+
 	//! Reverse mesh normal
 	void reverseNormal();
 	 
@@ -177,19 +229,45 @@ private:
 	void createSelectionList(GLenum Mode);
 	
 	//! Add coordinate index of a face
-	void addCoordIndex(const QVector<int> &Coordinate);
+	inline void addCoordIndex(const QVector<int> &Coordinate)
+	{	
+		m_CoordinateIndex+= Coordinate.toList();
+		m_CoordinateIndex.append(-1); // End of the face's coordinate index
+	}
 	
 	//! Add coordinate index of a face
-	void addNormalIndex(const QVector<int> &Normal);
+	inline void addNormalIndex(const QVector<int> &Normal)
+	{	
+		m_NormalIndex+= Normal.toList();
+		m_NormalIndex.append(-1); // End of the face's normal index
+	}
 
 	//! Add coordinate and normal index of a face
-	void addCoordAndNormIndex(const QVector<int> &Coordinate, const QVector<int> &Normal);
+	inline void addCoordAndNormIndex(const QVector<int> &Coordinate, const QVector<int> &Normal)
+	{	
+		m_CoordinateIndex+= Coordinate.toList();
+		m_CoordinateIndex.append(-1); // End of the face's coordinate index
+
+		m_NormalIndex+= Normal.toList();
+		m_NormalIndex.append(-1); // End of the face's normal index
+		
+		// Check if indexed list have the same size
+		Q_ASSERT(m_NormalIndex.size() == m_CoordinateIndex.size());
+	}
 	
 	//! Add Texture coordinate index of a face
-	void addTextureIndex(const QVector<int> &TextureCoordinate);
+	inline void addTextureIndex(const QVector<int> &TextureCoordinate)
+	{
+		m_TextureIndex+= TextureCoordinate.toList();
+		m_TextureIndex.append(-1); // End of the face's texture coordinate index
+	}
 	
 	//! Add Material index of a face
-	void addMaterialIndex(const QVector<int> &Material);
+	inline void addMaterialIndex(const QVector<int> &Material)
+	{
+		m_MaterialIndex+= Material.toList();
+		m_MaterialIndex.append(-1); // End of the face's material index
+	}
 	
 //////////////////////////////////////////////////////////////////////
 // Private members
