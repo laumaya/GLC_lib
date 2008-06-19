@@ -4,7 +4,6 @@ QT += opengl \
     core
 CONFIG += exceptions \
     release \
-    create_prl \
     warn_on
 TARGET = GLC_lib
 VERSION = 0.9.9
@@ -53,7 +52,8 @@ HEADERS += glc_maths.h \
     glc_product.h \
     glc_part.h \
     glc_objmtlloader.h \
-    glc_objtoworld.h
+    glc_objtoworld.h \
+    glc_stltoworld.h
     
 SOURCES += glc_vector4d.cpp \
     glc_vector3d.cpp \
@@ -89,7 +89,8 @@ SOURCES += glc_vector4d.cpp \
     glc_product.cpp \
     glc_part.cpp \
     glc_objmtlloader.cpp \
-    glc_objtoworld.cpp
+    glc_objtoworld.cpp \
+    glc_stltoworld.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
