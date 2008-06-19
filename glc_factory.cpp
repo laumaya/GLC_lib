@@ -27,6 +27,7 @@
 #include "glc_factory.h"
 #include "glc_objtomesh2.h"
 #include "glc_objtoworld.h"
+#include "glc_stltoworld.h"
 
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
@@ -122,9 +123,20 @@ GLC_Instance GLC_Factory::createMesh(QFile &file) const
 // Create an GLC_World* with a QFile
 GLC_World* GLC_Factory::createWorld(QFile &file) const
 {
-	GLC_ObjToWorld objToWorld(m_pQGLContext);
-	connect(&objToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-	return objToWorld.CreateWorldFromObj(file);
+	if (QFileInfo(file).suffix().toLower() == "obj")
+	{
+		GLC_ObjToWorld objToWorld(m_pQGLContext);
+		connect(&objToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
+		return objToWorld.CreateWorldFromObj(file);
+	}
+	else if (QFileInfo(file).suffix().toLower() == "stl")
+	{
+		GLC_StlToWorld stlToWorld(m_pQGLContext);
+		connect(&stlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
+		return stlToWorld.CreateWorldFromStl(file);
+	}
+	
+	else return NULL;
 }
 
 // Create an GLC_Material
