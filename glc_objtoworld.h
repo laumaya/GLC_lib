@@ -32,9 +32,9 @@
 #include <QObject>
 #include <QHash>
 #include <QVector>
-#include <glc_vector3d.h>
-#include <glc_vector2d.h>
 
+#include "glc_vector3d.h"
+#include "glc_vector2d.h"
 #include "glc_mesh2.h"
 
 class GLC_World;
