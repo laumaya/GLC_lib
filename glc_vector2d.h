@@ -42,22 +42,43 @@
 
 class GLC_Vector2d  
 {
+	friend class GLC_Vector4d;
 	
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	GLC_Vector2d();
-	/*! Standard constructor With x, y = 0.0*/
-	GLC_Vector2d(const double &dX, const double &dY)
+	/*! Default constructor
+	*  Value is set to 
+	* \n X = 0.0
+	* \n Y =  0.0
+	*/
+	inline GLC_Vector2d()
 	{
-		setVect(dX, dY);
+		dVecteur[0]= 0.0;
+		dVecteur[1]= 0.0;
 	}
-	// Recopy constructor
-	GLC_Vector2d(const GLC_Vector2d &Vect);
+	
+	/*! Standard constructor With x, y = 0.0*/
+	inline GLC_Vector2d(const double &dX, const double &dY)
+	{
+		dVecteur[0]= dX;
+		dVecteur[1]= dY;
+	}
+	
+	/*! Recopy constructor
+	 * Sample use
+	 * \code
+	 * NewVect = new GLC_Vector2d(OldVect);
+	 * \endcode
+	 */
+	inline GLC_Vector2d(const GLC_Vector2d &Vect)
+	{
+		dVecteur[0]= Vect.dVecteur[0];
+		dVecteur[1]= Vect.dVecteur[1];
+	}
 //@}
-
 	
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -65,16 +86,34 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! X Composante*/
-	GLC_Vector2d& setX(const double &dX);
+	inline GLC_Vector2d& setX(const double &dX)
+	{
+		dVecteur[0]= dX;
+		return *this;
+	}
 	
 	/*! Y Composante*/
-	GLC_Vector2d& setY(const double &dY);
+	inline GLC_Vector2d& setY(const double &dY)
+	{
+		dVecteur[1]= dY;
+		return *this;
+	}
 		
 	/*! All Composante*/
-	GLC_Vector2d& setVect(const double &dX, const double &dY);
+	inline GLC_Vector2d& setVect(const double &dX, const double &dY)
+	{
+		dVecteur[0]= dX;
+		dVecteur[1]= dY;
+		return *this;
+	}
 		
 	/*! From another Vector*/
-	GLC_Vector2d& setVect(const GLC_Vector2d &Vect);
+	inline GLC_Vector2d& setVect(const GLC_Vector2d &Vect)
+	{
+		dVecteur[0]= Vect.dVecteur[0];
+		dVecteur[1]= Vect.dVecteur[1];
+		return *this;
+	}
 	
 //@}
 
@@ -84,12 +123,12 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! X Composante*/
-	inline const double getX(void) const
+	inline double getX(void) const
 	{
 		return dVecteur[0];
 	}
 	/*! Y Composante*/
-	inline const double getY(void) const
+	inline double getY(void) const
 	{
 		return dVecteur[1];
 	}
@@ -99,21 +138,12 @@ public:
 		return dVecteur;
 	}
 	/*! Vector is null*/
-	inline const bool isNull(void) const
+	inline bool isNull(void) const
 	{
-		bool result;
-
-		result= (fabs(dVecteur[0]) < EPSILON) && (fabs(dVecteur[1]) < EPSILON);
-		
-		return result;
+		return (fabs(dVecteur[0]) < EPSILON) && (fabs(dVecteur[1]) < EPSILON);
 	}
 
 //@}
-
-//////////////////////////////////////////////////////////////////////
-// Private services functions
-//////////////////////////////////////////////////////////////////////
-
 
 //////////////////////////////////////////////////////////////////////
 //name Private attributes

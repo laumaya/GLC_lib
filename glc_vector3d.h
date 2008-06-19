@@ -28,9 +28,6 @@
 #define GLC_VECTOR3D_H_
 
 #include "glc_utils_maths.h"
-//////////////////////////////////////////////////////////////////////
-// définition global
-//////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Vector3d
@@ -42,20 +39,43 @@
 
 class GLC_Vector3d  
 {
-	
+	friend class GLC_Vector4d;
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	GLC_Vector3d();
-	/*! Standard constructor With x, y, z and w with default value of 1.0*/
-	GLC_Vector3d(const double &dX, const double &dY, const double &dZ)
+	/*! Default constructor
+	*  Value is set to 
+	* \n X = 0.0
+	* \n Y =  0.0
+	* \n Z =  0.0
+	*/
+	inline GLC_Vector3d()
+	{
+		dVecteur[0]= 0.0;
+		dVecteur[1]= 0.0;
+		dVecteur[2]= 0.0;
+	}
+	
+	/*! Standard constructor With x, y, z*/
+	inline GLC_Vector3d(const double &dX, const double &dY, const double &dZ)
 	{
 		setVect(dX, dY, dZ);
 	}
-	// Recopy constructor
-	GLC_Vector3d(const GLC_Vector3d &Vect);
+	
+	/*! Recopy constructor
+	 * Sample use
+	 * \code
+	 * NewVect = new GLC_Vector3d(OldVect);
+	 * \endcode
+	 */
+	inline GLC_Vector3d(const GLC_Vector3d &Vect)
+	{
+		dVecteur[0]= Vect.dVecteur[0];
+		dVecteur[1]= Vect.dVecteur[1];
+		dVecteur[2]= Vect.dVecteur[2];
+	}
 //@}
 
 	
@@ -65,25 +85,54 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! X Composante*/
-	GLC_Vector3d& setX(const double &dX);
+	inline GLC_Vector3d& setX(const double &dX)
+	{
+		dVecteur[0]= dX;
+		return *this;
+	}
 	
 	/*! Y Composante*/
-	GLC_Vector3d& setY(const double &dY);
+	inline GLC_Vector3d& setY(const double &dY)
+	{
+		dVecteur[1]= dY;
+		return *this;
+	}
 	
 	/*! Z Composante*/
-	GLC_Vector3d& setZ(const double &dZ);
+	inline GLC_Vector3d& setZ(const double &dZ)
+	{
+		dVecteur[2]= dZ;
+		return *this;
+	}
 	
 	/*! All Composante*/
-	GLC_Vector3d& setVect(const double &dX, const double &dY,
-		const double &dZ);
+	inline GLC_Vector3d& setVect(const double &dX, const double &dY, const double &dZ)
+	{
+		dVecteur[0]= dX;
+		dVecteur[1]= dY;
+		dVecteur[2]= dZ;
+
+		return *this;
+	}
 		
 	/*! From another Vector*/
-	GLC_Vector3d& setVect(const GLC_Vector3d &Vect);
+	GLC_Vector3d& setVect(const GLC_Vector3d &Vect)
+	{
+		dVecteur[0]= Vect.dVecteur[0];
+		dVecteur[1]= Vect.dVecteur[1];
+		dVecteur[2]= Vect.dVecteur[2];
+		return *this;
+	}
 	
 	/*! Invert Vector*/
-	GLC_Vector3d& setInv(void);
-	
-	
+	inline GLC_Vector3d& setInv(void)
+	{
+		dVecteur[0]= - dVecteur[0];
+		dVecteur[1]= - dVecteur[1];
+		dVecteur[2]= - dVecteur[2];
+		return *this;
+	}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -92,17 +141,17 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! X Composante*/
-	inline const double getX(void) const
+	inline double getX(void) const
 	{
 		return dVecteur[0];
 	}
 	/*! Y Composante*/
-	inline const double getY(void) const
+	inline double getY(void) const
 	{
 		return dVecteur[1];
 	}
 	/*! Z Composante*/
-	inline const double getZ(void) const
+	inline double getZ(void) const
 	{
 		return dVecteur[2];
 	}
@@ -112,14 +161,10 @@ public:
 		return dVecteur;
 	}
 	/*! Vector is null*/
-	inline const bool isNull(void) const
+	inline bool isNull(void) const
 	{
-		bool result;
-
-		result= (fabs(dVecteur[0]) < EPSILON) && (fabs(dVecteur[1]) < EPSILON)
-			&& (fabs(dVecteur[2]) < EPSILON);
-		
-		return result;
+		return (fabs(dVecteur[0]) < EPSILON) && (fabs(dVecteur[1]) < EPSILON)
+		&& (fabs(dVecteur[2]) < EPSILON);
 	}
 
 //@}
@@ -141,6 +186,5 @@ private:
 	double dVecteur[3];
 
 }; //class GLC_Vector3d
-
 
 #endif /*GLC_VECTOR3D_H_*/
