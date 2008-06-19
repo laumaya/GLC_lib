@@ -30,14 +30,6 @@
 #include <QVector>
 #include "glc_vector4d.h"
 
-//! Number of element in the matrix
-#define TAILLEMAT4X4 16
-
-
-//! Matrix Size
-#define DIMMAT4X4 4
-
-
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Matrix4x4
 /*! \brief GLC_Matrix4x4 is a 4 dimensions Matrix*/
@@ -61,31 +53,31 @@ public:
 	GLC_Matrix4x4();
 
 	//! Construct a Matrix by copy 
-	GLC_Matrix4x4(const GLC_Matrix4x4 &Mat);
+	GLC_Matrix4x4(const GLC_Matrix4x4 &);
 
 	//! Contruct a Matrix by an array of 16 elements.
-	GLC_Matrix4x4(const double *Tableau);
+	GLC_Matrix4x4(const double *);
 
 	//! Construct rotation matrix by a vector and an angle
-	GLC_Matrix4x4(const GLC_Vector4d &Vect, const double &dAngleRad)
+	inline GLC_Matrix4x4(const GLC_Vector4d &Vect, const double &dAngleRad)
 	{
 		setMatRot(Vect, dAngleRad);		
 	}
 
 	//! Construct rotation matrix by 2 vectors
-	GLC_Matrix4x4(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2)
+	inline GLC_Matrix4x4(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2)
 	{
 		setMatRot(Vect1, Vect2);		
 	}
 	
 	//! Construct translation matrix by a vector
-	GLC_Matrix4x4(const GLC_Vector4d &Vect)
+	inline GLC_Matrix4x4(const GLC_Vector4d &Vect)
 	{
 		setMatTranslate(Vect);
 	}
 
 	//! Construct translation matrix by 3 coordinates 
-	GLC_Matrix4x4(double Tx, double Ty, double Tz)
+	inline GLC_Matrix4x4(const double Tx, const double Ty, const double Tz)
 	{
 		setMatTranslate(Tx, Ty, Tz);
 	}
@@ -113,7 +105,7 @@ public:
 	const double getDeterminant(void) const;
 
 	//! return a pointer to a row first array of 16 elements
-	const double *return_dMat(void) const
+	inline const double *return_dMat(void) const
 	{
 		return dMatrice;
 	}
@@ -127,19 +119,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set matrix to a rotation matrix define by a vector and an angle in radians
-	GLC_Matrix4x4& setMatRot(const GLC_Vector4d &Vect, const double &dAngleRad);
+	GLC_Matrix4x4& setMatRot(const GLC_Vector4d &, const double &);
 
 	//! Set matrix to a rotation matrix define by 2 vectors
-	GLC_Matrix4x4& setMatRot(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2);
+	GLC_Matrix4x4& setMatRot(const GLC_Vector4d &, const GLC_Vector4d &);
 
 	//! Set Matrix to a translation matrix by a vector
-	GLC_Matrix4x4& setMatTranslate(const GLC_Vector4d &Vect);
+	GLC_Matrix4x4& setMatTranslate(const GLC_Vector4d &);
 	
 	//! Set Matrix to a translation matrix by 3 coordinates
-	GLC_Matrix4x4& setMatTranslate(double Tx, double Ty, double Tz);
+	GLC_Matrix4x4& setMatTranslate(const double, const double, const double);
 
 	//! Set Matrix to a scaling matrix define by 3 double
-	GLC_Matrix4x4& setMatScaling(const double &sX, const double &sY, const double sZ);
+	GLC_Matrix4x4& setMatScaling(const double, const double, const double);
 
 	//! Reverse the Matrix
 	GLC_Matrix4x4& invert(void);
@@ -151,7 +143,7 @@ public:
 	GLC_Matrix4x4& transpose(void);
 	
 	//! Set the matrix with Euler angle
-	GLC_Matrix4x4& fromEuler(double, double, double);
+	GLC_Matrix4x4& fromEuler(const double, const double, const double);
 	
 
 //@}
@@ -162,7 +154,7 @@ public:
 private:
 	
 	//! Return true if the index (argument) is in the diagonal of the matrix
-	const bool isDiagonal(const int index) const
+	inline const bool isDiagonal(const int index) const
 	{
 		if ((index == 0) || (index == 5) || (index == 10) || (index == 15))
 			return true;
@@ -170,14 +162,14 @@ private:
 			return false;
 	}
 
-	// Calcul du déterminant d'une céllule de la matrice 4x4
-	const double getDeterminantLC(const int &Ligne, const int &Colonne) const;
+	//! Return the determinant of a matrix cell
+	const double getDeterminantLC(const int, const int) const;
 
-	// Calcul d'une sous matrice 3x3
-	void getSubMat(const int &Ligne, const int &Colonne, double *ResultMat) const;
+	//! Compute Sub 3X3 matrix
+	void getSubMat(const int, const int, double *) const;
 
-	// Calcul du déterminant d'une matrice 3x3
-	const double getDeterminant3x3(const double *Mat3x3) const;
+	// Return the Matrix 3X3 determinant
+	const double getDeterminant3x3(const double *) const;
 	
 	//! Return the transpose matrix
 	const GLC_Matrix4x4 getTranspose(void) const;
@@ -192,6 +184,10 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 
+	//! Number of elements in the matrix
+	enum {TAILLEMAT4X4 = 16};
+	//! Matrix size
+	enum {DIMMAT4X4 = 4};
 	//! Matrix row first array
 	double dMatrice[TAILLEMAT4X4];
 /*
