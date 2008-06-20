@@ -43,7 +43,7 @@ class GLC_Mesh2;
 /*! \brief GLC_StlToWorld : Create an GLC_World from stl file */
 
 /*! An GLC_StlToWorld extract the only mesh from an .stl file \n
- * 	List of elements extracted from the OBJ
+ * 	List of elements extracted from the STL
  * 		- Vertex
  * 		- Face
  * 		- Normal coordinate
@@ -81,6 +81,8 @@ private:
 	void scanFacet();
 	//! Extract a 3D Vector from a string
 	GLC_Vector3d extract3dVect(QString &);
+	//! Load Binarie STL File
+	void LoadBinariStl(QFile &);
 	
 	
 
@@ -93,7 +95,7 @@ private:
 	void currentQuantum(int);
 
 //////////////////////////////////////////////////////////////////////
-	/*! /name Private members */
+	/* Private members */
 //////////////////////////////////////////////////////////////////////
 private:
 	//! pointer to a GLC_World

@@ -27,6 +27,7 @@
 #include <QTextStream>
 #include <QFileInfo>
 #include <QGLContext>
+#include <QDataStream>
 
 #include "glc_mesh2.h"
 #include "glc_stltoworld.h"
@@ -106,43 +107,38 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 	emit currentQuantum(currentQuantumValue);
 	m_CurrentLineNumber= 0;
 	// Search Object section in the STL
-	while (!m_StlStream.atEnd() && !lineBuff.startsWith("solid"))
+	
+	// Test if the STL File is ASCII or Binary
+	++m_CurrentLineNumber;
+	lineBuff= m_StlStream.readLine();
+	lineBuff.trimmed();
+	if (!lineBuff.startsWith("solid"))
 	{
-		++m_CurrentLineNumber;
-		lineBuff= m_StlStream.readLine();
-		lineBuff.trimmed();
-	}
-	// Test if a solid has been found
-	if (m_StlStream.atEnd())
-	{
-		QString message= "GLC_StlToWorld::CreateWorldFromStl : No mesh found!";
-		GLC_FileFormatException fileFormatException(message, m_FileName);
-		clear();
-		throw(fileFormatException);				
+		// The STL File is not ASCII trying to load Binary STL File
+		m_pCurrentMesh= new GLC_Mesh2();
+		file.reset();
+		LoadBinariStl(file);
 	}
 	else
 	{
-		// A solid has been found, create mesh
+		// The STL File is ASCII
 		lineBuff.remove(0, 5);
 		lineBuff.trimmed();
 		m_pCurrentMesh= new GLC_Mesh2();
 		m_pCurrentMesh->setName(lineBuff);
-	}
-	
-	// Read the mesh facet
-	while (!m_StlStream.atEnd())
-	{
-		scanFacet();
-		
-		currentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentLineNumber) / numberOfLine) * 100);
-		if (currentQuantumValue > previousQuantumValue)
+		// Read the mesh facet
+		while (!m_StlStream.atEnd())
 		{
-			emit currentQuantum(currentQuantumValue);
+			scanFacet();
+			
+			currentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentLineNumber) / numberOfLine) * 100);
+			if (currentQuantumValue > previousQuantumValue)
+			{
+				emit currentQuantum(currentQuantumValue);
+			}
+			previousQuantumValue= currentQuantumValue;		
 		}
-		previousQuantumValue= currentQuantumValue;
-					
-	}
-	
+	}	
 	file.close();
 	
 	GLC_Instance instance(m_pCurrentMesh);
@@ -311,5 +307,89 @@ GLC_Vector3d GLC_StlToWorld::extract3dVect(QString &line)
 
 	return vectResult;
 	
+}
+// Load Binarie STL File
+void GLC_StlToWorld::LoadBinariStl(QFile &file)
+{
+	// Create Working variables
+	int currentQuantumValue= 0;
+	int previousQuantumValue= 0;
+
+	QDataStream stlBinFile(&file);
+	// Pehaps just for mac ??
+	stlBinFile.setByteOrder(QDataStream::LittleEndian);
+	
+	// Skip 80 Bytes STL header
+	int SkipedData= stlBinFile.skipRawData(80);
+	qDebug() << SkipedData;
+	// Check if an error occur
+	if (-1 == SkipedData)
+	{
+		QString message= "GLC_StlToWorld::LoadBinariStl : Failed to skip Header of binary STL";
+		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
+		throw(fileFormatException);				
+	}
+	// Read the number of facet
+	quint32 numberOfFacet= 0;
+	stlBinFile >> numberOfFacet;
+	qDebug() << numberOfFacet;
+	// Check if an error occur
+	if (QDataStream::Ok != stlBinFile.status())
+	{
+		QString message= "GLC_StlToWorld::LoadBinariStl : Failed to read the number of facets of binary STL";
+		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
+		throw(fileFormatException);
+	}
+	for (quint32 i= 0; i < numberOfFacet; ++i)
+	{
+		// Extract the facet normal
+		float x, y, z;
+		stlBinFile >> x >> y >> z;
+		// Check if an error occur
+		if (QDataStream::Ok != stlBinFile.status())
+		{
+			QString message= "GLC_StlToWorld::LoadBinariStl : Failed to read the Normal of binary STL";
+			GLC_FileFormatException fileFormatException(message, m_FileName);
+			clear();
+			throw(fileFormatException);
+		}
+
+		m_pCurrentMesh->addNormal(m_CurNormalIndex++, GLC_Vector3d(static_cast<double>(x), static_cast<double>(y), static_cast<double>(z)));
+		QVector<int> vectorMaterial;
+		QVector<int> vectorCoordinate;
+		QVector<int> vectorNormal;
+		
+		// Extract the 3 Vertexs
+		for (int j= 0; j < 3; ++j)
+		{
+			stlBinFile >> x >> y >> z;
+			// Check if an error occur
+			if (QDataStream::Ok != stlBinFile.status())
+			{
+				QString message= "GLC_StlToWorld::LoadBinariStl : Failed to read the Vertex of binary STL";
+				GLC_FileFormatException fileFormatException(message, m_FileName);
+				clear();
+				throw(fileFormatException);
+			}
+			vectorCoordinate.append(m_CurVertexIndex);
+			vectorMaterial.append(-1); // There is no material information
+			vectorNormal.append(m_CurNormalIndex - 1);
+			m_pCurrentMesh->addVertex(m_CurVertexIndex++, GLC_Vector3d(static_cast<double>(x), static_cast<double>(y), static_cast<double>(z)));
+		}
+		currentQuantumValue = static_cast<int>((static_cast<double>(i + 1) / numberOfFacet) * 100);
+		if (currentQuantumValue > previousQuantumValue)
+		{
+			emit currentQuantum(currentQuantumValue);
+		}
+		previousQuantumValue= currentQuantumValue;
+
+		// Add the face to the current mesh
+		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		// Skip 2 fill-bytes not needed !!!!
+		stlBinFile.skipRawData(2);
+
+	}
 }
 
