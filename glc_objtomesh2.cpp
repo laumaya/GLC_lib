@@ -150,13 +150,15 @@ GLC_Mesh2* GLC_ObjToMesh2::CreateMeshFromObj(QFile &file)
 	{
 		++m_CurrentLineNumber;
 		lineBuff= objStream.readLine();
+		mergeLines(&lineBuff, &objStream);
 		
+		/*
 		if (lineBuff.endsWith(QChar('\\')))
 		{
 			lineBuff.replace(QChar('\\'), QChar(' '));
 			lineBuff.append(objStream.readLine());
 			++m_CurrentLineNumber;
-		}
+		}*/
 		
 		scanLigne(lineBuff);
 		currentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentLineNumber) / numberOfLine) * 100);
@@ -964,6 +966,18 @@ QString GLC_ObjToMesh2::getTextureName(QTextStream &inputStream, const QString &
 		}
 	}
 	return textureName;
+}
+
+// Merge Mutli line in one
+void GLC_ObjToMesh2::mergeLines(QString* pLineBuff, QTextStream* p0bjStream)
+{
+	if (pLineBuff->endsWith(QChar('\\')))
+	{
+		pLineBuff->replace(QChar('\\'), QChar(' '));
+		pLineBuff->append(p0bjStream->readLine());
+		++m_CurrentLineNumber;
+		mergeLines(pLineBuff, p0bjStream);
+	}
 }
 
 

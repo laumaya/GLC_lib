@@ -108,6 +108,9 @@ private:
 	void addTextureCoordinatesToCurrentMesh(QVector<int> &);
 	//! clear objToWorld allocate memmory
 	void clear();
+	//! Merge Mutli line in one
+	void mergeLines(QString*, QTextStream*);
+
 	
 		
 //////////////////////////////////////////////////////////////////////

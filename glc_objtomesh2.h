@@ -115,6 +115,9 @@ private:
 	
 	//! Get texture file name without parameters
 	QString getTextureName(QTextStream &, const QString &);
+	
+	//! Merge Mutli line in one
+	void mergeLines(QString*, QTextStream*);
 
 //////////////////////////////////////////////////////////////////////
 // Qt Signals

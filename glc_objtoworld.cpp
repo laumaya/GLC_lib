@@ -152,12 +152,15 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 		++m_CurrentLineNumber;
 		lineBuff= objStream.readLine();
 		
+		mergeLines(&lineBuff, &objStream);
+		
+		/*
 		if (lineBuff.endsWith(QChar('\\')))
 		{
 			lineBuff.replace(QChar('\\'), QChar(' '));
 			lineBuff.append(objStream.readLine());
 			++m_CurrentLineNumber;
-		}
+		}*/
 		
 		scanLigne(lineBuff);
 		currentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentLineNumber) / numberOfLine) * 100);
@@ -839,6 +842,17 @@ void GLC_ObjToWorld::clear()
 		m_pCurrentMesh= NULL;
 	}
 	
+}
+// Merge Mutli line in one
+void GLC_ObjToWorld::mergeLines(QString* pLineBuff, QTextStream* p0bjStream)
+{
+	if (pLineBuff->endsWith(QChar('\\')))
+	{
+		pLineBuff->replace(QChar('\\'), QChar(' '));
+		pLineBuff->append(p0bjStream->readLine());
+		++m_CurrentLineNumber;
+		mergeLines(pLineBuff, p0bjStream);
+	}
 }
 
 
