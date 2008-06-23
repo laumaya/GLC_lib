@@ -111,19 +111,22 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 	// Test if the STL File is ASCII or Binary
 	++m_CurrentLineNumber;
 	lineBuff= m_StlStream.readLine();
-	lineBuff.trimmed();
+	lineBuff= lineBuff.trimmed().toLower();
 	if (!lineBuff.startsWith("solid"))
 	{
 		// The STL File is not ASCII trying to load Binary STL File
 		m_pCurrentMesh= new GLC_Mesh2();
 		file.reset();
 		LoadBinariStl(file);
+		GLC_Instance instance(m_pCurrentMesh);
+		m_pCurrentMesh= NULL;
+		m_pWorld->rootProduct()->addChildPart(instance);
 	}
 	else
 	{
 		// The STL File is ASCII
 		lineBuff.remove(0, 5);
-		lineBuff.trimmed();
+		lineBuff= lineBuff.trimmed();
 		m_pCurrentMesh= new GLC_Mesh2();
 		m_pCurrentMesh->setName(lineBuff);
 		// Read the mesh facet
@@ -140,11 +143,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		}
 	}	
 	file.close();
-	
-	GLC_Instance instance(m_pCurrentMesh);
-	m_pCurrentMesh= NULL;
-	m_pWorld->rootProduct()->addChildPart(instance);
-	
+		
 	return m_pWorld;
 }
 
@@ -174,12 +173,26 @@ void GLC_StlToWorld::scanFacet()
 ////////////////////////////////////////////// Test end of solid section////////////////////	
 	++m_CurrentLineNumber;
 	QString lineBuff(m_StlStream.readLine());
-	lineBuff= lineBuff.trimmed();
-	// Test if this is the end of STL File
-	if (lineBuff.startsWith("endsolid"))
+	lineBuff= lineBuff.trimmed().toLower();
+	// Test if this is the end of current solid
+	if (lineBuff.startsWith("endsolid") || lineBuff.startsWith("end solid"))
 	{
+		GLC_Instance instance(m_pCurrentMesh);
+		m_pCurrentMesh= NULL;
+		m_pWorld->rootProduct()->addChildPart(instance);
 		return;
 	}
+	// Test if this is the start of new solid
+	if (lineBuff.startsWith("solid"))
+	{
+		// The STL File is ASCII
+		lineBuff.remove(0, 5);
+		lineBuff= lineBuff.trimmed();
+		m_pCurrentMesh= new GLC_Mesh2();
+		m_pCurrentMesh->setName(lineBuff);
+		return;
+	}
+
 ////////////////////////////////////////////// Facet Normal////////////////////////////////	
 	// lineBuff Must begin with "facet normal"
 	if (!lineBuff.startsWith("facet normal"))
@@ -192,13 +205,13 @@ void GLC_StlToWorld::scanFacet()
 		throw(fileFormatException);
 	}
 	lineBuff.remove(0,12); // Remove first 12 chars
-	lineBuff= lineBuff.trimmed();
+	lineBuff= lineBuff.trimmed().toLower();
 	m_pCurrentMesh->addNormal(m_CurNormalIndex++, extract3dVect(lineBuff));
 	
 ////////////////////////////////////////////// Outer Loop////////////////////////////////
 	++m_CurrentLineNumber;
 	lineBuff= m_StlStream.readLine();
-	lineBuff= lineBuff.trimmed();
+	lineBuff= lineBuff.trimmed().toLower();
 	// lineBuff Must begin with "outer loop"
 	if (!lineBuff.startsWith("outer loop"))
 	{
@@ -219,7 +232,7 @@ void GLC_StlToWorld::scanFacet()
 	{
 		++m_CurrentLineNumber;
 		lineBuff= m_StlStream.readLine();
-		lineBuff= lineBuff.trimmed();
+		lineBuff= lineBuff.trimmed().toLower();
 		// lineBuff Must begin with "vertex"
 		if (!lineBuff.startsWith("vertex"))
 		{
@@ -243,7 +256,7 @@ void GLC_StlToWorld::scanFacet()
 ////////////////////////////////////////////// End Loop////////////////////////////////
 	++m_CurrentLineNumber;
 	lineBuff= m_StlStream.readLine();
-	lineBuff= lineBuff.trimmed();
+	lineBuff= lineBuff.trimmed().toLower();
 	// lineBuff Must begin with "endloop"
 	if (!lineBuff.startsWith("endloop"))
 	{
@@ -258,7 +271,7 @@ void GLC_StlToWorld::scanFacet()
 ////////////////////////////////////////////// End Facet////////////////////////////////
 	++m_CurrentLineNumber;
 	lineBuff= m_StlStream.readLine();
-	lineBuff= lineBuff.trimmed();
+	lineBuff= lineBuff.trimmed().toLower();
 	// lineBuff Must begin with "endfacet"
 	if (!lineBuff.startsWith("endfacet"))
 	{
