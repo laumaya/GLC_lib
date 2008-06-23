@@ -28,6 +28,7 @@
 #include "glc_objtomesh2.h"
 #include "glc_objtoworld.h"
 #include "glc_stltoworld.h"
+#include "glc_offtoworld.h"
 
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
@@ -134,6 +135,12 @@ GLC_World* GLC_Factory::createWorld(QFile &file) const
 		GLC_StlToWorld stlToWorld(m_pQGLContext);
 		connect(&stlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		return stlToWorld.CreateWorldFromStl(file);
+	}
+	else if (QFileInfo(file).suffix().toLower() == "off")
+	{
+		GLC_OffToWorld offToWorld(m_pQGLContext);
+		connect(&offToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
+		return offToWorld.CreateWorldFromOff(file);
 	}
 	
 	else return NULL;

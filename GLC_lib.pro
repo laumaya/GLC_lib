@@ -53,7 +53,8 @@ HEADERS += glc_maths.h \
     glc_part.h \
     glc_objmtlloader.h \
     glc_objtoworld.h \
-    glc_stltoworld.h
+    glc_stltoworld.h \
+    glc_offtoworld.h
     
 SOURCES += glc_vector4d.cpp \
     glc_vector3d.cpp \
@@ -90,7 +91,8 @@ SOURCES += glc_vector4d.cpp \
     glc_part.cpp \
     glc_objmtlloader.cpp \
     glc_objtoworld.cpp \
-    glc_stltoworld.cpp
+    glc_stltoworld.cpp \
+    glc_offtoworld.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
