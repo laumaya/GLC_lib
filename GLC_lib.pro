@@ -16,6 +16,27 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
+HEADERS += lib3ds/atmosphere.h \
+           lib3ds/background.h \
+           lib3ds/camera.h \
+           lib3ds/chunk.h \
+           lib3ds/chunktable.h \
+           lib3ds/ease.h \
+           lib3ds/file.h \
+           lib3ds/io.h \
+           lib3ds/light.h \
+           lib3ds/material.h \
+           lib3ds/matrix.h \
+           lib3ds/mesh.h \
+           lib3ds/node.h \
+           lib3ds/quat.h \
+           lib3ds/shadow.h \
+           lib3ds/tcb.h \
+           lib3ds/tracks.h \
+           lib3ds/types.h \
+           lib3ds/vector.h \
+           lib3ds/viewport.h
+
 HEADERS += glc_maths.h \
     glc_utils_maths.h \
     glc_vector2d.h \
@@ -54,8 +75,28 @@ HEADERS += glc_maths.h \
     glc_objmtlloader.h \
     glc_objtoworld.h \
     glc_stltoworld.h \
-    glc_offtoworld.h
-    
+    glc_offtoworld.h \
+    glc_3dstoworld.h
+
+SOURCES += lib3ds/atmosphere.c \
+           lib3ds/background.c \
+           lib3ds/camera.c \
+           lib3ds/chunk.c \
+           lib3ds/ease.c \
+           lib3ds/file.c \
+           lib3ds/io.c \
+           lib3ds/light.c \
+           lib3ds/material.c \
+           lib3ds/matrix.c \
+           lib3ds/mesh.c \
+           lib3ds/node.c \
+           lib3ds/quat.c \
+           lib3ds/shadow.c \
+           lib3ds/tcb.c \
+           lib3ds/tracks.c \
+           lib3ds/vector.c \
+           lib3ds/viewport.c
+   
 SOURCES += glc_vector4d.cpp \
     glc_vector3d.cpp \
     glc_vector2d.cpp \
@@ -92,7 +133,8 @@ SOURCES += glc_vector4d.cpp \
     glc_objmtlloader.cpp \
     glc_objtoworld.cpp \
     glc_stltoworld.cpp \
-    glc_offtoworld.cpp
+    glc_offtoworld.cpp \
+    glc_3dstoworld.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
