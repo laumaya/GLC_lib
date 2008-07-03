@@ -62,6 +62,16 @@ GLC_Matrix4x4::GLC_Matrix4x4(const double *Tableau)
 	}
 }
 
+// Contruct a Matrix by an array of 16 elements.
+GLC_Matrix4x4::GLC_Matrix4x4(const float *Tableau)
+{
+
+	for (int i=0; i < TAILLEMAT4X4; i++)
+	{
+		dMatrice[i]= static_cast<double>(Tableau[i]);
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 // Operator Overload
 //////////////////////////////////////////////////////////////////////

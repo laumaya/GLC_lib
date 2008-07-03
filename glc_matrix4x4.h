@@ -58,6 +58,9 @@ public:
 	//! Contruct a Matrix by an array of 16 elements.
 	GLC_Matrix4x4(const double *);
 
+	//! Contruct a Matrix by an array of 16 elements.
+	GLC_Matrix4x4(const float *);
+
 	//! Construct rotation matrix by a vector and an angle
 	inline GLC_Matrix4x4(const GLC_Vector4d &Vect, const double &dAngleRad)
 	{
