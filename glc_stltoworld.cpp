@@ -329,12 +329,11 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 	int previousQuantumValue= 0;
 
 	QDataStream stlBinFile(&file);
-	// Pehaps just for mac ??
+
 	stlBinFile.setByteOrder(QDataStream::LittleEndian);
 	
 	// Skip 80 Bytes STL header
 	int SkipedData= stlBinFile.skipRawData(80);
-	qDebug() << SkipedData;
 	// Check if an error occur
 	if (-1 == SkipedData)
 	{
@@ -346,7 +345,6 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 	// Read the number of facet
 	quint32 numberOfFacet= 0;
 	stlBinFile >> numberOfFacet;
-	qDebug() << numberOfFacet;
 	// Check if an error occur
 	if (QDataStream::Ok != stlBinFile.status())
 	{
