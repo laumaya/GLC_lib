@@ -29,6 +29,7 @@
 #include "glc_objtoworld.h"
 #include "glc_stltoworld.h"
 #include "glc_offtoworld.h"
+#include "glc_3dstoworld.h"
 
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
@@ -141,6 +142,12 @@ GLC_World* GLC_Factory::createWorld(QFile &file) const
 		GLC_OffToWorld offToWorld(m_pQGLContext);
 		connect(&offToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		return offToWorld.CreateWorldFromOff(file);
+	}
+	else if (QFileInfo(file).suffix().toLower() == "3ds")
+	{
+		GLC_3dsToWorld studioToWorld(m_pQGLContext);
+		connect(&studioToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
+		return studioToWorld.CreateWorldFrom3ds(file);
 	}
 	
 	else return NULL;
