@@ -32,11 +32,13 @@
 #include "glc_world.h"
 #include "glc_fileformatexception.h"
 #include "glc_circle.h"
+#include "glc_material.h"
 // Lib3ds Header
 #include "lib3ds/file.h"
 #include "lib3ds/mesh.h"
 #include "lib3ds/node.h"
 #include "lib3ds/matrix.h"
+#include "lib3ds/material.h"
 
 GLC_3dsToWorld::GLC_3dsToWorld(const QGLContext *pContext)
 : m_pWorld(NULL)
@@ -46,14 +48,19 @@ GLC_3dsToWorld::GLC_3dsToWorld(const QGLContext *pContext)
 , m_CurVertexIndex(0)
 , m_CurNormalIndex(0)
 , m_pLib3dsFile(NULL)
+, m_Materials()
+, m_MaterialsIndex()
+, m_NextMaterialIndex(0)
+, m_pCurrentMaterial(NULL)
 {
 }
 
 GLC_3dsToWorld::~GLC_3dsToWorld()
 {
+	clear();
 }
 
-// Create an GLC_World from an input STL File
+// Create an GLC_World from an input 3DS File
 GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 {
 	clear();
@@ -106,6 +113,15 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	// Free Lib3dsFile and all its ressources
 	lib3ds_file_free(m_pLib3dsFile);
 	m_pLib3dsFile= NULL;
+	if (m_pWorld->collection()->isEmpty())
+	{
+		QString message= "GLC_3dsToWorld::CreateWorldFrom3ds : No mesh found !";
+		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
+		throw(fileFormatException);
+		
+	}
+	
 	return m_pWorld;
 }
 
@@ -131,6 +147,20 @@ void GLC_3dsToWorld::clear()
 		lib3ds_file_free(m_pLib3dsFile);
 		m_pLib3dsFile= NULL;
 	}
+	
+	// Remove unused material
+	QHash<QString, GLC_Material*>::iterator i;
+	for (i= m_Materials.begin(); i != m_Materials.end(); ++i)
+	{
+		if (i.value()->isUnused()) delete i.value();
+	}
+	m_Materials.clear();
+	// Clear the material index hash table
+	m_MaterialsIndex.clear();
+	m_NextMaterialIndex= 0;
+	// Set the current material to NULL
+	m_pCurrentMaterial= NULL;
+	
 }
 
 // Create meshes from the 3ds File
@@ -183,7 +213,7 @@ void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode
 GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 {
 	GLC_Mesh2 * pMesh= new GLC_Mesh2();
-	
+	pMesh->setName(p3dsMesh->name);
 	// The mesh normals
 	const int normalsNumber= p3dsMesh->faces * 3;
 	Lib3dsVector *normalL= static_cast<Lib3dsVector*>(malloc(normalsNumber * sizeof(Lib3dsVector)));
@@ -201,9 +231,10 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	{
 		pMesh->addVertex(i, GLC_Vector3d(p3dsMesh->pointL[i].pos[0], p3dsMesh->pointL[i].pos[1], p3dsMesh->pointL[i].pos[2]));
 	}
-	QVector<int> material;
-	material << -1 << -1 << -1;
+	
 	int normalIndex= 0;
+	int textureIndex= 0;
+	
 	for (unsigned int i= 0; i < p3dsMesh->faces; ++i)
 	{
 		//Add the Normal
@@ -213,9 +244,115 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 		normal.append(normalIndex++);
 		QVector<int> vertex;
 		Lib3dsFace *p3dsFace=&p3dsMesh->faceL[i];
+		// Load the material
+		// The material current face index
+		QVector<int> material;
+		
+		if (p3dsFace->material[0])
+		{
+			Lib3dsMaterial* p3dsMat=lib3ds_file_material_by_name(m_pLib3dsFile, p3dsFace->material);
+			// Check it this material as already been loaded
+			const QString materialName(p3dsFace->material);
+			if (!m_Materials.contains(materialName))
+			{ // Material not already loaded, load it
+				loadMaterial(p3dsMat);
+				// Add the loaded material to the mesh
+				pMesh->addMaterial(m_MaterialsIndex[materialName], m_Materials[materialName]);
+			}
+			// Set the current material
+			m_pCurrentMaterial= m_Materials[materialName];
+			
+			const int index= m_MaterialsIndex[materialName];
+			material << index << index << index;
+		}
+		else // No material
+		{
+			if (NULL != m_pCurrentMaterial)
+			{
+				const int index= m_MaterialsIndex[m_pCurrentMaterial->getName()];
+				pMesh->addMaterial(index, m_pCurrentMaterial);
+				material << index << index << index;
+			}
+			else
+			{
+				material << -1 << -1 << -1;
+			}
+		}
+		// End of loading material
 		vertex << p3dsFace->points[0] << p3dsFace->points[1] << p3dsFace->points[2];
-		pMesh->addFace(material, vertex, normal);
+		// check if the mesh have texture coordinate
+		if (p3dsMesh->texels > 0)
+		{
+			QVector<int> texture;
+			for (int i= 0; i < 3; ++i)
+			{
+				// Load texture coordinate
+				float x= p3dsMesh->texelL[p3dsFace->points[i]][0];
+				float y= p3dsMesh->texelL[p3dsFace->points[i]][1];
+				GLC_Vector2d texel(static_cast<double>(x), static_cast<double>(y));
+				texture.append(textureIndex);
+				pMesh->addTextureCoordinate(textureIndex++, texel);
+			}
+			pMesh->addFace(material, vertex, normal, texture);
+			
+		}
+		else
+		{
+			pMesh->addFace(material, vertex, normal);
+		}
+		
 	}
 	return GLC_Instance(pMesh);
+}
+
+// Load Material
+void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
+{
+	GLC_Material* pMaterial= new GLC_Material;
+	// Set the material name
+	const QString materialName(p3dsMaterial->name);
+	pMaterial->setName(materialName);
+	// Check if there is a texture
+	if (p3dsMaterial->texture1_map.name[0])
+	{
+		const QString textureName(p3dsMaterial->texture1_map.name);
+		// Retrieve the .3ds file path
+		QFileInfo fileInfo(m_FileName);
+		QString textureFileName(fileInfo.absolutePath() + QDir::separator());
+		textureFileName.append(textureName);
+		QFile textureFile(textureFileName);
+		
+		if (textureFile.open(QIODevice::ReadOnly))
+		{
+			// Create the texture and assign it to the material
+			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
+			pMaterial->setTexture(pTexture);
+		}
+		textureFile.close();
+	}
+	// Ambient Color
+	QColor ambient;
+	ambient.setRgbF(p3dsMaterial->ambient[0], p3dsMaterial->ambient[1], p3dsMaterial->ambient[2]);
+	ambient.setAlphaF(p3dsMaterial->ambient[3]);
+	pMaterial->setAmbientColor(ambient);
+	// Diffuse Color
+	QColor diffuse;
+	diffuse.setRgbF(p3dsMaterial->diffuse[0], p3dsMaterial->diffuse[1], p3dsMaterial->diffuse[2]);
+	diffuse.setAlphaF(p3dsMaterial->diffuse[3]);
+	pMaterial->setDiffuseColor(diffuse);
+	// Specular Color
+	QColor specular;
+	specular.setRgbF(p3dsMaterial->specular[0], p3dsMaterial->specular[1], p3dsMaterial->specular[2]);
+	specular.setAlphaF(p3dsMaterial->specular[3]);
+	pMaterial->setSpecularColor(specular);
+	// Shininess
+	//pMaterial->setShininess(pow(2, 10.0 * p3dsMaterial->shininess));
+	// Transparency
+	pMaterial->setTransparency(1.0 - p3dsMaterial->transparency);
+	
+	// Add the material to the hash table
+	m_Materials.insert(materialName, pMaterial);
+	// Add the material index
+	m_MaterialsIndex.insert(materialName, m_NextMaterialIndex++);
 }
 

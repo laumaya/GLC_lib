@@ -31,6 +31,7 @@
 #include <QFile>
 #include <QDataStream>
 #include <QString>
+#include <QHash>
 
 #include "glc_instance.h"
 
@@ -38,10 +39,12 @@ class GLC_World;
 class QGLContext;
 class GLC_Mesh2;
 class GLC_Product;
+class GLC_Material;
 
 struct Lib3dsFile;
 struct Lib3dsNode;
 struct Lib3dsMesh;
+struct Lib3dsMaterial;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_3dsToWorld
@@ -91,6 +94,8 @@ private:
 	void createMeshes(GLC_Product*, Lib3dsNode*);
 	//! Create Instance from a Lib3dsMesh
 	GLC_Instance createInstance(Lib3dsMesh*);
+	//! Load Material
+	void loadMaterial(Lib3dsMaterial*);
 
 //@}
 
@@ -118,6 +123,18 @@ private:
 	int m_CurNormalIndex;
 	//! The Lib3dsFile Structure
 	Lib3dsFile* m_pLib3dsFile;
+	//! The GLC_Material Hash Table
+	QHash<QString, GLC_Material*> m_Materials;
+	//! The Material index Hash Table
+	QHash<QString, int> m_MaterialsIndex;
+	//! The next material index
+	int m_NextMaterialIndex;
+	// The Current Material
+	GLC_Material* m_pCurrentMaterial;
+
+
+	
+
 };
 
 #endif /*GLC_3DSTOWORLD_H_*/
