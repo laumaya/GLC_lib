@@ -52,6 +52,7 @@ GLC_3dsToWorld::GLC_3dsToWorld(const QGLContext *pContext)
 , m_MaterialsIndex()
 , m_NextMaterialIndex(0)
 , m_pCurrentMaterial(NULL)
+, m_LoadedMeshes()
 {
 }
 
@@ -80,7 +81,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	m_pWorld= new GLC_World;
 	
 	//Load 3ds File
-	m_pLib3dsFile=lib3ds_file_load(m_FileName.toStdString().c_str());
+	m_pLib3dsFile=lib3ds_file_load(m_FileName.toLatin1().data());
 	if (!m_pLib3dsFile)
 	{
 		QString message= "GLC_3dsToWorld::CreateWorldFrom3ds : Loading Failed";
@@ -95,7 +96,8 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 		createMeshes(m_pWorld->rootProduct(), pNode);
 	}
 
-	/* No nodes?  Fabricate nodes to display all the meshes. */
+	/*
+	// No nodes?  Fabricate nodes to display all the meshes.
 	if(m_pWorld->collection()->isEmpty())
 	{
 		qDebug() << "No nodes founds";
@@ -109,8 +111,27 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 			pNode->parent_id= LIB3DS_NO_PARENT;
 			lib3ds_file_insert_node(m_pLib3dsFile, pNode);
 		}
-	}
+		
+		for (Lib3dsNode *pNode=m_pLib3dsFile->nodes; pNode!=0; pNode=pNode->next)
+		{
+			createMeshes(m_pWorld->rootProduct(), pNode);
+		}
+		
+	}*/
 	
+	// Load unloaded mesh name
+	for(Lib3dsMesh *pMesh= m_pLib3dsFile->meshes; pMesh != NULL; pMesh = pMesh->next)
+	{
+		if (!m_LoadedMeshes.contains(QString(pMesh->name)))
+		{
+			Lib3dsNode *pNode= lib3ds_node_new_object();
+			strcpy(pNode->name, pMesh->name);
+			pNode->parent_id= LIB3DS_NO_PARENT;
+			lib3ds_file_insert_node(m_pLib3dsFile, pNode);
+			createMeshes(m_pWorld->rootProduct(), pNode);
+		}
+	}
+
 	// Free Lib3dsFile and all its ressources
 	lib3ds_file_free(m_pLib3dsFile);
 	m_pLib3dsFile= NULL;
@@ -159,6 +180,8 @@ void GLC_3dsToWorld::clear()
 	m_NextMaterialIndex= 0;
 	// Set the current material to NULL
 	m_pCurrentMaterial= NULL;
+	// Clear the loaded meshes Set
+	m_LoadedMeshes.clear();
 	
 }
 
@@ -170,17 +193,34 @@ void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode
 	
 	if (pFatherNode->type == LIB3DS_OBJECT_NODE)
 	{
-		// Check if the node is a mesh or dummy
-		
+		// Check if the node is a mesh or dummy		
 		if (strcmp(pFatherNode->name,"$$$DUMMY")==0)
 		{
 			return;
-		}	
-		pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->data.object.morph);
+		}
+		
+		pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->data.object.morph);		
 	    if( pMesh == NULL )
 	    {
-	    	pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->name);
+	    	pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->data.object.instance);
+		    if( pMesh == NULL )
+		    {
+		    	pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->name);
+			    if( pMesh != NULL )
+			    {
+			    	m_LoadedMeshes.insert(QString(pFatherNode->name));
+			    }
+		    }
+		    else
+		    {
+		    	m_LoadedMeshes.insert(QString(pFatherNode->data.object.instance));
+		    }
 	    }
+	    else
+	    {
+	    	m_LoadedMeshes.insert(QString(pFatherNode->data.object.morph));
+	    }
+	    
 	    if( pMesh != NULL )
 	    {
 	    	GLC_Instance instance(createInstance(pMesh));

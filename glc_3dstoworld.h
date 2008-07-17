@@ -32,6 +32,7 @@
 #include <QDataStream>
 #include <QString>
 #include <QHash>
+#include <QSet>
 
 #include "glc_instance.h"
 
@@ -131,6 +132,8 @@ private:
 	int m_NextMaterialIndex;
 	// The Current Material
 	GLC_Material* m_pCurrentMaterial;
+	// The set of loaded meshes
+	QSet<QString> m_LoadedMeshes;
 
 
 	
