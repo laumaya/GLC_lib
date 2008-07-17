@@ -89,10 +89,16 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 		throw(fileFormatException);
 	}
 	
-	/* No nodes?  Fabricate nodes to display all the meshes. */
-	if(!m_pLib3dsFile->nodes)
+	// Create GLC_Instance with Node
+	for (Lib3dsNode *pNode=m_pLib3dsFile->nodes; pNode!=0; pNode=pNode->next)
 	{
-		qDebug() << "No nodes";
+		createMeshes(m_pWorld->rootProduct(), pNode);
+	}
+
+	/* No nodes?  Fabricate nodes to display all the meshes. */
+	if(m_pWorld->collection()->isEmpty())
+	{
+		qDebug() << "No nodes founds";
 		Lib3dsMesh *pMesh;
 		Lib3dsNode *pNode;
 	
@@ -103,12 +109,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 			pNode->parent_id= LIB3DS_NO_PARENT;
 			lib3ds_file_insert_node(m_pLib3dsFile, pNode);
 		}
-	  }
-	  // Create GLC_Instance with Node
-	   for (Lib3dsNode *pNode=m_pLib3dsFile->nodes; pNode!=0; pNode=pNode->next)
-	   {
-		   createMeshes(m_pWorld->rootProduct(), pNode);
-	   }
+	}
 	
 	// Free Lib3dsFile and all its ressources
 	lib3ds_file_free(m_pLib3dsFile);
@@ -118,10 +119,8 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 		QString message= "GLC_3dsToWorld::CreateWorldFrom3ds : No mesh found !";
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
-		throw(fileFormatException);
-		
-	}
-	
+		throw(fileFormatException);		
+	}	
 	return m_pWorld;
 }
 
@@ -172,39 +171,46 @@ void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode
 	if (pFatherNode->type == LIB3DS_OBJECT_NODE)
 	{
 		// Check if the node is a mesh or dummy
+		
 		if (strcmp(pFatherNode->name,"$$$DUMMY")==0)
 		{
 			return;
-		}		
+		}	
 		pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->data.object.morph);
 	    if( pMesh == NULL )
 	    {
 	    	pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->name);
 	    }
-	    	
-	    GLC_Instance instance(createInstance(pMesh));		   
-	    pProduct->addChildPart(instance);
+	    if( pMesh != NULL )
+	    {
+	    	GLC_Instance instance(createInstance(pMesh));
+			Lib3dsMatrix matrix;
+			lib3ds_matrix_copy(matrix, pMesh->matrix);
+			GLC_Matrix4x4 mat(&matrix[0][0]);
+			GLC_Matrix4x4 matInv(&matrix[0][0]);
+			matInv.invert();
+			
+			Lib3dsObjectData *pObjectData;
+			pObjectData= &pFatherNode->data.object;			
+			GLC_Matrix4x4 trans(-pObjectData->pivot[0], -pObjectData->pivot[1], -pObjectData->pivot[2]);
+			
+			mat= mat * trans * matInv;
+						
+			pProduct->addChildPart(instance)->move(mat);
+	    }
 	}
 	
 	// If there is a child, create a child product
 	if (NULL != pFatherNode->childs)
 	{
+		
 		pChildProduct= pProduct->addNewChildProduct();
-		if (NULL != pMesh)
-		{
-			Lib3dsMatrix M;
-			lib3ds_matrix_copy(M, pMesh->matrix);
-			lib3ds_matrix_inv(M);
-
-			GLC_Matrix4x4 mat(&M[0][0]);
-			
-			//pChildProduct->move(mat);
+		 
+		// Create Childs meshes if exists
+		for (Lib3dsNode* pNode= pFatherNode->childs; pNode!=0; pNode= pNode->next)
+		{	
+			createMeshes(pChildProduct, pNode);
 		}
-	}
-	// Create Childs meshes if exists
-	for (Lib3dsNode* pNode= pFatherNode->childs; pNode!=0; pNode= pNode->next)
-	{	
-		createMeshes(pChildProduct, pNode);
 	}
 	
 
