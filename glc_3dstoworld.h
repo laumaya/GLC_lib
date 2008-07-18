@@ -130,10 +130,18 @@ private:
 	QHash<QString, int> m_MaterialsIndex;
 	//! The next material index
 	int m_NextMaterialIndex;
-	// The Current Material
-	GLC_Material* m_pCurrentMaterial;
 	// The set of loaded meshes
 	QSet<QString> m_LoadedMeshes;
+	// Initial quantum value
+	const int m_InitQuantumValue;
+	// The current quantum value
+	int m_CurrentQuantumValue;
+	// The previous quantum value
+	int m_PreviousQuantumValue;
+	// The number of meshes
+	int m_NumberOfMeshes;
+	// The Current mesh index
+	int m_CurrentMeshNumber;
 
 
 	

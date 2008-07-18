@@ -51,8 +51,12 @@ GLC_3dsToWorld::GLC_3dsToWorld(const QGLContext *pContext)
 , m_Materials()
 , m_MaterialsIndex()
 , m_NextMaterialIndex(0)
-, m_pCurrentMaterial(NULL)
 , m_LoadedMeshes()
+, m_InitQuantumValue(50)
+, m_CurrentQuantumValue(0)
+, m_PreviousQuantumValue(0)
+, m_NumberOfMeshes(0)
+, m_CurrentMeshNumber(0)
 {
 }
 
@@ -66,6 +70,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 {
 	clear();
 	m_FileName= file.fileName();
+
 	//////////////////////////////////////////////////////////////////
 	// Test if the file exist and can be opened
 	//////////////////////////////////////////////////////////////////
@@ -89,35 +94,29 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 		clear();
 		throw(fileFormatException);
 	}
+	m_CurrentQuantumValue= m_InitQuantumValue;
+	m_PreviousQuantumValue= m_CurrentQuantumValue;
 	
+	emit currentQuantum(m_CurrentQuantumValue);
+	// Count the number of meshes
+	for(Lib3dsMesh *pMesh= m_pLib3dsFile->meshes; pMesh != NULL; pMesh = pMesh->next)
+	{
+		++m_NumberOfMeshes;
+	}
+	// Check if there is some meshes in the 3ds file
+	if (0 == m_NumberOfMeshes)
+	{
+		QString message= "GLC_3dsToWorld::CreateWorldFrom3ds : No mesh found !";
+		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
+		throw(fileFormatException);		
+	}	
+
 	// Create GLC_Instance with Node
 	for (Lib3dsNode *pNode=m_pLib3dsFile->nodes; pNode!=0; pNode=pNode->next)
 	{
 		createMeshes(m_pWorld->rootProduct(), pNode);
 	}
-
-	/*
-	// No nodes?  Fabricate nodes to display all the meshes.
-	if(m_pWorld->collection()->isEmpty())
-	{
-		qDebug() << "No nodes founds";
-		Lib3dsMesh *pMesh;
-		Lib3dsNode *pNode;
-	
-		for(pMesh= m_pLib3dsFile->meshes; pMesh != NULL; pMesh = pMesh->next)
-		{
-			pNode= lib3ds_node_new_object();
-			strcpy(pNode->name, pMesh->name);
-			pNode->parent_id= LIB3DS_NO_PARENT;
-			lib3ds_file_insert_node(m_pLib3dsFile, pNode);
-		}
-		
-		for (Lib3dsNode *pNode=m_pLib3dsFile->nodes; pNode!=0; pNode=pNode->next)
-		{
-			createMeshes(m_pWorld->rootProduct(), pNode);
-		}
-		
-	}*/
 	
 	// Load unloaded mesh name
 	for(Lib3dsMesh *pMesh= m_pLib3dsFile->meshes; pMesh != NULL; pMesh = pMesh->next)
@@ -135,13 +134,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	// Free Lib3dsFile and all its ressources
 	lib3ds_file_free(m_pLib3dsFile);
 	m_pLib3dsFile= NULL;
-	if (m_pWorld->collection()->isEmpty())
-	{
-		QString message= "GLC_3dsToWorld::CreateWorldFrom3ds : No mesh found !";
-		GLC_FileFormatException fileFormatException(message, m_FileName);
-		clear();
-		throw(fileFormatException);		
-	}	
+	
 	return m_pWorld;
 }
 
@@ -178,10 +171,13 @@ void GLC_3dsToWorld::clear()
 	// Clear the material index hash table
 	m_MaterialsIndex.clear();
 	m_NextMaterialIndex= 0;
-	// Set the current material to NULL
-	m_pCurrentMaterial= NULL;
 	// Clear the loaded meshes Set
 	m_LoadedMeshes.clear();
+	// Progress indicator
+	m_CurrentQuantumValue= 0;
+	m_PreviousQuantumValue= 0;
+	m_NumberOfMeshes= 0;
+	m_CurrentMeshNumber= 0;
 	
 }
 
@@ -260,6 +256,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 {
 	GLC_Mesh2 * pMesh= new GLC_Mesh2();
 	pMesh->setName(p3dsMesh->name);
+	
 	// The mesh normals
 	const int normalsNumber= p3dsMesh->faces * 3;
 	Lib3dsVector *normalL= static_cast<Lib3dsVector*>(malloc(normalsNumber * sizeof(Lib3dsVector)));
@@ -293,36 +290,35 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 		// Load the material
 		// The material current face index
 		QVector<int> material;
-		
 		if (p3dsFace->material[0])
 		{
 			Lib3dsMaterial* p3dsMat=lib3ds_file_material_by_name(m_pLib3dsFile, p3dsFace->material);
-			// Check it this material as already been loaded
-			const QString materialName(p3dsFace->material);
-			if (!m_Materials.contains(materialName))
-			{ // Material not already loaded, load it
-				loadMaterial(p3dsMat);
-				// Add the loaded material to the mesh
-				pMesh->addMaterial(m_MaterialsIndex[materialName], m_Materials[materialName]);
-			}
-			// Set the current material
-			m_pCurrentMaterial= m_Materials[materialName];
-			
-			const int index= m_MaterialsIndex[materialName];
-			material << index << index << index;
-		}
-		else // No material
-		{
-			if (NULL != m_pCurrentMaterial)
+			if (NULL != p3dsMat)
 			{
-				const int index= m_MaterialsIndex[m_pCurrentMaterial->getName()];
-				pMesh->addMaterial(index, m_pCurrentMaterial);
+				// Check it this material as already been loaded
+				const QString materialName(p3dsFace->material);
+
+				if (!m_Materials.contains(materialName))
+				{ // Material not already loaded, load it
+					loadMaterial(p3dsMat);
+				}
+				// Add the material to the mesh
+				const int index= m_MaterialsIndex[materialName];
+				// Add material to mesh if necessary
+				if (!pMesh->containsMaterial(index))
+				{
+					pMesh->addMaterial(index, m_Materials[materialName]);
+				}
 				material << index << index << index;
 			}
 			else
 			{
 				material << -1 << -1 << -1;
 			}
+		}
+		else // No material
+		{
+			material << -1 << -1 << -1;
 		}
 		// End of loading material
 		vertex << p3dsFace->points[0] << p3dsFace->points[1] << p3dsFace->points[2];
@@ -348,6 +344,15 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 		}
 		
 	}
+	// Compute loading progress
+	++m_CurrentMeshNumber;
+	m_CurrentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentMeshNumber) / m_NumberOfMeshes) * (100 - m_InitQuantumValue)) + m_InitQuantumValue;
+	if (m_CurrentQuantumValue > m_PreviousQuantumValue)
+	{
+		emit currentQuantum(m_CurrentQuantumValue);
+	}
+	m_PreviousQuantumValue= m_CurrentQuantumValue;		
+
 	return GLC_Instance(pMesh);
 }
 
