@@ -394,6 +394,20 @@ QVector<double> GLC_Matrix4x4::toEuler(void) const
 	return result;
 }
 
+// Return the matrix string
+QString GLC_Matrix4x4::toString() const
+{
+	QString result;
+	for (int i= 0; i < DIMMAT4X4; ++i)
+	{
+		result+= (QString::number(dMatrice[0 + i])) + QString(" ");
+		result+= (QString::number(dMatrice[4 + i])) + QString(" ");
+		result+= (QString::number(dMatrice[8 + i])) + QString(" ");
+		result+= (QString::number(dMatrice[12 + i])) + QString("\n");
+	}
+	result.remove(result.size() - 1, 1);
+	return result;
+}
 
 
 // Compute Sub 3X3 matrix

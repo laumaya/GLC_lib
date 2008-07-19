@@ -114,6 +114,9 @@ public:
 	}
 	//! Return a vector which contains radians Euler angle of the matrix
 	QVector<double> toEuler(void) const;
+	
+	//! Return the matrix string
+	QString toString() const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
