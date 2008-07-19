@@ -130,7 +130,7 @@ private:
 	QHash<QString, int> m_MaterialsIndex;
 	//! The next material index
 	int m_NextMaterialIndex;
-	// The set of loaded meshes
+	// The Hash of loaded meshes
 	QSet<QString> m_LoadedMeshes;
 	// Initial quantum value
 	const int m_InitQuantumValue;

@@ -94,6 +94,8 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 		clear();
 		throw(fileFormatException);
 	}
+	// Evaluate Nodes Matrix for the first frame (Needed by instances)
+	lib3ds_file_eval(m_pLib3dsFile, 0.0);
 	m_CurrentQuantumValue= m_InitQuantumValue;
 	m_PreviousQuantumValue= m_CurrentQuantumValue;
 	
@@ -123,6 +125,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	{
 		if (!m_LoadedMeshes.contains(QString(pMesh->name)))
 		{
+			qDebug() << "Mesh without parent found" << QString(pMesh->name);
 			Lib3dsNode *pNode= lib3ds_node_new_object();
 			strcpy(pNode->name, pMesh->name);
 			pNode->parent_id= LIB3DS_NO_PARENT;
@@ -189,58 +192,39 @@ void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode
 	
 	if (pFatherNode->type == LIB3DS_OBJECT_NODE)
 	{
-		// Check if the node is a mesh or dummy		
-		if (strcmp(pFatherNode->name,"$$$DUMMY")==0)
-		{
-			return;
-		}
+		//qDebug() << "Node type LIB3DS_OBJECT_NODE is named : " << QString(pFatherNode->name);
+		//qDebug() << "Node Matrix :";
+		//qDebug() << GLC_Matrix4x4(&(pFatherNode->matrix[0][0])).toString();
 		
-		pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->data.object.morph);		
-	    if( pMesh == NULL )
-	    {
-	    	pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->data.object.instance);
-		    if( pMesh == NULL )
+		// Check if the node is a mesh or dummy		
+		if (!(strcmp(pFatherNode->name,"$$$DUMMY")==0))
+		{
+	    	pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->name);
+		    if( pMesh != NULL )
 		    {
-		    	pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->name);
-			    if( pMesh != NULL )
-			    {
-			    	m_LoadedMeshes.insert(QString(pFatherNode->name));
-			    }
+		    	GLC_Instance instance(createInstance(pMesh));
+		    	// Load node matrix
+		    	GLC_Matrix4x4 nodeMat(&(pFatherNode->matrix[0][0]));
+				// The mesh matrix to inverse
+		    	GLC_Matrix4x4 matInv(&(pMesh->matrix[0][0]));
+				matInv.invert();				
+				// Get the node pivot
+				Lib3dsObjectData *pObjectData;
+				pObjectData= &pFatherNode->data.object;
+				GLC_Matrix4x4 trans(-pObjectData->pivot[0], -pObjectData->pivot[1], -pObjectData->pivot[2]);
+				// Compute the part matrix
+				nodeMat= nodeMat * trans * matInv; // I don't know why...
+				// move the part by the matrix			
+				pProduct->addChildPart(instance)->move(nodeMat);
 		    }
-		    else
-		    {
-		    	m_LoadedMeshes.insert(QString(pFatherNode->data.object.instance));
-		    }
-	    }
-	    else
-	    {
-	    	m_LoadedMeshes.insert(QString(pFatherNode->data.object.morph));
-	    }
-	    
-	    if( pMesh != NULL )
-	    {
-	    	GLC_Instance instance(createInstance(pMesh));
-			Lib3dsMatrix matrix;
-			lib3ds_matrix_copy(matrix, pMesh->matrix);
-			GLC_Matrix4x4 mat(&matrix[0][0]);
-			GLC_Matrix4x4 matInv(&matrix[0][0]);
-			matInv.invert();
-			
-			Lib3dsObjectData *pObjectData;
-			pObjectData= &pFatherNode->data.object;			
-			GLC_Matrix4x4 trans(-pObjectData->pivot[0], -pObjectData->pivot[1], -pObjectData->pivot[2]);
-			
-			mat= mat * trans * matInv;
-						
-			pProduct->addChildPart(instance)->move(mat);
-	    }
+		} // End If DUMMY
 	}
-	
+	else return;
 	// If there is a child, create a child product
 	if (NULL != pFatherNode->childs)
-	{
-		
+	{		
 		pChildProduct= pProduct->addNewChildProduct();
+		//pChildProduct->move(GLC_Matrix4x4(&(pFatherNode->matrix[0][0])));
 		 
 		// Create Childs meshes if exists
 		for (Lib3dsNode* pNode= pFatherNode->childs; pNode!=0; pNode= pNode->next)
@@ -254,9 +238,24 @@ void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode
 //! Create Instance from a Lib3dsNode
 GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 {
+	QString meshName(p3dsMesh->name);
+	if (m_LoadedMeshes.contains(meshName))
+	{
+		// This mesh as been already loaded
+		QList<GLC_Instance*> instancesList(m_pWorld->collection()->getInstancesHandle());
+		GLC_Instance* pCurrentInstance= NULL;
+		int currentIndex= -1;
+		do
+		{
+			pCurrentInstance= instancesList[++currentIndex];
+		} while (pCurrentInstance->getName() != meshName);
+		// return an instance.
+		//qDebug() << "instance";
+		return pCurrentInstance->instanciate();
+	}
 	GLC_Mesh2 * pMesh= new GLC_Mesh2();
 	pMesh->setName(p3dsMesh->name);
-	
+	m_LoadedMeshes.insert(pMesh->getName());
 	// The mesh normals
 	const int normalsNumber= p3dsMesh->faces * 3;
 	Lib3dsVector *normalL= static_cast<Lib3dsVector*>(malloc(normalsNumber * sizeof(Lib3dsVector)));
