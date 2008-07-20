@@ -152,9 +152,13 @@ void GLC_Mesh2::addMaterial(int Index, GLC_Material* pMaterial)
 		// Add the Material to Material hash table
 		m_MaterialHash.insert(Index, pMaterial);
 		// Test if the material is transparent
-		if (pMaterial->isTransparent())
+		if (pMaterial->isTransparent() && (m_MaterialHash.size() == 1))
 		{
 			setTransparency(true);
+		}
+		else if (isTransparent() && !pMaterial->isTransparent())
+		{
+			setTransparency(false);
 		}
 		// Invalid the geometry
 		m_GeometryIsValid = false;
