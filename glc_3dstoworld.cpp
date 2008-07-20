@@ -155,7 +155,6 @@ void GLC_3dsToWorld::clear()
 	}
 	m_pWorld= NULL;
 	m_FileName.clear();
-	m_pCurrentMesh= NULL;
 	m_CurVertexIndex= 0;
 	m_CurNormalIndex= 0;
 	if (NULL != m_pLib3dsFile)
