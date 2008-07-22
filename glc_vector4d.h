@@ -30,6 +30,7 @@
 #include "glc_utils_maths.h"
 #include "glc_vector2d.h"
 #include "glc_vector3d.h"
+#include "glc_vector3df.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Vector4d
@@ -96,6 +97,15 @@ public:
 		dVecteur[0]= Vect.dVecteur[0];
 		dVecteur[1]= Vect.dVecteur[1];
 		dVecteur[2]= Vect.dVecteur[2];
+		dVecteur[3]= 1.0;
+	}
+
+	//! Copy from an GLC_Vector3d
+	inline GLC_Vector4d(const GLC_Vector3df &Vect)
+	{
+		dVecteur[0]= static_cast<double>(Vect.dVecteur[0]);
+		dVecteur[1]= static_cast<double>(Vect.dVecteur[1]);
+		dVecteur[2]= static_cast<double>(Vect.dVecteur[2]);
 		dVecteur[3]= 1.0;
 	}
 
@@ -275,6 +285,10 @@ public:
 	inline GLC_Vector3d toVector3d() const
 	{
 		return GLC_Vector3d(dVecteur[0], dVecteur[1], dVecteur[2]);
+	}
+	inline GLC_Vector3df toVector3df() const
+	{
+		return GLC_Vector3df(static_cast<float>(dVecteur[0]), static_cast<float>(dVecteur[1]), static_cast<float>(dVecteur[2]));
 	}	
 	/*! retourne un pointeur constant vers le tableau du vecteur.*/
 	inline const double *return_dVect(void) const

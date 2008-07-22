@@ -28,6 +28,7 @@
 #define GLC_VECTOR3D_H_
 
 #include "glc_utils_maths.h"
+#include "glc_vector3df.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Vector3d
@@ -76,6 +77,19 @@ public:
 		dVecteur[1]= Vect.dVecteur[1];
 		dVecteur[2]= Vect.dVecteur[2];
 	}
+	/*! Copy constructor from a float vector
+	 * Sample use
+	 * \code
+	 * NewVect = new GLC_Vector3d(OldVectf);
+	 * \endcode
+	 */
+	inline GLC_Vector3d(const GLC_Vector3df &Vect)
+	{
+		dVecteur[0]= static_cast<double>(Vect.dVecteur[0]);
+		dVecteur[1]= static_cast<double>(Vect.dVecteur[1]);
+		dVecteur[2]= static_cast<double>(Vect.dVecteur[2]);
+	}
+
 //@}
 
 	

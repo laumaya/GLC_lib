@@ -40,7 +40,9 @@ HEADERS += lib3ds/atmosphere.h \
 HEADERS += glc_maths.h \
     glc_utils_maths.h \
     glc_vector2d.h \
+    glc_vector2df.h \
     glc_vector3d.h \
+    glc_vector3df.h \
     glc_vector4d.h \
     glc_matrix4x4.h \
     glc_interpolator.h \
