@@ -32,10 +32,12 @@
 
 #include "glc_material.h"
 #include "glc_geometry.h"
+#include "glc_vector2df.h"
+#include "glc_vector3df.h"
 
 //! The mesh's faces list
-typedef QHash<int, GLC_Vector3d> Vector3dHash;
-typedef QHash<int, GLC_Vector2d> Vector2dHash;
+typedef QHash<int, GLC_Vector3df> Vector3dHash;
+typedef QHash<int, GLC_Vector2df> Vector2dHash;
 
 typedef QHash<int, GLC_Material*> MaterialHash;
 
@@ -96,11 +98,11 @@ public:
 	//! Return a copy of the geometry
 	virtual GLC_Geometry* clone() const;
 	//! return a vertex with key
-	inline const GLC_Vector3d getVertex(const int key) const {return m_CoordinateHash.value(key);}
+	inline const GLC_Vector3df getVertex(const int key) const {return m_CoordinateHash.value(key);}
 	//! return true if vertex key is in the mesh
 	inline const bool containsVertex(const int key) const {return m_CoordinateHash.contains(key);}
 	//! return a normal with key
-	inline const GLC_Vector3d getNormal(const int key) const {return m_NormalHash.value(key);}
+	inline const GLC_Vector3df getNormal(const int key) const {return m_NormalHash.value(key);}
 	//! return true if normal key is in the mesh
 	inline const bool containsNormal(const int key) const {return m_NormalHash.contains(key);}
 
@@ -118,7 +120,7 @@ public:
 	int removeMaterial(int);
 		
 	//! Add a vertex to mesh
-	inline void addVertex(const int Index, const GLC_Vector3d& Coordinate)
+	inline void addVertex(const int Index, const GLC_Vector3df& Coordinate)
 	{
 		// Check if the key is already use		
 		if (m_CoordinateHash.find(Index) == m_CoordinateHash.end())
@@ -129,7 +131,7 @@ public:
 	}
 	
 	//! Add Normal
-	inline void addNormal(const int index, const GLC_Vector3d& Normal)
+	inline void addNormal(const int index, const GLC_Vector3df& Normal)
 	{
 		// Check if the key is already use		
 		if (m_NormalHash.find(index) == m_NormalHash.end())
@@ -140,7 +142,7 @@ public:
 	}
 	
 	//! Add texture coordinate
-	inline void addTextureCoordinate(const int index, const GLC_Vector2d& textureCoordinate)
+	inline void addTextureCoordinate(const int index, const GLC_Vector2df& textureCoordinate)
 	{
 		// Check if the key is already in use	
 		if (m_TextCoordinateHash.find(index) == m_TextCoordinateHash.end())

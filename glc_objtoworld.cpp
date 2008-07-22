@@ -376,13 +376,13 @@ void GLC_ObjToWorld::changeGroup(QString line)
 }
 
 // Extract a Vector from a string
-GLC_Vector3d GLC_ObjToWorld::extract3dVect(QString &line)
+GLC_Vector3df GLC_ObjToWorld::extract3dVect(QString &line)
 {
-	double x=0.0;
-	double y=0.0;
-	double z=0.0;
+	float x=0.0f;
+	float y=0.0f;
+	float z=0.0f;
 	
-	GLC_Vector3d vectResult;
+	GLC_Vector3df vectResult;
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString, zString;
@@ -390,12 +390,12 @@ GLC_Vector3d GLC_ObjToWorld::extract3dVect(QString &line)
 	if (((stringVecteur >> xString >> yString >> zString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk, zOk;
-		x= xString.toDouble(&xOk);
-		y= yString.toDouble(&yOk);
-		z= zString.toDouble(&zOk);
+		x= xString.toFloat(&xOk);
+		y= yString.toFloat(&yOk);
+		z= zString.toFloat(&zOk);
 		if (!(xOk && yOk && zOk))
 		{
-			QString message= "GLC_ObjToWorld::extract3dVect : failed to convert vector component to double";
+			QString message= "GLC_ObjToWorld::extract3dVect : failed to convert vector component to float";
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));				
 			//qDebug() << message;
@@ -414,11 +414,11 @@ GLC_Vector3d GLC_ObjToWorld::extract3dVect(QString &line)
 }
 
 // Extract a Vector from a string
-GLC_Vector2d GLC_ObjToWorld::extract2dVect(QString &line)
+GLC_Vector2df GLC_ObjToWorld::extract2dVect(QString &line)
 {
-	double x=0.0;
-	double y=0.0;
-	GLC_Vector2d vectResult;
+	float x=0.0f;
+	float y=0.0f;
+	GLC_Vector2df vectResult;
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString;
@@ -426,8 +426,8 @@ GLC_Vector2d GLC_ObjToWorld::extract2dVect(QString &line)
 	if (((stringVecteur >> xString >> yString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk;
-		x= xString.toDouble(&xOk);
-		y= yString.toDouble(&yOk);
+		x= xString.toFloat(&xOk);
+		y= yString.toFloat(&yOk);
 		if (!(xOk && yOk))
 		{
 			QString message= "GLC_ObjToWorld::extract2dVect : failed to convert vector component to double";
@@ -777,7 +777,7 @@ void GLC_ObjToWorld::setObjType(QString& ligne)
 }
 
 // compute face normal
-GLC_Vector3d GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
+GLC_Vector3df GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
 {
 	Q_ASSERT(listIndex.size() > 2);
 	
@@ -790,7 +790,7 @@ GLC_Vector3d GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
 	
 	GLC_Vector4d normal(edge1 ^ edge2);
 	normal.setNormal(1);
-	return normal.toVector3d();
+	return normal.toVector3df();
 }
 
 // Add Vertexs in the current mesh

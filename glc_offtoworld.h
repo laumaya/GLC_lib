@@ -33,6 +33,8 @@
 #include <QTextStream>
 
 #include "glc_vector3d.h"
+#include "glc_vector2df.h"
+#include "glc_vector3df.h"
 
 class GLC_World;
 class QGLContext;
@@ -81,13 +83,13 @@ private:
 	//! clear stlToWorld allocate memmory
 	void clear();
 	//! Extract a 3D Vector from a string
-	GLC_Vector3d extract3dVect(QString &);
+	GLC_Vector3df extract3dVect(QString &);
 	//! Extract Number off Vertex and faces
 	void extractNbrVertexsAndNbrFaces(QString &);
 	//! Extract a face from a string
 	void extractFaceIndex(QString &);
 	//! compute face normal
-	GLC_Vector3d computeNormal(QVector<int> &);
+	GLC_Vector3df computeNormal(QVector<int> &);
 
 
 //@}

@@ -32,7 +32,7 @@
 #include <QFile>
 #include <QTextStream>
 
-#include "glc_vector3d.h"
+#include "glc_vector3df.h"
 
 class GLC_World;
 class QGLContext;
@@ -80,7 +80,7 @@ private:
 	//! Scan a line previously extracted from STL file
 	void scanFacet();
 	//! Extract a 3D Vector from a string
-	GLC_Vector3d extract3dVect(QString &);
+	GLC_Vector3df extract3dVect(QString &);
 	//! Load Binarie STL File
 	void LoadBinariStl(QFile &);
 	

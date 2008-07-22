@@ -34,7 +34,8 @@
 #include <QVector>
 
 #include "glc_vector3d.h"
-#include "glc_vector2d.h"
+#include "glc_vector2df.h"
+#include "glc_vector3df.h"
 #include "glc_mesh2.h"
 
 class GLC_World;
@@ -87,9 +88,9 @@ private:
 	//! Change current group
 	void changeGroup(QString);
 	//! Extract a 3D Vector from a string
-	GLC_Vector3d extract3dVect(QString &);
+	GLC_Vector3df extract3dVect(QString &);
 	//! Extract a 2D Vector from a string
-	GLC_Vector2d extract2dVect(QString &);
+	GLC_Vector2df extract2dVect(QString &);
 	//! Extract a face from a string
 	void extractFaceIndex(QString &);
 	//! Set Current material index
@@ -99,7 +100,7 @@ private:
 	//! set the OBJ File type
 	void setObjType(QString &);
 	//! compute face normal
-	GLC_Vector3d computeNormal(QVector<int> &);
+	GLC_Vector3df computeNormal(QVector<int> &);
 	//! Add Vertexs in the current mesh
 	void addVertexsToCurrentMesh(QVector<int> &);
 	//! Add Normals in the current mesh

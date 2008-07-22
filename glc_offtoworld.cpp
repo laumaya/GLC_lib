@@ -231,13 +231,13 @@ void GLC_OffToWorld::clear()
 }
 
 // Extract a Vector from a string
-GLC_Vector3d GLC_OffToWorld::extract3dVect(QString &line)
+GLC_Vector3df GLC_OffToWorld::extract3dVect(QString &line)
 {
-	double x=0.0;
-	double y=0.0;
-	double z=0.0;
+	float x=0.0f;
+	float y=0.0f;
+	float z=0.0f;
 	
-	GLC_Vector3d vectResult;
+	GLC_Vector3df vectResult;
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString, zString;
@@ -245,12 +245,12 @@ GLC_Vector3d GLC_OffToWorld::extract3dVect(QString &line)
 	if (((stringVecteur >> xString >> yString >> zString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk, zOk;
-		x= xString.toDouble(&xOk);
-		y= yString.toDouble(&yOk);
-		z= zString.toDouble(&zOk);
+		x= xString.toFloat(&xOk);
+		y= yString.toFloat(&yOk);
+		z= zString.toFloat(&zOk);
 		if (!(xOk && yOk && zOk))
 		{
-			QString message= "GLC_OffToWorld::extract3dVect : failed to convert vector component to double";
+			QString message= "GLC_OffToWorld::extract3dVect : failed to convert vector component to float";
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));				
 			GLC_FileFormatException fileFormatException(message, m_FileName);
@@ -382,7 +382,7 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 }
 
 // compute face normal
-GLC_Vector3d GLC_OffToWorld::computeNormal(QVector<int> &listIndex)
+GLC_Vector3df GLC_OffToWorld::computeNormal(QVector<int> &listIndex)
 {
 	Q_ASSERT(listIndex.size() > 2);
 	
@@ -395,6 +395,6 @@ GLC_Vector3d GLC_OffToWorld::computeNormal(QVector<int> &listIndex)
 	
 	GLC_Vector4d normal(edge1 ^ edge2);
 	normal.setNormal(1);
-	return normal.toVector3d();
+	return normal.toVector3df();
 }
 

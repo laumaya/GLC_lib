@@ -33,6 +33,8 @@
 #include "glc_fileformatexception.h"
 #include "glc_circle.h"
 #include "glc_material.h"
+#include "glc_vector2df.h"
+#include "glc_vector3df.h"
 // Lib3ds Header
 #include "lib3ds/file.h"
 #include "lib3ds/mesh.h"
@@ -262,7 +264,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	// Add the normal to the mesh
 	for (int i= 0; i < normalsNumber; ++i)
 	{
-		pMesh->addNormal(i, GLC_Vector3d(normalL[i][0], normalL[i][1], normalL[i][2]));
+		pMesh->addNormal(i, GLC_Vector3df(normalL[i][0], normalL[i][1], normalL[i][2]));
 	}
 	delete normalL;
 	
@@ -270,7 +272,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	const int vertexNumber= p3dsMesh->points;
 	for (int i= 0; i < vertexNumber; ++i)
 	{
-		pMesh->addVertex(i, GLC_Vector3d(p3dsMesh->pointL[i].pos[0], p3dsMesh->pointL[i].pos[1], p3dsMesh->pointL[i].pos[2]));
+		pMesh->addVertex(i, GLC_Vector3df(p3dsMesh->pointL[i].pos[0], p3dsMesh->pointL[i].pos[1], p3dsMesh->pointL[i].pos[2]));
 	}
 	
 	int normalIndex= 0;
@@ -329,7 +331,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 				// Load texture coordinate
 				float x= p3dsMesh->texelL[p3dsFace->points[i]][0];
 				float y= p3dsMesh->texelL[p3dsFace->points[i]][1];
-				GLC_Vector2d texel(static_cast<double>(x), static_cast<double>(y));
+				GLC_Vector2df texel(x, y);
 				texture.append(textureIndex);
 				pMesh->addTextureCoordinate(textureIndex++, texel);
 			}

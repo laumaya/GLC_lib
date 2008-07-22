@@ -150,6 +150,31 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Vector3d& point)
 	return *this;
 }
 
+// Combine the bounding Box with new geometry point
+GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Vector3df& pointf)
+{
+	GLC_Vector3d point(pointf);
+	if (m_IsEmpty)
+	{
+		m_Lower= point;
+		m_Upper= point;
+		m_IsEmpty= false;
+	}
+	else
+	{	
+		double lowerX= fmin(point.getX(), m_Lower.getX());
+		double lowerY= fmin(point.getY(), m_Lower.getY());
+		double lowerZ= fmin(point.getZ(), m_Lower.getZ());
+		m_Lower.setVect(lowerX, lowerY, lowerZ);
+		
+		double upperX= fmax(point.getX(), m_Upper.getX());
+		double upperY= fmax(point.getY(), m_Upper.getY());
+		double upperZ= fmax(point.getZ(), m_Upper.getZ());	
+		m_Upper.setVect(upperX, upperY, upperZ);
+	}
+	return *this;
+}
+
 // Combine the bounding Box with another bounding box
 GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
 {

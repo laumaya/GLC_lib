@@ -347,16 +347,16 @@ void GLC_Mesh2::glDraw()
 			// Vertex texture coordinate if necessary
 			if (i < m_TextureIndex.size())
 			{
-				glTexCoord2dv(m_TextCoordinateHash[m_TextureIndex.at(i)].return_dVect());
+				glTexCoord2fv(m_TextCoordinateHash[m_TextureIndex.at(i)].return_dVect());
 			}
 				
 			// Vertex Normal
 			Q_ASSERT(i < m_NormalIndex.size());
-			glNormal3dv(m_NormalHash[m_NormalIndex.at(i)].return_dVect());
+			glNormal3fv(m_NormalHash[m_NormalIndex.at(i)].return_dVect());
 			
 			// Vertex 3D coordinate
 			Q_ASSERT(i < m_CoordinateIndex.size());
-			glVertex3dv(m_CoordinateHash[m_CoordinateIndex.at(i)].return_dVect());
+			glVertex3fv(m_CoordinateHash[m_CoordinateIndex.at(i)].return_dVect());
 		}		
 	}
 	

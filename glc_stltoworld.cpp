@@ -286,13 +286,13 @@ void GLC_StlToWorld::scanFacet()
 }
 
 // Extract a Vector from a string
-GLC_Vector3d GLC_StlToWorld::extract3dVect(QString &line)
+GLC_Vector3df GLC_StlToWorld::extract3dVect(QString &line)
 {
-	double x=0.0;
-	double y=0.0;
-	double z=0.0;
+	float x=0.0f;
+	float y=0.0f;
+	float z=0.0f;
 	
-	GLC_Vector3d vectResult;
+	GLC_Vector3df vectResult;
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString, zString;
@@ -300,12 +300,12 @@ GLC_Vector3d GLC_StlToWorld::extract3dVect(QString &line)
 	if (((stringVecteur >> xString >> yString >> zString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk, zOk;
-		x= xString.toDouble(&xOk);
-		y= yString.toDouble(&yOk);
-		z= zString.toDouble(&zOk);
+		x= xString.toFloat(&xOk);
+		y= yString.toFloat(&yOk);
+		z= zString.toFloat(&zOk);
 		if (!(xOk && yOk && zOk))
 		{
-			QString message= "GLC_StlToWorld::extract3dVect : failed to convert vector component to double";
+			QString message= "GLC_StlToWorld::extract3dVect : failed to convert vector component to float";
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));				
 			GLC_FileFormatException fileFormatException(message, m_FileName);
@@ -367,7 +367,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 			throw(fileFormatException);
 		}
 
-		m_pCurrentMesh->addNormal(m_CurNormalIndex++, GLC_Vector3d(static_cast<double>(x), static_cast<double>(y), static_cast<double>(z)));
+		m_pCurrentMesh->addNormal(m_CurNormalIndex++, GLC_Vector3df(x, y, z));
 		QVector<int> vectorMaterial;
 		QVector<int> vectorCoordinate;
 		QVector<int> vectorNormal;
@@ -387,7 +387,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 			vectorCoordinate.append(m_CurVertexIndex);
 			vectorMaterial.append(-1); // There is no material information
 			vectorNormal.append(m_CurNormalIndex - 1);
-			m_pCurrentMesh->addVertex(m_CurVertexIndex++, GLC_Vector3d(static_cast<double>(x), static_cast<double>(y), static_cast<double>(z)));
+			m_pCurrentMesh->addVertex(m_CurVertexIndex++, GLC_Vector3df(x, y, z));
 		}
 		currentQuantumValue = static_cast<int>((static_cast<double>(i + 1) / numberOfFacet) * 100);
 		if (currentQuantumValue > previousQuantumValue)

@@ -30,7 +30,8 @@
 #include <QObject>
 #include <QString>
 #include <QHash>
-
+#include "glc_vector2df.h"
+#include "glc_vector3df.h"
 #include "glc_mesh2.h"
 
 typedef QHash<QString, int> MaterialHashMap;
@@ -78,10 +79,10 @@ private:
 	void scanLigne(QString &line);
 
 	//! Extract a 3D Vector from a string
-	GLC_Vector3d extract3dVect(QString &line);
+	GLC_Vector3df extract3dVect(QString &line);
 
 	//! Extract a 2D Vector from a string
-	GLC_Vector2d extract2dVect(QString &line);
+	GLC_Vector2df extract2dVect(QString &line);
 
 	//! Extract a face from a string
 	void extractFaceIndex(QString &line);
@@ -111,7 +112,7 @@ private:
 	void setObjType(QString &);
 	
 	//! compute face normal
-	GLC_Vector3d computeNormal(QVector<int> &, GLC_Mesh2*);
+	GLC_Vector3df computeNormal(QVector<int> &, GLC_Mesh2*);
 	
 	//! Get texture file name without parameters
 	QString getTextureName(QTextStream &, const QString &);

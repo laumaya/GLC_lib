@@ -95,6 +95,9 @@ public:
 	//! Combine the bounding Box with new geometry point
 	GLC_BoundingBox& combine(const GLC_Vector3d& point);
 
+	//! Combine the bounding Box with new geometry point
+	GLC_BoundingBox& combine(const GLC_Vector3df& point);
+
 	//! Combine the bounding Box with another bounding box
 	GLC_BoundingBox& combine(const GLC_BoundingBox& box);
 
