@@ -32,6 +32,7 @@
 #include "glc_world.h"
 #include "glc_objmtlloader.h"
 #include "glc_fileformatexception.h"
+#include "glc_geomtools.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor
@@ -482,8 +483,9 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 	}
 	//////////////////////////////////////////////////////////////////
 	// Check the number of face's vertex
-	//////////////////////////////////////////////////////////////////				
-	if (vectorCoordinate.size() < 3)
+	//////////////////////////////////////////////////////////////////
+	const int size= vectorCoordinate.size();
+	if (size < 3)
 	{
 		//qDebug() << "GLC_ObjToWorld::extractFaceIndex Face with less than 3 vertex found";
 		return;
@@ -506,7 +508,33 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 			vectorNormal.append(m_CurComputedVectNormIndex);
 		}
 		m_CurComputedVectNormIndex++;
-		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		if ((size < 3) or glc::polygonIsConvex(m_pCurrentMesh, vectorCoordinate))
+			m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		else
+		{
+			QVector<int> tList(glc::triangulateMeshPoly(m_pCurrentMesh, vectorCoordinate));
+			const int tSize= tList.size();
+			for (int i= 0; i < tSize; i+= 3)
+			{
+				QVector<int> newCoordinate;
+				QVector<int> newMaterial;
+				QVector<int> newNormal;
+				const int index1= tList[i];
+				const int index2= tList[i + 1];
+				const int index3= tList[i + 2];
+				newCoordinate << index1 << index2 << index3;
+				newMaterial << vectorMaterial[vectorCoordinate.indexOf(index1)]
+				            << vectorMaterial[vectorCoordinate.indexOf(index2)]
+				            << vectorMaterial[vectorCoordinate.indexOf(index3)];
+				
+				newNormal << vectorNormal[vectorCoordinate.indexOf(index1)]
+				          << vectorNormal[vectorCoordinate.indexOf(index2)]
+				          << vectorNormal[vectorCoordinate.indexOf(index3)];
+
+				m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal);
+			}
+		}
+
 		
 	}
 	else if (m_FaceType == coordinateAndTexture)
@@ -519,14 +547,76 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 			vectorNormal.append(m_CurComputedVectNormIndex);
 		}
 		m_CurComputedVectNormIndex++;
-		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+		if ((size < 3) or glc::polygonIsConvex(m_pCurrentMesh, vectorCoordinate))
+			m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+		else
+		{
+			QVector<int> tList(glc::triangulateMeshPoly(m_pCurrentMesh, vectorCoordinate));
+			const int tSize= tList.size();
+			for (int i= 0; i < tSize; i+= 3)
+			{
+				QVector<int> newCoordinate;
+				QVector<int> newMaterial;
+				QVector<int> newNormal;
+				QVector<int> newTexture;
+				const int index1= tList[i];
+				const int index2= tList[i + 1];
+				const int index3= tList[i + 2];
+				newCoordinate << index1 << index2 << index3;
+				newMaterial << vectorMaterial[vectorCoordinate.indexOf(index1)]
+				            << vectorMaterial[vectorCoordinate.indexOf(index2)]
+				            << vectorMaterial[vectorCoordinate.indexOf(index3)];
+				
+				newNormal << vectorNormal[vectorCoordinate.indexOf(index1)]
+				          << vectorNormal[vectorCoordinate.indexOf(index2)]
+				          << vectorNormal[vectorCoordinate.indexOf(index3)];
+
+				newTexture << vectorTextureCoordinate[vectorCoordinate.indexOf(index1)]
+				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index2)]
+				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index3)];
+
+				m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal, newTexture);
+			}
+		}
+
 	}	
 	else if (m_FaceType == coordinateAndTextureAndNormal)
 	{
 		addVertexsToCurrentMesh(vectorCoordinate);
 		addNormalsToCurrentMesh(vectorNormal);
 		addTextureCoordinatesToCurrentMesh(vectorTextureCoordinate);
-		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+		
+		if ((size < 3) or glc::polygonIsConvex(m_pCurrentMesh, vectorCoordinate))
+			m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+		else
+		{
+			QVector<int> tList(glc::triangulateMeshPoly(m_pCurrentMesh, vectorCoordinate));
+			const int tSize= tList.size();
+			for (int i= 0; i < tSize; i+= 3)
+			{
+				QVector<int> newCoordinate;
+				QVector<int> newMaterial;
+				QVector<int> newNormal;
+				QVector<int> newTexture;
+				const int index1= tList[i];
+				const int index2= tList[i + 1];
+				const int index3= tList[i + 2];
+				newCoordinate << index1 << index2 << index3;
+				newMaterial << vectorMaterial[vectorCoordinate.indexOf(index1)]
+				            << vectorMaterial[vectorCoordinate.indexOf(index2)]
+				            << vectorMaterial[vectorCoordinate.indexOf(index3)];
+				
+				newNormal << vectorNormal[vectorCoordinate.indexOf(index1)]
+				          << vectorNormal[vectorCoordinate.indexOf(index2)]
+				          << vectorNormal[vectorCoordinate.indexOf(index3)];
+
+				newTexture << vectorTextureCoordinate[vectorCoordinate.indexOf(index1)]
+				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index2)]
+				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index3)];
+
+				m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal, newTexture);
+			}
+		}
 	}
 	else
 	{
