@@ -3,7 +3,7 @@ TEMPLATE = lib
 QT += opengl \
     core
 CONFIG += exceptions \
-    release \
+    debug \
     warn_on
 TARGET = GLC_lib
 VERSION = 0.9.9
@@ -78,7 +78,8 @@ HEADERS += glc_maths.h \
     glc_objtoworld.h \
     glc_stltoworld.h \
     glc_offtoworld.h \
-    glc_3dstoworld.h
+    glc_3dstoworld.h \
+    glc_geomtools.h
 
 SOURCES += lib3ds/atmosphere.c \
            lib3ds/background.c \
@@ -136,7 +137,8 @@ SOURCES += glc_vector4d.cpp \
     glc_objtoworld.cpp \
     glc_stltoworld.cpp \
     glc_offtoworld.cpp \
-    glc_3dstoworld.cpp
+    glc_3dstoworld.cpp \
+    glc_geomtools.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
