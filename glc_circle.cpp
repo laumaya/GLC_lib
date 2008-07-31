@@ -28,11 +28,10 @@
 #include "assert.h"
 #include "glc_openglexception.h"
 
-
+using namespace glc;
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
-
 
 GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
 :GLC_Geometry("Circle", true)

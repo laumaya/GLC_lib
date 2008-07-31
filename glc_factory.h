@@ -76,7 +76,7 @@ public:
 	GLC_Instance createPoint(double x, double y, double z) const;
 		
 	//!  Create an GLC_Circle
-	GLC_Instance createCircle(double radius, double angle= 2 * PI) const;
+	GLC_Instance createCircle(double radius, double angle= 2 * glc::PI) const;
 	
 	//! Create an GLC_Box
 	GLC_Instance createBox(double lx, double ly, double lz) const;
