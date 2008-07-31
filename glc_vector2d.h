@@ -27,7 +27,10 @@
 #ifndef GLC_VECTOR2D_H_
 #define GLC_VECTOR2D_H_
 
+#include <QString>
 #include "glc_utils_maths.h"
+#include "glc_vector2df.h"
+
 //////////////////////////////////////////////////////////////////////
 // definition global
 //////////////////////////////////////////////////////////////////////
@@ -43,6 +46,13 @@
 class GLC_Vector2d  
 {
 	friend class GLC_Vector4d;
+	
+	/*! Overload unary "-" operator*/
+	inline friend GLC_Vector2d operator - (const GLC_Vector2d &Vect)
+	{
+		return GLC_Vector2d(-Vect.dVecteur[0], -Vect.dVecteur[1]);
+	}
+
 	
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -79,7 +89,98 @@ public:
 		dVecteur[1]= Vect.dVecteur[1];
 	}
 //@}
+//////////////////////////////////////////////////////////////////////
+/*! @name Operator Overload */
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
 	
+	/*! Overload binary "+" operator*/
+	inline GLC_Vector2d operator + (const GLC_Vector2d &Vect) const
+	{
+		GLC_Vector2d VectResult(dVecteur[0] + Vect.dVecteur[0], dVecteur[1] + Vect.dVecteur[1]);
+
+		return VectResult;
+	}
+
+	/*! Overload "=" operator*/
+	inline GLC_Vector2d& operator = (const GLC_Vector2d &Vect)
+	{
+		dVecteur[0]= Vect.dVecteur[0];
+		dVecteur[1]= Vect.dVecteur[1];
+
+		return *this;
+	}
+	
+	/*! Overload "=" operator*/
+	inline GLC_Vector2d& operator = (const GLC_Vector2df &Vect)
+	{
+		dVecteur[0]= static_cast<double>(Vect.dVecteur[0]);
+		dVecteur[1]= static_cast<double>(Vect.dVecteur[1]);
+		
+		return *this;
+	}
+	
+
+	/*! Overload "+=" operator*/
+	inline GLC_Vector2d* operator += (const GLC_Vector2d &Vect)
+	{
+		*this= *this + Vect;
+		return this;
+	}
+
+	
+	/*! Overload binary "-" operator*/
+	inline GLC_Vector2d operator - (const GLC_Vector2d &Vect) const
+	{
+		GLC_Vector2d VectResult(dVecteur[0] - Vect.dVecteur[0], dVecteur[1] - Vect.dVecteur[1]);
+
+		return VectResult;
+	}
+
+	/*! Overload binary "-=" operator*/
+	inline GLC_Vector2d* operator -= (const GLC_Vector2d &Vect)
+	{
+		*this= *this - Vect;
+		return this;
+	}
+
+	/*! Overload dot product "^" operator*/
+	inline double operator ^ (const GLC_Vector2d &Vect) const
+	{
+		return dVecteur[0] * Vect.dVecteur[1] - dVecteur[1] * Vect.dVecteur[0];
+	}
+
+	/*! Overload scalar product "*" operator between 2 vector*/
+	inline double operator * (const GLC_Vector2d &Vect) const
+	{
+		return dVecteur[0] * Vect.dVecteur[0] + dVecteur[1] * Vect.dVecteur[1];
+	}
+
+	/*! Overload scalar product "*" operator between 1 vector and one scalar*/
+	inline GLC_Vector2d operator * (double Scalaire) const
+	{
+		return GLC_Vector2d(dVecteur[0] * Scalaire, dVecteur[1] * Scalaire);;
+	}
+
+	
+	/*! Overload equality "==" operator*/
+	inline bool operator == (const GLC_Vector2d &Vect) const
+	{
+		bool bResult= fabs(dVecteur[0] - Vect.dVecteur[0]) < glc::EPSILON;
+		bResult= (fabs(dVecteur[1] - Vect.dVecteur[1]) < glc::EPSILON) && bResult;
+
+		return bResult;
+	}
+
+	/*! Overload "!=" operator*/
+	inline bool operator != (const GLC_Vector2d &Vect) const
+	{
+		return !(*this == Vect);
+	}
+
+//@}
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
@@ -137,12 +238,16 @@ public:
 	{
 		return dVecteur;
 	}
-	/*! Vector is null*/
+	/*! Return true if the vector is null*/
 	inline bool isNull(void) const
 	{
-		return (fabs(dVecteur[0]) < EPSILON) && (fabs(dVecteur[1]) < EPSILON);
+		return (fabs(dVecteur[0]) < glc::EPSILON) && (fabs(dVecteur[1]) < glc::EPSILON);
 	}
-
+	//! return the string representation of vector
+	inline QString toString() const
+	{
+		return QString("[") + QString::number(dVecteur[0]) + QString(" , ") + QString::number(dVecteur[1]) + QString("]");
+	}
 //@}
 
 //////////////////////////////////////////////////////////////////////
