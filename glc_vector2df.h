@@ -42,7 +42,7 @@
 
 class GLC_Vector2df  
 {
-	
+	friend class GLC_Vector2d;
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -139,7 +139,7 @@ public:
 	/*! Vector is null*/
 	inline bool isNull(void) const
 	{
-		return (fabs(dVecteur[0]) < EPSILON) && (fabs(dVecteur[1]) < EPSILON);
+		return (fabs(dVecteur[0]) < glc::EPSILON) && (fabs(dVecteur[1]) < glc::EPSILON);
 	}
 
 //@}
