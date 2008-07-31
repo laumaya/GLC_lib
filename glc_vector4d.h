@@ -147,6 +147,39 @@ public:
 		return *this;
 	}
 
+	/*! Overload "=" operator*/
+	inline GLC_Vector4d& operator = (const GLC_Vector3d &Vect)
+	{
+		dVecteur[0]= Vect.dVecteur[0];
+		dVecteur[1]= Vect.dVecteur[1];
+		dVecteur[2]= Vect.dVecteur[2];
+		dVecteur[3]= 1.0;
+		
+		return *this;
+	}
+	
+	/*! Overload "=" operator*/
+	inline GLC_Vector4d& operator = (const GLC_Vector3df &Vect)
+	{
+		dVecteur[0]= static_cast<double>(Vect.dVecteur[0]);
+		dVecteur[1]= static_cast<double>(Vect.dVecteur[1]);
+		dVecteur[2]= static_cast<double>(Vect.dVecteur[2]);
+		dVecteur[3]= 1.0;
+		
+		return *this;
+	}
+	
+	/*! Overload "=" operator*/
+	inline GLC_Vector4d& operator = (const GLC_Vector2d &Vect)
+	{
+		dVecteur[0]= Vect.dVecteur[0];
+		dVecteur[1]= Vect.dVecteur[1];
+		dVecteur[2]= 0.0;
+		dVecteur[3]= 1.0;
+		
+		return *this;
+	}
+
 	/*! Overload "+=" operator*/
 	inline GLC_Vector4d* operator += (const GLC_Vector4d &Vect)
 	{
@@ -305,14 +338,22 @@ public:
 	{
 		bool result;
 
-		result= (fabs(dVecteur[0]) < EPSILON) && (fabs(dVecteur[1]) < EPSILON)
-			&& (fabs(dVecteur[2]) < EPSILON);
+		result= (fabs(dVecteur[0]) < glc::EPSILON) && (fabs(dVecteur[1]) < glc::EPSILON)
+			&& (fabs(dVecteur[2]) < glc::EPSILON);
 		
 		return result;
 	}
 
 	/*! Angle between another vector*/
 	const double getAngleWithVect(GLC_Vector4d Vect) const;
+	
+	//! return the vector string
+	QString toString() const;
+	
+	//! return the 2D vector specified by a mask vector
+	/*! retrieve component corresponding to
+	 * mask NULL component*/
+	GLC_Vector2d toVector2d(const GLC_Vector4d&) const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
