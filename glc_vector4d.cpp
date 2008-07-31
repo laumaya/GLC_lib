@@ -27,6 +27,7 @@
 #include <QtDebug>
 #include "glc_vector4d.h"
 
+using namespace glc;
 //////////////////////////////////////////////////////////////////////
 // Operators overload
 //////////////////////////////////////////////////////////////////////
@@ -123,6 +124,41 @@ const double GLC_Vector4d::getAngleWithVect(GLC_Vector4d Vect) const
 		return acos(ThisVect * Vect);
 	}
 	else return 0.0;
+}
+// return the vector string
+QString GLC_Vector4d::toString() const
+{
+	QString result("[");
+	
+	result+= QString::number(dVecteur[0]) + QString(" , ");
+	result+= QString::number(dVecteur[1]) + QString(" , ");
+	result+= QString::number(dVecteur[2]) + QString(" , ");
+	result+= QString::number(dVecteur[3]) + QString("]");
+	
+	return result;
+}
+
+// return the 2D vector 
+GLC_Vector2d GLC_Vector4d::toVector2d(const GLC_Vector4d& mask) const
+{
+	double x;
+	double y;
+	if (mask.dVecteur[0] == 0.0)
+	{
+		x= dVecteur[0];
+		if (mask.dVecteur[1] == 0.0)
+			y= dVecteur[1];
+		else		
+			y= dVecteur[2];
+		
+	}
+	else
+	{
+		x= dVecteur[1];
+		y= dVecteur[2];
+		
+	}
+	return GLC_Vector2d(x, y);
 }
 
 //////////////////////////////////////////////////////////////////////
