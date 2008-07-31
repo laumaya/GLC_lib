@@ -177,8 +177,8 @@ public:
 	/*! Vector is null*/
 	inline bool isNull(void) const
 	{
-		return (fabs(dVecteur[0]) < EPSILON) && (fabs(dVecteur[1]) < EPSILON)
-		&& (fabs(dVecteur[2]) < EPSILON);
+		return (fabs(dVecteur[0]) < glc::EPSILON) && (fabs(dVecteur[1]) < glc::EPSILON)
+		&& (fabs(dVecteur[2]) < glc::EPSILON);
 	}
 
 //@}
