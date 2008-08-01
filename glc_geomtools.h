@@ -52,7 +52,10 @@ namespace glc
 	
 	//! return true if there is an intersection between 2 segments
 	bool isIntersected(const GLC_Vector2d&, const GLC_Vector2d&, const GLC_Vector2d&, const GLC_Vector2d&);
-	
+
+	//! return true if there is an intersection between a ray and a segment
+	bool isIntersectedRaySegment(const GLC_Vector2d&, const GLC_Vector2d&, const GLC_Vector2d&, const GLC_Vector2d&);
+
 	//! find intersection of two intervals [u0, u1] and [v0, v1]
 	/*! Return the intersection as QVector of GLC_Vector2d
 	 *  - Empty QVector if there is no intersection
@@ -70,7 +73,10 @@ namespace glc
 	void triangulate(QList<GLC_Vector2d>&, QList<int>&, QList<int>&);
 	
 	//! Triangulate polygon wich vertices are in a mesh
-	QVector<int> triangulateMeshPoly(const GLC_Mesh2*, const QVector<int>&);
+	QVector<int> triangulateMeshPoly(const GLC_Mesh2*, QVector<int>);
+	
+	//! return true if the polygon is couterclockwise ordered
+	bool isCounterclockwiseOrdered(const QList<GLC_Vector2d>&);
 
 //@}
 	
