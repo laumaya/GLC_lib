@@ -248,6 +248,11 @@ public:
 	{
 		return QString("[") + QString::number(dVecteur[0]) + QString(" , ") + QString::number(dVecteur[1]) + QString("]");
 	}
+	//! return a vector perpendicular to this
+	inline GLC_Vector2d perp() const
+	{
+		return GLC_Vector2d(-dVecteur[1], dVecteur[0]);
+	}
 //@}
 
 //////////////////////////////////////////////////////////////////////
