@@ -77,8 +77,8 @@ GLC_BoundingBox* GLC_Circle::getBoundingBox(void) const
 {
 	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
 	
-	GLC_Vector3d lower(-m_Radius, -m_Radius, -2.0 * EPSILON);
-	GLC_Vector3d upper(m_Radius, m_Radius, 2.0 * EPSILON);
+	GLC_Point3d lower(-m_Radius, -m_Radius, -2.0 * EPSILON);
+	GLC_Point3d upper(m_Radius, m_Radius, 2.0 * EPSILON);
 	pBoundingBox->combine(lower);
 	pBoundingBox->combine(upper);
 	
@@ -143,18 +143,18 @@ void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 // Circle drawing
 void GLC_Circle::glDraw(void)
 {
-	double MyCos;
-	double MySin;
-	GLC_Vector4d Vect;
+	double coord[3];
+	
+	// Z is always set to 0.0
+	coord[2]= 0.0;
 
 	glBegin(GL_LINE_STRIP);
 
 		for (int i= 0; i <= m_nDiscret; i++)
 		{
-			MyCos= m_Radius * cos(i * m_dAngle / m_nDiscret);
-			MySin= m_Radius * sin(i * m_dAngle / m_nDiscret);
-			Vect.setVect(MyCos, MySin, 0);
-			glVertex3dv(Vect.return_dVect());
+			coord[0]= m_Radius * cos(i * m_dAngle / m_nDiscret);
+			coord[1]= m_Radius * sin(i * m_dAngle / m_nDiscret);
+			glVertex3dv(coord);
 		}
 
 	glEnd();

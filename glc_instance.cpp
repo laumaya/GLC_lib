@@ -182,7 +182,7 @@ GLC_Instance GLC_Instance::clone() const
 GLC_Instance GLC_Instance::instanciate()
 {
 	GLC_Instance instance(*this);
-	instance.m_Uid= GLC_GenID();
+	instance.m_Uid= glc::GLC_GenID();
 	return instance;
 }
 

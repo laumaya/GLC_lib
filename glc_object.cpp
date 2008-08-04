@@ -33,7 +33,7 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////
 
 GLC_Object::GLC_Object(const QString name)
-: m_Uid(GLC_GenID())	// Object ID
+: m_Uid(glc::GLC_GenID())	// Object ID
 , m_Name(name)			// Object Name
 {
 

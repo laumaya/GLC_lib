@@ -32,7 +32,7 @@
 //////////////////////////////////////////////////////////////////////
 
 GLC_Node::GLC_Node(GLC_Collection *pCollection)
-: m_Uid(GLC_GenID())
+: m_Uid(glc::GLC_GenID())
 , m_pCollection(pCollection)
 , m_pParent(NULL)
 , m_Ref()

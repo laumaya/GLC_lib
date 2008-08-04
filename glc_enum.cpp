@@ -26,7 +26,7 @@
 
 #include "glc_enum.h"
 
-GLC_uint GLC_GenID(void)
+GLC_uint glc::GLC_GenID(void)
 {
 	static GLC_uint Id= 0;
 	return Id++;

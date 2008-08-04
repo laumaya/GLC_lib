@@ -68,19 +68,17 @@ GLC_Light::~GLC_Light(void)
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Set the lihgt position by a 4D vector
-void GLC_Light::setPosition(const GLC_Vector4d &vectPos)
+// Set the lihgt position by a 4D point
+void GLC_Light::setPosition(const GLC_Point4d &pos)
 {
-	m_Position= vectPos;
+	m_Position= pos;
 	m_ListIsValid = false;
 }
 
 // Set the lihgt position by a 3 GLfloat
 void GLC_Light::setPosition(GLfloat x, GLfloat y, GLfloat z)
 {
-	m_Position.setX(x);
-	m_Position.setY(y);
-	m_Position.setZ(z);
+	m_Position.setVect(static_cast<double>(x), static_cast<double>(y), static_cast<double>(z));
 	m_ListIsValid = false;
 }
 

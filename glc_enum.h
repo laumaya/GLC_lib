@@ -29,16 +29,18 @@
 
 #define GLC_uint unsigned int
 
-//! Simple ID generation
-GLC_uint GLC_GenID(void);
-
+namespace glc
+{
+	//! Simple ID generation
+	GLC_uint GLC_GenID(void);
+};
 // Default Discretion value
 #define GLC_DISCRET 80
 #define GLC_POLYDISCRET 60
 
 // GLC_Lib version
 
-#define GLC_VERSION "0.9.9"
+#define GLC_VERSION "1.0.0"
 #define GLC_DESCRIPTION "GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4."
 
 

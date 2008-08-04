@@ -169,17 +169,17 @@ void GLC_Viewport::glPointing(GLint x, GLint y)
 	// Test if there is geometry under picking point
 	if (fabs(Depth - 1.0) > EPSILON)
 	{	// Geometry find -> Update camera's target position
-		const GLC_Vector4d VectTarget(pX, pY, pZ);
-		const double Distance= (m_pViewCam->getVectEye() - VectTarget).getNorm();
+		const GLC_Point4d target(pX, pY, pZ);
+		const double Distance= (m_pViewCam->getEye() - target).getNorm();
 		qDebug("Return Distance: %e\n", Distance);
-		m_pViewCam->setTargetCam(VectTarget);
+		m_pViewCam->setTargetCam(target);
 	}
 	else
 	{	// Geometrie not find -> panning
 		
-		const GLC_Vector4d VectCur(mapPosMouse(x, y));
-		const GLC_Vector4d VectPrev(mapPosMouse(getWinHSize() / 2, getWinVSize() / 2));
-		const GLC_Vector4d VectPan(VectCur - VectPrev);	// panning vector
+		const GLC_Point4d curPos(mapPosMouse(x, y));
+		const GLC_Point4d prevPos(mapPosMouse(getWinHSize() / 2, getWinVSize() / 2));
+		const GLC_Vector4d VectPan(curPos - prevPos);	// panning vector
 		// pan camera
 		m_pViewCam->pan(VectPan);		
 	}
@@ -223,8 +223,8 @@ void GLC_Viewport::glExecuteTargetCam()	//! \todo Create a display list
 		const double dDecAxe= dLgAxe / 3;
 		glPushMatrix();
 
-		glTranslated(m_pViewCam->getVectTarget().getX(), m_pViewCam->getVectTarget().getY(),
-			m_pViewCam->getVectTarget().getZ() );
+		glTranslated(m_pViewCam->getTarget().getX(), m_pViewCam->getTarget().getY(),
+			m_pViewCam->getTarget().getZ() );
 
 		// Graphic propertys
 		glDisable(GL_BLEND);
@@ -498,12 +498,12 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	const double boundingBoxCover= 1.0;
 	
 	// Center view on the BoundingBox
-	const GLC_Vector4d deltaVector(box.getCenter() - m_pViewCam->getVectTarget());
+	const GLC_Vector4d deltaVector(box.getCenter() - m_pViewCam->getTarget());
 	m_pViewCam->translate(deltaVector);
 	//m_pViewCam->setTargetCam(box.getCenter());
 	
 	// Compute the new BoundingBox
-	GLC_Matrix4x4 matTranslateCam(m_pViewCam->getVectEye());
+	GLC_Matrix4x4 matTranslateCam(m_pViewCam->getEye());
 	GLC_Matrix4x4 matRotateCam(m_pViewCam->getMatCompOrbit());
 	
 	GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam.invert());	
@@ -587,7 +587,7 @@ bool GLC_Viewport::setDistMax(double DistMax)
 void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 {
 	assert(!bBox.isEmpty());
-	GLC_Matrix4x4 matTranslateCam(m_pViewCam->getVectEye());
+	GLC_Matrix4x4 matTranslateCam(m_pViewCam->getEye());
 	GLC_Matrix4x4 matRotateCam(m_pViewCam->getMatCompOrbit());
 	
 	GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam.invert());	
@@ -602,11 +602,11 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	double d2= fabs(boundingBox.getUpper().getZ());
 	double min= fmin(d1,d2)* (2.0 - increaseFactor);
 	double max= fmax(d1,d2) * increaseFactor;
-	GLC_Vector4d vectCamEye(m_pViewCam->getVectEye());
+	GLC_Point4d camEye(m_pViewCam->getEye());
 	
-	vectCamEye= matComp * vectCamEye;
+	camEye= matComp * camEye;
 	
-	if (!boundingBox.intersect(vectCamEye))
+	if (!boundingBox.intersect(camEye))
 	{
 	
 		m_dCamDistMin= min;

@@ -58,7 +58,7 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_IsTransparent(sourceGeom.m_IsTransparent)
 
 {	
-	m_Uid= GLC_GenID();
+	m_Uid= glc::GLC_GenID();
 	// Material is copy here
 	setMaterial(new GLC_Material());
 	m_pMaterial->setMaterial(sourceGeom.getMaterial());

@@ -27,7 +27,6 @@
 #ifndef GLC_POINT_H_
 #define GLC_POINT_H_
 
-
 #include "glc_geometry.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -45,10 +44,10 @@ class GLC_Point : public GLC_Geometry
 //////////////////////////////////////////////////////////////////////
 public:	
 	//! Construct an GLC_Point
-	GLC_Point(const GLC_Vector4d &VectSetCoord);
+	GLC_Point(const GLC_Point4d &);
 
 	//! Construct an GLC_Point
-	GLC_Point(double x, double y, double z);
+	GLC_Point(double, double, double);
 
 //@}
 
@@ -58,8 +57,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Get a 4D vector represent point coordinate
-	GLC_Vector4d getVectCoord(void) const;
+	//! Get a 4D point represent point coordinate
+	GLC_Point4d getCoord(void) const;
 	
 	//! return the point bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
@@ -74,8 +73,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set Point coordinate by 4D Vector
-	void setCoord(const GLC_Vector4d &Vect);
+	//! Set Point coordinate by 4D point
+	void setCoord(const GLC_Point4d &);
 
 	//! Set Point coordinate by 3 double
 	void setCoord(double x, double y, double z);
@@ -98,8 +97,8 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 private:
-	//! 4d Vector for point coordinate
-	GLC_Vector4d m_VectCoord;
+	//! 4d point for point coordinate
+	GLC_Point4d m_Coord;
 	
 };
 #endif //GLC_POINT_H_

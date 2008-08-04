@@ -53,8 +53,7 @@ public:
 	/* VectUp and VectCam could not be parallel
 	 * VectUp could not be NULL
 	 * VectCam could not be NULL */   
-   GLC_Camera(const GLC_Vector4d &Eye, const GLC_Vector4d &Target, const GLC_Vector4d &Up,
-	   const char *pName="Caméra" );
+   GLC_Camera(const GLC_Point4d &, const GLC_Point4d &, const GLC_Vector4d &);
 	//! Copy constructor
 	GLC_Camera(const GLC_Camera&);
 //@}
@@ -67,11 +66,11 @@ public:
 	//! Get the distance between the eye and the target of camera
 	double getDistEyeTarget(void) const;
 
-	//! Get camera's eye coordinate vector
-	const GLC_Vector4d getVectEye(void) const;
+	//! Get camera's eye coordinate point
+	const GLC_Point4d getEye(void) const;
 
-	//! Get camera's target coordinate vector
-	const GLC_Vector4d getVectTarget(void) const;
+	//! Get camera's target coordinate point
+	const GLC_Point4d getTarget(void) const;
 
 	//! Get camera's Up vector
 	const GLC_Vector4d getVectUp(void) const;
@@ -112,13 +111,16 @@ public:
 	/* VectUp and VectCam could not be parallel
 	 * VectUp could not be NULL
 	 * VectCam could not be NULL */   
-   void setCam(GLC_Vector4d Eye, GLC_Vector4d Target, GLC_Vector4d Up);
+   void setCam(GLC_Point4d Eye, GLC_Point4d Target, GLC_Vector4d Up);
+   
+   //! Set the camera by copying another camera
+   void setCam(const GLC_Camera&);
 
    //! Set camera's eye coordinate vector
-   void setEyeCam(const GLC_Vector4d &Eye);
+   void setEyeCam(const GLC_Point4d &Eye);
   
    //! Set camera's target coordinate vector
-   void setTargetCam(const GLC_Vector4d &Target);
+   void setTargetCam(const GLC_Point4d &Target);
  
    //! Set camera's Up vector
    void setUpCam(const GLC_Vector4d &Up);
@@ -155,14 +157,14 @@ private:
 // Private Member
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Camera's eye vector
-	GLC_Vector4d VectEye;
-	//! Camera's target vector
-	GLC_Vector4d VectTarget;
+	//! Camera's eye point
+	GLC_Point4d m_Eye;
+	//! Camera's target point
+	GLC_Point4d m_Target;
 	//! Camera's Up vector
-	GLC_Vector4d VectUp;
+	GLC_Vector4d m_VectUp;
 	
 	//! Camera orbit composition matrix
-	GLC_Matrix4x4 MatCompOrbit;
+	GLC_Matrix4x4 m_MatCompOrbit;
 };
 #endif //GLC_CAMERA_H_

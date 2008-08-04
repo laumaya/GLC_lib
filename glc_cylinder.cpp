@@ -25,7 +25,6 @@
 //! \file glc_cylinder.cpp implementation of the GLC_Cylinder class.
 
 #include <QVector>
-#include <assert.h>
 #include "glc_cylinder.h"
 #include "glc_openglexception.h"
 #include "glc_selectionmaterial.h"
@@ -83,8 +82,8 @@ GLC_BoundingBox* GLC_Cylinder::getBoundingBox(void) const
 {
 	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
 	
-	GLC_Vector3d lower(-m_Radius, -m_Radius, 0.0);
-	GLC_Vector3d upper(m_Radius, m_Radius, m_Length);
+	GLC_Point3d lower(-m_Radius, -m_Radius, 0.0);
+	GLC_Point3d upper(m_Radius, m_Radius, m_Length);
 	pBoundingBox->combine(lower);
 	pBoundingBox->combine(upper);
 	
@@ -103,7 +102,7 @@ GLC_Geometry* GLC_Cylinder::clone() const
 // Set Cylinder length
 void GLC_Cylinder::setLength(double Length)
 {
-	assert(Length > 0.0);
+	Q_ASSERT(Length > 0.0);
 	m_Length= Length;
 
 	m_ListIsValid= false;	 
@@ -112,7 +111,7 @@ void GLC_Cylinder::setLength(double Length)
 // Set Cylinder radius
 void GLC_Cylinder::setRadius(double Radius)
 {
-	assert(Radius > 0.0);
+	Q_ASSERT(Radius > 0.0);
 	m_Radius= Radius;
 	
 	m_ListIsValid= false;
@@ -121,7 +120,7 @@ void GLC_Cylinder::setRadius(double Radius)
 // Set Discretion
 void GLC_Cylinder::setDiscretion(int TargetDiscret)
 {
-	assert(TargetDiscret > 0);
+	Q_ASSERT(TargetDiscret > 0);
 	if (TargetDiscret != m_Discret)
 	{
 		m_Discret= TargetDiscret;

@@ -29,6 +29,7 @@
 
 #include <QColor>
 #include "glc_object.h"
+#include "glc_vector4d.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Light
@@ -87,11 +88,11 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set lihgt's position by a 4D vector
-	void setPosition(const GLC_Vector4d &VectPos);
+	//! Set lihgt's position by a 4D point
+	void setPosition(const GLC_Point4d &);
 
 	//! Set lihgt's position by a 3 GLfloat
-	void setPosition(GLfloat x, GLfloat y, GLfloat z);
+	void setPosition(GLfloat, GLfloat, GLfloat);
 	
 	//! Set light's ambiant color by a QColor
 	void setAmbientColor(const QColor &);
@@ -172,7 +173,7 @@ private:
 	QColor m_SpecularColor;
 	
 	//! Light position
-	GLC_Vector4d m_Position;
+	GLC_Point4d m_Position;
 	
 	//! Lighting mode
 	bool m_TwoSided;
