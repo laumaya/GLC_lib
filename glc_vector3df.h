@@ -187,4 +187,7 @@ private:
 
 }; //class GLC_Vector3d
 
+//! Define GLC_Point3D
+typedef GLC_Vector3df GLC_Point3df;
+
 #endif /*GLC_VECTOR3DF_H_*/

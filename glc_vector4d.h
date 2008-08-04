@@ -385,6 +385,8 @@ private:
 
 }; //class GLC_Vector4d
 
+//! Define GLC_Point4D
+typedef GLC_Vector4d GLC_Point4d;
 
 // Axis definition
 /*! \var AxeX

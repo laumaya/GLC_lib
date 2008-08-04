@@ -156,4 +156,7 @@ private:
 
 }; //class GLC_Vector2df
 
+//! Define GLC_Point2D
+typedef GLC_Vector2df GLC_Point2df;
+
 #endif /*GLC_VECTOR2DF_H_*/
