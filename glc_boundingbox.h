@@ -53,7 +53,7 @@ public:
 	GLC_BoundingBox(const GLC_BoundingBox& boundingBox);
 	
 	//! Constructor with 2 points.
-	GLC_BoundingBox(const GLC_Vector4d& lower, const GLC_Vector4d& upper);
+	GLC_BoundingBox(const GLC_Point4d& lower, const GLC_Point4d& upper);
 	
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -68,19 +68,19 @@ public:
 	}
 	
 	//! Test if a point is in the bounding Box
-	bool intersect(const GLC_Vector4d& point) const;
+	bool intersect(const GLC_Point4d& point) const;
 
 	//! Return the max distance between a point and a corner of the bounding box
 	//double maxDistance(const GLC_Vector4d& point) const;
 	
 	//! Get the lower corner of the bounding box
-	GLC_Vector4d getLower(void) const;
+	GLC_Point4d getLower(void) const;
 	
 	//! Get the upper corner of the bounding box
-	GLC_Vector4d getUpper(void) const;
+	GLC_Point4d getUpper(void) const;
 	
 	//! Get the center of the bounding box
-	GLC_Vector4d getCenter(void) const;
+	GLC_Point4d getCenter(void) const;
 		
 //@}
 
@@ -90,13 +90,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Combine the bounding Box with new geometry point
-	GLC_BoundingBox& combine(const GLC_Vector4d& point);
+	GLC_BoundingBox& combine(const GLC_Point4d& point);
 
 	//! Combine the bounding Box with new geometry point
-	GLC_BoundingBox& combine(const GLC_Vector3d& point);
+	GLC_BoundingBox& combine(const GLC_Point3d& point);
 
 	//! Combine the bounding Box with new geometry point
-	GLC_BoundingBox& combine(const GLC_Vector3df& point);
+	GLC_BoundingBox& combine(const GLC_Point3df& point);
 
 	//! Combine the bounding Box with another bounding box
 	GLC_BoundingBox& combine(const GLC_BoundingBox& box);
@@ -112,8 +112,8 @@ public:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	GLC_Vector4d m_Lower;
-	GLC_Vector4d m_Upper;
+	GLC_Point4d m_Lower;
+	GLC_Point4d m_Upper;
 	bool m_IsEmpty;
 
 };

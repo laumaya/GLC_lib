@@ -48,7 +48,7 @@ GLC_BoundingBox::GLC_BoundingBox(const GLC_BoundingBox& boundingBox)
 }
 
 // Constructor with 2 points.
-GLC_BoundingBox::GLC_BoundingBox(const GLC_Vector4d& lower, const GLC_Vector4d& upper)
+GLC_BoundingBox::GLC_BoundingBox(const GLC_Point4d& lower, const GLC_Point4d& upper)
 : m_Lower(lower)
 , m_Upper(upper)
 , m_IsEmpty(false)
@@ -61,7 +61,7 @@ GLC_BoundingBox::GLC_BoundingBox(const GLC_Vector4d& lower, const GLC_Vector4d& 
 //////////////////////////////////////////////////////////////////////
 
 // Test if a point is in the bounding Box
-bool GLC_BoundingBox::intersect(const GLC_Vector4d& point) const
+bool GLC_BoundingBox::intersect(const GLC_Point4d& point) const
 {
 	if (!m_IsEmpty)
 	{
@@ -78,19 +78,19 @@ bool GLC_BoundingBox::intersect(const GLC_Vector4d& point) const
 }
 
 // Get the lower corner of the bounding box
-GLC_Vector4d GLC_BoundingBox::getLower(void) const
+GLC_Point4d GLC_BoundingBox::getLower(void) const
 {
 	return m_Lower;
 }
 
 // Get the upper corner of the bounding box
-GLC_Vector4d GLC_BoundingBox::getUpper(void) const
+GLC_Point4d GLC_BoundingBox::getUpper(void) const
 {
 	return m_Upper;
 }
 
 // Get the center of the bounding box
-GLC_Vector4d GLC_BoundingBox::getCenter(void) const
+GLC_Point4d GLC_BoundingBox::getCenter(void) const
 {
 	GLC_Vector4d vectResult = (m_Lower + m_Upper) * (1.0 / 2.0);
 	return vectResult;
@@ -103,7 +103,7 @@ GLC_Vector4d GLC_BoundingBox::getCenter(void) const
 //////////////////////////////////////////////////////////////////////
 
 // Combine the bounding Box with new geometry point
-GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Vector4d& point)
+GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point4d& point)
 {
 	if (m_IsEmpty)
 	{
@@ -127,7 +127,7 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Vector4d& point)
 }
 
 // Combine the bounding Box with new geometry point
-GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Vector3d& point)
+GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3d& point)
 {
 	if (m_IsEmpty)
 	{
@@ -151,9 +151,9 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Vector3d& point)
 }
 
 // Combine the bounding Box with new geometry point
-GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Vector3df& pointf)
+GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3df& pointf)
 {
-	GLC_Vector3d point(pointf);
+	GLC_Point3d point(pointf);
 	if (m_IsEmpty)
 	{
 		m_Lower= point;
@@ -204,14 +204,14 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
 GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
 {
 	// Compute Transformed BoundingBox Corner
-	GLC_Vector4d corner1(m_Lower);
-	GLC_Vector4d corner7(m_Upper);
-	GLC_Vector4d corner2(corner7.getX(), corner1.getY(), corner1.getZ());
-	GLC_Vector4d corner3(corner7.getX(), corner7.getY(), corner1.getZ());
-	GLC_Vector4d corner4(corner1.getX(), corner7.getY(), corner1.getZ());
-	GLC_Vector4d corner5(corner1.getX(), corner1.getY(), corner7.getZ());
-	GLC_Vector4d corner6(corner7.getX(), corner1.getY(), corner7.getZ());
-	GLC_Vector4d corner8(corner1.getX(), corner7.getY(), corner7.getZ());
+	GLC_Point4d corner1(m_Lower);
+	GLC_Point4d corner7(m_Upper);
+	GLC_Point4d corner2(corner7.getX(), corner1.getY(), corner1.getZ());
+	GLC_Point4d corner3(corner7.getX(), corner7.getY(), corner1.getZ());
+	GLC_Point4d corner4(corner1.getX(), corner7.getY(), corner1.getZ());
+	GLC_Point4d corner5(corner1.getX(), corner1.getY(), corner7.getZ());
+	GLC_Point4d corner6(corner7.getX(), corner1.getY(), corner7.getZ());
+	GLC_Point4d corner8(corner1.getX(), corner7.getY(), corner7.getZ());
 
 	corner1 = (matrix * corner1);
 	corner2 = (matrix * corner2);
