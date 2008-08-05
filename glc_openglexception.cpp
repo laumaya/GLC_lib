@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_openglexception.h implementation of the GLC_OpenGlException class.
+//! \file glc_openglexception.cpp implementation of the GLC_OpenGlException class.
 
 #include "glc_openglexception.h"
 

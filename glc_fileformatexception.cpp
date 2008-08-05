@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_fileformatexception.h implementation of the GLC_FileFormatException class.
+//! \file glc_fileformatexception.cpp implementation of the GLC_FileFormatException class.
 
 #include "glc_fileformatexception.h"
 

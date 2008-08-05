@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_exception.h implementation of the GLC_Exception class.
+//! \file glc_exception.cpp implementation of the GLC_Exception class.
 
 #include "glc_exception.h"
 
