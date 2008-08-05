@@ -29,6 +29,7 @@
 
 #include "glc_vector4d.h"
 #include "glc_utils_maths.h"
+#include "glc_matrix4x4.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_BoundingBox
