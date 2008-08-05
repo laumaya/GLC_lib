@@ -127,7 +127,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	{
 		if (!m_LoadedMeshes.contains(QString(pMesh->name)))
 		{
-			qDebug() << "Mesh without parent found" << QString(pMesh->name);
+			//qDebug() << "Mesh without parent found" << QString(pMesh->name);
 			Lib3dsNode *pNode= lib3ds_node_new_object();
 			strcpy(pNode->name, pMesh->name);
 			pNode->parent_id= LIB3DS_NO_PARENT;
