@@ -25,7 +25,6 @@
 //! \file glc_camera.cpp Implementation of the GLC_Camera class.
 
 #include <QtDebug>
-#include "glc_maths.h"
 #include "glc_camera.h"
 #include "glc_openglexception.h"
 

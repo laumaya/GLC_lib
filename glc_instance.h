@@ -31,6 +31,7 @@
 #include "glc_enum.h"
 #include "glc_boundingbox.h"
 #include "glc_object.h"
+#include "glc_matrix4x4.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Instance

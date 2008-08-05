@@ -30,7 +30,6 @@
 #include <QObject>
 #include <QtOpenGL>
 #include <QString>
-#include "glc_maths.h"
 
 //class to built
 #include "glc_point.h"

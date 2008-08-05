@@ -27,8 +27,9 @@
 #ifndef GLC_CAMERA_H_
 #define GLC_CAMERA_H_
 
-
 #include "glc_object.h"
+#include "glc_vector4d.h"
+#include "glc_matrix4x4.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Camera

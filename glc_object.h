@@ -30,7 +30,6 @@
 #include <QtOpenGL>
 #include <QString>
 
-#include "glc_maths.h"
 #include "glc_enum.h"
 
 //////////////////////////////////////////////////////////////////////

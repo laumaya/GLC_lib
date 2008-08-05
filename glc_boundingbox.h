@@ -27,7 +27,7 @@
 #ifndef GLC_BOUNDINGBOX_
 #define GLC_BOUNDINGBOX_
 
-#include "glc_maths.h"
+#include "glc_vector4d.h"
 #include "glc_utils_maths.h"
 
 //////////////////////////////////////////////////////////////////////
