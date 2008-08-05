@@ -21,8 +21,8 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 *****************************************************************************/
-//! \file utils_maths.h 
-/*! \brief Definition of usefull definition*/
+//! \file glc_utils_maths.h Mathematic constants.
+/*! \brief Definition of usefull constants*/
 
 #ifndef GLC_UTILS_MATHS_H_
 #define GLC_UTILS_MATHS_H_
@@ -37,7 +37,7 @@ namespace glc
 	const double EPSILON= 0.00001;
 	
 	/*! \def PI
-	 * \brief Define th magique number PI */
+	 * \brief Define the magic number PI */
 	const double PI= 3.1415926535897932;
 };
 
