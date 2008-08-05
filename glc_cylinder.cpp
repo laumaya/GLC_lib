@@ -42,7 +42,7 @@ GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength)
 , m_Discret(GLC_POLYDISCRET)	// Default discretion
 , m_EndedIsCaped(true)				// Cylinder ended are closed	
 {
-	assert((m_Radius > 0.0) && (m_Length > 0.0));
+	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0));
 }
 
 GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
@@ -52,7 +52,7 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
 , m_Discret(sourceCylinder.m_Discret)
 , m_EndedIsCaped(sourceCylinder.m_EndedIsCaped)
 {
-	assert((m_Radius > 0.0) && (m_Length > 0.0) && (m_Discret > 0));
+	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0) && (m_Discret > 0));
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -151,7 +151,7 @@ void GLC_Cylinder::glDraw(void)
 	QVector<double> TableauSin;
 	GLC_Vector4d Vect;
 
-	// Calcul des coordonnées des points du pourtour
+	// Calcul des coordonnï¿½es des points du pourtour
 	for (int i= 0; i <= m_Discret; i++)
 	{
 		TableauCos.append(m_Radius * cos(i * (2 * PI) / m_Discret));
