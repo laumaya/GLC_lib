@@ -3,7 +3,7 @@ TEMPLATE = lib
 QT += opengl \
     core
 CONFIG += exceptions \
-    debug \
+    release \
     warn_on
 TARGET = GLC_lib
 VERSION = 1.0.0
@@ -185,23 +185,24 @@ unix {
     # Location of HEADERS and library
     LIB_DIR = /usr/lib
     INCLUDE_DIR = /usr/include
+    # Adds a -P to preserve link
+	QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
+	include.path = $${INCLUDE_DIR}/GLC_lib
 }
 
 # Windows Install configuration
 win32 { 
     # Location of HEADERS and library
-    LIB_DIR = C:/GLC_lib/lib
-    INCLUDE_DIR = C:/GLC_lib/include
+    LIB_DIR = C:\GLC_lib\lib
+    INCLUDE_DIR = C:\GLC_lib\include
+    include.path = $${INCLUDE_DIR}
 }    
-# Adds a -P to preserve link
-QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
-            
-include.path = $${INCLUDE_DIR}/GLC_lib
+
 include.files = $${HEADERS} $${HEADERS_INST}
     
 # install library
 target.path = $${LIB_DIR}
-    
+   
 # "make install" configuration options
 INSTALLS += target include
 
