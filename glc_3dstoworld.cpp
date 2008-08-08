@@ -139,7 +139,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	// Free Lib3dsFile and all its ressources
 	lib3ds_file_free(m_pLib3dsFile);
 	m_pLib3dsFile= NULL;
-	
+	emit currentQuantum(100);
 	return m_pWorld;
 }
 
