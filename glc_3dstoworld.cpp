@@ -82,6 +82,9 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		throw(fileFormatException);
 	}
+	// Close the file before open it with lib3ds
+	file.close();
+	
 	//////////////////////////////////////////////////////////////////
 	// Init member
 	//////////////////////////////////////////////////////////////////
