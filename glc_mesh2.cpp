@@ -309,36 +309,43 @@ void GLC_Mesh2::glDraw()
 		}
 		else
 		{
-			if (IsNewFace)
-			{
-				if (CurrentMaterialIndex != m_MaterialIndex.at(i))
-				{	// If the material change, make it current
-					CurrentMaterialIndex= m_MaterialIndex.at(i);
-					//qDebug() << "GLC_Mesh2::glDraw : CurrentMaterialIndex" << CurrentMaterialIndex;
-					MaterialHash::const_iterator iMaterial= m_MaterialHash.find(CurrentMaterialIndex);
-					// Check if the key is already use
-					if (iMaterial != m_MaterialHash.end())
+			if (CurrentMaterialIndex != m_MaterialIndex.at(i))
+			{	// If the material change, make it current
+				CurrentMaterialIndex= m_MaterialIndex.at(i);
+				//qDebug() << "GLC_Mesh2::glDraw : CurrentMaterialIndex" << CurrentMaterialIndex;
+				MaterialHash::const_iterator iMaterial= m_MaterialHash.find(CurrentMaterialIndex);
+				// Check if the key is already use
+				if (iMaterial != m_MaterialHash.end())
+				{
+					if (m_MaterialHash[CurrentMaterialIndex]->getAddRgbaTexture())
 					{
-						if (m_MaterialHash[CurrentMaterialIndex]->getAddRgbaTexture())
-						{
-							glEnable(GL_TEXTURE_2D);
-							//qDebug() << "GLC_Mesh2::glDraw : Texture enabled";
-						}
-						else
-						{
-							glDisable(GL_TEXTURE_2D);
-						}
-						m_MaterialHash[CurrentMaterialIndex]->glExecute();
-						glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());
-						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+						glEnable(GL_TEXTURE_2D);
+						//qDebug() << "GLC_Mesh2::glDraw : Texture enabled";
 					}
 					else
 					{
-						m_pMaterial->glExecute();
-						glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());
-						if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+						glDisable(GL_TEXTURE_2D);
 					}
+					m_MaterialHash[CurrentMaterialIndex]->glExecute();
+					double r, g, b, a;
+					QColor diffuseColor= m_MaterialHash[CurrentMaterialIndex]->getDiffuseColor();
+					r= diffuseColor.redF();
+					g= diffuseColor.greenF();
+					b= diffuseColor.blueF();
+					a= diffuseColor.alphaF();
+					glColor4d(r, g, b, a);
+					if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 				}
+				else
+				{
+					m_pMaterial->glExecute();
+					glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());
+					if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+				}
+			}
+
+			if (IsNewFace)
+			{
 				IsNewFace= false;
 				// New polygon creation
 				glBegin(GL_POLYGON);
