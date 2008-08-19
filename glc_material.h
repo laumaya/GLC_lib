@@ -59,10 +59,10 @@ public:
 	GLC_Material();
 	
 	/*! By default, Ambiant Color is dark grey*/
-	GLC_Material(const QColor &ambientColor);
+	GLC_Material(const QColor &);
 
 	/*! By default, Ambiant Color is dark grey*/
-	GLC_Material(const char *pName, const GLfloat *pAmbientColor);
+	GLC_Material(const char *pName, const GLfloat *);
 	
 	//! Construct textured GLC_Material
 	GLC_Material(GLC_Texture* pTexture, const char *pName);
@@ -201,7 +201,7 @@ private:
 	void updateUsed(void);
 	
 	//! Init Ambiant Color
-	void initAmbientColor(void);
+	void initDiffuseColor(void);
 	
 	//! Init other color
 	void initOtherColor(void);
