@@ -31,6 +31,7 @@
 #include <QObject>
 #include <QFile>
 #include <QTextStream>
+#include <QColor>
 
 #include "glc_vector3d.h"
 #include "glc_vector2df.h"
@@ -82,8 +83,8 @@ public:
 private:
 	//! clear stlToWorld allocate memmory
 	void clear();
-	//! Extract a 3D Vector from a string
-	GLC_Vector3df extract3dVect(QString &);
+	//! Extract a vertex from a string and add color component if needed
+	void extractVertex(QString &);
 	//! Extract Number off Vertex and faces
 	void extractNbrVertexsAndNbrFaces(QString &);
 	//! Extract a face from a string
@@ -118,10 +119,16 @@ private:
 	int m_CurVertexIndex;
 	//! Index of the current normal
 	int m_CurNormalIndex;
+	//! Index of the current material
+	int m_CurMaterialIndex;
 	//! The number of vertexs
 	int m_NbrOfVertexs;
 	//! The number of faces
 	int m_NbrOfFaces;
+	//! The OFF is a COFF
+	bool m_IsCoff;
+	//! The OFF is 4OFF
+	bool m_Is4off;
 
 };
 
