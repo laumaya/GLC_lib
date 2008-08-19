@@ -45,17 +45,17 @@ GLC_Material::GLC_Material()
 , m_Transparency(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << getID();
-	// Ambient Color
-	initAmbientColor();
+	// Diffuse Color
+	initDiffuseColor();
 
 	// Others
 	initOtherColor();
 }
 
-GLC_Material::GLC_Material(const QColor &ambientColor)
+GLC_Material::GLC_Material(const QColor &diffuseColor)
 :GLC_Object("Material")
-, m_AmbientColor(ambientColor)
-, m_DiffuseColor()
+, m_AmbientColor()
+, m_DiffuseColor(diffuseColor)
 , m_SpecularColor()
 , m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
@@ -68,7 +68,7 @@ GLC_Material::GLC_Material(const QColor &ambientColor)
 }
 
 
-GLC_Material::GLC_Material(const char *pName ,const GLfloat *pAmbientColor)
+GLC_Material::GLC_Material(const char *pName ,const GLfloat *pDiffuseColor)
 :GLC_Object(pName)
 , m_AmbientColor()
 , m_DiffuseColor()
@@ -80,17 +80,17 @@ GLC_Material::GLC_Material(const char *pName ,const GLfloat *pAmbientColor)
 , m_Transparency(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << getID();
-	// Init Ambiant Color
-	if (pAmbientColor != 0)
+	// Init Diffuse Color
+	if (pDiffuseColor != 0)
 	{
-		m_AmbientColor.setRgbF(static_cast<qreal>(pAmbientColor[0]),
-								static_cast<qreal>(pAmbientColor[1]), 
-								static_cast<qreal>(pAmbientColor[2]),
-								static_cast<qreal>(pAmbientColor[3]));
+		m_DiffuseColor.setRgbF(static_cast<qreal>(pDiffuseColor[0]),
+								static_cast<qreal>(pDiffuseColor[1]), 
+								static_cast<qreal>(pDiffuseColor[2]),
+								static_cast<qreal>(pDiffuseColor[3]));
 	}
 	else
 	{	
-		initAmbientColor();
+		initDiffuseColor();
 	}
 	// Others
 	initOtherColor();
@@ -108,8 +108,8 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << getID();
 	
-	// Ambiente Color
-	initAmbientColor();
+	// Diffuse Color
+	initDiffuseColor();
 
 	// Others
 	initOtherColor();
@@ -439,16 +439,16 @@ void GLC_Material::updateUsed(void)
 }
 
 // Init Ambiant Color
-void GLC_Material::initAmbientColor(void)
+void GLC_Material::initDiffuseColor(void)
 {
-	m_AmbientColor.setRgbF(0.8, 0.8, 0.8, 1.0);
+	m_DiffuseColor.setRgbF(1.0, 1.0, 1.0, 1.0);
 }
 
 // Init default color
 void GLC_Material::initOtherColor(void)
 {
-	// Diffuse Color
-	m_DiffuseColor.setRgbF(1.0, 1.0, 1.0, 1.0);
+	//Ambiant Color
+	m_AmbientColor.setRgbF(0.8, 0.8, 0.8, 1.0);	
 
 	// Specular Color
 	m_SpecularColor.setRgbF(0.5, 0.5, 0.5, 1.0);
