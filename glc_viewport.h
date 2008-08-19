@@ -149,6 +149,12 @@ public:
 	
 	//! Define camera's target position
 	void glPointing(GLint x, GLint y);
+	
+	//! Update OpenGL Projection Matrix
+	void updateProjectionMat(void) const;
+
+	//! Force the aspect ratio of the window
+	void forceAspectRatio(double) const;
 //@}
 	
 //////////////////////////////////////////////////////////////////////
@@ -289,9 +295,6 @@ private:
 	//! Convert mouse View coordinate to orbit coordinate (Centred and betwen (-1,-1) and (1,1))
 	GLC_Vector4d mapForOrbit( double Posx, double Posy) const;
 	
-	//! Update OpenGL Projection Matrix
-	void updateProjectionMat(void) const;
-
 	//! Update orbit circle dimensions
 	void updateOrbitCircle();
 

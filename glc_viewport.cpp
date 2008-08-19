@@ -185,6 +185,34 @@ void GLC_Viewport::glPointing(GLint x, GLint y)
 	}
 }
 
+// Update OpenGL Projection Matrix
+void GLC_Viewport::updateProjectionMat(void) const
+{
+	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+
+	// Calculate The Aspect Ratio Of The Window
+	double AspectRatio;
+	AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
+	gluPerspective(m_dFov, AspectRatio, m_dCamDistMin, m_dCamDistMax);
+
+	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+}
+
+//! Force the aspect ratio of the window
+void GLC_Viewport::forceAspectRatio(double ratio) const
+{
+	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+
+	gluPerspective(m_dFov, ratio, m_dCamDistMin, m_dCamDistMax);
+
+	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+	
+}
+
 //////////////////////////////////////////////////////////////////////
 // Private OpenGL Functions
 //////////////////////////////////////////////////////////////////////
@@ -330,17 +358,8 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 	}
 
 	glViewport(0,0,m_nWinHSize,m_nWinVSize);			// Reset The Current Viewport
-
-	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
-
-	// Calculate The Aspect Ratio Of The Window
-	double AspectRatio;
-	AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
-	gluPerspective(m_dFov, AspectRatio, m_dCamDistMin, m_dCamDistMax);
-
-	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
-	glLoadIdentity();									// Reset The Modelview Matrix
+	
+	updateProjectionMat();
 }
 
 //! select an object and return is UID
@@ -673,20 +692,6 @@ GLC_Vector4d GLC_Viewport::mapForOrbit( double Posx, double Posy) const
 	return VectMouse;
 }
 
-// Update OpenGL Projection Matrix
-void GLC_Viewport::updateProjectionMat(void) const
-{
-	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
-
-	// Calculate The Aspect Ratio Of The Window
-	double AspectRatio;
-	AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
-	gluPerspective(m_dFov, AspectRatio, m_dCamDistMin, m_dCamDistMax);
-
-	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
-	glLoadIdentity();									// Reset The Modelview Matrix
-}
 
 // Update orbit circle dimensions
 void GLC_Viewport::updateOrbitCircle()
