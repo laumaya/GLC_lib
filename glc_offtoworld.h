@@ -32,6 +32,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QColor>
+#include <QList>
 
 #include "glc_vector3d.h"
 #include "glc_vector2df.h"
@@ -129,6 +130,8 @@ private:
 	bool m_IsCoff;
 	//! The OFF is 4OFF
 	bool m_Is4off;
+	//! The list of material index
+	QList<int> m_MaterialIndexs;
 
 };
 

@@ -47,6 +47,7 @@ GLC_OffToWorld::GLC_OffToWorld(const QGLContext *pContext)
 , m_NbrOfFaces(0)
 , m_IsCoff(false)
 , m_Is4off(false)
+, m_MaterialIndexs()
 {
 	
 }
@@ -233,6 +234,7 @@ void GLC_OffToWorld::clear()
 	m_NbrOfFaces= 0;
 	m_IsCoff= false;
 	m_Is4off= false;
+	m_MaterialIndexs.clear();
 }
 
 // Extract a Vertex from a string and add color component if needed
@@ -325,7 +327,20 @@ void GLC_OffToWorld::extractVertex(QString &line)
 					QColor curColor;
 					curColor.setRgbF(r, g, b, a);
 					GLC_Material* pVertexMaterial= new GLC_Material(curColor);
-					m_pCurrentMesh->addMaterial(m_CurMaterialIndex++, pVertexMaterial);
+					int index= m_pCurrentMesh->materialIndex(*pVertexMaterial);
+					if (index != -1)
+					{
+						//Material already in mesh
+						delete pVertexMaterial;
+						m_MaterialIndexs.append(index);
+					}
+					else
+					{
+						index= m_pCurrentMesh->getNumberOfSubMaterial();
+						m_pCurrentMesh->addMaterial(index, pVertexMaterial);
+						m_MaterialIndexs.append(index);						
+					}
+					m_CurMaterialIndex++;
 				}				
 			}
 			else
@@ -441,7 +456,7 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 			vectorCoordinate.append(index);
 			if (m_IsCoff)
 			{
-				vectorMaterial.append(index);
+				vectorMaterial.append(m_MaterialIndexs[index]);
 			}
 			else
 			{
@@ -481,10 +496,22 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 		QColor diffuse;
 		diffuse.setRgbF(r, g, b);
 		GLC_Material* pFaceMaterial= new GLC_Material(diffuse);
-		m_pCurrentMesh->addMaterial(m_CurMaterialIndex, pFaceMaterial);
+		int index= m_pCurrentMesh->materialIndex(*pFaceMaterial);
+		if (index != -1)
+		{
+			//Material already in mesh
+			delete pFaceMaterial;
+			m_MaterialIndexs.append(index);
+		}
+		else
+		{
+			index= m_pCurrentMesh->getNumberOfSubMaterial();
+			m_pCurrentMesh->addMaterial(index, pFaceMaterial);
+			m_MaterialIndexs.append(index);						
+		}
 		for (int i=0; i < numberOfVertex; ++i)
 		{
-			vectorMaterial.append(m_CurMaterialIndex);
+			vectorMaterial.append(m_MaterialIndexs[m_CurMaterialIndex]);
 		}
 		m_CurMaterialIndex++;
 	}	
