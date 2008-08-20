@@ -92,7 +92,11 @@ public:
 	//! Get specified mesh sub material
 	inline GLC_Material* getSubMaterial(const int key) {return m_MaterialHash[key];}
 	//! return true if Material key is in the mesh
-	inline const bool containsMaterial(const int key) const {return m_MaterialHash.contains(key);}	
+	inline const bool containsMaterial(const int key) const {return m_MaterialHash.contains(key);}
+	//! Return material index if Material is the same than a material already in the mesh
+	/*! Return -1 if the material is not found
+	 */
+	int materialIndex(const GLC_Material& mat) const;
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 	//! Return a copy of the geometry

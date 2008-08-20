@@ -110,6 +110,24 @@ GLC_Mesh2::~GLC_Mesh2(void)
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
+//! Return material index if Material is the same than a material already in the mesh
+int GLC_Mesh2::materialIndex(const GLC_Material& mat) const
+{
+	int index= -1;
+	MaterialHash::const_iterator iEntry= m_MaterialHash.begin();
+	
+    while ((iEntry != m_MaterialHash.constEnd()) and !(*(iEntry.value()) == mat))
+    {
+        ++iEntry;
+    }
+    if (iEntry != m_MaterialHash.constEnd())
+    {
+    	index= iEntry.key();
+    }
+	return index;
+	
+}
+
 // return the mesh bounding box
 GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
 {
@@ -317,35 +335,31 @@ void GLC_Mesh2::glDraw()
 				// Check if the key is already use
 				if (iMaterial != m_MaterialHash.end())
 				{
-					if (m_MaterialHash[CurrentMaterialIndex]->getAddRgbaTexture())
+					if (!m_IsSelected or (m_IsSelected and m_MaterialHash[CurrentMaterialIndex]->getAddRgbaTexture()))
 					{
-						glEnable(GL_TEXTURE_2D);
-						//qDebug() << "GLC_Mesh2::glDraw : Texture enabled";
+						m_MaterialHash[CurrentMaterialIndex]->glExecute();
 					}
-					else
-					{
-						glDisable(GL_TEXTURE_2D);
-					}
-					m_MaterialHash[CurrentMaterialIndex]->glExecute();
-					double r, g, b, a;
-					QColor diffuseColor= m_MaterialHash[CurrentMaterialIndex]->getDiffuseColor();
-					r= diffuseColor.redF();
-					g= diffuseColor.greenF();
-					b= diffuseColor.blueF();
-					a= diffuseColor.alphaF();
-					glColor4d(r, g, b, a);
+						
 					if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 				}
 				else
 				{
 					m_pMaterial->glExecute();
-					glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());
 					if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 				}
 			}
 
 			if (IsNewFace)
 			{
+				if ((m_MaterialHash.find(CurrentMaterialIndex) != m_MaterialHash.end()) and m_MaterialHash[CurrentMaterialIndex]->getAddRgbaTexture())
+				{
+					glEnable(GL_TEXTURE_2D);
+					//qDebug() << "GLC_Mesh2::glDraw : Texture enabled";
+				}
+				else
+				{
+					glDisable(GL_TEXTURE_2D);
+				}
 				IsNewFace= false;
 				// New polygon creation
 				glBegin(GL_POLYGON);
