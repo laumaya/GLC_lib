@@ -119,6 +119,9 @@ public:
 	//! Return true if the material is transparent
 	inline bool isTransparent() const {return  m_Transparency < 1.0;}
 	
+	//! Return true if material are the same
+	bool operator==(const GLC_Material&) const;
+	
 //@}
 
 //////////////////////////////////////////////////////////////////////
