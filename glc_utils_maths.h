@@ -34,11 +34,11 @@ namespace glc
 	/*! \def EPSILON
 	 *  \brief Define precison of comparaison*/
 	
-	const double EPSILON= 0.00001;
+	const double EPSILON= 1e-10;
 	
 	/*! \def PI
 	 * \brief Define the magic number PI */
-	const double PI= 3.1415926535897932;
+	const double PI= acos(-1.0);
 };
 
 #endif /*GLC_UTILS_MATHS_H_*/
