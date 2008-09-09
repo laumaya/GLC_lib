@@ -24,10 +24,11 @@
 
 //! \file glc_cylinder.cpp implementation of the GLC_Cylinder class.
 
-#include <QVector>
 #include "glc_cylinder.h"
 #include "glc_openglexception.h"
 #include "glc_selectionmaterial.h"
+
+#include <QVector>
 
 using namespace glc;
 //////////////////////////////////////////////////////////////////////

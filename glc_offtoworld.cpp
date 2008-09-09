@@ -25,14 +25,14 @@
 
 //! \file glc_offtoworld.cpp implementation of the GLC_OffToWorld class.
 
-#include <QTextStream>
-#include <QFileInfo>
-#include <QGLContext>
-
 #include "glc_offtoworld.h"
 #include "glc_mesh2.h"
 #include "glc_world.h"
 #include "glc_fileformatexception.h"
+
+#include <QTextStream>
+#include <QFileInfo>
+#include <QGLContext>
 
 GLC_OffToWorld::GLC_OffToWorld(const QGLContext *pContext)
 : m_pWorld(NULL)

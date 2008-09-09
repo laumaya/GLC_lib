@@ -25,8 +25,8 @@
 //! \file glc_box.cpp implementation of the GLC_Box class.
 
 #include "glc_box.h"
-#include <assert.h>
 #include "glc_openglexception.h"
+#include <assert.h>
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor

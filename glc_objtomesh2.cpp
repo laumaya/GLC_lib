@@ -24,13 +24,14 @@
 
 //! \file glc_objToMesh2.cpp implementation of the GLC_ObjToMesh2 class.
 
-#include <QtDebug>
-#include <QVector>
-#include <QFile>
 
 #include "glc_objtomesh2.h"
 #include "glc_texture.h"
 #include "glc_fileformatexception.h"
+
+#include <QtDebug>
+#include <QVector>
+#include <QFile>
 
 
 //////////////////////////////////////////////////////////////////////

@@ -24,9 +24,10 @@
 
 //! \file glc_light.cpp implementation of the GLC_Light class.
 
-#include <QtDebug>
 #include "glc_light.h"
 #include "glc_openglexception.h"
+
+#include <QtDebug>
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor

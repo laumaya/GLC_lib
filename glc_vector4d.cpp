@@ -24,8 +24,8 @@
 
 
 //! \file glc_vector4d.cpp implementation of the GLC_Vector4d class.
-#include <QtDebug>
 #include "glc_vector4d.h"
+#include <QtDebug>
 
 using namespace glc;
 //////////////////////////////////////////////////////////////////////

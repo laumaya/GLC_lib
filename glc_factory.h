@@ -27,6 +27,8 @@
 #ifndef GLC_FACTORY_
 #define GLC_FACTORY_
 
+#include "glew/glew.h"
+
 #include <QObject>
 #include <QtOpenGL>
 #include <QString>

@@ -24,7 +24,6 @@
 
 
 //! \file glc_vector3d.cpp implementation of the GLC_Vector3d class.
-#include <QtDebug>
 #include "glc_vector3d.h"
 
 

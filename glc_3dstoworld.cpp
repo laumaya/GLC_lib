@@ -25,8 +25,6 @@
 //! \file glc_3dstoworld.cpp implementation of the GLC_3dsToWorld class.
 
 #include "glc_3dstoworld.h"
-#include <QFileInfo>
-#include <QGLContext>
 
 #include "glc_mesh2.h"
 #include "glc_world.h"
@@ -41,6 +39,9 @@
 #include "lib3ds/node.h"
 #include "lib3ds/matrix.h"
 #include "lib3ds/material.h"
+
+#include <QFileInfo>
+#include <QGLContext>
 
 GLC_3dsToWorld::GLC_3dsToWorld(const QGLContext *pContext)
 : m_pWorld(NULL)

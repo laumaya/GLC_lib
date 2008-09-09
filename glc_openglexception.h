@@ -27,9 +27,10 @@
 #ifndef GLC_OPENGLEXCEPTION_H_
 #define GLC_OPENGLEXCEPTION_H_
 
-#include <QtOpenGL>
+
 #include "glc_exception.h"
 
+#include <QtOpenGL>
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_OpenGlException
 /*! \brief GLC_OpenGlException : Class for all OpenGL error

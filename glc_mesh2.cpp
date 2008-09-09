@@ -24,10 +24,11 @@
 
 //! \file glc_mesh2.cpp implementation of the GLC_Mesh2 class.
 
-#include <QtDebug>
 #include "glc_mesh2.h"
 #include "glc_openglexception.h"
 #include "glc_selectionmaterial.h"
+
+#include <QtDebug>
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor

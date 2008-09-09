@@ -24,15 +24,16 @@
 
 //! \file glc_objToworld.cpp implementation of the GLC_ObjToWorld class.
 
-#include <QTextStream>
-#include <QFileInfo>
-#include <QGLContext>
 
 #include "glc_objtoworld.h"
 #include "glc_world.h"
 #include "glc_objmtlloader.h"
 #include "glc_fileformatexception.h"
 #include "glc_geomtools.h"
+
+#include <QTextStream>
+#include <QFileInfo>
+#include <QGLContext>
 
 //////////////////////////////////////////////////////////////////////
 // Constructor

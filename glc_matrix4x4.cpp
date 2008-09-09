@@ -25,8 +25,9 @@
 
 //! \file glc_matrix4x4.cpp implementation of the GLC_Matrix4x4 class.
 
-#include <QtDebug>
 #include "glc_matrix4x4.h"
+
+#include <QtDebug>
 
 using namespace glc;
 //////////////////////////////////////////////////////////////////////

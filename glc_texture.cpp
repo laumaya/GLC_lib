@@ -24,10 +24,11 @@
 
 //! \file glc_texture.cpp implementation of the GLC_Texture class.
 
-#include <QtDebug>
+
 #include "glc_texture.h"
 #include "glc_exception.h"
 
+#include <QtDebug>
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////

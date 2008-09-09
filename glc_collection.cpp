@@ -24,11 +24,12 @@
 
 //! \file glc_collection.cpp implementation of the GLC_Collection class.
 
-#include <QtDebug>
 
 #include "glc_collection.h"
 #include "glc_material.h"
 #include "glc_openglexception.h"
+
+#include <QtDebug>
 
 //////////////////////////////////////////////////////////////////////
 // Constructor/Destructor

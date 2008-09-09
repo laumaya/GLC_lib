@@ -23,10 +23,11 @@
 *****************************************************************************/
 
 //! \file glc_orbitCircle.cpp implementation of the GLC_OrbitCircle class.
-#include <QGLContext>
-#include <glc_factory.h>
+#include "glc_factory.h"
 #include "glc_circle.h"
 #include "glc_orbitcircle.h"
+
+#include <QGLContext>
 
 using namespace glc;
 //////////////////////////////////////////////////////////////////////

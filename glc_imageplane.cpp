@@ -23,10 +23,11 @@
 *****************************************************************************/
 
 //! \file glc_imagePlane.cpp implementation of the GLC_ImagePlane class.
-#include <QtDebug>
 #include "glc_imageplane.h"
 #include "glc_viewport.h"
 #include "glc_openglexception.h"
+
+#include <QtDebug>
 
 using namespace glc;
 //////////////////////////////////////////////////////////////////////

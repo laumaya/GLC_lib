@@ -24,15 +24,15 @@
 
 //! \file glc_stltoworld.cpp implementation of the GLC_StlToWorld class.
 
-#include <QTextStream>
-#include <QFileInfo>
-#include <QGLContext>
-#include <QDataStream>
-
 #include "glc_mesh2.h"
 #include "glc_stltoworld.h"
 #include "glc_world.h"
 #include "glc_fileformatexception.h"
+
+#include <QTextStream>
+#include <QFileInfo>
+#include <QGLContext>
+#include <QDataStream>
 
 GLC_StlToWorld::GLC_StlToWorld(const QGLContext *pContext)
 : m_pWorld(NULL)

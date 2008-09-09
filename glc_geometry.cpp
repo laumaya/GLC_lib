@@ -23,11 +23,12 @@
 *****************************************************************************/
 
 //! \file glc_geometry.cpp Implementation of the GLC_Geometry class.
-#include <QtDebug>
-
 #include "glc_geometry.h"
 #include "glc_openglexception.h"
 #include "glc_selectionmaterial.h"
+
+#include <QtDebug>
+
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor

@@ -26,6 +26,7 @@
 
 #ifndef GLC_VIEWPORT_H_
 #define GLC_VIEWPORT_H_
+#include "glew/glew.h"
 #include <QGLWidget>
 #include "glc_camera.h"
 #include "glc_orbitcircle.h"
@@ -132,6 +133,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:	
 	//! Initialize OpenGL with default values
+	/*! Glew initialisation is made here */
 	void initGl();
 	
 	//! Load camera's transformation Matrix and if image plane exist, display it
