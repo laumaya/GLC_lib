@@ -24,10 +24,11 @@
 
 //! \file glc_viewport.cpp implementation of the GLC_Viewport class.
 
-#include <QtDebug>
-#include <assert.h>
+
 #include "glc_viewport.h"
 #include "glc_openglexception.h"
+
+#include <QtDebug>
 
 using namespace glc;
 //////////////////////////////////////////////////////////////////////
@@ -131,6 +132,14 @@ void GLC_Viewport::initGl()
 	glDepthFunc(GL_LEQUAL);                               // The Type Of Depth Testing To Do
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	
+	// Glew initialisation
+	if (glewInit() != GLEW_OK)
+	{
+		GLC_Exception glewException("Glew initialisation failure");
+		qDebug() << "Glew initialisation failure";
+		throw(glewException);
+	}
 }
 
 // Define camera's target position
