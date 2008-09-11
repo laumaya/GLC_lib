@@ -134,12 +134,15 @@ void GLC_Viewport::initGl()
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	
 	// Glew initialisation
-	if (glewInit() != GLEW_OK)
+	GLenum glewReturnCode =glewInit();
+	if (glewReturnCode != GLEW_OK)
 	{
-		GLC_Exception glewException("Glew initialisation failure");
-		qDebug() << "Glew initialisation failure";
+		QString errorMsg(reinterpret_cast<const char*>(glewGetErrorString(glewReturnCode)));
+		GLC_Exception glewException(errorMsg);
+		qDebug() << errorMsg;
 		throw(glewException);
 	}
+	// TODO Test for openGL extensions
 }
 
 // Define camera's target position
