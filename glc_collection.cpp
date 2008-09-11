@@ -392,6 +392,7 @@ void GLC_Collection::glDraw(void)
     
     // Set attributes for blending activation
     glEnable(GL_BLEND);
+    glDepthMask(GL_FALSE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// Display transparent instance
 	iEntry= m_TransparentNodes.begin();
@@ -405,6 +406,7 @@ void GLC_Collection::glDraw(void)
         ++iEntry;
     }
     // Restore attributtes
+    glDepthMask(GL_TRUE);
     glDisable(GL_BLEND);
     
 	// OpenGL error handler
