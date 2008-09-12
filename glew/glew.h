@@ -79,7 +79,7 @@
 #ifndef __glew_h__
 #define __glew_h__
 #define __GLEW_H__
-//#define GLEW_BUILD 1 // Add for static compilation with glc_lib
+#define GLEW_STATIC 1 // Add for static compilation with glc_lib
 #if defined(__gl_h_) || defined(__GL_H__)
 #error gl.h included before glew.h
 #endif
