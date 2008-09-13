@@ -155,7 +155,7 @@ const bool GLC_Instance::getBoundingBoxValidity(void) const
 {
 	if ((m_pGeom != NULL) && (m_pBoundingBox != NULL))
 	{
-		return (m_pGeom->getListIsValid()) && (m_pGeom->getValidity());
+		return m_pGeom->getValidity();
 	}
 	else return false;
 }
@@ -276,13 +276,6 @@ void GLC_Instance::glExecute(GLenum Mode)
 {
 	bool computeBox= false;
 	if (NULL == m_pGeom) return;
-	// Geometry OpenGl list invalid
-	if (!m_pGeom->getListIsValid())
-	{
-		m_pGeom->glLoadTexture();
-		m_pGeom->createList(GL_COMPILE);
-		computeBox= true;
-	}
 	
 	// Geometry invalid or instance
 	if ((!m_pGeom->getValidity()) || (!m_IsValid))
