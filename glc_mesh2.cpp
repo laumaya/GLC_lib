@@ -274,7 +274,7 @@ void GLC_Mesh2::glExecute(GLenum Mode, bool isSelected, bool forceWire)
 // Specific createList method
 void GLC_Mesh2::createList(GLenum Mode)
 {
-	createSelectionList(Mode);
+	createSelectionList(GL_COMPILE);
 	GLC_Geometry::createList(Mode);
 }
 
