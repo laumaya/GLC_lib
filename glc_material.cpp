@@ -131,7 +131,7 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 	if (NULL != InitMaterial.m_pTexture)
 	{
 		m_pTexture= new GLC_Texture(*(InitMaterial.m_pTexture));
-		assert(m_pTexture != NULL);
+		Q_ASSERT(m_pTexture != NULL);
 	}
 		
 }
