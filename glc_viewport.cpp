@@ -524,7 +524,7 @@ void GLC_Viewport::zoom(int Cy)
 // reframe the current scene
 void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 {
-	assert(!box.isEmpty());
+	Q_ASSERT(!box.isEmpty());
 	// Ratio between screen size and bounding box size
 	const double boundingBoxCover= 1.0;
 	
@@ -617,7 +617,7 @@ bool GLC_Viewport::setDistMax(double DistMax)
 // Set Near and Far clipping distance
 void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 {
-	assert(!bBox.isEmpty());
+	Q_ASSERT(!bBox.isEmpty());
 	GLC_Matrix4x4 matTranslateCam(m_pViewCam->getEye());
 	GLC_Matrix4x4 matRotateCam(m_pViewCam->getMatCompOrbit());
 	
