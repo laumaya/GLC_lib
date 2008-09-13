@@ -25,7 +25,6 @@
 //! \file glc_circle.cpp implementation of the GLC_Circle class.
 
 #include "glc_circle.h"
-#include "assert.h"
 #include "glc_openglexception.h"
 
 using namespace glc;
@@ -98,14 +97,14 @@ GLC_Geometry* GLC_Circle::clone() const
 // Set Circle diameter
 void GLC_Circle::setDiameter(double D)
 {
-	assert(D > (2 * EPSILON));
+	Q_ASSERT(D > (2 * EPSILON));
 	setRadius(D / 2);
 }
 
 // Set Circle Radius
 void GLC_Circle::setRadius(double R)
 {
-	assert(R > EPSILON);
+	Q_ASSERT(R > EPSILON);
 	if ( fabs(R - m_Radius) > EPSILON)
 	{	// Radius is changing
 		m_Radius= R;
@@ -116,7 +115,7 @@ void GLC_Circle::setRadius(double R)
 // Set Circle discret
 void GLC_Circle::setDiscretion(int TargetDiscret)
 {
-	assert(TargetDiscret > 0);
+	Q_ASSERT(TargetDiscret > 0);
 	if (TargetDiscret != m_nDiscret)
 	{
 		m_nDiscret= TargetDiscret;
@@ -128,7 +127,7 @@ void GLC_Circle::setDiscretion(int TargetDiscret)
 // Set Circle Angle
 void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 {
-	assert((AngleRadians > EPSILON) && (AngleRadians < 2 * PI));
+	Q_ASSERT((AngleRadians > EPSILON) && (AngleRadians < 2 * PI));
 	if ( fabs(AngleRadians - m_dAngle) > EPSILON)
 	{	// Angle is changing
 			m_dAngle= AngleRadians;
