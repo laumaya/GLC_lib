@@ -26,7 +26,6 @@
 
 #include "glc_box.h"
 #include "glc_openglexception.h"
-#include <assert.h>
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
@@ -89,7 +88,7 @@ GLC_Geometry* GLC_Box::clone() const
 // Set X length
 void GLC_Box::setLgX(double LgX)
 {
-	assert(LgX > 0);
+	Q_ASSERT(LgX > 0);
 	m_dLgX= LgX;
 	m_ListIsValid= false;
 }
@@ -97,7 +96,7 @@ void GLC_Box::setLgX(double LgX)
 // Set Y length
 void GLC_Box::setLgY(double LgY)
 {
-	assert(LgY > 0);
+	Q_ASSERT(LgY > 0);
 	m_dLgY= LgY;
 	m_ListIsValid= false;
 }
@@ -105,7 +104,7 @@ void GLC_Box::setLgY(double LgY)
 // Set Z length
 void GLC_Box::setLgZ(double LgZ)
 {
-	assert(LgZ > 0);
+	Q_ASSERT(LgZ > 0);
 	m_dLgZ= LgZ;
 	m_ListIsValid= false;
 }
