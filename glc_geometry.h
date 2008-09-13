@@ -94,10 +94,7 @@ public:
 	
 	//! Return thickness
 	const float getThickness(void) const;
-	
-	//! Return associated OpenGL list ID
-	GLuint getListID(void);
-	
+		
 	//! Return Validity of associated OpenGL list
 	bool getListIsValid(void) const;
 

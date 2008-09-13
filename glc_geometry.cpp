@@ -115,11 +115,6 @@ const float GLC_Geometry::getThickness(void) const
 {
 	return m_Thikness;
 }
-// Return associated OpenGL list ID
-GLuint GLC_Geometry::getListID(void)
-{
-	return m_ListID;
-}
 
 // Return Validity of associated OpenGL list
 bool GLC_Geometry::getListIsValid(void) const
@@ -145,11 +140,9 @@ GLC_BoundingBox* GLC_Geometry::getBoundingBox(void) const
 	return NULL;	
 }
 
-
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-
 
 // Set Diffuse Color RGBA component
 void GLC_Geometry::setColor(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha)
@@ -167,7 +160,6 @@ void GLC_Geometry::setColor(const QColor& setCol)
 	m_GeometryIsValid= false;		
 }
 
-
 // Set Wire thickness
 void GLC_Geometry::setThikness(float SetEp)
 {
@@ -175,7 +167,6 @@ void GLC_Geometry::setThikness(float SetEp)
 
 	m_GeometryIsValid= false;
 }
-
 
 // Material
 void GLC_Geometry::setMaterial(GLC_Material* pMat)
@@ -202,8 +193,7 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 		}
 
 		m_GeometryIsValid = false;
-		m_ListIsValid= false;	// GLC_Mesh2 compatibility
-		
+		m_ListIsValid= false;	// GLC_Mesh2 compatibility		
 	}
 	else
 	{	
@@ -261,7 +251,7 @@ void GLC_Geometry::glExecute(GLenum Mode, bool isSelected, bool forceWire)
 	if (!m_ListIsValid)
 	{
 		// The list is not up to date or doesn't exist
-	
+		glLoadTexture();
 		createList(Mode);
 	}
 	else
