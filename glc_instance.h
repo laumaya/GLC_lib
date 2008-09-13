@@ -35,11 +35,10 @@
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Instance
-/*! \brief GLC_Instance : GLC_Geometry + OpenGL list + bounding box*/
+/*! \brief GLC_Instance : GLC_Geometry + bounding box*/
 
 /*! An GLC_Instance contain  :
  * 		- GLC_Geometry pointer
- * 		- OpenGL sub list ID
  * 		- Geomtry Bounding box
  * 		- Positionning 4 x 4 matrix
  */
@@ -187,10 +186,7 @@ private:
 	
 	//! Geometry of the instance
 	GLC_Geometry* m_pGeom;
-	
-	//! OpenGL list of the instance
-	GLuint m_ListID;
-	
+		
 	//! BoundingBox of the instance
 	GLC_BoundingBox* m_pBoundingBox;
 	

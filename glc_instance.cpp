@@ -34,7 +34,6 @@
 // Default constructor
 GLC_Instance::GLC_Instance()
 : m_pGeom(NULL)
-, m_ListID(0)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
 , m_MatPos()
@@ -51,7 +50,6 @@ GLC_Instance::GLC_Instance()
 // Contruct instance with a geometry
 GLC_Instance::GLC_Instance(GLC_Geometry* pGeom)
 : m_pGeom(pGeom)
-, m_ListID(0)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
 , m_MatPos()
@@ -70,7 +68,6 @@ GLC_Instance::GLC_Instance(GLC_Geometry* pGeom)
 GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
 : GLC_Object(inputNode)
 , m_pGeom(inputNode.m_pGeom)
-, m_ListID(0)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(inputNode.m_pNumberOfInstance)
 , m_MatPos(inputNode.m_MatPos)
@@ -287,35 +284,21 @@ void GLC_Instance::glExecute(GLenum Mode)
 		computeBox= true;
 	}
 	
-	// Geometry invalid or instance list ID == 0
+	// Geometry invalid or instance
 	if ((!m_pGeom->getValidity()) || (!m_IsValid))
-	{
-		//qDebug() << "GLC_Instance::GlExecute: geometry validity : " << m_pGeom->getValidity();
-		//qDebug() << "GLC_Instance::GlExecute: list ID : " << m_ListID;
-		
-		if (m_ListID == 0)
-		{
-			//qDebug() << "GLC_Instance::GlExecute: List not found";
-			m_ListID= glGenLists(1);
-		}		
-		glNewList(m_ListID, Mode);
-			// Object ID for selection purpose
-			glLoadName(getID());
-			// Save current OpenGL Matrix
-			glPushMatrix();
-			glVisProperties();
-			m_pGeom->glExecute(Mode, m_IsSelected, ((m_PolyMode != GL_FILL)));
-			// Restore OpenGL Matrix
-			glPopMatrix();
-		glEndList();
-		//qDebug() << "GLC_Instance::GlExecute : Display list " << m_ListID << " created";
+	{		
 		m_IsValid= true;
 		computeBox= true;
 	}
-	else
-	{
-		glCallList(m_ListID);
-	}
+	// Object ID for selection purpose
+	glLoadName(getID());
+	// Save current OpenGL Matrix
+	glPushMatrix();
+	glVisProperties();
+	m_pGeom->glExecute(Mode, m_IsSelected, ((m_PolyMode != GL_FILL)));
+	// Restore OpenGL Matrix
+	glPopMatrix();
+	//qDebug() << "GLC_Instance::GlExecute : Display list " << m_ListID << " created";
 	
 	if (computeBox)
 	{
@@ -386,13 +369,7 @@ void GLC_Instance::clear()
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
 	}
-	
-	if (m_ListID != 0)
-	{
-		glDeleteLists(m_ListID, 1);
-		m_ListID= 0;
-	}
-	
+		
 	// invalidate the instance
 	m_IsValid= false;
 

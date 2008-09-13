@@ -37,8 +37,7 @@
 
 GLC_Collection::GLC_Collection()
 : m_NodeMap()
-, m_ListID(0)
-, m_ListIsValid(false)
+, m_CollectionIsValid(false)
 , m_pBoundingBox(NULL)
 , m_SelectedNodes()
 , m_NotTransparentNodes()
@@ -73,7 +72,7 @@ bool GLC_Collection::add(GLC_Instance& node)
 		m_TransparentNodes.insert(key, pInstance);
 	}
 	
-	m_ListIsValid= false;
+	m_CollectionIsValid= false;
 	return true;	
 }
 
@@ -102,10 +101,9 @@ bool GLC_Collection::remove(GLC_uint Key)
 			m_TransparentNodes.remove(Key);
 		}
 		m_NodeMap.remove(Key);		// Delete the conteneur
-		// Search the list
 			
-		// List validity
-		m_ListIsValid= false;
+		// Collection validity
+		m_CollectionIsValid= false;
 		
 		//qDebug("GLC_Collection::removeNode : Element succesfuly deleted");
 		return true;
@@ -131,13 +129,6 @@ void GLC_Collection::clear(void)
 	// Clear main Hash table
     m_NodeMap.clear();
 
-	// Delete display list
-	if (0 != m_ListID)
-	{
-		glDeleteLists(m_ListID, 1);
-		//qDebug() << "GLC_Collection::deleteList : Display list " << m_ListID << " Deleted";
-		m_ListID= 0;			
-	}
 	// delete the boundingBox
 	if (m_pBoundingBox != NULL)
 	{
@@ -159,7 +150,7 @@ bool GLC_Collection::select(GLC_uint key)
 		m_SelectedNodes.insert(pSelectedNode->getID(), pSelectedNode);
 				
 		pSelectedNode->select();		
-		m_ListIsValid= false;
+		m_CollectionIsValid= false;
 		
 		//qDebug("GLC_Collection::selectNode : Element succesfuly selected");
 		return true;
@@ -184,7 +175,7 @@ bool GLC_Collection::unselect(GLC_uint key)
 		
 		m_SelectedNodes.remove(key);
 		
-		m_ListIsValid= false;
+		m_CollectionIsValid= false;
 		
 		//qDebug("GLC_Collection::unselectNode : Node succesfuly unselected");
 		return true;
@@ -234,7 +225,7 @@ void GLC_Collection::setVisibility(const GLC_uint key, const bool visibility)
 	if (iNode != m_NodeMap.end())
 	{	// Ok, the key exist
 		iNode.value().setVisibility(visibility);
-		m_ListIsValid= false;
+		m_CollectionIsValid= false;
 	}
 }
 
@@ -249,7 +240,7 @@ void GLC_Collection::showAll()
     	iEntry.value().setVisibility(true);
     	iEntry++;
     }
-    m_ListIsValid= false;
+    m_CollectionIsValid= false;
 }
 
 // Hide all instance of the collection
@@ -263,7 +254,7 @@ void GLC_Collection::hideAll()
     	iEntry.value().setVisibility(false);
     	iEntry++;
     }
-    m_ListIsValid= false;
+    m_CollectionIsValid= false;
 }
 
 // Return all GLC_Instance from collection
@@ -290,7 +281,7 @@ GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 //! return the collection Bounding Box
 GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 {
-	if (((m_pBoundingBox == NULL) || !m_ListIsValid) && (getNumber() > 0))
+	if (((m_pBoundingBox == NULL) || !m_CollectionIsValid) && (getNumber() > 0))
 	{
 		CNodeMap::iterator iEntry= m_NodeMap.begin();
 		if (m_pBoundingBox != NULL)
@@ -318,7 +309,7 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 	    }
 				
 	}
-	else if ((m_pBoundingBox == NULL) || !m_ListIsValid)
+	else if ((m_pBoundingBox == NULL) || !m_CollectionIsValid)
 	{
 		if (m_pBoundingBox != NULL)
 		{
@@ -344,15 +335,14 @@ void GLC_Collection::glExecute(void)
 	{
 		createMemberLists();		// Si nécessaire
 
-		//CreateSubLists();		// Si nécessaire
-
-		if (m_ListIsValid)
-		{	// La liste de la collection OK
-			glCallList(m_ListID);
+		if (m_CollectionIsValid)
+		{	// La collection OK
+			glDraw();
 		}
 		else
 		{
-			createList();
+			glDraw();
+			m_CollectionIsValid= true;
 			// delete the boundingBox
 			if (m_pBoundingBox != NULL)
 			{
@@ -456,37 +446,4 @@ void GLC_Collection::createMemberLists(void)
 	}
 
 
-}
-//////////////////////////////////////////////////////////////////////
-// Fonctions de services privées
-//////////////////////////////////////////////////////////////////////
-
-// Création de la liste d'affichage de la collection
-bool GLC_Collection::createList(void)
-{
-	//qDebug("GLC_Collection::CreateList");
-	
-	if(0 == m_ListID)		// list doesn't exist
-	{
-		m_ListID= glGenLists(1);
-	}
-
-	// Création de la liste
-	glNewList(m_ListID, GL_COMPILE_AND_EXECUTE);				
-		glDraw();
-	glEndList();
-	
-	m_ListIsValid= true;
-
-	//qDebug("GLC_Collection::createList : Liste d'affichage %u créé", m_ListID);	
-
-	// OpenGl error handling
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Geometry::GlExecute ", error);
-		throw(OpenGlException);
-	}
-
-	return true;
 }

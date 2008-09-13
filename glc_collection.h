@@ -119,7 +119,7 @@ public:
 	 * 		- Remove the Geometry container from collection
 	 * 		- Delete the associated OpenGL Display list
 	 * 		- Remove the Display list container from collection
-	 * 		- Invalidate the collection OpenGL Display list
+	 * 		- Invalidate the collection
 	 * return true if success false otherwise*/
 	bool remove(GLC_uint Key);
 
@@ -151,7 +151,7 @@ public:
 	inline void swapShowState()
 	{
 		m_IsInShowSate= !m_IsInShowSate;
-		m_ListIsValid= false;
+		m_CollectionIsValid= false;
 	}
 
 //@}
@@ -182,14 +182,6 @@ private:
 //@}
 
 //////////////////////////////////////////////////////////////////////
-// private services functions
-//////////////////////////////////////////////////////////////////////
-private:
-
-	//! Create Collection's OpenGL display list
-	bool createList(void);
-
-//////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 
@@ -197,11 +189,8 @@ private:
 	//! GLC_Instance Hash Table
 	CNodeMap m_NodeMap;
 
-	//! Collection's OpenGL list ID
-	GLuint m_ListID;
-
-	//! Validity of collection's OpenGL list
-	bool m_ListIsValid;
+	//! Validity of collection
+	bool m_CollectionIsValid;
 	
 	//! BoundingBox of the collection
 	GLC_BoundingBox* m_pBoundingBox;
