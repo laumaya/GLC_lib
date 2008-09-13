@@ -333,8 +333,6 @@ void GLC_Collection::glExecute(void)
 	//qDebug() << "GLC_Collection::glExecute";
 	if (getNumber() > 0)
 	{
-		createMemberLists();		// Si nécessaire
-
 		if (m_CollectionIsValid)
 		{	// La collection OK
 			glDraw();
@@ -407,43 +405,5 @@ void GLC_Collection::glDraw(void)
 		errString = gluErrorString(errCode);
 		qDebug("GLC_Collection::GlDraw OPENGL ERROR %s", errString);
 	}
-
-}
-
-// Création des listes d'affichages des membres
-void GLC_Collection::createMemberLists(void)
-{
-	CNodeMap::iterator iEntry= m_NodeMap.begin();
-	//qDebug("GLC_Collection::CreateMemberList ENTER");
-	
-    while (iEntry != m_NodeMap.constEnd())
-    {
-    	// Update Instance validity
-    	iEntry.value().setInstanceValidity();
-    	iEntry++;
-    }
-    
-	iEntry= m_NodeMap.begin();
-    while (iEntry != m_NodeMap.constEnd())
-    {
-    	if(!iEntry.value().getValidity())
-    	{
-    		iEntry.value().glExecute(GL_COMPILE);
-			if (m_pBoundingBox != NULL)
-			{
-				delete m_pBoundingBox;
-				m_pBoundingBox= NULL;
-			}				
-    	}
-    	// Passe au Suivant
-    	iEntry++;
-    }
-
-	// Gestion erreur OpenGL
-	if (glGetError() != GL_NO_ERROR)
-	{
-		qDebug("GLC_Collection::CreateMemberList OPENGL ERROR");
-	}
-
 
 }

@@ -164,10 +164,6 @@ public:
 	//! Display the collection
 	void glExecute(void);
 
-	//! Create member's OpenGL display list
-	void createMemberLists(void);
-
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
