@@ -27,7 +27,7 @@
 #ifndef GLC_CIRCLE_H_
 #define GLC_CIRCLE_H_
 
-#include "glc_geometry.h"
+#include "glc_vbogeom.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Circle
@@ -38,7 +38,7 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Circle : public GLC_Geometry  
+class GLC_Circle : public GLC_VboGeom  
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -55,7 +55,7 @@ public:
 	
 	//! Destructor
 	/*! \todo Check if this destructor is necessary*/
-	virtual ~GLC_Circle();	// Delete display list
+	virtual ~GLC_Circle();
 
 //@}
 
@@ -78,7 +78,7 @@ public:
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 	
 	//! Return a copy of the geometry
-	virtual GLC_Geometry* clone() const;
+	virtual GLC_VboGeom* clone() const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -115,6 +115,7 @@ private:
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
 	virtual void glDraw(void);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -128,6 +129,8 @@ private:
 	int m_nDiscret;
 	//! Angle of circle in radians
 	double m_dAngle;
+	//! Circle Step
+	int m_Step;
 		
 };
 #endif //GLC_CIRCLE_H_

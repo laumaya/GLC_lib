@@ -33,16 +33,17 @@ using namespace glc;
 //////////////////////////////////////////////////////////////////////
 
 GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
-:GLC_Geometry("Circle", true)
+:GLC_VboGeom("Circle", true)
 , m_Radius(dRadius)
 , m_nDiscret(GLC_DISCRET)
 , m_dAngle(Angle)
+, m_Step(0)
 {
 	
 }
 
 GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
-:GLC_Geometry(sourceCircle)
+:GLC_VboGeom(sourceCircle)
 , m_Radius(sourceCircle.m_Radius)
 , m_nDiscret(sourceCircle.m_nDiscret)
 , m_dAngle(sourceCircle.m_dAngle)
@@ -85,7 +86,7 @@ GLC_BoundingBox* GLC_Circle::getBoundingBox(void) const
 }
 
 // Return a copy of the current geometry
-GLC_Geometry* GLC_Circle::clone() const
+GLC_VboGeom* GLC_Circle::clone() const
 {
 	return new GLC_Circle(*this);
 }
@@ -108,7 +109,7 @@ void GLC_Circle::setRadius(double R)
 	if ( fabs(R - m_Radius) > EPSILON)
 	{	// Radius is changing
 		m_Radius= R;
-		m_ListIsValid= false;
+		m_GeometryIsValid= false;
 	}
 }
 
@@ -120,7 +121,7 @@ void GLC_Circle::setDiscretion(int TargetDiscret)
 	{
 		m_nDiscret= TargetDiscret;
 		if (m_nDiscret < 6) m_nDiscret= 6;
-		m_ListIsValid= false;
+		m_GeometryIsValid= false;
 	}
 }
 
@@ -131,7 +132,7 @@ void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 	if ( fabs(AngleRadians - m_dAngle) > EPSILON)
 	{	// Angle is changing
 			m_dAngle= AngleRadians;
-			m_ListIsValid= false;
+			m_GeometryIsValid= false;
 	}
 }
 
@@ -142,21 +143,22 @@ void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 // Circle drawing
 void GLC_Circle::glDraw(void)
 {
-	double coord[3];
-	
-	// Z is always set to 0.0
-	coord[2]= 0.0;
-
-	glBegin(GL_LINE_STRIP);
-
-		for (int i= 0; i <= m_nDiscret; i++)
+	if (!m_GeometryIsValid)
+	{
+		m_Step= static_cast<double>(m_nDiscret) * (m_dAngle / (2 * glc::PI));
+		if (m_Step < 2) m_Step= 2;
+		const GLsizeiptr size= (m_Step + 1) * 2 * sizeof(GLfloat);
+		GLfloat positionData[(m_Step + 1) * 2];
+		int j= 0;
+		for (int i= 0; i <= m_Step; ++i, j+=2)
 		{
-			coord[0]= m_Radius * cos(i * m_dAngle / m_nDiscret);
-			coord[1]= m_Radius * sin(i * m_dAngle / m_nDiscret);
-			glVertex3dv(coord);
+			positionData[j]= static_cast<float>(m_Radius * cos(i * m_dAngle / m_Step));
+			positionData[j + 1]= static_cast<float>(m_Radius * sin(i * m_dAngle / m_Step));			
 		}
-
-	glEnd();
+		glBufferData(GL_ARRAY_BUFFER, size, positionData, GL_STATIC_DRAW); 	
+	}
+	glVertexPointer(2, GL_FLOAT, 0, 0);
+	glDrawArrays(GL_LINE_STRIP, 0, (m_Step + 1));
 	
 	// OpenGL error handler
 	GLenum error= glGetError();	
