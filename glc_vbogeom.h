@@ -202,17 +202,11 @@ protected:
 //////////////////////////////////////////////////////////////////////
 protected:
 
-	//! VBO Vertex Buffer
-	GLuint m_VertexBufferID;
+	//! VBO ID
+	GLuint m_VboId;
 
-	//! VBO Normal Buffer
-	GLuint m_NormalBufferID;
-
-	//! VBO Index Buffer
-	GLuint m_IndexBufferID;
-
-	//! VBO Color Buffer
-	GLuint m_ColorBufferID;
+	//! IBO ID
+	GLuint m_IboId;
 
 	//! Geometry validity
 	bool m_GeometryIsValid;

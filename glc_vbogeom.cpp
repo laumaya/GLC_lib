@@ -34,10 +34,8 @@
 // Default constructor
 GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
 :GLC_Object(name)
-, m_VertexBufferID(0)
-, m_NormalBufferID(0)
-, m_IndexBufferID(0)
-, m_ColorBufferID(0)
+, m_VboId(0)
+, m_IboId(0)
 , m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pMaterial(NULL)			// have to be set later in constructor
 , m_UseColorPerVertex(false)
@@ -50,10 +48,8 @@ GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
 // Copy constructor
 GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 :GLC_Object(sourceGeom)
-, m_VertexBufferID(0)
-, m_NormalBufferID(0)
-, m_IndexBufferID(0)
-, m_ColorBufferID(0)
+, m_VboId(0)
+, m_IboId(0)
 , m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pMaterial(NULL)			// have to be set later in constructor
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
@@ -68,18 +64,12 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 
 GLC_VboGeom::~GLC_VboGeom()
 {
-	// Vertex VBO
-	if (0 != m_VertexBufferID)
-		glDeleteBuffers(1, &m_VertexBufferID);
-	// Normal VBO
-	if (0 != m_NormalBufferID)
-		glDeleteBuffers(1, &m_NormalBufferID);
-	// Index VBO
-	if (0 != m_IndexBufferID)
-		glDeleteBuffers(1, &m_IndexBufferID);
-	// Color VBO
-	if (0 != m_ColorBufferID)
-		glDeleteBuffers(1, &m_ColorBufferID);
+	// VBO
+	if (0 != m_VboId)
+		glDeleteBuffers(1, &m_VboId);
+	// IBO
+	if (0 != m_IboId)
+		glDeleteBuffers(1, &m_IboId);
 	// Material	
 	if (NULL != m_pMaterial)
 	{
@@ -145,20 +135,14 @@ void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 	// Define Geometry's property
 	glPropGeom(isSelected, forceWire);
 
-	if (0 == m_VertexBufferID)
+	if (0 == m_VboId)
 	{
 		createVBOs();
 	}
 	else
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferID);
-		if (!m_IsWire)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, m_NormalBufferID);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferID);			
-		}
-		if (m_UseColorPerVertex)
-			glBindBuffer(GL_ARRAY_BUFFER, m_ColorBufferID);	
+		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
 	}
 	
 	glDraw();
@@ -166,11 +150,8 @@ void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 	
 	// Unbind VBOs
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	if (!m_IsWire)
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	
 	// OpenGL error handler
 	GLenum error= glGetError();	
 	if (error != GL_NO_ERROR)
@@ -219,28 +200,8 @@ void GLC_VboGeom::glPropGeom(bool isSelected, bool forceWire)
 // Vbo creation
 void GLC_VboGeom::createVBOs()
 {
-	// Vertexs
-	if (0 == m_VertexBufferID)
-	{
-		glGenBuffers(1, &m_VertexBufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferID);
-		// Normals
-		if ((0 == m_NormalBufferID) and !m_IsWire)
-		{
-			glGenBuffers(1, &m_NormalBufferID);
-			glBindBuffer(GL_ARRAY_BUFFER, m_NormalBufferID);
-		}
-		// Index
-		if ((0 == m_IndexBufferID) and !m_IsWire)
-		{
-			glGenBuffers(1, &m_IndexBufferID);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferID);
-		}
-	}
-	// Color
-	if ((0 == m_ColorBufferID) and m_UseColorPerVertex)
-	{
-		glGenBuffers(1, &m_ColorBufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, m_ColorBufferID);
-	}
+	glGenBuffers(1, &m_VboId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
+	glGenBuffers(1, &m_IboId);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
 }
