@@ -27,6 +27,8 @@
 #include "glc_circle.h"
 #include "glc_openglexception.h"
 
+#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
 using namespace glc;
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
@@ -147,19 +149,26 @@ void GLC_Circle::glDraw(void)
 	{
 		m_Step= static_cast<double>(m_nDiscret) * (m_dAngle / (2 * glc::PI));
 		if (m_Step < 2) m_Step= 2;
-		const GLsizeiptr size= (m_Step + 1) * 2 * sizeof(GLfloat);
-		GLfloat positionData[(m_Step + 1) * 2];
-		int j= 0;
-		for (int i= 0; i <= m_Step; ++i, j+=2)
+		const GLsizeiptr size= (m_Step + 1) * sizeof(GLC_Vertex);
+		GLC_Vertex positionData[m_Step + 1];
+		for (GLuint i= 0; i <= m_Step; ++i)
 		{
-			positionData[j]= static_cast<float>(m_Radius * cos(i * m_dAngle / m_Step));
-			positionData[j + 1]= static_cast<float>(m_Radius * sin(i * m_dAngle / m_Step));			
+			positionData[i].x= static_cast<float>(m_Radius * cos(i * m_dAngle / m_Step));
+			positionData[i].y= static_cast<float>(m_Radius * sin(i * m_dAngle / m_Step));
 		}
 		glBufferData(GL_ARRAY_BUFFER, size, positionData, GL_STATIC_DRAW); 	
 	}
-	glVertexPointer(2, GL_FLOAT, 0, 0);
-	glDrawArrays(GL_LINE_STRIP, 0, (m_Step + 1));
+	glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
+	// Create IBO
+	const GLsizeiptr IndexSize = (m_Step + 1) * sizeof(GLuint);
+	GLuint IndexData[m_Step + 1];
+	for (GLuint i= 0; i <= m_Step; ++i)
+	{
+		IndexData[i]= i;
+	}
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize, IndexData, GL_STATIC_DRAW);
 	
+	glDrawRangeElements(GL_LINE_STRIP, 0, m_Step + 1, m_Step + 1, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 	// OpenGL error handler
 	GLenum error= glGetError();	
 	if (error != GL_NO_ERROR)

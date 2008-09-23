@@ -130,7 +130,7 @@ private:
 	//! Angle of circle in radians
 	double m_dAngle;
 	//! Circle Step
-	int m_Step;
+	GLuint m_Step;
 		
 };
 #endif //GLC_CIRCLE_H_
