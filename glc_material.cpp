@@ -26,6 +26,7 @@
 
 #include "glc_material.h"
 #include "glc_collection.h"
+#include "glc_vbogeom.h"
 
 #include <QtDebug>
 
@@ -327,23 +328,23 @@ void GLC_Material::removeTexture()
 }
 
 // Add Geometry to where used hash table
-bool GLC_Material::addGLC_Geom(GLC_Geometry* pGeom)
+bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
 {
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->getID());
 	
 	if (iGeom == m_WhereUsed.end())
 	{	// Ok, ID doesn't exist		
 		// Add Geometry to where used hash table
-		m_WhereUsed.insert(pGeom->getID(), pGeom);		
+		m_WhereUsed.insert(pGeom->getID(), pGeom);
 		return true;
 	}
 	else
 	{	// KO, ID exist
 		qDebug("GLC_Material::AddGLC_Geom : Geometry not added");
 		return false;
-	}
-	
+	}	
 }
+
 // Supprime une géométrie de la collection
 bool GLC_Material::delGLC_Geom(GLC_uint Key)
 {
@@ -388,7 +389,7 @@ void GLC_Material::glLoadTexture(void)
 }
 
 // Execute OpenGL Material
-void GLC_Material::glExecute(GLenum Mode)
+void GLC_Material::glExecute()
 {
 	GLfloat pAmbientColor[4]= {getAmbientColor().redF(),
 								getAmbientColor().greenF(),

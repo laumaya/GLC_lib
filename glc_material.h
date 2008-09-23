@@ -33,9 +33,9 @@
 #include <QHash>
 #include <QColor>
 
-class GLC_Geometry;
+class GLC_VboGeom;
 
-typedef QHash< GLC_uint, GLC_Geometry*> CWhereUsed;
+typedef QHash< GLC_uint, GLC_VboGeom*> CWhereUsed;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Material
@@ -172,7 +172,7 @@ public:
 	void removeTexture();
 
 	//! Add Geometry to the "where used" hash table
-	bool addGLC_Geom(GLC_Geometry* pGeom);
+	bool addGLC_Geom(GLC_VboGeom* pGeom);
 
 	//! Remove Geometry to the "where used" hash table
 	bool delGLC_Geom(GLC_uint Key);
@@ -192,7 +192,7 @@ public:
 	void glLoadTexture(void);
 	
 	//! Execute OpenGL Material
-	virtual void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	virtual void glExecute();
 
 //@}
 
