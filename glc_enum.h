@@ -33,10 +33,9 @@ namespace glc
 {
 	//! Simple ID generation
 	GLC_uint GLC_GenID(void);
+	const int GLC_DISCRET= 70;
+	const int GLC_POLYDISCRET= 60;
 };
-// Default Discretion value
-#define GLC_DISCRET 80
-#define GLC_POLYDISCRET 60
 
 // GLC_Lib version
 
