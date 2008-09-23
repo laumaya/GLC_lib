@@ -175,7 +175,7 @@ void GLC_Geometry::setMaterial(GLC_Material* pMat)
 	{
 		if (pMat != NULL)
 		{
-			pMat->addGLC_Geom(this);
+			//pMat->addGLC_Geom(this);
 		}
 	
 		if (m_pMaterial != NULL)

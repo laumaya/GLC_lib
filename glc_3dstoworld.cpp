@@ -357,7 +357,9 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	}
 	m_PreviousQuantumValue= m_CurrentQuantumValue;		
 
-	return GLC_Instance(pMesh);
+	//return GLC_Instance(pMesh);
+	//TODO new GLC_VboGeom
+	return NULL;
 }
 
 // Load Material

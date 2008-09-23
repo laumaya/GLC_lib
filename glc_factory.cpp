@@ -71,14 +71,20 @@ GLC_Factory::~GLC_Factory()
 // Create an GLC_Point
 GLC_Instance GLC_Factory::createPoint(const GLC_Vector4d &coord) const
 {
+	/*
 	GLC_Instance newPoint(new GLC_Point(coord));
 	return newPoint;
+	*/
+	return GLC_Instance();
 }
 // Create an GLC_Point
 GLC_Instance GLC_Factory::createPoint(double x, double y, double z) const
 {
+	/*
 	GLC_Instance newPoint(new GLC_Point(x, y, z));
 	return newPoint;
+	*/
+	return GLC_Instance();
 }
 
 //  Create an GLC_Circle
@@ -90,13 +96,17 @@ GLC_Instance GLC_Factory::createCircle(double radius, double angle) const
 // Create an GLC_Box
 GLC_Instance GLC_Factory::createBox(double lx, double ly, double lz) const
 {
+	/*
 	GLC_Instance newBox(new GLC_Box(lx, ly, lz));
 	return newBox;
+	*/
+	return GLC_Instance();
 }
 
 // Create an GLC_Box
 GLC_Instance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 {
+	/*
 	const double lx= boundingBox.getUpper().getX() - boundingBox.getLower().getX();
 	const double ly= boundingBox.getUpper().getY() - boundingBox.getLower().getY();
 	const double lz= boundingBox.getUpper().getZ() - boundingBox.getLower().getZ();
@@ -105,21 +115,29 @@ GLC_Instance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 	newBox.translate(boundingBox.getCenter().getX(), boundingBox.getCenter().getY()
 					, boundingBox.getCenter().getZ());
 	return newBox;
+	*/
+	return GLC_Instance();
 }
 
 // Create an GLC_Cylinder
 GLC_Instance GLC_Factory::createCylinder(double radius, double length) const
 {
+	/*
 	GLC_Instance newCylinder(new GLC_Cylinder(radius, length));
 	return newCylinder;
+	*/
+	return GLC_Instance();
 }
 // Create an GLC_Mesh with a QFile
 GLC_Instance GLC_Factory::createMesh(QFile &file) const
 {
+	/*
 	GLC_ObjToMesh2 objToMesh(m_pQGLContext);
 	connect(&objToMesh, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 	GLC_Instance newMesh(objToMesh.CreateMeshFromObj(file));
 	return newMesh;
+	*/
+	return GLC_Instance();
 }
 
 // Create an GLC_World* with a QFile

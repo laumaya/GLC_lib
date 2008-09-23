@@ -182,12 +182,15 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 		{
 			delete m_pCurrentMesh;
 			m_pCurrentMesh= NULL;
+			m_CurVertexIndex= 0;
 		}
 		else
 		{
-			GLC_Instance instance(m_pCurrentMesh);
+			//GLC_Instance instance(m_pCurrentMesh);
+			//TODO new GLC_VboGeom
 			m_pCurrentMesh= NULL;
-			m_pWorld->rootProduct()->addChildPart(instance);
+			m_CurVertexIndex= 0;
+			//m_pWorld->rootProduct()->addChildPart(instance);
 			// Clear the list of material already used
 			m_CurrentMeshMaterials.clear();
 			m_CurrentMeshMaterialIndex= -1;
@@ -327,13 +330,16 @@ void GLC_ObjToWorld::changeGroup(QString line)
 			{
 				if (m_pCurrentMesh->getNumberOfFaces() > 0)
 				{
-					GLC_Instance instance(m_pCurrentMesh);
+					//GLC_Instance instance(m_pCurrentMesh);
+					//TODO new GLC_VboGeom
 					m_pCurrentMesh= NULL;
-					m_pWorld->rootProduct()->addChildPart(instance);
+					m_CurVertexIndex= 0;
+					//m_pWorld->rootProduct()->addChildPart(instance);
 				}
 				else
 				{
 					delete m_pCurrentMesh;
+					m_CurVertexIndex= 0;
 					m_pCurrentMesh= NULL;
 				}
 				m_CurComputedVectNormIndex= 0;
@@ -932,6 +938,7 @@ void GLC_ObjToWorld::clear()
 		delete m_pCurrentMesh;
 		m_pCurrentMesh= NULL;
 	}
+	m_CurVertexIndex= 0;
 	
 }
 // Merge Mutli line in one

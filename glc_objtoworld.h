@@ -146,6 +146,9 @@ private:
 	
 	//! Index of the current vertex
 	int m_CurVertexIndex;
+	//! Current vertex index
+	int m_CurVertexDelta;
+	
 	//! Index of the current normal
 	int m_CurNormalIndex;
 	//! Index of the current texture coordinate

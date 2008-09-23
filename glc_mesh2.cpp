@@ -70,7 +70,7 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
     while (i != m_MaterialHash.constEnd())
     {
         // update inner material use table
-        i.value()->addGLC_Geom(this);
+        //TODO i.value()->addGLC_Geom(this);
         ++i;
     }	
 }
@@ -167,7 +167,7 @@ void GLC_Mesh2::addMaterial(int Index, GLC_Material* pMaterial)
 		Q_ASSERT(iMaterial == m_MaterialHash.end());
 		
 		// Add this geometry in the material use table
-		pMaterial->addGLC_Geom(this);
+		//TODO pMaterial->addGLC_Geom(this);
 		// Add the Material to Material hash table
 		m_MaterialHash.insert(Index, pMaterial);
 		// Test if the material is transparent

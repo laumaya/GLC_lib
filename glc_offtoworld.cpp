@@ -204,9 +204,10 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	
 	file.close();
 
-	GLC_Instance instance(m_pCurrentMesh);
+	//GLC_Instance instance(m_pCurrentMesh);
+	//TODO new GLC_VboGeom
 	m_pCurrentMesh= NULL;
-	m_pWorld->rootProduct()->addChildPart(instance);
+	//m_pWorld->rootProduct()->addChildPart(instance);
 	
 	return m_pWorld;	
 }

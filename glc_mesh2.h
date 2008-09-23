@@ -155,20 +155,6 @@ public:
 			m_TextCoordinateHash.insert(index, textureCoordinate);
 		}		
 	}
-
-	//! Add a face without texture coordinate and Normal
-	/*! Mesh list of texture index must be empty.
-	 */  
-	inline void addFace(const QVector<int> &Material, const QVector<int> &Coordinate)
-	{		
-		addMaterialIndex(Material);
-		addCoordIndex(Coordinate);
-			
-		// Increment number of faces
-		m_NumberOfFaces++;
-		m_ListIsValid= false;
-	}
-
 		 
 	//! Add a face without texture coordinate
 	/*! Mesh list of texture index must be empty.
@@ -233,14 +219,7 @@ private:
 
 	//! Create selection lis
 	void createSelectionList(GLenum Mode);
-	
-	//! Add coordinate index of a face
-	inline void addCoordIndex(const QVector<int> &Coordinate)
-	{	
-		m_CoordinateIndex+= Coordinate.toList();
-		m_CoordinateIndex.append(-1); // End of the face's coordinate index
-	}
-	
+		
 	//! Add coordinate index of a face
 	inline void addNormalIndex(const QVector<int> &Normal)
 	{	

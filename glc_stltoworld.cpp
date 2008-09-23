@@ -118,9 +118,10 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		m_pCurrentMesh= new GLC_Mesh2();
 		file.reset();
 		LoadBinariStl(file);
-		GLC_Instance instance(m_pCurrentMesh);
+		//GLC_Instance instance(m_pCurrentMesh);
+		//TODO new GLC_VboGeom
 		m_pCurrentMesh= NULL;
-		m_pWorld->rootProduct()->addChildPart(instance);
+		//m_pWorld->rootProduct()->addChildPart(instance);
 	}
 	else
 	{
@@ -177,9 +178,10 @@ void GLC_StlToWorld::scanFacet()
 	// Test if this is the end of current solid
 	if (lineBuff.startsWith("endsolid") || lineBuff.startsWith("end solid"))
 	{
-		GLC_Instance instance(m_pCurrentMesh);
+		//GLC_Instance instance(m_pCurrentMesh);
+		//TODO new GLC_VboGeom
 		m_pCurrentMesh= NULL;
-		m_pWorld->rootProduct()->addChildPart(instance);
+		//m_pWorld->rootProduct()->addChildPart(instance);
 		return;
 	}
 	// Test if this is the start of new solid
