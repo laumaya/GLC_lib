@@ -3,7 +3,7 @@ TEMPLATE = lib
 QT += opengl \
     core
 CONFIG += exceptions \
-    release \
+    debug \
     warn_on
 TARGET = GLC_lib
 VERSION = 1.0.0
@@ -54,6 +54,7 @@ HEADERS_GLC += glc_utils_maths.h \
            glc_material.h \
            glc_texture.h \
            glc_geometry.h \
+           glc_vbogeom.h \
            glc_circle.h \
            glc_orbitcircle.h \
            glc_cylinder.h \
@@ -117,6 +118,7 @@ SOURCES += glc_vector4d.cpp \
            glc_material.cpp \
            glc_texture.cpp \
            glc_geometry.cpp \
+           glc_vbogeom.cpp \
            glc_circle.cpp \
            glc_orbitcircle.cpp \
            glc_cylinder.cpp \
@@ -161,6 +163,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Factory \
     		   include/GLC_FileFormatException \
     		   include/GLC_Geometry \
+    		   include/GLC_VboGeom \
     		   include/GLC_ImagePlane \
     		   include/GLC_Instance \
     		   include/GLC_Interpolator \
