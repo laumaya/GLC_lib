@@ -48,7 +48,7 @@ GLC_Instance::GLC_Instance()
 }
 
 // Contruct instance with a geometry
-GLC_Instance::GLC_Instance(GLC_Geometry* pGeom)
+GLC_Instance::GLC_Instance(GLC_VboGeom* pGeom)
 : m_pGeom(pGeom)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
@@ -113,7 +113,7 @@ GLC_Instance::~GLC_Instance()
 //////////////////////////////////////////////////////////////////////
 
 // Get the geometry of the instance
-GLC_Geometry* GLC_Instance::getGeometry(void)
+GLC_VboGeom* GLC_Instance::getGeometry(void)
 {
 	return m_pGeom;
 }
@@ -189,7 +189,7 @@ GLC_Instance GLC_Instance::instanciate()
 
 
 // Set the instance Geometry
-bool GLC_Instance::setGeometry(GLC_Geometry* pGeom)
+bool GLC_Instance::setGeometry(GLC_VboGeom* pGeom)
 {
 		if (NULL == m_pGeom) return false;
 		else
@@ -272,7 +272,7 @@ void GLC_Instance::setInstanceValidity(void)
 //////////////////////////////////////////////////////////////////////
 
 // Display the instance
-void GLC_Instance::glExecute(GLenum Mode)
+void GLC_Instance::glExecute()
 {
 	bool computeBox= false;
 	if (NULL == m_pGeom) return;
@@ -288,7 +288,7 @@ void GLC_Instance::glExecute(GLenum Mode)
 	// Save current OpenGL Matrix
 	glPushMatrix();
 	glVisProperties();
-	m_pGeom->glExecute(Mode, m_IsSelected, ((m_PolyMode != GL_FILL)));
+	m_pGeom->glExecute(m_IsSelected, ((m_PolyMode != GL_FILL)));
 	// Restore OpenGL Matrix
 	glPopMatrix();
 	//qDebug() << "GLC_Instance::GlExecute : Display list " << m_ListID << " created";

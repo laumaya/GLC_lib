@@ -27,7 +27,7 @@
 #ifndef GLC_INSTANCE_H_
 #define GLC_INSTANCE_H_
 
-#include "glc_geometry.h"
+#include "glc_vboGeom.h"
 #include "glc_enum.h"
 #include "glc_boundingbox.h"
 #include "glc_object.h"
@@ -35,11 +35,11 @@
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Instance
-/*! \brief GLC_Instance : GLC_Geometry + bounding box*/
+/*! \brief GLC_Instance : GLC_VboGeom + bounding box*/
 
 /*! An GLC_Instance contain  :
- * 		- GLC_Geometry pointer
- * 		- Geomtry Bounding box
+ * 		- GLC_VboGeom pointer
+ * 		- Geometry Bounding box
  * 		- Positionning 4 x 4 matrix
  */
 //////////////////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ public:
 	GLC_Instance();
 	
 	//! Contruct node with a geometry
-	GLC_Instance(GLC_Geometry* pGeom);
+	GLC_Instance(GLC_VboGeom* pGeom);
 
 	//! Copy constructor
 	GLC_Instance(const GLC_Instance& );
@@ -81,7 +81,7 @@ public:
 	const bool isSelected(void) const {return m_IsSelected;}
 
 	//! Get the geometry of the instance
-	GLC_Geometry* getGeometry(void);
+	GLC_VboGeom* getGeometry(void);
 	
 	//! Get the validity of the Insatnce
 	const bool getValidity(void) const;
@@ -122,7 +122,7 @@ public:
 	/*! 
 	 *  instance must be null
 	 */
-	bool setGeometry(GLC_Geometry* pGeom);
+	bool setGeometry(GLC_VboGeom* pGeom);
 
 	//! translate Geometry
 	void translate(double Tx, double Ty, double Tz);
@@ -162,7 +162,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the instance
-	void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	void glExecute();
 	
 private:
 	//! Set instance visualisation properties
@@ -185,7 +185,7 @@ private:
 private:
 	
 	//! Geometry of the instance
-	GLC_Geometry* m_pGeom;
+	GLC_VboGeom* m_pGeom;
 		
 	//! BoundingBox of the instance
 	GLC_BoundingBox* m_pBoundingBox;
