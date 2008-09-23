@@ -30,6 +30,12 @@
 #include <QGLContext>
 
 using namespace glc;
+//! The angle of arcs
+#define ARCANGLE (30 * PI / 180)	
+
+// Arc discretisation
+#define ARCDISCRET 12	
+
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
@@ -57,9 +63,7 @@ GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const QGLContext *pContex
 	// Set arc discretion
 	GLC_Circle* pCircle;
 	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry());
-	pCircle->setDiscretion(ARCDISCRET);
 	pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry());
-	pCircle->setDiscretion(ARCDISCRET);
 }
 // Change the radius of the orbit circle
 void GLC_OrbitCircle::setRadius(double R)
@@ -155,8 +159,8 @@ void GLC_OrbitCircle::glExecute(double Profondeur)
 	m_Arc2.multMatrix(MatScaling);
 
 	// Display arcs
-	m_Arc1.glExecute(GL_COMPILE_AND_EXECUTE);
-	m_Arc2.glExecute(GL_COMPILE_AND_EXECUTE);
+	m_Arc1.glExecute();
+	m_Arc2.glExecute();
 
 	// Restore positionning matrix of arcs
 	m_Arc1.setMatrix(MatSavArc1);

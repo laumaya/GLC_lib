@@ -30,11 +30,6 @@
 
 #include "glc_circle.h"
 #include "glc_instance.h"
-//! The angle of arcs
-#define ARCANGLE (30 * PI / 180)	
-
-// Arc discretisation
-#define ARCDISCRET 6	
 
 class GLC_Factory;
 class QGLContext;
