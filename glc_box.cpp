@@ -32,7 +32,7 @@
 //////////////////////////////////////////////////////////////////////
 
 GLC_Box::GLC_Box(double dLx, double dLy, double dlz)
-:GLC_Geometry("Box", false)
+:GLC_VboGeom("Box", false)
 , m_dLgX(dLx)
 , m_dLgY(dLy)
 , m_dLgZ(dlz)
@@ -76,7 +76,7 @@ GLC_BoundingBox* GLC_Box::getBoundingBox(void) const
 }
 
 // Return a copy of the current geometry
-GLC_Geometry* GLC_Box::clone() const
+GLC_VboGeom* GLC_Box::clone() const
 {
 	return new GLC_Box(*this);
 }
@@ -90,7 +90,7 @@ void GLC_Box::setLgX(double LgX)
 {
 	Q_ASSERT(LgX > 0);
 	m_dLgX= LgX;
-	m_ListIsValid= false;
+	m_GeometryIsValid= false;
 }
 
 // Set Y length
@@ -98,7 +98,7 @@ void GLC_Box::setLgY(double LgY)
 {
 	Q_ASSERT(LgY > 0);
 	m_dLgY= LgY;
-	m_ListIsValid= false;
+	m_GeometryIsValid= false;
 }
 
 // Set Z length
@@ -106,7 +106,7 @@ void GLC_Box::setLgZ(double LgZ)
 {
 	Q_ASSERT(LgZ > 0);
 	m_dLgZ= LgZ;
-	m_ListIsValid= false;
+	m_GeometryIsValid= false;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -115,7 +115,35 @@ void GLC_Box::setLgZ(double LgZ)
 
 // Box Set Up
 void GLC_Box::glDraw(void)
-{
+{/*
+	const GLsizei numberOfVertex= 8;
+	const GLsizei numberOfFace= 6;
+	if (!m_GeometryIsValid)
+	{
+		
+		// Vertex Data
+		const GLsizeiptr positionSize= numberOfVertex * 3 * sizeof(GLfloat);
+		GLfloat positionData[numberOfVertex * 3];
+		const float lgX= static_cast<float>(m_dLgX / 2.0);
+		const float lgY= static_cast<float>(m_dLgY / 2.0);
+		const float lgZ= static_cast<float>(m_dLgZ / 2.0);
+		
+		positionData[0]= -lgX; positionData[1]= -lgY; positionData[2]= lgZ;
+		positionData[3]= lgX; positionData[4]= -lgY; positionData[5]= lgZ;
+		positionData[6]= lgX; positionData[7]= -lgY; positionData[8]= -lgZ;
+		positionData[9]= -lgX; positionData[10]= -lgY; positionData[11]= -lgZ;
+		
+		positionData[12]= -lgX; positionData[13]= lgY; positionData[14]= lgZ;
+		positionData[15]= lgX; positionData[16]= lgY; positionData[17]= lgZ;
+		positionData[18]= lgX; positionData[19]= lgY; positionData[20]= -lgZ;
+		positionData[21]= -lgX; positionData[22]= lgY; positionData[23]= -lgZ;
+		
+		// Normals
+		const GLsizeiptr normalSize= numberOfFace * 3 * sizeof(GLfloat);
+		GLfloat normalData[numberOfFace * 3];
+		
+		
+	}
 	// Polygon 1	
 	glBegin(GL_QUADS);		
 		glNormal3d(0.0, 0.0, 1.0);	// Z
@@ -162,6 +190,6 @@ void GLC_Box::glDraw(void)
 		GLC_OpenGlException OpenGlException("GLC_Box::GlDraw ", error);
 		throw(OpenGlException);
 	}
-	
+	*/
 
 }

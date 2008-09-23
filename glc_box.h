@@ -28,7 +28,7 @@
 #define GLC_BOX_H_
 
 
-#include "glc_geometry.h"
+#include "glc_vbogeom.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Box
@@ -40,7 +40,7 @@
 
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Box : public GLC_Geometry  
+class GLC_Box : public GLC_VboGeom 
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor */
@@ -70,7 +70,7 @@ public:
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 	
 	//! Return a copy of the geometry
-	virtual GLC_Geometry* clone() const;
+	virtual GLC_VboGeom* clone() const;
 
 //@}
 
