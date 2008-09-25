@@ -96,17 +96,14 @@ GLC_Instance GLC_Factory::createCircle(double radius, double angle) const
 // Create an GLC_Box
 GLC_Instance GLC_Factory::createBox(double lx, double ly, double lz) const
 {
-	/*
+	
 	GLC_Instance newBox(new GLC_Box(lx, ly, lz));
 	return newBox;
-	*/
-	return GLC_Instance();
 }
 
 // Create an GLC_Box
 GLC_Instance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 {
-	/*
 	const double lx= boundingBox.getUpper().getX() - boundingBox.getLower().getX();
 	const double ly= boundingBox.getUpper().getY() - boundingBox.getLower().getY();
 	const double lz= boundingBox.getUpper().getZ() - boundingBox.getLower().getZ();
@@ -115,8 +112,6 @@ GLC_Instance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 	newBox.translate(boundingBox.getCenter().getX(), boundingBox.getCenter().getY()
 					, boundingBox.getCenter().getZ());
 	return newBox;
-	*/
-	return GLC_Instance();
 }
 
 // Create an GLC_Cylinder
