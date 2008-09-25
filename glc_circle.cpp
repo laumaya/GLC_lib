@@ -156,18 +156,19 @@ void GLC_Circle::glDraw(void)
 			positionData[i].x= static_cast<float>(m_Radius * cos(i * m_dAngle / m_Step));
 			positionData[i].y= static_cast<float>(m_Radius * sin(i * m_dAngle / m_Step));
 		}
-		glBufferData(GL_ARRAY_BUFFER, size, positionData, GL_STATIC_DRAW); 	
+		glBufferData(GL_ARRAY_BUFFER, size, positionData, GL_STATIC_DRAW);
+		
+		
+		// Create IBO
+		const GLsizeiptr IndexSize = (m_Step + 1) * sizeof(GLuint);
+		GLuint IndexData[m_Step + 1];
+		for (GLuint i= 0; i <= m_Step; ++i)
+		{
+			IndexData[i]= i;
+		}
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize, IndexData, GL_STATIC_DRAW);
 	}
 	glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
-	// Create IBO
-	const GLsizeiptr IndexSize = (m_Step + 1) * sizeof(GLuint);
-	GLuint IndexData[m_Step + 1];
-	for (GLuint i= 0; i <= m_Step; ++i)
-	{
-		IndexData[i]= i;
-	}
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize, IndexData, GL_STATIC_DRAW);
-	
 	glDrawRangeElements(GL_LINE_STRIP, 0, m_Step + 1, m_Step + 1, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 	// OpenGL error handler
 	GLenum error= glGetError();	
