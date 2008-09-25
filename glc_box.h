@@ -125,6 +125,10 @@ private:
 
 	//! Z Length
 	double m_dLgZ;
+	
+	//! Box Vertex (3 normals per vertex and 8 Vertex => 3 x 8 = 24
+	static const GLuint m_Number= 24;
+
 
 	
 };
