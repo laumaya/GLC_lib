@@ -340,12 +340,12 @@ bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
 	}
 	else
 	{	// KO, ID exist
-		qDebug("GLC_Material::AddGLC_Geom : Geometry not added");
+		qDebug("GLC_Material::addGLC_Geom : Geometry not added");
 		return false;
 	}	
 }
 
-// Supprime une géométrie de la collection
+// Remove a geometry from the collection
 bool GLC_Material::delGLC_Geom(GLC_uint Key)
 {
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(Key);
@@ -358,7 +358,7 @@ bool GLC_Material::delGLC_Geom(GLC_uint Key)
 	}
 	else
 	{	// KO doesn't exist
-		qDebug("GLC_Material::DelGLC_Geom : Geometry not remove");
+		qDebug("GLC_Material::delGLC_Geom : Geometry not remove");
 		return false;
 	}
 	
