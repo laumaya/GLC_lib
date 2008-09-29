@@ -30,6 +30,8 @@
 
 #include <QVector>
 
+#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
 using namespace glc;
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
@@ -37,7 +39,7 @@ using namespace glc;
 
 
 GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength)
-:GLC_Geometry("Cylinder", false)
+:GLC_VboGeom("Cylinder", false)
 , m_Radius(dRadius)
 , m_Length(dLength)
 , m_Discret(GLC_POLYDISCRET)	// Default discretion
@@ -47,7 +49,7 @@ GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength)
 }
 
 GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
-:GLC_Geometry(sourceCylinder)
+:GLC_VboGeom(sourceCylinder)
 , m_Radius(sourceCylinder.m_Radius)
 , m_Length(sourceCylinder.m_Length)
 , m_Discret(sourceCylinder.m_Discret)
@@ -58,25 +60,6 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
-
-// Get Lenght of the Cylinder
-double GLC_Cylinder::getLength(void) const
-{
-	return m_Length;
-}
-
-// Get Radius of cylinder
-double GLC_Cylinder::getRadius(void) const
-{
-	return m_Radius;
-}
-
-// Get Cylinder discretion
-int GLC_Cylinder::getDiscretion(void) const
-{
-	return m_Discret;
-}
-
 
 // return the cylinder bounding box
 GLC_BoundingBox* GLC_Cylinder::getBoundingBox(void) const
@@ -92,7 +75,7 @@ GLC_BoundingBox* GLC_Cylinder::getBoundingBox(void) const
 }
 
 // Return a copy of the current geometry
-GLC_Geometry* GLC_Cylinder::clone() const
+GLC_VboGeom* GLC_Cylinder::clone() const
 {
 	return new GLC_Cylinder(*this);
 }
@@ -106,7 +89,7 @@ void GLC_Cylinder::setLength(double Length)
 	Q_ASSERT(Length > 0.0);
 	m_Length= Length;
 
-	m_ListIsValid= false;	 
+	m_GeometryIsValid= false;	 
 }
 
 // Set Cylinder radius
@@ -115,7 +98,7 @@ void GLC_Cylinder::setRadius(double Radius)
 	Q_ASSERT(Radius > 0.0);
 	m_Radius= Radius;
 	
-	m_ListIsValid= false;
+	m_GeometryIsValid= false;
 }
 
 // Set Discretion
@@ -127,7 +110,7 @@ void GLC_Cylinder::setDiscretion(int TargetDiscret)
 		m_Discret= TargetDiscret;
 		if (m_Discret < 6) m_Discret= 6;
 
-		m_ListIsValid= false;
+		m_GeometryIsValid= false;
 	}
 }
 
@@ -137,7 +120,6 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 	if (m_EndedIsCaped != CapsEnded)
 	{
 		m_EndedIsCaped= CapsEnded;
-		m_ListIsValid= false;
 	}
 }
 
@@ -148,116 +130,124 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 // Dessin du GLC_Cylinder
 void GLC_Cylinder::glDraw(void)
 {
-	QVector<double> TableauCos;
-	QVector<double> TableauSin;
-	GLC_Vector4d Vect;
-
-	// Calcul des coordonn�es des points du pourtour
-	for (int i= 0; i <= m_Discret; i++)
+	
+	if (!m_GeometryIsValid)
 	{
-		TableauCos.append(m_Radius * cos(i * (2 * PI) / m_Discret));
-		TableauSin.append(m_Radius * sin(i * (2 * PI) / m_Discret));
-	}
-
-	double Longueur= 0;
-
-	// Affichage du Cylindre
-	glBegin(GL_QUADS);
-
-	float fCoordx;
-
-		for (int i= 0; i <= m_Discret; i++)
+		double cosArray[m_Discret];
+		double sinArray[m_Discret];
+		for (int i= 0; i < m_Discret; ++i)
 		{
-			fCoordx= static_cast<float>(i) / static_cast<float>(m_Discret);
-
-			Vect.setVect(TableauCos[i], TableauSin[i], 0.0).setNormal(1);
-			glNormal3dv(Vect.return_dVect());
-
-			Vect.setVect(TableauCos[i], TableauSin[i], Longueur );
-
-			glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_Length)); 
-
-			glVertex3dv(Vect.return_dVect());
-
-			if(!Longueur)
-				Longueur= m_Length;
-			else
-				Longueur= 0;
-
-			Vect.setVect(TableauCos[i], TableauSin[i], Longueur );
-
-			glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_Length)); 
-
-			glVertex3dv(Vect.return_dVect());
-
-			if(!Longueur)
-			{
-				Vect.setVect(TableauCos[i], TableauSin[i], 0.0).setNormal(1);
-				glNormal3dv(Vect.return_dVect());
-				glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_Length)); 
-
-
-				Vect.setVect(TableauCos[i], TableauSin[i], Longueur );
-				glVertex3dv(Vect.return_dVect());
-				Longueur= m_Length;
-				glTexCoord2f(fCoordx, static_cast<float>(Longueur / m_Length));
-				Vect.setVect(TableauCos[i], TableauSin[i], Longueur );
-				glVertex3dv(Vect.return_dVect());
-			}
-
+			cosArray[i]= m_Radius * cos(i * (2 * PI) / m_Discret);
+			sinArray[i]= m_Radius * sin(i * (2 * PI) / m_Discret);
 		}
-
-	glEnd();
-
-	if (m_EndedIsCaped)
-	{	// Ended must be closed
-	// Cylinder cap
-		// Testure coordinate
-		float TextureX= 0.5f;	// Center
-		float TextureY= 0.5f;	// Center
-		float fRayon= static_cast<float>(m_Radius); // To avoid many casting
-
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f(TextureX, TextureY);
-			// Normals and closed lower
-			glNormal3d(0.0, 0.0, -1.0);
-			glVertex3d(0.0, 0.0, 0.0);
-			for (int i= 0; i <= m_Discret; i++)
+		
+		const GLsizei dataNbr= m_Discret * 4;
+		const GLsizeiptr dataSize= dataNbr * sizeof(GLC_Vertex);
+		GLC_Vertex positionData[dataNbr];
+		for (GLsizei i= 0; i < (dataNbr / 4); ++i)
+		{
+			// Bottom
+			positionData[i].x= static_cast<GLfloat>(cosArray[i]);
+			positionData[i].y= static_cast<GLfloat>(sinArray[i]);
+			positionData[i].z= 0.0f;
+			GLC_Vector4d normal(cosArray[i], sinArray[i], 0.0);
+			normal.setNormal(1.0);
+			positionData[i].nx= static_cast<GLfloat>(normal.getX());
+			positionData[i].ny= static_cast<GLfloat>(normal.getY());
+			positionData[i].nz= 0.0f;
+			positionData[i].s= static_cast<float>(i) / static_cast<float>(m_Discret);
+			positionData[i].t= 0.0f;
+			
+			// Top
+			positionData[i + m_Discret].x= positionData[i].x;
+			positionData[i + m_Discret].y= positionData[i].y;
+			positionData[i + m_Discret].z= static_cast<GLfloat>(m_Length);
+			positionData[i + m_Discret].nx= positionData[i].nx;
+			positionData[i + m_Discret].ny= positionData[i].ny;
+			positionData[i + m_Discret].nz= 0.0f;
+			positionData[i + m_Discret].s= positionData[i].s;
+			positionData[i + m_Discret].t= 1.0f;
+			
+			// Bottom Cap
+			positionData[i + 2 * m_Discret].x= positionData[i].x;
+			positionData[i + 2 * m_Discret].y= positionData[i].y;
+			positionData[i + 2 * m_Discret].z= 0.0f;
+			positionData[i + 2 * m_Discret].nx= 0.0f;
+			positionData[i + 2 * m_Discret].ny= 0.0f;
+			positionData[i + 2 * m_Discret].nz= -1.0f;
+			positionData[i + 2 * m_Discret].s= positionData[i].s;
+			positionData[i + 2 * m_Discret].t= 1.0f;
+	
+			// Top Cap
+			positionData[i + 3 * m_Discret].x= positionData[i].x;
+			positionData[i + 3 * m_Discret].y= positionData[i].y;
+			positionData[i + 3 * m_Discret].z= static_cast<GLfloat>(m_Length);
+			positionData[i + 3 * m_Discret].nx= 0.0f;
+			positionData[i + 3 * m_Discret].ny= 0.0f;
+			positionData[i + 3 * m_Discret].nz= 1.0f;
+			positionData[i + 3 * m_Discret].s= positionData[i].s;
+			positionData[i + 3 * m_Discret].t= 1.0f;
+		}
+		glBufferData(GL_ARRAY_BUFFER, dataSize, positionData, GL_STATIC_DRAW);
+		
+		// Create IBO
+		const GLsizei indexNbr= 2 * (m_Discret + 1) + 2 * m_Discret;
+		const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
+		GLuint indexData[indexNbr];
+		GLsizei j= 0;
+		for (GLsizei i= 0; i < indexNbr / 2; i+=2, ++j)
+		{
+			if (i < (indexNbr / 2) - 2)
 			{
-				// Calculate texture coordinates
-				TextureX= (static_cast<float>(TableauCos[i]) + fRayon) / (2 * fRayon);
-				TextureY= (static_cast<float>(TableauSin[i]) + fRayon) / (2 * fRayon);
-				glTexCoord2f(TextureX, TextureY);
-				// Vertex coordinates
-				Vect.setVect(TableauCos[i], TableauSin[i], 0.0 );
-				glVertex3dv(Vect.return_dVect());
+				indexData[i]= j;
+				indexData[i + 1]= j + m_Discret;				
 			}
-		glEnd();
-
-		glBegin(GL_TRIANGLE_FAN);
-			// Texture coordinate
-			TextureX= 0.5f;	// Centre
-			TextureY= 0.5f;	// Centre
-			glTexCoord2f(TextureX, TextureY);
-			// Normals and closed upper
-			glNormal3d(0.0, 0.0, 1.0);
-			glVertex3d(0.0, 0.0, m_Length);
-			for (int i= 0; i <= m_Discret; i++)
+			else
 			{
-				// Calculate texture coordinates
-				TextureX= (static_cast<float>(TableauCos[i]) + fRayon) / (2 * fRayon);
-				TextureY= (static_cast<float>(TableauSin[i]) + fRayon) / (2 * fRayon);
-				glTexCoord2f(TextureX, TextureY);
-				// Vertex coordinates
-				Vect.setVect(TableauCos[i], TableauSin[i], m_Length );
-				glVertex3dv(Vect.return_dVect());
+				indexData[i]= 0;
+				indexData[i + 1]= m_Discret;								
 			}
-		glEnd();
+		}
+		
+		// Caps end
+		j= 2.5 * m_Discret;
+		GLsizei k= j - 1;
+		GLsizei max = 2 * (m_Discret + 1) + m_Discret;
+		for (GLsizei i= 2 * (m_Discret + 1); i < max; i+= 2, ++j, --k)
+		{
+			indexData[i]= j;
+			if (i < (max - 1))
+				indexData[i + 1]= k;
+		}
+		
+		j= 3.5 * m_Discret;
+		k= j - 1;
+		for (GLsizei i= max; i < indexNbr; i+= 2, ++j, --k)
+		{
+			indexData[i]= j;
+			if (i < (indexNbr - 1))
+				indexData[i + 1]= k;
+		}
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, indexData, GL_STATIC_DRAW);
 	}
-	TableauCos.clear();
-	TableauSin.clear();
+	
+	glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
+	glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(12));
+	glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(24));
 
-	// End of cylinder draw
+	GLuint max= (m_Discret + 1) * 2;
+	// Draw cylinder 
+	glDrawRangeElements(GL_TRIANGLE_STRIP, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+	
+	// Fill ended if needed
+	if (m_EndedIsCaped)
+	{
+		// Draw bottom cap
+		glDrawRangeElements(GL_TRIANGLE_STRIP, 0, m_Discret, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
+		max+= m_Discret;
+		// Draw top cap
+		glDrawRangeElements(GL_TRIANGLE_STRIP, 0, m_Discret, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));		
+	}
 	
 	// OpenGL error handler
 	GLenum error= glGetError();	

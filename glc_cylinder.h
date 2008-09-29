@@ -28,7 +28,7 @@
 #define GLC_CYLINDER_H_
 
 
-#include "glc_geometry.h"
+#include "glc_vbogeom.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Cylinder
@@ -39,7 +39,7 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Cylinder : public GLC_Geometry  
+class GLC_Cylinder : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -66,19 +66,22 @@ public:
 public:
 
 	//! Get Lenght of the Cylinder
-	double getLength(void) const;
+	inline double getLength(void) const
+	{return m_Length;}
 
 	//! Get Radius of cylinder
-	double getRadius(void) const;
+	inline double getRadius(void) const
+	{return m_Radius;}
 
 	//! Get Cylinder discretion
-	int getDiscretion(void) const;
+	inline int getDiscretion(void) const
+	{return m_Discret;}
 	
 	//! return the cylinder bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 	
 	//! Return a copy of the geometry
-	virtual GLC_Geometry* clone() const;	
+	virtual GLC_VboGeom* clone() const;	
 	
 	//! return true if cylinder's ended are capped
 	bool EndedIsCaped() const {return m_EndedIsCaped;}
