@@ -80,11 +80,8 @@ GLC_Instance GLC_Factory::createPoint(const GLC_Vector4d &coord) const
 // Create an GLC_Point
 GLC_Instance GLC_Factory::createPoint(double x, double y, double z) const
 {
-	/*
 	GLC_Instance newPoint(new GLC_Point(x, y, z));
 	return newPoint;
-	*/
-	return GLC_Instance();
 }
 
 //  Create an GLC_Circle
@@ -117,11 +114,9 @@ GLC_Instance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 // Create an GLC_Cylinder
 GLC_Instance GLC_Factory::createCylinder(double radius, double length) const
 {
-	/*
+	
 	GLC_Instance newCylinder(new GLC_Cylinder(radius, length));
 	return newCylinder;
-	*/
-	return GLC_Instance();
 }
 // Create an GLC_Mesh with a QFile
 GLC_Instance GLC_Factory::createMesh(QFile &file) const
