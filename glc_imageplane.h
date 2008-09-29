@@ -27,7 +27,7 @@
 #ifndef GLC_IMAGEPLANE_H_
 #define GLC_IMAGEPLANE_H_
 
-#include "glc_geometry.h"
+#include "glc_vbogeom.h"
 
 
 class GLC_Viewport;
@@ -39,7 +39,7 @@ class GLC_Viewport;
 /*! An GLC_ImagePlane is just a plane with a image texture.*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_ImagePlane : public GLC_Geometry
+class GLC_ImagePlane : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -60,7 +60,7 @@ public:
 public:
 	
 	//! Return a copy of the geometry
-	virtual GLC_Geometry* clone() const;
+	virtual GLC_VboGeom* clone() const;
 //@}
 
 //////////////////////////////////////////////////////////////////////

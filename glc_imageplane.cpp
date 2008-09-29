@@ -34,7 +34,7 @@ using namespace glc;
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport)
-:GLC_Geometry("Image Plane", false)
+:GLC_VboGeom("Image Plane", false)
 , m_pViewport(pViewport)
 , m_dLgImage(0)
 , m_dZpos(0)
@@ -54,7 +54,7 @@ GLC_ImagePlane::~GLC_ImagePlane(void)
 //////////////////////////////////////////////////////////////////////
 
 // Return a copy of the current geometry
-GLC_Geometry* GLC_ImagePlane::clone() const
+GLC_VboGeom* GLC_ImagePlane::clone() const
 {
 	return NULL;
 }
@@ -92,7 +92,7 @@ void GLC_ImagePlane::updatePlaneSize(void)
 	m_dLgImage= ((double)nCote * ChampsVision / (double)m_pViewport->getWinVSize());
 
 	// Invalidate OpenGL Display list
-	m_ListIsValid= false;
+	m_GeometryIsValid= false;
 }
 
 // Update Plane Z position
@@ -113,8 +113,8 @@ void GLC_ImagePlane::updateZPosition(void)
 	m_dZpos= -f * n / (((zw - 1) / zw) * (f - n) - f);
 
 	updatePlaneSize();
-	// Invalidate OpenGL Display list
-	m_ListIsValid= false;
+	// Invalidate Geometry
+	m_GeometryIsValid= false;
 	
 }
 
