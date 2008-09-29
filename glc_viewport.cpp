@@ -314,11 +314,10 @@ void GLC_Viewport::glExecuteImagePlane()
 	
 	if (m_pImagePlane != NULL)
 	{
-		// Geometry OpenGl list invalid
-		if (!m_pImagePlane->getListIsValid())
+		// Geometry validity
+		if (!m_pImagePlane->getValidity())
 		{
 			m_pImagePlane->glLoadTexture();
-			m_pImagePlane->createList(GL_COMPILE);
 		}
 		
 		// Geometry invalid or collection node list ID == 0
