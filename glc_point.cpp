@@ -34,13 +34,13 @@ using namespace glc;
 
 
 GLC_Point::GLC_Point(const GLC_Point4d &setCoord)
-:GLC_Geometry("Point", true), m_Coord(setCoord)
+:GLC_VboGeom("Point", true), m_Coord(setCoord)
 {
 	
 }
 //! Construct an GLC_Point
 GLC_Point::GLC_Point(double x, double y, double z)
-:GLC_Geometry("Point", true), m_Coord(x, y, z)
+:GLC_VboGeom("Point", true), m_Coord(x, y, z)
 {
 }
 
@@ -58,13 +58,13 @@ GLC_Point4d GLC_Point::getCoord(void) const
 GLC_BoundingBox* GLC_Point::getBoundingBox(void) const
 {
 	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
-	
-	GLC_Point3d lower(m_Coord.getX() - EPSILON,
-			m_Coord.getY() - EPSILON,
-			m_Coord.getZ() - EPSILON);
-	GLC_Point3d upper(m_Coord.getX() + EPSILON,
-			m_Coord.getY() + EPSILON,
-			m_Coord.getZ() + EPSILON);
+	const double delta= 1e-2;
+	GLC_Point3d lower(m_Coord.getX() - delta,
+			m_Coord.getY() - delta,
+			m_Coord.getZ() - delta);
+	GLC_Point3d upper(m_Coord.getX() + delta,
+			m_Coord.getY() + delta,
+			m_Coord.getZ() + delta);
 	pBoundingBox->combine(lower);
 	pBoundingBox->combine(upper);
 	
@@ -72,7 +72,7 @@ GLC_BoundingBox* GLC_Point::getBoundingBox(void) const
 }
 
 // Return a copy of the current geometry
-GLC_Geometry* GLC_Point::clone() const
+GLC_VboGeom* GLC_Point::clone() const
 {
 	return new GLC_Point(*this);
 }
@@ -85,13 +85,11 @@ GLC_Geometry* GLC_Point::clone() const
 void GLC_Point::setCoord(const GLC_Point4d &point)
 {
 	m_Coord= point;
-	m_ListIsValid = false;
 }
 // Set Point coordinate by 3 double
 void GLC_Point::setCoord(double x, double y, double z)
 {
 	m_Coord.setVect(x, y, z);
-	m_ListIsValid = false;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -111,7 +109,6 @@ void GLC_Point::glDraw(void)
 	{
 		GLC_OpenGlException OpenGlException("GLC_Point::GlDraw ", error);
 		throw(OpenGlException);
-	}
-	
+	}	
 }
 
