@@ -120,8 +120,8 @@ void GLC_Box::glDraw(void)
 {
 	if (!m_GeometryIsValid)
 	{
-		GLC_Vertex positionData[m_Number];
-		const GLsizeiptr size= m_Number * sizeof(GLC_Vertex);
+		GLC_Vertex positionData[24]; // 3 normals per vertex and 8 Vertex => 3 x 8 = 24
+		const GLsizeiptr size= 24 * sizeof(GLC_Vertex);
 		
 		const GLfloat lgX= static_cast<const GLfloat>(m_dLgX / 2.0);
 		const GLfloat lgY= static_cast<const GLfloat>(m_dLgY / 2.0);
@@ -245,8 +245,6 @@ void GLC_Box::glDraw(void)
 				
 		};
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize, IndexData, GL_STATIC_DRAW);
-
-
 	}
 	glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
 	glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(12));
