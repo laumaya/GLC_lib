@@ -281,6 +281,8 @@ GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 //! return the collection Bounding Box
 GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 {
+	setBoundingBoxValidity();
+	
 	if (((m_pBoundingBox == NULL) || !m_CollectionIsValid) && (getNumber() > 0))
 	{
 		CNodeMap::iterator iEntry= m_NodeMap.begin();
@@ -406,4 +408,35 @@ void GLC_Collection::glDraw(void)
 		qDebug("GLC_Collection::GlDraw OPENGL ERROR %s", errString);
 	}
 
+}
+
+// Set the Bounding box validity
+void GLC_Collection::setBoundingBoxValidity(void)
+{
+	if (m_pBoundingBox == NULL)
+	{
+		return;
+	}
+	CNodeMap::iterator iEntry= m_NodeMap.begin();
+	
+    while (iEntry != m_NodeMap.constEnd())
+    {
+    	// Update Instance validity
+    	iEntry.value().setInstanceValidity();
+    	iEntry++;
+    }
+	iEntry= m_NodeMap.begin();
+    while (iEntry != m_NodeMap.constEnd() and (m_pBoundingBox != NULL))
+    {
+    	if(!iEntry.value().getValidity())
+    	{
+ 			if (m_pBoundingBox != NULL)
+			{
+				delete m_pBoundingBox;
+				m_pBoundingBox= NULL;
+			}				
+    	}
+    	// Passe au Suivant
+    	iEntry++;
+    }
 }
