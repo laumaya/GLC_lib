@@ -112,15 +112,11 @@ void GLC_Texture::glLoadTexture(void)
 // Bind texture in 2D mode
 void GLC_Texture::glcBindTexture(void)
 {
-	if (m_TextureID != 0)
+	if (m_TextureID == 0)
 	{
-		glBindTexture(GL_TEXTURE_2D, m_TextureID);
+		glLoadTexture();
 	}
-	else
-	{
-		GLC_Exception e("GLC_Texture::glcBindTexture Texture not loaded");
-		throw(e);
-	}
+	glBindTexture(GL_TEXTURE_2D, m_TextureID);
 	
 }
 
