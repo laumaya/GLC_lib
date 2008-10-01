@@ -133,15 +133,15 @@ void GLC_Cylinder::glDraw(void)
 	
 	if (!m_GeometryIsValid)
 	{
-		double cosArray[m_Discret];
-		double sinArray[m_Discret];
-		for (int i= 0; i < m_Discret; ++i)
+		double cosArray[m_Discret + 1];
+		double sinArray[m_Discret + 1];
+		for (int i= 0; i <= m_Discret; ++i)
 		{
 			cosArray[i]= m_Radius * cos(i * (2 * PI) / m_Discret);
 			sinArray[i]= m_Radius * sin(i * (2 * PI) / m_Discret);
 		}
 		
-		const GLsizei dataNbr= m_Discret * 4;
+		const GLsizei dataNbr= (m_Discret + 1) * 4;
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLC_Vertex);
 		GLC_Vertex positionData[dataNbr];
 		for (GLsizei i= 0; i < (dataNbr / 4); ++i)
@@ -159,34 +159,34 @@ void GLC_Cylinder::glDraw(void)
 			positionData[i].t= 0.0f;
 			
 			// Top
-			positionData[i + m_Discret].x= positionData[i].x;
-			positionData[i + m_Discret].y= positionData[i].y;
-			positionData[i + m_Discret].z= static_cast<GLfloat>(m_Length);
-			positionData[i + m_Discret].nx= positionData[i].nx;
-			positionData[i + m_Discret].ny= positionData[i].ny;
-			positionData[i + m_Discret].nz= 0.0f;
-			positionData[i + m_Discret].s= positionData[i].s;
-			positionData[i + m_Discret].t= 1.0f;
+			positionData[i + (m_Discret + 1)].x= positionData[i].x;
+			positionData[i + (m_Discret + 1)].y= positionData[i].y;
+			positionData[i + (m_Discret + 1)].z= static_cast<GLfloat>(m_Length);
+			positionData[i + (m_Discret + 1)].nx= positionData[i].nx;
+			positionData[i + (m_Discret + 1)].ny= positionData[i].ny;
+			positionData[i + (m_Discret + 1)].nz= 0.0f;
+			positionData[i + (m_Discret + 1)].s= positionData[i].s;
+			positionData[i + (m_Discret + 1)].t= 1.0f;
 			
 			// Bottom Cap
-			positionData[i + 2 * m_Discret].x= positionData[i].x;
-			positionData[i + 2 * m_Discret].y= positionData[i].y;
-			positionData[i + 2 * m_Discret].z= 0.0f;
-			positionData[i + 2 * m_Discret].nx= 0.0f;
-			positionData[i + 2 * m_Discret].ny= 0.0f;
-			positionData[i + 2 * m_Discret].nz= -1.0f;
-			positionData[i + 2 * m_Discret].s= positionData[i].s;
-			positionData[i + 2 * m_Discret].t= 1.0f;
+			positionData[i + 2 * (m_Discret + 1)].x= positionData[i].x;
+			positionData[i + 2 * (m_Discret + 1)].y= positionData[i].y;
+			positionData[i + 2 * (m_Discret + 1)].z= 0.0f;
+			positionData[i + 2 * (m_Discret + 1)].nx= 0.0f;
+			positionData[i + 2 * (m_Discret + 1)].ny= 0.0f;
+			positionData[i + 2 * (m_Discret + 1)].nz= -1.0f;
+			positionData[i + 2 * (m_Discret + 1)].s= positionData[i].s;
+			positionData[i + 2 * (m_Discret + 1)].t= 1.0f;
 	
 			// Top Cap
-			positionData[i + 3 * m_Discret].x= positionData[i].x;
-			positionData[i + 3 * m_Discret].y= positionData[i].y;
-			positionData[i + 3 * m_Discret].z= static_cast<GLfloat>(m_Length);
-			positionData[i + 3 * m_Discret].nx= 0.0f;
-			positionData[i + 3 * m_Discret].ny= 0.0f;
-			positionData[i + 3 * m_Discret].nz= 1.0f;
-			positionData[i + 3 * m_Discret].s= positionData[i].s;
-			positionData[i + 3 * m_Discret].t= 1.0f;
+			positionData[i + 3 * (m_Discret + 1)].x= positionData[i].x;
+			positionData[i + 3 * (m_Discret + 1)].y= positionData[i].y;
+			positionData[i + 3 * (m_Discret + 1)].z= static_cast<GLfloat>(m_Length);
+			positionData[i + 3 * (m_Discret + 1)].nx= 0.0f;
+			positionData[i + 3 * (m_Discret + 1)].ny= 0.0f;
+			positionData[i + 3 * (m_Discret + 1)].nz= 1.0f;
+			positionData[i + 3 * (m_Discret + 1)].s= positionData[i].s;
+			positionData[i + 3 * (m_Discret + 1)].t= 1.0f;
 		}
 		glBufferData(GL_ARRAY_BUFFER, dataSize, positionData, GL_STATIC_DRAW);
 		
@@ -195,22 +195,14 @@ void GLC_Cylinder::glDraw(void)
 		const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
 		GLuint indexData[indexNbr];
 		GLsizei j= 0;
-		for (GLsizei i= 0; i < indexNbr / 2; i+=2, ++j)
+		for (GLsizei i= 0; i < 2 * (m_Discret + 1); i+=2, ++j)
 		{
-			if (i < (indexNbr / 2) - 2)
-			{
-				indexData[i]= j;
-				indexData[i + 1]= j + m_Discret;				
-			}
-			else
-			{
-				indexData[i]= 0;
-				indexData[i + 1]= m_Discret;								
-			}
+			indexData[i]= j;
+			indexData[i + 1]= j + (m_Discret + 1);				
 		}
 		
 		// Caps end
-		j= 2.5 * m_Discret;
+		j= 2 * (m_Discret + 1) + m_Discret / 2;
 		GLsizei k= j - 1;
 		GLsizei max = 2 * (m_Discret + 1) + m_Discret;
 		for (GLsizei i= 2 * (m_Discret + 1); i < max; i+= 2, ++j, --k)
@@ -220,7 +212,7 @@ void GLC_Cylinder::glDraw(void)
 				indexData[i + 1]= k;
 		}
 		
-		j= 3.5 * m_Discret;
+		j= 3 * (m_Discret + 1) + m_Discret / 2;
 		k= j - 1;
 		for (GLsizei i= max; i < indexNbr; i+= 2, ++j, --k)
 		{
