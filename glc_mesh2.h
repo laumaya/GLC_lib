@@ -27,21 +27,23 @@
 #ifndef GLC_MESH2_H_
 #define GLC_MESH2_H_
 #include <QHash>
-#include <QList>
 #include <QVector>
+#include <QList>
 
 #include "glc_material.h"
-#include "glc_geometry.h"
+#include "glc_vbogeom.h"
 #include "glc_vector2df.h"
 #include "glc_vector3df.h"
 
-//! The mesh's faces list
+// TODO a supprimer
 typedef QHash<int, GLC_Vector3df> Vector3dHash;
 typedef QHash<int, GLC_Vector2df> Vector2dHash;
+// Fin a supprimer
 
-typedef QHash<int, GLC_Material*> MaterialHash;
-
-typedef QList<int> IndexedList;
+typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
+typedef QList<GLC_Vertex> VertexVector;
+typedef QList<GLuint> IndexVector;
+typedef QHash<GLC_uint, IndexVector*> MaterialGroup;
 
 enum FaceType
 {
@@ -61,7 +63,7 @@ enum FaceType
  * 		- Each face is composed by vertexs
  * */
 //////////////////////////////////////////////////////////////////////
-class GLC_Mesh2 : public GLC_Geometry
+class GLC_Mesh2 : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -84,31 +86,28 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get number of faces
-	inline int getNumberOfFaces() const {return m_NumberOfFaces;}
+	inline unsigned int getNumberOfFaces() const {return m_NumberOfFaces;}
 	//! Get number of vertex
-	inline int getNumberOfVertex() const {return m_CoordinateHash.size();}
+	inline unsigned int getNumberOfVertex() const {return m_Vertex.size();}
+	//! return a vertex with key
+	inline const GLC_Vector3df getVertex(const int key) const
+	{
+		return GLC_Vector3df(m_Vertex[key].x, m_Vertex[key].y, m_Vertex[key].z);
+	}
 	//! Get number of submaterial
-	inline int getNumberOfSubMaterial() const {return m_MaterialHash.size();}
+	inline unsigned int getNumberOfSubMaterial() const {return m_MaterialHash.size();}
 	//! Get specified mesh sub material
-	inline GLC_Material* getSubMaterial(const int key) {return m_MaterialHash[key];}
+	inline GLC_Material* getSubMaterial(const GLC_uint key) {return m_MaterialHash[key];}
 	//! return true if Material key is in the mesh
-	inline const bool containsMaterial(const int key) const {return m_MaterialHash.contains(key);}
+	inline const bool containsMaterial(const GLC_uint key) const {return m_MaterialHash.contains(key);}
 	//! Return material index if Material is the same than a material already in the mesh
 	/*! Return -1 if the material is not found
 	 */
-	int materialIndex(const GLC_Material& mat) const;
+	GLC_uint materialIndex(const GLC_Material& mat) const;
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 	//! Return a copy of the geometry
-	virtual GLC_Geometry* clone() const;
-	//! return a vertex with key
-	inline const GLC_Vector3df getVertex(const int key) const {return m_CoordinateHash.value(key);}
-	//! return true if vertex key is in the mesh
-	inline const bool containsVertex(const int key) const {return m_CoordinateHash.contains(key);}
-	//! return a normal with key
-	inline const GLC_Vector3df getNormal(const int key) const {return m_NormalHash.value(key);}
-	//! return true if normal key is in the mesh
-	inline const bool containsNormal(const int key) const {return m_NormalHash.contains(key);}
+	virtual GLC_VboGeom* clone() const;
 
 //@}
 
@@ -118,72 +117,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Add material to mesh
-	void addMaterial(int Index, GLC_Material *);
+	void addMaterial(GLC_uint Index, GLC_Material *);
 	
-	//! Remove material from the mesh
-	int removeMaterial(int);
-		
-	//! Add a vertex to mesh
-	inline void addVertex(const int Index, const GLC_Vector3df& Coordinate)
-	{
-		// Check if the key is already use		
-		if (m_CoordinateHash.find(Index) == m_CoordinateHash.end())
-		{
-			// Add the coordinate to coordinate hash table
-			m_CoordinateHash.insert(Index, Coordinate);
-		}
-	}
-	
-	//! Add Normal
-	inline void addNormal(const int index, const GLC_Vector3df& Normal)
-	{
-		// Check if the key is already use		
-		if (m_NormalHash.find(index) == m_NormalHash.end())
-		{
-			// Add the coordinate to coordinate hash table
-			m_NormalHash.insert(index, Normal);
-		}
-	}
-	
-	//! Add texture coordinate
-	inline void addTextureCoordinate(const int index, const GLC_Vector2df& textureCoordinate)
-	{
-		// Check if the key is already in use	
-		if (m_TextCoordinateHash.find(index) == m_TextCoordinateHash.end())
-		{	
-			// Add the coordinate to coordinate hash table
-			m_TextCoordinateHash.insert(index, textureCoordinate);
-		}		
-	}
-		 
-	//! Add a face without texture coordinate
-	/*! Mesh list of texture index must be empty.
-	 */  
-	inline void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal)
-	{
-		addMaterialIndex(Material);
-		addCoordAndNormIndex(Coordinate, Normal);
-			
-		// Increment number of faces
-		m_NumberOfFaces++;
-		m_ListIsValid= false;		
-	}
-
-	
-	//! Add a face with texture coordinate
-	/*! Number of coordinate, Normal and texture must be equal
-	 */
-	inline void addFace(const QVector<int> &Material, const QVector<int> &Coordinate, const QVector<int> &Normal,
-				const QVector<int> &TextureCoordinate)
-	{
-		addMaterialIndex(Material);
-		addCoordAndNormIndex(Coordinate, Normal);
-		addTextureIndex(TextureCoordinate);
-			
-		// Increment number of faces
-		m_NumberOfFaces++;
-		m_ListIsValid= false;
-	}
+	//! Add triangles with the same material to the mesh
+	void addTriangles(const VertexVector &, GLC_Material*);
 
 	//! Reverse mesh normal
 	void reverseNormal();
@@ -194,98 +131,44 @@ public:
 /*! \name OpenGL Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
+public:
+	//! Specific glExecute method
+	virtual void glExecute(bool, bool forceWire= false);
+
 private:
 
 	//! if the geometry have a texture, load it
 	virtual void glLoadTexture(void);
 	
-	//! Specific glExecute method
-	virtual void glExecute(GLenum Mode, bool, bool forceWire= false);
-
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
 	virtual void glDraw(void);
 	
-	//! Specific createList method
-	virtual void createList(GLenum Mode);
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
 //! Private services Functions
 //////////////////////////////////////////////////////////////////////
 private:
-
-	//! Create selection lis
-	void createSelectionList(GLenum Mode);
 		
-	//! Add coordinate index of a face
-	inline void addNormalIndex(const QVector<int> &Normal)
-	{	
-		m_NormalIndex+= Normal.toList();
-		m_NormalIndex.append(-1); // End of the face's normal index
-	}
-
-	//! Add coordinate and normal index of a face
-	inline void addCoordAndNormIndex(const QVector<int> &Coordinate, const QVector<int> &Normal)
-	{	
-		m_CoordinateIndex+= Coordinate.toList();
-		m_CoordinateIndex.append(-1); // End of the face's coordinate index
-
-		m_NormalIndex+= Normal.toList();
-		m_NormalIndex.append(-1); // End of the face's normal index
-		
-		// Check if indexed list have the same size
-		Q_ASSERT(m_NormalIndex.size() == m_CoordinateIndex.size());
-	}
-	
-	//! Add Texture coordinate index of a face
-	inline void addTextureIndex(const QVector<int> &TextureCoordinate)
-	{
-		m_TextureIndex+= TextureCoordinate.toList();
-		m_TextureIndex.append(-1); // End of the face's texture coordinate index
-	}
-	
-	//! Add Material index of a face
-	inline void addMaterialIndex(const QVector<int> &Material)
-	{
-		m_MaterialIndex+= Material.toList();
-		m_MaterialIndex.append(-1); // End of the face's material index
-	}
 	
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-
-		
-	//! Coordinate hash table
-	Vector3dHash m_CoordinateHash;
-	//! Coordinate index
-	IndexedList m_CoordinateIndex;
+	
+	//! Vertexs
+	VertexVector m_Vertex;
+	//! Hash table of Vector Index grouped by material
+	MaterialGroup m_MaterialGroup;
 	
 	//! Material Hash table
 	MaterialHash m_MaterialHash;
-	//! Material index
-	IndexedList m_MaterialIndex;
-	
-	//! Normal hash table
-	Vector3dHash m_NormalHash;
-	//! Normal Index
-	IndexedList m_NormalIndex;
-	
-	//! Texture coordinate Hash table
-	Vector2dHash m_TextCoordinateHash;
-	//! Texture index
-	IndexedList m_TextureIndex;
 	
 	//! Mesh number of faces
-	int m_NumberOfFaces;
-	
-	//! Selection Display list ID
-	GLuint m_SelectionListID;
-	
+	unsigned int m_NumberOfFaces;
+		
 	//! Selection state
 	bool m_IsSelected;
 	

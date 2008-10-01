@@ -30,38 +30,31 @@
 
 #include <QtDebug>
 
+#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_Mesh2::GLC_Mesh2()
-:GLC_Geometry("Mesh", false)
-, m_CoordinateHash()
-, m_CoordinateIndex()
+:GLC_VboGeom("Mesh", false)
+, m_Vertex()
+, m_MaterialGroup()
 , m_MaterialHash()
-, m_MaterialIndex()
-, m_NormalHash()
-, m_NormalIndex()
-, m_TextCoordinateHash()
-, m_TextureIndex()
 , m_NumberOfFaces(0)
-, m_SelectionListID(0)
 , m_IsSelected(false)
 {
 	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << getID();
+	// Index group with default material
+	IndexVector* pIndexVector= new IndexVector;
+	m_MaterialGroup.insert(0, pIndexVector);
 }
 
 GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
-: GLC_Geometry(meshToCopy)
-, m_CoordinateHash(meshToCopy.m_CoordinateHash)
-, m_CoordinateIndex(meshToCopy.m_CoordinateIndex)
+: GLC_VboGeom(meshToCopy)
+, m_Vertex()
+, m_MaterialGroup()
 , m_MaterialHash(meshToCopy.m_MaterialHash)
-, m_MaterialIndex(meshToCopy.m_MaterialIndex)
-, m_NormalHash(meshToCopy.m_NormalHash)
-, m_NormalIndex(meshToCopy.m_NormalIndex)
-, m_TextCoordinateHash(meshToCopy.m_TextCoordinateHash)
-, m_TextureIndex(meshToCopy.m_TextureIndex)
 , m_NumberOfFaces(meshToCopy.m_NumberOfFaces)
-, m_SelectionListID(0)
 , m_IsSelected(false)
 {
 	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << getID();
@@ -70,7 +63,7 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
     while (i != m_MaterialHash.constEnd())
     {
         // update inner material use table
-        //TODO i.value()->addGLC_Geom(this);
+        i.value()->addGLC_Geom(this);
         ++i;
     }	
 }
@@ -78,43 +71,38 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 
 GLC_Mesh2::~GLC_Mesh2(void)
 {
-	//qDebug() << "GLC_Mesh2::~GLC_Mesh2" << getID();
-	m_CoordinateHash.clear();
-	m_CoordinateIndex.clear();
-
-	m_NormalHash.clear();
-	m_NormalIndex.clear();
-
-	m_TextCoordinateHash.clear();
-	m_TextureIndex.clear();
-	
 	// delete mesh inner material
-	MaterialHash::const_iterator i= m_MaterialHash.begin();
-    while (i != m_MaterialHash.constEnd())
-    {
-        // delete the material if necessary
-        i.value()->delGLC_Geom(getID());
-        if (i.value()->isUnused()) delete i.value();
-        ++i;
-    }
-	m_MaterialHash.clear();
-	m_MaterialIndex.clear();
-	
-	// If display list is valid : delete it
-	if (0 != m_SelectionListID)
 	{
-		glDeleteLists(m_SelectionListID, 1);
+		MaterialHash::const_iterator i= m_MaterialHash.begin();
+	    while (i != m_MaterialHash.constEnd())
+	    {
+	        // delete the material if necessary
+	        i.value()->delGLC_Geom(getID());
+	        if (i.value()->isUnused()) delete i.value();
+	        ++i;
+	    }		
 	}
-	
+    // delete mesh inner index material group
+	{
+		MaterialGroup::const_iterator i= m_MaterialGroup.begin();
+	    while (i != m_MaterialGroup.constEnd())
+	    {
+	    	// Delete index vector
+	        delete i.value();
+	        ++i;
+	    }		
+	}
+    
+	m_MaterialHash.clear();		
 }
 /////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
 //! Return material index if Material is the same than a material already in the mesh
-int GLC_Mesh2::materialIndex(const GLC_Material& mat) const
+GLC_uint GLC_Mesh2::materialIndex(const GLC_Material& mat) const
 {
-	int index= -1;
+	int index= 0;
 	MaterialHash::const_iterator iEntry= m_MaterialHash.begin();
 	
     while ((iEntry != m_MaterialHash.constEnd()) and !(*(iEntry.value()) == mat))
@@ -125,8 +113,7 @@ int GLC_Mesh2::materialIndex(const GLC_Material& mat) const
     {
     	index= iEntry.key();
     }
-	return index;
-	
+	return index;	
 }
 
 // return the mesh bounding box
@@ -134,20 +121,18 @@ GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
 {
 	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
 	
-	Vector3dHash::const_iterator iEntry= m_CoordinateHash.begin();
-	
-    while (iEntry != m_CoordinateHash.constEnd())
-    {
-        // Combine the vertex with the bounding box        
-        pBoundingBox->combine(iEntry.value());
-        ++iEntry;
-    }
+	const int max= m_Vertex.size();
+	for (int i= 0; i < max; ++i)
+	{
+		GLC_Vector3d vector(m_Vertex[i].x, m_Vertex[i].y, m_Vertex[i].z);
+		pBoundingBox->combine(vector);
+	}
     
 	return pBoundingBox;
 }
 
 // Return a copy of the current geometry
-GLC_Geometry* GLC_Mesh2::clone() const
+GLC_VboGeom* GLC_Mesh2::clone() const
 {
 	return new GLC_Mesh2(*this);
 }
@@ -155,10 +140,8 @@ GLC_Geometry* GLC_Mesh2::clone() const
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-
-
 // Add material to mesh
-void GLC_Mesh2::addMaterial(int Index, GLC_Material* pMaterial)
+void GLC_Mesh2::addMaterial(GLC_uint Index, GLC_Material* pMaterial)
 {
 	if (pMaterial != NULL)
 	{
@@ -167,7 +150,7 @@ void GLC_Mesh2::addMaterial(int Index, GLC_Material* pMaterial)
 		Q_ASSERT(iMaterial == m_MaterialHash.end());
 		
 		// Add this geometry in the material use table
-		//TODO pMaterial->addGLC_Geom(this);
+		pMaterial->addGLC_Geom(this);
 		// Add the Material to Material hash table
 		m_MaterialHash.insert(Index, pMaterial);
 		// Test if the material is transparent
@@ -181,35 +164,66 @@ void GLC_Mesh2::addMaterial(int Index, GLC_Material* pMaterial)
 		}
 		// Invalid the geometry
 		m_GeometryIsValid = false;
-		m_ListIsValid= false;	// GLC_Mesh2 compatibility		
 	}
 }
 
-// Remove material from the mesh
-int GLC_Mesh2::removeMaterial(int index)
+// Add triangles with the same material to the mesh
+void GLC_Mesh2::addTriangles(const VertexVector &triangles, GLC_Material* pMaterial)
 {
-	//qDebug() << "GLC_Mesh2::removeMaterial" << getID();
-	m_MaterialHash[index]->delGLC_Geom(getID());
-	// If the removed material is the last, change transparency
-	if((m_MaterialHash.size() == 1) && !getMaterial()->isTransparent())
+	// test if the material is already in the mesh
+	GLC_uint materialID;
+	if (NULL != pMaterial)
 	{
-		setTransparency(false);
+		materialID= pMaterial->getID();
 	}
-	return m_MaterialHash.remove(index);
+	else
+	{
+		materialID= 0;
+	}
+	
+	IndexVector* pCurIndexVector= NULL;
+	if ((materialID == 0) or m_MaterialHash.contains(materialID))
+	{
+		pCurIndexVector= m_MaterialGroup.value(materialID);
+	}
+	else
+	{
+		pCurIndexVector= new IndexVector;
+		m_MaterialGroup.insert(materialID, pCurIndexVector);
+	}
+	const int startVertexIndex= m_Vertex.size();
+	const int delta= triangles.size();
+	// Add triangles vertex to the mesh
+	m_Vertex+= triangles;
+	
+	for (int i= 0; i < delta; ++i)
+	{
+		pCurIndexVector->append(startVertexIndex + static_cast<GLuint>(i));
+	}
+	// Invalid the geometry
+	m_GeometryIsValid = false;
 }
 
 // Reverse mesh normal
 void GLC_Mesh2::reverseNormal()
 {
-	Vector3dHash::iterator iNormal= m_NormalHash.begin();
-    while (iNormal != m_NormalHash.constEnd())
-    {
-        // Reverse normal    
-        iNormal.value().setInv();
-        ++iNormal;
-    }
-    m_ListIsValid= false;
-	
+	const int max= m_Vertex.size();
+	for (int i= 0; i < max; ++i)
+	{
+		m_Vertex[i].nx= m_Vertex[i].nx * -1.0f;
+		m_Vertex[i].ny= m_Vertex[i].ny * -1.0f;
+		m_Vertex[i].nz= m_Vertex[i].nz * -1.0f;
+	}
+	// Invalid the geometry
+	m_GeometryIsValid = false;
+}
+
+// Specific glExecute method
+void GLC_Mesh2::glExecute(bool isSelected, bool forceWire)
+{
+	m_IsSelected= isSelected;
+	GLC_VboGeom::glExecute(isSelected, forceWire);
+	m_IsSelected= false;	
 }
 
 
@@ -232,156 +246,85 @@ void GLC_Mesh2::glLoadTexture(void)
     }	
 }
 
-// Specific glExecute method
-void GLC_Mesh2::glExecute(GLenum Mode, bool isSelected, bool forceWire)
-{
-
-	if (isSelected)
-	{	
-		m_IsSelected= true;
-		// Define Geometry's property
-		glPropGeom(isSelected, forceWire);
-	
-		// Geometry validity set to true
-		m_GeometryIsValid= true;
-	
-		if (!m_ListIsValid)
-		{
-			// The list is not up to date or doesn't exist
-		
-			createList(Mode);
-		}
-		else
-		{
-			glCallList(m_SelectionListID);
-		}
-	
-		// OpenGL error handler
-		GLenum error= glGetError();	
-		if (error != GL_NO_ERROR)
-		{
-			GLC_OpenGlException OpenGlException("GLC_Geometry::GlExecute ", error);
-			throw(OpenGlException);
-		}
-		m_IsSelected= false;
-	}
-	else
-	{	
-		GLC_Geometry::glExecute(Mode, isSelected, forceWire);
-	}
-}
-
-// Specific createList method
-void GLC_Mesh2::createList(GLenum Mode)
-{
-	createSelectionList(GL_COMPILE);
-	GLC_Geometry::createList(Mode);
-}
-
-// Create selection list
-void GLC_Mesh2::createSelectionList(GLenum Mode)
-{
-	m_IsSelected= true;
-	if(!m_SelectionListID)		// The list doesn't exist
-	{
-		m_SelectionListID= glGenLists(1);
-		Q_ASSERT(0 != m_SelectionListID);
-	}
-	// List setting up
-	glNewList(m_SelectionListID, Mode);
-		// Geometry set up and display
-		glDraw();	// Virtual function defined in concrete class
-	glEndList();
-	m_IsSelected= false;
-	// OpenGL error handler
-	GLenum error= glGetError();	
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Mesh2::createList ", error);
-		throw(OpenGlException);
-	}		
-}
-
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh2::glDraw()
 {
-	//qDebug() << "GLC_Mesh2::glDraw ENTER";
-	
-	// If the mesh is empty there is noting to do
-	if (m_CoordinateIndex.isEmpty()) return;
-		
-	// Index face separator
-	const int separator= -1;
-	
-	int CurrentMaterialIndex= -1;
-	bool IsNewFace= true;
-	
-	for(int i=0; i < m_CoordinateIndex.size(); ++i)
-	{
-		if (m_CoordinateIndex.at(i) == separator)
-		{			
-			Q_ASSERT((i != 0) && (!IsNewFace));	// the first index couldn't be a separator
-			// End of current face
-			glEnd();
-			// At the next round a new face will be create
-			IsNewFace=true;
-		}
-		else
-		{
-			if (CurrentMaterialIndex != m_MaterialIndex.at(i))
-			{	// If the material change, make it current
-				CurrentMaterialIndex= m_MaterialIndex.at(i);
-				//qDebug() << "GLC_Mesh2::glDraw : CurrentMaterialIndex" << CurrentMaterialIndex;
-				MaterialHash::const_iterator iMaterial= m_MaterialHash.find(CurrentMaterialIndex);
-				// Check if the key is already use
-				if (iMaterial != m_MaterialHash.end())
-				{
-					if (!m_IsSelected or (m_IsSelected and m_MaterialHash[CurrentMaterialIndex]->getAddRgbaTexture()))
-					{
-						m_MaterialHash[CurrentMaterialIndex]->glExecute();
-					}
-						
-					if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-				}
-				else
-				{
-					m_pMaterial->glExecute();
-					if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-				}
-			}
+	IndexVector iboVector;
+	MaterialGroup::iterator iMaterialGroup;
 
-			if (IsNewFace)
-			{
-				if ((m_MaterialHash.find(CurrentMaterialIndex) != m_MaterialHash.end()) and m_MaterialHash[CurrentMaterialIndex]->getAddRgbaTexture())
-				{
-					glEnable(GL_TEXTURE_2D);
-					//qDebug() << "GLC_Mesh2::glDraw : Texture enabled";
-				}
-				else
-				{
-					glDisable(GL_TEXTURE_2D);
-				}
-				IsNewFace= false;
-				// New polygon creation
-				glBegin(GL_POLYGON);
-			} // end if isNewFace
-			
-			// Vertex texture coordinate if necessary
-			if (i < m_TextureIndex.size())
-			{
-				glTexCoord2fv(m_TextCoordinateHash[m_TextureIndex.at(i)].return_dVect());
-			}
-				
-			// Vertex Normal
-			Q_ASSERT(i < m_NormalIndex.size());
-			glNormal3fv(m_NormalHash[m_NormalIndex.at(i)].return_dVect());
-			
-			// Vertex 3D coordinate
-			Q_ASSERT(i < m_CoordinateIndex.size());
-			glVertex3fv(m_CoordinateHash[m_CoordinateIndex.at(i)].return_dVect());
-		}		
+	// Create VBO and IBO
+	if (!m_GeometryIsValid)
+	{
+		// Create VBO
+		const GLsizei dataNbr= static_cast<GLsizei>(m_Vertex.size());
+		const GLsizeiptr dataSize= dataNbr * sizeof(GLC_Vertex);
+		QVector<GLC_Vertex> vectorVertex(m_Vertex.toVector());
+		const GLC_Vertex* pPositionData= vectorVertex.data();
+		glBufferData(GL_ARRAY_BUFFER, dataSize, pPositionData, GL_STATIC_DRAW);
+		
+		// Create IBO
+		iMaterialGroup= m_MaterialGroup.begin();
+	    while (iMaterialGroup != m_MaterialGroup.constEnd())
+	    {
+	    	if (!iMaterialGroup.value()->isEmpty())
+	    	{
+	    		iboVector+= *(iMaterialGroup.value());
+	    	}
+	    	++iMaterialGroup;
+	    }
+		const GLsizei indexNbr= static_cast<GLsizei>(iboVector.size());
+		const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
+		QVector<GLuint> vectorIndex(iboVector.toVector());
+		const GLuint* pIndexData= vectorIndex.data();
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexData, GL_STATIC_DRAW);	    	
 	}
 	
+	glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
+	glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(12));
+	glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(24));
+	
+	GLC_Material* pCurrentMaterial;
+	GLuint max;
+	GLuint cur= 0;
+	iMaterialGroup= m_MaterialGroup.begin();
+    while (iMaterialGroup != m_MaterialGroup.constEnd())
+    {
+    	if (!iMaterialGroup.value()->isEmpty())
+    	{
+    		// Set current material
+    		if (iMaterialGroup.key() == 0)
+    		{
+    			// Use default material
+    			pCurrentMaterial= m_pMaterial;
+    		}
+    		else
+    		{
+    			pCurrentMaterial= m_MaterialHash.value(iMaterialGroup.key());
+    		}
+    		
+    		// Execute current material
+			if (pCurrentMaterial->getAddRgbaTexture())
+			{
+				glEnable(GL_TEXTURE_2D);
+			}
+			else
+			{
+				glDisable(GL_TEXTURE_2D);
+			}
+			// Activate material
+			pCurrentMaterial->glExecute();
+			glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());
+			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+    		
+			max= static_cast<GLuint>(iMaterialGroup.value()->size());
+			// Draw cylinder 
+			glDrawRangeElements(GL_TRIANGLES, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
+			cur+= max;
+    	}
+    	++iMaterialGroup;
+    }
+	
+
 	// OpenGL error handler
 	GLenum error= glGetError();	
 	if (error != GL_NO_ERROR)
