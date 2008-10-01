@@ -24,7 +24,6 @@
 
 //! \file glc_stltoworld.cpp implementation of the GLC_StlToWorld class.
 
-#include "glc_mesh2.h"
 #include "glc_stltoworld.h"
 #include "glc_world.h"
 #include "glc_fileformatexception.h"
@@ -43,6 +42,7 @@ GLC_StlToWorld::GLC_StlToWorld(const QGLContext *pContext)
 , m_pCurrentMesh(NULL)
 , m_CurVertexIndex(0)
 , m_CurNormalIndex(0)
+, m_CurrentFace()
 {
 	
 }
@@ -118,10 +118,9 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		m_pCurrentMesh= new GLC_Mesh2();
 		file.reset();
 		LoadBinariStl(file);
-		//GLC_Instance instance(m_pCurrentMesh);
-		//TODO new GLC_VboGeom
+		GLC_Instance instance(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
-		//m_pWorld->rootProduct()->addChildPart(instance);
+		m_pWorld->rootProduct()->addChildPart(instance);
 	}
 	else
 	{
@@ -166,6 +165,7 @@ void GLC_StlToWorld::clear()
 	m_pCurrentMesh= NULL;
 	m_CurVertexIndex= 0;
 	m_CurNormalIndex= 0;
+	m_CurrentFace.clear();
 }
 
 // Scan a line previously extracted from STL file
@@ -178,10 +178,9 @@ void GLC_StlToWorld::scanFacet()
 	// Test if this is the end of current solid
 	if (lineBuff.startsWith("endsolid") || lineBuff.startsWith("end solid"))
 	{
-		//GLC_Instance instance(m_pCurrentMesh);
-		//TODO new GLC_VboGeom
+		GLC_Instance instance(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
-		//m_pWorld->rootProduct()->addChildPart(instance);
+		m_pWorld->rootProduct()->addChildPart(instance);
 		return;
 	}
 	// Test if this is the start of new solid
@@ -206,9 +205,14 @@ void GLC_StlToWorld::scanFacet()
 		clear();
 		throw(fileFormatException);
 	}
+	GLC_Vertex curVertex;
 	lineBuff.remove(0,12); // Remove first 12 chars
 	lineBuff= lineBuff.trimmed().toLower();
-	m_pCurrentMesh->addNormal(m_CurNormalIndex++, extract3dVect(lineBuff));
+	GLC_Vector3df cur3dVect= extract3dVect(lineBuff);
+	curVertex.nx= cur3dVect.getX();
+	curVertex.ny= cur3dVect.getY();
+	curVertex.nz= cur3dVect.getZ();
+	//m_pCurrentMesh->addNormal(m_CurNormalIndex++, extract3dVect(lineBuff));
 	
 ////////////////////////////////////////////// Outer Loop////////////////////////////////
 	++m_CurrentLineNumber;
@@ -250,10 +254,21 @@ void GLC_StlToWorld::scanFacet()
 		vectorCoordinate.append(m_CurVertexIndex);
 		vectorMaterial.append(-1); // There is no material information
 		vectorNormal.append(m_CurNormalIndex - 1);
-		m_pCurrentMesh->addVertex(m_CurVertexIndex++, extract3dVect(lineBuff));
+		
+		cur3dVect= extract3dVect(lineBuff);
+		curVertex.x= cur3dVect.getX();
+		curVertex.y= cur3dVect.getY();
+		curVertex.z= cur3dVect.getZ();
+		
+		curVertex.s= 0.0f;
+		curVertex.t= 0.0f;
+		m_CurrentFace.append(curVertex);
+		//m_pCurrentMesh->addVertex(m_CurVertexIndex++, extract3dVect(lineBuff));
 	}
 	// Add the face to the current mesh
-	m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+	m_pCurrentMesh->addTriangles(m_CurrentFace, NULL);
+	m_CurrentFace.clear();
+	//m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 	
 ////////////////////////////////////////////// End Loop////////////////////////////////
 	++m_CurrentLineNumber;
@@ -369,7 +384,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 			throw(fileFormatException);
 		}
 
-		m_pCurrentMesh->addNormal(m_CurNormalIndex++, GLC_Vector3df(x, y, z));
+		// TODO m_pCurrentMesh->addNormal(m_CurNormalIndex++, GLC_Vector3df(x, y, z));
 		QVector<int> vectorMaterial;
 		QVector<int> vectorCoordinate;
 		QVector<int> vectorNormal;
@@ -389,7 +404,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 			vectorCoordinate.append(m_CurVertexIndex);
 			vectorMaterial.append(-1); // There is no material information
 			vectorNormal.append(m_CurNormalIndex - 1);
-			m_pCurrentMesh->addVertex(m_CurVertexIndex++, GLC_Vector3df(x, y, z));
+			// TODO m_pCurrentMesh->addVertex(m_CurVertexIndex++, GLC_Vector3df(x, y, z));
 		}
 		currentQuantumValue = static_cast<int>((static_cast<double>(i + 1) / numberOfFacet) * 100);
 		if (currentQuantumValue > previousQuantumValue)
@@ -399,7 +414,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 		previousQuantumValue= currentQuantumValue;
 
 		// Add the face to the current mesh
-		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 		// Skip 2 fill-bytes not needed !!!!
 		stlBinFile.skipRawData(2);
 

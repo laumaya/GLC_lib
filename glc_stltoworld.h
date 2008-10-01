@@ -32,11 +32,11 @@
 #include <QFile>
 #include <QTextStream>
 
+#include "glc_mesh2.h"
 #include "glc_vector3df.h"
 
 class GLC_World;
 class QGLContext;
-class GLC_Mesh2;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_StlToWorld
@@ -114,6 +114,8 @@ private:
 	int m_CurVertexIndex;
 	//! Index of the current normal
 	int m_CurNormalIndex;
+	//! Current face vertex
+	VertexVector m_CurrentFace;
 };
 
 #endif /*GLC_STLTOWORLD_H_*/
