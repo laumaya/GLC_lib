@@ -28,6 +28,6 @@
 
 GLC_uint glc::GLC_GenID(void)
 {
-	static GLC_uint Id= 0;
+	static GLC_uint Id= 1;
 	return Id++;
 }
