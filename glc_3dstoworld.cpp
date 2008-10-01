@@ -268,7 +268,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	// Add the normal to the mesh
 	for (int i= 0; i < normalsNumber; ++i)
 	{
-		pMesh->addNormal(i, GLC_Vector3df(normalL[i][0], normalL[i][1], normalL[i][2]));
+		// TODO pMesh->addNormal(i, GLC_Vector3df(normalL[i][0], normalL[i][1], normalL[i][2]));
 	}
 	delete normalL;
 	
@@ -276,7 +276,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	const int vertexNumber= p3dsMesh->points;
 	for (int i= 0; i < vertexNumber; ++i)
 	{
-		pMesh->addVertex(i, GLC_Vector3df(p3dsMesh->pointL[i].pos[0], p3dsMesh->pointL[i].pos[1], p3dsMesh->pointL[i].pos[2]));
+		// TODO pMesh->addVertex(i, GLC_Vector3df(p3dsMesh->pointL[i].pos[0], p3dsMesh->pointL[i].pos[1], p3dsMesh->pointL[i].pos[2]));
 	}
 	
 	int normalIndex= 0;
@@ -337,14 +337,14 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 				float y= p3dsMesh->texelL[p3dsFace->points[i]][1];
 				GLC_Vector2df texel(x, y);
 				texture.append(textureIndex);
-				pMesh->addTextureCoordinate(textureIndex++, texel);
+				// TODO pMesh->addTextureCoordinate(textureIndex++, texel);
 			}
-			pMesh->addFace(material, vertex, normal, texture);
+			// TODO pMesh->addFace(material, vertex, normal, texture);
 			
 		}
 		else
 		{
-			pMesh->addFace(material, vertex, normal);
+			// TODO pMesh->addFace(material, vertex, normal);
 		}
 		
 	}
@@ -357,9 +357,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	}
 	m_PreviousQuantumValue= m_CurrentQuantumValue;		
 
-	//return GLC_Instance(pMesh);
-	//TODO new GLC_VboGeom
-	return NULL;
+	return GLC_Instance(pMesh);
 }
 
 // Load Material

@@ -299,7 +299,7 @@ void GLC_OffToWorld::extractVertex(QString &line)
 		{
 			vectResult.setVect(x, y, z);
 		}
-		m_pCurrentMesh->addVertex(m_CurVertexIndex++, vectResult);
+		// TODO m_pCurrentMesh->addVertex(m_CurVertexIndex++, vectResult);
 		
 		// Test if the file is a COFF
 		if (m_IsCoff)
@@ -521,19 +521,20 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 	// Add the face to the current mesh
 	//////////////////////////////////////////////////////////////////				
 	// Compute and add the face normal
-	m_pCurrentMesh->addNormal(m_CurNormalIndex, computeNormal(vectorCoordinate));
+	// TODO m_pCurrentMesh->addNormal(m_CurNormalIndex, computeNormal(vectorCoordinate));
 	for (int i= 0; i < numberOfVertex; ++i)
 	{
 		vectorNormal.append(m_CurNormalIndex);
 	}
 	m_CurNormalIndex++;
 	// Add the face to the current mesh
-	m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+	// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 }
 
 // compute face normal
 GLC_Vector3df GLC_OffToWorld::computeNormal(QVector<int> &listIndex)
 {
+	/*
 	Q_ASSERT(listIndex.size() > 2);
 	
 	const GLC_Vector4d vect1(m_pCurrentMesh->getVertex(listIndex[0]));
@@ -546,5 +547,7 @@ GLC_Vector3df GLC_OffToWorld::computeNormal(QVector<int> &listIndex)
 	GLC_Vector4d normal(edge1 ^ edge2);
 	normal.setNormal(1);
 	return normal.toVector3df();
+	*/
+	return GLC_Vector3df();
 }
 

@@ -196,7 +196,7 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	if (line.startsWith("v "))
 	{
 		line.remove(0,2); // Remove first 2 char
-		m_pMesh->addVertex(m_nCurVectPos++, extract3dVect(line));
+		// TODO m_pMesh->addVertex(m_nCurVectPos++, extract3dVect(line));
 		m_FaceType = notSet;		
 	}
 
@@ -204,7 +204,7 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	else if (line.startsWith("vt "))
 	{
 		line.remove(0,3); // Remove first 3 char
-		m_pMesh->addTextureCoordinate(m_nCurVectTexture++, extract2dVect(line));
+		// TODO m_pMesh->addTextureCoordinate(m_nCurVectTexture++, extract2dVect(line));
 		m_FaceType = notSet;
 	}
 
@@ -212,7 +212,7 @@ void GLC_ObjToMesh2::scanLigne(QString &line)
 	else if (line.startsWith("vn "))
 	{
 		line.remove(0,3); // Remove first 3 char
-		m_pMesh->addNormal(m_nCurVectNorm++, extract3dVect(line));
+		// TODO m_pMesh->addNormal(m_nCurVectNorm++, extract3dVect(line));
 		m_FaceType = notSet;
 	}
 
@@ -351,31 +351,31 @@ void GLC_ObjToMesh2::extractFaceIndex(QString &line)
 	}
 	if (m_FaceType == coordinateAndNormal)
 	{
-		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		// TODO m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 	}
 	else if (m_FaceType == coordinate)
 	{
-		m_pMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
+		// TODO m_pMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
 		for (int i= 0; i < vectorCoordinate.size(); ++i)
 		{
 			vectorNormal.append(m_CurComputedVectNorm);
 		}
 		m_CurComputedVectNorm++;
-		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		// TODO m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 	}
 	else if (m_FaceType == coordinateAndTexture)
 	{
-		m_pMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
+		// TODO m_pMesh->addNormal(m_CurComputedVectNorm, computeNormal(vectorCoordinate, m_pMesh));
 		for (int i= 0; i < vectorCoordinate.size(); ++i)
 		{
 			vectorNormal.append(m_CurComputedVectNorm);
 		}
 		m_CurComputedVectNorm++;
-		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+		// TODO m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
 	}	
 	else if (m_FaceType == coordinateAndTextureAndNormal)
 	{
-		m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+		// TODO m_pMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
 	}
 	else
 	{
@@ -911,6 +911,7 @@ void GLC_ObjToMesh2::setObjType(QString& ligne)
 // compute face normal
 GLC_Vector3df GLC_ObjToMesh2::computeNormal(QVector<int> &listIndex, GLC_Mesh2* pMesh)
 {
+	/* TODO
 	Q_ASSERT(listIndex.size() > 2);
 	
 	const GLC_Vector4d vect1(pMesh->getVertex(listIndex[0]));
@@ -924,6 +925,8 @@ GLC_Vector3df GLC_ObjToMesh2::computeNormal(QVector<int> &listIndex, GLC_Mesh2* 
 	normal.setNormal(1);
 	GLC_Vector3df resultNormal(static_cast<float>(normal.getX()), static_cast<float>(normal.getY()), static_cast<float>(normal.getZ()));
 	return resultNormal;
+	*/
+	return GLC_Vector3df();
 } 
 
 // Get texture file name without parameters

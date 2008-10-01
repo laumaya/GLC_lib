@@ -182,15 +182,12 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 		{
 			delete m_pCurrentMesh;
 			m_pCurrentMesh= NULL;
-			m_CurVertexIndex= 0;
 		}
 		else
 		{
-			//GLC_Instance instance(m_pCurrentMesh);
-			//TODO new GLC_VboGeom
+			GLC_Instance instance(m_pCurrentMesh);
 			m_pCurrentMesh= NULL;
-			m_CurVertexIndex= 0;
-			//m_pWorld->rootProduct()->addChildPart(instance);
+			m_pWorld->rootProduct()->addChildPart(instance);
 			// Clear the list of material already used
 			m_CurrentMeshMaterials.clear();
 			m_CurrentMeshMaterialIndex= -1;
@@ -330,16 +327,13 @@ void GLC_ObjToWorld::changeGroup(QString line)
 			{
 				if (m_pCurrentMesh->getNumberOfFaces() > 0)
 				{
-					//GLC_Instance instance(m_pCurrentMesh);
-					//TODO new GLC_VboGeom
+					GLC_Instance instance(m_pCurrentMesh);
 					m_pCurrentMesh= NULL;
-					m_CurVertexIndex= 0;
-					//m_pWorld->rootProduct()->addChildPart(instance);
+					m_pWorld->rootProduct()->addChildPart(instance);
 				}
 				else
 				{
 					delete m_pCurrentMesh;
-					m_CurVertexIndex= 0;
 					m_pCurrentMesh= NULL;
 				}
 				m_CurComputedVectNormIndex= 0;
@@ -504,19 +498,21 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 	{
 		addVertexsToCurrentMesh(vectorCoordinate);
 		addNormalsToCurrentMesh(vectorNormal);
-		m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 	}
 	else if (m_FaceType == coordinate)
 	{
 		addVertexsToCurrentMesh(vectorCoordinate);
-		m_pCurrentMesh->addNormal(m_CurComputedVectNormIndex, computeNormal(vectorCoordinate));
+		// TODO m_pCurrentMesh->addNormal(m_CurComputedVectNormIndex, computeNormal(vectorCoordinate));
 		for (int i= 0; i < vectorCoordinate.size(); ++i)
 		{
 			vectorNormal.append(m_CurComputedVectNormIndex);
 		}
 		m_CurComputedVectNormIndex++;
 		if ((size < 3) or glc::polygonIsConvex(m_pCurrentMesh, vectorCoordinate))
-			m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		{
+			// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);			
+		}
 		else
 		{
 			QVector<int> tList(glc::triangulateMeshPoly(m_pCurrentMesh, vectorCoordinate));
@@ -538,7 +534,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 				          << vectorNormal[vectorCoordinate.indexOf(index2)]
 				          << vectorNormal[vectorCoordinate.indexOf(index3)];
 
-				m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal);
+				// TODO m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal);
 			}
 		}
 
@@ -548,14 +544,16 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 	{
 		addVertexsToCurrentMesh(vectorCoordinate);
 		addTextureCoordinatesToCurrentMesh(vectorTextureCoordinate);
-		m_pCurrentMesh->addNormal(m_CurComputedVectNormIndex, computeNormal(vectorCoordinate));
+		// TODO m_pCurrentMesh->addNormal(m_CurComputedVectNormIndex, computeNormal(vectorCoordinate));
 		for (int i= 0; i < vectorCoordinate.size(); ++i)
 		{
 			vectorNormal.append(m_CurComputedVectNormIndex);
 		}
 		m_CurComputedVectNormIndex++;
 		if ((size < 3) or glc::polygonIsConvex(m_pCurrentMesh, vectorCoordinate))
-			m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+		{
+			// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+		}
 		else
 		{
 			QVector<int> tList(glc::triangulateMeshPoly(m_pCurrentMesh, vectorCoordinate));
@@ -582,7 +580,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index2)]
 				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index3)];
 
-				m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal, newTexture);
+				// TODO m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal, newTexture);
 			}
 		}
 
@@ -594,7 +592,9 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		addTextureCoordinatesToCurrentMesh(vectorTextureCoordinate);
 		
 		if ((size < 3) or glc::polygonIsConvex(m_pCurrentMesh, vectorCoordinate))
-			m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
+		{
+			// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);			
+		}
 		else
 		{
 			QVector<int> tList(glc::triangulateMeshPoly(m_pCurrentMesh, vectorCoordinate));
@@ -621,7 +621,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index2)]
 				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index3)];
 
-				m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal, newTexture);
+				// TODO m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal, newTexture);
 			}
 		}
 	}
@@ -666,7 +666,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 		{
 			//qDebug() << "remove material" << m_CurrentMeshMaterials.key(m_CurrentMeshMaterialIndex);
 			m_CurrentMeshMaterials.clear();
-			m_pCurrentMesh->removeMaterial(m_CurrentMeshMaterialIndex);
+			// TODO m_pCurrentMesh->removeMaterial(m_CurrentMeshMaterialIndex);
 		}
 		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.size();
 		m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
@@ -896,7 +896,7 @@ void GLC_ObjToWorld::addVertexsToCurrentMesh(QVector<int> & vertexs)
 	const int max= vertexs.count();
 	for (int i= 0; i < max; ++i)
 	{
-		m_pCurrentMesh->addVertex(vertexs[i], m_VertexHash[vertexs[i]]);
+		// TODO m_pCurrentMesh->addVertex(vertexs[i], m_VertexHash[vertexs[i]]);
 	}
 }
 
@@ -906,7 +906,7 @@ void GLC_ObjToWorld::addNormalsToCurrentMesh(QVector<int> & normals)
 	const int max= normals.count();
 	for (int i= 0; i < max; ++i)
 	{
-		m_pCurrentMesh->addNormal(normals[i], m_NormalHash[normals[i]]);
+		// TODO m_pCurrentMesh->addNormal(normals[i], m_NormalHash[normals[i]]);
 	}
 }
 
@@ -916,7 +916,7 @@ void GLC_ObjToWorld::addTextureCoordinatesToCurrentMesh(QVector<int> & textureCo
 	const int max= textureCoordinates.count();
 	for (int i= 0; i < max; ++i)
 	{
-		m_pCurrentMesh->addTextureCoordinate(textureCoordinates[i], m_TextCoordinateHash[textureCoordinates[i]]);
+		// TODO m_pCurrentMesh->addTextureCoordinate(textureCoordinates[i], m_TextCoordinateHash[textureCoordinates[i]]);
 	}
 }
 
@@ -938,7 +938,6 @@ void GLC_ObjToWorld::clear()
 		delete m_pCurrentMesh;
 		m_pCurrentMesh= NULL;
 	}
-	m_CurVertexIndex= 0;
 	
 }
 // Merge Mutli line in one
