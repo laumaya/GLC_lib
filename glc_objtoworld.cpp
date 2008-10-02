@@ -353,7 +353,7 @@ void GLC_ObjToWorld::changeGroup(QString line)
 					m_CurrentMeshMaterials.clear();
 					//m_CurrentMeshMaterialIndex= -1;
 					m_CurrentMeshMaterialIndex= 0;
-					m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
+					// TODO m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
 					m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterialIndex);
 				}
 				else
@@ -669,7 +669,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 			// TODO m_pCurrentMesh->removeMaterial(m_CurrentMeshMaterialIndex);
 		}
 		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.size();
-		m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
+		// TODO m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
 		m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterialIndex);	
 	}
 			

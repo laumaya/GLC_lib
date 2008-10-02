@@ -110,10 +110,6 @@ private:
 	QTextStream m_StlStream;
 	//! The current mesh
 	GLC_Mesh2* m_pCurrentMesh;
-	//! Index of the current vertex
-	int m_CurVertexIndex;
-	//! Index of the current normal
-	int m_CurNormalIndex;
 	//! Current face vertex
 	VertexVector m_CurrentFace;
 };

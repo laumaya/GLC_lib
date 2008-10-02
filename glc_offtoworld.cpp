@@ -338,7 +338,7 @@ void GLC_OffToWorld::extractVertex(QString &line)
 					else
 					{
 						index= m_pCurrentMesh->getNumberOfSubMaterial();
-						m_pCurrentMesh->addMaterial(index, pVertexMaterial);
+						// TODO m_pCurrentMesh->addMaterial(index, pVertexMaterial);
 						m_MaterialIndexs.append(index);						
 					}
 					m_CurMaterialIndex++;
@@ -507,7 +507,7 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 		else
 		{
 			index= m_pCurrentMesh->getNumberOfSubMaterial();
-			m_pCurrentMesh->addMaterial(index, pFaceMaterial);
+			// TODO m_pCurrentMesh->addMaterial(index, pFaceMaterial);
 			m_MaterialIndexs.append(index);						
 		}
 		for (int i=0; i < numberOfVertex; ++i)

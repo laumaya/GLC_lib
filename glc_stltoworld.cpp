@@ -40,8 +40,6 @@ GLC_StlToWorld::GLC_StlToWorld(const QGLContext *pContext)
 , m_CurrentLineNumber(0)
 , m_StlStream()
 , m_pCurrentMesh(NULL)
-, m_CurVertexIndex(0)
-, m_CurNormalIndex(0)
 , m_CurrentFace()
 {
 	
@@ -163,8 +161,6 @@ void GLC_StlToWorld::clear()
 	m_FileName.clear();
 	m_CurrentLineNumber= 0;
 	m_pCurrentMesh= NULL;
-	m_CurVertexIndex= 0;
-	m_CurNormalIndex= 0;
 	m_CurrentFace.clear();
 }
 
@@ -230,9 +226,6 @@ void GLC_StlToWorld::scanFacet()
 	}
 
 ////////////////////////////////////////////// Vertex ////////////////////////////////	
-	QVector<int> vectorMaterial;
-	QVector<int> vectorCoordinate;
-	QVector<int> vectorNormal;
 
 	for (int i= 0; i < 3; ++i)
 	{
@@ -251,9 +244,6 @@ void GLC_StlToWorld::scanFacet()
 		}
 		lineBuff.remove(0,6); // Remove first 6 chars
 		lineBuff= lineBuff.trimmed();
-		vectorCoordinate.append(m_CurVertexIndex);
-		vectorMaterial.append(-1); // There is no material information
-		vectorNormal.append(m_CurNormalIndex - 1);
 		
 		cur3dVect= extract3dVect(lineBuff);
 		curVertex.x= cur3dVect.getX();
@@ -263,12 +253,10 @@ void GLC_StlToWorld::scanFacet()
 		curVertex.s= 0.0f;
 		curVertex.t= 0.0f;
 		m_CurrentFace.append(curVertex);
-		//m_pCurrentMesh->addVertex(m_CurVertexIndex++, extract3dVect(lineBuff));
 	}
 	// Add the face to the current mesh
 	m_pCurrentMesh->addTriangles(m_CurrentFace, NULL);
 	m_CurrentFace.clear();
-	//m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
 	
 ////////////////////////////////////////////// End Loop////////////////////////////////
 	++m_CurrentLineNumber;
@@ -373,8 +361,8 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 	for (quint32 i= 0; i < numberOfFacet; ++i)
 	{
 		// Extract the facet normal
-		float x, y, z;
-		stlBinFile >> x >> y >> z;
+		float nx, ny, nz;
+		stlBinFile >> nx >> ny >> nz;
 		// Check if an error occur
 		if (QDataStream::Ok != stlBinFile.status())
 		{
@@ -384,14 +372,17 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 			throw(fileFormatException);
 		}
 
-		// TODO m_pCurrentMesh->addNormal(m_CurNormalIndex++, GLC_Vector3df(x, y, z));
-		QVector<int> vectorMaterial;
-		QVector<int> vectorCoordinate;
-		QVector<int> vectorNormal;
-		
+		GLC_Vertex curVertex;
+		curVertex.nx= nx;
+		curVertex.ny= ny;
+		curVertex.nz= nz;
+		curVertex.s= 0.0f;
+		curVertex.t= 0.0f;
+
 		// Extract the 3 Vertexs
 		for (int j= 0; j < 3; ++j)
 		{
+			float x, y, z;
 			stlBinFile >> x >> y >> z;
 			// Check if an error occur
 			if (QDataStream::Ok != stlBinFile.status())
@@ -401,10 +392,10 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 				clear();
 				throw(fileFormatException);
 			}
-			vectorCoordinate.append(m_CurVertexIndex);
-			vectorMaterial.append(-1); // There is no material information
-			vectorNormal.append(m_CurNormalIndex - 1);
-			// TODO m_pCurrentMesh->addVertex(m_CurVertexIndex++, GLC_Vector3df(x, y, z));
+			curVertex.x= x;
+			curVertex.y= y;
+			curVertex.z= z;
+			m_CurrentFace.append(curVertex);
 		}
 		currentQuantumValue = static_cast<int>((static_cast<double>(i + 1) / numberOfFacet) * 100);
 		if (currentQuantumValue > previousQuantumValue)
@@ -414,7 +405,8 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 		previousQuantumValue= currentQuantumValue;
 
 		// Add the face to the current mesh
-		// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		m_pCurrentMesh->addTriangles(m_CurrentFace, NULL);
+		m_CurrentFace.clear();
 		// Skip 2 fill-bytes not needed !!!!
 		stlBinFile.skipRawData(2);
 
