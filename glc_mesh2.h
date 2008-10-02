@@ -117,7 +117,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Add material to mesh
-	void addMaterial(GLC_uint Index, GLC_Material *);
+	void addMaterial(GLC_Material *);
 	
 	//! Add triangles with the same material to the mesh
 	void addTriangles(const VertexVector &, GLC_Material*);

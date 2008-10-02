@@ -51,7 +51,7 @@ GLC_Mesh2::GLC_Mesh2()
 
 GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 : GLC_VboGeom(meshToCopy)
-, m_Vertex()
+, m_Vertex(meshToCopy.m_Vertex)
 , m_MaterialGroup()
 , m_MaterialHash(meshToCopy.m_MaterialHash)
 , m_NumberOfFaces(meshToCopy.m_NumberOfFaces)
@@ -65,7 +65,15 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
         // update inner material use table
         i.value()->addGLC_Geom(this);
         ++i;
-    }	
+    }
+    // Copy Material group IBO
+	MaterialGroup::const_iterator j= meshToCopy.m_MaterialGroup.begin();
+    while (j != meshToCopy.m_MaterialGroup.constEnd())
+    {
+    	IndexVector* pIndexVector= new IndexVector(*j.value());
+    	m_MaterialGroup.insert(j.key(), pIndexVector);
+        ++j;
+    }		
 }
 
 
@@ -141,18 +149,19 @@ GLC_VboGeom* GLC_Mesh2::clone() const
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 // Add material to mesh
-void GLC_Mesh2::addMaterial(GLC_uint Index, GLC_Material* pMaterial)
+void GLC_Mesh2::addMaterial(GLC_Material* pMaterial)
 {
 	if (pMaterial != NULL)
 	{
-		MaterialHash::const_iterator iMaterial= m_MaterialHash.find(Index);
+		const GLC_uint materialID= pMaterial->getID(); 
+		MaterialHash::const_iterator iMaterial= m_MaterialHash.find(materialID);
 		// Check if there is a material at specified index
 		Q_ASSERT(iMaterial == m_MaterialHash.end());
 		
 		// Add this geometry in the material use table
 		pMaterial->addGLC_Geom(this);
 		// Add the Material to Material hash table
-		m_MaterialHash.insert(Index, pMaterial);
+		m_MaterialHash.insert(materialID, pMaterial);
 		// Test if the material is transparent
 		if (pMaterial->isTransparent() && (m_MaterialHash.size() == 1))
 		{
@@ -180,7 +189,6 @@ void GLC_Mesh2::addTriangles(const VertexVector &triangles, GLC_Material* pMater
 	{
 		materialID= 0;
 	}
-	
 	IndexVector* pCurIndexVector= NULL;
 	if ((materialID == 0) or m_MaterialHash.contains(materialID))
 	{
@@ -188,6 +196,7 @@ void GLC_Mesh2::addTriangles(const VertexVector &triangles, GLC_Material* pMater
 	}
 	else
 	{
+		addMaterial(pMaterial);
 		pCurIndexVector= new IndexVector;
 		m_MaterialGroup.insert(materialID, pCurIndexVector);
 	}
@@ -202,6 +211,7 @@ void GLC_Mesh2::addTriangles(const VertexVector &triangles, GLC_Material* pMater
 	}
 	// Invalid the geometry
 	m_GeometryIsValid = false;
+	m_NumberOfFaces+= delta / 3;
 }
 
 // Reverse mesh normal
@@ -300,6 +310,7 @@ void GLC_Mesh2::glDraw()
     		else
     		{
     			pCurrentMaterial= m_MaterialHash.value(iMaterialGroup.key());
+    			Q_ASSERT(pCurrentMaterial != NULL);
     		}
     		
     		// Execute current material
@@ -313,7 +324,12 @@ void GLC_Mesh2::glDraw()
 			}
 			// Activate material
 			pCurrentMaterial->glExecute();
-			glColor4d(getdRed(), getdGreen(), getdBlue(), getdAlpha());
+			const GLfloat red= pCurrentMaterial->getDiffuseColor().redF();
+			const GLfloat green= pCurrentMaterial->getDiffuseColor().greenF();
+			const GLfloat blue= pCurrentMaterial->getDiffuseColor().blueF();
+			const GLfloat alpha= pCurrentMaterial->getDiffuseColor().alphaF();
+			
+			glColor4f(red, green, blue, alpha);
 			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
     		
 			max= static_cast<GLuint>(iMaterialGroup.value()->size());
