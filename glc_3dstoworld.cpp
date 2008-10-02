@@ -48,11 +48,8 @@ GLC_3dsToWorld::GLC_3dsToWorld(const QGLContext *pContext)
 , m_FileName()
 , m_pQGLContext(pContext)
 , m_pCurrentMesh(NULL)
-, m_CurVertexIndex(0)
-, m_CurNormalIndex(0)
 , m_pLib3dsFile(NULL)
 , m_Materials()
-, m_MaterialsIndex()
 , m_NextMaterialIndex(0)
 , m_LoadedMeshes()
 , m_InitQuantumValue(50)
@@ -161,8 +158,6 @@ void GLC_3dsToWorld::clear()
 	}
 	m_pWorld= NULL;
 	m_FileName.clear();
-	m_CurVertexIndex= 0;
-	m_CurNormalIndex= 0;
 	if (NULL != m_pLib3dsFile)
 	{
 		lib3ds_file_free(m_pLib3dsFile);
@@ -176,8 +171,6 @@ void GLC_3dsToWorld::clear()
 		if (i.value()->isUnused()) delete i.value();
 	}
 	m_Materials.clear();
-	// Clear the material index hash table
-	m_MaterialsIndex.clear();
 	m_NextMaterialIndex= 0;
 	// Clear the loaded meshes Set
 	m_LoadedMeshes.clear();
@@ -265,35 +258,43 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	const int normalsNumber= p3dsMesh->faces * 3;
 	Lib3dsVector *normalL= static_cast<Lib3dsVector*>(malloc(normalsNumber * sizeof(Lib3dsVector)));
 	lib3ds_mesh_calculate_normals(p3dsMesh, normalL);
-	// Add the normal to the mesh
-	for (int i= 0; i < normalsNumber; ++i)
-	{
-		// TODO pMesh->addNormal(i, GLC_Vector3df(normalL[i][0], normalL[i][1], normalL[i][2]));
-	}
-	delete normalL;
-	
-	// Add Vertex to the mesh
-	const int vertexNumber= p3dsMesh->points;
-	for (int i= 0; i < vertexNumber; ++i)
-	{
-		// TODO pMesh->addVertex(i, GLC_Vector3df(p3dsMesh->pointL[i].pos[0], p3dsMesh->pointL[i].pos[1], p3dsMesh->pointL[i].pos[2]));
-	}
-	
+		
 	int normalIndex= 0;
-	int textureIndex= 0;
-	
+	VertexVector triangle;
+	GLC_Vertex testVertex;
+	triangle.append(testVertex);
+	triangle.append(testVertex);
+	triangle.append(testVertex);
 	for (unsigned int i= 0; i < p3dsMesh->faces; ++i)
 	{
-		//Add the Normal
-		QVector<int> normal;
-		normal.append(normalIndex++);
-		normal.append(normalIndex++);
-		normal.append(normalIndex++);
-		QVector<int> vertex;
 		Lib3dsFace *p3dsFace=&p3dsMesh->faceL[i];
+		for (int i=0; i < 3; ++i)
+		{
+			// Add vertex coordinate
+			triangle[i].x= p3dsMesh->pointL[p3dsFace->points[i]].pos[0];
+			triangle[i].y= p3dsMesh->pointL[p3dsFace->points[i]].pos[1];
+			triangle[i].z= p3dsMesh->pointL[p3dsFace->points[i]].pos[2];
+			// Add vertex Normal
+			triangle[i].nx= normalL[normalIndex][0];
+			triangle[i].ny= normalL[normalIndex][1];
+			triangle[i].nz= normalL[normalIndex][2];
+			++normalIndex;
+			// Add texel
+			if (p3dsMesh->texels > 0)
+			{
+				triangle[i].s= p3dsMesh->texelL[p3dsFace->points[i]][0];
+				triangle[i].t= p3dsMesh->texelL[p3dsFace->points[i]][1];
+			}
+			else
+			{
+				triangle[i].s= 0.0f;
+				triangle[i].t= 0.0f;
+			}
+		}
+		
 		// Load the material
 		// The material current face index
-		QVector<int> material;
+		GLC_Material* pCurMaterial= NULL;
 		if (p3dsFace->material[0])
 		{
 			Lib3dsMaterial* p3dsMat=lib3ds_file_material_by_name(m_pLib3dsFile, p3dsFace->material);
@@ -306,48 +307,13 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 				{ // Material not already loaded, load it
 					loadMaterial(p3dsMat);
 				}
-				// Add the material to the mesh
-				const int index= m_MaterialsIndex[materialName];
-				// Add material to mesh if necessary
-				if (!pMesh->containsMaterial(index))
-				{
-					pMesh->addMaterial(index, m_Materials[materialName]);
-				}
-				material << index << index << index;
-			}
-			else
-			{
-				material << -1 << -1 << -1;
+				pCurMaterial= m_Materials[materialName];
 			}
 		}
-		else // No material
-		{
-			material << -1 << -1 << -1;
-		}
-		// End of loading material
-		vertex << p3dsFace->points[0] << p3dsFace->points[1] << p3dsFace->points[2];
-		// check if the mesh have texture coordinate
-		if (p3dsMesh->texels > 0)
-		{
-			QVector<int> texture;
-			for (int i= 0; i < 3; ++i)
-			{
-				// Load texture coordinate
-				float x= p3dsMesh->texelL[p3dsFace->points[i]][0];
-				float y= p3dsMesh->texelL[p3dsFace->points[i]][1];
-				GLC_Vector2df texel(x, y);
-				texture.append(textureIndex);
-				// TODO pMesh->addTextureCoordinate(textureIndex++, texel);
-			}
-			// TODO pMesh->addFace(material, vertex, normal, texture);
-			
-		}
-		else
-		{
-			// TODO pMesh->addFace(material, vertex, normal);
-		}
-		
+		pMesh->addTriangles(triangle, pCurMaterial);			
 	}
+	// free normal memmory
+	delete normalL;
 	// Compute loading progress
 	++m_CurrentMeshNumber;
 	m_CurrentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentMeshNumber) / m_NumberOfMeshes) * (100 - m_InitQuantumValue)) + m_InitQuantumValue;
@@ -356,7 +322,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 		emit currentQuantum(m_CurrentQuantumValue);
 	}
 	m_PreviousQuantumValue= m_CurrentQuantumValue;		
-
+	
 	return GLC_Instance(pMesh);
 }
 
@@ -407,7 +373,5 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 	
 	// Add the material to the hash table
 	m_Materials.insert(materialName, pMaterial);
-	// Add the material index
-	m_MaterialsIndex.insert(materialName, m_NextMaterialIndex++);
 }
 

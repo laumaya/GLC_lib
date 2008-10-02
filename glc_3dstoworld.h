@@ -118,16 +118,10 @@ private:
 	const QGLContext* m_pQGLContext;	
 	//! The current mesh
 	GLC_Mesh2* m_pCurrentMesh;
-	//! Index of the current vertex
-	int m_CurVertexIndex;
-	//! Index of the current normal
-	int m_CurNormalIndex;
 	//! The Lib3dsFile Structure
 	Lib3dsFile* m_pLib3dsFile;
 	//! The GLC_Material Hash Table
 	QHash<QString, GLC_Material*> m_Materials;
-	//! The Material index Hash Table
-	QHash<QString, int> m_MaterialsIndex;
 	//! The next material index
 	int m_NextMaterialIndex;
 	// The Hash of loaded meshes
