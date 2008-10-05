@@ -100,13 +100,15 @@ private:
 	//! set the OBJ File type
 	void setObjType(QString &);
 	//! compute face normal
-	GLC_Vector3df computeNormal(QVector<int> &);
-	//! Add Vertexs in the current mesh
-	void addVertexsToCurrentMesh(QVector<int> &);
-	//! Add Normals in the current mesh
-	void addNormalsToCurrentMesh(QVector<int> &);
-	//! Add TextureCoordinate in the current mesh
-	void addTextureCoordinatesToCurrentMesh(QVector<int> &);
+	void computeNormal(QVector<int> &);
+	//! Fill the current list of vertex by empty vertex
+	void fillCurrentListOfVertex(const int);
+	//! Add Vertexs in the current list of vertex
+	void addVertexsToCurrentListOfVertex(QVector<int> &);
+	//! Add Normals in the current list of vertex
+	void addNormalsToCurrentListOfVertex(QVector<int> &);
+	//! Add TextureCoordinate in the current list of vertex
+	void addTextureCoordinatesToCurrentListOfVertex(QVector<int> &);
 	//! clear objToWorld allocate memmory
 	void clear();
 	//! Merge Mutli line in one
@@ -161,10 +163,14 @@ private:
 	QHash<QString, int> m_CurrentMeshMaterials;
 	
 	//! current mesh material index
-	int m_CurrentMeshMaterialIndex;
+	GLC_Material* m_pCurrentMaterial;
 	
 	//! Current Computed vector normal index
 	int m_CurComputedVectNormIndex;
+	
+	// The list of GLC_Vertex of the current face
+	VertexList m_CurrentListOfVertex;
+
 
 };
 

@@ -53,8 +53,9 @@ GLC_ObjToWorld::GLC_ObjToWorld(const QGLContext *pContext)
 , m_CurTextureCoordinateIndex(0)
 , m_FaceType(notSet)
 , m_CurrentMeshMaterials()
-, m_CurrentMeshMaterialIndex(-1)
+, m_pCurrentMaterial(NULL)
 , m_CurComputedVectNormIndex(0)
+, m_CurrentListOfVertex()
 {
 }
 
@@ -156,14 +157,6 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 		
 		mergeLines(&lineBuff, &objStream);
 		
-		/*
-		if (lineBuff.endsWith(QChar('\\')))
-		{
-			lineBuff.replace(QChar('\\'), QChar(' '));
-			lineBuff.append(objStream.readLine());
-			++m_CurrentLineNumber;
-		}*/
-		
 		scanLigne(lineBuff);
 		currentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentLineNumber) / numberOfLine) * 100);
 		if (currentQuantumValue > previousQuantumValue)
@@ -173,7 +166,6 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 		previousQuantumValue= currentQuantumValue;
 					
 	}
-	
 	file.close();
 	
 	if (NULL != m_pCurrentMesh)
@@ -190,7 +182,7 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 			m_pWorld->rootProduct()->addChildPart(instance);
 			// Clear the list of material already used
 			m_CurrentMeshMaterials.clear();
-			m_CurrentMeshMaterialIndex= -1;
+			m_pCurrentMaterial= NULL;
 		}
 	}
 	//! Test if there is meshes in the world
@@ -340,29 +332,7 @@ void GLC_ObjToWorld::changeGroup(QString line)
 			}
 			m_pCurrentMesh= new GLC_Mesh2();
 			m_pCurrentMesh->setName(groupName);
-			
-			// Test if there is a current material
-			if (m_CurrentMeshMaterialIndex != -1)
-			{
-				// Get the name of the current material
-				QString materialName= m_CurrentMeshMaterials.key(m_CurrentMeshMaterialIndex);				
-				// There is a material loader with desired material
-				if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
-				{
-					// Clear the list of material already used
-					m_CurrentMeshMaterials.clear();
-					//m_CurrentMeshMaterialIndex= -1;
-					m_CurrentMeshMaterialIndex= 0;
-					// TODO m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
-					m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterialIndex);
-				}
-				else
-				{
-					m_CurrentMeshMaterials.clear();
-					m_CurrentMeshMaterialIndex= -1;
-				}				
-			}
-			
+						
 		}
 	}
 	else
@@ -451,11 +421,10 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 {
 	QString buff;
 	
-	QVector<int> vectorMaterial;
 	QVector<int> vectorCoordinate;
 	QVector<int> vectorNormal;
 	QVector<int> vectorTextureCoordinate;
-	
+		
 	int coordinateIndex;
 	int normalIndex;
 	int textureCoordinateIndex;
@@ -480,7 +449,6 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 			vectorNormal.append(normalIndex);
 		}
 		
-		vectorMaterial.append(m_CurrentMeshMaterialIndex);
 	}
 	//////////////////////////////////////////////////////////////////
 	// Check the number of face's vertex
@@ -491,139 +459,57 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		//qDebug() << "GLC_ObjToWorld::extractFaceIndex Face with less than 3 vertex found";
 		return;
 	}
+	// Fill the current list of index whith empty GLC_Vertex
+	fillCurrentListOfVertex(size);
 	//////////////////////////////////////////////////////////////////
 	// Add the face to the current mesh
 	//////////////////////////////////////////////////////////////////				
 	if (m_FaceType == coordinateAndNormal)
 	{
-		addVertexsToCurrentMesh(vectorCoordinate);
-		addNormalsToCurrentMesh(vectorNormal);
-		// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+		addVertexsToCurrentListOfVertex(vectorCoordinate);
+		addNormalsToCurrentListOfVertex(vectorNormal);
+		if (size > 3)
+		{
+			glc::triangulatePolygon(&m_CurrentListOfVertex);
+		}
+		m_pCurrentMesh->addTriangles(m_CurrentListOfVertex, m_pCurrentMaterial);
 	}
 	else if (m_FaceType == coordinate)
 	{
-		addVertexsToCurrentMesh(vectorCoordinate);
-		// TODO m_pCurrentMesh->addNormal(m_CurComputedVectNormIndex, computeNormal(vectorCoordinate));
-		for (int i= 0; i < vectorCoordinate.size(); ++i)
-		{
-			vectorNormal.append(m_CurComputedVectNormIndex);
-		}
-		m_CurComputedVectNormIndex++;
-		if ((size < 3) or glc::polygonIsConvex(m_pCurrentMesh, vectorCoordinate))
-		{
-			// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);			
-		}
-		else
-		{
-			QVector<int> tList(glc::triangulateMeshPoly(m_pCurrentMesh, vectorCoordinate));
-			const int tSize= tList.size();
-			for (int i= 0; i < tSize; i+= 3)
-			{
-				QVector<int> newCoordinate;
-				QVector<int> newMaterial;
-				QVector<int> newNormal;
-				const int index1= tList[i];
-				const int index2= tList[i + 1];
-				const int index3= tList[i + 2];
-				newCoordinate << index1 << index2 << index3;
-				newMaterial << vectorMaterial[vectorCoordinate.indexOf(index1)]
-				            << vectorMaterial[vectorCoordinate.indexOf(index2)]
-				            << vectorMaterial[vectorCoordinate.indexOf(index3)];
-				
-				newNormal << vectorNormal[vectorCoordinate.indexOf(index1)]
-				          << vectorNormal[vectorCoordinate.indexOf(index2)]
-				          << vectorNormal[vectorCoordinate.indexOf(index3)];
+		addVertexsToCurrentListOfVertex(vectorCoordinate);
+		computeNormal(vectorCoordinate);
 
-				// TODO m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal);
-			}
+		if (size > 3)
+		{
+			glc::triangulatePolygon(&m_CurrentListOfVertex);
 		}
+		m_pCurrentMesh->addTriangles(m_CurrentListOfVertex, m_pCurrentMaterial);
 
 		
 	}
 	else if (m_FaceType == coordinateAndTexture)
 	{
-		addVertexsToCurrentMesh(vectorCoordinate);
-		addTextureCoordinatesToCurrentMesh(vectorTextureCoordinate);
-		// TODO m_pCurrentMesh->addNormal(m_CurComputedVectNormIndex, computeNormal(vectorCoordinate));
-		for (int i= 0; i < vectorCoordinate.size(); ++i)
+		addVertexsToCurrentListOfVertex(vectorCoordinate);
+		addTextureCoordinatesToCurrentListOfVertex(vectorTextureCoordinate);
+		computeNormal(vectorCoordinate);
+		if (size > 3)
 		{
-			vectorNormal.append(m_CurComputedVectNormIndex);
+			glc::triangulatePolygon(&m_CurrentListOfVertex);
 		}
-		m_CurComputedVectNormIndex++;
-		if ((size < 3) or glc::polygonIsConvex(m_pCurrentMesh, vectorCoordinate))
-		{
-			// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);
-		}
-		else
-		{
-			QVector<int> tList(glc::triangulateMeshPoly(m_pCurrentMesh, vectorCoordinate));
-			const int tSize= tList.size();
-			for (int i= 0; i < tSize; i+= 3)
-			{
-				QVector<int> newCoordinate;
-				QVector<int> newMaterial;
-				QVector<int> newNormal;
-				QVector<int> newTexture;
-				const int index1= tList[i];
-				const int index2= tList[i + 1];
-				const int index3= tList[i + 2];
-				newCoordinate << index1 << index2 << index3;
-				newMaterial << vectorMaterial[vectorCoordinate.indexOf(index1)]
-				            << vectorMaterial[vectorCoordinate.indexOf(index2)]
-				            << vectorMaterial[vectorCoordinate.indexOf(index3)];
-				
-				newNormal << vectorNormal[vectorCoordinate.indexOf(index1)]
-				          << vectorNormal[vectorCoordinate.indexOf(index2)]
-				          << vectorNormal[vectorCoordinate.indexOf(index3)];
-
-				newTexture << vectorTextureCoordinate[vectorCoordinate.indexOf(index1)]
-				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index2)]
-				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index3)];
-
-				// TODO m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal, newTexture);
-			}
-		}
+		m_pCurrentMesh->addTriangles(m_CurrentListOfVertex, m_pCurrentMaterial);
 
 	}	
 	else if (m_FaceType == coordinateAndTextureAndNormal)
 	{
-		addVertexsToCurrentMesh(vectorCoordinate);
-		addNormalsToCurrentMesh(vectorNormal);
-		addTextureCoordinatesToCurrentMesh(vectorTextureCoordinate);
+		addVertexsToCurrentListOfVertex(vectorCoordinate);
+		addNormalsToCurrentListOfVertex(vectorNormal);
+		addTextureCoordinatesToCurrentListOfVertex(vectorTextureCoordinate);
 		
-		if ((size < 3) or glc::polygonIsConvex(m_pCurrentMesh, vectorCoordinate))
+		if (size > 3)
 		{
-			// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal, vectorTextureCoordinate);			
+			glc::triangulatePolygon(&m_CurrentListOfVertex);
 		}
-		else
-		{
-			QVector<int> tList(glc::triangulateMeshPoly(m_pCurrentMesh, vectorCoordinate));
-			const int tSize= tList.size();
-			for (int i= 0; i < tSize; i+= 3)
-			{
-				QVector<int> newCoordinate;
-				QVector<int> newMaterial;
-				QVector<int> newNormal;
-				QVector<int> newTexture;
-				const int index1= tList[i];
-				const int index2= tList[i + 1];
-				const int index3= tList[i + 2];
-				newCoordinate << index1 << index2 << index3;
-				newMaterial << vectorMaterial[vectorCoordinate.indexOf(index1)]
-				            << vectorMaterial[vectorCoordinate.indexOf(index2)]
-				            << vectorMaterial[vectorCoordinate.indexOf(index3)];
-				
-				newNormal << vectorNormal[vectorCoordinate.indexOf(index1)]
-				          << vectorNormal[vectorCoordinate.indexOf(index2)]
-				          << vectorNormal[vectorCoordinate.indexOf(index3)];
-
-				newTexture << vectorTextureCoordinate[vectorCoordinate.indexOf(index1)]
-				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index2)]
-				           << vectorTextureCoordinate[vectorCoordinate.indexOf(index3)];
-
-				// TODO m_pCurrentMesh->addFace(newMaterial, newCoordinate, newNormal, newTexture);
-			}
-		}
+		m_pCurrentMesh->addTriangles(m_CurrentListOfVertex, m_pCurrentMaterial);
 	}
 	else
 	{
@@ -656,21 +542,9 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	// Check if the material is already loaded from the current mesh
 	//////////////////////////////////////////////////////////////////				
 	//qDebug() << "Material Name" << materialName;
-	if (m_CurrentMeshMaterials.contains(materialName))
+	if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
 	{
-		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.value(materialName);
-	}
-	else if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName) && (NULL != m_pCurrentMesh))
-	{
-		if (m_pCurrentMesh->getNumberOfFaces() == 0 && (m_CurrentMeshMaterialIndex != -1)) // This is the first material to assign to mesh
-		{
-			//qDebug() << "remove material" << m_CurrentMeshMaterials.key(m_CurrentMeshMaterialIndex);
-			m_CurrentMeshMaterials.clear();
-			// TODO m_pCurrentMesh->removeMaterial(m_CurrentMeshMaterialIndex);
-		}
-		m_CurrentMeshMaterialIndex= m_CurrentMeshMaterials.size();
-		// TODO m_pCurrentMesh->addMaterial(m_CurrentMeshMaterialIndex, m_pMtlLoader->getMaterial(materialName));
-		m_CurrentMeshMaterials.insert(materialName, m_CurrentMeshMaterialIndex);	
+		m_pCurrentMaterial= m_pMtlLoader->getMaterial(materialName);
 	}
 			
 }
@@ -874,7 +748,7 @@ void GLC_ObjToWorld::setObjType(QString& ligne)
 }
 
 // compute face normal
-GLC_Vector3df GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
+void GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
 {
 	Q_ASSERT(listIndex.size() > 2);
 	
@@ -887,36 +761,86 @@ GLC_Vector3df GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
 	
 	GLC_Vector4d normal(edge1 ^ edge2);
 	normal.setNormal(1);
-	return normal.toVector3df();
+	
+	GLC_Vector3df curNormal= normal.toVector3df();
+	
+	const int max= listIndex.count();
+	Q_ASSERT(max == m_CurrentListOfVertex.size());
+	
+	for (int i= 0; i < max; ++i)
+	{
+		m_CurrentListOfVertex[i].nx= curNormal.getX();
+		m_CurrentListOfVertex[i].ny= curNormal.getY();
+		m_CurrentListOfVertex[i].ny= curNormal.getZ();
+	}
 }
 
-// Add Vertexs in the current mesh
-void GLC_ObjToWorld::addVertexsToCurrentMesh(QVector<int> & vertexs)
+//! Fill the current list of vertex by empty vertex
+void GLC_ObjToWorld::fillCurrentListOfVertex(const int size)
+{
+	m_CurrentListOfVertex.clear();
+	GLC_Vertex empty;
+	empty.x= 0.0f;
+	empty.y= 0.0f;
+	empty.z= 0.0f;
+	
+	empty.nx= 0.0f;
+	empty.ny= 0.0f;
+	empty.nz= 0.0f;
+	
+	empty.s= 0.0f;
+	empty.t= 0.0f;
+	
+	empty.r= 0.0f;
+	empty.g= 0.0f;
+	empty.b= 0.0f;
+	empty.a= 0.0f;
+
+	for (int i= 0; i < size; ++i)
+	{
+		m_CurrentListOfVertex.append(empty);
+	}
+}
+
+// Add Vertexs in the current list of vertex
+void GLC_ObjToWorld::addVertexsToCurrentListOfVertex(QVector<int> & vertexs)
 {
 	const int max= vertexs.count();
+	Q_ASSERT(max == m_CurrentListOfVertex.size());
+	
 	for (int i= 0; i < max; ++i)
 	{
-		// TODO m_pCurrentMesh->addVertex(vertexs[i], m_VertexHash[vertexs[i]]);
+		GLC_Vector3df curVect= m_VertexHash[vertexs[i]];
+		m_CurrentListOfVertex[i].x= curVect.getX();
+		m_CurrentListOfVertex[i].y= curVect.getY();
+		m_CurrentListOfVertex[i].z= curVect.getZ();
 	}
 }
 
-// Add Normals in the current mesh
-void GLC_ObjToWorld::addNormalsToCurrentMesh(QVector<int> & normals)
+// Add Normals in the current list of vertex
+void GLC_ObjToWorld::addNormalsToCurrentListOfVertex(QVector<int> & normals)
 {
 	const int max= normals.count();
+	Q_ASSERT(max == m_CurrentListOfVertex.size());
 	for (int i= 0; i < max; ++i)
 	{
-		// TODO m_pCurrentMesh->addNormal(normals[i], m_NormalHash[normals[i]]);
+		GLC_Vector3df curVect= m_NormalHash[normals[i]];
+		m_CurrentListOfVertex[i].nx= curVect.getX();
+		m_CurrentListOfVertex[i].ny= curVect.getY();
+		m_CurrentListOfVertex[i].nz= curVect.getZ();
 	}
 }
 
-// Add TextureCoordinate in the current mesh
-void GLC_ObjToWorld::addTextureCoordinatesToCurrentMesh(QVector<int> & textureCoordinates)
+// Add TextureCoordinate in the current list of vertex
+void GLC_ObjToWorld::addTextureCoordinatesToCurrentListOfVertex(QVector<int> & textureCoordinates)
 {
 	const int max= textureCoordinates.count();
+	Q_ASSERT(max == m_CurrentListOfVertex.size());
 	for (int i= 0; i < max; ++i)
 	{
-		// TODO m_pCurrentMesh->addTextureCoordinate(textureCoordinates[i], m_TextCoordinateHash[textureCoordinates[i]]);
+		GLC_Vector2df curVect= m_TextCoordinateHash[textureCoordinates[i]];
+		m_CurrentListOfVertex[i].s= curVect.getX();
+		m_CurrentListOfVertex[i].t= curVect.getY();
 	}
 }
 
@@ -927,6 +851,7 @@ void GLC_ObjToWorld::clear()
 	m_NormalHash.clear();
 	m_TextCoordinateHash.clear();
 	m_CurrentMeshMaterials.clear();
+	m_CurrentListOfVertex.clear();
 	
 	if (NULL != m_pMtlLoader)
 	{
