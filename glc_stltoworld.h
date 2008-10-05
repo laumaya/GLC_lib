@@ -111,7 +111,7 @@ private:
 	//! The current mesh
 	GLC_Mesh2* m_pCurrentMesh;
 	//! Current face vertex
-	VertexVector m_CurrentFace;
+	VertexList m_CurrentFace;
 };
 
 #endif /*GLC_STLTOWORLD_H_*/
