@@ -16,10 +16,6 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS_GLEW += glew/glew.h \
-           glew/glxew.h \
-           glew/wglew.h
-
 HEADERS_LIB3DS += lib3ds/atmosphere.h \
            lib3ds/background.h \
            lib3ds/camera.h \
@@ -62,7 +58,6 @@ HEADERS_GLC += glc_utils_maths.h \
            glc_point.h \
            glc_box.h \
            glc_mesh2.h \
-           glc_objtomesh2.h \
            glc_camera.h \
            glc_imageplane.h \
            glc_viewport.h \
@@ -85,9 +80,7 @@ HEADERS_GLC += glc_utils_maths.h \
            glc_3dstoworld.h \
            glc_geomtools.h
            
-HEADERS += $${HEADERS_GLEW} $${HEADERS_LIB3DS} $${HEADERS_GLC}
-
-SOURCES += glew/glew.c
+HEADERS += $${HEADERS_LIB3DS} $${HEADERS_GLC}
 
 SOURCES += lib3ds/atmosphere.c \
            lib3ds/background.c \
@@ -126,7 +119,6 @@ SOURCES += glc_vector4d.cpp \
            glc_point.cpp \
            glc_box.cpp \
            glc_mesh2.cpp \
-           glc_objtomesh2.cpp \
            glc_camera.cpp \
            glc_imageplane.cpp \
            glc_viewport.cpp \
@@ -200,7 +192,6 @@ unix {
 	QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
 	include.path = $${INCLUDE_DIR}/GLC_lib
 	include_lib3ds.path = $${INCLUDE_DIR}/GLC_lib/lib3ds
-	include_glew.path = $${INCLUDE_DIR}/GLC_lib/glew
 }
 
 # Windows Install configuration
@@ -210,15 +201,13 @@ win32 {
     INCLUDE_DIR = C:\GLC_lib\include
     include.path = $${INCLUDE_DIR}
     include_lib3ds.path = $${INCLUDE_DIR}/lib3ds
-	include_glew.path = $${INCLUDE_DIR}/glew   
 }    
 
 include.files = $${HEADERS_GLC} $${HEADERS_INST}
 include_lib3ds.files = $${HEADERS_LIB3DS}
-include_glew.files = $${HEADERS_GLEW}
 # install library
 target.path = $${LIB_DIR}
    
 # "make install" configuration options
-INSTALLS += target include include_lib3ds include_glew
+INSTALLS += target include include_lib3ds
 
