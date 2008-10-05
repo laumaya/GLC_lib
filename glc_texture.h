@@ -27,8 +27,6 @@
 #ifndef GLC_TEXTURE_H_
 #define GLC_TEXTURE_H_
 
-#include "glew/glew.h"
-
 #include <QFile>
 #include <QtOpenGL>
 
