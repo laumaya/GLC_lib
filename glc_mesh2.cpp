@@ -45,8 +45,8 @@ GLC_Mesh2::GLC_Mesh2()
 {
 	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << getID();
 	// Index group with default material
-	IndexVector* pIndexVector= new IndexVector;
-	m_MaterialGroup.insert(0, pIndexVector);
+	IndexList* pIndexList= new IndexList;
+	m_MaterialGroup.insert(0, pIndexList);
 }
 
 GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
@@ -67,11 +67,11 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
         ++i;
     }
     // Copy Material group IBO
-	MaterialGroup::const_iterator j= meshToCopy.m_MaterialGroup.begin();
+	MaterialGroupHash::const_iterator j= meshToCopy.m_MaterialGroup.begin();
     while (j != meshToCopy.m_MaterialGroup.constEnd())
     {
-    	IndexVector* pIndexVector= new IndexVector(*j.value());
-    	m_MaterialGroup.insert(j.key(), pIndexVector);
+    	IndexList* pIndexList= new IndexList(*j.value());
+    	m_MaterialGroup.insert(j.key(), pIndexList);
         ++j;
     }		
 }
@@ -92,7 +92,7 @@ GLC_Mesh2::~GLC_Mesh2(void)
 	}
     // delete mesh inner index material group
 	{
-		MaterialGroup::const_iterator i= m_MaterialGroup.begin();
+		MaterialGroupHash::const_iterator i= m_MaterialGroup.begin();
 	    while (i != m_MaterialGroup.constEnd())
 	    {
 	    	// Delete index vector
@@ -177,7 +177,7 @@ void GLC_Mesh2::addMaterial(GLC_Material* pMaterial)
 }
 
 // Add triangles with the same material to the mesh
-void GLC_Mesh2::addTriangles(const VertexVector &triangles, GLC_Material* pMaterial)
+void GLC_Mesh2::addTriangles(const VertexList &triangles, GLC_Material* pMaterial)
 {
 	// test if the material is already in the mesh
 	GLC_uint materialID;
@@ -189,16 +189,16 @@ void GLC_Mesh2::addTriangles(const VertexVector &triangles, GLC_Material* pMater
 	{
 		materialID= 0;
 	}
-	IndexVector* pCurIndexVector= NULL;
+	IndexList* pCurIndexList= NULL;
 	if ((materialID == 0) or m_MaterialHash.contains(materialID))
 	{
-		pCurIndexVector= m_MaterialGroup.value(materialID);
+		pCurIndexList= m_MaterialGroup.value(materialID);
 	}
 	else
 	{
 		addMaterial(pMaterial);
-		pCurIndexVector= new IndexVector;
-		m_MaterialGroup.insert(materialID, pCurIndexVector);
+		pCurIndexList= new IndexList;
+		m_MaterialGroup.insert(materialID, pCurIndexList);
 	}
 	const int startVertexIndex= m_Vertex.size();
 	const int delta= triangles.size();
@@ -207,7 +207,7 @@ void GLC_Mesh2::addTriangles(const VertexVector &triangles, GLC_Material* pMater
 	
 	for (int i= 0; i < delta; ++i)
 	{
-		pCurIndexVector->append(startVertexIndex + static_cast<GLuint>(i));
+		pCurIndexList->append(startVertexIndex + static_cast<GLuint>(i));
 	}
 	// Invalid the geometry
 	m_GeometryIsValid = false;
@@ -259,8 +259,8 @@ void GLC_Mesh2::glLoadTexture(void)
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh2::glDraw()
 {
-	IndexVector iboVector;
-	MaterialGroup::iterator iMaterialGroup;
+	IndexList iboList;
+	MaterialGroupHash::iterator iMaterialGroup;
 
 	// Create VBO and IBO
 	if (!m_GeometryIsValid)
@@ -278,13 +278,13 @@ void GLC_Mesh2::glDraw()
 	    {
 	    	if (!iMaterialGroup.value()->isEmpty())
 	    	{
-	    		iboVector+= *(iMaterialGroup.value());
+	    		iboList+= *(iMaterialGroup.value());
 	    	}
 	    	++iMaterialGroup;
 	    }
-		const GLsizei indexNbr= static_cast<GLsizei>(iboVector.size());
+		const GLsizei indexNbr= static_cast<GLsizei>(iboList.size());
 		const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-		QVector<GLuint> vectorIndex(iboVector.toVector());
+		QVector<GLuint> vectorIndex(iboList.toVector());
 		const GLuint* pIndexData= vectorIndex.data();
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexData, GL_STATIC_DRAW);	    	
 	}

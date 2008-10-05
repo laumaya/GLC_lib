@@ -41,9 +41,9 @@ typedef QHash<int, GLC_Vector2df> Vector2dHash;
 // Fin a supprimer
 
 typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
-typedef QList<GLC_Vertex> VertexVector;
-typedef QList<GLuint> IndexVector;
-typedef QHash<GLC_uint, IndexVector*> MaterialGroup;
+typedef QList<GLC_Vertex> VertexList;
+typedef QList<GLuint> IndexList;
+typedef QHash<GLC_uint, IndexList*> MaterialGroupHash;
 
 enum FaceType
 {
@@ -120,7 +120,7 @@ public:
 	void addMaterial(GLC_Material *);
 	
 	//! Add triangles with the same material to the mesh
-	void addTriangles(const VertexVector &, GLC_Material*);
+	void addTriangles(const VertexList &, GLC_Material*);
 
 	//! Reverse mesh normal
 	void reverseNormal();
@@ -159,9 +159,9 @@ private:
 private:
 	
 	//! Vertexs
-	VertexVector m_Vertex;
+	VertexList m_Vertex;
 	//! Hash table of Vector Index grouped by material
-	MaterialGroup m_MaterialGroup;
+	MaterialGroupHash m_MaterialGroup;
 	
 	//! Material Hash table
 	MaterialHash m_MaterialHash;
