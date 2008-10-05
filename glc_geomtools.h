@@ -39,9 +39,9 @@ namespace glc
 /*! \name Tools Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-	//! test if a polygon of mesh is convex
+	//! test if a polygon is convex
 	/*! The polygon must have mare than 3 vertexs */
-	bool polygonIsConvex(const GLC_Mesh2*, const QVector<int>&);
+	bool polygonIsConvex(const VertexList*);
 	
 	//! find intersection between two 2D segments
 	/*! Return the intersection as QVector of GLC_Point2d
@@ -77,6 +77,16 @@ namespace glc
 	
 	//! return true if the polygon is couterclockwise ordered
 	bool isCounterclockwiseOrdered(const QList<GLC_Point2d>&);
+	
+	//! Triangulate a polygon
+	void triangulatePolygon(VertexList*);
+	
+	//! Triangulate a no convex polygon
+	void triangulateNoConvexPolygon(VertexList*);
+	
+	//! Triangulate a convex polygon
+	void triangulateConvexPolygon(VertexList*);
+
 
 //@}
 	
