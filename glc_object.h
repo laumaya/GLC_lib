@@ -27,8 +27,6 @@
 #ifndef GLC_OBJECT_H_
 #define GLC_OBJECT_H_
 
-#include "glew/glew.h"
-
 #include <QtOpenGL>
 #include <QString>
 
