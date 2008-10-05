@@ -260,7 +260,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	lib3ds_mesh_calculate_normals(p3dsMesh, normalL);
 		
 	int normalIndex= 0;
-	VertexVector triangle;
+	VertexList triangle;
 	GLC_Vertex testVertex;
 	triangle.append(testVertex);
 	triangle.append(testVertex);
