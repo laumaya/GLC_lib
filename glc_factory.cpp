@@ -25,7 +25,6 @@
 //! \file glc_factory.cpp implementation of the GLC_Factory class.
 
 #include "glc_factory.h"
-#include "glc_objtomesh2.h"
 #include "glc_objtoworld.h"
 #include "glc_stltoworld.h"
 #include "glc_offtoworld.h"
@@ -117,17 +116,6 @@ GLC_Instance GLC_Factory::createCylinder(double radius, double length) const
 	
 	GLC_Instance newCylinder(new GLC_Cylinder(radius, length));
 	return newCylinder;
-}
-// Create an GLC_Mesh with a QFile
-GLC_Instance GLC_Factory::createMesh(QFile &file) const
-{
-	/*
-	GLC_ObjToMesh2 objToMesh(m_pQGLContext);
-	connect(&objToMesh, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-	GLC_Instance newMesh(objToMesh.CreateMeshFromObj(file));
-	return newMesh;
-	*/
-	return GLC_Instance();
 }
 
 // Create an GLC_World* with a QFile
