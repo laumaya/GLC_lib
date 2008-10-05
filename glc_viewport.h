@@ -26,7 +26,6 @@
 
 #ifndef GLC_VIEWPORT_H_
 #define GLC_VIEWPORT_H_
-#include "glew/glew.h"
 #include <QGLWidget>
 #include "glc_camera.h"
 #include "glc_orbitcircle.h"

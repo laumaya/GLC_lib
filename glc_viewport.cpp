@@ -133,15 +133,6 @@ void GLC_Viewport::initGl()
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	
-	// Glew initialisation
-	GLenum glewReturnCode =glewInit();
-	if (glewReturnCode != GLEW_OK)
-	{
-		QString errorMsg(reinterpret_cast<const char*>(glewGetErrorString(glewReturnCode)));
-		GLC_Exception glewException(errorMsg);
-		qDebug() << errorMsg;
-		throw(glewException);
-	}
 	// TODO Test for openGL extensions
 }
 
