@@ -148,8 +148,6 @@ private:
 	
 	//! Index of the current vertex
 	int m_CurVertexIndex;
-	//! Current vertex index
-	int m_CurVertexDelta;
 	
 	//! Index of the current normal
 	int m_CurNormalIndex;
@@ -164,9 +162,6 @@ private:
 	
 	//! current mesh material index
 	GLC_Material* m_pCurrentMaterial;
-	
-	//! Current Computed vector normal index
-	int m_CurComputedVectNormIndex;
 	
 	// The list of GLC_Vertex of the current face
 	VertexList m_CurrentListOfVertex;

@@ -54,7 +54,6 @@ GLC_ObjToWorld::GLC_ObjToWorld(const QGLContext *pContext)
 , m_FaceType(notSet)
 , m_CurrentMeshMaterials()
 , m_pCurrentMaterial(NULL)
-, m_CurComputedVectNormIndex(0)
 , m_CurrentListOfVertex()
 {
 }
@@ -328,7 +327,6 @@ void GLC_ObjToWorld::changeGroup(QString line)
 					delete m_pCurrentMesh;
 					m_pCurrentMesh= NULL;
 				}
-				m_CurComputedVectNormIndex= 0;
 			}
 			m_pCurrentMesh= new GLC_Mesh2();
 			m_pCurrentMesh->setName(groupName);
@@ -806,14 +804,25 @@ void GLC_ObjToWorld::fillCurrentListOfVertex(const int size)
 void GLC_ObjToWorld::addVertexsToCurrentListOfVertex(QVector<int> & vertexs)
 {
 	const int max= vertexs.count();
-	Q_ASSERT(max == m_CurrentListOfVertex.size());
-	
-	for (int i= 0; i < max; ++i)
+	if(max == m_CurrentListOfVertex.size())
 	{
-		GLC_Vector3df curVect= m_VertexHash[vertexs[i]];
-		m_CurrentListOfVertex[i].x= curVect.getX();
-		m_CurrentListOfVertex[i].y= curVect.getY();
-		m_CurrentListOfVertex[i].z= curVect.getZ();
+		for (int i= 0; i < max; ++i)
+		{
+			GLC_Vector3df curVect= m_VertexHash[vertexs[i]];
+			m_CurrentListOfVertex[i].x= curVect.getX();
+			m_CurrentListOfVertex[i].y= curVect.getY();
+			m_CurrentListOfVertex[i].z= curVect.getZ();
+		}		
+	}
+	else
+	{
+		QString message= "GLC_ObjToWorld::addVertexsToCurrentListOfVertex this Obj file type is not supported";
+		message.append("\nAt line : ");
+		message.append(QString::number(m_CurrentLineNumber));			
+		qDebug() << message;
+		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
+		throw(fileFormatException);		
 	}
 }
 
@@ -821,13 +830,25 @@ void GLC_ObjToWorld::addVertexsToCurrentListOfVertex(QVector<int> & vertexs)
 void GLC_ObjToWorld::addNormalsToCurrentListOfVertex(QVector<int> & normals)
 {
 	const int max= normals.count();
-	Q_ASSERT(max == m_CurrentListOfVertex.size());
-	for (int i= 0; i < max; ++i)
+	if(max == m_CurrentListOfVertex.size())
 	{
-		GLC_Vector3df curVect= m_NormalHash[normals[i]];
-		m_CurrentListOfVertex[i].nx= curVect.getX();
-		m_CurrentListOfVertex[i].ny= curVect.getY();
-		m_CurrentListOfVertex[i].nz= curVect.getZ();
+		for (int i= 0; i < max; ++i)
+		{
+			GLC_Vector3df curVect= m_NormalHash[normals[i]];
+			m_CurrentListOfVertex[i].nx= curVect.getX();
+			m_CurrentListOfVertex[i].ny= curVect.getY();
+			m_CurrentListOfVertex[i].nz= curVect.getZ();
+		}
+	}
+	else
+	{
+		QString message= "GLC_ObjToWorld::addNormalsToCurrentListOfVertex this Obj file type is not supported";
+		message.append("\nAt line : ");
+		message.append(QString::number(m_CurrentLineNumber));			
+		qDebug() << message;
+		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
+		throw(fileFormatException);
 	}
 }
 
@@ -835,12 +856,24 @@ void GLC_ObjToWorld::addNormalsToCurrentListOfVertex(QVector<int> & normals)
 void GLC_ObjToWorld::addTextureCoordinatesToCurrentListOfVertex(QVector<int> & textureCoordinates)
 {
 	const int max= textureCoordinates.count();
-	Q_ASSERT(max == m_CurrentListOfVertex.size());
-	for (int i= 0; i < max; ++i)
+	if (max == m_CurrentListOfVertex.size())
 	{
-		GLC_Vector2df curVect= m_TextCoordinateHash[textureCoordinates[i]];
-		m_CurrentListOfVertex[i].s= curVect.getX();
-		m_CurrentListOfVertex[i].t= curVect.getY();
+		for (int i= 0; i < max; ++i)
+		{
+			GLC_Vector2df curVect= m_TextCoordinateHash[textureCoordinates[i]];
+			m_CurrentListOfVertex[i].s= curVect.getX();
+			m_CurrentListOfVertex[i].t= curVect.getY();
+		}
+	}
+	else
+	{
+		QString message= "GLC_ObjToWorld::addTextureCoordinatesToCurrentListOfVertex this Obj file type is not supported";
+		message.append("\nAt line : ");
+		message.append(QString::number(m_CurrentLineNumber));			
+		qDebug() << message;
+		GLC_FileFormatException fileFormatException(message, m_FileName);
+		clear();
+		throw(fileFormatException);
 	}
 }
 
