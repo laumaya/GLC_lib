@@ -27,7 +27,6 @@
 #ifndef GLC_EXCEPTION_H_
 #define GLC_EXCEPTION_H_
 
-#include "glew/glew.h"
 #include <exception>
 #include <QString>
 
