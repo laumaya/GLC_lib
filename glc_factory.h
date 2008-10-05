@@ -27,8 +27,6 @@
 #ifndef GLC_FACTORY_
 #define GLC_FACTORY_
 
-#include "glew/glew.h"
-
 #include <QObject>
 #include <QtOpenGL>
 #include <QString>
@@ -85,9 +83,6 @@ public:
 	
 	//! Create an GLC_Cylinder
 	GLC_Instance createCylinder(double radius, double length) const;
-
-	//! Create an GLC_Mesh with a QFile
-	GLC_Instance createMesh(QFile &file) const;
 	
 	//! Create an GLC_World* with a QFile
 	GLC_World* createWorld(QFile &file) const;	
