@@ -70,11 +70,8 @@ GLC_Factory::~GLC_Factory()
 // Create an GLC_Point
 GLC_Instance GLC_Factory::createPoint(const GLC_Vector4d &coord) const
 {
-	/*
 	GLC_Instance newPoint(new GLC_Point(coord));
 	return newPoint;
-	*/
-	return GLC_Instance();
 }
 // Create an GLC_Point
 GLC_Instance GLC_Factory::createPoint(double x, double y, double z) const
