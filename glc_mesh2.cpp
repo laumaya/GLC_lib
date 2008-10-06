@@ -42,6 +42,7 @@ GLC_Mesh2::GLC_Mesh2()
 , m_MaterialHash()
 , m_NumberOfFaces(0)
 , m_IsSelected(false)
+, m_ColorPearVertex(false)
 {
 	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << getID();
 	// Index group with default material
@@ -56,6 +57,7 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 , m_MaterialHash(meshToCopy.m_MaterialHash)
 , m_NumberOfFaces(meshToCopy.m_NumberOfFaces)
 , m_IsSelected(false)
+, m_ColorPearVertex(meshToCopy.m_ColorPearVertex)
 {
 	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << getID();
 	// Add this mesh to inner material
@@ -292,7 +294,13 @@ void GLC_Mesh2::glDraw()
 	glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
 	glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(12));
 	glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(24));
-	
+	// test if color pear vertex is acivated
+	if (m_ColorPearVertex and !m_IsSelected)
+	{
+		glDisable(GL_LIGHTING);
+		glEnableClientState(GL_COLOR_ARRAY);
+		glColorPointer(4, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(32));
+	}
 	GLC_Material* pCurrentMaterial;
 	GLuint max;
 	GLuint cur= 0;
@@ -339,7 +347,10 @@ void GLC_Mesh2::glDraw()
     	}
     	++iMaterialGroup;
     }
-	
+	if (m_ColorPearVertex and !m_IsSelected)
+	{
+		glDisableClientState(GL_COLOR_ARRAY);
+	}
 
 	// OpenGL error handler
 	GLenum error= glGetError();	

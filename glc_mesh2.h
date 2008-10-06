@@ -108,6 +108,8 @@ public:
 	virtual GLC_BoundingBox* getBoundingBox(void) const;
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
+	//! Return true if color pear vertex is activated
+	bool ColorPearVertexIsAcivated() const {return m_ColorPearVertex;}
 
 //@}
 
@@ -124,6 +126,9 @@ public:
 
 	//! Reverse mesh normal
 	void reverseNormal();
+	
+	//! Set color per vertex flag
+	void setColorPearVertex(bool flag){m_ColorPearVertex= flag;}
 	 
 //@}
 
@@ -171,6 +176,9 @@ private:
 		
 	//! Selection state
 	bool m_IsSelected;
+	
+	//! Color pear vertex
+	bool m_ColorPearVertex;
 	
 };
 #endif //GLC_MESH2_H_
