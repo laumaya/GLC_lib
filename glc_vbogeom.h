@@ -60,7 +60,7 @@ struct GLC_Vertex
 	// Texture
 	float s, t;				// 8 Bytes
 	// Color
-	GLuint r, g, b, a;		// 16 Bytes
+	GLfloat r, g, b, a;		// 16 Bytes
 	// => 32 Bytes
 };
 class GLC_VboGeom : public GLC_Object
