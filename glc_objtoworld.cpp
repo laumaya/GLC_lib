@@ -769,7 +769,7 @@ void GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
 	{
 		m_CurrentListOfVertex[i].nx= curNormal.getX();
 		m_CurrentListOfVertex[i].ny= curNormal.getY();
-		m_CurrentListOfVertex[i].ny= curNormal.getZ();
+		m_CurrentListOfVertex[i].nz= curNormal.getZ();
 	}
 }
 
