@@ -37,10 +37,10 @@
 #include "glc_vector3d.h"
 #include "glc_vector2df.h"
 #include "glc_vector3df.h"
+#include "glc_mesh2.h"
 
 class GLC_World;
 class QGLContext;
-class GLC_Mesh2;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_OffToWorld
@@ -118,10 +118,6 @@ private:
 	GLC_Mesh2* m_pCurrentMesh;
 	//! Index of the current vertex
 	int m_CurVertexIndex;
-	//! Index of the current normal
-	int m_CurNormalIndex;
-	//! Index of the current material
-	int m_CurMaterialIndex;
 	//! The number of vertexs
 	int m_NbrOfVertexs;
 	//! The number of faces
@@ -130,8 +126,9 @@ private:
 	bool m_IsCoff;
 	//! The OFF is 4OFF
 	bool m_Is4off;
-	//! The list of material index
-	QList<int> m_MaterialIndexs;
+	// The list of GLC_Vertex of the current face
+	VertexList m_CurrentListOfVertex;
+
 
 };
 

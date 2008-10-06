@@ -26,7 +26,6 @@
 //! \file glc_offtoworld.cpp implementation of the GLC_OffToWorld class.
 
 #include "glc_offtoworld.h"
-#include "glc_mesh2.h"
 #include "glc_world.h"
 #include "glc_fileformatexception.h"
 
@@ -41,13 +40,11 @@ GLC_OffToWorld::GLC_OffToWorld(const QGLContext *pContext)
 , m_CurrentLineNumber(0)
 , m_pCurrentMesh(NULL)
 , m_CurVertexIndex(0)
-, m_CurNormalIndex(0)
-, m_CurMaterialIndex(0)
 , m_NbrOfVertexs(0)
 , m_NbrOfFaces(0)
 , m_IsCoff(false)
 , m_Is4off(false)
-, m_MaterialIndexs()
+, m_CurrentListOfVertex()
 {
 	
 }
@@ -115,6 +112,11 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	// Create the mesh
 	m_pCurrentMesh= new GLC_Mesh2();
 
+	// Set mesh color per vertex if needed
+	if (m_IsCoff)
+	{
+		m_pCurrentMesh->setColorPearVertex(true);
+	}
 	// Get the number of vertex and faces and skip comments
 	++m_CurrentLineNumber;
 	lineBuff= offStream.readLine();
@@ -204,10 +206,9 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	
 	file.close();
 
-	//GLC_Instance instance(m_pCurrentMesh);
-	//TODO new GLC_VboGeom
+	GLC_Instance instance(m_pCurrentMesh);
 	m_pCurrentMesh= NULL;
-	//m_pWorld->rootProduct()->addChildPart(instance);
+	m_pWorld->rootProduct()->addChildPart(instance);
 	
 	return m_pWorld;	
 }
@@ -229,21 +230,17 @@ void GLC_OffToWorld::clear()
 	m_CurrentLineNumber= 0;
 	m_pCurrentMesh= NULL;
 	m_CurVertexIndex= 0;
-	m_CurNormalIndex= 0;
-	m_CurMaterialIndex= 0;
 	m_NbrOfVertexs= 0;
 	m_NbrOfFaces= 0;
 	m_IsCoff= false;
 	m_Is4off= false;
-	m_MaterialIndexs.clear();
+	m_CurrentListOfVertex.clear();
 }
 
 // Extract a Vertex from a string and add color component if needed
 void GLC_OffToWorld::extractVertex(QString &line)
 {
-	float x=0.0f;
-	float y=0.0f;
-	float z=0.0f;
+	GLC_Vertex newVertex;
 	
 	QTextStream stringVecteur(&line);
 
@@ -252,9 +249,9 @@ void GLC_OffToWorld::extractVertex(QString &line)
 	if (((stringVecteur >> xString >> yString >> zString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk, zOk;
-		x= xString.toFloat(&xOk);
-		y= yString.toFloat(&yOk);
-		z= zString.toFloat(&zOk);
+		newVertex.x= xString.toFloat(&xOk);
+		newVertex.y= yString.toFloat(&yOk);
+		newVertex.z= zString.toFloat(&zOk);
 		if (!(xOk && yOk && zOk))
 		{
 			QString message= "GLC_OffToWorld::extractVertex : failed to convert vertex component to float";
@@ -264,7 +261,6 @@ void GLC_OffToWorld::extractVertex(QString &line)
 			clear();
 			throw(fileFormatException);		
 		}
-		GLC_Vector3df vectResult;
 		if (m_Is4off)
 		{
 			QString wString;
@@ -282,8 +278,9 @@ void GLC_OffToWorld::extractVertex(QString &line)
 					clear();
 					throw(fileFormatException);		
 				}
-				GLC_Vector4d vect4d(x, y, z, w);
-				vectResult= vect4d.toVector3df();	
+				newVertex.x= newVertex.x / w;
+				newVertex.y= newVertex.y / w;
+				newVertex.z= newVertex.z / w;
 			}
 			else
 			{
@@ -295,11 +292,6 @@ void GLC_OffToWorld::extractVertex(QString &line)
 				throw(fileFormatException);				
 			}
 		}
-		else
-		{
-			vectResult.setVect(x, y, z);
-		}
-		// TODO m_pCurrentMesh->addVertex(m_CurVertexIndex++, vectResult);
 		
 		// Test if the file is a COFF
 		if (m_IsCoff)
@@ -309,11 +301,11 @@ void GLC_OffToWorld::extractVertex(QString &line)
 			if (((stringVecteur >> rString >> gString >> bString >> aString).status() == QTextStream::Ok))
 			{
 				bool rOk, gOk, bOk, aOk;
-				float r, g, b, a;
-				r= rString.toFloat(&rOk);
-				g= gString.toFloat(&gOk);
-				b= bString.toFloat(&bOk);
-				a= aString.toFloat(&aOk);
+				
+				newVertex.r= rString.toFloat(&rOk);
+				newVertex.g= gString.toFloat(&gOk);
+				newVertex.b= bString.toFloat(&bOk);
+				newVertex.a= aString.toFloat(&aOk);
 				if (!(rOk && gOk && bOk && aOk))
 				{
 					QString message= "GLC_OffToWorld::extractVertex : failed to convert color component to float";
@@ -323,26 +315,6 @@ void GLC_OffToWorld::extractVertex(QString &line)
 					clear();
 					throw(fileFormatException);		
 				}
-				else
-				{
-					QColor curColor;
-					curColor.setRgbF(r, g, b, a);
-					GLC_Material* pVertexMaterial= new GLC_Material(curColor);
-					int index= m_pCurrentMesh->materialIndex(*pVertexMaterial);
-					if (index != -1)
-					{
-						//Material already in mesh
-						delete pVertexMaterial;
-						m_MaterialIndexs.append(index);
-					}
-					else
-					{
-						index= m_pCurrentMesh->getNumberOfSubMaterial();
-						// TODO m_pCurrentMesh->addMaterial(index, pVertexMaterial);
-						m_MaterialIndexs.append(index);						
-					}
-					m_CurMaterialIndex++;
-				}				
 			}
 			else
 			{
@@ -354,6 +326,8 @@ void GLC_OffToWorld::extractVertex(QString &line)
 				throw(fileFormatException);				
 			}
 		}
+		
+		m_CurrentListOfVertex.append(newVertex);
 	}
 	else
 	{
@@ -406,9 +380,7 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 {
 	QString buff;
 	
-	QVector<int> vectorMaterial;
 	QVector<int> vectorCoordinate;
-	QVector<int> vectorNormal;
 	
 	//////////////////////////////////////////////////////////////////
 	// Parse the line containing face index
@@ -455,14 +427,6 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 		if (conversionOk)
 		{
 			vectorCoordinate.append(index);
-			if (m_IsCoff)
-			{
-				vectorMaterial.append(m_MaterialIndexs[index]);
-			}
-			else
-			{
-				vectorMaterial.append(-1);
-			}			
 		}
 		else
 		{
@@ -479,7 +443,6 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 	QString rString, gString, bString;
 	if((streamFace >> rString >> gString >> bString).status() == QTextStream::Ok)
 	{
-		vectorMaterial.clear();
 		float r, g, b;
 		bool rOk, gOk, bOk;
 		r= rString.toFloat(&rOk);
@@ -494,52 +457,50 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 			clear();
 			throw(fileFormatException);			
 		}
-		QColor diffuse;
-		diffuse.setRgbF(r, g, b);
-		GLC_Material* pFaceMaterial= new GLC_Material(diffuse);
-		int index= m_pCurrentMesh->materialIndex(*pFaceMaterial);
-		if (index != -1)
+		for (int i= 0; i < numberOfVertex; ++i)
 		{
-			//Material already in mesh
-			delete pFaceMaterial;
-			m_MaterialIndexs.append(index);
+			m_CurrentListOfVertex[vectorCoordinate[i]].r= r;
+			m_CurrentListOfVertex[vectorCoordinate[i]].g= g;
+			m_CurrentListOfVertex[vectorCoordinate[i]].b= b;
+			m_CurrentListOfVertex[vectorCoordinate[i]].a= 1.0f;
 		}
-		else
-		{
-			index= m_pCurrentMesh->getNumberOfSubMaterial();
-			// TODO m_pCurrentMesh->addMaterial(index, pFaceMaterial);
-			m_MaterialIndexs.append(index);						
-		}
-		for (int i=0; i < numberOfVertex; ++i)
-		{
-			vectorMaterial.append(m_MaterialIndexs[m_CurMaterialIndex]);
-		}
-		m_CurMaterialIndex++;
 	}	
 
 	//////////////////////////////////////////////////////////////////
 	// Add the face to the current mesh
 	//////////////////////////////////////////////////////////////////				
 	// Compute and add the face normal
-	// TODO m_pCurrentMesh->addNormal(m_CurNormalIndex, computeNormal(vectorCoordinate));
+	VertexList currentListOfVertex;
+	GLC_Vector3df curNormal(computeNormal(vectorCoordinate));
 	for (int i= 0; i < numberOfVertex; ++i)
 	{
-		vectorNormal.append(m_CurNormalIndex);
+		m_CurrentListOfVertex[vectorCoordinate[i]].nx= curNormal.getX();
+		m_CurrentListOfVertex[vectorCoordinate[i]].ny= curNormal.getY();
+		m_CurrentListOfVertex[vectorCoordinate[i]].nz= curNormal.getZ();
+		currentListOfVertex.append(m_CurrentListOfVertex[vectorCoordinate[i]]);
 	}
-	m_CurNormalIndex++;
+	
 	// Add the face to the current mesh
-	// TODO m_pCurrentMesh->addFace(vectorMaterial, vectorCoordinate, vectorNormal);
+	m_pCurrentMesh->addTriangles(currentListOfVertex, NULL);
 }
 
 // compute face normal
 GLC_Vector3df GLC_OffToWorld::computeNormal(QVector<int> &listIndex)
 {
-	/*
 	Q_ASSERT(listIndex.size() > 2);
-	
-	const GLC_Vector4d vect1(m_pCurrentMesh->getVertex(listIndex[0]));
-	const GLC_Vector4d vect2(m_pCurrentMesh->getVertex(listIndex[1]));
-	const GLC_Vector4d vect3(m_pCurrentMesh->getVertex(listIndex[2]));
+	double x, y, z;
+	x= static_cast<double>(m_CurrentListOfVertex[listIndex[0]].x);
+	y= static_cast<double>(m_CurrentListOfVertex[listIndex[0]].y);
+	z= static_cast<double>(m_CurrentListOfVertex[listIndex[0]].z);
+	const GLC_Vector4d vect1(x, y, z);
+	x= static_cast<double>(m_CurrentListOfVertex[listIndex[1]].x);
+	y= static_cast<double>(m_CurrentListOfVertex[listIndex[1]].y);
+	z= static_cast<double>(m_CurrentListOfVertex[listIndex[1]].z);
+	const GLC_Vector4d vect2(x, y, z);
+	x= static_cast<double>(m_CurrentListOfVertex[listIndex[2]].x);
+	y= static_cast<double>(m_CurrentListOfVertex[listIndex[2]].y);
+	z= static_cast<double>(m_CurrentListOfVertex[listIndex[2]].z);	
+	const GLC_Vector4d vect3(x, y, z);
 	
 	const GLC_Vector4d edge1(vect2 - vect1);
 	const GLC_Vector4d edge2(vect3 - vect2);
@@ -547,7 +508,5 @@ GLC_Vector3df GLC_OffToWorld::computeNormal(QVector<int> &listIndex)
 	GLC_Vector4d normal(edge1 ^ edge2);
 	normal.setNormal(1);
 	return normal.toVector3df();
-	*/
-	return GLC_Vector3df();
 }
 
