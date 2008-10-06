@@ -457,7 +457,8 @@ void glc::triangulatePolygon(VertexList* pVertexList)
 {
 	if (polygonIsConvex(pVertexList))
 	{
-		triangulateConvexPolygon(pVertexList);
+		// TODO use triangulateConvexPolygon when fix bug
+		triangulateNoConvexPolygon(pVertexList);
 	}
 	else
 	{
@@ -564,6 +565,7 @@ void glc::triangulateNoConvexPolygon(VertexList* pVertexList)
 // Triangulate a convex polygon
 void glc::triangulateConvexPolygon(VertexList* pVertexList)
 {
+	// TODO correct bug if face is in no conter clockwise
 	VertexList newVertexList;
 	const int nbrOfVertex= pVertexList->size();
 	const int triangleNbr= (nbrOfVertex / 3) + (nbrOfVertex % 3);
