@@ -36,6 +36,8 @@ HEADERS_LIB3DS += lib3ds/atmosphere.h \
            lib3ds/types.h \
            lib3ds/vector.h \
            lib3ds/viewport.h
+           
+HEADERS_GLEXT += glext/glext.h
 
 HEADERS_GLC += glc_utils_maths.h \
            glc_vector2d.h \
@@ -78,9 +80,10 @@ HEADERS_GLC += glc_utils_maths.h \
            glc_stltoworld.h \
            glc_offtoworld.h \
            glc_3dstoworld.h \
-           glc_geomtools.h
+           glc_geomtools.h \
+           glc_ext.h
            
-HEADERS += $${HEADERS_LIB3DS} $${HEADERS_GLC}
+HEADERS += $${HEADERS_LIB3DS} $${HEADERS_GLC} $${HEADERS_GLEXT}
 
 SOURCES += lib3ds/atmosphere.c \
            lib3ds/background.c \
@@ -139,7 +142,8 @@ SOURCES += glc_vector4d.cpp \
            glc_stltoworld.cpp \
            glc_offtoworld.cpp \
            glc_3dstoworld.cpp \
-           glc_geomtools.cpp
+           glc_geomtools.cpp \
+           glc_ext.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
@@ -192,6 +196,7 @@ unix {
 	QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
 	include.path = $${INCLUDE_DIR}/GLC_lib
 	include_lib3ds.path = $${INCLUDE_DIR}/GLC_lib/lib3ds
+	include_glext.path = $${INCLUDE_DIR}/GLC_lib/glext
 }
 
 # Windows Install configuration
@@ -201,6 +206,7 @@ win32 {
     INCLUDE_DIR = C:\GLC_lib\include
     include.path = $${INCLUDE_DIR}
     include_lib3ds.path = $${INCLUDE_DIR}/lib3ds
+    include_glext.path = $${INCLUDE_DIR}/glext
 }    
 
 include.files = $${HEADERS_GLC} $${HEADERS_INST}
@@ -209,5 +215,5 @@ include_lib3ds.files = $${HEADERS_LIB3DS}
 target.path = $${LIB_DIR}
    
 # "make install" configuration options
-INSTALLS += target include include_lib3ds
+INSTALLS += target include include_lib3ds include_glext
 

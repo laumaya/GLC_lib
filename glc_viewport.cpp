@@ -27,6 +27,7 @@
 
 #include "glc_viewport.h"
 #include "glc_openglexception.h"
+#include "glc_ext.h"
 
 #include <QtDebug>
 
@@ -133,7 +134,19 @@ void GLC_Viewport::initGl()
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	
-	// TODO Test for openGL extensions
+	if (not extensionIsSupported("ARB_vertex_buffer_object"))
+	{
+		GLC_Exception glcException("GLC_Viewport::initGl ARB_vertex_buffer_object not found");
+		throw(glcException);
+	}
+	else
+	{
+		if (not loadVboExtension())
+		{
+			GLC_Exception glcException("GLC_Viewport::initGl Failed to load ARB_vertex_buffer_object functions");
+			throw(glcException);			
+		}
+	}
 }
 
 // Define camera's target position
