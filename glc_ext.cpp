@@ -23,6 +23,7 @@
 *****************************************************************************/
 #include "glc_ext.h"
 #include <QString>
+#include <windows.h>
 
 // Define glcGetProcAddress.
 #if defined(Q_OS_WIN32)
@@ -31,6 +32,23 @@
 #  if defined(Q_OS_LINUX)
 #    define glcGetProcAddress(name) (*glXGetProcAddressARB)(name)
 #  endif
+#endif
+
+#if !defined(Q_OS_MAC)
+// ARB_vertex_buffer_object
+PFNGLBINDBUFFERARBPROC				glBindBuffer			= NULL;
+PFNGLDELETEBUFFERSARBPROC			glDeleteBuffers			= NULL;
+PFNGLGENBUFFERSARBPROC				glGenBuffers			= NULL;
+PFNGLISBUFFERARBPROC				glIsBuffer				= NULL;
+PFNGLBUFFERDATAARBPROC				glBufferData			= NULL;
+PFNGLBUFFERSUBDATAARBPROC			glBufferSubData			= NULL;
+PFNGLGETBUFFERSUBDATAARBPROC		glGetBufferSubData		= NULL;
+PFNGLMAPBUFFERARBPROC				glMapBuffer				= NULL;
+PFNGLUNMAPBUFFERARBPROC				glUnmapBuffer			= NULL;
+PFNGLGETBUFFERPARAMETERIVARBPROC	glGetBufferParameteriv	= NULL;
+PFNGLGETBUFFERPOINTERVARBPROC		glGetBufferPointerv		= NULL;
+// glDrawRangElement
+PFNGLDRAWRANGEELEMENTSPROC 			glDrawRangeElements		= NULL;
 #endif
 
 //const QString glExtension(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)));
@@ -47,20 +65,22 @@ bool glc::loadVboExtension()
 {
 	bool result= true;
 #if !defined(Q_OS_MAC)
-    glBindBuffer				= (PFNGLBINDBUFFERARBPROC)glcGetProcAddress("glBindBufferARB");
-    glDeleteBuffers				= (PFNGLDELETEBUFFERSARBPROC)glcGetProcAddress("glDeleteBuffersARB");
-    glGenBuffers				= (PFNGLGENBUFFERSARBPROC)glcGetProcAddress("glGenBuffersARB");
-    glIsBuffer					= (PFNGLISBUFFERARBPROC)glcGetProcAddress("glIsBufferARB");
-    glBufferData				= (PFNGLBUFFERDATAARBPROC)glcGetProcAddress("glBufferDataARB");
-    glBufferSubData				= (PFNGLBUFFERSUBDATAARBPROC)glcGetProcAddress("glBufferSubDataARB");
-    glGetBufferSubData			= (PFNGLGETBUFFERSUBDATAARBPROC)glcGetProcAddress("glGetBufferSubDataARB");
-    glMapBuffer					= (PFNGLMAPBUFFERARBPROC)glcGetProcAddress("glMapBufferARB");
-    glUnmapBuffer				= (PFNGLUNMAPBUFFERARBPROC)glcGetProcAddress("glUnmapBufferARB");
-    glGetBufferParameteriv		= (PFNGLGETBUFFERPARAMETERIVARBPROC)glcGetProcAddress("glGetBufferParameterivARB");
-    glGetBufferPointerv			= (PFNGLGETBUFFERPOINTERVARBPROC)glcGetProcAddress("glGetBufferPointervARB");
+    glBindBuffer				= (PFNGLBINDBUFFERARBPROC)glcGetProcAddress("glBindBuffer");
+    glDeleteBuffers				= (PFNGLDELETEBUFFERSARBPROC)glcGetProcAddress("glDeleteBuffers");
+    glGenBuffers				= (PFNGLGENBUFFERSARBPROC)glcGetProcAddress("glGenBuffers");
+    glIsBuffer					= (PFNGLISBUFFERARBPROC)glcGetProcAddress("glIsBuffer");
+    glBufferData				= (PFNGLBUFFERDATAARBPROC)glcGetProcAddress("glBufferData");
+    glBufferSubData				= (PFNGLBUFFERSUBDATAARBPROC)glcGetProcAddress("glBufferSubData");
+    glGetBufferSubData			= (PFNGLGETBUFFERSUBDATAARBPROC)glcGetProcAddress("glGetBufferSubData");
+    glMapBuffer					= (PFNGLMAPBUFFERARBPROC)glcGetProcAddress("glMapBuffer");
+    glUnmapBuffer				= (PFNGLUNMAPBUFFERARBPROC)glcGetProcAddress("glUnmapBuffer");
+    glGetBufferParameteriv		= (PFNGLGETBUFFERPARAMETERIVARBPROC)glcGetProcAddress("glGetBufferParameteriv");
+    glGetBufferPointerv			= (PFNGLGETBUFFERPOINTERVARBPROC)glcGetProcAddress("glGetBufferPointerv");
+    
+    glDrawRangeElements			= (PFNGLDRAWRANGEELEMENTSPROC)glcGetProcAddress("glDrawRangeElements");
 
     result = glBindBuffer and glDeleteBuffers and glGenBuffers and glIsBuffer and glBufferData and glBufferSubData and
-    glGetBufferSubData and glMapBuffer and glUnmapBuffer and glGetBufferParameteriv and glGetBufferPointerv;   
+    glGetBufferSubData and glMapBuffer and glUnmapBuffer and glGetBufferParameteriv and glGetBufferPointerv and glDrawRangeElements;   
 #endif
     return result;
 

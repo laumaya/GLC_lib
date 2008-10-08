@@ -41,6 +41,9 @@ extern PFNGLMAPBUFFERARBPROC			glMapBuffer;
 extern PFNGLUNMAPBUFFERARBPROC			glUnmapBuffer;
 extern PFNGLGETBUFFERPARAMETERIVARBPROC	glGetBufferParameteriv;
 extern PFNGLGETBUFFERPOINTERVARBPROC	glGetBufferPointerv;
+// glDrawRangElement
+extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
+
 #endif
 
 namespace glc
