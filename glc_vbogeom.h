@@ -30,6 +30,7 @@
 #include "glc_object.h"
 #include "glc_material.h"
 #include "glc_boundingbox.h"
+#include "glc_ext.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_VboGeom
