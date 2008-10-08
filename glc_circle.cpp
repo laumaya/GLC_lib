@@ -147,7 +147,7 @@ void GLC_Circle::glDraw(void)
 {
 	if (!m_GeometryIsValid)
 	{
-		m_Step= static_cast<double>(m_nDiscret) * (m_dAngle / (2 * glc::PI));
+		m_Step= static_cast<GLuint>(static_cast<double>(m_nDiscret) * (m_dAngle / (2 * glc::PI)));
 		if (m_Step < 2) m_Step= 2;
 		const GLsizeiptr size= (m_Step + 1) * sizeof(GLC_Vertex);
 		GLC_Vertex positionData[m_Step + 1];
