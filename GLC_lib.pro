@@ -211,6 +211,8 @@ win32 {
 
 include.files = $${HEADERS_GLC} $${HEADERS_INST}
 include_lib3ds.files = $${HEADERS_LIB3DS}
+include_glext.files =$${HEADERS_GLEXT}
+
 # install library
 target.path = $${LIB_DIR}
    
