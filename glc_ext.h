@@ -26,21 +26,21 @@
 #define GLC_EXT_H_
 
 #include <QtOpenGL>
-#include <glext.h>
+#include "glext/glext.h"
 
 #if !defined(Q_OS_MAC)
 // ARB_vertex_buffer_object
-extern PFNGLBINDBUFFERARBPROC			glBindBuffer				= NULL;
-extern PFNGLDELETEBUFFERSARBPROC		glDeleteBuffers				= NULL;
-extern PFNGLGENBUFFERSARBPROC			glGenBuffers				= NULL;
-extern PFNGLISBUFFERARBPROC				glIsBuffer					= NULL;
-extern PFNGLBUFFERDATAARBPROC			glBufferData				= NULL;
-extern PFNGLBUFFERSUBDATAARBPROC		glBufferSubData				= NULL;
-extern PFNGLGETBUFFERSUBDATAARBPROC		glGetBufferSubData			= NULL;
-extern PFNGLMAPBUFFERARBPROC			glMapBuffer					= NULL;
-extern PFNGLUNMAPBUFFERARBPROC			glUnmapBuffer				= NULL;
-extern PFNGLGETBUFFERPARAMETERIVARBPROC	glGetBufferParameteriv		= NULL;
-extern PFNGLGETBUFFERPOINTERVARBPROC	glGetBufferPointerv			= NULL;
+extern PFNGLBINDBUFFERARBPROC			glBindBuffer;
+extern PFNGLDELETEBUFFERSARBPROC		glDeleteBuffers;
+extern PFNGLGENBUFFERSARBPROC			glGenBuffers;
+extern PFNGLISBUFFERARBPROC				glIsBuffer;
+extern PFNGLBUFFERDATAARBPROC			glBufferData;
+extern PFNGLBUFFERSUBDATAARBPROC		glBufferSubData;
+extern PFNGLGETBUFFERSUBDATAARBPROC		glGetBufferSubData;
+extern PFNGLMAPBUFFERARBPROC			glMapBuffer;
+extern PFNGLUNMAPBUFFERARBPROC			glUnmapBuffer;
+extern PFNGLGETBUFFERPARAMETERIVARBPROC	glGetBufferParameteriv;
+extern PFNGLGETBUFFERPOINTERVARBPROC	glGetBufferPointerv;
 #endif
 
 namespace glc
