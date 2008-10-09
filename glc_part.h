@@ -29,6 +29,7 @@
 
 #include "glc_node.h"
 #include "glc_instance.h"
+#include "glc_collection.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Part
@@ -57,6 +58,8 @@ public:
 public:
 	//! return the part's representation ID
 	inline GLC_uint getRepID() const {return m_RepID;}
+	//! return the instance associated to this part
+	inline GLC_Instance* getInstance() {return m_pCollection->getInstanceHandle(m_RepID);}
 	//! Clone the part
 	GLC_Part* clone(GLC_Collection *) const;
 	//! Get number of Faces
