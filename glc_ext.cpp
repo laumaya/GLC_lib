@@ -23,15 +23,18 @@
 *****************************************************************************/
 #include "glc_ext.h"
 #include <QString>
-#include <windows.h>
 
 // Define glcGetProcAddress.
 #if defined(Q_OS_WIN32)
-#  define glcGetProcAddress(name) wglGetProcAddress((LPCSTR)name)
+#	define glcGetProcAddress(name) wglGetProcAddress((LPCSTR)name)
 #else
-#  if defined(Q_OS_LINUX)
-#    define glcGetProcAddress(name) (*glXGetProcAddressARB)(name)
-#  endif
+#	if defined(Q_OS_MAC)
+#   	define glcGetProcAddress(name) NSGLGetProcAddress(name)
+#	else
+#		if defined(Q_OS_LINUX)
+#			define glcGetProcAddress(name) (*glXGetProcAddressARB)(name)
+#		endif
+#	endif
 #endif
 
 #if !defined(Q_OS_MAC)
@@ -49,6 +52,22 @@ PFNGLGETBUFFERPARAMETERIVARBPROC	glGetBufferParameteriv	= NULL;
 PFNGLGETBUFFERPOINTERVARBPROC		glGetBufferPointerv		= NULL;
 // glDrawRangElement
 PFNGLDRAWRANGEELEMENTSPROC 			glDrawRangeElements		= NULL;
+
+// GL_ARB_shader_objects
+PFNGLCREATEPROGRAMOBJECTARBPROC		glCreateProgramObjectARB	= NULL;
+PFNGLDELETEOBJECTARBPROC			glDeleteObjectARB			= NULL;
+PFNGLUSEPROGRAMOBJECTARBPROC		glUseProgramObjectARB		= NULL;
+PFNGLCREATESHADEROBJECTARBPROC		glCreateShaderObjectARB		= NULL;
+PFNGLSHADERSOURCEARBPROC			glShaderSourceARB			= NULL;
+PFNGLCOMPILESHADERARBPROC			glCompileShaderARB			= NULL;
+PFNGLGETOBJECTPARAMETERIVARBPROC	glGetObjectParameterivARB	= NULL;
+PFNGLATTACHOBJECTARBPROC			glAttachObjectARB			= NULL;
+PFNGLGETINFOLOGARBPROC				glGetInfoLogARB				= NULL;
+PFNGLLINKPROGRAMARBPROC				glLinkProgramARB			= NULL;
+PFNGLGETUNIFORMLOCATIONARBPROC		glGetUniformLocationARB		= NULL;
+PFNGLUNIFORM4FARBPROC				glUniform4fARB				= NULL;
+PFNGLUNIFORM1IARBPROC				glUniform1iARB				= NULL;
+
 #endif
 
 //const QString glExtension(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)));
@@ -79,10 +98,37 @@ bool glc::loadVboExtension()
     
     glDrawRangeElements			= (PFNGLDRAWRANGEELEMENTSPROC)glcGetProcAddress("glDrawRangeElements");
 
-    result = glBindBuffer and glDeleteBuffers and glGenBuffers and glIsBuffer and glBufferData and glBufferSubData and
+    result= glBindBuffer and glDeleteBuffers and glGenBuffers and glIsBuffer and glBufferData and glBufferSubData and
     glGetBufferSubData and glMapBuffer and glUnmapBuffer and glGetBufferParameteriv and glGetBufferPointerv and glDrawRangeElements;   
 #endif
     return result;
 
+}
+
+// Load GLSL extensions
+bool glc::loadGlSlExtension()
+{
+	bool result= true;
+#if !defined(Q_OS_MAC)
+    glCreateProgramObject		= (PFNGLCREATEPROGRAMOBJECTARBPROC)glcGetProcAddress("glCreateProgramObject");
+    glDeleteObject				= (PFNGLDELETEOBJECTARBPROC)glcGetProcAddress("glDeleteObject");
+    glUseProgramObject			= (PFNGLUSEPROGRAMOBJECTARBPROC)glcGetProcAddress("glUseProgramObject");
+    glCreateShaderObject		= (PFNGLCREATESHADEROBJECTARBPROC)glcGetProcAddress("glCreateShaderObject");
+    glShaderSource				= (PFNGLSHADERSOURCEARBPROC)glcGetProcAddress("glShaderSource");
+    glCompileShader				= (PFNGLCOMPILESHADERARBPROC)glcGetProcAddress("glCompileShader");
+    glGetObjectParameteriv		= (PFNGLGETOBJECTPARAMETERIVARBPROC)glcGetProcAddress("glGetObjectParameteriv");
+    glAttachObject				= (PFNGLATTACHOBJECTARBPROC)glcGetProcAddress("glAttachObject");
+    glGetInfoLog				= (PFNGLGETINFOLOGARBPROC)glcGetProcAddress("glGetInfoLog");
+    glLinkProgram				= (PFNGLLINKPROGRAMARBPROC)glcGetProcAddress("glLinkProgram");
+    glGetUniformLocation		= (PFNGLGETUNIFORMLOCATIONARBPROC)glcGetProcAddress("glGetUniformLocation");
+    glUniform4f					= (PFNGLUNIFORM4FARBPROC)glcGetProcAddress("glUniform4f");
+	glUniform1i					= (PFNGLUNIFORM1IARBPROC)glcGetProcAddress("glUniform1i");
+
+    result= glCreateProgramObject and glDeleteObject and glUseProgramObject and glCreateShaderObject and glCreateShaderObject and
+    glCompileShader and glGetObjectParameteriv and glAttachObject and glGetInfoLog and glLinkProgram and glGetUniformLocation and
+    glUniform4f and glUniform1i;
+
+#endif
+    return result;
 }
 

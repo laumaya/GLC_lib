@@ -44,6 +44,21 @@ extern PFNGLGETBUFFERPOINTERVARBPROC	glGetBufferPointerv;
 // glDrawRangElement
 extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
 
+// GL_ARB_shader_objects
+extern PFNGLCREATEPROGRAMOBJECTARBPROC  glCreateProgramObjectARB;
+extern PFNGLDELETEOBJECTARBPROC         glDeleteObjectARB;
+extern PFNGLUSEPROGRAMOBJECTARBPROC     glUseProgramObjectARB;
+extern PFNGLCREATESHADEROBJECTARBPROC   glCreateShaderObjectARB;
+extern PFNGLSHADERSOURCEARBPROC         glShaderSourceARB;
+extern PFNGLCOMPILESHADERARBPROC        glCompileShaderARB;
+extern PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB;
+extern PFNGLATTACHOBJECTARBPROC         glAttachObjectARB;
+extern PFNGLGETINFOLOGARBPROC           glGetInfoLogARB;
+extern PFNGLLINKPROGRAMARBPROC          glLinkProgramARB;
+extern PFNGLGETUNIFORMLOCATIONARBPROC   glGetUniformLocationARB;
+extern PFNGLUNIFORM4FARBPROC            glUniform4fARB;
+extern PFNGLUNIFORM1IARBPROC            glUniform1iARB;
+
 #endif
 
 namespace glc
@@ -53,5 +68,8 @@ namespace glc
 	
 	//! Load VBO extension
 	bool loadVboExtension();
+	
+	//! Load GLSL extensions
+	bool loadGlSlExtension();
 };
 #endif /*GLC_EXT_H_*/
