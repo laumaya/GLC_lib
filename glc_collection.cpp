@@ -43,6 +43,7 @@ GLC_Collection::GLC_Collection()
 , m_NotTransparentNodes()
 , m_TransparentNodes()
 , m_IsInShowSate(true)
+, m_CheckInstanceTransparency(true)
 {
 }
 
@@ -256,6 +257,36 @@ void GLC_Collection::hideAll()
     }
     m_CollectionIsValid= false;
 }
+// Update instance transparency
+void GLC_Collection::updateInstancesTransparency()
+{
+	// Check instance visibility
+	PointerNodeHash::iterator iEntry= m_NotTransparentNodes.begin();
+    while (iEntry != m_NotTransparentNodes.constEnd())
+    {
+        if (iEntry.value()->getGeometry()->isTransparent())
+        {
+        	GLC_Instance* pInstance= iEntry.value();
+        	m_TransparentNodes.insert(pInstance->getID(), pInstance);
+        	iEntry= m_NotTransparentNodes.erase(iEntry);
+        }
+        else ++iEntry;
+    }
+    
+	iEntry= m_TransparentNodes.begin();
+    while (iEntry != m_TransparentNodes.constEnd())
+    {
+        if (not iEntry.value()->getGeometry()->isTransparent())
+        {
+        	GLC_Instance* pInstance= iEntry.value();
+        	m_NotTransparentNodes.insert(pInstance->getID(), pInstance);
+        	iEntry= m_TransparentNodes.erase(iEntry);
+        }
+        else ++iEntry;
+    }
+	// End of checking instance visibility
+	
+}
 
 // Return all GLC_Instance from collection
 QList<GLC_Instance*> GLC_Collection::getInstancesHandle()
@@ -335,6 +366,10 @@ void GLC_Collection::glExecute(void)
 	//qDebug() << "GLC_Collection::glExecute";
 	if (getNumber() > 0)
 	{
+		if (m_CheckInstanceTransparency)
+		{
+			updateInstancesTransparency();
+		}
 		if (m_CollectionIsValid)
 		{	// La collection OK
 			glDraw();

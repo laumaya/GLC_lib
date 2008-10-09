@@ -100,6 +100,9 @@ public:
 	
 	//! Return the showing state
 	inline bool getShowState() const {return m_IsInShowSate;}
+	
+	//! Return true if instance transparency is checked
+	inline bool instanceTransparencyIsChecked() const {return m_CheckInstanceTransparency;}
 
 //@}
 
@@ -153,6 +156,11 @@ public:
 		m_IsInShowSate= !m_IsInShowSate;
 		m_CollectionIsValid= false;
 	}
+	//! Update instance transparency
+	void updateInstancesTransparency();
+	
+	//! Check For instances transparency
+	inline void checkInstancesTransparency(bool flag) {m_CheckInstanceTransparency= flag;}
 
 //@}
 	
@@ -211,9 +219,11 @@ private:
 	//! Transparent Node Hash Table
 	PointerNodeHash m_TransparentNodes;
 
-	
 	//! Show State
 	bool m_IsInShowSate;
+	
+	//! Check instances transparency
+	bool m_CheckInstanceTransparency;
 		
 };
 #endif //GLC_COLLECTION_H_
