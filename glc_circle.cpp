@@ -169,7 +169,13 @@ void GLC_Circle::glDraw(void)
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize, IndexData, GL_STATIC_DRAW);
 	}
 	glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+
 	glDrawRangeElements(GL_LINE_STRIP, 0, m_Step + 1, m_Step + 1, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
 	// OpenGL error handler
 	GLenum error= glGetError();	
 	if (error != GL_NO_ERROR)

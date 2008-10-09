@@ -250,11 +250,15 @@ void GLC_Box::glDraw(void)
 	glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(12));
 	glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(24));
 
-	
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
 	glDrawRangeElements(GL_TRIANGLES, 0, 36, 36, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-	
-	//glMultiDrawElements(GL_TRIANGLE_STRIP, GLsizei* count, GL_UNSIGNED_INT, GLvoid** indices, GLsizei primcount)
-	//glDrawElements(GL_TRIANGLE_STRIP, GLsizei count, GL_UNSIGNED_INT, GLvoid* indices)
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	
 	// OpenGL error handler
 	GLenum error= glGetError();	

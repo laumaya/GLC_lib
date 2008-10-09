@@ -294,6 +294,11 @@ void GLC_Mesh2::glDraw()
 	glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
 	glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(12));
 	glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(24));
+	
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
 	// test if color pear vertex is acivated
 	if (m_ColorPearVertex and !m_IsSelected)
 	{
@@ -351,6 +356,10 @@ void GLC_Mesh2::glDraw()
 	{
 		glDisableClientState(GL_COLOR_ARRAY);
 	}
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	// OpenGL error handler
 	GLenum error= glGetError();	
