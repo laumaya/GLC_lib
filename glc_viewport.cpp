@@ -147,6 +147,21 @@ void GLC_Viewport::initGl()
 			throw(glcException);			
 		}
 	}
+	
+	if (not extensionIsSupported("GL_ARB_shading_language_100"))
+	{
+		GLC_Exception glcException("GLC_Viewport::initGl GL_ARB_shading_language 1.0 not found");
+		throw(glcException);
+	}
+	else
+	{
+		if (not loadGlSlExtension())
+		{
+			GLC_Exception glcException("GLC_Viewport::initGl Failed to load GL_ARB_shading_language 1.0 functions");
+			throw(glcException);			
+		}
+	}
+
 }
 
 // Define camera's target position
