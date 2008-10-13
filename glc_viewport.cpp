@@ -28,6 +28,7 @@
 #include "glc_viewport.h"
 #include "glc_openglexception.h"
 #include "glc_ext.h"
+#include "glc_selectionmaterial.h"
 
 #include <QtDebug>
 
@@ -161,6 +162,8 @@ void GLC_Viewport::initGl()
 			throw(glcException);			
 		}
 	}
+	// Initialize selection shader
+	GLC_SelectionMaterial::initShader();
 
 }
 
@@ -351,7 +354,7 @@ void GLC_Viewport::glExecuteImagePlane()
 				m_ImagePlaneListID= glGenLists(1);
 			}		
 			glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
-				m_pImagePlane->glExecute(GL_COMPILE_AND_EXECUTE, false);
+				m_pImagePlane->glExecute(false, false);
 			glEndList();
 			//qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ImagePlaneListID << " created";
 		}
