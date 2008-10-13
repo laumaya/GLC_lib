@@ -167,7 +167,7 @@ void GLC_OrbitCircle::glExecute(double Profondeur)
 	m_Arc2.setMatrix(MatSavArc2);
 			
 	// Display base class (Main circle)
-	m_MainCircle.glExecute(GL_COMPILE_AND_EXECUTE, false);
+	m_MainCircle.glExecute(false, false);
 	
 	glPopMatrix();
 
