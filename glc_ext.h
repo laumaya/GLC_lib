@@ -45,19 +45,22 @@ extern PFNGLGETBUFFERPOINTERVARBPROC	glGetBufferPointerv;
 extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
 
 // GL_ARB_shader_objects
-extern PFNGLCREATEPROGRAMOBJECTARBPROC  glCreateProgramObjectARB;
-extern PFNGLDELETEOBJECTARBPROC         glDeleteObjectARB;
-extern PFNGLUSEPROGRAMOBJECTARBPROC     glUseProgramObjectARB;
-extern PFNGLCREATESHADEROBJECTARBPROC   glCreateShaderObjectARB;
-extern PFNGLSHADERSOURCEARBPROC         glShaderSourceARB;
-extern PFNGLCOMPILESHADERARBPROC        glCompileShaderARB;
-extern PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB;
-extern PFNGLATTACHOBJECTARBPROC         glAttachObjectARB;
-extern PFNGLGETINFOLOGARBPROC           glGetInfoLogARB;
-extern PFNGLLINKPROGRAMARBPROC          glLinkProgramARB;
-extern PFNGLGETUNIFORMLOCATIONARBPROC   glGetUniformLocationARB;
-extern PFNGLUNIFORM4FARBPROC            glUniform4fARB;
-extern PFNGLUNIFORM1IARBPROC            glUniform1iARB;
+extern PFNGLCREATEPROGRAMARBPROC		glCreateProgram;
+extern PFNGLDELETEPROGRAMARBPROC        glDeleteProgram;
+extern PFNGLUSEPROGRAMARBPROC			glUseProgram;
+extern PFNGLCREATESHADERARBPROC			glCreateShader;
+extern PFNGLDELETESHADERARBPROC         glDeleteShader;
+extern PFNGLSHADERSOURCEARBPROC         glShaderSource;
+extern PFNGLCOMPILESHADERARBPROC        glCompileShader;
+extern PFNGLATTACHARBPROC				glAttachShader;
+extern PFNGLDETACHARBPROC				glDetachShader;
+extern PFNGLGETINFOLOGARBPROC           glGetInfoLog;
+extern PFNGLLINKPROGRAMARBPROC          glLinkProgram;
+extern PFNGLGETUNIFORMLOCATIONARBPROC   glGetUniformLocation;
+extern PFNGLUNIFORM4FARBPROC            glUniform4f;
+extern PFNGLUNIFORM1IARBPROC            glUniform1i;
+extern PFNGLGETSHADERIVARBPROC			glGetShaderiv;
+extern PFNGLGETPROGRAMIVARBPROC			glGetProgramiv;
 
 #endif
 
