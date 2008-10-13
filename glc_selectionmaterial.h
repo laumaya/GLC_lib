@@ -28,6 +28,9 @@
 
 #include <QColor>
 #include <QtOpenGL>
+#include "glc_ext.h"
+#include "glc_shader.h"
+
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_SelectionMaterial
@@ -47,8 +50,25 @@ private:
 public:
 	//! Execute OpenGL Material
 	static void glExecute();
+	//! Init shader
+	inline static void initShader() {m_SelectionShader.createAndCompileProgrammShader();}
+	//! Set shaders
+	inline static void setShaders(QFile& vertex, QFile& fragment)
+	{m_SelectionShader.setVertexAndFragmentShader(vertex, fragment);}
+	//! Use shader
+	inline static void useShader() {m_SelectionShader.useProgramm();}
+	//! Unuse shader
+	inline static void unUseShader() {m_SelectionShader.usePreviousProgramm();}
 
 //@}
+	
+//////////////////////////////////////////////////////////////////////
+// Private members
+//////////////////////////////////////////////////////////////////////
+
+private:
+		//! Selection Shader
+		static GLC_Shader m_SelectionShader;
 
 };
 

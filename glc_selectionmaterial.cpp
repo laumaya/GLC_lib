@@ -25,6 +25,7 @@
 
 #include "glc_selectionmaterial.h"
 
+GLC_Shader GLC_SelectionMaterial::m_SelectionShader;
 
 GLC_SelectionMaterial::GLC_SelectionMaterial()
 {
