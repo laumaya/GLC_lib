@@ -144,8 +144,13 @@ void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
 	}
-	
+	if (isSelected)
+	{
+		GLC_SelectionMaterial::useShader();
+	}
+		
 	glDraw();
+	if (isSelected) GLC_SelectionMaterial::unUseShader();
 	m_GeometryIsValid= true;
 	
 	// Unbind VBOs
