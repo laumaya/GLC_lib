@@ -29,6 +29,7 @@
 #include "glc_openglexception.h"
 #include "glc_ext.h"
 #include "glc_selectionmaterial.h"
+#include "glc_state.h"
 
 #include <QtDebug>
 
@@ -149,21 +150,7 @@ void GLC_Viewport::initGl()
 		}
 	}
 	
-	if (not extensionIsSupported("GL_ARB_shading_language_100"))
-	{
-		GLC_Exception glcException("GLC_Viewport::initGl GL_ARB_shading_language 1.0 not found");
-		throw(glcException);
-	}
-	else
-	{
-		if (not loadGlSlExtension())
-		{
-			GLC_Exception glcException("GLC_Viewport::initGl Failed to load GL_ARB_shading_language 1.0 functions");
-			throw(glcException);			
-		}
-	}
-	// Initialize selection shader
-	GLC_SelectionMaterial::initShader();
+	GLC_State::setGlslSupport();
 
 }
 
