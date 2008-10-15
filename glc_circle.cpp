@@ -27,8 +27,6 @@
 #include "glc_circle.h"
 #include "glc_openglexception.h"
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
 using namespace glc;
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor

@@ -30,8 +30,6 @@
 
 #include <QVector>
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
 using namespace glc;
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor

@@ -32,6 +32,8 @@
 #include "glc_boundingbox.h"
 #include "glc_ext.h"
 
+#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_VboGeom
 /*! \brief GLC_VboGeom : parent class for all GLC class which contain
