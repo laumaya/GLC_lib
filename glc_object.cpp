@@ -25,8 +25,6 @@
 //! \file GLC_Object.cpp Implementation of the GLC_Object class.
 
 #include "glc_object.h"
-using namespace std;
-
 
 //////////////////////////////////////////////////////////////////////
 // Constructor/Destructor
