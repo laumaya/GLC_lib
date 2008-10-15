@@ -82,7 +82,8 @@ HEADERS_GLC += glc_utils_maths.h \
            glc_3dstoworld.h \
            glc_geomtools.h \
            glc_ext.h \
-           glc_shader.h
+           glc_shader.h \
+           glc_state.h
            
 HEADERS += $${HEADERS_LIB3DS} $${HEADERS_GLC} $${HEADERS_GLEXT}
 
@@ -145,7 +146,8 @@ SOURCES += glc_vector4d.cpp \
            glc_3dstoworld.cpp \
            glc_geomtools.cpp \
            glc_ext.cpp \
-           glc_shader.cpp
+           glc_shader.cpp \
+           glc_state.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
@@ -189,7 +191,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Viewport \
     		   include/GLC_World \
     		   include/GLC_Shader \
-    		   include/GLC_SelectionMaterial
+    		   include/GLC_SelectionMaterial \
+    		   include/GLC_State
     			   
 # Linux install configuration
 unix { 
