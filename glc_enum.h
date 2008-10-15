@@ -27,12 +27,14 @@
 #ifndef GLC_ENUM_H_
 #define GLC_ENUM_H_
 
-#define GLC_uint unsigned int
+// Type for UID
+typedef unsigned int GLC_uint;
 
 namespace glc
 {
 	//! Simple ID generation
 	GLC_uint GLC_GenID(void);
+	
 	const int GLC_DISCRET= 70;
 	const int GLC_POLYDISCRET= 60;
 };
