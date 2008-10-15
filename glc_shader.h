@@ -64,6 +64,8 @@ public:
 public:
 	//! Return true if the shader is usable
 	inline bool isUsable() const {return m_ProgramShader != 0;}
+	//! Return true if the shader can be deleted
+	bool canBeDeleted() const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -73,6 +75,9 @@ public:
 public:
 	//! Set Vertex and fragment shaders
 	void setVertexAndFragmentShader(QFile&, QFile&);
+	//! Replace this shader by a copy of another shader
+	/* If this shader is usable replacing shader must be usable*/
+	void replaceShader(GLC_Shader&);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -88,6 +93,8 @@ public:
 	//! Compile and attach shaders to a program shader
 	/*! Throw GLC_Exception if vertex and fragment shader are not been set*/
 	void createAndCompileProgrammShader();
+	
+private:
 	//! Create and compile vertex shader
 	void createAndLinkVertexShader();
 	//! Create and compile fragment shader

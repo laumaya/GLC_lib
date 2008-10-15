@@ -40,6 +40,7 @@ GLC_Shader::GLC_Shader()
 , m_ProgramShader(0)
 {
 }
+
 // Construct shader with specifie vertex and fragment
 GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 : m_VertexByteArray()
@@ -51,12 +52,39 @@ GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 	setVertexAndFragmentShader(vertex, fragment);
 }
 
-GLC_Shader::~GLC_Shader()
+// Copy constructor
+GLC_Shader::GLC_Shader(const GLC_Shader& shader)
+: m_VertexByteArray(shader.m_VertexByteArray)
+, m_VertexShader(0)
+, m_FragmentByteArray(shader.m_FragmentByteArray)
+, m_FragmentShader(0)
+, m_ProgramShader(0)
+
 {
 	
+}
+
+GLC_Shader::~GLC_Shader()
+{
+	//qDebug() << "GLC_Shader::~GLC_Shader";
 	if (m_ProgramShader != 0)
 	{
-		// Detach shaders associted with the programm
+		// Test if the shader is the current one
+		if (m_CurrentProgramm == m_ProgramShader)
+		{
+			qDebug() << "Warning deleting current shader";
+		}
+		//removing shader id from the stack
+		if (m_ProgrammStack.contains(m_ProgramShader))
+		{
+			int indexToDelete= m_ProgrammStack.indexOf(m_ProgramShader);
+			while (indexToDelete != -1)
+			{
+				m_ProgrammStack.remove(indexToDelete);
+				indexToDelete= m_ProgrammStack.indexOf(m_ProgramShader);
+			}
+		}
+		// Detach shaders associated with the programm
 		glDetachShader(m_ProgramShader, m_VertexShader);
 		glDetachShader(m_ProgramShader, m_FragmentShader);
 		// Delete the shader
@@ -65,8 +93,19 @@ GLC_Shader::~GLC_Shader()
 		// Delete the programm
 		glDeleteProgram(m_ProgramShader);
 	}
-	// If m_ProgramShader == 0 then there is no vertes and fragment shader
+	// If m_ProgramShader == 0 then there is no vertex and fragment shader
 }
+
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Return true if the shader can be deleted
+bool GLC_Shader::canBeDeleted() const
+{
+	return m_CurrentProgramm != m_ProgramShader;
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
@@ -74,12 +113,18 @@ GLC_Shader::~GLC_Shader()
 // Use this shader programm
 void GLC_Shader::useProgramm()
 {
-	if (m_CurrentProgramm != 0)
+	// Program shader must be valid
+	Q_ASSERT(0 != m_ProgramShader);
+	// Test if the program shader is not already the current one
+	if (m_CurrentProgramm != m_ProgramShader)
 	{
-		m_ProgrammStack.push(m_CurrentProgramm);
+		if (m_CurrentProgramm != 0)
+		{
+			m_ProgrammStack.push(m_CurrentProgramm);
+		}
+		m_CurrentProgramm= m_ProgramShader;
+		glUseProgram(m_CurrentProgramm);		
 	}
-	m_CurrentProgramm= m_ProgramShader;
-	glUseProgram(m_CurrentProgramm);
 }
 
 // Use previous programm shader
@@ -98,6 +143,8 @@ void GLC_Shader::usePreviousProgramm()
 // Compile and attach shaders to a program shader
 void GLC_Shader::createAndCompileProgrammShader()
 {
+	Q_ASSERT(0 == m_ProgramShader);
+	
 	createAndLinkVertexShader();
 	createAndLinkFragmentShader();
 	
@@ -120,8 +167,7 @@ void GLC_Shader::createAndCompileProgrammShader()
 
 // Create and compile vertex shader
 void GLC_Shader::createAndLinkVertexShader()
-{
-	
+{	
 	const char* pVertexShaderData= m_VertexByteArray.data();
 	
 	m_VertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -167,7 +213,56 @@ void GLC_Shader::createAndLinkFragmentShader()
 void GLC_Shader::setVertexAndFragmentShader(QFile& vertexFile, QFile& fragmentFile)
 {
 	setVertexShader(vertexFile);
-	setFragmentShader(fragmentFile);	
+	setFragmentShader(fragmentFile);
+}
+
+// Replace this shader by a copy of another shader
+void GLC_Shader::replaceShader(GLC_Shader& sourceShader)
+{
+	Q_ASSERT(isUsable() == sourceShader.isUsable());
+
+	m_VertexByteArray= sourceShader.m_VertexByteArray;
+	m_FragmentByteArray= sourceShader.m_FragmentByteArray;
+
+	if (isUsable())
+	{
+		const GLuint oldShaderId= m_ProgramShader;
+		
+		// Detach shaders associated with the programm
+		glDetachShader(m_ProgramShader, m_VertexShader);
+		glDetachShader(m_ProgramShader, m_FragmentShader);
+		// Delete the shader
+		glDeleteShader(m_VertexShader);
+		glDeleteShader(m_FragmentShader);
+		// Delete the programm
+		glDeleteProgram(m_ProgramShader);
+		
+		// Init shaders ID
+		m_ProgramShader= 0;
+		m_VertexShader= 0;
+		m_FragmentShader= 0;
+		
+		// Rebuilt shader
+		createAndCompileProgrammShader();
+		
+		// Update the shader program stack
+		if (m_ProgrammStack.contains(oldShaderId))
+		{
+			int indexToReplace= m_ProgrammStack.indexOf(oldShaderId);
+			while (indexToReplace != -1)
+			{
+				m_ProgrammStack.replace(indexToReplace, m_ProgramShader);
+				indexToReplace= m_ProgrammStack.indexOf(oldShaderId);
+			}
+		}
+		// Check the value of current shader
+		if (oldShaderId == m_CurrentProgramm)
+		{
+			m_CurrentProgramm= m_ProgramShader;
+			// Use the new One
+			glUseProgram(m_CurrentProgramm);
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -176,12 +271,14 @@ void GLC_Shader::setVertexAndFragmentShader(QFile& vertexFile, QFile& fragmentFi
 // Set Vertex shader
 void GLC_Shader::setVertexShader(QFile& vertexFile)
 {
+	Q_ASSERT(0 == m_ProgramShader);
 	m_VertexByteArray= readShaderFile(vertexFile);
 }
 
 // Set fragment shaders
 void GLC_Shader::setFragmentShader(QFile& fragmentFile)
 {
+	Q_ASSERT(0 == m_ProgramShader);
 	m_FragmentByteArray= readShaderFile(fragmentFile);
 }
 
