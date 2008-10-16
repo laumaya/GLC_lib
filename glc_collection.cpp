@@ -154,15 +154,28 @@ bool GLC_Collection::select(GLC_uint key)
 		m_CollectionIsValid= false;
 		
 		//qDebug("GLC_Collection::selectNode : Element succesfuly selected");
-		return true;
-		
+		return true;		
 	}
 	else
 	{	// KO, key doesn't exist or node allready selected
 		//qDebug("GLC_Collection::selectNode : Element not selected");
 		return false;
+	}	
+}
+
+// Select all instance
+void GLC_Collection::selectAll()
+{
+	unselectAll();
+	CNodeMap::iterator iNode= m_NodeMap.begin();
+	while (iNode != m_NodeMap.end())
+	{
+		GLC_Instance *pCurrentInstance= &(iNode.value());
+		pCurrentInstance->select();
+		m_SelectedNodes.insert(pCurrentInstance->getID(), pCurrentInstance);		
+		iNode++;
 	}
-	
+	m_CollectionIsValid= false;
 }
 
 // unselect a node
@@ -187,9 +200,7 @@ bool GLC_Collection::unselect(GLC_uint key)
 		//qDebug("GLC_Collection::unselectNode : Node not unselected");
 		return false;
 	}
-	
 }
-
 
 // Unselect all Node
 void GLC_Collection::unselectAll()
@@ -202,7 +213,9 @@ void GLC_Collection::unselectAll()
         ++iSelectedNode;
     }
     // Clear selected node hash table
-    m_SelectedNodes.clear();	
+    m_SelectedNodes.clear();
+    
+    m_CollectionIsValid= false;
 }
 
 // Set the polygon mode for all Instance

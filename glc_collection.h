@@ -132,6 +132,9 @@ public:
 	//! Select a Instance
 	bool select(GLC_uint);
 	
+	//! Select all instance
+	void selectAll();
+	
 	//! unselect a Instance
 	bool unselect(GLC_uint);
 	
