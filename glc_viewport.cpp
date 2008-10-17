@@ -276,7 +276,6 @@ void GLC_Viewport::glExecuteTargetCam()	//! \todo Create a display list
 			m_pViewCam->getTarget().getZ() );
 
 		// Graphic propertys
-		glDisable(GL_BLEND);
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
 		glColor4d(m_pOrbitCircle->getdRed(), m_pOrbitCircle->getdGreen(), m_pOrbitCircle->getdBlue(), m_pOrbitCircle->getdAlpha());
