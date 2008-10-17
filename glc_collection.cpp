@@ -28,6 +28,8 @@
 #include "glc_collection.h"
 #include "glc_material.h"
 #include "glc_openglexception.h"
+#include "glc_selectionmaterial.h"
+#include "glc_state.h"
 
 #include <QtDebug>
 
@@ -149,7 +151,16 @@ bool GLC_Collection::select(GLC_uint key)
 	{	// Ok, the key exist and the node is not selected
 		pSelectedNode= &(iNode.value());
 		m_SelectedNodes.insert(pSelectedNode->getID(), pSelectedNode);
-				
+		
+		// Remove Seleted Node from is privious collection
+		if (pSelectedNode->getGeometry()->isTransparent())
+		{
+			m_TransparentNodes.remove(key);
+		}
+		else
+		{
+			m_NotTransparentNodes.remove(key);
+		}
 		pSelectedNode->select();		
 		m_CollectionIsValid= false;
 		
@@ -175,12 +186,16 @@ void GLC_Collection::selectAll()
 		m_SelectedNodes.insert(pCurrentInstance->getID(), pCurrentInstance);		
 		iNode++;
 	}
+	m_NotTransparentNodes.clear();
+	m_TransparentNodes.clear();
 	m_CollectionIsValid= false;
 }
 
 // unselect a node
 bool GLC_Collection::unselect(GLC_uint key)
 {
+	GLC_Instance* pSelectedNode;
+	
 	PointerNodeHash::iterator iSelectedNode= m_SelectedNodes.find(key);
 		
 	if (iSelectedNode != m_SelectedNodes.end())
@@ -188,6 +203,18 @@ bool GLC_Collection::unselect(GLC_uint key)
 		iSelectedNode.value()->unselect();
 		
 		m_SelectedNodes.remove(key);
+		
+		pSelectedNode= iSelectedNode.value();
+		
+		// Insert Selected Node to the right collection
+		if (pSelectedNode->getGeometry()->isTransparent())
+		{
+			m_TransparentNodes.insert(pSelectedNode->getID(), pSelectedNode);
+		}
+		else
+		{
+			m_NotTransparentNodes.insert(pSelectedNode->getID(), pSelectedNode);
+		}
 		
 		m_CollectionIsValid= false;
 		
@@ -214,7 +241,7 @@ void GLC_Collection::unselectAll()
     }
     // Clear selected node hash table
     m_SelectedNodes.clear();
-    
+    updateInstancesTransparency();
     m_CollectionIsValid= false;
 }
 
@@ -273,32 +300,21 @@ void GLC_Collection::hideAll()
 // Update instance transparency
 void GLC_Collection::updateInstancesTransparency()
 {
-	// Check instance visibility
-	PointerNodeHash::iterator iEntry= m_NotTransparentNodes.begin();
-    while (iEntry != m_NotTransparentNodes.constEnd())
-    {
-        if (iEntry.value()->getGeometry()->isTransparent())
-        {
-        	GLC_Instance* pInstance= iEntry.value();
-        	m_TransparentNodes.insert(pInstance->getID(), pInstance);
-        	iEntry= m_NotTransparentNodes.erase(iEntry);
-        }
-        else ++iEntry;
-    }
-    
-	iEntry= m_TransparentNodes.begin();
-    while (iEntry != m_TransparentNodes.constEnd())
-    {
-        if (not iEntry.value()->getGeometry()->isTransparent())
-        {
-        	GLC_Instance* pInstance= iEntry.value();
-        	m_NotTransparentNodes.insert(pInstance->getID(), pInstance);
-        	iEntry= m_TransparentNodes.erase(iEntry);
-        }
-        else ++iEntry;
-    }
-	// End of checking instance visibility
+	CNodeMap::iterator iEntry= m_NodeMap.begin();
 	
+    while (iEntry != m_NodeMap.constEnd())
+    {
+    	if (iEntry.value().getGeometry()->isTransparent())
+    	{
+    		m_TransparentNodes.insert(iEntry.key(), &(iEntry.value()));
+    	}
+    	else
+    	{
+    		m_NotTransparentNodes.insert(iEntry.key(), &(iEntry.value()));
+    	}
+    	
+     	iEntry++;
+    }	
 }
 
 // Return all GLC_Instance from collection
@@ -415,37 +431,98 @@ void GLC_Collection::glDraw(void)
 {
 	// Display non transparent instance
     glDisable(GL_BLEND);
+    //glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
-	PointerNodeHash::iterator iEntry= m_NotTransparentNodes.begin();
-    while (iEntry != m_NotTransparentNodes.constEnd())
+    PointerNodeHash::iterator iEntry;
+    
+    if (not m_NotTransparentNodes.empty())
     {
-    	//qDebug() << "no transparent";
-        if (iEntry.value()->isVisible() == m_IsInShowSate)
+    	iEntry= m_NotTransparentNodes.begin();
+        while (iEntry != m_NotTransparentNodes.constEnd())
         {
-        	iEntry.value()->glExecute();
-        }        
-        ++iEntry;
+        	//qDebug() << "no transparent";
+            if (iEntry.value()->isVisible() == m_IsInShowSate)
+            {
+            	iEntry.value()->glExecute();
+            }        
+            ++iEntry;
+        }  	
+    }
+ 
+    if(not m_TransparentNodes.isEmpty())
+    {
+        // Set attributes for blending activation
+        //glEnable(GL_CULL_FACE);
+        glEnable(GL_BLEND);
+        glDepthMask(GL_FALSE);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+    	// Display transparent instance
+    	iEntry= m_TransparentNodes.begin();
+        while (iEntry != m_TransparentNodes.constEnd())
+        {
+        	//qDebug() << "transparent";
+            if (iEntry.value()->isVisible() == m_IsInShowSate)
+            {
+            	iEntry.value()->glExecute();
+            }        
+            ++iEntry;
+        }
+        // Restore attributtes
+        glDepthMask(GL_TRUE);
+        glDisable(GL_BLEND);
     }
     
-    // Set attributes for blending activation
-    glEnable(GL_BLEND);
-    glDepthMask(GL_FALSE);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	// Display transparent instance
-	iEntry= m_TransparentNodes.begin();
-    while (iEntry != m_TransparentNodes.constEnd())
+    if(not m_SelectedNodes.isEmpty())
     {
-    	//qDebug() << "transparent";
-        if (iEntry.value()->isVisible() == m_IsInShowSate)
+		GLC_SelectionMaterial::useShader();
+
+		if (GLC_State::selectionShaderUsed())
+		{
+			if (m_SelectedNodes.size() != m_NodeMap.size())
+			{
+		    	iEntry= m_SelectedNodes.begin();
+		        while (iEntry != m_SelectedNodes.constEnd())
+		        {
+		        	//qDebug() << "transparent";
+		            if (iEntry.value()->isVisible() == m_IsInShowSate)
+		            {
+		            	iEntry.value()->glExecute();
+		            }        
+		            ++iEntry;
+		        }				
+			}
+
+	        // Set attributes for selected Node
+	        glEnable(GL_CULL_FACE);
+	        glEnable(GL_BLEND);
+	        glDisable(GL_DEPTH_TEST);
+	        glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	    	// Display selected instance
+		}
+
+    	iEntry= m_SelectedNodes.begin();
+        while (iEntry != m_SelectedNodes.constEnd())
         {
-        	iEntry.value()->glExecute();
-        }        
-        ++iEntry;
+        	//qDebug() << "transparent";
+            if (iEntry.value()->isVisible() == m_IsInShowSate)
+            {
+            	iEntry.value()->glExecute();
+            }        
+            ++iEntry;
+        }
+        
+    	if (GLC_State::selectionShaderUsed())
+    	{
+    	    // Restore attributtes
+            glEnable(GL_DEPTH_TEST);
+            glDisable(GL_BLEND);
+            glDisable(GL_CULL_FACE);
+    		GLC_SelectionMaterial::unUseShader();
+    	}
+    	
     }
-    // Restore attributtes
-    glDepthMask(GL_TRUE);
-    glDisable(GL_BLEND);
     
 	// OpenGL error handler
 	GLenum errCode;

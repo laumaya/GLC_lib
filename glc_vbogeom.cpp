@@ -27,7 +27,6 @@
 #include "glc_vbogeom.h"
 #include "glc_openglexception.h"
 #include "glc_selectionmaterial.h"
-#include "glc_state.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
@@ -145,18 +144,9 @@ void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
 	}
-	if (isSelected and GLC_State::selectionShaderUsed())
-	{
-		GLC_SelectionMaterial::useShader();
-	}
 		
 	glDraw();
-	
-	if (isSelected and GLC_State::selectionShaderUsed())
-	{
-		GLC_SelectionMaterial::unUseShader();
-	}
-		
+			
 	m_GeometryIsValid= true;
 	
 	// Unbind VBOs
