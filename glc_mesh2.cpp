@@ -27,6 +27,7 @@
 #include "glc_mesh2.h"
 #include "glc_openglexception.h"
 #include "glc_selectionmaterial.h"
+#include "glc_state.h"
 
 #include <QtDebug>
 
@@ -312,36 +313,44 @@ void GLC_Mesh2::glDraw()
     {
     	if (!iMaterialGroup.value()->isEmpty())
     	{
-    		// Set current material
-    		if (iMaterialGroup.key() == 0)
+    		if (not GLC_State::selectionShaderUsed() or not m_IsSelected)
     		{
-    			// Use default material
-    			pCurrentMaterial= m_pMaterial;
+        		// Set current material
+        		if (iMaterialGroup.key() == 0)
+        		{
+        			// Use default material
+        			pCurrentMaterial= m_pMaterial;
+        		}
+        		else
+        		{
+        			pCurrentMaterial= m_MaterialHash.value(iMaterialGroup.key());
+        			Q_ASSERT(pCurrentMaterial != NULL);
+        		}
+        		
+        		// Execute current material
+    			if (pCurrentMaterial->getAddRgbaTexture())
+    			{
+    				glEnable(GL_TEXTURE_2D);
+    			}
+    			else
+    			{
+    				glDisable(GL_TEXTURE_2D);
+    			}
+    			// Activate material
+    			pCurrentMaterial->glExecute();
+    			const GLfloat red= pCurrentMaterial->getDiffuseColor().redF();
+    			const GLfloat green= pCurrentMaterial->getDiffuseColor().greenF();
+    			const GLfloat blue= pCurrentMaterial->getDiffuseColor().blueF();
+    			const GLfloat alpha= pCurrentMaterial->getDiffuseColor().alphaF();
+    			
+    			glColor4f(red, green, blue, alpha);
+    			if (m_IsSelected) GLC_SelectionMaterial::glExecute();   			
     		}
     		else
     		{
-    			pCurrentMaterial= m_MaterialHash.value(iMaterialGroup.key());
-    			Q_ASSERT(pCurrentMaterial != NULL);
+    			// Use Shader
+        		glDisable(GL_TEXTURE_2D);
     		}
-    		
-    		// Execute current material
-			if (pCurrentMaterial->getAddRgbaTexture())
-			{
-				glEnable(GL_TEXTURE_2D);
-			}
-			else
-			{
-				glDisable(GL_TEXTURE_2D);
-			}
-			// Activate material
-			pCurrentMaterial->glExecute();
-			const GLfloat red= pCurrentMaterial->getDiffuseColor().redF();
-			const GLfloat green= pCurrentMaterial->getDiffuseColor().greenF();
-			const GLfloat blue= pCurrentMaterial->getDiffuseColor().blueF();
-			const GLfloat alpha= pCurrentMaterial->getDiffuseColor().alphaF();
-			
-			glColor4f(red, green, blue, alpha);
-			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
     		
 			max= static_cast<GLuint>(iMaterialGroup.value()->size());
 			// Draw cylinder 
