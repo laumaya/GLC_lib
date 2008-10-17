@@ -414,7 +414,7 @@ void GLC_Material::glExecute()
 	if (m_pTexture != NULL)
 	{
 		// for blend managing
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+		//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 		m_pTexture->glcBindTexture();
 	}
 	glColor4fv(pDiffuseColor);
