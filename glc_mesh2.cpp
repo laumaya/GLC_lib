@@ -301,7 +301,8 @@ void GLC_Mesh2::glDraw()
 	// test if color pear vertex is acivated
 	if (m_ColorPearVertex and !m_IsSelected)
 	{
-		glDisable(GL_LIGHTING);
+		glEnable(GL_COLOR_MATERIAL);
+		glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
 		glEnableClientState(GL_COLOR_ARRAY);
 		glColorPointer(4, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(32));
 	}
@@ -362,6 +363,7 @@ void GLC_Mesh2::glDraw()
 	if (m_ColorPearVertex and !m_IsSelected)
 	{
 		glDisableClientState(GL_COLOR_ARRAY);
+		glDisable(GL_COLOR_MATERIAL);
 	}
 
 	glDisableClientState(GL_VERTEX_ARRAY);
