@@ -29,6 +29,12 @@
 #include "glc_exception.h"
 
 #include <QtDebug>
+
+// The default maximum texture size
+QSize GLC_Texture::m_MaxTextureSize(676, 676);
+
+// The Minimum texture size
+const QSize GLC_Texture::m_MinTextureSize(10, 10);
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
@@ -38,6 +44,7 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
 , m_File(Filename)
 , m_TextureID(0)
 , m_pTextureImage(new QImage(m_File.fileName()))
+, m_TextureSize()
 {
 	if (m_pTextureImage->isNull())
 	{
@@ -46,7 +53,7 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
 		qDebug() << ErrorMess;
 		GLC_Exception e(ErrorMess);
 		throw(e);		
-	}	
+	}
 }
 
 GLC_Texture::GLC_Texture(const QGLContext *pContext, const QFile &file)
@@ -54,6 +61,7 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QFile &file)
 , m_File(file.fileName())
 , m_TextureID(0)
 , m_pTextureImage(new QImage(file.fileName()))
+, m_TextureSize()
 {
 	if (m_pTextureImage->isNull())
 	{
@@ -70,7 +78,7 @@ GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 , m_File(TextureToCopy.m_File.fileName())
 , m_TextureID(0)
 , m_pTextureImage(new QImage(TextureToCopy.m_File.fileName()))
-
+, m_TextureSize(TextureToCopy.m_TextureSize)
 {
 	if (m_pTextureImage->isNull())
 	{
@@ -97,12 +105,56 @@ GLC_Texture::~GLC_Texture()
 		m_pTextureImage = NULL;
 	}
 }
+
+//////////////////////////////////////////////////////////////////////
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+
+// Set the maximum texture size
+void GLC_Texture::setMaxTextureSize(const QSize& size)
+{
+	if ((size.height() > m_MinTextureSize.height()) and (size.width() > m_MinTextureSize.width()))
+	{
+		m_MaxTextureSize= size;
+	}
+	else
+	{
+		qDebug() << "GLC_Texture::setMaxTextureSize m_MaxTextureSize set to m_MinTextureSize";
+		m_MaxTextureSize= m_MinTextureSize;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+// Private OpenGL functions
+//////////////////////////////////////////////////////////////////////
 // Load the texture
 void GLC_Texture::glLoadTexture(void)
 {
 	if (m_TextureID == 0)
 	{
-		m_TextureID= m_pQGLContext->bindTexture(*m_pTextureImage);
+		// Test image size
+		if ((m_pTextureImage->height() > m_MaxTextureSize.height())
+				or (m_pTextureImage->width() > m_MaxTextureSize.width()))
+		{
+			QImage rescaledImage;
+			if(m_pTextureImage->height() > m_pTextureImage->width())
+			{
+				rescaledImage= m_pTextureImage->scaledToHeight(m_MaxTextureSize.height(), Qt::SmoothTransformation);
+			}
+			else
+			{
+				rescaledImage= m_pTextureImage->scaledToWidth(m_MaxTextureSize.width(), Qt::SmoothTransformation);
+			}
+			m_TextureSize= rescaledImage.size();
+			m_TextureID= m_pQGLContext->bindTexture(rescaledImage);
+
+		}
+		else
+		{
+			m_TextureSize= m_pTextureImage->size();
+			m_TextureID= m_pQGLContext->bindTexture(*m_pTextureImage);
+			
+		}
 		delete m_pTextureImage;
 		m_pTextureImage= NULL;
 		//qDebug() << "GLC_Texture::glcBindTexture Texture ID = " << m_TextureID;
@@ -117,6 +169,7 @@ void GLC_Texture::glcBindTexture(void)
 		glLoadTexture();
 	}
 	glBindTexture(GL_TEXTURE_2D, m_TextureID);
-	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	
 }
 

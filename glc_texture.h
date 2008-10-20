@@ -65,14 +65,30 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get the texture File Name
-	QString getTextureFileName() const {return m_File.fileName();}
+	inline QString getTextureFileName() const {return m_File.fileName();}
 	
 	//! Get Texture Id
-	GLuint getTextureID() const {return m_TextureID;}
+	inline GLuint getTextureID() const {return m_TextureID;}
 	
 	//! return true if the texture is loaded
-	bool isLoaded() const {return (m_TextureID != 0);}
+	inline bool isLoaded() const {return (m_TextureID != 0);}
+	
+	//! Return the texture size
+	inline QSize size() const {return m_TextureSize;}
+	
+	//! Return the maximum texture size
+	static QSize maxSize() {return m_MaxTextureSize;}
 
+//@}
+	
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	// Set the maximum texture size
+	static void setMaxTextureSize(const QSize&);
+	
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
@@ -96,7 +112,9 @@ private:
 	GLuint	m_TextureID;
 	
 	QImage *m_pTextureImage;
-	
+	QSize m_TextureSize;
+	static QSize m_MaxTextureSize;
+	static const QSize m_MinTextureSize;
 	
 };
 
