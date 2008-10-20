@@ -132,7 +132,7 @@ public:
 	//! Select a Instance
 	bool select(GLC_uint);
 	
-	//! Select all instance
+	//! Select all instances in current show state
 	void selectAll();
 	
 	//! unselect a Instance
