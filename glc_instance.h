@@ -107,7 +107,11 @@ public:
 	GLenum getPolygonMode() const {return m_PolyMode;}
 	
 	//! Get the visibility state of instance
-	inline bool isVisible() const {return m_IsVisible;} 
+	inline bool isVisible() const {return m_IsVisible;}
+	
+	//! Get the number of instance
+	inline int getNumberOfInstance() const
+	{return *m_pNumberOfInstance;}
 	
 	
 //@}	
