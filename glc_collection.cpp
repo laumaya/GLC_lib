@@ -66,13 +66,17 @@ bool GLC_Collection::add(GLC_Instance& node)
 	CNodeMap::iterator iNode= m_NodeMap.find(key);
 	GLC_Instance* pInstance= &(iNode.value());
 	// Chose the hash where instance is
-	if (!node.getGeometry()->isTransparent())
+	if (not node.getGeometry()->isTransparent() and not node.isSelected())
 	{
 		m_NotTransparentNodes.insert(key, pInstance);
 	}
-	else
+	else if (not node.isSelected())
 	{
 		m_TransparentNodes.insert(key, pInstance);
+	}
+	else
+	{
+		m_SelectedNodes.insert(key, pInstance);
 	}
 	
 	m_CollectionIsValid= false;
@@ -152,7 +156,7 @@ bool GLC_Collection::select(GLC_uint key)
 		pSelectedNode= &(iNode.value());
 		m_SelectedNodes.insert(pSelectedNode->getID(), pSelectedNode);
 		
-		// Remove Seleted Node from is privious collection
+		// Remove Seleted Node from is previous collection
 		if (pSelectedNode->getGeometry()->isTransparent())
 		{
 			m_TransparentNodes.remove(key);
