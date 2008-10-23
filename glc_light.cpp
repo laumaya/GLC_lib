@@ -179,12 +179,10 @@ void GLC_Light::glDraw(void)
 	// Set the lighting model
 	if (m_TwoSided)
 	{
-		qDebug() << "Two sided";
 		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
 	}
 	else
 	{
-		qDebug() << "One Sided";
 		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
 	}
 
