@@ -27,6 +27,8 @@
 #ifndef GLC_ENUM_H_
 #define GLC_ENUM_H_
 
+#include "QMutex"
+
 // Type for UID
 typedef unsigned int GLC_uint;
 
@@ -37,6 +39,8 @@ namespace glc
 	
 	const int GLC_DISCRET= 70;
 	const int GLC_POLYDISCRET= 60;
+	
+	extern QMutex iDMutex;
 };
 
 // GLC_Lib version
