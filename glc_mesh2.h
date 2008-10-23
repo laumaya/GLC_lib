@@ -98,6 +98,8 @@ public:
 	inline unsigned int getNumberOfSubMaterial() const {return m_MaterialHash.size();}
 	//! Get specified mesh sub material
 	inline GLC_Material* getSubMaterial(const GLC_uint key) {return m_MaterialHash[key];}
+	//! Get All mesh sub material
+	inline QList<GLC_Material*> getSubMaterials() {return m_MaterialHash.values();}
 	//! return true if Material key is in the mesh
 	inline const bool containsMaterial(const GLC_uint key) const {return m_MaterialHash.contains(key);}
 	//! Return material index if Material is the same than a material already in the mesh
