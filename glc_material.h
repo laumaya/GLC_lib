@@ -161,8 +161,6 @@ public:
 	void setShininess(GLfloat Shininess)
 	{
 		m_fShininess= Shininess;
-
-		updateUsed();
 	}
 
 	//! Set Texture
@@ -200,9 +198,6 @@ public:
 // Private services Functions
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Update geometries which used material
-	void updateUsed(void);
-	
 	//! Init Ambiant Color
 	void initDiffuseColor(void);
 	

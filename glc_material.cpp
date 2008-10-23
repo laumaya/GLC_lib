@@ -262,7 +262,6 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
  	m_fShininess= pMat->m_fShininess;
  	// Transparency
  	m_Transparency= pMat->m_Transparency;
- 	updateUsed();
  }
 
 // Set Ambiant Color
@@ -270,7 +269,6 @@ void GLC_Material::setAmbientColor(const QColor& ambientColor)
 {
 	m_AmbientColor= ambientColor;
 	m_AmbientColor.setAlphaF(m_Transparency);
-	updateUsed();
 }
 
 // Set Diffuse color
@@ -278,7 +276,6 @@ void GLC_Material::setDiffuseColor(const QColor& diffuseColor)
 {
 	m_DiffuseColor= diffuseColor;
 	m_DiffuseColor.setAlphaF(m_Transparency);
-	updateUsed();
 }
 
 // Set Specular color
@@ -286,7 +283,6 @@ void GLC_Material::setSpecularColor(const QColor& specularColor)
 {
 	m_SpecularColor= specularColor;
 	m_SpecularColor.setAlphaF(m_Transparency);
-	updateUsed();
 }
 
 // Set Emissive
@@ -294,7 +290,6 @@ void GLC_Material::setLightEmission(const QColor& lightEmission)
 {
 	m_LightEmission= lightEmission;
 	m_LightEmission.setAlphaF(m_Transparency);
-	updateUsed();
 }
 
 // Set Texture
@@ -313,7 +308,6 @@ void GLC_Material::setTexture(GLC_Texture* pTexture)
 		m_pTexture= pTexture;
 	}
 		
-	updateUsed();
 }
 
 // remove Material Texture
@@ -323,7 +317,6 @@ void GLC_Material::removeTexture()
 	{
 		delete m_pTexture;
 		m_pTexture= NULL;
-		updateUsed();
 	}
 }
 
@@ -372,7 +365,6 @@ void GLC_Material::setTransparency(const qreal alpha)
 	m_DiffuseColor.setAlphaF(m_Transparency);
 	m_SpecularColor.setAlphaF(m_Transparency);
 	m_LightEmission.setAlphaF(m_Transparency);
-	updateUsed();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -437,20 +429,6 @@ void GLC_Material::glExecute()
 //////////////////////////////////////////////////////////////////////
 // Private servicies Functions
 //////////////////////////////////////////////////////////////////////
-
-// Update geometries which used material
-void GLC_Material::updateUsed(void)
-{
-	CWhereUsed::iterator iEntry= m_WhereUsed.begin();
-	
-    while (iEntry != m_WhereUsed.constEnd())
-    {
-        // Indique aux géométrie utilisant la matière que celle ci à changée
-        iEntry.value()->setMaterial(this);
-        ++iEntry;
-    }
-	
-}
 
 // Init Ambiant Color
 void GLC_Material::initDiffuseColor(void)
