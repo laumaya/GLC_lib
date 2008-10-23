@@ -58,6 +58,10 @@ class GLC_Factory : public QObject
 public:
 	//! Get unique instance of the factory
 	static GLC_Factory* instance(const QGLContext *);
+	//! Get unique instance of the factory
+	inline static GLC_Factory* instance()
+	{return m_pFactory;}
+
 protected:	
 	//! Constructor
 	GLC_Factory(const QGLContext *);
