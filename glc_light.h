@@ -63,24 +63,26 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get a 4D Vector representing light position
-	GLC_Vector4d getPosition(void) const {return m_Position;}
+	inline GLC_Vector4d getPosition(void) const {return m_Position;}
 
 	//! Get a QColor of the light's ambiant color
-	const QColor getAmbientColor()
+	inline QColor getAmbientColor()
 	{
 		return m_AmbientColor;
 	}
 
 	//! Get  a QColor of the light's Diffuse color
-	const QColor getDiffuseColor()
+	inline QColor getDiffuseColor()
 	{
 		return m_DiffuseColor;
 	}
 	//! Get  a QColor of the light's Specular color
-	const QColor getSpecularColor()
+	inline QColor getSpecularColor()
 	{
 		return m_SpecularColor;
 	}
+	//! Return true if the light used two sided ilumination
+	inline bool isTwoSided() const {return m_TwoSided;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
