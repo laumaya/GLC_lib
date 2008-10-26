@@ -61,6 +61,10 @@ public:
 	
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
+	
+	//! Return the geometry bounding box
+	virtual GLC_BoundingBox* getBoundingBox(void) const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

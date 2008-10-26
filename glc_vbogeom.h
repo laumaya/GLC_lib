@@ -122,7 +122,7 @@ public:
 	{return m_pMaterial;}
 	
 	//! return the geometry bounding box
-	virtual GLC_BoundingBox* getBoundingBox(void) const;
+	virtual GLC_BoundingBox* getBoundingBox(void) const = 0;
 	
 	//! clone the geometry
 	virtual GLC_VboGeom* clone() const = 0;
@@ -134,6 +134,14 @@ public:
 	//! return true if color per vertex is used
 	inline bool usedColorPerVertex() const
 	{return m_UseColorPerVertex;}
+	
+	//! Return true if the geometry type is wireframe
+	inline bool typeIsWire() const
+	{return m_IsWire;}
+	
+	//! Return true if the geometry have a texture
+	inline bool addTexture() const
+	{return m_pMaterial->getAddRgbaTexture();}
 
 //@}
 	

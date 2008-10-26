@@ -59,6 +59,12 @@ GLC_VboGeom* GLC_ImagePlane::clone() const
 	return NULL;
 }
 
+//! Return the geometry bounding box
+GLC_BoundingBox* GLC_ImagePlane::getBoundingBox() const
+{
+	return NULL;
+}
+
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
