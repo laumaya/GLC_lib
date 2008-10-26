@@ -88,7 +88,6 @@ GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
 // Assignement operator
 GLC_Instance& GLC_Instance::operator=(const GLC_Instance& inputNode)
 {	
-	
 	clear();
 	m_pGeom= inputNode.m_pGeom;
 	m_Uid= inputNode.m_Uid;
@@ -111,13 +110,6 @@ GLC_Instance::~GLC_Instance()
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
-
-// Get the geometry of the instance
-GLC_VboGeom* GLC_Instance::getGeometry(void)
-{
-	return m_pGeom;
-}
-
 
 // Get the validity of the OpenGL list
 const bool GLC_Instance::getValidity(void) const
@@ -242,20 +234,6 @@ void GLC_Instance::setPolygonMode(GLenum Face, GLenum Mode)
 		m_PolyMode= Mode;
 		m_IsValid = false;
 	}
-}
-
-// Select the instance
-void GLC_Instance::select(void)
-{
-	m_IsSelected= true;
-	m_IsValid= false;
-}
-
-// Unselect the instance
-void GLC_Instance::unselect(void)
-{
-	m_IsSelected= false;
-	m_IsValid= false;
 }
 
 // set Instance validity in case of multiple instance.

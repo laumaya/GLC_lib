@@ -75,13 +75,13 @@ public:
 public:
 
 	//! Return true if the instance as no geometry
-	const bool isNull() const {return (NULL == m_pGeom);}
+	inline const bool isNull() const {return (NULL == m_pGeom);}
 	
 	//! Return true if the instance is selected
-	const bool isSelected(void) const {return m_IsSelected;}
+	inline const bool isSelected(void) const {return m_IsSelected;}
 
 	//! Get the geometry of the instance
-	GLC_VboGeom* getGeometry(void);
+	inline GLC_VboGeom* getGeometry(void) {return m_pGeom;}
 	
 	//! Get the validity of the Insatnce
 	const bool getValidity(void) const;
@@ -93,7 +93,7 @@ public:
 	const bool getBoundingBoxValidity(void) const;
 	
 	//! Return transfomation 4x4Matrix
-	const GLC_Matrix4x4 getMatrix(void) const
+	inline const GLC_Matrix4x4 getMatrix(void) const
 	{return m_MatPos;}
 	
 	//! Clone the instance
@@ -104,7 +104,7 @@ public:
 	
 	//! Get the Polygon mode off the instance
 	/*! Polygon Mode can Be : GL_POINT, GL_LINE, or GL_FILL*/
-	GLenum getPolygonMode() const {return m_PolyMode;}
+	inline GLenum getPolygonMode() const {return m_PolyMode;}
 	
 	//! Get the visibility state of instance
 	inline bool isVisible() const {return m_IsVisible;}
@@ -146,10 +146,18 @@ public:
 	void setPolygonMode(GLenum Face, GLenum Mode);
 
 	//! Select the instance
-	void select(void);
+	inline void select(void)
+	{
+		m_IsSelected= true;
+		m_IsValid= false;
+	}
 	
 	//! Unselect the instance
-	void unselect(void);
+	inline void unselect(void)
+	{
+		m_IsSelected= false;
+		m_IsValid= false;
+	}
 	
 	//! set Instance validity in case of multiple instance.
 	void setInstanceValidity(void);
