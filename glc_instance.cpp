@@ -87,12 +87,12 @@ GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
 
 // Assignement operator
 GLC_Instance& GLC_Instance::operator=(const GLC_Instance& inputNode)
-{	
+{
 	clear();
 	m_pGeom= inputNode.m_pGeom;
 	m_Uid= inputNode.m_Uid;
 	m_Name= inputNode.m_Name;
-	
+
 	m_pNumberOfInstance= inputNode.m_pNumberOfInstance;
 	++(*m_pNumberOfInstance);
 	//qDebug() << "GLC_Instance::operator= :ID = " << m_Uid;
@@ -135,9 +135,9 @@ GLC_BoundingBox GLC_Instance::getBoundingBox(void)
 		{
 			return *m_pBoundingBox;
 		}
-		
+
 	}
-	
+
 	GLC_BoundingBox nullBoundingBox;
 	return nullBoundingBox;
 }
@@ -195,7 +195,7 @@ bool GLC_Instance::setGeometry(GLC_VboGeom* pGeom)
 void GLC_Instance::translate(double Tx, double Ty, double Tz)
 {
 	GLC_Matrix4x4 MatTrans(Tx, Ty, Tz);
-	
+
 	multMatrix(MatTrans);
 }
 
@@ -254,10 +254,10 @@ void GLC_Instance::glExecute()
 {
 	bool computeBox= false;
 	if (NULL == m_pGeom) return;
-	
+
 	// Geometry invalid or instance
 	if ((!m_pGeom->getValidity()) || (!m_IsValid))
-	{		
+	{
 		m_IsValid= true;
 		computeBox= true;
 	}
@@ -270,19 +270,19 @@ void GLC_Instance::glExecute()
 	// Restore OpenGL Matrix
 	glPopMatrix();
 	//qDebug() << "GLC_Instance::GlExecute : Display list " << m_ListID << " created";
-	
+
 	if (computeBox)
 	{
 		computeBoundingBox();
 	}
-	
+
 }
 
 // Set instance visualisation properties
 void GLC_Instance::glVisProperties()
 {
 	// Polygons display mode
-	glPolygonMode(m_PolyFace, m_PolyMode);	
+	glPolygonMode(m_PolyFace, m_PolyMode);
 	// Change the current matrix
 	glMultMatrixd(m_MatPos.return_dMat());
 
@@ -302,17 +302,17 @@ void GLC_Instance::computeBoundingBox(void)
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
 	}
-	
+
 	m_pBoundingBox= m_pGeom->getBoundingBox();
 	m_pBoundingBox->transform(m_MatPos);
-	
+
 }
 
 // Clear current instance
 void GLC_Instance::clear()
 {
 	Q_ASSERT(m_pNumberOfInstance != NULL);
-	
+
 	if ((--(*m_pNumberOfInstance)) == 0)
 	{
 		// this is the last instance, delete the geometry
@@ -326,21 +326,21 @@ void GLC_Instance::clear()
 		//qDebug() << "- Number of instance" << (*m_pNumberOfInstance);
 		delete m_pNumberOfInstance;
 		m_pNumberOfInstance= NULL;
-		
+
 	}
 	else
 	{
 		//qDebug() << "GLC_Instance::clear ID = " << m_Uid;
 		//qDebug() << " - Number of instance" << (*m_pNumberOfInstance);
 	}
-	
-	
+
+
 	if (m_pBoundingBox != NULL)
 	{
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
 	}
-		
+
 	// invalidate the instance
 	m_IsValid= false;
 
