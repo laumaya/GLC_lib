@@ -70,7 +70,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 	// Create orbit circle of specified color
 	m_pOrbitCircle= new GLC_OrbitCircle(1.0, m_pQGLWidget->context());
 	m_pOrbitCircle->setRGBAColor(color);
-	
+
 	// Compute orbit Circle
 	//updateOrbitCircle();
 }
@@ -81,14 +81,14 @@ GLC_Viewport::~GLC_Viewport()
 	// Delete the camera
 	if (m_pViewCam != NULL)
 	{
-		delete m_pViewCam;	
+		delete m_pViewCam;
 		m_pViewCam= NULL;
 	}
 
 	// Delete orbit circle
 	if (m_pOrbitCircle != NULL)
 	{
-		delete m_pOrbitCircle;	
+		delete m_pOrbitCircle;
 		m_pOrbitCircle= NULL;
 	}
 
@@ -108,7 +108,7 @@ GLC_Vector4d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 	Posy= (double)m_nWinVSize / 2 - Posy;
 
 	GLC_Vector4d VectMouse(Posx, Posy,0);
-	
+
 	// Compute the length of camera's field of view
 	const double ChampsVision = 2 * m_pViewCam->getDistEyeTarget() *  tan((m_dFov * PI / 180) / 2);
 
@@ -135,7 +135,7 @@ void GLC_Viewport::initGl()
 	glDepthFunc(GL_LEQUAL);                               // The Type Of Depth Testing To Do
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	
+
 	if (not extensionIsSupported("ARB_vertex_buffer_object"))
 	{
 		GLC_Exception glcException("GLC_Viewport::initGl ARB_vertex_buffer_object not found");
@@ -146,10 +146,10 @@ void GLC_Viewport::initGl()
 		if (not loadVboExtension())
 		{
 			GLC_Exception glcException("GLC_Viewport::initGl Failed to load ARB_vertex_buffer_object functions");
-			throw(glcException);			
+			throw(glcException);
 		}
 	}
-	
+
 	GLC_State::setGlslSupport();
 
 }
@@ -161,7 +161,7 @@ void GLC_Viewport::glPointing(GLint x, GLint y)
 	GLfloat Depth;
 	// read selected point
 	glReadPixels(x, getWinVSize() - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
-	
+
 	// Current visualisation matrix
 	GLdouble ViewMatrix[16];
 	glGetDoublev(GL_MODELVIEW_MATRIX, ViewMatrix);
@@ -171,14 +171,14 @@ void GLC_Viewport::glPointing(GLint x, GLint y)
 	// definition of the current viewport
 	GLint Viewport[4];
 	glGetIntegerv(GL_VIEWPORT, Viewport);
-	
+
 	// OpenGL ccordinate of selected point
 	GLdouble pX, pY, pZ;
 	gluUnProject((GLdouble) x, (GLdouble) (getWinVSize() - y) , Depth
 		, ViewMatrix, ProjMatrix, Viewport, &pX, &pY, &pZ);
 
 	// OpenGL error handler
-	GLenum error= glGetError();	
+	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_Viewport::GlPointing ", error);
@@ -197,12 +197,12 @@ void GLC_Viewport::glPointing(GLint x, GLint y)
 	}
 	else
 	{	// Geometrie not find -> panning
-		
+
 		const GLC_Point4d curPos(mapPosMouse(x, y));
 		const GLC_Point4d prevPos(mapPosMouse(getWinHSize() / 2, getWinVSize() / 2));
 		const GLC_Vector4d VectPan(curPos - prevPos);	// panning vector
 		// pan camera
-		m_pViewCam->pan(VectPan);		
+		m_pViewCam->pan(VectPan);
 	}
 }
 
@@ -231,7 +231,7 @@ void GLC_Viewport::forceAspectRatio(double ratio) const
 
 	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
-	
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -265,7 +265,7 @@ void GLC_Viewport::glExecuteTargetCam()	//! \todo Create a display list
 
 		// Compute the length of camera's field of view
 		const double ChampsVision = 2 * (m_pViewCam->getDistEyeTarget()) *  tan((m_dFov * PI / 180) / 2);
-	
+
 		// the side of camera's square is mapped on Vertical length of window
 		// Axis length in OpenGL unit = length(Pixel) * (dimend GL / dimens Pixel)
 		const double dLgAxe= ((double)nLgAxe * ChampsVision / (double)m_nWinVSize) / 7;
@@ -304,22 +304,22 @@ void GLC_Viewport::glExecuteTargetCam()	//! \todo Create a display list
 		glEnd();
 
 		glPopMatrix();
-		
+
 		// OpenGL error handler
-		GLenum error= glGetError();	
+		GLenum error= glGetError();
 		if (error != GL_NO_ERROR)
 		{
 			GLC_OpenGlException OpenGlException("GLC_Viewport::GlExecuteTargetCam ", error);
 			throw(OpenGlException);
-		}		
-		
+		}
+
 	}
 }
 
 // Display background image
 void GLC_Viewport::glExecuteImagePlane()
-{	
-	
+{
+
 	if (m_pImagePlane != NULL)
 	{
 		// Geometry validity
@@ -327,18 +327,18 @@ void GLC_Viewport::glExecuteImagePlane()
 		{
 			m_pImagePlane->glLoadTexture();
 		}
-		
+
 		// Geometry invalid or collection node list ID == 0
 		if ((!m_pImagePlane->getValidity()) || (m_ImagePlaneListID == 0))
 		{
 			//qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pImagePlane->getValidity();
 			//qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ImagePlaneListID;
-			
+
 			if (m_ImagePlaneListID == 0)
 			{
 				//qDebug() << "GLC_CollectionNode::GlExecute: List not found";
 				m_ImagePlaneListID= glGenLists(1);
-			}		
+			}
 			glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
 				m_pImagePlane->glExecute(false, false);
 			glEndList();
@@ -348,8 +348,8 @@ void GLC_Viewport::glExecuteImagePlane()
 		{
 			glCallList(m_ImagePlaneListID);
 		}
-	}	
-		
+	}
+
 }
 
 
@@ -377,7 +377,7 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 	}
 
 	glViewport(0,0,m_nWinHSize,m_nWinVSize);			// Reset The Current Viewport
-	
+
 	updateProjectionMat();
 }
 
@@ -390,19 +390,19 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 
 	// Change to selection mode
 	beginSelection(x, y);
-	
+
 	glSelectBuffer(BUFSIZE, SelectBuf);
 	glRenderMode(GL_SELECT);
-	
+
 	// Init selection names
 	glInitNames();
 	glPushName(0);
 	// Draw the scene
 	pGLWidget->updateGL();
 
-	
+
 	// Compute number of hits
-	const GLint NbrHits= glRenderMode(GL_RENDER);	
+	const GLint NbrHits= glRenderMode(GL_RENDER);
 	//qDebug() << "Number of hits : " << NbrHits;
 
 	// End of selection mode, restore Visualisation state
@@ -412,7 +412,7 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 	{
 		GLuint zMin = SelectBuf[1];	// Min object depth value
 		ReturnID= SelectBuf[3];		// Object Name
-		
+
 		for (int i= 1; i < NbrHits; ++i)
 		{
 			if (SelectBuf[4*i+1] < zMin)
@@ -442,7 +442,7 @@ void GLC_Viewport::deleteBackGroundImage()
 	{
 		glDeleteLists(m_ImagePlaneListID, 1);
 		m_ImagePlaneListID= 0;
-		
+
 	}
 	if (m_pImagePlane != NULL)
 	{
@@ -458,7 +458,7 @@ void GLC_Viewport::pan(double Cx, double Cy)
 {
 	const GLC_Vector4d VectCur(mapPosMouse(Cx,Cy));
 	const GLC_Vector4d VectPan= VectCur - m_VectPrevPan;	// Vecteur de déplacement
-	
+
 	// pan the camera
 	m_pViewCam->pan(-VectPan);
 	m_VectPrevPan= VectCur;
@@ -513,7 +513,7 @@ void GLC_Viewport::zoom(int Cy)
 
 	// Compute zoom factor between (1 / MAXZOOMFACTOR) and (MAXZOOMFACTOR)
 	double ZoomFactor= Posy - m_dPrevZoom;
-	
+
 	if (ZoomFactor > 0)
 	{
 		ZoomFactor= (MAXZOOMFACTOR - 1.0) * ZoomFactor + 1.0;
@@ -532,40 +532,18 @@ void GLC_Viewport::zoom(int Cy)
 void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 {
 	Q_ASSERT(!box.isEmpty());
-	// Ratio between screen size and bounding box size
-	const double boundingBoxCover= 1.0;
-	
+
 	// Center view on the BoundingBox
 	const GLC_Vector4d deltaVector(box.getCenter() - m_pViewCam->getTarget());
 	m_pViewCam->translate(deltaVector);
-	//m_pViewCam->setTargetCam(box.getCenter());
-	
-	// Compute the new BoundingBox
-	GLC_Matrix4x4 matTranslateCam(m_pViewCam->getEye());
-	GLC_Matrix4x4 matRotateCam(m_pViewCam->getMatCompOrbit());
-	
-	GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam.invert());	
-	
-	// The bounding Box in Camera coordinate
-	GLC_BoundingBox boundingBox(box);
-	boundingBox.transform(matComp);
-	// Compute camera's cover
-	double cameraCoverX= fabs(boundingBox.getUpper().getX()
-						- boundingBox.getLower().getX());
 
-	double cameraCoverY= fabs(boundingBox.getUpper().getY()
-						- boundingBox.getLower().getY());
+	double cameraCover= box.boundingSphereRadius() * 2.0;
 
-	double cameraCover= boundingBoxCover * fmax(cameraCoverX, cameraCoverY);
-
-	double boxProf= fabs(boundingBox.getUpper().getZ()
-						- boundingBox.getLower().getZ());
-	
 	// Compute Camera distance
-	const double distance = cameraCover / (2 * tan((m_dFov * PI / 180) / 2));
-	
+	const double distance = cameraCover / (2.0 * tan((m_dFov * PI / 180.0) / 2.0));
+
 	// Update Camera position
-	m_pViewCam->setDistEyeTarget(distance + boxProf / 2.0);
+	m_pViewCam->setDistEyeTarget(distance);
 }
 
 // Set near clipping distance
@@ -575,16 +553,16 @@ bool GLC_Viewport::setDistMin(double DistMin)
 	if (DistMin < m_dCamDistMax)
 	{
 		m_dCamDistMin= DistMin;
-		
+
 		updateProjectionMat();	// Update OpenGL projection matrix
-		
+
 		updateOrbitCircle();	// Update orbit circle
-		
+
 		if (m_pImagePlane != NULL)
 		{
 			m_pImagePlane->updateZPosition();	// Update image plane Z Position
 		}
-		
+
 		return true;
 	}
 	else
@@ -592,7 +570,7 @@ bool GLC_Viewport::setDistMin(double DistMin)
 		qDebug("GLC_Viewport::SetDistMin : KO");
 		return false;
 	}
-	
+
 }
 
 // Set far clipping distance
@@ -602,16 +580,16 @@ bool GLC_Viewport::setDistMax(double DistMax)
 	if (DistMax > m_dCamDistMin)
 	{
 		m_dCamDistMax= DistMax;
-		
+
 		updateProjectionMat();	// Update OpenGL projection matrix
-		
+
 		updateOrbitCircle();	// Update orbit circle
-		
+
 		if (m_pImagePlane != NULL)
 		{
 			m_pImagePlane->updateZPosition();	// Update image plane Z Position
 		}
-		
+
 		return true;
 	}
 	else
@@ -627,46 +605,47 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	Q_ASSERT(!bBox.isEmpty());
 	GLC_Matrix4x4 matTranslateCam(m_pViewCam->getEye());
 	GLC_Matrix4x4 matRotateCam(m_pViewCam->getMatCompOrbit());
-	
-	GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam.invert());	
-	
+
+	GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam.invert());
+
 	// The bounding Box in Camera coordinate
 	GLC_BoundingBox boundingBox(bBox);
 	boundingBox.transform(matComp);
 	// Increase size of the bounding box
 	const double increaseFactor= 1.1;
 	// Convert box distance in sphere distance
-	double d1= fabs(boundingBox.getLower().getZ());
-	double d2= fabs(boundingBox.getUpper().getZ());
-	double min= fmin(d1,d2)* (2.0 - increaseFactor);
-	double max= fmax(d1,d2) * increaseFactor;
+	const double center= fabs(boundingBox.getCenter().getZ());
+	const double radius= boundingBox.boundingSphereRadius();
+	const double min= center - radius * (2.0 - increaseFactor);
+	const double max= center + radius * increaseFactor;
+
 	GLC_Point4d camEye(m_pViewCam->getEye());
-	
 	camEye= matComp * camEye;
-	
-	if (!boundingBox.intersect(camEye))
+
+	if (min > 0.0)
 	{
-	
+		// Outside bounding Sphere
 		m_dCamDistMin= min;
 		m_dCamDistMax= max;
 		//qDebug() << "distmin" << m_dCamDistMin;
-		//qDebug() << "distmax" << m_dCamDistMax;		
+		//qDebug() << "distmax" << m_dCamDistMax;
 	}
 	else
 	{
-		m_dCamDistMin= fmin((max + min) * 0.001, m_pViewCam->getDistEyeTarget() / 2.0);
+		// Inside bounding Sphere
+		m_dCamDistMin= fmin(0.001 * radius, m_pViewCam->getDistEyeTarget() / 2.0);
 		m_dCamDistMax= max;
 		//qDebug() << "inside distmin" << m_dCamDistMin;
-		//qDebug() << "inside distmax" << m_dCamDistMax;		
+		//qDebug() << "inside distmax" << m_dCamDistMax;
 	}
-		
-		updateProjectionMat();	// Update OpenGL projection matrix		
+
+		updateProjectionMat();	// Update OpenGL projection matrix
 		updateOrbitCircle();	// Update orbit circle
 		if (m_pImagePlane != NULL)
 		{
 			m_pImagePlane->updateZPosition();	// Update image plane Z Position
 		}
-		
+
 }
 
 void GLC_Viewport::setBackgroundColor(QColor setColor)
@@ -707,7 +686,7 @@ GLC_Vector4d GLC_Viewport::mapForOrbit( double Posx, double Posy) const
 	{
 		VectMouse.setZ(sqrt(1.0 - VectMouse.getX() *  VectMouse.getX() - VectMouse.getY() * VectMouse.getY()));
 	}
-	
+
 	return VectMouse;
 }
 
@@ -727,13 +706,13 @@ void GLC_Viewport::updateOrbitCircle()
 
 	// Compute the length of camera's field of view
 	const double ChampsVision = 2 * (m_dCamDistMin + (m_dCamDistMax - m_dCamDistMin) / 2) *  tan((m_dFov * PI / 180) / 2);
-	
+
 	// the side of camera's square is mapped on Vertical length of window
 	// Circle radius in OpenGL unit = Radius(Pixel) * (dimend GL / dimens Pixel)
 	const double RayonSph= ((double)nRayonSph * ChampsVision / (double)m_nWinVSize);
 
 	if (fabs(RayonSph) > EPSILON)
-	{ 
+	{
 		m_pOrbitCircle->setRadius(RayonSph);
 	}
 
