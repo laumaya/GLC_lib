@@ -38,6 +38,18 @@
 #include "glc_vector3df.h"
 #include "glc_mesh2.h"
 
+typedef QHash<int, GLC_Vector3df> Vector3dHash;
+typedef QHash<int, GLC_Vector2df> Vector2dHash;
+
+enum FaceType
+{
+	notSet,
+	coordinate,
+	coordinateAndTexture,
+	coordinateAndNormal,
+	coordinateAndTextureAndNormal
+};
+
 class GLC_World;
 class GLC_ObjMtlLoader;
 class QGLContext;
@@ -57,12 +69,12 @@ class QGLContext;
 class GLC_ObjToWorld : public QObject
 {
 	Q_OBJECT
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
-	
+
 public:
 	GLC_ObjToWorld(const QGLContext*);
 	virtual ~GLC_ObjToWorld();
@@ -94,7 +106,7 @@ private:
 	//! Extract a face from a string
 	void extractFaceIndex(QString &);
 	//! Set Current material index
-	void setCurrentMaterial(QString &line);	
+	void setCurrentMaterial(QString &line);
 	//! Extract a vertex from a string
 	void extractVertexIndex(QString ligne, int &Coordinate, int &Normal, int &TextureCoordinate);
 	//! set the OBJ File type
@@ -114,8 +126,8 @@ private:
 	//! Merge Mutli line in one
 	void mergeLines(QString*, QTextStream*);
 
-	
-		
+
+
 //////////////////////////////////////////////////////////////////////
 // Qt Signals
 //////////////////////////////////////////////////////////////////////
@@ -131,24 +143,24 @@ private:
 	//! The Obj File name
 	QString m_FileName;
 	//! OpenGL Context
-	const QGLContext* m_pQGLContext;	
+	const QGLContext* m_pQGLContext;
 	//! the Obj Mtl loader
 	GLC_ObjMtlLoader* m_pMtlLoader;
 	//! The current line number
 	int m_CurrentLineNumber;
 	//! The current mesh
 	GLC_Mesh2* m_pCurrentMesh;
-	
+
 	//! Coordinate hash table
 	Vector3dHash m_VertexHash;
 	//! Normal hash table
 	Vector3dHash m_NormalHash;
 	//! Texture coordinate Hash table
 	Vector2dHash m_TextCoordinateHash;
-	
+
 	//! Index of the current vertex
 	int m_CurVertexIndex;
-	
+
 	//! Index of the current normal
 	int m_CurNormalIndex;
 	//! Index of the current texture coordinate
@@ -156,13 +168,13 @@ private:
 
 	//! Face type
 	FaceType m_FaceType;
-	
+
 	//! List of material already used by the current mesh
 	QHash<QString, int> m_CurrentMeshMaterials;
-	
+
 	//! current mesh material index
 	GLC_Material* m_pCurrentMaterial;
-	
+
 	// The list of GLC_Vertex of the current face
 	VertexList m_CurrentListOfVertex;
 

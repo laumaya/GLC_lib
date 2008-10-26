@@ -46,7 +46,7 @@ GLC_OffToWorld::GLC_OffToWorld(const QGLContext *pContext)
 , m_Is4off(false)
 , m_CurrentListOfVertex()
 {
-	
+
 }
 
 GLC_OffToWorld::~GLC_OffToWorld()
@@ -72,7 +72,7 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		throw(fileFormatException);
 	}
-	
+
 	//////////////////////////////////////////////////////////////////
 	// Init member
 	//////////////////////////////////////////////////////////////////
@@ -81,13 +81,13 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	// Create Working variables
 	int currentQuantumValue= 0;
 	int previousQuantumValue= 0;
-	
+
 	// Create the input file stream
 	QTextStream offStream(&file);
-	
-	// QString buffer	
+
+	// QString buffer
 	QString lineBuff;
-		
+
 	//////////////////////////////////////////////////////////////////
 	// Check the OFF Header
 	//////////////////////////////////////////////////////////////////
@@ -100,15 +100,15 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 		QString message= "GLC_OffToWorld::CreateWorldFromOff : OFF or COFF header not found";
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
-		throw(fileFormatException);				
+		throw(fileFormatException);
 	}
-	
+
 	// Set the COFF flag
 	m_IsCoff= lineBuff.startsWith("COFF");
-	
+
 	// Set the 4OFF flag
 	m_Is4off= lineBuff.startsWith("4OFF");
-	
+
 	// Create the mesh
 	m_pCurrentMesh= new GLC_Mesh2();
 
@@ -125,15 +125,15 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	{
 		++m_CurrentLineNumber;
 		lineBuff= offStream.readLine();
-		lineBuff= lineBuff.trimmed();		
+		lineBuff= lineBuff.trimmed();
 	}
 	extractNbrVertexsAndNbrFaces(lineBuff);
-	
+
 	//////////////////////////////////////////////////////////////////
 	// Read Buffer and load vertexs
-	//////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////
 	emit currentQuantum(currentQuantumValue);
-	
+
 	for (int currentVertex= 0; currentVertex < m_NbrOfVertexs; ++currentVertex)
 	{
 		// Check it the end of file has been reached
@@ -141,10 +141,10 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 		{
 			QString message= "GLC_OffToWorld::CreateWorldFromOff : This file seems to be incomplete";
 			message.append("\nAt ligne : ");
-			message.append(QString::number(m_CurrentLineNumber));				
+			message.append(QString::number(m_CurrentLineNumber));
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
-			throw(fileFormatException);		
+			throw(fileFormatException);
 		}
 
 		++m_CurrentLineNumber;
@@ -153,11 +153,11 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 		while (lineBuff.isEmpty())
 		{
 			++m_CurrentLineNumber;
-			lineBuff= offStream.readLine();			
+			lineBuff= offStream.readLine();
 		}
 		// Add current vertex and color if needed to the mesh
 		extractVertex(lineBuff);
-		
+
 		// Update Current Quantum for progress bar usage.
 		currentQuantumValue = static_cast<int>((static_cast<double>(currentVertex) / (m_NbrOfVertexs + m_NbrOfFaces)) * 100);
 		if (currentQuantumValue > previousQuantumValue)
@@ -166,10 +166,10 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 		}
 		previousQuantumValue= currentQuantumValue;
 	}
-	
+
 	//////////////////////////////////////////////////////////////////
 	// Read Buffer and load faces
-	//////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////
 	for (int currentFace= 0; currentFace < m_NbrOfFaces; ++currentFace)
 	{
 		// Check it the end of file has been reached
@@ -177,10 +177,10 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 		{
 			QString message= "GLC_OffToWorld::CreateWorldFromOff : This file seems to be incomplete";
 			message.append("\nAt ligne : ");
-			message.append(QString::number(m_CurrentLineNumber));				
+			message.append(QString::number(m_CurrentLineNumber));
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
-			throw(fileFormatException);		
+			throw(fileFormatException);
 		}
 
 		++m_CurrentLineNumber;
@@ -188,7 +188,7 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 		while (lineBuff.isEmpty())
 		{
 			++m_CurrentLineNumber;
-			lineBuff= offStream.readLine();			
+			lineBuff= offStream.readLine();
 		}
 
 		// Add current Face to the mesh
@@ -203,14 +203,14 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 		previousQuantumValue= currentQuantumValue;
 
 	}
-	
-	file.close();
 
+	file.close();
+	m_pCurrentMesh->finished();
 	GLC_Instance instance(m_pCurrentMesh);
 	m_pCurrentMesh= NULL;
 	m_pWorld->rootProduct()->addChildPart(instance);
-	
-	return m_pWorld;	
+
+	return m_pWorld;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -241,11 +241,11 @@ void GLC_OffToWorld::clear()
 void GLC_OffToWorld::extractVertex(QString &line)
 {
 	GLC_Vertex newVertex;
-	
+
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString, zString;
-	
+
 	if (((stringVecteur >> xString >> yString >> zString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk, zOk;
@@ -256,10 +256,10 @@ void GLC_OffToWorld::extractVertex(QString &line)
 		{
 			QString message= "GLC_OffToWorld::extractVertex : failed to convert vertex component to float";
 			message.append("\nAt ligne : ");
-			message.append(QString::number(m_CurrentLineNumber));				
+			message.append(QString::number(m_CurrentLineNumber));
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
-			throw(fileFormatException);		
+			throw(fileFormatException);
 		}
 		if (m_Is4off)
 		{
@@ -273,10 +273,10 @@ void GLC_OffToWorld::extractVertex(QString &line)
 				{
 					QString message= "GLC_OffToWorld::extractVertex : failed to convert vertex fourth component to float";
 					message.append("\nAt ligne : ");
-					message.append(QString::number(m_CurrentLineNumber));				
+					message.append(QString::number(m_CurrentLineNumber));
 					GLC_FileFormatException fileFormatException(message, m_FileName);
 					clear();
-					throw(fileFormatException);		
+					throw(fileFormatException);
 				}
 				newVertex.x= newVertex.x / w;
 				newVertex.y= newVertex.y / w;
@@ -286,22 +286,22 @@ void GLC_OffToWorld::extractVertex(QString &line)
 			{
 				QString message= "GLC_OffToWorld::extractVertex : failed to read vector fourth component";
 				message.append("\nAt ligne : ");
-				message.append(QString::number(m_CurrentLineNumber));				
+				message.append(QString::number(m_CurrentLineNumber));
 				GLC_FileFormatException fileFormatException(message, m_FileName);
 				clear();
-				throw(fileFormatException);				
+				throw(fileFormatException);
 			}
 		}
-		
+
 		// Test if the file is a COFF
 		if (m_IsCoff)
 		{
 			QString rString, gString, bString, aString;
-			
+
 			if (((stringVecteur >> rString >> gString >> bString >> aString).status() == QTextStream::Ok))
 			{
 				bool rOk, gOk, bOk, aOk;
-				
+
 				newVertex.r= rString.toFloat(&rOk);
 				newVertex.g= gString.toFloat(&gOk);
 				newVertex.b= bString.toFloat(&bOk);
@@ -310,44 +310,44 @@ void GLC_OffToWorld::extractVertex(QString &line)
 				{
 					QString message= "GLC_OffToWorld::extractVertex : failed to convert color component to float";
 					message.append("\nAt ligne : ");
-					message.append(QString::number(m_CurrentLineNumber));				
+					message.append(QString::number(m_CurrentLineNumber));
 					GLC_FileFormatException fileFormatException(message, m_FileName);
 					clear();
-					throw(fileFormatException);		
+					throw(fileFormatException);
 				}
 			}
 			else
 			{
 				QString message= "GLC_OffToWorld::extractVertex : failed to read vertex color";
 				message.append("\nAt ligne : ");
-				message.append(QString::number(m_CurrentLineNumber));				
+				message.append(QString::number(m_CurrentLineNumber));
 				GLC_FileFormatException fileFormatException(message, m_FileName);
 				clear();
-				throw(fileFormatException);				
+				throw(fileFormatException);
 			}
 		}
-		
+
 		m_CurrentListOfVertex.append(newVertex);
 	}
 	else
 	{
 		QString message= "GLC_OffToWorld::extractVertex : failed to read vector component";
 		message.append("\nAt ligne : ");
-		message.append(QString::number(m_CurrentLineNumber));				
+		message.append(QString::number(m_CurrentLineNumber));
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
-		throw(fileFormatException);				
+		throw(fileFormatException);
 	}
-	
+
 }
 
 // Extract Number off Vertex and faces
 void GLC_OffToWorld::extractNbrVertexsAndNbrFaces(QString &line)
-{	
+{
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString;
-	
+
 	if (((stringVecteur >> xString >> yString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk;
@@ -357,21 +357,21 @@ void GLC_OffToWorld::extractNbrVertexsAndNbrFaces(QString &line)
 		{
 			QString message= "GLC_OffToWorld::extractNbrVertexsAndNbrFaces : failed to convert text to int";
 			message.append("\nAt ligne : ");
-			message.append(QString::number(m_CurrentLineNumber));				
+			message.append(QString::number(m_CurrentLineNumber));
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
-			throw(fileFormatException);		
+			throw(fileFormatException);
 		}
 	}
 	else
 	{
 		QString message= "GLC_OffToWorld::extractNbrVertexsAndNbrFaces : failed to extract nbr of vertexs/faces";
 		message.append("\nAt ligne : ");
-		message.append(QString::number(m_CurrentLineNumber));				
+		message.append(QString::number(m_CurrentLineNumber));
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
-		throw(fileFormatException);		
-		
+		throw(fileFormatException);
+
 	}
 }
 
@@ -379,9 +379,9 @@ void GLC_OffToWorld::extractNbrVertexsAndNbrFaces(QString &line)
 void GLC_OffToWorld::extractFaceIndex(QString &line)
 {
 	QString buff;
-	
+
 	QVector<int> vectorCoordinate;
-	
+
 	//////////////////////////////////////////////////////////////////
 	// Parse the line containing face index
 	//////////////////////////////////////////////////////////////////
@@ -395,7 +395,7 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 		message.append(QString("\n") + line);
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
-		throw(fileFormatException);		
+		throw(fileFormatException);
 	}
 	bool conversionOk;
 	// Convert the QString Number of vertex to int
@@ -409,7 +409,7 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 		clear();
 		throw(fileFormatException);
 	}
-	// Extract the face's vertexs index 
+	// Extract the face's vertexs index
 	for (int i= 0; i < numberOfVertex; ++i)
 	{
 		// Get a vertex index
@@ -420,7 +420,7 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 			message.append(QString::number(m_CurrentLineNumber));
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
-			throw(fileFormatException);		
+			throw(fileFormatException);
 		}
 		// Convert the QString vertex index into int
 		int index= buff.toInt(&conversionOk);
@@ -435,8 +435,8 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 			message.append(QString::number(m_CurrentLineNumber));
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
-			throw(fileFormatException);			
-		}	
+			throw(fileFormatException);
+		}
 	}
 
 	// Trying to read face color
@@ -455,7 +455,7 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 			message.append(QString::number(m_CurrentLineNumber));
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
-			throw(fileFormatException);			
+			throw(fileFormatException);
 		}
 		for (int i= 0; i < numberOfVertex; ++i)
 		{
@@ -464,11 +464,11 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 			m_CurrentListOfVertex[vectorCoordinate[i]].b= b;
 			m_CurrentListOfVertex[vectorCoordinate[i]].a= 1.0f;
 		}
-	}	
+	}
 
 	//////////////////////////////////////////////////////////////////
 	// Add the face to the current mesh
-	//////////////////////////////////////////////////////////////////				
+	//////////////////////////////////////////////////////////////////
 	// Compute and add the face normal
 	VertexList currentListOfVertex;
 	GLC_Vector3df curNormal(computeNormal(vectorCoordinate));
@@ -479,7 +479,7 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 		m_CurrentListOfVertex[vectorCoordinate[i]].nz= curNormal.getZ();
 		currentListOfVertex.append(m_CurrentListOfVertex[vectorCoordinate[i]]);
 	}
-	
+
 	// Add the face to the current mesh
 	m_pCurrentMesh->addTriangles(currentListOfVertex, NULL);
 }
@@ -499,12 +499,12 @@ GLC_Vector3df GLC_OffToWorld::computeNormal(QVector<int> &listIndex)
 	const GLC_Vector4d vect2(x, y, z);
 	x= static_cast<double>(m_CurrentListOfVertex[listIndex[2]].x);
 	y= static_cast<double>(m_CurrentListOfVertex[listIndex[2]].y);
-	z= static_cast<double>(m_CurrentListOfVertex[listIndex[2]].z);	
+	z= static_cast<double>(m_CurrentListOfVertex[listIndex[2]].z);
 	const GLC_Vector4d vect3(x, y, z);
-	
+
 	const GLC_Vector4d edge1(vect2 - vect1);
 	const GLC_Vector4d edge2(vect3 - vect2);
-	
+
 	GLC_Vector4d normal(edge1 ^ edge2);
 	normal.setNormal(1);
 	return normal.toVector3df();

@@ -42,7 +42,7 @@ GLC_StlToWorld::GLC_StlToWorld(const QGLContext *pContext)
 , m_pCurrentMesh(NULL)
 , m_CurrentFace()
 {
-	
+
 }
 
 GLC_StlToWorld::~GLC_StlToWorld()
@@ -77,16 +77,16 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 	int currentQuantumValue= 0;
 	int previousQuantumValue= 0;
 	int numberOfLine= 0;
-	
+
 	// Attach the stream to the file
 	m_StlStream.setDevice(&file);
-	
-	// QString buffer	
+
+	// QString buffer
 	QString lineBuff;
-	
+
 	//////////////////////////////////////////////////////////////////
 	// Count the number of lines of the STL file
-	//////////////////////////////////////////////////////////////////		
+	//////////////////////////////////////////////////////////////////
 	while (!m_StlStream.atEnd())
 	{
 		++numberOfLine;
@@ -95,17 +95,17 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 
 	//////////////////////////////////////////////////////////////////
 	// Reset the stream
-	//////////////////////////////////////////////////////////////////			
+	//////////////////////////////////////////////////////////////////
 	m_StlStream.resetStatus();
 	m_StlStream.seek(0);
 	//////////////////////////////////////////////////////////////////
 	// Read Buffer and create the world
 	//////////////////////////////////////////////////////////////////
-	
+
 	emit currentQuantum(currentQuantumValue);
 	m_CurrentLineNumber= 0;
 	// Search Object section in the STL
-	
+
 	// Test if the STL File is ASCII or Binary
 	++m_CurrentLineNumber;
 	lineBuff= m_StlStream.readLine();
@@ -116,6 +116,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		m_pCurrentMesh= new GLC_Mesh2();
 		file.reset();
 		LoadBinariStl(file);
+		m_pCurrentMesh->finished();
 		GLC_Instance instance(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
 		m_pWorld->rootProduct()->addChildPart(instance);
@@ -131,17 +132,17 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		while (!m_StlStream.atEnd())
 		{
 			scanFacet();
-			
+
 			currentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentLineNumber) / numberOfLine) * 100);
 			if (currentQuantumValue > previousQuantumValue)
 			{
 				emit currentQuantum(currentQuantumValue);
 			}
-			previousQuantumValue= currentQuantumValue;		
+			previousQuantumValue= currentQuantumValue;
 		}
-	}	
+	}
 	file.close();
-		
+
 	return m_pWorld;
 }
 
@@ -167,13 +168,14 @@ void GLC_StlToWorld::clear()
 // Scan a line previously extracted from STL file
 void GLC_StlToWorld::scanFacet()
 {
-////////////////////////////////////////////// Test end of solid section////////////////////	
+////////////////////////////////////////////// Test end of solid section////////////////////
 	++m_CurrentLineNumber;
 	QString lineBuff(m_StlStream.readLine());
 	lineBuff= lineBuff.trimmed().toLower();
 	// Test if this is the end of current solid
 	if (lineBuff.startsWith("endsolid") || lineBuff.startsWith("end solid"))
 	{
+		m_pCurrentMesh->finished();
 		GLC_Instance instance(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
 		m_pWorld->rootProduct()->addChildPart(instance);
@@ -190,13 +192,13 @@ void GLC_StlToWorld::scanFacet()
 		return;
 	}
 
-////////////////////////////////////////////// Facet Normal////////////////////////////////	
+////////////////////////////////////////////// Facet Normal////////////////////////////////
 	// lineBuff Must begin with "facet normal"
 	if (!lineBuff.startsWith("facet normal"))
 	{
 		QString message= "GLC_StlToWorld::scanFacet : \"facet normal\" not found!";
 		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));		
+		message.append(QString::number(m_CurrentLineNumber));
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
 		throw(fileFormatException);
@@ -209,7 +211,7 @@ void GLC_StlToWorld::scanFacet()
 	curVertex.ny= cur3dVect.getY();
 	curVertex.nz= cur3dVect.getZ();
 	//m_pCurrentMesh->addNormal(m_CurNormalIndex++, extract3dVect(lineBuff));
-	
+
 ////////////////////////////////////////////// Outer Loop////////////////////////////////
 	++m_CurrentLineNumber;
 	lineBuff= m_StlStream.readLine();
@@ -219,13 +221,13 @@ void GLC_StlToWorld::scanFacet()
 	{
 		QString message= "GLC_StlToWorld::scanFacet : \"outer loop\" not found!";
 		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));		
+		message.append(QString::number(m_CurrentLineNumber));
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
 		throw(fileFormatException);
 	}
 
-////////////////////////////////////////////// Vertex ////////////////////////////////	
+////////////////////////////////////////////// Vertex ////////////////////////////////
 
 	for (int i= 0; i < 3; ++i)
 	{
@@ -237,19 +239,19 @@ void GLC_StlToWorld::scanFacet()
 		{
 			QString message= "GLC_StlToWorld::scanFacet : \"vertex\" not found!";
 			message.append("\nAt line : ");
-			message.append(QString::number(m_CurrentLineNumber));		
+			message.append(QString::number(m_CurrentLineNumber));
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
 			throw(fileFormatException);
 		}
 		lineBuff.remove(0,6); // Remove first 6 chars
 		lineBuff= lineBuff.trimmed();
-		
+
 		cur3dVect= extract3dVect(lineBuff);
 		curVertex.x= cur3dVect.getX();
 		curVertex.y= cur3dVect.getY();
 		curVertex.z= cur3dVect.getZ();
-		
+
 		curVertex.s= 0.0f;
 		curVertex.t= 0.0f;
 		m_CurrentFace.append(curVertex);
@@ -257,7 +259,7 @@ void GLC_StlToWorld::scanFacet()
 	// Add the face to the current mesh
 	m_pCurrentMesh->addTriangles(m_CurrentFace, NULL);
 	m_CurrentFace.clear();
-	
+
 ////////////////////////////////////////////// End Loop////////////////////////////////
 	++m_CurrentLineNumber;
 	lineBuff= m_StlStream.readLine();
@@ -267,12 +269,12 @@ void GLC_StlToWorld::scanFacet()
 	{
 		QString message= "GLC_StlToWorld::scanFacet : \"endloop\" not found!";
 		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));		
+		message.append(QString::number(m_CurrentLineNumber));
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
 		throw(fileFormatException);
 	}
-	
+
 ////////////////////////////////////////////// End Facet////////////////////////////////
 	++m_CurrentLineNumber;
 	lineBuff= m_StlStream.readLine();
@@ -282,7 +284,7 @@ void GLC_StlToWorld::scanFacet()
 	{
 		QString message= "GLC_StlToWorld::scanFacet : \"endfacet\" not found!";
 		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));		
+		message.append(QString::number(m_CurrentLineNumber));
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
 		throw(fileFormatException);
@@ -296,12 +298,12 @@ GLC_Vector3df GLC_StlToWorld::extract3dVect(QString &line)
 	float x=0.0f;
 	float y=0.0f;
 	float z=0.0f;
-	
+
 	GLC_Vector3df vectResult;
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString, zString;
-	
+
 	if (((stringVecteur >> xString >> yString >> zString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk, zOk;
@@ -312,19 +314,19 @@ GLC_Vector3df GLC_StlToWorld::extract3dVect(QString &line)
 		{
 			QString message= "GLC_StlToWorld::extract3dVect : failed to convert vector component to float";
 			message.append("\nAt ligne : ");
-			message.append(QString::number(m_CurrentLineNumber));				
+			message.append(QString::number(m_CurrentLineNumber));
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
-			throw(fileFormatException);		
+			throw(fileFormatException);
 		}
 		else
 		{
 			vectResult.setVect(x, y, z);
-		}		
+		}
 	}
 
 	return vectResult;
-	
+
 }
 // Load Binarie STL File
 void GLC_StlToWorld::LoadBinariStl(QFile &file)
@@ -336,7 +338,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 	QDataStream stlBinFile(&file);
 
 	stlBinFile.setByteOrder(QDataStream::LittleEndian);
-	
+
 	// Skip 80 Bytes STL header
 	int SkipedData= stlBinFile.skipRawData(80);
 	// Check if an error occur
@@ -345,7 +347,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 		QString message= "GLC_StlToWorld::LoadBinariStl : Failed to skip Header of binary STL";
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
-		throw(fileFormatException);				
+		throw(fileFormatException);
 	}
 	// Read the number of facet
 	quint32 numberOfFacet= 0;

@@ -77,11 +77,11 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	if (!file.open(QIODevice::ReadOnly))
 	{
 		QString message(QString("GLC_ObjToWorld::CreateWorldFromObj File ") + m_FileName + QString(" doesn't exist"));
-		//qDebug() << message;		
+		//qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		throw(fileFormatException);
 	}
-	
+
 	//////////////////////////////////////////////////////////////////
 	// Init member
 	//////////////////////////////////////////////////////////////////
@@ -91,43 +91,43 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	int currentQuantumValue= 0;
 	int previousQuantumValue= 0;
 	int numberOfLine= 0;
-	
+
 	// Create the input file stream
 	QTextStream objStream(&file);
-	
-	// QString buffer	
+
+	// QString buffer
 	QString lineBuff;
-	
+
 	QString mtlLibLine;
 
 	//////////////////////////////////////////////////////////////////
 	// Searching mtllib attribute
-	//////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////
 	while (!objStream.atEnd() && !lineBuff.contains("mtllib"))
 	{
 		++numberOfLine;
 		lineBuff= objStream.readLine();
 		if (lineBuff.contains("mtllib")) mtlLibLine= lineBuff;
 	}
-	
+
 	//////////////////////////////////////////////////////////////////
 	// Count the number of lines of the OBJ file
-	//////////////////////////////////////////////////////////////////		
+	//////////////////////////////////////////////////////////////////
 	while (!objStream.atEnd())
 	{
 		++numberOfLine;
 		objStream.readLine();
 	}
-	
+
 	//////////////////////////////////////////////////////////////////
 	// Reset the stream
-	//////////////////////////////////////////////////////////////////			
+	//////////////////////////////////////////////////////////////////
 	objStream.resetStatus();
 	objStream.seek(0);
 
 	//////////////////////////////////////////////////////////////////
 	// if mtl file found, load it
-	//////////////////////////////////////////////////////////////////		
+	//////////////////////////////////////////////////////////////////
 	QString mtlLibFileName(getMtlLibFileName(mtlLibLine));
 	if (!mtlLibFileName.isEmpty())
 	{
@@ -143,19 +143,19 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	{
 		//qDebug() << "GLC_ObjToWorld::CreateWorldFromObj: mtl file not found";
 	}
-		
+
 	//////////////////////////////////////////////////////////////////
 	// Read Buffer and create the world
-	//////////////////////////////////////////////////////////////////			
+	//////////////////////////////////////////////////////////////////
 	emit currentQuantum(currentQuantumValue);
 	m_CurrentLineNumber= 0;
 	while (!objStream.atEnd())
 	{
 		++m_CurrentLineNumber;
 		lineBuff= objStream.readLine();
-		
+
 		mergeLines(&lineBuff, &objStream);
-		
+
 		scanLigne(lineBuff);
 		currentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentLineNumber) / numberOfLine) * 100);
 		if (currentQuantumValue > previousQuantumValue)
@@ -163,10 +163,10 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 			emit currentQuantum(currentQuantumValue);
 		}
 		previousQuantumValue= currentQuantumValue;
-					
+
 	}
 	file.close();
-	
+
 	if (NULL != m_pCurrentMesh)
 	{
 		if (0 == m_pCurrentMesh->getNumberOfFaces())
@@ -176,6 +176,7 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 		}
 		else
 		{
+			m_pCurrentMesh->finished();
 			GLC_Instance instance(m_pCurrentMesh);
 			m_pCurrentMesh= NULL;
 			m_pWorld->rootProduct()->addChildPart(instance);
@@ -190,10 +191,10 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 		QString message= "GLC_ObjToWorld::CreateWorldFromObj : No mesh found!";
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
-		throw(fileFormatException);		
+		throw(fileFormatException);
 	}
 	return m_pWorld;
-		
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -220,8 +221,8 @@ QString GLC_ObjToWorld::getMtlLibFileName(QString line)
 				mtlFileName.append(" ");
 				mtlFileName.append(valueString2);
 			}
-			QFileInfo fileInfo(m_FileName);			
-			mtlFileName= fileInfo.absolutePath() + QDir::separator() + mtlFileName;			
+			QFileInfo fileInfo(m_FileName);
+			mtlFileName= fileInfo.absolutePath() + QDir::separator() + mtlFileName;
 		}
 		else
 		{
@@ -241,7 +242,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	{
 		line.remove(0,2); // Remove first 2 char
 		m_VertexHash.insert(m_CurVertexIndex++, extract3dVect(line));
-		m_FaceType = notSet;		
+		m_FaceType = notSet;
 	}
 
 	// Search texture coordinate vectors
@@ -270,7 +271,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 				//qDebug() << "Default group " << line;
 			}
 		line.remove(0,2); // Remove first 2 char
-		extractFaceIndex(line);	
+		extractFaceIndex(line);
 	}
 
 	// Search Material
@@ -280,7 +281,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 		setCurrentMaterial(line);
 		m_FaceType = notSet;
 	}
-	
+
 	// Search Group
 	else if (line.startsWith("g ") || line.startsWith("o ") || line.startsWith(QString("g") + QString(QChar(9)))
 			|| line.startsWith(QString("o") + QString(QChar(9))))
@@ -297,7 +298,7 @@ void GLC_ObjToWorld::changeGroup(QString line)
 	//qDebug() << "GLC_ObjToWorld::changeGroup at Line :" << line;
 	//////////////////////////////////////////////////////////////////
 	// Parse the line containing the group name
-	//////////////////////////////////////////////////////////////////		
+	//////////////////////////////////////////////////////////////////
 	QTextStream stream(&line);
 	QString groupName;
 	if ((stream >> groupName).status() == QTextStream::Ok)
@@ -311,13 +312,14 @@ void GLC_ObjToWorld::changeGroup(QString line)
 		}
 		//////////////////////////////////////////////////////////////
 		// If the groupName == "default" nothing to do
-		//////////////////////////////////////////////////////////////		
+		//////////////////////////////////////////////////////////////
 		if("default" != groupName)
 		{
 			if (NULL != m_pCurrentMesh) // If there is a current mesh add it as part in world
 			{
 				if (m_pCurrentMesh->getNumberOfFaces() > 0)
 				{
+					m_pCurrentMesh->finished();
 					GLC_Instance instance(m_pCurrentMesh);
 					m_pCurrentMesh= NULL;
 					m_pWorld->rootProduct()->addChildPart(instance);
@@ -330,19 +332,19 @@ void GLC_ObjToWorld::changeGroup(QString line)
 			}
 			m_pCurrentMesh= new GLC_Mesh2();
 			m_pCurrentMesh->setName(groupName);
-						
+
 		}
 	}
 	else
 	{
 		QString message= "GLC_ObjToWorld::changeGroup : something is wrong!!";
 		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));		
+		message.append(QString::number(m_CurrentLineNumber));
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
 		throw(fileFormatException);
 	}
-		
+
 }
 
 // Extract a Vector from a string
@@ -351,12 +353,12 @@ GLC_Vector3df GLC_ObjToWorld::extract3dVect(QString &line)
 	float x=0.0f;
 	float y=0.0f;
 	float z=0.0f;
-	
+
 	GLC_Vector3df vectResult;
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString, zString;
-	
+
 	if (((stringVecteur >> xString >> yString >> zString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk, zOk;
@@ -367,20 +369,20 @@ GLC_Vector3df GLC_ObjToWorld::extract3dVect(QString &line)
 		{
 			QString message= "GLC_ObjToWorld::extract3dVect : failed to convert vector component to float";
 			message.append("\nAt ligne : ");
-			message.append(QString::number(m_CurrentLineNumber));				
+			message.append(QString::number(m_CurrentLineNumber));
 			//qDebug() << message;
 			//GLC_FileFormatException fileFormatException(message, m_FileName);
 			//clear();
-			//throw(fileFormatException);		
+			//throw(fileFormatException);
 		}
 		else
 		{
 			vectResult.setVect(x, y, z);
-		}		
+		}
 	}
 
 	return vectResult;
-	
+
 }
 
 // Extract a Vector from a string
@@ -392,7 +394,7 @@ GLC_Vector2df GLC_ObjToWorld::extract2dVect(QString &line)
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString;
-	
+
 	if (((stringVecteur >> xString >> yString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk;
@@ -402,13 +404,13 @@ GLC_Vector2df GLC_ObjToWorld::extract2dVect(QString &line)
 		{
 			QString message= "GLC_ObjToWorld::extract2dVect : failed to convert vector component to double";
 			message.append("\nAt ligne : ");
-			message.append(QString::number(m_CurrentLineNumber));	
+			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
 			throw(fileFormatException);
 		}
-		vectResult.setVect(x, y);		
+		vectResult.setVect(x, y);
 	}
 
 	return vectResult;
@@ -418,35 +420,35 @@ GLC_Vector2df GLC_ObjToWorld::extract2dVect(QString &line)
 void GLC_ObjToWorld::extractFaceIndex(QString &line)
 {
 	QString buff;
-	
+
 	QVector<int> vectorCoordinate;
 	QVector<int> vectorNormal;
 	QVector<int> vectorTextureCoordinate;
-		
+
 	int coordinateIndex;
 	int normalIndex;
 	int textureCoordinateIndex;
 	//////////////////////////////////////////////////////////////////
 	// Parse the line containing face index
-	//////////////////////////////////////////////////////////////////			
+	//////////////////////////////////////////////////////////////////
 	QTextStream streamFace(&line);
 	while ((!streamFace.atEnd()))
 	{
 		streamFace >> buff;
 		extractVertexIndex(buff, coordinateIndex, normalIndex, textureCoordinateIndex);
-		
+
 		vectorCoordinate.append(coordinateIndex);
-		
+
 		if (-1 != textureCoordinateIndex)
 		{	// There is a texture coordinate
 			vectorTextureCoordinate.append(textureCoordinateIndex);
 		}
-		
+
 		if (-1 != normalIndex)
 		{	// There is a normal index
 			vectorNormal.append(normalIndex);
 		}
-		
+
 	}
 	//////////////////////////////////////////////////////////////////
 	// Check the number of face's vertex
@@ -461,7 +463,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 	fillCurrentListOfVertex(size);
 	//////////////////////////////////////////////////////////////////
 	// Add the face to the current mesh
-	//////////////////////////////////////////////////////////////////				
+	//////////////////////////////////////////////////////////////////
 	if (m_FaceType == coordinateAndNormal)
 	{
 		addVertexsToCurrentListOfVertex(vectorCoordinate);
@@ -483,7 +485,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		}
 		m_pCurrentMesh->addTriangles(m_CurrentListOfVertex, m_pCurrentMaterial);
 
-		
+
 	}
 	else if (m_FaceType == coordinateAndTexture)
 	{
@@ -496,13 +498,13 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		}
 		m_pCurrentMesh->addTriangles(m_CurrentListOfVertex, m_pCurrentMaterial);
 
-	}	
+	}
 	else if (m_FaceType == coordinateAndTextureAndNormal)
 	{
 		addVertexsToCurrentListOfVertex(vectorCoordinate);
 		addNormalsToCurrentListOfVertex(vectorNormal);
 		addTextureCoordinatesToCurrentListOfVertex(vectorTextureCoordinate);
-		
+
 		if (size > 3)
 		{
 			glc::triangulatePolygon(&m_CurrentListOfVertex);
@@ -513,7 +515,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 	{
 		QString message= "GLC_ObjToWorld::extractFaceIndex : unknow face type";
 		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));		
+		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
@@ -530,7 +532,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	{
 		QString message= "GLC_ObjToWorld::SetCurrentMaterial : failed to extract materialName";
 		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));		
+		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
@@ -538,22 +540,22 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	}
 	//////////////////////////////////////////////////////////////////
 	// Check if the material is already loaded from the current mesh
-	//////////////////////////////////////////////////////////////////				
+	//////////////////////////////////////////////////////////////////
 	//qDebug() << "Material Name" << materialName;
 	if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
 	{
 		m_pCurrentMaterial= m_pMtlLoader->getMaterial(materialName);
 	}
-			
+
 }
 // Extract a vertex from a string
 void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Normal, int &TextureCoordinate)
-{ 	
+{
  	if (m_FaceType == notSet)
  	{
  		setObjType(ligne);
  	}
- 	
+
  	if (m_FaceType == coordinateAndTextureAndNormal)
  	{
 		// Replace "/" with " "
@@ -584,13 +586,13 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		{
 			QString message= "GLC_ObjToWorld::extractVertexIndex this Obj file type is not supported";
 			message.append("\nAt line : ");
-			message.append(QString::number(m_CurrentLineNumber));			
+			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
 			throw(fileFormatException);
 		}
-				
+
  	}
  	else if (m_FaceType == coordinateAndTexture)
  	{
@@ -627,7 +629,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			clear();
 			throw(fileFormatException);
 		}
- 	}	
+ 	}
  	else if (m_FaceType == coordinateAndNormal)
  	{
 		// Replace "/" with " "
@@ -657,7 +659,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		{
 			QString message= "GLC_ObjToWorld::extractVertexIndex this Obj file type is not supported";
 			message.append("\nAt line : ");
-			message.append(QString::number(m_CurrentLineNumber));			
+			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
@@ -690,7 +692,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		{
 			QString message= "GLC_ObjToWorld::extractVertexIndex this Obj file type is not supported";
 			message.append("\nAt line : ");
-			message.append(QString::number(m_CurrentLineNumber));			
+			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName);
 			clear();
@@ -716,7 +718,7 @@ void GLC_ObjToWorld::setObjType(QString& ligne)
  	const QRegExp coordinateTextureNormalRegExp("^\\d{1,}/\\d{1,}/\\d{1,}$"); // ex. 10/30/54
  	const QRegExp coordinateNormalRegExp("^\\d{1,}//\\d{1,}$"); // ex. 10//54
  	const QRegExp coordinateTextureRegExp("^\\d{1,}/\\d{1,}$"); // ex. 10/56
- 	
+
  	if (coordinateTextureNormalRegExp.exactMatch(ligne))
  	{
  		m_FaceType= coordinateAndTextureAndNormal;
@@ -749,22 +751,22 @@ void GLC_ObjToWorld::setObjType(QString& ligne)
 void GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
 {
 	Q_ASSERT(listIndex.size() > 2);
-	
+
 	const GLC_Vector4d vect1(m_VertexHash.value(listIndex[0]));
 	const GLC_Vector4d vect2(m_VertexHash.value(listIndex[1]));
 	const GLC_Vector4d vect3(m_VertexHash.value(listIndex[2]));
-	
+
 	const GLC_Vector4d edge1(vect2 - vect1);
 	const GLC_Vector4d edge2(vect3 - vect2);
-	
+
 	GLC_Vector4d normal(edge1 ^ edge2);
 	normal.setNormal(1);
-	
+
 	GLC_Vector3df curNormal= normal.toVector3df();
-	
+
 	const int max= listIndex.count();
 	Q_ASSERT(max == m_CurrentListOfVertex.size());
-	
+
 	for (int i= 0; i < max; ++i)
 	{
 		m_CurrentListOfVertex[i].nx= curNormal.getX();
@@ -781,14 +783,14 @@ void GLC_ObjToWorld::fillCurrentListOfVertex(const int size)
 	empty.x= 0.0f;
 	empty.y= 0.0f;
 	empty.z= 0.0f;
-	
+
 	empty.nx= 0.0f;
 	empty.ny= 0.0f;
 	empty.nz= 0.0f;
-	
+
 	empty.s= 0.0f;
 	empty.t= 0.0f;
-	
+
 	empty.r= 0.0f;
 	empty.g= 0.0f;
 	empty.b= 0.0f;
@@ -812,17 +814,17 @@ void GLC_ObjToWorld::addVertexsToCurrentListOfVertex(QVector<int> & vertexs)
 			m_CurrentListOfVertex[i].x= curVect.getX();
 			m_CurrentListOfVertex[i].y= curVect.getY();
 			m_CurrentListOfVertex[i].z= curVect.getZ();
-		}		
+		}
 	}
 	else
 	{
 		QString message= "GLC_ObjToWorld::addVertexsToCurrentListOfVertex this Obj file type is not supported";
 		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));			
+		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
-		throw(fileFormatException);		
+		throw(fileFormatException);
 	}
 }
 
@@ -844,7 +846,7 @@ void GLC_ObjToWorld::addNormalsToCurrentListOfVertex(QVector<int> & normals)
 	{
 		QString message= "GLC_ObjToWorld::addNormalsToCurrentListOfVertex this Obj file type is not supported";
 		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));			
+		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
@@ -869,7 +871,7 @@ void GLC_ObjToWorld::addTextureCoordinatesToCurrentListOfVertex(QVector<int> & t
 	{
 		QString message= "GLC_ObjToWorld::addTextureCoordinatesToCurrentListOfVertex this Obj file type is not supported";
 		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));			
+		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
@@ -885,7 +887,7 @@ void GLC_ObjToWorld::clear()
 	m_TextCoordinateHash.clear();
 	m_CurrentMeshMaterials.clear();
 	m_CurrentListOfVertex.clear();
-	
+
 	if (NULL != m_pMtlLoader)
 	{
 		delete m_pMtlLoader;
@@ -896,7 +898,7 @@ void GLC_ObjToWorld::clear()
 		delete m_pCurrentMesh;
 		m_pCurrentMesh= NULL;
 	}
-	
+
 }
 // Merge Mutli line in one
 void GLC_ObjToWorld::mergeLines(QString* pLineBuff, QTextStream* p0bjStream)
