@@ -36,7 +36,7 @@ GLC_BoundingBox::GLC_BoundingBox()
 , m_Upper(0, 0, 0)
 , m_IsEmpty(true)
 {
-	
+
 }
 
 // Copy constructor
@@ -53,7 +53,7 @@ GLC_BoundingBox::GLC_BoundingBox(const GLC_Point4d& lower, const GLC_Point4d& up
 , m_Upper(upper)
 , m_IsEmpty(false)
 {
-	
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -68,13 +68,20 @@ bool GLC_BoundingBox::intersect(const GLC_Point4d& point) const
 		bool result= (point.getX() < m_Upper.getX()) && (point.getY() < m_Upper.getY())
 		&& (point.getZ() < m_Upper.getZ()) && (point.getX() > m_Lower.getX())
 		&& (point.getY() > m_Lower.getY()) && (point.getZ() > m_Lower.getZ());
-		
+
 		return result;
 	}
 	else
 	{
 		return false;
 	}
+}
+
+// Test if a point is in the bounding Sphere
+bool GLC_BoundingBox::intersectBoundingSphere(const GLC_Point4d& point) const
+{
+	const double distance= (getCenter() - point).getNorm();
+	return distance < boundingSphereRadius();
 }
 
 // Get the lower corner of the bounding box
@@ -94,7 +101,7 @@ GLC_Point4d GLC_BoundingBox::getCenter(void) const
 {
 	GLC_Vector4d vectResult = (m_Lower + m_Upper) * (1.0 / 2.0);
 	return vectResult;
-	
+
 }
 
 
@@ -117,10 +124,10 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point4d& point)
 		double lowerY= fmin(point.getY(), m_Lower.getY());
 		double lowerZ= fmin(point.getZ(), m_Lower.getZ());
 		m_Lower.setVect(lowerX, lowerY, lowerZ);
-		
+
 		double upperX= fmax(point.getX(), m_Upper.getX());
 		double upperY= fmax(point.getY(), m_Upper.getY());
-		double upperZ= fmax(point.getZ(), m_Upper.getZ());	
+		double upperZ= fmax(point.getZ(), m_Upper.getZ());
 		m_Upper.setVect(upperX, upperY, upperZ);
 	}
 	return *this;
@@ -136,15 +143,15 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3d& point)
 		m_IsEmpty= false;
 	}
 	else
-	{	
+	{
 		double lowerX= fmin(point.getX(), m_Lower.getX());
 		double lowerY= fmin(point.getY(), m_Lower.getY());
 		double lowerZ= fmin(point.getZ(), m_Lower.getZ());
 		m_Lower.setVect(lowerX, lowerY, lowerZ);
-		
+
 		double upperX= fmax(point.getX(), m_Upper.getX());
 		double upperY= fmax(point.getY(), m_Upper.getY());
-		double upperZ= fmax(point.getZ(), m_Upper.getZ());	
+		double upperZ= fmax(point.getZ(), m_Upper.getZ());
 		m_Upper.setVect(upperX, upperY, upperZ);
 	}
 	return *this;
@@ -161,15 +168,15 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3df& pointf)
 		m_IsEmpty= false;
 	}
 	else
-	{	
+	{
 		double lowerX= fmin(point.getX(), m_Lower.getX());
 		double lowerY= fmin(point.getY(), m_Lower.getY());
 		double lowerZ= fmin(point.getZ(), m_Lower.getZ());
 		m_Lower.setVect(lowerX, lowerY, lowerZ);
-		
+
 		double upperX= fmax(point.getX(), m_Upper.getX());
 		double upperY= fmax(point.getY(), m_Upper.getY());
-		double upperZ= fmax(point.getZ(), m_Upper.getZ());	
+		double upperZ= fmax(point.getZ(), m_Upper.getZ());
 		m_Upper.setVect(upperX, upperY, upperZ);
 	}
 	return *this;
@@ -190,13 +197,13 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
 		double lowerY= fmin(box.m_Lower.getY(), m_Lower.getY());
 		double lowerZ= fmin(box.m_Lower.getZ(), m_Lower.getZ());
 		m_Lower.setVect(lowerX, lowerY, lowerZ);
-		
+
 		double upperX= fmax(box.m_Upper.getX(), m_Upper.getX());
 		double upperY= fmax(box.m_Upper.getY(), m_Upper.getY());
-		double upperZ= fmax(box.m_Upper.getZ(), m_Upper.getZ());	
+		double upperZ= fmax(box.m_Upper.getZ(), m_Upper.getZ());
 		m_Upper.setVect(upperX, upperY, upperZ);
 	}
-	
+
 	return *this;
 }
 
@@ -221,7 +228,7 @@ GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
 	corner6 = (matrix * corner6);
 	corner7 = (matrix * corner7);
 	corner8 = (matrix * corner8);
-	
+
 	// Compute the new BoundingBox
 	GLC_BoundingBox boundingBox;
 	boundingBox.combine(corner1);
@@ -232,9 +239,9 @@ GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
 	boundingBox.combine(corner6);
 	boundingBox.combine(corner7);
 	boundingBox.combine(corner8);
-	
+
 	m_Lower= boundingBox.m_Lower;
 	m_Upper= boundingBox.m_Upper;
-	return *this;	
+	return *this;
 }
 

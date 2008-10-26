@@ -82,12 +82,12 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	}
 	// Close the file before open it with lib3ds
 	file.close();
-	
+
 	//////////////////////////////////////////////////////////////////
 	// Init member
 	//////////////////////////////////////////////////////////////////
 	m_pWorld= new GLC_World;
-	
+
 	//Load 3ds File
 	m_pLib3dsFile=lib3ds_file_load(m_FileName.toLatin1().data());
 	if (!m_pLib3dsFile)
@@ -101,7 +101,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	lib3ds_file_eval(m_pLib3dsFile, 0.0);
 	m_CurrentQuantumValue= m_InitQuantumValue;
 	m_PreviousQuantumValue= m_CurrentQuantumValue;
-	
+
 	emit currentQuantum(m_CurrentQuantumValue);
 	// Count the number of meshes
 	for(Lib3dsMesh *pMesh= m_pLib3dsFile->meshes; pMesh != NULL; pMesh = pMesh->next)
@@ -114,15 +114,15 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 		QString message= "GLC_3dsToWorld::CreateWorldFrom3ds : No mesh found !";
 		GLC_FileFormatException fileFormatException(message, m_FileName);
 		clear();
-		throw(fileFormatException);		
-	}	
+		throw(fileFormatException);
+	}
 
 	// Create GLC_Instance with Node
 	for (Lib3dsNode *pNode=m_pLib3dsFile->nodes; pNode!=0; pNode=pNode->next)
 	{
 		createMeshes(m_pWorld->rootProduct(), pNode);
 	}
-	
+
 	// Load unloaded mesh name
 	for(Lib3dsMesh *pMesh= m_pLib3dsFile->meshes; pMesh != NULL; pMesh = pMesh->next)
 	{
@@ -163,7 +163,7 @@ void GLC_3dsToWorld::clear()
 		lib3ds_file_free(m_pLib3dsFile);
 		m_pLib3dsFile= NULL;
 	}
-	
+
 	// Remove unused material
 	QHash<QString, GLC_Material*>::iterator i;
 	for (i= m_Materials.begin(); i != m_Materials.end(); ++i)
@@ -179,7 +179,7 @@ void GLC_3dsToWorld::clear()
 	m_PreviousQuantumValue= 0;
 	m_NumberOfMeshes= 0;
 	m_CurrentMeshNumber= 0;
-	
+
 }
 
 // Create meshes from the 3ds File
@@ -187,50 +187,56 @@ void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode
 {
 	GLC_Product* pChildProduct= NULL;
 	Lib3dsMesh *pMesh= NULL;
-	
+
 	if (pFatherNode->type == LIB3DS_OBJECT_NODE)
 	{
 		//qDebug() << "Node type LIB3DS_OBJECT_NODE is named : " << QString(pFatherNode->name);
 		//qDebug() << "Node Matrix :";
 		//qDebug() << GLC_Matrix4x4(&(pFatherNode->matrix[0][0])).toString();
-		
-		// Check if the node is a mesh or dummy		
+
+		// Check if the node is a mesh or dummy
 		if (!(strcmp(pFatherNode->name,"$$$DUMMY")==0))
 		{
 	    	pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->name);
 		    if( pMesh != NULL )
 		    {
 		    	GLC_Instance instance(createInstance(pMesh));
-		    	// Load node matrix
-		    	GLC_Matrix4x4 nodeMat(&(pFatherNode->matrix[0][0]));
-				// The mesh matrix to inverse
-		    	GLC_Matrix4x4 matInv(&(pMesh->matrix[0][0]));
-				matInv.invert();				
-				// Get the node pivot
-				Lib3dsObjectData *pObjectData;
-				pObjectData= &pFatherNode->data.object;
-				GLC_Matrix4x4 trans(-pObjectData->pivot[0], -pObjectData->pivot[1], -pObjectData->pivot[2]);
-				// Compute the part matrix
-				nodeMat= nodeMat * trans * matInv; // I don't know why...
-				// move the part by the matrix			
-				pProduct->addChildPart(instance)->move(nodeMat);
+		    	// Test if there is vertex in the mesh
+		    	GLC_Mesh2* pGLCMesh= dynamic_cast<GLC_Mesh2*>(instance.getGeometry());
+		    	if (0 != pGLCMesh->getNumberOfVertex())
+		    	{
+		    		m_LoadedMeshes.insert(pGLCMesh->getName());
+			    	// Load node matrix
+			    	GLC_Matrix4x4 nodeMat(&(pFatherNode->matrix[0][0]));
+					// The mesh matrix to inverse
+			    	GLC_Matrix4x4 matInv(&(pMesh->matrix[0][0]));
+					matInv.invert();
+					// Get the node pivot
+					Lib3dsObjectData *pObjectData;
+					pObjectData= &pFatherNode->data.object;
+					GLC_Matrix4x4 trans(-pObjectData->pivot[0], -pObjectData->pivot[1], -pObjectData->pivot[2]);
+					// Compute the part matrix
+					nodeMat= nodeMat * trans * matInv; // I don't know why...
+					// move the part by the matrix
+					pProduct->addChildPart(instance)->move(nodeMat);
+		    	}
 		    }
 		} // End If DUMMY
 	}
 	else return;
 	// If there is a child, create a child product
 	if (NULL != pFatherNode->childs)
-	{		
+	{
 		pChildProduct= pProduct->addNewChildProduct();
 		//pChildProduct->move(GLC_Matrix4x4(&(pFatherNode->matrix[0][0])));
-		 
+
 		// Create Childs meshes if exists
 		for (Lib3dsNode* pNode= pFatherNode->childs; pNode!=0; pNode= pNode->next)
-		{	
+		{
 			createMeshes(pChildProduct, pNode);
 		}
 	}
-	
+
 
 }
 //! Create Instance from a Lib3dsNode
@@ -253,12 +259,11 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	}
 	GLC_Mesh2 * pMesh= new GLC_Mesh2();
 	pMesh->setName(p3dsMesh->name);
-	m_LoadedMeshes.insert(pMesh->getName());
 	// The mesh normals
 	const int normalsNumber= p3dsMesh->faces * 3;
 	Lib3dsVector *normalL= static_cast<Lib3dsVector*>(malloc(normalsNumber * sizeof(Lib3dsVector)));
 	lib3ds_mesh_calculate_normals(p3dsMesh, normalL);
-		
+
 	int normalIndex= 0;
 	VertexList triangle;
 	GLC_Vertex testVertex;
@@ -291,7 +296,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 				triangle[i].t= 0.0f;
 			}
 		}
-		
+
 		// Load the material
 		// The material current face index
 		GLC_Material* pCurMaterial= NULL;
@@ -310,7 +315,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 				pCurMaterial= m_Materials[materialName];
 			}
 		}
-		pMesh->addTriangles(triangle, pCurMaterial);			
+		pMesh->addTriangles(triangle, pCurMaterial);
 	}
 	// free normal memmory
 	delete normalL;
@@ -321,8 +326,9 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	{
 		emit currentQuantum(m_CurrentQuantumValue);
 	}
-	m_PreviousQuantumValue= m_CurrentQuantumValue;		
-	
+	m_PreviousQuantumValue= m_CurrentQuantumValue;
+
+	pMesh->finished();
 	return GLC_Instance(pMesh);
 }
 
@@ -342,7 +348,7 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 		QString textureFileName(fileInfo.absolutePath() + QDir::separator());
 		textureFileName.append(textureName);
 		QFile textureFile(textureFileName);
-		
+
 		if (textureFile.open(QIODevice::ReadOnly))
 		{
 			// Create the texture and assign it to the material
@@ -370,7 +376,7 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 	//pMaterial->setShininess(pow(2, 10.0 * p3dsMaterial->shininess));
 	// Transparency
 	pMaterial->setTransparency(1.0 - p3dsMaterial->transparency);
-	
+
 	// Add the material to the hash table
 	m_Materials.insert(materialName, pMaterial);
 }
