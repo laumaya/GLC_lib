@@ -55,7 +55,7 @@ public:
 	/*! Create a GLC_Object , Generate is UID GLC_Object::m_Uid 
 	 * and set GLC_Object::m_Name to pName*/
 	//GLC_Object(const char *pName= "");
-	GLC_Object(const QString name= "");
+	GLC_Object(const QString& name= "");
 	
 	//! Copy constructor
 	GLC_Object(const GLC_Object& sourceObject);

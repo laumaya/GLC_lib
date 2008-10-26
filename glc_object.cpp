@@ -30,7 +30,7 @@
 // Constructor/Destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_Object::GLC_Object(const QString name)
+GLC_Object::GLC_Object(const QString& name)
 : m_Uid(glc::GLC_GenID())	// Object ID
 , m_Name(name)			// Object Name
 {
