@@ -78,9 +78,9 @@ bool GLC_Collection::add(GLC_Instance& node)
 	{
 		m_SelectedNodes.insert(key, pInstance);
 	}
-	
+
 	m_CollectionIsValid= false;
-	return true;	
+	return true;
 }
 
 // Delete geometry from the collection
@@ -88,16 +88,16 @@ bool GLC_Collection::remove(GLC_uint Key)
 {
 
 	CNodeMap::iterator iNode= m_NodeMap.find(Key);
-		
+
 	if (iNode != m_NodeMap.end())
 	{	// Ok, the key exist
-		
+
 		if (getNumberOfSelectedNode() > 0)
 		{
 			// if the geometry is selected, unselect it
 			unselect(Key);
 		}
-		
+
 		// test if the node is transparent
 		if(!iNode.value().getGeometry()->isTransparent())
 		{
@@ -108,20 +108,20 @@ bool GLC_Collection::remove(GLC_uint Key)
 			m_TransparentNodes.remove(Key);
 		}
 		m_NodeMap.remove(Key);		// Delete the conteneur
-			
+
 		// Collection validity
 		m_CollectionIsValid= false;
-		
+
 		//qDebug("GLC_Collection::removeNode : Element succesfuly deleted");
 		return true;
-		
+
 	}
 	else
 	{	// KO, key doesn't exist
 		qDebug("GLC_Collection::removeNode : Element not deleted");
 		return false;
 	}
-	
+
 }
 
 // Clear the collection
@@ -141,7 +141,7 @@ void GLC_Collection::clear(void)
 	{
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
-	}		
+	}
 }
 
 // Select a node
@@ -150,12 +150,12 @@ bool GLC_Collection::select(GLC_uint key)
 	GLC_Instance* pSelectedNode;
 	CNodeMap::iterator iNode= m_NodeMap.find(key);
 	PointerNodeHash::iterator iSelectedNode= m_SelectedNodes.find(key);
-		
+
 	if ((iNode != m_NodeMap.end()) && (iSelectedNode == m_SelectedNodes.end()))
 	{	// Ok, the key exist and the node is not selected
 		pSelectedNode= &(iNode.value());
 		m_SelectedNodes.insert(pSelectedNode->getID(), pSelectedNode);
-		
+
 		// Remove Seleted Node from is previous collection
 		if (pSelectedNode->getGeometry()->isTransparent())
 		{
@@ -165,17 +165,17 @@ bool GLC_Collection::select(GLC_uint key)
 		{
 			m_NotTransparentNodes.remove(key);
 		}
-		pSelectedNode->select();		
+		pSelectedNode->select();
 		m_CollectionIsValid= false;
-		
+
 		//qDebug("GLC_Collection::selectNode : Element succesfuly selected");
-		return true;		
+		return true;
 	}
 	else
 	{	// KO, key doesn't exist or node allready selected
 		//qDebug("GLC_Collection::selectNode : Element not selected");
 		return false;
-	}	
+	}
 }
 
 // Select all instances in current show state
@@ -202,17 +202,17 @@ void GLC_Collection::selectAll()
 bool GLC_Collection::unselect(GLC_uint key)
 {
 	GLC_Instance* pSelectedNode;
-	
+
 	PointerNodeHash::iterator iSelectedNode= m_SelectedNodes.find(key);
-		
+
 	if (iSelectedNode != m_SelectedNodes.end())
 	{	// Ok, the key exist and the node is selected
 		iSelectedNode.value()->unselect();
-		
+
 		m_SelectedNodes.remove(key);
-		
+
 		pSelectedNode= iSelectedNode.value();
-		
+
 		// Insert Selected Node to the right collection
 		if (pSelectedNode->getGeometry()->isTransparent())
 		{
@@ -222,12 +222,12 @@ bool GLC_Collection::unselect(GLC_uint key)
 		{
 			m_NotTransparentNodes.insert(pSelectedNode->getID(), pSelectedNode);
 		}
-		
+
 		m_CollectionIsValid= false;
-		
+
 		//qDebug("GLC_Collection::unselectNode : Node succesfuly unselected");
 		return true;
-		
+
 	}
 	else
 	{	// KO, key doesn't exist or node allready selected
@@ -240,10 +240,10 @@ bool GLC_Collection::unselect(GLC_uint key)
 void GLC_Collection::unselectAll()
 {
 	PointerNodeHash::iterator iSelectedNode= m_SelectedNodes.begin();
-	
+
     while (iSelectedNode != m_SelectedNodes.end())
     {
-		iSelectedNode.value()->unselect();    	
+		iSelectedNode.value()->unselect();
         ++iSelectedNode;
     }
     // Clear selected node hash table
@@ -256,7 +256,7 @@ void GLC_Collection::unselectAll()
 void GLC_Collection::setPolygonModeForAll(GLenum face, GLenum mode)
 {
 	CNodeMap::iterator iEntry= m_NodeMap.begin();
-	
+
     while (iEntry != m_NodeMap.constEnd())
     {
     	// Update Instance Polygon Mode
@@ -269,7 +269,7 @@ void GLC_Collection::setPolygonModeForAll(GLenum face, GLenum mode)
 // Set Instance visibility
 void GLC_Collection::setVisibility(const GLC_uint key, const bool visibility)
 {
-	CNodeMap::iterator iNode= m_NodeMap.find(key);		
+	CNodeMap::iterator iNode= m_NodeMap.find(key);
 	if (iNode != m_NodeMap.end())
 	{	// Ok, the key exist
 		iNode.value().setVisibility(visibility);
@@ -281,7 +281,7 @@ void GLC_Collection::setVisibility(const GLC_uint key, const bool visibility)
 void GLC_Collection::showAll()
 {
 	CNodeMap::iterator iEntry= m_NodeMap.begin();
-	
+
     while (iEntry != m_NodeMap.constEnd())
     {
     	// Update Instance Polygon Mode
@@ -295,7 +295,7 @@ void GLC_Collection::showAll()
 void GLC_Collection::hideAll()
 {
 	CNodeMap::iterator iEntry= m_NodeMap.begin();
-	
+
     while (iEntry != m_NodeMap.constEnd())
     {
     	// Update Instance Polygon Mode
@@ -308,7 +308,7 @@ void GLC_Collection::hideAll()
 void GLC_Collection::updateInstancesTransparency()
 {
 	CNodeMap::iterator iEntry= m_NodeMap.begin();
-	
+
     while (iEntry != m_NodeMap.constEnd())
     {
     	if (iEntry.value().getGeometry()->isTransparent())
@@ -319,18 +319,18 @@ void GLC_Collection::updateInstancesTransparency()
     	{
     		m_NotTransparentNodes.insert(iEntry.key(), &(iEntry.value()));
     	}
-    	
+
      	iEntry++;
-    }	
+    }
 }
 
 // Return all GLC_Instance from collection
 QList<GLC_Instance*> GLC_Collection::getInstancesHandle()
 {
 	QList<GLC_Instance*> instancesList;
-	
+
 	CNodeMap::iterator iEntry= m_NodeMap.begin();
-	
+
     while (iEntry != m_NodeMap.constEnd())
     {
     	instancesList.append(&(iEntry.value()));
@@ -349,17 +349,18 @@ GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 {
 	setBoundingBoxValidity();
-	
+
 	if (((m_pBoundingBox == NULL) || !m_CollectionIsValid) && (getNumber() > 0))
 	{
-		CNodeMap::iterator iEntry= m_NodeMap.begin();
+
 		if (m_pBoundingBox != NULL)
 		{
 			delete m_pBoundingBox;
 			m_pBoundingBox= NULL;
 		}
 		m_pBoundingBox= new GLC_BoundingBox();
-		
+
+		CNodeMap::iterator iEntry= m_NodeMap.begin();
 	    while (iEntry != m_NodeMap.constEnd())
 	    {
 	        if(iEntry.value().isVisible() == m_IsInShowSate)
@@ -376,7 +377,7 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 			GLC_Vector4d upper(0.5, 0.5, 0.5);
 			m_pBoundingBox= new GLC_BoundingBox(lower, upper);
 	    }
-				
+
 	}
 	else if ((m_pBoundingBox == NULL) || !m_CollectionIsValid)
 	{
@@ -384,12 +385,12 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 		{
 			delete m_pBoundingBox;
 			m_pBoundingBox= NULL;
-		}		
+		}
 		GLC_Vector4d lower(-0.5, -0.5, -0.5);
 		GLC_Vector4d upper(0.5, 0.5, 0.5);
-		m_pBoundingBox= new GLC_BoundingBox(lower, upper);		
+		m_pBoundingBox= new GLC_BoundingBox(lower, upper);
 	}
-	
+
 	return *m_pBoundingBox;
 }
 
@@ -419,7 +420,7 @@ void GLC_Collection::glExecute(void)
 			{
 				delete m_pBoundingBox;
 				m_pBoundingBox= NULL;
-			}				
+			}
 		}
 
 		// Gestion erreur OpenGL
@@ -442,7 +443,7 @@ void GLC_Collection::glDraw(void)
     glEnable(GL_DEPTH_TEST);
 
     PointerNodeHash::iterator iEntry;
-    
+
     if (not m_NotTransparentNodes.empty())
     {
     	iEntry= m_NotTransparentNodes.begin();
@@ -452,11 +453,11 @@ void GLC_Collection::glDraw(void)
             if (iEntry.value()->isVisible() == m_IsInShowSate)
             {
             	iEntry.value()->glExecute();
-            }        
+            }
             ++iEntry;
-        }  	
+        }
     }
- 
+
     if(not m_TransparentNodes.isEmpty())
     {
         // Set attributes for blending activation
@@ -473,19 +474,19 @@ void GLC_Collection::glDraw(void)
             if (iEntry.value()->isVisible() == m_IsInShowSate)
             {
             	iEntry.value()->glExecute();
-            }        
+            }
             ++iEntry;
         }
         // Restore attributtes
         glDepthMask(GL_TRUE);
         glDisable(GL_BLEND);
     }
-    
+
     if(not m_SelectedNodes.isEmpty())
     {
-    	// The number of object to drw 
+    	// The number of object to drw
     	int numberOffDrawnHit= 0;
-    	 
+
 		if (GLC_State::selectionShaderUsed())
 		{
 			GLC_SelectionMaterial::useShader();
@@ -497,9 +498,9 @@ void GLC_Collection::glDraw(void)
 	            if (i.value().isVisible() == m_IsInShowSate)
 	            {
 	            	++numberOffDrawnHit;
-	            }        
+	            }
 	            ++i;
-	        }				
+	        }
 		}
 		if ((m_SelectedNodes.size() != numberOffDrawnHit) or not GLC_State::selectionShaderUsed())
 		{
@@ -510,9 +511,9 @@ void GLC_Collection::glDraw(void)
 	            if (iEntry.value()->isVisible() == m_IsInShowSate)
 	            {
 	            	iEntry.value()->glExecute();
-	            }        
+	            }
 	            ++iEntry;
-	        }				
+	        }
 		}
 		if (GLC_State::selectionShaderUsed())
 		{
@@ -522,7 +523,7 @@ void GLC_Collection::glDraw(void)
 	        glEnable(GL_BLEND);
 	        glDisable(GL_DEPTH_TEST);
 	        glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	        
+
 	    	// Display selected instance
 	    	iEntry= m_SelectedNodes.begin();
 	        while (iEntry != m_SelectedNodes.constEnd())
@@ -531,19 +532,19 @@ void GLC_Collection::glDraw(void)
 	            if (iEntry.value()->isVisible() == m_IsInShowSate)
 	            {
 	            	iEntry.value()->glExecute();
-	            }        
+	            }
 	            ++iEntry;
 	        }
-        
+
     	    // Restore attributtes
             glEnable(GL_DEPTH_TEST);
             glDisable(GL_BLEND);
             glDisable(GL_CULL_FACE);
     		GLC_SelectionMaterial::unUseShader();
     	}
-    	
+
     }
-    
+
 	// OpenGL error handler
 	GLenum errCode;
 	if ((errCode= glGetError()) != GL_NO_ERROR)
@@ -563,7 +564,7 @@ void GLC_Collection::setBoundingBoxValidity(void)
 		return;
 	}
 	CNodeMap::iterator iEntry= m_NodeMap.begin();
-	
+
     while (iEntry != m_NodeMap.constEnd())
     {
     	// Update Instance validity
@@ -579,7 +580,8 @@ void GLC_Collection::setBoundingBoxValidity(void)
 			{
 				delete m_pBoundingBox;
 				m_pBoundingBox= NULL;
-			}				
+				return;
+			}
     	}
     	// Passe au Suivant
     	iEntry++;
