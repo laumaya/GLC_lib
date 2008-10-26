@@ -37,7 +37,7 @@
 
 /*! An GLC_BoundingBox is a non oriented bounding box
 */
- 
+
 //////////////////////////////////////////////////////////////////////
 
 class GLC_BoundingBox
@@ -46,16 +46,16 @@ class GLC_BoundingBox
 /*! @name Constructor */
 //@{
 //////////////////////////////////////////////////////////////////////
-public:	
+public:
 	//! Default constructor
 	GLC_BoundingBox();
-	
+
 	//! Copy constructor
 	GLC_BoundingBox(const GLC_BoundingBox& boundingBox);
-	
+
 	//! Constructor with 2 points.
 	GLC_BoundingBox(const GLC_Point4d& lower, const GLC_Point4d& upper);
-	
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
@@ -67,22 +67,29 @@ public:
 	{
 		return m_IsEmpty;
 	}
-	
+
 	//! Test if a point is in the bounding Box
 	bool intersect(const GLC_Point4d& point) const;
 
+	//! Test if a point is in the bounding Sphere
+	bool intersectBoundingSphere(const GLC_Point4d&) const;
+
 	//! Return the max distance between a point and a corner of the bounding box
 	//double maxDistance(const GLC_Vector4d& point) const;
-	
+
 	//! Get the lower corner of the bounding box
 	GLC_Point4d getLower(void) const;
-	
+
 	//! Get the upper corner of the bounding box
 	GLC_Point4d getUpper(void) const;
-	
+
 	//! Get the center of the bounding box
 	GLC_Point4d getCenter(void) const;
-		
+
+	//! Return the boudingSphere Radius
+	inline double boundingSphereRadius() const
+	{return fabs(GLC_Vector4d(m_Lower - m_Upper).getNorm()) / 2.0;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -104,7 +111,7 @@ public:
 
 	//! Transform the bounding Box
 	GLC_BoundingBox& transform(const GLC_Matrix4x4& matrix);
-	
+
 
 //@}
 
