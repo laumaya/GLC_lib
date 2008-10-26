@@ -36,17 +36,17 @@ bool glc::polygonIsConvex(const VertexList* pVertexList)
 {
 	const int max= pVertexList->size();
 	if (max < 4) return true;
-	
+
 	GLC_Vector4d vertex1((*pVertexList)[0].x, (*pVertexList)[0].y, (*pVertexList)[0].z);
 	GLC_Vector4d vertex2((*pVertexList)[1].x, (*pVertexList)[1].y, (*pVertexList)[1].z);
 	GLC_Vector4d edge1(vertex2 - vertex1);
-	
+
 	vertex1= vertex2;
 	vertex2= GLC_Vector4d((*pVertexList)[2].x, (*pVertexList)[2].y, (*pVertexList)[2].z);
 	GLC_Vector4d edge2(vertex2 - vertex1);
-	
+
 	const bool direction= (edge1 ^ edge2).getZ() >= 0.0;
-	
+
 	for (int i= 3; i < max; ++i)
 	{
 		edge1= edge2;
@@ -54,7 +54,7 @@ bool glc::polygonIsConvex(const VertexList* pVertexList)
 		vertex2= GLC_Vector4d((*pVertexList)[i].x, (*pVertexList)[i].y, (*pVertexList)[i].z);
 		edge2= vertex2 - vertex1;
 		if (((edge1 ^ edge2).getZ() >= 0.0) != direction)
-			return false;		
+			return false;
 	}
 	// The last edge with the first
 	edge1= edge2;
@@ -62,8 +62,8 @@ bool glc::polygonIsConvex(const VertexList* pVertexList)
 	vertex2= GLC_Vector4d((*pVertexList)[0].x, (*pVertexList)[0].y, (*pVertexList)[0].z);
 	edge2= vertex2 - vertex1;
 	if (((edge1 ^ edge2).getZ() >= 0.0) != direction)
-		return false;		
-	
+		return false;
+
 	// Ok, the polygon is convexe
 	return true;
 }
@@ -74,7 +74,7 @@ QVector<GLC_Point2d> glc::findIntersection(const GLC_Point2d& s1p1, const GLC_Po
 	const GLC_Vector2d D1= s2p2 - s2p1;
 	// The QVector of result points
 	QVector<GLC_Point2d> result;
-	
+
 	const GLC_Vector2d E(s2p1 - s1p1);
 	double kross= D0 ^ D1;
 	double sqrKross= kross * kross;
@@ -90,18 +90,18 @@ QVector<GLC_Point2d> glc::findIntersection(const GLC_Point2d& s1p1, const GLC_Po
 			return result; // Return empty QVector
 		}
 		const double t= (E ^ D0) / kross;
-		
+
 		if ((t < 0.0) or (t > 1.0))
 		{
 			// Intersection of lines is not a point on segment s2p1 + t * D1
 			return result; // Return empty QVector
 		}
-		
+
 		// Intersection of lines is a point on each segment
 		result << (s1p1 + (D0 * s));
 		return result; // Return a QVector of One Point
 	}
-	
+
 	// Lines of the segments are parallel
 	const double sqrLenE= E.getX() * E.getX() + E.getY() * E.getY();
 	kross= E ^ D0;
@@ -111,7 +111,7 @@ QVector<GLC_Point2d> glc::findIntersection(const GLC_Point2d& s1p1, const GLC_Po
 		// Lines of the segments are different
 		return result; // Return empty QVector
 	}
-	
+
 	// Lines of the segments are the same. Need to test for overlap of segments.
 	const double s0= (D0 * E) / sqrLen0;
 	const double s1= (D0 * D1) / sqrLen0;
@@ -131,7 +131,7 @@ bool glc::isIntersected(const GLC_Point2d& s1p1, const GLC_Point2d& s1p2, const 
 {
 	const GLC_Vector2d D0= s1p2 - s1p1;
 	const GLC_Vector2d D1= s2p2 - s2p1;
-	
+
 	const GLC_Vector2d E(s2p1 - s1p1);
 	double kross= D0 ^ D1;
 	double sqrKross= kross * kross;
@@ -147,17 +147,17 @@ bool glc::isIntersected(const GLC_Point2d& s1p1, const GLC_Point2d& s1p2, const 
 			return false;
 		}
 		const double t= (E ^ D0) / kross;
-		
+
 		if ((t < 0.0) or (t > 1.0))
 		{
 			// Intersection of lines is not a point on segment s2p1 + t * D1
 			return false;
 		}
-		
+
 		// Intersection of lines is a point on each segment
 		return true;
 	}
-	
+
 	// Lines of the segments are parallel
 	const double sqrLenE= E.getX() * E.getX() + E.getY() * E.getY();
 	kross= E ^ D0;
@@ -167,14 +167,14 @@ bool glc::isIntersected(const GLC_Point2d& s1p1, const GLC_Point2d& s1p2, const 
 		// Lines of the segments are different
 		return false;
 	}
-	
+
 	// Lines of the segments are the same. Need to test for overlap of segments.
 	const double s0= (D0 * E) / sqrLen0;
 	const double s1= s0 + (D0 * D1) / sqrLen0;
 	const double sMin= fmin(s0, s1);
 	const double sMax= fmax(s0, s1);
 	if (findIntersection(0.0, 1.0, sMin, sMax).size() == 0) return false; else return true;
-	
+
 }
 
 // return true if there is an intersection between a ray and a segment
@@ -182,7 +182,7 @@ bool glc::isIntersectedRaySegment(const GLC_Point2d& s1p1, const GLC_Vector2d& s
 {
 	const GLC_Vector2d D0= s1p2 - s1p1;
 	const GLC_Vector2d D1= s2p2 - s2p1;
-	
+
 	const GLC_Vector2d E(s2p1 - s1p1);
 	double kross= D0 ^ D1;
 	double sqrKross= kross * kross;
@@ -198,17 +198,17 @@ bool glc::isIntersectedRaySegment(const GLC_Point2d& s1p1, const GLC_Vector2d& s
 			return false;
 		}
 		const double t= (E ^ D0) / kross;
-		
+
 		if ((t < 0.0) or (t > 1.0))
 		{
 			// Intersection of lines is not a point on segment s2p1 + t * D1
 			return false;
 		}
-		
+
 		// Intersection of lines is a point on each segment
 		return true;
 	}
-	
+
 	// Lines of the segments are parallel
 	const double sqrLenE= E.getX() * E.getX() + E.getY() * E.getY();
 	kross= E ^ D0;
@@ -219,7 +219,7 @@ bool glc::isIntersectedRaySegment(const GLC_Point2d& s1p1, const GLC_Vector2d& s
 		return false;
 	}
 	else return true;
-	
+
 }
 
 // find intersection of two intervals [u0, u1] and [v0, v1]
@@ -228,7 +228,7 @@ QVector<double> glc::findIntersection(const double& u0, const double& u1, const 
 	//Q_ASSERT((u0 < u1) and (v0 < v1));
 	QVector<double> result;
 	if (u1 < v0 or u0 > v1) return result; // Return empty QVector
-	
+
 	if (u1 > v0)
 	{
 		if (u0 < v1)
@@ -281,7 +281,7 @@ bool glc::isDiagonal(const QList<GLC_Point2d>& polygon, const int i0, const int 
 	{
 		return false;
 	}
-	
+
 	int j0= 0;
 	int j1= size - 1;
 	// test segment <polygon[i0], polygon[i1]> to see if it is a diagonal
@@ -292,18 +292,18 @@ bool glc::isDiagonal(const QList<GLC_Point2d>& polygon, const int i0, const int 
 			if (isIntersected(polygon[i0], polygon[i1], polygon[j0], polygon[j1]))
 				return false;
 		}
-		
+
 		j1= j0;
 		++j0;
 	}
-	
+
 	return true;
 }
 
 // Triangulate a polygon
 void glc::triangulate(QList<GLC_Point2d>& polygon, QList<int>& index, QList<int>& tList)
-{	
-	const int size= polygon.size();	
+{
+	const int size= polygon.size();
 	if (size == 3)
 	{
 		tList << index[0] << index[1] << index[2];
@@ -331,94 +331,6 @@ void glc::triangulate(QList<GLC_Point2d>& polygon, QList<int>& index, QList<int>
 	}
 }
 
-//! Triangulate polygon wich vertices are in a mesh
-QVector<int> glc::triangulateMeshPoly(const GLC_Mesh2* pMesh, QVector<int> face)
-{
-	// Get the mesh's polygon vertexs
-	QList<GLC_Point4d> originPoints;
-	int size= face.size();
-	for (int i= 0; i < size; ++i)
-	{
-		originPoints.append(pMesh->getVertex(face[i]));
-	}
-	
-//-------------- Change frame to mach polygon plane	
-	// Compute face normal
-	const GLC_Point4d point1(originPoints[0]);
-	const GLC_Point4d point2(originPoints[1]);
-	const GLC_Point4d point3(originPoints[2]);
-	
-	const GLC_Vector4d edge1(point2 - point1);
-	const GLC_Vector4d edge2(point3 - point2);
-	
-	GLC_Vector4d polygonPlaneNormal(edge1 ^ edge2);
-	polygonPlaneNormal.setNormal(1.0);
-	
-	// Create the transformation matrix
-	GLC_Matrix4x4 transformation;
-	
-	GLC_Vector4d rotationAxis(polygonPlaneNormal ^ AxeZ);
-	if (!rotationAxis.isNull())
-	{
-		const double angle= acos(polygonPlaneNormal * AxeZ);		
-		transformation.setMatRot(rotationAxis, angle);
-	}
-	
-	QList<GLC_Point2d> polygon;
-	// Transforme polygon vertexs
-	for (int i=0; i < size; ++i)
-	{
-		//qDebug() << "b" << originPoints[i].toString();
-		originPoints[i]= transformation * originPoints[i];
-		//qDebug() << "a" << originPoints[i].toString();
-		// Create 2d vector
-		polygon << originPoints[i].toVector2d(AxeZ);
-		//qDebug() << polygon[i].toString();
-	}
-	// Create the index
-	QList<int> index;
-	for (int i= 0; i < size; ++i)
-		index.append(i);
-
-	QList<int> tList;
-	const bool faceIsCounterclockwise= isCounterclockwiseOrdered(polygon);
-		
-	if(not faceIsCounterclockwise)
-	{
-		//qDebug() << "clockwiseOrdered -> reordering polygon";
-		const int max= size / 2;
-		for (int i= 0; i < max; ++i)
-		{
-			polygon.swap(i, size - 1 -i);
-			int temp= face[i];
-			face[i]= face[size - 1 - i];
-			face[size - 1 - i]= temp;
-		}
-	}
-
-	triangulate(polygon, index, tList);
-	size= tList.size();
-	QVector<int> result;
-	for (int i= 0; i < size; i+= 3)
-	{
-		// Avoid normal problem
-		if (faceIsCounterclockwise)
-		{
-			result.append(face[tList[i]]);
-			result.append(face[tList[i + 1]]);
-			result.append(face[tList[i + 2]]);
-		}
-		else
-		{
-			result.append(face[tList[i + 2]]);
-			result.append(face[tList[i + 1]]);
-			result.append(face[tList[i]]);
-		}
-		//qDebug() << QString::number(result[i]);
-	}
-	
-	return result;
-}
 // return true if the polygon is couterclockwise ordered
 bool glc::isCounterclockwiseOrdered(const QList<GLC_Point2d>& polygon)
 {
@@ -448,7 +360,7 @@ bool glc::isCounterclockwiseOrdered(const QList<GLC_Point2d>& polygon)
 		j1= j0;
 		++j0;
 	}
-	
+
 	return true;
 
 }
@@ -477,29 +389,29 @@ void glc::triangulateNoConvexPolygon(VertexList* pVertexList)
 		originPoints.append(GLC_Point4d((*pVertexList)[i].x, (*pVertexList)[i].y, (*pVertexList)[i].z));
 		face.append(i);
 	}
-	
-//-------------- Change frame to mach polygon plane	
+
+//-------------- Change frame to mach polygon plane
 	// Compute face normal
 	const GLC_Point4d point1(originPoints[0]);
 	const GLC_Point4d point2(originPoints[1]);
 	const GLC_Point4d point3(originPoints[2]);
-	
+
 	const GLC_Vector4d edge1(point2 - point1);
 	const GLC_Vector4d edge2(point3 - point2);
-	
+
 	GLC_Vector4d polygonPlaneNormal(edge1 ^ edge2);
 	polygonPlaneNormal.setNormal(1.0);
-	
+
 	// Create the transformation matrix
 	GLC_Matrix4x4 transformation;
-	
+
 	GLC_Vector4d rotationAxis(polygonPlaneNormal ^ AxeZ);
 	if (!rotationAxis.isNull())
 	{
-		const double angle= acos(polygonPlaneNormal * AxeZ);		
+		const double angle= acos(polygonPlaneNormal * AxeZ);
 		transformation.setMatRot(rotationAxis, angle);
 	}
-	
+
 	QList<GLC_Point2d> polygon;
 	// Transforme polygon vertexs
 	for (int i=0; i < size; ++i)
@@ -518,7 +430,7 @@ void glc::triangulateNoConvexPolygon(VertexList* pVertexList)
 
 	QList<int> tList;
 	const bool faceIsCounterclockwise= isCounterclockwiseOrdered(polygon);
-		
+
 	if(not faceIsCounterclockwise)
 	{
 		//qDebug() << "clockwiseOrdered -> reordering polygon";
@@ -558,7 +470,7 @@ void glc::triangulateNoConvexPolygon(VertexList* pVertexList)
 	{
 		newVertexList.append((*pVertexList)[result[i]]);
 	}
-	
+
 	(*pVertexList)= newVertexList;
 }
 
@@ -573,7 +485,7 @@ void glc::triangulateConvexPolygon(VertexList* pVertexList)
 	{
 		newVertexList.append((*pVertexList)[0]);
 		newVertexList.append((*pVertexList)[1 + i]);
-		newVertexList.append((*pVertexList)[2 + i]);			
+		newVertexList.append((*pVertexList)[2 + i]);
 	}
 
 	(*pVertexList)= newVertexList;
