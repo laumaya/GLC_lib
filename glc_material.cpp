@@ -69,8 +69,8 @@ GLC_Material::GLC_Material(const QColor &diffuseColor)
 }
 
 
-GLC_Material::GLC_Material(const char *pName ,const GLfloat *pDiffuseColor)
-:GLC_Object(pName)
+GLC_Material::GLC_Material(const QString& name ,const GLfloat *pDiffuseColor)
+:GLC_Object(name)
 , m_AmbientColor()
 , m_DiffuseColor()
 , m_SpecularColor()
@@ -224,13 +224,21 @@ bool GLC_Material::textureIsLoaded() const
 // Return true if material are the same
 bool GLC_Material::operator==(const GLC_Material& mat) const
 {
-	bool result= m_AmbientColor == mat.m_AmbientColor;
-	result= result and (m_DiffuseColor == mat.m_DiffuseColor);
-	result= result and (m_SpecularColor == mat.m_SpecularColor);
-	result= result and (m_LightEmission == mat.m_LightEmission);
-	result= result and (m_fShininess == mat.m_fShininess);
-	result= result and (m_pTexture == mat.m_pTexture);
-	result= result and (m_Transparency == mat.m_Transparency);
+	bool result;
+	if (this == &mat)
+	{
+		result= true;
+	}
+	else
+	{
+		result= m_AmbientColor == mat.m_AmbientColor;
+		result= result and (m_DiffuseColor == mat.m_DiffuseColor);
+		result= result and (m_SpecularColor == mat.m_SpecularColor);
+		result= result and (m_LightEmission == mat.m_LightEmission);
+		result= result and (m_fShininess == mat.m_fShininess);
+		result= result and (m_pTexture == mat.m_pTexture);
+		result= result and (m_Transparency == mat.m_Transparency);
+	}
 	return result;
 }
 
