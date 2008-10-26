@@ -37,6 +37,7 @@
 GLC_Mesh2::GLC_Mesh2()
 :GLC_VboGeom("Mesh", false)
 , m_Vertex()
+, m_VertexVector()
 , m_MaterialGroup()
 , m_MaterialHash()
 , m_NumberOfFaces(0)
@@ -52,6 +53,7 @@ GLC_Mesh2::GLC_Mesh2()
 GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 : GLC_VboGeom(meshToCopy)
 , m_Vertex(meshToCopy.m_Vertex)
+, m_VertexVector(meshToCopy.m_VertexVector)
 , m_MaterialGroup()
 , m_MaterialHash(meshToCopy.m_MaterialHash)
 , m_NumberOfFaces(meshToCopy.m_NumberOfFaces)
@@ -74,7 +76,7 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
     	IndexList* pIndexList= new IndexList(*j.value());
     	m_MaterialGroup.insert(j.key(), pIndexList);
         ++j;
-    }		
+    }
 }
 
 
@@ -89,7 +91,7 @@ GLC_Mesh2::~GLC_Mesh2(void)
 	        i.value()->delGLC_Geom(getID());
 	        if (i.value()->isUnused()) delete i.value();
 	        ++i;
-	    }		
+	    }
 	}
     // delete mesh inner index material group
 	{
@@ -99,10 +101,13 @@ GLC_Mesh2::~GLC_Mesh2(void)
 	    	// Delete index vector
 	        delete i.value();
 	        ++i;
-	    }		
+	    }
 	}
-    
-	m_MaterialHash.clear();		
+
+	m_MaterialHash.clear();
+	m_Vertex.clear();
+	m_VertexVector.clear();
+	m_MaterialGroup.clear();
 }
 /////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -113,7 +118,7 @@ GLC_uint GLC_Mesh2::materialIndex(const GLC_Material& mat) const
 {
 	int index= 0;
 	MaterialHash::const_iterator iEntry= m_MaterialHash.begin();
-	
+
     while ((iEntry != m_MaterialHash.constEnd()) and !(*(iEntry.value()) == mat))
     {
         ++iEntry;
@@ -122,21 +127,21 @@ GLC_uint GLC_Mesh2::materialIndex(const GLC_Material& mat) const
     {
     	index= iEntry.key();
     }
-	return index;	
+	return index;
 }
 
 // return the mesh bounding box
 GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
 {
 	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
-	
-	const int max= m_Vertex.size();
+
+	const int max= m_VertexVector.size();
 	for (int i= 0; i < max; ++i)
 	{
-		GLC_Vector3d vector(m_Vertex[i].x, m_Vertex[i].y, m_Vertex[i].z);
+		GLC_Vector3d vector(m_VertexVector[i].x, m_VertexVector[i].y, m_VertexVector[i].z);
 		pBoundingBox->combine(vector);
 	}
-    
+
 	return pBoundingBox;
 }
 
@@ -154,11 +159,11 @@ void GLC_Mesh2::addMaterial(GLC_Material* pMaterial)
 {
 	if (pMaterial != NULL)
 	{
-		const GLC_uint materialID= pMaterial->getID(); 
+		const GLC_uint materialID= pMaterial->getID();
 		MaterialHash::const_iterator iMaterial= m_MaterialHash.find(materialID);
 		// Check if there is a material at specified index
 		Q_ASSERT(iMaterial == m_MaterialHash.end());
-		
+
 		// Add this geometry in the material use table
 		pMaterial->addGLC_Geom(this);
 		// Add the Material to Material hash table
@@ -205,7 +210,7 @@ void GLC_Mesh2::addTriangles(const VertexList &triangles, GLC_Material* pMateria
 	const int delta= triangles.size();
 	// Add triangles vertex to the mesh
 	m_Vertex+= triangles;
-	
+
 	for (int i= 0; i < delta; ++i)
 	{
 		pCurIndexList->append(startVertexIndex + static_cast<GLuint>(i));
@@ -218,12 +223,12 @@ void GLC_Mesh2::addTriangles(const VertexList &triangles, GLC_Material* pMateria
 // Reverse mesh normal
 void GLC_Mesh2::reverseNormal()
 {
-	const int max= m_Vertex.size();
+	const int max= m_VertexVector.size();
 	for (int i= 0; i < max; ++i)
 	{
-		m_Vertex[i].nx= m_Vertex[i].nx * -1.0f;
-		m_Vertex[i].ny= m_Vertex[i].ny * -1.0f;
-		m_Vertex[i].nz= m_Vertex[i].nz * -1.0f;
+		m_VertexVector[i].nx= m_VertexVector[i].nx * -1.0f;
+		m_VertexVector[i].ny= m_VertexVector[i].ny * -1.0f;
+		m_VertexVector[i].nz= m_VertexVector[i].nz * -1.0f;
 	}
 	// Invalid the geometry
 	m_GeometryIsValid = false;
@@ -234,7 +239,7 @@ void GLC_Mesh2::glExecute(bool isSelected, bool forceWire)
 {
 	m_IsSelected= isSelected;
 	GLC_VboGeom::glExecute(isSelected, forceWire);
-	m_IsSelected= false;	
+	m_IsSelected= false;
 }
 
 
@@ -244,22 +249,24 @@ void GLC_Mesh2::glExecute(bool isSelected, bool forceWire)
 // if the geometry have a texture, load it
 void GLC_Mesh2::glLoadTexture(void)
 {
-	// Load texture of the master material 
+	// Load texture of the master material
 	m_pMaterial->glLoadTexture();
 
 	MaterialHash::iterator iMaterial= m_MaterialHash.begin();
-	
+
     while (iMaterial != m_MaterialHash.constEnd())
     {
-        // Load texture of mesh materials    
+        // Load texture of mesh materials
         iMaterial.value()->glLoadTexture();
         ++iMaterial;
-    }	
+    }
 }
 
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh2::glDraw()
 {
+	Q_ASSERT(0 != m_VertexVector.size());
+
 	IndexList iboList;
 	MaterialGroupHash::iterator iMaterialGroup;
 
@@ -267,12 +274,11 @@ void GLC_Mesh2::glDraw()
 	if (!m_GeometryIsValid)
 	{
 		// Create VBO
-		const GLsizei dataNbr= static_cast<GLsizei>(m_Vertex.size());
+		const GLsizei dataNbr= static_cast<GLsizei>(m_VertexVector.size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLC_Vertex);
-		QVector<GLC_Vertex> vectorVertex(m_Vertex.toVector());
-		const GLC_Vertex* pPositionData= vectorVertex.data();
+		const GLC_Vertex* pPositionData= m_VertexVector.data();
 		glBufferData(GL_ARRAY_BUFFER, dataSize, pPositionData, GL_STATIC_DRAW);
-		
+
 		// Create IBO
 		iMaterialGroup= m_MaterialGroup.begin();
 	    while (iMaterialGroup != m_MaterialGroup.constEnd())
@@ -287,13 +293,13 @@ void GLC_Mesh2::glDraw()
 		const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
 		QVector<GLuint> vectorIndex(iboList.toVector());
 		const GLuint* pIndexData= vectorIndex.data();
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexData, GL_STATIC_DRAW);	    	
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexData, GL_STATIC_DRAW);
 	}
-	
+
 	glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
 	glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(12));
 	glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(24));
-	
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -327,7 +333,7 @@ void GLC_Mesh2::glDraw()
         			pCurrentMaterial= m_MaterialHash.value(iMaterialGroup.key());
         			Q_ASSERT(pCurrentMaterial != NULL);
         		}
-        		
+
         		// Execute current material
     			if (pCurrentMaterial->getAddRgbaTexture())
     			{
@@ -343,18 +349,18 @@ void GLC_Mesh2::glDraw()
     			const GLfloat green= pCurrentMaterial->getDiffuseColor().greenF();
     			const GLfloat blue= pCurrentMaterial->getDiffuseColor().blueF();
     			const GLfloat alpha= pCurrentMaterial->getDiffuseColor().alphaF();
-    			
+
     			glColor4f(red, green, blue, alpha);
-    			if (m_IsSelected) GLC_SelectionMaterial::glExecute();   			
+    			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
     		}
     		else
     		{
     			// Use Shader
         		glDisable(GL_TEXTURE_2D);
     		}
-    		
+
 			max= static_cast<GLuint>(iMaterialGroup.value()->size());
-			// Draw cylinder 
+			// Draw cylinder
 			glDrawRangeElements(GL_TRIANGLES, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
 			cur+= max;
     	}
@@ -371,11 +377,11 @@ void GLC_Mesh2::glDraw()
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	// OpenGL error handler
-	GLenum error= glGetError();	
+	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_Mesh2::GlDraw ", error);
 		throw(OpenGlException);
 	}
-	
+
 }

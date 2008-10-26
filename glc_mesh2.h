@@ -35,24 +35,11 @@
 #include "glc_vector2df.h"
 #include "glc_vector3df.h"
 
-// TODO a supprimer
-typedef QHash<int, GLC_Vector3df> Vector3dHash;
-typedef QHash<int, GLC_Vector2df> Vector2dHash;
-// Fin a supprimer
-
 typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
 typedef QList<GLC_Vertex> VertexList;
+typedef QVector<GLC_Vertex> VertexVector;
 typedef QList<GLuint> IndexList;
 typedef QHash<GLC_uint, IndexList*> MaterialGroupHash;
-
-enum FaceType
-{
-	notSet,
-	coordinate,
-	coordinateAndTexture,
-	coordinateAndNormal,
-	coordinateAndTextureAndNormal
-};
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Mesh2
@@ -72,10 +59,10 @@ class GLC_Mesh2 : public GLC_VboGeom
 public:
 	//! Construct an empty Mesh
 	explicit GLC_Mesh2();
-	
+
 	//! Copy constructor
 	explicit GLC_Mesh2(const GLC_Mesh2 &meshToCopy);
-	
+
 	//! Delete Mesh's faces and clear faces list
 	virtual ~GLC_Mesh2(void);
 //@}
@@ -88,12 +75,7 @@ public:
 	//! Get number of faces
 	inline unsigned int getNumberOfFaces() const {return m_NumberOfFaces;}
 	//! Get number of vertex
-	inline unsigned int getNumberOfVertex() const {return m_Vertex.size();}
-	//! return a vertex with key
-	inline const GLC_Vector3df getVertex(const int key) const
-	{
-		return GLC_Vector3df(m_Vertex[key].x, m_Vertex[key].y, m_Vertex[key].z);
-	}
+	inline unsigned int getNumberOfVertex() const {return m_VertexVector.size();}
 	//! Get number of submaterial
 	inline unsigned int getNumberOfSubMaterial() const {return m_MaterialHash.size();}
 	//! Get specified mesh sub material
@@ -122,16 +104,26 @@ public:
 public:
 	//! Add material to mesh
 	void addMaterial(GLC_Material *);
-	
+
 	//! Add triangles with the same material to the mesh
 	void addTriangles(const VertexList &, GLC_Material*);
 
 	//! Reverse mesh normal
 	void reverseNormal();
-	
+
 	//! Set color per vertex flag
 	void setColorPearVertex(bool flag){m_ColorPearVertex= flag;}
-	 
+
+	//! Copy vertex list in a vector list for Vertex Array Use
+	inline void finished()
+	{
+		if (0 == m_VertexVector.size())
+		{
+			m_VertexVector= m_Vertex.toVector();
+			m_Vertex.clear();
+		}
+	}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -146,41 +138,45 @@ private:
 
 	//! if the geometry have a texture, load it
 	virtual void glLoadTexture(void);
-	
+
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
 	virtual void glDraw(void);
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
 //! Private services Functions
 //////////////////////////////////////////////////////////////////////
 private:
-		
-	
+
+
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	
-	//! Vertexs
+
+	//! Vertex List (Use When creating Mesh)
 	VertexList m_Vertex;
+
+	//! Vertex Vectors (Use When Mesh is Finished)
+	VertexVector m_VertexVector;
+
 	//! Hash table of Vector Index grouped by material
 	MaterialGroupHash m_MaterialGroup;
-	
+
 	//! Material Hash table
 	MaterialHash m_MaterialHash;
-	
+
 	//! Mesh number of faces
 	unsigned int m_NumberOfFaces;
-		
+
 	//! Selection state
 	bool m_IsSelected;
-	
+
 	//! Color pear vertex
 	bool m_ColorPearVertex;
-	
+
 };
 #endif //GLC_MESH2_H_
