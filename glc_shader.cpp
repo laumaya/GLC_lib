@@ -26,11 +26,16 @@
 
 #include "glc_shader.h"
 #include <QTextStream>
+#include <QMutexLocker>
 #include "glc_exception.h"
 
+// Static member initialization
 QStack<GLuint> GLC_Shader::m_ProgrammStack;
 
 GLuint GLC_Shader::m_CurrentProgramm= 0;
+
+QMutex GLC_Shader::m_Mutex;
+
 
 GLC_Shader::GLC_Shader()
 : m_VertexByteArray()
@@ -61,7 +66,7 @@ GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 , m_ProgramShader(0)
 
 {
-	
+
 }
 
 GLC_Shader::~GLC_Shader()
@@ -84,13 +89,13 @@ GLC_Shader::~GLC_Shader()
 				indexToDelete= m_ProgrammStack.indexOf(m_ProgramShader);
 			}
 		}
-		// Detach shaders associated with the programm
+		// Detach shader associated with the program
 		glDetachShader(m_ProgramShader, m_VertexShader);
 		glDetachShader(m_ProgramShader, m_FragmentShader);
 		// Delete the shader
 		glDeleteShader(m_VertexShader);
 		glDeleteShader(m_FragmentShader);
-		// Delete the programm
+		// Delete the program
 		glDeleteProgram(m_ProgramShader);
 	}
 	// If m_ProgramShader == 0 then there is no vertex and fragment shader
@@ -111,10 +116,11 @@ bool GLC_Shader::canBeDeleted() const
 //////////////////////////////////////////////////////////////////////
 
 // Use this shader programm
-void GLC_Shader::useProgramm()
+void GLC_Shader::use()
 {
 	// Program shader must be valid
 	Q_ASSERT(0 != m_ProgramShader);
+	QMutexLocker locker(&m_Mutex);
 	// Test if the program shader is not already the current one
 	if (m_CurrentProgramm != m_ProgramShader)
 	{
@@ -123,13 +129,14 @@ void GLC_Shader::useProgramm()
 			m_ProgrammStack.push(m_CurrentProgramm);
 		}
 		m_CurrentProgramm= m_ProgramShader;
-		glUseProgram(m_CurrentProgramm);		
+		glUseProgram(m_CurrentProgramm);
 	}
 }
 
-// Use previous programm shader
-void GLC_Shader::usePreviousProgramm()
+// Use previous program shader
+void GLC_Shader::unuse()
 {
+	QMutexLocker locker(&m_Mutex);
 	if (m_ProgrammStack.isEmpty())
 	{
 		m_CurrentProgramm= 0;
@@ -140,21 +147,21 @@ void GLC_Shader::usePreviousProgramm()
 	}
 	glUseProgram(m_CurrentProgramm);
 }
-// Compile and attach shaders to a program shader
+// Compile and attach shader to a program shader
 void GLC_Shader::createAndCompileProgrammShader()
 {
 	Q_ASSERT(0 == m_ProgramShader);
-	
+
 	createAndLinkVertexShader();
 	createAndLinkFragmentShader();
-	
+
 	m_ProgramShader = glCreateProgram();
 	glAttachShader(m_ProgramShader, m_VertexShader);
 	glAttachShader(m_ProgramShader, m_FragmentShader);
 
 	glLinkProgram(m_ProgramShader);
 
-	// Check if the program as been linked successfully	
+	// Check if the program as been linked successfully
 	GLint params;
 	glGetProgramiv(m_ProgramShader, GL_LINK_STATUS, &params);
 	if (params != GL_TRUE)
@@ -162,19 +169,19 @@ void GLC_Shader::createAndCompileProgrammShader()
 		QString message("GLC_Shader::setVertexAndFragmentShader Failed to link program ");
 		GLC_Exception exception(message);
 		throw(exception);
-	}	
+	}
 }
 
 // Create and compile vertex shader
 void GLC_Shader::createAndLinkVertexShader()
-{	
+{
 	const char* pVertexShaderData= m_VertexByteArray.data();
-	
+
 	m_VertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(m_VertexShader, 1, &pVertexShaderData, NULL);
 	glCompileShader(m_VertexShader);
-	
-	// Check if the shader compilation is successfull
+
+	// Check if the shader compilation is successful
 	GLint params;
 	glGetShaderiv(m_VertexShader, GL_COMPILE_STATUS, &params);
 	if (params != GL_TRUE)
@@ -182,19 +189,19 @@ void GLC_Shader::createAndLinkVertexShader()
 		QString message("GLC_Shader::createAndLinkVertexShader Failed to compile Vertex shader");
 		GLC_Exception exception(message);
 		throw(exception);
-	}	
+	}
 }
 
 // Create and compile fragment shader
 void GLC_Shader::createAndLinkFragmentShader()
 {
 	const char* pFragmentShaderData= m_FragmentByteArray.data();
-	
+
 	m_FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(m_FragmentShader, 1, &pFragmentShaderData, NULL);
 	glCompileShader(m_FragmentShader);
-		
-	// Check if the shader compilation is successfull
+
+	// Check if the shader compilation is successful
 	GLint params;
 	glGetShaderiv(m_FragmentShader, GL_COMPILE_STATUS, &params);
 	if (params != GL_TRUE)
@@ -202,14 +209,14 @@ void GLC_Shader::createAndLinkFragmentShader()
 		QString message("GLC_Shader::createAndLinkFragmentShader Failed to compile fragment shader");
 		GLC_Exception exception(message);
 		throw(exception);
-	}	
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Set Vertex and fragment shaders
+// Set Vertex and fragment shader
 void GLC_Shader::setVertexAndFragmentShader(QFile& vertexFile, QFile& fragmentFile)
 {
 	setVertexShader(vertexFile);
@@ -227,24 +234,24 @@ void GLC_Shader::replaceShader(GLC_Shader& sourceShader)
 	if (isUsable())
 	{
 		const GLuint oldShaderId= m_ProgramShader;
-		
-		// Detach shaders associated with the programm
+
+		// Detach shader associated with the program
 		glDetachShader(m_ProgramShader, m_VertexShader);
 		glDetachShader(m_ProgramShader, m_FragmentShader);
 		// Delete the shader
 		glDeleteShader(m_VertexShader);
 		glDeleteShader(m_FragmentShader);
-		// Delete the programm
+		// Delete the program
 		glDeleteProgram(m_ProgramShader);
-		
-		// Init shaders ID
+
+		// Init shader ID
 		m_ProgramShader= 0;
 		m_VertexShader= 0;
 		m_FragmentShader= 0;
-		
+
 		// Rebuilt shader
 		createAndCompileProgrammShader();
-		
+
 		// Update the shader program stack
 		if (m_ProgrammStack.contains(oldShaderId))
 		{
@@ -275,7 +282,7 @@ void GLC_Shader::setVertexShader(QFile& vertexFile)
 	m_VertexByteArray= readShaderFile(vertexFile);
 }
 
-// Set fragment shaders
+// Set fragment shader
 void GLC_Shader::setFragmentShader(QFile& fragmentFile)
 {
 	Q_ASSERT(0 == m_ProgramShader);
