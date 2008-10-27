@@ -30,6 +30,8 @@
 #include "glc_ext.h"
 #include <QStack>
 #include <QFile>
+#include <QMutex>
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Shader
 /*! \brief GLC_Shader : OpenGL shader abstraction*/
@@ -38,7 +40,7 @@
  *  GLC_Shader provide functionnality to load, compile and execute
  * 	GLSL vertex and fragment shader.
  */
- 
+
 //////////////////////////////////////////////////////////////////////
 class GLC_Shader
 {
@@ -87,13 +89,13 @@ public:
 public:
 	//! Use this shader programm
 	/*! Throw GLC_Exception if the programm is not usable*/
-	void useProgramm();
-	//! Use previous programm shader
-	static void usePreviousProgramm();
+	void use();
+	//! unuse programm shader
+	static void unuse();
 	//! Compile and attach shaders to a program shader
 	/*! Throw GLC_Exception if vertex and fragment shader are not been set*/
 	void createAndCompileProgrammShader();
-	
+
 private:
 	//! Create and compile vertex shader
 	void createAndLinkVertexShader();
@@ -118,7 +120,7 @@ private:
 
 
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 // private members
 //////////////////////////////////////////////////////////////////////
@@ -127,6 +129,8 @@ private:
 	static QStack<GLuint> m_ProgrammStack;
 	//! The current programm ID
 	static GLuint m_CurrentProgramm;
+	//! A Mutex
+	static QMutex m_Mutex;
 
 	//! Vertex shader file
 	QByteArray m_VertexByteArray;
