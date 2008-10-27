@@ -42,7 +42,7 @@ class GLC_SelectionMaterial
 {
 private:
 	GLC_SelectionMaterial();
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
@@ -52,16 +52,16 @@ public:
 	static void glExecute();
 	//! Init shader
 	inline static void initShader() {m_SelectionShader.createAndCompileProgrammShader();}
-	//! Set shaders
+	//! Set shader
 	inline static void setShaders(QFile& vertex, QFile& fragment)
 	{m_SelectionShader.setVertexAndFragmentShader(vertex, fragment);}
 	//! Use shader
-	inline static void useShader() {m_SelectionShader.useProgramm();}
-	//! Unuse shader
-	inline static void unUseShader() {m_SelectionShader.usePreviousProgramm();}
+	inline static void useShader() {m_SelectionShader.use();}
+	//! Unused shader
+	inline static void unUseShader() {m_SelectionShader.unuse();}
 
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
