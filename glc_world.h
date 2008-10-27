@@ -38,7 +38,7 @@
  *  GLC_World contain :
  * 		- The Scene root GLC_Product.
  * 		- a GLC_Collection which manage all scene shapes (GLC_Instance)
- * 
+ *
  */
 //////////////////////////////////////////////////////////////////////
 class GLC_World
@@ -46,7 +46,7 @@ class GLC_World
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
-//////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
 	GLC_World();
@@ -84,7 +84,7 @@ public:
 	//! Reverse worlds part normal
 	inline void reversePartNormal() {m_pRoot->reverseChildPartNormal();}
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Operator Overload */
 //@{
@@ -100,7 +100,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the world
-	inline void glExecute(void) {m_pCollection->glExecute();}
+	inline void glExecute(GLuint groupId) {m_pCollection->glExecute(groupId);}
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -110,10 +110,10 @@ private:
 	//! The instance Collection
 	GLC_Collection* m_pCollection;
 	//! The root of the product structure
-	GLC_Product* m_pRoot;	
+	GLC_Product* m_pRoot;
 	//! Number of this world
 	int* m_pNumberOfWorld;
-	
+
 };
 
 #endif /*GLC_WORLD_H_*/
