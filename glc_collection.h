@@ -38,6 +38,12 @@ class GLC_Material;
 typedef QHash< GLC_uint, GLC_Instance> CNodeMap;
 typedef QHash< GLC_uint, GLC_Instance*> PointerNodeHash;
 
+//! Hash of geometry hash table
+typedef QHash<GLuint, PointerNodeHash*> HashList;
+
+//! Hash of shader group id
+typedef QHash<GLC_uint, GLuint> ShaderGroup;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Collection
 /*! \brief GLC_Collection : GLC_Instance flat collection */
@@ -47,7 +53,7 @@ typedef QHash< GLC_uint, GLC_Instance*> PointerNodeHash;
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Collection  
+class GLC_Collection
 {
 
 //////////////////////////////////////////////////////////////////////
@@ -57,7 +63,7 @@ class GLC_Collection
 public:
 	//! Default constructor
 	GLC_Collection();
-	
+
 	//! Destructor
 	/*! Delete all Node in the Hash Table and clear the Hash Table*/
 	virtual ~GLC_Collection();
@@ -72,37 +78,41 @@ public:
 
 	//! Return true if the collection is empty
 	inline bool isEmpty() const {return m_NodeMap.size() == 0;}
-	
+
 	//! Return the number of Node in the collection
 	inline int getNumber(void) const{return m_NodeMap.size();}
-	
+
 	//! Return all GLC_Instance from collection
 	QList<GLC_Instance*> getInstancesHandle();
-	
+
 	//! Return a GLC_Instance from collection
 	/*! If the element is not found in collection a empty node is return*/
 	GLC_Instance* getInstanceHandle(GLC_uint Key);
-	
-	//! Return the collection Bounding Box
+
+	//! Return the entire collection Bounding Box
 	GLC_BoundingBox getBoundingBox(void);
-	
+
 	//! Return the number of Node in the selection Hash
-	inline int getNumberOfSelectedNode(void) const {return m_SelectedNodes.size();}
-	
+	inline int numberOfSelectedNode(void) const {return m_SelectedNodes.size();}
+
 	//! Get the Hash table of Selected Nodes
 	inline PointerNodeHash* getSelections() {return &m_SelectedNodes;}
-	
+
 	//! Return true if the Node is in the collection
 	inline bool isInCollection(GLC_uint key) const {return m_NodeMap.contains(key);}
 
 	//! Return true if the element is selected
 	inline bool isSelected(GLC_uint key) const {return m_SelectedNodes.contains(key);}
-	
+
 	//! Return the showing state
 	inline bool getShowState() const {return m_IsInShowSate;}
-	
+
 	//! Return true if instance transparency is checked
 	inline bool instanceTransparencyIsChecked() const {return m_CheckInstanceTransparency;}
+
+	//! Return the number of drawable objects
+	int numberOfDrawableObjects() const;
+
 
 //@}
 
@@ -112,9 +122,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+	//! Add the specified shader to the collection
+	/* return true if success false otherwise*/
+	bool addShader(GLuint);
+
+	//! Remove the specified shader from the collection
+	/* return true if success false otherwise*/
+	bool removeShader(GLuint);
+
 	//! Add a GLC_Instance in the collection
-	/*! return true if success false otherwise*/
-	bool add(GLC_Instance& node);
+	/*! return true if success false otherwise
+	 * If shading group is specified, add instance in desire shading group
+	 * */
+	bool add(GLC_Instance& ,GLuint group=0);
 
 	//! Remove a GLC_Geometry from the collection and delete it
 	/*! 	- Find the GLC_Geometry in the collection
@@ -128,31 +148,31 @@ public:
 
 	//! Remove and delete all GLC_Geometry from the collection
 	void clear(void);
-	
+
 	//! Select a Instance
 	bool select(GLC_uint);
-	
+
 	//! Select all instances in current show state
 	void selectAll();
-	
+
 	//! unselect a Instance
 	bool unselect(GLC_uint);
-	
+
 	//! unselect all Instance
 	void unselectAll();
-	
+
 	//! Set the polygon mode for all Instance
 	void setPolygonModeForAll(GLenum, GLenum);
-	
+
 	//! Set Instance visibility
 	void setVisibility(const GLC_uint, const bool);
-	
+
 	//! Show all instances of the collection
 	void showAll();
-	
+
 	//! Hide all instances of collection
 	void hideAll();
-	
+
 	//! Set the Show or noShow state
 	inline void swapShowState()
 	{
@@ -161,19 +181,23 @@ public:
 	}
 	//! Update instance transparency
 	void updateInstancesTransparency();
-	
+
 	//! Check For instances transparency
 	inline void checkInstancesTransparency(bool flag) {m_CheckInstanceTransparency= flag;}
 
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Display the collection
-	void glExecute(void);
+	//! Display the specified collection group
+	/* The main group is 0
+	 * The selection group is 1
+	 * User group are identified by user id
+	 */
+	void glExecute(GLuint);
 
 //@}
 
@@ -184,10 +208,10 @@ public:
 
 private:
 	//! Display collection's member
-	void glDraw(void);
+	void glDraw(GLuint);
 
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Privates services Functions*/
 //@{
@@ -209,13 +233,19 @@ private:
 
 	//! Validity of collection
 	bool m_CollectionIsValid;
-	
+
 	//! BoundingBox of the collection
 	GLC_BoundingBox* m_pBoundingBox;
-		
+
 	//! Selected Node Hash Table
 	PointerNodeHash m_SelectedNodes;
-	
+
+	//! List of other Node Hash Table
+	HashList m_OtherNodeHashList;
+
+	//! Shader groups hash
+	ShaderGroup m_ShaderGroup;
+
 	//! Not transparent Node Hash Table
 	PointerNodeHash m_NotTransparentNodes;
 
@@ -224,9 +254,9 @@ private:
 
 	//! Show State
 	bool m_IsInShowSate;
-	
+
 	//! Check instances transparency
 	bool m_CheckInstanceTransparency;
-		
+
 };
 #endif //GLC_COLLECTION_H_

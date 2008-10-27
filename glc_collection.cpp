@@ -42,6 +42,8 @@ GLC_Collection::GLC_Collection()
 , m_CollectionIsValid(false)
 , m_pBoundingBox(NULL)
 , m_SelectedNodes()
+, m_OtherNodeHashList()
+, m_ShaderGroup()
 , m_NotTransparentNodes()
 , m_TransparentNodes()
 , m_IsInShowSate(true)
@@ -57,10 +59,28 @@ GLC_Collection::~GLC_Collection()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+
+// Add the specified shader to the collection
+bool addShader(GLuint shaderId)
+{
+	return true;
+}
+
+// Remove the specified shader from the collection
+bool removeShader(GLuint shaderId)
+{
+	return true;
+}
+
 // Add GLC_Instance in the collection
-bool GLC_Collection::add(GLC_Instance& node)
+bool GLC_Collection::add(GLC_Instance& node, GLuint shaderID)
 {
 	const GLC_uint key= node.getID();
+	if (m_NodeMap.contains(key))
+	{
+		qDebug() << "Instance already in collection";
+		return false;
+	}
 	m_NodeMap.insert(key, node);
 	// Create an GLC_Instance pointer of the inserted instance
 	CNodeMap::iterator iNode= m_NodeMap.find(key);
@@ -92,7 +112,7 @@ bool GLC_Collection::remove(GLC_uint Key)
 	if (iNode != m_NodeMap.end())
 	{	// Ok, the key exist
 
-		if (getNumberOfSelectedNode() > 0)
+		if (numberOfSelectedNode() > 0)
 		{
 			// if the geometry is selected, unselect it
 			unselect(Key);
@@ -133,6 +153,18 @@ void GLC_Collection::clear(void)
 	m_NotTransparentNodes.clear();
 	// Clear the transparent Hash Table
 	m_TransparentNodes.clear();
+	// Clear Other Node Hash List
+	HashList::iterator iEntry= m_OtherNodeHashList.begin();
+    while (iEntry != m_OtherNodeHashList.constEnd())
+    {
+    	iEntry.value()->clear();
+    	delete iEntry.value();
+    	iEntry= m_OtherNodeHashList.erase(iEntry);
+    }
+
+	m_OtherNodeHashList.clear();
+	m_ShaderGroup.clear();
+
 	// Clear main Hash table
     m_NodeMap.clear();
 
@@ -345,7 +377,7 @@ GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 	return &(m_NodeMap[Key]);
 }
 
-//! return the collection Bounding Box
+// return the entire collection Bounding Box
 GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 {
 	setBoundingBoxValidity();
@@ -394,11 +426,32 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 	return *m_pBoundingBox;
 }
 
+// Return the number of drawable objects
+int GLC_Collection::numberOfDrawableObjects() const
+{
+	// The number of object to drw
+	int numberOffDrawnHit= 0;
+
+	// Count the number off instance to draw
+	CNodeMap::const_iterator i= m_NodeMap.begin();
+	while (i != m_NodeMap.constEnd())
+	{
+		//qDebug() << "transparent";
+		if (i.value().isVisible() == m_IsInShowSate)
+		{
+			++numberOffDrawnHit;
+		}
+		++i;
+	}
+	return numberOffDrawnHit;
+}
+
 
 //////////////////////////////////////////////////////////////////////
-// Fonctions OpenGL
+// OpenGL Functions
 //////////////////////////////////////////////////////////////////////
-void GLC_Collection::glExecute(void)
+
+void GLC_Collection::glExecute(GLuint groupId)
 {
 	//qDebug() << "GLC_Collection::glExecute";
 	if (getNumber() > 0)
@@ -408,12 +461,12 @@ void GLC_Collection::glExecute(void)
 			updateInstancesTransparency();
 		}
 		if (m_CollectionIsValid)
-		{	// La collection OK
-			glDraw();
+		{	// The collection is OK
+			glDraw(groupId);
 		}
 		else
 		{
-			glDraw();
+			glDraw(groupId);
 			m_CollectionIsValid= true;
 			// delete the boundingBox
 			if (m_pBoundingBox != NULL)
@@ -423,7 +476,7 @@ void GLC_Collection::glExecute(void)
 			}
 		}
 
-		// Gestion erreur OpenGL
+		// OpenGL error handler
 		GLenum errCode;
 		if ((errCode= glGetError()) != GL_NO_ERROR)
 		{
@@ -434,54 +487,87 @@ void GLC_Collection::glExecute(void)
 	}
 }
 
-// Affiche les éléments de la collection
-void GLC_Collection::glDraw(void)
+// Display the specified collection group
+void GLC_Collection::glDraw(GLuint groupId)
 {
-	// Display non transparent instance
-    glDisable(GL_BLEND);
-    //glDisable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
+	if (groupId == 0)
+	{
+		// Display non transparent instance
+	    glDisable(GL_BLEND);
+	    //glDisable(GL_CULL_FACE);
+	    glEnable(GL_DEPTH_TEST);
 
-    PointerNodeHash::iterator iEntry;
+	    PointerNodeHash::iterator iEntry;
 
-    if (not m_NotTransparentNodes.empty())
-    {
-    	iEntry= m_NotTransparentNodes.begin();
-        while (iEntry != m_NotTransparentNodes.constEnd())
-        {
-        	//qDebug() << "no transparent";
-            if (iEntry.value()->isVisible() == m_IsInShowSate)
-            {
-            	iEntry.value()->glExecute();
-            }
-            ++iEntry;
-        }
-    }
+	    if (not m_NotTransparentNodes.empty())
+	    {
+	    	iEntry= m_NotTransparentNodes.begin();
+	        while (iEntry != m_NotTransparentNodes.constEnd())
+	        {
+	        	//qDebug() << "no transparent";
+	            if (iEntry.value()->isVisible() == m_IsInShowSate)
+	            {
+	            	iEntry.value()->glExecute();
+	            }
+	            ++iEntry;
+	        }
+	    }
 
-    if(not m_TransparentNodes.isEmpty())
-    {
-        // Set attributes for blending activation
-        //glEnable(GL_CULL_FACE);
-        glEnable(GL_BLEND);
-        glDepthMask(GL_FALSE);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-    	// Display transparent instance
-    	iEntry= m_TransparentNodes.begin();
-        while (iEntry != m_TransparentNodes.constEnd())
-        {
-        	//qDebug() << "transparent";
-            if (iEntry.value()->isVisible() == m_IsInShowSate)
-            {
-            	iEntry.value()->glExecute();
-            }
-            ++iEntry;
-        }
-        // Restore attributtes
-        glDepthMask(GL_TRUE);
-        glDisable(GL_BLEND);
-    }
+	    if(not m_TransparentNodes.isEmpty())
+	    {
+	        // Set attributes for blending activation
+	        //glEnable(GL_CULL_FACE);
+	        glEnable(GL_BLEND);
+	        glDepthMask(GL_FALSE);
+	        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	        //glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	    	// Display transparent instance
+	    	iEntry= m_TransparentNodes.begin();
+	        while (iEntry != m_TransparentNodes.constEnd())
+	        {
+	        	//qDebug() << "transparent";
+	            if (iEntry.value()->isVisible() == m_IsInShowSate)
+	            {
+	            	iEntry.value()->glExecute();
+	            }
+	            ++iEntry;
+	        }
+	        // Restore attributtes
+	        glDepthMask(GL_TRUE);
+	        glDisable(GL_BLEND);
+	    }
 
+	}
+	else if (groupId == 1)
+	{
+	    if(not m_SelectedNodes.isEmpty())
+	    {
+			if (GLC_State::selectionShaderUsed())
+			{
+				GLC_SelectionMaterial::useShader();
+			}
+			PointerNodeHash::iterator iEntry= m_SelectedNodes.begin();
+	        while (iEntry != m_SelectedNodes.constEnd())
+	        {
+	        	//qDebug() << "transparent";
+	            if (iEntry.value()->isVisible() == m_IsInShowSate)
+	            {
+	            	iEntry.value()->glExecute();
+	            }
+	            ++iEntry;
+	        }
+			if (GLC_State::selectionShaderUsed())
+			{
+				GLC_SelectionMaterial::unUseShader();
+			}
+	    }
+
+	}
+	else
+	{
+
+	}
+	/*
     if(not m_SelectedNodes.isEmpty())
     {
     	// The number of object to drw
@@ -544,7 +630,7 @@ void GLC_Collection::glDraw(void)
     	}
 
     }
-
+	*/
 	// OpenGL error handler
 	GLenum errCode;
 	if ((errCode= glGetError()) != GL_NO_ERROR)
