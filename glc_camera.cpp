@@ -323,7 +323,6 @@ void GLC_Camera::glExecute(GLenum Mode)
 
 void GLC_Camera::createMatComp(void)
 {
-	// Calcule de la matrice de rotation entre VectZ et VectCam
 	// Compute rotation matrix between Z axis and camera
 	const GLC_Vector4d VectCam((m_Eye - m_Target).setNormal(1));
 	
@@ -345,26 +344,28 @@ void GLC_Camera::createMatComp(void)
 	}
 
 	// Angle between InitVectUp and m_VectUp
-	GLC_Vector4d InitVectUp(0,1,0); // Par dï¿½faut m_VectUp est Y
+	GLC_Vector4d InitVectUp(0,1,0); // m_VectUp is Y by default
 	InitVectUp= m_MatCompOrbit * InitVectUp;
-	// Compute the angle
-	const double AngleVectUp= acos(InitVectUp * m_VectUp);
-	
-	GLC_Matrix4x4 MatInt; // intermediate matrix
-
-	if (( AngleVectUp > EPSILON) && ( (PI - AngleVectUp) > EPSILON) )
-
-	{ // Angle not equal to 0 or 180ï¿½
-		const GLC_Vector4d VectAxeRot(InitVectUp ^ m_VectUp);
-
-		MatInt.setMatRot(VectAxeRot, AngleVectUp);
-	}
-	else	// Angle equal to 0 or 180ï¿½
+	// Compute the angle if vector are not equal
+	if (InitVectUp != InitVectUp)
 	{
-		MatInt.setMatRot(VectCam, AngleVectUp);
-	}
-
-	m_MatCompOrbit= MatInt * m_MatCompOrbit;	
+		const double AngleVectUp= acos(InitVectUp * m_VectUp);
+		
+		GLC_Matrix4x4 MatInt; // intermediate matrix
+	
+		if (( AngleVectUp > EPSILON) && ( (PI - AngleVectUp) > EPSILON) )
+	
+		{ // Angle not equal to 0 or 180°
+			const GLC_Vector4d VectAxeRot(InitVectUp ^ m_VectUp);
+			MatInt.setMatRot(VectAxeRot, AngleVectUp);
+		}
+		else	// Angle equal to 0 or 180°
+		{
+			MatInt.setMatRot(VectCam, AngleVectUp);
+		}
+		qDebug() << "MatInt " << MatInt.toString();
+		m_MatCompOrbit= MatInt * m_MatCompOrbit;			
+	}	
 }
 
 
