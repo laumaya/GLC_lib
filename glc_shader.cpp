@@ -44,6 +44,7 @@ GLC_Shader::GLC_Shader()
 , m_FragmentShader(0)
 , m_ProgramShader(0)
 {
+	qDebug() << "Create Shader";
 }
 
 // Construct shader with specifie vertex and fragment
@@ -54,6 +55,7 @@ GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 , m_FragmentShader(0)
 , m_ProgramShader(0)
 {
+	qDebug() << "Create Shader";
 	setVertexAndFragmentShader(vertex, fragment);
 }
 
@@ -64,41 +66,14 @@ GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 , m_FragmentByteArray(shader.m_FragmentByteArray)
 , m_FragmentShader(0)
 , m_ProgramShader(0)
-
 {
-
+	qDebug() << "Create Shader";
 }
 
 GLC_Shader::~GLC_Shader()
 {
-	//qDebug() << "GLC_Shader::~GLC_Shader";
-	if (m_ProgramShader != 0)
-	{
-		// Test if the shader is the current one
-		if (m_CurrentProgramm == m_ProgramShader)
-		{
-			qDebug() << "Warning deleting current shader";
-		}
-		//removing shader id from the stack
-		if (m_ProgrammStack.contains(m_ProgramShader))
-		{
-			int indexToDelete= m_ProgrammStack.indexOf(m_ProgramShader);
-			while (indexToDelete != -1)
-			{
-				m_ProgrammStack.remove(indexToDelete);
-				indexToDelete= m_ProgrammStack.indexOf(m_ProgramShader);
-			}
-		}
-		// Detach shader associated with the program
-		glDetachShader(m_ProgramShader, m_VertexShader);
-		glDetachShader(m_ProgramShader, m_FragmentShader);
-		// Delete the shader
-		glDeleteShader(m_VertexShader);
-		glDeleteShader(m_FragmentShader);
-		// Delete the program
-		glDeleteProgram(m_ProgramShader);
-	}
-	// If m_ProgramShader == 0 then there is no vertex and fragment shader
+	qDebug() << "GLC_Shader::~GLC_Shader";
+	deleteShader();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -191,6 +166,41 @@ void GLC_Shader::createAndLinkVertexShader()
 		throw(exception);
 	}
 }
+//Delete the shader
+void GLC_Shader::deleteShader()
+{
+	qDebug() << "delete Shader";
+	if (m_ProgramShader != 0)
+	{
+		// Test if the shader is the current one
+		if (m_CurrentProgramm == m_ProgramShader)
+		{
+			qDebug() << "Warning deleting current shader";
+		}
+		//removing shader id from the stack
+		if (m_ProgrammStack.contains(m_ProgramShader))
+		{
+			int indexToDelete= m_ProgrammStack.indexOf(m_ProgramShader);
+			while (indexToDelete != -1)
+			{
+				m_ProgrammStack.remove(indexToDelete);
+				indexToDelete= m_ProgrammStack.indexOf(m_ProgramShader);
+			}
+		}
+			// Detach shader associated with the program
+		glDetachShader(m_ProgramShader, m_VertexShader);
+		glDetachShader(m_ProgramShader, m_FragmentShader);
+		// Delete the shader
+		glDeleteShader(m_VertexShader);
+		m_VertexShader= 0;
+		glDeleteShader(m_FragmentShader);
+		m_FragmentShader= 0;
+		// Delete the program
+		glDeletePrograms(1, &m_ProgramShader);
+		m_ProgramShader= 0;
+	}
+		
+}	
 
 // Create and compile fragment shader
 void GLC_Shader::createAndLinkFragmentShader()
@@ -242,7 +252,7 @@ void GLC_Shader::replaceShader(GLC_Shader& sourceShader)
 		glDeleteShader(m_VertexShader);
 		glDeleteShader(m_FragmentShader);
 		// Delete the program
-		glDeleteProgram(m_ProgramShader);
+		glDeletePrograms(1, &m_ProgramShader);
 
 		// Init shader ID
 		m_ProgramShader= 0;

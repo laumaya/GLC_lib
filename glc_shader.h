@@ -94,7 +94,9 @@ public:
 	static void unuse();
 	//! Compile and attach shaders to a program shader
 	/*! Throw GLC_Exception if vertex and fragment shader are not been set*/
-	void createAndCompileProgrammShader();
+	void createAndCompileProgrammShader();	
+	//!Delete the shader
+	void deleteShader();
 
 private:
 	//! Create and compile vertex shader
