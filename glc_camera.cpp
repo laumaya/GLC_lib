@@ -347,7 +347,7 @@ void GLC_Camera::createMatComp(void)
 	GLC_Vector4d InitVectUp(0,1,0); // m_VectUp is Y by default
 	InitVectUp= m_MatCompOrbit * InitVectUp;
 	// Compute the angle if vector are not equal
-	if (InitVectUp != InitVectUp)
+	if (InitVectUp != m_VectUp)
 	{
 		const double AngleVectUp= acos(InitVectUp * m_VectUp);
 		
