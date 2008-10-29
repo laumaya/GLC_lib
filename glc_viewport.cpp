@@ -78,6 +78,8 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // Delete Camera, Image Plane and orbit circle
 GLC_Viewport::~GLC_Viewport()
 {
+	GLC_SelectionMaterial::deleteShader();
+	
 	// Delete the camera
 	if (m_pViewCam != NULL)
 	{
@@ -603,10 +605,9 @@ bool GLC_Viewport::setDistMax(double DistMax)
 void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 {
 	Q_ASSERT(!bBox.isEmpty());
-	GLC_Matrix4x4 matTranslateCam(m_pViewCam->getEye());
+	GLC_Matrix4x4 matTranslateCam(-m_pViewCam->getEye());
 	GLC_Matrix4x4 matRotateCam(m_pViewCam->getMatCompOrbit());
-
-	GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam.invert());
+	GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam);
 
 	// The bounding Box in Camera coordinate
 	GLC_BoundingBox boundingBox(bBox);
