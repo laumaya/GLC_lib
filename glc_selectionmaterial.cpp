@@ -51,5 +51,11 @@ void GLC_SelectionMaterial::glExecute()
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pSpecularColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, pLightEmission);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &shininess);
-	
+}
+
+
+//! delete shader
+void GLC_SelectionMaterial::deleteShader()
+{
+	m_SelectionShader.deleteShader();
 }

@@ -52,6 +52,8 @@ public:
 	static void glExecute();
 	//! Init shader
 	inline static void initShader() {m_SelectionShader.createAndCompileProgrammShader();}
+	//! delete shader
+	static void deleteShader();
 	//! Set shader
 	inline static void setShaders(QFile& vertex, QFile& fragment)
 	{m_SelectionShader.setVertexAndFragmentShader(vertex, fragment);}
