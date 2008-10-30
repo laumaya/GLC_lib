@@ -44,7 +44,7 @@
  *		- Material : 	GLC_Material
  * 		- Graphic properties
  * 		- Transformation Matrix
- * 
+ *
  * GLC_Geometry provide :
  * 		- Function to create VBO : GLC_VboGeom::createVbo
  * 		- Function to draw Geometry : GLC_VboGeom::glExecute
@@ -104,15 +104,15 @@ public:
 	//! Return Color Green component
 	inline GLfloat getdGreen(void) const
 	{return m_pMaterial->getDiffuseColor().greenF();}
-	
+
 	//! Return Color blue component
 	inline GLfloat getdBlue(void) const
 	{return m_pMaterial->getDiffuseColor().blueF();}
-	
+
 	//! Return Color Alpha component
 	inline GLfloat getdAlpha(void) const
 	{return m_pMaterial->getDiffuseColor().alphaF();}
-			
+
 	//! Return Validity of geometry
 	inline bool getValidity(void) const
 	{return m_GeometryIsValid;}
@@ -120,31 +120,34 @@ public:
 	//! Return material of geometry
 	inline GLC_Material* getMaterial(void) const
 	{return m_pMaterial;}
-	
+
 	//! return the geometry bounding box
-	virtual GLC_BoundingBox* getBoundingBox(void) const = 0;
-	
+	virtual GLC_BoundingBox& getBoundingBox(void) = 0;
+
+	//! Return true if the bounding box is valid
+	inline bool boundingBoxIsValid() const {return NULL != m_pBoundingBox;}
+
 	//! clone the geometry
 	virtual GLC_VboGeom* clone() const = 0;
-	
+
 	//! Get the geometry transparency
 	inline bool isTransparent() const
 	{return m_IsTransparent;}
-	
+
 	//! return true if color per vertex is used
 	inline bool usedColorPerVertex() const
 	{return m_UseColorPerVertex;}
-	
+
 	//! Return true if the geometry type is wireframe
 	inline bool typeIsWire() const
 	{return m_IsWire;}
-	
+
 	//! Return true if the geometry have a texture
 	inline bool addTexture() const
 	{return m_pMaterial->getAddRgbaTexture();}
 
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
@@ -160,11 +163,11 @@ public:
 	// Material
 	//! Set the Geometry material
 	void setMaterial(GLC_Material* pMat);
-	
+
 	//! Set the transprency property
 	inline void setTransparency(const bool transparency)
 	{m_IsTransparent= transparency;}
-	
+
 	inline void colorPerVertex(const bool colorPerVertex)
 	{
 		if (m_UseColorPerVertex != colorPerVertex)
@@ -181,7 +184,7 @@ public:
 public:
 	//! if the geometry have a texture, load it
 	virtual void glLoadTexture(void);
-	
+
 	//! Virtual interface for OpenGL execution from GLC_Object.
 	/*! This Virtual function is implemented here.\n
 	 * At the first call, this function call virtual function
@@ -193,8 +196,8 @@ public:
 	 *        virtual function GLC_Geometry::glDraw
 	 */
 	virtual void glExecute(bool, bool forceWire= false);
-	
-	
+
+
 protected:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function have to be implemented in concrete class.*/
@@ -206,7 +209,7 @@ protected:
 	 * bool ForceWire
 	 */
 	virtual void glPropGeom(bool, bool);
-	
+
 	//! Vbo creation
 	void createVBOs();
 //@}
@@ -224,16 +227,19 @@ protected:
 	//! Geometry validity
 	bool m_GeometryIsValid;
 
+	//! Bounding box
+	GLC_BoundingBox* m_pBoundingBox;
+
 	//! Material
 	GLC_Material* m_pMaterial;
-	
+
 	//! Color per vertex usage
 	bool m_UseColorPerVertex;
-	
+
 //////////////////////////////////////////////////////////////////////
-// Private members 
+// Private members
 //////////////////////////////////////////////////////////////////////
-private:		
+private:
 	//! Geometry type is wire
 	bool m_IsWire;
 

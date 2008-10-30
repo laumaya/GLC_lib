@@ -36,17 +36,17 @@
 
 /*! An GLC_Box is a polygonal geometry\n
  *  It's a rectangular parallelepiped box centred at (0, 0, 0)*/
- 
+
 
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Box : public GLC_VboGeom 
+class GLC_Box : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor */
 //@{
 //////////////////////////////////////////////////////////////////////
-public:	
+public:
 	//! Construct an GLC_Box
 	/*! By default, discretion is set to #GLC_POLYDISCRET*/
 	GLC_Box(double, double, double);
@@ -65,10 +65,10 @@ public:
 
 	//! Get Z length
 	double getLgZ(void) const;
-	
+
 	//! return the box bounding box
-	virtual GLC_BoundingBox* getBoundingBox(void) const;
-	
+	virtual GLC_BoundingBox& getBoundingBox(void);
+
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
 
@@ -95,7 +95,7 @@ public:
 	/*! This Function invalid OpenGL display list
 	 * LgZ must be > 0*/
 	void setLgZ(double LgZ);
-	
+
 // End of Display List modifying functions
 
 //@}
@@ -125,6 +125,6 @@ private:
 
 	//! Z Length
 	double m_dLgZ;
-	
+
 };
 #endif //GLC_BOX_H_

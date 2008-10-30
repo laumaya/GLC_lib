@@ -37,11 +37,12 @@ GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
 , m_VboId(0)
 , m_IboId(0)
 , m_GeometryIsValid(false)	// By default geometry is invalid
+, m_pBoundingBox(NULL)
 , m_pMaterial(NULL)			// have to be set later in constructor
 , m_UseColorPerVertex(false)
 , m_IsWire(typeIsWire)		// the geometry type
 , m_IsTransparent(false)	// Not transparent by default
-{	
+{
 	// Material is set here
 	setMaterial(new GLC_Material());
 }
@@ -51,6 +52,7 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 , m_VboId(0)
 , m_IboId(0)
 , m_GeometryIsValid(false)	// By default geometry is invalid
+, m_pBoundingBox(NULL)
 , m_pMaterial(NULL)			// have to be set later in constructor
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
 , m_IsWire(sourceGeom.m_IsWire)
@@ -60,6 +62,10 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 	// Material is copy here
 	setMaterial(new GLC_Material());
 	m_pMaterial->setMaterial(sourceGeom.getMaterial());
+	if (NULL != sourceGeom.m_pBoundingBox)
+	{
+		m_pBoundingBox= new GLC_BoundingBox(*sourceGeom.m_pBoundingBox);
+	}
 }
 
 GLC_VboGeom::~GLC_VboGeom()
@@ -70,11 +76,16 @@ GLC_VboGeom::~GLC_VboGeom()
 	// IBO
 	if (0 != m_IboId)
 		glDeleteBuffers(1, &m_IboId);
-	// Material	
+	// Material
 	if (NULL != m_pMaterial)
 	{
 		m_pMaterial->delGLC_Geom(getID());	//Remove Geometry from the material usage collection
 		if (m_pMaterial->isUnused()) delete m_pMaterial;
+	}
+
+	if (NULL != m_pBoundingBox)
+	{
+		delete m_pBoundingBox;
 	}
 }
 
@@ -91,7 +102,7 @@ void GLC_VboGeom::setMaterial(GLC_Material* pMat)
 		{
 			pMat->addGLC_Geom(this);
 		}
-	
+
 		if (m_pMaterial != NULL)
 		{
 			m_pMaterial->delGLC_Geom(getID());
@@ -99,7 +110,7 @@ void GLC_VboGeom::setMaterial(GLC_Material* pMat)
 		}
 
 		m_pMaterial= pMat;
-		
+
 		// Test if the material is transparent
 		if (m_pMaterial->isTransparent())
 		{
@@ -133,17 +144,17 @@ void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
 	}
-		
+
 	glDraw();
-			
+
 	m_GeometryIsValid= true;
-	
+
 	// Unbind VBOs
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	
+
 	// OpenGL error handler
-	GLenum error= glGetError();	
+	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_VboGeom::GlExecute ", error);
@@ -154,12 +165,12 @@ void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 // Virtual interface for OpenGL Geometry properties.
 void GLC_VboGeom::glPropGeom(bool isSelected, bool forceWire)
 {
-	
+
 	if(m_IsWire || forceWire)
 	{
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
-		
+
 		if (isSelected) GLC_SelectionMaterial::glExecute();
 		else glColor4f(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
 	}
@@ -168,7 +179,7 @@ void GLC_VboGeom::glPropGeom(bool isSelected, bool forceWire)
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
 		m_pMaterial->glExecute();
-		if (isSelected) GLC_SelectionMaterial::glExecute();		
+		if (isSelected) GLC_SelectionMaterial::glExecute();
 	}
 	else
 	{
@@ -177,14 +188,14 @@ void GLC_VboGeom::glPropGeom(bool isSelected, bool forceWire)
 		if (isSelected) GLC_SelectionMaterial::glExecute();
 		else m_pMaterial->glExecute();
 	}
-		
+
 	// OpenGL error handler
-	GLenum error= glGetError();	
+	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_VboGeom::GlPropGeom ", error);
 		throw(OpenGlException);
-	}	
+	}
 }
 
 // Vbo creation

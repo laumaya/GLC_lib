@@ -53,7 +53,7 @@ public:
 	 *  dRadius must be > 0
 	 *  dLength must be > 0*/
 	GLC_Cylinder(double dRadius, double dLength);
-	
+
 	//! Copy contructor
 	GLC_Cylinder(const GLC_Cylinder& sourceCylinder);
 
@@ -76,16 +76,16 @@ public:
 	//! Get Cylinder discretion
 	inline int getDiscretion(void) const
 	{return m_Discret;}
-	
+
 	//! return the cylinder bounding box
-	virtual GLC_BoundingBox* getBoundingBox(void) const;
-	
+	virtual GLC_BoundingBox& getBoundingBox(void);
+
 	//! Return a copy of the geometry
-	virtual GLC_VboGeom* clone() const;	
-	
+	virtual GLC_VboGeom* clone() const;
+
 	//! return true if cylinder's ended are capped
 	bool EndedIsCaped() const {return m_EndedIsCaped;}
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ public:
 	void setEndedCaps(bool CapsEnded);
 
 // End of functions impacting display list
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -141,6 +141,6 @@ private:
 
 	//! Cylinder is capped
 	bool m_EndedIsCaped;
-	
+
 };
 #endif //GLC_CYLINDER_H_

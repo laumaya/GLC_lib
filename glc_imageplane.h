@@ -58,12 +58,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	
+
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
-	
+
 	//! Return the geometry bounding box
-	virtual GLC_BoundingBox* getBoundingBox(void) const;
+	virtual GLC_BoundingBox& getBoundingBox(void);
 
 //@}
 
@@ -77,7 +77,7 @@ public:
 
 	//! Update image plane size
 	void updatePlaneSize(void);
-	
+
 	//! Update Plane Z position
 	void updateZPosition(void);
 //@}
@@ -106,7 +106,7 @@ private:
 
 	//! Plane Position in Z direction
 	double m_dZpos;
-	
+
 	//! Polygons display style
 	GLenum m_PolyFace;
 	GLenum m_PolyMode;

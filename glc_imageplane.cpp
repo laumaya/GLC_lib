@@ -60,9 +60,9 @@ GLC_VboGeom* GLC_ImagePlane::clone() const
 }
 
 //! Return the geometry bounding box
-GLC_BoundingBox* GLC_ImagePlane::getBoundingBox() const
+GLC_BoundingBox& GLC_ImagePlane::getBoundingBox()
 {
-	return NULL;
+	return *(new GLC_BoundingBox());
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ void GLC_ImagePlane::updatePlaneSize(void)
 	// Calcul du coté du carré de vision de la caméra
 	// Le coté du carré de la caméra est mappé sur la hauteur de la fenètre
 	const double ChampsVision = 2 * m_dZpos *  tan((m_pViewport->getFov() * PI / 180)/ 2);
-	
+
 	// Circle radius in openGL unit = RayonPixel * (dimens GL / dimens Pixel)
 	m_dLgImage= ((double)nCote * ChampsVision / (double)m_pViewport->getWinVSize());
 
@@ -108,20 +108,20 @@ void GLC_ImagePlane::updateZPosition(void)
 	const double n= m_pViewport->getDistMin();
 	const double f= m_pViewport->getDistMax();
 	int nbrBits;
-	
+
 	//glGetIntegerv(GL_DEPTH_BITS, &nbrBits);
 	// glGetIntegerv seems to not work
 	// force to minimum Depth : 16 bits
 	nbrBits= 16;
-	
+
 	double zw= pow(2, static_cast<double>(nbrBits)) - 2.0;
-	
+
 	m_dZpos= -f * n / (((zw - 1) / zw) * (f - n) - f);
 
 	updatePlaneSize();
 	// Invalidate Geometry
 	m_GeometryIsValid= false;
-	
+
 }
 
 
@@ -149,7 +149,7 @@ void GLC_ImagePlane::glDraw(void)
 	glPopMatrix();
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	// OpenGL error handler
-	GLenum error= glGetError();	
+	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_ImagePlane::GlDraw ", error);

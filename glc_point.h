@@ -36,13 +36,13 @@
 /*! An GLC_Point is just a simple 3D Point*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Point : public GLC_VboGeom 
+class GLC_Point : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
-public:	
+public:
 	//! Construct an GLC_Point
 	GLC_Point(const GLC_Point4d &);
 
@@ -59,13 +59,13 @@ public:
 
 	//! Get a 4D point represent point coordinate
 	GLC_Point4d getCoord(void) const;
-	
+
 	//! return the point bounding box
-	virtual GLC_BoundingBox* getBoundingBox(void) const;
-	
+	virtual GLC_BoundingBox& getBoundingBox(void);
+
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -99,6 +99,6 @@ private:
 private:
 	//! 4d point for point coordinate
 	GLC_Point4d m_Coord;
-	
+
 };
 #endif //GLC_POINT_H_

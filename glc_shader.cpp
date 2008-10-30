@@ -196,11 +196,11 @@ void GLC_Shader::deleteShader()
 		glDeleteShader(m_FragmentShader);
 		m_FragmentShader= 0;
 		// Delete the program
-		glDeletePrograms(1, &m_ProgramShader);
+		glDeleteProgram(m_ProgramShader);
 		m_ProgramShader= 0;
 	}
-		
-}	
+
+}
 
 // Create and compile fragment shader
 void GLC_Shader::createAndLinkFragmentShader()
@@ -252,7 +252,7 @@ void GLC_Shader::replaceShader(GLC_Shader& sourceShader)
 		glDeleteShader(m_VertexShader);
 		glDeleteShader(m_FragmentShader);
 		// Delete the program
-		glDeletePrograms(1, &m_ProgramShader);
+		glDeleteProgram(m_ProgramShader);
 
 		// Init shader ID
 		m_ProgramShader= 0;

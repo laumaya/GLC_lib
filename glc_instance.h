@@ -53,7 +53,7 @@ class GLC_Instance : public GLC_Object
 public:
 	//! Default constructor
 	GLC_Instance();
-	
+
 	//! Contruct node with a geometry
 	GLC_Instance(GLC_VboGeom* pGeom);
 
@@ -61,7 +61,7 @@ public:
 	GLC_Instance(const GLC_Instance& );
 
 	//! Assignement operator
-	GLC_Instance &operator=(const GLC_Instance&);	
+	GLC_Instance &operator=(const GLC_Instance&);
 
 	//! Destructor
 	~GLC_Instance();
@@ -76,46 +76,43 @@ public:
 
 	//! Return true if the instance as no geometry
 	inline const bool isNull() const {return (NULL == m_pGeom);}
-	
+
 	//! Return true if the instance is selected
 	inline const bool isSelected(void) const {return m_IsSelected;}
 
 	//! Get the geometry of the instance
 	inline GLC_VboGeom* getGeometry(void) {return m_pGeom;}
-	
-	//! Get the validity of the Insatnce
-	const bool getValidity(void) const;
-	
+
 	//! Get the bounding box
 	GLC_BoundingBox getBoundingBox(void);
 
 	//! Get the validity of the Bounding Box
 	const bool getBoundingBoxValidity(void) const;
-	
+
 	//! Return transfomation 4x4Matrix
 	inline const GLC_Matrix4x4 getMatrix(void) const
 	{return m_MatPos;}
-	
+
 	//! Clone the instance
 	GLC_Instance clone() const;
-	
+
 	//! Instanciate the instance
 	GLC_Instance instanciate();
-	
+
 	//! Get the Polygon mode off the instance
 	/*! Polygon Mode can Be : GL_POINT, GL_LINE, or GL_FILL*/
 	inline GLenum getPolygonMode() const {return m_PolyMode;}
-	
+
 	//! Get the visibility state of instance
 	inline bool isVisible() const {return m_IsVisible;}
-	
+
 	//! Get the number of instance
 	inline int getNumberOfInstance() const
 	{return *m_pNumberOfInstance;}
-	
-	
-//@}	
-	
+
+
+//@}
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
@@ -123,7 +120,7 @@ public:
 public:
 
 	//! Set the instance Geometry
-	/*! 
+	/*!
 	 *  instance must be null
 	 */
 	bool setGeometry(GLC_VboGeom* pGeom);
@@ -133,10 +130,10 @@ public:
 
 	//! move instance with a 4x4Matrix
 	void multMatrix(const GLC_Matrix4x4 &MultMat);
-	
+
 	//! Replace the instance Matrix
 	void setMatrix(const GLC_Matrix4x4 &SetMat);
-	
+
 	//! Reset the instance Matrix
 	void resetMatrix(void);
 
@@ -149,23 +146,18 @@ public:
 	inline void select(void)
 	{
 		m_IsSelected= true;
-		m_IsValid= false;
 	}
-	
+
 	//! Unselect the instance
 	inline void unselect(void)
 	{
 		m_IsSelected= false;
-		m_IsValid= false;
 	}
-	
-	//! set Instance validity in case of multiple instance.
-	void setInstanceValidity(void);
-	
+
 	//! Set instance visibility
 	inline void setVisibility(const bool visibility) {m_IsVisible= visibility;}
-		
-	
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -175,11 +167,11 @@ public:
 public:
 	//! Display the instance
 	void glExecute();
-	
+
 private:
 	//! Set instance visualisation properties
 	void glVisProperties();
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -190,26 +182,26 @@ private:
 	void computeBoundingBox(void);
 	//! Clear current instance
 	void clear();
-	
+
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	
+
 	//! Geometry of the instance
 	GLC_VboGeom* m_pGeom;
-		
+
 	//! BoundingBox of the instance
 	GLC_BoundingBox* m_pBoundingBox;
-	
+
 	//! Number of this instance
 	int* m_pNumberOfInstance;
 
 	//! Geometry matrix
 	GLC_Matrix4x4 m_MatPos;
 
-	//! instance validity
-	bool m_IsValid;
+	//! Bounding box validity
+	bool m_IsBoundingBoxValid;
 
 	//! Selection state
 	bool m_IsSelected;
@@ -217,10 +209,10 @@ private:
 	//! Polygons display style
 	GLenum m_PolyFace;
 	GLenum m_PolyMode;
-	
+
 	//! Visibility
 	bool m_IsVisible;
-	
+
 };
 
 

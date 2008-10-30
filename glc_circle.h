@@ -38,13 +38,13 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Circle : public GLC_VboGeom  
+class GLC_Circle : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
-public:	
+public:
 
 	//! Construct an GLC_Circle
 	/*! By default, discretion is set to #GLC_DISCRET*/
@@ -52,7 +52,7 @@ public:
 
 	//! Copy constructor
 	GLC_Circle(const GLC_Circle& sourceCircle);
-	
+
 	//! Destructor
 	/*! \todo Check if this destructor is necessary*/
 	virtual ~GLC_Circle();
@@ -64,19 +64,19 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	
+
 	//! Return Circle Discretion
 	int getDiscretion(void) const;
-	
+
 	//! Return Circle radius
 	double getRadius(void) const;
-	
+
 	//! return Circle diameter
 	double getDiameter(void) const;
-	
+
 	//! return the circle bounding box
-	virtual GLC_BoundingBox* getBoundingBox(void) const;
-	
+	virtual GLC_BoundingBox& getBoundingBox(void);
+
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
 //@}
@@ -93,23 +93,23 @@ public:
 	//! Set Circle Radius
 	/*! Radius must be > EPSILON*/
 	void setRadius(double R);
-	
+
 	//! Set Circle discret
 	/*! TargetDiscret must be > 0
 	 *  if TargetDiscret < 6 discretion is set to 6*/
 	void setDiscretion(int TargetDiscret);
-	
+
 	//! Set Circle Angle
 	/*! AngleRadians must be > EPSILON and < 2 PI*/
 	void setAngle(double AngleRadians);	// Angle in Radians
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-private:	
+private:
 
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
@@ -131,6 +131,6 @@ private:
 	double m_dAngle;
 	//! Circle Step
 	GLuint m_Step;
-		
+
 };
 #endif //GLC_CIRCLE_H_

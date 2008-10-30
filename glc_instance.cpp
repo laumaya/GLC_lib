@@ -37,7 +37,7 @@ GLC_Instance::GLC_Instance()
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
 , m_MatPos()
-, m_IsValid(false)
+, m_IsBoundingBoxValid(false)
 , m_IsSelected(false)
 , m_PolyFace(GL_FRONT_AND_BACK)
 , m_PolyMode(GL_FILL)
@@ -53,7 +53,7 @@ GLC_Instance::GLC_Instance(GLC_VboGeom* pGeom)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
 , m_MatPos()
-, m_IsValid(false)
+, m_IsBoundingBoxValid(false)
 , m_IsSelected(false)
 , m_PolyFace(GL_FRONT_AND_BACK)
 , m_PolyMode(GL_FILL)
@@ -71,13 +71,17 @@ GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(inputNode.m_pNumberOfInstance)
 , m_MatPos(inputNode.m_MatPos)
-, m_IsValid(false)
+, m_IsBoundingBoxValid(inputNode.m_IsBoundingBoxValid)
 , m_IsSelected(inputNode.m_IsSelected)
 , m_PolyFace(inputNode.m_PolyFace)
 , m_PolyMode(inputNode.m_PolyMode)
 , m_IsVisible(inputNode.m_IsVisible)
 
 {
+	if (NULL != inputNode.m_pBoundingBox)
+	{
+		m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
+	}
 	// Increment the number of instance
 	++(*m_pNumberOfInstance);
 	//qDebug() << "GLC_Instance::GLC_Instance CopyConstructor ID = " << m_Uid;
@@ -89,15 +93,26 @@ GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
 GLC_Instance& GLC_Instance::operator=(const GLC_Instance& inputNode)
 {
 	clear();
-	m_pGeom= inputNode.m_pGeom;
 	m_Uid= inputNode.m_Uid;
 	m_Name= inputNode.m_Name;
 
+	m_pGeom= inputNode.m_pGeom;
+	if (NULL != inputNode.m_pBoundingBox)
+	{
+		m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
+	}
 	m_pNumberOfInstance= inputNode.m_pNumberOfInstance;
 	++(*m_pNumberOfInstance);
+	m_MatPos= inputNode.m_MatPos;
+	m_IsBoundingBoxValid= inputNode.m_IsBoundingBoxValid;
+	m_IsSelected= inputNode.m_IsSelected;
+	m_PolyFace= inputNode.m_PolyFace;
+	m_PolyMode= inputNode.m_PolyMode;
+	m_IsVisible= inputNode.m_IsVisible;
+
 	//qDebug() << "GLC_Instance::operator= :ID = " << m_Uid;
 	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
-	m_MatPos= inputNode.m_MatPos;
+
 	return *this;
 }
 
@@ -111,16 +126,6 @@ GLC_Instance::~GLC_Instance()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Get the validity of the OpenGL list
-const bool GLC_Instance::getValidity(void) const
-{
-	if ((m_pGeom != NULL) && (m_IsValid))
-	{
-		return m_pGeom->getValidity();
-	}
-	else return false;
-}
-
 // Get the bounding box
 GLC_BoundingBox GLC_Instance::getBoundingBox(void)
 {
@@ -133,9 +138,9 @@ GLC_BoundingBox GLC_Instance::getBoundingBox(void)
 		computeBoundingBox();
 		if (m_pBoundingBox != NULL)
 		{
+			m_IsBoundingBoxValid= true;
 			return *m_pBoundingBox;
 		}
-
 	}
 
 	GLC_BoundingBox nullBoundingBox;
@@ -147,7 +152,7 @@ const bool GLC_Instance::getBoundingBoxValidity(void) const
 {
 	if ((m_pGeom != NULL) && (m_pBoundingBox != NULL))
 	{
-		return m_pGeom->getValidity();
+		return m_pGeom->boundingBoxIsValid() and m_IsBoundingBoxValid;
 	}
 	else return false;
 }
@@ -161,9 +166,13 @@ GLC_Instance GLC_Instance::clone() const
 	{
 		cloneInstance.m_pBoundingBox= new GLC_BoundingBox(*m_pBoundingBox);
 	}
+
 	cloneInstance.m_MatPos= m_MatPos;
+	cloneInstance.m_IsBoundingBoxValid= m_IsBoundingBoxValid;
+	cloneInstance.m_IsSelected= m_IsSelected;
 	cloneInstance.m_PolyFace= m_PolyFace;
 	cloneInstance.m_PolyMode= m_PolyMode;
+	cloneInstance.m_IsVisible= m_IsVisible;
 	return cloneInstance;
 }
 
@@ -205,7 +214,7 @@ void GLC_Instance::multMatrix(const GLC_Matrix4x4 &MultMat)
 {
 	m_MatPos= MultMat * m_MatPos;
 
-	m_IsValid= false;
+	m_IsBoundingBoxValid= false;
 }
 
 // Replace the instance Matrix
@@ -213,7 +222,7 @@ void GLC_Instance::setMatrix(const GLC_Matrix4x4 &SetMat)
 {
 	m_MatPos= SetMat;
 
-	m_IsValid= false;
+	m_IsBoundingBoxValid= false;
 }
 
 // Reset the instance Matrix
@@ -221,7 +230,7 @@ void GLC_Instance::resetMatrix(void)
 {
 	m_MatPos.setToIdentity();
 
-	m_IsValid= false;
+	m_IsBoundingBoxValid= false;
 }
 
 // Polygon's display style
@@ -232,16 +241,6 @@ void GLC_Instance::setPolygonMode(GLenum Face, GLenum Mode)
 	{
 		m_PolyFace= Face;
 		m_PolyMode= Mode;
-		m_IsValid = false;
-	}
-}
-
-// set Instance validity in case of multiple instance.
-void GLC_Instance::setInstanceValidity(void)
-{
-	if ((m_pGeom != NULL) && (m_IsValid))
-	{
-		m_IsValid= m_pGeom->getValidity();
 	}
 }
 
@@ -252,15 +251,8 @@ void GLC_Instance::setInstanceValidity(void)
 // Display the instance
 void GLC_Instance::glExecute()
 {
-	bool computeBox= false;
 	if (NULL == m_pGeom) return;
 
-	// Geometry invalid or instance
-	if ((!m_pGeom->getValidity()) || (!m_IsValid))
-	{
-		m_IsValid= true;
-		computeBox= true;
-	}
 	// Object ID for selection purpose
 	glLoadName(getID());
 	// Save current OpenGL Matrix
@@ -269,13 +261,6 @@ void GLC_Instance::glExecute()
 	m_pGeom->glExecute(m_IsSelected, ((m_PolyMode != GL_FILL)));
 	// Restore OpenGL Matrix
 	glPopMatrix();
-	//qDebug() << "GLC_Instance::GlExecute : Display list " << m_ListID << " created";
-
-	if (computeBox)
-	{
-		computeBoundingBox();
-	}
-
 }
 
 // Set instance visualisation properties
@@ -303,9 +288,8 @@ void GLC_Instance::computeBoundingBox(void)
 		m_pBoundingBox= NULL;
 	}
 
-	m_pBoundingBox= m_pGeom->getBoundingBox();
+	m_pBoundingBox= new GLC_BoundingBox(m_pGeom->getBoundingBox());
 	m_pBoundingBox->transform(m_MatPos);
-
 }
 
 // Clear current instance
@@ -341,8 +325,8 @@ void GLC_Instance::clear()
 		m_pBoundingBox= NULL;
 	}
 
-	// invalidate the instance
-	m_IsValid= false;
+	// invalidate the bounding box
+	m_IsBoundingBoxValid= false;
 
 }
 

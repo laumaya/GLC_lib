@@ -66,7 +66,7 @@ public:
 	int getNumberOfFaces() const;
 	//! Get number of vertex
 	int getNumberOfVertex() const;
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -75,14 +75,14 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Move the node with specified matrix
-	void move(const GLC_Matrix4x4 &);
-	
+	GLC_Part* move(const GLC_Matrix4x4 &);
+
 	//! Update Part absolute matrix
 	void updateAbsoluteMatrix();
-	
+
 	//! Reverse representation normal if representation is a mesh
 	void reverseMeshNormal();
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ public:
 private:
 	//! Représentation id of the part
 	GLC_uint m_RepID;
-	
+
 };
 
 #endif /*GLC_PART_H_*/

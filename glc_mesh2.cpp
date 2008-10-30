@@ -131,18 +131,30 @@ GLC_uint GLC_Mesh2::materialIndex(const GLC_Material& mat) const
 }
 
 // return the mesh bounding box
-GLC_BoundingBox* GLC_Mesh2::getBoundingBox(void) const
+GLC_BoundingBox& GLC_Mesh2::getBoundingBox(void)
 {
-	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
 
-	const int max= m_VertexVector.size();
-	for (int i= 0; i < max; ++i)
+	if (NULL == m_pBoundingBox)
 	{
-		GLC_Vector3d vector(m_VertexVector[i].x, m_VertexVector[i].y, m_VertexVector[i].z);
-		pBoundingBox->combine(vector);
-	}
+		//qDebug() << "GLC_Mesh2::getBoundingBox create boundingBox";
+		m_pBoundingBox= new GLC_BoundingBox();
 
-	return pBoundingBox;
+		if (m_VertexVector.isEmpty())
+		{
+			qDebug() << "GLC_Mesh2::getBoundingBox empty m_VertexVector";
+		}
+		else
+		{
+			const int max= m_VertexVector.size();
+			for (int i= 0; i < max; ++i)
+			{
+				GLC_Vector3d vector(m_VertexVector[i].x, m_VertexVector[i].y, m_VertexVector[i].z);
+				m_pBoundingBox->combine(vector);
+			}
+		}
+
+	}
+	return *m_pBoundingBox;
 }
 
 // Return a copy of the current geometry
@@ -304,7 +316,7 @@ void GLC_Mesh2::glDraw()
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	// test if color pear vertex is acivated
+	// test if color pear vertex is activated
 	if (m_ColorPearVertex and !m_IsSelected)
 	{
 		glEnable(GL_COLOR_MATERIAL);

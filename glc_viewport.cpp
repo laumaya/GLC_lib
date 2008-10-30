@@ -79,7 +79,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 GLC_Viewport::~GLC_Viewport()
 {
 	GLC_SelectionMaterial::deleteShader();
-	
+
 	// Delete the camera
 	if (m_pViewCam != NULL)
 	{
@@ -583,15 +583,17 @@ bool GLC_Viewport::setDistMax(double DistMax)
 	{
 		m_dCamDistMax= DistMax;
 
-		updateProjectionMat();	// Update OpenGL projection matrix
+		// Update OpenGL projection matrix
+		updateProjectionMat();
 
-		updateOrbitCircle();	// Update orbit circle
+		// Update orbit circle
+		updateOrbitCircle();
 
+		// Update image plane Z Position
 		if (m_pImagePlane != NULL)
 		{
-			m_pImagePlane->updateZPosition();	// Update image plane Z Position
+			m_pImagePlane->updateZPosition();
 		}
-
 		return true;
 	}
 	else
@@ -604,49 +606,60 @@ bool GLC_Viewport::setDistMax(double DistMax)
 // Set Near and Far clipping distance
 void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 {
-	Q_ASSERT(!bBox.isEmpty());
-	GLC_Matrix4x4 matTranslateCam(-m_pViewCam->getEye());
-	GLC_Matrix4x4 matRotateCam(m_pViewCam->getMatCompOrbit());
-	GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam);
-
-	// The bounding Box in Camera coordinate
-	GLC_BoundingBox boundingBox(bBox);
-	boundingBox.transform(matComp);
-	// Increase size of the bounding box
-	const double increaseFactor= 1.1;
-	// Convert box distance in sphere distance
-	const double center= fabs(boundingBox.getCenter().getZ());
-	const double radius= boundingBox.boundingSphereRadius();
-	const double min= center - radius * (2.0 - increaseFactor);
-	const double max= center + radius * increaseFactor;
-
-	GLC_Point4d camEye(m_pViewCam->getEye());
-	camEye= matComp * camEye;
-
-	if (min > 0.0)
+	if(not bBox.isEmpty())
 	{
-		// Outside bounding Sphere
-		m_dCamDistMin= min;
-		m_dCamDistMax= max;
-		//qDebug() << "distmin" << m_dCamDistMin;
-		//qDebug() << "distmax" << m_dCamDistMax;
+		// The scene is not empty
+		GLC_Matrix4x4 matTranslateCam(-m_pViewCam->getEye());
+		GLC_Matrix4x4 matRotateCam(m_pViewCam->getMatCompOrbit());
+		GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam);
+
+		// The bounding Box in Camera coordinate
+		GLC_BoundingBox boundingBox(bBox);
+		boundingBox.transform(matComp);
+		// Increase size of the bounding box
+		const double increaseFactor= 1.1;
+		// Convert box distance in sphere distance
+		const double center= fabs(boundingBox.getCenter().getZ());
+		const double radius= boundingBox.boundingSphereRadius();
+		const double min= center - radius * (2.0 - increaseFactor);
+		const double max= center + radius * increaseFactor;
+
+		GLC_Point4d camEye(m_pViewCam->getEye());
+		camEye= matComp * camEye;
+
+		if (min > 0.0)
+		{
+			// Outside bounding Sphere
+			m_dCamDistMin= min;
+			m_dCamDistMax= max;
+			//qDebug() << "distmin" << m_dCamDistMin;
+			//qDebug() << "distmax" << m_dCamDistMax;
+		}
+		else
+		{
+			// Inside bounding Sphere
+			m_dCamDistMin= fmin(0.001 * radius, m_pViewCam->getDistEyeTarget() / 2.0);
+			m_dCamDistMax= max;
+			//qDebug() << "inside distmin" << m_dCamDistMin;
+			//qDebug() << "inside distmax" << m_dCamDistMax;
+		}
 	}
 	else
 	{
-		// Inside bounding Sphere
-		m_dCamDistMin= fmin(0.001 * radius, m_pViewCam->getDistEyeTarget() / 2.0);
-		m_dCamDistMax= max;
-		//qDebug() << "inside distmin" << m_dCamDistMin;
-		//qDebug() << "inside distmax" << m_dCamDistMax;
+		// The scene is empty
+		m_dCamDistMin= m_pViewCam->getDistEyeTarget() / 2.0;
+		m_dCamDistMax= m_pViewCam->getDistEyeTarget();
 	}
 
-		updateProjectionMat();	// Update OpenGL projection matrix
-		updateOrbitCircle();	// Update orbit circle
-		if (m_pImagePlane != NULL)
-		{
-			m_pImagePlane->updateZPosition();	// Update image plane Z Position
-		}
-
+	// Update OpenGL projection matrix
+	updateProjectionMat();
+	// Update orbit circle
+	updateOrbitCircle();
+	// Update image plane Z Position
+	if (m_pImagePlane != NULL)
+	{
+		m_pImagePlane->updateZPosition();
+	}
 }
 
 void GLC_Viewport::setBackgroundColor(QColor setColor)

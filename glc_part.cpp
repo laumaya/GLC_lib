@@ -37,7 +37,10 @@ GLC_Part::GLC_Part(GLC_Collection *pCollection, GLC_Instance& instance)
 
 GLC_Part::~GLC_Part()
 {
-	m_pCollection->remove(m_RepID);
+	if (not m_pCollection->isEmpty())
+	{
+		m_pCollection->remove(m_RepID);
+	}
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -80,11 +83,12 @@ int GLC_Part::getNumberOfVertex() const
 //////////////////////////////////////////////////////////////////////
 
 // Move the Part with specified matrix
-void GLC_Part::move(const GLC_Matrix4x4 &matrix)
+GLC_Part* GLC_Part::move(const GLC_Matrix4x4 &matrix)
 {
 	m_RelativeMatrix= matrix * m_RelativeMatrix;
 	m_AbsoluteMatrix= matrix * m_AbsoluteMatrix;
 	m_pCollection->getInstanceHandle(m_RepID)->setMatrix(m_AbsoluteMatrix);
+	return this;
 }
 // Update Part absolute matrix
 void GLC_Part::updateAbsoluteMatrix()
@@ -94,7 +98,7 @@ void GLC_Part::updateAbsoluteMatrix()
 		m_AbsoluteMatrix= m_pParent->absoluteMatrix() * m_RelativeMatrix;
 		m_pCollection->getInstanceHandle(m_RepID)->setMatrix(m_AbsoluteMatrix);
 	}
-}	
+}
 //! Reverse representation normal
 void GLC_Part::reverseMeshNormal()
 {
@@ -102,6 +106,6 @@ void GLC_Part::reverseMeshNormal()
 	if (NULL != pMesh)
 	{
 		pMesh->reverseNormal();
-	}	
+	}
 }
 

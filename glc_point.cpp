@@ -36,7 +36,7 @@ using namespace glc;
 GLC_Point::GLC_Point(const GLC_Point4d &setCoord)
 :GLC_VboGeom("Point", true), m_Coord(setCoord)
 {
-	
+
 }
 //! Construct an GLC_Point
 GLC_Point::GLC_Point(double x, double y, double z)
@@ -55,20 +55,23 @@ GLC_Point4d GLC_Point::getCoord(void) const
 }
 
 // return the point bounding box
-GLC_BoundingBox* GLC_Point::getBoundingBox(void) const
+GLC_BoundingBox& GLC_Point::getBoundingBox(void)
 {
-	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
-	const double delta= 1e-2;
-	GLC_Point3d lower(m_Coord.getX() - delta,
-			m_Coord.getY() - delta,
-			m_Coord.getZ() - delta);
-	GLC_Point3d upper(m_Coord.getX() + delta,
-			m_Coord.getY() + delta,
-			m_Coord.getZ() + delta);
-	pBoundingBox->combine(lower);
-	pBoundingBox->combine(upper);
-	
-	return pBoundingBox;	
+
+	if (NULL == m_pBoundingBox)
+	{
+		m_pBoundingBox= new GLC_BoundingBox();
+		const double delta= 1e-2;
+		GLC_Point3d lower(m_Coord.getX() - delta,
+				m_Coord.getY() - delta,
+				m_Coord.getZ() - delta);
+		GLC_Point3d upper(m_Coord.getX() + delta,
+				m_Coord.getY() + delta,
+				m_Coord.getZ() + delta);
+		m_pBoundingBox->combine(lower);
+		m_pBoundingBox->combine(upper);
+	}
+	return *m_pBoundingBox;
 }
 
 // Return a copy of the current geometry
@@ -102,13 +105,13 @@ void GLC_Point::glDraw(void)
 	glBegin(GL_POINTS);
 		glVertex3dv(m_Coord.return_dVect());
 	glEnd();
-	
+
 	// OpenGL error handler
-	GLenum error= glGetError();	
+	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_Point::GlDraw ", error);
 		throw(OpenGlException);
-	}	
+	}
 }
 

@@ -141,6 +141,8 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	lib3ds_file_free(m_pLib3dsFile);
 	m_pLib3dsFile= NULL;
 	emit currentQuantum(100);
+	// Create the world bounding box
+	m_pWorld->collection()->getBoundingBox();
 	return m_pWorld;
 }
 

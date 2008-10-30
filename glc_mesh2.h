@@ -89,7 +89,7 @@ public:
 	 */
 	GLC_uint materialIndex(const GLC_Material& mat) const;
 	//! return the mesh bounding box
-	virtual GLC_BoundingBox* getBoundingBox(void) const;
+	virtual GLC_BoundingBox& getBoundingBox(void);
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
 	//! Return true if color pear vertex is activated
@@ -119,8 +119,11 @@ public:
 	{
 		if (0 == m_VertexVector.size())
 		{
+			// Copy vertex Data to a vector
 			m_VertexVector= m_Vertex.toVector();
 			m_Vertex.clear();
+			// Create mesh Bounding Box
+			getBoundingBox();
 		}
 	}
 

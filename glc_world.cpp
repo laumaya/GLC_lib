@@ -41,7 +41,7 @@ GLC_World::GLC_World(const GLC_World& world)
 , m_pRoot(world.m_pRoot)
 , m_pNumberOfWorld(world.m_pNumberOfWorld)
 {
-	// Increment the nummber of world
+	// Increment the number of world
 	++(*m_pNumberOfWorld);
 }
 
@@ -70,10 +70,10 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 	{
 		m_pRoot->addChildParts(pAnotherRoot->childParts(), m_pCollection);
 	}
-	
+
 }
 
-// Assignement operator
+// Assignment operator
 GLC_World& GLC_World::operator=(const GLC_World& world)
 {
 	// Decrement the number of world
@@ -81,8 +81,8 @@ GLC_World& GLC_World::operator=(const GLC_World& world)
 	if ((*m_pNumberOfWorld) == 0)
 	{
 		// this is the last World, delete the root product and collection
+		delete m_pCollection; // Delete collection fist (performance)
 		delete m_pRoot;
-		delete m_pCollection;
 		delete m_pNumberOfWorld;
 	}
 	m_pRoot= world.m_pRoot;

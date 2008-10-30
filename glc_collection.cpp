@@ -39,9 +39,9 @@
 
 GLC_Collection::GLC_Collection()
 : m_NodeMap()
-, m_CollectionIsValid(false)
 , m_pBoundingBox(NULL)
 , m_SelectedNodes()
+, m_UserShader()
 , m_OtherNodeHashList()
 , m_ShaderGroup()
 , m_NotTransparentNodes()
@@ -99,7 +99,13 @@ bool GLC_Collection::add(GLC_Instance& node, GLuint shaderID)
 		m_SelectedNodes.insert(key, pInstance);
 	}
 
-	m_CollectionIsValid= false;
+	// Bounding box validity
+	if (NULL != m_pBoundingBox)
+	{
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+	}
+
 	return true;
 }
 
@@ -129,8 +135,12 @@ bool GLC_Collection::remove(GLC_uint Key)
 		}
 		m_NodeMap.remove(Key);		// Delete the conteneur
 
-		// Collection validity
-		m_CollectionIsValid= false;
+		// Bounding box validity
+		if (NULL != m_pBoundingBox)
+		{
+			delete m_pBoundingBox;
+			m_pBoundingBox= NULL;
+		}
 
 		//qDebug("GLC_Collection::removeNode : Element succesfuly deleted");
 		return true;
@@ -153,6 +163,14 @@ void GLC_Collection::clear(void)
 	m_NotTransparentNodes.clear();
 	// Clear the transparent Hash Table
 	m_TransparentNodes.clear();
+	// Clear User shader hash table
+	PointerShaderHash::iterator iShader= m_UserShader.begin();
+	while (iShader != m_UserShader.constEnd())
+	{
+		delete iShader.value();
+		++iShader;
+	}
+	m_UserShader.clear();
 	// Clear Other Node Hash List
 	HashList::iterator iEntry= m_OtherNodeHashList.begin();
     while (iEntry != m_OtherNodeHashList.constEnd())
@@ -188,7 +206,7 @@ bool GLC_Collection::select(GLC_uint key)
 		pSelectedNode= &(iNode.value());
 		m_SelectedNodes.insert(pSelectedNode->getID(), pSelectedNode);
 
-		// Remove Seleted Node from is previous collection
+		// Remove Selected Node from is previous collection
 		if (pSelectedNode->getGeometry()->isTransparent())
 		{
 			m_TransparentNodes.remove(key);
@@ -198,7 +216,6 @@ bool GLC_Collection::select(GLC_uint key)
 			m_NotTransparentNodes.remove(key);
 		}
 		pSelectedNode->select();
-		m_CollectionIsValid= false;
 
 		//qDebug("GLC_Collection::selectNode : Element succesfuly selected");
 		return true;
@@ -227,7 +244,6 @@ void GLC_Collection::selectAll()
 		}
 		iNode++;
 	}
-	m_CollectionIsValid= false;
 }
 
 // unselect a node
@@ -255,8 +271,6 @@ bool GLC_Collection::unselect(GLC_uint key)
 			m_NotTransparentNodes.insert(pSelectedNode->getID(), pSelectedNode);
 		}
 
-		m_CollectionIsValid= false;
-
 		//qDebug("GLC_Collection::unselectNode : Node succesfuly unselected");
 		return true;
 
@@ -281,7 +295,6 @@ void GLC_Collection::unselectAll()
     // Clear selected node hash table
     m_SelectedNodes.clear();
     updateInstancesTransparency();
-    m_CollectionIsValid= false;
 }
 
 // Set the polygon mode for all Instance
@@ -305,7 +318,12 @@ void GLC_Collection::setVisibility(const GLC_uint key, const bool visibility)
 	if (iNode != m_NodeMap.end())
 	{	// Ok, the key exist
 		iNode.value().setVisibility(visibility);
-		m_CollectionIsValid= false;
+		// Bounding box validity
+		if (NULL != m_pBoundingBox)
+		{
+			delete m_pBoundingBox;
+			m_pBoundingBox= NULL;
+		}
 	}
 }
 
@@ -320,7 +338,14 @@ void GLC_Collection::showAll()
     	iEntry.value().setVisibility(true);
     	iEntry++;
     }
-    m_CollectionIsValid= false;
+
+    // Bounding box validity
+	if (NULL != m_pBoundingBox)
+	{
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+	}
+
 }
 
 // Hide all instance of the collection
@@ -334,7 +359,14 @@ void GLC_Collection::hideAll()
     	iEntry.value().setVisibility(false);
     	iEntry++;
     }
-    m_CollectionIsValid= false;
+
+	// Bounding box validity
+	if (NULL != m_pBoundingBox)
+	{
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+	}
+
 }
 // Update instance transparency
 void GLC_Collection::updateInstancesTransparency()
@@ -380,15 +412,16 @@ GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 // return the entire collection Bounding Box
 GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 {
+	// If the bounding box is not valid delete it
 	setBoundingBoxValidity();
 
-	if (((m_pBoundingBox == NULL) || !m_CollectionIsValid) && (getNumber() > 0))
+	// Check if the bounding box have to be updated
+	if ((m_pBoundingBox == NULL) and not m_NodeMap.isEmpty())
 	{
-
+		// There is objects in the collection and the collection or bounding box is not valid
 		if (m_pBoundingBox != NULL)
 		{
 			delete m_pBoundingBox;
-			m_pBoundingBox= NULL;
 		}
 		m_pBoundingBox= new GLC_BoundingBox();
 
@@ -402,25 +435,12 @@ GLC_BoundingBox GLC_Collection::getBoundingBox(void)
 	        }
 	        ++iEntry;
 	    }
-	    if (m_pBoundingBox->isEmpty())
-	    {
-	    	delete m_pBoundingBox;
-			GLC_Vector4d lower(-0.5, -0.5, -0.5);
-			GLC_Vector4d upper(0.5, 0.5, 0.5);
-			m_pBoundingBox= new GLC_BoundingBox(lower, upper);
-	    }
-
 	}
-	else if ((m_pBoundingBox == NULL) || !m_CollectionIsValid)
+	else if (NULL == m_pBoundingBox)
 	{
-		if (m_pBoundingBox != NULL)
-		{
-			delete m_pBoundingBox;
-			m_pBoundingBox= NULL;
-		}
-		GLC_Vector4d lower(-0.5, -0.5, -0.5);
-		GLC_Vector4d upper(0.5, 0.5, 0.5);
-		m_pBoundingBox= new GLC_BoundingBox(lower, upper);
+		// The collection is empty and m_pBoundingBox == NULL
+		delete m_pBoundingBox;
+		m_pBoundingBox= new GLC_BoundingBox();
 	}
 
 	return *m_pBoundingBox;
@@ -460,21 +480,8 @@ void GLC_Collection::glExecute(GLuint groupId)
 		{
 			updateInstancesTransparency();
 		}
-		if (m_CollectionIsValid)
-		{	// The collection is OK
-			glDraw(groupId);
-		}
-		else
-		{
-			glDraw(groupId);
-			m_CollectionIsValid= true;
-			// delete the boundingBox
-			if (m_pBoundingBox != NULL)
-			{
-				delete m_pBoundingBox;
-				m_pBoundingBox= NULL;
-			}
-		}
+
+		glDraw(groupId);
 
 		// OpenGL error handler
 		GLenum errCode;
@@ -645,31 +652,27 @@ void GLC_Collection::glDraw(GLuint groupId)
 // Set the Bounding box validity
 void GLC_Collection::setBoundingBoxValidity(void)
 {
-	if (m_pBoundingBox == NULL)
+	if (NULL != m_pBoundingBox)
 	{
-		return;
+		if (not m_NodeMap.isEmpty())
+		{
+			// Check instance bounding box validity
+			CNodeMap::iterator iEntry= m_NodeMap.begin();
+		    while (iEntry != m_NodeMap.constEnd())
+		    {
+		    	if (not iEntry.value().getBoundingBoxValidity())
+		    	{
+					delete m_pBoundingBox;
+					m_pBoundingBox= NULL;
+					return;
+		    	}
+		    	iEntry++;
+		    }
+		}
+		else if (not m_pBoundingBox->isEmpty())
+		{
+			delete m_pBoundingBox;
+			m_pBoundingBox= NULL;
+		}
 	}
-	CNodeMap::iterator iEntry= m_NodeMap.begin();
-
-    while (iEntry != m_NodeMap.constEnd())
-    {
-    	// Update Instance validity
-    	iEntry.value().setInstanceValidity();
-    	iEntry++;
-    }
-	iEntry= m_NodeMap.begin();
-    while (iEntry != m_NodeMap.constEnd() and (m_pBoundingBox != NULL))
-    {
-    	if(!iEntry.value().getValidity())
-    	{
- 			if (m_pBoundingBox != NULL)
-			{
-				delete m_pBoundingBox;
-				m_pBoundingBox= NULL;
-				return;
-			}
-    	}
-    	// Passe au Suivant
-    	iEntry++;
-    }
 }

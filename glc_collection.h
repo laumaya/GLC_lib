@@ -33,12 +33,15 @@
 #include "glc_enum.h"
 
 class GLC_Material;
+class GLC_Shader;
 
 //! Geometry hash table
 typedef QHash< GLC_uint, GLC_Instance> CNodeMap;
 typedef QHash< GLC_uint, GLC_Instance*> PointerNodeHash;
 
-//! Hash of geometry hash table
+//! Hash of shader
+typedef QHash<GLuint, GLC_Shader*> PointerShaderHash;
+//! Hash of geometry hash table which use a shader
 typedef QHash<GLuint, PointerNodeHash*> HashList;
 
 //! Hash of shader group id
@@ -177,7 +180,12 @@ public:
 	inline void swapShowState()
 	{
 		m_IsInShowSate= !m_IsInShowSate;
-		m_CollectionIsValid= false;
+		// Bounding box validity
+		if (NULL != m_pBoundingBox)
+		{
+			delete m_pBoundingBox;
+			m_pBoundingBox= NULL;
+		}
 	}
 	//! Update instance transparency
 	void updateInstancesTransparency();
@@ -231,15 +239,14 @@ private:
 	//! GLC_Instance Hash Table
 	CNodeMap m_NodeMap;
 
-	//! Validity of collection
-	bool m_CollectionIsValid;
-
 	//! BoundingBox of the collection
 	GLC_BoundingBox* m_pBoundingBox;
 
 	//! Selected Node Hash Table
 	PointerNodeHash m_SelectedNodes;
 
+	//! User Shader
+	PointerShaderHash m_UserShader;
 	//! List of other Node Hash Table
 	HashList m_OtherNodeHashList;
 

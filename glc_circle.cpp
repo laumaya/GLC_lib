@@ -39,7 +39,7 @@ GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
 , m_dAngle(Angle)
 , m_Step(0)
 {
-	
+
 }
 
 GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
@@ -73,16 +73,19 @@ double GLC_Circle::getDiameter(void) const
 }
 
 // return the circle bounding box
-GLC_BoundingBox* GLC_Circle::getBoundingBox(void) const
+GLC_BoundingBox& GLC_Circle::getBoundingBox(void)
 {
-	GLC_BoundingBox* pBoundingBox= new GLC_BoundingBox();
-	
-	GLC_Point3d lower(-m_Radius, -m_Radius, -2.0 * EPSILON);
-	GLC_Point3d upper(m_Radius, m_Radius, 2.0 * EPSILON);
-	pBoundingBox->combine(lower);
-	pBoundingBox->combine(upper);
-	
-	return pBoundingBox;	
+	if (NULL == m_pBoundingBox)
+	{
+		m_pBoundingBox= new GLC_BoundingBox();
+
+		GLC_Point3d lower(-m_Radius, -m_Radius, -2.0 * EPSILON);
+		GLC_Point3d upper(m_Radius, m_Radius, 2.0 * EPSILON);
+		m_pBoundingBox->combine(lower);
+		m_pBoundingBox->combine(upper);
+	}
+
+	return *m_pBoundingBox;
 }
 
 // Return a copy of the current geometry
@@ -110,6 +113,11 @@ void GLC_Circle::setRadius(double R)
 	{	// Radius is changing
 		m_Radius= R;
 		m_GeometryIsValid= false;
+		if (NULL != m_pBoundingBox)
+		{
+			delete m_pBoundingBox;
+			m_pBoundingBox= NULL;
+		}
 	}
 }
 
@@ -133,6 +141,11 @@ void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 	{	// Angle is changing
 			m_dAngle= AngleRadians;
 			m_GeometryIsValid= false;
+			if (NULL != m_pBoundingBox)
+			{
+				delete m_pBoundingBox;
+				m_pBoundingBox= NULL;
+			}
 	}
 }
 
@@ -155,8 +168,8 @@ void GLC_Circle::glDraw(void)
 			positionData[i].y= static_cast<float>(m_Radius * sin(i * m_dAngle / m_Step));
 		}
 		glBufferData(GL_ARRAY_BUFFER, size, positionData, GL_STATIC_DRAW);
-		
-		
+
+
 		// Create IBO
 		const GLsizeiptr IndexSize = (m_Step + 1) * sizeof(GLuint);
 		GLuint IndexData[m_Step + 1];
@@ -175,7 +188,7 @@ void GLC_Circle::glDraw(void)
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	// OpenGL error handler
-	GLenum error= glGetError();	
+	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_Circle::GlDraw ", error);
