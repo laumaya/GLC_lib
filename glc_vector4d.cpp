@@ -33,39 +33,39 @@ using namespace glc;
 //////////////////////////////////////////////////////////////////////
 
 
-// Surcharge opérateur du produit vectoriel "^"
+// Overload dot product "^" operator
 GLC_Vector4d GLC_Vector4d::operator^ (const GLC_Vector4d &Vect) const
 {
 	GLC_Vector4d VectResult;
-	VectResult.dVecteur[0]= dVecteur[1] * Vect.dVecteur[2] - dVecteur[2] * Vect.dVecteur[1];
-	VectResult.dVecteur[1]= dVecteur[2] * Vect.dVecteur[0] - dVecteur[0] * Vect.dVecteur[2];
-	VectResult.dVecteur[2]= dVecteur[0] * Vect.dVecteur[1] - dVecteur[1] * Vect.dVecteur[0];
+	VectResult.vector[0]= vector[1] * Vect.vector[2] - vector[2] * Vect.vector[1];
+	VectResult.vector[1]= vector[2] * Vect.vector[0] - vector[0] * Vect.vector[2];
+	VectResult.vector[2]= vector[0] * Vect.vector[1] - vector[1] * Vect.vector[0];
 
 	return VectResult;
 }
 
-// Surcharge operateur d'égalité "=="
+// Overload equality "==" operator
 bool GLC_Vector4d::operator == (const GLC_Vector4d &Vect) const
 {
-	bool bResult= fabs(dVecteur[0] - Vect.dVecteur[0]) < EPSILON;
-	bResult= (fabs(dVecteur[1] - Vect.dVecteur[1]) < EPSILON) && bResult;
-	bResult= (fabs(dVecteur[2] - Vect.dVecteur[2]) < EPSILON) && bResult;
-	bResult= (fabs(dVecteur[3] - Vect.dVecteur[3]) < EPSILON) && bResult;
+	bool bResult= fabs(vector[0] - Vect.vector[0]) < EPSILON;
+	bResult= (fabs(vector[1] - Vect.vector[1]) < EPSILON) && bResult;
+	bResult= (fabs(vector[2] - Vect.vector[2]) < EPSILON) && bResult;
+	bResult= (fabs(vector[3] - Vect.vector[3]) < EPSILON) && bResult;
 
 	return bResult;
 }
 //////////////////////////////////////////////////////////////////////
-// Fonction Set
+// Set Function
 //////////////////////////////////////////////////////////////////////
 
 GLC_Vector4d& GLC_Vector4d::setW(const double &dW)
-{		
+{
 	if (dW != 0)
 	{
-		dVecteur[0]/= dW;
-		dVecteur[1]/= dW;
-		dVecteur[2]/= dW;
-		dVecteur[3]= 1.0;		// Pour le calcul, W = 1.
+		vector[0]/= dW;
+		vector[1]/= dW;
+		vector[2]/= dW;
+		vector[3]= 1.0;		// For calculation, W = 1.
 	}
 	return *this;
 }
@@ -75,42 +75,42 @@ GLC_Vector4d& GLC_Vector4d::setVect(const double &dX, const double &dY,
 {
 	if ((dW == 1.0) || (dW <= 0.0))
 	{
-		dVecteur[0]= dX;
-		dVecteur[1]= dY;
-		dVecteur[2]= dZ;
+		vector[0]= dX;
+		vector[1]= dY;
+		vector[2]= dZ;
 	}
 	else
 	{
-		dVecteur[0]= dX / dW;
-		dVecteur[1]= dY / dW;
-		dVecteur[2]= dZ / dW;
+		vector[0]= dX / dW;
+		vector[1]= dY / dW;
+		vector[2]= dZ / dW;
 	}
-	
-	dVecteur[3]= 1.0;		// Pour le calcul, W = 1.
+
+	vector[3]= 1.0;		// For calculation, W = 1.
 
 	return *this;
 }
 
 GLC_Vector4d& GLC_Vector4d::setNormal(const double &Norme)
 {
-	const double dNormeCur= sqrt( dVecteur[0] * dVecteur[0] + dVecteur[1] * dVecteur[1] + dVecteur[2] * dVecteur[2]);
-	
+	const double dNormeCur= sqrt( vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
+
 	if (dNormeCur != 0)
 	{
 		const double Coef = Norme / dNormeCur;
-		
-		dVecteur[0] = dVecteur[0] * Coef;
-		dVecteur[1] = dVecteur[1] * Coef;
-		dVecteur[2] = dVecteur[2] * Coef;
+
+		vector[0] = vector[0] * Coef;
+		vector[1] = vector[1] * Coef;
+		vector[2] = vector[2] * Coef;
 	}
 	return *this;
 }
 
 //////////////////////////////////////////////////////////////////////
-// Fonction Get
+// Get Function
 //////////////////////////////////////////////////////////////////////
 
-// Angle avec un autre vecteur
+// Return the Angle with another vector
 const double GLC_Vector4d::getAngleWithVect(GLC_Vector4d Vect) const
 {
 	GLC_Vector4d ThisVect(*this);
@@ -125,56 +125,57 @@ const double GLC_Vector4d::getAngleWithVect(GLC_Vector4d Vect) const
 	}
 	else return 0.0;
 }
+
 // return the vector string
 QString GLC_Vector4d::toString() const
 {
 	QString result("[");
-	
-	result+= QString::number(dVecteur[0]) + QString(" , ");
-	result+= QString::number(dVecteur[1]) + QString(" , ");
-	result+= QString::number(dVecteur[2]) + QString(" , ");
-	result+= QString::number(dVecteur[3]) + QString("]");
-	
+
+	result+= QString::number(vector[0]) + QString(" , ");
+	result+= QString::number(vector[1]) + QString(" , ");
+	result+= QString::number(vector[2]) + QString(" , ");
+	result+= QString::number(vector[3]) + QString("]");
+
 	return result;
 }
 
-// return the 2D vector 
+// return the 2D vector
 GLC_Vector2d GLC_Vector4d::toVector2d(const GLC_Vector4d& mask) const
 {
 	double x;
 	double y;
-	if (mask.dVecteur[0] == 0.0)
+	if (mask.vector[0] == 0.0)
 	{
-		x= dVecteur[0];
-		if (mask.dVecteur[1] == 0.0)
-			y= dVecteur[1];
-		else		
-			y= dVecteur[2];
-		
+		x= vector[0];
+		if (mask.vector[1] == 0.0)
+			y= vector[1];
+		else
+			y= vector[2];
+
 	}
 	else
 	{
-		x= dVecteur[1];
-		y= dVecteur[2];
-		
+		x= vector[1];
+		y= vector[2];
+
 	}
 	return GLC_Vector2d(x, y);
 }
 
 //////////////////////////////////////////////////////////////////////
-// Fonctions de Service privée
+// Services private function
 //////////////////////////////////////////////////////////////////////
 
-// setWToNull le vecteur -> Composante W=1
+// Normalize Vector w <- 0
 void GLC_Vector4d::setWToNull(void)
 {
-	if (fabs(dVecteur[3]) > 0.00001)
+	if (fabs(vector[3]) > 0.00001)
 	{
-		dVecteur[0]/= dVecteur[3];
-		dVecteur[1]/= dVecteur[3];
-		dVecteur[2]/= dVecteur[3];
+		vector[0]/= vector[3];
+		vector[1]/= vector[3];
+		vector[2]/= vector[3];
 	}
-	dVecteur[3]= 1.0;
+	vector[3]= 1.0;
 }
 
 

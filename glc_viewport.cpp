@@ -193,7 +193,7 @@ void GLC_Viewport::glPointing(GLint x, GLint y)
 	if (fabs(Depth - 1.0) > EPSILON)
 	{	// Geometry find -> Update camera's target position
 		const GLC_Point4d target(pX, pY, pZ);
-		const double Distance= (m_pViewCam->getEye() - target).getNorm();
+		const double Distance= (m_pViewCam->getEye() - target).norm();
 		qDebug("Return Distance: %e\n", Distance);
 		m_pViewCam->setTargetCam(target);
 	}
@@ -274,8 +274,8 @@ void GLC_Viewport::glExecuteTargetCam()	//! \todo Create a display list
 		const double dDecAxe= dLgAxe / 3;
 		glPushMatrix();
 
-		glTranslated(m_pViewCam->getTarget().getX(), m_pViewCam->getTarget().getY(),
-			m_pViewCam->getTarget().getZ() );
+		glTranslated(m_pViewCam->getTarget().X(), m_pViewCam->getTarget().Y(),
+			m_pViewCam->getTarget().Z() );
 
 		// Graphic propertys
 		glDisable(GL_TEXTURE_2D);
@@ -325,15 +325,15 @@ void GLC_Viewport::glExecuteImagePlane()
 	if (m_pImagePlane != NULL)
 	{
 		// Geometry validity
-		if (!m_pImagePlane->getValidity())
+		if (!m_pImagePlane->isValid())
 		{
 			m_pImagePlane->glLoadTexture();
 		}
 
 		// Geometry invalid or collection node list ID == 0
-		if ((!m_pImagePlane->getValidity()) || (m_ImagePlaneListID == 0))
+		if ((!m_pImagePlane->isValid()) || (m_ImagePlaneListID == 0))
 		{
-			//qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pImagePlane->getValidity();
+			//qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pImagePlane->isValid();
 			//qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ImagePlaneListID;
 
 			if (m_ImagePlaneListID == 0)
@@ -473,8 +473,8 @@ void GLC_Viewport::prepareOrbiting(double Cx, double Cy, bool circleVisibility, 
 	m_OrbitCircleIsVisible= circleVisibility;
 	m_CameraTargetIsVisible= targetVisibility;
 
-	const double Angle= acos(AxeZ * m_VectPrevOrbit);
-	const GLC_Vector4d AxeRot(AxeZ ^ m_VectPrevOrbit);
+	const double Angle= acos(Z_AXIS * m_VectPrevOrbit);
+	const GLC_Vector4d AxeRot(Z_AXIS ^ m_VectPrevOrbit);
 
 	GLC_Matrix4x4 Matrice(AxeRot, Angle);
 
@@ -619,7 +619,7 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		// Increase size of the bounding box
 		const double increaseFactor= 1.1;
 		// Convert box distance in sphere distance
-		const double center= fabs(boundingBox.getCenter().getZ());
+		const double center= fabs(boundingBox.getCenter().Z());
 		const double radius= boundingBox.boundingSphereRadius();
 		const double min= center - radius * (2.0 - increaseFactor);
 		const double max= center + radius * increaseFactor;
@@ -692,13 +692,13 @@ GLC_Vector4d GLC_Viewport::mapForOrbit( double Posx, double Posy) const
 
 	// Distance between pick point and origine can't be over then 1 (1 is radius of orbit circle)
 	GLC_Vector4d VectMouse(Posx, Posy,0);
-	if (VectMouse.getNorm() > 1)
+	if (VectMouse.norm() > 1)
 	{
 		VectMouse.setNormal(1);
 	}
 	else
 	{
-		VectMouse.setZ(sqrt(1.0 - VectMouse.getX() *  VectMouse.getX() - VectMouse.getY() * VectMouse.getY()));
+		VectMouse.setZ(sqrt(1.0 - VectMouse.X() *  VectMouse.X() - VectMouse.Y() * VectMouse.Y()));
 	}
 
 	return VectMouse;

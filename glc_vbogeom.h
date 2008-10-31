@@ -94,35 +94,35 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return a QColor which represent the color
-	inline QColor getRGBA(void) const
+	inline QColor color(void) const
 	{return m_pMaterial->getDiffuseColor();}
 
 	//! Return Color Red component
-	inline GLfloat getdRed(void) const
+	inline GLfloat redF(void) const
 	{return m_pMaterial->getDiffuseColor().redF();}
 
 	//! Return Color Green component
-	inline GLfloat getdGreen(void) const
+	inline GLfloat greenF(void) const
 	{return m_pMaterial->getDiffuseColor().greenF();}
 
 	//! Return Color blue component
-	inline GLfloat getdBlue(void) const
+	inline GLfloat blueF(void) const
 	{return m_pMaterial->getDiffuseColor().blueF();}
 
 	//! Return Color Alpha component
-	inline GLfloat getdAlpha(void) const
+	inline GLfloat alphaF(void) const
 	{return m_pMaterial->getDiffuseColor().alphaF();}
 
-	//! Return Validity of geometry
-	inline bool getValidity(void) const
+	//! Return true if the geometry is valid
+	inline bool isValid(void) const
 	{return m_GeometryIsValid;}
 
 	//! Return material of geometry
-	inline GLC_Material* getMaterial(void) const
+	inline GLC_Material* material(void) const
 	{return m_pMaterial;}
 
 	//! return the geometry bounding box
-	virtual GLC_BoundingBox& getBoundingBox(void) = 0;
+	virtual GLC_BoundingBox& boundingBox(void) = 0;
 
 	//! Return true if the bounding box is valid
 	inline bool boundingBoxIsValid() const {return NULL != m_pBoundingBox;}
@@ -164,7 +164,7 @@ public:
 	//! Set the Geometry material
 	void setMaterial(GLC_Material* pMat);
 
-	//! Set the transprency property
+	//! Set the transparency property
 	inline void setTransparency(const bool transparency)
 	{m_IsTransparent= transparency;}
 

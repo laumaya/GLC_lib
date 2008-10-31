@@ -36,7 +36,7 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Vector3df  
+class GLC_Vector3df
 {
 	friend class GLC_Vector4d;
 	friend class GLC_Vector3d;
@@ -46,25 +46,25 @@ class GLC_Vector3df
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! Default constructor
-	*  Value is set to 
+	*  Value is set to
 	* \n X = 0.0
 	* \n Y =  0.0
 	* \n Z =  0.0
 	*/
 	inline GLC_Vector3df()
 	{
-		dVecteur[0]= 0.0f;
-		dVecteur[1]= 0.0f;
-		dVecteur[2]= 0.0f;
+		dVector[0]= 0.0f;
+		dVector[1]= 0.0f;
+		dVector[2]= 0.0f;
 	}
-	
-	/*! Standard constructor With x, y, z*/
+
+	//! Standard constructor With x, y, z
 	inline GLC_Vector3df(const float &dX, const float &dY, const float &dZ)
 	{
 		setVect(dX, dY, dZ);
 	}
-	
-	/*! Recopy constructor
+
+	/*! Copy constructor
 	 * Sample use
 	 * \code
 	 * NewVect = new GLC_Vector3d(OldVect);
@@ -72,64 +72,64 @@ public:
 	 */
 	inline GLC_Vector3df(const GLC_Vector3df &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= Vect.dVecteur[2];
+		dVector[0]= Vect.dVector[0];
+		dVector[1]= Vect.dVector[1];
+		dVector[2]= Vect.dVector[2];
 	}
 //@}
 
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	/*! X Composante*/
+	//! X Compound
 	inline GLC_Vector3df& setX(const float &dX)
 	{
-		dVecteur[0]= dX;
+		dVector[0]= dX;
 		return *this;
 	}
-	
-	/*! Y Composante*/
+
+	//! Y Compound
 	inline GLC_Vector3df& setY(const float &dY)
 	{
-		dVecteur[1]= dY;
+		dVector[1]= dY;
 		return *this;
 	}
-	
-	/*! Z Composante*/
+
+	//! Z Compound
 	inline GLC_Vector3df& setZ(const float &dZ)
 	{
-		dVecteur[2]= dZ;
+		dVector[2]= dZ;
 		return *this;
 	}
-	
-	/*! All Composante*/
+
+	//! All Compound
 	inline GLC_Vector3df& setVect(const float &dX, const float &dY, const float &dZ)
 	{
-		dVecteur[0]= dX;
-		dVecteur[1]= dY;
-		dVecteur[2]= dZ;
+		dVector[0]= dX;
+		dVector[1]= dY;
+		dVector[2]= dZ;
 
 		return *this;
 	}
-		
-	/*! From another Vector*/
+
+	//! From another Vector
 	GLC_Vector3df& setVect(const GLC_Vector3df &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= Vect.dVecteur[2];
+		dVector[0]= Vect.dVector[0];
+		dVector[1]= Vect.dVector[1];
+		dVector[2]= Vect.dVector[2];
 		return *this;
 	}
-	
-	/*! Invert Vector*/
+
+	//! Invert Vector
 	inline GLC_Vector3df& setInv(void)
 	{
-		dVecteur[0]= - dVecteur[0];
-		dVecteur[1]= - dVecteur[1];
-		dVecteur[2]= - dVecteur[2];
+		dVector[0]= - dVector[0];
+		dVector[1]= - dVector[1];
+		dVector[2]= - dVector[2];
 		return *this;
 	}
 
@@ -140,50 +140,45 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	/*! X Composante*/
-	inline float getX(void) const
+	//! Return X Compound
+	inline float X(void) const
 	{
-		return dVecteur[0];
+		return dVector[0];
 	}
-	/*! Y Composante*/
-	inline float getY(void) const
+	//! Return Y Compound
+	inline float Y(void) const
 	{
-		return dVecteur[1];
+		return dVector[1];
 	}
-	/*! Z Composante*/
-	inline float getZ(void) const
+	//! Return Z Compound
+	inline float Z(void) const
 	{
-		return dVecteur[2];
+		return dVector[2];
 	}
-	/*! retourne un pointeur constant vers le tableau du vecteur.*/
-	inline const float *return_dVect(void) const
+	//! Return a pointer to vector data
+	inline const float *data(void) const
 	{
-		return dVecteur;
+		return dVector;
 	}
-	/*! Vector is null*/
+	//! Return true if the vector is null
 	inline bool isNull(void) const
 	{
-		return (fabs(dVecteur[0]) < glc::EPSILON) && (fabs(dVecteur[1]) < glc::EPSILON)
-		&& (fabs(dVecteur[2]) < glc::EPSILON);
+		return (fabs(dVector[0]) < glc::EPSILON) && (fabs(dVector[1]) < glc::EPSILON)
+		&& (fabs(dVector[2]) < glc::EPSILON);
 	}
 
 //@}
-
-//////////////////////////////////////////////////////////////////////
-// Private services functions
-//////////////////////////////////////////////////////////////////////
-
 
 //////////////////////////////////////////////////////////////////////
 //name Private attributes
 //////////////////////////////////////////////////////////////////////
 private:
 	/*! Vector array definition \n
-	*	dVecteur[0]	X \n
-	*	dVecteur[1]	Y \n
-	*	dVecteur[2]	Z \n
+	*	data[0]	X \n
+	*	data[1]	Y \n
+	*	data[2]	Z \n
 	*/
-	float dVecteur[3];
+	float dVector[3];
 
 }; //class GLC_Vector3d
 

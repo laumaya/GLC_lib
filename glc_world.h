@@ -50,8 +50,10 @@ class GLC_World
 public:
 	//! Default constructor
 	GLC_World();
+
 	//! Copy constructor
 	GLC_World(const GLC_World&);
+
 	//! Destructor
 	virtual ~GLC_World();
 //@}
@@ -63,14 +65,18 @@ public:
 public:
 	//! Get the root product of the world
 	inline GLC_Product* rootProduct() const {return m_pRoot;}
+
 	//! Get the world collection
 	inline GLC_Collection* collection() {return m_pCollection;}
+
 	//! return true if the world is empty
 	inline bool isEmpty() const {return  m_pCollection->isEmpty();}
+
 	//! Get number of faces
-	inline int getNumberOfFaces() const {return m_pRoot->getNumberOfFaces();}
+	inline int numberOfFaces() const {return m_pRoot->numberOfFaces();}
+
 	//! Get number of vertex
-	inline int getNumberOfVertex() const{return m_pRoot->getNumberOfVertex();}
+	inline int numberOfVertex() const{return m_pRoot->numberOfVertex();}
 
 //@}
 
@@ -81,6 +87,7 @@ public:
 public:
 	//! Merge this world with another world
 	void mergeWithAnotherWorld(GLC_World &);
+
 	//! Reverse worlds part normal
 	inline void reversePartNormal() {m_pRoot->reverseChildPartNormal();}
 //@}
@@ -109,11 +116,12 @@ public:
 private:
 	//! The instance Collection
 	GLC_Collection* m_pCollection;
+
 	//! The root of the product structure
 	GLC_Product* m_pRoot;
+
 	//! Number of this world
 	int* m_pNumberOfWorld;
-
 };
 
 #endif /*GLC_WORLD_H_*/

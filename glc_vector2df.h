@@ -40,7 +40,7 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Vector2df  
+class GLC_Vector2df
 {
 	friend class GLC_Vector2d;
 //////////////////////////////////////////////////////////////////////
@@ -49,24 +49,24 @@ class GLC_Vector2df
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! Default constructor
-	*  Value is set to 
+	*  Value is set to
 	* \n X = 0.0
 	* \n Y =  0.0
 	*/
 	inline GLC_Vector2df()
 	{
-		dVecteur[0]= 0.0f;
-		dVecteur[1]= 0.0f;
+		vector[0]= 0.0f;
+		vector[1]= 0.0f;
 	}
-	
-	/*! Standard constructor With x, y = 0.0*/
+
+	//! Standard constructor With x, y = 0.0
 	inline GLC_Vector2df(const float &dX, const float &dY)
 	{
-		dVecteur[0]= dX;
-		dVecteur[1]= dY;
+		vector[0]= dX;
+		vector[1]= dY;
 	}
-	
-	/*! Recopy constructor
+
+	/*! Copy constructor
 	 * Sample use
 	 * \code
 	 * NewVect = new GLC_Vector2d(OldVect);
@@ -74,46 +74,46 @@ public:
 	 */
 	inline GLC_Vector2df(const GLC_Vector2df &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
+		vector[0]= Vect.vector[0];
+		vector[1]= Vect.vector[1];
 	}
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	/*! X Composante*/
+	//! X Compound
 	inline GLC_Vector2df& setX(const float &dX)
 	{
-		dVecteur[0]= dX;
+		vector[0]= dX;
 		return *this;
 	}
-	
-	/*! Y Composante*/
+
+	//! Y Compound
 	inline GLC_Vector2df& setY(const float &dY)
 	{
-		dVecteur[1]= dY;
+		vector[1]= dY;
 		return *this;
 	}
-		
-	/*! All Composante*/
+
+	//! All Compound
 	inline GLC_Vector2df& setVect(const float &dX, const float &dY)
 	{
-		dVecteur[0]= dX;
-		dVecteur[1]= dY;
+		vector[0]= dX;
+		vector[1]= dY;
 		return *this;
 	}
-		
-	/*! From another Vector*/
+
+	//! From another Vector
 	inline GLC_Vector2df& setVect(const GLC_Vector2df &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
+		vector[0]= Vect.vector[0];
+		vector[1]= Vect.vector[1];
 		return *this;
 	}
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -121,25 +121,25 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	/*! X Composante*/
-	inline float getX(void) const
+	//! Return X Compound
+	inline float X(void) const
 	{
-		return dVecteur[0];
+		return vector[0];
 	}
-	/*! Y Composante*/
-	inline float getY(void) const
+	//! Return Y Compound
+	inline float Y(void) const
 	{
-		return dVecteur[1];
+		return vector[1];
 	}
-	/*! retourne un pointeur constant vers le tableau du vecteur.*/
+	//! Return a pointer to vector data
 	inline const float *return_dVect(void) const
 	{
-		return dVecteur;
+		return vector;
 	}
-	/*! Vector is null*/
+	//! Return true if the vector is null
 	inline bool isNull(void) const
 	{
-		return (fabs(dVecteur[0]) < glc::EPSILON) && (fabs(dVecteur[1]) < glc::EPSILON);
+		return (fabs(vector[0]) < glc::EPSILON) && (fabs(vector[1]) < glc::EPSILON);
 	}
 
 //@}
@@ -149,10 +149,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	/*! Vector array definition \n
-	*	dVecteur[0]	X \n
-	*	dVecteur[1]	Y \n
+	*	vector[0]	X \n
+	*	vector[1]	Y \n
 	*/
-	float dVecteur[2];
+	float vector[2];
 
 }; //class GLC_Vector2df
 

@@ -41,15 +41,15 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Vector4d  
+class GLC_Vector4d
 {
-	/*! GLC_Matrix4x4 class*/
+	//! GLC_Matrix4x4 class
 	friend class GLC_Matrix4x4;
-	
-	/*! Overload unary "-" operator*/
+
+	//! Overload unary "-" operator
 	inline friend GLC_Vector4d operator - (const GLC_Vector4d &Vect)
 	{
-		return GLC_Vector4d(-Vect.dVecteur[0], -Vect.dVecteur[1], -Vect.dVecteur[2]);
+		return GLC_Vector4d(-Vect.vector[0], -Vect.vector[1], -Vect.vector[2]);
 	}
 
 
@@ -59,25 +59,25 @@ class GLC_Vector4d
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! Default constructor
-	*  Value is set to 
+	*  Value is set to
 	* \n X = 0.0
 	* \n Y =  0.0
 	* \n Z =  0.0
 	* \n W =  1.0*/
 	inline GLC_Vector4d()
 	{
-		dVecteur[0]= 0.0;
-		dVecteur[1]= 0.0;
-		dVecteur[2]= 0.0;
+		vector[0]= 0.0;
+		vector[1]= 0.0;
+		vector[2]= 0.0;
 
-		dVecteur[3]= 1.0;
+		vector[3]= 1.0;
 	}
-	/*! Standard constructor With x, y, z and w with default value of 1.0*/
+	//! Standard constructor With x, y, z and w with default value of 1.0
 	inline GLC_Vector4d(const double &dX, const double &dY, const double &dZ, const double &dW= 1.0)
 	{
 		setVect(dX, dY, dZ, dW);
 	}
-	/*! Recopy constructor
+	/*! Copy constructor
 	 * Sample use
 	 * \code
 	 * NewVect = new GLC_Vector4d(OldVect);
@@ -85,206 +85,203 @@ public:
 	 */
 	inline GLC_Vector4d(const GLC_Vector4d &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= Vect.dVecteur[2];
-		dVecteur[3]= Vect.dVecteur[3];
+		vector[0]= Vect.vector[0];
+		vector[1]= Vect.vector[1];
+		vector[2]= Vect.vector[2];
+		vector[3]= Vect.vector[3];
 	}
-	
+
 	//! Copy from an GLC_Vector3d
 	inline GLC_Vector4d(const GLC_Vector3d &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= Vect.dVecteur[2];
-		dVecteur[3]= 1.0;
+		vector[0]= Vect.vector[0];
+		vector[1]= Vect.vector[1];
+		vector[2]= Vect.vector[2];
+		vector[3]= 1.0;
 	}
 
 	//! Copy from an GLC_Vector3d
 	inline GLC_Vector4d(const GLC_Vector3df &Vect)
 	{
-		dVecteur[0]= static_cast<double>(Vect.dVecteur[0]);
-		dVecteur[1]= static_cast<double>(Vect.dVecteur[1]);
-		dVecteur[2]= static_cast<double>(Vect.dVecteur[2]);
-		dVecteur[3]= 1.0;
+		vector[0]= static_cast<double>(Vect.dVector[0]);
+		vector[1]= static_cast<double>(Vect.dVector[1]);
+		vector[2]= static_cast<double>(Vect.dVector[2]);
+		vector[3]= 1.0;
 	}
 
 	//! Copy from an GLC_Vector3d
 	inline GLC_Vector4d(const GLC_Vector2d &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= 0.0;
-		dVecteur[3]= 1.0;
+		vector[0]= Vect.dVecteur[0];
+		vector[1]= Vect.dVecteur[1];
+		vector[2]= 0.0;
+		vector[3]= 1.0;
 	}
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Operator Overload */
 //@{
 //////////////////////////////////////////////////////////////////////
-
 public:
-
-	/*! Overload binary "+" operator*/
+	//! Overload binary "+" operator
 	inline GLC_Vector4d operator + (const GLC_Vector4d &Vect) const
 	{
-		GLC_Vector4d VectResult(dVecteur[0] + Vect.dVecteur[0], dVecteur[1] + Vect.dVecteur[1],
-			dVecteur[2] + Vect.dVecteur[2]);
+		GLC_Vector4d VectResult(vector[0] + Vect.vector[0], vector[1] + Vect.vector[1],
+			vector[2] + Vect.vector[2]);
 
 		return VectResult;
 	}
 
-	/*! Overload "=" operator*/
+	//! Overload "=" operator
 	inline GLC_Vector4d& operator = (const GLC_Vector4d &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= Vect.dVecteur[2];
-		dVecteur[3]= Vect.dVecteur[3];
-		
+		vector[0]= Vect.vector[0];
+		vector[1]= Vect.vector[1];
+		vector[2]= Vect.vector[2];
+		vector[3]= Vect.vector[3];
+
 		return *this;
 	}
 
-	/*! Overload "=" operator*/
+	//! Overload "=" operator
 	inline GLC_Vector4d& operator = (const GLC_Vector3d &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= Vect.dVecteur[2];
-		dVecteur[3]= 1.0;
-		
-		return *this;
-	}
-	
-	/*! Overload "=" operator*/
-	inline GLC_Vector4d& operator = (const GLC_Vector3df &Vect)
-	{
-		dVecteur[0]= static_cast<double>(Vect.dVecteur[0]);
-		dVecteur[1]= static_cast<double>(Vect.dVecteur[1]);
-		dVecteur[2]= static_cast<double>(Vect.dVecteur[2]);
-		dVecteur[3]= 1.0;
-		
-		return *this;
-	}
-	
-	/*! Overload "=" operator*/
-	inline GLC_Vector4d& operator = (const GLC_Vector2d &Vect)
-	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= 0.0;
-		dVecteur[3]= 1.0;
-		
+		vector[0]= Vect.vector[0];
+		vector[1]= Vect.vector[1];
+		vector[2]= Vect.vector[2];
+		vector[3]= 1.0;
+
 		return *this;
 	}
 
-	/*! Overload "+=" operator*/
+	//! Overload "=" operator
+	inline GLC_Vector4d& operator = (const GLC_Vector3df &Vect)
+	{
+		vector[0]= static_cast<double>(Vect.dVector[0]);
+		vector[1]= static_cast<double>(Vect.dVector[1]);
+		vector[2]= static_cast<double>(Vect.dVector[2]);
+		vector[3]= 1.0;
+
+		return *this;
+	}
+
+	//! Overload "=" operator
+	inline GLC_Vector4d& operator = (const GLC_Vector2d &Vect)
+	{
+		vector[0]= Vect.dVecteur[0];
+		vector[1]= Vect.dVecteur[1];
+		vector[2]= 0.0;
+		vector[3]= 1.0;
+
+		return *this;
+	}
+
+	//! Overload "+=" operator
 	inline GLC_Vector4d* operator += (const GLC_Vector4d &Vect)
 	{
 		*this= *this + Vect;
 		return this;
 	}
 
-	
-	/*! Overload binary "-" operator*/
+
+	//! Overload binary "-" operator
 	inline GLC_Vector4d operator - (const GLC_Vector4d &Vect) const
 	{
-		GLC_Vector4d VectResult(dVecteur[0] - Vect.dVecteur[0], dVecteur[1] - Vect.dVecteur[1],
-			dVecteur[2] - Vect.dVecteur[2]);
+		GLC_Vector4d VectResult(vector[0] - Vect.vector[0], vector[1] - Vect.vector[1],
+			vector[2] - Vect.vector[2]);
 
 		return VectResult;
 	}
 
-	/*! Overload binary "-=" operator*/
+	//! Overload binary "-=" operator
 	GLC_Vector4d* operator -= (const GLC_Vector4d &Vect)
 	{
 		*this= *this - Vect;
 		return this;
 	}
 
-	/*! Overload dot product "^" operator*/
+	//! Overload dot product "^" operator
 	GLC_Vector4d operator ^ (const GLC_Vector4d &Vect) const;
 
-	/*! Overload scalar product "*" operator between 2 vector*/
+	//! Overload scalar product "*" operator between 2 vector
 	inline const double operator * (const GLC_Vector4d &Vect) const
 	{
-		// La composante W est ignorée.
-		return dVecteur[0] * Vect.dVecteur[0] + dVecteur[1] * Vect.dVecteur[1] +
-			dVecteur[2] * Vect.dVecteur[2];
+		// W Component is ignored
+		return vector[0] * Vect.vector[0] + vector[1] * Vect.vector[1] +
+			vector[2] * Vect.vector[2];
 	}
 
-	/*! Overload scalar product "*" operator between 1 vector and one scalar*/
+	//! Overload scalar product "*" operator between 1 vector and one scalar
 	inline GLC_Vector4d operator * (double Scalaire) const
 	{
-		return GLC_Vector4d(dVecteur[0] * Scalaire, dVecteur[1] * Scalaire, dVecteur[2] * Scalaire);;
+		return GLC_Vector4d(vector[0] * Scalaire, vector[1] * Scalaire, vector[2] * Scalaire);;
 	}
 
-	
-	/*! Overload equality "==" operator*/
+
+	//! Overload equality "==" operator
 	bool operator == (const GLC_Vector4d &Vect) const;
 
-	/*! Overload dot product "!=" operator*/
+	//! Overload dot product "!=" operator
 	inline bool operator != (const GLC_Vector4d &Vect) const
 	{
 		return !(*this == Vect);
 	}
 
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	/*! X Composante*/
+	//! X Compound
 	inline GLC_Vector4d& setX(const double &dX)
 	{
-		dVecteur[0]= dX;
+		vector[0]= dX;
 		return *this;
 	}
 
-	/*! Y Composante*/
+	//! Y Compound
 	inline GLC_Vector4d& setY(const double &dY)
 	{
-		dVecteur[1]= dY;
-		return *this;
-	}
-	
-	/*! Z Composante*/
-	inline GLC_Vector4d& setZ(const double &dZ)
-	{
-		dVecteur[2]= dZ;
-		return *this;
-	}
-	
-	/*! W Composante*/
-	GLC_Vector4d& setW(const double &dW);
-	
-	/*! All Composante*/
-	GLC_Vector4d& setVect(const double &dX, const double &dY, const double &dZ, const double &dW= 1);
-		
-	/*! From another Vector*/
-	inline GLC_Vector4d& setVect(const GLC_Vector4d &Vect)
-	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= Vect.dVecteur[2];
-		dVecteur[3]= Vect.dVecteur[3];
+		vector[1]= dY;
 		return *this;
 	}
 
-	
-	/*! Vector Normal*/
+	//! Z Compound
+	inline GLC_Vector4d& setZ(const double &dZ)
+	{
+		vector[2]= dZ;
+		return *this;
+	}
+
+	//! W Compound
+	GLC_Vector4d& setW(const double &dW);
+
+	//! All Compound
+	GLC_Vector4d& setVect(const double &dX, const double &dY, const double &dZ, const double &dW= 1);
+
+	//! From another Vector
+	inline GLC_Vector4d& setVect(const GLC_Vector4d &Vect)
+	{
+		vector[0]= Vect.vector[0];
+		vector[1]= Vect.vector[1];
+		vector[2]= Vect.vector[2];
+		vector[3]= Vect.vector[3];
+		return *this;
+	}
+
+	//! Vector Normal
 	GLC_Vector4d& setNormal(const double &Norme);
-	
+
 	/*! Invert Vector*/
 	inline GLC_Vector4d& setInv(void)
 	{
-		dVecteur[0]= - dVecteur[0];
-		dVecteur[1]= - dVecteur[1];
-		dVecteur[2]= - dVecteur[2];
+		vector[0]= - vector[0];
+		vector[1]= - vector[1];
+		vector[2]= - vector[2];
 		return *this;
 	}
 
@@ -295,62 +292,63 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	/*! X Composante*/
-	inline const double getX(void) const
+	//! Return X Compound
+	inline const double X(void) const
 	{
-		return dVecteur[0];
+		return vector[0];
 	}
-	/*! Y Composante*/
-	inline const double getY(void) const
+	//! Return Y Compound
+	inline const double Y(void) const
 	{
-		return dVecteur[1];
+		return vector[1];
 	}
-	/*! Z Composante*/
-	inline const double getZ(void) const
+	//! Return Z Compound
+	inline const double Z(void) const
 	{
-		return dVecteur[2];
+		return vector[2];
 	}
-	/*! W Composante*/
-	inline const double getW(void) const
+	//! Return W Compound
+	inline const double W(void) const
 	{
-		return dVecteur[3];
+		return vector[3];
 	}
 	inline GLC_Vector3d toVector3d() const
 	{
-		return GLC_Vector3d(dVecteur[0], dVecteur[1], dVecteur[2]);
+		return GLC_Vector3d(vector[0], vector[1], vector[2]);
 	}
 	inline GLC_Vector3df toVector3df() const
 	{
-		return GLC_Vector3df(static_cast<float>(dVecteur[0]), static_cast<float>(dVecteur[1]), static_cast<float>(dVecteur[2]));
-	}	
-	/*! retourne un pointeur constant vers le tableau du vecteur.*/
-	inline const double *return_dVect(void) const
-	{
-		return dVecteur;
+		return GLC_Vector3df(static_cast<float>(vector[0]), static_cast<float>(vector[1]), static_cast<float>(vector[2]));
 	}
-	/*! Vector Norm*/
-	inline const double getNorm(void) const
+	//! Return a pointer to vector data
+	inline const double *data(void) const
 	{
-		return calcNorme();
+		return vector;
+	}
+	//! Return Vector Norm
+	inline const double norm(void) const
+	{
+		return sqrt(vector[0] * vector[0] + vector[1] * vector[1]
+			+ vector[2] * vector[2]);
 	}
 	/*! Vector is null*/
 	inline const bool isNull(void) const
 	{
 		bool result;
 
-		result= (fabs(dVecteur[0]) < glc::EPSILON) && (fabs(dVecteur[1]) < glc::EPSILON)
-			&& (fabs(dVecteur[2]) < glc::EPSILON);
-		
+		result= (fabs(vector[0]) < glc::EPSILON) && (fabs(vector[1]) < glc::EPSILON)
+			&& (fabs(vector[2]) < glc::EPSILON);
+
 		return result;
 	}
 
-	/*! Angle between another vector*/
+	//! Return the Angle with another vector
 	const double getAngleWithVect(GLC_Vector4d Vect) const;
-	
-	//! return the vector string
+
+	//! Return the vector string
 	QString toString() const;
-	
-	//! return the 2D vector specified by a mask vector
+
+	//! Return the 2D vector specified by a mask vector
 	/*! retrieve component corresponding to
 	 * mask NULL component*/
 	GLC_Vector2d toVector2d(const GLC_Vector4d&) const;
@@ -360,14 +358,8 @@ public:
 // Private services functions
 //////////////////////////////////////////////////////////////////////
 private:
-	/*! Compute Vector normal*/
-	inline const double calcNorme(void) const
-	{
-		return sqrt(dVecteur[0] * dVecteur[0] + dVecteur[1] * dVecteur[1]
-			+ dVecteur[2] * dVecteur[2]);
-	}
-	
-	/*! Normalize Vector w <- 0*/
+
+	//! Normalize Vector w <- 0
 	void setWToNull(void);
 
 //////////////////////////////////////////////////////////////////////
@@ -375,30 +367,34 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	/*! Vector array definition \n
-	*	dVecteur[0]	X \n
-	*	dVecteur[1]	Y \n
-	*	dVecteur[2]	Z \n
-	*	dVecteur[3]	1
+	*	vector[0]	X \n
+	*	vector[1]	Y \n
+	*	vector[2]	Z \n
+	*	vector[3]	1
 	*/
 	enum {VECT4DIMENSION = 4};
-	double dVecteur[VECT4DIMENSION];
+	double vector[VECT4DIMENSION];
 
 }; //class GLC_Vector4d
 
+// Vector constant in glc namespace
+namespace glc
+{
+	// Axis definition
+	/*! \var X_AXIS
+	 *  \brief X axis Vector*/
+	const GLC_Vector4d X_AXIS(1.0, 0.0, 0.0);
+
+	/*! \var Y_AXIS
+	 *  \brief Y axis Vector*/
+	const GLC_Vector4d Y_AXIS(0.0, 1.0, 0.0);
+
+	/*! \var Z_AXIS
+	 *  \brief Z axis Vector*/
+	const GLC_Vector4d Z_AXIS(0.0, 0.0, 1.0);
+};
+
 //! Define GLC_Point4D
 typedef GLC_Vector4d GLC_Point4d;
-
-// Axis definition
-/*! \var AxeX
- *  \brief X axis Vector*/
-const GLC_Vector4d AxeX(1.0, 0.0, 0.0);
-
-/*! \var AxeY
- *  \brief Y axis Vector*/
-const GLC_Vector4d AxeY(0.0, 1.0, 0.0);
-
-/*! \var AxeZ
- *  \brief Z axis Vector*/
-const GLC_Vector4d AxeZ(0.0, 0.0, 1.0);
 
 #endif /*GLC_VECTOR4D_H_*/

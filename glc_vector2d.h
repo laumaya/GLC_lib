@@ -43,24 +43,24 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Vector2d  
+class GLC_Vector2d
 {
 	friend class GLC_Vector4d;
-	
+
 	/*! Overload unary "-" operator*/
 	inline friend GLC_Vector2d operator - (const GLC_Vector2d &Vect)
 	{
 		return GLC_Vector2d(-Vect.dVecteur[0], -Vect.dVecteur[1]);
 	}
 
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! Default constructor
-	*  Value is set to 
+	*  Value is set to
 	* \n X = 0.0
 	* \n Y =  0.0
 	*/
@@ -69,14 +69,14 @@ public:
 		dVecteur[0]= 0.0;
 		dVecteur[1]= 0.0;
 	}
-	
+
 	/*! Standard constructor With x, y = 0.0*/
 	inline GLC_Vector2d(const double &dX, const double &dY)
 	{
 		dVecteur[0]= dX;
 		dVecteur[1]= dY;
 	}
-	
+
 	/*! Recopy constructor
 	 * Sample use
 	 * \code
@@ -94,7 +94,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	
+
 	/*! Overload binary "+" operator*/
 	inline GLC_Vector2d operator + (const GLC_Vector2d &Vect) const
 	{
@@ -111,16 +111,16 @@ public:
 
 		return *this;
 	}
-	
+
 	/*! Overload "=" operator*/
 	inline GLC_Vector2d& operator = (const GLC_Vector2df &Vect)
 	{
-		dVecteur[0]= static_cast<double>(Vect.dVecteur[0]);
-		dVecteur[1]= static_cast<double>(Vect.dVecteur[1]);
-		
+		dVecteur[0]= static_cast<double>(Vect.vector[0]);
+		dVecteur[1]= static_cast<double>(Vect.vector[1]);
+
 		return *this;
 	}
-	
+
 
 	/*! Overload "+=" operator*/
 	inline GLC_Vector2d* operator += (const GLC_Vector2d &Vect)
@@ -129,7 +129,7 @@ public:
 		return this;
 	}
 
-	
+
 	/*! Overload binary "-" operator*/
 	inline GLC_Vector2d operator - (const GLC_Vector2d &Vect) const
 	{
@@ -163,7 +163,7 @@ public:
 		return GLC_Vector2d(dVecteur[0] * Scalaire, dVecteur[1] * Scalaire);;
 	}
 
-	
+
 	/*! Overload equality "==" operator*/
 	inline bool operator == (const GLC_Vector2d &Vect) const
 	{
@@ -192,14 +192,14 @@ public:
 		dVecteur[0]= dX;
 		return *this;
 	}
-	
+
 	/*! Y Composante*/
 	inline GLC_Vector2d& setY(const double &dY)
 	{
 		dVecteur[1]= dY;
 		return *this;
 	}
-		
+
 	/*! All Composante*/
 	inline GLC_Vector2d& setVect(const double &dX, const double &dY)
 	{
@@ -207,7 +207,7 @@ public:
 		dVecteur[1]= dY;
 		return *this;
 	}
-		
+
 	/*! From another Vector*/
 	inline GLC_Vector2d& setVect(const GLC_Vector2d &Vect)
 	{
@@ -215,7 +215,7 @@ public:
 		dVecteur[1]= Vect.dVecteur[1];
 		return *this;
 	}
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -260,8 +260,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	/*! Vector array definition \n
-	*	dVecteur[0]	X \n
-	*	dVecteur[1]	Y \n
+	*	vector[0]	X \n
+	*	vector[1]	Y \n
 	*/
 	double dVecteur[2];
 

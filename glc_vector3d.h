@@ -38,7 +38,7 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Vector3d  
+class GLC_Vector3d
 {
 	friend class GLC_Vector4d;
 //////////////////////////////////////////////////////////////////////
@@ -47,25 +47,27 @@ class GLC_Vector3d
 //////////////////////////////////////////////////////////////////////
 public:
 	/*! Default constructor
-	*  Value is set to 
+	*  Value is set to
 	* \n X = 0.0
 	* \n Y =  0.0
 	* \n Z =  0.0
 	*/
 	inline GLC_Vector3d()
 	{
-		dVecteur[0]= 0.0;
-		dVecteur[1]= 0.0;
-		dVecteur[2]= 0.0;
+		vector[0]= 0.0;
+		vector[1]= 0.0;
+		vector[2]= 0.0;
 	}
-	
+
 	/*! Standard constructor With x, y, z*/
 	inline GLC_Vector3d(const double &dX, const double &dY, const double &dZ)
 	{
-		setVect(dX, dY, dZ);
+		vector[0]= dX;
+		vector[1]= dY;
+		vector[2]= dZ;
 	}
-	
-	/*! Recopy constructor
+
+	/*! Copy constructor
 	 * Sample use
 	 * \code
 	 * NewVect = new GLC_Vector3d(OldVect);
@@ -73,9 +75,9 @@ public:
 	 */
 	inline GLC_Vector3d(const GLC_Vector3d &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= Vect.dVecteur[2];
+		vector[0]= Vect.vector[0];
+		vector[1]= Vect.vector[1];
+		vector[2]= Vect.vector[2];
 	}
 	/*! Copy constructor from a float vector
 	 * Sample use
@@ -85,65 +87,65 @@ public:
 	 */
 	inline GLC_Vector3d(const GLC_Vector3df &Vect)
 	{
-		dVecteur[0]= static_cast<double>(Vect.dVecteur[0]);
-		dVecteur[1]= static_cast<double>(Vect.dVecteur[1]);
-		dVecteur[2]= static_cast<double>(Vect.dVecteur[2]);
+		vector[0]= static_cast<double>(Vect.dVector[0]);
+		vector[1]= static_cast<double>(Vect.dVector[1]);
+		vector[2]= static_cast<double>(Vect.dVector[2]);
 	}
 
 //@}
 
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	/*! X Composante*/
+	//! X Compound
 	inline GLC_Vector3d& setX(const double &dX)
 	{
-		dVecteur[0]= dX;
+		vector[0]= dX;
 		return *this;
 	}
-	
-	/*! Y Composante*/
+
+	//! Y Compound
 	inline GLC_Vector3d& setY(const double &dY)
 	{
-		dVecteur[1]= dY;
+		vector[1]= dY;
 		return *this;
 	}
-	
-	/*! Z Composante*/
+
+	//! Z Compound
 	inline GLC_Vector3d& setZ(const double &dZ)
 	{
-		dVecteur[2]= dZ;
+		vector[2]= dZ;
 		return *this;
 	}
-	
-	/*! All Composante*/
+
+	//! All Compound
 	inline GLC_Vector3d& setVect(const double &dX, const double &dY, const double &dZ)
 	{
-		dVecteur[0]= dX;
-		dVecteur[1]= dY;
-		dVecteur[2]= dZ;
+		vector[0]= dX;
+		vector[1]= dY;
+		vector[2]= dZ;
 
 		return *this;
 	}
-		
-	/*! From another Vector*/
+
+	//! From another Vector
 	GLC_Vector3d& setVect(const GLC_Vector3d &Vect)
 	{
-		dVecteur[0]= Vect.dVecteur[0];
-		dVecteur[1]= Vect.dVecteur[1];
-		dVecteur[2]= Vect.dVecteur[2];
+		vector[0]= Vect.vector[0];
+		vector[1]= Vect.vector[1];
+		vector[2]= Vect.vector[2];
 		return *this;
 	}
-	
-	/*! Invert Vector*/
+
+	//! Invert Vector
 	inline GLC_Vector3d& setInv(void)
 	{
-		dVecteur[0]= - dVecteur[0];
-		dVecteur[1]= - dVecteur[1];
-		dVecteur[2]= - dVecteur[2];
+		vector[0]= - vector[0];
+		vector[1]= - vector[1];
+		vector[2]= - vector[2];
 		return *this;
 	}
 
@@ -154,50 +156,45 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	/*! X Composante*/
-	inline double getX(void) const
+	//! Return X Compound
+	inline double X(void) const
 	{
-		return dVecteur[0];
+		return vector[0];
 	}
-	/*! Y Composante*/
-	inline double getY(void) const
+	//! Return Y Compound
+	inline double Y(void) const
 	{
-		return dVecteur[1];
+		return vector[1];
 	}
-	/*! Z Composante*/
-	inline double getZ(void) const
+	//! Return Z Compound
+	inline double Z(void) const
 	{
-		return dVecteur[2];
+		return vector[2];
 	}
-	/*! retourne un pointeur constant vers le tableau du vecteur.*/
-	inline const double *return_dVect(void) const
+	//! Return a pointer to vector data
+	inline const double *data(void) const
 	{
-		return dVecteur;
+		return vector;
 	}
-	/*! Vector is null*/
+	//! Return true if the vector is null
 	inline bool isNull(void) const
 	{
-		return (fabs(dVecteur[0]) < glc::EPSILON) && (fabs(dVecteur[1]) < glc::EPSILON)
-		&& (fabs(dVecteur[2]) < glc::EPSILON);
+		return (fabs(vector[0]) < glc::EPSILON) && (fabs(vector[1]) < glc::EPSILON)
+		&& (fabs(vector[2]) < glc::EPSILON);
 	}
 
 //@}
-
-//////////////////////////////////////////////////////////////////////
-// Private services functions
-//////////////////////////////////////////////////////////////////////
-
 
 //////////////////////////////////////////////////////////////////////
 //name Private attributes
 //////////////////////////////////////////////////////////////////////
 private:
 	/*! Vector array definition \n
-	*	dVecteur[0]	X \n
-	*	dVecteur[1]	Y \n
-	*	dVecteur[2]	Z \n
+	*	vector[0]	X \n
+	*	vector[1]	Y \n
+	*	vector[2]	Z \n
 	*/
-	double dVecteur[3];
+	double vector[3];
 
 }; //class GLC_Vector3d
 
