@@ -207,9 +207,9 @@ void GLC_StlToWorld::scanFacet()
 	lineBuff.remove(0,12); // Remove first 12 chars
 	lineBuff= lineBuff.trimmed().toLower();
 	GLC_Vector3df cur3dVect= extract3dVect(lineBuff);
-	curVertex.nx= cur3dVect.getX();
-	curVertex.ny= cur3dVect.getY();
-	curVertex.nz= cur3dVect.getZ();
+	curVertex.nx= cur3dVect.X();
+	curVertex.ny= cur3dVect.Y();
+	curVertex.nz= cur3dVect.Z();
 	//m_pCurrentMesh->addNormal(m_CurNormalIndex++, extract3dVect(lineBuff));
 
 ////////////////////////////////////////////// Outer Loop////////////////////////////////
@@ -248,9 +248,9 @@ void GLC_StlToWorld::scanFacet()
 		lineBuff= lineBuff.trimmed();
 
 		cur3dVect= extract3dVect(lineBuff);
-		curVertex.x= cur3dVect.getX();
-		curVertex.y= cur3dVect.getY();
-		curVertex.z= cur3dVect.getZ();
+		curVertex.x= cur3dVect.X();
+		curVertex.y= cur3dVect.Y();
+		curVertex.z= cur3dVect.Z();
 
 		curVertex.s= 0.0f;
 		curVertex.t= 0.0f;

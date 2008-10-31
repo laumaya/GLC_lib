@@ -66,7 +66,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Create an GLC_World from an input OBJ File
+	//! Create and return an GLC_World* from an input OBJ File
 	GLC_World* CreateWorldFromStl(QFile &file);
 //@}
 
@@ -83,11 +83,11 @@ private:
 	GLC_Vector3df extract3dVect(QString &);
 	//! Load Binarie STL File
 	void LoadBinariStl(QFile &);
-	
-	
+
+
 
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 // Qt Signals
 //////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ private:
 	//! The Stl File name
 	QString m_FileName;
 	//! OpenGL Context
-	const QGLContext* m_pQGLContext;	
+	const QGLContext* m_pQGLContext;
 	//! The current line number
 	int m_CurrentLineNumber;
 	//! The Text Stream

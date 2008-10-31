@@ -56,16 +56,16 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! return the part's representation ID
-	inline GLC_uint getRepID() const {return m_RepID;}
-	//! return the instance associated to this part
-	inline GLC_Instance* getInstance() {return m_pCollection->getInstanceHandle(m_RepID);}
+	//! Return the part's representation ID
+	inline GLC_uint id() const {return m_RepID;}
+	//! Return the GLC_Instance* associated to this part
+	inline GLC_Instance* instance() {return m_pCollection->getInstanceHandle(m_RepID);}
 	//! Clone the part
 	GLC_Part* clone(GLC_Collection *) const;
 	//! Get number of Faces
-	int getNumberOfFaces() const;
+	int numberOfFaces() const;
 	//! Get number of vertex
-	int getNumberOfVertex() const;
+	int numberOfVertex() const;
 
 //@}
 
@@ -89,7 +89,7 @@ public:
 // private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Représentation id of the part
+	//! Representation id of the part
 	GLC_uint m_RepID;
 
 };

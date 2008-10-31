@@ -63,27 +63,37 @@ public:
 public:
 	//! return true if product is parent of node
 	bool isParentOf(const GLC_uint) const;
+
 	//! Return the number of child
 	inline int childCount() const {return m_ChildProducts.size() + m_ChildParts.size();}
+
 	//! Return the number of product child
 	inline int productChildCount() const {return m_ChildProducts.size();}
+
 	//! Return the number of part child
 	inline int partChildCount() const {return m_ChildParts.size();}
+
 	//! Return the child product associated with the key
 	GLC_Product* childProduct(const GLC_uint);
+
 	//! Return the productChildList
 	inline QList<GLC_Product*> childProducts() const {return m_ChildProducts.values();}
+
 	//! Return the child part associated with the key
 	GLC_Part* childPart(const GLC_uint);
+
 	//! Return the partChildList
 	inline QList<GLC_Part*> childParts() const {return m_ChildParts.values();}
+
 	//! Clone the product
 	GLC_Product* clone(GLC_Collection *) const;
+
 	//! Get number of faces
-	int getNumberOfFaces() const;
+	int numberOfFaces() const;
+
 	//! Get number of vertex
-	int getNumberOfVertex() const;
-	
+	int numberOfVertex() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -93,7 +103,7 @@ public:
 public:
 	//! Move the Product with specified matrix
 	void move(const GLC_Matrix4x4 &);
-	
+
 	//! Add a new child product
 	/*! Return the added product Uid
 	 */
@@ -101,7 +111,7 @@ public:
 
 	//! Add child products
 	void addChildProducts(QList<GLC_Product*>, GLC_Collection *);
-		
+
 	//! Add child part containing specified instance
 	/*! Return the added part Uid
 	 */
@@ -109,18 +119,18 @@ public:
 
 	//! Add child parts
 	void addChildParts(QList<GLC_Part*>, GLC_Collection *);
-	 
+
 	 //! Remove a child with the specified UID
 	 /*! Return true if the child as been succesfully removed
 	  */
 	 bool removeChild(const GLC_uint);
-	 
+
 	//! Update Product absolute matrix
 	void updateAbsoluteMatrix();
-	
+
 	//! Remove child part, child product and update world collection
 	void removeChilds();
-	
+
 	//! Reverse child part normal
 	void reverseChildPartNormal();
 

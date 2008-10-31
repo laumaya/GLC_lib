@@ -55,7 +55,7 @@ GLC_ObjMtlLoader::~GLC_ObjMtlLoader()
 // Get functions
 //////////////////////////////////////////////////////////////////////
 // Get a material from is name
-GLC_Material* GLC_ObjMtlLoader::getMaterial(const QString& materialName)
+GLC_Material* GLC_ObjMtlLoader::material(const QString& materialName)
 {
 	if (m_Materials.contains(materialName))
 	{
@@ -76,7 +76,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 
 	// Create the input file stream
 	QFile mtlFile(m_FileName);
-	
+
 	if (!mtlFile.open(QIODevice::ReadOnly))
 	{
 		qDebug() << "GLC_ObjMtlLoader::LoadMaterial File " << m_FileName << " doesn't exist";
@@ -86,44 +86,44 @@ bool GLC_ObjMtlLoader::loadMaterials()
 	{
 		//qDebug() << "GLC_ObjMtlLoader::LoadMaterial OK File " << m_FileName << " exist";
 	}
-	
+
 	QTextStream mtlStream(&mtlFile);
 
 	QString lineBuff;
 	QString header;
-	
+
 	while (!mtlStream.atEnd())
 	{
 		lineBuff= mtlStream.readLine();
-		//qDebug() << lineBuff;		
+		//qDebug() << lineBuff;
 		QTextStream streamLine(lineBuff.toAscii());
-		
+
 		if ((streamLine >> header).status() ==QTextStream::Ok)
 		{
-		
+
 			// Search New material
 			if (header =="newmtl")
-			{			
+			{
 				//qDebug() << "New material find";
-				
+
 				if (NULL != m_pCurrentMaterial)
 				{	// It's not the first material
-					//qDebug() << "Add material : " << m_pCurrentMaterial->getName();
+					//qDebug() << "Add material : " << m_pCurrentMaterial->name();
 					processMayaSpecific();
-					m_Materials.insert(m_pCurrentMaterial->getName(), m_pCurrentMaterial);
+					m_Materials.insert(m_pCurrentMaterial->name(), m_pCurrentMaterial);
 					m_pCurrentMaterial= NULL;
 				}
-								
+
 				m_pCurrentMaterial= new GLC_Material;
 				if (!extractMaterialName(lineBuff)) return false;
-				//qDebug() << "New Material " << m_pCurrentMaterial->getName();
-								
+				//qDebug() << "New Material " << m_pCurrentMaterial->name();
+
 			}
 			else if ((header == "Ka") || (header == "Kd") || (header == "Ks")) // ambiant, diffuse and specular color
 			{
 				if (!extractRGBValue(lineBuff)) return false;
 			}
-	
+
 			else if ((header == "Ns") || (header == "d"))	// shiness Or transparency
 			{
 				if (!extractOneValue(lineBuff)) return false;
@@ -133,17 +133,17 @@ bool GLC_ObjMtlLoader::loadMaterials()
 				//qDebug() << "Texture detected";
 				extractTextureFileName(lineBuff);
 			}
-						
+
 		}
 	}
 
 	if (NULL != m_pCurrentMaterial)
 	{
-		//qDebug() << "Add material : " << m_pCurrentMaterial->getName();
-		m_Materials.insert(m_pCurrentMaterial->getName(), m_pCurrentMaterial);					
+		//qDebug() << "Add material : " << m_pCurrentMaterial->name();
+		m_Materials.insert(m_pCurrentMaterial->name(), m_pCurrentMaterial);
 		m_pCurrentMaterial= NULL;
 	}
-	
+
 	mtlFile.close();
 	return true;
 
@@ -167,7 +167,7 @@ bool GLC_ObjMtlLoader::extractMaterialName(QString &ligne)
 		{
 			valueString.append(" ");
 			valueString.append(valueString2);
-		}			
+		}
 		m_pCurrentMaterial->setName(valueString);
 		//qDebug() << "Material name is : " << valueString;
 		result= true;
@@ -189,13 +189,13 @@ void GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 	{
 		// Retrieve the .obj file path
 		QFileInfo fileInfo(m_FileName);
-		
+
 		QString textureFileName(fileInfo.absolutePath() + QDir::separator());
 		// concatenate File Path with texture filename
 		textureFileName.append(getTextureName(stream, valueString));
-		
+
 		QFile textureFile(textureFileName);
-		
+
 		if (!textureFile.open(QIODevice::ReadOnly))
 		{
 			m_LoadStatus= "GLC_ObjMtlLoader::extractTextureFileName File ";
@@ -221,7 +221,7 @@ bool GLC_ObjMtlLoader::extractRGBValue(QString &ligne)
 	QString header;
 	QString rColor, gColor, bColor;
 	QColor color(Qt::white);
-	
+
 	if ((stream >> header >> rColor >> gColor >> bColor).status() == QTextStream::Ok)
 	{
 		bool okr, okg, okb;
@@ -235,7 +235,7 @@ bool GLC_ObjMtlLoader::extractRGBValue(QString &ligne)
 			result= false;
 		}
 		else
-		{		
+		{
 			color.setAlphaF(1.0);
 			if (header == "Ka") // Ambiant Color
 			{
@@ -243,28 +243,28 @@ bool GLC_ObjMtlLoader::extractRGBValue(QString &ligne)
 				//qDebug() << "Ambiant Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
 				result= true;
 			}
-			
+
 			else if (header == "Kd") // Diffuse Color
 			{
 				m_pCurrentMaterial->setDiffuseColor(color);
 				//qDebug() << "Diffuse Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
 				result= true;
 			}
-			
+
 			else if (header == "Ks") // Specular Color
 			{
 				m_pCurrentMaterial->setSpecularColor(color);
 				//qDebug() << "Specular Color : " <<  color.redF() << " " << color.greenF() << " " << color.blueF();
 				result= true;
 			}
-			
+
 			else
 			{
 				m_LoadStatus= "GLC_ObjMtlLoader::ExtractRGBValue : something is wrong!!";
 				result= false;
 			}
 		}
-		
+
 	}else
 	{
 		m_LoadStatus= "GLC_ObjMtlLoader::ExtractRGBValue : something is wrong!!";
@@ -273,7 +273,7 @@ bool GLC_ObjMtlLoader::extractRGBValue(QString &ligne)
 	}
 
 	return result;
-		
+
 }
 
 // Extract One value
@@ -283,7 +283,7 @@ bool GLC_ObjMtlLoader::extractOneValue(QString &ligne)
 	QString valueString;
 	QString header;
 	GLfloat value;
-	
+
 	if ((stream >> header >> valueString).status() == QTextStream::Ok)
 	{
 		if (header == "Ns") // Ambient color
@@ -327,7 +327,7 @@ bool GLC_ObjMtlLoader::extractOneValue(QString &ligne)
 		GLC_FileFormatException fileFormatException(m_LoadStatus, m_FileName);
 		return false;
 	}
-	
+
 }
 
 // Get texture file name without parameters
@@ -349,7 +349,7 @@ QString GLC_ObjMtlLoader::getTextureName(QTextStream &inputStream, const QString
 	{
 		numberOfStringToSkip= 1;
 	}
-	
+
 	if (numberOfStringToSkip != 0)
 	{
 		// Skip unread map parameters
@@ -357,7 +357,7 @@ QString GLC_ObjMtlLoader::getTextureName(QTextStream &inputStream, const QString
 		{
 			inputStream >> textureName;
 		}
-		
+
 		if ((inputStream >> textureName).status() == QTextStream::Ok)
 		{
 			textureName= getTextureName(inputStream, textureName);
@@ -366,7 +366,7 @@ QString GLC_ObjMtlLoader::getTextureName(QTextStream &inputStream, const QString
 		{
 			m_LoadStatus== "GLC_ObjToMesh2::extractString : Error occur when trying to decode map option";
 			GLC_FileFormatException fileFormatException(m_LoadStatus, m_FileName);
-			throw(fileFormatException);					
+			throw(fileFormatException);
 		}
 	}
 	return textureName;
@@ -383,5 +383,5 @@ void GLC_ObjMtlLoader::processMayaSpecific()
 			// Change the material's diffuse color in order to see the texture
 			m_pCurrentMaterial->setDiffuseColor(Qt::lightGray);
 		}
-	}	
+	}
 }

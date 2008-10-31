@@ -61,7 +61,7 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 	m_Uid= glc::GLC_GenID();
 	// Material is copy here
 	setMaterial(new GLC_Material());
-	m_pMaterial->setMaterial(sourceGeom.getMaterial());
+	m_pMaterial->setMaterial(sourceGeom.material());
 	if (NULL != sourceGeom.m_pBoundingBox)
 	{
 		m_pBoundingBox= new GLC_BoundingBox(*sourceGeom.m_pBoundingBox);
@@ -79,7 +79,7 @@ GLC_VboGeom::~GLC_VboGeom()
 	// Material
 	if (NULL != m_pMaterial)
 	{
-		m_pMaterial->delGLC_Geom(getID());	//Remove Geometry from the material usage collection
+		m_pMaterial->delGLC_Geom(id());	//Remove Geometry from the material usage collection
 		if (m_pMaterial->isUnused()) delete m_pMaterial;
 	}
 
@@ -105,7 +105,7 @@ void GLC_VboGeom::setMaterial(GLC_Material* pMat)
 
 		if (m_pMaterial != NULL)
 		{
-			m_pMaterial->delGLC_Geom(getID());
+			m_pMaterial->delGLC_Geom(id());
 			if (m_pMaterial->isUnused()) delete m_pMaterial;
 		}
 
@@ -172,7 +172,7 @@ void GLC_VboGeom::glPropGeom(bool isSelected, bool forceWire)
 		glDisable(GL_LIGHTING);
 
 		if (isSelected) GLC_SelectionMaterial::glExecute();
-		else glColor4f(getdRed(), getdGreen(), getdBlue(), getdAlpha());			// is color
+		else glColor4f(redF(), greenF(), blueF(), alphaF());			// is color
 	}
 	else if (m_pMaterial->getAddRgbaTexture())
 	{

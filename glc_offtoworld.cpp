@@ -474,9 +474,9 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 	GLC_Vector3df curNormal(computeNormal(vectorCoordinate));
 	for (int i= 0; i < numberOfVertex; ++i)
 	{
-		m_CurrentListOfVertex[vectorCoordinate[i]].nx= curNormal.getX();
-		m_CurrentListOfVertex[vectorCoordinate[i]].ny= curNormal.getY();
-		m_CurrentListOfVertex[vectorCoordinate[i]].nz= curNormal.getZ();
+		m_CurrentListOfVertex[vectorCoordinate[i]].nx= curNormal.X();
+		m_CurrentListOfVertex[vectorCoordinate[i]].ny= curNormal.Y();
+		m_CurrentListOfVertex[vectorCoordinate[i]].nz= curNormal.Z();
 		currentListOfVertex.append(m_CurrentListOfVertex[vectorCoordinate[i]]);
 	}
 

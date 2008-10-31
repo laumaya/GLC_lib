@@ -57,11 +57,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Get a 4D point represent point coordinate
-	GLC_Point4d getCoord(void) const;
+	//! Return a GLC_Point4d of coordinate
+	GLC_Point4d coordinate(void) const;
 
-	//! return the point bounding box
-	virtual GLC_BoundingBox& getBoundingBox(void);
+	//! Return the point bounding box
+	virtual GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
@@ -74,10 +74,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set Point coordinate by 4D point
-	void setCoord(const GLC_Point4d &);
+	void setCoordinate(const GLC_Point4d &);
 
 	//! Set Point coordinate by 3 double
-	void setCoord(double x, double y, double z);
+	void setCoordinate(double x, double y, double z);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -98,7 +98,7 @@ private:
 
 private:
 	//! 4d point for point coordinate
-	GLC_Point4d m_Coord;
+	GLC_Point4d m_Coordinate;
 
 };
 #endif //GLC_POINT_H_

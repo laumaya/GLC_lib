@@ -61,19 +61,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 	//! Return Color Red component
 	GLdouble getdRed(void)
-	{return m_MainCircle.getdRed();}
+	{return m_MainCircle.redF();}
 
 	//! Return Color Green component
 	GLdouble getdGreen(void)
-	{return m_MainCircle.getdGreen();}
+	{return m_MainCircle.greenF();}
 	
 	//! Return Color blue component
 	GLdouble getdBlue(void)
-	{return m_MainCircle.getdBlue();}
+	{return m_MainCircle.blueF();}
 	
 	//! Return Color Alpha component
 	GLdouble getdAlpha(void)
-	{return m_MainCircle.getdAlpha();}
+	{return m_MainCircle.alphaF();}
 //@}
 
 //////////////////////////////////////////////////////////////////////

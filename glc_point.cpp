@@ -34,13 +34,13 @@ using namespace glc;
 
 
 GLC_Point::GLC_Point(const GLC_Point4d &setCoord)
-:GLC_VboGeom("Point", true), m_Coord(setCoord)
+:GLC_VboGeom("Point", true), m_Coordinate(setCoord)
 {
 
 }
 //! Construct an GLC_Point
 GLC_Point::GLC_Point(double x, double y, double z)
-:GLC_VboGeom("Point", true), m_Coord(x, y, z)
+:GLC_VboGeom("Point", true), m_Coordinate(x, y, z)
 {
 }
 
@@ -49,25 +49,25 @@ GLC_Point::GLC_Point(double x, double y, double z)
 //////////////////////////////////////////////////////////////////////
 
 // Get a 4D point represent point coordinate
-GLC_Point4d GLC_Point::getCoord(void) const
+GLC_Point4d GLC_Point::coordinate(void) const
 {
-	return m_Coord;
+	return m_Coordinate;
 }
 
 // return the point bounding box
-GLC_BoundingBox& GLC_Point::getBoundingBox(void)
+GLC_BoundingBox& GLC_Point::boundingBox(void)
 {
 
 	if (NULL == m_pBoundingBox)
 	{
 		m_pBoundingBox= new GLC_BoundingBox();
 		const double delta= 1e-2;
-		GLC_Point3d lower(m_Coord.getX() - delta,
-				m_Coord.getY() - delta,
-				m_Coord.getZ() - delta);
-		GLC_Point3d upper(m_Coord.getX() + delta,
-				m_Coord.getY() + delta,
-				m_Coord.getZ() + delta);
+		GLC_Point3d lower(m_Coordinate.X() - delta,
+				m_Coordinate.Y() - delta,
+				m_Coordinate.Z() - delta);
+		GLC_Point3d upper(m_Coordinate.X() + delta,
+				m_Coordinate.Y() + delta,
+				m_Coordinate.Z() + delta);
 		m_pBoundingBox->combine(lower);
 		m_pBoundingBox->combine(upper);
 	}
@@ -85,14 +85,14 @@ GLC_VboGeom* GLC_Point::clone() const
 //////////////////////////////////////////////////////////////////////
 
 // Set Point coordinate by 4D Vector
-void GLC_Point::setCoord(const GLC_Point4d &point)
+void GLC_Point::setCoordinate(const GLC_Point4d &point)
 {
-	m_Coord= point;
+	m_Coordinate= point;
 }
 // Set Point coordinate by 3 double
-void GLC_Point::setCoord(double x, double y, double z)
+void GLC_Point::setCoordinate(double x, double y, double z)
 {
-	m_Coord.setVect(x, y, z);
+	m_Coordinate.setVect(x, y, z);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ void GLC_Point::glDraw(void)
 {
 	// Point Display
 	glBegin(GL_POINTS);
-		glVertex3dv(m_Coord.return_dVect());
+		glVertex3dv(m_Coordinate.data());
 	glEnd();
 
 	// OpenGL error handler

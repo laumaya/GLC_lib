@@ -38,7 +38,7 @@
 //////////////////////////////////////////////////////////////////////
 
 
-class GLC_Texture  
+class GLC_Texture
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -54,7 +54,7 @@ public:
 
 	//! Copy constructor
 	GLC_Texture(const GLC_Texture &TextureToCopy);
-	
+
 	//! Default Destructor
 	virtual ~GLC_Texture();
 //@}
@@ -64,23 +64,23 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Get the texture File Name
-	inline QString getTextureFileName() const {return m_File.fileName();}
-	
-	//! Get Texture Id
-	inline GLuint getTextureID() const {return m_TextureID;}
-	
-	//! return true if the texture is loaded
-	inline bool isLoaded() const {return (m_TextureID != 0);}
-	
+	//! Return the texture File Name
+	inline QString fileName() const {return m_File.fileName();}
+
+	//! Return OpenGL Texture Id
+	inline GLuint GL_ID() const {return m_GlTextureID;}
+
+	//! Return true if the texture is loaded
+	inline bool isLoaded() const {return (m_GlTextureID != 0);}
+
 	//! Return the texture size
 	inline QSize size() const {return m_TextureSize;}
-	
+
 	//! Return the maximum texture size
 	static QSize maxSize() {return m_MaxTextureSize;}
 
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
@@ -88,34 +88,43 @@ public:
 public:
 	// Set the maximum texture size
 	static void setMaxTextureSize(const QSize&);
-	
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-public:	
+public:
 	//! Load the texture
 	void glLoadTexture(void);
 	//! Bind texture in 2D mode
 	void glcBindTexture(void);
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 
 private:
-	//! OpenGL Texture ID
+	//! OpenGL Context
 	QGLContext *m_pQGLContext;
+
+	//! Texture File
 	QFile m_File;
-	GLuint	m_TextureID;
-	
+
+	//! OpenGL Texture ID
+	GLuint	m_GlTextureID;
+
+	//! QImage off the texture
 	QImage *m_pTextureImage;
+
+	//! Size of the texture
 	QSize m_TextureSize;
+
+	//! Static member used to check texture size
 	static QSize m_MaxTextureSize;
 	static const QSize m_MinTextureSize;
-	
+
 };
 
 #endif //GLC_TEXTURE_H_

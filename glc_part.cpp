@@ -30,7 +30,7 @@
 
 GLC_Part::GLC_Part(GLC_Collection *pCollection, GLC_Instance& instance)
 : GLC_Node(pCollection)
-, m_RepID(instance.getID())
+, m_RepID(instance.id())
 {
 	m_pCollection->add(instance);
 }
@@ -55,24 +55,24 @@ GLC_Part* GLC_Part::clone(GLC_Collection * pCollection) const
 }
 
 //! Get number of Faces
-int GLC_Part::getNumberOfFaces() const
+int GLC_Part::numberOfFaces() const
 {
 	int number= 0;
 	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
 	if (NULL != pMesh)
 	{
-		number= pMesh->getNumberOfFaces();
+		number= pMesh->numberOfFaces();
 	}
 	return number;
 }
 //! Get number of vertex
-int GLC_Part::getNumberOfVertex() const
+int GLC_Part::numberOfVertex() const
 {
 	int number= 0;
 	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
 	if (NULL != pMesh)
 	{
-		number= pMesh->getNumberOfVertex();
+		number= pMesh->numberOfVertex();
 	}
 	return number;
 }

@@ -169,7 +169,7 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 
 	if (NULL != m_pCurrentMesh)
 	{
-		if (0 == m_pCurrentMesh->getNumberOfFaces())
+		if (0 == m_pCurrentMesh->numberOfFaces())
 		{
 			delete m_pCurrentMesh;
 			m_pCurrentMesh= NULL;
@@ -317,7 +317,7 @@ void GLC_ObjToWorld::changeGroup(QString line)
 		{
 			if (NULL != m_pCurrentMesh) // If there is a current mesh add it as part in world
 			{
-				if (m_pCurrentMesh->getNumberOfFaces() > 0)
+				if (m_pCurrentMesh->numberOfFaces() > 0)
 				{
 					m_pCurrentMesh->finished();
 					GLC_Instance instance(m_pCurrentMesh);
@@ -544,7 +544,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	//qDebug() << "Material Name" << materialName;
 	if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
 	{
-		m_pCurrentMaterial= m_pMtlLoader->getMaterial(materialName);
+		m_pCurrentMaterial= m_pMtlLoader->material(materialName);
 	}
 
 }
@@ -769,9 +769,9 @@ void GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
 
 	for (int i= 0; i < max; ++i)
 	{
-		m_CurrentListOfVertex[i].nx= curNormal.getX();
-		m_CurrentListOfVertex[i].ny= curNormal.getY();
-		m_CurrentListOfVertex[i].nz= curNormal.getZ();
+		m_CurrentListOfVertex[i].nx= curNormal.X();
+		m_CurrentListOfVertex[i].ny= curNormal.Y();
+		m_CurrentListOfVertex[i].nz= curNormal.Z();
 	}
 }
 
@@ -811,9 +811,9 @@ void GLC_ObjToWorld::addVertexsToCurrentListOfVertex(QVector<int> & vertexs)
 		for (int i= 0; i < max; ++i)
 		{
 			GLC_Vector3df curVect= m_VertexHash[vertexs[i]];
-			m_CurrentListOfVertex[i].x= curVect.getX();
-			m_CurrentListOfVertex[i].y= curVect.getY();
-			m_CurrentListOfVertex[i].z= curVect.getZ();
+			m_CurrentListOfVertex[i].x= curVect.X();
+			m_CurrentListOfVertex[i].y= curVect.Y();
+			m_CurrentListOfVertex[i].z= curVect.Z();
 		}
 	}
 	else
@@ -837,9 +837,9 @@ void GLC_ObjToWorld::addNormalsToCurrentListOfVertex(QVector<int> & normals)
 		for (int i= 0; i < max; ++i)
 		{
 			GLC_Vector3df curVect= m_NormalHash[normals[i]];
-			m_CurrentListOfVertex[i].nx= curVect.getX();
-			m_CurrentListOfVertex[i].ny= curVect.getY();
-			m_CurrentListOfVertex[i].nz= curVect.getZ();
+			m_CurrentListOfVertex[i].nx= curVect.X();
+			m_CurrentListOfVertex[i].ny= curVect.Y();
+			m_CurrentListOfVertex[i].nz= curVect.Z();
 		}
 	}
 	else
@@ -863,8 +863,8 @@ void GLC_ObjToWorld::addTextureCoordinatesToCurrentListOfVertex(QVector<int> & t
 		for (int i= 0; i < max; ++i)
 		{
 			GLC_Vector2df curVect= m_TextCoordinateHash[textureCoordinates[i]];
-			m_CurrentListOfVertex[i].s= curVect.getX();
-			m_CurrentListOfVertex[i].t= curVect.getY();
+			m_CurrentListOfVertex[i].s= curVect.X();
+			m_CurrentListOfVertex[i].t= curVect.Y();
 		}
 	}
 	else

@@ -59,7 +59,7 @@ public:
 	//! Return true if the material name is found
 	inline bool contains(const QString &name) const {return m_Materials.contains(name);}
 	//! Get a material from is name
-	GLC_Material* getMaterial(const QString&);
+	GLC_Material* material(const QString&);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -78,22 +78,22 @@ public:
 private:
 	//! Extract the material name
 	bool extractMaterialName(QString &);
-	
+
 	//! Extract the texture file name
 	void extractTextureFileName(QString &);
-	
+
 	//! Extract RGB value
 	bool extractRGBValue(QString &);
-	
+
 	//! Extract One value
 	bool extractOneValue(QString &);
-	
+
 	//! Get texture file name without parameters
 	QString getTextureName(QTextStream &, const QString &);
-	
+
 	//! Process Maya specific obj
 	void processMayaSpecific();
-	
+
 
 //@}
 
@@ -103,19 +103,19 @@ private:
 private:
 	//! The mtl file name
 	QString m_FileName;
-	
+
 	//! Current material
 	GLC_Material* m_pCurrentMaterial;
 
 	//! The GLC_Material Hash Table
 	QHash<QString, GLC_Material*> m_Materials;
-	
+
 	//! the Load status
 	QString m_LoadStatus;
-	
+
 	//! OpenGL Context
 	const QGLContext *m_pQGLContext;
-	
+
 };
 
 #endif /*GLC_OBJMTLLOADER_H_*/

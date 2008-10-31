@@ -69,7 +69,7 @@ GLC_Product* GLC_Product::clone(GLC_Collection * pCollection) const
 }
 
 // Get number of faces
-int GLC_Product::getNumberOfFaces() const
+int GLC_Product::numberOfFaces() const
 {
 	int number= 0;
 	// Get the number of faces of child product
@@ -77,20 +77,20 @@ int GLC_Product::getNumberOfFaces() const
  	while (productIterator.hasNext())
  	{
      	productIterator.next();
-     	number+= productIterator.value()->getNumberOfFaces();
+     	number+= productIterator.value()->numberOfFaces();
  	}
 	// Get the number of faces of child parts
  	QHashIterator<GLC_uint, GLC_Part*> partIterator(m_ChildParts);
  	while (partIterator.hasNext())
  	{
      	partIterator.next();
-     	number+= partIterator.value()->getNumberOfFaces();
+     	number+= partIterator.value()->numberOfFaces();
  	}
  	
  	return number;
 }
 // Get number of vertex
-int GLC_Product::getNumberOfVertex() const
+int GLC_Product::numberOfVertex() const
 {
 	int number= 0;
 	// Get the number of vertex of child product
@@ -98,14 +98,14 @@ int GLC_Product::getNumberOfVertex() const
  	while (productIterator.hasNext())
  	{
      	productIterator.next();
-     	number+= productIterator.value()->getNumberOfVertex();
+     	number+= productIterator.value()->numberOfVertex();
  	}
 	// Get the number of vertex of child parts
  	QHashIterator<GLC_uint, GLC_Part*> partIterator(m_ChildParts);
  	while (partIterator.hasNext())
  	{
      	partIterator.next();
-     	number+= partIterator.value()->getNumberOfVertex();
+     	number+= partIterator.value()->numberOfVertex();
  	}
  	
  	return number;
@@ -166,7 +166,7 @@ void GLC_Product::move(const GLC_Matrix4x4& matrix)
 GLC_Product* GLC_Product::addNewChildProduct()
 {
 	GLC_Product* pChild= new GLC_Product(m_pCollection);
-	m_ChildProducts.insert(pChild->getID(), pChild);
+	m_ChildProducts.insert(pChild->id(), pChild);
 	pChild->setParent(this);	
 	return pChild;
 }
@@ -178,7 +178,7 @@ void GLC_Product::addChildProducts(QList<GLC_Product*> products, GLC_Collection*
 	for (int i= 0; i < max; ++i)
 	{
 		GLC_Product* pProduct= products[i]->clone(pCollection);
-		m_ChildProducts.insert(pProduct->getID(), pProduct);
+		m_ChildProducts.insert(pProduct->id(), pProduct);
 		pProduct->setParent(this);
 	}
 }
@@ -187,7 +187,7 @@ void GLC_Product::addChildProducts(QList<GLC_Product*> products, GLC_Collection*
  GLC_Part* GLC_Product::addChildPart(GLC_Instance& instance)
  {
  	GLC_Part* pChild= new GLC_Part(m_pCollection, instance);
-	m_ChildParts.insert(pChild->getID(), pChild);
+	m_ChildParts.insert(pChild->id(), pChild);
 	pChild->setParent(this);	
 	return pChild; 		
  }
@@ -199,7 +199,7 @@ void GLC_Product::addChildParts(QList<GLC_Part*> parts, GLC_Collection* pCollect
 	for (int i= 0; i < max; ++i)
 	{
 		GLC_Part* pPart= parts[i]->clone(pCollection);
-		m_ChildParts.insert(pPart->getID(), pPart);
+		m_ChildParts.insert(pPart->id(), pPart);
 		pPart->setParent(this);
 	}	
 }

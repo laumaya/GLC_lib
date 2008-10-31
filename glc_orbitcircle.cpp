@@ -49,13 +49,13 @@ GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const QGLContext *pContex
 , m_MatArc2()
 {
 	// 2 circle arcs position
-	GLC_Matrix4x4 MatRot(AxeZ, -ARCANGLE / 2);
-	GLC_Matrix4x4 MatInt(AxeY, -PI / 2);
+	GLC_Matrix4x4 MatRot(Z_AXIS, -ARCANGLE / 2);
+	GLC_Matrix4x4 MatInt(Y_AXIS, -PI / 2);
 	MatRot= MatInt * MatRot;
 
 	m_MatArc1= MatRot;
 
-	MatInt.setMatRot(AxeZ, PI/2);
+	MatInt.setMatRot(Z_AXIS, PI/2);
 	MatRot= MatInt * MatRot;
 
 	m_MatArc2= MatRot;
@@ -95,15 +95,15 @@ void GLC_OrbitCircle::setOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 
 	double Angle;
 	
 	// Compute the 2 arcs orientation
-	if (VectAngle.getY() > 0)
+	if (VectAngle.Y() > 0)
 	{	// Angle entre 0 et PI
-		Angle= acos(VectAngle.getX());
-		MatRot.setMatRot(AxeZ, Angle);		
+		Angle= acos(VectAngle.X());
+		MatRot.setMatRot(Z_AXIS, Angle);		
 	}
 	else
 	{	// Angle between 0 et -PI
-		Angle= -acos(VectAngle.getX());
-		MatRot.setMatRot(AxeZ, Angle);		
+		Angle= -acos(VectAngle.X());
+		MatRot.setMatRot(Z_AXIS, Angle);		
 	}
 
 	// Composition of orientation matrix and mapping matrix
