@@ -75,7 +75,7 @@ public:
 	double getDiameter(void) const;
 
 	//! return the circle bounding box
-	virtual GLC_BoundingBox& getBoundingBox(void);
+	virtual GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;

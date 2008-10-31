@@ -24,7 +24,6 @@
 
 //! \file glc_camera.cpp Implementation of the GLC_Camera class.
 
-
 #include "glc_camera.h"
 #include "glc_openglexception.h"
 
@@ -72,7 +71,7 @@ GLC_Camera::GLC_Camera(const GLC_Camera& cam)
 // Get the distance between the eye and the target of camera
 double GLC_Camera::getDistEyeTarget(void) const
 {
-	return (m_Eye - m_Target).getNorm();
+	return (m_Eye - m_Target).norm();
 }
 
 // Get camera's eye coordinate point
@@ -154,7 +153,7 @@ void GLC_Camera::zoom(double factor)
 	GLC_Vector4d VectCam(m_Eye - m_Target);
 
 	// Compute new vector length
-	const double Norme= VectCam.getNorm() * 1 / factor;
+	const double Norme= VectCam.norm() * 1 / factor;
 	VectCam.setNormal(Norme);
 
 	m_Eye= VectCam + m_Target;
@@ -287,7 +286,7 @@ void GLC_Camera::setDistEyeTarget(double Longueur)
     VectCam.setNormal(Longueur);
     m_Eye= VectCam + m_Target;
 }
-// Assignement operator
+// Assignment operator
 GLC_Camera &GLC_Camera::operator=(const GLC_Camera& cam)
 {
 	GLC_Object::operator=(cam);
@@ -301,11 +300,11 @@ GLC_Camera &GLC_Camera::operator=(const GLC_Camera& cam)
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
-void GLC_Camera::glExecute(GLenum Mode)
+void GLC_Camera::glExecute(GLenum)
 {
-	gluLookAt(m_Eye.getX(), m_Eye.getY(), m_Eye.getZ(),
-		m_Target.getX(), m_Target.getY(), m_Target.getZ(),
-		m_VectUp.getX(), m_VectUp.getY(), m_VectUp.getZ());
+	gluLookAt(m_Eye.X(), m_Eye.Y(), m_Eye.Z(),
+		m_Target.X(), m_Target.Y(), m_Target.Z(),
+		m_VectUp.X(), m_VectUp.Y(), m_VectUp.Z());
 
 	// OpenGL error handler
 	GLenum error= glGetError();
@@ -326,15 +325,15 @@ void GLC_Camera::createMatComp(void)
 	// Compute rotation matrix between Z axis and camera
 	const GLC_Vector4d VectCam((m_Eye - m_Target).setNormal(1));
 
-	if ( fabs( fabs(VectCam.getZ()) - 1.0 ) > EPSILON)
+	if ( fabs( fabs(VectCam.Z()) - 1.0 ) > EPSILON)
 	{ // Camera's vector not equal to Z axis
-		const GLC_Vector4d VectAxeRot= (AxeZ ^ VectCam);
-		const double Angle= acos(AxeZ * VectCam);
+		const GLC_Vector4d VectAxeRot= (Z_AXIS ^ VectCam);
+		const double Angle= acos(Z_AXIS * VectCam);
 		m_MatCompOrbit.setMatRot(VectAxeRot, Angle);
 	}
 	else // Camera's Vector equal to Z axis
 	{
-		if (VectCam.getZ() < 0)
+		if (VectCam.Z() < 0)
 		{
 
 			m_MatCompOrbit.setMatRot(m_VectUp, PI);
@@ -366,5 +365,3 @@ void GLC_Camera::createMatComp(void)
 		m_MatCompOrbit= MatInt * m_MatCompOrbit;
 	}
 }
-
-

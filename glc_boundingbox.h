@@ -88,7 +88,7 @@ public:
 
 	//! Return the boudingSphere Radius
 	inline double boundingSphereRadius() const
-	{return fabs(GLC_Vector4d(m_Lower - m_Upper).getNorm()) / 2.0;}
+	{return fabs(GLC_Vector4d(m_Lower - m_Upper).norm()) / 2.0;}
 
 //@}
 

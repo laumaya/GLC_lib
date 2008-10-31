@@ -67,7 +67,7 @@ public:
 	double getLgZ(void) const;
 
 	//! return the box bounding box
-	virtual GLC_BoundingBox& getBoundingBox(void);
+	virtual GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;

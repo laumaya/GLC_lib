@@ -73,7 +73,7 @@ double GLC_Circle::getDiameter(void) const
 }
 
 // return the circle bounding box
-GLC_BoundingBox& GLC_Circle::getBoundingBox(void)
+GLC_BoundingBox& GLC_Circle::boundingBox(void)
 {
 	if (NULL == m_pBoundingBox)
 	{

@@ -63,7 +63,7 @@ double GLC_Box::getLgZ(void) const
 }
 
 // return the box bounding box
-GLC_BoundingBox& GLC_Box::getBoundingBox(void)
+GLC_BoundingBox& GLC_Box::boundingBox(void)
 {
 	if (NULL == m_pBoundingBox)
 	{
