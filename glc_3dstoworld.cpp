@@ -142,7 +142,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	m_pLib3dsFile= NULL;
 	emit currentQuantum(100);
 	// Create the world bounding box
-	m_pWorld->collection()->getBoundingBox();
+	m_pWorld->collection()->boundingBox();
 	return m_pWorld;
 }
 
@@ -205,9 +205,9 @@ void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode
 		    	GLC_Instance instance(createInstance(pMesh));
 		    	// Test if there is vertex in the mesh
 		    	GLC_Mesh2* pGLCMesh= dynamic_cast<GLC_Mesh2*>(instance.getGeometry());
-		    	if (0 != pGLCMesh->getNumberOfVertex())
+		    	if (0 != pGLCMesh->numberOfVertex())
 		    	{
-		    		m_LoadedMeshes.insert(pGLCMesh->getName());
+		    		m_LoadedMeshes.insert(pGLCMesh->name());
 			    	// Load node matrix
 			    	GLC_Matrix4x4 nodeMat(&(pFatherNode->matrix[0][0]));
 					// The mesh matrix to inverse
@@ -254,7 +254,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 		do
 		{
 			pCurrentInstance= instancesList[++currentIndex];
-		} while (pCurrentInstance->getName() != meshName);
+		} while (pCurrentInstance->name() != meshName);
 		// return an instance.
 		//qDebug() << "instance";
 		return pCurrentInstance->instanciate();
