@@ -44,7 +44,7 @@ GLC_Mesh2::GLC_Mesh2()
 , m_IsSelected(false)
 , m_ColorPearVertex(false)
 {
-	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << getID();
+	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << id();
 	// Index group with default material
 	IndexList* pIndexList= new IndexList;
 	m_MaterialGroup.insert(0, pIndexList);
@@ -60,7 +60,7 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 , m_IsSelected(false)
 , m_ColorPearVertex(meshToCopy.m_ColorPearVertex)
 {
-	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << getID();
+	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << id();
 	// Add this mesh to inner material
 	MaterialHash::const_iterator i= m_MaterialHash.begin();
     while (i != m_MaterialHash.constEnd())
@@ -88,7 +88,7 @@ GLC_Mesh2::~GLC_Mesh2(void)
 	    while (i != m_MaterialHash.constEnd())
 	    {
 	        // delete the material if necessary
-	        i.value()->delGLC_Geom(getID());
+	        i.value()->delGLC_Geom(id());
 	        if (i.value()->isUnused()) delete i.value();
 	        ++i;
 	    }
@@ -131,12 +131,12 @@ GLC_uint GLC_Mesh2::materialIndex(const GLC_Material& mat) const
 }
 
 // return the mesh bounding box
-GLC_BoundingBox& GLC_Mesh2::getBoundingBox(void)
+GLC_BoundingBox& GLC_Mesh2::boundingBox(void)
 {
 
 	if (NULL == m_pBoundingBox)
 	{
-		//qDebug() << "GLC_Mesh2::getBoundingBox create boundingBox";
+		//qDebug() << "GLC_Mesh2::boundingBox create boundingBox";
 		m_pBoundingBox= new GLC_BoundingBox();
 
 		if (m_VertexVector.isEmpty())
@@ -171,7 +171,7 @@ void GLC_Mesh2::addMaterial(GLC_Material* pMaterial)
 {
 	if (pMaterial != NULL)
 	{
-		const GLC_uint materialID= pMaterial->getID();
+		const GLC_uint materialID= pMaterial->id();
 		MaterialHash::const_iterator iMaterial= m_MaterialHash.find(materialID);
 		// Check if there is a material at specified index
 		Q_ASSERT(iMaterial == m_MaterialHash.end());
@@ -201,7 +201,7 @@ void GLC_Mesh2::addTriangles(const VertexList &triangles, GLC_Material* pMateria
 	GLC_uint materialID;
 	if (NULL != pMaterial)
 	{
-		materialID= pMaterial->getID();
+		materialID= pMaterial->id();
 	}
 	else
 	{

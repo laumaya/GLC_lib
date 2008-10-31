@@ -51,7 +51,6 @@ HEADERS_GLC += glc_utils_maths.h \
            glc_object.h \
            glc_material.h \
            glc_texture.h \
-           glc_geometry.h \
            glc_vbogeom.h \
            glc_circle.h \
            glc_orbitcircle.h \
@@ -107,15 +106,12 @@ SOURCES += lib3ds/atmosphere.c \
            lib3ds/viewport.c
    
 SOURCES += glc_vector4d.cpp \
-           glc_vector3d.cpp \
-           glc_vector2d.cpp \
            glc_matrix4x4.cpp \
            glc_interpolator.cpp \
            glc_enum.cpp \
            glc_object.cpp \
            glc_material.cpp \
            glc_texture.cpp \
-           glc_geometry.cpp \
            glc_vbogeom.cpp \
            glc_circle.cpp \
            glc_orbitcircle.cpp \

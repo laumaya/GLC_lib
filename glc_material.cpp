@@ -45,7 +45,7 @@ GLC_Material::GLC_Material()
 , m_pTexture(NULL)			// no texture
 , m_Transparency(1.0)
 {
-	//qDebug() << "GLC_Material::GLC_Material" << getID();
+	//qDebug() << "GLC_Material::GLC_Material" << id();
 	// Diffuse Color
 	initDiffuseColor();
 
@@ -80,7 +80,7 @@ GLC_Material::GLC_Material(const QString& name ,const GLfloat *pDiffuseColor)
 , m_pTexture(NULL)			// no texture
 , m_Transparency(1.0)
 {
-	//qDebug() << "GLC_Material::GLC_Material" << getID();
+	//qDebug() << "GLC_Material::GLC_Material" << id();
 	// Init Diffuse Color
 	if (pDiffuseColor != 0)
 	{
@@ -107,7 +107,7 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 , m_pTexture(pTexture)			// init texture
 , m_Transparency(1.0)
 {
-	//qDebug() << "GLC_Material::GLC_Material" << getID();
+	//qDebug() << "GLC_Material::GLC_Material" << id();
 	
 	// Diffuse Color
 	initDiffuseColor();
@@ -118,7 +118,7 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 
 // Copy constructor
 GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
-:GLC_Object(InitMaterial.getName())
+:GLC_Object(InitMaterial.name())
 , m_AmbientColor(InitMaterial.m_AmbientColor)
 , m_DiffuseColor(InitMaterial.m_DiffuseColor)
 , m_SpecularColor(InitMaterial.m_SpecularColor)
@@ -128,7 +128,7 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 , m_pTexture(NULL)
 , m_Transparency(InitMaterial.m_Transparency)
 {
-	//qDebug() << "GLC_Material::GLC_Material" << getID();
+	//qDebug() << "GLC_Material::GLC_Material" << id();
 	if (NULL != InitMaterial.m_pTexture)
 	{
 		m_pTexture= new GLC_Texture(*(InitMaterial.m_pTexture));
@@ -140,7 +140,7 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 // Destructor
 GLC_Material::~GLC_Material(void)
 {
-	//qDebug() << "GLC_Material::~GLC_Material" << getID();
+	//qDebug() << "GLC_Material::~GLC_Material" << id();
     // clear whereUSED Hash table
     m_WhereUsed.clear();
     
@@ -186,7 +186,7 @@ QString GLC_Material::getTextureFileName() const
 {
 	if (m_pTexture != NULL)
 	{
-		return m_pTexture->getTextureFileName();
+		return m_pTexture->fileName();
 	}
 	else
 	{
@@ -199,7 +199,7 @@ GLuint GLC_Material::getTextureID() const
 {
 	if (m_pTexture != NULL)
 	{
-		return m_pTexture->getTextureID();
+		return m_pTexture->GL_ID();
 	}
 	else
 	{
@@ -331,12 +331,12 @@ void GLC_Material::removeTexture()
 // Add Geometry to where used hash table
 bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
 {
-	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->getID());
+	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->id());
 	
 	if (iGeom == m_WhereUsed.end())
 	{	// Ok, ID doesn't exist		
 		// Add Geometry to where used hash table
-		m_WhereUsed.insert(pGeom->getID(), pGeom);
+		m_WhereUsed.insert(pGeom->id(), pGeom);
 		return true;
 	}
 	else

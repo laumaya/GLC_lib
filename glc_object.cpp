@@ -54,13 +54,13 @@ GLC_Object::~GLC_Object()
 //////////////////////////////////////////////////////////////////////
 
 // Object ID
-GLC_uint GLC_Object::getID() const
+GLC_uint GLC_Object::id() const
 {
 	return m_Uid;
 }
 
 // Object Name
-const QString GLC_Object::getName() const
+const QString GLC_Object::name() const
 {
 	return m_Name;
 }

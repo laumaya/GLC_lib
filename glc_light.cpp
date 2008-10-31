@@ -69,21 +69,21 @@ GLC_Light::~GLC_Light(void)
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Set the lihgt position by a 4D point
+// Set the light position by a 4D point
 void GLC_Light::setPosition(const GLC_Point4d &pos)
 {
 	m_Position= pos;
 	m_ListIsValid = false;
 }
 
-// Set the lihgt position by a 3 GLfloat
+// Set the light position by a 3 GLfloat
 void GLC_Light::setPosition(GLfloat x, GLfloat y, GLfloat z)
 {
 	m_Position.setVect(static_cast<double>(x), static_cast<double>(y), static_cast<double>(z));
 	m_ListIsValid = false;
 }
 
-// Set light's ambiant color by a QColor
+// Set light's ambient color by a QColor
 void GLC_Light::setAmbientColor(const QColor& color)
 {
 	m_AmbientColor= color;
@@ -127,17 +127,16 @@ void GLC_Light::creationList(GLenum Mode)
 	}
 	// OpenGL list creation and execution
 	glNewList(m_ListID, Mode);
-				
+
 	// Light execution
 	glDraw();
 
 	glEndList();
-	
-	// Indicateur de la validité de la liste
+
 	m_ListIsValid= true;
-	
+
 	// OpenGL error handler
-	GLenum error= glGetError();	
+	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_Light::CreationList ", error);
@@ -149,7 +148,7 @@ void GLC_Light::creationList(GLenum Mode)
 void GLC_Light::glExecute(GLenum Mode)
 {
 	// Object Name
-	glLoadName(getID());
+	glLoadName(id());
 
 
 	if (!m_ListIsValid)
@@ -164,7 +163,7 @@ void GLC_Light::glExecute(GLenum Mode)
 	}
 
 	// OpenGL error handler
-	GLenum error= glGetError();	
+	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_Light::GlExecute ", error);
@@ -192,29 +191,29 @@ void GLC_Light::glDraw(void)
 									static_cast<GLfloat>(m_AmbientColor.blueF()),
 									static_cast<GLfloat>(m_AmbientColor.alphaF())};
 	glLightfv(m_LightID, GL_AMBIENT, setArray);		// Setup The Ambient Light
-	
+
 	setArray[0]= static_cast<GLfloat>(m_DiffuseColor.redF());
 	setArray[1]= static_cast<GLfloat>(m_DiffuseColor.greenF());
 	setArray[2]= static_cast<GLfloat>(m_DiffuseColor.blueF());
-	setArray[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());	
+	setArray[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());
 	glLightfv(m_LightID, GL_DIFFUSE, setArray);		// Setup The Diffuse Light
-	
+
 
 	setArray[0]= static_cast<GLfloat>(m_SpecularColor.redF());
 	setArray[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
 	setArray[2]= static_cast<GLfloat>(m_SpecularColor.blueF());
-	setArray[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());		
+	setArray[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());
 	glLightfv(m_LightID, GL_SPECULAR, setArray);	// Setup The specular Light
-	
+
 	// Position
-	setArray[0]= static_cast<GLfloat>(m_Position.getX());
-	setArray[1]= static_cast<GLfloat>(m_Position.getY());
-	setArray[2]= static_cast<GLfloat>(m_Position.getZ());
-	setArray[3]= static_cast<GLfloat>(m_Position.getW());		
+	setArray[0]= static_cast<GLfloat>(m_Position.X());
+	setArray[1]= static_cast<GLfloat>(m_Position.Y());
+	setArray[2]= static_cast<GLfloat>(m_Position.Z());
+	setArray[3]= static_cast<GLfloat>(m_Position.W());
 	glLightfv(m_LightID, GL_POSITION, setArray);	// Position The Light
-	
+
 	// OpenGL error handler
-	GLenum error= glGetError();	
+	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		GLC_OpenGlException OpenGlException("GLC_Light::GlDraw ", error);
@@ -230,7 +229,7 @@ void GLC_Light::glDraw(void)
 // Delete OpenGL Display list
 void GLC_Light::deleteList(void)
 {
-	//! if the list is valid, the list is deleted
+	// if the list is valid, the list is deleted
 	if (glIsList(m_ListID))
 	{
 		glDeleteLists(m_ListID, 1);

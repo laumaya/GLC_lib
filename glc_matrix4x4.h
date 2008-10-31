@@ -38,8 +38,8 @@
  *  GLC_Matrix4x4 is a row first matrix compatible with OpenGL Matrix
  * */
 //////////////////////////////////////////////////////////////////////
-class GLC_Matrix4x4  
-{	
+class GLC_Matrix4x4
+{
 	friend class GLC_Vector4d;
 
 //////////////////////////////////////////////////////////////////////
@@ -49,37 +49,37 @@ public:
 //! @name Constructor
 //@{
 	//! Default Constructor
-	/*! Create an indentity Matrix */
+	/*! Create an identity Matrix */
 	GLC_Matrix4x4();
 
-	//! Construct a Matrix by copy 
+	//! Construct a Matrix by copy
 	GLC_Matrix4x4(const GLC_Matrix4x4 &);
 
-	//! Contruct a Matrix by an array of 16 elements.
+	//! Construct a Matrix by an array of 16 elements.
 	GLC_Matrix4x4(const double *);
 
-	//! Contruct a Matrix by an array of 16 elements.
+	//! Construct a Matrix by an array of 16 elements.
 	GLC_Matrix4x4(const float *);
 
 	//! Construct rotation matrix by a vector and an angle
 	inline GLC_Matrix4x4(const GLC_Vector4d &Vect, const double &dAngleRad)
 	{
-		setMatRot(Vect, dAngleRad);		
+		setMatRot(Vect, dAngleRad);
 	}
 
 	//! Construct rotation matrix by 2 vectors
 	inline GLC_Matrix4x4(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2)
 	{
-		setMatRot(Vect1, Vect2);		
+		setMatRot(Vect1, Vect2);
 	}
-	
+
 	//! Construct translation matrix by a vector
 	inline GLC_Matrix4x4(const GLC_Vector4d &Vect)
 	{
 		setMatTranslate(Vect);
 	}
 
-	//! Construct translation matrix by 3 coordinates 
+	//! Construct translation matrix by 3 coordinates
 	inline GLC_Matrix4x4(const double Tx, const double Ty, const double Tz)
 	{
 		setMatTranslate(Tx, Ty, Tz);
@@ -104,17 +104,17 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Compute matrix determinant
-	const double getDeterminant(void) const;
+	//! Return the matrix determinant
+	const double determinant(void) const;
 
 	//! return a pointer to a row first array of 16 elements
-	inline const double *return_dMat(void) const
+	inline const double *data(void) const
 	{
-		return dMatrice;
+		return matrix;
 	}
 	//! Return a vector which contains radians Euler angle of the matrix
 	QVector<double> toEuler(void) const;
-	
+
 	//! Return the matrix string
 	QString toString() const;
 //@}
@@ -132,7 +132,7 @@ public:
 
 	//! Set Matrix to a translation matrix by a vector
 	GLC_Matrix4x4& setMatTranslate(const GLC_Vector4d &);
-	
+
 	//! Set Matrix to a translation matrix by 3 coordinates
 	GLC_Matrix4x4& setMatTranslate(const double, const double, const double);
 
@@ -147,10 +147,10 @@ public:
 
 	//! Set the matrix by its transpose
 	GLC_Matrix4x4& transpose(void);
-	
+
 	//! Set the matrix with Euler angle
 	GLC_Matrix4x4& fromEuler(const double, const double, const double);
-	
+
 
 //@}
 
@@ -158,7 +158,7 @@ public:
 //! Private services Functions
 //////////////////////////////////////////////////////////////////////
 private:
-	
+
 	//! Return true if the index (argument) is in the diagonal of the matrix
 	inline const bool isDiagonal(const int index) const
 	{
@@ -176,13 +176,13 @@ private:
 
 	// Return the Matrix 3X3 determinant
 	const double getDeterminant3x3(const double *) const;
-	
+
 	//! Return the transpose matrix
 	const GLC_Matrix4x4 getTranspose(void) const;
 
 	//! Return the co-matrix
 	const GLC_Matrix4x4 getCoMat4x4(void) const;
-	
+
 
 
 //////////////////////////////////////////////////////////////////////
@@ -195,7 +195,7 @@ private:
 	//! Matrix size
 	enum {DIMMAT4X4 = 4};
 	//! Matrix row first array
-	double dMatrice[TAILLEMAT4X4];
+	double matrix[TAILLEMAT4X4];
 /*
 the matrix :
 					a[00] a[04] a[08] a[12]

@@ -72,24 +72,24 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Get number of faces
-	inline unsigned int getNumberOfFaces() const {return m_NumberOfFaces;}
-	//! Get number of vertex
-	inline unsigned int getNumberOfVertex() const {return m_VertexVector.size();}
-	//! Get number of submaterial
-	inline unsigned int getNumberOfSubMaterial() const {return m_MaterialHash.size();}
-	//! Get specified mesh sub material
-	inline GLC_Material* getSubMaterial(const GLC_uint key) {return m_MaterialHash[key];}
-	//! Get All mesh sub material
-	inline QList<GLC_Material*> getSubMaterials() {return m_MaterialHash.values();}
-	//! return true if Material key is in the mesh
+	//! Return the number of faces
+	inline unsigned int numberOfFaces() const {return m_NumberOfFaces;}
+	//! Return the number of vertex
+	inline unsigned int numberOfVertex() const {return m_VertexVector.size();}
+	//! Return the number of submaterial
+	inline unsigned int numberOfSubMaterial() const {return m_MaterialHash.size();}
+	//! Return the specified mesh sub material
+	inline GLC_Material* subMaterial(const GLC_uint key) {return m_MaterialHash[key];}
+	//! Return All mesh sub material
+	inline QList<GLC_Material*> subMaterials() {return m_MaterialHash.values();}
+	//! Return true if Material key is in the mesh
 	inline const bool containsMaterial(const GLC_uint key) const {return m_MaterialHash.contains(key);}
 	//! Return material index if Material is the same than a material already in the mesh
 	/*! Return -1 if the material is not found
 	 */
 	GLC_uint materialIndex(const GLC_Material& mat) const;
 	//! return the mesh bounding box
-	virtual GLC_BoundingBox& getBoundingBox(void);
+	virtual GLC_BoundingBox& boundingBox(void);
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
 	//! Return true if color pear vertex is activated
@@ -123,7 +123,7 @@ public:
 			m_VertexVector= m_Vertex.toVector();
 			m_Vertex.clear();
 			// Create mesh Bounding Box
-			getBoundingBox();
+			boundingBox();
 		}
 	}
 

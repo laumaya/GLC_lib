@@ -50,10 +50,12 @@ class GLC_Node
 public:
 	//! Constructor of the node
 	GLC_Node(GLC_Collection *);
+
 	//! Copy Constructor
 	GLC_Node(const GLC_Node&);
+
 	//! Destructor of the node
-	virtual ~GLC_Node();	
+	virtual ~GLC_Node();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -62,17 +64,17 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return node ID
-	inline GLC_uint getID() const {return m_Uid;}
-	
+	inline GLC_uint id() const {return m_Uid;}
+
 	//! Return the relative matrix of the node
 	inline GLC_Matrix4x4 relativeMatrix() const {return m_RelativeMatrix;}
-	
+
 	//! Return the absolute matrix of the node
 	inline GLC_Matrix4x4 absoluteMatrix() const {return m_AbsoluteMatrix;}
-	
+
 	//! Return the parent
 	inline GLC_Node* parent() {return m_pParent;}
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -82,10 +84,10 @@ public:
 public:
 	//! Set the parent of this node
 	void setParent(GLC_Node* );
-	
+
 	//! Update Node absolute matrix
-	virtual void updateAbsoluteMatrix()= 0;	
-	
+	virtual void updateAbsoluteMatrix()= 0;
+
 	//! Set the reference of this node
 	inline void setReference(const QString& ref) {m_Ref= ref;}
 //@}
@@ -104,19 +106,23 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	GLC_uint m_Uid;
-	
+
 //////////////////////////////////////////////////////////////////////
 // protected members
 //////////////////////////////////////////////////////////////////////
 protected:
 	//! the node's collection
 	GLC_Collection* m_pCollection;
+
 	//! The parent of this node
-	GLC_Node* m_pParent;	
+	GLC_Node* m_pParent;
+
 	//! Node reference
 	QString m_Ref;
+
 	//! Node relative Matrix
 	GLC_Matrix4x4 m_RelativeMatrix;
+
 	//! Node Absolute Matrix
 	GLC_Matrix4x4 m_AbsoluteMatrix;
 };

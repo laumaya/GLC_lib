@@ -52,7 +52,7 @@ public:
 	GLC_Light();
 	//* Construct GLC_Light with specified diffuse color
 	GLC_Light(const QColor& );
-	
+
 	//! Delete OpenGL list
 	virtual ~GLC_Light(void);
 //@}
@@ -62,25 +62,18 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Get a 4D Vector representing light position
-	inline GLC_Vector4d getPosition(void) const {return m_Position;}
+	//! Return a 4D GLC_Point4d representing light position
+	inline GLC_Point4d position(void) const {return m_Position;}
 
-	//! Get a QColor of the light's ambiant color
-	inline QColor getAmbientColor()
-	{
-		return m_AmbientColor;
-	}
+	//! Return the QColor of the light's ambient color
+	inline QColor ambientColor() {return m_AmbientColor;}
 
-	//! Get  a QColor of the light's Diffuse color
-	inline QColor getDiffuseColor()
-	{
-		return m_DiffuseColor;
-	}
-	//! Get  a QColor of the light's Specular color
-	inline QColor getSpecularColor()
-	{
-		return m_SpecularColor;
-	}
+	//! Return the QColor of the light's Diffuse color
+	inline QColor diffuseColor() { return m_DiffuseColor;}
+
+	//! Return the QColor of the light's Specular color
+	inline QColor specularColor() {return m_SpecularColor;}
+
 	//! Return true if the light used two sided ilumination
 	inline bool isTwoSided() const {return m_TwoSided;}
 //@}
@@ -95,7 +88,7 @@ public:
 
 	//! Set lihgt's position by a 3 GLfloat
 	void setPosition(GLfloat, GLfloat, GLfloat);
-	
+
 	//! Set light's ambiant color by a QColor
 	void setAmbientColor(const QColor &);
 
@@ -104,12 +97,12 @@ public:
 
 	//! Set light's specular color by a QColor
 	void setSpecularColor(const QColor &);
-	
+
 	//! Set Mode
 	inline void setTwoSided(const bool mode)
 	{
 		m_TwoSided= mode;
-		m_ListIsValid = false;	
+		m_ListIsValid = false;
 	}
 //@}
 
@@ -119,16 +112,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Enable the light
-	void enable(void)
-	{
-		glEnable(m_LightID);
-	}
-	
+	inline void enable(void) {glEnable(m_LightID);}
+
 	// Disable the light
-	void disable(void)
-	{
-		glDisable(m_LightID);
-	}
+	inline void disable(void) {glDisable(m_LightID);}
 
 	//! Execute OpenGL light
 	virtual void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
@@ -140,9 +127,9 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 private:
-	//! OpenGL light set up 
+	//! OpenGL light set up
 	void glDraw(void);
-	
+
 	//! Display List creation
 	void creationList(GLenum Mode);
 
@@ -150,7 +137,7 @@ private:
 
 	//! Delete OpenGL Display list
 	void deleteList(void);
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -173,10 +160,10 @@ private:
 	QColor m_DiffuseColor;
 	//! Light specular color
 	QColor m_SpecularColor;
-	
+
 	//! Light position
 	GLC_Point4d m_Position;
-	
+
 	//! Lighting mode
 	bool m_TwoSided;
 
