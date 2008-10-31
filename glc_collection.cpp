@@ -75,7 +75,7 @@ bool removeShader(GLuint shaderId)
 // Add GLC_Instance in the collection
 bool GLC_Collection::add(GLC_Instance& node, GLuint shaderID)
 {
-	const GLC_uint key= node.getID();
+	const GLC_uint key= node.id();
 	if (m_NodeMap.contains(key))
 	{
 		qDebug() << "Instance already in collection";
@@ -204,7 +204,7 @@ bool GLC_Collection::select(GLC_uint key)
 	if ((iNode != m_NodeMap.end()) && (iSelectedNode == m_SelectedNodes.end()))
 	{	// Ok, the key exist and the node is not selected
 		pSelectedNode= &(iNode.value());
-		m_SelectedNodes.insert(pSelectedNode->getID(), pSelectedNode);
+		m_SelectedNodes.insert(pSelectedNode->id(), pSelectedNode);
 
 		// Remove Selected Node from is previous collection
 		if (pSelectedNode->getGeometry()->isTransparent())
@@ -238,9 +238,9 @@ void GLC_Collection::selectAll()
 		if (pCurrentInstance->isVisible() == m_IsInShowSate)
 		{
 			pCurrentInstance->select();
-			m_SelectedNodes.insert(pCurrentInstance->getID(), pCurrentInstance);
-			m_NotTransparentNodes.remove(pCurrentInstance->getID());
-			m_TransparentNodes.remove(pCurrentInstance->getID());
+			m_SelectedNodes.insert(pCurrentInstance->id(), pCurrentInstance);
+			m_NotTransparentNodes.remove(pCurrentInstance->id());
+			m_TransparentNodes.remove(pCurrentInstance->id());
 		}
 		iNode++;
 	}
@@ -264,11 +264,11 @@ bool GLC_Collection::unselect(GLC_uint key)
 		// Insert Selected Node to the right collection
 		if (pSelectedNode->getGeometry()->isTransparent())
 		{
-			m_TransparentNodes.insert(pSelectedNode->getID(), pSelectedNode);
+			m_TransparentNodes.insert(pSelectedNode->id(), pSelectedNode);
 		}
 		else
 		{
-			m_NotTransparentNodes.insert(pSelectedNode->getID(), pSelectedNode);
+			m_NotTransparentNodes.insert(pSelectedNode->id(), pSelectedNode);
 		}
 
 		//qDebug("GLC_Collection::unselectNode : Node succesfuly unselected");
@@ -410,7 +410,7 @@ GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 }
 
 // return the entire collection Bounding Box
-GLC_BoundingBox GLC_Collection::getBoundingBox(void)
+GLC_BoundingBox GLC_Collection::boundingBox(void)
 {
 	// If the bounding box is not valid delete it
 	setBoundingBoxValidity();

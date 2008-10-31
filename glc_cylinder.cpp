@@ -60,7 +60,7 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
 //////////////////////////////////////////////////////////////////////
 
 // return the cylinder bounding box
-GLC_BoundingBox& GLC_Cylinder::getBoundingBox(void)
+GLC_BoundingBox& GLC_Cylinder::boundingBox(void)
 {
 	if (NULL == m_pBoundingBox)
 	{
@@ -161,8 +161,8 @@ void GLC_Cylinder::glDraw(void)
 			positionData[i].z= 0.0f;
 			GLC_Vector4d normal(cosArray[i], sinArray[i], 0.0);
 			normal.setNormal(1.0);
-			positionData[i].nx= static_cast<GLfloat>(normal.getX());
-			positionData[i].ny= static_cast<GLfloat>(normal.getY());
+			positionData[i].nx= static_cast<GLfloat>(normal.X());
+			positionData[i].ny= static_cast<GLfloat>(normal.Y());
 			positionData[i].nz= 0.0f;
 			positionData[i].s= static_cast<float>(i) / static_cast<float>(m_Discret);
 			positionData[i].t= 0.0f;

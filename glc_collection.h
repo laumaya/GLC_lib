@@ -93,7 +93,7 @@ public:
 	GLC_Instance* getInstanceHandle(GLC_uint Key);
 
 	//! Return the entire collection Bounding Box
-	GLC_BoundingBox getBoundingBox(void);
+	GLC_BoundingBox boundingBox(void);
 
 	//! Return the number of Node in the selection Hash
 	inline int numberOfSelectedNode(void) const {return m_SelectedNodes.size();}
