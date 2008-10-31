@@ -45,7 +45,7 @@ bool glc::polygonIsConvex(const VertexList* pVertexList)
 	vertex2= GLC_Vector4d((*pVertexList)[2].x, (*pVertexList)[2].y, (*pVertexList)[2].z);
 	GLC_Vector4d edge2(vertex2 - vertex1);
 
-	const bool direction= (edge1 ^ edge2).getZ() >= 0.0;
+	const bool direction= (edge1 ^ edge2).Z() >= 0.0;
 
 	for (int i= 3; i < max; ++i)
 	{
@@ -53,7 +53,7 @@ bool glc::polygonIsConvex(const VertexList* pVertexList)
 		vertex1= vertex2;
 		vertex2= GLC_Vector4d((*pVertexList)[i].x, (*pVertexList)[i].y, (*pVertexList)[i].z);
 		edge2= vertex2 - vertex1;
-		if (((edge1 ^ edge2).getZ() >= 0.0) != direction)
+		if (((edge1 ^ edge2).Z() >= 0.0) != direction)
 			return false;
 	}
 	// The last edge with the first
@@ -61,7 +61,7 @@ bool glc::polygonIsConvex(const VertexList* pVertexList)
 	vertex1= vertex2;
 	vertex2= GLC_Vector4d((*pVertexList)[0].x, (*pVertexList)[0].y, (*pVertexList)[0].z);
 	edge2= vertex2 - vertex1;
-	if (((edge1 ^ edge2).getZ() >= 0.0) != direction)
+	if (((edge1 ^ edge2).Z() >= 0.0) != direction)
 		return false;
 
 	// Ok, the polygon is convexe
@@ -405,10 +405,10 @@ void glc::triangulateNoConvexPolygon(VertexList* pVertexList)
 	// Create the transformation matrix
 	GLC_Matrix4x4 transformation;
 
-	GLC_Vector4d rotationAxis(polygonPlaneNormal ^ AxeZ);
+	GLC_Vector4d rotationAxis(polygonPlaneNormal ^ Z_AXIS);
 	if (!rotationAxis.isNull())
 	{
-		const double angle= acos(polygonPlaneNormal * AxeZ);
+		const double angle= acos(polygonPlaneNormal * Z_AXIS);
 		transformation.setMatRot(rotationAxis, angle);
 	}
 
@@ -420,7 +420,7 @@ void glc::triangulateNoConvexPolygon(VertexList* pVertexList)
 		originPoints[i]= transformation * originPoints[i];
 		//qDebug() << "a" << originPoints[i].toString();
 		// Create 2d vector
-		polygon << originPoints[i].toVector2d(AxeZ);
+		polygon << originPoints[i].toVector2d(Z_AXIS);
 		//qDebug() << polygon[i].toString();
 	}
 	// Create the index

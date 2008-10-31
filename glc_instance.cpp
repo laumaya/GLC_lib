@@ -59,7 +59,7 @@ GLC_Instance::GLC_Instance(GLC_VboGeom* pGeom)
 , m_PolyMode(GL_FILL)
 , m_IsVisible(true)
 {
-	setName(pGeom->getName());
+	setName(pGeom->name());
 	//qDebug() << "GLC_Instance::GLC_Instance ID = " << m_Uid;
 	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
 }
@@ -254,7 +254,7 @@ void GLC_Instance::glExecute()
 	if (NULL == m_pGeom) return;
 
 	// Object ID for selection purpose
-	glLoadName(getID());
+	glLoadName(id());
 	// Save current OpenGL Matrix
 	glPushMatrix();
 	glVisProperties();
@@ -269,7 +269,7 @@ void GLC_Instance::glVisProperties()
 	// Polygons display mode
 	glPolygonMode(m_PolyFace, m_PolyMode);
 	// Change the current matrix
-	glMultMatrixd(m_MatPos.return_dMat());
+	glMultMatrixd(m_MatPos.data());
 
 }
 
@@ -288,7 +288,7 @@ void GLC_Instance::computeBoundingBox(void)
 		m_pBoundingBox= NULL;
 	}
 
-	m_pBoundingBox= new GLC_BoundingBox(m_pGeom->getBoundingBox());
+	m_pBoundingBox= new GLC_BoundingBox(m_pGeom->boundingBox());
 	m_pBoundingBox->transform(m_MatPos);
 }
 

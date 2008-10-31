@@ -60,7 +60,7 @@ GLC_VboGeom* GLC_ImagePlane::clone() const
 }
 
 //! Return the geometry bounding box
-GLC_BoundingBox& GLC_ImagePlane::getBoundingBox()
+GLC_BoundingBox& GLC_ImagePlane::boundingBox()
 {
 	return *(new GLC_BoundingBox());
 }
