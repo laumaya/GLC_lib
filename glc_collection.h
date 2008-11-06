@@ -39,8 +39,6 @@ class GLC_Shader;
 typedef QHash< GLC_uint, GLC_Instance> CNodeMap;
 typedef QHash< GLC_uint, GLC_Instance*> PointerNodeHash;
 
-//! Hash of shader
-typedef QHash<GLuint, GLC_Shader*> PointerShaderHash;
 //! Hash of geometry hash table which use a shader
 typedef QHash<GLuint, PointerNodeHash*> HashList;
 
@@ -125,19 +123,21 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Add the specified shader to the collection
-	/* return true if success false otherwise*/
-	bool addShader(GLuint);
+	//! Bind the specified shader to the collection
+	/* GLC_Shader* must be different than NULL
+	 * GLC_Shader* must be usable
+	 * return true if success false if shader is already bind*/
+	bool bindShader(GLC_Shader*);
 
-	//! Remove the specified shader from the collection
+	//! Unbind the specified shader from the collection
 	/* return true if success false otherwise*/
-	bool removeShader(GLuint);
+	bool unBindShader(GLuint);
 
 	//! Add a GLC_Instance in the collection
 	/*! return true if success false otherwise
 	 * If shading group is specified, add instance in desire shading group
 	 * */
-	bool add(GLC_Instance& ,GLuint group=0);
+	bool add(GLC_Instance& ,GLuint shaderID=0);
 
 	//! Remove a GLC_Geometry from the collection and delete it
 	/*! 	- Find the GLC_Geometry in the collection
@@ -245,8 +245,6 @@ private:
 	//! Selected Node Hash Table
 	PointerNodeHash m_SelectedNodes;
 
-	//! User Shader
-	PointerShaderHash m_UserShader;
 	//! List of other Node Hash Table
 	HashList m_OtherNodeHashList;
 

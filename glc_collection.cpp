@@ -30,6 +30,7 @@
 #include "glc_openglexception.h"
 #include "glc_selectionmaterial.h"
 #include "glc_state.h"
+#include "glc_shader.h"
 
 #include <QtDebug>
 
@@ -41,7 +42,6 @@ GLC_Collection::GLC_Collection()
 : m_NodeMap()
 , m_pBoundingBox(NULL)
 , m_SelectedNodes()
-, m_UserShader()
 , m_OtherNodeHashList()
 , m_ShaderGroup()
 , m_NotTransparentNodes()
@@ -61,20 +61,64 @@ GLC_Collection::~GLC_Collection()
 //////////////////////////////////////////////////////////////////////
 
 // Add the specified shader to the collection
-bool addShader(GLuint shaderId)
+bool GLC_Collection::bindShader(GLC_Shader* pShader)
 {
-	return true;
+	Q_ASSERT(NULL != pShader);
+	Q_ASSERT(pShader->isUsable());
+	if (m_OtherNodeHashList.contains(pShader->id()))
+	{
+		return false;
+	}
+	else
+	{
+		PointerNodeHash* pNodeHash= new PointerNodeHash;
+		m_OtherNodeHashList.insert(pShader->id(), pNodeHash);
+		return true;
+	}
 }
 
-// Remove the specified shader from the collection
-bool removeShader(GLuint shaderId)
+// Unbind the specified shader from the collection
+bool GLC_Collection::unBindShader(GLuint shaderId)
 {
-	return true;
+	bool result= false;
+	if (m_OtherNodeHashList.contains(shaderId))
+	{
+		// Find node which use the shader
+		QList<GLC_uint> nodeId(m_ShaderGroup.keys(shaderId));
+
+		// Move these node in the standard hash and remove them from shader group
+		PointerNodeHash* pShaderNodeHash= m_OtherNodeHashList.take(shaderId);
+		for (int i= 0; i < nodeId.size(); ++i)
+		{
+			const GLC_uint id= nodeId[i];
+			GLC_Instance* pInstance= pShaderNodeHash->value(id);
+
+			if (not pInstance->getGeometry()->isTransparent() and not pInstance->isSelected())
+			{
+				m_NotTransparentNodes.insert(id, pInstance);
+			}
+			else if (not pInstance->isSelected())
+			{
+				m_TransparentNodes.insert(id, pInstance);
+			}
+			else
+			{
+				m_SelectedNodes.insert(id, pInstance);
+			}
+			m_ShaderGroup.remove(id);
+		}
+		pShaderNodeHash->clear();
+		delete pShaderNodeHash;
+		result= true;
+	}
+	Q_ASSERT(not m_OtherNodeHashList.contains(shaderId));
+	return result;
 }
 
 // Add GLC_Instance in the collection
 bool GLC_Collection::add(GLC_Instance& node, GLuint shaderID)
 {
+	bool result= false;
 	const GLC_uint key= node.id();
 	if (m_NodeMap.contains(key))
 	{
@@ -86,27 +130,41 @@ bool GLC_Collection::add(GLC_Instance& node, GLuint shaderID)
 	CNodeMap::iterator iNode= m_NodeMap.find(key);
 	GLC_Instance* pInstance= &(iNode.value());
 	// Chose the hash where instance is
-	if (not node.getGeometry()->isTransparent() and not node.isSelected())
+	if(0 != shaderID)
+	{
+		// Test if shaderId group exist
+		if (m_OtherNodeHashList.contains(shaderID))
+		{
+			m_OtherNodeHashList.value(shaderID)->insert(key, pInstance);
+			result=true;
+		}
+	}
+	else if (not pInstance->getGeometry()->isTransparent() and not pInstance->isSelected())
 	{
 		m_NotTransparentNodes.insert(key, pInstance);
+		result=true;
 	}
-	else if (not node.isSelected())
+	else if (not pInstance->isSelected())
 	{
 		m_TransparentNodes.insert(key, pInstance);
+		result=true;
 	}
 	else
 	{
 		m_SelectedNodes.insert(key, pInstance);
+		result=true;
 	}
 
-	// Bounding box validity
-	if (NULL != m_pBoundingBox)
+	if(result)
 	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
+		// Bounding box validity
+		if (NULL != m_pBoundingBox)
+		{
+			delete m_pBoundingBox;
+			m_pBoundingBox= NULL;
+		}
 	}
-
-	return true;
+	return result;
 }
 
 // Delete geometry from the collection
@@ -159,18 +217,10 @@ void GLC_Collection::clear(void)
 {
 	// Clear Selected node Hash Table
 	m_SelectedNodes.clear();
-	// Clear the not tranparent Hash Table
+	// Clear the not transparent Hash Table
 	m_NotTransparentNodes.clear();
 	// Clear the transparent Hash Table
 	m_TransparentNodes.clear();
-	// Clear User shader hash table
-	PointerShaderHash::iterator iShader= m_UserShader.begin();
-	while (iShader != m_UserShader.constEnd())
-	{
-		delete iShader.value();
-		++iShader;
-	}
-	m_UserShader.clear();
 	// Clear Other Node Hash List
 	HashList::iterator iEntry= m_OtherNodeHashList.begin();
     while (iEntry != m_OtherNodeHashList.constEnd())
@@ -375,15 +425,18 @@ void GLC_Collection::updateInstancesTransparency()
 
     while (iEntry != m_NodeMap.constEnd())
     {
-    	if (iEntry.value().getGeometry()->isTransparent())
+    	// Test if the entry use shader
+    	if (not m_OtherNodeHashList.contains(iEntry.key()))
     	{
-    		m_TransparentNodes.insert(iEntry.key(), &(iEntry.value()));
+        	if (iEntry.value().getGeometry()->isTransparent())
+        	{
+        		m_TransparentNodes.insert(iEntry.key(), &(iEntry.value()));
+        	}
+        	else
+        	{
+        		m_NotTransparentNodes.insert(iEntry.key(), &(iEntry.value()));
+        	}
     	}
-    	else
-    	{
-    		m_NotTransparentNodes.insert(iEntry.key(), &(iEntry.value()));
-    	}
-
      	iEntry++;
     }
 }
