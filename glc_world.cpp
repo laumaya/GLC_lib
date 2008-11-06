@@ -52,6 +52,7 @@ GLC_World::~GLC_World()
 	if ((*m_pNumberOfWorld) == 0)
 	{
 		// this is the last World, delete the root product and collection
+		m_pCollection->clear(); // Clear collection first (performance)
 		delete m_pRoot;
 		delete m_pCollection;
 		delete m_pNumberOfWorld;
@@ -81,8 +82,9 @@ GLC_World& GLC_World::operator=(const GLC_World& world)
 	if ((*m_pNumberOfWorld) == 0)
 	{
 		// this is the last World, delete the root product and collection
-		delete m_pCollection; // Delete collection fist (performance)
+		m_pCollection->clear(); // Clear collection first (performance)
 		delete m_pRoot;
+		delete m_pCollection;
 		delete m_pNumberOfWorld;
 	}
 	m_pRoot= world.m_pRoot;
