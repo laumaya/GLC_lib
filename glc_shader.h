@@ -51,10 +51,13 @@ class GLC_Shader
 public:
 	//! Default constructor
 	GLC_Shader();
+
 	//! Construct shader with specifie vertex and fragment
 	GLC_Shader(QFile&, QFile&);
+
 	//! Copy constructor
 	GLC_Shader(const GLC_Shader&);
+
 	//! Shader destructor
 	~GLC_Shader();
 //@}
@@ -64,8 +67,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the program shader id
+	inline GLuint id() const {return m_ProgramShader;}
+
 	//! Return true if the shader is usable
 	inline bool isUsable() const {return m_ProgramShader != 0;}
+
 	//! Return true if the shader can be deleted
 	bool canBeDeleted() const;
 //@}
@@ -77,6 +84,7 @@ public:
 public:
 	//! Set Vertex and fragment shaders
 	void setVertexAndFragmentShader(QFile&, QFile&);
+
 	//! Replace this shader by a copy of another shader
 	/* If this shader is usable replacing shader must be usable*/
 	void replaceShader(GLC_Shader&);
@@ -87,20 +95,28 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Use this shader programm
-	/*! Throw GLC_Exception if the programm is not usable*/
+	//! Use this shader program
+	/*! Throw GLC_Exception if the program is not usable*/
 	void use();
+
+	//! use specified program shader
+	/*! Throw GLC_Exception if the program is not usable*/
+	static void use(GLuint);
+
 	//! unuse programm shader
 	static void unuse();
+
 	//! Compile and attach shaders to a program shader
 	/*! Throw GLC_Exception if vertex and fragment shader are not been set*/
-	void createAndCompileProgrammShader();	
+	void createAndCompileProgrammShader();
+
 	//!Delete the shader
 	void deleteShader();
 
 private:
 	//! Create and compile vertex shader
 	void createAndLinkVertexShader();
+
 	//! Create and compile fragment shader
 	void createAndLinkFragmentShader();
 //@}
@@ -111,12 +127,16 @@ private:
 //////////////////////////////////////////////////////////////////////
 	//! Load Vertex shader
 	void loadVertexShader();
+
 	//! Load fragment shaders
 	void loadFragmentShader();
+
 	//! Set Vertex shader
 	void setVertexShader(QFile&);
+
 	//! Set fragment shaders
 	void setFragmentShader(QFile&);
+
 	//! Return char* of an Ascii file
 	QByteArray readShaderFile(QFile&);
 
@@ -129,19 +149,25 @@ private:
 private:
 	//! The programm ID Stack
 	static QStack<GLuint> m_ProgrammStack;
+
 	//! The current programm ID
 	static GLuint m_CurrentProgramm;
+
 	//! A Mutex
 	static QMutex m_Mutex;
 
 	//! Vertex shader file
 	QByteArray m_VertexByteArray;
+
 	//! Vertex shader ID
 	GLuint m_VertexShader;
+
 	//! Fragment shader file
 	QByteArray m_FragmentByteArray;
+
 	//! Fragment shader ID
 	GLuint m_FragmentShader;
+
 	//! Programm shader ID
 	GLuint m_ProgramShader;
 

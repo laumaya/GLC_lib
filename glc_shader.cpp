@@ -95,6 +95,14 @@ void GLC_Shader::use()
 {
 	// Program shader must be valid
 	Q_ASSERT(0 != m_ProgramShader);
+	// Test if it is a valid program shader
+	if (glIsProgram(m_ProgramShader) != GL_TRUE)
+	{
+		QString message("GLC_Shader::use() m_ProgramShader is not a valid program shader ");
+		GLC_Exception exception(message);
+		throw(exception);
+	}
+
 	QMutexLocker locker(&m_Mutex);
 	// Test if the program shader is not already the current one
 	if (m_CurrentProgramm != m_ProgramShader)
@@ -106,7 +114,32 @@ void GLC_Shader::use()
 		m_CurrentProgramm= m_ProgramShader;
 		glUseProgram(m_CurrentProgramm);
 	}
+
 }
+
+// Use specified program shader
+void GLC_Shader::use(GLuint shaderId)
+{
+
+	// Test if the program shader is not already the current one
+	if (m_CurrentProgramm != shaderId)
+	{
+		if (m_CurrentProgramm != 0)
+		{
+			m_ProgrammStack.push(shaderId);
+		}
+		m_CurrentProgramm= shaderId;
+		glUseProgram(m_CurrentProgramm);
+	}
+	else if (glIsProgram(shaderId) != GL_TRUE)	// Test if it is a valid program shader
+	{
+		QString message("GLC_Shader::use(GLuint id) id is not a valid program shader ");
+		GLC_Exception exception(message);
+		throw(exception);
+	}
+
+}
+
 
 // Use previous program shader
 void GLC_Shader::unuse()
