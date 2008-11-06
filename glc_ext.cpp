@@ -69,7 +69,7 @@ PFNGLUNIFORM4FARBPROC				glUniform4f				= NULL;
 PFNGLUNIFORM1IARBPROC				glUniform1i				= NULL;
 PFNGLGETSHADERIVPROC				glGetShaderiv			= NULL;
 PFNGLGETPROGRAMIVARBPROC			glGetProgramiv			= NULL;
-
+PFNGLISPROGRAMARBPROC				glIsProgram				= NULL;
 #endif
 
 //const QString glExtension(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)));
@@ -97,11 +97,10 @@ bool glc::loadVboExtension()
     glUnmapBuffer				= (PFNGLUNMAPBUFFERARBPROC)glcGetProcAddress("glUnmapBuffer");
     glGetBufferParameteriv		= (PFNGLGETBUFFERPARAMETERIVARBPROC)glcGetProcAddress("glGetBufferParameteriv");
     glGetBufferPointerv			= (PFNGLGETBUFFERPOINTERVARBPROC)glcGetProcAddress("glGetBufferPointerv");
-    
     glDrawRangeElements			= (PFNGLDRAWRANGEELEMENTSPROC)glcGetProcAddress("glDrawRangeElements");
 
     result= glBindBuffer and glDeleteBuffers and glGenBuffers and glIsBuffer and glBufferData and glBufferSubData and
-    glGetBufferSubData and glMapBuffer and glUnmapBuffer and glGetBufferParameteriv and glGetBufferPointerv and glDrawRangeElements;   
+    glGetBufferSubData and glMapBuffer and glUnmapBuffer and glGetBufferParameteriv and glGetBufferPointerv and glDrawRangeElements;
 #endif
     return result;
 
@@ -120,15 +119,15 @@ bool glc::loadGlSlExtension()
 	if (not glUseProgram) qDebug() << "not glUseProgram";
 	glCreateShader				= (PFNGLCREATESHADEROBJECTARBPROC)glcGetProcAddress("glCreateShader");
 	if (not glCreateShader) qDebug() << "not glCreateShader";
-	glDeleteShader				= (PFNGLDELETESHADERPROC)glcGetProcAddress("glDeleteShader");	
+	glDeleteShader				= (PFNGLDELETESHADERPROC)glcGetProcAddress("glDeleteShader");
 	if (not glDeleteShader) qDebug() << "not glDeleteShader";
 	glShaderSource				= (PFNGLSHADERSOURCEARBPROC)glcGetProcAddress("glShaderSource");
 	if (not glShaderSource) qDebug() << "not glShaderSource";
-	glCompileShader				= (PFNGLCOMPILESHADERARBPROC)glcGetProcAddress("glCompileShader");	
+	glCompileShader				= (PFNGLCOMPILESHADERARBPROC)glcGetProcAddress("glCompileShader");
 	if (not glCompileShader) qDebug() << "not glCompileShader";
-	glAttachShader				= (PFNGLATTACHOBJECTARBPROC)glcGetProcAddress("glAttachShader");	
+	glAttachShader				= (PFNGLATTACHOBJECTARBPROC)glcGetProcAddress("glAttachShader");
 	if (not glAttachShader) qDebug() << "not glAttachShader";
-	glDetachShader				= (PFNGLDETACHOBJECTARBPROC)glcGetProcAddress("glDetachShader");	
+	glDetachShader				= (PFNGLDETACHOBJECTARBPROC)glcGetProcAddress("glDetachShader");
 	if (not glDetachShader) qDebug() << "not glDetachShader";
 	glLinkProgram				= (PFNGLLINKPROGRAMARBPROC)glcGetProcAddress("glLinkProgram");
 	if (not glLinkProgram) qDebug() << "not glLinkProgram";
@@ -142,11 +141,11 @@ bool glc::loadGlSlExtension()
 	if (not glGetShaderiv) qDebug() << "not glGetShaderiv";
 	glGetProgramiv				= (PFNGLGETPROGRAMIVARBPROC)glcGetProcAddress("glGetProgramiv");
 	if (not glGetProgramiv) qDebug() << "not glGetProgramiv";
-
+	glIsProgram					= (PFNGLISPROGRAMARBPROC)glcGetProcAddress("glIsProgram");
 
 	result= glCreateProgram and glDeletePrograms and glUseProgram and glCreateShader and glDeleteShader and
     glShaderSource and glCompileShader and glAttachShader and glDetachShader and glLinkProgram and
-    glGetUniformLocation and glUniform4f and glUniform1i and glGetShaderiv and glGetProgramiv;
+    glGetUniformLocation and glUniform4f and glUniform1i and glGetShaderiv and glGetProgramiv and glIsProgram;
 
 #endif
     return result;

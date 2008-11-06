@@ -60,17 +60,17 @@ extern PFNGLUNIFORM4FARBPROC            glUniform4f;
 extern PFNGLUNIFORM1IARBPROC            glUniform1i;
 extern PFNGLGETSHADERIVPROC				glGetShaderiv;
 extern PFNGLGETPROGRAMIVARBPROC			glGetProgramiv;
-
+extern PFNGLISPROGRAMARBPROC			glIsProgram;
 #endif
 
 namespace glc
 {
 	//! Return true if the extension is supported
 	bool extensionIsSupported(const QString&);
-	
+
 	//! Load VBO extension
 	bool loadVboExtension();
-	
+
 	//! Load GLSL extensions
 	bool loadGlSlExtension();
 };
