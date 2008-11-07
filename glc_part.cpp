@@ -28,11 +28,11 @@
 #include "glc_world.h"
 #include "glc_mesh2.h"
 
-GLC_Part::GLC_Part(GLC_Collection *pCollection, GLC_Instance& instance)
+GLC_Part::GLC_Part(GLC_Collection *pCollection, GLC_Instance& instance, GLuint shaderId)
 : GLC_Node(pCollection)
 , m_RepID(instance.id())
 {
-	m_pCollection->add(instance);
+	m_pCollection->add(instance, shaderId);
 }
 
 GLC_Part::~GLC_Part()
@@ -50,7 +50,19 @@ GLC_Part::~GLC_Part()
 GLC_Part* GLC_Part::clone(GLC_Collection * pCollection) const
 {
 	GLC_Instance instance(m_pCollection->getInstanceHandle(m_RepID)->instanciate());
-	GLC_Part* pReturnPart= new GLC_Part(pCollection, instance);
+	GLC_Part* pReturnPart;
+	// Test if the instance is in a shading group
+	if(m_pCollection->isInAShadingGroup(m_RepID))
+	{
+		GLuint shaderId= m_pCollection->shadingGroup(m_RepID);
+		pCollection->bindShader(shaderId);
+		pReturnPart= new GLC_Part(pCollection, instance, shaderId);
+	}
+	else
+	{
+		pReturnPart= new GLC_Part(pCollection, instance);
+	}
+
 	return pReturnPart;
 }
 

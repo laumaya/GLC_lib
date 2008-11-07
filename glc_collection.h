@@ -86,6 +86,9 @@ public:
 	//! Return all GLC_Instance from collection
 	QList<GLC_Instance*> getInstancesHandle();
 
+	//! Return all visible GLC_Instance from the collection
+	QList<GLC_Instance*> getVisibleInstanceHandle();
+
 	//! Return a GLC_Instance from collection
 	/*! If the element is not found in collection a empty node is return*/
 	GLC_Instance* getInstanceHandle(GLC_uint Key);
@@ -114,6 +117,14 @@ public:
 	//! Return the number of drawable objects
 	int numberOfDrawableObjects() const;
 
+	//! Return the element shading group
+	inline GLuint shadingGroup(GLC_uint key) const
+	{ return m_ShaderGroup.value(key);}
+
+	//! Return true if the element is in a shading group
+	inline bool isInAShadingGroup(GLC_uint key) const
+	{ return m_ShaderGroup.contains(key);}
+
 
 //@}
 
@@ -124,10 +135,8 @@ public:
 public:
 
 	//! Bind the specified shader to the collection
-	/* GLC_Shader* must be different than NULL
-	 * GLC_Shader* must be usable
-	 * return true if success false if shader is already bind*/
-	bool bindShader(GLC_Shader*);
+	 /* return true if success false if shader is already bind*/
+	bool bindShader(GLuint);
 
 	//! Unbind the specified shader from the collection
 	/* return true if success false otherwise*/
@@ -135,9 +144,14 @@ public:
 
 	//! Add a GLC_Instance in the collection
 	/*! return true if success false otherwise
-	 * If shading group is specified, add instance in desire shading group
-	 * */
+	 * If shading group is specified, add instance in desire shading group*/
 	bool add(GLC_Instance& ,GLuint shaderID=0);
+
+	//! Change instance shading group
+	/* Move the specified instances into
+	 * the specified shading group
+	 * Return true if success false otherwise*/
+	void changeShadingGroup(GLC_uint, GLuint);
 
 	//! Remove a GLC_Geometry from the collection and delete it
 	/*! 	- Find the GLC_Geometry in the collection
@@ -201,7 +215,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the specified collection group
-	/* The main group is 0
+	/*! The main group is 0
 	 * The selection group is 1
 	 * User group are identified by user id
 	 */

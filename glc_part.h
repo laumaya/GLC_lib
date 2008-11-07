@@ -46,7 +46,7 @@ class GLC_Part : public GLC_Node
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Constructor
-	GLC_Part(GLC_Collection *, GLC_Instance&);
+	GLC_Part(GLC_Collection *, GLC_Instance&, GLuint shaderId= 0);
 	//! Destructor
 	virtual ~GLC_Part();
 //@}

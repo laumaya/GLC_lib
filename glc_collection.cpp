@@ -61,18 +61,16 @@ GLC_Collection::~GLC_Collection()
 //////////////////////////////////////////////////////////////////////
 
 // Add the specified shader to the collection
-bool GLC_Collection::bindShader(GLC_Shader* pShader)
+bool GLC_Collection::bindShader(GLuint shaderId)
 {
-	Q_ASSERT(NULL != pShader);
-	Q_ASSERT(pShader->isUsable());
-	if (m_OtherNodeHashList.contains(pShader->id()))
+	if (m_OtherNodeHashList.contains(shaderId))
 	{
 		return false;
 	}
 	else
 	{
 		PointerNodeHash* pNodeHash= new PointerNodeHash;
-		m_OtherNodeHashList.insert(pShader->id(), pNodeHash);
+		m_OtherNodeHashList.insert(shaderId, pNodeHash);
 		return true;
 	}
 }
@@ -135,7 +133,16 @@ bool GLC_Collection::add(GLC_Instance& node, GLuint shaderID)
 		// Test if shaderId group exist
 		if (m_OtherNodeHashList.contains(shaderID))
 		{
-			m_OtherNodeHashList.value(shaderID)->insert(key, pInstance);
+			m_ShaderGroup.insert(key, shaderID);
+
+			if(pInstance->isSelected())
+			{
+				m_SelectedNodes.insert(key, pInstance);
+			}
+			else
+			{
+				m_OtherNodeHashList.value(shaderID)->insert(key, pInstance);
+			}
 			result=true;
 		}
 	}
@@ -165,6 +172,69 @@ bool GLC_Collection::add(GLC_Instance& node, GLuint shaderID)
 		}
 	}
 	return result;
+}
+// Change instance shading group
+void GLC_Collection::changeShadingGroup(GLC_uint instanceId, GLuint shaderId)
+{
+	// Test if the specified instance exist
+	Q_ASSERT(m_NodeMap.contains(instanceId));
+	// Get the instance shading group
+	const GLuint instanceShadingGroup= shadingGroup(instanceId);
+	// Get a pointer to the instance
+	GLC_Instance* pInstance= NULL;
+	if (0 == instanceShadingGroup)
+	{
+		// The instance is not in a shading group
+		if (m_NotTransparentNodes.contains(instanceId))
+		{
+			pInstance= m_NotTransparentNodes.take(instanceId);
+		}
+		else if (m_TransparentNodes.contains(instanceId))
+		{
+			pInstance= m_TransparentNodes.take(instanceId);
+		}
+		else if (m_SelectedNodes.contains(instanceId))
+		{
+			// The instance is selected don't take it
+			pInstance= m_SelectedNodes.value(instanceId);
+		}
+		else
+		{
+			Q_ASSERT(false);
+		}
+	}
+	else
+	{
+		m_ShaderGroup.remove(instanceId);
+		// The instance is in a shading group
+		if (m_SelectedNodes.contains(instanceId))
+		{
+			// The instance is selected don't take it
+			pInstance= m_SelectedNodes.value(instanceId);
+		}
+		else
+		{
+			pInstance= m_OtherNodeHashList.value(instanceShadingGroup)->take(instanceId);
+		}
+
+	}
+	// Put the instance in specified shading group
+	if (0 != shaderId)
+	{
+		m_ShaderGroup.insert(instanceId, shaderId);
+		if (not pInstance->isSelected())
+		{
+			m_OtherNodeHashList.value(shaderId)->insert(instanceId, pInstance);
+		}
+	}
+	else if (not pInstance->getGeometry()->isTransparent() and not pInstance->isSelected())
+	{
+		m_NotTransparentNodes.insert(instanceId, pInstance);
+	}
+	else if (not pInstance->isSelected())
+	{
+		m_TransparentNodes.insert(instanceId, pInstance);
+	}
 }
 
 // Delete geometry from the collection
@@ -257,7 +327,12 @@ bool GLC_Collection::select(GLC_uint key)
 		m_SelectedNodes.insert(pSelectedNode->id(), pSelectedNode);
 
 		// Remove Selected Node from is previous collection
-		if (pSelectedNode->getGeometry()->isTransparent())
+		if (isInAShadingGroup(key))
+		{
+			m_OtherNodeHashList.value(shadingGroup(key))->remove(key);
+			//qDebug() << "remove from shader list";
+		}
+		else if (pSelectedNode->getGeometry()->isTransparent())
 		{
 			m_TransparentNodes.remove(key);
 		}
@@ -272,7 +347,7 @@ bool GLC_Collection::select(GLC_uint key)
 	}
 	else
 	{	// KO, key doesn't exist or node allready selected
-		//qDebug("GLC_Collection::selectNode : Element not selected");
+		qDebug("GLC_Collection::selectNode : Element not selected");
 		return false;
 	}
 }
@@ -285,12 +360,18 @@ void GLC_Collection::selectAll()
 	while (iNode != m_NodeMap.end())
 	{
 		GLC_Instance *pCurrentInstance= &(iNode.value());
+		const GLC_uint instanceId= pCurrentInstance->id();
+
 		if (pCurrentInstance->isVisible() == m_IsInShowSate)
 		{
 			pCurrentInstance->select();
-			m_SelectedNodes.insert(pCurrentInstance->id(), pCurrentInstance);
-			m_NotTransparentNodes.remove(pCurrentInstance->id());
-			m_TransparentNodes.remove(pCurrentInstance->id());
+			m_SelectedNodes.insert(instanceId, pCurrentInstance);
+			m_NotTransparentNodes.remove(instanceId);
+			m_TransparentNodes.remove(instanceId);
+			if(isInAShadingGroup(instanceId))
+			{
+				m_OtherNodeHashList.value(shadingGroup(instanceId))->remove(instanceId);
+			}
 		}
 		iNode++;
 	}
@@ -312,13 +393,17 @@ bool GLC_Collection::unselect(GLC_uint key)
 		pSelectedNode= iSelectedNode.value();
 
 		// Insert Selected Node to the right collection
-		if (pSelectedNode->getGeometry()->isTransparent())
+		if (isInAShadingGroup(key))
 		{
-			m_TransparentNodes.insert(pSelectedNode->id(), pSelectedNode);
+			m_OtherNodeHashList.value(shadingGroup(key))->insert(key, pSelectedNode);
+		}
+		else if (pSelectedNode->getGeometry()->isTransparent())
+		{
+			m_TransparentNodes.insert(key, pSelectedNode);
 		}
 		else
 		{
-			m_NotTransparentNodes.insert(pSelectedNode->id(), pSelectedNode);
+			m_NotTransparentNodes.insert(key, pSelectedNode);
 		}
 
 		//qDebug("GLC_Collection::unselectNode : Node succesfuly unselected");
@@ -339,7 +424,12 @@ void GLC_Collection::unselectAll()
 
     while (iSelectedNode != m_SelectedNodes.end())
     {
-		iSelectedNode.value()->unselect();
+    	GLC_Instance* pInstance= iSelectedNode.value();
+    	pInstance->unselect();
+		if (isInAShadingGroup(pInstance->id()))
+		{
+			m_OtherNodeHashList.value(shadingGroup(pInstance->id()))->insert(pInstance->id(), pInstance);
+		}
         ++iSelectedNode;
     }
     // Clear selected node hash table
@@ -426,7 +516,7 @@ void GLC_Collection::updateInstancesTransparency()
     while (iEntry != m_NodeMap.constEnd())
     {
     	// Test if the entry use shader
-    	if (not m_OtherNodeHashList.contains(iEntry.key()))
+    	if (not isInAShadingGroup(iEntry.key()))
     	{
         	if (iEntry.value().getGeometry()->isTransparent())
         	{
@@ -454,6 +544,24 @@ QList<GLC_Instance*> GLC_Collection::getInstancesHandle()
     	iEntry++;
     }
 	return instancesList;
+}
+// Return all visible GLC_Instance from the collection
+QList<GLC_Instance*> GLC_Collection::getVisibleInstanceHandle()
+{
+	QList<GLC_Instance*> instancesList;
+
+	CNodeMap::iterator iEntry= m_NodeMap.begin();
+
+    while (iEntry != m_NodeMap.constEnd())
+    {
+    	if (iEntry.value().isVisible())
+    	{
+        	instancesList.append(&(iEntry.value()));
+    	}
+    	iEntry++;
+    }
+	return instancesList;
+
 }
 
 // Return a GLC_Instance pointer from the collection
@@ -612,6 +720,7 @@ void GLC_Collection::glDraw(GLuint groupId)
 	        	//qDebug() << "transparent";
 	            if (iEntry.value()->isVisible() == m_IsInShowSate)
 	            {
+	            	//qDebug() << "Draw Selection : ";
 	            	iEntry.value()->glExecute();
 	            }
 	            ++iEntry;
@@ -625,72 +734,25 @@ void GLC_Collection::glDraw(GLuint groupId)
 	}
 	else
 	{
+	    if(m_OtherNodeHashList.contains(groupId) and not m_OtherNodeHashList.value(groupId)->isEmpty())
+	    {
+	    	GLC_Shader::use(groupId);
+	    	PointerNodeHash* pNodeHash= m_OtherNodeHashList.value(groupId);
 
+			PointerNodeHash::iterator iEntry= pNodeHash->begin();
+	        while (iEntry != pNodeHash->constEnd())
+	        {
+	        	//qDebug() << "transparent";
+	            if (iEntry.value()->isVisible() == m_IsInShowSate)
+	            {
+	            	//qDebug() << "Draw Shader : " << QString::number(groupId);
+	            	iEntry.value()->glExecute();
+	            }
+	            ++iEntry;
+	        }
+			GLC_Shader::unuse();
+	    }
 	}
-	/*
-    if(not m_SelectedNodes.isEmpty())
-    {
-    	// The number of object to drw
-    	int numberOffDrawnHit= 0;
-
-		if (GLC_State::selectionShaderUsed())
-		{
-			GLC_SelectionMaterial::useShader();
-	    	// Count the number off instance to draw
-			CNodeMap::iterator i= m_NodeMap.begin();
-	        while (i != m_NodeMap.constEnd())
-	        {
-	        	//qDebug() << "transparent";
-	            if (i.value().isVisible() == m_IsInShowSate)
-	            {
-	            	++numberOffDrawnHit;
-	            }
-	            ++i;
-	        }
-		}
-		if ((m_SelectedNodes.size() != numberOffDrawnHit) or not GLC_State::selectionShaderUsed())
-		{
-	    	iEntry= m_SelectedNodes.begin();
-	        while (iEntry != m_SelectedNodes.constEnd())
-	        {
-	        	//qDebug() << "transparent";
-	            if (iEntry.value()->isVisible() == m_IsInShowSate)
-	            {
-	            	iEntry.value()->glExecute();
-	            }
-	            ++iEntry;
-	        }
-		}
-		if (GLC_State::selectionShaderUsed())
-		{
-
-	        // Set attributes for selected Node
-	        glEnable(GL_CULL_FACE);
-	        glEnable(GL_BLEND);
-	        glDisable(GL_DEPTH_TEST);
-	        glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-
-	    	// Display selected instance
-	    	iEntry= m_SelectedNodes.begin();
-	        while (iEntry != m_SelectedNodes.constEnd())
-	        {
-	        	//qDebug() << "transparent";
-	            if (iEntry.value()->isVisible() == m_IsInShowSate)
-	            {
-	            	iEntry.value()->glExecute();
-	            }
-	            ++iEntry;
-	        }
-
-    	    // Restore attributtes
-            glEnable(GL_DEPTH_TEST);
-            glDisable(GL_BLEND);
-            glDisable(GL_CULL_FACE);
-    		GLC_SelectionMaterial::unUseShader();
-    	}
-
-    }
-	*/
 	// OpenGL error handler
 	GLenum errCode;
 	if ((errCode= glGetError()) != GL_NO_ERROR)
