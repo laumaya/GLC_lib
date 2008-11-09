@@ -92,26 +92,29 @@ GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
 // Assignement operator
 GLC_Instance& GLC_Instance::operator=(const GLC_Instance& inputNode)
 {
-	clear();
-	m_Uid= inputNode.m_Uid;
-	m_Name= inputNode.m_Name;
-
-	m_pGeom= inputNode.m_pGeom;
-	if (NULL != inputNode.m_pBoundingBox)
+	if (this != &inputNode)
 	{
-		m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
-	}
-	m_pNumberOfInstance= inputNode.m_pNumberOfInstance;
-	++(*m_pNumberOfInstance);
-	m_MatPos= inputNode.m_MatPos;
-	m_IsBoundingBoxValid= inputNode.m_IsBoundingBoxValid;
-	m_IsSelected= inputNode.m_IsSelected;
-	m_PolyFace= inputNode.m_PolyFace;
-	m_PolyMode= inputNode.m_PolyMode;
-	m_IsVisible= inputNode.m_IsVisible;
+		clear();
+		m_Uid= inputNode.m_Uid;
+		m_Name= inputNode.m_Name;
 
-	//qDebug() << "GLC_Instance::operator= :ID = " << m_Uid;
-	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
+		m_pGeom= inputNode.m_pGeom;
+		if (NULL != inputNode.m_pBoundingBox)
+		{
+			m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
+		}
+		m_pNumberOfInstance= inputNode.m_pNumberOfInstance;
+		++(*m_pNumberOfInstance);
+		m_MatPos= inputNode.m_MatPos;
+		m_IsBoundingBoxValid= inputNode.m_IsBoundingBoxValid;
+		m_IsSelected= inputNode.m_IsSelected;
+		m_PolyFace= inputNode.m_PolyFace;
+		m_PolyMode= inputNode.m_PolyMode;
+		m_IsVisible= inputNode.m_IsVisible;
+
+		//qDebug() << "GLC_Instance::operator= :ID = " << m_Uid;
+		//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
+	}
 
 	return *this;
 }
