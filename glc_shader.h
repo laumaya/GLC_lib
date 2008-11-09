@@ -87,7 +87,15 @@ public:
 
 	//! Replace this shader by a copy of another shader
 	/* If this shader is usable replacing shader must be usable*/
-	void replaceShader(GLC_Shader&);
+	void replaceShader(const GLC_Shader&);
+
+	//! Assignement operator which use replace shader method
+	inline GLC_Shader& operator=(const GLC_Shader& shader)
+	{
+		replaceShader(shader);
+		return *this;
+	}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
