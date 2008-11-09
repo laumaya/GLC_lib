@@ -68,6 +68,10 @@ GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 , m_ProgramShader(0)
 {
 	qDebug() << "Create Shader";
+	if (0 != shader.m_ProgramShader)
+	{
+		createAndCompileProgrammShader();
+	}
 }
 
 GLC_Shader::~GLC_Shader()
@@ -267,10 +271,15 @@ void GLC_Shader::setVertexAndFragmentShader(QFile& vertexFile, QFile& fragmentFi
 }
 
 // Replace this shader by a copy of another shader
-void GLC_Shader::replaceShader(GLC_Shader& sourceShader)
+void GLC_Shader::replaceShader(const GLC_Shader& sourceShader)
 {
 	Q_ASSERT(isUsable() == sourceShader.isUsable());
 
+	// Test if the source shader is the same than this shader
+	if (this == &sourceShader)
+	{
+		return;
+	}
 	m_VertexByteArray= sourceShader.m_VertexByteArray;
 	m_FragmentByteArray= sourceShader.m_FragmentByteArray;
 
