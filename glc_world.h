@@ -109,6 +109,9 @@ public:
 	//! Display the world
 	inline void glExecute(GLuint groupId) {m_pCollection->glExecute(groupId);}
 
+	//! Display the world's shader group
+	inline void glExecuteShaderGroup() {m_pCollection->glExecuteShaderGroup();}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 // private members
