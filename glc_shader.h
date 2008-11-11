@@ -31,6 +31,7 @@
 #include <QStack>
 #include <QFile>
 #include <QMutex>
+#include <QString>
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Shader
@@ -75,6 +76,9 @@ public:
 
 	//! Return true if the shader can be deleted
 	bool canBeDeleted() const;
+
+	//! Return the shader's name
+	QString name() const {return m_Name;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -95,6 +99,9 @@ public:
 		replaceShader(shader);
 		return *this;
 	}
+
+	//! Set the Shader Name
+	inline void setName(const QString& name) {m_Name= name;}
 
 //@}
 
@@ -178,6 +185,9 @@ private:
 
 	//! Programm shader ID
 	GLuint m_ProgramShader;
+
+	//! The Shader's name
+	QString m_Name;
 
 };
 
