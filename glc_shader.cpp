@@ -43,6 +43,7 @@ GLC_Shader::GLC_Shader()
 , m_FragmentByteArray()
 , m_FragmentShader(0)
 , m_ProgramShader(0)
+, m_Name("Empty Shader")
 {
 	qDebug() << "Create Shader";
 }
@@ -54,6 +55,7 @@ GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 , m_FragmentByteArray()
 , m_FragmentShader(0)
 , m_ProgramShader(0)
+, m_Name()
 {
 	qDebug() << "Create Shader";
 	setVertexAndFragmentShader(vertex, fragment);
@@ -66,6 +68,7 @@ GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 , m_FragmentByteArray(shader.m_FragmentByteArray)
 , m_FragmentShader(0)
 , m_ProgramShader(0)
+, m_Name(shader.m_Name)
 {
 	qDebug() << "Create Shader";
 	if (0 != shader.m_ProgramShader)
@@ -125,6 +128,7 @@ void GLC_Shader::use()
 void GLC_Shader::use(GLuint shaderId)
 {
 
+	//qDebug() << "GLC_Shader::use(GLuint shaderId)";
 	// Test if the program shader is not already the current one
 	if (m_CurrentProgramm != shaderId)
 	{
@@ -266,6 +270,7 @@ void GLC_Shader::createAndLinkFragmentShader()
 // Set Vertex and fragment shader
 void GLC_Shader::setVertexAndFragmentShader(QFile& vertexFile, QFile& fragmentFile)
 {
+	m_Name= QFileInfo(vertexFile).baseName();
 	setVertexShader(vertexFile);
 	setFragmentShader(fragmentFile);
 }
