@@ -113,6 +113,25 @@ bool GLC_Collection::unBindShader(GLuint shaderId)
 	return result;
 }
 
+// Unbind All shader
+bool GLC_Collection::unBindAllShader()
+{
+	bool result= true;
+	HashList::iterator iEntry= m_OtherNodeHashList.begin();
+	QList<GLuint> shaderList;
+    while (iEntry != m_OtherNodeHashList.constEnd())
+    {
+    	shaderList.append(iEntry.key());
+    	++iEntry;
+    }
+    const int size= shaderList.size();
+    for (int i=0; i < size; ++i)
+    {
+    	result= result and unBindShader(shaderList[i]);
+    }
+    return result;
+}
+
 // Add GLC_Instance in the collection
 bool GLC_Collection::add(GLC_Instance& node, GLuint shaderID)
 {
@@ -653,6 +672,30 @@ void GLC_Collection::glExecute(GLuint groupId)
 			qDebug("GLC_Collection::GlExecute OPENGL ERROR %s", errString);
 		}
 	}
+}
+// Display all shader group
+void GLC_Collection::glExecuteShaderGroup()
+{
+	//qDebug() << "GLC_Collection::glExecuteShaderGroup";
+	if (getNumber() > 0)
+	{
+		HashList::iterator iEntry= m_OtherNodeHashList.begin();
+	    while (iEntry != m_OtherNodeHashList.constEnd())
+	    {
+	    	glDraw(iEntry.key());
+	    	++iEntry;
+	    }
+
+		// OpenGL error handler
+		GLenum errCode;
+		if ((errCode= glGetError()) != GL_NO_ERROR)
+		{
+			const GLubyte* errString;
+			errString = gluErrorString(errCode);
+			qDebug("GLC_Collection::GlExecute OPENGL ERROR %s", errString);
+		}
+	}
+
 }
 
 // Display the specified collection group

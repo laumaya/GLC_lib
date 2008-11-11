@@ -142,6 +142,9 @@ public:
 	/* return true if success false otherwise*/
 	bool unBindShader(GLuint);
 
+	//! Unbind All shader
+	bool unBindAllShader();
+
 	//! Add a GLC_Instance in the collection
 	/*! return true if success false otherwise
 	 * If shading group is specified, add instance in desire shading group*/
@@ -220,6 +223,9 @@ public:
 	 * User group are identified by user id
 	 */
 	void glExecute(GLuint);
+
+	//! Display all shader group
+	void glExecuteShaderGroup();
 
 //@}
 
