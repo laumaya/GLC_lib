@@ -74,24 +74,33 @@ public:
 public:
 	//! Return the number of faces
 	inline unsigned int numberOfFaces() const {return m_NumberOfFaces;}
+
 	//! Return the number of vertex
 	inline unsigned int numberOfVertex() const {return m_VertexVector.size();}
+
 	//! Return the number of submaterial
 	inline unsigned int numberOfSubMaterial() const {return m_MaterialHash.size();}
+
 	//! Return the specified mesh sub material
 	inline GLC_Material* subMaterial(const GLC_uint key) {return m_MaterialHash[key];}
+
 	//! Return All mesh sub material
 	inline QList<GLC_Material*> subMaterials() {return m_MaterialHash.values();}
+
 	//! Return true if Material key is in the mesh
 	inline const bool containsMaterial(const GLC_uint key) const {return m_MaterialHash.contains(key);}
+
 	//! Return material index if Material is the same than a material already in the mesh
-	/*! Return -1 if the material is not found
+	/*! Return 0 if the material is not found
 	 */
 	GLC_uint materialIndex(const GLC_Material& mat) const;
+
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
+
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
+
 	//! Return true if color pear vertex is activated
 	bool ColorPearVertexIsAcivated() const {return m_ColorPearVertex;}
 
