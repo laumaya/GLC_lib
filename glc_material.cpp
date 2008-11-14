@@ -85,12 +85,12 @@ GLC_Material::GLC_Material(const QString& name ,const GLfloat *pDiffuseColor)
 	if (pDiffuseColor != 0)
 	{
 		m_DiffuseColor.setRgbF(static_cast<qreal>(pDiffuseColor[0]),
-								static_cast<qreal>(pDiffuseColor[1]), 
+								static_cast<qreal>(pDiffuseColor[1]),
 								static_cast<qreal>(pDiffuseColor[2]),
 								static_cast<qreal>(pDiffuseColor[3]));
 	}
 	else
-	{	
+	{
 		initDiffuseColor();
 	}
 	// Others
@@ -108,7 +108,7 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 , m_Transparency(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << id();
-	
+
 	// Diffuse Color
 	initDiffuseColor();
 
@@ -134,7 +134,7 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 		m_pTexture= new GLC_Texture(*(InitMaterial.m_pTexture));
 		Q_ASSERT(m_pTexture != NULL);
 	}
-		
+
 }
 
 // Destructor
@@ -143,13 +143,13 @@ GLC_Material::~GLC_Material(void)
 	//qDebug() << "GLC_Material::~GLC_Material" << id();
     // clear whereUSED Hash table
     m_WhereUsed.clear();
-    
+
     if (NULL != m_pTexture)
     {
    		delete m_pTexture;
     	m_pTexture= NULL;
     }
-    
+
 
 }
 
@@ -167,7 +167,7 @@ QColor GLC_Material::getAmbientColor() const
 // Get diffuse color
 QColor GLC_Material::getDiffuseColor() const
 {
-	return m_DiffuseColor; 
+	return m_DiffuseColor;
 }
 
 // Get specular color
@@ -205,7 +205,7 @@ GLuint GLC_Material::getTextureID() const
 	{
 		return 0;
 	}
-	
+
 }
 
 // return true if the texture is loaded
@@ -218,7 +218,7 @@ bool GLC_Material::textureIsLoaded() const
 	else
 	{
 		return false;
-	}	
+	}
 }
 
 // Return true if material are the same
@@ -236,7 +236,14 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
 		result= result and (m_SpecularColor == mat.m_SpecularColor);
 		result= result and (m_LightEmission == mat.m_LightEmission);
 		result= result and (m_fShininess == mat.m_fShininess);
-		result= result and (m_pTexture == mat.m_pTexture);
+		if ((NULL != m_pTexture) and (NULL != mat.m_pTexture))
+		{
+			result= result and ((*m_pTexture) == (*mat.m_pTexture));
+		}
+		else
+		{
+			result= result and (m_pTexture == mat.m_pTexture);
+		}
 		result= result and (m_Transparency == mat.m_Transparency);
 	}
 	return result;
@@ -255,6 +262,7 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
 	}
 	else if (NULL != m_pTexture)
 	{
+		qDebug() << "Delete texture";
 		delete m_pTexture;
 		m_pTexture= NULL;
 	}
@@ -315,7 +323,7 @@ void GLC_Material::setTexture(GLC_Texture* pTexture)
 		// It is not sure that there is OpenGL context
 		m_pTexture= pTexture;
 	}
-		
+
 }
 
 // remove Material Texture
@@ -332,9 +340,9 @@ void GLC_Material::removeTexture()
 bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
 {
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->id());
-	
+
 	if (iGeom == m_WhereUsed.end())
-	{	// Ok, ID doesn't exist		
+	{	// Ok, ID doesn't exist
 		// Add Geometry to where used hash table
 		m_WhereUsed.insert(pGeom->id(), pGeom);
 		return true;
@@ -343,18 +351,18 @@ bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
 	{	// KO, ID exist
 		qDebug("GLC_Material::addGLC_Geom : Geometry not added");
 		return false;
-	}	
+	}
 }
 
 // Remove a geometry from the collection
 bool GLC_Material::delGLC_Geom(GLC_uint Key)
 {
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(Key);
-	
+
 	if (iGeom != m_WhereUsed.end())
-	{	// Ok, ID exist		
+	{	// Ok, ID exist
 		m_WhereUsed.remove(Key);	// Remove container
-		
+
 		return true;
 	}
 	else
@@ -362,7 +370,7 @@ bool GLC_Material::delGLC_Geom(GLC_uint Key)
 		qDebug("GLC_Material::delGLC_Geom : Geometry not remove");
 		return false;
 	}
-	
+
 }
 
 // Set the material transparency
@@ -395,12 +403,12 @@ void GLC_Material::glExecute()
 								getAmbientColor().greenF(),
 								getAmbientColor().blueF(),
 								getAmbientColor().alphaF()};
-	
+
 	GLfloat pDiffuseColor[4]= {getDiffuseColor().redF(),
 								getDiffuseColor().greenF(),
 								getDiffuseColor().blueF(),
 								getDiffuseColor().alphaF()};
-	
+
 	GLfloat pSpecularColor[4]= {getSpecularColor().redF(),
 								getSpecularColor().greenF(),
 								getSpecularColor().blueF(),
@@ -448,13 +456,11 @@ void GLC_Material::initDiffuseColor(void)
 void GLC_Material::initOtherColor(void)
 {
 	//Ambiant Color
-	m_AmbientColor.setRgbF(0.8, 0.8, 0.8, 1.0);	
+	m_AmbientColor.setRgbF(0.8, 0.8, 0.8, 1.0);
 
 	// Specular Color
 	m_SpecularColor.setRgbF(0.5, 0.5, 0.5, 1.0);
 
 	// Lighting emit
 	m_LightEmission.setRgbF(0.0, 0.0, 0.0, 1.0);
-	
 }
-
