@@ -214,9 +214,19 @@ void GLC_Mesh2::addTriangles(const VertexList &triangles, GLC_Material* pMateria
 	}
 	else
 	{
-		addMaterial(pMaterial);
-		pCurIndexList= new IndexList;
-		m_MaterialGroup.insert(materialID, pCurIndexList);
+		// Test if the mesh have already an equivalent material
+		GLC_uint index=  materialIndex(*pMaterial);
+		if (0 == index)
+		{
+			addMaterial(pMaterial);
+			pCurIndexList= new IndexList;
+			m_MaterialGroup.insert(materialID, pCurIndexList);
+		}
+		else
+		{
+			pCurIndexList= m_MaterialGroup.value(index);
+		}
+
 	}
 	const int startVertexIndex= m_Vertex.size();
 	const int delta= triangles.size();
