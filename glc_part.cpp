@@ -33,6 +33,7 @@ GLC_Part::GLC_Part(GLC_Collection *pCollection, GLC_Instance& instance, GLuint s
 , m_RepID(instance.id())
 {
 	m_pCollection->add(instance, shaderId);
+	move(instance.getMatrix());
 }
 
 GLC_Part::~GLC_Part()
