@@ -150,7 +150,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 // Private services Functions
 //////////////////////////////////////////////////////////////////////
 
-// clear stlToWorld allocate memmory and reset member
+// clear 3dsToWorld allocate memory and reset member
 void GLC_3dsToWorld::clear()
 {
 	if (NULL != m_pCurrentMesh)
@@ -375,7 +375,10 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 	specular.setAlphaF(p3dsMaterial->specular[3]);
 	pMaterial->setSpecularColor(specular);
 	// Shininess
-	//pMaterial->setShininess(pow(2, 10.0 * p3dsMaterial->shininess));
+	if (0 != p3dsMaterial->shininess)
+	{
+		pMaterial->setShininess(p3dsMaterial->shininess * 128.0);
+	}
 	// Transparency
 	pMaterial->setTransparency(1.0 - p3dsMaterial->transparency);
 
