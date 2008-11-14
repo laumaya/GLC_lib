@@ -52,7 +52,7 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
 		ErrorMess.append(m_File.fileName()).append(" Failed");
 		qDebug() << ErrorMess;
 		GLC_Exception e(ErrorMess);
-		throw(e);		
+		throw(e);
 	}
 }
 
@@ -69,8 +69,8 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QFile &file)
 		ErrorMess.append(m_File.fileName()).append(" Failed");
 		qDebug() << ErrorMess;
 		GLC_Exception e(ErrorMess);
-		throw(e);		
-	}	
+		throw(e);
+	}
 }
 
 GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
@@ -86,9 +86,9 @@ GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 		ErrorMess.append(m_File.fileName()).append(" Failed");
 		qDebug() << ErrorMess;
 		GLC_Exception e(ErrorMess);
-		throw(e);		
-	}	
-	
+		throw(e);
+	}
+
 }
 
 GLC_Texture::~GLC_Texture()
@@ -104,6 +104,24 @@ GLC_Texture::~GLC_Texture()
 		delete m_pTextureImage;
 		m_pTextureImage = NULL;
 	}
+}
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Return true if texture are the same
+bool GLC_Texture::operator==(const GLC_Texture& texture) const
+{
+	bool result;
+	if (this == &texture)
+	{
+		result= true;
+	}
+	else
+	{
+		result= m_File.fileName() == texture.m_File.fileName();
+	}
+	return result;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -153,7 +171,7 @@ void GLC_Texture::glLoadTexture(void)
 		{
 			m_TextureSize= m_pTextureImage->size();
 			m_GlTextureID= m_pQGLContext->bindTexture(*m_pTextureImage);
-			
+
 		}
 		delete m_pTextureImage;
 		m_pTextureImage= NULL;
@@ -170,6 +188,6 @@ void GLC_Texture::glcBindTexture(void)
 	}
 	glBindTexture(GL_TEXTURE_2D, m_GlTextureID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 }
 

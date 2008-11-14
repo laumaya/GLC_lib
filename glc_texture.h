@@ -79,6 +79,10 @@ public:
 	//! Return the maximum texture size
 	static QSize maxSize() {return m_MaxTextureSize;}
 
+	//! Return true if texture are the same
+	bool operator==(const GLC_Texture&) const;
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
