@@ -63,6 +63,8 @@ GLC_Product* GLC_Product::clone(GLC_Collection * pCollection) const
 {
 	GLC_Product* pResult= new GLC_Product(pCollection);
 	pResult->setReference(this->m_Ref);
+	pResult->m_RelativeMatrix= m_RelativeMatrix;
+	pResult->m_AbsoluteMatrix= m_AbsoluteMatrix;
 	pResult->addChildProducts(this->childProducts(), pCollection);
 	pResult->addChildParts(this->childParts(), pCollection);
 	return pResult;
@@ -86,7 +88,7 @@ int GLC_Product::numberOfFaces() const
      	partIterator.next();
      	number+= partIterator.value()->numberOfFaces();
  	}
- 	
+
  	return number;
 }
 // Get number of vertex
@@ -107,9 +109,9 @@ int GLC_Product::numberOfVertex() const
      	partIterator.next();
      	number+= partIterator.value()->numberOfVertex();
  	}
- 	
+
  	return number;
-	
+
 }
 
 // Return the child product associated with the key
@@ -145,21 +147,21 @@ void GLC_Product::move(const GLC_Matrix4x4& matrix)
 {
 	m_RelativeMatrix= matrix * m_RelativeMatrix;
 	m_AbsoluteMatrix= matrix * m_AbsoluteMatrix;
-	
+
 	// Update Childe product Matrix
  	QHashIterator<GLC_uint, GLC_Product*> productIterator(m_ChildProducts);
  	while (productIterator.hasNext())
  	{
      	productIterator.next();
      	productIterator.value()->updateAbsoluteMatrix();
- 	} 
+ 	}
 	// Update Childe part Matrix
  	QHashIterator<GLC_uint, GLC_Part*> partIterator(m_ChildParts);
  	while (partIterator.hasNext())
  	{
      	partIterator.next();
      	partIterator.value()->updateAbsoluteMatrix();
- 	} 
+ 	}
 }
 
 // Add a new child product
@@ -167,7 +169,7 @@ GLC_Product* GLC_Product::addNewChildProduct()
 {
 	GLC_Product* pChild= new GLC_Product(m_pCollection);
 	m_ChildProducts.insert(pChild->id(), pChild);
-	pChild->setParent(this);	
+	pChild->setParent(this);
 	return pChild;
 }
 
@@ -188,10 +190,10 @@ void GLC_Product::addChildProducts(QList<GLC_Product*> products, GLC_Collection*
  {
  	GLC_Part* pChild= new GLC_Part(m_pCollection, instance);
 	m_ChildParts.insert(pChild->id(), pChild);
-	pChild->setParent(this);	
-	return pChild; 		
+	pChild->setParent(this);
+	return pChild;
  }
- 
+
  // Add child parts
 void GLC_Product::addChildParts(QList<GLC_Part*> parts, GLC_Collection* pCollection)
 {
@@ -201,9 +203,9 @@ void GLC_Product::addChildParts(QList<GLC_Part*> parts, GLC_Collection* pCollect
 		GLC_Part* pPart= parts[i]->clone(pCollection);
 		m_ChildParts.insert(pPart->id(), pPart);
 		pPart->setParent(this);
-	}	
+	}
 }
- 
+
  // Remove a child with the specified UID
  bool GLC_Product::removeChild(const GLC_uint id)
  {
@@ -216,18 +218,18 @@ void GLC_Product::addChildParts(QList<GLC_Part*> parts, GLC_Collection* pCollect
  	{
  		delete m_ChildParts.take(id);
  		return true;
- 		
+
  	}
- 	else return false;	
+ 	else return false;
  }
- 
+
 // Update Product absolute matrix
 void GLC_Product::updateAbsoluteMatrix()
 {
 	if (NULL != m_pParent)
 	{
 		m_AbsoluteMatrix= m_pParent->absoluteMatrix() * m_RelativeMatrix;
-	} 
+	}
 }
 
 // Clear child part and child product
@@ -241,7 +243,7 @@ void GLC_Product::removeChilds()
      	delete productIterator.value();
  	}
  	m_ChildProducts.clear();
- 	
+
 	// Delete Child part
  	QHashIterator<GLC_uint, GLC_Part*> partIterator(m_ChildParts);
  	while (partIterator.hasNext())
@@ -249,7 +251,7 @@ void GLC_Product::removeChilds()
      	partIterator.next();
      	delete partIterator.value();
  	}
- 	m_ChildParts.clear();	
+ 	m_ChildParts.clear();
 }
 
 // Reverse child part normal
@@ -269,7 +271,7 @@ void GLC_Product::reverseChildPartNormal()
      	partIterator.next();
      	partIterator.value()->reverseMeshNormal();
  	}
-	
+
 }
 
 // Assignement operator
