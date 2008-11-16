@@ -125,17 +125,17 @@ public:
 	 */
 	bool setGeometry(GLC_VboGeom* pGeom);
 
-	//! translate Geometry
-	void translate(double Tx, double Ty, double Tz);
+	//! Translate Instance
+	GLC_Instance& translate(double Tx, double Ty, double Tz);
 
-	//! move instance with a 4x4Matrix
-	void multMatrix(const GLC_Matrix4x4 &MultMat);
+	//! Move instance with a 4x4Matrix
+	GLC_Instance& multMatrix(const GLC_Matrix4x4 &MultMat);
 
 	//! Replace the instance Matrix
-	void setMatrix(const GLC_Matrix4x4 &SetMat);
+	GLC_Instance& setMatrix(const GLC_Matrix4x4 &SetMat);
 
 	//! Reset the instance Matrix
-	void resetMatrix(void);
+	GLC_Instance& resetMatrix(void);
 
 	//! Polygon's display style
 	/*! Face Polygon Mode can be : GL_FRONT_AND_BACK, GL_FRONT, or GL_BACK

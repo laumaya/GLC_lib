@@ -203,37 +203,40 @@ bool GLC_Instance::setGeometry(GLC_VboGeom* pGeom)
 		}
 }
 
-// Geometry translation
-void GLC_Instance::translate(double Tx, double Ty, double Tz)
+// Instance translation
+GLC_Instance& GLC_Instance::translate(double Tx, double Ty, double Tz)
 {
-	GLC_Matrix4x4 MatTrans(Tx, Ty, Tz);
+	multMatrix(GLC_Matrix4x4(Tx, Ty, Tz));
 
-	multMatrix(MatTrans);
+	return *this;
 }
 
 
-// move instance with a 4x4Matrix
-void GLC_Instance::multMatrix(const GLC_Matrix4x4 &MultMat)
+// Move instance with a 4x4Matrix
+GLC_Instance& GLC_Instance::multMatrix(const GLC_Matrix4x4 &MultMat)
 {
 	m_MatPos= MultMat * m_MatPos;
-
 	m_IsBoundingBoxValid= false;
+
+	return *this;
 }
 
 // Replace the instance Matrix
-void GLC_Instance::setMatrix(const GLC_Matrix4x4 &SetMat)
+GLC_Instance& GLC_Instance::setMatrix(const GLC_Matrix4x4 &SetMat)
 {
 	m_MatPos= SetMat;
-
 	m_IsBoundingBoxValid= false;
+
+	return *this;
 }
 
 // Reset the instance Matrix
-void GLC_Instance::resetMatrix(void)
+GLC_Instance& GLC_Instance::resetMatrix(void)
 {
 	m_MatPos.setToIdentity();
-
 	m_IsBoundingBoxValid= false;
+
+	return *this;
 }
 
 // Polygon's display style
