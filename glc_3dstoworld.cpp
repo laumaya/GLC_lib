@@ -257,9 +257,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 		} while (pCurrentInstance->name() != meshName);
 		// return an instance.
 		//qDebug() << "instance";
-		GLC_Instance instance(pCurrentInstance->instanciate());
-		instance.resetMatrix();
-		return instance;
+		return pCurrentInstance->instanciate().resetMatrix();
 	}
 	GLC_Mesh2 * pMesh= new GLC_Mesh2();
 	pMesh->setName(p3dsMesh->name);
