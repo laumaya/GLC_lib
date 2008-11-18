@@ -78,6 +78,9 @@ public:
 	//! Get number of vertex
 	inline int numberOfVertex() const{return m_pRoot->numberOfVertex();}
 
+	//! Get the number of materials
+	inline int numberOfMaterials() const {return m_pRoot->numberOfMaterials();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
