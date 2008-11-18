@@ -89,10 +89,16 @@ public:
 	GLC_Product* clone(GLC_Collection *) const;
 
 	//! Get number of faces
-	int numberOfFaces() const;
+	unsigned int numberOfFaces() const;
 
 	//! Get number of vertex
-	int numberOfVertex() const;
+	unsigned int numberOfVertex() const;
+
+	//! Get number of materials
+	unsigned int numberOfMaterials() const;
+
+	//! Get materials List
+	QSet<GLC_Material*> materialSet() const;
 
 //@}
 

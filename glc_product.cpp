@@ -71,9 +71,9 @@ GLC_Product* GLC_Product::clone(GLC_Collection * pCollection) const
 }
 
 // Get number of faces
-int GLC_Product::numberOfFaces() const
+unsigned int GLC_Product::numberOfFaces() const
 {
-	int number= 0;
+	unsigned int number= 0;
 	// Get the number of faces of child product
 	QHashIterator<GLC_uint, GLC_Product*> productIterator(m_ChildProducts);
  	while (productIterator.hasNext())
@@ -92,9 +92,9 @@ int GLC_Product::numberOfFaces() const
  	return number;
 }
 // Get number of vertex
-int GLC_Product::numberOfVertex() const
+unsigned int GLC_Product::numberOfVertex() const
 {
-	int number= 0;
+	unsigned int number= 0;
 	// Get the number of vertex of child product
 	QHashIterator<GLC_uint, GLC_Product*> productIterator(m_ChildProducts);
  	while (productIterator.hasNext())
@@ -112,6 +112,33 @@ int GLC_Product::numberOfVertex() const
 
  	return number;
 
+}
+
+// Get number of materials
+unsigned int GLC_Product::numberOfMaterials() const
+{
+	return materialSet().size();
+}
+
+// Get materials List
+QSet<GLC_Material*> GLC_Product::materialSet() const
+{
+	QSet<GLC_Material*> result;
+	QHashIterator<GLC_uint, GLC_Product*> productIterator(m_ChildProducts);
+ 	while (productIterator.hasNext())
+ 	{
+     	productIterator.next();
+     	result.unite(productIterator.value()->materialSet());
+ 	}
+	// Get the number of vertex of child parts
+ 	QHashIterator<GLC_uint, GLC_Part*> partIterator(m_ChildParts);
+ 	while (partIterator.hasNext())
+ 	{
+     	partIterator.next();
+     	result.unite(partIterator.value()->materialSet());
+ 	}
+
+ 	return result;
 }
 
 // Return the child product associated with the key
