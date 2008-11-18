@@ -27,6 +27,7 @@
 #include "glc_part.h"
 #include "glc_world.h"
 #include "glc_mesh2.h"
+#include "glc_material.h"
 
 GLC_Part::GLC_Part(GLC_Collection *pCollection, GLC_Instance& instance, GLuint shaderId)
 : GLC_Node(pCollection)
@@ -67,10 +68,10 @@ GLC_Part* GLC_Part::clone(GLC_Collection * pCollection) const
 	return pReturnPart;
 }
 
-//! Get number of Faces
-int GLC_Part::numberOfFaces() const
+// Get number of Faces
+unsigned int GLC_Part::numberOfFaces() const
 {
-	int number= 0;
+	unsigned int number= 0;
 	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
 	if (NULL != pMesh)
 	{
@@ -78,10 +79,10 @@ int GLC_Part::numberOfFaces() const
 	}
 	return number;
 }
-//! Get number of vertex
-int GLC_Part::numberOfVertex() const
+// Get number of vertex
+unsigned int GLC_Part::numberOfVertex() const
 {
-	int number= 0;
+	unsigned int number= 0;
 	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
 	if (NULL != pMesh)
 	{
@@ -90,6 +91,38 @@ int GLC_Part::numberOfVertex() const
 	return number;
 }
 
+// Get number of materials
+unsigned int GLC_Part::numberOfMaterials() const
+{
+	unsigned int number= 0;
+	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
+	if (NULL != pMesh)
+	{
+		number= pMesh->numberOfSubMaterial();
+		if (number == 0) number= 1;
+	}
+	return number;
+}
+// Get materials List
+QSet<GLC_Material*> GLC_Part::materialSet() const
+{
+	QSet<GLC_Material*> result;
+	unsigned int number= 0;
+	GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
+	if (NULL != pMesh)
+	{
+		number= pMesh->numberOfSubMaterial();
+		if (number == 0)
+		{
+			result.insert(pMesh->material());
+		}
+		else
+		{
+			result.unite(pMesh->subMaterials().toSet());
+		}
+	}
+	return result;
+}
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions

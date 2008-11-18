@@ -31,6 +31,10 @@
 #include "glc_instance.h"
 #include "glc_collection.h"
 
+#include <QSet>
+
+class GLC_Material;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Part
 /*! \brief GLC_Part : Part of the Product Structure*/
@@ -47,6 +51,7 @@ class GLC_Part : public GLC_Node
 public:
 	//! Constructor
 	GLC_Part(GLC_Collection *, GLC_Instance&, GLuint shaderId= 0);
+
 	//! Destructor
 	virtual ~GLC_Part();
 //@}
@@ -58,14 +63,24 @@ public:
 public:
 	//! Return the part's representation ID
 	inline GLC_uint id() const {return m_RepID;}
+
 	//! Return the GLC_Instance* associated to this part
 	inline GLC_Instance* instance() {return m_pCollection->getInstanceHandle(m_RepID);}
+
 	//! Clone the part
 	GLC_Part* clone(GLC_Collection *) const;
+
 	//! Get number of Faces
-	int numberOfFaces() const;
+	unsigned int numberOfFaces() const;
+
 	//! Get number of vertex
-	int numberOfVertex() const;
+	unsigned int numberOfVertex() const;
+
+	//! Get number of materials
+	unsigned int numberOfMaterials() const;
+
+	//! Get materials List
+	QSet<GLC_Material*> materialSet() const;
 
 //@}
 
