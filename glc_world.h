@@ -81,6 +81,9 @@ public:
 	//! Get the number of materials
 	inline int numberOfMaterials() const {return m_pRoot->numberOfMaterials();}
 
+	//! Get the list of material
+	inline QList<GLC_Material*> listOfMaterials() const {return m_pRoot->materialSet().toList();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
