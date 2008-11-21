@@ -638,7 +638,7 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		else
 		{
 			// Inside bounding Sphere
-			m_dCamDistMin= fmin(0.001 * radius, m_pViewCam->getDistEyeTarget() / 2.0);
+			m_dCamDistMin= fmin(0.05 * radius, m_pViewCam->getDistEyeTarget() / 4.0);
 			m_dCamDistMax= max;
 			//qDebug() << "inside distmin" << m_dCamDistMin;
 			//qDebug() << "inside distmax" << m_dCamDistMax;
