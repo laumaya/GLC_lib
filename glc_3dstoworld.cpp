@@ -359,6 +359,7 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 		}
 		textureFile.close();
 	}
+
 	// Ambient Color
 	QColor ambient;
 	ambient.setRgbF(p3dsMaterial->ambient[0], p3dsMaterial->ambient[1], p3dsMaterial->ambient[2]);
@@ -375,11 +376,15 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 	specular.setAlphaF(p3dsMaterial->specular[3]);
 	pMaterial->setSpecularColor(specular);
 	// Shininess
+
 	if (0 != p3dsMaterial->shininess)
 	{
-		pMaterial->setShininess(p3dsMaterial->shininess * 128.0);
+		float matShininess= p3dsMaterial->shininess * 128.0;
+		if (matShininess > 128.0) matShininess= 128.0;
+		pMaterial->setShininess(matShininess);
 	}
 	// Transparency
+
 	pMaterial->setTransparency(1.0 - p3dsMaterial->transparency);
 
 	// Add the material to the hash table
