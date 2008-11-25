@@ -36,11 +36,15 @@ namespace glc
 {
 	//! Simple ID generation
 	GLC_uint GLC_GenID(void);
-	
+
+	//! Simple User ID generation
+	GLC_uint GLC_GenUserID(void);
+
 	const int GLC_DISCRET= 70;
 	const int GLC_POLYDISCRET= 60;
-	
+
 	extern QMutex iDMutex;
+	extern QMutex userIdMutex;
 };
 
 // GLC_Lib version

@@ -27,6 +27,7 @@
 #include "glc_enum.h"
 
 QMutex glc::iDMutex;
+QMutex glc::userIdMutex;
 
 GLC_uint glc::GLC_GenID(void)
 {
@@ -34,5 +35,14 @@ GLC_uint glc::GLC_GenID(void)
 	glc::iDMutex.lock();
 	Id++;
 	glc::iDMutex.unlock();
+	return Id;
+}
+
+GLC_uint glc::GLC_GenUserID(void)
+{
+	static GLC_uint Id= 0;
+	glc::userIdMutex.lock();
+	Id++;
+	glc::userIdMutex.unlock();
 	return Id;
 }
