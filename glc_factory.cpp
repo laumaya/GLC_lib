@@ -54,7 +54,7 @@ GLC_Factory* GLC_Factory::instance(const QGLContext *pContext)
 GLC_Factory::GLC_Factory(const QGLContext *pContext)
 : m_pQGLContext(pContext)
 {
-	
+
 }
 
 // Destructor
@@ -89,7 +89,7 @@ GLC_Instance GLC_Factory::createCircle(double radius, double angle) const
 // Create an GLC_Box
 GLC_Instance GLC_Factory::createBox(double lx, double ly, double lz) const
 {
-	
+
 	GLC_Instance newBox(new GLC_Box(lx, ly, lz));
 	return newBox;
 }
@@ -110,7 +110,7 @@ GLC_Instance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 // Create an GLC_Cylinder
 GLC_Instance GLC_Factory::createCylinder(double radius, double length) const
 {
-	
+
 	GLC_Instance newCylinder(new GLC_Cylinder(radius, length));
 	return newCylinder;
 }
@@ -118,32 +118,35 @@ GLC_Instance GLC_Factory::createCylinder(double radius, double length) const
 // Create an GLC_World* with a QFile
 GLC_World* GLC_Factory::createWorld(QFile &file) const
 {
+	GLC_World* pWorld= NULL;
 	if (QFileInfo(file).suffix().toLower() == "obj")
 	{
 		GLC_ObjToWorld objToWorld(m_pQGLContext);
 		connect(&objToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		return objToWorld.CreateWorldFromObj(file);
+		pWorld= objToWorld.CreateWorldFromObj(file);
+		emit listOfAttachedFile(objToWorld.listOfAttachedFileName());
 	}
 	else if (QFileInfo(file).suffix().toLower() == "stl")
 	{
 		GLC_StlToWorld stlToWorld(m_pQGLContext);
 		connect(&stlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		return stlToWorld.CreateWorldFromStl(file);
+		pWorld= stlToWorld.CreateWorldFromStl(file);
 	}
 	else if (QFileInfo(file).suffix().toLower() == "off")
 	{
 		GLC_OffToWorld offToWorld(m_pQGLContext);
 		connect(&offToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		return offToWorld.CreateWorldFromOff(file);
+		pWorld= offToWorld.CreateWorldFromOff(file);
 	}
 	else if (QFileInfo(file).suffix().toLower() == "3ds")
 	{
 		GLC_3dsToWorld studioToWorld(m_pQGLContext);
 		connect(&studioToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		return studioToWorld.CreateWorldFrom3ds(file);
+		pWorld= studioToWorld.CreateWorldFrom3ds(file);
+		emit listOfAttachedFile(studioToWorld.listOfAttachedFileName());
 	}
-	
-	else return NULL;
+
+	return pWorld;
 }
 
 // Create an GLC_Material
@@ -171,7 +174,7 @@ GLC_Material* GLC_Factory::createMaterial(GLC_Texture* pTexture) const
 GLC_Material* GLC_Factory::createMaterial(const QString &textureFullFileName) const
 {
 	GLC_Texture* pTexture= createTexture(textureFullFileName);
-	return createMaterial(pTexture);	
+	return createMaterial(pTexture);
 }
 
 // Create an GLC_Texture

@@ -55,6 +55,7 @@ GLC_ObjToWorld::GLC_ObjToWorld(const QGLContext *pContext)
 , m_CurrentMeshMaterials()
 , m_pCurrentMaterial(NULL)
 , m_CurrentListOfVertex()
+, m_ListOfAttachedFileName()
 {
 }
 
@@ -70,6 +71,7 @@ GLC_ObjToWorld::~GLC_ObjToWorld()
 // Create an GLC_World from an input OBJ File
 GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 {
+	m_ListOfAttachedFileName.clear();
 	m_FileName= file.fileName();
 	//////////////////////////////////////////////////////////////////
 	// Test if the file exist and can be opened
@@ -137,6 +139,12 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 			delete m_pMtlLoader;
 			m_pMtlLoader= NULL;
 			//qDebug() << "GLC_ObjToWorld::CreateWorldFromObj: Failed to load materials";
+		}
+		else
+		{
+			// Update Attached file name list
+			m_ListOfAttachedFileName << mtlLibFileName;
+			m_ListOfAttachedFileName << m_pMtlLoader->listOfAttachedFileName();
 		}
 	}
 	else
@@ -887,6 +895,7 @@ void GLC_ObjToWorld::clear()
 	m_TextCoordinateHash.clear();
 	m_CurrentMeshMaterials.clear();
 	m_CurrentListOfVertex.clear();
+	m_ListOfAttachedFileName.clear();
 
 	if (NULL != m_pMtlLoader)
 	{

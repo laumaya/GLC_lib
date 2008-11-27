@@ -33,6 +33,7 @@
 #include <QString>
 #include <QHash>
 #include <QSet>
+#include <QStringList>
 
 #include "glc_instance.h"
 
@@ -64,7 +65,7 @@ struct Lib3dsMaterial;
 class GLC_3dsToWorld : public QObject
 {
 	Q_OBJECT
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -82,8 +83,13 @@ public:
 public:
 	//! Create an GLC_World from an input 3DS File
 	GLC_World* CreateWorldFrom3ds(QFile &file);
+
+	//! Get the list of attached files
+	inline QStringList listOfAttachedFileName() const
+	{return m_ListOfAttachedFileName.toList();}
+
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Private services functions */
 //@{
@@ -91,10 +97,13 @@ public:
 private:
 	//! clear 3dsToWorld allocate memmory
 	void clear();
+
 	//! Create meshes from the 3ds File
 	void createMeshes(GLC_Product*, Lib3dsNode*);
+
 	//! Create Instance from a Lib3dsMesh
 	GLC_Instance createInstance(Lib3dsMesh*);
+
 	//! Load Material
 	void loadMaterial(Lib3dsMaterial*);
 
@@ -112,33 +121,49 @@ private:
 private:
 	//! pointer to a GLC_World
 	GLC_World* m_pWorld;
+
 	//! The 3DS File name
 	QString m_FileName;
+
 	//! OpenGL Context
-	const QGLContext* m_pQGLContext;	
+	const QGLContext* m_pQGLContext;
+
 	//! The current mesh
 	GLC_Mesh2* m_pCurrentMesh;
+
 	//! The Lib3dsFile Structure
 	Lib3dsFile* m_pLib3dsFile;
+
 	//! The GLC_Material Hash Table
 	QHash<QString, GLC_Material*> m_Materials;
+
 	//! The next material index
 	int m_NextMaterialIndex;
+
 	// The Hash of loaded meshes
 	QSet<QString> m_LoadedMeshes;
+
 	// Initial quantum value
 	const int m_InitQuantumValue;
+
 	// The current quantum value
 	int m_CurrentQuantumValue;
+
 	// The previous quantum value
 	int m_PreviousQuantumValue;
+
 	// The number of meshes
 	int m_NumberOfMeshes;
+
 	// The Current mesh index
 	int m_CurrentMeshNumber;
 
+	//! The list of attached file name
+	QSet<QString> m_ListOfAttachedFileName;
 
-	
+
+
+
 
 };
 

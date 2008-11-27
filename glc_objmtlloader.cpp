@@ -38,6 +38,7 @@ GLC_ObjMtlLoader::GLC_ObjMtlLoader(const QGLContext *pContext, const QString& fi
 , m_Materials()
 , m_LoadStatus()
 , m_pQGLContext(pContext)
+, m_ListOfAttachedFileName()
 {
 }
 
@@ -50,6 +51,7 @@ GLC_ObjMtlLoader::~GLC_ObjMtlLoader()
 		if (i.value()->isUnused()) delete i.value();
 	}
 	m_Materials.clear();
+	m_ListOfAttachedFileName.clear();
 }
 /////////////////////////////////////////////////////////////////////
 // Get functions
@@ -204,6 +206,7 @@ void GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 		}
 		else
 		{
+			m_ListOfAttachedFileName << textureFileName;
 			// Create the texture and assign it to current material
 			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
 			m_pCurrentMaterial->setTexture(pTexture);

@@ -54,7 +54,7 @@
 class GLC_Factory : public QObject
 {
 	Q_OBJECT
-	
+
 public:
 	//! Get unique instance of the factory
 	static GLC_Factory* instance(const QGLContext *);
@@ -62,7 +62,7 @@ public:
 	inline static GLC_Factory* instance()
 	{return m_pFactory;}
 
-protected:	
+protected:
 	//! Constructor
 	GLC_Factory(const QGLContext *);
 public:
@@ -77,20 +77,20 @@ public:
 	//! Create an GLC_Point
 	GLC_Instance createPoint(const GLC_Vector4d &coord) const;
 	GLC_Instance createPoint(double x, double y, double z) const;
-		
+
 	//!  Create an GLC_Circle
 	GLC_Instance createCircle(double radius, double angle= 2 * glc::PI) const;
-	
+
 	//! Create an GLC_Box
 	GLC_Instance createBox(double lx, double ly, double lz) const;
 	GLC_Instance createBox(const GLC_BoundingBox& boundingBox) const;
-	
+
 	//! Create an GLC_Cylinder
 	GLC_Instance createCylinder(double radius, double length) const;
-	
+
 	//! Create an GLC_World* with a QFile
-	GLC_World* createWorld(QFile &file) const;	
-	
+	GLC_World* createWorld(QFile &file) const;
+
 	//! Create default material
 	GLC_Material* createMaterial() const;
 	//! create a material with an ambient color
@@ -101,26 +101,29 @@ public:
 	GLC_Material* createMaterial(GLC_Texture* pTexture) const;
 	//! create an material textured with a image file name
 	GLC_Material* createMaterial(const QString &textureFullFileName) const;
-	
+
 	//! Create an GLC_Texture
 	GLC_Texture* createTexture(const QString &textureFullFileName) const;
-	
+
 //@}
 
 	signals:
-	void currentQuantum(int);
+	//! For progress bar management
+	void currentQuantum(int) const;
+	//! The list of attached file (Emit after loading 3d model
+	void listOfAttachedFile(QStringList) const;
 
 //////////////////////////////////////////////////////////////////////
-// Private members 
+// Private members
 //////////////////////////////////////////////////////////////////////
 
 private:
 	//! The unique instance of the factory
 	static GLC_Factory* m_pFactory;
-	
+
 	//! The QGLContext attached to the factory (rendering context)
 	const QGLContext* m_pQGLContext;
-			
+
 };
 
 #endif /*GLC_FACTORY_*/

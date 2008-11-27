@@ -32,6 +32,7 @@
 #include <QObject>
 #include <QHash>
 #include <QVector>
+#include <QStringList>
 
 #include "glc_vector3d.h"
 #include "glc_vector2df.h"
@@ -87,6 +88,9 @@ public:
 public:
 	//! Create an GLC_World from an input OBJ File
 	GLC_World* CreateWorldFromObj(QFile &file);
+
+	//! Get the list of attached files
+	inline QStringList listOfAttachedFileName() const{return m_ListOfAttachedFileName;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -175,8 +179,11 @@ private:
 	//! current mesh material index
 	GLC_Material* m_pCurrentMaterial;
 
-	// The list of GLC_Vertex of the current face
+	//! The list of GLC_Vertex of the current face
 	VertexList m_CurrentListOfVertex;
+
+	//! The list of attached file name
+	QStringList m_ListOfAttachedFileName;
 
 
 };

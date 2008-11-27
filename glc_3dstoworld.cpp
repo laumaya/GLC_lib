@@ -57,6 +57,7 @@ GLC_3dsToWorld::GLC_3dsToWorld(const QGLContext *pContext)
 , m_PreviousQuantumValue(0)
 , m_NumberOfMeshes(0)
 , m_CurrentMeshNumber(0)
+, m_ListOfAttachedFileName()
 {
 }
 
@@ -181,7 +182,7 @@ void GLC_3dsToWorld::clear()
 	m_PreviousQuantumValue= 0;
 	m_NumberOfMeshes= 0;
 	m_CurrentMeshNumber= 0;
-
+	m_ListOfAttachedFileName.clear();
 }
 
 // Create meshes from the 3ds File
@@ -356,6 +357,7 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 			// Create the texture and assign it to the material
 			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
 			pMaterial->setTexture(pTexture);
+			m_ListOfAttachedFileName << textureFileName;
 		}
 		textureFile.close();
 	}

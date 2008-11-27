@@ -49,6 +49,7 @@ class GLC_ObjMtlLoader
 //////////////////////////////////////////////////////////////////////
 public:
 	GLC_ObjMtlLoader(const QGLContext*, const QString&);
+
 	virtual ~GLC_ObjMtlLoader();
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -57,9 +58,16 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return true if the material name is found
-	inline bool contains(const QString &name) const {return m_Materials.contains(name);}
+	inline bool contains(const QString &name) const
+	{return m_Materials.contains(name);}
+
 	//! Get a material from is name
 	GLC_Material* material(const QString&);
+
+	//! Get the list of attached files
+	inline QStringList listOfAttachedFileName() const
+	{return m_ListOfAttachedFileName.toList();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -115,6 +123,10 @@ private:
 
 	//! OpenGL Context
 	const QGLContext *m_pQGLContext;
+
+	//! The list of attached file name
+	QSet<QString> m_ListOfAttachedFileName;
+
 
 };
 
