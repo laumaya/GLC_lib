@@ -96,6 +96,9 @@ public:
 
 	//! Reverse worlds part normal
 	inline void reversePartNormal() {m_pRoot->reverseChildPartNormal();}
+
+	//! Clear this world
+	GLC_World& clear() {return *this= GLC_World();}
 //@}
 
 //////////////////////////////////////////////////////////////////////
