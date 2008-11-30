@@ -55,7 +55,7 @@ PFNGLDRAWRANGEELEMENTSPROC 			glDrawRangeElements		= NULL;
 
 // GL_ARB_shader_objects
 PFNGLCREATEPROGRAMOBJECTARBPROC		glCreateProgram			= NULL;
-PFNGLDELETEPROGRAMSARBPROC			glDeletePrograms		= NULL;
+PFNGLDELETEPROGRAMPROC				glDeleteProgram			= NULL;
 PFNGLUSEPROGRAMOBJECTARBPROC		glUseProgram			= NULL;
 PFNGLCREATESHADEROBJECTARBPROC		glCreateShader			= NULL;
 PFNGLDELETESHADERPROC				glDeleteShader			= NULL;
@@ -113,8 +113,8 @@ bool glc::loadGlSlExtension()
 #if !defined(Q_OS_MAC)
 	glCreateProgram				= (PFNGLCREATEPROGRAMOBJECTARBPROC)glcGetProcAddress("glCreateProgram");
 	if (not glCreateProgram) qDebug() << "not glCreateProgram";
-	glDeletePrograms			= (PFNGLDELETEPROGRAMSARBPROC)glcGetProcAddress("glDeleteProgram");
-	if (not glDeletePrograms) qDebug() << "not glDeleteProgram";
+	glDeleteProgram 			= (PFNGLDELETEPROGRAMPROC)glcGetProcAddress("glDeleteProgram");
+	if (not glDeleteProgram) qDebug() << "not glDeleteProgram";
 	glUseProgram				= (PFNGLUSEPROGRAMOBJECTARBPROC)glcGetProcAddress("glUseProgram");
 	if (not glUseProgram) qDebug() << "not glUseProgram";
 	glCreateShader				= (PFNGLCREATESHADEROBJECTARBPROC)glcGetProcAddress("glCreateShader");
@@ -143,7 +143,7 @@ bool glc::loadGlSlExtension()
 	if (not glGetProgramiv) qDebug() << "not glGetProgramiv";
 	glIsProgram					= (PFNGLISPROGRAMARBPROC)glcGetProcAddress("glIsProgram");
 
-	result= glCreateProgram and glDeletePrograms and glUseProgram and glCreateShader and glDeleteShader and
+	result= glCreateProgram and glDeleteProgram and glUseProgram and glCreateShader and glDeleteShader and
     glShaderSource and glCompileShader and glAttachShader and glDetachShader and glLinkProgram and
     glGetUniformLocation and glUniform4f and glUniform1i and glGetShaderiv and glGetProgramiv and glIsProgram;
 

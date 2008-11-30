@@ -46,7 +46,7 @@ extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
 
 // GL_ARB_shader_objects
 extern PFNGLCREATEPROGRAMOBJECTARBPROC	glCreateProgram;
-extern PFNGLDELETEPROGRAMSARBPROC	  	glDeletePrograms;
+extern PFNGLDELETEPROGRAMPROC		  	glDeleteProgram;
 extern PFNGLUSEPROGRAMOBJECTARBPROC		glUseProgram;
 extern PFNGLCREATESHADEROBJECTARBPROC	glCreateShader;
 extern PFNGLDELETESHADERPROC			glDeleteShader;
