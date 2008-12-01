@@ -23,19 +23,8 @@
 *****************************************************************************/
 #include "glc_ext.h"
 #include <QString>
-
-// Define glcGetProcAddress.
-#if defined(Q_OS_WIN32)
-#	define glcGetProcAddress(name) wglGetProcAddress((LPCSTR)name)
-#else
-#	if defined(Q_OS_MAC)
-#   	define glcGetProcAddress(name) NSGLGetProcAddress(name)
-#	else
-#		if defined(Q_OS_LINUX)
-#			define glcGetProcAddress(name) (*glXGetProcAddressARB)(name)
-#		endif
-#	endif
-#endif
+#include <QGLContext>
+#include <QDebug>
 
 #if !defined(Q_OS_MAC)
 // ARB_vertex_buffer_object
@@ -86,18 +75,19 @@ bool glc::loadVboExtension()
 {
 	bool result= true;
 #if !defined(Q_OS_MAC)
-    glBindBuffer				= (PFNGLBINDBUFFERARBPROC)glcGetProcAddress("glBindBuffer");
-    glDeleteBuffers				= (PFNGLDELETEBUFFERSARBPROC)glcGetProcAddress("glDeleteBuffers");
-    glGenBuffers				= (PFNGLGENBUFFERSARBPROC)glcGetProcAddress("glGenBuffers");
-    glIsBuffer					= (PFNGLISBUFFERARBPROC)glcGetProcAddress("glIsBuffer");
-    glBufferData				= (PFNGLBUFFERDATAARBPROC)glcGetProcAddress("glBufferData");
-    glBufferSubData				= (PFNGLBUFFERSUBDATAARBPROC)glcGetProcAddress("glBufferSubData");
-    glGetBufferSubData			= (PFNGLGETBUFFERSUBDATAARBPROC)glcGetProcAddress("glGetBufferSubData");
-    glMapBuffer					= (PFNGLMAPBUFFERARBPROC)glcGetProcAddress("glMapBuffer");
-    glUnmapBuffer				= (PFNGLUNMAPBUFFERARBPROC)glcGetProcAddress("glUnmapBuffer");
-    glGetBufferParameteriv		= (PFNGLGETBUFFERPARAMETERIVARBPROC)glcGetProcAddress("glGetBufferParameteriv");
-    glGetBufferPointerv			= (PFNGLGETBUFFERPOINTERVARBPROC)glcGetProcAddress("glGetBufferPointerv");
-    glDrawRangeElements			= (PFNGLDRAWRANGEELEMENTSPROC)glcGetProcAddress("glDrawRangeElements");
+	const QGLContext* pContext= QGLContext::currentContext();
+    glBindBuffer				= (PFNGLBINDBUFFERARBPROC)pContext->getProcAddress(QLatin1String("glBindBuffer"));
+    glDeleteBuffers				= (PFNGLDELETEBUFFERSARBPROC)pContext->getProcAddress(QLatin1String("glDeleteBuffers"));
+    glGenBuffers				= (PFNGLGENBUFFERSARBPROC)pContext->getProcAddress(QLatin1String("glGenBuffers"));
+    glIsBuffer					= (PFNGLISBUFFERARBPROC)pContext->getProcAddress(QLatin1String("glIsBuffer"));
+    glBufferData				= (PFNGLBUFFERDATAARBPROC)pContext->getProcAddress(QLatin1String("glBufferData"));
+    glBufferSubData				= (PFNGLBUFFERSUBDATAARBPROC)pContext->getProcAddress(QLatin1String("glBufferSubData"));
+    glGetBufferSubData			= (PFNGLGETBUFFERSUBDATAARBPROC)pContext->getProcAddress(QLatin1String("glGetBufferSubData"));
+    glMapBuffer					= (PFNGLMAPBUFFERARBPROC)pContext->getProcAddress(QLatin1String("glMapBuffer"));
+    glUnmapBuffer				= (PFNGLUNMAPBUFFERARBPROC)pContext->getProcAddress(QLatin1String("glUnmapBuffer"));
+    glGetBufferParameteriv		= (PFNGLGETBUFFERPARAMETERIVARBPROC)pContext->getProcAddress(QLatin1String("glGetBufferParameteriv"));
+    glGetBufferPointerv			= (PFNGLGETBUFFERPOINTERVARBPROC)pContext->getProcAddress(QLatin1String("glGetBufferPointerv"));
+    glDrawRangeElements			= (PFNGLDRAWRANGEELEMENTSPROC)pContext->getProcAddress(QLatin1String("glDrawRangeElements"));
 
     result= glBindBuffer and glDeleteBuffers and glGenBuffers and glIsBuffer and glBufferData and glBufferSubData and
     glGetBufferSubData and glMapBuffer and glUnmapBuffer and glGetBufferParameteriv and glGetBufferPointerv and glDrawRangeElements;
@@ -111,37 +101,38 @@ bool glc::loadGlSlExtension()
 {
 	bool result= true;
 #if !defined(Q_OS_MAC)
-	glCreateProgram				= (PFNGLCREATEPROGRAMOBJECTARBPROC)glcGetProcAddress("glCreateProgram");
+	const QGLContext* pContext= QGLContext::currentContext();
+	glCreateProgram				= (PFNGLCREATEPROGRAMOBJECTARBPROC)pContext->getProcAddress(QLatin1String("glCreateProgram"));
 	if (not glCreateProgram) qDebug() << "not glCreateProgram";
-	glDeleteProgram 			= (PFNGLDELETEPROGRAMPROC)glcGetProcAddress("glDeleteProgram");
+	glDeleteProgram 			= (PFNGLDELETEPROGRAMPROC)pContext->getProcAddress(QLatin1String("glDeleteProgram"));
 	if (not glDeleteProgram) qDebug() << "not glDeleteProgram";
-	glUseProgram				= (PFNGLUSEPROGRAMOBJECTARBPROC)glcGetProcAddress("glUseProgram");
+	glUseProgram				= (PFNGLUSEPROGRAMOBJECTARBPROC)pContext->getProcAddress(QLatin1String("glUseProgram"));
 	if (not glUseProgram) qDebug() << "not glUseProgram";
-	glCreateShader				= (PFNGLCREATESHADEROBJECTARBPROC)glcGetProcAddress("glCreateShader");
+	glCreateShader				= (PFNGLCREATESHADEROBJECTARBPROC)pContext->getProcAddress(QLatin1String("glCreateShader"));
 	if (not glCreateShader) qDebug() << "not glCreateShader";
-	glDeleteShader				= (PFNGLDELETESHADERPROC)glcGetProcAddress("glDeleteShader");
+	glDeleteShader				= (PFNGLDELETESHADERPROC)pContext->getProcAddress(QLatin1String("glDeleteShader"));
 	if (not glDeleteShader) qDebug() << "not glDeleteShader";
-	glShaderSource				= (PFNGLSHADERSOURCEARBPROC)glcGetProcAddress("glShaderSource");
+	glShaderSource				= (PFNGLSHADERSOURCEARBPROC)pContext->getProcAddress(QLatin1String("glShaderSource"));
 	if (not glShaderSource) qDebug() << "not glShaderSource";
-	glCompileShader				= (PFNGLCOMPILESHADERARBPROC)glcGetProcAddress("glCompileShader");
+	glCompileShader				= (PFNGLCOMPILESHADERARBPROC)pContext->getProcAddress(QLatin1String("glCompileShader"));
 	if (not glCompileShader) qDebug() << "not glCompileShader";
-	glAttachShader				= (PFNGLATTACHOBJECTARBPROC)glcGetProcAddress("glAttachShader");
+	glAttachShader				= (PFNGLATTACHOBJECTARBPROC)pContext->getProcAddress(QLatin1String("glAttachShader"));
 	if (not glAttachShader) qDebug() << "not glAttachShader";
-	glDetachShader				= (PFNGLDETACHOBJECTARBPROC)glcGetProcAddress("glDetachShader");
+	glDetachShader				= (PFNGLDETACHOBJECTARBPROC)pContext->getProcAddress(QLatin1String("glDetachShader"));
 	if (not glDetachShader) qDebug() << "not glDetachShader";
-	glLinkProgram				= (PFNGLLINKPROGRAMARBPROC)glcGetProcAddress("glLinkProgram");
+	glLinkProgram				= (PFNGLLINKPROGRAMARBPROC)pContext->getProcAddress(QLatin1String("glLinkProgram"));
 	if (not glLinkProgram) qDebug() << "not glLinkProgram";
-	glGetUniformLocation		= (PFNGLGETUNIFORMLOCATIONARBPROC)glcGetProcAddress("glGetUniformLocation");
+	glGetUniformLocation		= (PFNGLGETUNIFORMLOCATIONARBPROC)pContext->getProcAddress(QLatin1String("glGetUniformLocation"));
 	if (not glGetUniformLocation) qDebug() << "not glGetUniformLocation";
-	glUniform4f					= (PFNGLUNIFORM4FARBPROC)glcGetProcAddress("glUniform4f");
+	glUniform4f					= (PFNGLUNIFORM4FARBPROC)pContext->getProcAddress(QLatin1String("glUniform4f"));
 	if (not glUniform4f) qDebug() << "not glUniform4f";
-	glUniform1i					= (PFNGLUNIFORM1IARBPROC)glcGetProcAddress("glUniform1i");
+	glUniform1i					= (PFNGLUNIFORM1IARBPROC)pContext->getProcAddress(QLatin1String("glUniform1i"));
 	if (not glUniform1i) qDebug() << "not glUniform1i";
-	glGetShaderiv				= (PFNGLGETSHADERIVPROC)glcGetProcAddress("glGetShaderiv");
+	glGetShaderiv				= (PFNGLGETSHADERIVPROC)pContext->getProcAddress(QLatin1String("glGetShaderiv"));
 	if (not glGetShaderiv) qDebug() << "not glGetShaderiv";
-	glGetProgramiv				= (PFNGLGETPROGRAMIVARBPROC)glcGetProcAddress("glGetProgramiv");
+	glGetProgramiv				= (PFNGLGETPROGRAMIVARBPROC)pContext->getProcAddress(QLatin1String("glGetProgramiv"));
 	if (not glGetProgramiv) qDebug() << "not glGetProgramiv";
-	glIsProgram					= (PFNGLISPROGRAMARBPROC)glcGetProcAddress("glIsProgram");
+	glIsProgram					= (PFNGLISPROGRAMARBPROC)pContext->getProcAddress(QLatin1String("glIsProgram"));
 
 	result= glCreateProgram and glDeleteProgram and glUseProgram and glCreateShader and glDeleteShader and
     glShaderSource and glCompileShader and glAttachShader and glDetachShader and glLinkProgram and
