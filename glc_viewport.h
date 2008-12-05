@@ -56,7 +56,7 @@
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Viewport  
+class GLC_Viewport
 {
 
 //////////////////////////////////////////////////////////////////////
@@ -74,10 +74,10 @@ public:
 	 * 		- Maximum zoom factor	: <b>3.0</b>
 	 * */
 	GLC_Viewport(QGLWidget *GLWidget);
-	
+
 	//! Delete Camera, Image Plane and orbit circle
 	virtual ~GLC_Viewport();
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -86,43 +86,35 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get The viewport Horizontal size
-	int getWinHSize() const
-	{
-		return m_nWinHSize;
-	}
-	
+	inline int getWinHSize() const
+	{ return m_nWinHSize;}
+
 	//! Get The viewport Vertical size
-	int getWinVSize() const
-	{
-		return m_nWinVSize;
-	}
+	inline int getWinVSize() const
+	{ return m_nWinVSize;}
+
+	//! Get the viewport ratio
+	inline double aspectRatio() const
+	{ return static_cast<double>(m_nWinHSize) / static_cast<double>(m_nWinVSize);}
 
 	//! Map Screen position to OpenGL position (On image Plane)
 	GLC_Vector4d mapPosMouse( GLdouble Posx, GLdouble Posy) const;
-	
+
 	//! Get camera's angle of view
-	double getFov() const
-	{
-		return m_dFov;
-	}
+	inline double getFov() const
+	{ return m_dFov;}
 
 	//! Get near clipping distance
-	double getDistMin(void) const
-	{
-		return m_dCamDistMin;
-	}
+	inline double getDistMin(void) const
+	{ return m_dCamDistMin;}
 
 	//! Get far clipping distance
-	double getDistMax(void) const
-	{
-		return m_dCamDistMax;
-	}
-	
+	inline double getDistMax(void) const
+	{ return m_dCamDistMax;}
+
 	//! Get background Color
-	QColor getBackgroundColor(void) const
-	{
-		return m_BackgroundColor;
-	}
+	inline QColor getBackgroundColor(void) const
+	{ return m_BackgroundColor;}
 
 //@}
 
@@ -130,11 +122,11 @@ public:
 /*! \name OpenGL Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-public:	
+public:
 	//! Initialize OpenGL with default values
 	/*! Glew initialisation is made here */
 	void initGl();
-	
+
 	//! Load camera's transformation Matrix and if image plane exist, display it
 	void glExecuteCam(void)
 	{
@@ -147,17 +139,17 @@ public:
 		glExecuteOrbitCircle();
 		glExecuteTargetCam();
 	}
-	
+
 	//! Define camera's target position
 	void glPointing(GLint x, GLint y);
-	
+
 	//! Update OpenGL Projection Matrix
 	void updateProjectionMat(void) const;
 
 	//! Force the aspect ratio of the window
 	void forceAspectRatio(double) const;
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
@@ -186,7 +178,7 @@ public:
 	//! select an object and return is UID
 	/*! Return UID of the nearest picked object */
 	GLC_uint select(QGLWidget *pGLWidget, int x, int y);
-	
+
 	//! load background image
 	void loadBackGroundImage(const QString Image);
 
@@ -199,7 +191,7 @@ public:
 		m_dFov= TargetFov;
 
 		updateProjectionMat();	// Mise à jour de la matrice de projection opengl
-		
+
 		updateOrbitCircle();	// Mise à jour du diamètre du cercle de la sphere de rotation
 	}
 
@@ -208,17 +200,17 @@ public:
 
 	//! Set far clipping distance
 	bool setDistMax(double DistMax);
-	
+
 	//! Set Near and Far clipping distance
 	/*! box shouldn't be empty*/
 	void setDistMinAndMax(const GLC_BoundingBox& bBox);
-	
+
 	//! Set the Background color
 	void setBackgroundColor(QColor setColor);
 
 //@}
 
-/////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////
 //! @name  Panning Functions
 //@{
 	//! Prepare panning operation
@@ -250,7 +242,7 @@ public:
 	 * 	- Show Camera's Target
 	 */
 	void prepareOrbiting(double Cx, double Cy, bool circleVisibility= true, bool targetVisibility= true);
-	
+
 	//! orbit in accordance of mouse position
 	void orbit(double Cx, double Cy);
 
@@ -271,20 +263,20 @@ public:
 	 * 	- Show Camera's target
 	 */
 	void prepareZooming(int Cy, bool tragetVisibility= true);
-	
+
 	//! zoom in accordance of Y mouse position
 	void zoom(int Cy);
-	
+
 	//! Hide Camera's target
 	void EndZooming()
 	{
 		m_CameraTargetIsVisible= false;
 	}
-	
+
 	//! reframe the current scene
 	/*! box shouldn't be empty*/
 	void reframe(const GLC_BoundingBox& box);
-	
+
 //@} End Zooming functions
 /////////////////////////////////////////////////////////////////////
 
@@ -295,7 +287,7 @@ public:
 private:
 	//! Convert mouse View coordinate to orbit coordinate (Centred and betwen (-1,-1) and (1,1))
 	GLC_Vector4d mapForOrbit( double Posx, double Posy) const;
-	
+
 	//! Update orbit circle dimensions
 	void updateOrbitCircle();
 
@@ -321,7 +313,7 @@ private:
 	GLdouble m_dCamDistMax;		//!< Camera Maximum distance (far clipping plane)
 	GLdouble m_dCamDistMin;		//!< Camera Minimum distance (near clipping plane)
 	GLdouble m_dFov;			//!< Camera angle of view
-	
+
 	//! Image plane (Background image)
 	GLC_ImagePlane* m_pImagePlane;
 
@@ -334,14 +326,14 @@ private:
 	int m_nWinVSize;			//!< Vertical OpenGL viewport size
 
 	//! Previous zoom Factor
-	double m_dPrevZoom;	
-	
+	double m_dPrevZoom;
+
 	//! orbit Circle
 	GLC_OrbitCircle* m_pOrbitCircle;
 
 	//! Circle ratio size / window size
 	double m_dRatWinSph;
-	
+
 	//! Show state of orbit Circle
 	bool m_OrbitCircleIsVisible;
 
@@ -349,17 +341,17 @@ private:
 	GLC_Vector4d m_VectPrevPan;
 
 	//! Orbiting Vector
-	GLC_Vector4d m_VectPrevOrbit;	
+	GLC_Vector4d m_VectPrevOrbit;
 
 	//! The QGLWidget attached to the viewport (rendering context)
 	QGLWidget* m_pQGLWidget;
-	
+
 	//! Viewport Background color
 	QColor m_BackgroundColor;
-	
+
 	//! OpenGL list of the Image Plane
 	GLuint m_ImagePlaneListID;
-	
+
 
 };
 
