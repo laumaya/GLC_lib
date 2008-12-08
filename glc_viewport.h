@@ -147,7 +147,7 @@ public:
 	void updateProjectionMat(void) const;
 
 	//! Force the aspect ratio of the window
-	void forceAspectRatio(double) const;
+	void forceAspectRatio(double);
 //@}
 
 //////////////////////////////////////////////////////////////////////
