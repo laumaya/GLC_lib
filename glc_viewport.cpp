@@ -224,7 +224,7 @@ void GLC_Viewport::updateProjectionMat(void) const
 }
 
 //! Force the aspect ratio of the window
-void GLC_Viewport::forceAspectRatio(double ratio) const
+void GLC_Viewport::forceAspectRatio(double ratio)
 {
 	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
@@ -233,6 +233,25 @@ void GLC_Viewport::forceAspectRatio(double ratio) const
 
 	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
+
+	// Calculate The Aspect Ratio Of The Window
+	double AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
+
+	if (ratio > AspectRatio)
+	{
+		// Save window size
+		const int width= m_nWinHSize;
+
+		// Calculate new width
+		m_nWinHSize= static_cast<int>(static_cast<double>(m_nWinVSize) * ratio);
+
+		// Update image plane size
+		if (m_pImagePlane != NULL)
+			m_pImagePlane->updatePlaneSize();
+
+		// Restore width
+		m_nWinHSize= width;
+	}
 
 }
 
@@ -365,13 +384,6 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 	m_nWinHSize= HSize;
 	m_nWinVSize= VSize;
 
-	// Update image plane size
-	if (m_pImagePlane != NULL)
-		m_pImagePlane->updatePlaneSize();
-
-	// Update orbit circle size
-	updateOrbitCircle();
-
 	// from NeHe's Tutorial 3
 	if (m_nWinVSize == 0)								// Prevent A Divide By Zero By
 	{
@@ -381,6 +393,14 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 	glViewport(0,0,m_nWinHSize,m_nWinVSize);			// Reset The Current Viewport
 
 	updateProjectionMat();
+
+	// Update image plane size
+	if (m_pImagePlane != NULL)
+		m_pImagePlane->updatePlaneSize();
+
+	// Update orbit circle size
+	updateOrbitCircle();
+
 }
 
 //! select an object and return is UID
