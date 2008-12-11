@@ -65,7 +65,7 @@ class GLC_OffToWorld : public QObject
 //////////////////////////////////////////////////////////////////////
 
 public:
-	GLC_OffToWorld(const QGLContext *);
+	GLC_OffToWorld();
 	virtual ~GLC_OffToWorld();
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ public:
 	//! Create an GLC_World from an input OFF File
 	GLC_World* CreateWorldFromOff(QFile &file);
 //@}
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Private services functions */
 //@{
@@ -110,8 +110,6 @@ private:
 	GLC_World* m_pWorld;
 	//! The Stl File name
 	QString m_FileName;
-	//! OpenGL Context
-	const QGLContext* m_pQGLContext;	
 	//! The current line number
 	int m_CurrentLineNumber;
 	//! The current mesh

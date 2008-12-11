@@ -33,10 +33,9 @@
 #include <QGLContext>
 #include <QDataStream>
 
-GLC_StlToWorld::GLC_StlToWorld(const QGLContext *pContext)
+GLC_StlToWorld::GLC_StlToWorld()
 : m_pWorld(NULL)
 , m_FileName()
-, m_pQGLContext(pContext)
 , m_CurrentLineNumber(0)
 , m_StlStream()
 , m_pCurrentMesh(NULL)

@@ -33,10 +33,9 @@
 #include <QFileInfo>
 #include <QGLContext>
 
-GLC_OffToWorld::GLC_OffToWorld(const QGLContext *pContext)
+GLC_OffToWorld::GLC_OffToWorld()
 : m_pWorld(NULL)
 , m_FileName()
-, m_pQGLContext(pContext)
 , m_CurrentLineNumber(0)
 , m_pCurrentMesh(NULL)
 , m_CurVertexIndex(0)

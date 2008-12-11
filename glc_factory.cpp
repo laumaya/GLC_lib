@@ -128,13 +128,13 @@ GLC_World* GLC_Factory::createWorld(QFile &file) const
 	}
 	else if (QFileInfo(file).suffix().toLower() == "stl")
 	{
-		GLC_StlToWorld stlToWorld(m_pQGLContext);
+		GLC_StlToWorld stlToWorld;
 		connect(&stlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= stlToWorld.CreateWorldFromStl(file);
 	}
 	else if (QFileInfo(file).suffix().toLower() == "off")
 	{
-		GLC_OffToWorld offToWorld(m_pQGLContext);
+		GLC_OffToWorld offToWorld;
 		connect(&offToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= offToWorld.CreateWorldFromOff(file);
 	}

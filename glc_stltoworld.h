@@ -58,7 +58,7 @@ class GLC_StlToWorld : public QObject
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	GLC_StlToWorld(const QGLContext*);
+	GLC_StlToWorld();
 	virtual ~GLC_StlToWorld();
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -102,8 +102,6 @@ private:
 	GLC_World* m_pWorld;
 	//! The Stl File name
 	QString m_FileName;
-	//! OpenGL Context
-	const QGLContext* m_pQGLContext;
 	//! The current line number
 	int m_CurrentLineNumber;
 	//! The Text Stream
