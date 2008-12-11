@@ -78,8 +78,6 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // Delete Camera, Image Plane and orbit circle
 GLC_Viewport::~GLC_Viewport()
 {
-	GLC_SelectionMaterial::deleteShader();
-
 	// Delete the camera
 	if (m_pViewCam != NULL)
 	{
