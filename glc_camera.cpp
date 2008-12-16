@@ -171,6 +171,7 @@ void GLC_Camera::move(const GLC_Matrix4x4 &MatMove)
 	// Backup m_VectUp
 	const GLC_Vector4d VectUpOld(m_VectUp);
 	m_VectUp= (MatMove * VectUpOld) - (MatMove * VectOrigine); // Up Vector Origin must be equal to 0,0,0
+	m_VectUp.setNormal(1.0);
 	createMatComp();
 }
 
@@ -257,8 +258,8 @@ void GLC_Camera::setCam(GLC_Point4d Eye, GLC_Point4d Target, GLC_Vector4d Up)
 	 * m_VectUp could not be NULL
 	 * VectCam could not be NULL */
 	//Q_ASSERT((Angle > EPSILON) && ((PI - Angle) > EPSILON));
-	if ( fabs(Angle - (PI / 2)) > EPSILON)
-	{	// Angle not equal to 90ï¿½
+	if ( fabs(fabs(Angle) - (PI / 2)) > EPSILON)
+	{	// Angle not equal to 90¡
 		const GLC_Vector4d AxeRot(VectCam ^ Up);
 		GLC_Matrix4x4 MatRot(AxeRot, PI / 2);
 		Up= MatRot * VectCam;
@@ -322,46 +323,33 @@ void GLC_Camera::glExecute(GLenum)
 
 void GLC_Camera::createMatComp(void)
 {
-	// Compute rotation matrix between Z axis and camera
 	const GLC_Vector4d VectCam((m_Eye - m_Target).setNormal(1));
+	const GLC_Vector4d orthoVect(m_VectUp ^ VectCam);
 
-	if ( fabs( fabs(VectCam.Z()) - 1.0 ) > EPSILON)
-	{ // Camera's vector not equal to Z axis
-		const GLC_Vector4d VectAxeRot= (Z_AXIS ^ VectCam);
-		const double Angle= acos(Z_AXIS * VectCam);
-		m_MatCompOrbit.setMatRot(VectAxeRot, Angle);
-	}
-	else // Camera's Vector equal to Z axis
-	{
-		if (VectCam.Z() < 0)
-		{
+	// Create camera matrix
+	double newMat[16];
+	newMat[0]= orthoVect.X();
+	newMat[1]= orthoVect.Y();
+	newMat[2]= orthoVect.Z();
+	newMat[3]= 0.0;
 
-			m_MatCompOrbit.setMatRot(m_VectUp, PI);
-		}
-		else
-			m_MatCompOrbit.setToIdentity();
-	}
+	// Vector Up is Y Axis
+	newMat[4]= m_VectUp.X();
+	newMat[5]= m_VectUp.Y();
+	newMat[6]= m_VectUp.Z();
+	newMat[7]= 0.0;
 
-	// Angle between InitVectUp and m_VectUp
-	GLC_Vector4d InitVectUp(0,1,0); // m_VectUp is Y by default
-	InitVectUp= m_MatCompOrbit * InitVectUp;
-	// Compute the angle if vector are not equal
-	if (InitVectUp != m_VectUp)
-	{
-		const double AngleVectUp= acos(InitVectUp * m_VectUp);
+	// Vector Cam is Z axis
+	newMat[8]= VectCam.X();
+	newMat[9]= VectCam.Y();
+	newMat[10]= VectCam.Z();
+	newMat[11]= 0.0;
 
-		GLC_Matrix4x4 MatInt; // intermediate matrix
+	newMat[12]= 0.0;
+	newMat[13]= 0.0;
+	newMat[14]= 0.0;
+	newMat[15]= 1.0;
 
-		if (( AngleVectUp > EPSILON) && ( (PI - AngleVectUp) > EPSILON) )
-
-		{ // Angle not equal to 0 or 180°
-			const GLC_Vector4d VectAxeRot(InitVectUp ^ m_VectUp);
-			MatInt.setMatRot(VectAxeRot, AngleVectUp);
-		}
-		else	// Angle equal to 0 or 180°
-		{
-			MatInt.setMatRot(VectCam, AngleVectUp);
-		}
-		m_MatCompOrbit= MatInt * m_MatCompOrbit;
-	}
+	// Load the result matrix into camera matrix
+	m_MatCompOrbit= GLC_Matrix4x4(newMat);
 }
