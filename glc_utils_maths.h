@@ -26,16 +26,16 @@
 
 #ifndef GLC_UTILS_MATHS_H_
 #define GLC_UTILS_MATHS_H_
-  
+
 // Standard C math library
 #include <math.h>
 namespace glc
 {
 	/*! \def EPSILON
 	 *  \brief Define precison of comparaison*/
-	
+
 	const double EPSILON= 1e-10;
-	
+
 	/*! \def PI
 	 * \brief Define the magic number PI */
 	const double PI= acos(-1.0);
