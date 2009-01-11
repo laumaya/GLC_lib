@@ -90,7 +90,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	m_pWorld= new GLC_World;
 
 	//Load 3ds File
-	m_pLib3dsFile=lib3ds_file_load(m_FileName.toLatin1().data());
+	m_pLib3dsFile=lib3ds_file_load(m_FileName.toLocal8Bit().data());
 	if (!m_pLib3dsFile)
 	{
 		QString message= "GLC_3dsToWorld::CreateWorldFrom3ds : Loading Failed";
