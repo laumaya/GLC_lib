@@ -417,9 +417,11 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 	// Init selection names
 	glInitNames();
 	glPushName(0);
+	// Update State
+	GLC_State::setSelectionMode(true);
 	// Draw the scene
 	pGLWidget->updateGL();
-
+	GLC_State::setSelectionMode(false);
 
 	// Compute number of hits
 	const GLint NbrHits= glRenderMode(GL_RENDER);

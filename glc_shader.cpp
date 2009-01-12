@@ -28,6 +28,7 @@
 #include <QTextStream>
 #include <QMutexLocker>
 #include "glc_exception.h"
+#include "glc_state.h"
 
 // Static member initialization
 QStack<GLuint> GLC_Shader::m_ProgrammStack;
@@ -100,6 +101,7 @@ bool GLC_Shader::canBeDeleted() const
 // Use this shader programm
 void GLC_Shader::use()
 {
+	if (GLC_State::isInSelectionMode()) return;
 	// Program shader must be valid
 	Q_ASSERT(0 != m_ProgramShader);
 	// Test if it is a valid program shader
@@ -152,6 +154,8 @@ void GLC_Shader::use(GLuint shaderId)
 // Use previous program shader
 void GLC_Shader::unuse()
 {
+	if (GLC_State::isInSelectionMode()) return;
+
 	QMutexLocker locker(&m_Mutex);
 	if (m_ProgrammStack.isEmpty())
 	{

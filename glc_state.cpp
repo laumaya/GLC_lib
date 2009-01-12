@@ -29,6 +29,7 @@
 
 bool GLC_State::m_GlslSupported= false;
 bool GLC_State::m_UseSelectionShader= false;
+bool GLC_State::m_IsInSelectionMode= false;
 
 GLC_State::~GLC_State()
 {

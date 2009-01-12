@@ -41,8 +41,12 @@ public:
 public:
 	//! Return true if GLSL is supported
 	inline static bool glslIsSupported() {return m_GlslSupported;}
-	//! Return true if slection shader is used
+
+	//! Return true if selection shader is used
 	inline static bool selectionShaderUsed() {return m_UseSelectionShader;}
+
+	//! Return true if is in selection mode
+	inline static bool isInSelectionMode() {return m_IsInSelectionMode;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -52,9 +56,13 @@ public:
 public:
 	//! Set GLSL support
 	static void setGlslSupport();
+
 	//! Set selection shader usage
 	static void setSelectionShaderUsage(const bool);
-	
+
+	//! Set selection mode
+	inline static void setSelectionMode(const bool mode) {m_IsInSelectionMode= mode;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -63,9 +71,12 @@ public:
 private:
 	//! GLSL supported flag
 	static bool m_GlslSupported;
-	
+
 	//! Use selectionShader flag
 	static bool m_UseSelectionShader;
+
+	//! In selection mode
+	static bool m_IsInSelectionMode;
 
 };
 
