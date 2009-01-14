@@ -31,14 +31,16 @@
 //////////////////////////////////////////////////////////////////////
 
 GLC_Object::GLC_Object(const QString& name)
-: m_Uid(glc::GLC_GenID())	// Object ID
+: m_QUuid(QUuid::createUuid())
+, m_Uid(glc::GLC_GenID())	// Object ID
 , m_Name(name)			// Object Name
 {
 
 }
 // Copy constructor
 GLC_Object::GLC_Object(const GLC_Object& sourceObject)
-: m_Uid(sourceObject.m_Uid)
+: m_QUuid(sourceObject.m_QUuid)
+, m_Uid(sourceObject.m_Uid)
 , m_Name(sourceObject.m_Name)
 {
 }
@@ -53,33 +55,20 @@ GLC_Object::~GLC_Object()
 // Get function
 //////////////////////////////////////////////////////////////////////
 
-// Object ID
-GLC_uint GLC_Object::id() const
-{
-	return m_Uid;
-}
-
-// Object Name
-const QString GLC_Object::name() const
-{
-	return m_Name;
-}
-
 //////////////////////////////////////////////////////////////////////
 // Set function
 //////////////////////////////////////////////////////////////////////
 
-// Object Name
-void GLC_Object::setName(const QString name)
-{
-	m_Name= name;
-}
 
 // Assignement operator
 GLC_Object &GLC_Object::operator=(const GLC_Object& object)
 {
-	m_Name= object.m_Name;
-	m_Uid= object.m_Uid;
+	if (&object != this)
+	{
+		m_QUuid= object.m_QUuid;
+		m_Uid= object.m_Uid;
+		m_Name= object.m_Name;
+	}
 	return *this;
 }
 

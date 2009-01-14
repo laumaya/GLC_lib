@@ -29,6 +29,7 @@
 
 #include <QtOpenGL>
 #include <QString>
+#include <QUuid>
 
 #include "glc_enum.h"
 
@@ -49,17 +50,17 @@ class GLC_Object
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
-public:		
-	
+public:
+
 	//! Default constructor
-	/*! Create a GLC_Object , Generate is UID GLC_Object::m_Uid 
+	/*! Create a GLC_Object , Generate is UID GLC_Object::m_Uid
 	 * and set GLC_Object::m_Name to pName*/
 	//GLC_Object(const char *pName= "");
 	GLC_Object(const QString& name= "");
-	
+
 	//! Copy constructor
 	GLC_Object(const GLC_Object& sourceObject);
-	
+
 	//! Virtual destructor
 	virtual ~GLC_Object();
 //@}
@@ -69,10 +70,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return Object Uuid
+	inline QUuid uuid() const {return m_QUuid;};
 	//! Get Object ID
-	GLC_uint	id() const;
+	inline GLC_uint id() const {return m_Uid;}
 	//! Get Object Name
-	const QString name() const;
+	inline const QString name() const {return m_Name;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -80,12 +83,16 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+
+	//! Set Object UUid
+	inline void setUuid(const QUuid& uuid) {m_QUuid= uuid;}
+
 	//! Set Object Name
-	void setName(const QString name);
-	
+	inline void setName(const QString name) {m_Name= name;}
+
 	//! Assignement operator
-	GLC_Object &operator=(const GLC_Object&);	
-	
+	GLC_Object &operator=(const GLC_Object&);
+
 //@}
 
 
@@ -94,9 +101,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 protected:
+	//! The universal Unique Id of an Object
+	QUuid m_QUuid;
+
 	//! The Unique ID of an GLC_Object
 	/*! Generated on GLC_Object creation*/
 	GLC_uint m_Uid;
+
 	//! Name of an GLC_Object
 	QString m_Name;
 };
