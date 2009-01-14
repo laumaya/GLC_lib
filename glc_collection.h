@@ -89,6 +89,9 @@ public:
 	//! Return all visible GLC_Instance from the collection
 	QList<GLC_Instance*> getVisibleInstanceHandle();
 
+	//! Return list of invisible instance name
+	QList<QString> getInvisibleInstanceName() const;
+
 	//! Return a GLC_Instance from collection
 	/*! If the element is not found in collection a empty node is return*/
 	GLC_Instance* getInstanceHandle(GLC_uint Key);
