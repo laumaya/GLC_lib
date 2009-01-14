@@ -583,6 +583,26 @@ QList<GLC_Instance*> GLC_Collection::getVisibleInstanceHandle()
 
 }
 
+// Return list of invisible instance name
+QList<QString> GLC_Collection::getInvisibleInstanceName() const
+{
+	QList<QString> listOfInstanceName;
+
+	CNodeMap::const_iterator iEntry= m_NodeMap.constBegin();
+
+    while (iEntry != m_NodeMap.constEnd())
+    {
+    	if (not iEntry.value().isVisible())
+    	{
+    		listOfInstanceName.append(iEntry.value().name());
+    	}
+    	iEntry++;
+    }
+
+    return listOfInstanceName;
+}
+
+
 // Return a GLC_Instance pointer from the collection
 GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
 {
