@@ -63,26 +63,30 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Get the root product of the world
+	//! Return the root product of the world
 	inline GLC_Product* rootProduct() const {return m_pRoot;}
 
-	//! Get the world collection
+	//! Return the world collection
 	inline GLC_Collection* collection() {return m_pCollection;}
 
-	//! return true if the world is empty
+	//! Return true if the world is empty
 	inline bool isEmpty() const {return  m_pCollection->isEmpty();}
 
-	//! Get number of faces
+	//! Return number of faces
 	inline int numberOfFaces() const {return m_pRoot->numberOfFaces();}
 
-	//! Get number of vertex
+	//! Return number of vertex
 	inline int numberOfVertex() const{return m_pRoot->numberOfVertex();}
 
-	//! Get the number of materials
+	//! Return the number of materials
 	inline int numberOfMaterials() const {return m_pRoot->numberOfMaterials();}
 
-	//! Get the list of material
+	//! Return the list of material
 	inline QList<GLC_Material*> listOfMaterials() const {return m_pRoot->materialSet().toList();}
+
+	//! Return list of invisible instance name
+	inline QList<QString> getInvisibleInstanceName() const
+	{return m_pCollection->getInvisibleInstanceName();}
 
 //@}
 
