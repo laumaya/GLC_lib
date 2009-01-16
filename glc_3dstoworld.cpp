@@ -279,19 +279,22 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 		for (int i=0; i < 3; ++i)
 		{
 			// Add vertex coordinate
-			triangle[i].x= p3dsMesh->pointL[p3dsFace->points[i]].pos[0];
-			triangle[i].y= p3dsMesh->pointL[p3dsFace->points[i]].pos[1];
-			triangle[i].z= p3dsMesh->pointL[p3dsFace->points[i]].pos[2];
+			memcpy((void*)&triangle[i].x, &p3dsMesh->pointL[p3dsFace->points[i]], 3 * sizeof(float));
+			//triangle[i].x= p3dsMesh->pointL[p3dsFace->points[i]].pos[0];
+			//triangle[i].y= p3dsMesh->pointL[p3dsFace->points[i]].pos[1];
+			//triangle[i].z= p3dsMesh->pointL[p3dsFace->points[i]].pos[2];
 			// Add vertex Normal
-			triangle[i].nx= normalL[normalIndex][0];
-			triangle[i].ny= normalL[normalIndex][1];
-			triangle[i].nz= normalL[normalIndex][2];
+			memcpy((void*)&triangle[i].nx, &normalL[normalIndex], 3 * sizeof(float));
+			//triangle[i].nx= normalL[normalIndex][0];
+			//triangle[i].ny= normalL[normalIndex][1];
+			//triangle[i].nz= normalL[normalIndex][2];
 			++normalIndex;
 			// Add texel
 			if (p3dsMesh->texels > 0)
 			{
-				triangle[i].s= p3dsMesh->texelL[p3dsFace->points[i]][0];
-				triangle[i].t= p3dsMesh->texelL[p3dsFace->points[i]][1];
+				memcpy((void*)&triangle[i].s, &p3dsMesh->texelL[p3dsFace->points[i]], 2 * sizeof(float));
+				//triangle[i].s= p3dsMesh->texelL[p3dsFace->points[i]][0];
+				//triangle[i].t= p3dsMesh->texelL[p3dsFace->points[i]][1];
 			}
 			else
 			{
