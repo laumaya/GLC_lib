@@ -27,12 +27,19 @@
 #include "glc_state.h"
 #include "glc_ext.h"
 
+bool GLC_State::m_VboSupported= false;
 bool GLC_State::m_GlslSupported= false;
 bool GLC_State::m_UseSelectionShader= false;
 bool GLC_State::m_IsInSelectionMode= false;
 
 GLC_State::~GLC_State()
 {
+}
+
+// Set VBO support
+void GLC_State::setVboSupport()
+{
+	m_VboSupported= glc::extensionIsSupported("ARB_vertex_buffer_object") and glc::loadVboExtension();
 }
 
 // Set GLSL support

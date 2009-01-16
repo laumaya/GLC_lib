@@ -26,6 +26,7 @@
 
 #include "glc_circle.h"
 #include "glc_openglexception.h"
+#include "glc_state.h"
 
 using namespace glc;
 //////////////////////////////////////////////////////////////////////
@@ -158,34 +159,60 @@ void GLC_Circle::glDraw(void)
 {
 	if (!m_GeometryIsValid)
 	{
+		// Calculate number of step
 		m_Step= static_cast<GLuint>(static_cast<double>(m_nDiscret) * (m_dAngle / (2 * glc::PI)));
 		if (m_Step < 2) m_Step= 2;
+
+		// Vertex Vector
 		const GLsizeiptr size= (m_Step + 1) * sizeof(GLC_Vertex);
-		GLC_Vertex positionData[m_Step + 1];
+		// Resize the Vertex vector
+		m_VertexVector.resize(m_Step + 1);
+		// Fill Vertex Vector
 		for (GLuint i= 0; i <= m_Step; ++i)
 		{
-			positionData[i].x= static_cast<float>(m_Radius * cos(i * m_dAngle / m_Step));
-			positionData[i].y= static_cast<float>(m_Radius * sin(i * m_dAngle / m_Step));
+			m_VertexVector[i].x= static_cast<float>(m_Radius * cos(i * m_dAngle / m_Step));
+			m_VertexVector[i].y= static_cast<float>(m_Radius * sin(i * m_dAngle / m_Step));
 		}
-		glBufferData(GL_ARRAY_BUFFER, size, positionData, GL_STATIC_DRAW);
 
-
-		// Create IBO
+		// Index Vector
 		const GLsizeiptr IndexSize = (m_Step + 1) * sizeof(GLuint);
-		GLuint IndexData[m_Step + 1];
+		// Resize index vector
+		m_IndexVector.resize(m_Step + 1);
+		// Fill index vector
 		for (GLuint i= 0; i <= m_Step; ++i)
 		{
-			IndexData[i]= i;
+			m_IndexVector[i]= i;
 		}
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize, IndexData, GL_STATIC_DRAW);
+
+		if (GLC_State::vboIsSupported())
+		{
+			// Create VBO
+			glBufferData(GL_ARRAY_BUFFER, size, m_VertexVector.data(), GL_STATIC_DRAW);
+			// Create IBO
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize, m_IndexVector.data(), GL_STATIC_DRAW);
+			// Clear Vector
+			m_VertexVector.clear();
+			m_IndexVector.clear();
+		}
 	}
-	glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
 
-	glEnableClientState(GL_VERTEX_ARRAY);
+	if (GLC_State::vboIsSupported())
+	{
+		// Use VBO
+		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glDrawRangeElements(GL_LINE_STRIP, 0, m_Step + 1, m_Step + 1, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
+	else
+	{
+		// Use Vertex Array
+		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), m_VertexVector.data());
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glDrawElements(GL_LINE_STRIP, m_Step + 1, GL_UNSIGNED_INT, m_IndexVector.data());
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
 
-	glDrawRangeElements(GL_LINE_STRIP, 0, m_Step + 1, m_Step + 1, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-
-	glDisableClientState(GL_VERTEX_ARRAY);
 
 	// OpenGL error handler
 	GLenum error= glGetError();

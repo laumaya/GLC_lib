@@ -122,13 +122,15 @@ private:
 // private members
 //////////////////////////////////////////////////////////////////////
 private:
-
 	//! Circle Radius
 	double m_Radius;
+
 	//! Circle Discretion
 	int m_nDiscret;
+
 	//! Angle of circle in radians
 	double m_dAngle;
+
 	//! Circle Step
 	GLuint m_Step;
 

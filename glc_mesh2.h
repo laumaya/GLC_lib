@@ -37,7 +37,6 @@
 
 typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
 typedef QList<GLC_Vertex> VertexList;
-typedef QVector<GLC_Vertex> VertexVector;
 typedef QList<GLuint> IndexList;
 typedef QHash<GLC_uint, IndexList*> MaterialGroupHash;
 
@@ -171,9 +170,6 @@ private:
 
 	//! Vertex List (Use When creating Mesh)
 	VertexList m_Vertex;
-
-	//! Vertex Vectors (Use When Mesh is Finished)
-	VertexVector m_VertexVector;
 
 	//! Hash table of Vector Index grouped by material
 	MaterialGroupHash m_MaterialGroup;

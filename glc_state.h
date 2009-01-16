@@ -39,6 +39,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return true if VBO is supported
+	inline static bool vboIsSupported() {return m_VboSupported;}
+
 	//! Return true if GLSL is supported
 	inline static bool glslIsSupported() {return m_GlslSupported;}
 
@@ -54,6 +57,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Set VBO support
+	static void setVboSupport();
+
 	//! Set GLSL support
 	static void setGlslSupport();
 
@@ -69,6 +75,9 @@ public:
 //Private attributes
 //////////////////////////////////////////////////////////////////////
 private:
+	//! VBO supported flag
+	static bool m_VboSupported;
+
 	//! GLSL supported flag
 	static bool m_GlslSupported;
 

@@ -37,7 +37,6 @@
 GLC_Mesh2::GLC_Mesh2()
 :GLC_VboGeom("Mesh", false)
 , m_Vertex()
-, m_VertexVector()
 , m_MaterialGroup()
 , m_MaterialHash()
 , m_NumberOfFaces(0)
@@ -53,7 +52,6 @@ GLC_Mesh2::GLC_Mesh2()
 GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 : GLC_VboGeom(meshToCopy)
 , m_Vertex(meshToCopy.m_Vertex)
-, m_VertexVector(meshToCopy.m_VertexVector)
 , m_MaterialGroup()
 , m_MaterialHash(meshToCopy.m_MaterialHash)
 , m_NumberOfFaces(meshToCopy.m_NumberOfFaces)
@@ -106,7 +104,6 @@ GLC_Mesh2::~GLC_Mesh2(void)
 
 	m_MaterialHash.clear();
 	m_Vertex.clear();
-	m_VertexVector.clear();
 	m_MaterialGroup.clear();
 }
 /////////////////////////////////////////////////////////////////////
@@ -287,7 +284,9 @@ void GLC_Mesh2::glLoadTexture(void)
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh2::glDraw()
 {
-	Q_ASSERT(0 != m_VertexVector.size());
+	Q_ASSERT(m_GeometryIsValid or not m_VertexVector.isEmpty());
+
+	const bool vboIsSupported= GLC_State::vboIsSupported();
 
 	IndexList iboList;
 	MaterialGroupHash::iterator iMaterialGroup;
@@ -295,13 +294,7 @@ void GLC_Mesh2::glDraw()
 	// Create VBO and IBO
 	if (!m_GeometryIsValid)
 	{
-		// Create VBO
-		const GLsizei dataNbr= static_cast<GLsizei>(m_VertexVector.size());
-		const GLsizeiptr dataSize= dataNbr * sizeof(GLC_Vertex);
-		const GLC_Vertex* pPositionData= m_VertexVector.data();
-		glBufferData(GL_ARRAY_BUFFER, dataSize, pPositionData, GL_STATIC_DRAW);
-
-		// Create IBO
+		// Fill index
 		iMaterialGroup= m_MaterialGroup.begin();
 	    while (iMaterialGroup != m_MaterialGroup.constEnd())
 	    {
@@ -311,29 +304,66 @@ void GLC_Mesh2::glDraw()
 	    	}
 	    	++iMaterialGroup;
 	    }
-		const GLsizei indexNbr= static_cast<GLsizei>(iboList.size());
-		const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-		QVector<GLuint> vectorIndex(iboList.toVector());
-		const GLuint* pIndexData= vectorIndex.data();
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexData, GL_STATIC_DRAW);
+		// Set index vector
+		m_IndexVector= iboList.toVector();
+
+		if (vboIsSupported)
+		{
+			// Create VBO
+			const GLsizei dataNbr= static_cast<GLsizei>(m_VertexVector.size());
+			const GLsizeiptr dataSize= dataNbr * sizeof(GLC_Vertex);
+			glBufferData(GL_ARRAY_BUFFER, dataSize, m_VertexVector.data(), GL_STATIC_DRAW);
+			m_VertexVector.clear();
+			// Create IBO
+			const GLsizei indexNbr= static_cast<GLsizei>(iboList.size());
+			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, m_IndexVector.data(), GL_STATIC_DRAW);
+			m_IndexVector.clear();
+		}
 	}
 
-	glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
-	glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(12));
-	glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(24));
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	// test if color pear vertex is activated
-	if (m_ColorPearVertex and !m_IsSelected)
+	if (vboIsSupported)
 	{
-		glEnable(GL_COLOR_MATERIAL);
-		glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-		glEnableClientState(GL_COLOR_ARRAY);
-		glColorPointer(4, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(32));
+		// Use VBO
+		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
+		glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(12));
+		glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(24));
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		// test if color pear vertex is activated
+		if (m_ColorPearVertex and !m_IsSelected)
+		{
+			glEnable(GL_COLOR_MATERIAL);
+			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+			glEnableClientState(GL_COLOR_ARRAY);
+			glColorPointer(4, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(32));
+		}
 	}
+	else
+	{
+		// Use Vertex Array
+		float* pVertexData= (float *) m_VertexVector.data();
+		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), pVertexData);
+		glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[3]);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[6]);
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		// test if color pear vertex is activated
+		if (m_ColorPearVertex and !m_IsSelected)
+		{
+			glEnable(GL_COLOR_MATERIAL);
+			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+			glEnableClientState(GL_COLOR_ARRAY);
+			glColorPointer(4, GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[8]);
+		}
+	}
+
 	GLC_Material* pCurrentMaterial;
 	GLuint max;
 	GLuint cur= 0;
@@ -382,8 +412,17 @@ void GLC_Mesh2::glDraw()
     		}
 
 			max= static_cast<GLuint>(iMaterialGroup.value()->size());
-			// Draw cylinder
-			glDrawRangeElements(GL_TRIANGLES, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
+			// Draw Mesh
+			if (vboIsSupported)
+			{
+				// Use VBO
+				glDrawRangeElements(GL_TRIANGLES, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
+			}
+			else
+			{
+				// Use Vertex Array
+				glDrawElements(GL_TRIANGLES, max, GL_UNSIGNED_INT, &m_IndexVector.data()[cur]);
+			}
 			cur+= max;
     	}
     	++iMaterialGroup;

@@ -27,6 +27,7 @@
 #include "glc_vbogeom.h"
 #include "glc_openglexception.h"
 #include "glc_selectionmaterial.h"
+#include "glc_state.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
@@ -34,12 +35,14 @@
 // Default constructor
 GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
 :GLC_Object(name)
-, m_VboId(0)
-, m_IboId(0)
 , m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pBoundingBox(NULL)
 , m_pMaterial(NULL)			// have to be set later in constructor
 , m_UseColorPerVertex(false)
+, m_VertexVector()
+, m_IndexVector()
+, m_VboId(0)
+, m_IboId(0)
 , m_IsWire(typeIsWire)		// the geometry type
 , m_IsTransparent(false)	// Not transparent by default
 {
@@ -49,12 +52,14 @@ GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
 // Copy constructor
 GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 :GLC_Object(sourceGeom)
-, m_VboId(0)
-, m_IboId(0)
 , m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pBoundingBox(NULL)
 , m_pMaterial(NULL)			// have to be set later in constructor
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
+, m_VertexVector(sourceGeom.m_VertexVector)
+, m_IndexVector(sourceGeom.m_IndexVector)
+, m_VboId(0)
+, m_IboId(0)
 , m_IsWire(sourceGeom.m_IsWire)
 , m_IsTransparent(sourceGeom.m_IsTransparent)
 {
@@ -70,12 +75,15 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 
 GLC_VboGeom::~GLC_VboGeom()
 {
-	// VBO
-	if (0 != m_VboId)
-		glDeleteBuffers(1, &m_VboId);
-	// IBO
-	if (0 != m_IboId)
-		glDeleteBuffers(1, &m_IboId);
+	if (GLC_State::vboIsSupported())
+	{
+		// VBO
+		if (0 != m_VboId)
+			glDeleteBuffers(1, &m_VboId);
+		// IBO
+		if (0 != m_IboId)
+			glDeleteBuffers(1, &m_IboId);
+	}
 	// Material
 	if (NULL != m_pMaterial)
 	{
@@ -134,24 +142,30 @@ void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 {
 	// Define Geometry's property
 	glPropGeom(isSelected, forceWire);
+	const bool vboIsSupported= GLC_State::vboIsSupported();
 
-	if (0 == m_VboId)
+	if (vboIsSupported and (0 == m_VboId))
 	{
 		createVBOs();
 	}
-	else
+	if (vboIsSupported)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
+
+		glDraw();
+
+		m_GeometryIsValid= true;
+
+		// Unbind VBOs
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
-
-	glDraw();
-
-	m_GeometryIsValid= true;
-
-	// Unbind VBOs
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	else // VBO not supported
+	{
+		glDraw();
+		m_GeometryIsValid= true;
+	}
 
 	// OpenGL error handler
 	GLenum error= glGetError();
@@ -202,7 +216,5 @@ void GLC_VboGeom::glPropGeom(bool isSelected, bool forceWire)
 void GLC_VboGeom::createVBOs()
 {
 	glGenBuffers(1, &m_VboId);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
 	glGenBuffers(1, &m_IboId);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
 }

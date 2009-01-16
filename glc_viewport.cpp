@@ -136,22 +136,11 @@ void GLC_Viewport::initGl()
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-	if (not extensionIsSupported("ARB_vertex_buffer_object"))
-	{
-		GLC_Exception glcException("GLC_Viewport::initGl ARB_vertex_buffer_object not found");
-		throw(glcException);
-	}
-	else
-	{
-		if (not loadVboExtension())
-		{
-			GLC_Exception glcException("GLC_Viewport::initGl Failed to load ARB_vertex_buffer_object functions");
-			throw(glcException);
-		}
-	}
+	// Extension "ARB_vertex_buffer_object"
+	GLC_State::setVboSupport();
 
+	// Extension "GL_ARB_shading_language_100"
 	GLC_State::setGlslSupport();
-
 }
 
 // Define camera's target position

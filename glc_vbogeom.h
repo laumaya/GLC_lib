@@ -66,6 +66,9 @@ struct GLC_Vertex
 	GLfloat r, g, b, a;		// 16 Bytes
 	// => 32 Bytes
 };
+
+typedef QVector<GLC_Vertex> VertexVector;
+
 class GLC_VboGeom : public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
@@ -218,12 +221,6 @@ protected:
 //////////////////////////////////////////////////////////////////////
 protected:
 
-	//! VBO ID
-	GLuint m_VboId;
-
-	//! IBO ID
-	GLuint m_IboId;
-
 	//! Geometry validity
 	bool m_GeometryIsValid;
 
@@ -236,10 +233,22 @@ protected:
 	//! Color per vertex usage
 	bool m_UseColorPerVertex;
 
+	//! Vertex Vector
+	VertexVector m_VertexVector;
+
+	//! Index Vector
+	QVector<GLuint> m_IndexVector;
+
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
+	//! VBO ID
+	GLuint m_VboId;
+
+	//! IBO ID
+	GLuint m_IboId;
+
 	//! Geometry type is wire
 	bool m_IsWire;
 
