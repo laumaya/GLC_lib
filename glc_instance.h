@@ -27,7 +27,7 @@
 #ifndef GLC_INSTANCE_H_
 #define GLC_INSTANCE_H_
 
-#include "glc_vboGeom.h"
+#include "glc_vbogeom.h"
 #include "glc_enum.h"
 #include "glc_boundingbox.h"
 #include "glc_object.h"
