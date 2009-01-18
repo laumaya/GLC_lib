@@ -40,7 +40,7 @@ PFNGLUNMAPBUFFERARBPROC				glUnmapBuffer			= NULL;
 PFNGLGETBUFFERPARAMETERIVARBPROC	glGetBufferParameteriv	= NULL;
 PFNGLGETBUFFERPOINTERVARBPROC		glGetBufferPointerv		= NULL;
 // glDrawRangElement
-PFNGLDRAWRANGEELEMENTSPROC 			glDrawRangeElements		= NULL;
+//PFNGLDRAWRANGEELEMENTSPROC 			glDrawRangeElements		= NULL;
 
 // GL_ARB_shader_objects
 PFNGLCREATEPROGRAMOBJECTARBPROC		glCreateProgram			= NULL;
@@ -87,10 +87,10 @@ bool glc::loadVboExtension()
     glUnmapBuffer				= (PFNGLUNMAPBUFFERARBPROC)pContext->getProcAddress(QLatin1String("glUnmapBuffer"));
     glGetBufferParameteriv		= (PFNGLGETBUFFERPARAMETERIVARBPROC)pContext->getProcAddress(QLatin1String("glGetBufferParameteriv"));
     glGetBufferPointerv			= (PFNGLGETBUFFERPOINTERVARBPROC)pContext->getProcAddress(QLatin1String("glGetBufferPointerv"));
-    glDrawRangeElements			= (PFNGLDRAWRANGEELEMENTSPROC)pContext->getProcAddress(QLatin1String("glDrawRangeElements"));
+    //glDrawRangeElements			= (PFNGLDRAWRANGEELEMENTSPROC)pContext->getProcAddress(QLatin1String("glDrawRangeElements"));
 
     result= glBindBuffer and glDeleteBuffers and glGenBuffers and glIsBuffer and glBufferData and glBufferSubData and
-    glGetBufferSubData and glMapBuffer and glUnmapBuffer and glGetBufferParameteriv and glGetBufferPointerv and glDrawRangeElements;
+    glGetBufferSubData and glMapBuffer and glUnmapBuffer and glGetBufferParameteriv and glGetBufferPointerv;// and glDrawRangeElements;
 #endif
     return result;
 

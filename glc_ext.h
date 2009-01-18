@@ -42,7 +42,7 @@ extern PFNGLUNMAPBUFFERARBPROC			glUnmapBuffer;
 extern PFNGLGETBUFFERPARAMETERIVARBPROC	glGetBufferParameteriv;
 extern PFNGLGETBUFFERPOINTERVARBPROC	glGetBufferPointerv;
 // glDrawRangElement
-extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
+//extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
 
 // GL_ARB_shader_objects
 extern PFNGLCREATEPROGRAMOBJECTARBPROC	glCreateProgram;
