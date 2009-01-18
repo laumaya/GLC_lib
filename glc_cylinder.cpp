@@ -259,16 +259,19 @@ void GLC_Cylinder::glDraw(void)
 
 		GLuint max= (m_Discret + 1) * 2;
 		// Draw cylinder
-		glDrawRangeElements(GL_TRIANGLE_STRIP, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+		//glDrawRangeElements(GL_TRIANGLE_STRIP, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+		glDrawElements(GL_TRIANGLE_STRIP, max, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 
 		// Fill ended if needed
 		if (m_EndedIsCaped)
 		{
 			// Draw bottom cap
-			glDrawRangeElements(GL_TRIANGLE_STRIP, 0, m_Discret, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
+			//glDrawRangeElements(GL_TRIANGLE_STRIP, 0, m_Discret, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
+			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
 			max+= m_Discret;
 			// Draw top cap
-			glDrawRangeElements(GL_TRIANGLE_STRIP, 0, m_Discret, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
+			//glDrawRangeElements(GL_TRIANGLE_STRIP, 0, m_Discret, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
+			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
 		}
 
 		glDisableClientState(GL_VERTEX_ARRAY);

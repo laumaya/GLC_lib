@@ -416,7 +416,8 @@ void GLC_Mesh2::glDraw()
 			if (vboIsSupported)
 			{
 				// Use VBO
-				glDrawRangeElements(GL_TRIANGLES, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
+				//glDrawRangeElements(GL_TRIANGLES, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
+				glDrawElements(GL_TRIANGLES, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
 			}
 			else
 			{

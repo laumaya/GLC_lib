@@ -201,7 +201,8 @@ void GLC_Circle::glDraw(void)
 		// Use VBO
 		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glDrawRangeElements(GL_LINE_STRIP, 0, m_Step + 1, m_Step + 1, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+		//glDrawRangeElements(GL_LINE_STRIP, 0, m_Step + 1, m_Step + 1, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+		glDrawElements(GL_LINE_STRIP, m_Step + 1, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 	else

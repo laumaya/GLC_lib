@@ -280,7 +280,8 @@ void GLC_Box::glDraw(void)
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-		glDrawRangeElements(GL_TRIANGLES, 0, 36, 36, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+		//glDrawRangeElements(GL_TRIANGLES, 0, 36, 36, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_NORMAL_ARRAY);
