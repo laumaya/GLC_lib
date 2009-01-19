@@ -198,6 +198,9 @@ void GLC_Viewport::glPointing(GLint x, GLint y)
 // Update OpenGL Projection Matrix
 void GLC_Viewport::updateProjectionMat(void) const
 {
+	// Make opengl context attached the current One
+	m_pQGLWidget->makeCurrent();
+
 	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
 
@@ -213,6 +216,9 @@ void GLC_Viewport::updateProjectionMat(void) const
 //! Force the aspect ratio of the window
 void GLC_Viewport::forceAspectRatio(double ratio)
 {
+	// Make opengl context attached the current One
+	m_pQGLWidget->makeCurrent();
+
 	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
 
