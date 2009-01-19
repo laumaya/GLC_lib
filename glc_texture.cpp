@@ -150,6 +150,9 @@ void GLC_Texture::glLoadTexture(void)
 {
 	if (m_GlTextureID == 0)
 	{
+		// Make the texture context current
+		m_pQGLContext->makeCurrent();
+
 		// Test image size
 		if ((m_pTextureImage->height() > m_MaxTextureSize.height())
 				or (m_pTextureImage->width() > m_MaxTextureSize.width()))
