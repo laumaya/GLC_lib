@@ -116,7 +116,7 @@ GLC_Instance GLC_Factory::createCylinder(double radius, double length) const
 }
 
 // Create an GLC_World* with a QFile
-GLC_World* GLC_Factory::createWorld(QFile &file) const
+GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName) const
 {
 	GLC_World* pWorld= NULL;
 	if (QFileInfo(file).suffix().toLower() == "obj")
@@ -124,7 +124,10 @@ GLC_World* GLC_Factory::createWorld(QFile &file) const
 		GLC_ObjToWorld objToWorld(m_pQGLContext);
 		connect(&objToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= objToWorld.CreateWorldFromObj(file);
-		emit listOfAttachedFile(objToWorld.listOfAttachedFileName());
+		if (NULL != pAttachedFileName)
+		{
+			(*pAttachedFileName)= objToWorld.listOfAttachedFileName();
+		}
 	}
 	else if (QFileInfo(file).suffix().toLower() == "stl")
 	{
@@ -143,7 +146,10 @@ GLC_World* GLC_Factory::createWorld(QFile &file) const
 		GLC_3dsToWorld studioToWorld(m_pQGLContext);
 		connect(&studioToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= studioToWorld.CreateWorldFrom3ds(file);
-		emit listOfAttachedFile(studioToWorld.listOfAttachedFileName());
+		if (NULL != pAttachedFileName)
+		{
+			(*pAttachedFileName)= studioToWorld.listOfAttachedFileName();
+		}
 	}
 
 	return pWorld;

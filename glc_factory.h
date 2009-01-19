@@ -89,7 +89,7 @@ public:
 	GLC_Instance createCylinder(double radius, double length) const;
 
 	//! Create an GLC_World* with a QFile
-	GLC_World* createWorld(QFile &file) const;
+	GLC_World* createWorld(QFile &file, QStringList* pAttachedFileName= NULL) const;
 
 	//! Create default material
 	GLC_Material* createMaterial() const;
@@ -110,8 +110,6 @@ public:
 	signals:
 	//! For progress bar management
 	void currentQuantum(int) const;
-	//! The list of attached file (Emit after loading 3d model
-	void listOfAttachedFile(QStringList) const;
 
 //////////////////////////////////////////////////////////////////////
 // Private members
