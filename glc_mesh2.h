@@ -75,7 +75,7 @@ public:
 	inline unsigned int numberOfFaces() const {return m_NumberOfFaces;}
 
 	//! Return the number of vertex
-	inline unsigned int numberOfVertex() const {return m_VertexVector.size();}
+	inline unsigned int numberOfVertex() const {return m_NumberOfFaces * 3;}
 
 	//! Return the number of submaterial
 	inline unsigned int numberOfSubMaterial() const {return m_MaterialHash.size();}
@@ -101,7 +101,14 @@ public:
 	virtual GLC_VboGeom* clone() const;
 
 	//! Return true if color pear vertex is activated
-	bool ColorPearVertexIsAcivated() const {return m_ColorPearVertex;}
+	inline bool ColorPearVertexIsAcivated() const {return m_ColorPearVertex;}
+
+	//! Return the Vertex Vector
+	VertexVector getVertexVector() const;
+
+	//! Return the Index Vector
+	QVector<GLuint> getIndexVector() const;
+
 
 //@}
 

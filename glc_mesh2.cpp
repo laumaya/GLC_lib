@@ -58,6 +58,12 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 , m_IsSelected(false)
 , m_ColorPearVertex(meshToCopy.m_ColorPearVertex)
 {
+	// Copy Vertex and index data if necessary
+	if (m_VertexVector.isEmpty())
+	{
+		m_VertexVector= meshToCopy.getVertexVector();
+		m_IndexVector= meshToCopy.getIndexVector();
+	}
 	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << id();
 	// Add this mesh to inner material
 	MaterialHash::const_iterator i= m_MaterialHash.begin();
@@ -158,6 +164,54 @@ GLC_BoundingBox& GLC_Mesh2::boundingBox(void)
 GLC_VboGeom* GLC_Mesh2::clone() const
 {
 	return new GLC_Mesh2(*this);
+}
+
+// Return the Vertex Vector
+VertexVector GLC_Mesh2::getVertexVector() const
+{
+
+	if (0 != m_VboId)
+	{
+		// VBO created get data from VBO
+		const int sizeOfVbo= numberOfVertex();
+		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLC_Vertex);
+		VertexVector vertexVector(sizeOfVbo);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
+		GLvoid* pVbo = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		memcpy(vertexVector.data(), pVbo, dataSize);
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		return vertexVector;
+	}
+	else
+	{
+		return m_VertexVector;
+	}
+}
+
+// Return the Index Vector
+QVector<GLuint> GLC_Mesh2::getIndexVector() const
+{
+	if (0 != m_IboId)
+	{
+		// IBO created get data from IBO
+		const int sizeOfVbo= numberOfVertex();
+		const GLsizeiptr indexSize = sizeOfVbo * sizeof(GLuint);
+		QVector<GLuint> indexVector(sizeOfVbo);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
+		GLvoid* pIbo = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY);
+		memcpy(indexVector.data(), pIbo, indexSize);
+		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		return indexVector;
+	}
+	else
+	{
+		return m_IndexVector;
+	}
+
 }
 
 /////////////////////////////////////////////////////////////////////
