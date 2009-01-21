@@ -141,7 +141,17 @@ void GLC_VboGeom::glLoadTexture(void)
 void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 {
 	// Define Geometry's property
-	glPropGeom(isSelected, forceWire);
+	if(not GLC_State::isInSelectionMode())
+	{
+		glPropGeom(isSelected, forceWire);
+	}
+	else
+	{
+		glDisable(GL_BLEND);
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_LIGHTING);
+	}
+
 	const bool vboIsSupported= GLC_State::vboIsSupported();
 
 	if (vboIsSupported and (0 == m_VboId))

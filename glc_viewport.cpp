@@ -58,7 +58,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_OrbitCircleIsVisible(false)	// Show state of orbit Circle
 , m_pQGLWidget(GLWidget)		// Attached QGLWidget
 // the default backgroundColor
-, m_BackgroundColor((QColor::fromRgbF(0.39, 0.39, 0.39, 1.0)))
+, m_BackgroundColor(Qt::black)
 , m_ImagePlaneListID(0)
 {
 	// create a camera
@@ -333,37 +333,38 @@ void GLC_Viewport::glExecuteTargetCam()	//! \todo Create a display list
 // Display background image
 void GLC_Viewport::glExecuteImagePlane()
 {
-
-	if (m_pImagePlane != NULL)
+	if(not GLC_State::isInSelectionMode())
 	{
-		// Geometry validity
-		if (!m_pImagePlane->isValid())
+		if (m_pImagePlane != NULL)
 		{
-			m_pImagePlane->glLoadTexture();
-		}
-
-		// Geometry invalid or collection node list ID == 0
-		if ((!m_pImagePlane->isValid()) || (m_ImagePlaneListID == 0))
-		{
-			//qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pImagePlane->isValid();
-			//qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ImagePlaneListID;
-
-			if (m_ImagePlaneListID == 0)
+			// Geometry validity
+			if (!m_pImagePlane->isValid())
 			{
-				//qDebug() << "GLC_CollectionNode::GlExecute: List not found";
-				m_ImagePlaneListID= glGenLists(1);
+				m_pImagePlane->glLoadTexture();
 			}
-			glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
-				m_pImagePlane->glExecute(false, false);
-			glEndList();
-			//qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ImagePlaneListID << " created";
-		}
-		else
-		{
-			glCallList(m_ImagePlaneListID);
+
+			// Geometry invalid or collection node list ID == 0
+			if ((!m_pImagePlane->isValid()) || (m_ImagePlaneListID == 0))
+			{
+				//qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pImagePlane->isValid();
+				//qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ImagePlaneListID;
+
+				if (m_ImagePlaneListID == 0)
+				{
+					//qDebug() << "GLC_CollectionNode::GlExecute: List not found";
+					m_ImagePlaneListID= glGenLists(1);
+				}
+				glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
+					m_pImagePlane->glExecute(false, false);
+				glEndList();
+				//qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ImagePlaneListID << " created";
+			}
+			else
+			{
+				glCallList(m_ImagePlaneListID);
+			}
 		}
 	}
-
 }
 
 
@@ -399,49 +400,22 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 //! select an object and return is UID
 GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 {
-	//pGLWidget->updateGL(); // To avoid problem in some machine
-	const int BUFSIZE= 1024;
-	GLuint SelectBuf[BUFSIZE];
-
-	// Change to selection mode
-	beginSelection(x, y);
-
-	glSelectBuffer(BUFSIZE, SelectBuf);
-	glRenderMode(GL_SELECT);
-
-	// Init selection names
-	glInitNames();
-	glPushName(0);
-	// Update State
+	QColor backgroundColor(Qt::black);
+	backgroundColor.setAlpha(0);
+	m_pQGLWidget->qglClearColor(backgroundColor);
 	GLC_State::setSelectionMode(true);
 	// Draw the scene
 	pGLWidget->updateGL();
 	GLC_State::setSelectionMode(false);
 
-	// Compute number of hits
-	const GLint NbrHits= glRenderMode(GL_RENDER);
-	//qDebug() << "Number of hits : " << NbrHits;
-
-	// End of selection mode, restore Visualisation state
-	endSelection();
-	GLC_uint ReturnID= 0;
-	if (NbrHits > 0)
-	{
-		GLuint zMin = SelectBuf[1];	// Min object depth value
-		ReturnID= SelectBuf[3];		// Object Name
-
-		for (int i= 1; i < NbrHits; ++i)
-		{
-			if (SelectBuf[4*i+1] < zMin)
-		  	{
-		    	zMin = SelectBuf[4*i+1];	// Min object depth value
-		    	ReturnID= SelectBuf[4*i+3];	// Object Name
-		  	}
-		}
-	}
-	//qDebug() << "ReturnID : " << ReturnID;
-	return ReturnID;
-
+	GLubyte colorId[4];
+	glReadBuffer(GL_BACK);
+	glReadPixels(x, pGLWidget->size().height() - y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorId);
+	//qDebug() << "x= " << QString::number(x) << " , y= " << QString::number(y);
+	//qDebug() << "Color : " << QString::number(colorId[0]) << " " << QString::number(colorId[1]) << " " << QString::number(colorId[2]) << " " << QString::number(colorId[3]);
+	//qDebug() << "End of selection";
+	m_pQGLWidget->qglClearColor(m_BackgroundColor);
+	return GLC_Instance::decodeRgbaId(colorId);
 }
 
 // load background image
@@ -744,39 +718,5 @@ void GLC_Viewport::updateOrbitCircle()
 	{
 		m_pOrbitCircle->setRadius(RayonSph);
 	}
-
-}
-
-// Change to selection mode, save Visualisation state
-void GLC_Viewport::beginSelection(GLdouble x, GLdouble y)
-{
-	// Change to projection mode
-	glMatrixMode(GL_PROJECTION);
-	// Save projection matrix
-	glPushMatrix();
-	glLoadIdentity();
-	GLint Viewport[4];
-	glGetIntegerv(GL_VIEWPORT, Viewport);
-	// Load selection matrix
-	gluPickMatrix(x, Viewport[3] - y, SELECT_WIDTH, SELECT_HEIGHT, Viewport);
-
-	// Calculate The Aspect Ratio Of The Window
-	double AspectRatio;
-	AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
-	gluPerspective(m_dFov, AspectRatio, m_dCamDistMin, m_dCamDistMax);
-
-	// Back to visualisation mode
-	glMatrixMode(GL_MODELVIEW);
-}
-
-// End of selection mode, restore Visualisation state
-void GLC_Viewport::endSelection(void)
-{
-	// Change to projection mode
-	glMatrixMode(GL_PROJECTION);
-	// retore projection matrix
-	glPopMatrix();
-	// Back to visualisation mode
-	glMatrixMode(GL_MODELVIEW);
 
 }

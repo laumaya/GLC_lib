@@ -110,6 +110,8 @@ public:
 	inline int getNumberOfInstance() const
 	{return *m_pNumberOfInstance;}
 
+	//! Return the GLC_uint decoded ID from RGBA encoded ID
+	static GLC_uint decodeRgbaId(const GLubyte*);
 
 //@}
 
@@ -180,8 +182,12 @@ private:
 private:
 	//! compute the instance bounding box
 	void computeBoundingBox(void);
+
 	//! Clear current instance
 	void clear();
+
+	//! Encode Id to RGBA color
+	void encodeIdInRGBA();
 
 //////////////////////////////////////////////////////////////////////
 // Private members
@@ -212,6 +218,9 @@ private:
 
 	//! Visibility
 	bool m_IsVisible;
+
+	//! The instance color ID
+	GLubyte m_colorId[4];
 
 };
 

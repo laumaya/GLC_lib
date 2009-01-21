@@ -426,7 +426,7 @@ void GLC_Mesh2::glDraw()
     {
     	if (!iMaterialGroup.value()->isEmpty())
     	{
-    		if (not GLC_State::selectionShaderUsed() or not m_IsSelected)
+    		if ((not GLC_State::selectionShaderUsed() or not m_IsSelected) and not GLC_State::isInSelectionMode())
     		{
         		// Set current material
         		if (iMaterialGroup.key() == 0)
@@ -459,7 +459,7 @@ void GLC_Mesh2::glDraw()
     			glColor4f(red, green, blue, alpha);
     			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
     		}
-    		else
+    		else if(not GLC_State::isInSelectionMode())
     		{
     			// Use Shader
         		glDisable(GL_TEXTURE_2D);

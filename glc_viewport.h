@@ -291,12 +291,6 @@ private:
 	//! Update orbit circle dimensions
 	void updateOrbitCircle();
 
-	//! Change to selection mode, save Visualisation state
-	void beginSelection(GLdouble x, GLdouble y);
-
-	//! End of selection mode, restore Visualisation state
-	void endSelection(void);
-
 //////////////////////////////////////////////////////////////////////
 // Publics Member
 //////////////////////////////////////////////////////////////////////

@@ -26,6 +26,7 @@
 
 #include "glc_instance.h"
 #include "glc_selectionmaterial.h"
+#include "glc_state.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -33,7 +34,8 @@
 
 // Default constructor
 GLC_Instance::GLC_Instance()
-: m_pGeom(NULL)
+: GLC_Object()
+, m_pGeom(NULL)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
 , m_MatPos()
@@ -43,13 +45,17 @@ GLC_Instance::GLC_Instance()
 , m_PolyMode(GL_FILL)
 , m_IsVisible(true)
 {
+	// Encode Color Id
+	encodeIdInRGBA();
+
 	//qDebug() << "GLC_Instance::GLC_Instance null instance ID = " << m_Uid;
 	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
 }
 
 // Contruct instance with a geometry
 GLC_Instance::GLC_Instance(GLC_VboGeom* pGeom)
-: m_pGeom(pGeom)
+: GLC_Object()
+, m_pGeom(pGeom)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
 , m_MatPos()
@@ -59,7 +65,11 @@ GLC_Instance::GLC_Instance(GLC_VboGeom* pGeom)
 , m_PolyMode(GL_FILL)
 , m_IsVisible(true)
 {
+	// Encode Color Id
+	encodeIdInRGBA();
+
 	setName(pGeom->name());
+
 	//qDebug() << "GLC_Instance::GLC_Instance ID = " << m_Uid;
 	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
 }
@@ -78,6 +88,9 @@ GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
 , m_IsVisible(inputNode.m_IsVisible)
 
 {
+	// Encode Color Id
+	encodeIdInRGBA();
+
 	if (NULL != inputNode.m_pBoundingBox)
 	{
 		m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
@@ -96,6 +109,9 @@ GLC_Instance& GLC_Instance::operator=(const GLC_Instance& inputNode)
 	{
 		clear();
 		m_Uid= inputNode.m_Uid;
+		// Encode Color Id
+		encodeIdInRGBA();
+
 		m_Name= inputNode.m_Name;
 
 		m_pGeom= inputNode.m_pGeom;
@@ -184,7 +200,22 @@ GLC_Instance GLC_Instance::instanciate()
 {
 	GLC_Instance instance(*this);
 	instance.m_Uid= glc::GLC_GenID();
+	// Encode Color Id
+	encodeIdInRGBA();
+
 	return instance;
+}
+
+// Return the GLC_uint decoded ID from RGBA encoded ID
+GLC_uint GLC_Instance::decodeRgbaId(const GLubyte* pcolorId)
+{
+	GLC_uint returnId= 0;
+	returnId|= (GLC_uint)pcolorId[0] << (0 * 8);
+	returnId|= (GLC_uint)pcolorId[1] << (1 * 8);
+	returnId|= (GLC_uint)pcolorId[2] << (2 * 8);
+	returnId|= (GLC_uint)pcolorId[3] << (3 * 8);
+
+	return returnId;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -259,11 +290,17 @@ void GLC_Instance::glExecute()
 {
 	if (NULL == m_pGeom) return;
 
+
 	// Object ID for selection purpose
-	glLoadName(id());
+	//glLoadName(id());
+
 	// Save current OpenGL Matrix
 	glPushMatrix();
 	glVisProperties();
+	if(GLC_State::isInSelectionMode())
+	{
+		glColor4ubv(m_colorId);
+	}
 	m_pGeom->glExecute(m_IsSelected, ((m_PolyMode != GL_FILL)));
 	// Restore OpenGL Matrix
 	glPopMatrix();
@@ -334,6 +371,15 @@ void GLC_Instance::clear()
 	// invalidate the bounding box
 	m_IsBoundingBoxValid= false;
 
+}
+
+//! Encode Id to RGBA color
+void GLC_Instance::encodeIdInRGBA()
+{
+	m_colorId[0]= m_Uid >> (0 * 8);
+	m_colorId[1]= m_Uid >> (1 * 8);
+	m_colorId[2]= m_Uid >> (2 * 8);
+	m_colorId[3]= m_Uid >> (3 * 8);
 }
 
 
