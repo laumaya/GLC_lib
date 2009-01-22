@@ -207,13 +207,14 @@ GLC_Instance GLC_Instance::instanciate()
 }
 
 // Return the GLC_uint decoded ID from RGBA encoded ID
-GLC_uint GLC_Instance::decodeRgbaId(const GLubyte* pcolorId)
+GLC_uint GLC_Instance::decodeRgbId(const GLubyte* pcolorId)
 {
 	GLC_uint returnId= 0;
 	returnId|= (GLC_uint)pcolorId[0] << (0 * 8);
 	returnId|= (GLC_uint)pcolorId[1] << (1 * 8);
 	returnId|= (GLC_uint)pcolorId[2] << (2 * 8);
-	returnId|= (GLC_uint)pcolorId[3] << (3 * 8);
+	// Only get first 24 bits
+	//returnId|= (GLC_uint)pcolorId[3] << (3 * 8);
 
 	return returnId;
 }
@@ -299,7 +300,8 @@ void GLC_Instance::glExecute()
 	glVisProperties();
 	if(GLC_State::isInSelectionMode())
 	{
-		glColor4ubv(m_colorId);
+		// D'ont use Alpha component
+		glColor3ubv(m_colorId);
 	}
 	m_pGeom->glExecute(m_IsSelected, ((m_PolyMode != GL_FILL)));
 	// Restore OpenGL Matrix
@@ -376,10 +378,10 @@ void GLC_Instance::clear()
 //! Encode Id to RGBA color
 void GLC_Instance::encodeIdInRGBA()
 {
-	m_colorId[0]= m_Uid >> (0 * 8);
-	m_colorId[1]= m_Uid >> (1 * 8);
-	m_colorId[2]= m_Uid >> (2 * 8);
-	m_colorId[3]= m_Uid >> (3 * 8);
+	m_colorId[0]= static_cast<GLubyte>((m_Uid >> (0 * 8)) & 0xFF);
+	m_colorId[1]= static_cast<GLubyte>((m_Uid >> (1 * 8)) & 0xFF);
+	m_colorId[2]= static_cast<GLubyte>((m_Uid >> (2 * 8)) & 0xFF);
+	m_colorId[3]= static_cast<GLubyte>((m_Uid >> (3 * 8)) & 0xFF);
 }
 
 

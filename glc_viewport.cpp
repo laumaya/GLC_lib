@@ -180,8 +180,6 @@ void GLC_Viewport::glPointing(GLint x, GLint y)
 	if (fabs(Depth - 1.0) > EPSILON)
 	{	// Geometry find -> Update camera's target position
 		const GLC_Point4d target(pX, pY, pZ);
-		const double Distance= (m_pViewCam->getEye() - target).norm();
-		qDebug("Return Distance: %e\n", Distance);
 		m_pViewCam->setTargetCam(target);
 	}
 	else
@@ -400,22 +398,64 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 //! select an object and return is UID
 GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 {
-	QColor backgroundColor(Qt::black);
-	backgroundColor.setAlpha(0);
-	m_pQGLWidget->qglClearColor(backgroundColor);
+	m_pQGLWidget->qglClearColor(Qt::black);
 	GLC_State::setSelectionMode(true);
 	// Draw the scene
 	pGLWidget->updateGL();
 	GLC_State::setSelectionMode(false);
 
-	GLubyte colorId[4];
+	// Read the back buffer
 	glReadBuffer(GL_BACK);
-	glReadPixels(x, pGLWidget->size().height() - y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorId);
-	//qDebug() << "x= " << QString::number(x) << " , y= " << QString::number(y);
-	//qDebug() << "Color : " << QString::number(colorId[0]) << " " << QString::number(colorId[1]) << " " << QString::number(colorId[2]) << " " << QString::number(colorId[3]);
-	//qDebug() << "End of selection";
+	// Use 5 pixels by 5 pixels Square
+	GLubyte colorId[100]; // 5 * 5= 25 pixels 25 * 4 = 100 bytes
+	// Lower left corner of the square
+	int newX= x - 2;
+	int newY= (pGLWidget->size().height() - y) - 2;
+	if (newX < 0) newX= 0;
+	if (newY < 0) newY= 0;
+
+	// Get the array of pixels
+	glReadPixels(newX, newY, 5, 5, GL_RGBA, GL_UNSIGNED_BYTE, colorId);
+
+	// Restore Background color
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);
-	return GLC_Instance::decodeRgbaId(colorId);
+
+	QList<GLC_uint> idList;
+	QList<int> idWeight;
+
+	// Find the most meaningful color
+	for (int i= 0; i < 25; ++i)
+	{
+		GLC_uint id= GLC_Instance::decodeRgbId(&colorId[i * 4]);
+		if (idList.contains(id))
+		{
+			++(idWeight[idList.indexOf(id)]);
+		}
+		else if (id != 0)
+		{
+			idList.append(id);
+			idWeight.append(1);
+		}
+	}
+	GLC_uint returnId= 0;
+	// If the list is empty return 0
+	if (not idList.isEmpty())
+	{
+		int maxWeight= 0;
+		int maxIndex= 0;
+		const int listSize= idWeight.size();
+		for (int i= 0; i < listSize; ++i)
+		{
+			if (maxWeight < idWeight[i])
+			{
+				maxWeight= idWeight[i];
+				maxIndex= i;
+			}
+		}
+		returnId= idList[maxIndex];
+	}
+
+	return returnId;
 }
 
 // load background image

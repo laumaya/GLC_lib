@@ -110,8 +110,8 @@ public:
 	inline int getNumberOfInstance() const
 	{return *m_pNumberOfInstance;}
 
-	//! Return the GLC_uint decoded ID from RGBA encoded ID
-	static GLC_uint decodeRgbaId(const GLubyte*);
+	//! Return the GLC_uint decoded ID from RGB encoded ID
+	static GLC_uint decodeRgbId(const GLubyte*);
 
 //@}
 
