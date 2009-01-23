@@ -296,6 +296,13 @@ void GLC_Mesh2::addTriangles(const VertexList &triangles, GLC_Material* pMateria
 // Reverse mesh normal
 void GLC_Mesh2::reverseNormal()
 {
+	// Copy Vertex and index data if necessary
+	if (m_VertexVector.isEmpty())
+	{
+		m_VertexVector= getVertexVector();
+		m_IndexVector= getIndexVector();
+	}
+
 	const int max= m_VertexVector.size();
 	for (int i= 0; i < max; ++i)
 	{
