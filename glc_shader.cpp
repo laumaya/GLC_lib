@@ -129,7 +129,7 @@ void GLC_Shader::use()
 // Use specified program shader
 void GLC_Shader::use(GLuint shaderId)
 {
-
+	if (GLC_State::isInSelectionMode()) return;
 	//qDebug() << "GLC_Shader::use(GLuint shaderId)";
 	// Test if the program shader is not already the current one
 	if (m_CurrentProgramm != shaderId)
