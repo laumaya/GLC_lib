@@ -37,36 +37,42 @@ GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
 :GLC_Object(name)
 , m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pBoundingBox(NULL)
-, m_pMaterial(NULL)			// have to be set later in constructor
+, m_MaterialHash()
 , m_UseColorPerVertex(false)
 , m_VertexVector()
 , m_IndexVector()
 , m_VboId(0)
 , m_IboId(0)
 , m_IsWire(typeIsWire)		// the geometry type
-, m_IsTransparent(false)	// Not transparent by default
+, m_TransparentMaterialNumber(0)
 {
-	// Material is set here
-	setMaterial(new GLC_Material());
+
 }
 // Copy constructor
 GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 :GLC_Object(sourceGeom)
 , m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pBoundingBox(NULL)
-, m_pMaterial(NULL)			// have to be set later in constructor
+, m_MaterialHash(sourceGeom.m_MaterialHash)
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
 , m_VertexVector(sourceGeom.m_VertexVector)
 , m_IndexVector(sourceGeom.m_IndexVector)
 , m_VboId(0)
 , m_IboId(0)
 , m_IsWire(sourceGeom.m_IsWire)
-, m_IsTransparent(sourceGeom.m_IsTransparent)
+, m_TransparentMaterialNumber(sourceGeom.m_TransparentMaterialNumber)
 {
 	m_Uid= glc::GLC_GenID();
-	// Material is copy here
-	setMaterial(new GLC_Material());
-	m_pMaterial->setMaterial(sourceGeom.material());
+
+	// Add this mesh to inner material
+	MaterialHash::const_iterator i= m_MaterialHash.begin();
+    while (i != m_MaterialHash.constEnd())
+    {
+        // update inner material use table
+        i.value()->addGLC_Geom(this);
+        ++i;
+    }
+
 	if (NULL != sourceGeom.m_pBoundingBox)
 	{
 		m_pBoundingBox= new GLC_BoundingBox(*sourceGeom.m_pBoundingBox);
@@ -84,46 +90,98 @@ GLC_VboGeom::~GLC_VboGeom()
 		if (0 != m_IboId)
 			glDeleteBuffers(1, &m_IboId);
 	}
-	// Material
-	if (NULL != m_pMaterial)
+	// delete mesh inner material
 	{
-		m_pMaterial->delGLC_Geom(id());	//Remove Geometry from the material usage collection
-		if (m_pMaterial->isUnused()) delete m_pMaterial;
+		MaterialHash::const_iterator i= m_MaterialHash.begin();
+	    while (i != m_MaterialHash.constEnd())
+	    {
+	        // delete the material if necessary
+	        i.value()->delGLC_Geom(id());
+	        if (i.value()->isUnused()) delete i.value();
+	        ++i;
+	    }
 	}
+	m_MaterialHash.clear();
 
-	if (NULL != m_pBoundingBox)
-	{
-		delete m_pBoundingBox;
-	}
+	delete m_pBoundingBox;
+
+}
+
+/////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+//! Return material index if Material is the same than a material already in the mesh
+GLC_uint GLC_VboGeom::materialIndex(const GLC_Material& mat) const
+{
+	int index= 0;
+	MaterialHash::const_iterator iEntry= m_MaterialHash.begin();
+
+    while ((iEntry != m_MaterialHash.constEnd()) and !(*(iEntry.value()) == mat))
+    {
+        ++iEntry;
+    }
+    if (iEntry != m_MaterialHash.constEnd())
+    {
+    	index= iEntry.key();
+    }
+	return index;
 }
 
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Material
-void GLC_VboGeom::setMaterial(GLC_Material* pMat)
+// Replace the Master material
+void GLC_VboGeom::replaceMasterMaterial(GLC_Material* pMaterial)
 {
-	if (pMat != m_pMaterial)
+	if (not m_MaterialHash.isEmpty())
 	{
-		if (pMat != NULL)
+		Q_ASSERT(1 == m_MaterialHash.size());
+		if (pMaterial != firstMaterial())
 		{
-			pMat->addGLC_Geom(this);
+			// Remove the first material
+			MaterialHash::iterator iMaterial= m_MaterialHash.begin();
+	        // delete the material if necessary
+			iMaterial.value()->delGLC_Geom(id());
+			if (iMaterial.value()->isTransparent())
+			{
+				--m_TransparentMaterialNumber;
+			}
+	        if (iMaterial.value()->isUnused()) delete iMaterial.value();
+			m_MaterialHash.erase(iMaterial);
+			addMaterial(pMaterial);
 		}
+	}
+	else
+	{
+		addMaterial(pMaterial);
+	}
+}
 
-		if (m_pMaterial != NULL)
-		{
-			m_pMaterial->delGLC_Geom(id());
-			if (m_pMaterial->isUnused()) delete m_pMaterial;
-		}
+// Add material to mesh
+void GLC_VboGeom::addMaterial(GLC_Material* pMaterial)
+{
+	if (pMaterial != NULL)
+	{
+		const GLC_uint materialID= pMaterial->id();
+		MaterialHash::const_iterator iMaterial= m_MaterialHash.find(materialID);
+		// Check if there is a material at specified index
+		Q_ASSERT(iMaterial == m_MaterialHash.end());
 
-		m_pMaterial= pMat;
+		// Add this geometry in the material use table
+		pMaterial->addGLC_Geom(this);
+		// Add the Material to Material hash table
+		m_MaterialHash.insert(materialID, pMaterial);
 
 		// Test if the material is transparent
-		if (m_pMaterial->isTransparent())
+		if (pMaterial->isTransparent())
 		{
-			setTransparency(true);
+			qDebug() << "Add transparent material";
+			++m_TransparentMaterialNumber;
 		}
+		// Invalid the geometry
+		m_GeometryIsValid = false;
 	}
 }
 
@@ -134,16 +192,31 @@ void GLC_VboGeom::setMaterial(GLC_Material* pMat)
 // if the geometry have a texture, load it
 void GLC_VboGeom::glLoadTexture(void)
 {
-	m_pMaterial->glLoadTexture();
+	MaterialHash::iterator iMaterial= m_MaterialHash.begin();
+
+    while (iMaterial != m_MaterialHash.constEnd())
+    {
+        // Load texture of mesh materials
+        iMaterial.value()->glLoadTexture();
+        ++iMaterial;
+    }
 }
 
 // Geometry display
-void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
+void GLC_VboGeom::glExecute(bool isSelected, bool transparent)
 {
+	if (m_MaterialHash.isEmpty())
+	{
+		GLC_Material* pMaterial= new GLC_Material();
+		pMaterial->setName(name());
+		pMaterial->addGLC_Geom(this);
+		m_MaterialHash.insert(pMaterial->id(), pMaterial);
+
+	}
 	// Define Geometry's property
 	if(not GLC_State::isInSelectionMode())
 	{
-		glPropGeom(isSelected, forceWire);
+		glPropGeom(isSelected);
 	}
 	else
 	{
@@ -163,7 +236,7 @@ void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
 
-		glDraw();
+		glDraw(transparent);
 
 		m_GeometryIsValid= true;
 
@@ -173,7 +246,7 @@ void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 	}
 	else // VBO not supported
 	{
-		glDraw();
+		glDraw(transparent);
 		m_GeometryIsValid= true;
 	}
 
@@ -187,30 +260,40 @@ void GLC_VboGeom::glExecute(bool isSelected, bool forceWire)
 }
 
 // Virtual interface for OpenGL Geometry properties.
-void GLC_VboGeom::glPropGeom(bool isSelected, bool forceWire)
+void GLC_VboGeom::glPropGeom(bool isSelected)
 {
+	Q_ASSERT(not m_MaterialHash.isEmpty());
 
-	if(m_IsWire || forceWire)
+	if(m_IsWire and (m_MaterialHash.size() == 1))
 	{
+		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
+		const GLfloat red= pCurrentMaterial->getDiffuseColor().redF();
+		const GLfloat green= pCurrentMaterial->getDiffuseColor().greenF();
+		const GLfloat blue= pCurrentMaterial->getDiffuseColor().blueF();
+		const GLfloat alpha= pCurrentMaterial->getDiffuseColor().alphaF();
 
-		if (isSelected) GLC_SelectionMaterial::glExecute();
-		else glColor4f(redF(), greenF(), blueF(), alphaF());			// is color
-	}
-	else if (m_pMaterial->getAddRgbaTexture())
-	{
-		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_LIGHTING);
-		m_pMaterial->glExecute();
+		glColor4f(red, green, blue, alpha);
 		if (isSelected) GLC_SelectionMaterial::glExecute();
 	}
-	else
+	else if (m_MaterialHash.size() == 1)
 	{
-		glDisable(GL_TEXTURE_2D);
-		glEnable(GL_LIGHTING);
-		if (isSelected) GLC_SelectionMaterial::glExecute();
-		else m_pMaterial->glExecute();
+		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
+		if (pCurrentMaterial->getAddRgbaTexture())
+		{
+			glEnable(GL_TEXTURE_2D);
+			glEnable(GL_LIGHTING);
+			pCurrentMaterial->glExecute();
+			if (isSelected) GLC_SelectionMaterial::glExecute();
+		}
+		else
+		{
+			glDisable(GL_TEXTURE_2D);
+			glEnable(GL_LIGHTING);
+			if (isSelected) GLC_SelectionMaterial::glExecute();
+			else pCurrentMaterial->glExecute();
+		}
 	}
 
 	// OpenGL error handler

@@ -61,19 +61,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 	//! Return Color Red component
 	GLdouble getdRed(void)
-	{return m_MainCircle.redF();}
+	{return m_MainCircle.firstMaterial()->getDiffuseColor().redF();}
 
 	//! Return Color Green component
 	GLdouble getdGreen(void)
-	{return m_MainCircle.greenF();}
-	
+	{return m_MainCircle.firstMaterial()->getDiffuseColor().greenF();}
+
 	//! Return Color blue component
 	GLdouble getdBlue(void)
-	{return m_MainCircle.blueF();}
-	
+	{return m_MainCircle.firstMaterial()->getDiffuseColor().blueF();}
+
 	//! Return Color Alpha component
 	GLdouble getdAlpha(void)
-	{return m_MainCircle.alphaF();}
+	{return m_MainCircle.firstMaterial()->getDiffuseColor().alphaF();}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -90,20 +90,20 @@ public:
 
 	//! Set Arcs position in concordance with mouse position
 	void mapArcs(const GLC_Matrix4x4 &Matrice);
-	
+
 	//! overload function setColor(color);
 	void setRGBAColor(const QColor&);
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-public:	
+public:
 	//! orbit circle OpenGL Execution
 	void glExecute(double Profondeur);
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ private:
 	GLC_Factory* m_pFactory;
 	//! Main Circle
 	GLC_Circle m_MainCircle;
-	//! Arc 1 showing orbit sphere orientation	
+	//! Arc 1 showing orbit sphere orientation
 	GLC_Instance m_Arc1;
 	//! Arc 1 positionning Matrix
 	GLC_Matrix4x4 m_MatArc1;

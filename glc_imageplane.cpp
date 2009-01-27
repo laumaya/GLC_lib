@@ -40,8 +40,10 @@ GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport)
 , m_dZpos(0)
 , m_PolyFace(GL_FRONT_AND_BACK)	// Default Faces style
 , m_PolyMode(GL_FILL)			// Default polyganal mode
-
+, m_BoundingBox()
 {
+	addMaterial(new GLC_Material());
+
 	updateZPosition();
 }
 
@@ -62,7 +64,7 @@ GLC_VboGeom* GLC_ImagePlane::clone() const
 //! Return the geometry bounding box
 GLC_BoundingBox& GLC_ImagePlane::boundingBox()
 {
-	return *(new GLC_BoundingBox());
+	return m_BoundingBox;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -72,7 +74,7 @@ GLC_BoundingBox& GLC_ImagePlane::boundingBox()
 void GLC_ImagePlane::loadImageFile(const QGLContext *pContext, const QString ImageName)
 {
 	GLC_Texture* pImgTexture= new GLC_Texture(pContext, ImageName);
-	m_pMaterial->setTexture(pImgTexture);
+	firstMaterial()->setTexture(pImgTexture);
 }
 
 // Update image size
@@ -129,7 +131,7 @@ void GLC_ImagePlane::updateZPosition(void)
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 // Plane Display
-void GLC_ImagePlane::glDraw(void)
+void GLC_ImagePlane::glDraw(bool)
 {
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	const double LgImgSur2= m_dLgImage / 2;

@@ -114,9 +114,6 @@ public:
 	//! Return the showing state
 	inline bool getShowState() const {return m_IsInShowSate;}
 
-	//! Return true if instance transparency is checked
-	inline bool instanceTransparencyIsChecked() const {return m_CheckInstanceTransparency;}
-
 	//! Return the number of drawable objects
 	int numberOfDrawableObjects() const;
 
@@ -207,11 +204,6 @@ public:
 			m_pBoundingBox= NULL;
 		}
 	}
-	//! Update instance transparency
-	void updateInstancesTransparency();
-
-	//! Check For instances transparency
-	inline void checkInstancesTransparency(bool flag) {m_CheckInstanceTransparency= flag;}
 
 //@}
 
@@ -277,14 +269,8 @@ private:
 	//! Not transparent Node Hash Table
 	PointerNodeHash m_NotTransparentNodes;
 
-	//! Transparent Node Hash Table
-	PointerNodeHash m_TransparentNodes;
-
 	//! Show State
 	bool m_IsInShowSate;
-
-	//! Check instances transparency
-	bool m_CheckInstanceTransparency;
 
 };
 #endif //GLC_COLLECTION_H_

@@ -38,7 +38,6 @@ GLC_Mesh2::GLC_Mesh2()
 :GLC_VboGeom("Mesh", false)
 , m_Vertex()
 , m_MaterialGroup()
-, m_MaterialHash()
 , m_NumberOfFaces(0)
 , m_IsSelected(false)
 , m_ColorPearVertex(false)
@@ -53,7 +52,6 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 : GLC_VboGeom(meshToCopy)
 , m_Vertex(meshToCopy.m_Vertex)
 , m_MaterialGroup()
-, m_MaterialHash(meshToCopy.m_MaterialHash)
 , m_NumberOfFaces(meshToCopy.m_NumberOfFaces)
 , m_IsSelected(false)
 , m_ColorPearVertex(meshToCopy.m_ColorPearVertex)
@@ -65,15 +63,8 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 		m_IndexVector= meshToCopy.getIndexVector();
 	}
 	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << id();
-	// Add this mesh to inner material
-	MaterialHash::const_iterator i= m_MaterialHash.begin();
-    while (i != m_MaterialHash.constEnd())
-    {
-        // update inner material use table
-        i.value()->addGLC_Geom(this);
-        ++i;
-    }
-    // Copy Material group IBO
+
+	// Copy Material group IBO
 	MaterialGroupHash::const_iterator j= meshToCopy.m_MaterialGroup.begin();
     while (j != meshToCopy.m_MaterialGroup.constEnd())
     {
@@ -86,17 +77,6 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 
 GLC_Mesh2::~GLC_Mesh2(void)
 {
-	// delete mesh inner material
-	{
-		MaterialHash::const_iterator i= m_MaterialHash.begin();
-	    while (i != m_MaterialHash.constEnd())
-	    {
-	        // delete the material if necessary
-	        i.value()->delGLC_Geom(id());
-	        if (i.value()->isUnused()) delete i.value();
-	        ++i;
-	    }
-	}
     // delete mesh inner index material group
 	{
 		MaterialGroupHash::const_iterator i= m_MaterialGroup.begin();
@@ -108,30 +88,12 @@ GLC_Mesh2::~GLC_Mesh2(void)
 	    }
 	}
 
-	m_MaterialHash.clear();
 	m_Vertex.clear();
 	m_MaterialGroup.clear();
 }
 /////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
-
-//! Return material index if Material is the same than a material already in the mesh
-GLC_uint GLC_Mesh2::materialIndex(const GLC_Material& mat) const
-{
-	int index= 0;
-	MaterialHash::const_iterator iEntry= m_MaterialHash.begin();
-
-    while ((iEntry != m_MaterialHash.constEnd()) and !(*(iEntry.value()) == mat))
-    {
-        ++iEntry;
-    }
-    if (iEntry != m_MaterialHash.constEnd())
-    {
-    	index= iEntry.key();
-    }
-	return index;
-}
 
 // return the mesh bounding box
 GLC_BoundingBox& GLC_Mesh2::boundingBox(void)
@@ -217,33 +179,6 @@ QVector<GLuint> GLC_Mesh2::getIndexVector() const
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-// Add material to mesh
-void GLC_Mesh2::addMaterial(GLC_Material* pMaterial)
-{
-	if (pMaterial != NULL)
-	{
-		const GLC_uint materialID= pMaterial->id();
-		MaterialHash::const_iterator iMaterial= m_MaterialHash.find(materialID);
-		// Check if there is a material at specified index
-		Q_ASSERT(iMaterial == m_MaterialHash.end());
-
-		// Add this geometry in the material use table
-		pMaterial->addGLC_Geom(this);
-		// Add the Material to Material hash table
-		m_MaterialHash.insert(materialID, pMaterial);
-		// Test if the material is transparent
-		if (pMaterial->isTransparent() && (m_MaterialHash.size() == 1))
-		{
-			setTransparency(true);
-		}
-		else if (isTransparent() && !pMaterial->isTransparent())
-		{
-			setTransparency(false);
-		}
-		// Invalid the geometry
-		m_GeometryIsValid = false;
-	}
-}
 
 // Add triangles with the same material to the mesh
 void GLC_Mesh2::addTriangles(const VertexList &triangles, GLC_Material* pMaterial)
@@ -315,10 +250,10 @@ void GLC_Mesh2::reverseNormal()
 }
 
 // Specific glExecute method
-void GLC_Mesh2::glExecute(bool isSelected, bool forceWire)
+void GLC_Mesh2::glExecute(bool isSelected, bool transparent)
 {
 	m_IsSelected= isSelected;
-	GLC_VboGeom::glExecute(isSelected, forceWire);
+	GLC_VboGeom::glExecute(isSelected, transparent);
 	m_IsSelected= false;
 }
 
@@ -326,24 +261,9 @@ void GLC_Mesh2::glExecute(bool isSelected, bool forceWire)
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
-// if the geometry have a texture, load it
-void GLC_Mesh2::glLoadTexture(void)
-{
-	// Load texture of the master material
-	m_pMaterial->glLoadTexture();
-
-	MaterialHash::iterator iMaterial= m_MaterialHash.begin();
-
-    while (iMaterial != m_MaterialHash.constEnd())
-    {
-        // Load texture of mesh materials
-        iMaterial.value()->glLoadTexture();
-        ++iMaterial;
-    }
-}
 
 // Virtual interface for OpenGL Geometry set up.
-void GLC_Mesh2::glDraw()
+void GLC_Mesh2::glDraw(bool transparent)
 {
 	Q_ASSERT(m_GeometryIsValid or not m_VertexVector.isEmpty());
 
@@ -431,7 +351,7 @@ void GLC_Mesh2::glDraw()
 	iMaterialGroup= m_MaterialGroup.begin();
     while (iMaterialGroup != m_MaterialGroup.constEnd())
     {
-    	if (!iMaterialGroup.value()->isEmpty())
+    	if (not iMaterialGroup.value()->isEmpty())
     	{
     		if ((not GLC_State::selectionShaderUsed() or not m_IsSelected) and not GLC_State::isInSelectionMode())
     		{
@@ -439,7 +359,7 @@ void GLC_Mesh2::glDraw()
         		if (iMaterialGroup.key() == 0)
         		{
         			// Use default material
-        			pCurrentMaterial= m_pMaterial;
+        			pCurrentMaterial= firstMaterial();
         		}
         		else
         		{
@@ -447,24 +367,27 @@ void GLC_Mesh2::glDraw()
         			Q_ASSERT(pCurrentMaterial != NULL);
         		}
 
-        		// Execute current material
-    			if (pCurrentMaterial->getAddRgbaTexture())
-    			{
-    				glEnable(GL_TEXTURE_2D);
-    			}
-    			else
-    			{
-    				glDisable(GL_TEXTURE_2D);
-    			}
-    			// Activate material
-    			pCurrentMaterial->glExecute();
-    			const GLfloat red= pCurrentMaterial->getDiffuseColor().redF();
-    			const GLfloat green= pCurrentMaterial->getDiffuseColor().greenF();
-    			const GLfloat blue= pCurrentMaterial->getDiffuseColor().blueF();
-    			const GLfloat alpha= pCurrentMaterial->getDiffuseColor().alphaF();
+        		if (pCurrentMaterial->isTransparent() == transparent)
+        		{
+            		// Execute current material
+        			if (pCurrentMaterial->getAddRgbaTexture())
+        			{
+        				glEnable(GL_TEXTURE_2D);
+        			}
+        			else
+        			{
+        				glDisable(GL_TEXTURE_2D);
+        			}
+        			// Activate material
+        			pCurrentMaterial->glExecute();
+        			const GLfloat red= pCurrentMaterial->getDiffuseColor().redF();
+        			const GLfloat green= pCurrentMaterial->getDiffuseColor().greenF();
+        			const GLfloat blue= pCurrentMaterial->getDiffuseColor().blueF();
+        			const GLfloat alpha= pCurrentMaterial->getDiffuseColor().alphaF();
 
-    			glColor4f(red, green, blue, alpha);
-    			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+        			glColor4f(red, green, blue, alpha);
+        			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+        		}
     		}
     		else if(not GLC_State::isInSelectionMode())
     		{
@@ -473,18 +396,22 @@ void GLC_Mesh2::glDraw()
     		}
 
 			max= static_cast<GLuint>(iMaterialGroup.value()->size());
-			// Draw Mesh
-			if (vboIsSupported)
-			{
-				// Use VBO
-				//glDrawRangeElements(GL_TRIANGLES, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
-				glDrawElements(GL_TRIANGLES, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
-			}
-			else
-			{
-				// Use Vertex Array
-				glDrawElements(GL_TRIANGLES, max, GL_UNSIGNED_INT, &m_IndexVector.data()[cur]);
-			}
+    		if ((pCurrentMaterial->isTransparent() == transparent) or m_IsSelected or GLC_State::isInSelectionMode())
+    		{
+    			// Draw Mesh
+    			if (vboIsSupported)
+    			{
+    				// Use VBO
+    				//glDrawRangeElements(GL_TRIANGLES, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
+    				glDrawElements(GL_TRIANGLES, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
+    			}
+    			else
+    			{
+    				// Use Vertex Array
+    				glDrawElements(GL_TRIANGLES, max, GL_UNSIGNED_INT, &m_IndexVector.data()[cur]);
+    			}
+    		}
+
 			cur+= max;
     	}
     	++iMaterialGroup;

@@ -287,7 +287,7 @@ void GLC_Instance::setPolygonMode(GLenum Face, GLenum Mode)
 //////////////////////////////////////////////////////////////////////
 
 // Display the instance
-void GLC_Instance::glExecute()
+void GLC_Instance::glExecute(bool transparent)
 {
 	if (NULL == m_pGeom) return;
 
@@ -303,7 +303,7 @@ void GLC_Instance::glExecute()
 		// D'ont use Alpha component
 		glColor3ubv(m_colorId);
 	}
-	m_pGeom->glExecute(m_IsSelected, ((m_PolyMode != GL_FILL)));
+	m_pGeom->glExecute(m_IsSelected, transparent);
 	// Restore OpenGL Matrix
 	glPopMatrix();
 }

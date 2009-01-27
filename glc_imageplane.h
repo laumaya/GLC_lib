@@ -89,7 +89,7 @@ public:
 public:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n*/
-	virtual void glDraw(void);
+	virtual void glDraw(bool transparent= false);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -110,6 +110,9 @@ private:
 	//! Polygons display style
 	GLenum m_PolyFace;
 	GLenum m_PolyMode;
+
+	//! image plane boundingBox (not yet used)
+	GLC_BoundingBox m_BoundingBox;
 
 };
 

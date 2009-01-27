@@ -31,10 +31,10 @@
 
 using namespace glc;
 //! The angle of arcs
-#define ARCANGLE (30 * PI / 180)	
+#define ARCANGLE (30 * PI / 180)
 
 // Arc discretisation
-#define ARCDISCRET 12	
+#define ARCDISCRET 12
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
@@ -59,7 +59,7 @@ GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const QGLContext *pContex
 	MatRot= MatInt * MatRot;
 
 	m_MatArc2= MatRot;
-	
+
 	// Set arc discretion
 	GLC_Circle* pCircle;
 	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry());
@@ -68,17 +68,17 @@ GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const QGLContext *pContex
 // Change the radius of the orbit circle
 void GLC_OrbitCircle::setRadius(double R)
 {
-	
+
 	// Main circle radius
 	m_MainCircle.setRadius(R);
-	
-	GLC_Circle* pCircle;	
+
+	GLC_Circle* pCircle;
 	// Arc 1 radius
 	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry());
-	pCircle->setRadius(R); 		
+	pCircle->setRadius(R);
 	// Arc 2 radius
 	pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry());
-	pCircle->setRadius(R); 		
+	pCircle->setRadius(R);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -87,28 +87,28 @@ void GLC_OrbitCircle::setRadius(double R)
 
 // Set Arcs orientation and position in concordance with mouse position
 void GLC_OrbitCircle::setOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 &Matrice)
-{	
+{
 	VectAngle.setZ(0);
 	VectAngle.setNormal(1);
-	
+
 	GLC_Matrix4x4 MatRot;
 	double Angle;
-	
+
 	// Compute the 2 arcs orientation
 	if (VectAngle.Y() > 0)
 	{	// Angle entre 0 et PI
 		Angle= acos(VectAngle.X());
-		MatRot.setMatRot(Z_AXIS, Angle);		
+		MatRot.setMatRot(Z_AXIS, Angle);
 	}
 	else
 	{	// Angle between 0 et -PI
 		Angle= -acos(VectAngle.X());
-		MatRot.setMatRot(Z_AXIS, Angle);		
+		MatRot.setMatRot(Z_AXIS, Angle);
 	}
 
 	// Composition of orientation matrix and mapping matrix
 	MatRot= Matrice * MatRot;
-	
+
 	m_Arc1.setMatrix(MatRot * m_MatArc1);
 	m_Arc2.setMatrix(MatRot * m_MatArc2);
 
@@ -124,9 +124,19 @@ void GLC_OrbitCircle::mapArcs(const GLC_Matrix4x4 &Matrice)
 // overload function setColor(color);
 void GLC_OrbitCircle::setRGBAColor(const QColor& color)
 {
-	m_MainCircle.setColor(color);
-	m_Arc1.getGeometry()->setColor(color);
-	m_Arc2.getGeometry()->setColor(color);
+	if (m_MainCircle.numberOfMaterials() == 1)
+	{
+		m_MainCircle.firstMaterial()->setDiffuseColor(color);
+		m_Arc1.getGeometry()->firstMaterial()->setDiffuseColor(color);
+		m_Arc2.getGeometry()->firstMaterial()->setDiffuseColor(color);
+	}
+	else
+	{
+		GLC_Material* pMaterial= new GLC_Material(color);
+		m_MainCircle.addMaterial(pMaterial);
+		m_Arc1.getGeometry()->addMaterial(pMaterial);
+		m_Arc2.getGeometry()->addMaterial(pMaterial);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -141,7 +151,7 @@ void GLC_OrbitCircle::glExecute(double Profondeur)
 	glDisable(GL_DEPTH_TEST);
 
 	glPushMatrix();
-	
+
 	glLoadIdentity();
 
 	// Put circle at the middle of camera range of depth
@@ -165,10 +175,10 @@ void GLC_OrbitCircle::glExecute(double Profondeur)
 	// Restore positionning matrix of arcs
 	m_Arc1.setMatrix(MatSavArc1);
 	m_Arc2.setMatrix(MatSavArc2);
-			
+
 	// Display base class (Main circle)
 	m_MainCircle.glExecute(false, false);
-	
+
 	glPopMatrix();
 
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing

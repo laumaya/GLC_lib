@@ -131,7 +131,7 @@ void GLC_Box::setLgZ(double LgZ)
 //////////////////////////////////////////////////////////////////////
 
 // Box Set Up
-void GLC_Box::glDraw(void)
+void GLC_Box::glDraw(bool)
 {
 	const bool vboIsSupported= GLC_State::vboIsSupported();
 

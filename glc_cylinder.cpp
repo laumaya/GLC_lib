@@ -138,7 +138,7 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 //////////////////////////////////////////////////////////////////////
 
 // Dessin du GLC_Cylinder
-void GLC_Cylinder::glDraw(void)
+void GLC_Cylinder::glDraw(bool)
 {
 	const bool vboIsSupported= GLC_State::vboIsSupported();
 

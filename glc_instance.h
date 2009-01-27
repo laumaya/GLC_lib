@@ -168,7 +168,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the instance
-	void glExecute();
+	void glExecute(bool transparent=false);
 
 private:
 	//! Set instance visualisation properties

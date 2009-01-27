@@ -155,7 +155,7 @@ void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 //////////////////////////////////////////////////////////////////////
 
 // Circle drawing
-void GLC_Circle::glDraw(void)
+void GLC_Circle::glDraw(bool)
 {
 	if (!m_GeometryIsValid)
 	{

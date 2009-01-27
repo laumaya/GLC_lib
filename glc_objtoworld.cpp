@@ -340,8 +340,6 @@ void GLC_ObjToWorld::changeGroup(QString line)
 			}
 			m_pCurrentMesh= new GLC_Mesh2();
 			m_pCurrentMesh->setName(groupName);
-			m_pCurrentMesh->material()->setName(QString("Mat_") + groupName);
-
 		}
 	}
 	else

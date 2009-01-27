@@ -95,12 +95,12 @@ unsigned int GLC_Part::numberOfVertex() const
 unsigned int GLC_Part::numberOfMaterials() const
 {
 	unsigned int number= 0;
-	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
-	if (NULL != pMesh)
+	const GLC_VboGeom* pGeom= m_pCollection->getInstanceHandle(m_RepID)->getGeometry();
+	if (NULL != pGeom)
 	{
-		number= pMesh->numberOfSubMaterial();
-		if (number == 0) number= 1;
+		number= pGeom->numberOfMaterials();
 	}
+
 	return number;
 }
 // Get materials List
@@ -108,18 +108,12 @@ QSet<GLC_Material*> GLC_Part::materialSet() const
 {
 	QSet<GLC_Material*> result;
 	unsigned int number= 0;
-	GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
-	if (NULL != pMesh)
+	GLC_VboGeom* pGeom= m_pCollection->getInstanceHandle(m_RepID)->getGeometry();
+	if (NULL != pGeom)
 	{
-		number= pMesh->numberOfSubMaterial();
-		if (number == 0)
-		{
-			result.insert(pMesh->material());
-		}
-		else
-		{
-			result.unite(pMesh->subMaterials().toSet());
-		}
+		number= pGeom->numberOfMaterials();
+
+		result.unite(pGeom->materials().toSet());
 	}
 	return result;
 }

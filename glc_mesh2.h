@@ -77,23 +77,6 @@ public:
 	//! Return the number of vertex
 	inline unsigned int numberOfVertex() const {return m_NumberOfFaces * 3;}
 
-	//! Return the number of submaterial
-	inline unsigned int numberOfSubMaterial() const {return m_MaterialHash.size();}
-
-	//! Return the specified mesh sub material
-	inline GLC_Material* subMaterial(const GLC_uint key) {return m_MaterialHash[key];}
-
-	//! Return All mesh sub material
-	inline QList<GLC_Material*> subMaterials() {return m_MaterialHash.values();}
-
-	//! Return true if Material key is in the mesh
-	inline const bool containsMaterial(const GLC_uint key) const {return m_MaterialHash.contains(key);}
-
-	//! Return material index if Material is the same than a material already in the mesh
-	/*! Return 0 if the material is not found
-	 */
-	GLC_uint materialIndex(const GLC_Material& mat) const;
-
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
 
@@ -117,8 +100,6 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Add material to mesh
-	void addMaterial(GLC_Material *);
 
 	//! Add triangles with the same material to the mesh
 	void addTriangles(const VertexList &, GLC_Material*);
@@ -150,17 +131,14 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Specific glExecute method
-	virtual void glExecute(bool, bool forceWire= false);
+	virtual void glExecute(bool, bool transparent= false);
 
 private:
-
-	//! if the geometry have a texture, load it
-	virtual void glLoadTexture(void);
 
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
-	virtual void glDraw(void);
+	virtual void glDraw(bool transparent= false);
 
 //@}
 
@@ -180,9 +158,6 @@ private:
 
 	//! Hash table of Vector Index grouped by material
 	MaterialGroupHash m_MaterialGroup;
-
-	//! Material Hash table
-	MaterialHash m_MaterialHash;
 
 	//! Mesh number of faces
 	unsigned int m_NumberOfFaces;

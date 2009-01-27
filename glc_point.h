@@ -88,7 +88,7 @@ public:
 private:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n*/
-	virtual void glDraw(void);
+	virtual void glDraw(bool transparent= false);
 
 //@}
 

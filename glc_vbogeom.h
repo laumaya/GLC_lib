@@ -34,6 +34,22 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+struct GLC_Vertex
+{
+	// Vertex
+	float x, y, z;			// 12 Bytes
+	// Normal
+	float nx, ny, nz;		// 12 Bytes
+	// Texture
+	float s, t;				// 8 Bytes
+	// Color
+	GLfloat r, g, b, a;		// 16 Bytes
+	// => 32 Bytes
+};
+
+typedef QVector<GLC_Vertex> VertexVector;
+typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_VboGeom
 /*! \brief GLC_VboGeom : parent class for all GLC class which contain
@@ -53,21 +69,6 @@
  *
  */
 //////////////////////////////////////////////////////////////////////
-
-struct GLC_Vertex
-{
-	// Vertex
-	float x, y, z;			// 12 Bytes
-	// Normal
-	float nx, ny, nz;		// 12 Bytes
-	// Texture
-	float s, t;				// 8 Bytes
-	// Color
-	GLfloat r, g, b, a;		// 16 Bytes
-	// => 32 Bytes
-};
-
-typedef QVector<GLC_Vertex> VertexVector;
 
 class GLC_VboGeom : public GLC_Object
 {
@@ -96,33 +97,37 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return a QColor which represent the color
-	inline QColor color(void) const
-	{return m_pMaterial->getDiffuseColor();}
-
-	//! Return Color Red component
-	inline GLfloat redF(void) const
-	{return m_pMaterial->getDiffuseColor().redF();}
-
-	//! Return Color Green component
-	inline GLfloat greenF(void) const
-	{return m_pMaterial->getDiffuseColor().greenF();}
-
-	//! Return Color blue component
-	inline GLfloat blueF(void) const
-	{return m_pMaterial->getDiffuseColor().blueF();}
-
-	//! Return Color Alpha component
-	inline GLfloat alphaF(void) const
-	{return m_pMaterial->getDiffuseColor().alphaF();}
 
 	//! Return true if the geometry is valid
 	inline bool isValid(void) const
 	{return m_GeometryIsValid;}
 
-	//! Return material of geometry
-	inline GLC_Material* material(void) const
-	{return m_pMaterial;}
+	//! Return first material of geometry
+	inline GLC_Material* firstMaterial(void) const
+	{
+		if (not m_MaterialHash.isEmpty())
+		{
+			return m_MaterialHash.begin().value();
+		}
+		else return NULL;
+	}
+
+	//! Return the number of materials
+	inline unsigned int numberOfMaterials() const {return m_MaterialHash.size();}
+
+	//! Return the specified mesh sub material
+	inline GLC_Material* material(const GLC_uint key) {return m_MaterialHash[key];}
+
+	//! Return All mesh sub material
+	inline QList<GLC_Material*> materials() {return m_MaterialHash.values();}
+
+	//! Return true if Material key is in the mesh
+	inline const bool containsMaterial(const GLC_uint key) const {return m_MaterialHash.contains(key);}
+
+	//! Return material index if Material is the same than a material already in the mesh
+	/*! Return 0 if the material is not found
+	 */
+	GLC_uint materialIndex(const GLC_Material& mat) const;
 
 	//! return the geometry bounding box
 	virtual GLC_BoundingBox& boundingBox(void) = 0;
@@ -135,7 +140,11 @@ public:
 
 	//! Get the geometry transparency
 	inline bool isTransparent() const
-	{return m_IsTransparent;}
+	{return m_TransparentMaterialNumber == m_MaterialHash.size();}
+
+	//! Return the true if the geometry contains transparent materials
+	inline bool haveTransparentMaterials() const
+	{return m_TransparentMaterialNumber > 0;}
 
 	//! return true if color per vertex is used
 	inline bool usedColorPerVertex() const
@@ -145,10 +154,6 @@ public:
 	inline bool typeIsWire() const
 	{return m_IsWire;}
 
-	//! Return true if the geometry have a texture
-	inline bool addTexture() const
-	{return m_pMaterial->getAddRgbaTexture();}
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -157,19 +162,12 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Set Diffuse Color RGBA component with an QColor Object
-	inline void setColor(const QColor& setCol)
-	{
-		m_pMaterial->setDiffuseColor(setCol);
-	}
+	//! Replace the Master material
+	//! The number of materials must be <= 1
+	void replaceMasterMaterial(GLC_Material*);
 
-	// Material
-	//! Set the Geometry material
-	void setMaterial(GLC_Material* pMat);
-
-	//! Set the transparency property
-	inline void setTransparency(const bool transparency)
-	{m_IsTransparent= transparency;}
+	//! Add material to the geometry
+	void addMaterial(GLC_Material *);
 
 	inline void colorPerVertex(const bool colorPerVertex)
 	{
@@ -198,20 +196,20 @@ public:
 	 *		- Call virtual function GLC_VboGeom::glPropGeom
 	 *        virtual function GLC_Geometry::glDraw
 	 */
-	virtual void glExecute(bool, bool forceWire= false);
+	virtual void glExecute(bool, bool transparent= false);
 
 
 protected:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function have to be implemented in concrete class.*/
-	virtual void glDraw(void) = 0;
+	virtual void glDraw(bool transparent= false) = 0;
 
 	//! Virtual interface for OpenGL Geometry properties.
 	/*! This Virtual function can be modify in concrete class.
 	 * bool IsSelected
 	 * bool ForceWire
 	 */
-	virtual void glPropGeom(bool, bool);
+	virtual void glPropGeom(bool);
 
 	//! Vbo creation
 	void createVBOs();
@@ -227,8 +225,8 @@ protected:
 	//! Bounding box
 	GLC_BoundingBox* m_pBoundingBox;
 
-	//! Material
-	GLC_Material* m_pMaterial;
+	//! Material Hash table
+	MaterialHash m_MaterialHash;
 
 	//! Color per vertex usage
 	bool m_UseColorPerVertex;
@@ -253,7 +251,7 @@ private:
 	bool m_IsWire;
 
 	//! Transparency
-	bool m_IsTransparent;
+	int m_TransparentMaterialNumber;
 };
 
 #endif /*GLC_VBOGEOM_H_*/
