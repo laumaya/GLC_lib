@@ -177,7 +177,7 @@ void GLC_VboGeom::addMaterial(GLC_Material* pMaterial)
 		// Test if the material is transparent
 		if (pMaterial->isTransparent())
 		{
-			qDebug() << "Add transparent material";
+			//qDebug() << "Add transparent material";
 			++m_TransparentMaterialNumber;
 		}
 		// Invalid the geometry
@@ -209,9 +209,7 @@ void GLC_VboGeom::glExecute(bool isSelected, bool transparent)
 	{
 		GLC_Material* pMaterial= new GLC_Material();
 		pMaterial->setName(name());
-		pMaterial->addGLC_Geom(this);
-		m_MaterialHash.insert(pMaterial->id(), pMaterial);
-
+		addMaterial(pMaterial);
 	}
 	// Define Geometry's property
 	if(not GLC_State::isInSelectionMode())

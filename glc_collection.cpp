@@ -321,7 +321,7 @@ bool GLC_Collection::select(GLC_uint key)
 		if (isInAShadingGroup(key))
 		{
 			m_OtherNodeHashList.value(shadingGroup(key))->remove(key);
-			qDebug() << "remove from shader list";
+			//qDebug() << "remove from shader list";
 		}
 		else
 		{
@@ -329,7 +329,7 @@ bool GLC_Collection::select(GLC_uint key)
 		}
 		pSelectedNode->select();
 
-		qDebug("GLC_Collection::selectNode : Element succesfuly selected");
+		//qDebug("GLC_Collection::selectNode : Element succesfuly selected");
 		return true;
 	}
 	else
@@ -708,7 +708,6 @@ void GLC_Collection::glDraw(GLuint groupId)
 	        {
 	        	//qDebug() << "transparent";
 	            transparentInstances[i]->glExecute(true);
-	            qDebug() << "Execute transparent node";
 	        }
 	        // Restore attributtes
 	        glDepthMask(GL_TRUE);
@@ -727,10 +726,8 @@ void GLC_Collection::glDraw(GLuint groupId)
 			PointerNodeHash::iterator iEntry= m_SelectedNodes.begin();
 	        while (iEntry != m_SelectedNodes.constEnd())
 	        {
-	        	qDebug() << "selection";
 	            if (iEntry.value()->isVisible() == m_IsInShowSate)
 	            {
-	            	qDebug() << "Draw Selection : ";
 	            	iEntry.value()->glExecute();
 	            }
 	            ++iEntry;

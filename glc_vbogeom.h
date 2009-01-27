@@ -140,7 +140,7 @@ public:
 
 	//! Get the geometry transparency
 	inline bool isTransparent() const
-	{return m_TransparentMaterialNumber == m_MaterialHash.size();}
+	{return (m_TransparentMaterialNumber == m_MaterialHash.size()) and haveTransparentMaterials();}
 
 	//! Return the true if the geometry contains transparent materials
 	inline bool haveTransparentMaterials() const
