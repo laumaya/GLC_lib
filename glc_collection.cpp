@@ -743,6 +743,7 @@ void GLC_Collection::glDraw(GLuint groupId)
 	{
 	    if(m_OtherNodeHashList.contains(groupId) and not m_OtherNodeHashList.value(groupId)->isEmpty())
 	    {
+	    	QList<GLC_Instance*> transparentInstances;
 	    	GLC_Shader::use(groupId);
 	    	PointerNodeHash* pNodeHash= m_OtherNodeHashList.value(groupId);
 
@@ -752,11 +753,39 @@ void GLC_Collection::glDraw(GLuint groupId)
 	        	//qDebug() << "transparent";
 	            if (iEntry.value()->isVisible() == m_IsInShowSate)
 	            {
-	            	//qDebug() << "Draw Shader : " << QString::number(groupId);
-	            	iEntry.value()->glExecute();
+		            if (not iEntry.value()->getGeometry()->isTransparent())
+		            {
+		            	iEntry.value()->glExecute();
+		            }
+
+		            if (iEntry.value()->getGeometry()->haveTransparentMaterials())
+		            {
+		            	transparentInstances.append(iEntry.value());
+		            }
+
 	            }
 	            ++iEntry;
 	        }
+		    if(not transparentInstances.isEmpty())
+		    {
+		        // Set attributes for blending activation
+		        //glEnable(GL_CULL_FACE);
+		        glEnable(GL_BLEND);
+		        glDepthMask(GL_FALSE);
+		        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		        //glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+		    	// Display transparent instance
+		        const int size= transparentInstances.size();
+		        for (int i= 0; i < size; ++i)
+		        {
+		        	//qDebug() << "transparent";
+		            transparentInstances[i]->glExecute(true);
+		        }
+		        // Restore attributtes
+		        glDepthMask(GL_TRUE);
+		        glDisable(GL_BLEND);
+		    }
+
 			GLC_Shader::unuse();
 	    }
 	}

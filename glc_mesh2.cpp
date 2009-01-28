@@ -345,7 +345,7 @@ void GLC_Mesh2::glDraw(bool transparent)
 		}
 	}
 
-	GLC_Material* pCurrentMaterial;
+	GLC_Material* pCurrentMaterial= NULL;
 	GLuint max;
 	GLuint cur= 0;
 	iMaterialGroup= m_MaterialGroup.begin();
@@ -396,7 +396,7 @@ void GLC_Mesh2::glDraw(bool transparent)
     		}
 
 			max= static_cast<GLuint>(iMaterialGroup.value()->size());
-    		if ((pCurrentMaterial->isTransparent() == transparent) or m_IsSelected or GLC_State::isInSelectionMode())
+    		if (m_IsSelected or GLC_State::isInSelectionMode() or (pCurrentMaterial->isTransparent() == transparent))
     		{
     			// Draw Mesh
     			if (vboIsSupported)
