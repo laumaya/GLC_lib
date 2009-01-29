@@ -75,6 +75,9 @@ public:
 	//! Return the parent
 	inline GLC_Node* parent() {return m_pParent;}
 
+	//! Return node name
+	inline QString name() const {return m_Ref;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
