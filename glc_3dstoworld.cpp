@@ -231,6 +231,8 @@ void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode
 	if (NULL != pFatherNode->childs)
 	{
 		pChildProduct= pProduct->addNewChildProduct();
+		pChildProduct->setReference(QString("Product") + QString::number(pFatherNode->node_id));
+
 		//pChildProduct->move(GLC_Matrix4x4(&(pFatherNode->matrix[0][0])));
 
 		// Create Childs meshes if exists
