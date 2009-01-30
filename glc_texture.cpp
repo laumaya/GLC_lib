@@ -150,11 +150,6 @@ void GLC_Texture::glLoadTexture(void)
 {
 	if (m_GlTextureID == 0)
 	{
-		#if defined(Q_OS_MAC)
-		// Make the texture context current cause crash under windows ??
-		m_pQGLContext->makeCurrent();
-		#endif
-
 		// Test image size
 		if ((m_pTextureImage->height() > m_MaxTextureSize.height())
 				or (m_pTextureImage->width() > m_MaxTextureSize.width()))
