@@ -135,11 +135,13 @@ GLC_uint GLC_VboGeom::materialIndex(const GLC_Material& mat) const
 // Replace the Master material
 void GLC_VboGeom::replaceMasterMaterial(GLC_Material* pMaterial)
 {
+
 	if (not m_MaterialHash.isEmpty())
 	{
 		Q_ASSERT(1 == m_MaterialHash.size());
 		if (pMaterial != firstMaterial())
 		{
+			const bool saveValidity= m_GeometryIsValid;
 			// Remove the first material
 			MaterialHash::iterator iMaterial= m_MaterialHash.begin();
 	        // delete the material if necessary
@@ -151,6 +153,7 @@ void GLC_VboGeom::replaceMasterMaterial(GLC_Material* pMaterial)
 	        if (iMaterial.value()->isUnused()) delete iMaterial.value();
 			m_MaterialHash.erase(iMaterial);
 			addMaterial(pMaterial);
+			m_GeometryIsValid= saveValidity;
 		}
 	}
 	else
