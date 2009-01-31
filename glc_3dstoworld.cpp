@@ -386,8 +386,9 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 
 	if (0 != p3dsMaterial->shininess)
 	{
-		float matShininess= p3dsMaterial->shininess * 128.0;
-		if (matShininess > 128.0) matShininess= 128.0;
+		float matShininess= p3dsMaterial->shininess * 128.0f;
+		if (matShininess > 128.0f) matShininess= 128.0f;
+		if (matShininess < 5.0f) matShininess= 20.0f;
 		pMaterial->setShininess(matShininess);
 	}
 	// Transparency
