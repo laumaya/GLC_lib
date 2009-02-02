@@ -31,8 +31,8 @@
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_Node::GLC_Node(GLC_Collection *pCollection)
-: m_Uid(glc::GLC_GenID())
+GLC_Node::GLC_Node(GLC_Collection *pCollection, GLC_uint id)
+: m_Uid(id)
 , m_pCollection(pCollection)
 , m_pParent(NULL)
 , m_Ref()
@@ -71,7 +71,7 @@ GLC_Node& GLC_Node::operator=(const GLC_Node& node)
 	m_Ref= node.m_Ref;
 	m_RelativeMatrix= node.m_RelativeMatrix;
 	m_AbsoluteMatrix= node.m_AbsoluteMatrix;
-	return *this;	
+	return *this;
 }
 
 

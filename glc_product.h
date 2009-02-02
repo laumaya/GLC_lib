@@ -100,6 +100,9 @@ public:
 	//! Get materials List
 	QSet<GLC_Material*> materialSet() const;
 
+	//! Return true if all child of the product are hidden
+	bool isHidden() const ;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

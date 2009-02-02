@@ -49,7 +49,7 @@ class GLC_Node
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Constructor of the node
-	GLC_Node(GLC_Collection *);
+	GLC_Node(GLC_Collection *, GLC_uint);
 
 	//! Copy Constructor
 	GLC_Node(const GLC_Node&);

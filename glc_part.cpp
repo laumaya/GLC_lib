@@ -30,8 +30,7 @@
 #include "glc_material.h"
 
 GLC_Part::GLC_Part(GLC_Collection *pCollection, GLC_Instance& instance, GLuint shaderId)
-: GLC_Node(pCollection)
-, m_RepID(instance.id())
+: GLC_Node(pCollection, instance.id())
 {
 	m_pCollection->add(instance, shaderId);
 	move(instance.getMatrix());
@@ -41,7 +40,7 @@ GLC_Part::~GLC_Part()
 {
 	if (not m_pCollection->isEmpty())
 	{
-		m_pCollection->remove(m_RepID);
+		m_pCollection->remove(id());
 	}
 }
 //////////////////////////////////////////////////////////////////////
@@ -51,12 +50,12 @@ GLC_Part::~GLC_Part()
 // Clone the part
 GLC_Part* GLC_Part::clone(GLC_Collection * pCollection) const
 {
-	GLC_Instance instance(m_pCollection->getInstanceHandle(m_RepID)->instanciate());
+	GLC_Instance instance(m_pCollection->getInstanceHandle(id())->instanciate());
 	GLC_Part* pReturnPart;
 	// Test if the instance is in a shading group
-	if(m_pCollection->isInAShadingGroup(m_RepID))
+	if(m_pCollection->isInAShadingGroup(id()))
 	{
-		GLuint shaderId= m_pCollection->shadingGroup(m_RepID);
+		GLuint shaderId= m_pCollection->shadingGroup(id());
 		pCollection->bindShader(shaderId);
 		pReturnPart= new GLC_Part(pCollection, instance, shaderId);
 	}
@@ -72,7 +71,7 @@ GLC_Part* GLC_Part::clone(GLC_Collection * pCollection) const
 unsigned int GLC_Part::numberOfFaces() const
 {
 	unsigned int number= 0;
-	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
+	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(id())->getGeometry());
 	if (NULL != pMesh)
 	{
 		number= pMesh->numberOfFaces();
@@ -83,7 +82,7 @@ unsigned int GLC_Part::numberOfFaces() const
 unsigned int GLC_Part::numberOfVertex() const
 {
 	unsigned int number= 0;
-	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
+	const GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(id())->getGeometry());
 	if (NULL != pMesh)
 	{
 		number= pMesh->numberOfVertex();
@@ -95,7 +94,7 @@ unsigned int GLC_Part::numberOfVertex() const
 unsigned int GLC_Part::numberOfMaterials() const
 {
 	unsigned int number= 0;
-	const GLC_VboGeom* pGeom= m_pCollection->getInstanceHandle(m_RepID)->getGeometry();
+	const GLC_VboGeom* pGeom= m_pCollection->getInstanceHandle(id())->getGeometry();
 	if (NULL != pGeom)
 	{
 		number= pGeom->numberOfMaterials();
@@ -108,7 +107,7 @@ QSet<GLC_Material*> GLC_Part::materialSet() const
 {
 	QSet<GLC_Material*> result;
 	unsigned int number= 0;
-	GLC_VboGeom* pGeom= m_pCollection->getInstanceHandle(m_RepID)->getGeometry();
+	GLC_VboGeom* pGeom= m_pCollection->getInstanceHandle(id())->getGeometry();
 	if (NULL != pGeom)
 	{
 		number= pGeom->numberOfMaterials();
@@ -127,7 +126,7 @@ GLC_Part* GLC_Part::move(const GLC_Matrix4x4 &matrix)
 {
 	m_RelativeMatrix= matrix * m_RelativeMatrix;
 	m_AbsoluteMatrix= matrix * m_AbsoluteMatrix;
-	m_pCollection->getInstanceHandle(m_RepID)->setMatrix(m_AbsoluteMatrix);
+	m_pCollection->getInstanceHandle(id())->setMatrix(m_AbsoluteMatrix);
 	return this;
 }
 // Update Part absolute matrix
@@ -136,13 +135,13 @@ void GLC_Part::updateAbsoluteMatrix()
 	if (NULL != m_pParent)
 	{
 		m_AbsoluteMatrix= m_pParent->absoluteMatrix() * m_RelativeMatrix;
-		m_pCollection->getInstanceHandle(m_RepID)->setMatrix(m_AbsoluteMatrix);
+		m_pCollection->getInstanceHandle(id())->setMatrix(m_AbsoluteMatrix);
 	}
 }
 //! Reverse representation normal
 void GLC_Part::reverseMeshNormal()
 {
-	GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(m_RepID)->getGeometry());
+	GLC_Mesh2* pMesh= dynamic_cast<GLC_Mesh2*>(m_pCollection->getInstanceHandle(id())->getGeometry());
 	if (NULL != pMesh)
 	{
 		pMesh->reverseNormal();

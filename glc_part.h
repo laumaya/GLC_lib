@@ -61,11 +61,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the part's representation ID
-	inline GLC_uint id() const {return m_RepID;}
-
 	//! Return the GLC_Instance* associated to this part
-	inline GLC_Instance* instance() {return m_pCollection->getInstanceHandle(m_RepID);}
+	inline GLC_Instance* instance() {return m_pCollection->getInstanceHandle(id());}
 
 	//! Clone the part
 	GLC_Part* clone(GLC_Collection *) const;
@@ -81,6 +78,9 @@ public:
 
 	//! Get materials List
 	QSet<GLC_Material*> materialSet() const;
+
+	//! return true if the part is Hidden
+	inline bool isHidden() const {return not m_pCollection->getInstanceHandle(id())->isVisible();}
 
 //@}
 
@@ -99,13 +99,6 @@ public:
 	void reverseMeshNormal();
 
 //@}
-
-//////////////////////////////////////////////////////////////////////
-// private members
-//////////////////////////////////////////////////////////////////////
-private:
-	//! Representation id of the part
-	GLC_uint m_RepID;
 
 };
 

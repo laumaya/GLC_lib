@@ -28,7 +28,7 @@
 #include "glc_part.h"
 
 GLC_Product::GLC_Product(GLC_Collection *pCollection)
-: GLC_Node(pCollection)
+: GLC_Node(pCollection, glc::GLC_GenID())
 , m_ChildProducts()
 , m_ChildParts()
 {
@@ -140,6 +140,35 @@ QSet<GLC_Material*> GLC_Product::materialSet() const
 
  	return result;
 }
+
+// Return true if all child of the product are hidden
+bool GLC_Product::isHidden() const
+{
+	bool result= true;
+	{
+		QList<GLC_Product*> childProductsList(childProducts());
+		const int size= childProductsList.size();
+		int i= 0;
+		while (result and (i < size))
+		{
+			result= result and childProductsList[i]->isHidden();
+			++i;
+		}
+	}
+	if (result)
+	{
+		QList<GLC_Part*> childPartsList(childParts());
+		const int size= childPartsList.size();
+		int i= 0;
+		while (result and (i < size))
+		{
+			result= result and childPartsList[i]->isHidden();
+			++i;
+		}
+	}
+	return result;
+}
+
 
 // Return the child product associated with the key
 GLC_Product* GLC_Product::childProduct(const GLC_uint key)
