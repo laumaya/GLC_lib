@@ -315,7 +315,7 @@ void GLC_Mesh2::glDraw(bool transparent)
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		// test if color pear vertex is activated
-		if (m_ColorPearVertex and !m_IsSelected)
+		if (m_ColorPearVertex and not m_IsSelected and not GLC_State::isInSelectionMode())
 		{
 			glEnable(GL_COLOR_MATERIAL);
 			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
@@ -336,7 +336,7 @@ void GLC_Mesh2::glDraw(bool transparent)
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		// test if color pear vertex is activated
-		if (m_ColorPearVertex and !m_IsSelected)
+		if (m_ColorPearVertex and not m_IsSelected and not GLC_State::isInSelectionMode())
 		{
 			glEnable(GL_COLOR_MATERIAL);
 			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
@@ -416,7 +416,7 @@ void GLC_Mesh2::glDraw(bool transparent)
     	}
     	++iMaterialGroup;
     }
-	if (m_ColorPearVertex and !m_IsSelected)
+	if (m_ColorPearVertex and not m_IsSelected and not GLC_State::isInSelectionMode())
 	{
 		glDisableClientState(GL_COLOR_ARRAY);
 		glDisable(GL_COLOR_MATERIAL);
