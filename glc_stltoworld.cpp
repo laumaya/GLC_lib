@@ -64,7 +64,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 	if (!file.open(QIODevice::ReadOnly))
 	{
 		QString message(QString("GLC_StlToWorld::CreateWorldFromStl File ") + m_FileName + QString(" doesn't exist"));
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotFound);
 		throw(fileFormatException);
 	}
 	//////////////////////////////////////////////////////////////////
@@ -198,7 +198,7 @@ void GLC_StlToWorld::scanFacet()
 		QString message= "GLC_StlToWorld::scanFacet : \"facet normal\" not found!";
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
 	}
@@ -221,7 +221,7 @@ void GLC_StlToWorld::scanFacet()
 		QString message= "GLC_StlToWorld::scanFacet : \"outer loop\" not found!";
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
 	}
@@ -239,7 +239,7 @@ void GLC_StlToWorld::scanFacet()
 			QString message= "GLC_StlToWorld::scanFacet : \"vertex\" not found!";
 			message.append("\nAt line : ");
 			message.append(QString::number(m_CurrentLineNumber));
-			GLC_FileFormatException fileFormatException(message, m_FileName);
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			clear();
 			throw(fileFormatException);
 		}
@@ -269,7 +269,7 @@ void GLC_StlToWorld::scanFacet()
 		QString message= "GLC_StlToWorld::scanFacet : \"endloop\" not found!";
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
 	}
@@ -284,7 +284,7 @@ void GLC_StlToWorld::scanFacet()
 		QString message= "GLC_StlToWorld::scanFacet : \"endfacet\" not found!";
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
 	}
@@ -314,7 +314,7 @@ GLC_Vector3df GLC_StlToWorld::extract3dVect(QString &line)
 			QString message= "GLC_StlToWorld::extract3dVect : failed to convert vector component to float";
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));
-			GLC_FileFormatException fileFormatException(message, m_FileName);
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			clear();
 			throw(fileFormatException);
 		}
@@ -344,7 +344,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 	if (-1 == SkipedData)
 	{
 		QString message= "GLC_StlToWorld::LoadBinariStl : Failed to skip Header of binary STL";
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
 	}
@@ -355,7 +355,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 	if (QDataStream::Ok != stlBinFile.status())
 	{
 		QString message= "GLC_StlToWorld::LoadBinariStl : Failed to read the number of facets of binary STL";
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
 	}
@@ -368,7 +368,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 		if (QDataStream::Ok != stlBinFile.status())
 		{
 			QString message= "GLC_StlToWorld::LoadBinariStl : Failed to read the Normal of binary STL";
-			GLC_FileFormatException fileFormatException(message, m_FileName);
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			clear();
 			throw(fileFormatException);
 		}
@@ -389,7 +389,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 			if (QDataStream::Ok != stlBinFile.status())
 			{
 				QString message= "GLC_StlToWorld::LoadBinariStl : Failed to read the Vertex of binary STL";
-				GLC_FileFormatException fileFormatException(message, m_FileName);
+				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
 			}

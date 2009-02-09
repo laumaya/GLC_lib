@@ -78,7 +78,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	if (!file.open(QIODevice::ReadOnly))
 	{
 		QString message(QString("GLC_3dsToWorld::CreateWorldFrom3ds File ") + m_FileName + QString(" doesn't exist"));
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotFound);
 		throw(fileFormatException);
 	}
 	// Close the file before open it with lib3ds
@@ -94,7 +94,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	if (!m_pLib3dsFile)
 	{
 		QString message= "GLC_3dsToWorld::CreateWorldFrom3ds : Loading Failed";
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 		clear();
 		throw(fileFormatException);
 	}
@@ -113,7 +113,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	if (0 == m_NumberOfMeshes)
 	{
 		QString message= "GLC_3dsToWorld::CreateWorldFrom3ds : No mesh found !";
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::NoMeshFound);
 		clear();
 		throw(fileFormatException);
 	}

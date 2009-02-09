@@ -80,7 +80,7 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	{
 		QString message(QString("GLC_ObjToWorld::CreateWorldFromObj File ") + m_FileName + QString(" doesn't exist"));
 		//qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotFound);
 		throw(fileFormatException);
 	}
 
@@ -197,7 +197,7 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	if (m_pWorld->rootProduct()->childCount() == 0)
 	{
 		QString message= "GLC_ObjToWorld::CreateWorldFromObj : No mesh found!";
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::NoMeshFound);
 		clear();
 		throw(fileFormatException);
 	}
@@ -347,7 +347,7 @@ void GLC_ObjToWorld::changeGroup(QString line)
 		QString message= "GLC_ObjToWorld::changeGroup : something is wrong!!";
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 		clear();
 		throw(fileFormatException);
 	}
@@ -413,7 +413,7 @@ GLC_Vector2df GLC_ObjToWorld::extract2dVect(QString &line)
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_FileName);
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			clear();
 			throw(fileFormatException);
 		}
@@ -524,7 +524,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 		clear();
 		throw(fileFormatException);
 	}
@@ -541,7 +541,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
 	}
@@ -584,7 +584,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append("\nAt line : ");
 				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
-				GLC_FileFormatException fileFormatException(message, m_FileName);
+				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
 			}
@@ -595,7 +595,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			message.append("\nAt line : ");
 			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_FileName);
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 			clear();
 			throw(fileFormatException);
 		}
@@ -621,7 +621,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append("\nAt line : ");
 				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
-				GLC_FileFormatException fileFormatException(message, m_FileName);
+				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
 			}
@@ -632,7 +632,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			message.append("\nAt line : ");
 			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_FileName);
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 			clear();
 			throw(fileFormatException);
 		}
@@ -657,7 +657,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append("\nAt line : ");
 				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
-				GLC_FileFormatException fileFormatException(message, m_FileName);
+				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
 			}
@@ -668,7 +668,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			message.append("\nAt line : ");
 			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_FileName);
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 			clear();
 			throw(fileFormatException);
 		}
@@ -690,7 +690,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 				message.append("\nAt line : ");
 				message.append(QString::number(m_CurrentLineNumber));
 				qDebug() << message;
-				GLC_FileFormatException fileFormatException(message, m_FileName);
+				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
 			}
@@ -701,7 +701,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 			message.append("\nAt line : ");
 			message.append(QString::number(m_CurrentLineNumber));
 			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_FileName);
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 			clear();
 			throw(fileFormatException);
 		}
@@ -712,7 +712,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 		clear();
 		throw(fileFormatException);
  	}
@@ -748,7 +748,7 @@ void GLC_ObjToWorld::setObjType(QString& ligne)
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 		clear();
 		throw(fileFormatException);
  	}
@@ -829,7 +829,7 @@ void GLC_ObjToWorld::addVertexsToCurrentListOfVertex(QVector<int> & vertexs)
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 		clear();
 		throw(fileFormatException);
 	}
@@ -855,7 +855,7 @@ void GLC_ObjToWorld::addNormalsToCurrentListOfVertex(QVector<int> & normals)
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 		clear();
 		throw(fileFormatException);
 	}
@@ -880,7 +880,7 @@ void GLC_ObjToWorld::addTextureCoordinatesToCurrentListOfVertex(QVector<int> & t
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName);
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 		clear();
 		throw(fileFormatException);
 	}

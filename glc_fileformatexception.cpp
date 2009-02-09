@@ -26,9 +26,10 @@
 
 #include "glc_fileformatexception.h"
 
-GLC_FileFormatException::GLC_FileFormatException(const QString &message, const QString &fileName)
+GLC_FileFormatException::GLC_FileFormatException(const QString &message, const QString &fileName, ExceptionType exceptionType)
 : GLC_Exception(message)
 , m_FileName(fileName)
+, m_ExceptionType(exceptionType)
 {
 }
 

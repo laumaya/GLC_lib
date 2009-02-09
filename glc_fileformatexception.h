@@ -36,25 +36,42 @@
 class GLC_FileFormatException : public GLC_Exception
 {
 public:
-	GLC_FileFormatException(const QString &message, const QString &fileName);
+	//! Enum of exception Type
+	enum ExceptionType
+	{
+		FileNotFound= 1,
+		FileNotSupported,
+		WrongFileFormat,
+		NoMeshFound
+	};
+
+	GLC_FileFormatException(const QString&, const QString&, ExceptionType);
 	virtual ~GLC_FileFormatException() throw();
-	
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-public:	
+public:
 	//! Return exception description
 	virtual const char* what() const throw();
+
+	//! Return exception type
+	inline ExceptionType exceptionType() const
+	{return m_ExceptionType;}
+
 //@}
 //////////////////////////////////////////////////////////////////////
-// protected members
+// private members
 //////////////////////////////////////////////////////////////////////
-protected:
-	
+private:
+
 	//! The name of the file
 	QString m_FileName;
-	
+
+	//! The Exception type
+	ExceptionType m_ExceptionType;
+
 };
 
 #endif /*GLC_FILEFORMATEXCEPTION_H_*/
