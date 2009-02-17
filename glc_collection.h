@@ -125,6 +125,12 @@ public:
 	inline bool isInAShadingGroup(GLC_uint key) const
 	{ return m_ShaderGroup.contains(key);}
 
+	//! Return instances name from the specified shading group
+	QList<QString> getInstanceNameFromShadingGroup(GLuint) const;
+
+	//! Return the number of used shading group
+	int numberOfUsedShadingGroup() const;
+
 
 //@}
 

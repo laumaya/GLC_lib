@@ -210,6 +210,10 @@ void GLC_Collection::changeShadingGroup(GLC_uint instanceId, GLuint shaderId)
 	else
 	{
 		m_ShaderGroup.remove(instanceId);
+		if (m_ShaderGroup.keys(instanceShadingGroup).isEmpty())
+		{
+			unBindShader(instanceShadingGroup);
+		}
 		// The instance is in a shading group
 		if (m_SelectedNodes.contains(instanceId))
 		{
@@ -611,6 +615,27 @@ int GLC_Collection::numberOfDrawableObjects() const
 	return numberOffDrawnHit;
 }
 
+// Return instances name from the specified shading group
+QList<QString> GLC_Collection::getInstanceNameFromShadingGroup(GLuint shaderId) const
+{
+	QList<QString> listOfInstanceName;
+	QList<GLC_uint> listOfInstanceNameId= m_ShaderGroup.keys(shaderId);
+	if (not listOfInstanceNameId.isEmpty())
+	{
+		const int size= listOfInstanceNameId.size();
+		for (int i= 0; i < size; ++i)
+		{
+			listOfInstanceName << m_NodeMap.value(listOfInstanceNameId[i]).name();
+		}
+	}
+	return listOfInstanceName;
+}
+
+// Return the number of used shading group
+int GLC_Collection::numberOfUsedShadingGroup() const
+{
+	return m_ShaderGroup.values().toSet().size();
+}
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
