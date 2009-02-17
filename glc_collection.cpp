@@ -210,10 +210,6 @@ void GLC_Collection::changeShadingGroup(GLC_uint instanceId, GLuint shaderId)
 	else
 	{
 		m_ShaderGroup.remove(instanceId);
-		if (m_ShaderGroup.keys(instanceShadingGroup).isEmpty())
-		{
-			unBindShader(instanceShadingGroup);
-		}
 		// The instance is in a shading group
 		if (m_SelectedNodes.contains(instanceId))
 		{
