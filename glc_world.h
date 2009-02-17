@@ -88,6 +88,15 @@ public:
 	inline QList<QString> getInvisibleInstanceName() const
 	{return m_pCollection->getInvisibleInstanceName();}
 
+	//! Return instances name from the specified shading group
+	inline QList<QString> getInstanceNameFromShadingGroup(GLuint id) const
+	{return m_pCollection->getInstanceNameFromShadingGroup(id);}
+
+	//! Return the number of used shading group
+	inline int numberOfUsedShadingGroup() const
+	{return m_pCollection->numberOfUsedShadingGroup();}
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
