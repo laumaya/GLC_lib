@@ -198,7 +198,7 @@ void GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 
 		QFile textureFile(textureFileName);
 
-		if (!textureFile.open(QIODevice::ReadOnly))
+		if (!textureFile.open(QIODevice::ReadOnly) or (textureFileName.right(3).contains("TGA", Qt::CaseInsensitive)))
 		{
 			m_LoadStatus= "GLC_ObjMtlLoader::extractTextureFileName File ";
 			//qDebug() << m_LoadStatus;

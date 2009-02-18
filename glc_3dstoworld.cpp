@@ -351,20 +351,24 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 	if (p3dsMaterial->texture1_map.name[0])
 	{
 		const QString textureName(p3dsMaterial->texture1_map.name);
-		// Retrieve the .3ds file path
-		QFileInfo fileInfo(m_FileName);
-		QString textureFileName(fileInfo.absolutePath() + QDir::separator());
-		textureFileName.append(textureName);
-		QFile textureFile(textureFileName);
-
-		if (textureFile.open(QIODevice::ReadOnly))
+		// TGA file type are not supported
+		if (not textureName.right(3).contains("TGA", Qt::CaseInsensitive))
 		{
-			// Create the texture and assign it to the material
-			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
-			pMaterial->setTexture(pTexture);
-			m_ListOfAttachedFileName << textureFileName;
+			// Retrieve the .3ds file path
+			QFileInfo fileInfo(m_FileName);
+			QString textureFileName(fileInfo.absolutePath() + QDir::separator());
+			textureFileName.append(textureName);
+			QFile textureFile(textureFileName);
+
+			if (textureFile.open(QIODevice::ReadOnly))
+			{
+				// Create the texture and assign it to the material
+				GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
+				pMaterial->setTexture(pTexture);
+				m_ListOfAttachedFileName << textureFileName;
+			}
+			textureFile.close();
 		}
-		textureFile.close();
 	}
 
 	// Ambient Color
