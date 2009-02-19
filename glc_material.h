@@ -57,23 +57,23 @@ public:
 	//! Construct Colored GLC_Material
 	//! Default constructor
 	GLC_Material();
-	
+
 	/*! By default, Ambiant Color is dark grey*/
 	GLC_Material(const QColor &);
 
 	/*! By default, Ambiant Color is dark grey*/
 	GLC_Material(const QString& name, const GLfloat *);
-	
+
 	//! Construct textured GLC_Material
 	GLC_Material(GLC_Texture* pTexture, const char *pName);
-	
+
 	//! Copy constructor
 	/*! Hast usage table are not copying
 	 */
 	GLC_Material(const GLC_Material &InitMaterial);
-	
+
 	//! Remove material where used geometry
-	virtual ~GLC_Material(void);	
+	virtual ~GLC_Material(void);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -106,22 +106,26 @@ public:
 	{
 		return m_fShininess;
 	}
-	
+
 	//! Get the texture File Name
 	QString getTextureFileName() const;
-	
+
 	//! Get Texture Id
 	GLuint getTextureID() const;
-	
+
 	//! return true if the texture is loaded
 	bool textureIsLoaded() const;
-	
+
 	//! Return true if the material is transparent
 	inline bool isTransparent() const {return  m_Transparency < 1.0;}
-	
+
 	//! Return true if material are the same
 	bool operator==(const GLC_Material&) const;
-	
+
+	//! Return the material alpha
+	inline double getAlpha() const
+	{return m_DiffuseColor.alphaF();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -132,25 +136,25 @@ public:
 	//! Assignement operator
 	/*! The Hash Table WhereUse
 	 *  is not modified
-	 */	
+	 */
 	inline GLC_Material &operator=(const GLC_Material& mat)
 	{
 		setMaterial(&mat);
 		return *this;
-	}	
+	}
 
 	//! Set Material properties
 	/*! The Hash Table WhereUse
 	 *  is not modified
 	 */
 	 void setMaterial(const GLC_Material*);
-	 
+
 	//! Set Ambiant Color
 	void setAmbientColor(const QColor& ambientColor);
 
 	//! Set Diffuse color
 	void setDiffuseColor(const QColor& diffuseColor);
-	
+
 	//! Set Specular color
 	void setSpecularColor(const QColor& specularColor);
 
@@ -165,7 +169,7 @@ public:
 
 	//! Set Texture
 	void setTexture(GLC_Texture* pTexture);
-	
+
 	//! remove Material Texture
 	void removeTexture();
 
@@ -174,10 +178,10 @@ public:
 
 	//! Remove Geometry to the "where used" hash table
 	bool delGLC_Geom(GLC_uint Key);
-	
+
 	//! Set the material transparency
 	void setTransparency(const qreal);
-	
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -188,7 +192,7 @@ public:
 
 	//! Load the texture
 	void glLoadTexture(void);
-	
+
 	//! Execute OpenGL Material
 	virtual void glExecute();
 
@@ -200,7 +204,7 @@ public:
 private:
 	//! Init Ambiant Color
 	void initDiffuseColor(void);
-	
+
 	//! Init other color
 	void initOtherColor(void);
 
@@ -229,7 +233,7 @@ private:
 
 	//! material's texture
 	GLC_Texture* m_pTexture;
-	
+
 	//! material transparency
 	qreal m_Transparency;
 
