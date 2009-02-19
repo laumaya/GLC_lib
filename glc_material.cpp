@@ -278,6 +278,14 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
  	m_fShininess= pMat->m_fShininess;
  	// Transparency
  	m_Transparency= pMat->m_Transparency;
+	// Update geometry which use this material
+	CWhereUsed::const_iterator iGeom= m_WhereUsed.constBegin();
+	while (iGeom != m_WhereUsed.constEnd())
+	{
+		iGeom.value()->updateTransparentMaterialNumber();
+		++iGeom;
+	}
+
  }
 
 // Set Ambiant Color
@@ -381,6 +389,13 @@ void GLC_Material::setTransparency(const qreal alpha)
 	m_DiffuseColor.setAlphaF(m_Transparency);
 	m_SpecularColor.setAlphaF(m_Transparency);
 	m_LightEmission.setAlphaF(m_Transparency);
+	// Update geometry which use this material
+	CWhereUsed::const_iterator iGeom= m_WhereUsed.constBegin();
+	while (iGeom != m_WhereUsed.constEnd())
+	{
+		iGeom.value()->updateTransparentMaterialNumber();
+		++iGeom;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
