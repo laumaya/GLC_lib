@@ -161,6 +161,20 @@ void GLC_VboGeom::replaceMasterMaterial(GLC_Material* pMaterial)
 		addMaterial(pMaterial);
 	}
 }
+//! Update the transparent material number
+void GLC_VboGeom::updateTransparentMaterialNumber()
+{
+	m_TransparentMaterialNumber= 0;
+	MaterialHash::const_iterator iMat= m_MaterialHash.constBegin();
+	while (iMat != m_MaterialHash.constEnd())
+	{
+		if (iMat.value()->isTransparent())
+		{
+			++m_TransparentMaterialNumber;
+		}
+		++iMat;
+	}
+}
 
 // Add material to mesh
 void GLC_VboGeom::addMaterial(GLC_Material* pMaterial)

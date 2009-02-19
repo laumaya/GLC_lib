@@ -177,6 +177,9 @@ public:
 			m_GeometryIsValid= false;
 		}
 	}
+
+	//! Update the transparent material number
+	void updateTransparentMaterialNumber();
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
