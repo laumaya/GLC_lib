@@ -3,10 +3,10 @@ TEMPLATE = lib
 QT += opengl \
     core
 CONFIG += exceptions \
-    debug \
+    release \
     warn_on
 TARGET = GLC_lib
-VERSION = 1.0.0
+VERSION = 1.1.0
 
 unix:OBJECTS_DIR = ./Build
 unix:MOC_DIR = ./Build
@@ -220,5 +220,5 @@ include_glext.files =$${HEADERS_GLEXT}
 target.path = $${LIB_DIR}
    
 # "make install" configuration options
-INSTALLS += target include include_lib3ds include_glext
+INSTALLS += target include_lib3ds include_glext include
 
