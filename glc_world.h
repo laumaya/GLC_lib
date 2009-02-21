@@ -129,10 +129,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the world
-	inline void glExecute(GLuint groupId) {m_pCollection->glExecute(groupId);}
+	inline void glExecute(GLuint groupId, bool transparent= false) {m_pCollection->glExecute(groupId, transparent);}
 
 	//! Display the world's shader group
-	inline void glExecuteShaderGroup() {m_pCollection->glExecuteShaderGroup();}
+	inline void glExecuteShaderGroup(bool transparent= false) {m_pCollection->glExecuteShaderGroup(transparent);}
 
 //@}
 //////////////////////////////////////////////////////////////////////

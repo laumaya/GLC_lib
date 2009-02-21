@@ -223,10 +223,10 @@ public:
 	 * The selection group is 1
 	 * User group are identified by user id
 	 */
-	void glExecute(GLuint);
+	void glExecute(GLuint, bool);
 
 	//! Display all shader group
-	void glExecuteShaderGroup();
+	void glExecuteShaderGroup(bool);
 
 //@}
 
@@ -237,7 +237,7 @@ public:
 
 private:
 	//! Display collection's member
-	void glDraw(GLuint);
+	void glDraw(GLuint, bool);
 
 //@}
 
@@ -272,8 +272,8 @@ private:
 	//! Shader groups hash
 	ShaderGroup m_ShaderGroup;
 
-	//! Not transparent Node Hash Table
-	PointerNodeHash m_NotTransparentNodes;
+	//! Normal Node Hash Table
+	PointerNodeHash m_MainNodes;
 
 	//! Show State
 	bool m_IsInShowSate;
