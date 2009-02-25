@@ -133,7 +133,7 @@ void GLC_Box::setLgZ(double LgZ)
 // Box Set Up
 void GLC_Box::glDraw(bool)
 {
-	const bool vboIsSupported= GLC_State::vboIsSupported();
+	const bool vboIsUsed= GLC_State::vboUsed();
 
 	if (!m_GeometryIsValid)
 	{
@@ -259,7 +259,7 @@ void GLC_Box::glDraw(bool)
 		m_IndexVector << 16 << 17 << 18 << 18 << 19 << 16;		// Face 5
 		m_IndexVector << 20 << 21 << 22 << 22 << 23 << 20;		// Face 6
 
-		if (vboIsSupported)
+		if (vboIsUsed)
 		{
 			const GLsizeiptr size= 24 * sizeof(GLC_Vertex);
 			glBufferData(GL_ARRAY_BUFFER, size, m_VertexVector.data(), GL_STATIC_DRAW);
@@ -269,7 +269,7 @@ void GLC_Box::glDraw(bool)
 		}
 	}
 
-	if (vboIsSupported)
+	if (vboIsUsed)
 	{
 		// Use VBO
 		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));

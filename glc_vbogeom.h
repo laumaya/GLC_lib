@@ -44,9 +44,7 @@ struct GLC_Vertex
 	float s, t;				// 8 Bytes
 	// Color
 	GLfloat r, g, b, a;		// 16 Bytes
-
-	float padding[4];
-	// => 64 Bytes
+	// => 48 Bytes
 };
 
 typedef QVector<GLC_Vertex> VertexVector;

@@ -81,7 +81,7 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 
 GLC_VboGeom::~GLC_VboGeom()
 {
-	if (GLC_State::vboIsSupported())
+	if (GLC_State::vboUsed())
 	{
 		// VBO
 		if (0 != m_VboId)
@@ -240,13 +240,13 @@ void GLC_VboGeom::glExecute(bool isSelected, bool transparent)
 		glDisable(GL_LIGHTING);
 	}
 
-	const bool vboIsSupported= GLC_State::vboIsSupported();
+	const bool vboIsUsed= GLC_State::vboUsed();
 
-	if (vboIsSupported and (0 == m_VboId))
+	if (vboIsUsed and (0 == m_VboId))
 	{
 		createVBOs();
 	}
-	if (vboIsSupported)
+	if (vboIsUsed)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);

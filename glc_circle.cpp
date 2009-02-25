@@ -184,7 +184,7 @@ void GLC_Circle::glDraw(bool)
 			m_IndexVector[i]= i;
 		}
 
-		if (GLC_State::vboIsSupported())
+		if (GLC_State::vboUsed())
 		{
 			// Create VBO
 			glBufferData(GL_ARRAY_BUFFER, size, m_VertexVector.data(), GL_STATIC_DRAW);
@@ -196,7 +196,7 @@ void GLC_Circle::glDraw(bool)
 		}
 	}
 
-	if (GLC_State::vboIsSupported())
+	if (GLC_State::vboUsed())
 	{
 		// Use VBO
 		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));

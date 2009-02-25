@@ -140,7 +140,7 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 // Dessin du GLC_Cylinder
 void GLC_Cylinder::glDraw(bool)
 {
-	const bool vboIsSupported= GLC_State::vboIsSupported();
+	const bool vboIsUsed= GLC_State::vboUsed();
 
 	if (!m_GeometryIsValid)
 	{
@@ -234,7 +234,7 @@ void GLC_Cylinder::glDraw(bool)
 				m_IndexVector[i + 1]= k;
 		}
 
-		if (vboIsSupported)
+		if (vboIsUsed)
 		{
 			// Create VBO
 			const GLsizeiptr dataSize= dataNbr * sizeof(GLC_Vertex);
@@ -246,7 +246,7 @@ void GLC_Cylinder::glDraw(bool)
 
 	}
 
-	if (vboIsSupported)
+	if (vboIsUsed)
 	{
 		// Use VBO
 		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));

@@ -267,7 +267,7 @@ void GLC_Mesh2::glDraw(bool transparent)
 {
 	Q_ASSERT(m_GeometryIsValid or not m_VertexVector.isEmpty());
 
-	const bool vboIsSupported= GLC_State::vboIsSupported();
+	const bool vboIsUsed= GLC_State::vboUsed();
 
 	IndexList iboList;
 	MaterialGroupHash::iterator iMaterialGroup;
@@ -288,7 +288,7 @@ void GLC_Mesh2::glDraw(bool transparent)
 		// Set index vector
 		m_IndexVector= iboList.toVector();
 
-		if (vboIsSupported)
+		if (vboIsUsed)
 		{
 			// Create VBO
 			const GLsizei dataNbr= static_cast<GLsizei>(m_VertexVector.size());
@@ -303,7 +303,7 @@ void GLC_Mesh2::glDraw(bool transparent)
 		}
 	}
 
-	if (vboIsSupported)
+	if (vboIsUsed)
 	{
 		// Use VBO
 		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
@@ -399,7 +399,7 @@ void GLC_Mesh2::glDraw(bool transparent)
     		if (m_IsSelected or GLC_State::isInSelectionMode() or (pCurrentMaterial->isTransparent() == transparent))
     		{
     			// Draw Mesh
-    			if (vboIsSupported)
+    			if (vboIsUsed)
     			{
     				// Use VBO
     				//glDrawRangeElements(GL_TRIANGLES, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET((cur) * sizeof(unsigned int)));
