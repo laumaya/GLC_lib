@@ -27,6 +27,8 @@
 #ifndef GLC_STATE_H_
 #define GLC_STATE_H_
 
+#include <QString>
+
 class GLC_State
 {
 private:
@@ -40,7 +42,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return true if VBO is supported
-	inline static bool vboIsSupported() {return m_VboSupported;}
+	inline static bool vboSupported() {return m_VboSupported;}
+
+	//! Return true if VBO is used
+	inline static bool vboUsed() {return m_UseVbo;}
 
 	//! Return true if GLSL is supported
 	inline static bool glslIsSupported() {return m_GlslSupported;}
@@ -50,6 +55,15 @@ public:
 
 	//! Return true if is in selection mode
 	inline static bool isInSelectionMode() {return m_IsInSelectionMode;}
+
+	//! Return the Opengl vendor
+	inline static QString vendor() {return m_Vendor;}
+
+	//! Return the Opengl renderer
+	inline static QString renderer() {return m_Renderer;}
+
+	//! Return true if OpenGL Vendor is NVIDIA
+	inline static bool vendorIsNvidia() {return m_Vendor.contains("NVIDIA");}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -57,8 +71,14 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Intialize the state
+	static void init();
+
 	//! Set VBO support
 	static void setVboSupport();
+
+	//! Set VBO usage
+	static void setVboUsage(const bool);
 
 	//! Set GLSL support
 	static void setGlslSupport();
@@ -78,6 +98,9 @@ private:
 	//! VBO supported flag
 	static bool m_VboSupported;
 
+	//! VBO used
+	static bool m_UseVbo;
+
 	//! GLSL supported flag
 	static bool m_GlslSupported;
 
@@ -86,6 +109,12 @@ private:
 
 	//! In selection mode
 	static bool m_IsInSelectionMode;
+
+	//! The Opengl card vendor
+	static QString m_Vendor;
+
+	//! The Opengl card renderer
+	static QString m_Renderer;
 
 };
 

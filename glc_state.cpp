@@ -28,18 +28,37 @@
 #include "glc_ext.h"
 
 bool GLC_State::m_VboSupported= false;
+bool GLC_State::m_UseVbo= true;
 bool GLC_State::m_GlslSupported= false;
 bool GLC_State::m_UseSelectionShader= false;
 bool GLC_State::m_IsInSelectionMode= false;
+QString GLC_State::m_Vendor;
+QString GLC_State::m_Renderer;
+
 
 GLC_State::~GLC_State()
 {
+}
+
+//! Intialize the state
+void GLC_State::init()
+{
+	setVboSupport();
+	setGlslSupport();
+	m_Vendor= (char *) glGetString(GL_VENDOR);
+	m_Renderer= (char *) glGetString(GL_RENDERER);
 }
 
 // Set VBO support
 void GLC_State::setVboSupport()
 {
 	m_VboSupported= glc::extensionIsSupported("ARB_vertex_buffer_object") and glc::loadVboExtension();
+}
+
+// Set VBO usage
+void GLC_State::setVboUsage(const bool vboUsed)
+{
+	m_UseVbo= m_VboSupported and vboUsed;
 }
 
 // Set GLSL support
