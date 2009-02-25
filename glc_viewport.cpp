@@ -136,11 +136,8 @@ void GLC_Viewport::initGl()
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-	// Extension "ARB_vertex_buffer_object"
-	GLC_State::setVboSupport();
-
-	// Extension "GL_ARB_shading_language_100"
-	GLC_State::setGlslSupport();
+	// Init GLC_State
+	GLC_State::init();
 }
 
 // Define camera's target position
