@@ -30,8 +30,10 @@
 bool GLC_State::m_VboSupported= false;
 bool GLC_State::m_UseVbo= true;
 bool GLC_State::m_GlslSupported= false;
+bool GLC_State::m_UseShader= true;
 bool GLC_State::m_UseSelectionShader= false;
 bool GLC_State::m_IsInSelectionMode= false;
+QString GLC_State::m_Version;
 QString GLC_State::m_Vendor;
 QString GLC_State::m_Renderer;
 
@@ -45,6 +47,7 @@ void GLC_State::init()
 {
 	setVboSupport();
 	setGlslSupport();
+	m_Version= (char *) glGetString(GL_VERSION);
 	m_Vendor= (char *) glGetString(GL_VENDOR);
 	m_Renderer= (char *) glGetString(GL_RENDERER);
 }
@@ -65,6 +68,12 @@ void GLC_State::setVboUsage(const bool vboUsed)
 void GLC_State::setGlslSupport()
 {
 	m_GlslSupported= glc::extensionIsSupported("GL_ARB_shading_language_100") and glc::loadGlSlExtension();
+}
+
+// Set GLSL usage
+void GLC_State::setGlslUsage(const bool glslUsage)
+{
+	m_UseShader= m_GlslSupported and glslUsage;
 }
 
 // Set selection shader usage

@@ -48,13 +48,19 @@ public:
 	inline static bool vboUsed() {return m_UseVbo;}
 
 	//! Return true if GLSL is supported
-	inline static bool glslIsSupported() {return m_GlslSupported;}
+	inline static bool glslSupported() {return m_GlslSupported;}
+
+	//! Return true if GLSL is used
+	inline static bool glslUsed() {return m_UseShader;}
 
 	//! Return true if selection shader is used
 	inline static bool selectionShaderUsed() {return m_UseSelectionShader;}
 
 	//! Return true if is in selection mode
 	inline static bool isInSelectionMode() {return m_IsInSelectionMode;}
+
+	//! Return the Opengl version
+	inline static QString version() {return m_Version;}
 
 	//! Return the Opengl vendor
 	inline static QString vendor() {return m_Vendor;}
@@ -83,6 +89,9 @@ public:
 	//! Set GLSL support
 	static void setGlslSupport();
 
+	//! Set GLSL usage
+	static void setGlslUsage(const bool);
+
 	//! Set selection shader usage
 	static void setSelectionShaderUsage(const bool);
 
@@ -104,11 +113,17 @@ private:
 	//! GLSL supported flag
 	static bool m_GlslSupported;
 
+	//! Use shader
+	static bool m_UseShader;
+
 	//! Use selectionShader flag
 	static bool m_UseSelectionShader;
 
 	//! In selection mode
 	static bool m_IsInSelectionMode;
+
+	//! The Opengl card version
+	static QString m_Version;
 
 	//! The Opengl card vendor
 	static QString m_Vendor;
