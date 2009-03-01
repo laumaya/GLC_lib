@@ -148,32 +148,32 @@ GLC_Instance::~GLC_Instance()
 // Get the bounding box
 GLC_BoundingBox GLC_Instance::getBoundingBox(void)
 {
+	GLC_BoundingBox resultBox;
 	if (getBoundingBoxValidity())
 	{
-		return *m_pBoundingBox;
+		resultBox= *m_pBoundingBox;
 	}
 	else if (m_pGeom != NULL)
 	{
 		computeBoundingBox();
-		if (m_pBoundingBox != NULL)
-		{
-			m_IsBoundingBoxValid= true;
-			return *m_pBoundingBox;
-		}
+		m_IsBoundingBoxValid= true;
+		resultBox= *m_pBoundingBox;
 	}
 
-	GLC_BoundingBox nullBoundingBox;
-	return nullBoundingBox;
+	return resultBox;
 }
 
 // Get the validity of the Bounding Box
 const bool GLC_Instance::getBoundingBoxValidity(void) const
 {
+	bool result;
 	if ((m_pGeom != NULL) && (m_pBoundingBox != NULL))
 	{
-		return m_pGeom->boundingBoxIsValid() and m_IsBoundingBoxValid;
+		result= m_pGeom->boundingBoxIsValid() and m_IsBoundingBoxValid;
 	}
-	else return false;
+	else result= false;
+
+	return result;
 }
 
 // Clone the instance
