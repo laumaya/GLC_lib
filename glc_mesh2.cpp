@@ -64,12 +64,28 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 	}
 	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << id();
 
+	// Copy inner material hash
+	MaterialHash::const_iterator i= m_MaterialHash.begin();
+	MaterialHash newMaterialHash;
+	QHash<GLC_uint, GLC_uint> materialMap;
+    while (i != m_MaterialHash.constEnd())
+    {
+        // update inner material use table
+    	i.value()->delGLC_Geom(id());
+    	GLC_Material* pNewMaterial= new GLC_Material(*(i.value()));
+    	newMaterialHash.insert(pNewMaterial->id(), pNewMaterial);
+    	pNewMaterial->addGLC_Geom(this);
+    	materialMap.insert(i.key(), pNewMaterial->id());
+        ++i;
+    }
+    m_MaterialHash= newMaterialHash;
+
 	// Copy Material group IBO
 	MaterialGroupHash::const_iterator j= meshToCopy.m_MaterialGroup.begin();
     while (j != meshToCopy.m_MaterialGroup.constEnd())
     {
     	IndexList* pIndexList= new IndexList(*j.value());
-    	m_MaterialGroup.insert(j.key(), pIndexList);
+    	m_MaterialGroup.insert(materialMap.value(j.key()), pIndexList);
         ++j;
     }
 }
