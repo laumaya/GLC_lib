@@ -50,6 +50,9 @@ public:
 	//! Construct an GLC_Box
 	/*! By default, discretion is set to #GLC_POLYDISCRET*/
 	GLC_Box(double, double, double);
+
+	//! Copy constructor
+	GLC_Box(const GLC_Box&);
 //@}
 
 //////////////////////////////////////////////////////////////////////

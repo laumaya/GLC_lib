@@ -55,6 +55,21 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
 , m_EndedIsCaped(sourceCylinder.m_EndedIsCaped)
 {
 	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0) && (m_Discret > 0));
+
+	// Copy inner material hash
+	MaterialHash::const_iterator i= m_MaterialHash.begin();
+	MaterialHash newMaterialHash;
+    while (i != m_MaterialHash.constEnd())
+    {
+        // update inner material use table
+    	i.value()->delGLC_Geom(id());
+    	GLC_Material* pNewMaterial= new GLC_Material(*(i.value()));
+    	newMaterialHash.insert(pNewMaterial->id(), pNewMaterial);
+    	pNewMaterial->addGLC_Geom(this);
+         ++i;
+    }
+    m_MaterialHash= newMaterialHash;
+
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions

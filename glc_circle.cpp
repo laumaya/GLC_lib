@@ -49,6 +49,19 @@ GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
 , m_nDiscret(sourceCircle.m_nDiscret)
 , m_dAngle(sourceCircle.m_dAngle)
 {
+	// Copy inner material hash
+	MaterialHash::const_iterator i= m_MaterialHash.begin();
+	MaterialHash newMaterialHash;
+    while (i != m_MaterialHash.constEnd())
+    {
+        // update inner material use table
+    	i.value()->delGLC_Geom(id());
+    	GLC_Material* pNewMaterial= new GLC_Material(*(i.value()));
+    	newMaterialHash.insert(pNewMaterial->id(), pNewMaterial);
+    	pNewMaterial->addGLC_Geom(this);
+         ++i;
+    }
+    m_MaterialHash= newMaterialHash;
 }
 GLC_Circle::~GLC_Circle()
 {
