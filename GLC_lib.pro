@@ -158,7 +158,6 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Exception \
     		   include/GLC_Factory \
     		   include/GLC_FileFormatException \
-    		   include/GLC_Geometry \
     		   include/GLC_VboGeom \
     		   include/GLC_ImagePlane \
     		   include/GLC_Instance \
