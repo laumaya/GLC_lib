@@ -54,7 +54,6 @@ public:
 	GLC_Circle(const GLC_Circle& sourceCircle);
 
 	//! Destructor
-	/*! \todo Check if this destructor is necessary*/
 	virtual ~GLC_Circle();
 
 //@}
