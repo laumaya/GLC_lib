@@ -34,6 +34,9 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+
+//! \struct GLC_Vertex
+/*! \brief GLC_Vertex : OpenGL Vertex */
 struct GLC_Vertex
 {
 	// Vertex
