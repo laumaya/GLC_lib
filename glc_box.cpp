@@ -40,6 +40,28 @@ GLC_Box::GLC_Box(double dLx, double dLy, double dlz)
 {
 
 }
+// Copy constructor
+GLC_Box::GLC_Box(const GLC_Box& box)
+:GLC_VboGeom(box)
+, m_dLgX(box.m_dLgX)
+, m_dLgY(box.m_dLgY)
+, m_dLgZ(box.m_dLgZ)
+{
+	// Copy inner material hash
+	MaterialHash::const_iterator i= m_MaterialHash.begin();
+	MaterialHash newMaterialHash;
+    while (i != m_MaterialHash.constEnd())
+    {
+        // update inner material use table
+    	i.value()->delGLC_Geom(id());
+    	GLC_Material* pNewMaterial= new GLC_Material(*(i.value()));
+    	newMaterialHash.insert(pNewMaterial->id(), pNewMaterial);
+    	pNewMaterial->addGLC_Geom(this);
+         ++i;
+    }
+    m_MaterialHash= newMaterialHash;
+
+}
 
 //////////////////////////////////////////////////////////////////////
 // Get Functions

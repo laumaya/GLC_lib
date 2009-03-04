@@ -647,7 +647,7 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		// Convert box distance in sphere distance
 		const double center= fabs(boundingBox.getCenter().Z());
 		const double radius= boundingBox.boundingSphereRadius();
-		const double min= center - radius * (2.0 - increaseFactor);
+		const double min= center - radius * increaseFactor;
 		const double max= center + radius * increaseFactor;
 
 		GLC_Point4d camEye(m_pViewCam->getEye());

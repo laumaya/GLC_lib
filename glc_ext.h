@@ -21,6 +21,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 *****************************************************************************/
+//! \file glc_ext.h Header of the GLC Opengl extension functions.
 
 #ifndef GLC_EXT_H_
 #define GLC_EXT_H_

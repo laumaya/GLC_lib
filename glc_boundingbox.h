@@ -86,9 +86,9 @@ public:
 	//! Get the center of the bounding box
 	GLC_Point4d getCenter(void) const;
 
-	//! Return the boudingSphere Radius
+	//! Return the boundingSphere Radius
 	inline double boundingSphereRadius() const
-	{return fabs(GLC_Vector4d(m_Lower - m_Upper).norm()) / 2.0;}
+	{return GLC_Vector4d(m_Lower - m_Upper).norm() / 2.0;}
 
 //@}
 

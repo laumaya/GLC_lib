@@ -35,7 +35,6 @@
 #include "glc_vector2df.h"
 #include "glc_vector3df.h"
 
-typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
 typedef QList<GLC_Vertex> VertexList;
 typedef QList<GLuint> IndexList;
 typedef QHash<GLC_uint, IndexList*> MaterialGroupHash;

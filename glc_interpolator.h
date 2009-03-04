@@ -22,8 +22,7 @@
 
 *****************************************************************************/
 
-
-//! \file Interpolator.h interface for the GLC_Interpolator class.
+//! \file glc_interpolator.h interface for the GLC_Interpolator class.
 
 #ifndef GLC_INTERPOLATOR_H_
 #define GLC_INTERPOLATOR_H_
@@ -43,7 +42,14 @@ enum INTERPOL_TYPE
 // La CLASSE
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Interpolator  
+
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_Interpolator
+/*! \brief GLC_Interpolator : Matrix interpolation class*/
+
+/*! An GLC_Interpolator is a class used to interpolate 2 4D matrix*/
+//////////////////////////////////////////////////////////////////////
+class GLC_Interpolator
 {
 
 //////////////////////////////////////////////////////////////////////
@@ -76,7 +82,7 @@ public:
 	{
 		return m_InterpolMat;
 	}
-	
+
 //////////////////////////////////////////////////////////////////////
 // Fonctions de Service privée
 //////////////////////////////////////////////////////////////////////

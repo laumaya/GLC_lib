@@ -21,6 +21,8 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 *****************************************************************************/
+//! \file glc_ext.cpp implementation of the GLC Opengl extension functions.
+
 #include "glc_ext.h"
 #include <QString>
 #include <QGLContext>
