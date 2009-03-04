@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file interpolator.cpp implementation of the GLC_Interpolator class.
+//! \file glc_interpolator.cpp implementation of the GLC_Interpolator class.
 
 #include "glc_interpolator.h"
 
@@ -50,7 +50,7 @@ void GLC_Interpolator::SetInterpolMat(int NbrPas, const GLC_Vector4d &VectDepart
 	m_InterpolType= Interpolation;
 	if (!NbrPas)
 	{
-		//TRACE("GLC_Interpolator::SetInterpolMat -> NbrPas == 0 \n");		
+		//TRACE("GLC_Interpolator::SetInterpolMat -> NbrPas == 0 \n");
 	}
 	else m_nNbrPas= NbrPas;
 
@@ -90,7 +90,7 @@ void GLC_Interpolator::SetVecteurs(const GLC_Vector4d &VectDepart, const GLC_Vec
 {
 	m_VectDepart= VectDepart;
 	m_VectArrive= VectArrive;
-	
+
 	// Calcul de la matrice d'interpolation
 	CalcInterpolMat();
 
@@ -135,10 +135,10 @@ bool GLC_Interpolator::CalcInterpolMat(void)
 
 // Calcul la matrice d'interpolation linéaire
 bool GLC_Interpolator::CalcInterpolLineaireMat(void)
-{	
+{
 
 	// Calcul la matrice de translation
-	const GLC_Vector4d VectTrans= (m_VectArrive - m_VectDepart) * (1.0 / m_nNbrPas);	
+	const GLC_Vector4d VectTrans= (m_VectArrive - m_VectDepart) * (1.0 / m_nNbrPas);
 	if(VectTrans.isNull())
 	{
 		//TRACE("GLC_Interpolator::CalcInterpolLineaireMat -> Translation NULL\n");
