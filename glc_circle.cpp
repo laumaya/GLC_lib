@@ -39,6 +39,7 @@ GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
 , m_nDiscret(GLC_DISCRET)
 , m_dAngle(Angle)
 , m_Step(0)
+, m_pSimpleGeomEngine(dynamic_cast<GLC_SimpleGeomEngine*>(engineHandle()))
 {
 
 }
@@ -48,6 +49,7 @@ GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
 , m_Radius(sourceCircle.m_Radius)
 , m_nDiscret(sourceCircle.m_nDiscret)
 , m_dAngle(sourceCircle.m_dAngle)
+, m_pSimpleGeomEngine(sourceCircle.m_pSimpleGeomEngine)
 {
 	// Copy inner material hash
 	MaterialHash::const_iterator i= m_MaterialHash.begin();
@@ -172,6 +174,7 @@ void GLC_Circle::glDraw(bool)
 {
 	if (!m_GeometryIsValid)
 	{
+		VertexVector* pVertexVector= m_pSimpleGeomEngine->vertexVectorHandle();
 		// Calculate number of step
 		m_Step= static_cast<GLuint>(static_cast<double>(m_nDiscret) * (m_dAngle / (2 * glc::PI)));
 		if (m_Step < 2) m_Step= 2;
@@ -179,33 +182,34 @@ void GLC_Circle::glDraw(bool)
 		// Vertex Vector
 		const GLsizeiptr size= (m_Step + 1) * sizeof(GLC_Vertex);
 		// Resize the Vertex vector
-		m_VertexVector.resize(m_Step + 1);
+		pVertexVector->resize(m_Step + 1);
 		// Fill Vertex Vector
 		for (GLuint i= 0; i <= m_Step; ++i)
 		{
-			m_VertexVector[i].x= static_cast<float>(m_Radius * cos(i * m_dAngle / m_Step));
-			m_VertexVector[i].y= static_cast<float>(m_Radius * sin(i * m_dAngle / m_Step));
+			(*pVertexVector)[i].x= static_cast<float>(m_Radius * cos(i * m_dAngle / m_Step));
+			(*pVertexVector)[i].y= static_cast<float>(m_Radius * sin(i * m_dAngle / m_Step));
 		}
 
 		// Index Vector
 		const GLsizeiptr IndexSize = (m_Step + 1) * sizeof(GLuint);
 		// Resize index vector
-		m_IndexVector.resize(m_Step + 1);
+		QVector<GLuint>* pIndexVector= m_pSimpleGeomEngine->indexVectorHandle();
+		pIndexVector->resize(m_Step + 1);
 		// Fill index vector
 		for (GLuint i= 0; i <= m_Step; ++i)
 		{
-			m_IndexVector[i]= i;
+			(*pIndexVector)[i]= i;
 		}
 
 		if (GLC_State::vboUsed())
 		{
 			// Create VBO
-			glBufferData(GL_ARRAY_BUFFER, size, m_VertexVector.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, size, pVertexVector->data(), GL_STATIC_DRAW);
 			// Create IBO
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize, m_IndexVector.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize, pIndexVector->data(), GL_STATIC_DRAW);
 			// Clear Vector
-			m_VertexVector.clear();
-			m_IndexVector.clear();
+			pVertexVector->clear();
+			pIndexVector->clear();
 		}
 	}
 
@@ -221,9 +225,9 @@ void GLC_Circle::glDraw(bool)
 	else
 	{
 		// Use Vertex Array
-		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), m_VertexVector.data());
+		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), m_pSimpleGeomEngine->vertexVectorHandle()->data());
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glDrawElements(GL_LINE_STRIP, m_Step + 1, GL_UNSIGNED_INT, m_IndexVector.data());
+		glDrawElements(GL_LINE_STRIP, m_Step + 1, GL_UNSIGNED_INT, m_pSimpleGeomEngine->indexVectorHandle()->data());
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 

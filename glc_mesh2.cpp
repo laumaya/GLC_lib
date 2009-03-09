@@ -41,6 +41,7 @@ GLC_Mesh2::GLC_Mesh2()
 , m_NumberOfFaces(0)
 , m_IsSelected(false)
 , m_ColorPearVertex(false)
+, m_pSimpleGeomEngine(dynamic_cast<GLC_SimpleGeomEngine*>(engineHandle()))
 {
 	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << id();
 	// Index group with default material
@@ -55,13 +56,8 @@ GLC_Mesh2::GLC_Mesh2(const GLC_Mesh2 &meshToCopy)
 , m_NumberOfFaces(meshToCopy.m_NumberOfFaces)
 , m_IsSelected(false)
 , m_ColorPearVertex(meshToCopy.m_ColorPearVertex)
+, m_pSimpleGeomEngine(meshToCopy.m_pSimpleGeomEngine)
 {
-	// Copy Vertex and index data if necessary
-	if (m_VertexVector.isEmpty())
-	{
-		m_VertexVector= meshToCopy.getVertexVector();
-		m_IndexVector= meshToCopy.getIndexVector();
-	}
 	//qDebug() << "GLC_Mesh2::GLC_Mesh2" << id();
 
 	// Copy inner material hash
@@ -120,16 +116,18 @@ GLC_BoundingBox& GLC_Mesh2::boundingBox(void)
 		//qDebug() << "GLC_Mesh2::boundingBox create boundingBox";
 		m_pBoundingBox= new GLC_BoundingBox();
 
-		if (m_VertexVector.isEmpty())
+		if (m_pSimpleGeomEngine->vertexVectorHandle()->isEmpty())
 		{
 			qDebug() << "GLC_Mesh2::getBoundingBox empty m_VertexVector";
 		}
 		else
 		{
-			const int max= m_VertexVector.size();
+			VertexVector* pVertexVector= m_pSimpleGeomEngine->vertexVectorHandle();
+			const int max= pVertexVector->size();
+
 			for (int i= 0; i < max; ++i)
 			{
-				GLC_Vector3d vector(m_VertexVector[i].x, m_VertexVector[i].y, m_VertexVector[i].z);
+				GLC_Vector3d vector((*pVertexVector)[i].x, (*pVertexVector)[i].y, (*pVertexVector)[i].z);
 				m_pBoundingBox->combine(vector);
 			}
 		}
@@ -142,54 +140,6 @@ GLC_BoundingBox& GLC_Mesh2::boundingBox(void)
 GLC_VboGeom* GLC_Mesh2::clone() const
 {
 	return new GLC_Mesh2(*this);
-}
-
-// Return the Vertex Vector
-VertexVector GLC_Mesh2::getVertexVector() const
-{
-
-	if (0 != m_VboId)
-	{
-		// VBO created get data from VBO
-		const int sizeOfVbo= numberOfVertex();
-		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLC_Vertex);
-		VertexVector vertexVector(sizeOfVbo);
-
-		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
-		GLvoid* pVbo = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
-		memcpy(vertexVector.data(), pVbo, dataSize);
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		return vertexVector;
-	}
-	else
-	{
-		return m_VertexVector;
-	}
-}
-
-// Return the Index Vector
-QVector<GLuint> GLC_Mesh2::getIndexVector() const
-{
-	if (0 != m_IboId)
-	{
-		// IBO created get data from IBO
-		const int sizeOfVbo= numberOfVertex();
-		const GLsizeiptr indexSize = sizeOfVbo * sizeof(GLuint);
-		QVector<GLuint> indexVector(sizeOfVbo);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
-		GLvoid* pIbo = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY);
-		memcpy(indexVector.data(), pIbo, indexSize);
-		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		return indexVector;
-	}
-	else
-	{
-		return m_IndexVector;
-	}
-
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -247,19 +197,20 @@ void GLC_Mesh2::addTriangles(const VertexList &triangles, GLC_Material* pMateria
 // Reverse mesh normal
 void GLC_Mesh2::reverseNormal()
 {
+	VertexVector* pVertexVector= m_pSimpleGeomEngine->vertexVectorHandle();
 	// Copy Vertex and index data if necessary
-	if (m_VertexVector.isEmpty())
+	if (pVertexVector->isEmpty())
 	{
-		m_VertexVector= getVertexVector();
-		m_IndexVector= getIndexVector();
+		(*m_pSimpleGeomEngine->vertexVectorHandle())= m_pSimpleGeomEngine->vertexVector();
+		(*m_pSimpleGeomEngine->indexVectorHandle())= m_pSimpleGeomEngine->indexVector();
 	}
 
-	const int max= m_VertexVector.size();
+	const int max= pVertexVector->size();
 	for (int i= 0; i < max; ++i)
 	{
-		m_VertexVector[i].nx= m_VertexVector[i].nx * -1.0f;
-		m_VertexVector[i].ny= m_VertexVector[i].ny * -1.0f;
-		m_VertexVector[i].nz= m_VertexVector[i].nz * -1.0f;
+		(*pVertexVector)[i].nx= (*pVertexVector)[i].nx * -1.0f;
+		(*pVertexVector)[i].ny= (*pVertexVector)[i].ny * -1.0f;
+		(*pVertexVector)[i].nz= (*pVertexVector)[i].nz * -1.0f;
 	}
 	// Invalid the geometry
 	m_GeometryIsValid = false;
@@ -281,7 +232,7 @@ void GLC_Mesh2::glExecute(bool isSelected, bool transparent)
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh2::glDraw(bool transparent)
 {
-	Q_ASSERT(m_GeometryIsValid or not m_VertexVector.isEmpty());
+	Q_ASSERT(m_GeometryIsValid or not m_pSimpleGeomEngine->vertexVectorHandle()->isEmpty());
 
 	const bool vboIsUsed= GLC_State::vboUsed();
 
@@ -302,20 +253,22 @@ void GLC_Mesh2::glDraw(bool transparent)
 	    	++iMaterialGroup;
 	    }
 		// Set index vector
-		m_IndexVector= iboList.toVector();
+	    QVector<GLuint>* pIndexVector= m_pSimpleGeomEngine->indexVectorHandle();
+		(*pIndexVector)= iboList.toVector();
 
 		if (vboIsUsed)
 		{
 			// Create VBO
-			const GLsizei dataNbr= static_cast<GLsizei>(m_VertexVector.size());
+			VertexVector* pVertexVector= m_pSimpleGeomEngine->vertexVectorHandle();
+			const GLsizei dataNbr= static_cast<GLsizei>(pVertexVector->size());
 			const GLsizeiptr dataSize= dataNbr * sizeof(GLC_Vertex);
-			glBufferData(GL_ARRAY_BUFFER, dataSize, m_VertexVector.data(), GL_STATIC_DRAW);
-			m_VertexVector.clear();
+			glBufferData(GL_ARRAY_BUFFER, dataSize, pVertexVector->data(), GL_STATIC_DRAW);
+			pVertexVector->clear();
 			// Create IBO
 			const GLsizei indexNbr= static_cast<GLsizei>(iboList.size());
 			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, m_IndexVector.data(), GL_STATIC_DRAW);
-			m_IndexVector.clear();
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
+			pIndexVector->clear();
 		}
 	}
 
@@ -342,7 +295,7 @@ void GLC_Mesh2::glDraw(bool transparent)
 	else
 	{
 		// Use Vertex Array
-		float* pVertexData= (float *) m_VertexVector.data();
+		float* pVertexData= (float *) m_pSimpleGeomEngine->vertexVectorHandle()->data();
 		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), pVertexData);
 		glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[3]);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[6]);
@@ -424,7 +377,7 @@ void GLC_Mesh2::glDraw(bool transparent)
     			else
     			{
     				// Use Vertex Array
-    				glDrawElements(GL_TRIANGLES, max, GL_UNSIGNED_INT, &m_IndexVector.data()[cur]);
+    				glDrawElements(GL_TRIANGLES, max, GL_UNSIGNED_INT, &m_pSimpleGeomEngine->indexVectorHandle()->data()[cur]);
     			}
     		}
 

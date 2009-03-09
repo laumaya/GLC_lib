@@ -42,7 +42,8 @@ GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength)
 , m_Radius(dRadius)
 , m_Length(dLength)
 , m_Discret(GLC_POLYDISCRET)	// Default discretion
-, m_EndedIsCaped(true)				// Cylinder ended are closed
+, m_EndedIsCaped(true)			// Cylinder ended are closed
+, m_pSimpleGeomEngine(dynamic_cast<GLC_SimpleGeomEngine*>(engineHandle()))
 {
 	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0));
 }
@@ -53,6 +54,7 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
 , m_Length(sourceCylinder.m_Length)
 , m_Discret(sourceCylinder.m_Discret)
 , m_EndedIsCaped(sourceCylinder.m_EndedIsCaped)
+, m_pSimpleGeomEngine(sourceCylinder.m_pSimpleGeomEngine)
 {
 	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0) && (m_Discret > 0));
 
@@ -170,63 +172,65 @@ void GLC_Cylinder::glDraw(bool)
 		// Vertex Vector
 		const GLsizei dataNbr= (m_Discret + 1) * 4;
 		// Resize the Vertex vector
-		m_VertexVector.resize(dataNbr);
+		VertexVector* pVertexVector= m_pSimpleGeomEngine->vertexVectorHandle();
+		pVertexVector->resize(dataNbr);
 
 		for (GLsizei i= 0; i < (dataNbr / 4); ++i)
 		{
 			// Bottom
-			m_VertexVector[i].x= static_cast<GLfloat>(cosArray[i]);
-			m_VertexVector[i].y= static_cast<GLfloat>(sinArray[i]);
-			m_VertexVector[i].z= 0.0f;
+			(*pVertexVector)[i].x= static_cast<GLfloat>(cosArray[i]);
+			(*pVertexVector)[i].y= static_cast<GLfloat>(sinArray[i]);
+			(*pVertexVector)[i].z= 0.0f;
 			GLC_Vector4d normal(cosArray[i], sinArray[i], 0.0);
 			normal.setNormal(1.0);
-			m_VertexVector[i].nx= static_cast<GLfloat>(normal.X());
-			m_VertexVector[i].ny= static_cast<GLfloat>(normal.Y());
-			m_VertexVector[i].nz= 0.0f;
-			m_VertexVector[i].s= static_cast<float>(i) / static_cast<float>(m_Discret);
-			m_VertexVector[i].t= 0.0f;
+			(*pVertexVector)[i].nx= static_cast<GLfloat>(normal.X());
+			(*pVertexVector)[i].ny= static_cast<GLfloat>(normal.Y());
+			(*pVertexVector)[i].nz= 0.0f;
+			(*pVertexVector)[i].s= static_cast<float>(i) / static_cast<float>(m_Discret);
+			(*pVertexVector)[i].t= 0.0f;
 
 			// Top
-			m_VertexVector[i + (m_Discret + 1)].x= m_VertexVector[i].x;
-			m_VertexVector[i + (m_Discret + 1)].y= m_VertexVector[i].y;
-			m_VertexVector[i + (m_Discret + 1)].z= static_cast<GLfloat>(m_Length);
-			m_VertexVector[i + (m_Discret + 1)].nx= m_VertexVector[i].nx;
-			m_VertexVector[i + (m_Discret + 1)].ny= m_VertexVector[i].ny;
-			m_VertexVector[i + (m_Discret + 1)].nz= 0.0f;
-			m_VertexVector[i + (m_Discret + 1)].s= m_VertexVector[i].s;
-			m_VertexVector[i + (m_Discret + 1)].t= 1.0f;
+			(*pVertexVector)[i + (m_Discret + 1)].x= (*pVertexVector)[i].x;
+			(*pVertexVector)[i + (m_Discret + 1)].y= (*pVertexVector)[i].y;
+			(*pVertexVector)[i + (m_Discret + 1)].z= static_cast<GLfloat>(m_Length);
+			(*pVertexVector)[i + (m_Discret + 1)].nx= (*pVertexVector)[i].nx;
+			(*pVertexVector)[i + (m_Discret + 1)].ny= (*pVertexVector)[i].ny;
+			(*pVertexVector)[i + (m_Discret + 1)].nz= 0.0f;
+			(*pVertexVector)[i + (m_Discret + 1)].s= (*pVertexVector)[i].s;
+			(*pVertexVector)[i + (m_Discret + 1)].t= 1.0f;
 
 			// Bottom Cap
-			m_VertexVector[i + 2 * (m_Discret + 1)].x= m_VertexVector[i].x;
-			m_VertexVector[i + 2 * (m_Discret + 1)].y= m_VertexVector[i].y;
-			m_VertexVector[i + 2 * (m_Discret + 1)].z= 0.0f;
-			m_VertexVector[i + 2 * (m_Discret + 1)].nx= 0.0f;
-			m_VertexVector[i + 2 * (m_Discret + 1)].ny= 0.0f;
-			m_VertexVector[i + 2 * (m_Discret + 1)].nz= -1.0f;
-			m_VertexVector[i + 2 * (m_Discret + 1)].s= m_VertexVector[i].s;
-			m_VertexVector[i + 2 * (m_Discret + 1)].t= 1.0f;
+			(*pVertexVector)[i + 2 * (m_Discret + 1)].x= (*pVertexVector)[i].x;
+			(*pVertexVector)[i + 2 * (m_Discret + 1)].y= (*pVertexVector)[i].y;
+			(*pVertexVector)[i + 2 * (m_Discret + 1)].z= 0.0f;
+			(*pVertexVector)[i + 2 * (m_Discret + 1)].nx= 0.0f;
+			(*pVertexVector)[i + 2 * (m_Discret + 1)].ny= 0.0f;
+			(*pVertexVector)[i + 2 * (m_Discret + 1)].nz= -1.0f;
+			(*pVertexVector)[i + 2 * (m_Discret + 1)].s= (*pVertexVector)[i].s;
+			(*pVertexVector)[i + 2 * (m_Discret + 1)].t= 1.0f;
 
 			// Top Cap
-			m_VertexVector[i + 3 * (m_Discret + 1)].x= m_VertexVector[i].x;
-			m_VertexVector[i + 3 * (m_Discret + 1)].y= m_VertexVector[i].y;
-			m_VertexVector[i + 3 * (m_Discret + 1)].z= static_cast<GLfloat>(m_Length);
-			m_VertexVector[i + 3 * (m_Discret + 1)].nx= 0.0f;
-			m_VertexVector[i + 3 * (m_Discret + 1)].ny= 0.0f;
-			m_VertexVector[i + 3 * (m_Discret + 1)].nz= 1.0f;
-			m_VertexVector[i + 3 * (m_Discret + 1)].s= m_VertexVector[i].s;
-			m_VertexVector[i + 3 * (m_Discret + 1)].t= 1.0f;
+			(*pVertexVector)[i + 3 * (m_Discret + 1)].x= (*pVertexVector)[i].x;
+			(*pVertexVector)[i + 3 * (m_Discret + 1)].y= (*pVertexVector)[i].y;
+			(*pVertexVector)[i + 3 * (m_Discret + 1)].z= static_cast<GLfloat>(m_Length);
+			(*pVertexVector)[i + 3 * (m_Discret + 1)].nx= 0.0f;
+			(*pVertexVector)[i + 3 * (m_Discret + 1)].ny= 0.0f;
+			(*pVertexVector)[i + 3 * (m_Discret + 1)].nz= 1.0f;
+			(*pVertexVector)[i + 3 * (m_Discret + 1)].s= (*pVertexVector)[i].s;
+			(*pVertexVector)[i + 3 * (m_Discret + 1)].t= 1.0f;
 		}
 
 		// IBO Vector
 		const GLsizei indexNbr= 2 * (m_Discret + 1) + 2 * m_Discret;
 		// Resize index vector
-		m_IndexVector.resize(indexNbr);
+		QVector<GLuint>* pIndexVector= m_pSimpleGeomEngine->indexVectorHandle();
+		pIndexVector->resize(indexNbr);
 
 		GLsizei j= 0;
 		for (GLsizei i= 0; i < 2 * (m_Discret + 1); i+=2, ++j)
 		{
-			m_IndexVector[i]= j;
-			m_IndexVector[i + 1]= j + (m_Discret + 1);
+			(*pIndexVector)[i]= j;
+			(*pIndexVector)[i + 1]= j + (m_Discret + 1);
 		}
 
 		// Caps end
@@ -235,28 +239,28 @@ void GLC_Cylinder::glDraw(bool)
 		GLsizei max = 2 * (m_Discret + 1) + m_Discret;
 		for (GLsizei i= 2 * (m_Discret + 1); i < max; i+= 2, ++j, --k)
 		{
-			m_IndexVector[i]= j;
+			(*pIndexVector)[i]= j;
 			if (i < (max - 1))
-				m_IndexVector[i + 1]= k;
+				(*pIndexVector)[i + 1]= k;
 		}
 
 		j= 3 * (m_Discret + 1) + m_Discret / 2;
 		k= j - 1;
 		for (GLsizei i= max; i < indexNbr; i+= 2, ++j, --k)
 		{
-			m_IndexVector[i]= j;
+			(*pIndexVector)[i]= j;
 			if (i < (indexNbr - 1))
-				m_IndexVector[i + 1]= k;
+				(*pIndexVector)[i + 1]= k;
 		}
 
 		if (vboIsUsed)
 		{
 			// Create VBO
 			const GLsizeiptr dataSize= dataNbr * sizeof(GLC_Vertex);
-			glBufferData(GL_ARRAY_BUFFER, dataSize, m_VertexVector.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, dataSize, pVertexVector->data(), GL_STATIC_DRAW);
 			// Create IBO
 			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, m_IndexVector.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
 		}
 
 	}
@@ -296,7 +300,7 @@ void GLC_Cylinder::glDraw(bool)
 	else
 	{
 		// Use Vertex Array
-		float* pVertexData= (float *) m_VertexVector.data();
+		float* pVertexData= (float *) m_pSimpleGeomEngine->vertexVectorHandle()->data();
 		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), pVertexData);
 		glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[3]);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[6]);
@@ -307,16 +311,16 @@ void GLC_Cylinder::glDraw(bool)
 
 		GLuint max= (m_Discret + 1) * 2;
 		// Draw cylinder
-		glDrawElements(GL_TRIANGLE_STRIP, max, GL_UNSIGNED_INT, m_IndexVector.data());
+		glDrawElements(GL_TRIANGLE_STRIP, max, GL_UNSIGNED_INT, m_pSimpleGeomEngine->indexVectorHandle()->data());
 
 		// Fill ended if needed
 		if (m_EndedIsCaped)
 		{
 			// Draw bottom cap
-			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, &m_IndexVector.data()[max]);
+			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, &m_pSimpleGeomEngine->indexVectorHandle()->data()[max]);
 			max+= m_Discret;
 			// Draw top cap
-			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, &m_IndexVector.data()[max]);
+			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, &m_pSimpleGeomEngine->indexVectorHandle()->data()[max]);
 		}
 
 		glDisableClientState(GL_VERTEX_ARRAY);

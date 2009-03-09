@@ -142,5 +142,9 @@ private:
 	//! Cylinder is capped
 	bool m_EndedIsCaped;
 
+	//! Geom engine
+	GLC_SimpleGeomEngine* m_pSimpleGeomEngine;
+
+
 };
 #endif //GLC_CYLINDER_H_

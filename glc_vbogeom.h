@@ -31,26 +31,8 @@
 #include "glc_material.h"
 #include "glc_boundingbox.h"
 #include "glc_ext.h"
+#include "glc_simplegeomengine.h"
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
-
-//! \struct GLC_Vertex
-/*! \brief GLC_Vertex : OpenGL Vertex */
-struct GLC_Vertex
-{
-	// Vertex
-	float x, y, z;			// 12 Bytes
-	// Normal
-	float nx, ny, nz;		// 12 Bytes
-	// Texture
-	float s, t;				// 8 Bytes
-	// Color
-	GLfloat r, g, b, a;		// 16 Bytes
-	// => 48 Bytes
-};
-
-typedef QVector<GLC_Vertex> VertexVector;
 typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
 
 //////////////////////////////////////////////////////////////////////
@@ -157,6 +139,10 @@ public:
 	inline bool typeIsWire() const
 	{return m_IsWire;}
 
+	//! Return an handle to the engine
+	inline GLC_GeomEngine* engineHandle()
+	{return m_pEngine;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -217,8 +203,6 @@ protected:
 	 */
 	virtual void glPropGeom(bool);
 
-	//! Vbo creation
-	void createVBOs();
 //@}
 //////////////////////////////////////////////////////////////////////
 // Protected members
@@ -237,17 +221,6 @@ protected:
 	//! Color per vertex usage
 	bool m_UseColorPerVertex;
 
-	//! Vertex Vector
-	VertexVector m_VertexVector;
-
-	//! Index Vector
-	QVector<GLuint> m_IndexVector;
-
-	//! VBO ID
-	GLuint m_VboId;
-
-	//! IBO ID
-	GLuint m_IboId;
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
@@ -258,6 +231,9 @@ private:
 
 	//! Transparency
 	int m_TransparentMaterialNumber;
+
+	//! the geometry engine
+	GLC_GeomEngine* m_pEngine;
 };
 
 #endif /*GLC_VBOGEOM_H_*/

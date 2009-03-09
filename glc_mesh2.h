@@ -85,13 +85,6 @@ public:
 	//! Return true if color pear vertex is activated
 	inline bool ColorPearVertexIsAcivated() const {return m_ColorPearVertex;}
 
-	//! Return the Vertex Vector
-	VertexVector getVertexVector() const;
-
-	//! Return the Index Vector
-	QVector<GLuint> getIndexVector() const;
-
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -112,10 +105,10 @@ public:
 	//! Copy vertex list in a vector list for Vertex Array Use
 	inline void finished()
 	{
-		if (0 == m_VertexVector.size())
+		if (m_pSimpleGeomEngine->vertexVectorHandle()->isEmpty())
 		{
 			// Copy vertex Data to a vector
-			m_VertexVector= m_Vertex.toVector();
+			(*m_pSimpleGeomEngine->vertexVectorHandle())= m_Vertex.toVector();
 			m_Vertex.clear();
 			// Create mesh Bounding Box
 			boundingBox();
@@ -166,6 +159,9 @@ private:
 
 	//! Color pear vertex
 	bool m_ColorPearVertex;
+
+	//! Geom engine
+	GLC_SimpleGeomEngine* m_pSimpleGeomEngine;
 
 };
 #endif //GLC_MESH2_H_

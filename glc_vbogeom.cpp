@@ -39,12 +39,9 @@ GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
 , m_pBoundingBox(NULL)
 , m_MaterialHash()
 , m_UseColorPerVertex(false)
-, m_VertexVector()
-, m_IndexVector()
-, m_VboId(0)
-, m_IboId(0)
 , m_IsWire(typeIsWire)		// the geometry type
 , m_TransparentMaterialNumber(0)
+, m_pEngine(new GLC_SimpleGeomEngine())
 {
 
 }
@@ -55,13 +52,11 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 , m_pBoundingBox(NULL)
 , m_MaterialHash(sourceGeom.m_MaterialHash)
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
-, m_VertexVector(sourceGeom.m_VertexVector)
-, m_IndexVector(sourceGeom.m_IndexVector)
-, m_VboId(0)
-, m_IboId(0)
 , m_IsWire(sourceGeom.m_IsWire)
 , m_TransparentMaterialNumber(sourceGeom.m_TransparentMaterialNumber)
+, m_pEngine(NULL)
 {
+	m_pEngine= new GLC_SimpleGeomEngine(*dynamic_cast<GLC_SimpleGeomEngine*>(sourceGeom.m_pEngine));
 	m_Uid= glc::GLC_GenID();
 
 	// Add this mesh to inner material
@@ -81,15 +76,9 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 
 GLC_VboGeom::~GLC_VboGeom()
 {
-	if (GLC_State::vboUsed())
-	{
-		// VBO
-		if (0 != m_VboId)
-			glDeleteBuffers(1, &m_VboId);
-		// IBO
-		if (0 != m_IboId)
-			glDeleteBuffers(1, &m_IboId);
-	}
+	// Delete geometry engine
+	delete m_pEngine;
+
 	// delete mesh inner material
 	{
 		MaterialHash::const_iterator i= m_MaterialHash.begin();
@@ -242,22 +231,20 @@ void GLC_VboGeom::glExecute(bool isSelected, bool transparent)
 
 	const bool vboIsUsed= GLC_State::vboUsed();
 
-	if (vboIsUsed and (0 == m_VboId))
+	if (vboIsUsed)
 	{
-		createVBOs();
+		m_pEngine->createVBOs();
 	}
 	if (vboIsUsed)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
+		m_pEngine->useVBOs(true);
 
 		glDraw(transparent);
 
 		m_GeometryIsValid= true;
 
 		// Unbind VBOs
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		m_pEngine->useVBOs(false);
 	}
 	else // VBO not supported
 	{
@@ -318,11 +305,4 @@ void GLC_VboGeom::glPropGeom(bool isSelected)
 		GLC_OpenGlException OpenGlException("GLC_VboGeom::GlPropGeom ", error);
 		throw(OpenGlException);
 	}
-}
-
-// Vbo creation
-void GLC_VboGeom::createVBOs()
-{
-	glGenBuffers(1, &m_VboId);
-	glGenBuffers(1, &m_IboId);
 }

@@ -129,5 +129,8 @@ private:
 	//! Z Length
 	double m_dLgZ;
 
+	//! Geom engine
+	GLC_SimpleGeomEngine* m_pSimpleGeomEngine;
+
 };
 #endif //GLC_BOX_H_

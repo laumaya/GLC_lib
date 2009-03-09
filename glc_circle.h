@@ -133,5 +133,8 @@ private:
 	//! Circle Step
 	GLuint m_Step;
 
+	//! Geom engine
+	GLC_SimpleGeomEngine* m_pSimpleGeomEngine;
+
 };
 #endif //GLC_CIRCLE_H_
