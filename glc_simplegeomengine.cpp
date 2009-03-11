@@ -27,6 +27,7 @@
 #include "glc_simplegeomengine.h"
 #include "glc_state.h"
 
+// Default constructor
 GLC_SimpleGeomEngine::GLC_SimpleGeomEngine()
 : GLC_GeomEngine()
 , m_VertexVector()
@@ -124,9 +125,6 @@ void GLC_SimpleGeomEngine::createVBOs()
 	if (0 == m_VboId)
 	{
 		glGenBuffers(1, &m_VboId);
-	}
-	if (0 == m_IboId)
-	{
 		glGenBuffers(1, &m_IboId);
 	}
 }
