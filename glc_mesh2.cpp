@@ -235,7 +235,11 @@ void GLC_Mesh2::glDraw(bool transparent)
 	Q_ASSERT(m_GeometryIsValid or not m_pSimpleGeomEngine->vertexVectorHandle()->isEmpty());
 
 	const bool vboIsUsed= GLC_State::vboUsed();
-
+	if (vboIsUsed)
+	{
+		m_pSimpleGeomEngine->createVBOs();
+		m_pSimpleGeomEngine->useVBOs(true);
+	}
 	IndexList iboList;
 	MaterialGroupHash::iterator iMaterialGroup;
 
@@ -394,6 +398,11 @@ void GLC_Mesh2::glDraw(bool transparent)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if (vboIsUsed)
+	{
+		m_pSimpleGeomEngine->useVBOs(false);
+	}
 
 	// OpenGL error handler
 	GLenum error= glGetError();
