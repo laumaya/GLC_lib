@@ -158,6 +158,11 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 void GLC_Cylinder::glDraw(bool)
 {
 	const bool vboIsUsed= GLC_State::vboUsed();
+	if (vboIsUsed)
+	{
+		m_pSimpleGeomEngine->createVBOs();
+		m_pSimpleGeomEngine->useVBOs(true);
+	}
 
 	if (!m_GeometryIsValid)
 	{
@@ -328,6 +333,10 @@ void GLC_Cylinder::glDraw(bool)
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 
+	if (vboIsUsed)
+	{
+		m_pSimpleGeomEngine->useVBOs(false);
+	}
 
 	// OpenGL error handler
 	GLenum error= glGetError();

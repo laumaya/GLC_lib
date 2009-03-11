@@ -172,6 +172,13 @@ void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 // Circle drawing
 void GLC_Circle::glDraw(bool)
 {
+	const bool vboIsUsed= GLC_State::vboUsed();
+	if (vboIsUsed)
+	{
+		m_pSimpleGeomEngine->createVBOs();
+		m_pSimpleGeomEngine->useVBOs(true);
+	}
+
 	if (!m_GeometryIsValid)
 	{
 		VertexVector* pVertexVector= m_pSimpleGeomEngine->vertexVectorHandle();
@@ -201,7 +208,7 @@ void GLC_Circle::glDraw(bool)
 			(*pIndexVector)[i]= i;
 		}
 
-		if (GLC_State::vboUsed())
+		if (vboIsUsed)
 		{
 			// Create VBO
 			glBufferData(GL_ARRAY_BUFFER, size, pVertexVector->data(), GL_STATIC_DRAW);
@@ -213,7 +220,7 @@ void GLC_Circle::glDraw(bool)
 		}
 	}
 
-	if (GLC_State::vboUsed())
+	if (vboIsUsed)
 	{
 		// Use VBO
 		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
@@ -229,6 +236,11 @@ void GLC_Circle::glDraw(bool)
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glDrawElements(GL_LINE_STRIP, m_Step + 1, GL_UNSIGNED_INT, m_pSimpleGeomEngine->indexVectorHandle()->data());
 		glDisableClientState(GL_VERTEX_ARRAY);
+	}
+
+	if (vboIsUsed)
+	{
+		m_pSimpleGeomEngine->useVBOs(false);
 	}
 
 

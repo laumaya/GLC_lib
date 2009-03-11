@@ -158,6 +158,11 @@ void GLC_Box::setLgZ(double LgZ)
 void GLC_Box::glDraw(bool)
 {
 	const bool vboIsUsed= GLC_State::vboUsed();
+	if (vboIsUsed)
+	{
+		m_pSimpleGeomEngine->createVBOs();
+		m_pSimpleGeomEngine->useVBOs(true);
+	}
 
 	if (!m_GeometryIsValid)
 	{
@@ -330,6 +335,11 @@ void GLC_Box::glDraw(bool)
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_NORMAL_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	}
+
+	if (vboIsUsed)
+	{
+		m_pSimpleGeomEngine->useVBOs(false);
 	}
 
 	// OpenGL error handler
