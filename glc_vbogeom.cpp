@@ -229,28 +229,8 @@ void GLC_VboGeom::glExecute(bool isSelected, bool transparent)
 		glDisable(GL_LIGHTING);
 	}
 
-	const bool vboIsUsed= GLC_State::vboUsed();
-
-	if (vboIsUsed)
-	{
-		m_pEngine->createVBOs();
-	}
-	if (vboIsUsed)
-	{
-		m_pEngine->useVBOs(true);
-
-		glDraw(transparent);
-
-		m_GeometryIsValid= true;
-
-		// Unbind VBOs
-		m_pEngine->useVBOs(false);
-	}
-	else // VBO not supported
-	{
-		glDraw(transparent);
-		m_GeometryIsValid= true;
-	}
+	glDraw(transparent);
+	m_GeometryIsValid= true;
 
 	// OpenGL error handler
 	GLenum error= glGetError();
