@@ -84,7 +84,9 @@ HEADERS_GLC += glc_utils_maths.h \
            glc_shader.h \
            glc_state.h \
            glc_geomengine.h \
-           glc_simplegeomengine.h
+           glc_simplegeomengine.h \
+           glc_extendedgeomengine.h \
+           glc_primitivegroup.h
            
 HEADERS += $${HEADERS_LIB3DS} $${HEADERS_GLC} $${HEADERS_GLEXT}
 
@@ -147,7 +149,9 @@ SOURCES += glc_vector4d.cpp \
            glc_shader.cpp \
            glc_state.cpp \
            glc_geomengine.cpp \
-           glc_simplegeomengine.cpp
+           glc_simplegeomengine.cpp \
+           glc_extendedgeomengine.cpp \
+           glc_primitivegroup.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
