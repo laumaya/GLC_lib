@@ -38,9 +38,6 @@
 
 /*! GLC_GeomEngine is a abstract class. \n \n
  *  Main attributes of GLC_GeomEngine:
- *		- Material : 	GLC_Material
- * 		- Graphic properties
- * 		- Transformation Matrix
  *
  * GLC_GeomEngine provide :
  * 		- Function to create VBO : GLC_GeomEngine::createVbo
@@ -49,6 +46,16 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_GeomEngine
 {
+public:
+
+	//! Enum of IBO TYPE
+	enum IboType
+	{
+		GLC_Triangles= 1,
+		GLC_TrianglesStrip,
+		GLC_TrianglesFan,
+	};
+
 public:
 	//! Default constructor
 	GLC_GeomEngine();
@@ -60,22 +67,10 @@ public:
 	virtual ~GLC_GeomEngine();
 
 //////////////////////////////////////////////////////////////////////
-/*! \name OpenGL Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-public:
-	//! Vbo creation
-	virtual void createVBOs()= 0;
-
-	//! Vbo Usage
-	virtual void useVBOs(bool)= 0;
-//@}
-
-//////////////////////////////////////////////////////////////////////
 // Protected members
 //////////////////////////////////////////////////////////////////////
 protected:
-	//! VBO ID
+	//! Main VBO ID
 	GLuint m_VboId;
 
 };
