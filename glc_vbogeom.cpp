@@ -41,7 +41,6 @@ GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
 , m_UseColorPerVertex(false)
 , m_IsWire(typeIsWire)		// the geometry type
 , m_TransparentMaterialNumber(0)
-, m_pEngine(new GLC_SimpleGeomEngine())
 {
 
 }
@@ -54,9 +53,7 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
 , m_IsWire(sourceGeom.m_IsWire)
 , m_TransparentMaterialNumber(sourceGeom.m_TransparentMaterialNumber)
-, m_pEngine(NULL)
 {
-	m_pEngine= new GLC_SimpleGeomEngine(*dynamic_cast<GLC_SimpleGeomEngine*>(sourceGeom.m_pEngine));
 	m_Uid= glc::GLC_GenID();
 
 	// Add this mesh to inner material
@@ -76,9 +73,6 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 
 GLC_VboGeom::~GLC_VboGeom()
 {
-	// Delete geometry engine
-	delete m_pEngine;
-
 	// delete mesh inner material
 	{
 		MaterialHash::const_iterator i= m_MaterialHash.begin();

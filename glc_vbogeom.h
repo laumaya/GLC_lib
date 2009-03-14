@@ -31,7 +31,6 @@
 #include "glc_material.h"
 #include "glc_boundingbox.h"
 #include "glc_ext.h"
-#include "glc_simplegeomengine.h"
 
 typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
 
@@ -139,10 +138,6 @@ public:
 	inline bool typeIsWire() const
 	{return m_IsWire;}
 
-	//! Return an handle to the engine
-	inline GLC_GeomEngine* engineHandle()
-	{return m_pEngine;}
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -231,9 +226,6 @@ private:
 
 	//! Transparency
 	int m_TransparentMaterialNumber;
-
-	//! the geometry engine
-	GLC_GeomEngine* m_pEngine;
 };
 
 #endif /*GLC_VBOGEOM_H_*/
