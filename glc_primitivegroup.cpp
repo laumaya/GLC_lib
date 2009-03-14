@@ -67,10 +67,13 @@ GLC_PrimitiveGroup::~GLC_PrimitiveGroup()
 void GLC_PrimitiveGroup::addTrianglesStrip(const IndexList& input)
 {
 	m_StripsIndex+= input;
+	GLsizei offset= 0;
+	if (not m_StripIndexOffset.isEmpty())
+	{
+		offset= reinterpret_cast<GLsizei>(m_StripIndexOffset.last()) + m_StripIndexSizes.last();
+	}
 	m_StripIndexSizes+= static_cast<GLsizei>(input.size());
-	GLvoid* pOffset= NULL;
-	if (not m_StripIndexOffset.isEmpty()) pOffset= m_StripIndexOffset.last();
-	m_StripIndexOffset.append(BUFFER_OFFSET(reinterpret_cast<GLsizei>(pOffset) * sizeof(GLuint)));
+	m_StripIndexOffset.append(BUFFER_OFFSET(offset * sizeof(GLuint)));
 }
 
 // Set base triangle strip offset
@@ -87,10 +90,13 @@ void GLC_PrimitiveGroup::setBaseTrianglesStripOffset(GLvoid* pOffset)
 void GLC_PrimitiveGroup::addTrianglesFan(const IndexList& input)
 {
 	m_FansIndex+= input;
+	GLsizei offset= 0;
+	if (not m_FanIndexOffset.isEmpty())
+	{
+		offset= reinterpret_cast<GLsizei>(m_FanIndexOffset.last()) + m_FansIndexSizes.last();
+	}
 	m_FansIndexSizes+= static_cast<GLsizei>(input.size());
-	GLvoid* pOffset= NULL;
-	if (not m_FanIndexOffset.isEmpty()) pOffset= m_FanIndexOffset.last();
-	m_FanIndexOffset.append(BUFFER_OFFSET(reinterpret_cast<GLsizei>(pOffset) * sizeof(GLuint)));
+	m_FanIndexOffset.append(BUFFER_OFFSET(offset * sizeof(GLuint)));
 
 }
 
