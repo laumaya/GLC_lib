@@ -36,7 +36,6 @@ GLC_ExtendedMesh::GLC_ExtendedMesh()
 , m_ColorPearVertex(false)
 , m_ExtendedGeomEngine()
 {
-	qDebug() << "Extended Mesh constructed";
 
 }
 
@@ -83,7 +82,6 @@ GLC_BoundingBox& GLC_ExtendedMesh::boundingBox()
 		{
 			GLfloatVector* pVertexVector= m_ExtendedGeomEngine.positionVectorHandle();
 			const int max= pVertexVector->size();
-			qDebug() << "Number of vertex : " << max;
 			for (int i= 0; i < max; i= i + 3)
 			{
 				GLC_Vector3d vector((*pVertexVector)[i], (*pVertexVector)[i + 1], (*pVertexVector)[i + 2]);
@@ -338,7 +336,6 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 				const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffset().size());
 				glMultiDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->stripsOffset().data(), stripsCount);
 				m_ExtendedGeomEngine.useIBO(false, GLC_ExtendedGeomEngine::GLC_TrianglesStrip);
-				qDebug() << "MultiDraw strip";
 			}
 
 			// Draw Triangles fan
