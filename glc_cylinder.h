@@ -29,6 +29,7 @@
 
 
 #include "glc_vbogeom.h"
+#include "glc_simplegeomengine.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Cylinder
@@ -56,6 +57,9 @@ public:
 
 	//! Copy contructor
 	GLC_Cylinder(const GLC_Cylinder& sourceCylinder);
+
+	//! Destructor
+	virtual ~GLC_Cylinder();
 
 //@}
 
@@ -143,7 +147,7 @@ private:
 	bool m_EndedIsCaped;
 
 	//! Geom engine
-	GLC_SimpleGeomEngine* m_pSimpleGeomEngine;
+	GLC_SimpleGeomEngine m_SimpleGeomEngine;
 
 
 };

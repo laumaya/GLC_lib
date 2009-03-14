@@ -43,7 +43,7 @@ GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength)
 , m_Length(dLength)
 , m_Discret(GLC_POLYDISCRET)	// Default discretion
 , m_EndedIsCaped(true)			// Cylinder ended are closed
-, m_pSimpleGeomEngine(dynamic_cast<GLC_SimpleGeomEngine*>(engineHandle()))
+, m_SimpleGeomEngine()
 {
 	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0));
 }
@@ -54,7 +54,7 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
 , m_Length(sourceCylinder.m_Length)
 , m_Discret(sourceCylinder.m_Discret)
 , m_EndedIsCaped(sourceCylinder.m_EndedIsCaped)
-, m_pSimpleGeomEngine(sourceCylinder.m_pSimpleGeomEngine)
+, m_SimpleGeomEngine(sourceCylinder.m_SimpleGeomEngine)
 {
 	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0) && (m_Discret > 0));
 
@@ -73,6 +73,11 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
     m_MaterialHash= newMaterialHash;
 
 }
+GLC_Cylinder::~GLC_Cylinder()
+{
+
+}
+
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
@@ -160,8 +165,8 @@ void GLC_Cylinder::glDraw(bool)
 	const bool vboIsUsed= GLC_State::vboUsed();
 	if (vboIsUsed)
 	{
-		m_pSimpleGeomEngine->createVBOs();
-		m_pSimpleGeomEngine->useVBOs(true);
+		m_SimpleGeomEngine.createVBOs();
+		m_SimpleGeomEngine.useVBOs(true);
 	}
 
 	if (!m_GeometryIsValid)
@@ -177,7 +182,7 @@ void GLC_Cylinder::glDraw(bool)
 		// Vertex Vector
 		const GLsizei dataNbr= (m_Discret + 1) * 4;
 		// Resize the Vertex vector
-		VertexVector* pVertexVector= m_pSimpleGeomEngine->vertexVectorHandle();
+		VertexVector* pVertexVector= m_SimpleGeomEngine.vertexVectorHandle();
 		pVertexVector->resize(dataNbr);
 
 		for (GLsizei i= 0; i < (dataNbr / 4); ++i)
@@ -228,7 +233,7 @@ void GLC_Cylinder::glDraw(bool)
 		// IBO Vector
 		const GLsizei indexNbr= 2 * (m_Discret + 1) + 2 * m_Discret;
 		// Resize index vector
-		QVector<GLuint>* pIndexVector= m_pSimpleGeomEngine->indexVectorHandle();
+		QVector<GLuint>* pIndexVector= m_SimpleGeomEngine.indexVectorHandle();
 		pIndexVector->resize(indexNbr);
 
 		GLsizei j= 0;
@@ -305,7 +310,7 @@ void GLC_Cylinder::glDraw(bool)
 	else
 	{
 		// Use Vertex Array
-		float* pVertexData= (float *) m_pSimpleGeomEngine->vertexVectorHandle()->data();
+		float* pVertexData= (float *) m_SimpleGeomEngine.vertexVectorHandle()->data();
 		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), pVertexData);
 		glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[3]);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[6]);
@@ -316,16 +321,16 @@ void GLC_Cylinder::glDraw(bool)
 
 		GLuint max= (m_Discret + 1) * 2;
 		// Draw cylinder
-		glDrawElements(GL_TRIANGLE_STRIP, max, GL_UNSIGNED_INT, m_pSimpleGeomEngine->indexVectorHandle()->data());
+		glDrawElements(GL_TRIANGLE_STRIP, max, GL_UNSIGNED_INT, m_SimpleGeomEngine.indexVectorHandle()->data());
 
 		// Fill ended if needed
 		if (m_EndedIsCaped)
 		{
 			// Draw bottom cap
-			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, &m_pSimpleGeomEngine->indexVectorHandle()->data()[max]);
+			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, &m_SimpleGeomEngine.indexVectorHandle()->data()[max]);
 			max+= m_Discret;
 			// Draw top cap
-			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, &m_pSimpleGeomEngine->indexVectorHandle()->data()[max]);
+			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, &m_SimpleGeomEngine.indexVectorHandle()->data()[max]);
 		}
 
 		glDisableClientState(GL_VERTEX_ARRAY);
@@ -335,7 +340,7 @@ void GLC_Cylinder::glDraw(bool)
 
 	if (vboIsUsed)
 	{
-		m_pSimpleGeomEngine->useVBOs(false);
+		m_SimpleGeomEngine.useVBOs(false);
 	}
 
 	// OpenGL error handler

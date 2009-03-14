@@ -39,7 +39,7 @@ GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
 , m_nDiscret(GLC_DISCRET)
 , m_dAngle(Angle)
 , m_Step(0)
-, m_pSimpleGeomEngine(dynamic_cast<GLC_SimpleGeomEngine*>(engineHandle()))
+, m_SimpleGeomEngine()
 {
 
 }
@@ -49,7 +49,7 @@ GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
 , m_Radius(sourceCircle.m_Radius)
 , m_nDiscret(sourceCircle.m_nDiscret)
 , m_dAngle(sourceCircle.m_dAngle)
-, m_pSimpleGeomEngine(sourceCircle.m_pSimpleGeomEngine)
+, m_SimpleGeomEngine(sourceCircle.m_SimpleGeomEngine)
 {
 	// Copy inner material hash
 	MaterialHash::const_iterator i= m_MaterialHash.begin();
@@ -67,6 +67,7 @@ GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
 }
 GLC_Circle::~GLC_Circle()
 {
+
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -175,13 +176,13 @@ void GLC_Circle::glDraw(bool)
 	const bool vboIsUsed= GLC_State::vboUsed();
 	if (vboIsUsed)
 	{
-		m_pSimpleGeomEngine->createVBOs();
-		m_pSimpleGeomEngine->useVBOs(true);
+		m_SimpleGeomEngine.createVBOs();
+		m_SimpleGeomEngine.useVBOs(true);
 	}
 
 	if (!m_GeometryIsValid)
 	{
-		VertexVector* pVertexVector= m_pSimpleGeomEngine->vertexVectorHandle();
+		VertexVector* pVertexVector= m_SimpleGeomEngine.vertexVectorHandle();
 		// Calculate number of step
 		m_Step= static_cast<GLuint>(static_cast<double>(m_nDiscret) * (m_dAngle / (2 * glc::PI)));
 		if (m_Step < 2) m_Step= 2;
@@ -200,7 +201,7 @@ void GLC_Circle::glDraw(bool)
 		// Index Vector
 		const GLsizeiptr IndexSize = (m_Step + 1) * sizeof(GLuint);
 		// Resize index vector
-		QVector<GLuint>* pIndexVector= m_pSimpleGeomEngine->indexVectorHandle();
+		QVector<GLuint>* pIndexVector= m_SimpleGeomEngine.indexVectorHandle();
 		pIndexVector->resize(m_Step + 1);
 		// Fill index vector
 		for (GLuint i= 0; i <= m_Step; ++i)
@@ -232,15 +233,15 @@ void GLC_Circle::glDraw(bool)
 	else
 	{
 		// Use Vertex Array
-		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), m_pSimpleGeomEngine->vertexVectorHandle()->data());
+		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), m_SimpleGeomEngine.vertexVectorHandle()->data());
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glDrawElements(GL_LINE_STRIP, m_Step + 1, GL_UNSIGNED_INT, m_pSimpleGeomEngine->indexVectorHandle()->data());
+		glDrawElements(GL_LINE_STRIP, m_Step + 1, GL_UNSIGNED_INT, m_SimpleGeomEngine.indexVectorHandle()->data());
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 
 	if (vboIsUsed)
 	{
-		m_pSimpleGeomEngine->useVBOs(false);
+		m_SimpleGeomEngine.useVBOs(false);
 	}
 
 

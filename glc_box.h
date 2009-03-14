@@ -29,6 +29,7 @@
 
 
 #include "glc_vbogeom.h"
+#include "glc_simplegeomengine.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Box
@@ -53,6 +54,10 @@ public:
 
 	//! Copy constructor
 	GLC_Box(const GLC_Box&);
+
+	//! Destructor
+	virtual ~GLC_Box();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -130,7 +135,7 @@ private:
 	double m_dLgZ;
 
 	//! Geom engine
-	GLC_SimpleGeomEngine* m_pSimpleGeomEngine;
+	GLC_SimpleGeomEngine m_SimpleGeomEngine;
 
 };
 #endif //GLC_BOX_H_

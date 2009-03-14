@@ -37,7 +37,7 @@ GLC_Box::GLC_Box(double dLx, double dLy, double dlz)
 , m_dLgX(dLx)
 , m_dLgY(dLy)
 , m_dLgZ(dlz)
-, m_pSimpleGeomEngine(dynamic_cast<GLC_SimpleGeomEngine*>(engineHandle()))
+, m_SimpleGeomEngine()
 {
 
 }
@@ -47,7 +47,7 @@ GLC_Box::GLC_Box(const GLC_Box& box)
 , m_dLgX(box.m_dLgX)
 , m_dLgY(box.m_dLgY)
 , m_dLgZ(box.m_dLgZ)
-, m_pSimpleGeomEngine(box.m_pSimpleGeomEngine)
+, m_SimpleGeomEngine(box.m_SimpleGeomEngine)
 {
 	// Copy inner material hash
 	MaterialHash::const_iterator i= m_MaterialHash.begin();
@@ -62,6 +62,10 @@ GLC_Box::GLC_Box(const GLC_Box& box)
          ++i;
     }
     m_MaterialHash= newMaterialHash;
+
+}
+GLC_Box::~GLC_Box()
+{
 
 }
 
@@ -160,14 +164,14 @@ void GLC_Box::glDraw(bool)
 	const bool vboIsUsed= GLC_State::vboUsed();
 	if (vboIsUsed)
 	{
-		m_pSimpleGeomEngine->createVBOs();
-		m_pSimpleGeomEngine->useVBOs(true);
+		m_SimpleGeomEngine.createVBOs();
+		m_SimpleGeomEngine.useVBOs(true);
 	}
 
 	if (!m_GeometryIsValid)
 	{
 		// Resize the Vertex vector
-		VertexVector* pVertexVector= m_pSimpleGeomEngine->vertexVectorHandle();
+		VertexVector* pVertexVector= m_SimpleGeomEngine.vertexVectorHandle();
 		pVertexVector->resize(24); // 3 normals per vertex and 8 Vertex => 3 x 8 = 24
 
 		const GLfloat lgX= static_cast<const GLfloat>(m_dLgX / 2.0);
@@ -281,7 +285,7 @@ void GLC_Box::glDraw(bool)
 		// Index Vector
 		const GLsizei indexNbr= 36; // 6 face * 2 * 3 Vertexs
 		// Fill index Vector
-		QVector<GLuint>* pIndexVector= m_pSimpleGeomEngine->indexVectorHandle();
+		QVector<GLuint>* pIndexVector= m_SimpleGeomEngine.indexVectorHandle();
 		pIndexVector->clear();
 		(*pIndexVector) << 0 << 1 << 2 << 2 << 3 << 0;		// Face 1
 		(*pIndexVector) << 4 << 5 << 6 << 6 << 7 << 4;		// Face 2
@@ -321,7 +325,7 @@ void GLC_Box::glDraw(bool)
 	else
 	{
 		// Use Vertex Array
-		float* pVertexData= (float *) m_pSimpleGeomEngine->vertexVectorHandle()->data();
+		float* pVertexData= (float *) m_SimpleGeomEngine.vertexVectorHandle()->data();
 		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), pVertexData);
 		glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[3]);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[6]);
@@ -330,7 +334,7 @@ void GLC_Box::glDraw(bool)
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, m_pSimpleGeomEngine->indexVectorHandle()->data());
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, m_SimpleGeomEngine.indexVectorHandle()->data());
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_NORMAL_ARRAY);
@@ -339,7 +343,7 @@ void GLC_Box::glDraw(bool)
 
 	if (vboIsUsed)
 	{
-		m_pSimpleGeomEngine->useVBOs(false);
+		m_SimpleGeomEngine.useVBOs(false);
 	}
 
 	// OpenGL error handler

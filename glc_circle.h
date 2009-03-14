@@ -28,6 +28,7 @@
 #define GLC_CIRCLE_H_
 
 #include "glc_vbogeom.h"
+#include "glc_simplegeomengine.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Circle
@@ -37,7 +38,6 @@
  * It can be an entire circle or an arc.
  * */
 //////////////////////////////////////////////////////////////////////
-
 class GLC_Circle : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
@@ -134,7 +134,7 @@ private:
 	GLuint m_Step;
 
 	//! Geom engine
-	GLC_SimpleGeomEngine* m_pSimpleGeomEngine;
+	GLC_SimpleGeomEngine m_SimpleGeomEngine;
 
 };
 #endif //GLC_CIRCLE_H_
