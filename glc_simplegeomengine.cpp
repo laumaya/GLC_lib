@@ -33,6 +33,7 @@ GLC_SimpleGeomEngine::GLC_SimpleGeomEngine()
 , m_VertexVector()
 , m_IndexVector()
 , m_IboId(0)
+, m_NumberOfVertex(0)
 {
 
 
@@ -43,6 +44,7 @@ GLC_SimpleGeomEngine::GLC_SimpleGeomEngine(const GLC_SimpleGeomEngine& engine)
 , m_VertexVector(engine.m_VertexVector)
 , m_IndexVector(engine.m_IndexVector)
 , m_IboId(0)
+, m_NumberOfVertex(engine.m_NumberOfVertex)
 {
 	// Copy Vertex and index data if necessary
 	if (m_VertexVector.isEmpty())
@@ -74,7 +76,7 @@ VertexVector GLC_SimpleGeomEngine::vertexVector() const
 	if (0 != m_VboId)
 	{
 		// VBO created get data from VBO
-		const int sizeOfVbo= m_VertexVector.size();
+		const int sizeOfVbo= m_NumberOfVertex;
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLC_Vertex);
 		VertexVector vertexVector(sizeOfVbo);
 
@@ -97,7 +99,7 @@ QVector<GLuint> GLC_SimpleGeomEngine::indexVector() const
 	if (0 != m_IboId)
 	{
 		// IBO created get data from IBO
-		const int sizeOfVbo= m_VertexVector.size();
+		const int sizeOfVbo= m_NumberOfVertex;
 		const GLsizeiptr indexSize = sizeOfVbo * sizeof(GLuint);
 		QVector<GLuint> indexVector(sizeOfVbo);
 
