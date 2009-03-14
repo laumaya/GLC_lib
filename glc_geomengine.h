@@ -46,15 +46,6 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_GeomEngine
 {
-public:
-
-	//! Enum of IBO TYPE
-	enum IboType
-	{
-		GLC_Triangles= 1,
-		GLC_TrianglesStrip,
-		GLC_TrianglesFan,
-	};
 
 public:
 	//! Default constructor
