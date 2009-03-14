@@ -227,7 +227,10 @@ GLC_uint GLC_Instance::decodeRgbId(const GLubyte* pcolorId)
 // Set the instance Geometry
 bool GLC_Instance::setGeometry(GLC_VboGeom* pGeom)
 {
-		if (NULL == m_pGeom) return false;
+		if (NULL != m_pGeom)
+		{
+			return false;
+		}
 		else
 		{
 			m_pGeom= pGeom;
