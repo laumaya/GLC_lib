@@ -29,9 +29,11 @@
 
 #include "glc_ext.h"
 #include "glc_enum.h"
+#include "glc_geomengine.h"
 
 typedef QList<GLuint> IndexList;
-typedef QList<GLsizei> IndexSizes;
+typedef QVector<GLsizei> IndexSizes;
+typedef QVector<GLvoid*> OffsetVector;
 
 class GLC_PrimitiveGroup
 {
@@ -56,6 +58,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+	//! Return the group id
+	inline GLC_uint id() const
+	{return m_ID;}
+
 	//! Return true if the group contains triangles
 	inline bool containsTriangles() const
 	{return not m_TrianglesIndex.isEmpty();}
@@ -63,6 +69,10 @@ public:
 	//! Return the list of triangles index of the group
 	inline const IndexList& trianglesIndex() const
 	{ return m_TrianglesIndex;}
+
+	//! Return the offset of triangles index
+	inline const GLvoid* trianglesIndexOffset() const
+	{return m_pBaseTrianglesOffset;}
 
 	//! Return true if the group contains strips
 	inline bool containsStrip() const
@@ -72,9 +82,13 @@ public:
 	inline const IndexList& stripsIndex() const
 	{return m_StripsIndex;}
 
-	//! Return the list of strips sizes
+	//! Return the vector of strips sizes
 	inline const IndexSizes& stripsSizes() const
 	{return m_StripIndexSizes;}
+
+	//! Return the vector of strip offset
+	inline const OffsetVector& stripsOffset() const
+	{return m_StripIndexOffset;}
 
 	//! Return true if the group contains fans
 	inline bool containsFan() const
@@ -84,9 +98,13 @@ public:
 	inline const IndexList& fansIndex() const
 	{return m_FansIndex;}
 
-	//! Return the list of fans sizes
+	//! Return the vector of fans sizes
 	inline const IndexSizes& fansSizes() const
 	{return m_FansIndexSizes;}
+
+	//! Return the vector of strip offset
+	inline const OffsetVector& fansOffset() const
+	{return m_FanIndexOffset;}
 
 
 //@}
@@ -100,19 +118,22 @@ public:
 	inline void addTriangles(const IndexList& input)
 	{m_TrianglesIndex+= input;}
 
+	//! Set the triangle index offset
+	inline void setTrianglesOffset(GLvoid* pOffset)
+	{m_pBaseTrianglesOffset= pOffset;}
+
 	//! Add triangle strip to the group
-	inline void addTrianglesStrip(const IndexList& input)
-	{
-		m_StripsIndex+= input;
-		m_StripIndexSizes+= static_cast<GLsizei>(input.size());
-	}
+	void addTrianglesStrip(const IndexList&);
+
+	//! Set base triangle strip offset
+	void setBaseTrianglesStripOffset(GLvoid*);
 
 	//! Add triangle fan to the group
-	inline void addTrianglesFan(const IndexList& input)
-	{
-		m_FansIndex+= input;
-		m_FansIndexSizes+= static_cast<GLsizei>(input.size());
-	}
+	void addTrianglesFan(const IndexList&);
+
+	//! Set base triangle fan offset
+	void setBaseTrianglesFanOffset(GLvoid*);
+
 
 //@}
 
@@ -126,17 +147,26 @@ private:
 	//! Triangles index list
 	IndexList m_TrianglesIndex;
 
+	//! The base triangle index offset
+	GLvoid* m_pBaseTrianglesOffset;
+
 	//! Strips index list
 	IndexList m_StripsIndex;
 
 	//! Strips index size
 	IndexSizes m_StripIndexSizes;
 
+	//! Vector of strips offset
+	OffsetVector m_StripIndexOffset;
+
 	//! Fans index list
 	IndexList m_FansIndex;
 
 	//! Fans index size
 	IndexSizes m_FansIndexSizes;
+
+	//! Vector of fan Offset
+	OffsetVector m_FanIndexOffset;
 
 };
 

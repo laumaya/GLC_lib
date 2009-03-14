@@ -29,10 +29,13 @@
 GLC_PrimitiveGroup::GLC_PrimitiveGroup(GLC_uint materialId)
 : m_ID(materialId)
 , m_TrianglesIndex()
+, m_pBaseTrianglesOffset(NULL)
 , m_StripsIndex()
 , m_StripIndexSizes()
+, m_StripIndexOffset()
 , m_FansIndex()
 , m_FansIndexSizes()
+, m_FanIndexOffset()
 {
 
 
@@ -42,10 +45,13 @@ GLC_PrimitiveGroup::GLC_PrimitiveGroup(GLC_uint materialId)
 GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group)
 : m_ID(group.m_ID)
 , m_TrianglesIndex(group.m_TrianglesIndex)
+, m_pBaseTrianglesOffset(group.m_pBaseTrianglesOffset)
 , m_StripsIndex(group.m_StripsIndex)
 , m_StripIndexSizes(group.m_StripIndexSizes)
+, m_StripIndexOffset(group.m_StripIndexOffset)
 , m_FansIndex(group.m_FansIndex)
 , m_FansIndexSizes(group.m_FansIndexSizes)
+, m_FanIndexOffset(group.m_FanIndexOffset)
 {
 
 
@@ -56,3 +62,45 @@ GLC_PrimitiveGroup::~GLC_PrimitiveGroup()
 {
 
 }
+
+// Add triangle strip to the group
+void GLC_PrimitiveGroup::addTrianglesStrip(const IndexList& input)
+{
+	m_StripsIndex+= input;
+	m_StripIndexSizes+= static_cast<GLsizei>(input.size());
+	GLvoid* pOffset= NULL;
+	if (not m_StripIndexOffset.isEmpty()) pOffset= m_StripIndexOffset.last();
+	m_StripIndexOffset.append(BUFFER_OFFSET(reinterpret_cast<GLsizei>(pOffset) * sizeof(GLuint)));
+}
+
+// Set base triangle strip offset
+void GLC_PrimitiveGroup::setBaseTrianglesStripOffset(GLvoid* pOffset)
+{
+	const int size= m_StripIndexOffset.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_StripIndexOffset[i]= static_cast<char *>(m_StripIndexOffset[i]) + reinterpret_cast<GLsizei>(pOffset);
+	}
+}
+
+//! Add triangle fan to the group
+void GLC_PrimitiveGroup::addTrianglesFan(const IndexList& input)
+{
+	m_FansIndex+= input;
+	m_FansIndexSizes+= static_cast<GLsizei>(input.size());
+	GLvoid* pOffset= NULL;
+	if (not m_FanIndexOffset.isEmpty()) pOffset= m_FanIndexOffset.last();
+	m_FanIndexOffset.append(BUFFER_OFFSET(reinterpret_cast<GLsizei>(pOffset) * sizeof(GLuint)));
+
+}
+
+// Set base triangle fan offset
+void GLC_PrimitiveGroup::setBaseTrianglesFanOffset(GLvoid* pOffset)
+{
+	const int size= m_FanIndexOffset.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_FanIndexOffset[i]= static_cast<char *>(m_FanIndexOffset[i]) + reinterpret_cast<GLsizei>(pOffset);
+	}
+}
+
