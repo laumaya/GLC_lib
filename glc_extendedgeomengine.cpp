@@ -88,6 +88,57 @@ GLC_ExtendedGeomEngine::~GLC_ExtendedGeomEngine()
 		}
 	}
 }
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Return the Position Vector
+GLfloatVector GLC_ExtendedGeomEngine::positionVector() const
+{
+	if (0 != m_VboId)
+	{
+		// VBO created get data from VBO
+		const int sizeOfVbo= m_Positions.size();
+		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
+		GLfloatVector positionVector(sizeOfVbo);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
+		GLvoid* pVbo = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		memcpy(positionVector.data(), pVbo, dataSize);
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		return positionVector;
+	}
+	else
+	{
+		return m_Positions;
+	}
+
+}
+
+// Return the normal Vector
+GLfloatVector GLC_ExtendedGeomEngine::normalVector() const
+{
+	if (0 != m_NormalVboId)
+	{
+		// VBO created get data from VBO
+		const int sizeOfVbo= m_Normals.size();
+		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
+		GLfloatVector normalVector(sizeOfVbo);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_NormalVboId);
+		GLvoid* pVbo = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		memcpy(normalVector.data(), pVbo, dataSize);
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		return normalVector;
+	}
+	else
+	{
+		return m_Normals;
+	}
+}
+
 
 
 //////////////////////////////////////////////////////////////////////
@@ -127,39 +178,58 @@ void GLC_ExtendedGeomEngine::createVBOs()
 		}
 	}
 }
-
-//! Vbo Usage
-void GLC_ExtendedGeomEngine::useVBOs(bool use, GLC_GeomEngine::IboType type)
+//! Ibo Usage
+bool GLC_ExtendedGeomEngine::useVBO(bool use, GLC_ExtendedGeomEngine::VboType type)
 {
+	bool result= true;
 	if (use)
 	{
-		// Position VBO
-		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
-		// Normal VBO
-		glBindBuffer(GL_ARRAY_BUFFER, m_NormalVboId);
-		// Texture VBO if needed
-		if (0 != m_TexelVboId)
+		// Chose the right VBO
+		if (type == GLC_ExtendedGeomEngine::GLC_Vertex)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
+		}
+		else if (type == GLC_ExtendedGeomEngine::GLC_Normal)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_NormalVboId);
 		}
+		else if ((type == GLC_ExtendedGeomEngine::GLC_Texel) and (0 != m_TexelVboId))
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, m_TexelVboId);
+		}
+		else result= false;
+	}
+	else
+	{
+		// Unbind VBO
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	return result;
+
+}
+
+//! Vbo Usage
+void GLC_ExtendedGeomEngine::useIBO(bool use, GLC_ExtendedGeomEngine::IboType type)
+{
+	if (use)
+	{
 		// Chose the right IBO
-		if (type == GLC_GeomEngine::GLC_Triangles)
+		if (type == GLC_ExtendedGeomEngine::GLC_Triangles)
 		{
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_TrianglesIboId);
 		}
-		else if (type == GLC_GeomEngine::GLC_TrianglesStrip)
+		else if (type == GLC_ExtendedGeomEngine::GLC_TrianglesStrip)
 		{
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_TrianglesStripIboId);
 		}
-		else if (type == GLC_GeomEngine::GLC_TrianglesFan)
+		else if (type == GLC_ExtendedGeomEngine::GLC_TrianglesFan)
 		{
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_TrianglesFanIboId);
 		}
 	}
 	else
 	{
-		// Unbind VBOs
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		// Unbind Ibo
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 

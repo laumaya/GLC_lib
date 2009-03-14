@@ -39,6 +39,24 @@ typedef QVector<GLuint> GLuintVector;
 class GLC_ExtendedGeomEngine : public GLC_GeomEngine
 {
 public:
+
+	//! Enum of VBO TYPE
+	enum VboType
+	{
+		GLC_Vertex= 30,
+		GLC_Normal,
+		GLC_Texel,
+	};
+
+	//! Enum of IBO TYPE
+	enum IboType
+	{
+		GLC_Triangles= 1,
+		GLC_TrianglesStrip,
+		GLC_TrianglesFan,
+	};
+
+public:
 	//! Default constructor
 	GLC_ExtendedGeomEngine();
 
@@ -56,6 +74,9 @@ public:
 	//! Return the Position Vector
 	GLfloatVector positionVector() const;
 
+	//! Return the normal Vector
+	GLfloatVector normalVector() const;
+
 	//! Return the Position Vector handle
 	inline GLfloatVector* positionVectorHandle()
 	{ return &m_Positions;}
@@ -68,25 +89,37 @@ public:
 	inline GLfloatVector* texelVectorHandle()
 	{ return &m_Texels;}
 
+	//! Return true if contains triangles
+	inline bool containsTriangles() const
+	{return not m_TrianglesIbo.isEmpty();}
+
 	//! Return the Triangle Index Vector
-	GLuintVector TrianglesIndexVector() const;
+	GLuintVector trianglesIndexVector() const;
 
 	//! Return the Triangle Index Vector handle
-	inline GLuintVector* TrianglesIndexVectorHandle()
+	inline GLuintVector* trianglesIndexVectorHandle()
 	{ return &m_TrianglesIbo;}
 
+	//! Return true if contains triangles strip
+	inline bool containsTrianglesStrip() const
+	{ return not m_TrianglesStripIbo.isEmpty();}
+
 	//! Return the Triangle Strip Index Vector
-	GLuintVector TrianglesStripIndexVector() const;
+	GLuintVector trianglesStripIndexVector() const;
 
 	//! Return the Triangle Strip Index Vector handle
-	inline GLuintVector* TrianglesStripIndexVectorHandle()
+	inline GLuintVector* trianglesStripIndexVectorHandle()
 	{ return &m_TrianglesStripIbo;}
 
+	//! Return true if contains triangles fan
+	inline bool containsTrianglesFan() const
+	{ return not m_TrianglesFanIbo.isEmpty();}
+
 	//! Return the Triangle Fan Index Vector
-	GLuintVector TrianglesFanpIndexVector() const;
+	GLuintVector trianglesFanIndexVector() const;
 
 	//! Return the Triangle Strip Index Vector handle
-	inline GLuintVector* TrianglesFanIndexVectorHandle()
+	inline GLuintVector* trianglesFanIndexVectorHandle()
 	{ return &m_TrianglesFanIbo;}
 
 
@@ -100,8 +133,11 @@ public:
 	//! Vbo creation
 	void createVBOs();
 
-	//! Vbo Usage
-	void useVBOs(bool, GLC_GeomEngine::IboType);
+	//! Ibo Usage
+	bool useVBO(bool, GLC_ExtendedGeomEngine::VboType);
+
+	//! Ibo Usage
+	void useIBO(bool, GLC_ExtendedGeomEngine::IboType);
 //@}
 
 //////////////////////////////////////////////////////////////////////
