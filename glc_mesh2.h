@@ -34,6 +34,7 @@
 #include "glc_vbogeom.h"
 #include "glc_vector2df.h"
 #include "glc_vector3df.h"
+#include "glc_simplegeomengine.h"
 
 typedef QList<GLC_Vertex> VertexList;
 typedef QList<GLuint> IndexList;
@@ -100,15 +101,15 @@ public:
 	void reverseNormal();
 
 	//! Set color per vertex flag
-	void setColorPearVertex(bool flag){m_ColorPearVertex= flag;}
+	inline void setColorPearVertex(bool flag){m_ColorPearVertex= flag;}
 
 	//! Copy vertex list in a vector list for Vertex Array Use
 	inline void finished()
 	{
-		if (m_pSimpleGeomEngine->vertexVectorHandle()->isEmpty())
+		if (m_SimpleGeomEngine.vertexVectorHandle()->isEmpty())
 		{
 			// Copy vertex Data to a vector
-			(*m_pSimpleGeomEngine->vertexVectorHandle())= m_Vertex.toVector();
+			(*m_SimpleGeomEngine.vertexVectorHandle())= m_Vertex.toVector();
 			m_Vertex.clear();
 			// Create mesh Bounding Box
 			boundingBox();
@@ -161,7 +162,7 @@ private:
 	bool m_ColorPearVertex;
 
 	//! Geom engine
-	GLC_SimpleGeomEngine* m_pSimpleGeomEngine;
+	GLC_SimpleGeomEngine m_SimpleGeomEngine;
 
 };
 #endif //GLC_MESH2_H_
