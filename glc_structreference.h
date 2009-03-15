@@ -1,0 +1,90 @@
+/****************************************************************************
+
+ This file is part of the GLC-lib library.
+ Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 1.1.0, packaged on March, 2009.
+
+ http://glc-lib.sourceforge.net
+
+ GLC-lib is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ GLC-lib is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with GLC-lib; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+*****************************************************************************/
+
+//! \file glc_structreference.h interface for the GLC_StructReference class.
+
+#ifndef GLC_STRUCTREFERENCE_H_
+#define GLC_STRUCTREFERENCE_H_
+
+#include <QString>
+#include <QList>
+
+#include "glc_structinstance.h"
+
+class GLC_StructReference
+{
+//////////////////////////////////////////////////////////////////////
+/*! @name Constructor / Destructor */
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	// Default Constructor
+	GLC_StructReference();
+
+	// Destructor
+	virtual ~GLC_StructReference();
+//@}
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Return true if this reference have instance
+	inline bool haveStructInstance() const
+	{ return not m_ListOfInstance.isEmpty();}
+
+	//! Return first instance handle
+	inline GLC_StructInstance* firstInstanceHandle() const
+	{ return m_ListOfInstance.first();}
+
+	//! Create a Struct instance of this reference
+	GLC_StructInstance* createStructInstance();
+
+	//! Return the list of instance of this reference
+	inline QList<GLC_StructInstance*> listOfStructInstances() const
+	{ return m_ListOfInstance;}
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! An Instance of this reference have been created
+	inline void structInstanceCreated(GLC_StructInstance* pInstance)
+	{m_ListOfInstance.append(pInstance);}
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+// Private members
+//////////////////////////////////////////////////////////////////////
+private:
+	//! The list of refrence's instances
+	QList<GLC_StructInstance*> m_ListOfInstance;
+
+};
+
+#endif /* GLC_STRUCTREFERENCE_H_ */
