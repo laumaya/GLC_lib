@@ -29,9 +29,11 @@
 
 #include "glc_object.h"
 #include "glc_matrix4x4.h"
+#include <QSet>
 
 class GLC_Collection;
 class GLC_StructInstance;
+class GLC_Material;
 
 class GLC_StructOccurence : public GLC_Object
 {
@@ -42,7 +44,10 @@ class GLC_StructOccurence : public GLC_Object
 
 public:
 	//! Default constructor
-	GLC_StructOccurence(GLC_Collection*, GLC_StructInstance*);
+	GLC_StructOccurence(GLC_Collection*, GLC_StructInstance*, GLuint shaderId=0);
+
+	//! Copy constructor
+	GLC_StructOccurence(GLC_Collection*, const GLC_StructOccurence&);
 
 	//! Destructor
 	virtual ~GLC_StructOccurence();
@@ -68,6 +73,38 @@ public:
 	inline GLC_StructInstance* structInstance() const
 	{ return m_pStructInstance;}
 
+	//! Return the number of childs
+	inline int childCount() const
+	{ return m_Childs.size();}
+
+	//! Return a child
+	/*! The index must exist*/
+	inline GLC_StructOccurence* child(const int index) const
+	{return m_Childs.at(index);}
+
+	//! Return the list of children
+	inline QList<GLC_StructOccurence*> children() const
+	{ return m_Childs;}
+
+	//! Get number of faces
+	unsigned int numberOfFaces() const;
+
+	//! Get number of vertex
+	unsigned int numberOfVertex() const;
+
+	//! Get number of materials
+	unsigned int numberOfMaterials() const;
+
+	//! Get materials List
+	QSet<GLC_Material*> materialSet() const;
+
+	//! Clone the occurence
+	GLC_StructOccurence* clone(GLC_Collection*) const;
+
+	//! Return true if the occurence is visible
+	bool isVisible() const;
+
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -81,6 +118,13 @@ public:
 	/*! The new child must be orphan*/
 	void addChild(GLC_StructOccurence*);
 
+	//! Add Child instance (the occurence is created)
+	void addChild(GLC_StructInstance*);
+
+	//! Add Children
+	/*! the new children must be orphan*/
+	void addChildren(const QList<GLC_StructOccurence*>&);
+
 	//! make the occurence orphan
 	void makeOrphan();
 
@@ -88,6 +132,9 @@ public:
 	/*! The removed child will not be deleted*/
 	inline bool removeChild(GLC_StructOccurence* pChild)
 	{ return m_Childs.removeOne(pChild);}
+
+	//! Reverse Normals of this Occurence and childs
+	void reverseNormals();
 
 //@}
 

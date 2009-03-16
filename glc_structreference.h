@@ -31,6 +31,7 @@
 #include <QList>
 
 #include "glc_structinstance.h"
+#include "glc_instance.h"
 
 class GLC_StructReference
 {
@@ -39,10 +40,13 @@ class GLC_StructReference
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	// Default Constructor
+	//! Default Constructor
 	GLC_StructReference();
 
-	// Destructor
+	//! Create reference with representation
+	GLC_StructReference(const GLC_Instance&);
+
+	//! Destructor
 	virtual ~GLC_StructReference();
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -65,6 +69,14 @@ public:
 	inline QList<GLC_StructInstance*> listOfStructInstances() const
 	{ return m_ListOfInstance;}
 
+	//! Return true if this reference have a representation
+	inline bool haveRepresentation() const
+	{ return NULL != m_pRepresentation;}
+
+	//! Return an instance of the representation
+	/*! representation must exists*/
+	inline GLC_Instance instanceRepresentation() const
+	{return m_pRepresentation->instanciate();}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -84,6 +96,9 @@ public:
 private:
 	//! The list of refrence's instances
 	QList<GLC_StructInstance*> m_ListOfInstance;
+
+	//! The representation of reference
+	GLC_Instance* m_pRepresentation;
 
 };
 

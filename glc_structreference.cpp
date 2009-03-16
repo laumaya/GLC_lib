@@ -26,16 +26,26 @@
 
 #include "glc_structreference.h"
 
+// Default constructor
 GLC_StructReference::GLC_StructReference()
 : m_ListOfInstance()
+, m_pRepresentation(NULL)
 {
 
 
 }
 
-GLC_StructReference::~GLC_StructReference()
+// Create reference with representation
+GLC_StructReference::GLC_StructReference(const GLC_Instance& rep)
+: m_ListOfInstance()
+, m_pRepresentation(new GLC_Instance(rep))
 {
 
+}
+
+GLC_StructReference::~GLC_StructReference()
+{
+	delete m_pRepresentation;
 }
 
 
