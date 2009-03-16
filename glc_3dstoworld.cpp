@@ -33,6 +33,10 @@
 #include "glc_material.h"
 #include "glc_vector2df.h"
 #include "glc_vector3df.h"
+#include "glc_structreference.h"
+#include "glc_structinstance.h"
+#include "glc_structoccurence.h"
+
 // Lib3ds Header
 #include "lib3ds/file.h"
 #include "lib3ds/mesh.h"
@@ -121,7 +125,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 	// Create GLC_Instance with Node
 	for (Lib3dsNode *pNode=m_pLib3dsFile->nodes; pNode!=0; pNode=pNode->next)
 	{
-		createMeshes(m_pWorld->rootProduct(), pNode);
+		createMeshes(m_pWorld->rootOccurence(), pNode);
 	}
 
 	// Load unloaded mesh name
@@ -134,7 +138,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 			strcpy(pNode->name, pMesh->name);
 			pNode->parent_id= LIB3DS_NO_PARENT;
 			lib3ds_file_insert_node(m_pLib3dsFile, pNode);
-			createMeshes(m_pWorld->rootProduct(), pNode);
+			createMeshes(m_pWorld->rootOccurence(), pNode);
 		}
 	}
 
@@ -186,9 +190,9 @@ void GLC_3dsToWorld::clear()
 }
 
 // Create meshes from the 3ds File
-void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode)
+void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFatherNode)
 {
-	GLC_Product* pChildProduct= NULL;
+	GLC_StructOccurence* pChildProduct= NULL;
 	Lib3dsMesh *pMesh= NULL;
 
 	if (pFatherNode->type == LIB3DS_OBJECT_NODE)
@@ -221,7 +225,7 @@ void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode
 					// Compute the part matrix
 					nodeMat= nodeMat * trans * matInv; // I don't know why...
 					// move the part by the matrix
-					pProduct->addChildPart(instance)->move(nodeMat);
+					pProduct->addChild((new GLC_StructReference(instance))->createStructInstance()->move(nodeMat));
 		    	}
 		    }
 		} // End If DUMMY
@@ -230,8 +234,11 @@ void GLC_3dsToWorld::createMeshes(GLC_Product* pProduct, Lib3dsNode* pFatherNode
 	// If there is a child, create a child product
 	if (NULL != pFatherNode->childs)
 	{
-		pChildProduct= pProduct->addNewChildProduct();
-		pChildProduct->setReference(QString("Product") + QString::number(pFatherNode->node_id));
+		GLC_StructInstance* pInstance= (new GLC_StructReference())->createStructInstance();
+		pChildProduct= new GLC_StructOccurence(m_pWorld->collection(), pInstance);
+		pProduct->addChild(pChildProduct);
+
+		pChildProduct->setName(QString("Product") + QString::number(pFatherNode->node_id));
 
 		//pChildProduct->move(GLC_Matrix4x4(&(pFatherNode->matrix[0][0])));
 

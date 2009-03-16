@@ -40,7 +40,7 @@
 class GLC_World;
 class QGLContext;
 class GLC_Mesh2;
-class GLC_Product;
+class GLC_StructOccurence;
 class GLC_Material;
 
 struct Lib3dsFile;
@@ -99,7 +99,7 @@ private:
 	void clear();
 
 	//! Create meshes from the 3ds File
-	void createMeshes(GLC_Product*, Lib3dsNode*);
+	void createMeshes(GLC_StructOccurence*, Lib3dsNode*);
 
 	//! Create Instance from a Lib3dsMesh
 	GLC_Instance createInstance(Lib3dsMesh*);
