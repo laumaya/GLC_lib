@@ -87,6 +87,12 @@ public:
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
 
+	//! Get number of faces
+	virtual unsigned int numberOfFaces() const;
+
+	//! Get number of vertex
+	virtual unsigned int numberOfVertex() const;
+
 	//! return true if cylinder's ended are capped
 	bool EndedIsCaped() const {return m_EndedIsCaped;}
 
