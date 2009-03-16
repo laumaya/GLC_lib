@@ -66,6 +66,18 @@ GLC_ExtendedMesh::~GLC_ExtendedMesh()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
+// Get number of faces
+unsigned int GLC_ExtendedMesh::numberOfFaces() const
+{
+	return m_NumberOfFaces;
+}
+
+// Get number of vertex
+unsigned int GLC_ExtendedMesh::numberOfVertex() const
+{
+	return m_NumberOfFaces / 3;
+}
+
 // return the mesh bounding box
 GLC_BoundingBox& GLC_ExtendedMesh::boundingBox()
 {
