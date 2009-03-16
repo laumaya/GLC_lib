@@ -27,6 +27,9 @@
 #include "glc_stltoworld.h"
 #include "glc_world.h"
 #include "glc_fileformatexception.h"
+#include "glc_structreference.h"
+#include "glc_structinstance.h"
+#include "glc_structoccurence.h"
 
 #include <QTextStream>
 #include <QFileInfo>
@@ -118,7 +121,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		m_pCurrentMesh->finished();
 		GLC_Instance instance(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
-		m_pWorld->rootProduct()->addChildPart(instance);
+		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
 	}
 	else
 	{
@@ -177,7 +180,7 @@ void GLC_StlToWorld::scanFacet()
 		m_pCurrentMesh->finished();
 		GLC_Instance instance(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
-		m_pWorld->rootProduct()->addChildPart(instance);
+		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
 		return;
 	}
 	// Test if this is the start of new solid
