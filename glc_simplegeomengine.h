@@ -83,6 +83,14 @@ public:
 	inline QVector<GLuint>* indexVectorHandle()
 	{ return &m_IndexVector;}
 
+	//! Get number of faces
+	inline unsigned int numberOfFaces() const
+	{ return m_NumberOfVertex / 3;}
+
+	//! Get number of vertex
+	inline unsigned int numberOfVertex() const
+	{return m_NumberOfVertex;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
