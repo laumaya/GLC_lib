@@ -110,6 +110,17 @@ GLC_uint GLC_VboGeom::materialIndex(const GLC_Material& mat) const
     }
 	return index;
 }
+// Get number of faces
+unsigned int GLC_VboGeom::numberOfFaces() const
+{
+	return 0;
+}
+
+// Get number of vertex
+unsigned int GLC_VboGeom::numberOfVertex() const
+{
+	return 0;
+}
 
 /////////////////////////////////////////////////////////////////////
 // Set Functions
@@ -157,6 +168,11 @@ void GLC_VboGeom::updateTransparentMaterialNumber()
 		}
 		++iMat;
 	}
+}
+// Reverse normal
+void GLC_VboGeom::reverseNormals()
+{
+	// Nothing to do by default
 }
 
 // Add material to mesh

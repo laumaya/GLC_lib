@@ -97,16 +97,20 @@ public:
 	}
 
 	//! Return the number of materials
-	inline unsigned int numberOfMaterials() const {return m_MaterialHash.size();}
+	inline unsigned int numberOfMaterials() const
+	{return m_MaterialHash.size();}
 
 	//! Return the specified mesh sub material
-	inline GLC_Material* material(const GLC_uint key) {return m_MaterialHash[key];}
+	inline GLC_Material* material(const GLC_uint key)
+	{return m_MaterialHash[key];}
 
-	//! Return All mesh sub material
-	inline QList<GLC_Material*> materials() {return m_MaterialHash.values();}
+	//! Get materials List
+	inline QSet<GLC_Material*> materialSet() const
+	{return m_MaterialHash.values().toSet();}
 
 	//! Return true if Material key is in the mesh
-	inline const bool containsMaterial(const GLC_uint key) const {return m_MaterialHash.contains(key);}
+	inline const bool containsMaterial(const GLC_uint key) const
+	{return m_MaterialHash.contains(key);}
 
 	//! Return material index if Material is the same than a material already in the mesh
 	/*! Return 0 if the material is not found
@@ -138,6 +142,12 @@ public:
 	inline bool typeIsWire() const
 	{return m_IsWire;}
 
+	//! Get number of faces
+	virtual unsigned int numberOfFaces() const;
+
+	//! Get number of vertex
+	virtual unsigned int numberOfVertex() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -164,6 +174,9 @@ public:
 
 	//! Update the transparent material number
 	void updateTransparentMaterialNumber();
+
+	//! Reverse normal
+	virtual void reverseNormals();
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
