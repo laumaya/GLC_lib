@@ -107,6 +107,18 @@ GLC_Mesh2::~GLC_Mesh2(void)
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
+// Get number of faces
+unsigned int GLC_Mesh2::numberOfFaces() const
+{
+	return m_NumberOfFaces;
+}
+
+// Get number of vertex
+unsigned int GLC_Mesh2::numberOfVertex() const
+{
+	return m_NumberOfFaces / 3;
+}
+
 // return the mesh bounding box
 GLC_BoundingBox& GLC_Mesh2::boundingBox(void)
 {
@@ -195,7 +207,7 @@ void GLC_Mesh2::addTriangles(const VertexList &triangles, GLC_Material* pMateria
 }
 
 // Reverse mesh normal
-void GLC_Mesh2::reverseNormal()
+void GLC_Mesh2::reverseNormals()
 {
 	VertexVector* pVertexVector= m_SimpleGeomEngine.vertexVectorHandle();
 	// Copy Vertex and index data if necessary

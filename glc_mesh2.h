@@ -71,11 +71,11 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the number of faces
-	inline unsigned int numberOfFaces() const {return m_NumberOfFaces;}
+	//! Get number of faces
+	virtual unsigned int numberOfFaces() const;
 
-	//! Return the number of vertex
-	inline unsigned int numberOfVertex() const {return m_NumberOfFaces * 3;}
+	//! Get number of vertex
+	virtual unsigned int numberOfVertex() const;
 
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
@@ -98,7 +98,7 @@ public:
 	void addTriangles(const VertexList &, GLC_Material*);
 
 	//! Reverse mesh normal
-	void reverseNormal();
+	virtual void reverseNormals();
 
 	//! Set color per vertex flag
 	inline void setColorPearVertex(bool flag){m_ColorPearVertex= flag;}
