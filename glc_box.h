@@ -80,6 +80,12 @@ public:
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;
 
+	//! Get number of faces
+	virtual unsigned int numberOfFaces() const;
+
+	//! Get number of vertex
+	virtual unsigned int numberOfVertex() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -88,7 +94,6 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-// Display List modifying functions
 	//! Set X length
 	/*! This Function invalid OpenGL display list
 	 * LgX must be > 0*/
@@ -103,9 +108,6 @@ public:
 	/*! This Function invalid OpenGL display list
 	 * LgZ must be > 0*/
 	void setLgZ(double LgZ);
-
-// End of Display List modifying functions
-
 //@}
 
 //////////////////////////////////////////////////////////////////////

@@ -111,6 +111,19 @@ GLC_VboGeom* GLC_Box::clone() const
 	return new GLC_Box(*this);
 }
 
+
+// Get number of faces
+unsigned int GLC_Box::numberOfFaces() const
+{
+	return m_SimpleGeomEngine.numberOfFaces();
+}
+
+// Get number of vertex
+unsigned int GLC_Box::numberOfVertex() const
+{
+	return m_SimpleGeomEngine.numberOfVertex();
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
