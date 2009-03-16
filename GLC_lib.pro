@@ -72,8 +72,6 @@ HEADERS_GLC += glc_utils_maths.h \
            glc_selectionmaterial.h \
            glc_world.h \
            glc_node.h \
-           glc_product.h \
-           glc_part.h \
            glc_objmtlloader.h \
            glc_objtoworld.h \
            glc_stltoworld.h \
@@ -141,8 +139,6 @@ SOURCES += glc_vector4d.cpp \
            glc_selectionmaterial.cpp \
            glc_world.cpp \
            glc_node.cpp \
-           glc_product.cpp \
-           glc_part.cpp \
            glc_objmtlloader.cpp \
            glc_objtoworld.cpp \
            glc_stltoworld.cpp \
@@ -185,14 +181,12 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Node \
     		   include/GLC_Object \
     		   include/GLC_OpenGlException \
-    		   include/GLC_Part \
     		   include/GLC_Point \
     		   include/GLC_Point2d \
     		   include/GLC_Point2df \
     		   include/GLC_Point3d \
     		   include/GLC_Point3df \
     		   include/GLC_Point4d \
-    		   include/GLC_Product \
     		   include/GLC_Texture \
     		   include/GLC_Vector2d \
     		   include/GLC_Vector2df \
