@@ -30,7 +30,9 @@
 #include "glc_objmtlloader.h"
 #include "glc_fileformatexception.h"
 #include "glc_geomtools.h"
-
+#include "glc_structreference.h"
+#include "glc_structinstance.h"
+#include "glc_structoccurence.h"
 #include <QTextStream>
 #include <QFileInfo>
 #include <QGLContext>
@@ -187,14 +189,14 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 			m_pCurrentMesh->finished();
 			GLC_Instance instance(m_pCurrentMesh);
 			m_pCurrentMesh= NULL;
-			m_pWorld->rootProduct()->addChildPart(instance);
+			m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
 			// Clear the list of material already used
 			m_CurrentMeshMaterials.clear();
 			m_pCurrentMaterial= NULL;
 		}
 	}
 	//! Test if there is meshes in the world
-	if (m_pWorld->rootProduct()->childCount() == 0)
+	if (m_pWorld->rootOccurence()->childCount() == 0)
 	{
 		QString message= "GLC_ObjToWorld::CreateWorldFromObj : No mesh found!";
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::NoMeshFound);
@@ -330,7 +332,7 @@ void GLC_ObjToWorld::changeGroup(QString line)
 					m_pCurrentMesh->finished();
 					GLC_Instance instance(m_pCurrentMesh);
 					m_pCurrentMesh= NULL;
-					m_pWorld->rootProduct()->addChildPart(instance);
+					m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
 				}
 				else
 				{
