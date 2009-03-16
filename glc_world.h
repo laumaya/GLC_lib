@@ -28,8 +28,10 @@
 #define GLC_WORLD_H_
 
 #include "glc_collection.h"
-#include "glc_product.h"
-#include "glc_part.h"
+#include "glc_structoccurence.h"
+#include "glc_structreference.h"
+#include "glc_structinstance.h"
+
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_World
@@ -63,8 +65,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the root product of the world
-	inline GLC_Product* rootProduct() const {return m_pRoot;}
+	//! Return the root of the world
+	inline GLC_StructOccurence* rootOccurence() const {return m_pRoot;}
 
 	//! Return the world collection
 	inline GLC_Collection* collection() {return m_pCollection;}
@@ -108,7 +110,7 @@ public:
 	void mergeWithAnotherWorld(GLC_World &);
 
 	//! Reverse worlds part normal
-	inline void reversePartNormal() {m_pRoot->reverseChildPartNormal();}
+	inline void reversePartNormal() {m_pRoot->reverseNormals();}
 
 	//! Clear this world
 	GLC_World& clear() {return *this= GLC_World();}
@@ -142,8 +144,8 @@ private:
 	//! The instance Collection
 	GLC_Collection* m_pCollection;
 
-	//! The root of the product structure
-	GLC_Product* m_pRoot;
+	//! The root of the structure
+	GLC_StructOccurence* m_pRoot;
 
 	//! Number of this world
 	int* m_pNumberOfWorld;
