@@ -113,6 +113,23 @@ public:
 	//! Return the GLC_uint decoded ID from RGB encoded ID
 	static GLC_uint decodeRgbId(const GLubyte*);
 
+	//! Get number of faces
+	inline unsigned int numberOfFaces() const
+	{ return m_pGeom->numberOfFaces();}
+
+	//! Get number of vertex
+	inline unsigned int numberOfVertex() const
+	{ return m_pGeom->numberOfVertex();}
+
+	//! Get number of materials
+	inline unsigned int numberOfMaterials() const
+	{ return m_pGeom->numberOfMaterials();}
+
+	//! Get materials List
+	inline QSet<GLC_Material*> materialSet() const
+	{ return m_pGeom->materialSet();}
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
