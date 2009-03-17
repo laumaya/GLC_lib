@@ -209,10 +209,9 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 		    {
 		    	GLC_Instance instance(createInstance(pMesh));
 		    	// Test if there is vertex in the mesh
-		    	GLC_Mesh2* pGLCMesh= dynamic_cast<GLC_Mesh2*>(instance.getGeometry());
-		    	if (0 != pGLCMesh->numberOfVertex())
+		    	if (0 != instance.getGeometry()->numberOfVertex())
 		    	{
-		    		m_LoadedMeshes.insert(pGLCMesh->name());
+		    		m_LoadedMeshes.insert(instance.getGeometry()->name());
 			    	// Load node matrix
 			    	GLC_Matrix4x4 nodeMat(&(pFatherNode->matrix[0][0]));
 					// The mesh matrix to inverse
@@ -226,6 +225,20 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 					nodeMat= nodeMat * trans * matInv; // I don't know why...
 					// move the part by the matrix
 					pProduct->addChild((new GLC_StructReference(instance))->createStructInstance()->move(nodeMat));
+		    	}
+		    	else
+		    	{
+		    		// the instance will be deleted, check material usage
+		    		QSet<GLC_Material*> meshMaterials= instance.getGeometry()->materialSet();
+		    		QSet<GLC_Material*>::const_iterator iMat= meshMaterials.constBegin();
+		    		while (iMat != meshMaterials.constEnd())
+		    		{
+		    			if ((*iMat)->numberOfUsage() == 1)
+		    			{
+		    				m_Materials.remove((*iMat)->name());
+		    			}
+		    			++iMat;
+		    		}
 		    	}
 		    }
 		} // End If DUMMY
@@ -327,7 +340,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 				{ // Material not already loaded, load it
 					loadMaterial(p3dsMat);
 				}
-				pCurMaterial= m_Materials[materialName];
+				pCurMaterial= m_Materials.value(materialName);
 			}
 		}
 		pMesh->addTriangles(triangle, pCurMaterial);
