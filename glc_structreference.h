@@ -88,13 +88,17 @@ public:
 	inline void structInstanceCreated(GLC_StructInstance* pInstance)
 	{m_ListOfInstance.append(pInstance);}
 
+	//! An Instance of this reference have been deleted
+	inline void structInstanceDeleted(GLC_StructInstance* pInstance)
+	{m_ListOfInstance.removeOne(pInstance);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! The list of refrence's instances
+	//! The list of reference's instances
 	QList<GLC_StructInstance*> m_ListOfInstance;
 
 	//! The representation of reference
