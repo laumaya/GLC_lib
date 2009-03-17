@@ -1,3 +1,4 @@
+
 /****************************************************************************
 
  This file is part of the GLC-lib library.
@@ -30,7 +31,6 @@
 #include <QList>
 #include "glc_matrix4x4.h"
 #include "glc_instance.h"
-
 
 class GLC_StructReference;
 class GLC_StructOccurence;
@@ -77,6 +77,9 @@ public:
 	//! An occurence of this instance have been created
 	inline void structOccurenceCreated(GLC_StructOccurence* pOccurence)
 	{m_ListOfOccurences.append(pOccurence);}
+
+	inline void structOccurenceDeleted(GLC_StructOccurence *pOccurence)
+	{m_ListOfOccurences.removeOne(pOccurence);}
 
 	//! Move the instance by specified matrix
 	inline GLC_StructInstance* move(const GLC_Matrix4x4& matrix)
