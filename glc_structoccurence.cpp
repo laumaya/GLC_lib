@@ -76,18 +76,31 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 , m_pNumberOfOccurence(structOccurence.m_pNumberOfOccurence)
 , m_pStructInstance(structOccurence.m_pStructInstance)
 , m_pParent(NULL)
-, m_Childs(structOccurence.m_Childs)
+, m_Childs()
 , m_AbsoluteMatrix(structOccurence.m_AbsoluteMatrix)
 , m_HaveRepresentation(structOccurence.m_HaveRepresentation)
 {
 	++(*m_pNumberOfOccurence);
+	// Inform the instance of the creation
+	m_pStructInstance->structOccurenceCreated(this);
+
 	if (m_HaveRepresentation)
 	{
 		// Add occurence instance representation to the collection
 		GLC_Instance newRep= structOccurence.m_pCollection->getInstanceHandle(structOccurence.id())->instanciate();
+		newRep.setId(id());
+		if(structOccurence.m_pCollection->isInAShadingGroup(structOccurence.id()))
+		{
+			GLuint shaderId= structOccurence.m_pCollection->shadingGroup(structOccurence.id());
+			pCollection->bindShader(shaderId);
+			m_pCollection->add(newRep, shaderId);
+		}
+		else
+		{
+			m_pCollection->add(newRep);
+		}
+		//qDebug() << "Add instance " << newRep.name() << " in collection";
 
-		GLuint shaderId= structOccurence.m_pCollection->shadingGroup(structOccurence.id());
-		m_pCollection->add(newRep, shaderId);
 	}
 
 	// Update Absolute matrix
@@ -95,12 +108,32 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 
 	// Update instance
 	m_pStructInstance->structOccurenceCreated(this);
+
+	// Create childs
+	const int size= structOccurence.childCount();
+	for (int i= 0; i < size; ++i)
+	{
+		addChild(structOccurence.child(i)->clone(pCollection));
+	}
 }
 
 // Destructor
 GLC_StructOccurence::~GLC_StructOccurence()
 {
 	Q_ASSERT(m_pNumberOfOccurence != NULL);
+	// Remove collection representation if necessary
+	if (m_HaveRepresentation and not m_pCollection->isEmpty())
+	{
+		m_pCollection->remove(id());
+	}
+
+	// Remove Childs
+	const int size= m_Childs.size();
+	for (int i= 0; i < size; ++i)
+	{
+		GLC_StructOccurence* pChild= m_Childs.at(i);
+		delete pChild;
+	}
 
 	if ((--(*m_pNumberOfOccurence)) == 0)
 	{
@@ -150,17 +183,10 @@ QSet<GLC_Material*> GLC_StructOccurence::materialSet() const
 	return materialSet;
 }
 
-//! Clone the occurence
+// Clone the occurence
 GLC_StructOccurence* GLC_StructOccurence::clone(GLC_Collection* pCollection) const
 {
-	GLC_StructOccurence* pOccurence= new GLC_StructOccurence(pCollection, *this);
-
-	const int size= childCount();
-	for (int i= 0; i < size; ++i)
-	{
-		pOccurence->addChild(child(i)->clone(pCollection));
-	}
-	return pOccurence;
+	return new GLC_StructOccurence(pCollection, *this);
 }
 
 // Return true if the occurence is visible
@@ -242,7 +268,6 @@ void GLC_StructOccurence::makeOrphan()
 {
 	Q_ASSERT(not isOrphan());
 	m_pParent->removeChild(this);
-	m_pParent= NULL;
 }
 
 // Reverse Normals of this Occurence and childs

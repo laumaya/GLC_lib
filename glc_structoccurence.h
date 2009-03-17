@@ -131,7 +131,10 @@ public:
 	//! Remove the specified child
 	/*! The removed child will not be deleted*/
 	inline bool removeChild(GLC_StructOccurence* pChild)
-	{ return m_Childs.removeOne(pChild);}
+	{
+		pChild->m_pParent= NULL;
+		return m_Childs.removeOne(pChild);
+	}
 
 	//! Reverse Normals of this Occurence and childs
 	void reverseNormals();
