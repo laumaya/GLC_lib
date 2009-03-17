@@ -26,13 +26,16 @@
 
 #include "glc_world.h"
 #include "glc_product.h"
+#include "glc_structinstance.h"
+#include "glc_structreference.h"
 
 // Default constructor
 GLC_World::GLC_World()
 : m_pCollection(new GLC_Collection())
-, m_pRoot(new GLC_Product(m_pCollection))
+, m_pRoot(new GLC_StructOccurence(m_pCollection, (new GLC_StructReference())->createStructInstance()))
 , m_pNumberOfWorld(new int(1))
 {
+	//qDebug() << "GLC_World::GLC_World() : " << (*m_pNumberOfWorld) << " " << this;
 }
 
 // Copy constructor
@@ -41,14 +44,17 @@ GLC_World::GLC_World(const GLC_World& world)
 , m_pRoot(world.m_pRoot)
 , m_pNumberOfWorld(world.m_pNumberOfWorld)
 {
+	//qDebug() << "GLC_World::GLC_World() : " << (*m_pNumberOfWorld) << " " << this;
 	// Increment the number of world
 	++(*m_pNumberOfWorld);
 }
 
 GLC_World::~GLC_World()
 {
+
 	// Decrement the number of world
 	--(*m_pNumberOfWorld);
+	//qDebug() << "GLC_World::GLC_World() : " << (*m_pNumberOfWorld) << " " << this;
 	if ((*m_pNumberOfWorld) == 0)
 	{
 		// this is the last World, delete the root product and collection
@@ -62,14 +68,15 @@ GLC_World::~GLC_World()
 // Merge this world with another world
 void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 {
-	GLC_Product* pAnotherRoot= anotherWorld.rootProduct();
-	if (pAnotherRoot->productChildCount() > 0)
+	GLC_StructOccurence* pAnotherRoot= anotherWorld.rootOccurence();
+	if (pAnotherRoot->childCount() > 0)
 	{
-		m_pRoot->addChildProducts(pAnotherRoot->childProducts(), m_pCollection);
-	}
-	if (pAnotherRoot->partChildCount() > 0)
-	{
-		m_pRoot->addChildParts(pAnotherRoot->childParts(), m_pCollection);
+		QList<GLC_StructOccurence*> childs= pAnotherRoot->children();
+		const int size= childs.size();
+		for (int i= 0; i < size; ++i)
+		{
+			m_pRoot->addChild(childs.at(i)->clone(m_pCollection));
+		}
 	}
 
 }
