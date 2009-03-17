@@ -46,6 +46,7 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)
 	}
 	// Inform reference that an instance has been created
 	m_pStructReference->structInstanceCreated(this);
+	//qDebug() << "GLC_StructInstance::GLC_StructInstance : " << (*m_pNumberOfInstance) << " " << m_pNumberOfInstance;
 }
 
 // Destructor
@@ -53,6 +54,9 @@ GLC_StructInstance::~GLC_StructInstance()
 {
 	Q_ASSERT(m_pNumberOfInstance != NULL);
 
+	// Inform reference that an insatnce has been deleted
+	m_pStructReference->structInstanceDeleted(this);
+	//qDebug() << "GLC_StructInstance::~GLC_StructInstance : " << (*m_pNumberOfInstance) - 1 << " " << m_pNumberOfInstance;
 	if ((--(*m_pNumberOfInstance)) == 0)
 	{
 		delete m_pStructReference;
