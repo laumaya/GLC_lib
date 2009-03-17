@@ -126,6 +126,10 @@ public:
 	inline double getAlpha() const
 	{return m_DiffuseColor.alphaF();}
 
+	//! Return the number of this material usage
+	inline int numberOfUsage() const
+	{return m_WhereUsed.size();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
