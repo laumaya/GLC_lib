@@ -16,6 +16,15 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
+HEADERS_QUAZIP +=	quazip/crypt.h \
+					quazip/ioapi.h \
+					quazip/quazip.h \
+					quazip/quazipfile.h \
+					quazip/quazipfileinfo.h \
+					quazip/quazipnewinfo.h \
+					quazip/unzip.h \
+					quazip/zip.h
+
 HEADERS_LIB3DS += lib3ds/atmosphere.h \
            lib3ds/background.h \
            lib3ds/camera.h \
@@ -71,7 +80,6 @@ HEADERS_GLC += glc_utils_maths.h \
            glc_fileformatexception.h \
            glc_selectionmaterial.h \
            glc_world.h \
-           glc_node.h \
            glc_objmtlloader.h \
            glc_objtoworld.h \
            glc_stltoworld.h \
@@ -88,9 +96,17 @@ HEADERS_GLC += glc_utils_maths.h \
            glc_extendedmesh.h \
            glc_structreference.h \
            glc_structinstance.h \
-           glc_structoccurence.h
+           glc_structoccurence.h \
+           glc_3dxmltoworld.h
            
-HEADERS += $${HEADERS_LIB3DS} $${HEADERS_GLC} $${HEADERS_GLEXT}
+HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC} $${HEADERS_GLEXT}
+
+SOURCES += quazip/ioapi.c \
+           quazip/quazip.cpp \
+           quazip/quazipfile.cpp \
+           quazip/quazipnewinfo.cpp \
+           quazip/unzip.c \
+           quazip/zip.c
 
 SOURCES += lib3ds/atmosphere.c \
            lib3ds/background.c \
@@ -138,7 +154,6 @@ SOURCES += glc_vector4d.cpp \
            glc_fileformatexception.cpp \
            glc_selectionmaterial.cpp \
            glc_world.cpp \
-           glc_node.cpp \
            glc_objmtlloader.cpp \
            glc_objtoworld.cpp \
            glc_stltoworld.cpp \
@@ -155,7 +170,8 @@ SOURCES += glc_vector4d.cpp \
            glc_extendedmesh.cpp \
            glc_structreference.cpp \
            glc_structinstance.cpp \
-           glc_structoccurence.cpp
+           glc_structoccurence.cpp \
+           glc_3dxmltoworld.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
@@ -209,6 +225,7 @@ unix {
 	include.path = $${INCLUDE_DIR}/GLC_lib
 	include_lib3ds.path = $${INCLUDE_DIR}/GLC_lib/lib3ds
 	include_glext.path = $${INCLUDE_DIR}/GLC_lib/glext
+	include_quazip.path = $${INCLUDE_DIR}/quazip
 }
 
 # Windows Install configuration
@@ -219,15 +236,17 @@ win32 {
     include.path = $${INCLUDE_DIR}
     include_lib3ds.path = $${INCLUDE_DIR}/lib3ds
     include_glext.path = $${INCLUDE_DIR}/glext
+    include_quazip.path = $${INCLUDE_DIR}/quazip
 }    
 
 include.files = $${HEADERS_GLC} $${HEADERS_INST}
 include_lib3ds.files = $${HEADERS_LIB3DS}
 include_glext.files =$${HEADERS_GLEXT}
+include_quazip.files = $${HEADERS_QUAZIP}
 
 # install library
 target.path = $${LIB_DIR}
    
 # "make install" configuration options
-INSTALLS += target include_lib3ds include_glext include
+INSTALLS += target include_lib3ds include_glext include_quazip include
 
