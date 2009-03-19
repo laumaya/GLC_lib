@@ -41,7 +41,7 @@ class GLC_StructReference
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default Constructor
-	GLC_StructReference();
+	GLC_StructReference(const QString& name= QString());
 
 	//! Create reference with representation
 	GLC_StructReference(const GLC_Instance&);
@@ -77,6 +77,10 @@ public:
 	/*! representation must exists*/
 	inline GLC_Instance instanceRepresentation() const
 	{return m_pRepresentation->instanciate();}
+
+	//! Return the name
+	inline QString name() const
+	{return m_Name;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -92,6 +96,10 @@ public:
 	inline void structInstanceDeleted(GLC_StructInstance* pInstance)
 	{m_ListOfInstance.removeOne(pInstance);}
 
+	//! Set the reference name
+	inline void setName(const QString& name)
+	{m_Name= name;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -103,6 +111,9 @@ private:
 
 	//! The representation of reference
 	GLC_Instance* m_pRepresentation;
+
+	//! The Reference Name
+	QString m_Name;
 
 };
 

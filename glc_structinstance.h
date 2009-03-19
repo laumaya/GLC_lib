@@ -29,6 +29,7 @@
 #define GLC_STRUCTINSTANCE_H_
 
 #include <QList>
+#include <QString>
 #include "glc_matrix4x4.h"
 #include "glc_instance.h"
 
@@ -40,6 +41,12 @@ class GLC_StructInstance
 public:
 	//! Default constructor
 	GLC_StructInstance(GLC_StructReference*);
+
+	//! Create empty instance
+	GLC_StructInstance(const QString&);
+
+	//! Set the reference of an empty instance
+	void setReference(GLC_StructReference*);
 
 	// Destructor
 	virtual ~GLC_StructInstance();
@@ -68,6 +75,10 @@ public:
 	inline QList<GLC_StructOccurence*> listOfStructOccurences() const
 	{ return m_ListOfOccurences;}
 
+	//! Return the instance name
+	inline QString name() const
+	{return m_Name;}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -76,7 +87,10 @@ public:
 public:
 	//! An occurence of this instance have been created
 	inline void structOccurenceCreated(GLC_StructOccurence* pOccurence)
-	{m_ListOfOccurences.append(pOccurence);}
+	{
+		Q_ASSERT(not m_ListOfOccurences.contains(pOccurence));
+		m_ListOfOccurences.append(pOccurence);
+	}
 
 	inline void structOccurenceDeleted(GLC_StructOccurence *pOccurence)
 	{m_ListOfOccurences.removeOne(pOccurence);}
@@ -87,6 +101,9 @@ public:
 		m_RelativeMatrix= matrix * m_RelativeMatrix;
 		return this;
 	}
+	//! Set the instance name
+	inline void setName(const QString& name)
+	{m_Name= name;}
 
 //@}
 
@@ -105,6 +122,9 @@ private:
 
 	//! The relative matrix
 	GLC_Matrix4x4 m_RelativeMatrix;
+
+	//! The instance Name
+	QString m_Name;
 };
 
 #endif /* GLC_STRUCTINSTANCE_H_ */

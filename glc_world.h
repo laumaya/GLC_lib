@@ -114,6 +114,12 @@ public:
 
 	//! Clear this world
 	GLC_World& clear() {return *this= GLC_World();}
+
+	//! Set the World root Name
+	inline void setRootName(const QString& name)
+	{
+		m_pRoot->setName(name);
+	}
 //@}
 
 //////////////////////////////////////////////////////////////////////

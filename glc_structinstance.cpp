@@ -34,10 +34,40 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)
 , m_pStructReference(pStructReference)
 , m_ListOfOccurences()
 , m_RelativeMatrix()
+, m_Name()
 {
 	if (pStructReference->haveStructInstance())
 	{
 		m_pNumberOfInstance= pStructReference->firstInstanceHandle()->m_pNumberOfInstance;
+		++(*m_pNumberOfInstance);
+	}
+	else
+	{
+		m_pNumberOfInstance= new int(1);
+	}
+	// Inform reference that an instance has been created
+	m_pStructReference->structInstanceCreated(this);
+	//qDebug() << "GLC_StructInstance::GLC_StructInstance : " << (*m_pNumberOfInstance) << " " << m_pNumberOfInstance;
+}
+
+// Create empty instance
+GLC_StructInstance::GLC_StructInstance(const QString& name)
+: m_pNumberOfInstance(NULL)
+, m_pStructReference(NULL)
+, m_ListOfOccurences()
+, m_RelativeMatrix()
+, m_Name(name)
+{
+}
+
+// Set the reference of an empty instance
+void GLC_StructInstance::setReference(GLC_StructReference* pStructReference)
+{
+	Q_ASSERT(NULL == m_pStructReference);
+	m_pStructReference= pStructReference;
+	if (m_pStructReference->haveStructInstance())
+	{
+		m_pNumberOfInstance= m_pStructReference->firstInstanceHandle()->m_pNumberOfInstance;
 		++(*m_pNumberOfInstance);
 	}
 	else

@@ -45,7 +45,12 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_Struct
 	{
 		m_pNumberOfOccurence= pStructInstance->firstOccurenceHandle()->m_pNumberOfOccurence;
 		++(*m_pNumberOfOccurence);
-		m_Childs= pStructInstance->firstOccurenceHandle()->m_Childs;
+		QList<GLC_StructOccurence*> childs= pStructInstance->firstOccurenceHandle()->m_Childs;
+		const int size= childs.size();
+		for (int i= 0; i < size; ++i)
+		{
+			addChild(childs.at(i)->clone(m_pCollection));
+		}
 	}
 	else
 	{
@@ -61,6 +66,10 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_Struct
 		// Force instance representation id
 		representation.setId(id());
 		m_pCollection->add(representation, shaderId);
+	}
+	else
+	{
+		setName(m_pStructInstance->name());
 	}
 
 	// Update Absolute matrix
@@ -80,9 +89,9 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 , m_AbsoluteMatrix(structOccurence.m_AbsoluteMatrix)
 , m_HaveRepresentation(structOccurence.m_HaveRepresentation)
 {
+	// Change object id
+	setId(glc::GLC_GenID());
 	++(*m_pNumberOfOccurence);
-	// Inform the instance of the creation
-	m_pStructInstance->structOccurenceCreated(this);
 
 	if (m_HaveRepresentation)
 	{
@@ -106,8 +115,6 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 	// Update Absolute matrix
 	updateAbsoluteMatrix();
 
-	// Update instance
-	m_pStructInstance->structOccurenceCreated(this);
 
 	// Create childs
 	const int size= structOccurence.childCount();
@@ -115,6 +122,9 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 	{
 		addChild(structOccurence.child(i)->clone(pCollection));
 	}
+
+	// Update instance
+	m_pStructInstance->structOccurenceCreated(this);
 }
 
 // Destructor
@@ -134,7 +144,6 @@ GLC_StructOccurence::~GLC_StructOccurence()
 		GLC_StructOccurence* pChild= m_Childs.at(i);
 		delete pChild;
 	}
-
 	if ((--(*m_pNumberOfOccurence)) == 0)
 	{
 		delete m_pStructInstance;
@@ -237,7 +246,7 @@ void GLC_StructOccurence::updateAbsoluteMatrix()
 void GLC_StructOccurence::addChild(GLC_StructOccurence* pChild)
 {
 	Q_ASSERT(pChild->isOrphan());
-
+	//qDebug() << "Add Child " << pChild->name() << "id=" << pChild->id() << " to " << name() << " id=" << id();
 	// Add the child to the list of child
 	m_Childs.append(pChild);
 	pChild->m_pParent= this;
@@ -246,7 +255,16 @@ void GLC_StructOccurence::addChild(GLC_StructOccurence* pChild)
 // Add Child instance (the occurence is created)
 void GLC_StructOccurence::addChild(GLC_StructInstance* pInstance)
 {
-	GLC_StructOccurence* pOccurence= new GLC_StructOccurence(m_pCollection, pInstance);
+	GLC_StructOccurence* pOccurence;
+	if (not pInstance->haveStructOccurence())
+	{
+		pOccurence= new GLC_StructOccurence(m_pCollection, pInstance);
+	}
+	else
+	{
+		pOccurence= pInstance->firstOccurenceHandle()->clone(m_pCollection);
+	}
+
 	addChild(pOccurence);
 }
 

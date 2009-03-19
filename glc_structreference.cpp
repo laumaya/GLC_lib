@@ -27,9 +27,10 @@
 #include "glc_structreference.h"
 
 // Default constructor
-GLC_StructReference::GLC_StructReference()
+GLC_StructReference::GLC_StructReference(const QString& name)
 : m_ListOfInstance()
 , m_pRepresentation(NULL)
+, m_Name(name)
 {
 
 
@@ -39,6 +40,7 @@ GLC_StructReference::GLC_StructReference()
 GLC_StructReference::GLC_StructReference(const GLC_Instance& rep)
 : m_ListOfInstance()
 , m_pRepresentation(new GLC_Instance(rep))
+, m_Name(m_pRepresentation->name())
 {
 
 }
@@ -57,8 +59,7 @@ GLC_StructReference::~GLC_StructReference()
 GLC_StructInstance* GLC_StructReference::createStructInstance()
 {
 	GLC_StructInstance* pInstance= new GLC_StructInstance(this);
-	m_ListOfInstance.append(pInstance);
-
+	pInstance->setName(m_Name);
 	return pInstance;
 }
 
