@@ -29,6 +29,7 @@
 #include "glc_stltoworld.h"
 #include "glc_offtoworld.h"
 #include "glc_3dstoworld.h"
+#include "glc_3dxmltoworld.h"
 
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
@@ -151,6 +152,13 @@ GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName)
 			(*pAttachedFileName)= studioToWorld.listOfAttachedFileName();
 		}
 	}
+	else if (QFileInfo(file).suffix().toLower() == "3dxml")
+	{
+		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
+		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
+		pWorld= d3dxmlToWorld.CreateWorldFrom3dxml(file);
+	}
+
 
 	return pWorld;
 }
