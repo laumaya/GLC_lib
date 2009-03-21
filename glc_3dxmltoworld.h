@@ -41,7 +41,7 @@ class QuaZip;
 class QuaZipFile;
 class GLC_StructReference;
 class GLC_StructInstance;
-
+class GLC_ExtendedMesh;
 
 class GLC_3dxmlToWorld : public QObject
 {
@@ -100,6 +100,12 @@ private:
 	//! Go to an Element of a xml
 	void goToElement(const QString&);
 
+	//! Go to a Rep of a xml
+	void goToRepId(const QString&);
+
+	//! Go to Polygonal Rep Type
+	void gotToPolygonalRepType();
+
 	// Return the content of an element
 	QString getContent(const QString&);
 
@@ -124,7 +130,23 @@ private:
 	//! Create the unfolded  tree
 	void createUnfoldedTree();
 
+	//! Check for XML error
+	//! Throw ecxeption if error occur
+	void checkForXmlError(const QString&);
 
+	//! Go to the master LOD
+	void goToMasterLOD();
+
+	//! Return true if the end of specified element is not reached
+	inline bool endElementNotReached(const QString& element)
+	{return not m_pStreamReader->atEnd() and not ((QXmlStreamReader::EndElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == element));}
+
+	//! Return true if the start of specified element is not reached
+	inline bool startElementNotReached(const QString& element)
+	{return not m_pStreamReader->atEnd() and not ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == element));}
+
+	//! Load a face
+	void loadFace(GLC_ExtendedMesh*);
 
 //@}
 
