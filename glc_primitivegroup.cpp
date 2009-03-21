@@ -67,18 +67,22 @@ GLC_PrimitiveGroup::~GLC_PrimitiveGroup()
 void GLC_PrimitiveGroup::addTrianglesStrip(const IndexList& input)
 {
 	m_StripsIndex+= input;
-	GLsizei offset= 0;
-	if (not m_StripIndexOffset.isEmpty())
+	if (m_StripIndexOffset.isEmpty())
 	{
-		offset= reinterpret_cast<GLsizei>(m_StripIndexOffset.last()) + m_StripIndexSizes.last();
+		m_StripIndexOffset.append(BUFFER_OFFSET(0));
+		qDebug() << "StripOffset Append 0";
 	}
-	m_StripIndexSizes+= static_cast<GLsizei>(input.size());
-	m_StripIndexOffset.append(BUFFER_OFFSET(offset * sizeof(GLuint)));
+
+	m_StripIndexSizes.append(static_cast<GLsizei>(input.size()));
+	GLuint offset= reinterpret_cast<GLuint>(m_StripIndexOffset.last()) + static_cast<GLuint>(m_StripIndexSizes.last()) * sizeof(GLuint);
+	m_StripIndexOffset.append(BUFFER_OFFSET(offset));
+	//qDebug() << "StripOffset Append " << QString::number(offset);
 }
 
 // Set base triangle strip offset
 void GLC_PrimitiveGroup::setBaseTrianglesStripOffset(GLvoid* pOffset)
 {
+	m_StripIndexOffset.pop_back();
 	const int size= m_StripIndexOffset.size();
 	for (int i= 0; i < size; ++i)
 	{
@@ -90,19 +94,20 @@ void GLC_PrimitiveGroup::setBaseTrianglesStripOffset(GLvoid* pOffset)
 void GLC_PrimitiveGroup::addTrianglesFan(const IndexList& input)
 {
 	m_FansIndex+= input;
-	GLsizei offset= 0;
-	if (not m_FanIndexOffset.isEmpty())
+	if (m_FanIndexOffset.isEmpty())
 	{
-		offset= reinterpret_cast<GLsizei>(m_FanIndexOffset.last()) + m_FansIndexSizes.last();
+		m_FanIndexOffset.append(BUFFER_OFFSET(0));
 	}
-	m_FansIndexSizes+= static_cast<GLsizei>(input.size());
-	m_FanIndexOffset.append(BUFFER_OFFSET(offset * sizeof(GLuint)));
 
+	m_FansIndexSizes.append(static_cast<GLsizei>(input.size()));
+	GLuint offset= reinterpret_cast<GLuint>(m_FanIndexOffset.last()) + static_cast<GLuint>(m_FansIndexSizes.last()) * sizeof(GLuint);
+	m_FanIndexOffset.append(BUFFER_OFFSET(offset));
 }
 
 // Set base triangle fan offset
 void GLC_PrimitiveGroup::setBaseTrianglesFanOffset(GLvoid* pOffset)
 {
+	m_FanIndexOffset.pop_back();
 	const int size= m_FanIndexOffset.size();
 	for (int i= 0; i < size; ++i)
 	{
