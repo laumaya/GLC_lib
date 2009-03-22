@@ -70,13 +70,11 @@ void GLC_PrimitiveGroup::addTrianglesStrip(const IndexList& input)
 	if (m_StripIndexOffset.isEmpty())
 	{
 		m_StripIndexOffset.append(BUFFER_OFFSET(0));
-		qDebug() << "StripOffset Append 0";
 	}
 
 	m_StripIndexSizes.append(static_cast<GLsizei>(input.size()));
 	GLuint offset= reinterpret_cast<GLuint>(m_StripIndexOffset.last()) + static_cast<GLuint>(m_StripIndexSizes.last()) * sizeof(GLuint);
 	m_StripIndexOffset.append(BUFFER_OFFSET(offset));
-	//qDebug() << "StripOffset Append " << QString::number(offset);
 }
 
 // Set base triangle strip offset

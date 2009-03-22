@@ -82,15 +82,15 @@ public:
 
 	//! Add vertices coordinate
 	inline void addVertices(const GLfloatVector& vertices)
-	{*(m_ExtendedGeomEngine.positionVectorHandle())= vertices;}
+	{*(m_ExtendedGeomEngine.positionVectorHandle())+= vertices;}
 
 	//! Add Normals
 	inline void addNormals(const GLfloatVector& normals)
-	{*(m_ExtendedGeomEngine.normalVectorHandle())= normals;}
+	{*(m_ExtendedGeomEngine.normalVectorHandle())+= normals;}
 
 	//! Add texel
 	inline void addTexels(const GLfloatVector& texels)
-	{*(m_ExtendedGeomEngine.texelVectorHandle())= texels;}
+	{*(m_ExtendedGeomEngine.texelVectorHandle())+= texels;}
 
 	//! Add triangles
 	void addTriangles(GLC_Material*, const IndexList&);
