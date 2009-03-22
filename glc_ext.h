@@ -44,7 +44,8 @@ extern PFNGLGETBUFFERPARAMETERIVARBPROC	glGetBufferParameteriv;
 extern PFNGLGETBUFFERPOINTERVARBPROC	glGetBufferPointerv;
 // glDrawRangElement
 //extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
-
+// glMultiDrawElement
+extern PFNGLMULTIDRAWELEMENTSPROC		glMultiDrawElements;
 // GL_ARB_shader_objects
 extern PFNGLCREATEPROGRAMOBJECTARBPROC	glCreateProgram;
 extern PFNGLDELETEPROGRAMPROC		  	glDeleteProgram;
