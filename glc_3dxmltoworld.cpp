@@ -211,6 +211,8 @@ void GLC_3dxmlToWorld::gotToPolygonalRepType()
 	while(not m_pStreamReader->atEnd() and not ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == "Rep")
 			and (m_pStreamReader->attributes().value("xsi:type").toString() == "PolygonalRepType")))
 	{
+		//qDebug() << m_pStreamReader->name();
+		//qDebug() << m_pStreamReader->attributes().value("xsi:type").toString();
 		m_pStreamReader->readNext();
 	}
 
@@ -489,65 +491,104 @@ GLC_StructReference* GLC_3dxmlToWorld::addExtenalRef()
 	checkForXmlError("repId not found");
 	qDebug() << "repId found";
 
-	gotToPolygonalRepType();
-	checkForXmlError("PolygonalRepType not found");
-	qDebug() << "PolygonalRepType found";
-
-	goToMasterLOD();
-	checkForXmlError(" Master LOD not found");
-	qDebug() << "Master LOD found";
-
 	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
 	GLC_Instance currentMeshInstance(pMesh);
 	currentMeshInstance.setName(refName);
 
-	// Load Faces index data
-	while (endElementNotReached("Faces"))
+	int numberOfMesh= 1;
+	while (not m_pStreamReader->atEnd() and not m_pStreamReader->hasError())
 	{
-		m_pStreamReader->readNext();
-		if ( m_pStreamReader->name() == "Face")
+		qDebug() << "Number Of Mesh :" << numberOfMesh;
+		gotToPolygonalRepType();
+		if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
 		{
-			loadFace(pMesh);
+			if (m_pStreamReader->hasError())
+			{
+				QString message(QString("An element have not been found in file ") + m_FileName);
+				qDebug() << m_pStreamReader->errorString();
+				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
+				clear();
+				throw(fileFormatException);
+			}
+			else
+			{
+				if (numberOfMesh > 1)
+				{
+					qDebug() << "finish mesh " << numberOfMesh;
+					pMesh->finished();
+					return new GLC_StructReference(currentMeshInstance);
+				}
+				else
+				{
+					return new GLC_StructReference(refName);
+				}
+			}
 		}
-	}
-	checkForXmlError("End of Faces not found");
-
-	goToElement("VertexBuffer");
-	checkForXmlError("Element VertexBuffer not found");
-
-	{
-		QString verticePosition= getContent("Positions").replace(',', ' ');
-		//qDebug() << "Position " << verticePosition;
-		checkForXmlError("Error while retrieving Position ContentVertexBuffer");
-		// Load Vertice position
-		QTextStream verticeStream(&verticePosition);
-		QList<GLfloat> verticeValues;
-		QString buff;
-		while ((!verticeStream.atEnd()))
+		if (numberOfMesh > 1)
 		{
-			verticeStream >> buff;
-			verticeValues.append(buff.toFloat());
+			qDebug() << "Add mesh " << numberOfMesh;
+			pMesh->finished();
+			qDebug() << "finish mesh " << numberOfMesh - 1;
+			pMesh = new GLC_ExtendedMesh();
+			currentMeshInstance.setGeometry(pMesh);
 		}
-		qDebug() << "Number of vertice =" << verticeValues.size();
-		pMesh->addVertices(verticeValues.toVector());
+
+		goToMasterLOD();
+		checkForXmlError(" Master LOD not found");
+		qDebug() << "Master LOD found";
+
+		// Load Faces index data
+		while (endElementNotReached("Faces"))
+		{
+			m_pStreamReader->readNext();
+			if ( m_pStreamReader->name() == "Face")
+			{
+				loadFace(pMesh);
+			}
+		}
+		checkForXmlError("End of Faces not found");
+
+		goToElement("VertexBuffer");
+		checkForXmlError("Element VertexBuffer not found");
+
+		{
+			QString verticePosition= getContent("Positions").replace(',', ' ');
+			//qDebug() << "Position " << verticePosition;
+			checkForXmlError("Error while retrieving Position ContentVertexBuffer");
+			// Load Vertice position
+			QTextStream verticeStream(&verticePosition);
+			QList<GLfloat> verticeValues;
+			QString buff;
+			while ((!verticeStream.atEnd()))
+			{
+				verticeStream >> buff;
+				verticeValues.append(buff.toFloat());
+			}
+			qDebug() << "Number of vertice =" << verticeValues.size();
+			pMesh->addVertices(verticeValues.toVector());
+
+		}
+
+		{
+			QString normals= getContent("Normals").replace(',', ' ');
+			//qDebug() << "Normals " << normals;
+			checkForXmlError("Error while retrieving Normals values");
+			// Load Vertice Normals
+			QTextStream normalsStream(&normals);
+			QList<GLfloat> normalValues;
+			QString buff;
+			while ((!normalsStream.atEnd()))
+			{
+				normalsStream >> buff;
+				normalValues.append(buff.toFloat());
+			}
+			qDebug() << "Number of normals =" << normalValues.size();
+			pMesh->addNormals(normalValues.toVector());
+		}
+		++numberOfMesh;
 	}
 
-	{
-		QString normals= getContent("Normals").replace(',', ' ');
-		//qDebug() << "Normals " << normals;
-		checkForXmlError("Error while retrieving Normals values");
-		// Load Vertice Normals
-		QTextStream normalsStream(&normals);
-		QList<GLfloat> normalValues;
-		QString buff;
-		while ((!normalsStream.atEnd()))
-		{
-			normalsStream >> buff;
-			normalValues.append(buff.toFloat());
-		}
-		qDebug() << "Number of normals =" << normalValues.size();
-		pMesh->addNormals(normalValues.toVector());
-	}
+	qDebug() << "Finish mesh " << numberOfMesh;
 	pMesh->finished();
 
 	return new GLC_StructReference(currentMeshInstance);
@@ -674,6 +715,7 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
 	// Trying to find triangles
 	if (not m_pStreamReader->attributes().value("triangles").isEmpty())
 	{
+		qDebug() << "Triangles";
 		QString triangles= m_pStreamReader->attributes().value("triangles").toString();
 		QTextStream trianglesStream(&triangles);
 		IndexList trianglesIndex;
