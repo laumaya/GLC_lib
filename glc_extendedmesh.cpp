@@ -165,7 +165,7 @@ void GLC_ExtendedMesh::finished()
 		// Add group triangles index to engine triangles index vector
 		if (iGroup.value()->containsTriangles())
 		{
-			iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesStripIndexVectorHandle()->size() * sizeof(GLuint)));
+			iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesIndexVectorHandle()->size() * sizeof(GLuint)));
 			(*m_ExtendedGeomEngine.trianglesIndexVectorHandle())+= iGroup.value()->trianglesIndex().toVector();
 		}
 
