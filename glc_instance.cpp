@@ -35,7 +35,7 @@
 // Default constructor
 GLC_Instance::GLC_Instance()
 : GLC_Object()
-, m_pGeom(NULL)
+, m_pGeomList(NULL)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
 , m_MatPos()
@@ -55,7 +55,7 @@ GLC_Instance::GLC_Instance()
 // Contruct instance with a geometry
 GLC_Instance::GLC_Instance(GLC_VboGeom* pGeom)
 : GLC_Object()
-, m_pGeom(pGeom)
+, m_pGeomList(new QList<GLC_VboGeom*>())
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
 , m_MatPos()
@@ -65,6 +65,7 @@ GLC_Instance::GLC_Instance(GLC_VboGeom* pGeom)
 , m_PolyMode(GL_FILL)
 , m_IsVisible(true)
 {
+	m_pGeomList->append(pGeom);
 	// Encode Color Id
 	encodeIdInRGBA();
 
@@ -77,7 +78,7 @@ GLC_Instance::GLC_Instance(GLC_VboGeom* pGeom)
 // Copy constructor
 GLC_Instance::GLC_Instance(const GLC_Instance& inputNode)
 : GLC_Object(inputNode)
-, m_pGeom(inputNode.m_pGeom)
+, m_pGeomList(inputNode.m_pGeomList)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(inputNode.m_pNumberOfInstance)
 , m_MatPos(inputNode.m_MatPos)
@@ -114,7 +115,7 @@ GLC_Instance& GLC_Instance::operator=(const GLC_Instance& inputNode)
 
 		m_Name= inputNode.m_Name;
 
-		m_pGeom= inputNode.m_pGeom;
+		m_pGeomList= inputNode.m_pGeomList;
 		if (NULL != inputNode.m_pBoundingBox)
 		{
 			m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
@@ -153,7 +154,7 @@ GLC_BoundingBox GLC_Instance::getBoundingBox(void)
 	{
 		resultBox= *m_pBoundingBox;
 	}
-	else if (m_pGeom != NULL)
+	else if (m_pGeomList != NULL)
 	{
 		computeBoundingBox();
 		m_IsBoundingBoxValid= true;
@@ -166,10 +167,14 @@ GLC_BoundingBox GLC_Instance::getBoundingBox(void)
 // Get the validity of the Bounding Box
 const bool GLC_Instance::getBoundingBoxValidity(void) const
 {
-	bool result;
-	if ((m_pGeom != NULL) && (m_pBoundingBox != NULL))
+	bool result= true;
+	if ((m_pGeomList != NULL) && (m_pBoundingBox != NULL))
 	{
-		result= m_pGeom->boundingBoxIsValid() and m_IsBoundingBoxValid;
+		const int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			result= result and m_pGeomList->at(i)->boundingBoxIsValid() and m_IsBoundingBoxValid;
+		}
 	}
 	else result= false;
 
@@ -180,7 +185,15 @@ const bool GLC_Instance::getBoundingBoxValidity(void) const
 GLC_Instance GLC_Instance::clone() const
 {
 	GLC_Instance cloneInstance;
-	cloneInstance.m_pGeom= m_pGeom->clone();
+	if (m_pGeomList != NULL)
+	{
+		cloneInstance.m_pGeomList= new QList<GLC_VboGeom*>();
+		int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			cloneInstance.m_pGeomList->append(m_pGeomList->at(i)->clone());
+		}
+	}
 	if (NULL != m_pBoundingBox)
 	{
 		cloneInstance.m_pBoundingBox= new GLC_BoundingBox(*m_pBoundingBox);
@@ -218,6 +231,69 @@ GLC_uint GLC_Instance::decodeRgbId(const GLubyte* pcolorId)
 
 	return returnId;
 }
+// Get number of faces
+unsigned int GLC_Instance::numberOfFaces() const
+{
+	unsigned int result= 0;
+	if (NULL != m_pGeomList)
+	{
+		const int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			result+= m_pGeomList->at(i)->numberOfFaces();
+		}
+	}
+
+	return result;
+}
+
+// Get number of vertex
+unsigned int GLC_Instance::numberOfVertex() const
+{
+	unsigned int result= 0;
+	if (NULL != m_pGeomList)
+	{
+		const int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			result+= m_pGeomList->at(i)->numberOfVertex();
+		}
+	}
+
+	return result;
+}
+
+// Get number of materials
+unsigned int GLC_Instance::numberOfMaterials() const
+{
+	unsigned int result= 0;
+	if (NULL != m_pGeomList)
+	{
+		const int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			result+= m_pGeomList->at(i)->numberOfMaterials();
+		}
+	}
+
+	return result;
+}
+
+// Get materials List
+QSet<GLC_Material*> GLC_Instance::materialSet() const
+{
+	QSet<GLC_Material*> result;
+	if (NULL != m_pGeomList)
+	{
+		const int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			result.unite(m_pGeomList->at(i)->materialSet());
+		}
+	}
+
+	return result;
+}
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
@@ -227,15 +303,23 @@ GLC_uint GLC_Instance::decodeRgbId(const GLubyte* pcolorId)
 // Set the instance Geometry
 bool GLC_Instance::setGeometry(GLC_VboGeom* pGeom)
 {
-		if (NULL != m_pGeom)
+	if (NULL != m_pGeomList)
+	{
+		if (m_pGeomList->contains(pGeom))
 		{
 			return false;
 		}
 		else
 		{
-			m_pGeom= pGeom;
+			m_pGeomList->append(pGeom);
 			return true;
 		}
+	}
+	else
+	{
+		m_pGeomList= new QList<GLC_VboGeom*>();
+		m_pGeomList->append(pGeom);
+	}
 }
 
 // Instance translation
@@ -292,7 +376,7 @@ void GLC_Instance::setPolygonMode(GLenum Face, GLenum Mode)
 // Display the instance
 void GLC_Instance::glExecute(bool transparent)
 {
-	if (NULL == m_pGeom) return;
+	if (NULL == m_pGeomList) return;
 
 
 	// Object ID for selection purpose
@@ -306,7 +390,12 @@ void GLC_Instance::glExecute(bool transparent)
 		// D'ont use Alpha component
 		glColor3ubv(m_colorId);
 	}
-	m_pGeom->glExecute(m_IsSelected, transparent);
+	const int size= m_pGeomList->size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
+	}
+
 	// Restore OpenGL Matrix
 	glPopMatrix();
 }
@@ -327,16 +416,23 @@ void GLC_Instance::glVisProperties()
 
 
 // compute the instance bounding box
-// m_pGeom should be not null
+// m_pGeomList should be not null
 void GLC_Instance::computeBoundingBox(void)
 {
+	if (NULL == m_pGeomList) return;
+
 	if (m_pBoundingBox != NULL)
 	{
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
 	}
+	m_pBoundingBox= new GLC_BoundingBox();
+	const int size= m_pGeomList->size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_pBoundingBox->combine(m_pGeomList->at(i)->boundingBox());
+	}
 
-	m_pBoundingBox= new GLC_BoundingBox(m_pGeom->boundingBox());
 	m_pBoundingBox->transform(m_MatPos);
 }
 
@@ -348,10 +444,15 @@ void GLC_Instance::clear()
 	if ((--(*m_pNumberOfInstance)) == 0)
 	{
 		// this is the last instance, delete the geometry
-		if (m_pGeom != NULL)
+		if (m_pGeomList != NULL)
 		{
-			delete m_pGeom;
-			m_pGeom= NULL;
+			const int size= m_pGeomList->size();
+			for (int i= 0; i < size; ++i)
+			{
+				delete (*m_pGeomList)[i];
+			}
+			delete m_pGeomList;
+			m_pGeomList= NULL;
 		}
 		// delete instance counter
 		//qDebug() << "GLC_Instance::clear ID = " << m_Uid;

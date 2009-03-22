@@ -75,13 +75,23 @@ public:
 public:
 
 	//! Return true if the instance as no geometry
-	inline const bool isNull() const {return (NULL == m_pGeom);}
+	inline const bool isNull() const {return (NULL == m_pGeomList);}
 
 	//! Return true if the instance is selected
 	inline const bool isSelected(void) const {return m_IsSelected;}
 
+	//! Return the number of geometry
+	inline int numberOfGeometry() const
+	{
+		if (NULL != m_pGeomList) return m_pGeomList->size();
+		else return 0;
+	}
 	//! Get the geometry of the instance
-	inline GLC_VboGeom* getGeometry(void) {return m_pGeom;}
+	inline GLC_VboGeom* getGeometry(int index= 0)
+	{
+		if (NULL != m_pGeomList) return m_pGeomList->at(index);
+		else return NULL;
+	}
 
 	//! Get the bounding box
 	GLC_BoundingBox getBoundingBox(void);
@@ -114,20 +124,16 @@ public:
 	static GLC_uint decodeRgbId(const GLubyte*);
 
 	//! Get number of faces
-	inline unsigned int numberOfFaces() const
-	{ return m_pGeom->numberOfFaces();}
+	unsigned int numberOfFaces() const;
 
 	//! Get number of vertex
-	inline unsigned int numberOfVertex() const
-	{ return m_pGeom->numberOfVertex();}
+	unsigned int numberOfVertex() const;
 
 	//! Get number of materials
-	inline unsigned int numberOfMaterials() const
-	{ return m_pGeom->numberOfMaterials();}
+	unsigned int numberOfMaterials() const;
 
 	//! Get materials List
-	inline QSet<GLC_Material*> materialSet() const
-	{ return m_pGeom->materialSet();}
+	QSet<GLC_Material*> materialSet() const;
 
 
 //@}
@@ -211,8 +217,8 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! Geometry of the instance
-	GLC_VboGeom* m_pGeom;
+	//! Geometries of the instance
+	QList<GLC_VboGeom*>* m_pGeomList;
 
 	//! BoundingBox of the instance
 	GLC_BoundingBox* m_pBoundingBox;
