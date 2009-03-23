@@ -53,6 +53,7 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 , m_SetOfExtRef()
 , m_InstanceOfExtRefHash()
 , m_ExternalReferenceHash()
+, m_MaterialHash()
 {
 
 }
@@ -77,6 +78,7 @@ GLC_3dxmlToWorld::~GLC_3dxmlToWorld()
 		delete m_p3dxmlArchive;
 		m_p3dxmlArchive= NULL;
 	}
+	clearMaterialHash();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -183,6 +185,8 @@ void GLC_3dxmlToWorld::clear()
 		delete m_p3dxmlArchive;
 		m_p3dxmlArchive= NULL;
 	}
+
+	clearMaterialHash();
 }
 
 // Go to Element
@@ -381,7 +385,6 @@ void GLC_3dxmlToWorld::loadInstance3D()
 	else
 	{
 		const QString extRefId= instanceOf.remove(externRef).remove("#1");
-		qDebug() << extRefId;
 		m_SetOfExtRef << extRefId;
 		pStructInstance= new GLC_StructInstance(instName);
 		pStructInstance->move(instanceMatrix);
@@ -411,7 +414,7 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		m_p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
 
 		const QString currentRefFileName= (*iExtRef);
-		qDebug() << "Current File name : " << currentRefFileName;
+		//qDebug() << "Current File name : " << currentRefFileName;
 		// Get the refFile of the 3dxml
 		if (not m_p3dxmlArchive->setCurrentFile(currentRefFileName, QuaZip::csInsensitive))
 		{
@@ -460,20 +463,16 @@ GLC_StructReference* GLC_3dxmlToWorld::addExtenalRef()
 {
 	goToElement("ProductStructure");
 	checkForXmlError("Element ProductStructure not found");
-	qDebug() << "ProductStructure found";
 
 	goToElement("Reference3D");
 	checkForXmlError("Element Reference3D not found");
-	qDebug() << "Reference3D found";
 	QString refName= m_pStreamReader->attributes().value("name").toString();
 
 	goToElement("ReferenceRep");
 	checkForXmlError("Element ReferenceRep not found");
-	qDebug() << "ReferenceRep found";
 
 	const QString format(m_pStreamReader->attributes().value("format").toString());
 	checkForXmlError("attributes format not found");
-	qDebug() << "Attribute format found";
 	if (format != "TESSELLATED")
 	{
 		QString message(QString("GLC_3dxmlToWorld::addExtenalRef 3D rep format ") + format + " Not Supported");
@@ -485,20 +484,17 @@ GLC_StructReference* GLC_3dxmlToWorld::addExtenalRef()
 	const QString local= "urn:3DXML:Representation:loc:";
 	const QString repId(m_pStreamReader->attributes().value("associatedFile").toString().remove(local));
 	checkForXmlError("attribute associatedFile not found");
-	qDebug() << "Attribute associatedFile found";
 
 	goToRepId(repId);
 	checkForXmlError("repId not found");
-	qDebug() << "repId found";
 
 	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
+	pMesh->setName(refName);
 	GLC_Instance currentMeshInstance(pMesh);
-	currentMeshInstance.setName(refName);
 
 	int numberOfMesh= 1;
 	while (not m_pStreamReader->atEnd() and not m_pStreamReader->hasError())
 	{
-		qDebug() << "Number Of Mesh :" << numberOfMesh;
 		gotToPolygonalRepType();
 		if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
 		{
@@ -514,7 +510,6 @@ GLC_StructReference* GLC_3dxmlToWorld::addExtenalRef()
 			{
 				if (numberOfMesh > 1)
 				{
-					qDebug() << "finish mesh " << numberOfMesh;
 					pMesh->finished();
 					return new GLC_StructReference(currentMeshInstance);
 				}
@@ -526,16 +521,14 @@ GLC_StructReference* GLC_3dxmlToWorld::addExtenalRef()
 		}
 		if (numberOfMesh > 1)
 		{
-			qDebug() << "Add mesh " << numberOfMesh;
 			pMesh->finished();
-			qDebug() << "finish mesh " << numberOfMesh - 1;
 			pMesh = new GLC_ExtendedMesh();
+			pMesh->setName(refName);
 			currentMeshInstance.setGeometry(pMesh);
 		}
 
 		goToMasterLOD();
 		checkForXmlError(" Master LOD not found");
-		qDebug() << "Master LOD found";
 
 		// Load Faces index data
 		while (endElementNotReached("Faces"))
@@ -564,7 +557,6 @@ GLC_StructReference* GLC_3dxmlToWorld::addExtenalRef()
 				verticeStream >> buff;
 				verticeValues.append(buff.toFloat());
 			}
-			qDebug() << "Number of vertice =" << verticeValues.size();
 			pMesh->addVertices(verticeValues.toVector());
 
 		}
@@ -582,13 +574,11 @@ GLC_StructReference* GLC_3dxmlToWorld::addExtenalRef()
 				normalsStream >> buff;
 				normalValues.append(buff.toFloat());
 			}
-			qDebug() << "Number of normals =" << normalValues.size();
 			pMesh->addNormals(normalValues.toVector());
 		}
 		++numberOfMesh;
 	}
 
-	qDebug() << "Finish mesh " << numberOfMesh;
 	pMesh->finished();
 
 	return new GLC_StructReference(currentMeshInstance);
@@ -679,6 +669,9 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 	m_AssyLinkList.clear();
 	m_ReferenceHash.clear();
 
+	// Update position
+	m_pWorld->rootOccurence()->updateChildsAbsoluteMatrix();
+
 }
 // Check for XML error
 void GLC_3dxmlToWorld::checkForXmlError(const QString& info)
@@ -711,12 +704,27 @@ void GLC_3dxmlToWorld::goToMasterLOD()
 // Load a face
 void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
 {
-	qDebug() << "GLC_3dxmlToWorld::loadFace" << m_pStreamReader->name();
-	// Trying to find triangles
-	if (not m_pStreamReader->attributes().value("triangles").isEmpty())
+	//qDebug() << "GLC_3dxmlToWorld::loadFace" << m_pStreamReader->name();
+	// List of index declaration
+
+	QString triangles= m_pStreamReader->attributes().value("triangles").toString();
+	QString strips= m_pStreamReader->attributes().value("strips").toString();
+	QString fans= m_pStreamReader->attributes().value("fans").toString();
+
+	GLC_Material* pCurrentMaterial= NULL;
+
+	while(endElementNotReached("Face"))
 	{
-		qDebug() << "Triangles";
-		QString triangles= m_pStreamReader->attributes().value("triangles").toString();
+		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == "Color"))
+		{
+			pCurrentMaterial= getMaterial();
+		}
+		m_pStreamReader->readNext();
+	}
+
+	// Trying to find triangles
+	if (not triangles.isEmpty())
+	{
 		QTextStream trianglesStream(&triangles);
 		IndexList trianglesIndex;
 		QString buff;
@@ -725,14 +733,12 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
 			trianglesStream >> buff;
 			trianglesIndex.append(buff.toUInt());
 		}
-		pMesh->addTriangles(NULL, trianglesIndex);
-
+		pMesh->addTriangles(pCurrentMaterial, trianglesIndex);
 	}
 	// Trying to find trips
-	if (not m_pStreamReader->attributes().value("strips").isEmpty())
+	if (not strips.isEmpty())
 	{
-		QString strips= m_pStreamReader->attributes().value("strips").toString();
-		//qDebug() << "Strips :" << strips;
+
 		QStringList stripsList(strips.split(","));
 		const int size= stripsList.size();
 		for (int i= 0; i < size; ++i)
@@ -746,13 +752,12 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
 				stripsStream >> buff;
 				stripsIndex.append(buff.toUInt());
 			}
-			pMesh->addTrianglesStrip(NULL, stripsIndex);
+			pMesh->addTrianglesStrip(pCurrentMaterial, stripsIndex);
 		}
 	}
 	// Trying to find fans
-	if (not m_pStreamReader->attributes().value("fans").isEmpty())
+	if (not fans.isEmpty())
 	{
-		QString fans= m_pStreamReader->attributes().value("fans").toString();
 		QStringList fansList(fans.split(","));
 		const int size= fansList.size();
 		for (int i= 0; i < size; ++i)
@@ -765,14 +770,54 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
 				fansStream >> buff;
 				fansIndex.append(buff.toUInt());
 			}
-			pMesh->addTrianglesFan(NULL, fansIndex);
+			pMesh->addTrianglesFan(pCurrentMaterial, fansIndex);
 		}
-	}
-
-	while(endElementNotReached("Face"))
-	{
-		m_pStreamReader->readNext();
 	}
 
 }
 
+// Clear material hash
+void GLC_3dxmlToWorld::clearMaterialHash()
+{
+	MaterialHash::iterator iMaterial= m_MaterialHash.begin();
+	while (m_MaterialHash.constEnd() != iMaterial)
+	{
+		if (iMaterial.value()->isUnused())
+		{
+			delete iMaterial.value();
+		}
+		++iMaterial;
+	}
+	m_MaterialHash.clear();
+}
+
+// get material
+GLC_Material* GLC_3dxmlToWorld::getMaterial()
+{
+	GLC_Material* pMaterial= NULL;
+	const QString red(m_pStreamReader->attributes().value("red").toString());
+	const QString green(m_pStreamReader->attributes().value("green").toString());
+	const QString blue(m_pStreamReader->attributes().value("blue").toString());
+
+	const QString matKey= red + green + blue;
+	if (m_MaterialHash.contains(matKey))
+	{
+		pMaterial= m_MaterialHash.value(matKey);
+	}
+	else
+	{
+		qreal redReal= red.toDouble();
+		qreal greenReal= green.toDouble();
+		qreal blueReal= blue.toDouble();
+		QColor diffuse;
+		diffuse.setRgbF(redReal, greenReal, blueReal);
+		pMaterial= new GLC_Material(diffuse);
+		pMaterial->setName("Material_" + QString::number(m_MaterialHash.size()));
+		pMaterial->setAmbientColor(Qt::black);
+		pMaterial->setSpecularColor(Qt::white);
+		pMaterial->setShininess(25.0);
+		m_MaterialHash.insert(matKey, pMaterial);
+	}
+
+	return pMaterial;
+}

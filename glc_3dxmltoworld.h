@@ -59,6 +59,7 @@ class GLC_3dxmlToWorld : public QObject
 	typedef QSet<const QString> SetOfExtRef;
 	typedef QList<AssyLink> AssyLinkList;
 	typedef QHash<const QString, GLC_StructReference*> ExternalReferenceHash;
+	typedef QHash<const QString, GLC_Material*> MaterialHash;
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -148,6 +149,12 @@ private:
 	//! Load a face
 	void loadFace(GLC_ExtendedMesh*);
 
+	//! Clear material hash
+	void clearMaterialHash();
+
+	//! get material
+	GLC_Material* getMaterial();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -192,6 +199,9 @@ private:
 
 	//! Externam reference hash table
 	ExternalReferenceHash m_ExternalReferenceHash;
+
+	//! Hash table of material
+	MaterialHash m_MaterialHash;
 };
 
 #endif /* GLC_3DXMLTOWORLD_H_ */
