@@ -77,8 +77,8 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 		{
 			m_pRoot->addChild(childs.at(i)->clone(m_pCollection));
 		}
+		m_pRoot->updateChildsAbsoluteMatrix();
 	}
-
 }
 
 // Assignment operator
