@@ -73,6 +73,33 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return true if the all instance's mesh are transparent
+	inline bool isTransparent() const
+	{
+		const int size= m_pGeomList->size();
+		bool result= true;
+		int i= 0;
+		while((i < size) and result)
+		{
+			result= result and m_pGeomList->at(i)->isTransparent();
+			++i;
+		}
+		return result;
+	}
+
+	//! Return true if the instance contains mesh which contains transparent material
+	inline bool haveTransparentMaterials() const
+	{
+		const int size= m_pGeomList->size();
+		bool result= false;
+		int i= 0;
+		while ((i < size) and not result)
+		{
+			result= result or m_pGeomList->at(i)->haveTransparentMaterials();
+			++i;
+		}
+		return result;
+	}
 
 	//! Return true if the instance as no geometry
 	inline const bool isNull() const {return (NULL == m_pGeomList);}
