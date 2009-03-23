@@ -86,10 +86,15 @@ GLC_StructInstance::~GLC_StructInstance()
 
 	// Inform reference that an insatnce has been deleted
 	m_pStructReference->structInstanceDeleted(this);
-	//qDebug() << "GLC_StructInstance::~GLC_StructInstance : " << (*m_pNumberOfInstance) - 1 << " " << m_pNumberOfInstance;
+
+	// Update number of instance and reference
 	if ((--(*m_pNumberOfInstance)) == 0)
 	{
 		delete m_pStructReference;
 		delete m_pNumberOfInstance;
+	}
+	else
+	{
+		m_pStructReference->structInstanceDeleted(this);
 	}
 }

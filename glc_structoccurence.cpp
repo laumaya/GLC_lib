@@ -120,7 +120,9 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 	const int size= structOccurence.childCount();
 	for (int i= 0; i < size; ++i)
 	{
-		addChild(structOccurence.child(i)->clone(pCollection));
+		GLC_StructOccurence* pChild= structOccurence.child(i)->clone(pCollection);
+		addChild(pChild);
+		pChild->updateAbsoluteMatrix();
 	}
 
 	// Update instance
@@ -144,10 +146,15 @@ GLC_StructOccurence::~GLC_StructOccurence()
 		GLC_StructOccurence* pChild= m_Childs.at(i);
 		delete pChild;
 	}
+	// Update number of occurence and instance
 	if ((--(*m_pNumberOfOccurence)) == 0)
 	{
 		delete m_pStructInstance;
 		delete m_pNumberOfOccurence;
+	}
+	else
+	{
+		m_pStructInstance->structOccurenceDeleted(this);
 	}
 }
 
@@ -225,7 +232,7 @@ bool GLC_StructOccurence::isVisible() const
 //////////////////////////////////////////////////////////////////////
 
 // Update the absolute matrix
-void GLC_StructOccurence::updateAbsoluteMatrix()
+GLC_StructOccurence* GLC_StructOccurence::updateAbsoluteMatrix()
 {
 	if (NULL != m_pParent)
 	{
@@ -240,6 +247,18 @@ void GLC_StructOccurence::updateAbsoluteMatrix()
 	{
 		m_pCollection->getInstanceHandle(id())->setMatrix(m_AbsoluteMatrix);
 	}
+	return this;
+}
+
+// Update childs obsolute Matrix
+GLC_StructOccurence* GLC_StructOccurence::updateChildsAbsoluteMatrix()
+{
+	updateAbsoluteMatrix();
+	const int size= m_Childs.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_Childs[i]->updateChildsAbsoluteMatrix();
+	}
 }
 
 // Add Child
@@ -250,6 +269,7 @@ void GLC_StructOccurence::addChild(GLC_StructOccurence* pChild)
 	// Add the child to the list of child
 	m_Childs.append(pChild);
 	pChild->m_pParent= this;
+	pChild->updateAbsoluteMatrix();
 }
 
 // Add Child instance (the occurence is created)

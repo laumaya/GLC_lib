@@ -112,7 +112,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Update the absolute matrix
-	void updateAbsoluteMatrix();
+	GLC_StructOccurence* updateAbsoluteMatrix();
+
+	//! Update childs obsolute Matrix
+	GLC_StructOccurence* updateChildsAbsoluteMatrix();
 
 	//! Add Child
 	/*! The new child must be orphan*/
