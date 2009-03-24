@@ -48,58 +48,68 @@ HEADERS_LIB3DS += lib3ds/atmosphere.h \
            
 HEADERS_GLEXT += glext/glext.h
 
-HEADERS_GLC += glc_utils_maths.h \
-           glc_vector2d.h \
-           glc_vector2df.h \
-           glc_vector3d.h \
-           glc_vector3df.h \
-           glc_vector4d.h \
-           glc_matrix4x4.h \
-           glc_interpolator.h \
-           glc_enum.h \
+HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
+						maths/glc_vector2d.h \
+						maths/glc_vector2df.h \
+						maths/glc_vector3d.h \
+						maths/glc_vector3df.h \
+						maths/glc_vector4d.h \
+						maths/glc_matrix4x4.h \
+						maths/glc_interpolator.h
+						
+HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
+						io/glc_objtoworld.h \
+						io/glc_stltoworld.h \
+						io/glc_offtoworld.h \
+						io/glc_3dstoworld.h \
+						io/glc_3dxmltoworld.h
+
+HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_collection.h \
+							sceneGraph/glc_instance.h \
+							sceneGraph/glc_structreference.h \
+							sceneGraph/glc_structinstance.h \
+							sceneGraph/glc_structoccurence.h \
+							sceneGraph/glc_world.h
+							
+HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
+							geometry/glc_circle.h \
+							geometry/glc_cylinder.h \
+							geometry/glc_point.h \
+							geometry/glc_box.h \
+							geometry/glc_mesh2.h \
+           					geometry/glc_geomtools.h \
+							geometry/glc_geomengine.h \
+							geometry/glc_simplegeomengine.h \
+							geometry/glc_extendedgeomengine.h \
+							geometry/glc_primitivegroup.h \
+							geometry/glc_extendedmesh.h
+
+HEADERS_GLC_SHADING +=	shading/glc_material.h \						
+						shading/glc_texture.h \
+						shading/glc_shader.h \
+						shading/glc_selectionmaterial.h \
+						shading/glc_light.h
+						
+HEADERS_GLC_VIEWPORT +=	viewport/glc_orbitcircle.h \
+						viewport/glc_camera.h \
+						viewport/glc_imageplane.h \
+						viewport/glc_viewport.h
+
+
+HEADERS_GLC += glc_enum.h \
            glc_object.h \
-           glc_material.h \
-           glc_texture.h \
-           glc_vbogeom.h \
-           glc_circle.h \
-           glc_orbitcircle.h \
-           glc_cylinder.h \
-           glc_light.h \
-           glc_point.h \
-           glc_box.h \
-           glc_mesh2.h \
-           glc_camera.h \
-           glc_imageplane.h \
-           glc_viewport.h \
-           glc_collection.h \
            glc_factory.h \
            glc_boundingbox.h \
-           glc_instance.h \
            glc_exception.h \
            glc_openglexception.h \
            glc_fileformatexception.h \
-           glc_selectionmaterial.h \
-           glc_world.h \
-           glc_objmtlloader.h \
-           glc_objtoworld.h \
-           glc_stltoworld.h \
-           glc_offtoworld.h \
-           glc_3dstoworld.h \
-           glc_geomtools.h \
            glc_ext.h \
-           glc_shader.h \
-           glc_state.h \
-           glc_geomengine.h \
-           glc_simplegeomengine.h \
-           glc_extendedgeomengine.h \
-           glc_primitivegroup.h \
-           glc_extendedmesh.h \
-           glc_structreference.h \
-           glc_structinstance.h \
-           glc_structoccurence.h \
-           glc_3dxmltoworld.h
+           glc_state.h
            
-HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC} $${HEADERS_GLEXT}
+           
+HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
+HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
+HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT}
 
 SOURCES += quazip/ioapi.c \
            quazip/quazip.cpp \
@@ -127,51 +137,58 @@ SOURCES += lib3ds/atmosphere.c \
            lib3ds/vector.c \
            lib3ds/viewport.c
    
-SOURCES += glc_vector4d.cpp \
-           glc_matrix4x4.cpp \
-           glc_interpolator.cpp \
-           glc_enum.cpp \
-           glc_object.cpp \
-           glc_material.cpp \
-           glc_texture.cpp \
-           glc_vbogeom.cpp \
-           glc_circle.cpp \
-           glc_orbitcircle.cpp \
-           glc_cylinder.cpp \
-           glc_light.cpp \
-           glc_point.cpp \
-           glc_box.cpp \
-           glc_mesh2.cpp \
-           glc_camera.cpp \
-           glc_imageplane.cpp \
-           glc_viewport.cpp \
-           glc_collection.cpp \
-           glc_factory.cpp \
-           glc_boundingbox.cpp \
-           glc_instance.cpp \
-           glc_exception.cpp \
-           glc_openglexception.cpp \
-           glc_fileformatexception.cpp \
-           glc_selectionmaterial.cpp \
-           glc_world.cpp \
-           glc_objmtlloader.cpp \
-           glc_objtoworld.cpp \
-           glc_stltoworld.cpp \
-           glc_offtoworld.cpp \
-           glc_3dstoworld.cpp \
-           glc_geomtools.cpp \
-           glc_ext.cpp \
-           glc_shader.cpp \
-           glc_state.cpp \
-           glc_geomengine.cpp \
-           glc_simplegeomengine.cpp \
-           glc_extendedgeomengine.cpp \
-           glc_primitivegroup.cpp \
-           glc_extendedmesh.cpp \
-           glc_structreference.cpp \
-           glc_structinstance.cpp \
-           glc_structoccurence.cpp \
-           glc_3dxmltoworld.cpp
+SOURCES +=	maths/glc_vector4d.cpp \
+			maths/glc_matrix4x4.cpp \
+			maths/glc_interpolator.cpp 
+
+SOURCES +=	io/glc_objmtlloader.cpp \
+			io/glc_objtoworld.cpp \
+			io/glc_stltoworld.cpp \
+			io/glc_offtoworld.cpp \
+			io/glc_3dstoworld.cpp \
+			io/glc_3dxmltoworld.cpp
+
+SOURCES +=	sceneGraph/glc_collection.cpp \
+			sceneGraph/glc_instance.cpp \
+			sceneGraph/glc_structreference.cpp \
+			sceneGraph/glc_structinstance.cpp \
+			sceneGraph/glc_structoccurence.cpp \
+			sceneGraph/glc_world.cpp
+
+SOURCES +=	geometry/glc_vbogeom.cpp \
+			geometry/glc_circle.cpp \
+			geometry/glc_cylinder.cpp \
+			geometry/glc_point.cpp \
+			geometry/glc_box.cpp \
+			geometry/glc_mesh2.cpp \
+			geometry/glc_geomtools.cpp \
+			geometry/glc_geomengine.cpp \
+			geometry/glc_simplegeomengine.cpp \
+			geometry/glc_extendedgeomengine.cpp \
+			geometry/glc_primitivegroup.cpp \
+			geometry/glc_extendedmesh.cpp 
+
+SOURCES +=	shading/glc_material.cpp \
+			shading/glc_texture.cpp \
+			shading/glc_light.cpp \
+			shading/glc_selectionmaterial.cpp \
+			shading/glc_shader.cpp
+
+SOURCES +=	viewport/glc_orbitcircle.cpp \
+			viewport/glc_camera.cpp \
+			viewport/glc_imageplane.cpp \
+			viewport/glc_viewport.cpp 
+		
+SOURCES +=	glc_enum.cpp \
+			glc_object.cpp \			
+			glc_factory.cpp \
+			glc_boundingbox.cpp \
+			glc_exception.cpp \
+			glc_openglexception.cpp \
+			glc_fileformatexception.cpp \
+			glc_ext.cpp \
+			glc_state.cpp
+           
 
 # Windows compilation configuration
 win32:CONFIG *= dll
@@ -225,7 +242,13 @@ unix {
 	include.path = $${INCLUDE_DIR}/GLC_lib
 	include_lib3ds.path = $${INCLUDE_DIR}/GLC_lib/lib3ds
 	include_glext.path = $${INCLUDE_DIR}/GLC_lib/glext
-	include_quazip.path = $${INCLUDE_DIR}/quazip
+	include_quazip.path = $${INCLUDE_DIR}/GLC_lib/quazip
+	include_glc_maths.path = $${INCLUDE_DIR}/GLC_lib/maths
+	include_glc_io.path = $${INCLUDE_DIR}/GLC_lib/io
+	include_glc_scengraph.path = $${INCLUDE_DIR}/GLC_lib/sceneGraph
+	include_glc_geometry.path = $${INCLUDE_DIR}/GLC_lib/geometry
+	include_glc_shading.path = $${INCLUDE_DIR}/GLC_lib/shading
+	include_glc_viewport.path = $${INCLUDE_DIR}/GLC_lib/viewport
 }
 
 # Windows Install configuration
@@ -237,16 +260,32 @@ win32 {
     include_lib3ds.path = $${INCLUDE_DIR}/lib3ds
     include_glext.path = $${INCLUDE_DIR}/glext
     include_quazip.path = $${INCLUDE_DIR}/quazip
+    include_glc_maths.path = $${INCLUDE_DIR}/GLC_lib/maths
+    include_glc_io.path = $${INCLUDE_DIR}/GLC_lib/io
+    include_glc_scengraph.path = $${INCLUDE_DIR}/GLC_lib/sceneGraph
+    include_glc_geometry.path = $${INCLUDE_DIR}/GLC_lib/geometry
+    include_glc_shading.path = $${INCLUDE_DIR}/GLC_lib/shading
+    include_glc_viewport.path = $${INCLUDE_DIR}/GLC_lib/viewport
 }    
 
 include.files = $${HEADERS_GLC} $${HEADERS_INST}
 include_lib3ds.files = $${HEADERS_LIB3DS}
 include_glext.files =$${HEADERS_GLEXT}
 include_quazip.files = $${HEADERS_QUAZIP}
+include_glc_maths.files= $${HEADERS_GLC_MATHS}
+include_glc_io.files= $${HEADERS_GLC_IO}
+include_glc_scengraph.files= $${HEADERS_GLC_SCENEGRAPH}
+include_glc_geometry.files= $${HEADERS_GLC_GEOMETRY}
+include_glc_shading.files = $${HEADERS_GLC_SHADING}
+include_glc_viewport.files = $${HEADERS_GLC_VIEWPORT}
 
 # install library
 target.path = $${LIB_DIR}
    
 # "make install" configuration options
-INSTALLS += target include_lib3ds include_glext include_quazip include
+INSTALLS += include_lib3ds include_glext include_quazip include_glc_maths include_glc_io
+INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport
+
+INSTALLS += target
+INSTALLS +=include
 
