@@ -25,11 +25,11 @@
 //! \file glc_factory.cpp implementation of the GLC_Factory class.
 
 #include "glc_factory.h"
-#include "glc_objtoworld.h"
-#include "glc_stltoworld.h"
-#include "glc_offtoworld.h"
-#include "glc_3dstoworld.h"
-#include "glc_3dxmltoworld.h"
+#include "io/glc_objtoworld.h"
+#include "io/glc_stltoworld.h"
+#include "io/glc_offtoworld.h"
+#include "io/glc_3dstoworld.h"
+#include "io/glc_3dxmltoworld.h"
 
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;

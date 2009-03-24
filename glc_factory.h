@@ -32,16 +32,16 @@
 #include <QString>
 
 //class to built
-#include "glc_point.h"
-#include "glc_circle.h"
-#include "glc_box.h"
-#include "glc_cylinder.h"
-#include "glc_mesh2.h"
-#include "glc_material.h"
-#include "glc_texture.h"
+#include "geometry/glc_point.h"
+#include "geometry/glc_circle.h"
+#include "geometry/glc_box.h"
+#include "geometry/glc_cylinder.h"
+#include "geometry/glc_mesh2.h"
+#include "shading/glc_material.h"
+#include "shading/glc_texture.h"
+#include "sceneGraph/glc_instance.h"
+#include "sceneGraph/glc_world.h"
 #include "glc_boundingbox.h"
-#include "glc_instance.h"
-#include "glc_world.h"
 
 // end of class to built
 
