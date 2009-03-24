@@ -27,9 +27,9 @@
 #ifndef GLC_BOUNDINGBOX_
 #define GLC_BOUNDINGBOX_
 
-#include "glc_vector4d.h"
-#include "glc_utils_maths.h"
-#include "glc_matrix4x4.h"
+#include "maths/glc_vector4d.h"
+#include "maths/glc_utils_maths.h"
+#include "maths/glc_matrix4x4.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_BoundingBox
