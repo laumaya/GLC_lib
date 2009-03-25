@@ -82,7 +82,10 @@ public:
 
 	//! Add vertices coordinate
 	inline void addVertices(const GLfloatVector& vertices)
-	{*(m_ExtendedGeomEngine.positionVectorHandle())+= vertices;}
+	{
+		*(m_ExtendedGeomEngine.positionVectorHandle())+= vertices;
+		m_NumberOfVertice+= vertices.size() / 3;
+	}
 
 	//! Add Normals
 	inline void addNormals(const GLfloatVector& normals)
@@ -150,6 +153,9 @@ private:
 
 	//! Mesh number of faces
 	unsigned int m_NumberOfFaces;
+
+	//! Mesh number of vertice
+	unsigned int m_NumberOfVertice;
 
 	//! Selection state
 	bool m_IsSelected;
