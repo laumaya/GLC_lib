@@ -78,6 +78,10 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 		}
 		m_pRoot->updateChildsAbsoluteMatrix();
 	}
+	else
+	{
+		m_pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pCollection));
+	}
 }
 
 // Assignment operator
