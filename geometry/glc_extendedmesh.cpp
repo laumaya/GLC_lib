@@ -32,6 +32,7 @@ GLC_ExtendedMesh::GLC_ExtendedMesh()
 :GLC_VboGeom("ExtendedMesh", false)
 , m_PrimitiveGroups()
 , m_NumberOfFaces(0)
+, m_NumberOfVertice(0)
 , m_IsSelected(false)
 , m_ColorPearVertex(false)
 , m_ExtendedGeomEngine()
@@ -43,6 +44,7 @@ GLC_ExtendedMesh::GLC_ExtendedMesh(const GLC_ExtendedMesh& mesh)
 :GLC_VboGeom(mesh)
 , m_PrimitiveGroups(mesh.m_PrimitiveGroups)
 , m_NumberOfFaces(mesh.m_NumberOfFaces)
+, m_NumberOfVertice(mesh.m_NumberOfVertice)
 , m_IsSelected(false)
 , m_ColorPearVertex(mesh.m_ColorPearVertex)
 , m_ExtendedGeomEngine(mesh.m_ExtendedGeomEngine)
@@ -75,7 +77,7 @@ unsigned int GLC_ExtendedMesh::numberOfFaces() const
 // Get number of vertex
 unsigned int GLC_ExtendedMesh::numberOfVertex() const
 {
-	return m_NumberOfFaces / 3;
+	return m_NumberOfVertice;
 }
 
 // return the mesh bounding box
