@@ -260,12 +260,12 @@ win32 {
     include_lib3ds.path = $${INCLUDE_DIR}/lib3ds
     include_glext.path = $${INCLUDE_DIR}/glext
     include_quazip.path = $${INCLUDE_DIR}/quazip
-    include_glc_maths.path = $${INCLUDE_DIR}/GLC_lib/maths
-    include_glc_io.path = $${INCLUDE_DIR}/GLC_lib/io
-    include_glc_scengraph.path = $${INCLUDE_DIR}/GLC_lib/sceneGraph
-    include_glc_geometry.path = $${INCLUDE_DIR}/GLC_lib/geometry
-    include_glc_shading.path = $${INCLUDE_DIR}/GLC_lib/shading
-    include_glc_viewport.path = $${INCLUDE_DIR}/GLC_lib/viewport
+    include_glc_maths.path = $${INCLUDE_DIR}/maths
+    include_glc_io.path = $${INCLUDE_DIR}/io
+    include_glc_scengraph.path = $${INCLUDE_DIR}/sceneGraph
+    include_glc_geometry.path = $${INCLUDE_DIR}/geometry
+    include_glc_shading.path = $${INCLUDE_DIR}/shading
+    include_glc_viewport.path = $${INCLUDE_DIR}/viewport
 }    
 
 include.files = $${HEADERS_GLC} $${HEADERS_INST}
