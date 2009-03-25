@@ -25,6 +25,7 @@
 //! \file glc_structreference.cpp implementation of the GLC_StructReference class.
 
 #include "glc_structreference.h"
+#include "glc_structoccurence.h"
 
 // Default constructor
 GLC_StructReference::GLC_StructReference(const QString& name)
@@ -66,4 +67,25 @@ GLC_StructInstance* GLC_StructReference::createStructInstance()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+// Set the reference representation
+void GLC_StructReference::setRepresentation(const GLC_Instance& rep)
+{
+	Q_ASSERT(NULL == m_pRepresentation);
+	m_pRepresentation= new GLC_Instance(rep);
+
+	// Update all occurence of this reference if exist
+	if (haveStructInstance())
+	{
+		GLC_StructInstance* pInstance= firstInstanceHandle();
+		if (pInstance->haveStructOccurence())
+		{
+			QList<GLC_StructOccurence*> occurenceList= pInstance->listOfStructOccurences();
+			const int size= occurenceList.size();
+			for (int i= 0; i < size; ++i)
+			{
+				occurenceList[i]->checkForRepresentation();
+			}
+		}
+	}
+}
 

@@ -76,11 +76,43 @@ public:
 	//! Return an instance of the representation
 	/*! representation must exists*/
 	inline GLC_Instance instanceRepresentation() const
-	{return m_pRepresentation->instanciate();}
+	{
+		Q_ASSERT(NULL != m_pRepresentation);
+		return m_pRepresentation->instanciate();
+	}
 
 	//! Return the name
 	inline QString name() const
 	{return m_Name;}
+
+	//! Get number of faces
+	inline unsigned int numberOfFaces() const
+	{
+		Q_ASSERT(NULL != m_pRepresentation);
+		return m_pRepresentation->numberOfFaces();
+	}
+
+	//! Get number of vertex
+	inline unsigned int numberOfVertex() const
+	{
+		Q_ASSERT(NULL != m_pRepresentation);
+		return m_pRepresentation->numberOfVertex();
+	}
+
+	//! Get number of materials
+	inline unsigned int numberOfMaterials() const
+	{
+		Q_ASSERT(NULL != m_pRepresentation);
+		return m_pRepresentation->numberOfMaterials();
+	}
+
+	//! Get materials List
+	inline QSet<GLC_Material*> materialSet() const
+	{
+		Q_ASSERT(NULL != m_pRepresentation);
+		return m_pRepresentation->materialSet();
+	}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -99,6 +131,10 @@ public:
 	//! Set the reference name
 	inline void setName(const QString& name)
 	{m_Name= name;}
+
+	//! Set the reference representation
+	/*! Representation must not exist*/
+	void setRepresentation(const GLC_Instance& rep);
 
 //@}
 
