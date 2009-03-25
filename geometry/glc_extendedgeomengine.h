@@ -27,7 +27,7 @@
 #ifndef GLC_EXTENDEDGEOMENGINE_H_
 #define GLC_EXTENDEDGEOMENGINE_H_
 
-#include <QVector>;
+#include <QVector>
 #include "glc_geomengine.h"
 
 //! QVector of GLfloat
