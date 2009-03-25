@@ -165,19 +165,60 @@ GLC_StructOccurence::~GLC_StructOccurence()
 // Get number of faces
 unsigned int GLC_StructOccurence::numberOfFaces() const
 {
-	return 0;
+	unsigned int result= 0;
+	if (m_HaveRepresentation)
+	{
+		result= structInstance()->structReference()->numberOfFaces();
+	}
+	else
+	{
+		const int size= m_Childs.size();
+		for (int i= 0; i < size; ++i)
+		{
+			result+= m_Childs.at(i)->numberOfFaces();
+		}
+	}
+	return result;
 }
 
 // Get number of vertex
 unsigned int GLC_StructOccurence::numberOfVertex() const
 {
-	return 0;
+	unsigned int result= 0;
+	if (m_HaveRepresentation)
+	{
+		result= structInstance()->structReference()->numberOfVertex();
+	}
+	else
+	{
+		const int size= m_Childs.size();
+		for (int i= 0; i < size; ++i)
+		{
+			result+= m_Childs.at(i)->numberOfVertex();
+		}
+	}
+	return result;
 }
 
 // Get number of materials
 unsigned int GLC_StructOccurence::numberOfMaterials() const
 {
-	return 0;
+	unsigned int result= 0;
+	QSet<GLC_Material*> materialSet;
+	if (m_HaveRepresentation)
+	{
+		result= structInstance()->structReference()->numberOfMaterials();
+	}
+	else
+	{
+		const int size= m_Childs.size();
+		for (int i= 0; i < size; ++i)
+		{
+			materialSet.unite(m_Childs.at(i)->materialSet());
+		}
+		result= static_cast<unsigned int>(materialSet.size());
+	}
+	return result;
 }
 
 // Get materials List
@@ -186,7 +227,7 @@ QSet<GLC_Material*> GLC_StructOccurence::materialSet() const
 	QSet<GLC_Material*> materialSet;
 	if (m_HaveRepresentation)
 	{
-		materialSet= m_pCollection->getInstanceHandle(id())->materialSet();
+		materialSet= structInstance()->structReference()->materialSet();
 	}
 	else
 	{
@@ -315,5 +356,26 @@ void GLC_StructOccurence::reverseNormals()
 	if (m_HaveRepresentation)
 	{
 		m_pCollection->getInstanceHandle(id())->getGeometry()->reverseNormals();
+	}
+}
+
+// Check the presence of representation
+void GLC_StructOccurence::checkForRepresentation()
+{
+	if (NULL != m_pStructInstance)
+	{
+		GLC_StructReference* pRef= m_pStructInstance->structReference();
+		if (NULL != pRef)
+		{
+			if (pRef->haveRepresentation())
+			{
+				GLC_Instance representation(pRef->instanceRepresentation());
+				representation.setName(name());
+				// Force instance representation id
+				representation.setId(id());
+				m_pCollection->add(representation);
+			}
+			m_HaveRepresentation= true;
+		}
 	}
 }

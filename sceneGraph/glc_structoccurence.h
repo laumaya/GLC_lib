@@ -142,6 +142,9 @@ public:
 	//! Reverse Normals of this Occurence and childs
 	void reverseNormals();
 
+	//! Check the presence of representation
+	void checkForRepresentation();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
