@@ -44,6 +44,7 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 , m_FileName()
 , m_p3dxmlArchive(NULL)
 , m_p3dxmlFile(NULL)
+, m_pCurrentFile(NULL)
 , m_RootName()
 , m_pWorld(NULL)
 , m_ReferenceHash()
@@ -53,6 +54,9 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 , m_InstanceOfExtRefHash()
 , m_ExternalReferenceHash()
 , m_MaterialHash()
+, m_IsInArchive(false)
+, m_ReferenceRepHash()
+, m_RepLinkList()
 {
 
 }
@@ -61,6 +65,14 @@ GLC_3dxmlToWorld::~GLC_3dxmlToWorld()
 {
 	delete m_pStreamReader;
 	m_pStreamReader= NULL;
+
+	// Clear current file
+	if (NULL != m_pCurrentFile)
+	{
+		m_pCurrentFile->close();
+		delete m_pCurrentFile;
+		m_pCurrentFile= NULL;
+	}
 
 	// Clear the 3dxml file
 	if (NULL != m_p3dxmlFile)
@@ -95,17 +107,20 @@ GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file)
 	if(not m_p3dxmlArchive->open(QuaZip::mdUnzip))
 	{
 	  qDebug() << "The 3dxml file is not a valid zip archive";
-	  // In this case, the 3dxml is not compressed
-	  // TODO Load uncompressed 3dxml
-	  return false;
+	  // In this case, the 3dxml is not compressed or is not valid
+	  m_RootName= m_FileName;
+	  delete m_p3dxmlArchive;
+	  m_p3dxmlArchive= NULL;
 	}
-	// Set the file Name Codec
-	m_p3dxmlArchive->setFileNameCodec("IBM866");
-	// Create QuaZip File
-	m_p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
+	else
+	{
+		m_IsInArchive= true;
+		// Set the file Name Codec
+		m_p3dxmlArchive->setFileNameCodec("IBM866");
 
-	// Load the manifest
-	loadManifest();
+		// Load the manifest
+		loadManifest();
+	}
 
 	// Load the product structure
 	loadProductStructure();
@@ -121,28 +136,7 @@ GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file)
 // Load the 3dxml's manifest
 void GLC_3dxmlToWorld::loadManifest()
 {
-	// Get the manifest of the 3dxml
-	if (not m_p3dxmlArchive->setCurrentFile("Manifest.xml", QuaZip::csInsensitive))
-	{
-		QString message(QString("GLC_3dxmlToWorld::loadManifest File ") + m_FileName + " doesn't contains Manifest.3dxml");
-		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
-		clear();
-		throw(fileFormatException);
-	}
-
-	// Open the manifest of the 3dxml
-	if(not m_p3dxmlFile->open(QIODevice::ReadOnly))
-    {
-		QString message(QString("GLC_3dxmlToWorld::loadManifest Unable to Open ") + m_FileName);
-		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
-		clear();
-		throw(fileFormatException);
-    }
-
-	m_pStreamReader= new QXmlStreamReader(m_p3dxmlFile);
-
+	setStreamReaderToFile("Manifest.xml");
 	m_RootName= getContent("Root");
 
 	if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
@@ -168,6 +162,14 @@ void GLC_3dxmlToWorld::clear()
 
 	delete m_pStreamReader;
 	m_pStreamReader= NULL;
+
+	// Clear current file
+	if (NULL != m_pCurrentFile)
+	{
+		m_pCurrentFile->close();
+		delete m_pCurrentFile;
+		m_pCurrentFile= NULL;
+	}
 
 	// Clear the 3dxml file
 	if (NULL != m_p3dxmlFile)
@@ -240,28 +242,7 @@ QString GLC_3dxmlToWorld::getContent(const QString& element)
 // Load the product structure
 void GLC_3dxmlToWorld::loadProductStructure()
 {
-	// Get the root of the 3dxml
-	if (not m_p3dxmlArchive->setCurrentFile(m_RootName, QuaZip::csInsensitive))
-	{
-		QString message(QString("GLC_3dxmlToWorld::loadProductStructure Root Structure ") + m_RootName + " Not found");
-		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
-		clear();
-		throw(fileFormatException);
-	}
-
-	// Open the root of the 3dxml
-	if(not m_p3dxmlFile->open(QIODevice::ReadOnly))
-    {
-		QString message(QString("GLC_3dxmlToWorld::loadProductStructure Unable to Open ") + m_RootName);
-		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
-		clear();
-		throw(fileFormatException);
-    }
-
-	// Bind the reader to the root
-	m_pStreamReader= new QXmlStreamReader(m_p3dxmlFile);
+	setStreamReaderToFile(m_RootName);
 
 	goToElement("ProductStructure");
 	if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
@@ -273,13 +254,16 @@ void GLC_3dxmlToWorld::loadProductStructure()
 		throw(fileFormatException);
 	}
 	// Load the structure
-	while(not m_pStreamReader->atEnd() and not m_pStreamReader->hasError())
+	while(endElementNotReached("ProductStructure"))
 	{
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
-				and ((m_pStreamReader->name() == "Reference3D") or (m_pStreamReader->name() == "Instance3D")))
+				and ((m_pStreamReader->name() == "Reference3D") or (m_pStreamReader->name() == "Instance3D")
+						or (m_pStreamReader->name() == "ReferenceRep") or (m_pStreamReader->name() == "InstanceRep")))
 		{
 			if (m_pStreamReader->name() == "Reference3D") loadReference3D();
-			else loadInstance3D();
+			else if (m_pStreamReader->name() == "Instance3D") loadInstance3D();
+			else if (m_pStreamReader->name() == "ReferenceRep") loadReferenceRep();
+			else loadInstanceRep();
 		}
 		m_pStreamReader->readNext();
 	}
@@ -294,10 +278,8 @@ void GLC_3dxmlToWorld::loadProductStructure()
 		throw(fileFormatException);
 	}
 
-	delete m_pStreamReader;
-	m_pStreamReader= NULL;
-
-	m_p3dxmlFile->close();
+	// Load local representation ref
+	loadLocalRepresentations();
 
 	// Load external ref
 	loadExternalRef3D();
@@ -315,6 +297,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 		m_InstanceOf.clear();
 
 	}
+	qDebug() << "Local instance linked with reference";
 
 	{ // Link external instance with reference
 
@@ -331,9 +314,12 @@ void GLC_3dxmlToWorld::loadProductStructure()
 		m_ExternalReferenceHash.clear();
 
 	}
+	qDebug() << "external instance linked with reference";
 
 	// Create the unfolded tree
 	createUnfoldedTree();
+
+	qDebug() << "Unfolded tree created";
 
 }
 
@@ -397,9 +383,49 @@ void GLC_3dxmlToWorld::loadInstance3D()
 	m_AssyLinkList.append(assyLink);
 }
 
+// Load a Reference representation
+void GLC_3dxmlToWorld::loadReferenceRep()
+{
+	const QString local= "urn:3DXML:Representation:loc:";
+	const QString externRef= "urn:3DXML:Representation:ext:";
+
+	const unsigned int id= m_pStreamReader->attributes().value("id").toString().toUInt();
+	const QString refName(m_pStreamReader->attributes().value("name").toString());
+	QString associatedFile(m_pStreamReader->attributes().value("associatedFile").toString());
+
+	if (associatedFile.contains(local))
+	{
+		const QString repId= associatedFile.remove(local);
+		m_ReferenceRepHash.insert(id, repId);
+	}
+}
+
+// Load a Instance representation
+void GLC_3dxmlToWorld::loadInstanceRep()
+{
+	const QString local= "urn:3DXML:Reference:loc:";
+
+	const QString instName(m_pStreamReader->attributes().value("name").toString());
+	const unsigned int aggregatedById= getContent("IsAggregatedBy").toUInt();
+	QString instanceOf= getContent("IsInstanceOf");
+
+	if (instanceOf.contains(local))
+	{
+		const unsigned int refId= instanceOf.remove(local).toUInt();
+
+		RepLink repLink;
+		repLink.m_ReferenceId= aggregatedById;
+		repLink.m_RepId= refId;
+
+		m_RepLinkList.append(repLink);
+	}
+}
+
 // Load External Ref
 void GLC_3dxmlToWorld::loadExternalRef3D()
 {
+	if (m_SetOfExtRef.isEmpty()) return;
+
 	const int size= m_SetOfExtRef.size();
 	int previousQuantumValue= 0;
 	int currentQuantumValue= 0;
@@ -409,34 +435,13 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 	SetOfExtRef::iterator iExtRef= m_SetOfExtRef.begin();
 	while (iExtRef != m_SetOfExtRef.constEnd())
 	{
-		delete m_p3dxmlFile;
-		m_p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
 
 		const QString currentRefFileName= (*iExtRef);
 		//qDebug() << "Current File name : " << currentRefFileName;
 		// Get the refFile of the 3dxml
-		if (not m_p3dxmlArchive->setCurrentFile(currentRefFileName, QuaZip::csInsensitive))
-		{
-			QString message(QString("GLC_3dxmlToWorld::loadExternalRef3D File ") + m_FileName + " doesn't contains " + currentRefFileName);
-			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
-			clear();
-			throw(fileFormatException);
-		}
+		setStreamReaderToFile(currentRefFileName);
 
-		// Open the current external file of the 3dxml
-		if(not m_p3dxmlFile->open(QIODevice::ReadOnly))
-	    {
-			QString message(QString("GLC_3dxmlToWorld::loadExternalRef3D Unable to Open ") + currentRefFileName);
-			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
-			clear();
-			throw(fileFormatException);
-	    }
-
-		m_pStreamReader= new QXmlStreamReader(m_p3dxmlFile);
-
-		m_ExternalReferenceHash.insert(currentRefFileName, addExtenalRef());
+		m_ExternalReferenceHash.insert(currentRefFileName, createReferenceRep());
 		++currentFileIndex;
 		// Progrees bar indicator
 		currentQuantumValue = static_cast<int>((static_cast<double>(currentFileIndex) / size) * 100);
@@ -446,11 +451,6 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		}
 		previousQuantumValue= currentQuantumValue;
 
-		delete m_pStreamReader;
-		m_pStreamReader= NULL;
-
-		m_p3dxmlFile->close();
-
 		++iExtRef;
 	}
 	m_SetOfExtRef.clear();
@@ -458,41 +458,45 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 }
 
 // Create Instance from 3DXML Rep
-GLC_StructReference* GLC_3dxmlToWorld::addExtenalRef()
+GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 {
-	goToElement("ProductStructure");
-	checkForXmlError("Element ProductStructure not found");
+	QString refName;
 
-	goToElement("Reference3D");
-	checkForXmlError("Element Reference3D not found");
-	QString refName= m_pStreamReader->attributes().value("name").toString();
-
-	goToElement("ReferenceRep");
-	checkForXmlError("Element ReferenceRep not found");
-
-	const QString format(m_pStreamReader->attributes().value("format").toString());
-	checkForXmlError("attributes format not found");
-	if (format != "TESSELLATED")
+	if (repId.isEmpty())
 	{
-		QString message(QString("GLC_3dxmlToWorld::addExtenalRef 3D rep format ") + format + " Not Supported");
-		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
-		clear();
-		throw(fileFormatException);
-	}
-	const QString local= "urn:3DXML:Representation:loc:";
-	const QString repId(m_pStreamReader->attributes().value("associatedFile").toString().remove(local));
-	checkForXmlError("attribute associatedFile not found");
+		goToElement("ProductStructure");
+		checkForXmlError("Element ProductStructure not found");
 
-	goToRepId(repId);
-	checkForXmlError("repId not found");
+		goToElement("Reference3D");
+		checkForXmlError("Element Reference3D not found");
+		refName= m_pStreamReader->attributes().value("name").toString();
+
+		goToElement("ReferenceRep");
+		checkForXmlError("Element ReferenceRep not found");
+
+		const QString format(m_pStreamReader->attributes().value("format").toString());
+		checkForXmlError("attributes format not found");
+		if (format != "TESSELLATED")
+		{
+			QString message(QString("GLC_3dxmlToWorld::addExtenalRef 3D rep format ") + format + " Not Supported");
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
+			clear();
+			throw(fileFormatException);
+		}
+		const QString local= "urn:3DXML:Representation:loc:";
+		repId= m_pStreamReader->attributes().value("associatedFile").toString().remove(local);
+		checkForXmlError("attribute associatedFile not found");
+		goToRepId(repId);
+		checkForXmlError("repId not found");
+	}
 
 	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
 	pMesh->setName(refName);
 	GLC_Instance currentMeshInstance(pMesh);
 
 	int numberOfMesh= 1;
-	while (not m_pStreamReader->atEnd() and not m_pStreamReader->hasError())
+	while (endElementNotReached("Representation"))
 	{
 		gotToPolygonalRepType();
 		if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
@@ -615,6 +619,7 @@ GLC_Matrix4x4 GLC_3dxmlToWorld::loadMatrix(const QString& stringMatrix)
 // Create the unfolded  tree
 void GLC_3dxmlToWorld::createUnfoldedTree()
 {
+	qDebug() << "createUnfoldedTree";
 	// Run throw all link in the list of link
 	AssyLinkList::iterator iLink= m_AssyLinkList.begin();
 	while(iLink != m_AssyLinkList.constEnd())
@@ -819,4 +824,101 @@ GLC_Material* GLC_3dxmlToWorld::getMaterial()
 	}
 
 	return pMaterial;
+}
+
+// Set the stream reader to the specified file
+bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName)
+{
+	if (m_IsInArchive)
+	{
+		delete m_p3dxmlFile;
+		// Create QuaZip File
+		m_p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
+
+		// Get the manifest of the 3dxml
+		if (not m_p3dxmlArchive->setCurrentFile(fileName, QuaZip::csInsensitive))
+		{
+			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + m_FileName + " doesn't contains " + fileName);
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
+			clear();
+			throw(fileFormatException);
+		}
+
+		// Open the manifest of the 3dxml
+		if(not m_p3dxmlFile->open(QIODevice::ReadOnly))
+	    {
+			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile Unable to Open ") + fileName);
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotSupported);
+			clear();
+			throw(fileFormatException);
+	    }
+
+		// Set the stream reader
+		m_pStreamReader= new QXmlStreamReader(m_p3dxmlFile);
+	}
+	else
+	{
+		delete m_pCurrentFile;
+		// Create the file to load
+		if (fileName != m_FileName)
+		{
+			fileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + fileName;
+		}
+		m_pCurrentFile= new QFile(fileName);
+		if (not m_pCurrentFile->open(QIODevice::ReadOnly))
+		{
+			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + fileName + QString(" not found"));
+			qDebug() << message;
+			GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotFound);
+			clear();
+			throw(fileFormatException);
+		}
+		// Set the stream reader
+		m_pStreamReader= new QXmlStreamReader(m_pCurrentFile);
+	}
+	return true;
+}
+
+// Load the local representation
+void GLC_3dxmlToWorld::loadLocalRepresentations()
+{
+	if (m_RepLinkList.isEmpty()) return;
+	qDebug() << "Load local representation";
+	QHash<const QString, GLC_Instance> repHash;
+
+	// Load all local ref
+	goToElement("GeometricRepresentationSet");
+	while (endElementNotReached("GeometricRepresentationSet"))
+	{
+		if ( not startElementNotReached("Representation"))
+		{
+			QString id= m_pStreamReader->attributes().value("id").toString();
+
+			GLC_StructReference* pRef= createReferenceRep("Local");
+			GLC_Instance instance= pRef->instanceRepresentation();
+			delete pRef;
+			repHash.insert(id, instance);
+		}
+		m_pStreamReader->readNext();
+	}
+	qDebug() << "Local rep loaded";
+
+	// Attach the ref to the structure reference
+	RepLinkList::iterator iLocalRep= m_RepLinkList.begin();
+	while (iLocalRep != m_RepLinkList.constEnd())
+	{
+		unsigned int referenceId= (*iLocalRep).m_ReferenceId;
+		unsigned int refId= (*iLocalRep).m_RepId;
+
+		GLC_StructReference* pReference= m_ReferenceHash.value(referenceId);
+		const QString representationID= m_ReferenceRepHash.value(refId);
+		qDebug() << "Attach rep id=" << representationID << " To reference id=" << referenceId;
+		pReference->setRepresentation(repHash.value(representationID));
+
+		++iLocalRep;
+	}
+	qDebug() << "Local Rep attached";
+
 }

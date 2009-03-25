@@ -53,13 +53,21 @@ class GLC_3dxmlToWorld : public QObject
 		GLC_StructInstance* m_pChildInstance;
 	};
 
+	struct RepLink
+	{
+		unsigned int m_ReferenceId;
+		unsigned int  m_RepId;
+	};
+
 	typedef QHash<unsigned int, GLC_StructReference*> ReferenceHash;
 	typedef QHash<GLC_StructInstance*, unsigned int> InstanceOfHash;
 	typedef QHash<GLC_StructInstance*, QString> InstanceOfExtRefHash;
 	typedef QSet<const QString> SetOfExtRef;
 	typedef QList<AssyLink> AssyLinkList;
+	typedef QList<RepLink> RepLinkList;
 	typedef QHash<const QString, GLC_StructReference*> ExternalReferenceHash;
 	typedef QHash<const QString, GLC_Material*> MaterialHash;
+	typedef QHash<const unsigned int, QString> ReferenceRepHash;
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -119,11 +127,17 @@ private:
 	//! Load a Instance3D
 	void loadInstance3D();
 
+	//! Load a Reference representation
+	void loadReferenceRep();
+
+	//! Load a Instance representation
+	void loadInstanceRep();
+
 	//! Load External Ref
 	void loadExternalRef3D();
 
-	//! Add an external ref from 3dxml to m_ExternalReferenceHash
-	GLC_StructReference* addExtenalRef();
+	//! Add a reference from 3dxml to m_ExternalReferenceHash
+	GLC_StructReference* createReferenceRep(QString id= QString());
 
 	//! Load Matrix
 	GLC_Matrix4x4 loadMatrix(const QString&);
@@ -155,6 +169,12 @@ private:
 	//! get material
 	GLC_Material* getMaterial();
 
+	//! Set the stream reader to the specified file
+	bool setStreamReaderToFile(QString);
+
+	//! Load the local representation
+	void loadLocalRepresentations();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -175,6 +195,9 @@ private:
 
 	//! The Quazip file (Entry or archive)
 	QuaZipFile* m_p3dxmlFile;
+
+	//! The current file (if there is no archive)
+	QFile* m_pCurrentFile;
 
 	//! The root Name of the 3dxml file
 	QString m_RootName;
@@ -202,6 +225,16 @@ private:
 
 	//! Hash table of material
 	MaterialHash m_MaterialHash;
+
+	//! Flag to know if the 3dxml is in an archive
+	bool m_IsInArchive;
+
+	//! The Reference representation hash table
+	ReferenceRepHash m_ReferenceRepHash;
+
+	//! The list of representation link
+	RepLinkList m_RepLinkList;
+
 };
 
 #endif /* GLC_3DXMLTOWORLD_H_ */
