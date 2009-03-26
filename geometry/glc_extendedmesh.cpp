@@ -31,6 +31,7 @@
 GLC_ExtendedMesh::GLC_ExtendedMesh()
 :GLC_VboGeom("ExtendedMesh", false)
 , m_PrimitiveGroups()
+, m_PrimitiveGroupsList()
 , m_NumberOfFaces(0)
 , m_NumberOfVertice(0)
 , m_IsSelected(false)
@@ -43,6 +44,7 @@ GLC_ExtendedMesh::GLC_ExtendedMesh()
 GLC_ExtendedMesh::GLC_ExtendedMesh(const GLC_ExtendedMesh& mesh)
 :GLC_VboGeom(mesh)
 , m_PrimitiveGroups(mesh.m_PrimitiveGroups)
+, m_PrimitiveGroupsList(mesh.m_PrimitiveGroupsList)
 , m_NumberOfFaces(mesh.m_NumberOfFaces)
 , m_NumberOfVertice(mesh.m_NumberOfVertice)
 , m_IsSelected(false)
@@ -167,8 +169,8 @@ void GLC_ExtendedMesh::finished()
 		// Add group triangles index to engine triangles index vector
 		if (iGroup.value()->containsTriangles())
 		{
-			iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesIndexVectorHandle()->size() * sizeof(GLuint)));
-			(*m_ExtendedGeomEngine.trianglesIndexVectorHandle())+= iGroup.value()->trianglesIndex().toVector();
+			iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesIndexVectorSize() * sizeof(GLuint)));
+			m_ExtendedGeomEngine.addTriangle(iGroup.value()->trianglesIndex().toVector());
 		}
 
 		// Add group strip index to engine strip index vector
@@ -184,9 +186,10 @@ void GLC_ExtendedMesh::finished()
 			iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesFanIndexVectorHandle()->size() * sizeof(GLuint)));
 			(*m_ExtendedGeomEngine.trianglesFanIndexVectorHandle())+= iGroup.value()->fansIndex().toVector();
 		}
-
+		m_PrimitiveGroupsList.append(iGroup.value());
 		++iGroup;
 	}
+	m_PrimitiveGroups.clear();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -296,10 +299,10 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		//TODO test if color pear vertex is activated
 	}
 
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.begin();
-	while (iGroup != m_PrimitiveGroups.constEnd())
+	PrimitiveGroupsList::iterator iGroup= m_PrimitiveGroupsList.begin();
+	while (iGroup != m_PrimitiveGroupsList.constEnd())
 	{
-		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+		GLC_PrimitiveGroup* pCurrentGroup= *iGroup;
 		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
 
    		if ((not GLC_State::selectionShaderUsed() or not m_IsSelected) and not GLC_State::isInSelectionMode())

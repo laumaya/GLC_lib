@@ -28,6 +28,7 @@
 #define GLC_EXTENDEDMESH_H_
 
 #include <QHash>
+#include <QList>
 #include "../maths/glc_vector2df.h"
 #include "../maths/glc_vector3df.h"
 #include "../glc_enum.h"
@@ -36,10 +37,13 @@
 #include "glc_vbogeom.h"
 #include "glc_primitivegroup.h"
 
-typedef QHash<GLC_uint, GLC_PrimitiveGroup*> PrimitiveGroups;
 
 class GLC_ExtendedMesh : public GLC_VboGeom
 {
+public:
+	typedef QHash<GLC_uint, GLC_PrimitiveGroup*> PrimitiveGroups;
+	typedef QList<GLC_PrimitiveGroup*> PrimitiveGroupsList;
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -150,6 +154,9 @@ private:
 
 	//! Hash table of primitive group
 	PrimitiveGroups m_PrimitiveGroups;
+
+	//! List of primitive groups
+	PrimitiveGroupsList m_PrimitiveGroupsList;
 
 	//! Mesh number of faces
 	unsigned int m_NumberOfFaces;
