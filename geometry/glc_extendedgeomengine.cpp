@@ -36,8 +36,11 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine()
 , m_NormalVboId(0)
 , m_TexelVboId(0)
 , m_TrianglesIboId(0)
+, m_TrianglesIbo()
 , m_TrianglesStripIboId(0)
+, m_TrianglesStripIbo()
 , m_TrianglesFanIboId(0)
+, m_TrianglesFanIbo()
 {
 
 
@@ -52,8 +55,11 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine(const GLC_ExtendedGeomEngine& eng
 , m_NormalVboId(0)
 , m_TexelVboId(0)
 , m_TrianglesIboId(0)
+, m_TrianglesIbo(engine.m_TrianglesIbo)
 , m_TrianglesStripIboId(0)
+, m_TrianglesStripIbo(engine.m_TrianglesStripIbo)
 , m_TrianglesFanIboId(0)
+, m_TrianglesFanIbo(engine.m_TrianglesFanIbo)
 {
 
 
