@@ -100,6 +100,10 @@ public:
 	inline GLuintVector* trianglesIndexVectorHandle()
 	{ return &m_TrianglesIbo;}
 
+	//! Return the size of the triangles index Vector
+	inline int trianglesIndexVectorSize() const
+	{return m_TrianglesIbo.size();}
+
 	//! Return true if contains triangles strip
 	inline bool containsTrianglesStrip() const
 	{ return not m_TrianglesStripIbo.isEmpty();}
@@ -121,7 +125,16 @@ public:
 	//! Return the Triangle Strip Index Vector handle
 	inline GLuintVector* trianglesFanIndexVectorHandle()
 	{ return &m_TrianglesFanIbo;}
+//@}
 
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Add faces to the Triangle IBO
+	void addTriangle(const GLuintVector& triangles)
+	{m_TrianglesIbo+= triangles;}
 
 //@}
 
