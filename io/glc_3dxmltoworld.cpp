@@ -56,7 +56,9 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 , m_MaterialHash()
 , m_IsInArchive(false)
 , m_ReferenceRepHash()
-, m_RepLinkList()
+, m_LocalRepLinkList()
+, m_ExternRepLinkList()
+, m_SetOfExtRep()
 {
 
 }
@@ -284,6 +286,9 @@ void GLC_3dxmlToWorld::loadProductStructure()
 	// Load external ref
 	loadExternalRef3D();
 
+	// Load extern representations
+	loadExternRepresentations();
+
 	{ // Link locals instance with reference
 		InstanceOfHash::iterator iInstance= m_InstanceOf.begin();
 		while (iInstance != m_InstanceOf.constEnd())
@@ -360,7 +365,15 @@ void GLC_3dxmlToWorld::loadInstance3D()
 
 	GLC_StructInstance* pStructInstance;
 
-	if (instanceOf.contains(local))
+	if (instanceOf.contains(externRef))
+	{
+		const QString extRefId= instanceOf.remove(externRef).remove("#1");
+		m_SetOfExtRef << extRefId;
+		pStructInstance= new GLC_StructInstance(instName);
+		pStructInstance->move(instanceMatrix);
+		m_InstanceOfExtRefHash.insert(pStructInstance, extRefId);
+	}
+	else if (instanceOf.contains(local))
 	{
 		const unsigned int refId= instanceOf.remove(local).toUInt();
 		pStructInstance= new GLC_StructInstance(instName);
@@ -369,11 +382,12 @@ void GLC_3dxmlToWorld::loadInstance3D()
 	}
 	else
 	{
-		const QString extRefId= instanceOf.remove(externRef).remove("#1");
-		m_SetOfExtRef << extRefId;
+		// 3dvia 3dxml
+		qDebug() << "3dvia instance";
+		const unsigned int refId= instanceOf.toUInt();
 		pStructInstance= new GLC_StructInstance(instName);
 		pStructInstance->move(instanceMatrix);
-		m_InstanceOfExtRefHash.insert(pStructInstance, extRefId);
+		m_InstanceOf.insert(pStructInstance, refId);
 	}
 
 	AssyLink assyLink;
@@ -387,7 +401,7 @@ void GLC_3dxmlToWorld::loadInstance3D()
 void GLC_3dxmlToWorld::loadReferenceRep()
 {
 	const QString local= "urn:3DXML:Representation:loc:";
-	const QString externRef= "urn:3DXML:Representation:ext:";
+	const QString externName= "urn:3DXML:";
 
 	const unsigned int id= m_pStreamReader->attributes().value("id").toString().toUInt();
 	const QString refName(m_pStreamReader->attributes().value("name").toString());
@@ -396,6 +410,11 @@ void GLC_3dxmlToWorld::loadReferenceRep()
 	if (associatedFile.contains(local))
 	{
 		const QString repId= associatedFile.remove(local);
+		m_ReferenceRepHash.insert(id, repId);
+	}
+	else if (associatedFile.contains(externName))
+	{
+		const QString repId= associatedFile.remove(externName);
 		m_ReferenceRepHash.insert(id, repId);
 	}
 }
@@ -411,13 +430,25 @@ void GLC_3dxmlToWorld::loadInstanceRep()
 
 	if (instanceOf.contains(local))
 	{
+		// The 3dxml is a 3dxml rep from CATIA V5
 		const unsigned int refId= instanceOf.remove(local).toUInt();
 
 		RepLink repLink;
 		repLink.m_ReferenceId= aggregatedById;
 		repLink.m_RepId= refId;
 
-		m_RepLinkList.append(repLink);
+		m_LocalRepLinkList.append(repLink);
+	}
+	else
+	{
+		// The 3dxml is a 3dvia 3dxml
+		const unsigned int refId= instanceOf.toUInt();
+		qDebug() << "3dvia instance aggregated by ref id=" << instanceOf;
+		RepLink repLink;
+		repLink.m_ReferenceId= aggregatedById;
+		repLink.m_RepId= refId;
+
+		m_ExternRepLinkList.append(repLink);
 	}
 }
 
@@ -531,7 +562,11 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		}
 
 		goToMasterLOD();
-		checkForXmlError(" Master LOD not found");
+		if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
+		{
+			qDebug() << " Master LOD not found";
+			return new GLC_StructReference("Empty Rep");
+		}
 
 		// Load Faces index data
 		while (endElementNotReached("Faces"))
@@ -711,9 +746,9 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
 	//qDebug() << "GLC_3dxmlToWorld::loadFace" << m_pStreamReader->name();
 	// List of index declaration
 
-	QString triangles= m_pStreamReader->attributes().value("triangles").toString();
-	QString strips= m_pStreamReader->attributes().value("strips").toString();
-	QString fans= m_pStreamReader->attributes().value("fans").toString();
+	QString triangles= m_pStreamReader->attributes().value("triangles").toString().trimmed();
+	QString strips= m_pStreamReader->attributes().value("strips").toString().trimmed();
+	QString fans= m_pStreamReader->attributes().value("fans").toString().trimmed();
 
 	GLC_Material* pCurrentMaterial= NULL;
 
@@ -729,6 +764,11 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
 	// Trying to find triangles
 	if (not triangles.isEmpty())
 	{
+		// For 3dvia mesh
+		if (triangles.contains(','))
+		{
+			triangles.remove(',');
+		}
 		QTextStream trianglesStream(&triangles);
 		IndexList trianglesIndex;
 		QString buff;
@@ -884,7 +924,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName)
 // Load the local representation
 void GLC_3dxmlToWorld::loadLocalRepresentations()
 {
-	if (m_RepLinkList.isEmpty()) return;
+	if (m_LocalRepLinkList.isEmpty()) return;
 	qDebug() << "Load local representation";
 	QHash<const QString, GLC_Instance> repHash;
 
@@ -906,8 +946,8 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 	qDebug() << "Local rep loaded";
 
 	// Attach the ref to the structure reference
-	RepLinkList::iterator iLocalRep= m_RepLinkList.begin();
-	while (iLocalRep != m_RepLinkList.constEnd())
+	RepLinkList::iterator iLocalRep= m_LocalRepLinkList.begin();
+	while (iLocalRep != m_LocalRepLinkList.constEnd())
 	{
 		unsigned int referenceId= (*iLocalRep).m_ReferenceId;
 		unsigned int refId= (*iLocalRep).m_RepId;
@@ -919,6 +959,105 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 
 		++iLocalRep;
 	}
-	qDebug() << "Local Rep attached";
+}
+
+// Load the extern representation
+void GLC_3dxmlToWorld::loadExternRepresentations()
+{
+	if (m_ExternRepLinkList.isEmpty()) return;
+
+	qDebug() << "Extern rep found";
+
+	QHash<const unsigned int, GLC_Instance> repHash;
+
+	// Load all external rep
+	ReferenceRepHash::iterator iRefRep= m_ReferenceRepHash.begin();
+	while (iRefRep != m_ReferenceRepHash.constEnd())
+	{
+		const QString currentRefFileName= iRefRep.value();
+		const unsigned int id= iRefRep.key();
+
+		setStreamReaderToFile(currentRefFileName);
+
+		GLC_Instance instance= loadCurrentExtRep();
+		repHash.insert(id, instance);
+
+		++iRefRep;
+	}
+
+	// Attach the ref to the structure reference
+	RepLinkList::iterator iExtRep= m_ExternRepLinkList.begin();
+	while (iExtRep != m_ExternRepLinkList.constEnd())
+	{
+		unsigned int referenceId= (*iExtRep).m_ReferenceId;
+		unsigned int refId= (*iExtRep).m_RepId;
+
+		GLC_StructReference* pReference= m_ReferenceHash.value(referenceId);
+		const QString representationID= m_ReferenceRepHash.value(refId);
+		qDebug() << "Attach rep id=" << representationID << " To reference id=" << referenceId;
+		pReference->setRepresentation(repHash.value(refId));
+		pReference->setName("tot");
+
+		++iExtRep;
+	}
+
+}
+
+// Return the instance of the current extern representation
+GLC_Instance GLC_3dxmlToWorld::loadCurrentExtRep()
+{
+	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
+	GLC_Instance currentMeshInstance(pMesh);
+
+	goToElement("Faces");
+	while (endElementNotReached("Faces"))
+	{
+		m_pStreamReader->readNext();
+		if ( m_pStreamReader->name() == "Face")
+		{
+			loadFace(pMesh);
+		}
+	}
+	checkForXmlError("End of Faces not found");
+
+	goToElement("VertexBuffer");
+	checkForXmlError("Element VertexBuffer not found");
+
+	{
+		QString verticePosition= getContent("Positions").replace(',', ' ');
+		//qDebug() << "Position " << verticePosition;
+		checkForXmlError("Error while retrieving Position ContentVertexBuffer");
+		// Load Vertice position
+		QTextStream verticeStream(&verticePosition);
+		QList<GLfloat> verticeValues;
+		QString buff;
+		while ((!verticeStream.atEnd()))
+		{
+			verticeStream >> buff;
+			verticeValues.append(buff.toFloat());
+		}
+		pMesh->addVertices(verticeValues.toVector());
+
+	}
+
+	{
+		QString normals= getContent("Normals").replace(',', ' ');
+		//qDebug() << "Normals " << normals;
+		checkForXmlError("Error while retrieving Normals values");
+		// Load Vertice Normals
+		QTextStream normalsStream(&normals);
+		QList<GLfloat> normalValues;
+		QString buff;
+		while ((!normalsStream.atEnd()))
+		{
+			normalsStream >> buff;
+			normalValues.append(buff.toFloat());
+		}
+		pMesh->addNormals(normalValues.toVector());
+	}
+
+	pMesh->finished();
+
+	return currentMeshInstance;
 
 }

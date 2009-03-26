@@ -175,6 +175,12 @@ private:
 	//! Load the local representation
 	void loadLocalRepresentations();
 
+	//! Load the extern representation
+	void loadExternRepresentations();
+
+	//! Return the instance of the current extern representation
+	GLC_Instance loadCurrentExtRep();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -232,8 +238,15 @@ private:
 	//! The Reference representation hash table
 	ReferenceRepHash m_ReferenceRepHash;
 
-	//! The list of representation link
-	RepLinkList m_RepLinkList;
+	//! The list of local representation link
+	RepLinkList m_LocalRepLinkList;
+
+	//! The list of extern representation link
+	RepLinkList m_ExternRepLinkList;
+
+	//! The set of ext rep to load
+	SetOfExtRef m_SetOfExtRep;
+
 
 };
 
