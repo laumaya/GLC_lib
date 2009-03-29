@@ -383,7 +383,6 @@ void GLC_3dxmlToWorld::loadInstance3D()
 	else
 	{
 		// 3dvia 3dxml
-		qDebug() << "3dvia instance";
 		const unsigned int refId= instanceOf.toUInt();
 		pStructInstance= new GLC_StructInstance(instName);
 		pStructInstance->move(instanceMatrix);
@@ -443,7 +442,6 @@ void GLC_3dxmlToWorld::loadInstanceRep()
 	{
 		// The 3dxml is a 3dvia 3dxml
 		const unsigned int refId= instanceOf.toUInt();
-		qDebug() << "3dvia instance aggregated by ref id=" << instanceOf;
 		RepLink repLink;
 		repLink.m_ReferenceId= aggregatedById;
 		repLink.m_RepId= refId;
@@ -925,14 +923,13 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName)
 void GLC_3dxmlToWorld::loadLocalRepresentations()
 {
 	if (m_LocalRepLinkList.isEmpty()) return;
-	qDebug() << "Load local representation";
 	QHash<const QString, GLC_Instance> repHash;
 
 	// Load all local ref
 	goToElement("GeometricRepresentationSet");
 	while (endElementNotReached("GeometricRepresentationSet"))
 	{
-		if ( not startElementNotReached("Representation"))
+		if (m_pStreamReader->name() == "Representation")
 		{
 			QString id= m_pStreamReader->attributes().value("id").toString();
 
@@ -954,7 +951,6 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 
 		GLC_StructReference* pReference= m_ReferenceHash.value(referenceId);
 		const QString representationID= m_ReferenceRepHash.value(refId);
-		qDebug() << "Attach rep id=" << representationID << " To reference id=" << referenceId;
 		pReference->setRepresentation(repHash.value(representationID));
 
 		++iLocalRep;
@@ -966,9 +962,14 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 {
 	if (m_ExternRepLinkList.isEmpty()) return;
 
-	qDebug() << "Extern rep found";
-
 	QHash<const unsigned int, GLC_Instance> repHash;
+
+	// Progress bar variables
+	const int size= m_ReferenceRepHash.size();
+	int previousQuantumValue= 0;
+	int currentQuantumValue= 0;
+	int currentFileIndex= 0;
+	emit currentQuantum(currentQuantumValue);
 
 	// Load all external rep
 	ReferenceRepHash::iterator iRefRep= m_ReferenceRepHash.begin();
@@ -982,6 +983,15 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 		GLC_Instance instance= loadCurrentExtRep();
 		repHash.insert(id, instance);
 
+		// Progrees bar indicator
+		++currentFileIndex;
+		currentQuantumValue = static_cast<int>((static_cast<double>(currentFileIndex) / size) * 100);
+		if (currentQuantumValue > previousQuantumValue)
+		{
+			emit currentQuantum(currentQuantumValue);
+		}
+		previousQuantumValue= currentQuantumValue;
+
 		++iRefRep;
 	}
 
@@ -994,9 +1004,7 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 
 		GLC_StructReference* pReference= m_ReferenceHash.value(referenceId);
 		const QString representationID= m_ReferenceRepHash.value(refId);
-		qDebug() << "Attach rep id=" << representationID << " To reference id=" << referenceId;
 		pReference->setRepresentation(repHash.value(refId));
-		pReference->setName("tot");
 
 		++iExtRep;
 	}
