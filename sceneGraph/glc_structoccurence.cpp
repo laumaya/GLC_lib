@@ -61,16 +61,12 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_Struct
 	if (m_HaveRepresentation)
 	{
 		GLC_Instance representation(pStructInstance->structReference()->instanceRepresentation());
-		// Set occurence default name
-		setName(representation.name());
 		// Force instance representation id
 		representation.setId(id());
 		m_pCollection->add(representation, shaderId);
 	}
-	else
-	{
-		setName(m_pStructInstance->name());
-	}
+
+	setName(m_pStructInstance->name());
 
 	// Update Absolute matrix
 	updateAbsoluteMatrix();
