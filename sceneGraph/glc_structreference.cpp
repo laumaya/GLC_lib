@@ -60,7 +60,6 @@ GLC_StructReference::~GLC_StructReference()
 GLC_StructInstance* GLC_StructReference::createStructInstance()
 {
 	GLC_StructInstance* pInstance= new GLC_StructInstance(this);
-	pInstance->setName(m_Name);
 	return pInstance;
 }
 
