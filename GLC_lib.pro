@@ -82,7 +82,8 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
 							geometry/glc_simplegeomengine.h \
 							geometry/glc_extendedgeomengine.h \
 							geometry/glc_primitivegroup.h \
-							geometry/glc_extendedmesh.h
+							geometry/glc_extendedmesh.h \
+							geometry/glc_enginelod.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -166,7 +167,8 @@ SOURCES +=	geometry/glc_vbogeom.cpp \
 			geometry/glc_simplegeomengine.cpp \
 			geometry/glc_extendedgeomengine.cpp \
 			geometry/glc_primitivegroup.cpp \
-			geometry/glc_extendedmesh.cpp 
+			geometry/glc_extendedmesh.cpp \
+			geometry/glc_enginelod.cpp
 
 SOURCES +=	shading/glc_material.cpp \
 			shading/glc_texture.cpp \
