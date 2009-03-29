@@ -29,6 +29,7 @@
 
 #include <QVector>
 #include "glc_geomengine.h"
+#include "glc_enginelod.h"
 
 //! QVector of GLfloat
 typedef QVector<GLfloat> GLfloatVector;
@@ -48,14 +49,6 @@ public:
 		GLC_Texel,
 	};
 
-	//! Enum of IBO TYPE
-	enum IboType
-	{
-		GLC_Triangles= 1,
-		GLC_TrianglesStrip,
-		GLC_TrianglesFan,
-	};
-
 public:
 	//! Default constructor
 	GLC_ExtendedGeomEngine();
@@ -71,6 +64,10 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the number of lod
+	inline int numberOfLod()
+	{return m_EngineLodList.size();}
+
 	//! Return the Position Vector
 	GLfloatVector positionVector() const;
 
@@ -90,41 +87,53 @@ public:
 	{ return &m_Texels;}
 
 	//! Return true if contains triangles
-	inline bool containsTriangles() const
-	{return not m_TrianglesIbo.isEmpty();}
-
-	//! Return the Triangle Index Vector
-	GLuintVector trianglesIndexVector() const;
+	inline bool containsTriangles(const int i= 0) const
+	{
+		Q_ASSERT(i < m_EngineLodList.size());
+		return m_EngineLodList.at(i)->containsTriangles();
+	}
 
 	//! Return the Triangle Index Vector handle
-	inline GLuintVector* trianglesIndexVectorHandle()
-	{ return &m_TrianglesIbo;}
+	inline GLuintVector* trianglesIndexVectorHandle(const int i= 0)
+	{
+		Q_ASSERT(i < m_EngineLodList.size());
+		return m_EngineLodList.at(i)->trianglesIndexVectorHandle();
+	}
 
 	//! Return the size of the triangles index Vector
-	inline int trianglesIndexVectorSize() const
-	{return m_TrianglesIbo.size();}
+	inline int trianglesIndexVectorSize(const int i= 0) const
+	{
+		Q_ASSERT(i < m_EngineLodList.size());
+		return m_EngineLodList.at(i)->trianglesIndexVectorSize();
+	}
 
 	//! Return true if contains triangles strip
-	inline bool containsTrianglesStrip() const
-	{ return not m_TrianglesStripIbo.isEmpty();}
-
-	//! Return the Triangle Strip Index Vector
-	GLuintVector trianglesStripIndexVector() const;
+	inline bool containsTrianglesStrip(const int i= 0) const
+	{
+		Q_ASSERT(i < m_EngineLodList.size());
+		return m_EngineLodList.at(i)->containsTrianglesStrip();
+	}
 
 	//! Return the Triangle Strip Index Vector handle
-	inline GLuintVector* trianglesStripIndexVectorHandle()
-	{ return &m_TrianglesStripIbo;}
+	inline GLuintVector* trianglesStripIndexVectorHandle(const int i= 0)
+	{
+		Q_ASSERT(i < m_EngineLodList.size());
+		return m_EngineLodList.at(i)->trianglesStripIndexVectorHandle();
+	}
 
 	//! Return true if contains triangles fan
-	inline bool containsTrianglesFan() const
-	{ return not m_TrianglesFanIbo.isEmpty();}
-
-	//! Return the Triangle Fan Index Vector
-	GLuintVector trianglesFanIndexVector() const;
+	inline bool containsTrianglesFan(const int i= 0) const
+	{
+		Q_ASSERT(i < m_EngineLodList.size());
+		return m_EngineLodList.at(i)->containsTrianglesFan();
+	}
 
 	//! Return the Triangle Strip Index Vector handle
-	inline GLuintVector* trianglesFanIndexVectorHandle()
-	{ return &m_TrianglesFanIbo;}
+	inline GLuintVector* trianglesFanIndexVectorHandle(const int i= 0)
+	{
+		Q_ASSERT(i < m_EngineLodList.size());
+		return m_EngineLodList.at(i)->trianglesFanIndexVectorHandle();
+	}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -132,9 +141,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Add faces to the Triangle IBO
-	void addTriangle(const GLuintVector& triangles)
-	{m_TrianglesIbo+= triangles;}
+
 
 //@}
 
@@ -150,13 +157,13 @@ public:
 	bool useVBO(bool, GLC_ExtendedGeomEngine::VboType);
 
 	//! Ibo Usage
-	void useIBO(bool, GLC_ExtendedGeomEngine::IboType);
+	void useIBO(bool, GLC_EngineLod::IboType);
 //@}
 
 //////////////////////////////////////////////////////////////////////
-// Protected members
+// Private members
 //////////////////////////////////////////////////////////////////////
-protected:
+private:
 	//! Vertex Position Vector
 	GLfloatVector m_Positions;
 
@@ -172,23 +179,8 @@ protected:
 	//! Texture VBO ID
 	GLuint m_TexelVboId;
 
-	//! Triangles IBO ID
-	GLuint m_TrianglesIboId;
-
-	//! Triangle IBO Vector
-	GLuintVector m_TrianglesIbo;
-
-	//! Triangles strip IBO
-	GLuint m_TrianglesStripIboId;
-
-	//! Triangle strip IBO Vector
-	GLuintVector m_TrianglesStripIbo;
-
-	//! Triangles fan IBO
-	GLuint m_TrianglesFanIboId;
-
-	//! Triangles fan IBO
-	GLuintVector m_TrianglesFanIbo;
+	//! The list of LOD
+	QList<GLC_EngineLod*> m_EngineLodList;
 
 };
 

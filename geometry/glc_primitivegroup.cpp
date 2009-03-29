@@ -113,3 +113,4 @@ void GLC_PrimitiveGroup::setBaseTrianglesFanOffset(GLvoid* pOffset)
 	}
 }
 
+

@@ -42,7 +42,7 @@ class GLC_ExtendedMesh : public GLC_VboGeom
 {
 public:
 	typedef QHash<GLC_uint, GLC_PrimitiveGroup*> PrimitiveGroups;
-	typedef QList<GLC_PrimitiveGroup*> PrimitiveGroupsList;
+	typedef QHash<const int, PrimitiveGroups*> PrimitiveGroupsHash;
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -100,13 +100,13 @@ public:
 	{*(m_ExtendedGeomEngine.texelVectorHandle())+= texels;}
 
 	//! Add triangles
-	void addTriangles(GLC_Material*, const IndexList&);
+	void addTriangles(GLC_Material*, const IndexList&, const int lod= 0);
 
 	//! Add triangles Strip
-	void addTrianglesStrip(GLC_Material*, const IndexList&);
+	void addTrianglesStrip(GLC_Material*, const IndexList&, const int lod= 0);
 
 	//! Add triangles Fan
-	void addTrianglesFan(GLC_Material*, const IndexList&);
+	void addTrianglesFan(GLC_Material*, const IndexList&, const int lod= 0);
 
 	//! Reverse mesh normal
 	void reverseNormal();
@@ -142,8 +142,10 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Set the current material
-	GLC_uint setCurrentMaterial(GLC_Material*);
+	GLC_uint setCurrentMaterial(GLC_Material*, const int);
 
+	//! Create VBO and IBO
+	void createVbos();
 //@}
 
 
@@ -152,11 +154,11 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! Hash table of primitive group
-	PrimitiveGroups m_PrimitiveGroups;
+	//! the list of Hash table of primitive group
+	PrimitiveGroupsHash m_PrimitiveGroups;
 
-	//! List of primitive groups
-	PrimitiveGroupsList m_PrimitiveGroupsList;
+	//! the default material Id
+	GLC_uint m_DefaultMaterialId;
 
 	//! Mesh number of faces
 	unsigned int m_NumberOfFaces;

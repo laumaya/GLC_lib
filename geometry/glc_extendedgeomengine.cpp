@@ -35,14 +35,9 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine()
 , m_Texels()
 , m_NormalVboId(0)
 , m_TexelVboId(0)
-, m_TrianglesIboId(0)
-, m_TrianglesIbo()
-, m_TrianglesStripIboId(0)
-, m_TrianglesStripIbo()
-, m_TrianglesFanIboId(0)
-, m_TrianglesFanIbo()
+, m_EngineLodList()
 {
-
+	m_EngineLodList.append(new GLC_EngineLod());
 
 }
 
@@ -54,44 +49,28 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine(const GLC_ExtendedGeomEngine& eng
 , m_Texels(engine.m_Texels)
 , m_NormalVboId(0)
 , m_TexelVboId(0)
-, m_TrianglesIboId(0)
-, m_TrianglesIbo(engine.m_TrianglesIbo)
-, m_TrianglesStripIboId(0)
-, m_TrianglesStripIbo(engine.m_TrianglesStripIbo)
-, m_TrianglesFanIboId(0)
-, m_TrianglesFanIbo(engine.m_TrianglesFanIbo)
+, m_EngineLodList()
 {
-
+	const int size= engine.m_EngineLodList.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_EngineLodList.append(new GLC_EngineLod(*engine.m_EngineLodList.at(i)));
+	}
 
 }
 
 GLC_ExtendedGeomEngine::~GLC_ExtendedGeomEngine()
 {
-	if (GLC_State::vboUsed())
+	// Delete Texel VBO
+	if (0 != m_TexelVboId)
 	{
-		// Delete Texel VBO
-		if (0 != m_TexelVboId)
-		{
-			glDeleteBuffers(1, &m_TexelVboId);
-		}
+		glDeleteBuffers(1, &m_TexelVboId);
+	}
 
-		// Delete Triangles IBO
-		if (0 != m_TrianglesIboId)
-		{
-			glDeleteBuffers(1, &m_TrianglesIboId);
-		}
-
-		// Delete Triangles strip IBO
-		if (0 != m_TrianglesStripIboId)
-		{
-			glDeleteBuffers(1, &m_TrianglesStripIboId);
-		}
-
-		// Delete Triangle fan IBO
-		if (0 != m_TrianglesFanIboId)
-		{
-			glDeleteBuffers(1, &m_TrianglesFanIboId);
-		}
+	const int size= m_EngineLodList.size();
+	for (int i= 0; i < size; ++i)
+	{
+		delete m_EngineLodList.at(i);
 	}
 }
 //////////////////////////////////////////////////////////////////////
@@ -165,22 +144,10 @@ void GLC_ExtendedGeomEngine::createVBOs()
 			glGenBuffers(1, &m_TexelVboId);
 		}
 
-		// Create Triangles IBO
-		if (0 == m_TrianglesIboId and not m_TrianglesIbo.isEmpty())
+		const int size= m_EngineLodList.size();
+		for (int i= 0; i < size; ++i)
 		{
-			glGenBuffers(1, &m_TrianglesIboId);
-		}
-
-		// Create Triangles strip IBO
-		if (0 == m_TrianglesStripIboId and not m_TrianglesStripIbo.isEmpty())
-		{
-			glGenBuffers(1, &m_TrianglesStripIboId);
-		}
-
-		// Create Triangle fan IBO
-		if (0 == m_TrianglesFanIboId and not m_TrianglesFanIbo.isEmpty())
-		{
-			glGenBuffers(1, &m_TrianglesFanIboId);
+			m_EngineLodList.at(i)->createIBOs();
 		}
 	}
 }
@@ -215,22 +182,14 @@ bool GLC_ExtendedGeomEngine::useVBO(bool use, GLC_ExtendedGeomEngine::VboType ty
 }
 
 //! Vbo Usage
-void GLC_ExtendedGeomEngine::useIBO(bool use, GLC_ExtendedGeomEngine::IboType type)
+void GLC_ExtendedGeomEngine::useIBO(bool use, GLC_EngineLod::IboType type)
 {
 	if (use)
 	{
-		// Chose the right IBO
-		if (type == GLC_ExtendedGeomEngine::GLC_Triangles)
+		const int size= m_EngineLodList.size();
+		for (int i= 0; i < size; ++i)
 		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_TrianglesIboId);
-		}
-		else if (type == GLC_ExtendedGeomEngine::GLC_TrianglesStrip)
-		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_TrianglesStripIboId);
-		}
-		else if (type == GLC_ExtendedGeomEngine::GLC_TrianglesFan)
-		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_TrianglesFanIboId);
+			m_EngineLodList.at(i)->useIBO(type);
 		}
 	}
 	else

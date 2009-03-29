@@ -31,7 +31,7 @@
 GLC_ExtendedMesh::GLC_ExtendedMesh()
 :GLC_VboGeom("ExtendedMesh", false)
 , m_PrimitiveGroups()
-, m_PrimitiveGroupsList()
+, m_DefaultMaterialId(0)
 , m_NumberOfFaces(0)
 , m_NumberOfVertice(0)
 , m_IsSelected(false)
@@ -44,7 +44,7 @@ GLC_ExtendedMesh::GLC_ExtendedMesh()
 GLC_ExtendedMesh::GLC_ExtendedMesh(const GLC_ExtendedMesh& mesh)
 :GLC_VboGeom(mesh)
 , m_PrimitiveGroups(mesh.m_PrimitiveGroups)
-, m_PrimitiveGroupsList(mesh.m_PrimitiveGroupsList)
+, m_DefaultMaterialId(mesh.m_DefaultMaterialId)
 , m_NumberOfFaces(mesh.m_NumberOfFaces)
 , m_NumberOfVertice(mesh.m_NumberOfVertice)
 , m_IsSelected(false)
@@ -57,9 +57,16 @@ GLC_ExtendedMesh::GLC_ExtendedMesh(const GLC_ExtendedMesh& mesh)
 
 GLC_ExtendedMesh::~GLC_ExtendedMesh()
 {
-	PrimitiveGroups::iterator iGroups= m_PrimitiveGroups.begin();
+	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
 	while (iGroups != m_PrimitiveGroups.constEnd())
 	{
+		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+		while (iGroup != iGroups.value()->constEnd())
+		{
+			delete iGroup.value();
+
+			++iGroup;
+		}
 		delete iGroups.value();
 		++iGroups;
 	}
@@ -120,11 +127,11 @@ GLC_VboGeom* GLC_ExtendedMesh::clone() const
 //////////////////////////////////////////////////////////////////////
 
 // Add triangles
-void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexList)
+void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexList, const int lod)
 {
-	GLC_uint groupId= setCurrentMaterial(pMaterial);
-	Q_ASSERT(m_PrimitiveGroups.contains(groupId));
-	m_PrimitiveGroups.value(groupId)->addTriangles(indexList);
+	GLC_uint groupId= setCurrentMaterial(pMaterial, lod);
+	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
+	m_PrimitiveGroups.value(lod)->value(groupId)->addTriangles(indexList);
 
 	// Invalid the geometry
 	m_GeometryIsValid = false;
@@ -132,22 +139,22 @@ void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& in
 }
 
 // Add triangles Strip
-void GLC_ExtendedMesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexList& indexList)
+void GLC_ExtendedMesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexList& indexList, const int lod)
 {
-	GLC_uint groupId= setCurrentMaterial(pMaterial);
-	Q_ASSERT(m_PrimitiveGroups.contains(groupId));
-	m_PrimitiveGroups.value(groupId)->addTrianglesStrip(indexList);
+	GLC_uint groupId= setCurrentMaterial(pMaterial, lod);
+	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
+	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesStrip(indexList);
 
 	// Invalid the geometry
 	m_GeometryIsValid = false;
 	m_NumberOfFaces+= indexList.size() - 2;
 }
 // Add triangles Fan
-void GLC_ExtendedMesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList& indexList)
+void GLC_ExtendedMesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList& indexList, const int lod)
 {
-	GLC_uint groupId= setCurrentMaterial(pMaterial);
-	Q_ASSERT(m_PrimitiveGroups.contains(groupId));
-	m_PrimitiveGroups.value(groupId)->addTrianglesFan(indexList);
+	GLC_uint groupId= setCurrentMaterial(pMaterial, lod);
+	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
+	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesFan(indexList);
 
 	// Invalid the geometry
 	m_GeometryIsValid = false;
@@ -163,33 +170,38 @@ void GLC_ExtendedMesh::reverseNormal()
 // Copy index list in a vector for Vertex Array Use
 void GLC_ExtendedMesh::finished()
 {
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.begin();
-	while (iGroup != m_PrimitiveGroups.constEnd())
+	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
+	while (iGroups != m_PrimitiveGroups.constEnd())
 	{
-		// Add group triangles index to engine triangles index vector
-		if (iGroup.value()->containsTriangles())
+		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+		while (iGroup != iGroups.value()->constEnd())
 		{
-			iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesIndexVectorSize() * sizeof(GLuint)));
-			m_ExtendedGeomEngine.addTriangle(iGroup.value()->trianglesIndex().toVector());
-		}
+			// Add group triangles index to engine triangles index vector
+			if (iGroup.value()->containsTriangles())
+			{
+				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesIndexVectorSize() * sizeof(GLuint)));
+				(*m_ExtendedGeomEngine.trianglesIndexVectorHandle())+= iGroup.value()->trianglesIndex().toVector();
+			}
 
-		// Add group strip index to engine strip index vector
-		if (iGroup.value()->containsStrip())
-		{
-			iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesStripIndexVectorHandle()->size() * sizeof(GLuint)));
-			(*m_ExtendedGeomEngine.trianglesStripIndexVectorHandle())+= iGroup.value()->stripsIndex().toVector();
-		}
+			// Add group strip index to engine strip index vector
+			if (iGroup.value()->containsStrip())
+			{
+				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesStripIndexVectorHandle()->size() * sizeof(GLuint)));
+				(*m_ExtendedGeomEngine.trianglesStripIndexVectorHandle())+= iGroup.value()->stripsIndex().toVector();
+			}
 
-		// Add group fan index to engine fan index vector
-		if (iGroup.value()->containsFan())
-		{
-			iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesFanIndexVectorHandle()->size() * sizeof(GLuint)));
-			(*m_ExtendedGeomEngine.trianglesFanIndexVectorHandle())+= iGroup.value()->fansIndex().toVector();
+			// Add group fan index to engine fan index vector
+			if (iGroup.value()->containsFan())
+			{
+				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesFanIndexVectorHandle()->size() * sizeof(GLuint)));
+				(*m_ExtendedGeomEngine.trianglesFanIndexVectorHandle())+= iGroup.value()->fansIndex().toVector();
+			}
+			++iGroup;
 		}
-		m_PrimitiveGroupsList.append(iGroup.value());
-		++iGroup;
+		++iGroups;
+
 	}
-	m_PrimitiveGroups.clear();
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -217,62 +229,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 	{
 		if (vboIsUsed)
 		{
-			// Create VBO of vertices
-			{
-				m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Vertex);
-
-				GLfloatVector* pPositionVector= m_ExtendedGeomEngine.positionVectorHandle();
-				const GLsizei dataNbr= static_cast<GLsizei>(pPositionVector->size());
-				const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
-				glBufferData(GL_ARRAY_BUFFER, dataSize, pPositionVector->data(), GL_STATIC_DRAW);
-			}
-
-			// Create VBO of normals
-			{
-				m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Normal);
-
-				GLfloatVector* pNormalVector= m_ExtendedGeomEngine.normalVectorHandle();
-				const GLsizei dataNbr= static_cast<GLsizei>(pNormalVector->size());
-				const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
-				glBufferData(GL_ARRAY_BUFFER, dataSize, pNormalVector->data(), GL_STATIC_DRAW);
-			}
-			// Create VBO of texel if needed
-			if (m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Texel))
-			{
-				GLfloatVector* pTexelVector= m_ExtendedGeomEngine.texelVectorHandle();
-				const GLsizei dataNbr= static_cast<GLsizei>(pTexelVector->size());
-				const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
-				glBufferData(GL_ARRAY_BUFFER, dataSize, pTexelVector->data(), GL_STATIC_DRAW);
-			}
-
-			//Create Triangle IBO
-			if (m_ExtendedGeomEngine.containsTriangles())
-			{
-				QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.trianglesIndexVectorHandle();
-				m_ExtendedGeomEngine.useIBO(true, GLC_ExtendedGeomEngine::GLC_Triangles);
-				const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
-				const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
-			}
-			//Create Triangle Strip IBO
-			if (m_ExtendedGeomEngine.containsTrianglesStrip())
-			{
-				QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.trianglesStripIndexVectorHandle();
-				m_ExtendedGeomEngine.useIBO(true, GLC_ExtendedGeomEngine::GLC_TrianglesStrip);
-				const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
-				const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
-			}
-			//Create Triangle Fan IBO
-			if (m_ExtendedGeomEngine.containsTrianglesFan())
-			{
-				QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.trianglesFanIndexVectorHandle();
-				m_ExtendedGeomEngine.useIBO(true, GLC_ExtendedGeomEngine::GLC_TrianglesFan);
-				const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
-				const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
-			}
-			//TODO clear engine
+			createVbos();
 		}
 
 	}
@@ -299,10 +256,10 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		//TODO test if color pear vertex is activated
 	}
 
-	PrimitiveGroupsList::iterator iGroup= m_PrimitiveGroupsList.begin();
-	while (iGroup != m_PrimitiveGroupsList.constEnd())
+	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(0)->begin();
+	while (iGroup != m_PrimitiveGroups.value(0)->constEnd())
 	{
-		GLC_PrimitiveGroup* pCurrentGroup= *iGroup;
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
 		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
 
    		if ((not GLC_State::selectionShaderUsed() or not m_IsSelected) and not GLC_State::isInSelectionMode())
@@ -341,27 +298,27 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 			// Draw triangles
 			if (pCurrentGroup->containsTriangles())
 			{
-				m_ExtendedGeomEngine.useIBO(true, GLC_ExtendedGeomEngine::GLC_Triangles);
+				m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_Triangles);
 				glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndex().size(), GL_UNSIGNED_INT, pCurrentGroup->trianglesIndexOffset());
-				m_ExtendedGeomEngine.useIBO(false, GLC_ExtendedGeomEngine::GLC_Triangles);
+				m_ExtendedGeomEngine.useIBO(false, GLC_EngineLod::GLC_Triangles);
 			}
 
 			// Draw Triangles strip
 			if (pCurrentGroup->containsStrip())
 			{
-				m_ExtendedGeomEngine.useIBO(true, GLC_ExtendedGeomEngine::GLC_TrianglesStrip);
+				m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_TrianglesStrip);
 				const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffset().size());
 				glMultiDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->stripsOffset().data(), stripsCount);
-				m_ExtendedGeomEngine.useIBO(false, GLC_ExtendedGeomEngine::GLC_TrianglesStrip);
+				m_ExtendedGeomEngine.useIBO(false, GLC_EngineLod::GLC_TrianglesStrip);
 			}
 
 			// Draw Triangles fan
 			if (pCurrentGroup->containsFan())
 			{
-				m_ExtendedGeomEngine.useIBO(true, GLC_ExtendedGeomEngine::GLC_TrianglesFan);
+				m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_TrianglesFan);
 				const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffset().size());
 				glMultiDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->fansOffset().data(), fansCount);
-				m_ExtendedGeomEngine.useIBO(false, GLC_ExtendedGeomEngine::GLC_TrianglesFan);
+				m_ExtendedGeomEngine.useIBO(false, GLC_EngineLod::GLC_TrianglesFan);
 			}
 		}
 
@@ -378,30 +335,118 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 //////////////////////////////////////////////////////////////////////
 
 // Set the current material
-GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial)
+GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod)
 {
+	// Test if a primitive group hash exists for the specified lod
+	if (not m_PrimitiveGroups.contains(lod))
+	{
+		m_PrimitiveGroups.insert(lod, new PrimitiveGroups());
+	}
+
 	GLC_uint returnId;
 	if (NULL == pMaterial)
 	{
-		returnId= 0; // Default material id is 0
-		if (not m_PrimitiveGroups.contains(returnId))
+		returnId= m_DefaultMaterialId; // Default material id
+
+		// Test if the material has been already load
+		if (m_DefaultMaterialId == 0)
 		{
 			pMaterial= new GLC_Material();
 			// Add the material to the mesh
 			addMaterial(pMaterial);
-			m_PrimitiveGroups.insert(returnId, new GLC_PrimitiveGroup(pMaterial->id()));
+			m_DefaultMaterialId= pMaterial->id();
+			returnId= m_DefaultMaterialId;
+
+		}
+		// Test if a primitive group for this material exist
+		if (not m_PrimitiveGroups.value(lod)->contains(returnId))
+		{
+			m_PrimitiveGroups.value(lod)->insert(returnId, new GLC_PrimitiveGroup(returnId));
 		}
 	}
 	else
 	{
 		returnId= pMaterial->id();
-		if (not m_PrimitiveGroups.contains(returnId))
+		// Test if the material has been already load
+		if (not containsMaterial(returnId))
 		{
 			// Add the material to the mesh
 			addMaterial(pMaterial);
-			m_PrimitiveGroups.insert(returnId, new GLC_PrimitiveGroup(returnId));
+			m_PrimitiveGroups.value(lod)->insert(returnId, new GLC_PrimitiveGroup(returnId));
+
+		}
+		else if (not m_PrimitiveGroups.value(lod)->contains(returnId))
+		{
+			// Add the material to the group
+			m_PrimitiveGroups.value(lod)->insert(returnId, new GLC_PrimitiveGroup(returnId));
 		}
 	}
 
 	return returnId;
+}
+
+// Create VBO and IBO
+void GLC_ExtendedMesh::createVbos()
+{
+	// Create VBO of vertices
+	{
+		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Vertex);
+
+		GLfloatVector* pPositionVector= m_ExtendedGeomEngine.positionVectorHandle();
+		const GLsizei dataNbr= static_cast<GLsizei>(pPositionVector->size());
+		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
+		glBufferData(GL_ARRAY_BUFFER, dataSize, pPositionVector->data(), GL_STATIC_DRAW);
+	}
+
+	// Create VBO of normals
+	{
+		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Normal);
+
+		GLfloatVector* pNormalVector= m_ExtendedGeomEngine.normalVectorHandle();
+		const GLsizei dataNbr= static_cast<GLsizei>(pNormalVector->size());
+		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
+		glBufferData(GL_ARRAY_BUFFER, dataSize, pNormalVector->data(), GL_STATIC_DRAW);
+	}
+	// Create VBO of texel if needed
+	if (m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Texel))
+	{
+		GLfloatVector* pTexelVector= m_ExtendedGeomEngine.texelVectorHandle();
+		const GLsizei dataNbr= static_cast<GLsizei>(pTexelVector->size());
+		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
+		glBufferData(GL_ARRAY_BUFFER, dataSize, pTexelVector->data(), GL_STATIC_DRAW);
+	}
+
+	const int lodNumber= m_ExtendedGeomEngine.numberOfLod();
+	for (int i= 0; i < lodNumber; ++i)
+	{
+		//Create Triangle IBO
+		if (m_ExtendedGeomEngine.containsTriangles(i))
+		{
+			QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.trianglesIndexVectorHandle(i);
+			m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_Triangles);
+			const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
+			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
+		}
+		//Create Triangle Strip IBO
+		if (m_ExtendedGeomEngine.containsTrianglesStrip(i))
+		{
+			QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.trianglesStripIndexVectorHandle(i);
+			m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_TrianglesStrip);
+			const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
+			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
+		}
+		//Create Triangle Fan IBO
+		if (m_ExtendedGeomEngine.containsTrianglesFan(i))
+		{
+			QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.trianglesFanIndexVectorHandle(i);
+			m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_TrianglesFan);
+			const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
+			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
+		}
+	}
+	//TODO clear engine
+
 }
