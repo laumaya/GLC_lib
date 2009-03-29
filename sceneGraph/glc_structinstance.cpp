@@ -34,7 +34,7 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)
 , m_pStructReference(pStructReference)
 , m_ListOfOccurences()
 , m_RelativeMatrix()
-, m_Name()
+, m_Name(pStructReference->name())
 {
 	if (pStructReference->haveStructInstance())
 	{
@@ -76,6 +76,11 @@ void GLC_StructInstance::setReference(GLC_StructReference* pStructReference)
 	}
 	// Inform reference that an instance has been created
 	m_pStructReference->structInstanceCreated(this);
+
+	if (m_Name.isEmpty())
+	{
+		m_Name= pStructReference->name();
+	}
 	//qDebug() << "GLC_StructInstance::GLC_StructInstance : " << (*m_pNumberOfInstance) << " " << m_pNumberOfInstance;
 }
 
