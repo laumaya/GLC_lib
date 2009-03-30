@@ -37,7 +37,7 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine()
 , m_TexelVboId(0)
 , m_EngineLodList()
 {
-	m_EngineLodList.append(new GLC_EngineLod());
+	//m_EngineLodList.append(new GLC_EngineLod());
 
 }
 
@@ -147,7 +147,7 @@ void GLC_ExtendedGeomEngine::createVBOs()
 		const int size= m_EngineLodList.size();
 		for (int i= 0; i < size; ++i)
 		{
-			m_EngineLodList.at(i)->createIBOs();
+			m_EngineLodList.at(i)->createIBO();
 		}
 	}
 }
@@ -178,25 +178,6 @@ bool GLC_ExtendedGeomEngine::useVBO(bool use, GLC_ExtendedGeomEngine::VboType ty
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	return result;
-
-}
-
-//! Vbo Usage
-void GLC_ExtendedGeomEngine::useIBO(bool use, GLC_EngineLod::IboType type)
-{
-	if (use)
-	{
-		const int size= m_EngineLodList.size();
-		for (int i= 0; i < size; ++i)
-		{
-			m_EngineLodList.at(i)->useIBO(type);
-		}
-	}
-	else
-	{
-		// Unbind Ibo
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
 
 }
 

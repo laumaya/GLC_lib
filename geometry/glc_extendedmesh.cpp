@@ -37,7 +37,12 @@ GLC_ExtendedMesh::GLC_ExtendedMesh()
 , m_IsSelected(false)
 , m_ColorPearVertex(false)
 , m_ExtendedGeomEngine()
+, m_CurrentLod(0)
 {
+	if(id() == 24)
+	{
+		qDebug() << "Default Constructor of " << id();
+	}
 
 }
 
@@ -50,8 +55,12 @@ GLC_ExtendedMesh::GLC_ExtendedMesh(const GLC_ExtendedMesh& mesh)
 , m_IsSelected(false)
 , m_ColorPearVertex(mesh.m_ColorPearVertex)
 , m_ExtendedGeomEngine(mesh.m_ExtendedGeomEngine)
+, m_CurrentLod(0)
 {
-
+	if(id() == 24)
+	{
+		qDebug() << "Copy Constructor of " << id();
+	}
 
 }
 
@@ -135,7 +144,7 @@ void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& in
 
 	// Invalid the geometry
 	m_GeometryIsValid = false;
-	m_NumberOfFaces+= indexList.size() / 3;
+	if (0 == lod) m_NumberOfFaces+= indexList.size() / 3;
 }
 
 // Add triangles Strip
@@ -147,7 +156,7 @@ void GLC_ExtendedMesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexLis
 
 	// Invalid the geometry
 	m_GeometryIsValid = false;
-	m_NumberOfFaces+= indexList.size() - 2;
+	if (0 == lod) m_NumberOfFaces+= indexList.size() - 2;
 }
 // Add triangles Fan
 void GLC_ExtendedMesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList& indexList, const int lod)
@@ -158,7 +167,7 @@ void GLC_ExtendedMesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList&
 
 	// Invalid the geometry
 	m_GeometryIsValid = false;
-	m_NumberOfFaces+= indexList.size() - 2;
+	if (0 == lod) m_NumberOfFaces+= indexList.size() - 2;
 }
 
 //!Reverse mesh normal
@@ -173,28 +182,29 @@ void GLC_ExtendedMesh::finished()
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
 	while (iGroups != m_PrimitiveGroups.constEnd())
 	{
+		int currentLod= iGroups.key();
 		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
 		while (iGroup != iGroups.value()->constEnd())
 		{
 			// Add group triangles index to engine triangles index vector
 			if (iGroup.value()->containsTriangles())
 			{
-				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesIndexVectorSize() * sizeof(GLuint)));
-				(*m_ExtendedGeomEngine.trianglesIndexVectorHandle())+= iGroup.value()->trianglesIndex().toVector();
+				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
+				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
 			}
 
 			// Add group strip index to engine strip index vector
 			if (iGroup.value()->containsStrip())
 			{
-				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesStripIndexVectorHandle()->size() * sizeof(GLuint)));
-				(*m_ExtendedGeomEngine.trianglesStripIndexVectorHandle())+= iGroup.value()->stripsIndex().toVector();
+				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
+				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
 			}
 
 			// Add group fan index to engine fan index vector
 			if (iGroup.value()->containsFan())
 			{
-				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.trianglesFanIndexVectorHandle()->size() * sizeof(GLuint)));
-				(*m_ExtendedGeomEngine.trianglesFanIndexVectorHandle())+= iGroup.value()->fansIndex().toVector();
+				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
+				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
 			}
 			++iGroup;
 		}
@@ -202,6 +212,22 @@ void GLC_ExtendedMesh::finished()
 
 	}
 
+}
+
+// Set the lod Index
+void GLC_ExtendedMesh::setCurrentLod(const int value)
+{
+	if (value)
+	{
+		const int numberOfLod= m_ExtendedGeomEngine.numberOfLod() - 1;
+		// Clamp value to number of load
+		m_CurrentLod= nearbyint(static_cast<int>((static_cast<double>(value) / 100.0) * numberOfLod));
+		qDebug() << "Current LOD = " << m_CurrentLod;
+	}
+	else
+	{
+		m_CurrentLod= 0;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -220,6 +246,8 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 {
 	Q_ASSERT(m_GeometryIsValid or not m_ExtendedGeomEngine.positionVectorHandle()->isEmpty());
 	const bool vboIsUsed= GLC_State::vboUsed();
+
+	// Create VBO and ibo ID.
 	if (vboIsUsed)
 	{
 		m_ExtendedGeomEngine.createVBOs();
@@ -231,7 +259,6 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		{
 			createVbos();
 		}
-
 	}
 
 	if (vboIsUsed)
@@ -255,9 +282,19 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 
 		//TODO test if color pear vertex is activated
 	}
-
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(0)->begin();
-	while (iGroup != m_PrimitiveGroups.value(0)->constEnd())
+/*
+	if (m_ExtendedGeomEngine.numberOfLod() > 1)
+	{
+		m_CurrentLod= m_ExtendedGeomEngine.numberOfLod() - 1;
+	}
+	else
+	{
+		m_CurrentLod= 0;
+	}
+*/
+	m_ExtendedGeomEngine.useIBO(true, m_CurrentLod);
+	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 	{
 		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
 		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
@@ -298,32 +335,28 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 			// Draw triangles
 			if (pCurrentGroup->containsTriangles())
 			{
-				m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_Triangles);
 				glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndex().size(), GL_UNSIGNED_INT, pCurrentGroup->trianglesIndexOffset());
-				m_ExtendedGeomEngine.useIBO(false, GLC_EngineLod::GLC_Triangles);
 			}
 
 			// Draw Triangles strip
 			if (pCurrentGroup->containsStrip())
 			{
-				m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_TrianglesStrip);
 				const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffset().size());
 				glMultiDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->stripsOffset().data(), stripsCount);
-				m_ExtendedGeomEngine.useIBO(false, GLC_EngineLod::GLC_TrianglesStrip);
 			}
 
 			// Draw Triangles fan
 			if (pCurrentGroup->containsFan())
 			{
-				m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_TrianglesFan);
 				const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffset().size());
 				glMultiDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->fansOffset().data(), fansCount);
-				m_ExtendedGeomEngine.useIBO(false, GLC_EngineLod::GLC_TrianglesFan);
 			}
 		}
 
 		++iGroup;
 	}
+	m_ExtendedGeomEngine.useIBO(false);
+
 	m_ExtendedGeomEngine.useVBO(false, GLC_ExtendedGeomEngine::GLC_Normal);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
@@ -337,10 +370,13 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 // Set the current material
 GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod)
 {
+
 	// Test if a primitive group hash exists for the specified lod
 	if (not m_PrimitiveGroups.contains(lod))
 	{
 		m_PrimitiveGroups.insert(lod, new PrimitiveGroups());
+
+		m_ExtendedGeomEngine.appendLod();
 	}
 
 	GLC_uint returnId;
@@ -419,33 +455,12 @@ void GLC_ExtendedMesh::createVbos()
 	const int lodNumber= m_ExtendedGeomEngine.numberOfLod();
 	for (int i= 0; i < lodNumber; ++i)
 	{
-		//Create Triangle IBO
-		if (m_ExtendedGeomEngine.containsTriangles(i))
-		{
-			QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.trianglesIndexVectorHandle(i);
-			m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_Triangles);
-			const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
-			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
-		}
-		//Create Triangle Strip IBO
-		if (m_ExtendedGeomEngine.containsTrianglesStrip(i))
-		{
-			QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.trianglesStripIndexVectorHandle(i);
-			m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_TrianglesStrip);
-			const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
-			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
-		}
-		//Create Triangle Fan IBO
-		if (m_ExtendedGeomEngine.containsTrianglesFan(i))
-		{
-			QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.trianglesFanIndexVectorHandle(i);
-			m_ExtendedGeomEngine.useIBO(true, GLC_EngineLod::GLC_TrianglesFan);
-			const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
-			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
-		}
+		//Create LOD IBO
+		QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.indexVectorHandle(i);
+		m_ExtendedGeomEngine.useIBO(true, i);
+		const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
+		const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
 	}
 	//TODO clear engine
 

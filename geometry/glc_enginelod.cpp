@@ -30,12 +30,8 @@
 // Default constructor
 GLC_EngineLod::GLC_EngineLod(double accuracy)
 : m_Accuracy(accuracy)
-, m_TrianglesIboId(0)
-, m_TrianglesIbo()
-, m_TrianglesStripIboId(0)
-, m_TrianglesStripIbo()
-, m_TrianglesFanIboId(0)
-, m_TrianglesFanIbo()
+, m_IboId(0)
+, m_IboVector()
 {
 
 
@@ -44,12 +40,8 @@ GLC_EngineLod::GLC_EngineLod(double accuracy)
 // Copy Constructor
 GLC_EngineLod::GLC_EngineLod(const GLC_EngineLod& lod)
 : m_Accuracy(lod.m_Accuracy)
-, m_TrianglesIboId(0)
-, m_TrianglesIbo(lod.m_TrianglesIbo)
-, m_TrianglesStripIboId(0)
-, m_TrianglesStripIbo(lod.m_TrianglesStripIbo)
-, m_TrianglesFanIboId(0)
-, m_TrianglesFanIbo(lod.m_TrianglesFanIbo)
+, m_IboId(0)
+, m_IboVector(lod.m_IboVector)
 {
 
 
@@ -57,61 +49,10 @@ GLC_EngineLod::GLC_EngineLod(const GLC_EngineLod& lod)
 
 GLC_EngineLod::~GLC_EngineLod()
 {
-	// Delete Triangles IBO
-	if (0 != m_TrianglesIboId)
+	// Delete IBO
+	if (0 != m_IboId)
 	{
-		glDeleteBuffers(1, &m_TrianglesIboId);
+		glDeleteBuffers(1, &m_IboId);
 	}
 
-	// Delete Triangles strip IBO
-	if (0 != m_TrianglesStripIboId)
-	{
-		glDeleteBuffers(1, &m_TrianglesStripIboId);
-	}
-
-	// Delete Triangle fan IBO
-	if (0 != m_TrianglesFanIboId)
-	{
-		glDeleteBuffers(1, &m_TrianglesFanIboId);
-	}
-}
-
-// IBO creation
-void GLC_EngineLod::createIBOs()
-{
-	// Create Triangles IBO
-	if (0 == m_TrianglesIboId and not m_TrianglesIbo.isEmpty())
-	{
-		glGenBuffers(1, &m_TrianglesIboId);
-	}
-
-	// Create Triangles strip IBO
-	if (0 == m_TrianglesStripIboId and not m_TrianglesStripIbo.isEmpty())
-	{
-		glGenBuffers(1, &m_TrianglesStripIboId);
-	}
-
-	// Create Triangle fan IBO
-	if (0 == m_TrianglesFanIboId and not m_TrianglesFanIbo.isEmpty())
-	{
-		glGenBuffers(1, &m_TrianglesFanIboId);
-	}
-}
-
-// Ibo Usage
-void GLC_EngineLod::useIBO(GLC_EngineLod::IboType type)
-{
-	// Chose the right IBO
-	if (type == GLC_EngineLod::GLC_Triangles)
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_TrianglesIboId);
-	}
-	else if (type == GLC_EngineLod::GLC_TrianglesStrip)
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_TrianglesStripIboId);
-	}
-	else if (type == GLC_EngineLod::GLC_TrianglesFan)
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_TrianglesFanIboId);
-	}
 }

@@ -117,6 +117,9 @@ public:
 	//! Copy vertex list in a vector list for Vertex Array Use
 	void finished();
 
+	//! Set the lod Index
+	virtual void setCurrentLod(const int);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -174,6 +177,9 @@ private:
 
 	//! Geom engine
 	GLC_ExtendedGeomEngine m_ExtendedGeomEngine;
+
+	//! The current LOD index
+	int m_CurrentLod;
 
 };
 

@@ -33,13 +33,6 @@
 class GLC_EngineLod
 {
 public:
-	//! Enum of IBO TYPE
-	enum IboType
-	{
-		GLC_Triangles= 1,
-		GLC_TrianglesStrip,
-		GLC_TrianglesFan,
-	};
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -65,33 +58,13 @@ public:
 	inline double accuracy() const
 	{return m_Accuracy;}
 
-	//! Return true if contains triangles
-	inline bool containsTriangles() const
-	{return not m_TrianglesIbo.isEmpty();}
-
 	//! Return the Triangle Index Vector handle
-	inline QVector<GLuint>* trianglesIndexVectorHandle()
-	{ return &m_TrianglesIbo;}
+	inline QVector<GLuint>* indexVectorHandle()
+	{ return &m_IboVector;}
 
 	//! Return the size of the triangles index Vector
-	inline int trianglesIndexVectorSize() const
-	{return m_TrianglesIbo.size();}
-
-	//! Return true if contains triangles strip
-	inline bool containsTrianglesStrip() const
-	{ return not m_TrianglesStripIbo.isEmpty();}
-
-	//! Return the Triangle Strip Index Vector handle
-	inline QVector<GLuint>* trianglesStripIndexVectorHandle()
-	{ return &m_TrianglesStripIbo;}
-
-	//! Return true if contains triangles fan
-	inline bool containsTrianglesFan() const
-	{ return not m_TrianglesFanIbo.isEmpty();}
-
-	//! Return the Triangle Strip Index Vector handle
-	inline QVector<GLuint>* trianglesFanIndexVectorHandle()
-	{ return &m_TrianglesFanIbo;}
+	inline int indexVectorSize() const
+	{return m_IboVector.size();}
 
 //@}
 
@@ -110,10 +83,18 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! IBO creation
-	void createIBOs();
+	inline void createIBO()
+	{
+		if (0 == m_IboId and not m_IboVector.isEmpty())
+		{
+			glGenBuffers(1, &m_IboId);
+		}
+	}
 
 	//! Ibo Usage
-	void useIBO(GLC_EngineLod::IboType);
+	inline void useIBO()
+	{glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -124,23 +105,11 @@ private:
 	//! The accuracy of the load
 	double m_Accuracy;
 
-	//! Triangles IBO ID
-	GLuint m_TrianglesIboId;
+	//! The IBO ID
+	GLuint m_IboId;
 
-	//! Triangle IBO Vector
-	QVector<GLuint> m_TrianglesIbo;
-
-	//! Triangles strip IBO ID
-	GLuint m_TrianglesStripIboId;
-
-	//! Triangle strip IBO Vector
-	QVector<GLuint> m_TrianglesStripIbo;
-
-	//! Triangles fan IBO ID
-	GLuint m_TrianglesFanIboId;
-
-	//! Triangles fan IBO Vector
-	QVector<GLuint> m_TrianglesFanIbo;
+	//! The IBO Vector
+	QVector<GLuint> m_IboVector;
 
 };
 

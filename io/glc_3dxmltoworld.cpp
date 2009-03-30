@@ -559,7 +559,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 			currentMeshInstance.setGeometry(pMesh);
 		}
 
-		goToMasterLOD();
+		loadLOD(pMesh);
 		if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
 		{
 			qDebug() << " Master LOD not found";
@@ -723,23 +723,30 @@ void GLC_3dxmlToWorld::checkForXmlError(const QString& info)
 	}
 }
 // Go to the master LOD
-void GLC_3dxmlToWorld::goToMasterLOD()
+void GLC_3dxmlToWorld::loadLOD(GLC_ExtendedMesh* pMesh)
 {
+	int lodIndex= 1;
 	while(not m_pStreamReader->atEnd() and not ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == "Faces")))
 	{
 		m_pStreamReader->readNext();
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == "PolygonalLOD"))
 		{
-			// Skip the load
-			while(endElementNotReached("PolygonalLOD"))
+			// Load Faces index data
+			while (endElementNotReached("Faces"))
 			{
 				m_pStreamReader->readNext();
+				if ( m_pStreamReader->name() == "Face")
+				{
+					loadFace(pMesh, lodIndex);
+				}
 			}
+			checkForXmlError("End of Faces not found");
+			++lodIndex;
 		}
 	}
 }
 // Load a face
-void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
+void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh, const int lod)
 {
 	//qDebug() << "GLC_3dxmlToWorld::loadFace" << m_pStreamReader->name();
 	// List of index declaration
@@ -775,7 +782,7 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
 			trianglesStream >> buff;
 			trianglesIndex.append(buff.toUInt());
 		}
-		pMesh->addTriangles(pCurrentMaterial, trianglesIndex);
+		pMesh->addTriangles(pCurrentMaterial, trianglesIndex, lod);
 	}
 	// Trying to find trips
 	if (not strips.isEmpty())
@@ -794,7 +801,7 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
 				stripsStream >> buff;
 				stripsIndex.append(buff.toUInt());
 			}
-			pMesh->addTrianglesStrip(pCurrentMaterial, stripsIndex);
+			pMesh->addTrianglesStrip(pCurrentMaterial, stripsIndex, lod);
 		}
 	}
 	// Trying to find fans
@@ -812,7 +819,7 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh)
 				fansStream >> buff;
 				fansIndex.append(buff.toUInt());
 			}
-			pMesh->addTrianglesFan(pCurrentMaterial, fansIndex);
+			pMesh->addTrianglesFan(pCurrentMaterial, fansIndex, lod);
 		}
 	}
 

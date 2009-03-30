@@ -211,6 +211,10 @@ public:
 		}
 	}
 
+	//! Set the LOD usage
+	inline void setLodUsage(const bool usage)
+	{m_UseLod= usage;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -277,6 +281,9 @@ private:
 
 	//! Show State
 	bool m_IsInShowSate;
+
+	//! Level of detail usage
+	bool m_UseLod;
 
 };
 #endif //GLC_COLLECTION_H_

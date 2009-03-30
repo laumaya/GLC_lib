@@ -86,54 +86,20 @@ public:
 	inline GLfloatVector* texelVectorHandle()
 	{ return &m_Texels;}
 
-	//! Return true if contains triangles
-	inline bool containsTriangles(const int i= 0) const
+	//! Return the Index Vector handle
+	inline GLuintVector* indexVectorHandle(const int i= 0)
 	{
 		Q_ASSERT(i < m_EngineLodList.size());
-		return m_EngineLodList.at(i)->containsTriangles();
-	}
-
-	//! Return the Triangle Index Vector handle
-	inline GLuintVector* trianglesIndexVectorHandle(const int i= 0)
-	{
-		Q_ASSERT(i < m_EngineLodList.size());
-		return m_EngineLodList.at(i)->trianglesIndexVectorHandle();
+		return m_EngineLodList.at(i)->indexVectorHandle();
 	}
 
 	//! Return the size of the triangles index Vector
-	inline int trianglesIndexVectorSize(const int i= 0) const
+	inline int indexVectorSize(const int i= 0) const
 	{
 		Q_ASSERT(i < m_EngineLodList.size());
-		return m_EngineLodList.at(i)->trianglesIndexVectorSize();
+		return m_EngineLodList.at(i)->indexVectorSize();
 	}
 
-	//! Return true if contains triangles strip
-	inline bool containsTrianglesStrip(const int i= 0) const
-	{
-		Q_ASSERT(i < m_EngineLodList.size());
-		return m_EngineLodList.at(i)->containsTrianglesStrip();
-	}
-
-	//! Return the Triangle Strip Index Vector handle
-	inline GLuintVector* trianglesStripIndexVectorHandle(const int i= 0)
-	{
-		Q_ASSERT(i < m_EngineLodList.size());
-		return m_EngineLodList.at(i)->trianglesStripIndexVectorHandle();
-	}
-
-	//! Return true if contains triangles fan
-	inline bool containsTrianglesFan(const int i= 0) const
-	{
-		Q_ASSERT(i < m_EngineLodList.size());
-		return m_EngineLodList.at(i)->containsTrianglesFan();
-	}
-
-	//! Return the Triangle Strip Index Vector handle
-	inline GLuintVector* trianglesFanIndexVectorHandle(const int i= 0)
-	{
-		Q_ASSERT(i < m_EngineLodList.size());
-		return m_EngineLodList.at(i)->trianglesFanIndexVectorHandle();
-	}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -141,7 +107,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-
+	//! Add a Lod to the engine
+	inline void appendLod()
+	{m_EngineLodList.append(new GLC_EngineLod());}
 
 //@}
 
@@ -157,7 +125,19 @@ public:
 	bool useVBO(bool, GLC_ExtendedGeomEngine::VboType);
 
 	//! Ibo Usage
-	void useIBO(bool, GLC_EngineLod::IboType);
+	inline void useIBO(bool use, const int currentLod= 0)
+	{
+		if (use)
+		{
+			m_EngineLodList.at(currentLod)->useIBO();
+		}
+		else
+		{
+			// Unbind Ibo
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		}
+
+	}
 //@}
 
 //////////////////////////////////////////////////////////////////////

@@ -225,7 +225,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the instance
-	inline void glExecute(bool transparent=false)
+	inline void glExecute(bool transparent= false, bool computeLod= false)
 	{
 		if (NULL == m_pGeomList) return;
 		// Save current OpenGL Matrix
@@ -236,9 +236,23 @@ public:
 			glColor3ubv(m_colorId); // D'ont use Alpha component
 		}
 		const int size= m_pGeomList->size();
-		for (int i= 0; i < size; ++i)
+		if (computeLod)
 		{
-			m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
+			for (int i= 0; i < size; ++i)
+			{
+				m_pGeomList->at(i)->setCurrentLod(50);
+				m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
+			}
+
+		}
+		else
+		{
+			for (int i= 0; i < size; ++i)
+			{
+				m_pGeomList->at(i)->setCurrentLod(0);
+				m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
+			}
+
 		}
 		// Restore OpenGL Matrix
 		glPopMatrix();

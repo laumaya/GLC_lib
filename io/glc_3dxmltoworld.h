@@ -149,8 +149,8 @@ private:
 	//! Throw ecxeption if error occur
 	void checkForXmlError(const QString&);
 
-	//! Go to the master LOD
-	void goToMasterLOD();
+	//! Load Level of detail
+	void loadLOD(GLC_ExtendedMesh*);
 
 	//! Return true if the end of specified element is not reached
 	inline bool endElementNotReached(const QString& element)
@@ -161,7 +161,7 @@ private:
 	{return not m_pStreamReader->atEnd() and not ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == element));}
 
 	//! Load a face
-	void loadFace(GLC_ExtendedMesh*);
+	void loadFace(GLC_ExtendedMesh*, const int lod= 0);
 
 	//! Clear material hash
 	void clearMaterialHash();

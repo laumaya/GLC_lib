@@ -46,6 +46,7 @@ GLC_Collection::GLC_Collection()
 , m_ShaderGroup()
 , m_MainNodes()
 , m_IsInShowSate(true)
+, m_UseLod(false)
 {
 }
 
@@ -703,7 +704,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 	        	{
 		            if (not iEntry.value()->isTransparent())
 		            {
-		            	iEntry.value()->glExecute();
+		            	iEntry.value()->glExecute(false, m_UseLod);
 		            }
 	        	}
 	            ++iEntry;
@@ -727,7 +728,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 	        	{
 	        		 if (iEntry.value()->haveTransparentMaterials())
 		            {
-		            	iEntry.value()->glExecute(true);
+		            	iEntry.value()->glExecute(true, m_UseLod);
 		            }
 	        	}
 	            ++iEntry;
@@ -751,7 +752,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 	        {
 	            if (iEntry.value()->isVisible() == m_IsInShowSate)
 	            {
-	            	iEntry.value()->glExecute();
+	            	iEntry.value()->glExecute(false, m_UseLod);
 	            }
 	            ++iEntry;
 	        }
@@ -779,7 +780,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 		            {
 			            if (not iEntry.value()->isTransparent())
 			            {
-			            	iEntry.value()->glExecute();
+			            	iEntry.value()->glExecute(false, m_UseLod);
 			            }
 		            }
 		            ++iEntry;
@@ -801,7 +802,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 		            {
 		            	if (iEntry.value()->haveTransparentMaterials())
 			            {
-			            	iEntry.value()->glExecute(true);
+			            	iEntry.value()->glExecute(true, m_UseLod);
 			            }
 		            }
 		            ++iEntry;

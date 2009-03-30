@@ -177,6 +177,10 @@ public:
 
 	//! Reverse normal
 	virtual void reverseNormals();
+
+	//! Set the lod Index
+	/*! The value must be between 0 and 100*/
+	virtual void setCurrentLod(const int) {}
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
