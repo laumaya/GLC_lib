@@ -222,7 +222,6 @@ void GLC_ExtendedMesh::setCurrentLod(const int value)
 		const int numberOfLod= m_ExtendedGeomEngine.numberOfLod() - 1;
 		// Clamp value to number of load
 		m_CurrentLod= nearbyint(static_cast<int>((static_cast<double>(value) / 100.0) * numberOfLod));
-		qDebug() << "Current LOD = " << m_CurrentLod;
 	}
 	else
 	{
