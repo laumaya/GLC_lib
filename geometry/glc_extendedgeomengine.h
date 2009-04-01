@@ -111,6 +111,9 @@ public:
 	inline void appendLod()
 	{m_EngineLodList.append(new GLC_EngineLod());}
 
+	//! The mesh wich use this engine is finished
+	void finished();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -127,16 +130,8 @@ public:
 	//! Ibo Usage
 	inline void useIBO(bool use, const int currentLod= 0)
 	{
-		if (use)
-		{
-			m_EngineLodList.at(currentLod)->useIBO();
-		}
-		else
-		{
-			// Unbind Ibo
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		}
-
+		if (use) m_EngineLodList.at(currentLod)->useIBO();
+		else glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 //@}
 
@@ -161,6 +156,12 @@ private:
 
 	//! The list of LOD
 	QList<GLC_EngineLod*> m_EngineLodList;
+
+	//! The size of Position and normal VBO
+	int m_PositionSize;
+
+	//! The size of texel VBO
+	int m_TexelsSize;
 
 };
 

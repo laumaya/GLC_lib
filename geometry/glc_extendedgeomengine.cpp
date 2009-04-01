@@ -36,6 +36,8 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine()
 , m_NormalVboId(0)
 , m_TexelVboId(0)
 , m_EngineLodList()
+, m_PositionSize(0)
+, m_TexelsSize(0)
 {
 	//m_EngineLodList.append(new GLC_EngineLod());
 
@@ -50,6 +52,8 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine(const GLC_ExtendedGeomEngine& eng
 , m_NormalVboId(0)
 , m_TexelVboId(0)
 , m_EngineLodList()
+, m_PositionSize(engine.m_PositionSize)
+, m_TexelsSize(engine.m_TexelsSize)
 {
 	const int size= engine.m_EngineLodList.size();
 	for (int i= 0; i < size; ++i)
@@ -124,6 +128,21 @@ GLfloatVector GLC_ExtendedGeomEngine::normalVector() const
 	}
 }
 
+//////////////////////////////////////////////////////////////////////
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+
+// The mesh wich use this engine is finished
+void GLC_ExtendedGeomEngine::finished()
+{
+	m_PositionSize= m_Positions.size();
+	m_Positions.clear();
+	m_Normals.clear();
+	m_TexelsSize= m_Texels.size();
+	m_Texels.clear();
+
+	// TODO Finish the LOD
+}
 
 
 //////////////////////////////////////////////////////////////////////
