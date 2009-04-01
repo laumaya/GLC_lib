@@ -241,14 +241,6 @@ void GLC_VboGeom::glExecute(bool isSelected, bool transparent)
 
 	glDraw(transparent);
 	m_GeometryIsValid= true;
-
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_VboGeom::GlExecute ", error);
-		throw(OpenGlException);
-	}
 }
 
 // Virtual interface for OpenGL Geometry properties.
