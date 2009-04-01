@@ -243,7 +243,6 @@ public:
 				m_pGeomList->at(i)->setCurrentLod(50);
 				m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
 			}
-
 		}
 		else
 		{
@@ -252,7 +251,6 @@ public:
 				m_pGeomList->at(i)->setCurrentLod(0);
 				m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
 			}
-
 		}
 		// Restore OpenGL Matrix
 		glPopMatrix();
