@@ -801,22 +801,7 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh, const int lod)
 				stripsStream >> buff;
 				stripsIndex.append(buff.toUInt());
 			}
-			// Convert strip to triangles
-			IndexList newList;
-			newList.append(stripsIndex.at(0));
-			newList.append(stripsIndex.at(1));
-			newList.append(stripsIndex.at(2));
-			const int size= stripsIndex.size();
-			int delta= -1;
-			for (int i= 2; i < size - 1; ++i)
-			{
-				newList.append(stripsIndex.at(i));
-				newList.append(stripsIndex.at(i + delta));
-				newList.append(stripsIndex.at(i - delta));
-				delta = -delta;
-			}
-
-			pMesh->addTriangles(pCurrentMaterial, newList, lod);
+			pMesh->addTrianglesStrip(pCurrentMaterial, stripsIndex, lod);
 		}
 	}
 	// Trying to find fans
