@@ -206,6 +206,8 @@ void GLC_ExtendedMesh::finished()
 				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
 				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
 			}
+
+			iGroup.value()->finished();
 			++iGroup;
 		}
 		++iGroups;
@@ -281,16 +283,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 
 		//TODO test if color pear vertex is activated
 	}
-/*
-	if (m_ExtendedGeomEngine.numberOfLod() > 1)
-	{
-		m_CurrentLod= m_ExtendedGeomEngine.numberOfLod() - 1;
-	}
-	else
-	{
-		m_CurrentLod= 0;
-	}
-*/
+
 	m_ExtendedGeomEngine.useIBO(true, m_CurrentLod);
 	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
@@ -334,21 +327,30 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 			// Draw triangles
 			if (pCurrentGroup->containsTriangles())
 			{
-				glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndex().size(), GL_UNSIGNED_INT, pCurrentGroup->trianglesIndexOffset());
+				glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSize(), GL_UNSIGNED_INT, pCurrentGroup->trianglesIndexOffset());
 			}
 
 			// Draw Triangles strip
 			if (pCurrentGroup->containsStrip())
 			{
 				const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffset().size());
-				glMultiDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->stripsOffset().data(), stripsCount);
+				//glMultiDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->stripsOffset().data(), stripsCount);
+				for (GLint i= 0; i < stripsCount; ++i)
+				{
+					glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
+				}
 			}
 
 			// Draw Triangles fan
 			if (pCurrentGroup->containsFan())
 			{
 				const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffset().size());
-				glMultiDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->fansOffset().data(), fansCount);
+				//glMultiDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->fansOffset().data(), fansCount);
+				for (GLint i= 0; i < fansCount; ++i)
+				{
+					glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
+				}
+
 			}
 		}
 
@@ -461,6 +463,7 @@ void GLC_ExtendedMesh::createVbos()
 		const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
 	}
-	//TODO clear engine
+	//Clear engine
+	m_ExtendedGeomEngine.finished();
 
 }
