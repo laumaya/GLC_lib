@@ -64,11 +64,18 @@ public:
 
 	//! Return true if the group contains triangles
 	inline bool containsTriangles() const
-	{return not m_TrianglesIndex.isEmpty();}
+	{return m_TrianglesIndexSize > 0;}
+
+	//! Return the list of triangles index of the group
+	inline const int trianglesIndexSize() const
+	{return m_TrianglesIndexSize;}
 
 	//! Return the list of triangles index of the group
 	inline const IndexList& trianglesIndex() const
-	{ return m_TrianglesIndex;}
+	{
+		Q_ASSERT(not m_IsFinished);
+		return m_TrianglesIndex;
+	}
 
 	//! Return the offset of triangles index
 	inline const GLvoid* trianglesIndexOffset() const
@@ -76,11 +83,18 @@ public:
 
 	//! Return true if the group contains strips
 	inline bool containsStrip() const
-	{return not m_StripsIndex.isEmpty();}
+	{return m_TrianglesStripSize > 0;}
+
+	//! Return the size of index of strips
+	inline const int stripsIndexSize() const
+	{return m_TrianglesStripSize;}
 
 	//! Return the list of index of strips
 	inline const IndexList& stripsIndex() const
-	{return m_StripsIndex;}
+	{
+		Q_ASSERT(not m_IsFinished);
+		return m_StripsIndex;
+	}
 
 	//! Return the vector of strips sizes
 	inline const IndexSizes& stripsSizes() const
@@ -92,11 +106,18 @@ public:
 
 	//! Return true if the group contains fans
 	inline bool containsFan() const
-	{return not m_FansIndex.isEmpty();}
+	{return m_TrianglesFanSize > 0;}
+
+	//! Return the size of index of fans
+	inline const int fansIndexSize() const
+	{return m_TrianglesFanSize;}
 
 	//! Return the list of index of fans
 	inline const IndexList& fansIndex() const
-	{return m_FansIndex;}
+	{
+		Q_ASSERT(not m_IsFinished);
+		return m_FansIndex;
+	}
 
 	//! Return the vector of fans sizes
 	inline const IndexSizes& fansSizes() const
@@ -116,7 +137,10 @@ public:
 public:
 	//! Add triangles to the group
 	inline void addTriangles(const IndexList& input)
-	{m_TrianglesIndex+= input;}
+	{
+		m_TrianglesIndex+= input;
+		m_TrianglesIndexSize= m_TrianglesIndex.size();
+	}
 
 	//! Set the triangle index offset
 	inline void setTrianglesOffset(GLvoid* pOffset)
@@ -134,6 +158,14 @@ public:
 	//! Set base triangle fan offset
 	void setBaseTrianglesFanOffset(GLvoid*);
 
+	//! The mesh wich use this group is finished
+	inline void finished()
+	{
+		m_TrianglesIndex.clear();
+		m_StripsIndex.clear();
+		m_FansIndex.clear();
+		m_IsFinished= true;
+	}
 
 //@}
 
@@ -167,6 +199,19 @@ private:
 
 	//! Vector of fan Offset
 	OffsetVector m_FanIndexOffset;
+
+	//! Flag to know if the group is finish
+	int m_IsFinished;
+
+	//! Flag to know if there is triangles
+	int m_TrianglesIndexSize;
+
+	//! Flag to know if there is triangles strip
+	int m_TrianglesStripSize;
+
+	//! Flag to know if there is triangles fan
+	int m_TrianglesFanSize;
+
 
 };
 
