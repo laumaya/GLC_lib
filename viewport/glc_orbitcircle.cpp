@@ -61,8 +61,8 @@ GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const QGLContext *pContex
 
 	// Set arc discretion
 	GLC_Circle* pCircle;
-	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry());
-	pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry());
+	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry(0));
+	pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry(0));
 }
 // Change the radius of the orbit circle
 void GLC_OrbitCircle::setRadius(double R)
@@ -73,10 +73,10 @@ void GLC_OrbitCircle::setRadius(double R)
 
 	GLC_Circle* pCircle;
 	// Arc 1 radius
-	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry());
+	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry(0));
 	pCircle->setRadius(R);
 	// Arc 2 radius
-	pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry());
+	pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry(0));
 	pCircle->setRadius(R);
 }
 
@@ -126,15 +126,15 @@ void GLC_OrbitCircle::setRGBAColor(const QColor& color)
 	if (m_MainCircle.numberOfMaterials() == 1)
 	{
 		m_MainCircle.firstMaterial()->setDiffuseColor(color);
-		m_Arc1.getGeometry()->firstMaterial()->setDiffuseColor(color);
-		m_Arc2.getGeometry()->firstMaterial()->setDiffuseColor(color);
+		m_Arc1.getGeometry(0)->firstMaterial()->setDiffuseColor(color);
+		m_Arc2.getGeometry(0)->firstMaterial()->setDiffuseColor(color);
 	}
 	else
 	{
 		GLC_Material* pMaterial= new GLC_Material(color);
 		m_MainCircle.addMaterial(pMaterial);
-		m_Arc1.getGeometry()->addMaterial(pMaterial);
-		m_Arc2.getGeometry()->addMaterial(pMaterial);
+		m_Arc1.getGeometry(0)->addMaterial(pMaterial);
+		m_Arc2.getGeometry(0)->addMaterial(pMaterial);
 	}
 }
 
