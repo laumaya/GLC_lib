@@ -171,49 +171,33 @@ void GLC_ExtendedMesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList&
 }
 
 //!Reverse mesh normal
-void GLC_ExtendedMesh::reverseNormal()
+void GLC_ExtendedMesh::reverseNormals()
 {
-
+	GLfloatVector* pNormalVector= m_ExtendedGeomEngine.normalVectorHandle();
+	if (pNormalVector->isEmpty())
+	{
+		(*m_ExtendedGeomEngine.normalVectorHandle())= m_ExtendedGeomEngine.normalVector();
+	}
+	const int size= pNormalVector->size();
+	for (int i= 0; i < size; ++i)
+	{
+		(*pNormalVector)[i]= - pNormalVector->at(i);
+	}
+	// Invalid the geometry
+	m_GeometryIsValid = false;
 }
 
 // Copy index list in a vector for Vertex Array Use
 void GLC_ExtendedMesh::finished()
 {
-	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
-	while (iGroups != m_PrimitiveGroups.constEnd())
+	if (GLC_State::vboUsed())
 	{
-		int currentLod= iGroups.key();
-		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
-		while (iGroup != iGroups.value()->constEnd())
-		{
-			// Add group triangles index to engine triangles index vector
-			if (iGroup.value()->containsTriangles())
-			{
-				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
-				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
-			}
-
-			// Add group strip index to engine strip index vector
-			if (iGroup.value()->containsStrip())
-			{
-				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
-				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
-			}
-
-			// Add group fan index to engine fan index vector
-			if (iGroup.value()->containsFan())
-			{
-				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
-				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
-			}
-
-			iGroup.value()->finished();
-			++iGroup;
-		}
-		++iGroups;
-
+		finishVbo();
 	}
-
+	else
+	{
+		finishNonVbo();
+	}
 }
 
 // Set the lod Index
@@ -245,25 +229,31 @@ void GLC_ExtendedMesh::glExecute(bool isSelected, bool transparent)
 // Virtual interface for OpenGL Geometry set up.
 void GLC_ExtendedMesh::glDraw(bool transparent)
 {
-	Q_ASSERT(m_GeometryIsValid or not m_ExtendedGeomEngine.positionVectorHandle()->isEmpty());
+	Q_ASSERT(m_GeometryIsValid or not m_ExtendedGeomEngine.normalVectorHandle()->isEmpty());
+
 	const bool vboIsUsed= GLC_State::vboUsed();
 
-	// Create VBO and ibo ID.
 	if (vboIsUsed)
 	{
 		m_ExtendedGeomEngine.createVBOs();
-	}
-	// Create VBO and IBO
-	if (!m_GeometryIsValid)
-	{
-		if (vboIsUsed)
+
+		// Create VBO and IBO
+		if (not m_GeometryIsValid and not m_ExtendedGeomEngine.positionVectorHandle()->isEmpty())
 		{
 			createVbos();
 		}
-	}
+		else if (not m_GeometryIsValid and not m_ExtendedGeomEngine.normalVectorHandle()->isEmpty())
+		{
+			// Normals has been inversed update normal vbo
+			m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Normal);
 
-	if (vboIsUsed)
-	{
+			GLfloatVector* pNormalVector= m_ExtendedGeomEngine.normalVectorHandle();
+			const GLsizei dataNbr= static_cast<GLsizei>(pNormalVector->size());
+			const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
+			glBufferData(GL_ARRAY_BUFFER, dataSize, pNormalVector->data(), GL_STATIC_DRAW);
+			m_ExtendedGeomEngine.normalVectorHandle()->clear();
+		}
+
 		// Activate Vertices VBO
 		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Vertex);
 		glVertexPointer(3, GL_FLOAT, 0, 0);
@@ -282,9 +272,22 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		}
 
 		//TODO test if color pear vertex is activated
+		m_ExtendedGeomEngine.useIBO(true, m_CurrentLod);
+	}
+	else
+	{
+		// Use Vertex Array
+		glVertexPointer(3, GL_FLOAT, 0, m_ExtendedGeomEngine.positionVectorHandle()->data());
+		glEnableClientState(GL_VERTEX_ARRAY);
+
+		glNormalPointer(GL_FLOAT, 0, m_ExtendedGeomEngine.normalVectorHandle()->data());
+		glEnableClientState(GL_NORMAL_ARRAY);
+
+		//glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 
-	m_ExtendedGeomEngine.useIBO(true, m_CurrentLod);
+
 	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 	{
@@ -324,31 +327,63 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 
 		if (m_IsSelected or GLC_State::isInSelectionMode() or (pCurrentMaterial->isTransparent() == transparent))
 		{
-			// Draw triangles
-			if (pCurrentGroup->containsTriangles())
+			if (vboIsUsed)
 			{
-				glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSize(), GL_UNSIGNED_INT, pCurrentGroup->trianglesIndexOffset());
-			}
-
-			// Draw Triangles strip
-			if (pCurrentGroup->containsStrip())
-			{
-				const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffset().size());
-				//glMultiDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->stripsOffset().data(), stripsCount);
-				for (GLint i= 0; i < stripsCount; ++i)
+				// Draw triangles
+				if (pCurrentGroup->containsTriangles())
 				{
-					glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
+					glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSize(), GL_UNSIGNED_INT, pCurrentGroup->trianglesIndexOffset());
+				}
+
+				// Draw Triangles strip
+				if (pCurrentGroup->containsStrip())
+				{
+					const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffset().size());
+					for (GLint i= 0; i < stripsCount; ++i)
+					{
+						glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
+					}
+				}
+
+				// Draw Triangles fan
+				if (pCurrentGroup->containsFan())
+				{
+					const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffset().size());
+					for (GLint i= 0; i < fansCount; ++i)
+					{
+						glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
+					}
 				}
 			}
-
-			// Draw Triangles fan
-			if (pCurrentGroup->containsFan())
+			else
 			{
-				const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffset().size());
-				//glMultiDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().data(), GL_UNSIGNED_INT, (const GLvoid**)pCurrentGroup->fansOffset().data(), fansCount);
-				for (GLint i= 0; i < fansCount; ++i)
+				// Draw triangles
+				if (pCurrentGroup->containsTriangles())
 				{
-					glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
+					GLvoid* pOffset= &(m_ExtendedGeomEngine.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesIndexOffseti()]);
+					glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSize(), GL_UNSIGNED_INT, pOffset);
+				}
+
+				// Draw Triangles strip
+				if (pCurrentGroup->containsStrip())
+				{
+					const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffseti().size());
+					for (GLint i= 0; i < stripsCount; ++i)
+					{
+						GLvoid* pOffset= &m_ExtendedGeomEngine.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
+						glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pOffset);
+					}
+				}
+
+				// Draw Triangles fan
+				if (pCurrentGroup->containsFan())
+				{
+					const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffseti().size());
+					for (GLint i= 0; i < fansCount; ++i)
+					{
+						GLvoid* pOffset= &m_ExtendedGeomEngine.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
+						glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pOffset);
+					}
 				}
 
 			}
@@ -356,9 +391,11 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 
 		++iGroup;
 	}
-	m_ExtendedGeomEngine.useIBO(false);
-
-	m_ExtendedGeomEngine.useVBO(false, GLC_ExtendedGeomEngine::GLC_Normal);
+	if (vboIsUsed)
+	{
+		m_ExtendedGeomEngine.useIBO(false);
+		m_ExtendedGeomEngine.useVBO(false, GLC_ExtendedGeomEngine::GLC_Normal);
+	}
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -444,6 +481,7 @@ void GLC_ExtendedMesh::createVbos()
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		glBufferData(GL_ARRAY_BUFFER, dataSize, pNormalVector->data(), GL_STATIC_DRAW);
 	}
+
 	// Create VBO of texel if needed
 	if (m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Texel))
 	{
@@ -457,13 +495,95 @@ void GLC_ExtendedMesh::createVbos()
 	for (int i= 0; i < lodNumber; ++i)
 	{
 		//Create LOD IBO
-		QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.indexVectorHandle(i);
-		m_ExtendedGeomEngine.useIBO(true, i);
-		const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
-		const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
+		if (not m_ExtendedGeomEngine.indexVectorHandle(i)->isEmpty())
+		{
+			QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.indexVectorHandle(i);
+			m_ExtendedGeomEngine.useIBO(true, i);
+			const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
+			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
+		}
 	}
 	//Clear engine
 	m_ExtendedGeomEngine.finished();
+
+}
+// Finish VBO mesh
+void GLC_ExtendedMesh::finishVbo()
+{
+	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
+	while (iGroups != m_PrimitiveGroups.constEnd())
+	{
+		int currentLod= iGroups.key();
+		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+		while (iGroup != iGroups.value()->constEnd())
+		{
+			// Add group triangles index to engine triangles index vector
+			if (iGroup.value()->containsTriangles())
+			{
+				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
+				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
+			}
+
+			// Add group strip index to engine strip index vector
+			if (iGroup.value()->containsStrip())
+			{
+				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
+				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
+			}
+
+			// Add group fan index to engine fan index vector
+			if (iGroup.value()->containsFan())
+			{
+				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
+				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
+			}
+
+			iGroup.value()->finished();
+			++iGroup;
+		}
+		++iGroups;
+
+	}
+}
+
+// Finish non Vbo mesh
+void GLC_ExtendedMesh::finishNonVbo()
+{
+	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
+	while (iGroups != m_PrimitiveGroups.constEnd())
+	{
+		int currentLod= iGroups.key();
+		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+		while (iGroup != iGroups.value()->constEnd())
+		{
+			// Add group triangles index to engine triangles index vector
+			if (iGroup.value()->containsTriangles())
+			{
+				iGroup.value()->setTrianglesOffseti(m_ExtendedGeomEngine.indexVectorSize(currentLod));
+				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
+			}
+
+			// Add group strip index to engine strip index vector
+			if (iGroup.value()->containsStrip())
+			{
+				iGroup.value()->setBaseTrianglesStripOffseti(m_ExtendedGeomEngine.indexVectorSize(currentLod));
+				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
+			}
+
+			// Add group fan index to engine fan index vector
+			if (iGroup.value()->containsFan())
+			{
+				iGroup.value()->setBaseTrianglesFanOffseti(m_ExtendedGeomEngine.indexVectorSize(currentLod));
+				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
+			}
+
+			iGroup.value()->finished();
+			++iGroup;
+		}
+		++iGroups;
+
+	}
+
 
 }

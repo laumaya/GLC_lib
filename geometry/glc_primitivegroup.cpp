@@ -25,17 +25,21 @@
 //! \file glc_primitivegroup.cpp implementation of the GLC_PrimitiveGroup class.
 
 #include "glc_primitivegroup.h"
+#include "../glc_state.h"
 
 GLC_PrimitiveGroup::GLC_PrimitiveGroup(GLC_uint materialId)
 : m_ID(materialId)
 , m_TrianglesIndex()
 , m_pBaseTrianglesOffset(NULL)
+, m_BaseTrianglesOffseti(0)
 , m_StripsIndex()
 , m_StripIndexSizes()
 , m_StripIndexOffset()
+, m_StripIndexOffseti()
 , m_FansIndex()
 , m_FansIndexSizes()
 , m_FanIndexOffset()
+, m_FanIndexOffseti()
 , m_IsFinished(false)
 , m_TrianglesIndexSize(0)
 , m_TrianglesStripSize(0)
@@ -50,12 +54,15 @@ GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group)
 : m_ID(group.m_ID)
 , m_TrianglesIndex(group.m_TrianglesIndex)
 , m_pBaseTrianglesOffset(group.m_pBaseTrianglesOffset)
+, m_BaseTrianglesOffseti(group.m_BaseTrianglesOffseti)
 , m_StripsIndex(group.m_StripsIndex)
 , m_StripIndexSizes(group.m_StripIndexSizes)
 , m_StripIndexOffset(group.m_StripIndexOffset)
+, m_StripIndexOffseti(group.m_StripIndexOffseti)
 , m_FansIndex(group.m_FansIndex)
 , m_FansIndexSizes(group.m_FansIndexSizes)
 , m_FanIndexOffset(group.m_FanIndexOffset)
+, m_FanIndexOffseti(group.m_FanIndexOffseti)
 , m_IsFinished(group.m_IsFinished)
 , m_TrianglesIndexSize(group.m_TrianglesIndexSize)
 , m_TrianglesStripSize(group.m_TrianglesStripSize)
@@ -76,16 +83,28 @@ GLC_PrimitiveGroup::~GLC_PrimitiveGroup()
 void GLC_PrimitiveGroup::addTrianglesStrip(const IndexList& input)
 {
 	m_StripsIndex+= input;
-	if (m_StripIndexOffset.isEmpty())
-	{
-		m_StripIndexOffset.append(BUFFER_OFFSET(0));
-	}
+	m_TrianglesStripSize= m_StripsIndex.size();
 
 	m_StripIndexSizes.append(static_cast<GLsizei>(input.size()));
-	GLuint offset= reinterpret_cast<GLuint>(m_StripIndexOffset.last()) + static_cast<GLuint>(m_StripIndexSizes.last()) * sizeof(GLuint);
-	m_StripIndexOffset.append(BUFFER_OFFSET(offset));
 
-	m_TrianglesStripSize= m_StripsIndex.size();
+	if (GLC_State::vboUsed())
+	{
+		if (m_StripIndexOffset.isEmpty())
+		{
+			m_StripIndexOffset.append(BUFFER_OFFSET(0));
+		}
+		GLuint offset= reinterpret_cast<GLuint>(m_StripIndexOffset.last()) + static_cast<GLuint>(m_StripIndexSizes.last()) * sizeof(GLuint);
+		m_StripIndexOffset.append(BUFFER_OFFSET(offset));
+	}
+	else
+	{
+		if (m_StripIndexOffseti.isEmpty())
+		{
+			m_StripIndexOffseti.append(0);
+		}
+		int offset= m_StripIndexOffseti.last() + m_StripIndexSizes.last();
+		m_StripIndexOffseti.append(offset);
+	}
 }
 
 // Set base triangle strip offset
@@ -99,20 +118,44 @@ void GLC_PrimitiveGroup::setBaseTrianglesStripOffset(GLvoid* pOffset)
 	}
 }
 
+// Set base triangle strip offset
+void GLC_PrimitiveGroup::setBaseTrianglesStripOffseti(int offset)
+{
+	m_StripIndexOffseti.pop_back();
+	const int size= m_StripIndexOffseti.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_StripIndexOffseti[i]= m_StripIndexOffseti[i] + offset;
+	}
+}
+
 //! Add triangle fan to the group
 void GLC_PrimitiveGroup::addTrianglesFan(const IndexList& input)
 {
 	m_FansIndex+= input;
-	if (m_FanIndexOffset.isEmpty())
-	{
-		m_FanIndexOffset.append(BUFFER_OFFSET(0));
-	}
+	m_TrianglesFanSize= m_FansIndex.size();
 
 	m_FansIndexSizes.append(static_cast<GLsizei>(input.size()));
-	GLuint offset= reinterpret_cast<GLuint>(m_FanIndexOffset.last()) + static_cast<GLuint>(m_FansIndexSizes.last()) * sizeof(GLuint);
-	m_FanIndexOffset.append(BUFFER_OFFSET(offset));
 
-	m_TrianglesFanSize= m_FansIndex.size();
+	if (GLC_State::vboUsed())
+	{
+		if (m_FanIndexOffset.isEmpty())
+		{
+			m_FanIndexOffset.append(BUFFER_OFFSET(0));
+		}
+		GLuint offset= reinterpret_cast<GLuint>(m_FanIndexOffset.last()) + static_cast<GLuint>(m_FansIndexSizes.last()) * sizeof(GLuint);
+		m_FanIndexOffset.append(BUFFER_OFFSET(offset));
+	}
+	else
+	{
+		if (m_FanIndexOffseti.isEmpty())
+		{
+			m_FanIndexOffseti.append(0);
+		}
+		int offset= m_FanIndexOffseti.last() + m_FansIndexSizes.last();
+		m_FanIndexOffseti.append(offset);
+	}
+
 }
 
 // Set base triangle fan offset
@@ -126,4 +169,14 @@ void GLC_PrimitiveGroup::setBaseTrianglesFanOffset(GLvoid* pOffset)
 	}
 }
 
+// Set base triangle fan offset
+void GLC_PrimitiveGroup::setBaseTrianglesFanOffseti(int offset)
+{
+	m_FanIndexOffseti.pop_back();
+	const int size= m_FanIndexOffseti.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_FanIndexOffseti[i]= m_FanIndexOffseti[i] + offset;
+	}
+}
 

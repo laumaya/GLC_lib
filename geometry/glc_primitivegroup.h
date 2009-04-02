@@ -34,6 +34,7 @@
 typedef QList<GLuint> IndexList;
 typedef QVector<GLsizei> IndexSizes;
 typedef QVector<GLvoid*> OffsetVector;
+typedef QVector<int> OffsetVectori;
 
 class GLC_PrimitiveGroup
 {
@@ -81,6 +82,10 @@ public:
 	inline const GLvoid* trianglesIndexOffset() const
 	{return m_pBaseTrianglesOffset;}
 
+	//! Return the offset of triangles index
+	inline const int trianglesIndexOffseti() const
+	{return m_BaseTrianglesOffseti;}
+
 	//! Return true if the group contains strips
 	inline bool containsStrip() const
 	{return m_TrianglesStripSize > 0;}
@@ -103,6 +108,10 @@ public:
 	//! Return the vector of strip offset
 	inline const OffsetVector& stripsOffset() const
 	{return m_StripIndexOffset;}
+
+	//! Return the vector of strip offset
+	inline const OffsetVectori& stripsOffseti() const
+	{return m_StripIndexOffseti;}
 
 	//! Return true if the group contains fans
 	inline bool containsFan() const
@@ -127,6 +136,10 @@ public:
 	inline const OffsetVector& fansOffset() const
 	{return m_FanIndexOffset;}
 
+	//! Return the vector of strip offset
+	inline const OffsetVectori& fansOffseti() const
+	{return m_FanIndexOffseti;}
+
 
 //@}
 
@@ -146,17 +159,27 @@ public:
 	inline void setTrianglesOffset(GLvoid* pOffset)
 	{m_pBaseTrianglesOffset= pOffset;}
 
+	//! Set the triangle index offset
+	inline void setTrianglesOffseti(int offset)
+	{m_BaseTrianglesOffseti= offset;}
+
 	//! Add triangle strip to the group
 	void addTrianglesStrip(const IndexList&);
 
 	//! Set base triangle strip offset
 	void setBaseTrianglesStripOffset(GLvoid*);
 
+	//! Set base triangle strip offset
+	void setBaseTrianglesStripOffseti(int);
+
 	//! Add triangle fan to the group
 	void addTrianglesFan(const IndexList&);
 
 	//! Set base triangle fan offset
 	void setBaseTrianglesFanOffset(GLvoid*);
+
+	//! Set base triangle fan offset
+	void setBaseTrianglesFanOffseti(int);
 
 	//! The mesh wich use this group is finished
 	inline void finished()
@@ -181,6 +204,7 @@ private:
 
 	//! The base triangle index offset
 	GLvoid* m_pBaseTrianglesOffset;
+	int m_BaseTrianglesOffseti;
 
 	//! Strips index list
 	IndexList m_StripsIndex;
@@ -190,6 +214,7 @@ private:
 
 	//! Vector of strips offset
 	OffsetVector m_StripIndexOffset;
+	OffsetVectori m_StripIndexOffseti;
 
 	//! Fans index list
 	IndexList m_FansIndex;
@@ -199,6 +224,7 @@ private:
 
 	//! Vector of fan Offset
 	OffsetVector m_FanIndexOffset;
+	OffsetVectori m_FanIndexOffseti;
 
 	//! Flag to know if the group is finish
 	int m_IsFinished;

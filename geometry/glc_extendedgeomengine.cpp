@@ -46,15 +46,16 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine()
 // Copy constructor
 GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine(const GLC_ExtendedGeomEngine& engine)
 : GLC_GeomEngine(engine)
-, m_Positions(engine.m_Positions)
-, m_Normals(engine.m_Normals)
-, m_Texels(engine.m_Texels)
+, m_Positions(engine.positionVector())
+, m_Normals(engine.normalVector())
+, m_Texels(engine.texelVector())
 , m_NormalVboId(0)
 , m_TexelVboId(0)
 , m_EngineLodList()
 , m_PositionSize(engine.m_PositionSize)
 , m_TexelsSize(engine.m_TexelsSize)
 {
+
 	const int size= engine.m_EngineLodList.size();
 	for (int i= 0; i < size; ++i)
 	{
@@ -87,7 +88,7 @@ GLfloatVector GLC_ExtendedGeomEngine::positionVector() const
 	if (0 != m_VboId)
 	{
 		// VBO created get data from VBO
-		const int sizeOfVbo= m_Positions.size();
+		const int sizeOfVbo= m_PositionSize;
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
 		GLfloatVector positionVector(sizeOfVbo);
 
@@ -111,7 +112,7 @@ GLfloatVector GLC_ExtendedGeomEngine::normalVector() const
 	if (0 != m_NormalVboId)
 	{
 		// VBO created get data from VBO
-		const int sizeOfVbo= m_Normals.size();
+		const int sizeOfVbo= m_PositionSize;
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
 		GLfloatVector normalVector(sizeOfVbo);
 
@@ -128,6 +129,29 @@ GLfloatVector GLC_ExtendedGeomEngine::normalVector() const
 	}
 }
 
+// Return the texel Vector
+GLfloatVector GLC_ExtendedGeomEngine::texelVector() const
+{
+	if (0 != m_TexelVboId)
+	{
+		// VBO created get data from VBO
+		const int sizeOfVbo= m_TexelsSize;
+		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
+		GLfloatVector texelVector(sizeOfVbo);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_TexelVboId);
+		GLvoid* pVbo = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		memcpy(texelVector.data(), pVbo, dataSize);
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		return texelVector;
+	}
+	else
+	{
+		return m_Texels;
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -141,7 +165,12 @@ void GLC_ExtendedGeomEngine::finished()
 	m_TexelsSize= m_Texels.size();
 	m_Texels.clear();
 
-	// TODO Finish the LOD
+	// Finish the LOD
+	const int size= m_EngineLodList.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_EngineLodList[i]->finished();
+	}
 }
 
 

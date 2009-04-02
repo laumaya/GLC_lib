@@ -58,6 +58,9 @@ public:
 	inline double accuracy() const
 	{return m_Accuracy;}
 
+	//! Return the Triangle Index Vector
+	QVector<GLuint> indexVector() const;
+
 	//! Return the Triangle Index Vector handle
 	inline QVector<GLuint>* indexVectorHandle()
 	{ return &m_IboVector;}
@@ -73,7 +76,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-
+	//! The mesh wich use this lod is finished
+	inline void finished()
+	{
+		m_IndexSize= m_IboVector.size();
+		m_IboVector.clear();
+	}
 
 //@}
 
@@ -110,6 +118,9 @@ private:
 
 	//! The IBO Vector
 	QVector<GLuint> m_IboVector;
+
+	//! The Index vector size
+	int m_IndexSize;
 
 };
 

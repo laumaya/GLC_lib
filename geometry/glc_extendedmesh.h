@@ -109,7 +109,7 @@ public:
 	void addTrianglesFan(GLC_Material*, const IndexList&, const int lod= 0);
 
 	//! Reverse mesh normal
-	void reverseNormal();
+	void reverseNormals();
 
 	//! Set color per vertex flag
 	inline void setColorPearVertex(bool flag){m_ColorPearVertex= flag;}
@@ -149,6 +149,12 @@ private:
 
 	//! Create VBO and IBO
 	void createVbos();
+
+	//! Finish VBO mesh
+	void finishVbo();
+
+	//! Finish non Vbo mesh
+	void finishNonVbo();
 //@}
 
 

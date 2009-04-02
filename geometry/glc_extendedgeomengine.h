@@ -74,6 +74,9 @@ public:
 	//! Return the normal Vector
 	GLfloatVector normalVector() const;
 
+	//! Return the texel Vector
+	GLfloatVector texelVector() const;
+
 	//! Return the Position Vector handle
 	inline GLfloatVector* positionVectorHandle()
 	{ return &m_Positions;}
@@ -133,6 +136,7 @@ public:
 		if (use) m_EngineLodList.at(currentLod)->useIBO();
 		else glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
+	//!
 //@}
 
 //////////////////////////////////////////////////////////////////////

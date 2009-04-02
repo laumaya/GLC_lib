@@ -32,6 +32,7 @@ GLC_EngineLod::GLC_EngineLod(double accuracy)
 : m_Accuracy(accuracy)
 , m_IboId(0)
 , m_IboVector()
+, m_IndexSize(0)
 {
 
 
@@ -41,7 +42,8 @@ GLC_EngineLod::GLC_EngineLod(double accuracy)
 GLC_EngineLod::GLC_EngineLod(const GLC_EngineLod& lod)
 : m_Accuracy(lod.m_Accuracy)
 , m_IboId(0)
-, m_IboVector(lod.m_IboVector)
+, m_IboVector(lod.indexVector())
+, m_IndexSize(lod.m_IndexSize)
 {
 
 
@@ -56,3 +58,31 @@ GLC_EngineLod::~GLC_EngineLod()
 	}
 
 }
+
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Return the Triangle Index Vector
+QVector<GLuint> GLC_EngineLod::indexVector() const
+{
+	if (0 != m_IboId)
+	{
+		// VBO created get data from VBO
+		const int sizeOfIbo= m_IndexSize;
+		const GLsizeiptr dataSize= sizeOfIbo * sizeof(GLuint);
+		QVector<GLuint> indexVector(sizeOfIbo);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
+		GLvoid* pIbo = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY);
+		memcpy(indexVector.data(), pIbo, dataSize);
+		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		return indexVector;
+	}
+	else
+	{
+		return m_IboVector;
+	}
+}
+

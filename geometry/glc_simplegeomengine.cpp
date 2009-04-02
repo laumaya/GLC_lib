@@ -41,17 +41,12 @@ GLC_SimpleGeomEngine::GLC_SimpleGeomEngine()
 // Copy constructor
 GLC_SimpleGeomEngine::GLC_SimpleGeomEngine(const GLC_SimpleGeomEngine& engine)
 : GLC_GeomEngine(engine)
-, m_VertexVector(engine.m_VertexVector)
-, m_IndexVector(engine.m_IndexVector)
+, m_VertexVector(engine.vertexVector())
+, m_IndexVector(engine.indexVector())
 , m_IboId(0)
 , m_NumberOfVertex(engine.m_NumberOfVertex)
 {
-	// Copy Vertex and index data if necessary
-	if (m_VertexVector.isEmpty())
-	{
-		m_VertexVector= engine.vertexVector();
-		m_IndexVector= engine.indexVector();
-	}
+
 }
 
 GLC_SimpleGeomEngine::~GLC_SimpleGeomEngine()
