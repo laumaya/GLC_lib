@@ -116,8 +116,10 @@ public:
 		if (NULL != m_pGeomList) return m_pGeomList->size();
 		else return 0;
 	}
+
+
 	//! Get the geometry of the instance
-	inline GLC_VboGeom* getGeometry(int index= 0)
+	inline GLC_VboGeom* getGeometry(int index)
 	{
 		if (NULL != m_pGeomList) return m_pGeomList->at(index);
 		else return NULL;
@@ -179,6 +181,9 @@ public:
 	 *  instance must be null
 	 */
 	bool setGeometry(GLC_VboGeom* pGeom);
+
+	//! Reverse geometry normals
+	void reverseGeometriesNormals();
 
 	//! Translate Instance
 	GLC_Instance& translate(double Tx, double Ty, double Tz);
