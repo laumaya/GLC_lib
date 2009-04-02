@@ -209,9 +209,9 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 		    {
 		    	GLC_Instance instance(createInstance(pMesh));
 		    	// Test if there is vertex in the mesh
-		    	if (0 != instance.getGeometry()->numberOfVertex())
+		    	if (0 != instance.numberOfVertex())
 		    	{
-		    		m_LoadedMeshes.insert(instance.getGeometry()->name());
+		    		m_LoadedMeshes.insert(instance.name());
 			    	// Load node matrix
 			    	GLC_Matrix4x4 nodeMat(&(pFatherNode->matrix[0][0]));
 					// The mesh matrix to inverse
@@ -229,7 +229,7 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 		    	else
 		    	{
 		    		// the instance will be deleted, check material usage
-		    		QSet<GLC_Material*> meshMaterials= instance.getGeometry()->materialSet();
+		    		QSet<GLC_Material*> meshMaterials= instance.materialSet();
 		    		QSet<GLC_Material*>::const_iterator iMat= meshMaterials.constBegin();
 		    		while (iMat != meshMaterials.constEnd())
 		    		{
