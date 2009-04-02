@@ -351,7 +351,7 @@ void GLC_StructOccurence::reverseNormals()
 {
 	if (m_HaveRepresentation)
 	{
-		m_pCollection->getInstanceHandle(id())->getGeometry()->reverseNormals();
+		m_pCollection->getInstanceHandle(id())->reverseGeometriesNormals();
 	}
 }
 
