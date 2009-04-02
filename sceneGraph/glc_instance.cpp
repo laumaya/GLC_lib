@@ -325,6 +325,19 @@ bool GLC_Instance::setGeometry(GLC_VboGeom* pGeom)
 	}
 }
 
+// Reverse geometry normals
+void GLC_Instance::reverseGeometriesNormals()
+{
+	if (NULL != m_pGeomList)
+	{
+		const int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			(*m_pGeomList)[i]->reverseNormals();
+		}
+	}
+}
+
 // Instance translation
 GLC_Instance& GLC_Instance::translate(double Tx, double Ty, double Tz)
 {
