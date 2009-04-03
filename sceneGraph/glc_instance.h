@@ -245,7 +245,7 @@ public:
 		{
 			for (int i= 0; i < size; ++i)
 			{
-				m_pGeomList->at(i)->setCurrentLod(50);
+				m_pGeomList->at(i)->setCurrentLod(80);
 				m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
 			}
 		}

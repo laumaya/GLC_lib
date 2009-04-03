@@ -71,6 +71,9 @@ public:
 	//! Return the world collection
 	inline GLC_Collection* collection() {return m_pCollection;}
 
+	//! Return the size of the world
+	inline int size() const {return m_pCollection->size();}
+
 	//! Return true if the world is empty
 	inline bool isEmpty() const {return  m_pCollection->isEmpty();}
 
@@ -87,12 +90,12 @@ public:
 	inline QList<GLC_Material*> listOfMaterials() const {return m_pRoot->materialSet().toList();}
 
 	//! Return list of invisible instance name
-	inline QList<QString> getInvisibleInstanceName() const
-	{return m_pCollection->getInvisibleInstanceName();}
+	inline QList<QString> invisibleInstanceName() const
+	{return m_pCollection->invisibleInstanceName();}
 
 	//! Return instances name from the specified shading group
-	inline QList<QString> getInstanceNameFromShadingGroup(GLuint id) const
-	{return m_pCollection->getInstanceNameFromShadingGroup(id);}
+	inline QList<QString> instanceNamesFromShadingGroup(GLuint id) const
+	{return m_pCollection->instanceNamesFromShadingGroup(id);}
 
 	//! Return the number of used shading group
 	inline int numberOfUsedShadingGroup() const

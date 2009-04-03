@@ -92,7 +92,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 	if (m_HaveRepresentation)
 	{
 		// Add occurence instance representation to the collection
-		GLC_Instance newRep= structOccurence.m_pCollection->getInstanceHandle(structOccurence.id())->instanciate();
+		GLC_Instance newRep= structOccurence.m_pCollection->instanceHandle(structOccurence.id())->instanciate();
 		newRep.setId(id());
 		if(structOccurence.m_pCollection->isInAShadingGroup(structOccurence.id()))
 		{
@@ -245,22 +245,26 @@ GLC_StructOccurence* GLC_StructOccurence::clone(GLC_Collection* pCollection) con
 // Return true if the occurence is visible
 bool GLC_StructOccurence::isVisible() const
 {
-	bool result= true;
+	bool isHidden= true;
 	if (m_HaveRepresentation)
 	{
-		result= m_pCollection->getInstanceHandle(id())->isVisible();
+		isHidden= not m_pCollection->instanceHandle(id())->isVisible();
 	}
-	else
+	else if (childCount() > 0)
 	{
 		const int size= childCount();
 		int i= 0;
-		while ((i < size) and result)
+		while ((i < size) and isHidden)
 		{
-			result= result and child(i)->isVisible();
+			isHidden= isHidden and not child(i)->isVisible();
 			++i;
 		}
 	}
-	return result;
+	else
+	{
+		qDebug() << "Leaf occurence " << id() << " " << name() << " without rep";
+	}
+	return not isHidden;
 }
 
 
@@ -282,7 +286,7 @@ GLC_StructOccurence* GLC_StructOccurence::updateAbsoluteMatrix()
 	// If the occurence have a representation, update it.
 	if (m_HaveRepresentation)
 	{
-		m_pCollection->getInstanceHandle(id())->setMatrix(m_AbsoluteMatrix);
+		m_pCollection->instanceHandle(id())->setMatrix(m_AbsoluteMatrix);
 	}
 	return this;
 }
@@ -351,7 +355,7 @@ void GLC_StructOccurence::reverseNormals()
 {
 	if (m_HaveRepresentation)
 	{
-		m_pCollection->getInstanceHandle(id())->reverseGeometriesNormals();
+		m_pCollection->instanceHandle(id())->reverseGeometriesNormals();
 	}
 }
 
