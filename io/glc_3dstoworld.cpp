@@ -271,7 +271,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	if (m_LoadedMeshes.contains(meshName))
 	{
 		// This mesh as been already loaded
-		QList<GLC_Instance*> instancesList(m_pWorld->collection()->getInstancesHandle());
+		QList<GLC_Instance*> instancesList(m_pWorld->collection()->instancesHandle());
 		GLC_Instance* pCurrentInstance= NULL;
 		int currentIndex= -1;
 		do

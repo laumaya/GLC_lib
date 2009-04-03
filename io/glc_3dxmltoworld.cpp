@@ -470,7 +470,8 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		// Get the refFile of the 3dxml
 		setStreamReaderToFile(currentRefFileName);
 
-		m_ExternalReferenceHash.insert(currentRefFileName, createReferenceRep());
+		GLC_StructReference* pCurrentRef= createReferenceRep();
+		m_ExternalReferenceHash.insert(currentRefFileName, pCurrentRef);
 		++currentFileIndex;
 		// Progrees bar indicator
 		currentQuantumValue = static_cast<int>((static_cast<double>(currentFileIndex) / size) * 100);
@@ -901,6 +902,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName)
 	    }
 
 		// Set the stream reader
+		delete m_pStreamReader;
 		m_pStreamReader= new QXmlStreamReader(m_p3dxmlFile);
 	}
 	else
@@ -921,6 +923,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName)
 			throw(fileFormatException);
 		}
 		// Set the stream reader
+		delete m_pStreamReader;
 		m_pStreamReader= new QXmlStreamReader(m_pCurrentFile);
 	}
 	return true;
