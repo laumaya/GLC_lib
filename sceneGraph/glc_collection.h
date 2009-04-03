@@ -81,29 +81,29 @@ public:
 	inline bool isEmpty() const {return m_NodeMap.size() == 0;}
 
 	//! Return the number of Node in the collection
-	inline int getNumber(void) const{return m_NodeMap.size();}
+	inline int size(void) const{return m_NodeMap.size();}
 
 	//! Return all GLC_Instance from collection
-	QList<GLC_Instance*> getInstancesHandle();
+	QList<GLC_Instance*> instancesHandle();
 
 	//! Return all visible GLC_Instance from the collection
-	QList<GLC_Instance*> getVisibleInstanceHandle();
+	QList<GLC_Instance*> visibleInstanceHandle();
 
 	//! Return list of invisible instance name
-	QList<QString> getInvisibleInstanceName() const;
+	QList<QString> invisibleInstanceName() const;
 
 	//! Return a GLC_Instance from collection
 	/*! If the element is not found in collection a empty node is return*/
-	GLC_Instance* getInstanceHandle(GLC_uint Key);
+	GLC_Instance* instanceHandle(GLC_uint Key);
 
 	//! Return the entire collection Bounding Box
 	GLC_BoundingBox boundingBox(void);
 
 	//! Return the number of Node in the selection Hash
-	inline int numberOfSelectedNode(void) const {return m_SelectedNodes.size();}
+	inline int selectionSize(void) const {return m_SelectedNodes.size();}
 
 	//! Get the Hash table of Selected Nodes
-	inline PointerNodeHash* getSelections() {return &m_SelectedNodes;}
+	inline PointerNodeHash* selection() {return &m_SelectedNodes;}
 
 	//! Return true if the Node is in the collection
 	inline bool isInCollection(GLC_uint key) const {return m_NodeMap.contains(key);}
@@ -112,10 +112,10 @@ public:
 	inline bool isSelected(GLC_uint key) const {return m_SelectedNodes.contains(key);}
 
 	//! Return the showing state
-	inline bool getShowState() const {return m_IsInShowSate;}
+	inline bool showState() const {return m_IsInShowSate;}
 
 	//! Return the number of drawable objects
-	int numberOfDrawableObjects() const;
+	int DrawableObjectsSize() const;
 
 	//! Return the element shading group
 	inline GLuint shadingGroup(GLC_uint key) const
@@ -126,7 +126,7 @@ public:
 	{ return m_ShaderGroup.contains(key);}
 
 	//! Return instances name from the specified shading group
-	QList<QString> getInstanceNameFromShadingGroup(GLuint) const;
+	QList<QString> instanceNamesFromShadingGroup(GLuint) const;
 
 	//! Return the number of used shading group
 	int numberOfUsedShadingGroup() const;

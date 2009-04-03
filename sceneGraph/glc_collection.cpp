@@ -247,7 +247,7 @@ bool GLC_Collection::remove(GLC_uint Key)
 	if (iNode != m_NodeMap.end())
 	{	// Ok, the key exist
 
-		if (numberOfSelectedNode() > 0)
+		if (selectionSize() > 0)
 		{
 			// if the geometry is selected, unselect it
 			unselect(Key);
@@ -309,6 +309,9 @@ void GLC_Collection::clear(void)
 // Select a node
 bool GLC_Collection::select(GLC_uint key)
 {
+	if (not m_NodeMap.contains(key)) return false;
+	qDebug() << "GLC_Collection::select " << key;
+
 	GLC_Instance* pSelectedNode;
 	CNodeMap::iterator iNode= m_NodeMap.find(key);
 	PointerNodeHash::iterator iSelectedNode= m_SelectedNodes.find(key);
@@ -497,7 +500,7 @@ void GLC_Collection::hideAll()
 }
 
 // Return all GLC_Instance from collection
-QList<GLC_Instance*> GLC_Collection::getInstancesHandle()
+QList<GLC_Instance*> GLC_Collection::instancesHandle()
 {
 	QList<GLC_Instance*> instancesList;
 
@@ -511,7 +514,7 @@ QList<GLC_Instance*> GLC_Collection::getInstancesHandle()
 	return instancesList;
 }
 // Return all visible GLC_Instance from the collection
-QList<GLC_Instance*> GLC_Collection::getVisibleInstanceHandle()
+QList<GLC_Instance*> GLC_Collection::visibleInstanceHandle()
 {
 	QList<GLC_Instance*> instancesList;
 
@@ -530,7 +533,7 @@ QList<GLC_Instance*> GLC_Collection::getVisibleInstanceHandle()
 }
 
 // Return list of invisible instance name
-QList<QString> GLC_Collection::getInvisibleInstanceName() const
+QList<QString> GLC_Collection::invisibleInstanceName() const
 {
 	QList<QString> listOfInstanceName;
 
@@ -550,7 +553,7 @@ QList<QString> GLC_Collection::getInvisibleInstanceName() const
 
 
 // Return a GLC_Instance pointer from the collection
-GLC_Instance* GLC_Collection::getInstanceHandle(GLC_uint Key)
+GLC_Instance* GLC_Collection::instanceHandle(GLC_uint Key)
 {
 	return &(m_NodeMap[Key]);
 }
@@ -593,7 +596,7 @@ GLC_BoundingBox GLC_Collection::boundingBox(void)
 }
 
 // Return the number of drawable objects
-int GLC_Collection::numberOfDrawableObjects() const
+int GLC_Collection::DrawableObjectsSize() const
 {
 	// The number of object to drw
 	int numberOffDrawnHit= 0;
@@ -613,7 +616,7 @@ int GLC_Collection::numberOfDrawableObjects() const
 }
 
 // Return instances name from the specified shading group
-QList<QString> GLC_Collection::getInstanceNameFromShadingGroup(GLuint shaderId) const
+QList<QString> GLC_Collection::instanceNamesFromShadingGroup(GLuint shaderId) const
 {
 	QList<QString> listOfInstanceName;
 	QList<GLC_uint> listOfInstanceNameId= m_ShaderGroup.keys(shaderId);
@@ -641,7 +644,7 @@ int GLC_Collection::numberOfUsedShadingGroup() const
 void GLC_Collection::glExecute(GLuint groupId, bool transparent)
 {
 	//qDebug() << "GLC_Collection::glExecute";
-	if (getNumber() > 0)
+	if (size() > 0)
 	{
 
 		glDraw(groupId, transparent);
@@ -660,7 +663,7 @@ void GLC_Collection::glExecute(GLuint groupId, bool transparent)
 void GLC_Collection::glExecuteShaderGroup(bool transparent)
 {
 	//qDebug() << "GLC_Collection::glExecuteShaderGroup";
-	if (getNumber() > 0)
+	if (size() > 0)
 	{
 		HashList::iterator iEntry= m_OtherNodeHashList.begin();
 	    while (iEntry != m_OtherNodeHashList.constEnd())
