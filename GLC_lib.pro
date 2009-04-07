@@ -246,7 +246,16 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_World \
     		   include/GLC_Shader \
     		   include/GLC_SelectionMaterial \
-    		   include/GLC_State
+    		   include/GLC_State \
+    		   include/GLC_Mover \
+    		   include/GLC_MoverControler \
+    		   include/GLC_PanMover \
+    		   include/GLC_ZoomMover \
+    		   include/GLC_TrackBallMover \
+    		   include/GLC_RepMover \
+    		   include/GLC_RepCrossMover \
+    		   include/GLC_RepTrackBallMover
+    		   
     			   
 # Linux install configuration
 unix { 
