@@ -20,33 +20,36 @@
  along with GLC-lib; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-*****************************************************************************/
+ *****************************************************************************/
 
-//! \file glc_orbitCircle.cpp implementation of the GLC_OrbitCircle class.
+#include "glc_reptrackballmover.h"
+#include "glc_viewport.h"
 #include "../glc_factory.h"
-#include "glc_orbitcircle.h"
-
 #include <QGLContext>
 
 using namespace glc;
 //! The angle of arcs
 #define ARCANGLE (30 * PI / 180)
 
-// Arc discretisation
-#define ARCDISCRET 12
 
-//////////////////////////////////////////////////////////////////////
-// Constructor destructor
-//////////////////////////////////////////////////////////////////////
-
-GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const QGLContext *pContext)
-: m_pFactory(GLC_Factory::instance(pContext))
-, m_MainCircle(dRayon)
-, m_Arc1(m_pFactory->createCircle(dRayon, ARCANGLE))
+GLC_RepTrackBallMover::GLC_RepTrackBallMover(GLC_Viewport* pViewport)
+: GLC_RepMover(pViewport)
+, m_Radius(1.0)
+, m_pFactory(GLC_Factory::instance(QGLContext::currentContext()))
+, m_MainCircle(m_Radius)
+, m_Arc1(m_pFactory->createCircle(m_Radius, ARCANGLE))
 , m_MatArc1()
-, m_Arc2(m_pFactory->createCircle(dRayon, ARCANGLE))
+, m_Arc2(m_pFactory->createCircle(m_Radius, ARCANGLE))
 , m_MatArc2()
+, m_Ratio(0.95)
 {
+
+	GLC_Material* pMat= new GLC_Material(m_MainColor);
+
+	m_MainCircle.addMaterial(pMat);
+	m_Arc1.getGeometry(0)->addMaterial(pMat);
+	m_Arc2.getGeometry(0)->addMaterial(pMat);
+
 	// 2 circle arcs position
 	GLC_Matrix4x4 MatRot(Z_AXIS, -ARCANGLE / 2);
 	GLC_Matrix4x4 MatInt(Y_AXIS, -PI / 2);
@@ -58,35 +61,20 @@ GLC_OrbitCircle::GLC_OrbitCircle(const double &dRayon, const QGLContext *pContex
 	MatRot= MatInt * MatRot;
 
 	m_MatArc2= MatRot;
-
-	// Set arc discretion
-	GLC_Circle* pCircle;
-	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry(0));
-	pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry(0));
 }
-// Change the radius of the orbit circle
-void GLC_OrbitCircle::setRadius(double R)
+
+GLC_RepTrackBallMover::~GLC_RepTrackBallMover()
 {
 
-	// Main circle radius
-	m_MainCircle.setRadius(R);
-
-	GLC_Circle* pCircle;
-	// Arc 1 radius
-	pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry(0));
-	pCircle->setRadius(R);
-	// Arc 2 radius
-	pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry(0));
-	pCircle->setRadius(R);
 }
-
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
 // Set Arcs orientation and position in concordance with mouse position
-void GLC_OrbitCircle::setOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 &Matrice)
+void GLC_RepTrackBallMover::init(const GLC_Vector4d& vect, const GLC_Matrix4x4 &Matrice)
 {
+	GLC_Vector4d VectAngle(vect);
 	VectAngle.setZ(0);
 	VectAngle.setNormal(1);
 
@@ -110,42 +98,30 @@ void GLC_OrbitCircle::setOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 
 
 	m_Arc1.setMatrix(MatRot * m_MatArc1);
 	m_Arc2.setMatrix(MatRot * m_MatArc2);
-
 }
 
 // Set Arcs position in concordance with mouse position
-void GLC_OrbitCircle::mapArcs(const GLC_Matrix4x4 &Matrice)
+void GLC_RepTrackBallMover::update(const GLC_Matrix4x4 &Matrice)
 {
 	m_Arc1.multMatrix(Matrice);
 	m_Arc2.multMatrix(Matrice);
 }
 
 // overload function setColor(color);
-void GLC_OrbitCircle::setRGBAColor(const QColor& color)
+void GLC_RepTrackBallMover::setMainColor(const QColor& color)
 {
-	if (m_MainCircle.numberOfMaterials() == 1)
-	{
-		m_MainCircle.firstMaterial()->setDiffuseColor(color);
-		m_Arc1.getGeometry(0)->firstMaterial()->setDiffuseColor(color);
-		m_Arc2.getGeometry(0)->firstMaterial()->setDiffuseColor(color);
-	}
-	else
-	{
-		GLC_Material* pMaterial= new GLC_Material(color);
-		m_MainCircle.addMaterial(pMaterial);
-		m_Arc1.getGeometry(0)->addMaterial(pMaterial);
-		m_Arc2.getGeometry(0)->addMaterial(pMaterial);
-	}
+	m_MainCircle.firstMaterial()->setDiffuseColor(color);
 }
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-// orbit circle OpenGL Execution
-void GLC_OrbitCircle::glExecute(double Profondeur)
-
+// Virtual interface for OpenGL Geometry set up.
+void GLC_RepTrackBallMover::glDraw()
 {
+	computeRadius();
+
 	// orbit circle must be shown
 	glDisable(GL_DEPTH_TEST);
 
@@ -153,8 +129,10 @@ void GLC_OrbitCircle::glExecute(double Profondeur)
 
 	glLoadIdentity();
 
+
+	double depth= m_pViewport->getDistMin() + (m_pViewport->getDistMax() - m_pViewport->getDistMin()) / 2.0;
 	// Put circle at the middle of camera range of depth
-	glTranslated(0, 0, - (Profondeur) );
+	glTranslated(0, 0, - (depth) );
 
 	// Save Positionning matrix of arcs
 	const GLC_Matrix4x4 MatSavArc1(m_Arc1.getMatrix());
@@ -181,4 +159,48 @@ void GLC_OrbitCircle::glExecute(double Profondeur)
 	glPopMatrix();
 
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// Private services Functions
+//////////////////////////////////////////////////////////////////////
+
+// Compute trackball radius
+void GLC_RepTrackBallMover::computeRadius()
+{
+	int nRayonSph;
+	const double winHSize= static_cast<double>(m_pViewport->getWinHSize());
+	const double winVSize= static_cast<double>(m_pViewport->getWinVSize());
+
+	if (winHSize > winVSize)
+	{
+		nRayonSph = static_cast<int>(m_Ratio * winVSize / 2.0);
+	}
+	else
+	{
+		nRayonSph = static_cast<int>(m_Ratio * winHSize / 2.0);
+	}
+
+	// Compute the length of camera's field of view
+	const double ChampsVision = 2.0 * ( m_pViewport->getDistMin() + (m_pViewport->getDistMax() - m_pViewport->getDistMin()) / 2.0) *  tan((m_pViewport->getFov() * PI / 180.0) / 2.0);
+
+	// the side of camera's square is mapped on Vertical length of window
+	// Circle radius in OpenGL unit = Radius(Pixel) * (dimend GL / dimens Pixel)
+	const double RayonSph= (static_cast<double>(nRayonSph) * ChampsVision / winVSize);
+
+	if (fabs(RayonSph) > EPSILON and ((fabs(RayonSph) - fabs(m_Radius)) > EPSILON))
+	{
+		// Main circle radius
+		m_MainCircle.setRadius(RayonSph);
+
+		GLC_Circle* pCircle;
+		// Arc 1 radius
+		pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry(0));
+		pCircle->setRadius(RayonSph);
+		// Arc 2 radius
+		pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry(0));
+		pCircle->setRadius(RayonSph);
+	}
+
 }

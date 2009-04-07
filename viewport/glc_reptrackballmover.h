@@ -20,79 +20,40 @@
  along with GLC-lib; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-*****************************************************************************/
+ *****************************************************************************/
 
-//! \file glc_orbitCircle.h interface for the GLC_OrbitCircle class.
+#ifndef GLC_REPTRACKBALLMOVER_H_
+#define GLC_REPTRACKBALLMOVER_H_
 
-#ifndef GLC_ORBITCIRCLE_H_
-#define GLC_ORBITCIRCLE_H_
-
-
+#include "glc_repmover.h"
 #include "../geometry/glc_circle.h"
 #include "../sceneGraph/glc_instance.h"
 
 class GLC_Factory;
-class QGLContext;
-//////////////////////////////////////////////////////////////////////
-//! \class GLC_OrbitCircle
-/*! \brief GLC_OrbitCircle : OpenGL 3D orbit Circle*/
 
-/*! An GLC_OrbitCircle is a wire geometry composed of 3d lines \n
- * It's as a circle (GLC_Circle) with 2 arcs (GLC_Circle) of an angle of #ARCANGLE\n
- * The orbit Circle represent camera orientation.
- * */
-//////////////////////////////////////////////////////////////////////
 
-class GLC_OrbitCircle
+class GLC_RepTrackBallMover : public GLC_RepMover
 {
-
-//////////////////////////////////////////////////////////////////////
-/*! @name Constructor / Destructor */
-//@{
-//////////////////////////////////////////////////////////////////////
 public:
-	//! Create an orbit Circle with a given radius, name and color.
-	GLC_OrbitCircle(const double &, const QGLContext*);
-//@}
+	//! Default constructor
+	GLC_RepTrackBallMover(GLC_Viewport*);
 
-//////////////////////////////////////////////////////////////////////
-/*! \name Get Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-	//! Return Color Red component
-	GLdouble getdRed(void)
-	{return m_MainCircle.firstMaterial()->getDiffuseColor().redF();}
-
-	//! Return Color Green component
-	GLdouble getdGreen(void)
-	{return m_MainCircle.firstMaterial()->getDiffuseColor().greenF();}
-
-	//! Return Color blue component
-	GLdouble getdBlue(void)
-	{return m_MainCircle.firstMaterial()->getDiffuseColor().blueF();}
-
-	//! Return Color Alpha component
-	GLdouble getdAlpha(void)
-	{return m_MainCircle.firstMaterial()->getDiffuseColor().alphaF();}
-//@}
-
+	// Destructor
+	virtual ~GLC_RepTrackBallMover();
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Change the radius of the orbit circle
-	void setRadius(double);
-
 	//! Set Arcs orientation and position in concordance with mouse position
-	void setOrientArcs(GLC_Vector4d VectAngle, const GLC_Matrix4x4 &Matrice);
+	virtual void init(const GLC_Vector4d& VectAngle, const GLC_Matrix4x4 &Matrice);
 
 	//! Set Arcs position in concordance with mouse position
-	void mapArcs(const GLC_Matrix4x4 &Matrice);
+	virtual void update(const GLC_Matrix4x4 &Matrice);
 
-	//! overload function setColor(color);
-	void setRGBAColor(const QColor&);
+	//! Set representation main color
+	virtual void setMainColor(const QColor& color);
 
 //@}
 
@@ -101,16 +62,25 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! orbit circle OpenGL Execution
-	void glExecute(double Profondeur);
+	//! Virtual interface for OpenGL Geometry set up.
+	virtual void glDraw();
 
 //@}
+
+//////////////////////////////////////////////////////////////////////
+// Private services Functions
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Compute trackball radius
+	void computeRadius();
 
 //////////////////////////////////////////////////////////////////////
 // Private Members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! OpenGl context
+	//! trackball radius
+	double m_Radius;
+	//! Factory
 	GLC_Factory* m_pFactory;
 	//! Main Circle
 	GLC_Circle m_MainCircle;
@@ -122,8 +92,9 @@ private:
 	GLC_Instance m_Arc2;
 	//! Arc 2 positionning Matrix
 	GLC_Matrix4x4 m_MatArc2;
-
+	//! The ratio of the trackball size
+	double m_Ratio;
 
 };
 
-#endif //GLC_ORBITCIRCLE_H_
+#endif /* GLC_REPTRACKBALLMOVER_H_ */
