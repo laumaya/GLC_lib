@@ -91,10 +91,17 @@ HEADERS_GLC_SHADING +=	shading/glc_material.h \
 						shading/glc_selectionmaterial.h \
 						shading/glc_light.h
 						
-HEADERS_GLC_VIEWPORT +=	viewport/glc_orbitcircle.h \
-						viewport/glc_camera.h \
+HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_imageplane.h \
-						viewport/glc_viewport.h
+						viewport/glc_viewport.h \
+						viewport/glc_movercontroller.h\
+						viewport/glc_mover.h \
+						viewport/glc_panmover.h \
+						viewport/glc_repmover.h \
+						viewport/glc_repcrossmover.h \
+						viewport/glc_zoommover.h \
+						viewport/glc_trackballmover.h \
+						viewport/glc_reptrackballmover.h
 
 
 HEADERS_GLC += glc_enum.h \
@@ -176,10 +183,17 @@ SOURCES +=	shading/glc_material.cpp \
 			shading/glc_selectionmaterial.cpp \
 			shading/glc_shader.cpp
 
-SOURCES +=	viewport/glc_orbitcircle.cpp \
-			viewport/glc_camera.cpp \
+SOURCES +=	viewport/glc_camera.cpp \
 			viewport/glc_imageplane.cpp \
-			viewport/glc_viewport.cpp 
+			viewport/glc_viewport.cpp \
+			viewport/glc_movercontroller.cpp\
+			viewport/glc_mover.cpp \
+			viewport/glc_panmover.cpp \
+			viewport/glc_repmover.cpp \
+			viewport/glc_repcrossmover.cpp \
+			viewport/glc_zoommover.cpp \
+			viewport/glc_trackballmover.cpp \
+			viewport/glc_reptrackballmover.cpp
 		
 SOURCES +=	glc_enum.cpp \
 			glc_object.cpp \			
