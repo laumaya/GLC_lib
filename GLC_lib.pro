@@ -248,7 +248,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_SelectionMaterial \
     		   include/GLC_State \
     		   include/GLC_Mover \
-    		   include/GLC_MoverControler \
+    		   include/GLC_MoverController \
     		   include/GLC_PanMover \
     		   include/GLC_ZoomMover \
     		   include/GLC_TrackBallMover \
