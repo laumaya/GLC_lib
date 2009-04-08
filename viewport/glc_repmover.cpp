@@ -33,8 +33,15 @@ GLC_RepMover::GLC_RepMover(GLC_Viewport* pViewport)
 , m_MainColor()
 {
 
+}
+// Copy constructor
+GLC_RepMover::GLC_RepMover(const GLC_RepMover& repMover)
+: m_pViewport(repMover.m_pViewport)
+, m_MainColor(repMover.m_MainColor)
+{
 
 }
+
 
 GLC_RepMover::~GLC_RepMover()
 {

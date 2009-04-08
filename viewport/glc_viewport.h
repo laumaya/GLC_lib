@@ -84,7 +84,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return the camera associate to the viewport
-	inline GLC_Camera* cameraHandle()
+	inline GLC_Camera* cameraHandle() const
 	{return m_pViewCam;}
 
 	//! Get The viewport Horizontal size
@@ -139,9 +139,6 @@ public:
 	void glExecute()
 	{
 	}
-
-	//! Define camera's target position
-	void glPointing(GLint x, GLint y);
 
 	//! Update OpenGL Projection Matrix
 	void updateProjectionMat(void) const;

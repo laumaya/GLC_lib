@@ -42,12 +42,16 @@ public:
 	{
 		Pan= 1,
 		Zoom= 2,
-		TrackBall= 3
+		TrackBall= 3,
+		Target= 4
 	};
 
 public:
 	//! Default Constructor
 	GLC_MoverController();
+
+	//! Copy Constructor
+	GLC_MoverController(const GLC_MoverController&);
 
 	//! Destructor
 	virtual ~GLC_MoverController();
@@ -65,6 +69,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Assign another mover controller
+	GLC_MoverController& operator = (const GLC_MoverController&);
+
 	//! Add a mover to the controller
 	void addMover(GLC_Mover*, const int);
 

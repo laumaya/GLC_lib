@@ -26,6 +26,7 @@
 
 #include "glc_movercontroller.h"
 
+// Default constructor
 GLC_MoverController::GLC_MoverController()
 : m_ActiveMoverId(0)
 , m_MoverHash()
@@ -34,6 +35,20 @@ GLC_MoverController::GLC_MoverController()
 
 }
 
+// Copy constructor
+GLC_MoverController::GLC_MoverController(const GLC_MoverController& controller)
+: m_ActiveMoverId(controller.m_ActiveMoverId)
+, m_MoverHash()
+{
+	MoverHash::const_iterator iMover= controller.m_MoverHash.constBegin();
+	while (iMover != controller.m_MoverHash.constEnd())
+	{
+		m_MoverHash.insert(iMover.key(), iMover.value()->clone());
+		++iMover;
+	}
+}
+
+// Destructor
 GLC_MoverController::~GLC_MoverController()
 {
 	MoverHash::iterator iMover= m_MoverHash.begin();
@@ -48,6 +63,35 @@ GLC_MoverController::~GLC_MoverController()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+
+//! Assign another mover controller
+GLC_MoverController& GLC_MoverController::operator = (const GLC_MoverController& controller)
+{
+	if (&controller != this)
+	{
+		 m_ActiveMoverId= controller.m_ActiveMoverId;
+
+		 // Clear the inner movers
+		 {
+			 MoverHash::iterator iMover= m_MoverHash.begin();
+			 while (iMover != m_MoverHash.constEnd())
+			 {
+				 delete iMover.value();
+
+				 ++iMover;
+			 }
+			 m_MoverHash.clear();
+		 }
+		 // Copy movers
+		 MoverHash::const_iterator iMover= controller.m_MoverHash.constBegin();
+		 while (iMover != controller.m_MoverHash.constEnd())
+		 {
+			 m_MoverHash.insert(iMover.key(), iMover.value()->clone());
+			 ++iMover;
+		 }
+	}
+	return *this;
+}
 
 // Add a mover to the controller
 void GLC_MoverController::addMover(GLC_Mover* pMover, const int id)

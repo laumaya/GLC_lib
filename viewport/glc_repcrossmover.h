@@ -33,8 +33,19 @@ public:
 	//! Default constructor
 	GLC_RepCrossMover(GLC_Viewport*);
 
+	//! Copy constructor
+	GLC_RepCrossMover(const GLC_RepCrossMover&);
+
 	//! Destructor
 	virtual ~GLC_RepCrossMover();
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+	//! Return a clone of the repmover
+	virtual GLC_RepMover* clone() const;
+//@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/

@@ -25,6 +25,7 @@
 #include "glc_trackballmover.h"
 #include "glc_viewport.h"
 
+// Default constructor
 GLC_TrackBallMover::GLC_TrackBallMover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>& repsList)
 : GLC_Mover(pViewport, repsList)
 , m_Ratio(0.95)
@@ -32,9 +33,27 @@ GLC_TrackBallMover::GLC_TrackBallMover(GLC_Viewport* pViewport, const QList<GLC_
 
 }
 
+// Copy constructor
+GLC_TrackBallMover::GLC_TrackBallMover(const GLC_TrackBallMover& mover)
+: GLC_Mover(mover)
+, m_Ratio(mover.m_Ratio)
+{
+
+}
+
 GLC_TrackBallMover::~GLC_TrackBallMover()
 {
 
+}
+
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Return a clone of the mover
+GLC_Mover* GLC_TrackBallMover::clone() const
+{
+	return new GLC_TrackBallMover(*this);
 }
 
 //////////////////////////////////////////////////////////////////////

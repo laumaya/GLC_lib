@@ -25,8 +25,16 @@
 #include "glc_repcrossmover.h"
 #include "glc_viewport.h"
 
+// Default constructor
 GLC_RepCrossMover::GLC_RepCrossMover(GLC_Viewport* pViewport)
 : GLC_RepMover(pViewport)
+{
+
+}
+
+// Copy constructor
+GLC_RepCrossMover::GLC_RepCrossMover(const GLC_RepCrossMover& repMover)
+: GLC_RepMover(repMover)
 {
 
 }
@@ -34,6 +42,16 @@ GLC_RepCrossMover::GLC_RepCrossMover(GLC_Viewport* pViewport)
 GLC_RepCrossMover::~GLC_RepCrossMover()
 {
 
+}
+
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Return a clone of the repmover
+GLC_RepMover* GLC_RepCrossMover::clone() const
+{
+	return new GLC_RepCrossMover(*this);
 }
 
 //////////////////////////////////////////////////////////////////////

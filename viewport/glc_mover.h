@@ -40,9 +40,21 @@ public:
 	//! Default constructor
 	GLC_Mover(GLC_Viewport*, const QList<GLC_RepMover*>&);
 
+	//! Copy constructor
+	GLC_Mover(const GLC_Mover&);
+
 	//! Destructor
 	virtual ~GLC_Mover();
 
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Return a clone of the mover
+	virtual GLC_Mover* clone() const= 0;
+//@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/

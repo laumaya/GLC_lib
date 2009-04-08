@@ -36,6 +36,19 @@ GLC_Mover::GLC_Mover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>& repsLi
 
 }
 
+// Copy constructor
+GLC_Mover::GLC_Mover(const GLC_Mover& mover)
+: m_RepMoverList()
+, m_PreviousVector(mover.m_PreviousVector)
+, m_pViewport(mover.m_pViewport)
+{
+	const int size= mover.m_RepMoverList.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_RepMoverList.append(mover.m_RepMoverList.at(i)->clone());
+	}
+}
+
 GLC_Mover::~GLC_Mover()
 {
 	clearMoverRepresentation();

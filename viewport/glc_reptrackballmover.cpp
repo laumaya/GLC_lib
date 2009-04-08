@@ -31,7 +31,6 @@ using namespace glc;
 //! The angle of arcs
 #define ARCANGLE (30 * PI / 180)
 
-
 GLC_RepTrackBallMover::GLC_RepTrackBallMover(GLC_Viewport* pViewport)
 : GLC_RepMover(pViewport)
 , m_Radius(1.0)
@@ -61,12 +60,44 @@ GLC_RepTrackBallMover::GLC_RepTrackBallMover(GLC_Viewport* pViewport)
 	MatRot= MatInt * MatRot;
 
 	m_MatArc2= MatRot;
+
+}
+
+// Copy constructor
+GLC_RepTrackBallMover::GLC_RepTrackBallMover(const GLC_RepTrackBallMover& repMover)
+: GLC_RepMover(repMover)
+, m_Radius(repMover.m_Radius)
+, m_pFactory(repMover.m_pFactory)
+, m_MainCircle(repMover.m_MainCircle)
+, m_Arc1(repMover.m_Arc1.clone())
+, m_MatArc1(repMover.m_MatArc1)
+, m_Arc2(repMover.m_Arc2.clone())
+, m_MatArc2(repMover.m_MatArc2)
+, m_Ratio(repMover.m_Ratio)
+{
+	// Don't share material
+	GLC_Material* pMat= new GLC_Material(m_MainColor);
+	m_MainCircle.replaceMasterMaterial(pMat);
+	m_Arc1.getGeometry(0)->replaceMasterMaterial(pMat);
+	m_Arc2.getGeometry(0)->replaceMasterMaterial(pMat);
 }
 
 GLC_RepTrackBallMover::~GLC_RepTrackBallMover()
 {
 
 }
+
+
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Return a clone of the repmover
+GLC_RepMover* GLC_RepTrackBallMover::clone() const
+{
+	return new GLC_RepTrackBallMover(*this);
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -111,6 +142,7 @@ void GLC_RepTrackBallMover::update(const GLC_Matrix4x4 &Matrice)
 void GLC_RepTrackBallMover::setMainColor(const QColor& color)
 {
 	m_MainCircle.firstMaterial()->setDiffuseColor(color);
+	GLC_RepMover::setMainColor(color);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -130,7 +162,7 @@ void GLC_RepTrackBallMover::glDraw()
 	glLoadIdentity();
 
 
-	double depth= m_pViewport->getDistMin() + (m_pViewport->getDistMax() - m_pViewport->getDistMin()) / 2.0;
+	const double depth= m_pViewport->getDistMin() + (m_pViewport->getDistMax() - m_pViewport->getDistMin()) / 2.0;
 	// Put circle at the middle of camera range of depth
 	glTranslated(0, 0, - (depth) );
 
@@ -187,9 +219,9 @@ void GLC_RepTrackBallMover::computeRadius()
 
 	// the side of camera's square is mapped on Vertical length of window
 	// Circle radius in OpenGL unit = Radius(Pixel) * (dimend GL / dimens Pixel)
-	const double RayonSph= (static_cast<double>(nRayonSph) * ChampsVision / winVSize);
+	const double RayonSph= fabs((static_cast<double>(nRayonSph) * ChampsVision / winVSize));
 
-	if (fabs(RayonSph) > EPSILON and ((fabs(RayonSph) - fabs(m_Radius)) > EPSILON))
+	if ((RayonSph > EPSILON ) and ((RayonSph - m_Radius) > EPSILON) or (RayonSph < 2.0))
 	{
 		// Main circle radius
 		m_MainCircle.setRadius(RayonSph);

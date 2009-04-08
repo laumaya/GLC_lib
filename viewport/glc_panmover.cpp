@@ -34,10 +34,29 @@ GLC_PanMover::GLC_PanMover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>& 
 
 }
 
+// Copy constructor
+GLC_PanMover::GLC_PanMover(const GLC_PanMover& panMover)
+: GLC_Mover(panMover)
+{
+
+}
+
+
 GLC_PanMover::~GLC_PanMover()
 {
 
 }
+
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Return a clone of the mover
+GLC_Mover* GLC_PanMover::clone() const
+{
+	return new GLC_PanMover(*this);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions

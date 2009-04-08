@@ -38,8 +38,21 @@ public:
 	//! Default constructor
 	GLC_RepTrackBallMover(GLC_Viewport*);
 
+	//! Copy constructor
+	GLC_RepTrackBallMover(const GLC_RepTrackBallMover&);
+
 	// Destructor
 	virtual ~GLC_RepTrackBallMover();
+
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+	//! Return a clone of the repmover
+	virtual GLC_RepMover* clone() const;
+//@}
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{

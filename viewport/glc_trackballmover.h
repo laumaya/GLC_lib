@@ -33,8 +33,20 @@ public:
 	//! Default constructor
 	GLC_TrackBallMover(GLC_Viewport*, const QList<GLC_RepMover*>& repsList= QList<GLC_RepMover*>());
 
+	//! Copy constructor
+	GLC_TrackBallMover(const GLC_TrackBallMover&);
+
 	//! Destructor
 	virtual ~GLC_TrackBallMover();
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Return a clone of the mover
+	virtual GLC_Mover* clone() const;
+//@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/

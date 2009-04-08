@@ -117,54 +117,6 @@ void GLC_Viewport::initGl()
 	GLC_State::init();
 }
 
-// Define camera's target position
-void GLC_Viewport::glPointing(GLint x, GLint y)
-{
-	// Z Buffer component of selected point between 0 and 1
-	GLfloat Depth;
-	// read selected point
-	glReadPixels(x, getWinVSize() - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
-
-	// Current visualisation matrix
-	GLdouble ViewMatrix[16];
-	glGetDoublev(GL_MODELVIEW_MATRIX, ViewMatrix);
-	// Current projection matrix
-	GLdouble ProjMatrix[16];
-	glGetDoublev(GL_PROJECTION_MATRIX, ProjMatrix);
-	// definition of the current viewport
-	GLint Viewport[4];
-	glGetIntegerv(GL_VIEWPORT, Viewport);
-
-	// OpenGL ccordinate of selected point
-	GLdouble pX, pY, pZ;
-	gluUnProject((GLdouble) x, (GLdouble) (getWinVSize() - y) , Depth
-		, ViewMatrix, ProjMatrix, Viewport, &pX, &pY, &pZ);
-
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Viewport::GlPointing ", error);
-		throw(OpenGlException);
-	}
-
-	// Test if there is geometry under picking point
-	if (fabs(Depth - 1.0) > EPSILON)
-	{	// Geometry find -> Update camera's target position
-		const GLC_Point4d target(pX, pY, pZ);
-		m_pViewCam->setTargetCam(target);
-	}
-	else
-	{	// Geometrie not find -> panning
-
-		const GLC_Point4d curPos(mapPosMouse(x, y));
-		const GLC_Point4d prevPos(mapPosMouse(getWinHSize() / 2, getWinVSize() / 2));
-		const GLC_Vector4d VectPan(curPos - prevPos);	// panning vector
-		// pan camera
-		m_pViewCam->pan(VectPan);
-	}
-}
-
 // Update OpenGL Projection Matrix
 void GLC_Viewport::updateProjectionMat(void) const
 {

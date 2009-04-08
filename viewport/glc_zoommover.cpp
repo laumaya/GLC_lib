@@ -25,6 +25,7 @@
 #include "glc_zoommover.h"
 #include "glc_viewport.h"
 
+// Default constructor
 GLC_ZoomMover::GLC_ZoomMover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>& repsList)
 : GLC_Mover(pViewport, repsList)
 , m_MaxZoomFactor(3.0)
@@ -32,9 +33,28 @@ GLC_ZoomMover::GLC_ZoomMover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>
 
 }
 
+// Copy constructor
+GLC_ZoomMover::GLC_ZoomMover(const GLC_ZoomMover& mover)
+: GLC_Mover(mover)
+, m_MaxZoomFactor(mover.m_MaxZoomFactor)
+{
+
+}
+
 GLC_ZoomMover::~GLC_ZoomMover()
 {
 
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Get Functions
+//////////////////////////////////////////////////////////////////////
+
+// Return a clone of the mover
+GLC_Mover* GLC_ZoomMover::clone() const
+{
+	return new GLC_ZoomMover(*this);
 }
 
 //////////////////////////////////////////////////////////////////////

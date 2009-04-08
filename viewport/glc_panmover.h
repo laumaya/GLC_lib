@@ -35,8 +35,20 @@ public:
 	//! Default constructor
 	GLC_PanMover(GLC_Viewport*, const QList<GLC_RepMover*>& repsList= QList<GLC_RepMover*>());
 
+	//! Copy constructor
+	GLC_PanMover(const GLC_PanMover&);
+
 	//! Destructor
 	virtual ~GLC_PanMover();
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Return a clone of the mover
+	virtual GLC_Mover* clone() const;
+//@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/

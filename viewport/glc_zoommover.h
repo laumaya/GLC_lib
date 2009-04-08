@@ -33,6 +33,9 @@ public:
 	//! Default constructor
 	GLC_ZoomMover(GLC_Viewport*, const QList<GLC_RepMover*>& repsList= QList<GLC_RepMover*>());
 
+	//! Copy constructor
+	GLC_ZoomMover(const GLC_ZoomMover&);
+
 	//! Destructor
 	virtual ~GLC_ZoomMover();
 
@@ -45,6 +48,9 @@ public:
 	//! Return the maximum zoom factor
 	inline double maxZoomFactor() const
 	{return m_MaxZoomFactor;}
+
+	//! Return a clone of the mover
+	virtual GLC_Mover* clone() const;
 
 //@}
 

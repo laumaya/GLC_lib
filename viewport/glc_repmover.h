@@ -39,6 +39,9 @@ public:
 	//! Default constructor
 	GLC_RepMover(GLC_Viewport*);
 
+	//! Copy constructor
+	GLC_RepMover(const GLC_RepMover&);
+
 	//! Destructor
 	virtual ~GLC_RepMover();
 
@@ -47,9 +50,13 @@ public:
 /*! \name Get Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
+public:
 	//! Return the main Color
 	inline QColor mainColor()
 	{return m_MainColor;}
+
+	//! Return a clone of the repmover
+	virtual GLC_RepMover* clone() const= 0;
 //@}
 
 //////////////////////////////////////////////////////////////////////
