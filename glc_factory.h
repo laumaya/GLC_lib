@@ -42,6 +42,8 @@
 #include "sceneGraph/glc_instance.h"
 #include "sceneGraph/glc_world.h"
 #include "glc_boundingbox.h"
+#include "viewport/glc_movercontroller.h"
+#include "viewport/glc_viewport.h"
 
 // end of class to built
 
@@ -104,6 +106,9 @@ public:
 
 	//! Create an GLC_Texture
 	GLC_Texture* createTexture(const QString &textureFullFileName) const;
+
+	//! Create the default mover controller
+	GLC_MoverController createDefaultMoverController(const QColor&, GLC_Viewport*);
 
 //@}
 

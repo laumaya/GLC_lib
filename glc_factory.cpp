@@ -31,6 +31,13 @@
 #include "io/glc_3dstoworld.h"
 #include "io/glc_3dxmltoworld.h"
 
+#include "viewport/glc_panmover.h"
+#include "viewport/glc_zoommover.h"
+#include "viewport/glc_settargetmover.h"
+#include "viewport/glc_trackballmover.h"
+#include "viewport/glc_repcrossmover.h"
+#include "viewport/glc_reptrackballmover.h"
+
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
 
@@ -196,4 +203,61 @@ GLC_Material* GLC_Factory::createMaterial(const QString &textureFullFileName) co
 GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName) const
 {
 	return new GLC_Texture(m_pQGLContext, textureFullFileName);
+}
+
+// Create the default mover controller
+GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& color, GLC_Viewport* pViewport)
+{
+	GLC_MoverController defaultController;
+
+	//////////////////////////////////////////////////////////////////////
+	// Pan Mover
+	//////////////////////////////////////////////////////////////////////
+	// Create Pan Mover representation
+	GLC_RepMover* pRepMover= new GLC_RepCrossMover(pViewport);
+	pRepMover->setMainColor(color);
+	QList<GLC_RepMover*> listOfRep;
+	listOfRep.append(pRepMover);
+	// Create the Pan Mover
+	GLC_Mover* pMover= new GLC_PanMover(pViewport, listOfRep);
+	// Add the Pan Mover to the controller
+	defaultController.addMover(pMover, GLC_MoverController::Pan);
+
+	//////////////////////////////////////////////////////////////////////
+	// Zoom Mover
+	//////////////////////////////////////////////////////////////////////
+	// Copy the pan Mover representation
+	pRepMover= pRepMover->clone();
+	listOfRep.clear();
+	listOfRep.append(pRepMover);
+	// Create the Zoom Mover
+	pMover= new GLC_ZoomMover(pViewport, listOfRep);
+	// Add the Zoom Mover to the controller
+	defaultController.addMover(pMover, GLC_MoverController::Zoom);
+
+	//////////////////////////////////////////////////////////////////////
+	// Set Target Mover
+	//////////////////////////////////////////////////////////////////////
+	// Create the Zoom Mover
+	pMover= new GLC_SetTargetMover(pViewport);
+	// Add the Zoom Mover to the controller
+	defaultController.addMover(pMover, GLC_MoverController::Target);
+
+	//////////////////////////////////////////////////////////////////////
+	// Track Ball Mover
+	//////////////////////////////////////////////////////////////////////
+	// Copy the pan Mover representation
+	pRepMover= pRepMover->clone();
+	listOfRep.clear();
+	listOfRep.append(pRepMover);
+	// Create the track ball representation
+	pRepMover= new GLC_RepTrackBallMover(pViewport);
+	pRepMover->setMainColor(color);
+	listOfRep.append(pRepMover);
+	// Create the Track Ball Mover
+	pMover= new GLC_TrackBallMover(pViewport, listOfRep);
+	// Add the Track ball Mover to the controller
+	defaultController.addMover(pMover, GLC_MoverController::TrackBall);
+
+	return defaultController;
 }
