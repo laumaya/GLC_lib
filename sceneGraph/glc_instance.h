@@ -34,6 +34,8 @@
 #include "../maths/glc_matrix4x4.h"
 #include "../glc_state.h"
 
+class GLC_Viewport;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Instance
 /*! \brief GLC_Instance : GLC_VboGeom + bounding box*/
@@ -230,7 +232,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the instance
-	inline void glExecute(bool transparent= false, bool computeLod= false)
+	inline void glExecute(bool transparent= false, bool useLoad= false, GLC_Viewport* pView= NULL)
 	{
 		if (NULL == m_pGeomList) return;
 		// Save current OpenGL Matrix
@@ -241,12 +243,16 @@ public:
 			glColor3ubv(m_colorId); // D'ont use Alpha component
 		}
 		const int size= m_pGeomList->size();
-		if (computeLod)
+		if (useLoad and (NULL != pView))
 		{
 			for (int i= 0; i < size; ++i)
 			{
-				m_pGeomList->at(i)->setCurrentLod(80);
-				m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
+				const int lodValue= choseLod(m_pGeomList->at(i)->boundingBox(), pView);
+				if (lodValue <= 100)
+				{
+					m_pGeomList->at(i)->setCurrentLod(lodValue);
+					m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
+				}
 			}
 		}
 		else
@@ -286,6 +292,9 @@ private:
 
 	//! Encode Id to RGBA color
 	void encodeIdInRGBA();
+
+	//! Compute LOD
+	int choseLod(const GLC_BoundingBox&, GLC_Viewport*);
 
 //////////////////////////////////////////////////////////////////////
 // Private members

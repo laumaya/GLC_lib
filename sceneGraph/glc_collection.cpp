@@ -31,6 +31,7 @@
 #include "../shading/glc_selectionmaterial.h"
 #include "../glc_state.h"
 #include "../shading/glc_shader.h"
+#include "../viewport/glc_viewport.h"
 
 #include <QtDebug>
 
@@ -47,6 +48,7 @@ GLC_Collection::GLC_Collection()
 , m_MainNodes()
 , m_IsInShowSate(true)
 , m_UseLod(false)
+, m_pViewport(NULL)
 {
 }
 
@@ -707,7 +709,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 	        	{
 		            if (not iEntry.value()->isTransparent())
 		            {
-		            	iEntry.value()->glExecute(false, m_UseLod);
+		            	iEntry.value()->glExecute(false, m_UseLod, m_pViewport);
 		            }
 	        	}
 	            ++iEntry;
@@ -731,7 +733,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 	        	{
 	        		 if (iEntry.value()->haveTransparentMaterials())
 		            {
-		            	iEntry.value()->glExecute(true, m_UseLod);
+		            	iEntry.value()->glExecute(true, m_UseLod, m_pViewport);
 		            }
 	        	}
 	            ++iEntry;
@@ -755,7 +757,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 	        {
 	            if (iEntry.value()->isVisible() == m_IsInShowSate)
 	            {
-	            	iEntry.value()->glExecute(false, m_UseLod);
+	            	iEntry.value()->glExecute(false, m_UseLod, m_pViewport);
 	            }
 	            ++iEntry;
 	        }
@@ -783,7 +785,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 		            {
 			            if (not iEntry.value()->isTransparent())
 			            {
-			            	iEntry.value()->glExecute(false, m_UseLod);
+			            	iEntry.value()->glExecute(false, m_UseLod, m_pViewport);
 			            }
 		            }
 		            ++iEntry;
@@ -805,7 +807,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 		            {
 		            	if (iEntry.value()->haveTransparentMaterials())
 			            {
-			            	iEntry.value()->glExecute(true, m_UseLod);
+			            	iEntry.value()->glExecute(true, m_UseLod, m_pViewport);
 			            }
 		            }
 		            ++iEntry;

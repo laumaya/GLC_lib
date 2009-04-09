@@ -34,6 +34,7 @@
 
 class GLC_Material;
 class GLC_Shader;
+class GLC_Viewport;
 
 //! Geometry hash table
 typedef QHash< GLC_uint, GLC_Instance> CNodeMap;
@@ -212,8 +213,11 @@ public:
 	}
 
 	//! Set the LOD usage
-	inline void setLodUsage(const bool usage)
-	{m_UseLod= usage;}
+	inline void setLodUsage(const bool usage, GLC_Viewport* pView)
+	{
+		m_UseLod= usage;
+		m_pViewport= pView;
+	}
 
 //@}
 
@@ -284,6 +288,9 @@ private:
 
 	//! Level of detail usage
 	bool m_UseLod;
+
+	//! The viewport associted to the collection for LOD Usage
+	GLC_Viewport* m_pViewport;
 
 };
 #endif //GLC_COLLECTION_H_
