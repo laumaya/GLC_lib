@@ -258,9 +258,15 @@ public:
 		else
 		{
 			for (int i= 0; i < size; ++i)
+
 			{
-				m_pGeomList->at(i)->setCurrentLod(0);
-				m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
+				const int lodValue= choseLod(m_pGeomList->at(i)->boundingBox(), pView);
+				if (lodValue <= 100)
+				{
+					m_pGeomList->at(i)->setCurrentLod(10);
+					m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
+				}
+
 			}
 		}
 		// Restore OpenGL Matrix
