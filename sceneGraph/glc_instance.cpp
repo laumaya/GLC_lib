@@ -473,17 +473,18 @@ void GLC_Instance::encodeIdInRGBA()
 // Compute LOD
 int GLC_Instance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewport* pView)
 {
-
+	if (NULL == pView) return 0;
 	const double diameter= boundingBox.boundingSphereRadius() * 2.0;
 	GLC_Vector4d center(m_MatPos * boundingBox.getCenter());
 
 	const double dist= (center - pView->cameraHandle()->getEye()).norm();
-	const double cameraCover = dist * (2.0 * tan((pView->getFov() * glc::PI / 180.0) / 2.0));
+	const double cameraCover= dist * (2.0 * tan((pView->getFov() * glc::PI / 180.0) / 2.0));
 	double ratio= diameter / cameraCover * 150.0;
 
 	if (ratio > 100.0) ratio= 100.0;
 	ratio= 100.0 - ratio;
-	if (ratio > 98.0) ratio= 110;
+	if (ratio > 98.0) ratio= 110.0;
+	if (ratio < 10.0) ratio= 10.0;
 	//qDebug() << "RATIO = " << static_cast<int>(ratio);
 
 	return static_cast<int>(ratio);
