@@ -25,7 +25,6 @@
 //! \file glc_camera.cpp Implementation of the GLC_Camera class.
 
 #include "glc_camera.h"
-#include "../glc_openglexception.h"
 
 #include <QtDebug>
 
@@ -37,7 +36,9 @@ GLC_Camera::GLC_Camera()
 : GLC_Object("Camera")
 , m_Eye(0,0,1)
 , m_Target()
-, m_VectUp(0,1,0)
+, m_VectUp(Y_AXIS)
+, m_MatCompOrbit()
+, m_DefaultVectUp(Y_AXIS)
 {
 
 }
@@ -47,6 +48,8 @@ GLC_Camera::GLC_Camera(const GLC_Point4d &Eye, const GLC_Point4d &Target, const 
 , m_Eye()
 , m_Target()
 , m_VectUp()
+, m_MatCompOrbit()
+, m_DefaultVectUp(Y_AXIS)
 
 {
 	setCam(Eye, Target, Up);
@@ -60,6 +63,7 @@ GLC_Camera::GLC_Camera(const GLC_Camera& cam)
 , m_Target(cam.m_Target)
 , m_VectUp(cam.m_VectUp)
 , m_MatCompOrbit(cam.m_MatCompOrbit)
+, m_DefaultVectUp(cam.m_DefaultVectUp)
 {
 
 }
@@ -68,54 +72,18 @@ GLC_Camera::GLC_Camera(const GLC_Camera& cam)
 // Get Functions
 /////////////////////////////////////////////////////////////////////
 
-// Get the distance between the eye and the target of camera
-double GLC_Camera::getDistEyeTarget(void) const
-{
-	return (m_Eye - m_Target).norm();
-}
-
-// Get camera's eye coordinate point
-const GLC_Point4d GLC_Camera::getEye(void) const
-{
-	return m_Eye;
-}
-
-// Get camera's target coordinate point
-const GLC_Point4d GLC_Camera::getTarget(void) const
-{
-	return m_Target;
-}
-
-// Get camera's Up vector
-const GLC_Vector4d GLC_Camera::getVectUp(void) const
-{
-	return m_VectUp;
-}
-
-// Get camera's Vector (from eye to target)
-GLC_Vector4d GLC_Camera::getVectCam(void) const
-{
-	return m_Eye - m_Target;
-}
-
-// Get camera's orbit composition matrix
-const GLC_Matrix4x4 GLC_Camera::getMatCompOrbit(void) const
-{
-	return m_MatCompOrbit;
-}
-
 // equality operator
 bool GLC_Camera::operator==(const GLC_Camera& cam) const
 {
 	return (m_Eye == cam.m_Eye) && (m_Target == cam.m_Target)
-			&& (m_VectUp == cam.m_VectUp);
+			&& (m_VectUp == cam.m_VectUp) && (m_DefaultVectUp == cam.m_DefaultVectUp);
 }
 
 
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 /////////////////////////////////////////////////////////////////////
-void GLC_Camera::orbit(GLC_Vector4d VectOldPoss, GLC_Vector4d VectCurPoss)
+GLC_Camera& GLC_Camera::orbit(GLC_Vector4d VectOldPoss, GLC_Vector4d VectCurPoss)
 {
 	// Map Vectors
 	VectOldPoss= m_MatCompOrbit * VectOldPoss;
@@ -134,9 +102,11 @@ void GLC_Camera::orbit(GLC_Vector4d VectOldPoss, GLC_Vector4d VectCurPoss)
 		m_VectUp= MatOrbit * m_VectUp;
 		m_MatCompOrbit= MatOrbit * m_MatCompOrbit;
 	}
+
+	return *this;
 }
 
-void GLC_Camera::pan(GLC_Vector4d VectDep)
+GLC_Camera& GLC_Camera::pan(GLC_Vector4d VectDep)
 {
 	// Vector mapping
 	VectDep= m_MatCompOrbit * VectDep;
@@ -144,9 +114,11 @@ void GLC_Camera::pan(GLC_Vector4d VectDep)
 	// Camera transformation
 	m_Eye= m_Eye + VectDep;
 	m_Target= m_Target + VectDep;
+
+	return *this;
 }
 
-void GLC_Camera::zoom(double factor)
+GLC_Camera& GLC_Camera::zoom(double factor)
 {
 	Q_ASSERT(factor > 0);
 	// Eye->target vector
@@ -158,9 +130,11 @@ void GLC_Camera::zoom(double factor)
 
 	m_Eye= VectCam + m_Target;
 
+	return *this;
 }
 
-void GLC_Camera::move(const GLC_Matrix4x4 &MatMove)
+// Move camera
+GLC_Camera& GLC_Camera::move(const GLC_Matrix4x4 &MatMove)
 {
 	m_Eye= MatMove * m_Eye;
 	m_Target= MatMove * m_Target;
@@ -173,15 +147,39 @@ void GLC_Camera::move(const GLC_Matrix4x4 &MatMove)
 	m_VectUp= (MatMove * VectUpOld) - (MatMove * VectOrigine); // Up Vector Origin must be equal to 0,0,0
 	m_VectUp.setNormal(1.0);
 	createMatComp();
+
+	return *this;
 }
 
-void GLC_Camera::translate(const GLC_Vector4d &VectTrans)
+// Rotate around an axis
+GLC_Camera& GLC_Camera::rotateAround(const GLC_Vector4d& axis, const double& angle, const GLC_Point4d& point)
+{
+	const GLC_Matrix4x4 rotationMatrix(axis, angle);
+	translate(-point);
+	move(rotationMatrix);
+	translate(point);
+
+	return *this;
+}
+
+// Rotate around camera target
+GLC_Camera& GLC_Camera::rotateAroundTarget(const GLC_Vector4d& axis, const double& angle)
+{
+	GLC_Point4d target(m_Target);
+	rotateAround(axis, angle, target);
+
+	return *this;
+}
+
+GLC_Camera& GLC_Camera::translate(const GLC_Vector4d &VectTrans)
 {
 	m_Eye= m_Eye + VectTrans;
 	m_Target= m_Target + VectTrans;
+
+	return *this;
 }
 
-void GLC_Camera::setEyeCam(const GLC_Point4d &Eye)
+GLC_Camera& GLC_Camera::setEyeCam(const GLC_Point4d &Eye)
 {
 	// Old camera's vector
 	GLC_Vector4d VectOldCam(m_Eye - m_Target);
@@ -208,9 +206,11 @@ void GLC_Camera::setEyeCam(const GLC_Point4d &Eye)
 
 		setCam(Eye, m_Target, m_VectUp);
 	}
+
+	return *this;
 }
 
-void GLC_Camera::setTargetCam(const GLC_Point4d &Target)
+GLC_Camera& GLC_Camera::setTargetCam(const GLC_Point4d &Target)
 {
 	// Old camera's vector
 	GLC_Vector4d VectOldCam(m_Eye - m_Target);
@@ -237,17 +237,21 @@ void GLC_Camera::setTargetCam(const GLC_Point4d &Target)
 
 		setCam(m_Eye, Target, m_VectUp);
 	}
+
+	return *this;
 }
 
-void GLC_Camera::setUpCam(const GLC_Vector4d &Up)
+GLC_Camera& GLC_Camera::setUpCam(const GLC_Vector4d &Up)
 {
 	if ( !(m_VectUp - Up).isNull() )
 	{
 		setCam(m_Eye, m_Target, Up);
 	}
+
+	return *this;
 }
 
-void GLC_Camera::setCam(GLC_Point4d Eye, GLC_Point4d Target, GLC_Vector4d Up)
+GLC_Camera& GLC_Camera::setCam(GLC_Point4d Eye, GLC_Point4d Target, GLC_Vector4d Up)
 {
 	Up.setNormal(1);
 
@@ -269,23 +273,29 @@ void GLC_Camera::setCam(GLC_Point4d Eye, GLC_Point4d Target, GLC_Vector4d Up)
 	m_Target= Target;
 	m_VectUp= Up;
 	createMatComp();
+
+	return *this;
 }
 
 //! Set the camera by copying another camera
-void GLC_Camera::setCam(const GLC_Camera& cam)
+GLC_Camera& GLC_Camera::setCam(const GLC_Camera& cam)
 {
 	m_Eye= cam.m_Eye;
 	m_Target= cam.m_Target;
 	m_VectUp= cam.m_VectUp;
 	m_MatCompOrbit= cam.m_MatCompOrbit;
+
+	return *this;
 }
 
 
-void GLC_Camera::setDistEyeTarget(double Longueur)
+GLC_Camera& GLC_Camera::setDistEyeTarget(double Longueur)
 {
     GLC_Vector4d VectCam(m_Eye - m_Target);
     VectCam.setNormal(Longueur);
     m_Eye= VectCam + m_Target;
+
+    return *this;
 }
 // Assignment operator
 GLC_Camera &GLC_Camera::operator=(const GLC_Camera& cam)
@@ -295,25 +305,114 @@ GLC_Camera &GLC_Camera::operator=(const GLC_Camera& cam)
 	m_Target= cam.m_Target;
 	m_VectUp= cam.m_VectUp;
 	m_MatCompOrbit= cam.m_MatCompOrbit;
+	m_DefaultVectUp= cam.m_DefaultVectUp;
+
 	return *this;
+}
+
+// Return the standard front view form this camera
+GLC_Camera GLC_Camera::frontView() const
+{
+	GLC_Vector4d eye;
+
+	if (m_DefaultVectUp == glc::Z_AXIS)
+	{
+		eye.setVect(0.0, -1.0, 0.0);
+	}
+	else // Y_AXIS or X_AXIS
+	{
+		eye.setVect(0.0, 0.0, 1.0);
+	}
+	eye= eye + m_Target;
+
+	GLC_Camera newCam(eye, m_Target, m_DefaultVectUp);
+	newCam.setDistEyeTarget(getDistEyeTarget());
+	newCam.setDefaultUpVector(m_DefaultVectUp);
+	return newCam;
+}
+
+// Return the standard rear view form this camera
+GLC_Camera GLC_Camera::rearView() const
+{
+	return frontView().rotateAroundTarget(m_DefaultVectUp, glc::PI);
+}
+
+// Return the standard right view form this camera
+GLC_Camera GLC_Camera::rightView() const
+{
+	return frontView().rotateAroundTarget(m_DefaultVectUp, glc::PI / 2.0);}
+
+// Return the standard left view form this camera
+GLC_Camera GLC_Camera::leftView() const
+{
+	return frontView().rotateAroundTarget(m_DefaultVectUp, - glc::PI / 2.0);
+}
+
+// Return the standard top view form this camera
+GLC_Camera GLC_Camera::topView() const
+{
+	GLC_Vector4d eye= m_DefaultVectUp;
+	eye= eye + m_Target;
+	GLC_Vector4d up;
+
+	if (m_DefaultVectUp == glc::Y_AXIS)
+	{
+		up.setVect(0.0, 0.0, -1.0);
+	}
+	else // Z_AXIS or X_AXIS
+	{
+		up.setVect(0.0, 1.0, 0.0);
+	}
+
+	GLC_Camera newCam(eye, m_Target, up);
+	newCam.setDistEyeTarget(getDistEyeTarget());
+	newCam.setDefaultUpVector(m_DefaultVectUp);
+
+	return newCam;
+}
+
+// Return the standard bottom view form this camera
+GLC_Camera GLC_Camera::bottomView() const
+{
+	GLC_Camera newCam(topView());
+	newCam.rotateAroundTarget(newCam.getVectUp(), glc::PI);
+
+	return newCam;
+}
+
+// Return the standard isoview from his camera
+GLC_Camera GLC_Camera::isoView() const
+{
+	GLC_Vector4d eye;
+	if (m_DefaultVectUp == glc::Z_AXIS)
+	{
+		eye.setVect(-1.0, -1.0, 1.0);
+	}
+	else if (m_DefaultVectUp == glc::Y_AXIS)
+	{
+		eye.setVect(-1.0, 1.0, 1.0);
+	}
+	else
+	{
+		eye.setVect(1.0, 1.0, 1.0);
+	}
+
+	eye= eye + m_Target;
+
+	GLC_Camera newCam(eye, m_Target, m_DefaultVectUp);
+	newCam.setDistEyeTarget(getDistEyeTarget());
+	newCam.setDefaultUpVector(m_DefaultVectUp);
+	return newCam;
 }
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
-void GLC_Camera::glExecute(GLenum)
+void GLC_Camera::glExecute()
 {
 	gluLookAt(m_Eye.X(), m_Eye.Y(), m_Eye.Z(),
 		m_Target.X(), m_Target.Y(), m_Target.Z(),
 		m_VectUp.X(), m_VectUp.Y(), m_VectUp.Z());
-
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Camera::GlExecute ", error);
-		throw(OpenGlException);
-	}
 
 }
 
