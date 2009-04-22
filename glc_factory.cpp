@@ -35,6 +35,7 @@
 #include "viewport/glc_zoommover.h"
 #include "viewport/glc_settargetmover.h"
 #include "viewport/glc_trackballmover.h"
+#include "viewport/glc_turntablemover.h"
 #include "viewport/glc_repcrossmover.h"
 #include "viewport/glc_reptrackballmover.h"
 
@@ -258,6 +259,14 @@ GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& colo
 	pMover= new GLC_TrackBallMover(pViewport, listOfRep);
 	// Add the Track ball Mover to the controller
 	defaultController.addMover(pMover, GLC_MoverController::TrackBall);
+
+	//////////////////////////////////////////////////////////////////////
+	// Turn Table Mover
+	//////////////////////////////////////////////////////////////////////
+	// Create the Turn Table Mover
+	pMover= new GLC_TurnTableMover(pViewport);
+	// Add the Turn Table Mover to the controller
+	defaultController.addMover(pMover, GLC_MoverController::TurnTable);
 
 	return defaultController;
 }
