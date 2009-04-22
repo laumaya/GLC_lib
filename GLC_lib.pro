@@ -102,7 +102,8 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_zoommover.h \
 						viewport/glc_trackballmover.h \
 						viewport/glc_reptrackballmover.h \
-						viewport/glc_settargetmover.h
+						viewport/glc_settargetmover.h \
+						viewport/glc_turntablemover.h
 
 
 HEADERS_GLC += glc_enum.h \
@@ -195,7 +196,8 @@ SOURCES +=	viewport/glc_camera.cpp \
 			viewport/glc_zoommover.cpp \
 			viewport/glc_trackballmover.cpp \
 			viewport/glc_reptrackballmover.cpp \
-			viewport/glc_settargetmover.cpp
+			viewport/glc_settargetmover.cpp \
+			viewport/glc_turntablemover.cpp
 		
 SOURCES +=	glc_enum.cpp \
 			glc_object.cpp \			
