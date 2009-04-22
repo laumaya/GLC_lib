@@ -43,7 +43,8 @@ public:
 		Pan= 1,
 		Zoom= 2,
 		TrackBall= 3,
-		Target= 4
+		Target= 4,
+		TurnTable= 5
 	};
 
 public:
