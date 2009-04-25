@@ -267,6 +267,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 			else if (m_pStreamReader->name() == "ReferenceRep") loadReferenceRep();
 			else loadInstanceRep();
 		}
+
 		m_pStreamReader->readNext();
 	}
 
@@ -346,6 +347,29 @@ void GLC_3dxmlToWorld::loadReference3D()
 	{
 		pStructReference= new GLC_StructReference(refName);
 	}
+	// Try to find extension
+	GLC_Attributes userAttributes;
+	while (endElementNotReached("Reference3D"))
+	{
+		if (m_pStreamReader->isStartElement() and (m_pStreamReader->name() == "Reference3DExtensionType"))
+		{
+			while (endElementNotReached("Reference3DExtensionType"))
+			{
+				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == "Attribute"))
+				{
+					QString name= m_pStreamReader->attributes().value("name").toString();
+					QString value= m_pStreamReader->attributes().value("value").toString();
+					userAttributes.insert(name, value);
+				}
+				m_pStreamReader->readNext();
+			}
+		}
+		m_pStreamReader->readNext();
+	}
+	if (not userAttributes.isEmpty())
+	{
+		pStructReference->setAttributes(userAttributes);
+	}
 
 	m_ReferenceHash.insert(id, pStructReference);
 }
@@ -363,29 +387,48 @@ void GLC_3dxmlToWorld::loadInstance3D()
 	GLC_Matrix4x4 instanceMatrix= loadMatrix(matrixString);
 
 
-	GLC_StructInstance* pStructInstance;
+	GLC_StructInstance* pStructInstance= new GLC_StructInstance(instName);
+	pStructInstance->move(instanceMatrix);
+
+	// Try to find extension
+	GLC_Attributes userAttributes;
+	while (endElementNotReached("Instance3D"))
+	{
+		if (m_pStreamReader->isStartElement() and (m_pStreamReader->name() == "Reference3DExtensionType"))
+		{
+			while (endElementNotReached("Reference3DExtensionType"))
+			{
+				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == "Attribute"))
+				{
+					QString name= m_pStreamReader->attributes().value("name").toString();
+					QString value= m_pStreamReader->attributes().value("value").toString();
+					userAttributes.insert(name, value);
+				}
+				m_pStreamReader->readNext();
+			}
+		}
+		m_pStreamReader->readNext();
+	}
+	if (not userAttributes.isEmpty())
+	{
+		pStructInstance->setAttributes(userAttributes);
+	}
 
 	if (instanceOf.contains(externRef))
 	{
 		const QString extRefId= instanceOf.remove(externRef).remove("#1");
 		m_SetOfExtRef << extRefId;
-		pStructInstance= new GLC_StructInstance(instName);
-		pStructInstance->move(instanceMatrix);
 		m_InstanceOfExtRefHash.insert(pStructInstance, extRefId);
 	}
 	else if (instanceOf.contains(local))
 	{
 		const unsigned int refId= instanceOf.remove(local).toUInt();
-		pStructInstance= new GLC_StructInstance(instName);
-		pStructInstance->move(instanceMatrix);
 		m_InstanceOf.insert(pStructInstance, refId);
 	}
 	else
 	{
 		// 3dvia 3dxml
 		const unsigned int refId= instanceOf.toUInt();
-		pStructInstance= new GLC_StructInstance(instName);
-		pStructInstance->move(instanceMatrix);
 		m_InstanceOf.insert(pStructInstance, refId);
 	}
 
