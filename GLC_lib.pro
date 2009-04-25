@@ -69,7 +69,8 @@ HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_collection.h \
 							sceneGraph/glc_structreference.h \
 							sceneGraph/glc_structinstance.h \
 							sceneGraph/glc_structoccurence.h \
-							sceneGraph/glc_world.h
+							sceneGraph/glc_world.h \
+							sceneGraph/glc_attributes.h
 							
 HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
 							geometry/glc_circle.h \
@@ -163,7 +164,8 @@ SOURCES +=	sceneGraph/glc_collection.cpp \
 			sceneGraph/glc_structreference.cpp \
 			sceneGraph/glc_structinstance.cpp \
 			sceneGraph/glc_structoccurence.cpp \
-			sceneGraph/glc_world.cpp
+			sceneGraph/glc_world.cpp \
+			sceneGraph/glc_attributes.cpp
 
 SOURCES +=	geometry/glc_vbogeom.cpp \
 			geometry/glc_circle.cpp \
@@ -258,7 +260,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_TrackBallMover \
     		   include/GLC_RepMover \
     		   include/GLC_RepCrossMover \
-    		   include/GLC_RepTrackBallMover
+    		   include/GLC_RepTrackBallMover \
+    		   include/GLC_TurnTableMover \
+    		   include/GLC_Attribute
     		   
     			   
 # Linux install configuration
