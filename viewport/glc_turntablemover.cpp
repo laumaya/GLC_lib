@@ -28,6 +28,7 @@
 // Default constructor
 GLC_TurnTableMover::GLC_TurnTableMover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>& repsList)
 : GLC_Mover(pViewport, repsList)
+, m_Sign(1.0)
 {
 
 }
@@ -36,6 +37,7 @@ GLC_TurnTableMover::GLC_TurnTableMover(GLC_Viewport* pViewport, const QList<GLC_
 // Copy constructor
 GLC_TurnTableMover::GLC_TurnTableMover(const GLC_TurnTableMover& mover)
 : GLC_Mover(mover)
+, m_Sign(mover.m_Sign)
 {
 }
 
@@ -64,30 +66,25 @@ GLC_Mover* GLC_TurnTableMover::clone() const
 void GLC_TurnTableMover::init(int x, int y)
 {
 	m_PreviousVector.setVect(static_cast<double>(x), static_cast<double>(y),0.0);
+	GLC_Camera* pCamera= m_pViewport->cameraHandle();
+	// Calculate angle sign
+	m_Sign= pCamera->defaultUpVector() * pCamera->getVectUp();
+	if (m_Sign == 0)
+	{
+		m_Sign= 1;
+	}
+	else
+	{
+		m_Sign= m_Sign / fabs(m_Sign);
+	}
+
+	pCamera->setUpCam(pCamera->defaultUpVector() * m_Sign);
 }
 
 
 void GLC_TurnTableMover::move(int x, int y)
 {
 	GLC_Camera* pCamera= m_pViewport->cameraHandle();
-	// Calculate angle sign
-	double sign= pCamera->defaultUpVector() * pCamera->getVectUp();
-
-	if (sign == 0)
-	{
-		sign= 1;
-	}
-	else
-	{
-		sign= sign / fabs(sign);
-	}
-
-	// Check the current up cam vector
-	if ((-pCamera->getVectUp() != pCamera->defaultUpVector()) and (pCamera->getVectUp() != pCamera->defaultUpVector()))
-	{
-		pCamera->setUpCam(pCamera->defaultUpVector() * sign);
-	}
-
 	// Turn table rotation
 	const double rotSpeed= 2.3;
 	const double width= static_cast<double> ( m_pViewport->getWinVSize() );
@@ -97,7 +94,7 @@ void GLC_TurnTableMover::move(int x, int y)
 	const double beta = ((static_cast<double>(y) - m_PreviousVector.Y()) / height) * rotSpeed;
 
 	// Rotation around the screen vertical axis
-	pCamera->rotateAroundTarget(pCamera->defaultUpVector(), alpha * sign);
+	pCamera->rotateAroundTarget(pCamera->defaultUpVector(), alpha * m_Sign);
 
 	// Rotation around the screen horizontal axis
 	GLC_Vector4d incidentVector= pCamera->getVectCam();
