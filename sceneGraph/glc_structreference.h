@@ -32,7 +32,12 @@
 
 #include "glc_structinstance.h"
 #include "glc_instance.h"
+#include "glc_attributes.h"
 
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_StructReference
+/*! \brief GLC_StructReference : A scene graph reference node */
+//////////////////////////////////////////////////////////////////////
 class GLC_StructReference
 {
 //////////////////////////////////////////////////////////////////////
@@ -113,6 +118,14 @@ public:
 		return m_pRepresentation->materialSet();
 	}
 
+	//! Return true if the reference contains User attributes
+	inline bool containsAttributes() const
+	{ return ((NULL != m_pAttributes) and not m_pAttributes->isEmpty());}
+
+	//! Return handle to the reference attributes
+	inline GLC_Attributes* attributesHandle() const
+	{return m_pAttributes;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -136,6 +149,13 @@ public:
 	/*! Representation must not exist*/
 	void setRepresentation(const GLC_Instance& rep);
 
+	//! Set the reference attributes
+	void setAttributes(const GLC_Attributes& attr)
+	{
+		delete m_pAttributes;
+		m_pAttributes= new GLC_Attributes(attr);
+	}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -150,6 +170,9 @@ private:
 
 	//! The Reference Name
 	QString m_Name;
+
+	//! The Reference attributes
+	GLC_Attributes* m_pAttributes;
 
 };
 

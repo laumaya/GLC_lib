@@ -32,6 +32,7 @@ GLC_StructReference::GLC_StructReference(const QString& name)
 : m_ListOfInstance()
 , m_pRepresentation(NULL)
 , m_Name(name)
+, m_pAttributes(NULL)
 {
 
 
@@ -42,6 +43,7 @@ GLC_StructReference::GLC_StructReference(const GLC_Instance& rep)
 : m_ListOfInstance()
 , m_pRepresentation(new GLC_Instance(rep))
 , m_Name(m_pRepresentation->name())
+, m_pAttributes(NULL)
 {
 
 }
@@ -49,6 +51,7 @@ GLC_StructReference::GLC_StructReference(const GLC_Instance& rep)
 GLC_StructReference::~GLC_StructReference()
 {
 	delete m_pRepresentation;
+	delete m_pAttributes;
 }
 
 
