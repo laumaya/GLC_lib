@@ -27,15 +27,14 @@
 #ifndef GLC_STRUCTOCCURENCE_H_
 #define GLC_STRUCTOCCURENCE_H_
 
-#include "../glc_object.h"
 #include "../maths/glc_matrix4x4.h"
+#include "glc_structinstance.h"
 #include <QSet>
 
 class GLC_Collection;
-class GLC_StructInstance;
 class GLC_Material;
 
-class GLC_StructOccurence : public GLC_Object
+class GLC_StructOccurence
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -57,6 +56,14 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the Occurence id
+	inline GLC_uint id() const
+	{return m_Uid;}
+
+	//! Return Occurence instance name
+	inline const QString name() const
+	{return m_pStructInstance->name();}
+
 	//! Return the absolute matrix
 	inline GLC_Matrix4x4 absoluteMatrix() const
 	{ return m_AbsoluteMatrix;}
@@ -111,6 +118,13 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Set Occurence Id
+	inline void setId(const GLC_uint id)
+	{m_Uid= id;}
+
+	//! Set Occurence instance Name
+	inline void setName(const QString name) {m_pStructInstance->setName(name);}
+
 	//! Update the absolute matrix
 	GLC_StructOccurence* updateAbsoluteMatrix();
 
@@ -151,6 +165,9 @@ public:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
+	//! Occurence Unique ID
+	GLC_uint m_Uid;
+
 	//! the occurence's collection
 	GLC_Collection* m_pCollection;
 

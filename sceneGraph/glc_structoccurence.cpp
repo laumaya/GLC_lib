@@ -26,12 +26,11 @@
 
 #include "glc_structoccurence.h"
 #include "glc_collection.h"
-#include "glc_structinstance.h"
 #include "glc_structreference.h"
 
 // Default constructor
 GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_StructInstance* pStructInstance, GLuint shaderId)
-: GLC_Object()
+: m_Uid(glc::GLC_GenID())
 , m_pCollection(pCollection)
 , m_pNumberOfOccurence(NULL)
 , m_pStructInstance(pStructInstance)
@@ -76,7 +75,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_Struct
 }
 // Copy constructor
 GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_StructOccurence& structOccurence)
-: GLC_Object(structOccurence)
+: m_Uid(structOccurence.m_Uid)
 , m_pCollection(pCollection)
 , m_pNumberOfOccurence(structOccurence.m_pNumberOfOccurence)
 , m_pStructInstance(structOccurence.m_pStructInstance)
