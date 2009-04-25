@@ -32,10 +32,15 @@
 #include <QString>
 #include "../maths/glc_matrix4x4.h"
 #include "glc_instance.h"
+#include "glc_attributes.h"
 
 class GLC_StructReference;
 class GLC_StructOccurence;
 
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_StructInstance
+/*! \brief GLC_StructInstance : A scene graph instance node */
+//////////////////////////////////////////////////////////////////////
 class GLC_StructInstance
 {
 public:
@@ -79,6 +84,14 @@ public:
 	inline QString name() const
 	{return m_Name;}
 
+	//! Return true if the reference contains User attributes
+	inline bool containsAttributes() const
+	{ return ((NULL != m_pAttributes) and not m_pAttributes->isEmpty());}
+
+	//! Return handle to the reference attributes
+	inline GLC_Attributes* attributesHandle() const
+	{return m_pAttributes;}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -105,6 +118,14 @@ public:
 	inline void setName(const QString& name)
 	{m_Name= name;}
 
+	//! Set the instance attributes
+	void setAttributes(const GLC_Attributes& attr)
+	{
+		delete m_pAttributes;
+		m_pAttributes= new GLC_Attributes(attr);
+	}
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -125,6 +146,9 @@ private:
 
 	//! The instance Name
 	QString m_Name;
+
+	//! The Reference attributes
+	GLC_Attributes* m_pAttributes;
 };
 
 #endif /* GLC_STRUCTINSTANCE_H_ */

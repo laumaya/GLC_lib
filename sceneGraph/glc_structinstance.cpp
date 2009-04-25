@@ -35,6 +35,7 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)
 , m_ListOfOccurences()
 , m_RelativeMatrix()
 , m_Name(pStructReference->name())
+, m_pAttributes(NULL)
 {
 	if (pStructReference->haveStructInstance())
 	{
@@ -57,6 +58,7 @@ GLC_StructInstance::GLC_StructInstance(const QString& name)
 , m_ListOfOccurences()
 , m_RelativeMatrix()
 , m_Name(name)
+, m_pAttributes(NULL)
 {
 }
 
@@ -97,6 +99,7 @@ GLC_StructInstance::~GLC_StructInstance()
 	{
 		delete m_pStructReference;
 		delete m_pNumberOfInstance;
+		delete m_pAttributes;
 	}
 	else
 	{
