@@ -245,7 +245,10 @@ GLC_Camera& GLC_Camera::setUpCam(const GLC_Vector4d &Up)
 {
 	if ( !(m_VectUp - Up).isNull() )
 	{
-		setCam(m_Eye, m_Target, Up);
+		if (fabs(getVectCam().getAngleWithVect(Up)) > glc::EPSILON)
+		{
+			setCam(m_Eye, m_Target, Up);
+		}
 	}
 
 	return *this;
@@ -262,6 +265,7 @@ GLC_Camera& GLC_Camera::setCam(GLC_Point4d Eye, GLC_Point4d Target, GLC_Vector4d
 	 * m_VectUp could not be NULL
 	 * VectCam could not be NULL */
 	//Q_ASSERT((Angle > EPSILON) && ((PI - Angle) > EPSILON));
+
 	if ( fabs(fabs(Angle) - (PI / 2)) > EPSILON)
 	{	// Angle not equal to 90¡
 		const GLC_Vector4d AxeRot(VectCam ^ Up);
