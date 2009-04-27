@@ -93,7 +93,7 @@ void GLC_PrimitiveGroup::addTrianglesStrip(const IndexList& input)
 		{
 			m_StripIndexOffset.append(BUFFER_OFFSET(0));
 		}
-		GLuint offset= reinterpret_cast<GLuint>(m_StripIndexOffset.last()) + static_cast<GLuint>(m_StripIndexSizes.last()) * sizeof(GLuint);
+		size_t offset= reinterpret_cast<size_t>(m_StripIndexOffset.last()) + static_cast<size_t>(m_StripIndexSizes.last()) * sizeof(GLvoid*);
 		m_StripIndexOffset.append(BUFFER_OFFSET(offset));
 	}
 	else
@@ -114,7 +114,7 @@ void GLC_PrimitiveGroup::setBaseTrianglesStripOffset(GLvoid* pOffset)
 	const int size= m_StripIndexOffset.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_StripIndexOffset[i]= static_cast<char *>(m_StripIndexOffset[i]) + reinterpret_cast<GLsizei>(pOffset);
+		m_StripIndexOffset[i]= static_cast<char *>(m_StripIndexOffset[i]) + reinterpret_cast<size_t>(pOffset);
 	}
 }
 
@@ -143,7 +143,7 @@ void GLC_PrimitiveGroup::addTrianglesFan(const IndexList& input)
 		{
 			m_FanIndexOffset.append(BUFFER_OFFSET(0));
 		}
-		GLuint offset= reinterpret_cast<GLuint>(m_FanIndexOffset.last()) + static_cast<GLuint>(m_FansIndexSizes.last()) * sizeof(GLuint);
+		size_t offset= reinterpret_cast<size_t>(m_FanIndexOffset.last()) + static_cast<size_t>(m_FansIndexSizes.last()) * sizeof(GLvoid*);
 		m_FanIndexOffset.append(BUFFER_OFFSET(offset));
 	}
 	else
@@ -165,7 +165,7 @@ void GLC_PrimitiveGroup::setBaseTrianglesFanOffset(GLvoid* pOffset)
 	const int size= m_FanIndexOffset.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_FanIndexOffset[i]= static_cast<char *>(m_FanIndexOffset[i]) + reinterpret_cast<GLsizei>(pOffset);
+		m_FanIndexOffset[i]= static_cast<char *>(m_FanIndexOffset[i]) + reinterpret_cast<size_t>(pOffset);
 	}
 }
 
