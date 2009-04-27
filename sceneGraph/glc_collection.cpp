@@ -731,7 +731,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 	        	//qDebug() << "Transparent";
 	        	if ((iEntry.value()->isVisible() == m_IsInShowSate))
 	        	{
-	        		 if (iEntry.value()->haveTransparentMaterials())
+	        		 if (iEntry.value()->hasTransparentMaterials())
 		            {
 		            	iEntry.value()->glExecute(true, m_UseLod, m_pViewport);
 		            }
@@ -805,7 +805,7 @@ void GLC_Collection::glDraw(GLuint groupId, bool transparent)
 		        	//qDebug() << "transparent";
 		            if (iEntry.value()->isVisible() == m_IsInShowSate)
 		            {
-		            	if (iEntry.value()->haveTransparentMaterials())
+		            	if (iEntry.value()->hasTransparentMaterials())
 			            {
 			            	iEntry.value()->glExecute(true, m_UseLod, m_pViewport);
 			            }
