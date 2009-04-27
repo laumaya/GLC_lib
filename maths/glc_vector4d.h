@@ -206,7 +206,7 @@ public:
 	GLC_Vector4d operator ^ (const GLC_Vector4d &Vect) const;
 
 	//! Overload scalar product "*" operator between 2 vector
-	inline const double operator * (const GLC_Vector4d &Vect) const
+	inline double operator * (const GLC_Vector4d &Vect) const
 	{
 		// W Component is ignored
 		return vector[0] * Vect.vector[0] + vector[1] * Vect.vector[1] +
@@ -216,7 +216,7 @@ public:
 	//! Overload scalar product "*" operator between 1 vector and one scalar
 	inline GLC_Vector4d operator * (double Scalaire) const
 	{
-		return GLC_Vector4d(vector[0] * Scalaire, vector[1] * Scalaire, vector[2] * Scalaire);;
+		return GLC_Vector4d(vector[0] * Scalaire, vector[1] * Scalaire, vector[2] * Scalaire);
 	}
 
 
@@ -293,22 +293,22 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return X Compound
-	inline const double X(void) const
+	inline double X(void) const
 	{
 		return vector[0];
 	}
 	//! Return Y Compound
-	inline const double Y(void) const
+	inline double Y(void) const
 	{
 		return vector[1];
 	}
 	//! Return Z Compound
-	inline const double Z(void) const
+	inline double Z(void) const
 	{
 		return vector[2];
 	}
 	//! Return W Compound
-	inline const double W(void) const
+	inline double W(void) const
 	{
 		return vector[3];
 	}
@@ -326,24 +326,24 @@ public:
 		return vector;
 	}
 	//! Return Vector Norm
-	inline const double norm(void) const
+	inline double norm(void) const
 	{
 		return sqrt(vector[0] * vector[0] + vector[1] * vector[1]
 			+ vector[2] * vector[2]);
 	}
 	/*! Vector is null*/
-	inline const bool isNull(void) const
+	inline bool isNull(void) const
 	{
 		bool result;
 
-		result= (fabs(vector[0]) < glc::EPSILON) && (fabs(vector[1]) < glc::EPSILON)
-			&& (fabs(vector[2]) < glc::EPSILON);
+		result= qFuzzyCompare(vector[0], 0.0) and qFuzzyCompare(vector[1], 0.0)
+			and qFuzzyCompare(vector[2], 0.0);
 
 		return result;
 	}
 
 	//! Return the Angle with another vector
-	const double getAngleWithVect(GLC_Vector4d Vect) const;
+	double getAngleWithVect(GLC_Vector4d Vect) const;
 
 	//! Return the vector string
 	QString toString() const;
