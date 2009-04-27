@@ -163,8 +163,8 @@ public:
 	//! Return true if the vector is null
 	inline bool isNull(void) const
 	{
-		return (fabs(dVector[0]) < glc::EPSILON) && (fabs(dVector[1]) < glc::EPSILON)
-		&& (fabs(dVector[2]) < glc::EPSILON);
+		return qFuzzyCompare(dVector[0], 0.0f) and qFuzzyCompare(dVector[1], 0.0f)
+		and qFuzzyCompare(dVector[2], 0.0f);
 	}
 
 //@}
