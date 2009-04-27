@@ -61,7 +61,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return true if this instance have occurence
-	inline bool haveStructOccurence() const
+	inline bool hasStructOccurence() const
 	{ return not m_ListOfOccurences.isEmpty();}
 
 	//! Return first occurence handle
