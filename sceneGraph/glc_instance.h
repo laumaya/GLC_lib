@@ -92,7 +92,7 @@ public:
 	}
 
 	//! Return true if the instance contains mesh which contains transparent material
-	inline bool haveTransparentMaterials() const
+	inline bool hasTransparentMaterials() const
 	{
 		if (NULL == m_pGeomList) return false;
 		const int size= m_pGeomList->size();
@@ -100,7 +100,7 @@ public:
 		int i= 0;
 		while ((i < size) and not result)
 		{
-			result= result or m_pGeomList->at(i)->haveTransparentMaterials();
+			result= result or m_pGeomList->at(i)->hasTransparentMaterials();
 			++i;
 		}
 		return result;
