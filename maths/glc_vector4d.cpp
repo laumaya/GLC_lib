@@ -47,10 +47,10 @@ GLC_Vector4d GLC_Vector4d::operator^ (const GLC_Vector4d &Vect) const
 // Overload equality "==" operator
 bool GLC_Vector4d::operator == (const GLC_Vector4d &Vect) const
 {
-	bool bResult= fabs(vector[0] - Vect.vector[0]) < EPSILON;
-	bResult= (fabs(vector[1] - Vect.vector[1]) < EPSILON) && bResult;
-	bResult= (fabs(vector[2] - Vect.vector[2]) < EPSILON) && bResult;
-	bResult= (fabs(vector[3] - Vect.vector[3]) < EPSILON) && bResult;
+	bool bResult= qFuzzyCompare(vector[0], Vect.vector[0]);
+	bResult= bResult and qFuzzyCompare(vector[1], Vect.vector[1]);
+	bResult= bResult and qFuzzyCompare(vector[2], Vect.vector[2]);
+	bResult= bResult and qFuzzyCompare(vector[3], Vect.vector[3]);
 
 	return bResult;
 }
@@ -111,7 +111,7 @@ GLC_Vector4d& GLC_Vector4d::setNormal(const double &Norme)
 //////////////////////////////////////////////////////////////////////
 
 // Return the Angle with another vector
-const double GLC_Vector4d::getAngleWithVect(GLC_Vector4d Vect) const
+double GLC_Vector4d::getAngleWithVect(GLC_Vector4d Vect) const
 {
 	GLC_Vector4d ThisVect(*this);
 	ThisVect.setNormal(1);
