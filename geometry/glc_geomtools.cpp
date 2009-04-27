@@ -115,8 +115,8 @@ QVector<GLC_Point2d> glc::findIntersection(const GLC_Point2d& s1p1, const GLC_Po
 	// Lines of the segments are the same. Need to test for overlap of segments.
 	const double s0= (D0 * E) / sqrLen0;
 	const double s1= (D0 * D1) / sqrLen0;
-	const double sMin= fmin(s0, s1);
-	const double sMax= fmax(s0, s1);
+	const double sMin= qMin(s0, s1);
+	const double sMax= qMax(s0, s1);
 	QVector<double> overlaps= findIntersection(0.0, 1.0, sMin, sMax);
 	const int iMax= overlaps.size();
 	for (int i= 0; i < iMax; ++i)
@@ -171,8 +171,8 @@ bool glc::isIntersected(const GLC_Point2d& s1p1, const GLC_Point2d& s1p2, const 
 	// Lines of the segments are the same. Need to test for overlap of segments.
 	const double s0= (D0 * E) / sqrLen0;
 	const double s1= s0 + (D0 * D1) / sqrLen0;
-	const double sMin= fmin(s0, s1);
-	const double sMax= fmax(s0, s1);
+	const double sMin= qMin(s0, s1);
+	const double sMax= qMax(s0, s1);
 	if (findIntersection(0.0, 1.0, sMin, sMax).size() == 0) return false; else return true;
 
 }
