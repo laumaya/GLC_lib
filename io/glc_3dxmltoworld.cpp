@@ -712,13 +712,13 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 		const int instanceNumber= instanceList.size();
 		for (int i= 0; i < instanceNumber; ++i)
 		{
-			if (instanceList.at(i)->haveStructOccurence())
+			if (instanceList.at(i)->hasStructOccurence())
 			{
 				QList<GLC_StructOccurence*> occurenceList= instanceList.at(i)->listOfStructOccurences();
 				const int occurenceNumber= occurenceList.size();
 				for (int j= 0; j < occurenceNumber; ++j)
 				{
-					if (pChildInstance->haveStructOccurence() and pChildInstance->firstOccurenceHandle()->isOrphan())
+					if (pChildInstance->hasStructOccurence() and pChildInstance->firstOccurenceHandle()->isOrphan())
 					{
 						Q_ASSERT(pChildInstance->listOfStructOccurences().size() == 1);
 						occurenceList.at(j)->addChild(pChildInstance->firstOccurenceHandle());
@@ -733,7 +733,7 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 			{
 				GLC_StructOccurence* pOccurence= new GLC_StructOccurence(m_pWorld->collection(), instanceList.at(i));
 
-				if (pChildInstance->haveStructOccurence() and pChildInstance->firstOccurenceHandle()->isOrphan())
+				if (pChildInstance->hasStructOccurence() and pChildInstance->firstOccurenceHandle()->isOrphan())
 				{
 					Q_ASSERT(pChildInstance->listOfStructOccurences().size() == 1);
 					pOccurence->addChild(pChildInstance->firstOccurenceHandle());
