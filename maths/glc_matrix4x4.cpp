@@ -138,7 +138,7 @@ GLC_Vector4d GLC_Matrix4x4::operator * (const GLC_Vector4d &Vect) const
 //////////////////////////////////////////////////////////////////////
 
 // Compute matrix determinant
-const double GLC_Matrix4x4::determinant(void) const
+double GLC_Matrix4x4::determinant(void) const
 {
 	double Determinant= 0.0;
 	double SubMat3x3[9];
@@ -257,7 +257,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::invert(void)
 	const double det= determinant();
 
 	// Verifie si l'inversion est possible
-	if ( ( fabs(det) ) < EPSILON)
+	if (qFuzzyCompare(det, 0.0))
 	{
 		qDebug() << "Det < EPSILON";
 		return *this;
@@ -348,7 +348,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::fromEuler(const double angle_x, const double angle
 //////////////////////////////////////////////////////////////////////
 
 // Compute matrix determinant
-const double GLC_Matrix4x4::getDeterminantLC(const int Ligne, const int Colonne) const
+double GLC_Matrix4x4::getDeterminantLC(const int Ligne, const int Colonne) const
 {
 	double Mat3x3[9];
 	double Determinant;
@@ -373,7 +373,7 @@ QVector<double> GLC_Matrix4x4::toEuler(void) const
 	angle_y= -asin(matrix[8]);
 	double C= cos(angle_y);
 
-	if (fabs(C) > EPSILON) // Gimball lock?
+	if (not qFuzzyCompare(C, 0.0)) // Gimball lock?
 	{
 		tracex= matrix[10] / C;
 		tracey= - matrix[9] / C;
@@ -451,7 +451,7 @@ void GLC_Matrix4x4::getSubMat(const int Ligne, const int Colonne, double *Result
 }
 
 // Return determinant of a 3x3 matrix
-const double GLC_Matrix4x4::getDeterminant3x3(const double *Mat3x3) const
+double GLC_Matrix4x4::getDeterminant3x3(const double *Mat3x3) const
 {
 	double Determinant;
 
@@ -463,7 +463,7 @@ const double GLC_Matrix4x4::getDeterminant3x3(const double *Mat3x3) const
 }
 
 // Return transposed matrix
-const GLC_Matrix4x4 GLC_Matrix4x4::getTranspose(void) const
+GLC_Matrix4x4 GLC_Matrix4x4::getTranspose(void) const
 {
 	GLC_Matrix4x4 MatT(matrix);
 	int IndexOrigine;
@@ -483,7 +483,7 @@ const GLC_Matrix4x4 GLC_Matrix4x4::getTranspose(void) const
 }
 
 // Return the comatrix
-const GLC_Matrix4x4 GLC_Matrix4x4::getCoMat4x4(void) const
+GLC_Matrix4x4 GLC_Matrix4x4::getCoMat4x4(void) const
 {
 	GLC_Matrix4x4 CoMat(matrix);
 	double SubMat3x3[9];
