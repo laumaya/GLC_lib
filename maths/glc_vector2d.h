@@ -167,8 +167,8 @@ public:
 	/*! Overload equality "==" operator*/
 	inline bool operator == (const GLC_Vector2d &Vect) const
 	{
-		bool bResult= fabs(dVecteur[0] - Vect.dVecteur[0]) < glc::EPSILON;
-		bResult= (fabs(dVecteur[1] - Vect.dVecteur[1]) < glc::EPSILON) && bResult;
+		bool bResult= qFuzzyCompare(dVecteur[0], Vect.dVecteur[0]);
+		bResult= bResult and qFuzzyCompare(dVecteur[1], Vect.dVecteur[1]);
 
 		return bResult;
 	}
@@ -241,7 +241,7 @@ public:
 	/*! Return true if the vector is null*/
 	inline bool isNull(void) const
 	{
-		return (fabs(dVecteur[0]) < glc::EPSILON) && (fabs(dVecteur[1]) < glc::EPSILON);
+		return qFuzzyCompare(dVecteur[0], 0.0) and qFuzzyCompare(dVecteur[1], 0.0);
 	}
 	//! return the string representation of vector
 	inline QString toString() const
