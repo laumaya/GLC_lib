@@ -93,7 +93,7 @@ void GLC_SetTargetMover::init(int x, int y)
 	}
 
 	// Test if there is geometry under picking point
-	if (fabs(Depth - 1.0) > glc::EPSILON)
+	if (not qFuzzyCompare(Depth, 1.0f))
 	{	// Geometry find -> Update camera's target position
 		const GLC_Point4d target(pX, pY, pZ);
 		m_pViewport->cameraHandle()->setTargetCam(target);
