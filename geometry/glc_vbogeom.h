@@ -128,10 +128,10 @@ public:
 
 	//! Get the geometry transparency
 	inline bool isTransparent() const
-	{return (m_TransparentMaterialNumber == m_MaterialHash.size()) and haveTransparentMaterials();}
+	{return (m_TransparentMaterialNumber == m_MaterialHash.size()) and hasTransparentMaterials();}
 
-	//! Return the true if the geometry contains transparent materials
-	inline bool haveTransparentMaterials() const
+	//! Return true if the geometry contains transparent materials
+	inline bool hasTransparentMaterials() const
 	{return m_TransparentMaterialNumber > 0;}
 
 	//! return true if color per vertex is used
