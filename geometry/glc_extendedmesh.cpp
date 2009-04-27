@@ -521,21 +521,21 @@ void GLC_ExtendedMesh::finishVbo()
 			// Add group triangles index to engine triangles index vector
 			if (iGroup.value()->containsTriangles())
 			{
-				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
+				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLvoid*)));
 				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
 			}
 
 			// Add group strip index to engine strip index vector
 			if (iGroup.value()->containsStrip())
 			{
-				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
+				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLvoid*)));
 				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
 			}
 
 			// Add group fan index to engine fan index vector
 			if (iGroup.value()->containsFan())
 			{
-				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
+				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLvoid*)));
 				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
 			}
 
