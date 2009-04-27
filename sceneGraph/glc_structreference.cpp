@@ -79,7 +79,7 @@ void GLC_StructReference::setRepresentation(const GLC_Instance& rep)
 	if (haveStructInstance())
 	{
 		GLC_StructInstance* pInstance= firstInstanceHandle();
-		if (pInstance->haveStructOccurence())
+		if (pInstance->hasStructOccurence())
 		{
 			QList<GLC_StructOccurence*> occurenceList= pInstance->listOfStructOccurences();
 			const int size= occurenceList.size();
