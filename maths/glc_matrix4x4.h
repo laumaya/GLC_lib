@@ -105,7 +105,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return the matrix determinant
-	const double determinant(void) const;
+	double determinant(void) const;
 
 	//! return a pointer to a row first array of 16 elements
 	inline const double *data(void) const
@@ -160,7 +160,7 @@ public:
 private:
 
 	//! Return true if the index (argument) is in the diagonal of the matrix
-	inline const bool isDiagonal(const int index) const
+	inline bool isDiagonal(const int index) const
 	{
 		if ((index == 0) || (index == 5) || (index == 10) || (index == 15))
 			return true;
@@ -169,19 +169,19 @@ private:
 	}
 
 	//! Return the determinant of a matrix cell
-	const double getDeterminantLC(const int, const int) const;
+	double getDeterminantLC(const int, const int) const;
 
 	//! Compute Sub 3X3 matrix
 	void getSubMat(const int, const int, double *) const;
 
 	// Return the Matrix 3X3 determinant
-	const double getDeterminant3x3(const double *) const;
+	double getDeterminant3x3(const double *) const;
 
 	//! Return the transpose matrix
-	const GLC_Matrix4x4 getTranspose(void) const;
+	GLC_Matrix4x4 getTranspose(void) const;
 
 	//! Return the co-matrix
-	const GLC_Matrix4x4 getCoMat4x4(void) const;
+	GLC_Matrix4x4 getCoMat4x4(void) const;
 
 
 
