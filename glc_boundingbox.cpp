@@ -120,14 +120,14 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point4d& point)
 	}
 	else
 	{
-		double lowerX= fmin(point.X(), m_Lower.X());
-		double lowerY= fmin(point.Y(), m_Lower.Y());
-		double lowerZ= fmin(point.Z(), m_Lower.Z());
+		double lowerX= qMin(point.X(), m_Lower.X());
+		double lowerY= qMin(point.Y(), m_Lower.Y());
+		double lowerZ= qMin(point.Z(), m_Lower.Z());
 		m_Lower.setVect(lowerX, lowerY, lowerZ);
 
-		double upperX= fmax(point.X(), m_Upper.X());
-		double upperY= fmax(point.Y(), m_Upper.Y());
-		double upperZ= fmax(point.Z(), m_Upper.Z());
+		double upperX= qMax(point.X(), m_Upper.X());
+		double upperY= qMax(point.Y(), m_Upper.Y());
+		double upperZ= qMax(point.Z(), m_Upper.Z());
 		m_Upper.setVect(upperX, upperY, upperZ);
 	}
 	return *this;
@@ -144,14 +144,14 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3d& point)
 	}
 	else
 	{
-		double lowerX= fmin(point.X(), m_Lower.X());
-		double lowerY= fmin(point.Y(), m_Lower.Y());
-		double lowerZ= fmin(point.Z(), m_Lower.Z());
+		double lowerX= qMin(point.X(), m_Lower.X());
+		double lowerY= qMin(point.Y(), m_Lower.Y());
+		double lowerZ= qMin(point.Z(), m_Lower.Z());
 		m_Lower.setVect(lowerX, lowerY, lowerZ);
 
-		double upperX= fmax(point.X(), m_Upper.X());
-		double upperY= fmax(point.Y(), m_Upper.Y());
-		double upperZ= fmax(point.Z(), m_Upper.Z());
+		double upperX= qMax(point.X(), m_Upper.X());
+		double upperY= qMax(point.Y(), m_Upper.Y());
+		double upperZ= qMax(point.Z(), m_Upper.Z());
 		m_Upper.setVect(upperX, upperY, upperZ);
 	}
 	return *this;
@@ -169,14 +169,14 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3df& pointf)
 	}
 	else
 	{
-		double lowerX= fmin(point.X(), m_Lower.X());
-		double lowerY= fmin(point.Y(), m_Lower.Y());
-		double lowerZ= fmin(point.Z(), m_Lower.Z());
+		double lowerX= qMin(point.X(), m_Lower.X());
+		double lowerY= qMin(point.Y(), m_Lower.Y());
+		double lowerZ= qMin(point.Z(), m_Lower.Z());
 		m_Lower.setVect(lowerX, lowerY, lowerZ);
 
-		double upperX= fmax(point.X(), m_Upper.X());
-		double upperY= fmax(point.Y(), m_Upper.Y());
-		double upperZ= fmax(point.Z(), m_Upper.Z());
+		double upperX= qMax(point.X(), m_Upper.X());
+		double upperY= qMax(point.Y(), m_Upper.Y());
+		double upperZ= qMax(point.Z(), m_Upper.Z());
 		m_Upper.setVect(upperX, upperY, upperZ);
 	}
 	return *this;
@@ -193,14 +193,14 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
 	}
 	else
 	{
-		double lowerX= fmin(box.m_Lower.X(), m_Lower.X());
-		double lowerY= fmin(box.m_Lower.Y(), m_Lower.Y());
-		double lowerZ= fmin(box.m_Lower.Z(), m_Lower.Z());
+		double lowerX= qMin(box.m_Lower.X(), m_Lower.X());
+		double lowerY= qMin(box.m_Lower.Y(), m_Lower.Y());
+		double lowerZ= qMin(box.m_Lower.Z(), m_Lower.Z());
 		m_Lower.setVect(lowerX, lowerY, lowerZ);
 
-		double upperX= fmax(box.m_Upper.X(), m_Upper.X());
-		double upperY= fmax(box.m_Upper.Y(), m_Upper.Y());
-		double upperZ= fmax(box.m_Upper.Z(), m_Upper.Z());
+		double upperX= qMax(box.m_Upper.X(), m_Upper.X());
+		double upperY= qMax(box.m_Upper.Y(), m_Upper.Y());
+		double upperZ= qMax(box.m_Upper.Z(), m_Upper.Z());
 		m_Upper.setVect(upperX, upperY, upperZ);
 	}
 
