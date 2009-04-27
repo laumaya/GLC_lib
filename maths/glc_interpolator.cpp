@@ -160,7 +160,7 @@ bool GLC_Interpolator::CalcInterpolAngulaireMat(void)
 	// Calcul de l'angle entre les vecteurs
 	const double Angle= m_VectArrive.getAngleWithVect(m_VectDepart) / m_nNbrPas;
 	// Calcul de la matrice de rotation
-	if (fabs(Angle) < EPSILON)
+	if (qFuzzyCompare(Angle, 0.0))
 	{
 		//TRACE("GLC_Interpolator::CalcInterpolAngulaireMat -> Rotation NULL\n");
 		m_InterpolMat.setToIdentity();
