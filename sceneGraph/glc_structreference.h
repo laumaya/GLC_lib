@@ -74,8 +74,8 @@ public:
 	inline QList<GLC_StructInstance*> listOfStructInstances() const
 	{ return m_ListOfInstance;}
 
-	//! Return true if this reference have a representation
-	inline bool haveRepresentation() const
+	//! Return true if this reference has a representation
+	inline bool hasRepresentation() const
 	{ return NULL != m_pRepresentation;}
 
 	//! Return an instance of the representation
