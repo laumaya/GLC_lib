@@ -37,10 +37,10 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_Struct
 , m_pParent(NULL)
 , m_Childs()
 , m_AbsoluteMatrix()
-, m_HaveRepresentation(pStructInstance->structReference()->haveRepresentation())
+, m_HaveRepresentation(pStructInstance->structReference()->hasRepresentation())
 {
 	// Update the number of occurences
-	if (pStructInstance->haveStructOccurence())
+	if (pStructInstance->hasStructOccurence())
 	{
 		m_pNumberOfOccurence= pStructInstance->firstOccurenceHandle()->m_pNumberOfOccurence;
 		++(*m_pNumberOfOccurence);
@@ -317,7 +317,7 @@ void GLC_StructOccurence::addChild(GLC_StructOccurence* pChild)
 void GLC_StructOccurence::addChild(GLC_StructInstance* pInstance)
 {
 	GLC_StructOccurence* pOccurence;
-	if (not pInstance->haveStructOccurence())
+	if (not pInstance->hasStructOccurence())
 	{
 		pOccurence= new GLC_StructOccurence(m_pCollection, pInstance);
 	}
@@ -366,7 +366,7 @@ void GLC_StructOccurence::checkForRepresentation()
 		GLC_StructReference* pRef= m_pStructInstance->structReference();
 		if (NULL != pRef)
 		{
-			if (pRef->haveRepresentation())
+			if (pRef->hasRepresentation())
 			{
 				GLC_Instance representation(pRef->instanceRepresentation());
 				representation.setName(name());
