@@ -258,7 +258,6 @@ public:
 		else
 		{
 			for (int i= 0; i < size; ++i)
-
 			{
 				const int lodValue= choseLod(m_pGeomList->at(i)->boundingBox(), pView);
 				if (lodValue <= 100)
