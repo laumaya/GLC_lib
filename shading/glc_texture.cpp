@@ -39,6 +39,7 @@ const QSize GLC_Texture::m_MinTextureSize(10, 10);
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 
+// Constructor with fileName
 GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
 : m_pQGLContext(const_cast<QGLContext*>(pContext))
 , m_File(Filename)
@@ -55,7 +56,7 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
 		throw(e);
 	}
 }
-
+// Constructor with QFile
 GLC_Texture::GLC_Texture(const QGLContext *pContext, const QFile &file)
 : m_pQGLContext(const_cast<QGLContext*>(pContext))
 , m_File(file.fileName())
@@ -71,6 +72,17 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QFile &file)
 		GLC_Exception e(ErrorMess);
 		throw(e);
 	}
+}
+
+// Constructor with QImage
+GLC_Texture::GLC_Texture(const QGLContext* pContext, const QImage& image)
+: m_pQGLContext(const_cast<QGLContext*>(pContext))
+, m_File()
+, m_GlTextureID(0)
+, m_pTextureImage(new QImage(image))
+, m_TextureSize()
+{
+	Q_ASSERT(not m_pTextureImage->isNull());
 }
 
 GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)

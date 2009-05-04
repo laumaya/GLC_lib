@@ -47,13 +47,16 @@ class GLC_Texture
 
 public:
 	//! Constructor with fileName
-	GLC_Texture(const QGLContext *, const QString &);
+	GLC_Texture(const QGLContext*, const QString&);
 
 	//! Constructor with QFile
-	GLC_Texture(const QGLContext *, const QFile &);
+	GLC_Texture(const QGLContext*, const QFile&);
+
+	//! Constructor with QImage
+	GLC_Texture(const QGLContext*, const QImage&);
 
 	//! Copy constructor
-	GLC_Texture(const GLC_Texture &TextureToCopy);
+	GLC_Texture(const GLC_Texture& TextureToCopy);
 
 	//! Default Destructor
 	virtual ~GLC_Texture();
