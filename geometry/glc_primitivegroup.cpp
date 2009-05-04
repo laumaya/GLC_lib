@@ -180,3 +180,23 @@ void GLC_PrimitiveGroup::setBaseTrianglesFanOffseti(int offset)
 	}
 }
 
+// Clear the group
+void GLC_PrimitiveGroup::clear()
+{
+	m_TrianglesIndex.clear();
+	m_pBaseTrianglesOffset= NULL;
+	m_BaseTrianglesOffseti= 0;
+	m_StripsIndex.clear();
+	m_StripIndexSizes.clear();
+	m_StripIndexOffset.clear();
+	m_StripIndexOffseti.clear();
+	m_FansIndex.clear();
+	m_FansIndexSizes.clear();
+	m_FanIndexOffset.clear();
+	m_FanIndexOffseti.clear();
+	m_IsFinished= false;
+	m_TrianglesIndexSize= 0;
+	m_TrianglesStripSize= 0;
+	m_TrianglesFanSize= 0;
+}
+
