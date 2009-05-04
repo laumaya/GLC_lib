@@ -27,6 +27,8 @@
 #ifndef GLC_VECTOR4D_H_
 #define GLC_VECTOR4D_H_
 
+#include <QVector>
+
 #include "glc_utils_maths.h"
 #include "glc_vector2d.h"
 #include "glc_vector3d.h"
@@ -352,6 +354,14 @@ public:
 	/*! retrieve component corresponding to
 	 * mask NULL component*/
 	GLC_Vector2d toVector2d(const GLC_Vector4d&) const;
+
+	//! Return a QVector<float> of 3 values
+	inline QVector<float> toFloat3dQVector() const
+	{
+		QVector<float> result;
+		result << static_cast<float>(vector[0]) << static_cast<float>(vector[1]) << static_cast<float>(vector[2]);
+		return result;
+	}
 //@}
 
 //////////////////////////////////////////////////////////////////////
