@@ -37,6 +37,7 @@
 #include "geometry/glc_box.h"
 #include "geometry/glc_cylinder.h"
 #include "geometry/glc_mesh2.h"
+#include "geometry/glc_rectangle.h"
 #include "shading/glc_material.h"
 #include "shading/glc_texture.h"
 #include "sceneGraph/glc_instance.h"
@@ -89,6 +90,9 @@ public:
 
 	//! Create an GLC_Cylinder
 	GLC_Instance createCylinder(double radius, double length) const;
+
+	//!Create ang GLC_Rectangle
+	GLC_Instance createRectangle(const GLC_Vector4d&, double, double);
 
 	//! Create an GLC_World* with a QFile
 	GLC_World* createWorld(QFile &file, QStringList* pAttachedFileName= NULL) const;

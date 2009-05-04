@@ -124,6 +124,13 @@ GLC_Instance GLC_Factory::createCylinder(double radius, double length) const
 	return newCylinder;
 }
 
+// Create ang GLC_Rectangle
+GLC_Instance GLC_Factory::createRectangle(const GLC_Vector4d& normal, double l1, double l2)
+{
+	GLC_Instance newRectangle(new GLC_Rectangle(normal, l1, l2));
+	return newRectangle;
+}
+
 // Create an GLC_World* with a QFile
 GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName) const
 {
