@@ -40,12 +40,20 @@ GLC_GeomEngine::GLC_GeomEngine(const GLC_GeomEngine&)
 
 }
 
+// Destructor
 GLC_GeomEngine::~GLC_GeomEngine()
 {
-	if (GLC_State::vboUsed())
+	clear();
+}
+//////////////////////////////////////////////////////////////////////
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+
+// Clear the engine
+void GLC_GeomEngine::clear()
+{
+	if (0 != m_VboId)
 	{
-		// VBO
-		if (0 != m_VboId)
-			glDeleteBuffers(1, &m_VboId);
+		glDeleteBuffers(1, &m_VboId);
 	}
 }
