@@ -63,6 +63,14 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+	//! Return true if there is an active mover
+	inline bool hasActiveMover() const
+	{ return (m_ActiveMoverId != 0);}
+
+	//! Return the active mover id
+	inline int activeMoverId() const
+	{return m_ActiveMoverId;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
