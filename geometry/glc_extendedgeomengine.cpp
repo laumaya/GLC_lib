@@ -66,6 +66,13 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine(const GLC_ExtendedGeomEngine& eng
 
 GLC_ExtendedGeomEngine::~GLC_ExtendedGeomEngine()
 {
+
+	// Delete Normal VBO
+	if (0 != m_NormalVboId)
+	{
+		glDeleteBuffers(1, &m_NormalVboId);
+	}
+
 	// Delete Texel VBO
 	if (0 != m_TexelVboId)
 	{
@@ -171,6 +178,38 @@ void GLC_ExtendedGeomEngine::finished()
 	{
 		m_EngineLodList[i]->finished();
 	}
+}
+
+// Clear the engine
+void GLC_ExtendedGeomEngine::clear()
+{
+	GLC_GeomEngine::clear();
+	m_Positions.clear();
+	m_Normals.clear();
+	m_Texels.clear();
+	m_PositionSize= 0;
+	m_TexelsSize= 0;
+
+	// Delete Normal VBO
+	if (0 != m_NormalVboId)
+	{
+		glDeleteBuffers(1, &m_NormalVboId);
+		m_NormalVboId= 0;
+	}
+
+	// Delete Texel VBO
+	if (0 != m_TexelVboId)
+	{
+		glDeleteBuffers(1, &m_TexelVboId);
+		m_TexelVboId= 0;
+	}
+
+	const int size= m_EngineLodList.size();
+	for (int i= 0; i < size; ++i)
+	{
+		delete m_EngineLodList.at(i);
+	}
+	m_EngineLodList.clear();
 }
 
 

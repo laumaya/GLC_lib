@@ -117,6 +117,9 @@ public:
 	//! The mesh wich use this engine is finished
 	void finished();
 
+	//! Clear the engine
+	void clear();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
