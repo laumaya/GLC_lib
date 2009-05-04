@@ -169,11 +169,6 @@ void GLC_VboGeom::updateTransparentMaterialNumber()
 		++iMat;
 	}
 }
-// Reverse normal
-void GLC_VboGeom::reverseNormals()
-{
-	// Nothing to do by default
-}
 
 // Add material to mesh
 void GLC_VboGeom::addMaterial(GLC_Material* pMaterial)

@@ -176,7 +176,7 @@ public:
 	void updateTransparentMaterialNumber();
 
 	//! Reverse normal
-	virtual void reverseNormals();
+	virtual void reverseNormals() {}
 
 	//! Set the lod Index
 	/*! The value must be between 0 and 100*/
