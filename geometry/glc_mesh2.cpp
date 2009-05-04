@@ -116,7 +116,7 @@ unsigned int GLC_Mesh2::numberOfFaces() const
 // Get number of vertex
 unsigned int GLC_Mesh2::numberOfVertex() const
 {
-	return m_NumberOfFaces / 3;
+	return m_NumberOfFaces * 3;
 }
 
 // return the mesh bounding box
