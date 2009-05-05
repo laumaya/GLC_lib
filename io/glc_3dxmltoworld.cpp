@@ -311,7 +311,19 @@ void GLC_3dxmlToWorld::loadProductStructure()
 		while (iInstance != m_InstanceOfExtRefHash.constEnd())
 		{
 			GLC_StructInstance* pInstance= iInstance.key();
-			GLC_StructReference* pRef= m_ExternalReferenceHash.value(iInstance.value());
+			GLC_StructReference* pRef;
+			if (m_ExternalReferenceHash.contains(iInstance.value()))
+			{
+				pRef= m_ExternalReferenceHash.value(iInstance.value());
+			}
+			else
+			{
+				QString referenceName= pInstance->name();
+				referenceName= referenceName.left(pInstance->name().lastIndexOf('.'));
+				qDebug() << referenceName;
+				pRef= new GLC_StructReference(referenceName);
+			}
+
 			pInstance->setReference(pRef);
 
 			++iInstance;
@@ -511,10 +523,16 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		const QString currentRefFileName= (*iExtRef);
 		//qDebug() << "Current File name : " << currentRefFileName;
 		// Get the refFile of the 3dxml
-		setStreamReaderToFile(currentRefFileName);
+		if (setStreamReaderToFile(currentRefFileName))
+		{
+			GLC_StructReference* pCurrentRef= createReferenceRep();
+			m_ExternalReferenceHash.insert(currentRefFileName, pCurrentRef);
+		}
+		else
+		{
+			qDebug() << "GLC_3dxmlToWorld::loadExternalRef3D No File Found";
+		}
 
-		GLC_StructReference* pCurrentRef= createReferenceRep();
-		m_ExternalReferenceHash.insert(currentRefFileName, pCurrentRef);
 		++currentFileIndex;
 		// Progrees bar indicator
 		currentQuantumValue = static_cast<int>((static_cast<double>(currentFileIndex) / size) * 100);
@@ -670,6 +688,8 @@ GLC_Matrix4x4 GLC_3dxmlToWorld::loadMatrix(const QString& stringMatrix)
 
 	QStringList stringValues(stringMatrix.split(" "));
 
+	if (stringValues.size() != 12) return GLC_Matrix4x4();
+
 	QVector<double> values(16);
 	// Rotation
 	values[0]= stringValues[0].toDouble();
@@ -706,6 +726,7 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 		{
 			pChildInstance->setReference(new GLC_StructReference("Part"));
 		}
+		Q_ASSERT(m_ReferenceHash.contains((*iLink).m_ParentRefId));
 		GLC_StructReference* pRef= m_ReferenceHash.value((*iLink).m_ParentRefId);
 		// Attach pInstance at all Occurence of pRef
 		QList<GLC_StructInstance*> instanceList= pRef->listOfStructInstances();
@@ -924,7 +945,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName)
 		// Create QuaZip File
 		m_p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
 
-		// Get the manifest of the 3dxml
+		// Get the file of the 3dxml
 		if (not m_p3dxmlArchive->setCurrentFile(fileName, QuaZip::csInsensitive))
 		{
 			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + m_FileName + " doesn't contains " + fileName);
@@ -934,7 +955,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName)
 			throw(fileFormatException);
 		}
 
-		// Open the manifest of the 3dxml
+		// Open the file of the 3dxml
 		if(not m_p3dxmlFile->open(QIODevice::ReadOnly))
 	    {
 			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile Unable to Open ") + fileName);
@@ -961,9 +982,10 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName)
 		{
 			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + fileName + QString(" not found"));
 			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotFound);
-			clear();
-			throw(fileFormatException);
+			//GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotFound);
+			//clear();
+			return false;
+			//throw(fileFormatException);
 		}
 		// Set the stream reader
 		delete m_pStreamReader;
