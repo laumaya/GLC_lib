@@ -67,7 +67,7 @@ public:
 	{return m_AttributesHash.size();}
 
 	//! Return true if the specified attribute exist
-	bool constains(const QString& name) const
+	bool contains(const QString& name) const
 	{return m_AttributesHash.contains(name);}
 
 	//! Return the list of attribute name
