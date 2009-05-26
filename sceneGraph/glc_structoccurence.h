@@ -72,9 +72,9 @@ public:
 	inline bool isOrphan() const
 	{ return NULL == m_pParent;}
 
-	//! Return true if this occurence have a representation
-	inline bool haveRepresentation() const
-	{ return m_HaveRepresentation;}
+	//! Return true if this occurence has a representation
+	inline bool hasRepresentation() const
+	{ return m_HasRepresentation;}
 
 	//! Return the instance of this occurence
 	inline GLC_StructInstance* structInstance() const
@@ -186,8 +186,8 @@ private:
 	//! The absolute matrix of the occurence
 	GLC_Matrix4x4 m_AbsoluteMatrix;
 
-	//! true if occurence have a representation
-	bool m_HaveRepresentation;
+	//! true if occurence has a representation
+	bool m_HasRepresentation;
 
 };
 

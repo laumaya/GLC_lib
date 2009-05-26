@@ -37,7 +37,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_Struct
 , m_pParent(NULL)
 , m_Childs()
 , m_AbsoluteMatrix()
-, m_HaveRepresentation(pStructInstance->structReference()->hasRepresentation())
+, m_HasRepresentation(pStructInstance->structReference()->hasRepresentation())
 {
 	// Update the number of occurences
 	if (pStructInstance->hasStructOccurence())
@@ -57,7 +57,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_Struct
 	}
 
 	// Add instance representation in the collection
-	if (m_HaveRepresentation)
+	if (m_HasRepresentation)
 	{
 		GLC_Instance representation(pStructInstance->structReference()->instanceRepresentation());
 		// Force instance representation id
@@ -82,13 +82,13 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 , m_pParent(NULL)
 , m_Childs()
 , m_AbsoluteMatrix(structOccurence.m_AbsoluteMatrix)
-, m_HaveRepresentation(structOccurence.m_HaveRepresentation)
+, m_HasRepresentation(structOccurence.m_HasRepresentation)
 {
 	// Change object id
 	setId(glc::GLC_GenID());
 	++(*m_pNumberOfOccurence);
 
-	if (m_HaveRepresentation)
+	if (m_HasRepresentation)
 	{
 		// Add occurence instance representation to the collection
 		GLC_Instance newRep= structOccurence.m_pCollection->instanceHandle(structOccurence.id())->instanciate();
@@ -129,7 +129,7 @@ GLC_StructOccurence::~GLC_StructOccurence()
 {
 	Q_ASSERT(m_pNumberOfOccurence != NULL);
 	// Remove collection representation if necessary
-	if (m_HaveRepresentation and not m_pCollection->isEmpty())
+	if (m_HasRepresentation and not m_pCollection->isEmpty())
 	{
 		m_pCollection->remove(id());
 	}
@@ -161,7 +161,7 @@ GLC_StructOccurence::~GLC_StructOccurence()
 unsigned int GLC_StructOccurence::numberOfFaces() const
 {
 	unsigned int result= 0;
-	if (m_HaveRepresentation)
+	if (m_HasRepresentation)
 	{
 		result= structInstance()->structReference()->numberOfFaces();
 	}
@@ -180,7 +180,7 @@ unsigned int GLC_StructOccurence::numberOfFaces() const
 unsigned int GLC_StructOccurence::numberOfVertex() const
 {
 	unsigned int result= 0;
-	if (m_HaveRepresentation)
+	if (m_HasRepresentation)
 	{
 		result= structInstance()->structReference()->numberOfVertex();
 	}
@@ -200,7 +200,7 @@ unsigned int GLC_StructOccurence::numberOfMaterials() const
 {
 	unsigned int result= 0;
 	QSet<GLC_Material*> materialSet;
-	if (m_HaveRepresentation)
+	if (m_HasRepresentation)
 	{
 		result= structInstance()->structReference()->numberOfMaterials();
 	}
@@ -220,7 +220,7 @@ unsigned int GLC_StructOccurence::numberOfMaterials() const
 QSet<GLC_Material*> GLC_StructOccurence::materialSet() const
 {
 	QSet<GLC_Material*> materialSet;
-	if (m_HaveRepresentation)
+	if (m_HasRepresentation)
 	{
 		materialSet= structInstance()->structReference()->materialSet();
 	}
@@ -245,7 +245,7 @@ GLC_StructOccurence* GLC_StructOccurence::clone(GLC_Collection* pCollection) con
 bool GLC_StructOccurence::isVisible() const
 {
 	bool isHidden= true;
-	if (m_HaveRepresentation)
+	if (m_HasRepresentation)
 	{
 		isHidden= not m_pCollection->instanceHandle(id())->isVisible();
 	}
@@ -283,7 +283,7 @@ GLC_StructOccurence* GLC_StructOccurence::updateAbsoluteMatrix()
 		m_AbsoluteMatrix= m_pStructInstance->relativeMatrix();
 	}
 	// If the occurence have a representation, update it.
-	if (m_HaveRepresentation)
+	if (m_HasRepresentation)
 	{
 		m_pCollection->instanceHandle(id())->setMatrix(m_AbsoluteMatrix);
 	}
@@ -352,7 +352,7 @@ void GLC_StructOccurence::makeOrphan()
 // Reverse Normals of this Occurence and childs
 void GLC_StructOccurence::reverseNormals()
 {
-	if (m_HaveRepresentation)
+	if (m_HasRepresentation)
 	{
 		m_pCollection->instanceHandle(id())->reverseGeometriesNormals();
 	}
@@ -374,7 +374,7 @@ void GLC_StructOccurence::checkForRepresentation()
 				representation.setId(id());
 				m_pCollection->add(representation);
 			}
-			m_HaveRepresentation= true;
+			m_HasRepresentation= true;
 		}
 	}
 }
