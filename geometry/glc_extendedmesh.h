@@ -68,6 +68,10 @@ public:
 	//! Get number of vertex
 	virtual unsigned int numberOfVertex() const;
 
+	//! Get number of normals
+	inline unsigned int numberOfNormals() const
+	{ return m_NumberOfNormals;}
+
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
 
@@ -93,7 +97,10 @@ public:
 
 	//! Add Normals
 	inline void addNormals(const GLfloatVector& normals)
-	{*(m_ExtendedGeomEngine.normalVectorHandle())+= normals;}
+	{
+		*(m_ExtendedGeomEngine.normalVectorHandle())+= normals;
+		m_NumberOfNormals+= normals.size() / 3;
+	}
 
 	//! Add texel
 	inline void addTexels(const GLfloatVector& texels)
@@ -174,6 +181,9 @@ private:
 
 	//! Mesh number of vertice
 	unsigned int m_NumberOfVertice;
+
+	//! Mesh number of normals
+	unsigned int m_NumberOfNormals;
 
 	//! Selection state
 	bool m_IsSelected;
