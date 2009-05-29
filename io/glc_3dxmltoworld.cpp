@@ -679,7 +679,15 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 
 	pMesh->finished();
 
-	return new GLC_StructReference(currentMeshInstance);
+	currentMeshInstance.removeEmptyGeometry();
+	if (not currentMeshInstance.isEmpty())
+	{
+		return new GLC_StructReference(currentMeshInstance);
+	}
+	else
+	{
+		return new GLC_StructReference("Empty Rep");
+	}
 }
 
 // Load Matrix
@@ -1056,7 +1064,11 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 		if (setStreamReaderToFile(currentRefFileName))
 		{
 			GLC_Instance instance= loadCurrentExtRep();
-			repHash.insert(id, instance);
+			instance.removeEmptyGeometry();
+			if (not instance.isEmpty())
+			{
+				repHash.insert(id, instance);
+			}
 		}
 
 		// Progrees bar indicator
@@ -1130,6 +1142,7 @@ GLC_Instance GLC_3dxmlToWorld::loadCurrentExtRep()
 		if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
 		{
 			qDebug() << " Master LOD not found";
+			pMesh->finished();
 			return currentMeshInstance;
 		}
 
