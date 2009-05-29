@@ -55,5 +55,6 @@ void GLC_GeomEngine::clear()
 	if (0 != m_VboId)
 	{
 		glDeleteBuffers(1, &m_VboId);
+		m_VboId= 0;
 	}
 }
