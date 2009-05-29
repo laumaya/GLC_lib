@@ -184,11 +184,20 @@ public:
 	 */
 	bool setGeometry(GLC_VboGeom* pGeom);
 
+	//! Remove empty geometries
+	void removeEmptyGeometry();
+
 	//! Reverse geometry normals
 	void reverseGeometriesNormals();
 
 	//! Translate Instance
 	GLC_Instance& translate(double Tx, double Ty, double Tz);
+
+	//! Translate Instance
+	inline GLC_Instance& translate(const GLC_Vector4d& v)
+	{
+		return translate(v.X(), v.Y(), v.Z());
+	}
 
 	//! Move instance with a 4x4Matrix
 	GLC_Instance& multMatrix(const GLC_Matrix4x4 &MultMat);

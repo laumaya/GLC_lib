@@ -326,6 +326,32 @@ bool GLC_Instance::setGeometry(GLC_VboGeom* pGeom)
 	}
 }
 
+// Remove empty geometries
+void GLC_Instance::removeEmptyGeometry()
+{
+	if (NULL != m_pGeomList)
+	{
+		QList<GLC_VboGeom*>::iterator iGeomList= m_pGeomList->begin();
+		while(iGeomList != m_pGeomList->constEnd())
+		{
+			if ((*iGeomList)->numberOfVertex() == 0)
+			{
+				delete (*iGeomList);
+				iGeomList= m_pGeomList->erase(iGeomList);
+			}
+			else
+			{
+				++iGeomList;
+			}
+		}
+		if (m_pGeomList->isEmpty())
+		{
+			delete m_pGeomList;
+			m_pGeomList= NULL;
+		}
+	}
+}
+
 // Reverse geometry normals
 void GLC_Instance::reverseGeometriesNormals()
 {
