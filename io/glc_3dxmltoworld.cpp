@@ -124,6 +124,9 @@ GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file)
 		loadManifest();
 	}
 
+	// Trying to Load CATRefMaterial File
+	loadCatMaterialRef();
+
 	// Load the product structure
 	loadProductStructure();
 
@@ -245,7 +248,6 @@ QString GLC_3dxmlToWorld::getContent(const QString& element)
 void GLC_3dxmlToWorld::loadProductStructure()
 {
 	setStreamReaderToFile(m_RootName);
-
 	goToElement("ProductStructure");
 	if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
 	{
@@ -945,7 +947,7 @@ GLC_Material* GLC_3dxmlToWorld::getMaterial()
 }
 
 // Set the stream reader to the specified file
-bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName)
+bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 {
 	if (m_IsInArchive)
 	{
@@ -956,11 +958,15 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName)
 		// Get the file of the 3dxml
 		if (not m_p3dxmlArchive->setCurrentFile(fileName, QuaZip::csInsensitive))
 		{
-			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + m_FileName + " doesn't contains " + fileName);
-			qDebug() << message;
-			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
-			clear();
-			throw(fileFormatException);
+			if (not test)
+			{
+				QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + m_FileName + " doesn't contains " + fileName);
+				qDebug() << message;
+				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
+				clear();
+				throw(fileFormatException);
+			}
+			else return false;
 		}
 
 		// Open the file of the 3dxml
@@ -1198,5 +1204,14 @@ GLC_Instance GLC_3dxmlToWorld::loadCurrentExtRep()
 	pMesh->finished();
 
 	return currentMeshInstance;
+}
+// Load CatMaterial Ref if present
+void GLC_3dxmlToWorld::loadCatMaterialRef()
+{
+	if (setStreamReaderToFile("CATMaterialRef.3dxml", true))
+	{
+		// Load the material file
+		qDebug() << "CATMaterialRef.3dxml found and current";
 
+	}
 }

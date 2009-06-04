@@ -170,7 +170,7 @@ private:
 	GLC_Material* getMaterial();
 
 	//! Set the stream reader to the specified file
-	bool setStreamReaderToFile(QString);
+	bool setStreamReaderToFile(QString, bool test= false);
 
 	//! Load the local representation
 	void loadLocalRepresentations();
@@ -180,6 +180,9 @@ private:
 
 	//! Return the instance of the current extern representation
 	GLC_Instance loadCurrentExtRep();
+
+	//! Load CatMaterial Ref if present
+	void loadCatMaterialRef();
 
 //@}
 
