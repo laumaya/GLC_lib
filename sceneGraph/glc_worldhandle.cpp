@@ -1,0 +1,74 @@
+/****************************************************************************
+
+ This file is part of the GLC-lib library.
+ Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 1.1.0, packaged on March, 2009.
+
+ http://glc-lib.sourceforge.net
+
+ GLC-lib is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ GLC-lib is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with GLC-lib; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+ *****************************************************************************/
+
+#include "glc_worldhandle.h"
+#include "glc_structreference.h"
+
+GLC_WorldHandle::GLC_WorldHandle()
+: m_Collection()
+, m_NumberOfWorld(1)
+, m_OccurenceHash()
+{
+
+}
+
+GLC_WorldHandle::~GLC_WorldHandle()
+{
+
+}
+
+// An Occurence has been added
+void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelected, GLuint shaderId)
+{
+	Q_ASSERT(not m_OccurenceHash.contains(pOccurence->id()));
+	m_OccurenceHash.insert(pOccurence->id(), pOccurence);
+
+	// Add instance representation in the collection
+	if (pOccurence->hasRepresentation())
+	{
+		GLC_Instance representation(pOccurence->structReference()->instanceRepresentation());
+		// Force instance representation id
+		representation.setId(pOccurence->id());
+		if (0 != shaderId) m_Collection.bindShader(shaderId);
+		m_Collection.add(representation, shaderId);
+		if (isSelected)
+		{
+			qDebug() << pOccurence->name() << "selected";
+			m_Collection.select(pOccurence->id());
+		}
+	}
+}
+
+// An Occurence has been removed
+void GLC_WorldHandle::removeOccurence(GLC_StructOccurence* pOccurence)
+{
+	Q_ASSERT(m_OccurenceHash.contains(pOccurence->id()));
+	m_OccurenceHash.remove(pOccurence->id());
+	// Remove instance representation from the collection
+	if (pOccurence->hasRepresentation())
+	{
+		//qDebug() << "Remove " << pOccurence->name();
+		m_Collection.remove(pOccurence->id());
+	}
+}
