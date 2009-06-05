@@ -30,37 +30,34 @@
 
 // Default constructor
 GLC_World::GLC_World()
-: m_pCollection(new GLC_Collection())
-, m_pRoot(new GLC_StructOccurence(m_pCollection, (new GLC_StructReference())->createStructInstance()))
-, m_pNumberOfWorld(new int(1))
+: m_pWorldHandle(new GLC_WorldHandle())
+, m_pRoot(new GLC_StructOccurence(m_pWorldHandle, (new GLC_StructReference())->createStructInstance()))
 {
 	//qDebug() << "GLC_World::GLC_World() : " << (*m_pNumberOfWorld) << " " << this;
 }
 
 // Copy constructor
 GLC_World::GLC_World(const GLC_World& world)
-: m_pCollection(world.m_pCollection)
+: m_pWorldHandle(world.m_pWorldHandle)
 , m_pRoot(world.m_pRoot)
-, m_pNumberOfWorld(world.m_pNumberOfWorld)
 {
 	//qDebug() << "GLC_World::GLC_World() : " << (*m_pNumberOfWorld) << " " << this;
 	// Increment the number of world
-	++(*m_pNumberOfWorld);
+	m_pWorldHandle->increment();
 }
 
 GLC_World::~GLC_World()
 {
 
 	// Decrement the number of world
-	--(*m_pNumberOfWorld);
+	m_pWorldHandle->decrement();
 	//qDebug() << "GLC_World::GLC_World() : " << (*m_pNumberOfWorld) << " " << this;
-	if ((*m_pNumberOfWorld) == 0)
+	if (m_pWorldHandle->isOrphan())
 	{
 		// this is the last World, delete the root product and collection
-		m_pCollection->clear(); // Clear collection first (performance)
+		//m_pWorldHandle->collection()->clear(); // Clear collection first (performance)
 		delete m_pRoot;
-		delete m_pCollection;
-		delete m_pNumberOfWorld;
+		delete m_pWorldHandle;
 	}
 }
 
@@ -74,13 +71,13 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 		const int size= childs.size();
 		for (int i= 0; i < size; ++i)
 		{
-			m_pRoot->addChild(childs.at(i)->clone(m_pCollection));
+			m_pRoot->addChild(childs.at(i)->clone(m_pWorldHandle));
 		}
 		m_pRoot->updateChildsAbsoluteMatrix();
 	}
 	else
 	{
-		m_pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pCollection));
+		m_pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pWorldHandle));
 	}
 }
 
@@ -88,18 +85,16 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 GLC_World& GLC_World::operator=(const GLC_World& world)
 {
 	// Decrement the number of world
-	--(*m_pNumberOfWorld);
-	if ((*m_pNumberOfWorld) == 0)
+	m_pWorldHandle->decrement();
+	if (m_pWorldHandle->isOrphan())
 	{
 		// this is the last World, delete the root product and collection
-		m_pCollection->clear(); // Clear collection first (performance)
+		//m_pWorldHandle->collection()->clear(); // Clear collection first (performance)
 		delete m_pRoot;
-		delete m_pCollection;
-		delete m_pNumberOfWorld;
+		delete m_pWorldHandle;
 	}
 	m_pRoot= world.m_pRoot;
-	m_pCollection= world.m_pCollection;
-	m_pNumberOfWorld= world.m_pNumberOfWorld;
-	++(*m_pNumberOfWorld);
+	m_pWorldHandle= world.m_pWorldHandle;
+	m_pWorldHandle->increment();
 	return *this;
 }

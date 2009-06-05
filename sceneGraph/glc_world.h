@@ -31,7 +31,7 @@
 #include "glc_structoccurence.h"
 #include "glc_structreference.h"
 #include "glc_structinstance.h"
-
+#include "glc_worldhandle.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_World
@@ -69,13 +69,13 @@ public:
 	inline GLC_StructOccurence* rootOccurence() const {return m_pRoot;}
 
 	//! Return the world collection
-	inline GLC_Collection* collection() {return m_pCollection;}
+	inline GLC_Collection* collection() {return m_pWorldHandle->collection();}
 
 	//! Return the size of the world
-	inline int size() const {return m_pCollection->size();}
+	inline int size() const {return m_pWorldHandle->collection()->size();}
 
 	//! Return true if the world is empty
-	inline bool isEmpty() const {return  m_pCollection->isEmpty();}
+	inline bool isEmpty() const {return  m_pWorldHandle->collection()->isEmpty();}
 
 	//! Return number of faces
 	inline int numberOfFaces() const {return m_pRoot->numberOfFaces();}
@@ -91,15 +91,36 @@ public:
 
 	//! Return list of invisible instance name
 	inline QList<QString> invisibleInstanceName() const
-	{return m_pCollection->invisibleInstanceName();}
+	{return m_pWorldHandle->collection()->invisibleInstanceName();}
 
 	//! Return instances name from the specified shading group
 	inline QList<QString> instanceNamesFromShadingGroup(GLuint id) const
-	{return m_pCollection->instanceNamesFromShadingGroup(id);}
+	{return m_pWorldHandle->collection()->instanceNamesFromShadingGroup(id);}
 
 	//! Return the number of used shading group
 	inline int numberOfUsedShadingGroup() const
-	{return m_pCollection->numberOfUsedShadingGroup();}
+	{return m_pWorldHandle->collection()->numberOfUsedShadingGroup();}
+
+	//! Return the worldHandle of this world
+	inline GLC_WorldHandle* worldHandle()
+	{return m_pWorldHandle;}
+
+	//! Return the occurence specified by an id
+	/*! Id must be a valid identifier*/
+	inline GLC_StructOccurence* getOccurence(GLC_uint id) const
+	{return m_pWorldHandle->getOccurence(id);}
+
+	//! Return the list off occurences
+	inline QList<GLC_StructOccurence*> listOfOccurence() const
+	{return m_pWorldHandle->listOfOccurence();}
+
+	//! Return the number of occurence
+	inline int numberOfOccurence() const
+	{return m_pWorldHandle->numberOfOccurence();}
+
+	//! Return true if the world contians specified id
+	inline int contains(GLC_uint id) const
+	{return m_pWorldHandle->contains(id);}
 
 
 //@}
@@ -140,24 +161,21 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the world
-	inline void glExecute(GLuint groupId, bool transparent= false) {m_pCollection->glExecute(groupId, transparent);}
+	inline void glExecute(GLuint groupId, bool transparent= false) {m_pWorldHandle->collection()->glExecute(groupId, transparent);}
 
 	//! Display the world's shader group
-	inline void glExecuteShaderGroup(bool transparent= false) {m_pCollection->glExecuteShaderGroup(transparent);}
+	inline void glExecuteShaderGroup(bool transparent= false) {m_pWorldHandle->collection()->glExecuteShaderGroup(transparent);}
 
 //@}
 //////////////////////////////////////////////////////////////////////
 // private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! The instance Collection
-	GLC_Collection* m_pCollection;
+	//! The World Handle
+	GLC_WorldHandle* m_pWorldHandle;
 
 	//! The root of the structure
 	GLC_StructOccurence* m_pRoot;
-
-	//! Number of this world
-	int* m_pNumberOfWorld;
 };
 
 #endif /*GLC_WORLD_H_*/

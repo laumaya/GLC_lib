@@ -31,7 +31,7 @@
 #include "glc_structinstance.h"
 #include <QSet>
 
-class GLC_Collection;
+class GLC_WorldHandle;
 class GLC_Material;
 
 class GLC_StructOccurence
@@ -43,10 +43,10 @@ class GLC_StructOccurence
 
 public:
 	//! Default constructor
-	GLC_StructOccurence(GLC_Collection*, GLC_StructInstance*, GLuint shaderId=0);
+	GLC_StructOccurence(GLC_WorldHandle*, GLC_StructInstance*, GLuint shaderId=0);
 
 	//! Copy constructor
-	GLC_StructOccurence(GLC_Collection*, const GLC_StructOccurence&);
+	GLC_StructOccurence(GLC_WorldHandle*, const GLC_StructOccurence&);
 
 	//! Destructor
 	virtual ~GLC_StructOccurence();
@@ -80,6 +80,13 @@ public:
 	inline GLC_StructInstance* structInstance() const
 	{ return m_pStructInstance;}
 
+	//! Return the reference of this occurence
+	inline GLC_StructReference* structReference() const
+	{
+		Q_ASSERT(NULL != m_pStructInstance);
+		return m_pStructInstance->structReference();
+	}
+
 	//! Return the number of childs
 	inline int childCount() const
 	{ return m_Childs.size();}
@@ -106,10 +113,11 @@ public:
 	QSet<GLC_Material*> materialSet() const;
 
 	//! Clone the occurence
-	GLC_StructOccurence* clone(GLC_Collection*) const;
+	GLC_StructOccurence* clone(GLC_WorldHandle*) const;
 
 	//! Return true if the occurence is visible
 	bool isVisible() const;
+
 
 
 //@}
@@ -118,9 +126,6 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set Occurence Id
-	inline void setId(const GLC_uint id)
-	{m_Uid= id;}
 
 	//! Set Occurence instance Name
 	inline void setName(const QString name) {m_pStructInstance->setName(name);}
@@ -147,17 +152,16 @@ public:
 
 	//! Remove the specified child
 	/*! The removed child will not be deleted*/
-	inline bool removeChild(GLC_StructOccurence* pChild)
-	{
-		pChild->m_pParent= NULL;
-		return m_Childs.removeOne(pChild);
-	}
+	bool removeChild(GLC_StructOccurence* pChild);
 
 	//! Reverse Normals of this Occurence and childs
 	void reverseNormals();
 
 	//! Check the presence of representation
 	void checkForRepresentation();
+
+	//! Set the occurence world Handle
+	void setWorldHandle(GLC_WorldHandle*);
 
 //@}
 
@@ -168,8 +172,8 @@ private:
 	//! Occurence Unique ID
 	GLC_uint m_Uid;
 
-	//! the occurence's collection
-	GLC_Collection* m_pCollection;
+	//! the occurence's World Handle
+	GLC_WorldHandle* m_pWorldHandle;
 
 	//! Number of this Occurence
 	int* m_pNumberOfOccurence;

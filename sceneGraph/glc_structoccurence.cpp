@@ -27,11 +27,12 @@
 #include "glc_structoccurence.h"
 #include "glc_collection.h"
 #include "glc_structreference.h"
+#include "glc_worldhandle.h"
 
 // Default constructor
-GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_StructInstance* pStructInstance, GLuint shaderId)
+GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, GLC_StructInstance* pStructInstance, GLuint shaderId)
 : m_Uid(glc::GLC_GenID())
-, m_pCollection(pCollection)
+, m_pWorldHandle(pWorldHandle)
 , m_pNumberOfOccurence(NULL)
 , m_pStructInstance(pStructInstance)
 , m_pParent(NULL)
@@ -48,7 +49,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_Struct
 		const int size= childs.size();
 		for (int i= 0; i < size; ++i)
 		{
-			addChild(childs.at(i)->clone(m_pCollection));
+			addChild(childs.at(i)->clone(m_pWorldHandle));
 		}
 	}
 	else
@@ -56,16 +57,13 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_Struct
 		m_pNumberOfOccurence= new int(1);
 	}
 
-	// Add instance representation in the collection
-	if (m_HasRepresentation)
-	{
-		GLC_Instance representation(pStructInstance->structReference()->instanceRepresentation());
-		// Force instance representation id
-		representation.setId(id());
-		m_pCollection->add(representation, shaderId);
-	}
-
 	setName(m_pStructInstance->name());
+
+	// Inform the world Handle
+	if (NULL != m_pWorldHandle)
+	{
+		m_pWorldHandle->addOccurence(this, shaderId);
+	}
 
 	// Update Absolute matrix
 	updateAbsoluteMatrix();
@@ -74,9 +72,9 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, GLC_Struct
 	m_pStructInstance->structOccurenceCreated(this);
 }
 // Copy constructor
-GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_StructOccurence& structOccurence)
+GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GLC_StructOccurence& structOccurence)
 : m_Uid(structOccurence.m_Uid)
-, m_pCollection(pCollection)
+, m_pWorldHandle(pWorldHandle)
 , m_pNumberOfOccurence(structOccurence.m_pNumberOfOccurence)
 , m_pStructInstance(structOccurence.m_pStructInstance)
 , m_pParent(NULL)
@@ -85,26 +83,27 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 , m_HasRepresentation(structOccurence.m_HasRepresentation)
 {
 	// Change object id
-	setId(glc::GLC_GenID());
+	m_Uid= glc::GLC_GenID();
 	++(*m_pNumberOfOccurence);
 
-	if (m_HasRepresentation)
+	// Test if structOccurence has representation and has a shader
+	GLuint shaderId= 0;
+	bool instanceIsSelected= false;
+	if ((m_HasRepresentation) and (NULL != m_pWorldHandle) and (NULL != structOccurence.m_pWorldHandle))
 	{
-		// Add occurence instance representation to the collection
-		GLC_Instance newRep= structOccurence.m_pCollection->instanceHandle(structOccurence.id())->instanciate();
-		newRep.setId(id());
-		if(structOccurence.m_pCollection->isInAShadingGroup(structOccurence.id()))
-		{
-			GLuint shaderId= structOccurence.m_pCollection->shadingGroup(structOccurence.id());
-			pCollection->bindShader(shaderId);
-			m_pCollection->add(newRep, shaderId);
-		}
-		else
-		{
-			m_pCollection->add(newRep);
-		}
-		//qDebug() << "Add instance " << newRep.name() << " in collection";
 
+		if(structOccurence.m_pWorldHandle->collection()->isInAShadingGroup(structOccurence.id()))
+		{
+			shaderId= structOccurence.m_pWorldHandle->collection()->shadingGroup(structOccurence.id());
+		}
+
+		instanceIsSelected= structOccurence.m_pWorldHandle->collection()->instanceHandle(structOccurence.id())->isSelected();
+	}
+
+	// Inform the world Handle
+	if (NULL != m_pWorldHandle)
+	{
+		m_pWorldHandle->addOccurence(this,instanceIsSelected, shaderId);
 	}
 
 	// Update Absolute matrix
@@ -115,7 +114,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 	const int size= structOccurence.childCount();
 	for (int i= 0; i < size; ++i)
 	{
-		GLC_StructOccurence* pChild= structOccurence.child(i)->clone(pCollection);
+		GLC_StructOccurence* pChild= structOccurence.child(i)->clone(m_pWorldHandle);
 		addChild(pChild);
 		pChild->updateAbsoluteMatrix();
 	}
@@ -128,10 +127,10 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_Collection* pCollection, const GLC_
 GLC_StructOccurence::~GLC_StructOccurence()
 {
 	Q_ASSERT(m_pNumberOfOccurence != NULL);
-	// Remove collection representation if necessary
-	if (m_HasRepresentation and not m_pCollection->isEmpty())
+	// Remove from the GLC_WorldHandle
+	if (NULL != m_pWorldHandle)
 	{
-		m_pCollection->remove(id());
+		m_pWorldHandle->removeOccurence(this);
 	}
 
 	// Remove Childs
@@ -236,9 +235,9 @@ QSet<GLC_Material*> GLC_StructOccurence::materialSet() const
 }
 
 // Clone the occurence
-GLC_StructOccurence* GLC_StructOccurence::clone(GLC_Collection* pCollection) const
+GLC_StructOccurence* GLC_StructOccurence::clone(GLC_WorldHandle* pWorldHandle) const
 {
-	return new GLC_StructOccurence(pCollection, *this);
+	return new GLC_StructOccurence(pWorldHandle, *this);
 }
 
 // Return true if the occurence is visible
@@ -247,7 +246,7 @@ bool GLC_StructOccurence::isVisible() const
 	bool isHidden= true;
 	if (m_HasRepresentation)
 	{
-		isHidden= not m_pCollection->instanceHandle(id())->isVisible();
+		isHidden= not m_pWorldHandle->collection()->instanceHandle(id())->isVisible();
 	}
 	else if (childCount() > 0)
 	{
@@ -285,7 +284,7 @@ GLC_StructOccurence* GLC_StructOccurence::updateAbsoluteMatrix()
 	// If the occurence have a representation, update it.
 	if (m_HasRepresentation)
 	{
-		m_pCollection->instanceHandle(id())->setMatrix(m_AbsoluteMatrix);
+		m_pWorldHandle->collection()->instanceHandle(id())->setMatrix(m_AbsoluteMatrix);
 	}
 	return this;
 }
@@ -306,10 +305,16 @@ GLC_StructOccurence* GLC_StructOccurence::updateChildsAbsoluteMatrix()
 void GLC_StructOccurence::addChild(GLC_StructOccurence* pChild)
 {
 	Q_ASSERT(pChild->isOrphan());
+	Q_ASSERT((NULL == pChild->m_pWorldHandle) or (m_pWorldHandle == pChild->m_pWorldHandle));
+
 	//qDebug() << "Add Child " << pChild->name() << "id=" << pChild->id() << " to " << name() << " id=" << id();
 	// Add the child to the list of child
 	m_Childs.append(pChild);
 	pChild->m_pParent= this;
+	if (NULL == pChild->m_pWorldHandle)
+	{
+		m_pWorldHandle->addOccurence(pChild);
+	}
 	pChild->updateAbsoluteMatrix();
 }
 
@@ -319,11 +324,11 @@ void GLC_StructOccurence::addChild(GLC_StructInstance* pInstance)
 	GLC_StructOccurence* pOccurence;
 	if (not pInstance->hasStructOccurence())
 	{
-		pOccurence= new GLC_StructOccurence(m_pCollection, pInstance);
+		pOccurence= new GLC_StructOccurence(m_pWorldHandle, pInstance);
 	}
 	else
 	{
-		pOccurence= pInstance->firstOccurenceHandle()->clone(m_pCollection);
+		pOccurence= pInstance->firstOccurenceHandle()->clone(m_pWorldHandle);
 	}
 
 	addChild(pOccurence);
@@ -349,12 +354,24 @@ void GLC_StructOccurence::makeOrphan()
 	m_pParent->removeChild(this);
 }
 
+// Remove the specified child
+bool GLC_StructOccurence::removeChild(GLC_StructOccurence* pChild)
+{
+	pChild->m_pParent= NULL;
+	if (NULL != m_pWorldHandle)
+	{
+		m_pWorldHandle->removeOccurence(pChild);
+		m_pWorldHandle= NULL;
+	}
+	return m_Childs.removeOne(pChild);
+}
+
 // Reverse Normals of this Occurence and childs
 void GLC_StructOccurence::reverseNormals()
 {
 	if (m_HasRepresentation)
 	{
-		m_pCollection->instanceHandle(id())->reverseGeometriesNormals();
+		m_pWorldHandle->collection()->instanceHandle(id())->reverseGeometriesNormals();
 	}
 }
 
@@ -372,9 +389,33 @@ void GLC_StructOccurence::checkForRepresentation()
 				representation.setName(name());
 				// Force instance representation id
 				representation.setId(id());
-				m_pCollection->add(representation);
+				m_pWorldHandle->collection()->add(representation);
 			}
 			m_HasRepresentation= true;
+		}
+	}
+}
+
+// Set the occurence world Handle
+void GLC_StructOccurence::setWorldHandle(GLC_WorldHandle* pWorldHandle)
+{
+	// Check if world handles are equal
+	if (m_pWorldHandle == pWorldHandle) return;
+
+	if (NULL != m_pWorldHandle)
+	{
+		m_pWorldHandle->removeOccurence(this);
+	}
+
+	m_pWorldHandle= pWorldHandle;
+
+	if (NULL != m_pWorldHandle)
+	{
+		m_pWorldHandle->addOccurence(this);
+		const int size= m_Childs.size();
+		for (int i= 0; i < size; ++i)
+		{
+			m_Childs[i]->setWorldHandle(m_pWorldHandle);
 		}
 	}
 }
