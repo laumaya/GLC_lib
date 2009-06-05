@@ -70,7 +70,8 @@ HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_collection.h \
 							sceneGraph/glc_structinstance.h \
 							sceneGraph/glc_structoccurence.h \
 							sceneGraph/glc_world.h \
-							sceneGraph/glc_attributes.h
+							sceneGraph/glc_attributes.h \
+							sceneGraph/glc_worldhandle.h
 							
 HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
 							geometry/glc_circle.h \
@@ -166,7 +167,8 @@ SOURCES +=	sceneGraph/glc_collection.cpp \
 			sceneGraph/glc_structinstance.cpp \
 			sceneGraph/glc_structoccurence.cpp \
 			sceneGraph/glc_world.cpp \
-			sceneGraph/glc_attributes.cpp
+			sceneGraph/glc_attributes.cpp \
+			sceneGraph/glc_worldhandle.cpp
 
 SOURCES +=	geometry/glc_vbogeom.cpp \
 			geometry/glc_circle.cpp \
