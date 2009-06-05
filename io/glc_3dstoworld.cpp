@@ -248,7 +248,7 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 	if (NULL != pFatherNode->childs)
 	{
 		GLC_StructInstance* pInstance= (new GLC_StructReference())->createStructInstance();
-		pChildProduct= new GLC_StructOccurence(m_pWorld->collection(), pInstance);
+		pChildProduct= new GLC_StructOccurence(m_pWorld->worldHandle(), pInstance);
 		pProduct->addChild(pChildProduct);
 
 		pChildProduct->setName(QString("Product") + QString::number(pFatherNode->node_id));

@@ -762,7 +762,7 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 			}
 			else
 			{
-				GLC_StructOccurence* pOccurence= new GLC_StructOccurence(m_pWorld->collection(), instanceList.at(i));
+				GLC_StructOccurence* pOccurence= new GLC_StructOccurence(m_pWorld->worldHandle(), instanceList.at(i));
 
 				if (pChildInstance->hasStructOccurence() and pChildInstance->firstOccurenceHandle()->isOrphan())
 				{
