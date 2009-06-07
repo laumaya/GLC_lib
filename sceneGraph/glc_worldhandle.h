@@ -78,12 +78,18 @@ public:
 	}
 
 	//! Return the list off occurences
-	inline QList<GLC_StructOccurence*> listOfOccurence() const
+	inline QList<GLC_StructOccurence*> occurences() const
 	{return m_OccurenceHash.values();}
 
 	//! Return the number of occurence
 	inline int numberOfOccurence() const
 	{return m_OccurenceHash.size();}
+
+	//! Return the list of instance
+	QList<GLC_StructInstance*> instances() const;
+
+	//! Return the list of Reference
+	QList<GLC_StructReference*> references() const;
 
 //@}
 

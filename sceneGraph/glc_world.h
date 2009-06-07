@@ -112,7 +112,7 @@ public:
 
 	//! Return the list off occurences
 	inline QList<GLC_StructOccurence*> listOfOccurence() const
-	{return m_pWorldHandle->listOfOccurence();}
+	{return m_pWorldHandle->occurences();}
 
 	//! Return the number of occurence
 	inline int numberOfOccurence() const
@@ -121,6 +121,15 @@ public:
 	//! Return true if the world contians specified id
 	inline int contains(GLC_uint id) const
 	{return m_pWorldHandle->contains(id);}
+
+	//! Return the list of instance
+	inline QList<GLC_StructInstance*> instances() const
+	{return m_pWorldHandle->instances();}
+
+	//! Return the list of Reference
+	inline QList<GLC_StructReference*> references() const
+	{return m_pWorldHandle->references();}
+
 
 
 //@}

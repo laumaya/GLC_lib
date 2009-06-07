@@ -24,6 +24,7 @@
 
 #include "glc_worldhandle.h"
 #include "glc_structreference.h"
+#include <QSet>
 
 GLC_WorldHandle::GLC_WorldHandle()
 : m_Collection()
@@ -37,6 +38,33 @@ GLC_WorldHandle::~GLC_WorldHandle()
 {
 
 }
+
+// Return the list of instance
+QList<GLC_StructInstance*> GLC_WorldHandle::instances() const
+{
+	QSet<GLC_StructInstance*> instancesSet;
+	QHash<GLC_uint, GLC_StructOccurence*>::const_iterator iOccurence= m_OccurenceHash.constBegin();
+	while (iOccurence != m_OccurenceHash.constEnd())
+	{
+		instancesSet.insert(iOccurence.value()->structInstance());
+		++iOccurence;
+	}
+	return instancesSet.toList();
+}
+
+// Return the list of Reference
+QList<GLC_StructReference*> GLC_WorldHandle::references() const
+{
+	QSet<GLC_StructReference*> referencesSet;
+	QHash<GLC_uint, GLC_StructOccurence*>::const_iterator iOccurence= m_OccurenceHash.constBegin();
+	while (iOccurence != m_OccurenceHash.constEnd())
+	{
+		referencesSet.insert(iOccurence.value()->structReference());
+		++iOccurence;
+	}
+	return referencesSet.toList();
+}
+
 
 // An Occurence has been added
 void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelected, GLuint shaderId)
