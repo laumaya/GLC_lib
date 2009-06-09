@@ -91,6 +91,10 @@ public:
 	inline int childCount() const
 	{ return m_Childs.size();}
 
+	//! Return The parent
+	inline GLC_StructOccurence* parent() const
+	{return m_pParent;}
+
 	//! Return a child
 	/*! The index must exist*/
 	inline GLC_StructOccurence* child(const int index) const
