@@ -285,8 +285,11 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		glNormalPointer(GL_FLOAT, 0, m_ExtendedGeomEngine.normalVectorHandle()->data());
 		glEnableClientState(GL_NORMAL_ARRAY);
 
-		//glTexCoordPointer(2, GL_FLOAT, 0, 0);
-		//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		if (not m_ExtendedGeomEngine.texelVectorHandle()->isEmpty())
+		{
+			glTexCoordPointer(2, GL_FLOAT, 0, m_ExtendedGeomEngine.texelVectorHandle()->data());
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		}
 	}
 
 
