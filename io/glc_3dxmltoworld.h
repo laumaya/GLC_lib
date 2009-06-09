@@ -59,6 +59,13 @@ class GLC_3dxmlToWorld : public QObject
 		unsigned int  m_RepId;
 	};
 
+	struct MaterialRef
+	{
+		QString m_Id;
+		QString m_Name;
+		QString m_AssociatedFile;
+	};
+
 	typedef QHash<unsigned int, GLC_StructReference*> ReferenceHash;
 	typedef QHash<GLC_StructInstance*, unsigned int> InstanceOfHash;
 	typedef QHash<GLC_StructInstance*, QString> InstanceOfExtRefHash;
@@ -184,6 +191,15 @@ private:
 	//! Load CatMaterial Ref if present
 	void loadCatMaterialRef();
 
+	//! Create material from material def file
+	void loadMaterialDef(const MaterialRef&);
+
+	//! Load CATRepIage if present
+	void loadCatRepImage();
+
+	//! try to load the specified image
+	QImage loadImage(QString);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -249,6 +265,12 @@ private:
 
 	//! The set of ext rep to load
 	SetOfExtRef m_SetOfExtRep;
+
+	//! The 3DREP current material
+	GLC_Material* m_pCurrentMaterial;
+
+	//! The image file hash table
+	QHash<QString, QString> m_TextureImagesHash;
 
 
 };
