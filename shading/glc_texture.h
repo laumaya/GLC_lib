@@ -68,7 +68,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return the texture File Name
-	inline QString fileName() const {return m_File.fileName();}
+	inline QString fileName() const {return m_Name;}
 
 	//! Return OpenGL Texture Id
 	inline GLuint GL_ID() const {return m_GlTextureID;}
@@ -116,8 +116,8 @@ private:
 	//! OpenGL Context
 	QGLContext *m_pQGLContext;
 
-	//! Texture File
-	QFile m_File;
+	//! Texture Name
+	QString m_Name;
 
 	//! OpenGL Texture ID
 	GLuint	m_GlTextureID;
