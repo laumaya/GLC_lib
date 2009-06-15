@@ -598,7 +598,7 @@ GLC_BoundingBox GLC_Collection::boundingBox(void)
 }
 
 // Return the number of drawable objects
-int GLC_Collection::DrawableObjectsSize() const
+int GLC_Collection::drawableObjectsSize() const
 {
 	// The number of object to drw
 	int numberOffDrawnHit= 0;
