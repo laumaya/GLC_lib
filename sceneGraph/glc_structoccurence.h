@@ -28,6 +28,7 @@
 #define GLC_STRUCTOCCURENCE_H_
 
 #include "../maths/glc_matrix4x4.h"
+#include "../glc_boundingbox.h"
 #include "glc_structinstance.h"
 #include <QSet>
 
@@ -91,6 +92,10 @@ public:
 	inline int childCount() const
 	{ return m_Childs.size();}
 
+	//! Return true if the occurence has child
+	inline bool hasChild() const
+	{return childCount() > 0;}
+
 	//! Return The parent
 	inline GLC_StructOccurence* parent() const
 	{return m_pParent;}
@@ -121,6 +126,9 @@ public:
 
 	//! Return true if the occurence is visible
 	bool isVisible() const;
+
+	//! Return the occurence Bounding Box
+	GLC_BoundingBox boundingBox() const;
 
 
 

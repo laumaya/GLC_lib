@@ -265,6 +265,35 @@ bool GLC_StructOccurence::isVisible() const
 	return not isHidden;
 }
 
+// Return the occurence Bounding Box
+GLC_BoundingBox GLC_StructOccurence::boundingBox() const
+{
+	GLC_BoundingBox boundingBox;
+
+	if (not isOrphan() and (NULL != m_pWorldHandle))
+	{
+		if (m_HasRepresentation)
+		{
+			Q_ASSERT(m_pWorldHandle->collection()->contains(id()));
+			boundingBox= m_pWorldHandle->collection()->instanceHandle(id())->getBoundingBox();
+		}
+		else
+		{
+			if (hasChild())
+			{
+				QList<GLC_StructOccurence*> childrenList= children();
+				const int size= childrenList.size();
+
+				for (int i= 0; i < size; ++i)
+				{
+					boundingBox.combine(childrenList.at(i)->boundingBox());
+				}
+			}
+		}
+	}
+	return boundingBox;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
