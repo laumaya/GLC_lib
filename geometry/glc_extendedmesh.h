@@ -79,7 +79,63 @@ public:
 	virtual GLC_VboGeom* clone() const;
 
 	//! Return true if color pear vertex is activated
-	inline bool ColorPearVertexIsAcivated() const {return m_ColorPearVertex;}
+	inline bool ColorPearVertexIsAcivated() const
+	{return m_ColorPearVertex;}
+
+	//! Return the number of lod
+	inline int numberOfLod()
+	{return m_ExtendedGeomEngine.numberOfLod();}
+
+	//! Return the Position Vector
+	inline GLfloatVector positionVector() const
+	{return m_ExtendedGeomEngine.positionVector();}
+
+	//! Return the normal Vector
+	inline GLfloatVector normalVector() const
+	{return m_ExtendedGeomEngine.normalVector();}
+
+	//! Return the texel Vector
+	inline GLfloatVector texelVector() const
+	{return m_ExtendedGeomEngine.texelVector();}
+
+	//! Return true if the mesh contains triangles
+	bool containsTriangles(int lod, GLC_uint materialId) const;
+
+	//! Return the triangle index
+	QVector<GLuint> getTrianglesIndex(int lod, GLC_uint materialId) const;
+
+	//! Return the number of triangles
+	int numberOfTriangles(int lod, GLC_uint materialId) const;
+
+	//! Return true if the mesh contains trips
+	bool containsStrips(int lod, GLC_uint materialId) const;
+
+	//! Return the strips index
+	QList<QVector<GLuint> > getTripsIndex(int lod, GLC_uint materialId) const;
+
+	//! Return the number of strips
+	int numberOfStrips(int lod, GLC_uint materialId) const;
+
+	//! Return true if the mesh contains fans
+	bool containsFans(int lod, GLC_uint materialId) const;
+
+	//! Return the fans index
+	QList<QVector<GLuint> > getFansIndex(int lod, GLC_uint materialId) const;
+
+	//! Return the number of fans
+	int numberOfFans(int lod, GLC_uint materialId) const;
+
+	//! Return true if the mesh contains the specified LOD
+	inline bool containsLod(int lod) const
+	{return (NULL != m_ExtendedGeomEngine.getLod(lod));}
+
+	//! Return the specified LOD accuracy
+	inline double getLodAccuracy(int lod) const
+	{
+		Q_ASSERT(containsLod(lod));
+		return m_ExtendedGeomEngine.getLod(lod)->accuracy();
+	}
+
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -107,13 +163,13 @@ public:
 	{*(m_ExtendedGeomEngine.texelVectorHandle())+= texels;}
 
 	//! Add triangles
-	void addTriangles(GLC_Material*, const IndexList&, const int lod= 0);
+	void addTriangles(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
 
 	//! Add triangles Strip
-	void addTrianglesStrip(GLC_Material*, const IndexList&, const int lod= 0);
+	void addTrianglesStrip(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
 
 	//! Add triangles Fan
-	void addTrianglesFan(GLC_Material*, const IndexList&, const int lod= 0);
+	void addTrianglesFan(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
 
 	//! Reverse mesh normal
 	void reverseNormals();
@@ -152,7 +208,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Set the current material
-	GLC_uint setCurrentMaterial(GLC_Material*, const int);
+	GLC_uint setCurrentMaterial(GLC_Material*, const int, double);
 
 	//! Create VBO and IBO
 	void createVbos();

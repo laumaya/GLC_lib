@@ -133,14 +133,187 @@ GLC_VboGeom* GLC_ExtendedMesh::clone() const
 {
 	return new GLC_ExtendedMesh(*this);
 }
+
+// Return true if the mesh contains triangles
+bool GLC_ExtendedMesh::containsTriangles(int lod, GLC_uint materialId) const
+{
+	// Check if the lod exist and material exists
+	Q_ASSERT(m_PrimitiveGroups.contains(lod));
+	if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
+	else return m_PrimitiveGroups.value(lod)->value(materialId)->containsTriangles();
+}
+
+// Return the specified index
+QVector<GLuint> GLC_ExtendedMesh::getTrianglesIndex(int lod, GLC_uint materialId) const
+{
+	// Check if the mesh contains triangles
+	Q_ASSERT(containsTriangles(lod, materialId));
+
+	GLC_PrimitiveGroup* pPrimitiveGroup= m_PrimitiveGroups.value(lod)->value(materialId);
+
+	int offset= 0;
+	if (GLC_State::vboUsed())
+	{
+		offset= reinterpret_cast<size_t>(pPrimitiveGroup->trianglesIndexOffset()) / sizeof(GLvoid*);
+	}
+	else
+	{
+		offset= pPrimitiveGroup->trianglesIndexOffseti();
+	}
+	const int size= pPrimitiveGroup->trianglesIndexSize();
+
+	QVector<GLuint> resultIndex(size);
+
+	memcpy((void*)resultIndex.data(), &(m_ExtendedGeomEngine.indexVector(lod).data())[offset], size * sizeof(int));
+
+	return resultIndex;
+}
+
+// Return the number of triangles
+int GLC_ExtendedMesh::numberOfTriangles(int lod, GLC_uint materialId) const
+{
+	// Check if the lod exist and material exists
+	if (not m_PrimitiveGroups.contains(lod))return 0;
+	else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return 0;
+	else return m_PrimitiveGroups.value(lod)->value(materialId)->trianglesIndexSize();
+}
+
+// Return true if the mesh contains trips
+bool GLC_ExtendedMesh::containsStrips(int lod, GLC_uint materialId) const
+{
+	// Check if the lod exist and material exists
+	if (not m_PrimitiveGroups.contains(lod))return false;
+	else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
+	else return m_PrimitiveGroups.value(lod)->value(materialId)->containsStrip();
+
+}
+
+// Return the strips index
+QList<QVector<GLuint> > GLC_ExtendedMesh::getTripsIndex(int lod, GLC_uint materialId) const
+{
+	// Check if the mesh contains trips
+	Q_ASSERT(containsStrips(lod, materialId));
+
+	GLC_PrimitiveGroup* pPrimitiveGroup= m_PrimitiveGroups.value(lod)->value(materialId);
+
+	QList<int> offsets;
+	QList<int> sizes;
+	int stripsCount;
+
+	if (GLC_State::vboUsed())
+	{
+		stripsCount= pPrimitiveGroup->stripsOffset().size();
+		for (int i= 0; i < stripsCount; ++i)
+		{
+			offsets.append(reinterpret_cast<size_t>(pPrimitiveGroup->stripsOffset().at(i)) / sizeof(GLvoid*));
+			sizes.append(static_cast<int>(pPrimitiveGroup->stripsSizes().at(i)));
+		}
+	}
+	else
+	{
+		stripsCount= pPrimitiveGroup->stripsOffseti().size();
+		for (int i= 0; i < stripsCount; ++i)
+		{
+			offsets.append(static_cast<int>(pPrimitiveGroup->stripsOffseti().at(i)));
+			sizes.append(static_cast<int>(pPrimitiveGroup->stripsSizes().at(i)));
+		}
+
+	}
+	// The result list of vector
+	QList<QVector<GLuint> > result;
+	// The copy of the engine index vector
+	QVector<GLuint> SourceIndex(m_ExtendedGeomEngine.indexVector(lod));
+	for (int i= 0; i < stripsCount; ++i)
+	{
+		QVector<GLuint> currentStrip(sizes.at(i));
+		memcpy((void*)currentStrip.data(), &(SourceIndex.data())[offsets.at(i)], sizes.at(i) * sizeof(GLuint));
+		result.append(currentStrip);
+	}
+
+	return result;
+}
+
+// Return the number of strips
+int GLC_ExtendedMesh::numberOfStrips(int lod, GLC_uint materialId) const
+{
+	// Check if the lod exist and material exists
+	if (not m_PrimitiveGroups.contains(lod))return 0;
+	else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return 0;
+	else return m_PrimitiveGroups.value(lod)->value(materialId)->stripsSizes().size();
+}
+
+// Return true if the mesh contains fans
+bool GLC_ExtendedMesh::containsFans(int lod, GLC_uint materialId) const
+{
+	// Check if the lod exist and material exists
+	if (not m_PrimitiveGroups.contains(lod))return false;
+	else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
+	else return m_PrimitiveGroups.value(lod)->value(materialId)->containsFan();
+
+}
+
+//! Return the number of fans
+int GLC_ExtendedMesh::numberOfFans(int lod, GLC_uint materialId) const
+{
+	// Check if the lod exist and material exists
+	if(not m_PrimitiveGroups.contains(lod))return 0;
+	else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return 0;
+	else return m_PrimitiveGroups.value(lod)->value(materialId)->fansSizes().size();
+}
+
+// Return the strips index
+QList<QVector<GLuint> > GLC_ExtendedMesh::getFansIndex(int lod, GLC_uint materialId) const
+{
+	// Check if the mesh contains trips
+	Q_ASSERT(containsFans(lod, materialId));
+
+	GLC_PrimitiveGroup* pPrimitiveGroup= m_PrimitiveGroups.value(lod)->value(materialId);
+
+	QList<int> offsets;
+	QList<int> sizes;
+	int fansCount;
+
+	if (GLC_State::vboUsed())
+	{
+		fansCount= pPrimitiveGroup->fansOffset().size();
+		for (int i= 0; i < fansCount; ++i)
+		{
+			offsets.append(reinterpret_cast<size_t>(pPrimitiveGroup->fansOffset().at(i)) / sizeof(GLvoid*));
+			sizes.append(static_cast<int>(pPrimitiveGroup->fansSizes().at(i)));
+		}
+	}
+	else
+	{
+		fansCount= pPrimitiveGroup->fansOffseti().size();
+		for (int i= 0; i < fansCount; ++i)
+		{
+			offsets.append(static_cast<int>(pPrimitiveGroup->fansOffseti().at(i)));
+			sizes.append(static_cast<int>(pPrimitiveGroup->fansSizes().at(i)));
+		}
+
+	}
+	// The result list of vector
+	QList<QVector<GLuint> > result;
+	// The copy of the engine index vector
+	QVector<GLuint> SourceIndex(m_ExtendedGeomEngine.indexVector(lod));
+	for (int i= 0; i < fansCount; ++i)
+	{
+		QVector<GLuint> currentFan(sizes.at(i));
+		memcpy((void*)currentFan.data(), &(SourceIndex.data())[offsets.at(i)], sizes.at(i) * sizeof(GLuint));
+		result.append(currentFan);
+	}
+
+	return result;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
 // Add triangles
-void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexList, const int lod)
+void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
 {
-	GLC_uint groupId= setCurrentMaterial(pMaterial, lod);
+	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTriangles(indexList);
 
@@ -150,9 +323,9 @@ void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& in
 }
 
 // Add triangles Strip
-void GLC_ExtendedMesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexList& indexList, const int lod)
+void GLC_ExtendedMesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
 {
-	GLC_uint groupId= setCurrentMaterial(pMaterial, lod);
+	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesStrip(indexList);
 
@@ -161,9 +334,9 @@ void GLC_ExtendedMesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexLis
 	if (0 == lod) m_NumberOfFaces+= indexList.size() - 2;
 }
 // Add triangles Fan
-void GLC_ExtendedMesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList& indexList, const int lod)
+void GLC_ExtendedMesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
 {
-	GLC_uint groupId= setCurrentMaterial(pMaterial, lod);
+	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesFan(indexList);
 
@@ -192,6 +365,7 @@ void GLC_ExtendedMesh::reverseNormals()
 // Copy index list in a vector for Vertex Array Use
 void GLC_ExtendedMesh::finished()
 {
+	m_ExtendedGeomEngine.finishedLod();
 	if (GLC_State::vboUsed())
 	{
 		finishVbo();
@@ -411,7 +585,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 //////////////////////////////////////////////////////////////////////
 
 // Set the current material
-GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod)
+GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, double accuracy)
 {
 
 	// Test if a primitive group hash exists for the specified lod
@@ -419,7 +593,7 @@ GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod)
 	{
 		m_PrimitiveGroups.insert(lod, new PrimitiveGroups());
 
-		m_ExtendedGeomEngine.appendLod();
+		m_ExtendedGeomEngine.appendLod(accuracy);
 	}
 
 	GLC_uint returnId;
