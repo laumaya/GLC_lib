@@ -67,7 +67,7 @@ public:
 	inline bool containsTriangles() const
 	{return m_TrianglesIndexSize > 0;}
 
-	//! Return the list of triangles index of the group
+	//! Return the size of list of triangles index of the group
 	inline const int trianglesIndexSize() const
 	{return m_TrianglesIndexSize;}
 
