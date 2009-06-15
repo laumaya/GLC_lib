@@ -40,7 +40,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_EngineLod(double accuracy= 0.0);
+	GLC_EngineLod(double accuracy);
 
 	//! Copy constructor
 	GLC_EngineLod(const GLC_EngineLod&);
@@ -54,7 +54,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the accuracy of the load
+	//! Return the accuracy of the LOD
 	inline double accuracy() const
 	{return m_Accuracy;}
 
@@ -82,6 +82,9 @@ public:
 		m_IndexSize= m_IboVector.size();
 		m_IboVector.clear();
 	}
+	//! Set accuracy of the LOD
+	inline void setAccuracy(const double& accuracy)
+	{m_Accuracy= accuracy;}
 
 //@}
 
