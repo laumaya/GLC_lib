@@ -267,7 +267,11 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_RepTrackBallMover \
     		   include/GLC_TurnTableMover \
     		   include/GLC_Attribute \
-    		   include/GLC_Rectangle
+    		   include/GLC_Rectangle \
+    		   include/GLC_ExtendedMesh \
+    		   include/GLC_StructOccurence \
+    		   include/GLC_StructInstance \
+    		   include/GLC_StructReference
     		   
     			   
 # Linux install configuration
