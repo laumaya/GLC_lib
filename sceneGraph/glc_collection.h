@@ -79,10 +79,12 @@ public:
 public:
 
 	//! Return true if the collection is empty
-	inline bool isEmpty() const {return m_NodeMap.size() == 0;}
+	inline bool isEmpty() const
+	{return m_NodeMap.size() == 0;}
 
 	//! Return the number of Node in the collection
-	inline int size(void) const{return m_NodeMap.size();}
+	inline int size(void) const
+	{return m_NodeMap.size();}
 
 	//! Return all GLC_Instance from collection
 	QList<GLC_Instance*> instancesHandle();
@@ -101,22 +103,27 @@ public:
 	GLC_BoundingBox boundingBox(void);
 
 	//! Return the number of Node in the selection Hash
-	inline int selectionSize(void) const {return m_SelectedNodes.size();}
+	inline int selectionSize(void) const
+	{return m_SelectedNodes.size();}
 
 	//! Get the Hash table of Selected Nodes
-	inline PointerNodeHash* selection() {return &m_SelectedNodes;}
+	inline PointerNodeHash* selection()
+	{return &m_SelectedNodes;}
 
-	//! Return true if the Node is in the collection
-	inline bool isInCollection(GLC_uint key) const {return m_NodeMap.contains(key);}
+	//! Return true if the Instance Id is in the collection
+	inline bool contains(GLC_uint key) const
+	{return m_NodeMap.contains(key);}
 
 	//! Return true if the element is selected
-	inline bool isSelected(GLC_uint key) const {return m_SelectedNodes.contains(key);}
+	inline bool isSelected(GLC_uint key) const
+	{return m_SelectedNodes.contains(key);}
 
 	//! Return the showing state
-	inline bool showState() const {return m_IsInShowSate;}
+	inline bool showState() const
+	{return m_IsInShowSate;}
 
 	//! Return the number of drawable objects
-	int DrawableObjectsSize() const;
+	int drawableObjectsSize() const;
 
 	//! Return the element shading group
 	inline GLuint shadingGroup(GLC_uint key) const
