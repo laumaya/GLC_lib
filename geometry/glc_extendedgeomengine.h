@@ -89,8 +89,15 @@ public:
 	inline GLfloatVector* texelVectorHandle()
 	{ return &m_Texels;}
 
+	//! Return the Index Vector
+	inline GLuintVector indexVector(const int i= 0) const
+	{
+		Q_ASSERT(i < m_EngineLodList.size());
+		return m_EngineLodList.at(i)->indexVector();
+	}
+
 	//! Return the Index Vector handle
-	inline GLuintVector* indexVectorHandle(const int i= 0)
+	inline GLuintVector* indexVectorHandle(const int i= 0) const
 	{
 		Q_ASSERT(i < m_EngineLodList.size());
 		return m_EngineLodList.at(i)->indexVectorHandle();
@@ -102,6 +109,11 @@ public:
 		Q_ASSERT(i < m_EngineLodList.size());
 		return m_EngineLodList.at(i)->indexVectorSize();
 	}
+	//! Return the specified LOD
+	inline GLC_EngineLod* getLod(int index) const
+	{
+		return m_EngineLodList.value(index);
+	}
 
 //@}
 
@@ -111,11 +123,14 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Add a Lod to the engine
-	inline void appendLod()
-	{m_EngineLodList.append(new GLC_EngineLod());}
+	inline void appendLod(double accuracy= 0.0)
+	{m_EngineLodList.append(new GLC_EngineLod(accuracy));}
 
 	//! The mesh wich use this engine is finished
 	void finished();
+
+	//! If the there is more than 2 LOD Swap the first and last
+	void finishedLod();
 
 	//! Clear the engine
 	void clear();

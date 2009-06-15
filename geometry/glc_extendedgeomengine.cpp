@@ -179,6 +179,18 @@ void GLC_ExtendedGeomEngine::finished()
 		m_EngineLodList[i]->finished();
 	}
 }
+//! If the there is more than 2 LOD Swap the first and last
+void GLC_ExtendedGeomEngine::finishedLod()
+{
+	// Swap the first LOD by the last
+	const int size= m_EngineLodList.size();
+	if (size > 1)
+	{
+		GLC_EngineLod* PMasterLod= m_EngineLodList.at(size - 1);
+		m_EngineLodList[size - 1]= m_EngineLodList.at(0);
+		m_EngineLodList[0]= PMasterLod;
+	}
+}
 
 // Clear the engine
 void GLC_ExtendedGeomEngine::clear()
