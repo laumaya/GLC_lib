@@ -168,7 +168,7 @@ private:
 	{return not m_pStreamReader->atEnd() and not (m_pStreamReader->isStartElement() and (m_pStreamReader->name() == element));}
 
 	//! Load a face
-	void loadFace(GLC_ExtendedMesh*, const int lod= 0);
+	void loadFace(GLC_ExtendedMesh*, const int lod= 0, double accuracy= 0.0);
 
 	//! Clear material hash
 	void clearMaterialHash();

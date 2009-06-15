@@ -837,7 +837,7 @@ void GLC_3dxmlToWorld::loadLOD(GLC_ExtendedMesh* pMesh)
 				m_pStreamReader->readNext();
 				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == "MaterialId"))
 				{
-					qDebug() << m_p3dxmlFile->getActualFileName();
+					//qDebug() << m_p3dxmlFile->getActualFileName();
 					checkForXmlError("Material ID not found");
 					QString materialId= m_pStreamReader->attributes().value("id").toString().remove("urn:3DXML:CATMaterialRef.3dxml#");
 					if (m_MaterialHash.contains(materialId));
@@ -847,13 +847,14 @@ void GLC_3dxmlToWorld::loadLOD(GLC_ExtendedMesh* pMesh)
 		}
 		else if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) and (m_pStreamReader->name() == "PolygonalLOD"))
 		{
+			double accuracy= m_pStreamReader->attributes().value("accuracy").toString().toDouble();
 			// Load Faces index data
 			while (endElementNotReached("Faces"))
 			{
 				m_pStreamReader->readNext();
 				if ( m_pStreamReader->name() == "Face")
 				{
-					loadFace(pMesh, lodIndex);
+					loadFace(pMesh, lodIndex, accuracy);
 				}
 			}
 			checkForXmlError("End of Faces not found");
@@ -862,7 +863,7 @@ void GLC_3dxmlToWorld::loadLOD(GLC_ExtendedMesh* pMesh)
 	}
 }
 // Load a face
-void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh, const int lod)
+void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh, const int lod, double accuracy)
 {
 	//qDebug() << "GLC_3dxmlToWorld::loadFace" << m_pStreamReader->name();
 	// List of index declaration
@@ -902,7 +903,7 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh, const int lod)
 			trianglesStream >> buff;
 			trianglesIndex.append(buff.toUInt());
 		}
-		pMesh->addTriangles(pCurrentMaterial, trianglesIndex, lod);
+		pMesh->addTriangles(pCurrentMaterial, trianglesIndex, lod, accuracy);
 	}
 	// Trying to find trips
 	if (not strips.isEmpty())
@@ -921,7 +922,7 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh, const int lod)
 				stripsStream >> buff;
 				stripsIndex.append(buff.toUInt());
 			}
-			pMesh->addTrianglesStrip(pCurrentMaterial, stripsIndex, lod);
+			pMesh->addTrianglesStrip(pCurrentMaterial, stripsIndex, lod, accuracy);
 		}
 	}
 	// Trying to find fans
@@ -939,7 +940,7 @@ void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh, const int lod)
 				fansStream >> buff;
 				fansIndex.append(buff.toUInt());
 			}
-			pMesh->addTrianglesFan(pCurrentMaterial, fansIndex, lod);
+			pMesh->addTrianglesFan(pCurrentMaterial, fansIndex, lod, accuracy);
 		}
 	}
 
@@ -1074,7 +1075,7 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 		}
 		m_pStreamReader->readNext();
 	}
-	qDebug() << "Local rep loaded";
+	//qDebug() << "Local rep loaded";
 
 	// Attach the ref to the structure reference
 	RepLinkList::iterator iLocalRep= m_LocalRepLinkList.begin();
@@ -1295,7 +1296,7 @@ void GLC_3dxmlToWorld::loadCatMaterialRef()
 				checkForXmlError("Element MaterialDomain not found after CATMatReference Element");
 				currentMaterial.m_AssociatedFile= m_pStreamReader->attributes().value("associatedFile").toString().remove("urn:3DXML:");
 				materialRefList.append(currentMaterial);
-				qDebug() << "Material " << currentMaterial.m_Name << " Added";
+				//qDebug() << "Material " << currentMaterial.m_Name << " Added";
 			}
 		}
 	}
@@ -1305,7 +1306,7 @@ void GLC_3dxmlToWorld::loadCatMaterialRef()
 	{
 		if (setStreamReaderToFile(materialRefList.at(i).m_AssociatedFile, true))
 		{
-			qDebug() << "Load MaterialDef : " << materialRefList.at(i).m_AssociatedFile;
+			//qDebug() << "Load MaterialDef : " << materialRefList.at(i).m_AssociatedFile;
 			loadMaterialDef(materialRefList.at(i));
 		}
 	}
@@ -1347,7 +1348,7 @@ void GLC_3dxmlToWorld::loadMaterialDef(const MaterialRef& materialRef)
 			}
 			else if (currentName == "TextureImage")
 			{
-				qDebug() << "TextureImage";
+				//qDebug() << "TextureImage";
 				QString imageId= m_pStreamReader->attributes().value("Value").toString().remove("urn:3DXML:CATRepImage.3dxml#");
 				if (m_TextureImagesHash.contains(imageId))
 				{
@@ -1420,8 +1421,6 @@ void GLC_3dxmlToWorld::loadCatRepImage()
 QImage GLC_3dxmlToWorld::loadImage(QString fileName)
 {
 	QString format= QFileInfo(fileName).suffix().toUpper();
-	qDebug() << "Image Name : " << fileName;
-	qDebug() << "Image Format : " << format;
 	QImage resultImage;
 	if (m_IsInArchive)
 	{
