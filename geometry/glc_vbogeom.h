@@ -108,6 +108,10 @@ public:
 	inline QSet<GLC_Material*> materialSet() const
 	{return m_MaterialHash.values().toSet();}
 
+	//! Get materials ID List
+	inline QList<GLC_uint> materialIds() const
+	{return m_MaterialHash.keys();}
+
 	//! Return true if Material key is in the mesh
 	inline const bool containsMaterial(const GLC_uint key) const
 	{return m_MaterialHash.contains(key);}
