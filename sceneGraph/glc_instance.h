@@ -121,7 +121,7 @@ public:
 
 
 	//! Get the geometry of the instance
-	inline GLC_VboGeom* getGeometry(int index)
+	inline GLC_VboGeom* getGeometry(int index) const
 	{
 		if (NULL != m_pGeomList) return m_pGeomList->at(index);
 		else return NULL;
