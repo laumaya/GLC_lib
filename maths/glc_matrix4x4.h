@@ -117,6 +117,17 @@ public:
 
 	//! Return the matrix string
 	QString toString() const;
+
+	//! Return the rotation matrix of this matrix
+	inline GLC_Matrix4x4 rotationMatrix() const
+	{
+		GLC_Matrix4x4 result(*this);
+		result.matrix[12]= 0.0; result.matrix[13]= 0.0; result.matrix[14]= 0.0;
+		result.matrix[3]= 0.0; result.matrix[7]= 0.0; result.matrix[11]= 0.0;
+		result.matrix[15]= 1.0;
+		return result;
+	}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
