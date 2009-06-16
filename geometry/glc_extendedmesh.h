@@ -129,6 +129,13 @@ public:
 	inline bool containsLod(int lod) const
 	{return (NULL != m_ExtendedGeomEngine.getLod(lod));}
 
+	//! Return true if the specified LOD conatins the specified material
+	inline bool lodContainsMaterial(int lod, GLC_uint materialId) const
+	{
+		if (not m_PrimitiveGroups.contains(lod))return false;
+		else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
+	}
+
 	//! Return the specified LOD accuracy
 	inline double getLodAccuracy(int lod) const
 	{
