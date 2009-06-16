@@ -79,12 +79,7 @@ public:
 	{
 		setVect(dX, dY, dZ, dW);
 	}
-	/*! Copy constructor
-	 * Sample use
-	 * \code
-	 * NewVect = new GLC_Vector4d(OldVect);
-	 * \endcode
-	 */
+	//! Copy constructor
 	inline GLC_Vector4d(const GLC_Vector4d &Vect)
 	{
 		vector[0]= Vect.vector[0];
