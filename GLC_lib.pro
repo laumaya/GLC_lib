@@ -55,7 +55,8 @@ HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
 						maths/glc_vector3df.h \
 						maths/glc_vector4d.h \
 						maths/glc_matrix4x4.h \
-						maths/glc_interpolator.h
+						maths/glc_interpolator.h \
+						maths/glc_distance.h
 						
 HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_objtoworld.h \
@@ -152,7 +153,8 @@ SOURCES += lib3ds/atmosphere.c \
    
 SOURCES +=	maths/glc_vector4d.cpp \
 			maths/glc_matrix4x4.cpp \
-			maths/glc_interpolator.cpp 
+			maths/glc_interpolator.cpp \
+			maths/glc_distance.cpp
 
 SOURCES +=	io/glc_objmtlloader.cpp \
 			io/glc_objtoworld.cpp \
