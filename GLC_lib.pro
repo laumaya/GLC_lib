@@ -87,7 +87,8 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
 							geometry/glc_primitivegroup.h \
 							geometry/glc_extendedmesh.h \
 							geometry/glc_enginelod.h \
-							geometry/glc_rectangle.h
+							geometry/glc_rectangle.h \
+							geometry/glc_line.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -185,7 +186,8 @@ SOURCES +=	geometry/glc_vbogeom.cpp \
 			geometry/glc_primitivegroup.cpp \
 			geometry/glc_extendedmesh.cpp \
 			geometry/glc_enginelod.cpp \
-			geometry/glc_rectangle.cpp
+			geometry/glc_rectangle.cpp \
+			geometry/glc_line.cpp
 
 SOURCES +=	shading/glc_material.cpp \
 			shading/glc_texture.cpp \
@@ -273,7 +275,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_ExtendedMesh \
     		   include/GLC_StructOccurence \
     		   include/GLC_StructInstance \
-    		   include/GLC_StructReference
+    		   include/GLC_StructReference \
+    		   include/GLC_Distance \
+    		   include/GLC_Line
     		   
     			   
 # Linux install configuration
