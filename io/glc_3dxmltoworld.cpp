@@ -808,7 +808,7 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 	m_ReferenceHash.clear();
 
 	// Update position
-	m_pWorld->rootOccurence()->updateChildsAbsoluteMatrix();
+	m_pWorld->rootOccurence()->updateChildrenAbsoluteMatrix();
 
 }
 // Check for XML error
