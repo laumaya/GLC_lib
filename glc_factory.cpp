@@ -89,6 +89,13 @@ GLC_Instance GLC_Factory::createPoint(double x, double y, double z) const
 	return newPoint;
 }
 
+// Create an GLC_Line
+GLC_Instance GLC_Factory::createLine(const GLC_Point4d& point1, const GLC_Point4d& point2) const
+{
+	GLC_Instance newPoint(new GLC_Line(point1, point2));
+	return newPoint;
+}
+
 //  Create an GLC_Circle
 GLC_Instance GLC_Factory::createCircle(double radius, double angle) const
 {
