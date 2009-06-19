@@ -38,6 +38,12 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_Distance : public GLC_Object
 {
+	struct DistanceResult
+	{
+		double m_Distance;
+		GLC_Point4d m_Point1;
+		GLC_Point4d m_Point2;
+	};
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -81,8 +87,23 @@ public:
 	//! Compute the minimum distance between the 2 groups
 	void computeMinimumDistance();
 
+//@}
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
 	//! Return the minimum distance between the 2 groups
-	double distMin();
+	inline double distMin() const
+	{return m_DistanceMini;}
+
+	//! Return First point of the distance
+	inline GLC_Point4d point1() const
+	{return m_Point1;}
+
+	//! Return Seconf point of the distance
+	inline GLC_Point4d point2() const
+	{return m_Point2;}
 
 //@}
 
@@ -92,7 +113,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Return distance mini beween to instance
-	double minimumDistance(GLC_Instance&, GLC_Instance&) const;
+	DistanceResult minimumDistance(GLC_Instance&, GLC_Instance&) const;
 //@}
 
 //////////////////////////////////////////////////////////////////////

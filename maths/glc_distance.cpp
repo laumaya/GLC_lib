@@ -108,35 +108,48 @@ void GLC_Distance::addInstancesInGroup2(const QList<GLC_Instance>& instances)
 // Compute the minimum distance between the 2 groups
 void GLC_Distance::computeMinimumDistance()
 {
-	clear();
-	const int size1= m_ListOfInstances1.size();
-	const int size2= m_ListOfInstances2.size();
-	for (int index1= 0; index1 < size1; ++index1)
+	DistanceResult distanceResult;
+	distanceResult.m_Distance= MAXFLOAT;
+	if (not m_ListOfInstances1.isEmpty() and not m_ListOfInstances2.isEmpty())
 	{
-		for (int index2= 0; index2 < size2; ++index2)
+		const int size1= m_ListOfInstances1.size();
+		const int size2= m_ListOfInstances2.size();
+		for (int index1= 0; index1 < size1; ++index1)
 		{
-
+			GLC_Instance instance1= m_ListOfInstances1.at(index1);
+			for (int index2= 0; index2 < size2; ++index2)
+			{
+				GLC_Instance instance2= m_ListOfInstances2.at(index2);
+				DistanceResult currentDistance= minimumDistance(instance1, instance2);
+				qDebug() << "currentDistance " << currentDistance.m_Distance;
+				if (currentDistance.m_Distance < distanceResult.m_Distance) distanceResult= currentDistance;
+			}
 		}
 	}
+	else
+	{
+		qDebug() << "a list is empty";
+		distanceResult.m_Distance= -1.0;
+		distanceResult.m_Point1= GLC_Point4d();
+		distanceResult.m_Point2= GLC_Point4d();
+	}
+	m_DistanceMini= distanceResult.m_Distance;
+	m_Point1= distanceResult.m_Point1;
+	m_Point2= distanceResult.m_Point2;
 
 }
-
-// Return the minimum distance between the 2 groups
-double GLC_Distance::distMin()
-{
-
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // private services functions
 //////////////////////////////////////////////////////////////////////
 
 // Return distance mini beween to instance
-double GLC_Distance::minimumDistance(GLC_Instance& instance1, GLC_Instance& instance2) const
+GLC_Distance::DistanceResult GLC_Distance::minimumDistance(GLC_Instance& instance1, GLC_Instance& instance2) const
 {
-	double distance= 0.0;
+	DistanceResult distanceResult;
+	distanceResult.m_Distance= 0.0;
 
+	//! Create the list ot the instance1 meshs
 	QList<GLC_ExtendedMesh*> listOfMesh1;
 	{
 		const int size= instance1.numberOfGeometry();
@@ -146,8 +159,13 @@ double GLC_Distance::minimumDistance(GLC_Instance& instance1, GLC_Instance& inst
 			if (NULL != pMesh) listOfMesh1.append(pMesh);
 		}
 	}
-	if (listOfMesh1.isEmpty()) return distance;
+	if (listOfMesh1.isEmpty())
+	{
+		qDebug() << "listOfMesh1 empty";
+		return distanceResult;
+	}
 
+	//! Create the list ot the instance2 meshs
 	QList<GLC_ExtendedMesh*> listOfMesh2;
 	{
 		const int size= instance2.numberOfGeometry();
@@ -157,37 +175,82 @@ double GLC_Distance::minimumDistance(GLC_Instance& instance1, GLC_Instance& inst
 			if (NULL != pMesh) listOfMesh2.append(pMesh);
 		}
 	}
-	if (listOfMesh2.isEmpty()) return distance;
-
-	int minIndexList1= 0;
-	int minIndexList2= 0;
-	const int sizeOfList1= listOfMesh1.size();
-	const int sizeOfList2= listOfMesh2.size();
-	GLC_Matrix4x4 instance1Matrix= instance1.getMatrix();
-	GLC_Matrix4x4 instance2Matrix= instance2.getMatrix();
-	distance= (instance1.getBoundingBox().getCenter() - instance2.getBoundingBox().getCenter()).norm();
-	distance+= instance1.getBoundingBox().boundingSphereRadius() + instance2.getBoundingBox().boundingSphereRadius();
-	qDebug() << "Distance " << distance;
-
-	for (int indexList1= 0; indexList1 < sizeOfList1; ++indexList1)
+	if (listOfMesh2.isEmpty())
 	{
-		GLC_Point4d point1= listOfMesh1.at(indexList1)->boundingBox().transform(instance1Matrix).getCenter();
-		for (int indexList2= 0; indexList2 < sizeOfList2; ++indexList2)
-		{
-
-			GLC_Point4d point2= listOfMesh2.at(indexList2)->boundingBox().transform(instance2Matrix).getCenter();
-			GLC_Vector4d delta(point1 - point2);
-			double distance2= delta.norm() + listOfMesh2.at(indexList2)->boundingBox().boundingSphereRadius();
-			if (distance2 < distance)
-			{
-				minIndexList1= indexList1;
-				minIndexList2= indexList2;
-				distance= distance2;
-			}
-		}
-
+		qDebug() << "listOfMesh2 empty";
+		return distanceResult;
 	}
 
-	return distance;
+
+	// Create the list of instance1 positions
+	QList<GLfloat> positions1;
+	{
+		const int size= listOfMesh1.size();
+		for (int i= 0; i < size; ++i)
+		{
+			positions1.append(listOfMesh1.at(i)->positionVector().toList());
+		}
+	}
+	// Create the list of instance2 positions
+	QList<GLfloat> positions2;
+	{
+		const int size= listOfMesh2.size();
+		for (int i= 0; i < size; ++i)
+		{
+			positions2.append(listOfMesh2.at(i)->positionVector().toList());
+		}
+	}
+
+	// Update the position of instance1 vertice
+	GLC_Matrix4x4 instance1Matrix(instance1.getMatrix());
+	const int size1= positions1.size();
+	if (instance1Matrix != GLC_Matrix4x4())
+	{
+		for (int i= 0; i < size1; i+= 3)
+		{
+			GLC_Point4d point(positions1.at(i), positions1.at(i + 1), positions1.at(i + 2));
+			point= instance1Matrix * point;
+			positions1[i]= static_cast<float>(point.X());
+			positions1[i + 1]= static_cast<float>(point.Y());
+			positions1[i + 2]= static_cast<float>(point.Z());
+		}
+	}
+
+	// Update the position of instance1 vertice
+	GLC_Matrix4x4 instance2Matrix(instance2.getMatrix());
+	const int size2= positions2.size();
+	if (instance2Matrix != GLC_Matrix4x4())
+	{
+		for (int i= 0; i < size2; i+= 3)
+		{
+			GLC_Point4d point(positions2.at(i), positions2.at(i + 1), positions2.at(i + 2));
+			point= instance2Matrix * point;
+			positions2[i]= static_cast<float>(point.X());
+			positions2[i + 1]= static_cast<float>(point.Y());
+			positions2[i + 2]= static_cast<float>(point.Z());
+		}
+	}
+
+	// Comput the minimum distance
+	distanceResult.m_Distance= HUGE_VAL;
+	for (int index1= 0; index1 < size1; index1+= 3)
+	{
+		GLC_Point4d point1(positions1.at(index1), positions1.at(index1 + 1), positions1.at(index1 + 2));
+		for (int index2= 0; index2 < size2; index2+= 3)
+		{
+			GLC_Point4d point2(positions2.at(index2), positions2.at(index2 + 1), positions2.at(index2 + 2));
+			GLC_Vector4d delta(point1 - point2);
+			double distance2= delta.norm();
+			if (distance2 < distanceResult.m_Distance)
+			{
+				distanceResult.m_Distance= distance2;
+				distanceResult.m_Point1= point1;
+				distanceResult.m_Point2= point2;
+			}
+		}
+	}
+
+	qDebug() << "Distance " << distanceResult.m_Distance;
+	return distanceResult;
  }
 
