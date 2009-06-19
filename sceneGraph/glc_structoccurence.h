@@ -145,8 +145,8 @@ public:
 	//! Update the absolute matrix
 	GLC_StructOccurence* updateAbsoluteMatrix();
 
-	//! Update childs obsolute Matrix
-	GLC_StructOccurence* updateChildsAbsoluteMatrix();
+	//! Update children obsolute Matrix
+	GLC_StructOccurence* updateChildrenAbsoluteMatrix();
 
 	//! Add Child
 	/*! The new child must be orphan*/
