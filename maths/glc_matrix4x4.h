@@ -97,6 +97,13 @@ public:
 	//! Vector transformation
 	GLC_Vector4d operator * (const GLC_Vector4d &Vect) const;
 
+	//! Return true if the 2 matrix are equals
+	bool operator==(const GLC_Matrix4x4& mat) const;
+
+	//! Return true if the 2 matrix are not equals
+	inline bool operator!=(const GLC_Matrix4x4& mat) const
+	{return not operator==(mat);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

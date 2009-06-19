@@ -132,6 +132,19 @@ GLC_Vector4d GLC_Matrix4x4::operator * (const GLC_Vector4d &Vect) const
 	return VectResult;
 }
 
+// Return true if the 2 matrix are equals
+bool GLC_Matrix4x4::operator==(const GLC_Matrix4x4& mat) const
+{
+	bool result= true;
+	int i= 0;
+	while (result and (i < TAILLEMAT4X4))
+	{
+		result= (matrix[i] == mat.matrix[i]);
+		++i;
+	}
+	return result;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // Get Functions
