@@ -133,7 +133,7 @@ public:
 	inline bool lodContainsMaterial(int lod, GLC_uint materialId) const
 	{
 		if (not m_PrimitiveGroups.contains(lod))return false;
-		else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
+		else return m_PrimitiveGroups.value(lod)->contains(materialId);
 	}
 
 	//! Return the specified LOD accuracy
