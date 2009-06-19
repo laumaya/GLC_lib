@@ -315,6 +315,7 @@ void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& in
 {
 	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
+	Q_ASSERT(not indexList.isEmpty());
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTriangles(indexList);
 
 	// Invalid the geometry
@@ -327,6 +328,7 @@ void GLC_ExtendedMesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexLis
 {
 	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
+	Q_ASSERT(not indexList.isEmpty());
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesStrip(indexList);
 
 	// Invalid the geometry
@@ -338,6 +340,7 @@ void GLC_ExtendedMesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList&
 {
 	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
+	Q_ASSERT(not indexList.isEmpty());
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesFan(indexList);
 
 	// Invalid the geometry
