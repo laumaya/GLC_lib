@@ -116,9 +116,8 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GL
 	{
 		GLC_StructOccurence* pChild= structOccurence.child(i)->clone(m_pWorldHandle);
 		addChild(pChild);
-		pChild->updateAbsoluteMatrix();
 	}
-
+	updateChildrenAbsoluteMatrix();
 	// Update instance
 	m_pStructInstance->structOccurenceCreated(this);
 }
@@ -311,21 +310,21 @@ GLC_StructOccurence* GLC_StructOccurence::updateAbsoluteMatrix()
 		m_AbsoluteMatrix= m_pStructInstance->relativeMatrix();
 	}
 	// If the occurence have a representation, update it.
-	if (m_HasRepresentation)
+	if ((NULL != m_pWorldHandle) and m_HasRepresentation)
 	{
 		m_pWorldHandle->collection()->instanceHandle(id())->setMatrix(m_AbsoluteMatrix);
 	}
 	return this;
 }
 
-// Update childs obsolute Matrix
-GLC_StructOccurence* GLC_StructOccurence::updateChildsAbsoluteMatrix()
+// Update children obsolute Matrix
+GLC_StructOccurence* GLC_StructOccurence::updateChildrenAbsoluteMatrix()
 {
 	updateAbsoluteMatrix();
 	const int size= m_Childs.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_Childs[i]->updateChildsAbsoluteMatrix();
+		m_Childs[i]->updateChildrenAbsoluteMatrix();
 	}
 	return this;
 }
@@ -342,9 +341,9 @@ void GLC_StructOccurence::addChild(GLC_StructOccurence* pChild)
 	pChild->m_pParent= this;
 	if (NULL == pChild->m_pWorldHandle)
 	{
-		m_pWorldHandle->addOccurence(pChild);
+		pChild->setWorldHandle(m_pWorldHandle);
 	}
-	pChild->updateAbsoluteMatrix();
+	updateChildrenAbsoluteMatrix();
 }
 
 // Add Child instance (the occurence is created)
@@ -369,10 +368,7 @@ void GLC_StructOccurence::addChildren(const QList<GLC_StructOccurence*>& childre
 	const int size= children.size();
 	for (int i= 0; i < size; ++i)
 	{
-		Q_ASSERT(children.at(i)->isOrphan());
-		// Add the child to the list of child
-		m_Childs.append(children.at(i));
-		children.at(i)->m_pParent= this;
+		addChild(children.at(i));
 	}
 }
 
