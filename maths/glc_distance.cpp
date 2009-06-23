@@ -37,8 +37,8 @@ GLC_Distance::GLC_Distance()
 
 }
 
-// Construct a distmin with 2 GLC_Instance
-GLC_Distance::GLC_Distance(const GLC_Instance& instance1, const GLC_Instance& instance2)
+// Construct a distmin with 2 GLC_3DViewInstance
+GLC_Distance::GLC_Distance(const GLC_3DViewInstance& instance1, const GLC_3DViewInstance& instance2)
 : GLC_Object("DistMin")
 , m_ListOfInstances1()
 , m_ListOfInstances2()
@@ -82,25 +82,25 @@ void GLC_Distance::clear()
 }
 
 // Add instance in group 1
-void GLC_Distance::addInstanceInGroup1(const GLC_Instance& instance)
+void GLC_Distance::addInstanceInGroup1(const GLC_3DViewInstance& instance)
 {
 	m_ListOfInstances1.append(instance);
 }
 
 // Add instances list in group 1
-void GLC_Distance::addInstancesInGroup1(const QList<GLC_Instance>& instances)
+void GLC_Distance::addInstancesInGroup1(const QList<GLC_3DViewInstance>& instances)
 {
 	m_ListOfInstances1.append(instances);
 }
 
 // Add instance in group 1
-void GLC_Distance::addInstanceInGroup2(const GLC_Instance& instance)
+void GLC_Distance::addInstanceInGroup2(const GLC_3DViewInstance& instance)
 {
 	m_ListOfInstances2.append(instance);
 }
 
 // Add instances list in group 1
-void GLC_Distance::addInstancesInGroup2(const QList<GLC_Instance>& instances)
+void GLC_Distance::addInstancesInGroup2(const QList<GLC_3DViewInstance>& instances)
 {
 	m_ListOfInstances2.append(instances);
 }
@@ -109,17 +109,17 @@ void GLC_Distance::addInstancesInGroup2(const QList<GLC_Instance>& instances)
 void GLC_Distance::computeMinimumDistance()
 {
 	DistanceResult distanceResult;
-	distanceResult.m_Distance= MAXFLOAT;
+	distanceResult.m_Distance= HUGE_VAL;
 	if (not m_ListOfInstances1.isEmpty() and not m_ListOfInstances2.isEmpty())
 	{
 		const int size1= m_ListOfInstances1.size();
 		const int size2= m_ListOfInstances2.size();
 		for (int index1= 0; index1 < size1; ++index1)
 		{
-			GLC_Instance instance1= m_ListOfInstances1.at(index1);
+			GLC_3DViewInstance instance1= m_ListOfInstances1.at(index1);
 			for (int index2= 0; index2 < size2; ++index2)
 			{
-				GLC_Instance instance2= m_ListOfInstances2.at(index2);
+				GLC_3DViewInstance instance2= m_ListOfInstances2.at(index2);
 				DistanceResult currentDistance= minimumDistance(instance1, instance2);
 				qDebug() << "currentDistance " << currentDistance.m_Distance;
 				if (currentDistance.m_Distance < distanceResult.m_Distance) distanceResult= currentDistance;
@@ -144,7 +144,7 @@ void GLC_Distance::computeMinimumDistance()
 //////////////////////////////////////////////////////////////////////
 
 // Return distance mini beween to instance
-GLC_Distance::DistanceResult GLC_Distance::minimumDistance(GLC_Instance& instance1, GLC_Instance& instance2) const
+GLC_Distance::DistanceResult GLC_Distance::minimumDistance(GLC_3DViewInstance& instance1, GLC_3DViewInstance& instance2) const
 {
 	DistanceResult distanceResult;
 	distanceResult.m_Distance= 0.0;
