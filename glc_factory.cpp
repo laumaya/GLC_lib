@@ -77,64 +77,64 @@ GLC_Factory::~GLC_Factory()
 //////////////////////////////////////////////////////////////////////
 
 // Create an GLC_Point
-GLC_Instance GLC_Factory::createPoint(const GLC_Vector4d &coord) const
+GLC_3DViewInstance GLC_Factory::createPoint(const GLC_Vector4d &coord) const
 {
-	GLC_Instance newPoint(new GLC_Point(coord));
+	GLC_3DViewInstance newPoint(new GLC_Point(coord));
 	return newPoint;
 }
 // Create an GLC_Point
-GLC_Instance GLC_Factory::createPoint(double x, double y, double z) const
+GLC_3DViewInstance GLC_Factory::createPoint(double x, double y, double z) const
 {
-	GLC_Instance newPoint(new GLC_Point(x, y, z));
+	GLC_3DViewInstance newPoint(new GLC_Point(x, y, z));
 	return newPoint;
 }
 
 // Create an GLC_Line
-GLC_Instance GLC_Factory::createLine(const GLC_Point4d& point1, const GLC_Point4d& point2) const
+GLC_3DViewInstance GLC_Factory::createLine(const GLC_Point4d& point1, const GLC_Point4d& point2) const
 {
-	GLC_Instance newPoint(new GLC_Line(point1, point2));
+	GLC_3DViewInstance newPoint(new GLC_Line(point1, point2));
 	return newPoint;
 }
 
 //  Create an GLC_Circle
-GLC_Instance GLC_Factory::createCircle(double radius, double angle) const
+GLC_3DViewInstance GLC_Factory::createCircle(double radius, double angle) const
 {
-	GLC_Instance newCircle(new GLC_Circle(radius, angle));
+	GLC_3DViewInstance newCircle(new GLC_Circle(radius, angle));
 	return newCircle;
 }
 // Create an GLC_Box
-GLC_Instance GLC_Factory::createBox(double lx, double ly, double lz) const
+GLC_3DViewInstance GLC_Factory::createBox(double lx, double ly, double lz) const
 {
 
-	GLC_Instance newBox(new GLC_Box(lx, ly, lz));
+	GLC_3DViewInstance newBox(new GLC_Box(lx, ly, lz));
 	return newBox;
 }
 
 // Create an GLC_Box
-GLC_Instance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
+GLC_3DViewInstance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 {
 	const double lx= boundingBox.getUpper().X() - boundingBox.getLower().X();
 	const double ly= boundingBox.getUpper().Y() - boundingBox.getLower().Y();
 	const double lz= boundingBox.getUpper().Z() - boundingBox.getLower().Z();
 	GLC_Box* pBox= new GLC_Box(lx, ly, lz);
-	GLC_Instance newBox(pBox);
+	GLC_3DViewInstance newBox(pBox);
 	newBox.translate(boundingBox.getCenter().X(), boundingBox.getCenter().Y()
 					, boundingBox.getCenter().Z());
 	return newBox;
 }
 
 // Create an GLC_Cylinder
-GLC_Instance GLC_Factory::createCylinder(double radius, double length) const
+GLC_3DViewInstance GLC_Factory::createCylinder(double radius, double length) const
 {
 
-	GLC_Instance newCylinder(new GLC_Cylinder(radius, length));
+	GLC_3DViewInstance newCylinder(new GLC_Cylinder(radius, length));
 	return newCylinder;
 }
 
 // Create ang GLC_Rectangle
-GLC_Instance GLC_Factory::createRectangle(const GLC_Vector4d& normal, double l1, double l2)
+GLC_3DViewInstance GLC_Factory::createRectangle(const GLC_Vector4d& normal, double l1, double l2)
 {
-	GLC_Instance newRectangle(new GLC_Rectangle(normal, l1, l2));
+	GLC_3DViewInstance newRectangle(new GLC_Rectangle(normal, l1, l2));
 	return newRectangle;
 }
 

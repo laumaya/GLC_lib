@@ -41,7 +41,7 @@
 #include "geometry/glc_rectangle.h"
 #include "shading/glc_material.h"
 #include "shading/glc_texture.h"
-#include "sceneGraph/glc_instance.h"
+#include "sceneGraph/glc_3dviewinstance.h"
 #include "sceneGraph/glc_world.h"
 #include "glc_boundingbox.h"
 #include "viewport/glc_movercontroller.h"
@@ -79,24 +79,24 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an GLC_Point
-	GLC_Instance createPoint(const GLC_Vector4d &coord) const;
-	GLC_Instance createPoint(double x, double y, double z) const;
+	GLC_3DViewInstance createPoint(const GLC_Vector4d &coord) const;
+	GLC_3DViewInstance createPoint(double x, double y, double z) const;
 
 	//! Create an GLC_Line
-	GLC_Instance createLine(const GLC_Point4d&, const GLC_Point4d&) const;
+	GLC_3DViewInstance createLine(const GLC_Point4d&, const GLC_Point4d&) const;
 
 	//!  Create an GLC_Circle
-	GLC_Instance createCircle(double radius, double angle= 2 * glc::PI) const;
+	GLC_3DViewInstance createCircle(double radius, double angle= 2 * glc::PI) const;
 
 	//! Create an GLC_Box
-	GLC_Instance createBox(double lx, double ly, double lz) const;
-	GLC_Instance createBox(const GLC_BoundingBox& boundingBox) const;
+	GLC_3DViewInstance createBox(double lx, double ly, double lz) const;
+	GLC_3DViewInstance createBox(const GLC_BoundingBox& boundingBox) const;
 
 	//! Create an GLC_Cylinder
-	GLC_Instance createCylinder(double radius, double length) const;
+	GLC_3DViewInstance createCylinder(double radius, double length) const;
 
 	//!Create ang GLC_Rectangle
-	GLC_Instance createRectangle(const GLC_Vector4d&, double, double);
+	GLC_3DViewInstance createRectangle(const GLC_Vector4d&, double, double);
 
 	//! Create an GLC_World* with a QFile
 	GLC_World* createWorld(QFile &file, QStringList* pAttachedFileName= NULL) const;
