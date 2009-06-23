@@ -25,7 +25,6 @@
 //! \file glc_material.cpp implementation of the GLC_Material class.
 
 #include "glc_material.h"
-#include "../sceneGraph/glc_collection.h"
 #include "../geometry/glc_vbogeom.h"
 
 #include <QtDebug>
