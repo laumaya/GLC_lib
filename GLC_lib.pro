@@ -65,8 +65,8 @@ HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_3dstoworld.h \
 						io/glc_3dxmltoworld.h
 
-HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_collection.h \
-							sceneGraph/glc_instance.h \
+HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
+							sceneGraph/glc_3dviewinstance.h \
 							sceneGraph/glc_structreference.h \
 							sceneGraph/glc_structinstance.h \
 							sceneGraph/glc_structoccurence.h \
@@ -88,7 +88,9 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
 							geometry/glc_extendedmesh.h \
 							geometry/glc_enginelod.h \
 							geometry/glc_rectangle.h \
-							geometry/glc_line.h
+							geometry/glc_line.h \
+							geometry/glc_rep.h \
+							geometry/glc_3drep.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -164,8 +166,8 @@ SOURCES +=	io/glc_objmtlloader.cpp \
 			io/glc_3dstoworld.cpp \
 			io/glc_3dxmltoworld.cpp
 
-SOURCES +=	sceneGraph/glc_collection.cpp \
-			sceneGraph/glc_instance.cpp \
+SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
+			sceneGraph/glc_3dviewinstance.cpp \
 			sceneGraph/glc_structreference.cpp \
 			sceneGraph/glc_structinstance.cpp \
 			sceneGraph/glc_structoccurence.cpp \
@@ -187,7 +189,10 @@ SOURCES +=	geometry/glc_vbogeom.cpp \
 			geometry/glc_extendedmesh.cpp \
 			geometry/glc_enginelod.cpp \
 			geometry/glc_rectangle.cpp \
-			geometry/glc_line.cpp
+			geometry/glc_line.cpp \
+			geometry/glc_rep.cpp \
+			geometry/glc_3drep.cpp
+
 
 SOURCES +=	shading/glc_material.cpp \
 			shading/glc_texture.cpp \
@@ -228,14 +233,14 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Box \
     		   include/GLC_Camera \
     		   include/GLC_Circle \
-    		   include/GLC_Collection \
+    		   include/GLC_3DViewCollection \
     		   include/GLC_Cylinder \
     		   include/GLC_Exception \
     		   include/GLC_Factory \
     		   include/GLC_FileFormatException \
     		   include/GLC_VboGeom \
     		   include/GLC_ImagePlane \
-    		   include/GLC_Instance \
+    		   include/GLC_3DViewInstance \
     		   include/GLC_Interpolator \
     		   include/GLC_Light \
     		   include/GLC_Material \
