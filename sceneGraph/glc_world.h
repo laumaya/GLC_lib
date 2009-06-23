@@ -27,7 +27,7 @@
 #ifndef GLC_WORLD_H_
 #define GLC_WORLD_H_
 
-#include "glc_collection.h"
+#include "glc_3dviewcollection.h"
 #include "glc_structoccurence.h"
 #include "glc_structreference.h"
 #include "glc_structinstance.h"
@@ -39,7 +39,7 @@
 /*!
  *  GLC_World contain :
  * 		- The Scene root GLC_Product.
- * 		- a GLC_Collection which manage all scene shapes (GLC_Instance)
+ * 		- a GLC_3DViewCollection which manage all scene shapes (GLC_3DViewInstance)
  *
  */
 //////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ public:
 	inline GLC_StructOccurence* rootOccurence() const {return m_pRoot;}
 
 	//! Return the world collection
-	inline GLC_Collection* collection() {return m_pWorldHandle->collection();}
+	inline GLC_3DViewCollection* collection() {return m_pWorldHandle->collection();}
 
 	//! Return the size of the world
 	inline int size() const {return m_pWorldHandle->collection()->size();}
