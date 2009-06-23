@@ -31,7 +31,7 @@
 #include <QList>
 #include <QString>
 #include "../maths/glc_matrix4x4.h"
-#include "glc_instance.h"
+#include "glc_3dviewinstance.h"
 #include "glc_attributes.h"
 
 class GLC_StructReference;
