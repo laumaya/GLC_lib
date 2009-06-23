@@ -27,7 +27,7 @@
 
 #include "glc_repmover.h"
 #include "../geometry/glc_circle.h"
-#include "../sceneGraph/glc_instance.h"
+#include "../sceneGraph/glc_3dviewinstance.h"
 
 class GLC_Factory;
 
@@ -98,11 +98,11 @@ private:
 	//! Main Circle
 	GLC_Circle m_MainCircle;
 	//! Arc 1 showing orbit sphere orientation
-	GLC_Instance m_Arc1;
+	GLC_3DViewInstance m_Arc1;
 	//! Arc 1 positionning Matrix
 	GLC_Matrix4x4 m_MatArc1;
 	//! Arc 2 showing orbit sphere orientation
-	GLC_Instance m_Arc2;
+	GLC_3DViewInstance m_Arc2;
 	//! Arc 2 positionning Matrix
 	GLC_Matrix4x4 m_MatArc2;
 	//! The ratio of the trackball size

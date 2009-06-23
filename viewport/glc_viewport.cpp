@@ -30,7 +30,7 @@
 #include "../glc_ext.h"
 #include "../shading/glc_selectionmaterial.h"
 #include "../glc_state.h"
-#include "../sceneGraph/glc_instance.h"
+#include "../sceneGraph/glc_3dviewinstance.h"
 
 #include <QtDebug>
 
@@ -269,7 +269,7 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 	// Find the most meaningful color
 	for (int i= 0; i < 25; ++i)
 	{
-		GLC_uint id= GLC_Instance::decodeRgbId(&colorId[i * 4]);
+		GLC_uint id= GLC_3DViewInstance::decodeRgbId(&colorId[i * 4]);
 		if (idList.contains(id))
 		{
 			++(idWeight[idList.indexOf(id)]);
