@@ -31,7 +31,7 @@
 #include <QList>
 
 #include "glc_structinstance.h"
-#include "glc_instance.h"
+#include "glc_3dviewinstance.h"
 #include "glc_attributes.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ public:
 	GLC_StructReference(const QString& name= QString());
 
 	//! Create reference with representation
-	GLC_StructReference(const GLC_Instance&);
+	GLC_StructReference(const GLC_3DViewInstance&);
 
 	//! Destructor
 	virtual ~GLC_StructReference();
@@ -80,7 +80,7 @@ public:
 
 	//! Return an instance of the representation
 	/*! representation must exists*/
-	inline GLC_Instance instanceRepresentation() const
+	inline GLC_3DViewInstance instanceRepresentation() const
 	{
 		Q_ASSERT(NULL != m_pRepresentation);
 		return m_pRepresentation->instanciate();
@@ -147,7 +147,7 @@ public:
 
 	//! Set the reference representation
 	/*! Representation must not exist*/
-	void setRepresentation(const GLC_Instance& rep);
+	void setRepresentation(const GLC_3DViewInstance& rep);
 
 	//! Set the reference attributes
 	void setAttributes(const GLC_Attributes& attr)
@@ -166,7 +166,7 @@ private:
 	QList<GLC_StructInstance*> m_ListOfInstance;
 
 	//! The representation of reference
-	GLC_Instance* m_pRepresentation;
+	GLC_3DViewInstance* m_pRepresentation;
 
 	//! The Reference Name
 	QString m_Name;
