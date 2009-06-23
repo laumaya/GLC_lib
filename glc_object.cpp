@@ -63,12 +63,9 @@ GLC_Object::~GLC_Object()
 // Assignement operator
 GLC_Object &GLC_Object::operator=(const GLC_Object& object)
 {
-	if (&object != this)
-	{
-		m_QUuid= object.m_QUuid;
-		m_Uid= object.m_Uid;
-		m_Name= object.m_Name;
-	}
+	m_QUuid= object.m_QUuid;
+	m_Uid= object.m_Uid;
+	m_Name= object.m_Name;
 	return *this;
 }
 
