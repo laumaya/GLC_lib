@@ -25,7 +25,7 @@
 #ifndef GLC_WORLDHANDLE_H_
 #define GLC_WORLDHANDLE_H_
 
-#include "glc_collection.h"
+#include "glc_3dviewcollection.h"
 #include "glc_structoccurence.h"
 
 #include <QHash>
@@ -54,7 +54,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return the collection
-	inline GLC_Collection* collection()
+	inline GLC_3DViewCollection* collection()
 	{return &m_Collection;}
 
 	//! Return the number of world associated with this handle
@@ -126,7 +126,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! The Collection
-	GLC_Collection m_Collection;
+	GLC_3DViewCollection m_Collection;
 
 	//! Number of this world
 	int m_NumberOfWorld;
