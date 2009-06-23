@@ -25,7 +25,7 @@
 //! \file glc_structoccurence.cpp implementation of the GLC_StructOccurence class.
 
 #include "glc_structoccurence.h"
-#include "glc_collection.h"
+#include "glc_3dviewcollection.h"
 #include "glc_structreference.h"
 #include "glc_worldhandle.h"
 
@@ -410,7 +410,7 @@ void GLC_StructOccurence::checkForRepresentation()
 		{
 			if (pRef->hasRepresentation())
 			{
-				GLC_Instance representation(pRef->instanceRepresentation());
+				GLC_3DViewInstance representation(pRef->instanceRepresentation());
 				representation.setName(name());
 				// Force instance representation id
 				representation.setId(id());
