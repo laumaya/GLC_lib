@@ -208,7 +208,7 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 
 	file.close();
 	m_pCurrentMesh->finished();
-	GLC_Instance instance(m_pCurrentMesh);
+	GLC_3DViewInstance instance(m_pCurrentMesh);
 	m_pCurrentMesh= NULL;
 	m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
 

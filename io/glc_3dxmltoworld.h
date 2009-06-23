@@ -33,7 +33,7 @@
 #include <QHash>
 #include <QSet>
 #include "../maths/glc_matrix4x4.h"
-#include "../sceneGraph/glc_instance.h"
+#include "../sceneGraph/glc_3dviewinstance.h"
 
 class GLC_World;
 class QGLContext;
@@ -168,7 +168,7 @@ private:
 	{return not m_pStreamReader->atEnd() and not (m_pStreamReader->isStartElement() and (m_pStreamReader->name() == element));}
 
 	//! Load a face
-	void loadFace(GLC_ExtendedMesh*, const int lod= 0, double accuracy= 0.0);
+	void loadFace(GLC_ExtendedMesh*, const int lod, double accuracy);
 
 	//! Clear material hash
 	void clearMaterialHash();
@@ -186,7 +186,7 @@ private:
 	void loadExternRepresentations();
 
 	//! Return the instance of the current extern representation
-	GLC_Instance loadCurrentExtRep();
+	GLC_3DViewInstance loadCurrentExtRep();
 
 	//! Load CatMaterial Ref if present
 	void loadCatMaterialRef();

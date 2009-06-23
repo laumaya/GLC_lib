@@ -122,7 +122,7 @@ GLC_World* GLC_3dsToWorld::CreateWorldFrom3ds(QFile &file)
 		throw(fileFormatException);
 	}
 
-	// Create GLC_Instance with Node
+	// Create GLC_3DViewInstance with Node
 	for (Lib3dsNode *pNode=m_pLib3dsFile->nodes; pNode!=0; pNode=pNode->next)
 	{
 		createMeshes(m_pWorld->rootOccurence(), pNode);
@@ -207,7 +207,7 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 	    	pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->name);
 		    if( pMesh != NULL )
 		    {
-		    	GLC_Instance instance(createInstance(pMesh));
+		    	GLC_3DViewInstance instance(createInstance(pMesh));
 		    	// Test if there is vertex in the mesh
 		    	if (0 != instance.numberOfVertex())
 		    	{
@@ -265,14 +265,14 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 
 }
 //! Create Instance from a Lib3dsNode
-GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
+GLC_3DViewInstance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 {
 	QString meshName(p3dsMesh->name);
 	if (m_LoadedMeshes.contains(meshName))
 	{
 		// This mesh as been already loaded
-		QList<GLC_Instance*> instancesList(m_pWorld->collection()->instancesHandle());
-		GLC_Instance* pCurrentInstance= NULL;
+		QList<GLC_3DViewInstance*> instancesList(m_pWorld->collection()->instancesHandle());
+		GLC_3DViewInstance* pCurrentInstance= NULL;
 		int currentIndex= -1;
 		do
 		{
@@ -357,7 +357,7 @@ GLC_Instance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	m_PreviousQuantumValue= m_CurrentQuantumValue;
 
 	pMesh->finished();
-	return GLC_Instance(pMesh);
+	return GLC_3DViewInstance(pMesh);
 }
 
 // Load Material

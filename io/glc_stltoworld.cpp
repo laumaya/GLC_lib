@@ -119,7 +119,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		file.reset();
 		LoadBinariStl(file);
 		m_pCurrentMesh->finished();
-		GLC_Instance instance(m_pCurrentMesh);
+		GLC_3DViewInstance instance(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
 		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
 	}
@@ -178,7 +178,7 @@ void GLC_StlToWorld::scanFacet()
 	if (lineBuff.startsWith("endsolid") || lineBuff.startsWith("end solid"))
 	{
 		m_pCurrentMesh->finished();
-		GLC_Instance instance(m_pCurrentMesh);
+		GLC_3DViewInstance instance(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
 		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
 		return;

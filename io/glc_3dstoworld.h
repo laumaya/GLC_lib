@@ -35,7 +35,7 @@
 #include <QSet>
 #include <QStringList>
 
-#include "../sceneGraph/glc_instance.h"
+#include "../sceneGraph/glc_3dviewinstance.h"
 
 class GLC_World;
 class QGLContext;
@@ -102,7 +102,7 @@ private:
 	void createMeshes(GLC_StructOccurence*, Lib3dsNode*);
 
 	//! Create Instance from a Lib3dsMesh
-	GLC_Instance createInstance(Lib3dsMesh*);
+	GLC_3DViewInstance createInstance(Lib3dsMesh*);
 
 	//! Load Material
 	void loadMaterial(Lib3dsMaterial*);
