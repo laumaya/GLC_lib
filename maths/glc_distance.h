@@ -27,7 +27,7 @@
 
 #include <QList>
 #include "../glc_object.h"
-#include "../sceneGraph/glc_instance.h"
+#include "../sceneGraph/glc_3dviewinstance.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Distance
@@ -52,8 +52,8 @@ public:
 	//! Default constructor
 	GLC_Distance();
 
-	//! Construct a distmin with 2 GLC_Instance
-	GLC_Distance(const GLC_Instance&, const GLC_Instance&);
+	//! Construct a distmin with 2 GLC_3DViewInstance
+	GLC_Distance(const GLC_3DViewInstance&, const GLC_3DViewInstance&);
 
 	//! Copy Constructor
 	GLC_Distance(const GLC_Distance&);
@@ -73,16 +73,16 @@ public:
 	void clear();
 
 	//! Add instance in group 1
-	void addInstanceInGroup1(const GLC_Instance&);
+	void addInstanceInGroup1(const GLC_3DViewInstance&);
 
 	//! Add instances list in group 1
-	void addInstancesInGroup1(const QList<GLC_Instance>&);
+	void addInstancesInGroup1(const QList<GLC_3DViewInstance>&);
 
 	//! Add instance in group 1
-	void addInstanceInGroup2(const GLC_Instance&);
+	void addInstanceInGroup2(const GLC_3DViewInstance&);
 
 	//! Add instances list in group 1
-	void addInstancesInGroup2(const QList<GLC_Instance>&);
+	void addInstancesInGroup2(const QList<GLC_3DViewInstance>&);
 
 	//! Compute the minimum distance between the 2 groups
 	void computeMinimumDistance();
@@ -113,7 +113,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Return distance mini beween to instance
-	DistanceResult minimumDistance(GLC_Instance&, GLC_Instance&) const;
+	DistanceResult minimumDistance(GLC_3DViewInstance&, GLC_3DViewInstance&) const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -121,10 +121,10 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! The first list of instance
-	QList<GLC_Instance> m_ListOfInstances1;
+	QList<GLC_3DViewInstance> m_ListOfInstances1;
 
 	//! The Second list of instance
-	QList<GLC_Instance> m_ListOfInstances2;
+	QList<GLC_3DViewInstance> m_ListOfInstances2;
 
 	//! The Minimum Distance point 1
 	GLC_Point4d m_Point1;
