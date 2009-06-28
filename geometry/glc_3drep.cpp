@@ -29,7 +29,6 @@ GLC_3DRep::GLC_3DRep()
 : GLC_Rep()
 , m_pGeomList(new QList<GLC_VboGeom*>)
 , m_pType(new int(GLC_Rep::GLC_VBOGEOM))
-, m_pDefaultLOD(new int(10))
 {
 
 }
@@ -39,9 +38,9 @@ GLC_3DRep::GLC_3DRep(GLC_VboGeom* pGeom)
 : GLC_Rep()
 , m_pGeomList(new QList<GLC_VboGeom*>)
 , m_pType(new int(GLC_Rep::GLC_VBOGEOM))
-, m_pDefaultLOD(new int(10))
 {
 	m_pGeomList->append(pGeom);
+	setName(pGeom->name());
 }
 
 // Copy Constructor
@@ -49,7 +48,6 @@ GLC_3DRep::GLC_3DRep(const GLC_3DRep& rep)
 : GLC_Rep(rep)
 , m_pGeomList(rep.m_pGeomList)
 , m_pType(rep.m_pType)
-, m_pDefaultLOD(rep.m_pDefaultLOD)
 {
 
 }
@@ -61,7 +59,6 @@ GLC_3DRep& GLC_3DRep::operator=(const GLC_3DRep& rep)
 	GLC_Rep::operator=(rep);
 	m_pGeomList= rep.m_pGeomList;
 	m_pType= rep.m_pType;
-	m_pDefaultLOD= rep.m_pDefaultLOD;
 
 	return *this;
 }
@@ -88,40 +85,128 @@ int GLC_3DRep::type() const
 }
 
 //////////////////////////////////////////////////////////////////////
-// Opengl functions
+// Get functions
 //////////////////////////////////////////////////////////////////////
-// Display the 3DRep
-void GLC_3DRep::glExecute(bool isSelected, bool transparent, bool useLoad, double cameraCover)
+
+// Return true if the rep bounding box is valid
+bool GLC_3DRep::boundingBoxIsValid() const
+{
+	bool result= not m_pGeomList->isEmpty();
+	const int max= m_pGeomList->size();
+	int index= 0;
+	while (result and (index < max))
+	{
+		result= result and m_pGeomList->at(index)->boundingBoxIsValid();
+		++index;
+	}
+	return result;
+}
+
+// Clone the 3DRep
+GLC_3DRep GLC_3DRep::deepCopy() const
+{
+	GLC_3DRep cloneRep;
+	// Copy fields of the base class
+	cloneRep.setFileName(fileName());
+	cloneRep.setName(name());
+	// Copy representation geometries
+	const int size= m_pGeomList->size();
+	for (int i= 0; i < size; ++i)
+	{
+		cloneRep.addGeom(m_pGeomList->at(i)->clone());
+	}
+	return cloneRep;
+}
+
+// Get number of faces
+unsigned int GLC_3DRep::numberOfFaces() const
+{
+	unsigned int result= 0;
+	if (not m_pGeomList->isEmpty())
+	{
+		const int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			result+= m_pGeomList->at(i)->numberOfFaces();
+		}
+	}
+
+	return result;
+}
+
+// Get number of vertex
+unsigned int GLC_3DRep::numberOfVertex() const
+{
+	unsigned int result= 0;
+	if (not m_pGeomList->isEmpty())
+	{
+		const int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			result+= m_pGeomList->at(i)->numberOfFaces();
+		}
+	}
+
+	return result;
+}
+
+// Get number of materials
+unsigned int GLC_3DRep::numberOfMaterials() const
+{
+	unsigned int result= 0;
+	if (not m_pGeomList->isEmpty())
+	{
+		const int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			result+= m_pGeomList->at(i)->numberOfMaterials();
+		}
+	}
+
+	return result;
+}
+
+// Get materials List
+QSet<GLC_Material*> GLC_3DRep::materialSet() const
+{
+	QSet<GLC_Material*> result;
+	if (not m_pGeomList->isEmpty())
+	{
+		const int size= m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			result.unite(m_pGeomList->at(i)->materialSet());
+		}
+	}
+
+	return result;
+}
+
+// Remove empty geometries
+void GLC_3DRep::removeEmptyGeometry()
+{
+	QList<GLC_VboGeom*>::iterator iGeomList= m_pGeomList->begin();
+	while(iGeomList != m_pGeomList->constEnd())
+	{
+		if ((*iGeomList)->numberOfVertex() == 0)
+		{
+			delete (*iGeomList);
+			iGeomList= m_pGeomList->erase(iGeomList);
+		}
+		else
+		{
+			++iGeomList;
+		}
+	}
+}
+
+// Reverse geometries normals
+void GLC_3DRep::reverseNormals()
 {
 	const int size= m_pGeomList->size();
 	for (int i= 0; i < size; ++i)
 	{
-		const double diameter= m_pGeomList->at(i)->boundingBox().boundingSphereRadius() * 2.0;
-		double ratio= diameter / cameraCover * 150.0;
-
-		if (ratio > 100.0) ratio= 100.0;
-		ratio= 100.0 - ratio;
-		if (ratio > 98.0) ratio= 110.0;
-		if (ratio < static_cast<double>(*m_pDefaultLOD)) ratio= static_cast<double>(*m_pDefaultLOD);
-		//qDebug() << "RATIO = " << static_cast<int>(ratio);
-
-		const int lodValue= static_cast<int>(ratio);
-		if (useLoad)
-		{
-			if (lodValue <= 100)
-			{
-				m_pGeomList->at(i)->setCurrentLod(lodValue);
-				m_pGeomList->at(i)->glExecute(isSelected, transparent);
-			}
-		}
-		else
-		{
-			if (lodValue <= 100)
-			{
-				m_pGeomList->at(i)->setCurrentLod(*m_pDefaultLOD);
-				m_pGeomList->at(i)->glExecute(isSelected, transparent);
-			}
-		}
+		(*m_pGeomList)[i]->reverseNormals();
 	}
 }
 
@@ -141,10 +226,8 @@ void GLC_3DRep::clear()
 		}
 		delete m_pGeomList;
 		m_pGeomList= NULL;
-	}
-	delete m_pType;
-	m_pType= NULL;
 
-	delete m_pDefaultLOD;
-	m_pDefaultLOD= NULL;
+		delete m_pType;
+		m_pType= NULL;
+	}
 }

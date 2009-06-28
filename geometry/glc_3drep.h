@@ -68,12 +68,48 @@ public:
 	virtual int type() const;
 
 	//! Get Geometry
-	inline GLC_VboGeom* GeomAt(int index) const
-	{return m_pGeomList->at(index);}
+	inline GLC_VboGeom* geomAt(int index) const
+	{
+		Q_ASSERT(NULL != m_pGeomList);
+		Q_ASSERT(m_pGeomList->size() > index);
+		return m_pGeomList->at(index);
+	}
 
 	//! Return the number of body
 	inline int numberOfBody() const
-	{return m_pGeomList->size();}
+	{
+		Q_ASSERT(NULL != m_pGeomList);
+		return m_pGeomList->size();
+	}
+
+	//! Return true if the representation is empty
+	inline virtual bool isEmpty() const
+	{
+		Q_ASSERT(NULL != m_pGeomList);
+		return m_pGeomList->isEmpty();
+	}
+
+	//! Return true if the rep bounding box is valid
+	bool boundingBoxIsValid() const;
+
+	//! Make a deep copy of the 3DRep
+	GLC_3DRep deepCopy() const;
+
+	//! Return true if the 3DRep contains the geometry
+	inline bool contains(GLC_VboGeom* pGeom)
+	{return m_pGeomList->contains(pGeom);}
+
+	//! Get number of faces
+	unsigned int numberOfFaces() const;
+
+	//! Get number of vertex
+	unsigned int numberOfVertex() const;
+
+	//! Get number of materials
+	unsigned int numberOfMaterials() const;
+
+	//! Get materials List
+	QSet<GLC_Material*> materialSet() const;
 
 //@}
 
@@ -86,15 +122,12 @@ public:
 	inline void addGeom(GLC_VboGeom* pGeom)
 	{m_pGeomList->append(pGeom);}
 
-//@}
+	//! Remove empty geometries
+	void removeEmptyGeometry();
 
-/////////////////////////////////////////////////////////////////////
-/*! \name OpenGL Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-public:
-	//! Display the 3DRep
-	void glExecute(bool isSelected, bool transparent, bool useLoad, double cameraCover);
+	//! Reverse geometries normals
+	void reverseNormals();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -113,10 +146,6 @@ private:
 
 	//! The Type of representation
 	int* m_pType;
-
-	//! The representation Default LOD
-	int* m_pDefaultLOD;
-
 };
 
 #endif /* GLC_3DREP_H_ */
