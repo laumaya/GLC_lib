@@ -30,9 +30,10 @@
 #include <QString>
 #include <QList>
 
-#include "glc_structinstance.h"
+#include "../geometry/glc_3drep.h"
 #include "glc_3dviewinstance.h"
 #include "glc_attributes.h"
+#include "glc_structinstance.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_StructReference
@@ -49,7 +50,7 @@ public:
 	GLC_StructReference(const QString& name= QString());
 
 	//! Create reference with representation
-	GLC_StructReference(const GLC_3DViewInstance&);
+	GLC_StructReference(GLC_Rep*);
 
 	//! Destructor
 	virtual ~GLC_StructReference();
@@ -76,14 +77,13 @@ public:
 
 	//! Return true if this reference has a representation
 	inline bool hasRepresentation() const
-	{ return NULL != m_pRepresentation;}
+	{return NULL != m_pRepresentation;}
 
-	//! Return an instance of the representation
+	//! Return a clone the representation
 	/*! representation must exists*/
-	inline GLC_3DViewInstance instanceRepresentation() const
+	inline GLC_Rep* representationHandle() const
 	{
-		Q_ASSERT(NULL != m_pRepresentation);
-		return m_pRepresentation->instanciate();
+		return m_pRepresentation;
 	}
 
 	//! Return the name
@@ -94,28 +94,36 @@ public:
 	inline unsigned int numberOfFaces() const
 	{
 		Q_ASSERT(NULL != m_pRepresentation);
-		return m_pRepresentation->numberOfFaces();
+		GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_pRepresentation);
+		if (NULL != pRep) return pRep->numberOfFaces();
+		else return 0;
 	}
 
 	//! Get number of vertex
 	inline unsigned int numberOfVertex() const
 	{
 		Q_ASSERT(NULL != m_pRepresentation);
-		return m_pRepresentation->numberOfVertex();
+		GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_pRepresentation);
+		if (NULL != pRep) return pRep->numberOfVertex();
+		else return 0;
 	}
 
 	//! Get number of materials
 	inline unsigned int numberOfMaterials() const
 	{
 		Q_ASSERT(NULL != m_pRepresentation);
-		return m_pRepresentation->numberOfMaterials();
+		GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_pRepresentation);
+		if (NULL != pRep) return pRep->numberOfMaterials();
+		else return 0;
 	}
 
 	//! Get materials List
 	inline QSet<GLC_Material*> materialSet() const
 	{
 		Q_ASSERT(NULL != m_pRepresentation);
-		return m_pRepresentation->materialSet();
+		GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_pRepresentation);
+		if (NULL != pRep) return pRep->materialSet();
+		else return QSet<GLC_Material*>();
 	}
 
 	//! Return true if the reference contains User attributes
@@ -147,7 +155,7 @@ public:
 
 	//! Set the reference representation
 	/*! Representation must not exist*/
-	void setRepresentation(const GLC_3DViewInstance& rep);
+	void setRepresentation(const GLC_3DRep& rep);
 
 	//! Set the reference attributes
 	void setAttributes(const GLC_Attributes& attr)
@@ -166,7 +174,7 @@ private:
 	QList<GLC_StructInstance*> m_ListOfInstance;
 
 	//! The representation of reference
-	GLC_3DViewInstance* m_pRepresentation;
+	GLC_Rep* m_pRepresentation;
 
 	//! The Reference Name
 	QString m_Name;
