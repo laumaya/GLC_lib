@@ -119,9 +119,9 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		file.reset();
 		LoadBinariStl(file);
 		m_pCurrentMesh->finished();
-		GLC_3DViewInstance instance(m_pCurrentMesh);
+		GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
-		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
+		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
 	}
 	else
 	{
@@ -178,9 +178,9 @@ void GLC_StlToWorld::scanFacet()
 	if (lineBuff.startsWith("endsolid") || lineBuff.startsWith("end solid"))
 	{
 		m_pCurrentMesh->finished();
-		GLC_3DViewInstance instance(m_pCurrentMesh);
+		GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
-		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
+		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
 		return;
 	}
 	// Test if this is the start of new solid

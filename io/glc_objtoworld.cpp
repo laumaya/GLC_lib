@@ -187,9 +187,9 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 		else
 		{
 			m_pCurrentMesh->finished();
-			GLC_3DViewInstance instance(m_pCurrentMesh);
+			GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 			m_pCurrentMesh= NULL;
-			m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
+			m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
 			// Clear the list of material already used
 			m_CurrentMeshMaterials.clear();
 			m_pCurrentMaterial= NULL;
@@ -330,9 +330,9 @@ void GLC_ObjToWorld::changeGroup(QString line)
 				if (m_pCurrentMesh->numberOfFaces() > 0)
 				{
 					m_pCurrentMesh->finished();
-					GLC_3DViewInstance instance(m_pCurrentMesh);
+					GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 					m_pCurrentMesh= NULL;
-					m_pWorld->rootOccurence()->addChild((new GLC_StructReference(instance))->createStructInstance());
+					m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
 				}
 				else
 				{

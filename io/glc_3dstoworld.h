@@ -101,8 +101,8 @@ private:
 	//! Create meshes from the 3ds File
 	void createMeshes(GLC_StructOccurence*, Lib3dsNode*);
 
-	//! Create Instance from a Lib3dsMesh
-	GLC_3DViewInstance createInstance(Lib3dsMesh*);
+	//! Create 3DRep from a Lib3dsMesh
+	GLC_3DRep create3DRep(Lib3dsMesh*);
 
 	//! Load Material
 	void loadMaterial(Lib3dsMaterial*);

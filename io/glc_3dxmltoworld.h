@@ -186,7 +186,7 @@ private:
 	void loadExternRepresentations();
 
 	//! Return the instance of the current extern representation
-	GLC_3DViewInstance loadCurrentExtRep();
+	GLC_3DRep loadCurrentExtRep();
 
 	//! Load CatMaterial Ref if present
 	void loadCatMaterialRef();

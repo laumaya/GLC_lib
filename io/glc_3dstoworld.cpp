@@ -207,11 +207,11 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 	    	pMesh = lib3ds_file_mesh_by_name(m_pLib3dsFile, pFatherNode->name);
 		    if( pMesh != NULL )
 		    {
-		    	GLC_3DViewInstance instance(createInstance(pMesh));
+		    	GLC_3DRep representation(create3DRep(pMesh));
 		    	// Test if there is vertex in the mesh
-		    	if (0 != instance.numberOfVertex())
+		    	if (0 != representation.numberOfVertex())
 		    	{
-		    		m_LoadedMeshes.insert(instance.name());
+		    		m_LoadedMeshes.insert(representation.name());
 			    	// Load node matrix
 			    	GLC_Matrix4x4 nodeMat(&(pFatherNode->matrix[0][0]));
 					// The mesh matrix to inverse
@@ -224,12 +224,12 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 					// Compute the part matrix
 					nodeMat= nodeMat * trans * matInv; // I don't know why...
 					// move the part by the matrix
-					pProduct->addChild((new GLC_StructReference(instance))->createStructInstance()->move(nodeMat));
+					pProduct->addChild((new GLC_StructReference(new GLC_3DRep(representation)))->createStructInstance()->move(nodeMat));
 		    	}
 		    	else
 		    	{
 		    		// the instance will be deleted, check material usage
-		    		QSet<GLC_Material*> meshMaterials= instance.materialSet();
+		    		QSet<GLC_Material*> meshMaterials= representation.materialSet();
 		    		QSet<GLC_Material*>::const_iterator iMat= meshMaterials.constBegin();
 		    		while (iMat != meshMaterials.constEnd())
 		    		{
@@ -264,8 +264,8 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 
 
 }
-//! Create Instance from a Lib3dsNode
-GLC_3DViewInstance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
+//! Create 3DRep from a Lib3dsNode
+GLC_3DRep GLC_3dsToWorld::create3DRep(Lib3dsMesh* p3dsMesh)
 {
 	QString meshName(p3dsMesh->name);
 	if (m_LoadedMeshes.contains(meshName))
@@ -280,7 +280,7 @@ GLC_3DViewInstance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 		} while (pCurrentInstance->name() != meshName);
 		// return an instance.
 		//qDebug() << "instance";
-		return pCurrentInstance->instanciate().resetMatrix();
+		return pCurrentInstance->representation();
 	}
 	GLC_Mesh2 * pMesh= new GLC_Mesh2();
 	pMesh->setName(p3dsMesh->name);
@@ -357,7 +357,7 @@ GLC_3DViewInstance GLC_3dsToWorld::createInstance(Lib3dsMesh* p3dsMesh)
 	m_PreviousQuantumValue= m_CurrentQuantumValue;
 
 	pMesh->finished();
-	return GLC_3DViewInstance(pMesh);
+	return GLC_3DRep(pMesh);
 }
 
 // Load Material

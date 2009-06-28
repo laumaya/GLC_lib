@@ -591,7 +591,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 
 	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
 	pMesh->setName(refName);
-	GLC_3DViewInstance currentMeshInstance(pMesh);
+	GLC_3DRep currentMesh3DRep(pMesh);
 
 	int numberOfMesh= 1;
 	while (endElementNotReached("Representation"))
@@ -612,7 +612,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 				if (numberOfMesh > 1)
 				{
 					pMesh->finished();
-					return new GLC_StructReference(currentMeshInstance);
+					return new GLC_StructReference(new GLC_3DRep(currentMesh3DRep));
 				}
 				else
 				{
@@ -625,7 +625,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 			pMesh->finished();
 			pMesh = new GLC_ExtendedMesh();
 			pMesh->setName(refName);
-			currentMeshInstance.setGeometry(pMesh);
+			currentMesh3DRep.addGeom(pMesh);
 		}
 
 		// Get the master lod accuracy
@@ -710,10 +710,10 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 
 	pMesh->finished();
 
-	currentMeshInstance.removeEmptyGeometry();
-	if (not currentMeshInstance.isEmpty())
+	currentMesh3DRep.removeEmptyGeometry();
+	if (not currentMesh3DRep.isEmpty())
 	{
-		return new GLC_StructReference(currentMeshInstance);
+		return new GLC_StructReference(new GLC_3DRep(currentMesh3DRep));
 	}
 	else
 	{
@@ -1070,7 +1070,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 void GLC_3dxmlToWorld::loadLocalRepresentations()
 {
 	if (m_LocalRepLinkList.isEmpty()) return;
-	QHash<const QString, GLC_3DViewInstance> repHash;
+	QHash<const QString, GLC_3DRep> repHash;
 
 	// Load all local ref
 	goToElement("GeometricRepresentationSet");
@@ -1081,9 +1081,10 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 			QString id= m_pStreamReader->attributes().value("id").toString();
 
 			GLC_StructReference* pRef= createReferenceRep("Local");
-			GLC_3DViewInstance instance= pRef->instanceRepresentation();
+			GLC_3DRep representation(*(dynamic_cast<GLC_3DRep*>(pRef->representationHandle())));
+
 			delete pRef;
-			repHash.insert(id, instance);
+			repHash.insert(id, representation);
 		}
 		m_pStreamReader->readNext();
 	}
@@ -1109,7 +1110,7 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 {
 	if (m_ExternRepLinkList.isEmpty()) return;
 
-	QHash<const unsigned int, GLC_3DViewInstance> repHash;
+	QHash<const unsigned int, GLC_3DRep> repHash;
 
 	// Progress bar variables
 	const int size= m_ReferenceRepHash.size();
@@ -1127,11 +1128,11 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 
 		if (setStreamReaderToFile(currentRefFileName))
 		{
-			GLC_3DViewInstance instance= loadCurrentExtRep();
-			instance.removeEmptyGeometry();
-			if (not instance.isEmpty())
+			GLC_3DRep representation= loadCurrentExtRep();
+			representation.removeEmptyGeometry();
+			if (not representation.isEmpty())
 			{
-				repHash.insert(id, instance);
+				repHash.insert(id, representation);
 			}
 		}
 
@@ -1164,10 +1165,10 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 }
 
 // Return the instance of the current extern representation
-GLC_3DViewInstance GLC_3dxmlToWorld::loadCurrentExtRep()
+GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 {
 	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
-	GLC_3DViewInstance currentMeshInstance(pMesh);
+	GLC_3DRep currentMeshRep(pMesh);
 	int numberOfMesh= 1;
 	while (not m_pStreamReader->atEnd())
 	{
@@ -1188,11 +1189,11 @@ GLC_3DViewInstance GLC_3dxmlToWorld::loadCurrentExtRep()
 				if (numberOfMesh > 1)
 				{
 					pMesh->finished();
-					return currentMeshInstance;
+					return currentMeshRep;
 				}
 				else
 				{
-					return currentMeshInstance;
+					return currentMeshRep;
 				}
 			}
 		}
@@ -1200,7 +1201,7 @@ GLC_3DViewInstance GLC_3dxmlToWorld::loadCurrentExtRep()
 		{
 			pMesh->finished();
 			pMesh = new GLC_ExtendedMesh();
-			currentMeshInstance.setGeometry(pMesh);
+			currentMeshRep.addGeom(pMesh);
 		}
 
 		// Get the master lod accuracy
@@ -1211,7 +1212,7 @@ GLC_3DViewInstance GLC_3dxmlToWorld::loadCurrentExtRep()
 		{
 			qDebug() << " Master LOD not found";
 			pMesh->finished();
-			return currentMeshInstance;
+			return currentMeshRep;
 		}
 
 		// Load Faces index data
@@ -1284,7 +1285,7 @@ GLC_3DViewInstance GLC_3dxmlToWorld::loadCurrentExtRep()
 
 	pMesh->finished();
 
-	return currentMeshInstance;
+	return currentMeshRep;
 }
 // Load CatMaterial Ref if present
 void GLC_3dxmlToWorld::loadCatMaterialRef()
