@@ -410,11 +410,12 @@ void GLC_StructOccurence::checkForRepresentation()
 		{
 			if (pRef->hasRepresentation())
 			{
-				GLC_3DViewInstance representation(pRef->instanceRepresentation());
-				representation.setName(name());
+				GLC_3DRep* p3DRep= dynamic_cast<GLC_3DRep*>(pRef->representationHandle());
+				GLC_3DViewInstance instance(*p3DRep);
+				instance.setName(name());
 				// Force instance representation id
-				representation.setId(id());
-				m_pWorldHandle->collection()->add(representation);
+				instance.setId(id());
+				m_pWorldHandle->collection()->add(instance);
 			}
 			m_HasRepresentation= true;
 		}
