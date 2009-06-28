@@ -69,9 +69,9 @@ GLC_RepTrackBallMover::GLC_RepTrackBallMover(const GLC_RepTrackBallMover& repMov
 , m_Radius(repMover.m_Radius)
 , m_pFactory(repMover.m_pFactory)
 , m_MainCircle(repMover.m_MainCircle)
-, m_Arc1(repMover.m_Arc1.clone())
+, m_Arc1(repMover.m_Arc1.deepCopy())
 , m_MatArc1(repMover.m_MatArc1)
-, m_Arc2(repMover.m_Arc2.clone())
+, m_Arc2(repMover.m_Arc2.deepCopy())
 , m_MatArc2(repMover.m_MatArc2)
 , m_Ratio(repMover.m_Ratio)
 {
