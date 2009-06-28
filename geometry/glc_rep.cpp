@@ -39,7 +39,7 @@ GLC_Rep::GLC_Rep(const GLC_Rep& rep)
 , m_pFileName(rep.m_pFileName)
 , m_pName(rep.m_pName)
 {
-
+	++(*m_pNumberOfRepresentation);
 }
 
 // Assignement operator
@@ -64,6 +64,7 @@ GLC_Rep::~GLC_Rep()
 	// Clear this representation
 	clear();
 }
+
 
 //////////////////////////////////////////////////////////////////////
 // private services functions
