@@ -39,9 +39,9 @@ GLC_StructReference::GLC_StructReference(const QString& name)
 }
 
 // Create reference with representation
-GLC_StructReference::GLC_StructReference(const GLC_3DViewInstance& rep)
+GLC_StructReference::GLC_StructReference(GLC_Rep* pRep)
 : m_ListOfInstance()
-, m_pRepresentation(new GLC_3DViewInstance(rep))
+, m_pRepresentation(pRep)
 , m_Name(m_pRepresentation->name())
 , m_pAttributes(NULL)
 {
@@ -70,10 +70,10 @@ GLC_StructInstance* GLC_StructReference::createStructInstance()
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 // Set the reference representation
-void GLC_StructReference::setRepresentation(const GLC_3DViewInstance& rep)
+void GLC_StructReference::setRepresentation(const GLC_3DRep& rep)
 {
 	Q_ASSERT(NULL == m_pRepresentation);
-	m_pRepresentation= new GLC_3DViewInstance(rep);
+	m_pRepresentation= new GLC_3DRep(rep);
 
 	// Update all occurence of this reference if exist
 	if (haveStructInstance())
