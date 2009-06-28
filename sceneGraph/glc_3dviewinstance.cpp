@@ -35,7 +35,7 @@
 // Default constructor
 GLC_3DViewInstance::GLC_3DViewInstance()
 : GLC_Object()
-, m_pGeomList(NULL)
+, m_3DRep()
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
 , m_MatPos()
@@ -57,7 +57,7 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 // Contruct instance with a geometry
 GLC_3DViewInstance::GLC_3DViewInstance(GLC_VboGeom* pGeom)
 : GLC_Object()
-, m_pGeomList(new QList<GLC_VboGeom*>())
+, m_3DRep(pGeom)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(new int(1))
 , m_MatPos()
@@ -69,11 +69,34 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_VboGeom* pGeom)
 , m_colorId()
 , m_DefaultLOD(10)
 {
-	m_pGeomList->append(pGeom);
 	// Encode Color Id
 	encodeIdInRGBA();
 
-	setName(pGeom->name());
+	setName(m_3DRep.name());
+
+	//qDebug() << "GLC_3DViewInstance::GLC_3DViewInstance ID = " << m_Uid;
+	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
+}
+
+// Contruct instance with a 3DRep
+GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
+: GLC_Object()
+, m_3DRep(rep)
+, m_pBoundingBox(NULL)
+, m_pNumberOfInstance(new int(1))
+, m_MatPos()
+, m_IsBoundingBoxValid(false)
+, m_IsSelected(false)
+, m_PolyFace(GL_FRONT_AND_BACK)
+, m_PolyMode(GL_FILL)
+, m_IsVisible(true)
+, m_colorId()
+, m_DefaultLOD(10)
+{
+	// Encode Color Id
+	encodeIdInRGBA();
+
+	setName(m_3DRep.name());
 
 	//qDebug() << "GLC_3DViewInstance::GLC_3DViewInstance ID = " << m_Uid;
 	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
@@ -82,7 +105,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_VboGeom* pGeom)
 // Copy constructor
 GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
 : GLC_Object(inputNode)
-, m_pGeomList(inputNode.m_pGeomList)
+, m_3DRep(inputNode.m_3DRep)
 , m_pBoundingBox(NULL)
 , m_pNumberOfInstance(inputNode.m_pNumberOfInstance)
 , m_MatPos(inputNode.m_MatPos)
@@ -119,7 +142,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 		// Encode Color Id
 		encodeIdInRGBA();
 
-		m_pGeomList= inputNode.m_pGeomList;
+		m_3DRep= inputNode.m_3DRep;
 		if (NULL != inputNode.m_pBoundingBox)
 		{
 			m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
@@ -159,7 +182,7 @@ GLC_BoundingBox GLC_3DViewInstance::getBoundingBox(void)
 	{
 		resultBox= *m_pBoundingBox;
 	}
-	else if (m_pGeomList != NULL)
+	else if (not m_3DRep.isEmpty())
 	{
 		computeBoundingBox();
 		m_IsBoundingBoxValid= true;
@@ -169,36 +192,12 @@ GLC_BoundingBox GLC_3DViewInstance::getBoundingBox(void)
 	return resultBox;
 }
 
-// Get the validity of the Bounding Box
-const bool GLC_3DViewInstance::getBoundingBoxValidity(void) const
-{
-	bool result= true;
-	if ((m_pGeomList != NULL) && (m_pBoundingBox != NULL))
-	{
-		const int size= m_pGeomList->size();
-		for (int i= 0; i < size; ++i)
-		{
-			result= result and m_pGeomList->at(i)->boundingBoxIsValid() and m_IsBoundingBoxValid;
-		}
-	}
-	else result= false;
-
-	return result;
-}
-
 // Clone the instance
-GLC_3DViewInstance GLC_3DViewInstance::clone() const
+GLC_3DViewInstance GLC_3DViewInstance::deepCopy() const
 {
-	GLC_3DViewInstance cloneInstance;
-	if (m_pGeomList != NULL)
-	{
-		cloneInstance.m_pGeomList= new QList<GLC_VboGeom*>();
-		int size= m_pGeomList->size();
-		for (int i= 0; i < size; ++i)
-		{
-			cloneInstance.m_pGeomList->append(m_pGeomList->at(i)->clone());
-		}
-	}
+
+	GLC_3DViewInstance cloneInstance(m_3DRep.deepCopy());
+
 	if (NULL != m_pBoundingBox)
 	{
 		cloneInstance.m_pBoundingBox= new GLC_BoundingBox(*m_pBoundingBox);
@@ -236,69 +235,6 @@ GLC_uint GLC_3DViewInstance::decodeRgbId(const GLubyte* pcolorId)
 
 	return returnId;
 }
-// Get number of faces
-unsigned int GLC_3DViewInstance::numberOfFaces() const
-{
-	unsigned int result= 0;
-	if (NULL != m_pGeomList)
-	{
-		const int size= m_pGeomList->size();
-		for (int i= 0; i < size; ++i)
-		{
-			result+= m_pGeomList->at(i)->numberOfFaces();
-		}
-	}
-
-	return result;
-}
-
-// Get number of vertex
-unsigned int GLC_3DViewInstance::numberOfVertex() const
-{
-	unsigned int result= 0;
-	if (NULL != m_pGeomList)
-	{
-		const int size= m_pGeomList->size();
-		for (int i= 0; i < size; ++i)
-		{
-			result+= m_pGeomList->at(i)->numberOfVertex();
-		}
-	}
-
-	return result;
-}
-
-// Get number of materials
-unsigned int GLC_3DViewInstance::numberOfMaterials() const
-{
-	unsigned int result= 0;
-	if (NULL != m_pGeomList)
-	{
-		const int size= m_pGeomList->size();
-		for (int i= 0; i < size; ++i)
-		{
-			result+= m_pGeomList->at(i)->numberOfMaterials();
-		}
-	}
-
-	return result;
-}
-
-// Get materials List
-QSet<GLC_Material*> GLC_3DViewInstance::materialSet() const
-{
-	QSet<GLC_Material*> result;
-	if (NULL != m_pGeomList)
-	{
-		const int size= m_pGeomList->size();
-		for (int i= 0; i < size; ++i)
-		{
-			result.unite(m_pGeomList->at(i)->materialSet());
-		}
-	}
-
-	return result;
-}
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
@@ -308,62 +244,14 @@ QSet<GLC_Material*> GLC_3DViewInstance::materialSet() const
 // Set the instance Geometry
 bool GLC_3DViewInstance::setGeometry(GLC_VboGeom* pGeom)
 {
-	if (NULL != m_pGeomList)
+	if (m_3DRep.contains(pGeom))
 	{
-		if (m_pGeomList->contains(pGeom))
-		{
-			return false;
-		}
-		else
-		{
-			m_pGeomList->append(pGeom);
-			return true;
-		}
+		return false;
 	}
 	else
 	{
-		m_pGeomList= new QList<GLC_VboGeom*>();
-		m_pGeomList->append(pGeom);
+		m_3DRep.addGeom(pGeom);
 		return true;
-	}
-}
-
-// Remove empty geometries
-void GLC_3DViewInstance::removeEmptyGeometry()
-{
-	if (NULL != m_pGeomList)
-	{
-		QList<GLC_VboGeom*>::iterator iGeomList= m_pGeomList->begin();
-		while(iGeomList != m_pGeomList->constEnd())
-		{
-			if ((*iGeomList)->numberOfVertex() == 0)
-			{
-				delete (*iGeomList);
-				iGeomList= m_pGeomList->erase(iGeomList);
-			}
-			else
-			{
-				++iGeomList;
-			}
-		}
-		if (m_pGeomList->isEmpty())
-		{
-			delete m_pGeomList;
-			m_pGeomList= NULL;
-		}
-	}
-}
-
-// Reverse geometry normals
-void GLC_3DViewInstance::reverseGeometriesNormals()
-{
-	if (NULL != m_pGeomList)
-	{
-		const int size= m_pGeomList->size();
-		for (int i= 0; i < size; ++i)
-		{
-			(*m_pGeomList)[i]->reverseNormals();
-		}
 	}
 }
 
@@ -421,7 +309,7 @@ void GLC_3DViewInstance::setPolygonMode(GLenum Face, GLenum Mode)
 // Display the instance
 void GLC_3DViewInstance::glExecute(bool transparent, bool useLoad, GLC_Viewport* pView)
 {
-	if (NULL == m_pGeomList) return;
+	if (m_3DRep.isEmpty()) return;
 	// Save current OpenGL Matrix
 	glPushMatrix();
 	glVisProperties();
@@ -429,16 +317,16 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLoad, GLC_Viewport*
 	{
 		glColor3ubv(m_colorId); // D'ont use Alpha component
 	}
-	const int size= m_pGeomList->size();
+	const int size= m_3DRep.numberOfBody();
 	if (useLoad and (NULL != pView))
 	{
 		for (int i= 0; i < size; ++i)
 		{
-			const int lodValue= choseLod(m_pGeomList->at(i)->boundingBox(), pView);
+			const int lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
 			if (lodValue <= 100)
 			{
-				m_pGeomList->at(i)->setCurrentLod(lodValue);
-				m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
+				m_3DRep.geomAt(i)->setCurrentLod(lodValue);
+				m_3DRep.geomAt(i)->glExecute(m_IsSelected, transparent);
 			}
 		}
 	}
@@ -446,11 +334,11 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLoad, GLC_Viewport*
 	{
 		for (int i= 0; i < size; ++i)
 		{
-			const int lodValue= choseLod(m_pGeomList->at(i)->boundingBox(), pView);
+			const int lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
 			if (lodValue <= 100)
 			{
-				m_pGeomList->at(i)->setCurrentLod(m_DefaultLOD);
-				m_pGeomList->at(i)->glExecute(m_IsSelected, transparent);
+				m_3DRep.geomAt(i)->setCurrentLod(m_DefaultLOD);
+				m_3DRep.geomAt(i)->glExecute(m_IsSelected, transparent);
 			}
 
 		}
@@ -470,7 +358,7 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLoad, GLC_Viewport*
 // m_pGeomList should be not null
 void GLC_3DViewInstance::computeBoundingBox(void)
 {
-	if (NULL == m_pGeomList) return;
+	if (m_3DRep.isEmpty()) return;
 
 	if (m_pBoundingBox != NULL)
 	{
@@ -478,10 +366,10 @@ void GLC_3DViewInstance::computeBoundingBox(void)
 		m_pBoundingBox= NULL;
 	}
 	m_pBoundingBox= new GLC_BoundingBox();
-	const int size= m_pGeomList->size();
+	const int size= m_3DRep.numberOfBody();
 	for (int i= 0; i < size; ++i)
 	{
-		m_pBoundingBox->combine(m_pGeomList->at(i)->boundingBox());
+		m_pBoundingBox->combine(m_3DRep.geomAt(i)->boundingBox());
 	}
 
 	m_pBoundingBox->transform(m_MatPos);
@@ -494,17 +382,6 @@ void GLC_3DViewInstance::clear()
 
 	if ((--(*m_pNumberOfInstance)) == 0)
 	{
-		// this is the last instance, delete the geometry
-		if (m_pGeomList != NULL)
-		{
-			const int size= m_pGeomList->size();
-			for (int i= 0; i < size; ++i)
-			{
-				delete (*m_pGeomList)[i];
-			}
-			delete m_pGeomList;
-			m_pGeomList= NULL;
-		}
 		// delete instance counter
 		//qDebug() << "GLC_3DViewInstance::clear ID = " << m_Uid;
 		//qDebug() << "- Number of instance" << (*m_pNumberOfInstance);
