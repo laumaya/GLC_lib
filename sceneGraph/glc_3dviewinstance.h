@@ -57,8 +57,11 @@ public:
 	//! Default constructor
 	GLC_3DViewInstance();
 
-	//! Contruct node with a geometry
+	//! Contruct instance with a geometry
 	GLC_3DViewInstance(GLC_VboGeom* pGeom);
+
+	//! Contruct instance with a 3DRep
+	GLC_3DViewInstance(const GLC_3DRep&);
 
 	//! Copy constructor
 	GLC_3DViewInstance(const GLC_3DViewInstance& );
@@ -79,13 +82,13 @@ public:
 	//! Return true if the all instance's mesh are transparent
 	inline bool isTransparent() const
 	{
-		if (NULL == m_pGeomList) return false;
-		const int size= m_pGeomList->size();
+		if (m_3DRep.isEmpty()) return false;
+		const int size= m_3DRep.numberOfBody();
 		bool result= true;
 		int i= 0;
 		while((i < size) and result)
 		{
-			result= result and m_pGeomList->at(i)->isTransparent();
+			result= result and m_3DRep.geomAt(i)->isTransparent();
 			++i;
 		}
 		return result;
@@ -94,51 +97,50 @@ public:
 	//! Return true if the instance contains mesh which contains transparent material
 	inline bool hasTransparentMaterials() const
 	{
-		if (NULL == m_pGeomList) return false;
-		const int size= m_pGeomList->size();
+		if (m_3DRep.isEmpty()) return false;
+		const int size= m_3DRep.numberOfBody();
 		bool result= false;
 		int i= 0;
 		while ((i < size) and not result)
 		{
-			result= result or m_pGeomList->at(i)->hasTransparentMaterials();
+			result= result or m_3DRep.geomAt(i)->hasTransparentMaterials();
 			++i;
 		}
 		return result;
 	}
 
 	//! Return true if the instance as no geometry
-	inline const bool isEmpty() const {return (NULL == m_pGeomList);}
+	inline const bool isEmpty() const
+	{return m_3DRep.isEmpty();}
 
 	//! Return true if the instance is selected
 	inline const bool isSelected(void) const {return m_IsSelected;}
 
 	//! Return the number of geometry
 	inline int numberOfGeometry() const
-	{
-		if (NULL != m_pGeomList) return m_pGeomList->size();
-		else return 0;
-	}
+	{return m_3DRep.numberOfBody();}
 
 
 	//! Get the geometry of the instance
 	inline GLC_VboGeom* getGeometry(int index) const
 	{
-		if (NULL != m_pGeomList) return m_pGeomList->at(index);
+		if (not m_3DRep.isEmpty()) return m_3DRep.geomAt(index);
 		else return NULL;
 	}
 
 	//! Get the bounding box
-	GLC_BoundingBox getBoundingBox(void);
+	GLC_BoundingBox getBoundingBox();
 
 	//! Get the validity of the Bounding Box
-	const bool getBoundingBoxValidity(void) const;
+	inline bool getBoundingBoxValidity() const
+	{return (m_pBoundingBox != NULL) and m_IsBoundingBoxValid and m_3DRep.boundingBoxIsValid();}
 
 	//! Return transfomation 4x4Matrix
-	inline const GLC_Matrix4x4 getMatrix(void) const
+	inline const GLC_Matrix4x4 getMatrix() const
 	{return m_MatPos;}
 
-	//! Clone the instance
-	GLC_3DViewInstance clone() const;
+	//! Make a deep copy of the instance
+	GLC_3DViewInstance deepCopy() const;
 
 	//! Instanciate the instance
 	GLC_3DViewInstance instanciate();
@@ -158,21 +160,28 @@ public:
 	static GLC_uint decodeRgbId(const GLubyte*);
 
 	//! Get number of faces
-	unsigned int numberOfFaces() const;
+	inline unsigned int numberOfFaces() const
+	{return m_3DRep.numberOfFaces();}
 
 	//! Get number of vertex
-	unsigned int numberOfVertex() const;
+	inline unsigned int numberOfVertex() const
+	{return m_3DRep.numberOfVertex();}
 
 	//! Get number of materials
-	unsigned int numberOfMaterials() const;
+	inline unsigned int numberOfMaterials() const
+	{return m_3DRep.numberOfMaterials();}
 
 	//! Get materials List
-	QSet<GLC_Material*> materialSet() const;
+	inline QSet<GLC_Material*> materialSet() const
+	{return m_3DRep.materialSet();}
 
 	//! Return the default LOD Value
 	inline int defaultLodValue() const
 	{return m_DefaultLOD;}
 
+	//! Return the instance representation
+	inline GLC_3DRep representation() const
+	{return m_3DRep;}
 
 //@}
 
@@ -189,10 +198,12 @@ public:
 	bool setGeometry(GLC_VboGeom* pGeom);
 
 	//! Remove empty geometries
-	void removeEmptyGeometry();
+	inline void removeEmptyGeometry()
+	{m_3DRep.removeEmptyGeometry();}
 
 	//! Reverse geometry normals
-	void reverseGeometriesNormals();
+	inline void reverseGeometriesNormals()
+	{m_3DRep.reverseNormals();}
 
 	//! Translate Instance
 	GLC_3DViewInstance& translate(double Tx, double Ty, double Tz);
@@ -239,7 +250,6 @@ public:
 	//! Set the default LOD value
 	inline void setDefaultLodValue(int lod)
 	{
-		Q_ASSERT((lod > -1) and (lod < 101));
 		m_DefaultLOD= lod;
 	}
 
@@ -288,8 +298,8 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! Geometries of the instance
-	QList<GLC_VboGeom*>* m_pGeomList;
+	//! The 3D rep of the instance
+	GLC_3DRep m_3DRep;
 
 	//! BoundingBox of the instance
 	GLC_BoundingBox* m_pBoundingBox;
