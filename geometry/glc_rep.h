@@ -83,6 +83,10 @@ public:
 	//! Return the name of the rep
 	inline QString name() const
 	{return (*m_pName);}
+
+	//! Return true if the representation is empty
+	virtual bool isEmpty() const= 0;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -93,6 +97,10 @@ public:
 	//! Set the representation FileName
 	inline void setFileName(const QString& fileName)
 	{(*m_pFileName)= fileName;}
+
+	//! Set the representation Name
+	inline void setName(const QString& name)
+	{(*m_pName)= name;}
 
 //@}
 //////////////////////////////////////////////////////////////////////
