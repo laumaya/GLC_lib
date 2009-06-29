@@ -533,7 +533,14 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		if (setStreamReaderToFile(currentRefFileName))
 		{
 			GLC_StructReference* pCurrentRef= createReferenceRep();
-			m_ExternalReferenceHash.insert(currentRefFileName, pCurrentRef);
+			if (NULL != pCurrentRef)
+			{
+				m_ExternalReferenceHash.insert(currentRefFileName, pCurrentRef);
+			}
+			else
+			{
+				qDebug() << "GLC_3dxmlToWorld::loadExternalRef3D No File Found";
+			}
 		}
 		else
 		{
@@ -582,8 +589,29 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 			clear();
 			throw(fileFormatException);
 		}
+
+		repId= m_pStreamReader->attributes().value("associatedFile").toString();
+
 		const QString local= "urn:3DXML:Representation:loc:";
-		repId= m_pStreamReader->attributes().value("associatedFile").toString().remove(local);
+		const QString ext= "urn:3DXML:Representation:ext:";
+		if (repId.contains(ext))
+		{
+			repId.remove(ext);
+			repId.resize(repId.size() - 2);
+			if (setStreamReaderToFile(repId))
+			{
+				return createReferenceRep();
+			}
+			else
+			{
+				return NULL;
+			}
+		}
+		else
+		{
+			repId.remove(local);
+		}
+
 		checkForXmlError("attribute associatedFile not found");
 		goToRepId(repId);
 		checkForXmlError("repId not found");
@@ -820,7 +848,7 @@ void GLC_3dxmlToWorld::checkForXmlError(const QString& info)
 	if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
 	{
 		QString message(QString("An element have not been found in file ") + m_FileName);
-		qDebug() << info << " " << m_pStreamReader->errorString();
+		qDebug() << info << " " << m_pStreamReader->errorString() << "  " << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
