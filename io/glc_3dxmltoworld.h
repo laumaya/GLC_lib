@@ -43,22 +43,30 @@ class GLC_StructReference;
 class GLC_StructInstance;
 class GLC_ExtendedMesh;
 
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_3dxmlToWorld
+/*! \brief GLC_3dxmlToWorld : Create an GLC_World from 3dxml file */
+//////////////////////////////////////////////////////////////////////
 class GLC_3dxmlToWorld : public QObject
 {
 	Q_OBJECT
 
+	//! \struct AssyLink
+	/*! \brief AssyLink : Assemblage link between parent id and GLC_StructInstance* */
 	struct AssyLink
 	{
 		unsigned int m_ParentRefId;
 		GLC_StructInstance* m_pChildInstance;
 	};
-
+	//! \class RepLink
+	/*! \brief RepLink : Representation link between reference id and representation id */
 	struct RepLink
 	{
 		unsigned int m_ReferenceId;
 		unsigned int  m_RepId;
 	};
-
+	//! \class MaterialRef
+	/*! \brief MaterialRef : Material reference containing id, name and associated file */
 	struct MaterialRef
 	{
 		QString m_Id;
