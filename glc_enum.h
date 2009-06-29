@@ -37,6 +37,9 @@ namespace glc
 	//! Simple ID generation
 	GLC_uint GLC_GenID(void);
 
+	//! Simple Geom ID generation
+	GLC_uint GLC_GenGeomID(void);
+
 	//! Simple User ID generation
 	GLC_uint GLC_GenUserID(void);
 
@@ -44,6 +47,7 @@ namespace glc
 	const int GLC_POLYDISCRET= 60;
 
 	extern QMutex iDMutex;
+	extern QMutex geomIdMutex;
 	extern QMutex userIdMutex;
 };
 
