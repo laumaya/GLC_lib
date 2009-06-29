@@ -54,7 +54,7 @@ typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_VboGeom : public GLC_Object
+class GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -81,6 +81,11 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Get Object ID
+	inline GLC_uint id() const {return m_Uid;}
+
+	//! Get Object Name
+	inline const QString name() const {return m_Name;}
 
 	//! Return true if the geometry is valid
 	inline bool isValid(void) const
@@ -185,6 +190,14 @@ public:
 	//! Set the lod Index
 	/*! The value must be between 0 and 100*/
 	virtual void setCurrentLod(const int) {}
+
+	//! Set Object Id
+	inline void setId(const GLC_uint id)
+	{m_Uid= id;}
+
+	//! Set geometry Name
+	inline void setName(const QString name) {m_Name= name;}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
@@ -247,6 +260,14 @@ private:
 
 	//! Transparency
 	int m_TransparentMaterialNumber;
+
+	//! The Unique id of an Geometry
+	/*! Generated on creation*/
+	GLC_uint m_Uid;
+
+	//! Name of geometry
+	QString m_Name;
+
 };
 
 #endif /*GLC_VBOGEOM_H_*/

@@ -34,28 +34,28 @@
 //////////////////////////////////////////////////////////////////////
 // Default constructor
 GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
-:GLC_Object(name)
-, m_GeometryIsValid(false)	// By default geometry is invalid
+: m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pBoundingBox(NULL)
 , m_MaterialHash()
 , m_UseColorPerVertex(false)
 , m_IsWire(typeIsWire)		// the geometry type
 , m_TransparentMaterialNumber(0)
+, m_Uid(glc::GLC_GenGeomID())
+, m_Name(name)
 {
 
 }
 // Copy constructor
 GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
-:GLC_Object(sourceGeom)
-, m_GeometryIsValid(false)	// By default geometry is invalid
+: m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pBoundingBox(NULL)
 , m_MaterialHash(sourceGeom.m_MaterialHash)
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
 , m_IsWire(sourceGeom.m_IsWire)
 , m_TransparentMaterialNumber(sourceGeom.m_TransparentMaterialNumber)
+, m_Uid(glc::GLC_GenGeomID())
+, m_Name(sourceGeom.m_Name)
 {
-	m_Uid= glc::GLC_GenID();
-
 	// Add this mesh to inner material
 	MaterialHash::const_iterator i= m_MaterialHash.begin();
     while (i != m_MaterialHash.constEnd())
