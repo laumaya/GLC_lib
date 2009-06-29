@@ -37,7 +37,6 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 : GLC_Object()
 , m_3DRep()
 , m_pBoundingBox(NULL)
-, m_pNumberOfInstance(new int(1))
 , m_MatPos()
 , m_IsBoundingBoxValid(false)
 , m_IsSelected(false)
@@ -59,7 +58,6 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_VboGeom* pGeom)
 : GLC_Object()
 , m_3DRep(pGeom)
 , m_pBoundingBox(NULL)
-, m_pNumberOfInstance(new int(1))
 , m_MatPos()
 , m_IsBoundingBoxValid(false)
 , m_IsSelected(false)
@@ -83,7 +81,6 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
 : GLC_Object()
 , m_3DRep(rep)
 , m_pBoundingBox(NULL)
-, m_pNumberOfInstance(new int(1))
 , m_MatPos()
 , m_IsBoundingBoxValid(false)
 , m_IsSelected(false)
@@ -107,7 +104,6 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
 : GLC_Object(inputNode)
 , m_3DRep(inputNode.m_3DRep)
 , m_pBoundingBox(NULL)
-, m_pNumberOfInstance(inputNode.m_pNumberOfInstance)
 , m_MatPos(inputNode.m_MatPos)
 , m_IsBoundingBoxValid(inputNode.m_IsBoundingBoxValid)
 , m_IsSelected(inputNode.m_IsSelected)
@@ -124,10 +120,6 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
 	{
 		m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
 	}
-	// Increment the number of instance
-	++(*m_pNumberOfInstance);
-	//qDebug() << "GLC_3DViewInstance::GLC_3DViewInstance CopyConstructor ID = " << m_Uid;
-	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
 }
 
 
@@ -147,8 +139,6 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 		{
 			m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
 		}
-		m_pNumberOfInstance= inputNode.m_pNumberOfInstance;
-		++(*m_pNumberOfInstance);
 		m_MatPos= inputNode.m_MatPos;
 		m_IsBoundingBoxValid= inputNode.m_IsBoundingBoxValid;
 		m_IsSelected= inputNode.m_IsSelected;
@@ -378,29 +368,9 @@ void GLC_3DViewInstance::computeBoundingBox(void)
 // Clear current instance
 void GLC_3DViewInstance::clear()
 {
-	Q_ASSERT(m_pNumberOfInstance != NULL);
 
-	if ((--(*m_pNumberOfInstance)) == 0)
-	{
-		// delete instance counter
-		//qDebug() << "GLC_3DViewInstance::clear ID = " << m_Uid;
-		//qDebug() << "- Number of instance" << (*m_pNumberOfInstance);
-		delete m_pNumberOfInstance;
-		m_pNumberOfInstance= NULL;
-
-	}
-	else
-	{
-		//qDebug() << "GLC_3DViewInstance::clear ID = " << m_Uid;
-		//qDebug() << " - Number of instance" << (*m_pNumberOfInstance);
-	}
-
-
-	if (m_pBoundingBox != NULL)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
+	delete m_pBoundingBox;
+	m_pBoundingBox= NULL;
 
 	// invalidate the bounding box
 	m_IsBoundingBoxValid= false;

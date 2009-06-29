@@ -152,10 +152,6 @@ public:
 	//! Get the visibility state of instance
 	inline bool isVisible() const {return m_IsVisible;}
 
-	//! Get the number of instance
-	inline int getNumberOfInstance() const
-	{return *m_pNumberOfInstance;}
-
 	//! Return the GLC_uint decoded ID from RGB encoded ID
 	static GLC_uint decodeRgbId(const GLubyte*);
 
@@ -303,9 +299,6 @@ private:
 
 	//! BoundingBox of the instance
 	GLC_BoundingBox* m_pBoundingBox;
-
-	//! Number of this instance
-	int* m_pNumberOfInstance;
 
 	//! Geometry matrix
 	GLC_Matrix4x4 m_MatPos;
