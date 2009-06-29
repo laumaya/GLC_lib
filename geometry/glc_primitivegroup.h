@@ -36,6 +36,13 @@ typedef QVector<GLsizei> IndexSizes;
 typedef QVector<GLvoid*> OffsetVector;
 typedef QVector<int> OffsetVectori;
 
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_PrimitiveGroup
+/*! \brief GLC_PrimitiveGroup : Triangles, Strip and fan index*/
+
+/*! An GLC_PrimitiveGroup is used to stored Triangles, strips and fans index
+ * Grouped by material*/
+//////////////////////////////////////////////////////////////////////
 class GLC_PrimitiveGroup
 {
 public:

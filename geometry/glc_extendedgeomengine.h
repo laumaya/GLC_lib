@@ -37,6 +37,14 @@ typedef QVector<GLfloat> GLfloatVector;
 //! QVector of GLuint
 typedef QVector<GLuint> GLuintVector;
 
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_ExtendedGeomEngine
+/*! \brief GLC_ExtendedGeomEngine : Specialized engine
+ */
+
+/*! GLC_ExtendedGeomEngine can handle mesh with Triangles, strips and fans
+ */
+//////////////////////////////////////////////////////////////////////
 class GLC_ExtendedGeomEngine : public GLC_GeomEngine
 {
 public:

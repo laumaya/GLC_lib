@@ -37,7 +37,13 @@
 #include "glc_vbogeom.h"
 #include "glc_primitivegroup.h"
 
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_ExtendedMesh
+/*! \brief GLC_ExtendedMesh : OpenGL 3D Mesh*/
 
+/*! An GLC_ExtendedMesh is Mesh composed of triangles, strips and fan
+*/
+//////////////////////////////////////////////////////////////////////
 class GLC_ExtendedMesh : public GLC_VboGeom
 {
 public:
