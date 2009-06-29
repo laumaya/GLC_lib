@@ -31,8 +31,13 @@
 #include "../maths/glc_vector4d.h"
 #include "../maths/glc_matrix4x4.h"
 
+
 class GLC_Viewport;
 
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_RepMover
+/*! \brief GLC_RepMover : Base class for all interactive manipulation representation*/
+//////////////////////////////////////////////////////////////////////
 class GLC_RepMover
 {
 public:

@@ -31,6 +31,10 @@
 #include <QHash>
 #include <QtDebug>
 
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_MoverController
+/*! \brief GLC_MoverController : Control activation of interactive manipulation mover */
+//////////////////////////////////////////////////////////////////////
 class GLC_MoverController
 {
 public:
