@@ -179,6 +179,10 @@ public:
 	inline GLC_3DRep representation() const
 	{return m_3DRep;}
 
+	//! Return the number of body contains in the 3DRep
+	inline int numberOfBody() const
+	{return m_3DRep.numberOfBody();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
