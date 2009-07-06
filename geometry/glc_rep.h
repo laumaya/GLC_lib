@@ -56,6 +56,7 @@ public:
 
 	//! Destructor
 	virtual ~GLC_Rep();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -87,6 +88,10 @@ public:
 	//! Return true if the representation is empty
 	virtual bool isEmpty() const= 0;
 
+	//! Return true if the representation as been loaded
+	inline bool isLoaded() const
+	{return *m_pIsLoaded;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -102,6 +107,12 @@ public:
 	inline void setName(const QString& name)
 	{(*m_pName)= name;}
 
+	//! Load the representation
+	virtual bool load()= 0;
+
+	//! UnLoad the representation
+	virtual bool unload()= 0;
+
 //@}
 //////////////////////////////////////////////////////////////////////
 // private services functions
@@ -109,6 +120,13 @@ public:
 private:
 	//! Clear current representation
 	void clear();
+//////////////////////////////////////////////////////////////////////
+// protected members
+//////////////////////////////////////////////////////////////////////
+protected:
+
+	//! Flag to know if the representation has been loaded
+	bool* m_pIsLoaded;
 
 //////////////////////////////////////////////////////////////////////
 // Private members

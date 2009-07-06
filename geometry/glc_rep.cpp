@@ -26,7 +26,8 @@
 
 // Default constructor
 GLC_Rep::GLC_Rep()
-: m_pNumberOfRepresentation(new int(1))
+: m_pIsLoaded(new bool(false))
+, m_pNumberOfRepresentation(new int(1))
 , m_pFileName(new QString())
 , m_pName(new QString())
 {
@@ -35,7 +36,8 @@ GLC_Rep::GLC_Rep()
 
 // Copy Constructor
 GLC_Rep::GLC_Rep(const GLC_Rep& rep)
-: m_pNumberOfRepresentation(rep.m_pNumberOfRepresentation)
+: m_pIsLoaded(rep.m_pIsLoaded)
+, m_pNumberOfRepresentation(rep.m_pNumberOfRepresentation)
 , m_pFileName(rep.m_pFileName)
 , m_pName(rep.m_pName)
 {
@@ -49,6 +51,7 @@ GLC_Rep& GLC_Rep::operator=(const GLC_Rep& rep)
 	{
 		// Clear this representation
 		clear();
+		m_pIsLoaded= rep.m_pIsLoaded;
 		m_pNumberOfRepresentation= rep.m_pNumberOfRepresentation;
 		++(*m_pNumberOfRepresentation);
 		m_pFileName= rep.m_pFileName;
@@ -75,6 +78,8 @@ void GLC_Rep::clear()
 	Q_ASSERT(NULL != m_pNumberOfRepresentation);
 	if ((--(*m_pNumberOfRepresentation)) == 0)
 	{
+		delete m_pIsLoaded;
+		m_pIsLoaded= NULL;
 		delete m_pNumberOfRepresentation;
 		m_pNumberOfRepresentation= NULL;
 		delete m_pFileName;
