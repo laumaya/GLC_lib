@@ -178,11 +178,42 @@ GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName)
 	{
 		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		pWorld= d3dxmlToWorld.CreateWorldFrom3dxml(file);
+		pWorld= d3dxmlToWorld.CreateWorldFrom3dxml(file, false);
 	}
 
 
 	return pWorld;
+}
+
+// Create an GLC_World containing only the 3dxml structure
+GLC_World* GLC_Factory::createWorldStructureFrom3dxml(QFile &file) const
+{
+	GLC_World* pWorld= NULL;
+
+	if (QFileInfo(file).suffix().toLower() == "3dxml")
+	{
+		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
+		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
+		pWorld= d3dxmlToWorld.CreateWorldFrom3dxml(file, true);
+	}
+
+	return pWorld;
+}
+
+// Create 3DRep from 3dxml or 3DRep file
+GLC_3DRep GLC_Factory::create3DrepFromFile(QFile &file) const
+{
+	GLC_3DRep rep;
+
+	if ((QFileInfo(file).suffix().toLower() == "3dxml") or (QFileInfo(file).suffix().toLower() == "3drep"))
+	{
+		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
+		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
+		rep= d3dxmlToWorld.Create3DrepFrom3dxmlRep(file);
+	}
+
+	return rep;
+
 }
 
 // Create an GLC_Material

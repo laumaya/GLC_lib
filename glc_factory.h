@@ -101,6 +101,12 @@ public:
 	//! Create an GLC_World* with a QFile
 	GLC_World* createWorld(QFile &file, QStringList* pAttachedFileName= NULL) const;
 
+	//! Create an GLC_World containing only the 3dxml structure
+	GLC_World* createWorldStructureFrom3dxml(QFile &file) const;
+
+	//! Create 3DRep from 3dxml or 3DRep file
+	GLC_3DRep create3DrepFromFile(QFile &file) const;
+
 	//! Create default material
 	GLC_Material* createMaterial() const;
 	//! create a material with an ambient color
