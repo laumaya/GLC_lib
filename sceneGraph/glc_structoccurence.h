@@ -51,7 +51,7 @@ public:
 	GLC_StructOccurence(GLC_WorldHandle*, GLC_StructInstance*, GLuint shaderId=0);
 
 	//! Copy constructor
-	GLC_StructOccurence(GLC_WorldHandle*, const GLC_StructOccurence&);
+	GLC_StructOccurence(GLC_WorldHandle*, const GLC_StructOccurence&, bool shareInstance);
 
 	//! Destructor
 	virtual ~GLC_StructOccurence();
@@ -126,7 +126,7 @@ public:
 	QSet<GLC_Material*> materialSet() const;
 
 	//! Clone the occurence
-	GLC_StructOccurence* clone(GLC_WorldHandle*) const;
+	GLC_StructOccurence* clone(GLC_WorldHandle*, bool shareInstance) const;
 
 	//! Return true if the occurence is visible
 	bool isVisible() const;
@@ -159,10 +159,6 @@ public:
 	//! Add Child instance (the occurence is created)
 	void addChild(GLC_StructInstance*);
 
-	//! Add Children
-	/*! the new children must be orphan*/
-	void addChildren(const QList<GLC_StructOccurence*>&);
-
 	//! make the occurence orphan
 	void makeOrphan();
 
@@ -179,7 +175,20 @@ public:
 	//! Set the occurence world Handle
 	void setWorldHandle(GLC_WorldHandle*);
 
+	//! Load the representation and return true if success
+	bool loadRepresentation();
+
+	//! UnLoad the representation and return true if success
+	bool unloadRepresentation();
+
 //@}
+
+//////////////////////////////////////////////////////////////////////
+// Private services function
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Detach the occurence from the GLC_World
+	void detach();
 
 //////////////////////////////////////////////////////////////////////
 // Private members

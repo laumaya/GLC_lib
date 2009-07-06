@@ -47,6 +47,9 @@ public:
 	//! Default constructor
 	GLC_StructInstance(GLC_StructReference*);
 
+	//! Copy constructor
+	GLC_StructInstance(GLC_StructInstance*);
+
 	//! Create empty instance
 	GLC_StructInstance(const QString&);
 
@@ -63,6 +66,10 @@ public:
 	//! Return true if this instance have occurence
 	inline bool hasStructOccurence() const
 	{ return not m_ListOfOccurences.isEmpty();}
+
+	//! Return the number of occurence
+	inline int numberOfOccurence() const
+	{return m_ListOfOccurences.size();}
 
 	//! Return first occurence handle
 	inline GLC_StructOccurence* firstOccurenceHandle() const

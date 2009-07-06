@@ -60,8 +60,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return true if this reference have instance
-	inline bool haveStructInstance() const
+	//! Return true if this reference has instance
+	inline bool hasStructInstance() const
 	{ return not m_ListOfInstance.isEmpty();}
 
 	//! Return first instance handle
@@ -74,6 +74,9 @@ public:
 	//! Return the list of instance of this reference
 	inline QList<GLC_StructInstance*> listOfStructInstances() const
 	{ return m_ListOfInstance;}
+
+	//! Return the list of occurence of this reference
+	QList<GLC_StructOccurence*> listOfStructOccurence() const;
 
 	//! Return true if this reference has a representation
 	inline bool hasRepresentation() const
@@ -114,6 +117,18 @@ public:
 		Q_ASSERT(NULL != m_pRepresentation);
 		GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_pRepresentation);
 		if (NULL != pRep) return pRep->numberOfMaterials();
+		else return 0;
+	}
+
+	//! Return the number of body
+	inline unsigned int numberOfBody() const
+	{
+		if(NULL != m_pRepresentation)
+		{
+			GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_pRepresentation);
+			if (NULL != pRep) return pRep->numberOfBody();
+			else return 0;
+		}
 		else return 0;
 	}
 

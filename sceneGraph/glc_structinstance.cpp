@@ -37,9 +37,9 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)
 , m_Name(pStructReference->name())
 , m_pAttributes(NULL)
 {
-	if (pStructReference->haveStructInstance())
+	if (m_pStructReference->hasStructInstance())
 	{
-		m_pNumberOfInstance= pStructReference->firstInstanceHandle()->m_pNumberOfInstance;
+		m_pNumberOfInstance= m_pStructReference->firstInstanceHandle()->m_pNumberOfInstance;
 		++(*m_pNumberOfInstance);
 	}
 	else
@@ -49,6 +49,30 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)
 	// Inform reference that an instance has been created
 	m_pStructReference->structInstanceCreated(this);
 	//qDebug() << "GLC_StructInstance::GLC_StructInstance : " << (*m_pNumberOfInstance) << " " << m_pNumberOfInstance;
+}
+
+// Copy constructor
+GLC_StructInstance::GLC_StructInstance(GLC_StructInstance* pStructInstance)
+: m_pNumberOfInstance(pStructInstance->m_pNumberOfInstance)
+, m_pStructReference(pStructInstance->m_pStructReference)
+, m_ListOfOccurences()
+, m_RelativeMatrix(pStructInstance->m_RelativeMatrix)
+, m_Name(pStructInstance->name())
+, m_pAttributes(NULL)
+{
+	//qDebug() << "Instance Copy constructor";
+	Q_ASSERT(NULL != m_pStructReference);
+	// Copy attributes if necessary
+	if (NULL != pStructInstance->m_pAttributes)
+	{
+		m_pAttributes= new GLC_Attributes(*(pStructInstance->m_pAttributes));
+	}
+
+	++(*m_pNumberOfInstance);
+
+	// Inform reference that an instance has been created
+	m_pStructReference->structInstanceCreated(this);
+
 }
 
 // Create empty instance
@@ -67,7 +91,7 @@ void GLC_StructInstance::setReference(GLC_StructReference* pStructReference)
 {
 	Q_ASSERT(NULL == m_pStructReference);
 	m_pStructReference= pStructReference;
-	if (m_pStructReference->haveStructInstance())
+	if (m_pStructReference->hasStructInstance())
 	{
 		m_pNumberOfInstance= m_pStructReference->firstInstanceHandle()->m_pNumberOfInstance;
 		++(*m_pNumberOfInstance);
@@ -89,20 +113,22 @@ void GLC_StructInstance::setReference(GLC_StructReference* pStructReference)
 // Destructor
 GLC_StructInstance::~GLC_StructInstance()
 {
-	Q_ASSERT(m_pNumberOfInstance != NULL);
-
-	// Inform reference that an insatnce has been deleted
-	m_pStructReference->structInstanceDeleted(this);
-
-	// Update number of instance and reference
-	if ((--(*m_pNumberOfInstance)) == 0)
+	if(m_pNumberOfInstance != NULL)
 	{
-		delete m_pStructReference;
-		delete m_pNumberOfInstance;
+		// Inform reference that an instance has been deleted
+		m_pStructReference->structInstanceDeleted(this);
+
+		// Update number of instance
+		if ((--(*m_pNumberOfInstance)) == 0)
+		{
+			//qDebug() << "Delete structInstance";
+			Q_ASSERT(not m_pStructReference->hasStructInstance());
+
+			delete m_pStructReference;
+			delete m_pNumberOfInstance;
+		}
 		delete m_pAttributes;
 	}
-	else
-	{
-		m_pStructReference->structInstanceDeleted(this);
-	}
+	else qDebug() << "GLC_StructInstance::~GLC_StructInstance() of empty instance";
+
 }
