@@ -128,6 +128,12 @@ public:
 	//! Reverse geometries normals
 	void reverseNormals();
 
+	//! Load the representation and return true if success
+	virtual bool load();
+
+	//! UnLoad the representation and return true if success
+	virtual bool unload();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

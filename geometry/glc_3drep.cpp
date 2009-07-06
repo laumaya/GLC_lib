@@ -23,6 +23,7 @@
  *****************************************************************************/
 
 #include "glc_3drep.h"
+#include "../glc_factory.h"
 
 // Default constructor
 GLC_3DRep::GLC_3DRep()
@@ -143,7 +144,7 @@ unsigned int GLC_3DRep::numberOfVertex() const
 		const int size= m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
 		{
-			result+= m_pGeomList->at(i)->numberOfFaces();
+			result+= m_pGeomList->at(i)->numberOfVertex();
 		}
 	}
 
@@ -208,6 +209,54 @@ void GLC_3DRep::reverseNormals()
 	{
 		(*m_pGeomList)[i]->reverseNormals();
 	}
+}
+
+// Load the representation
+bool GLC_3DRep::load()
+{
+	Q_ASSERT((not (*m_pIsLoaded)) == m_pGeomList->isEmpty());
+	if ((*m_pIsLoaded) or fileName().isEmpty())
+	{
+		qDebug() << "GLC_3DRep::load() Allready loaded or empty fileName";
+		return false;
+	}
+	QFile repFile(fileName());
+	GLC_3DRep newRep= GLC_Factory::instance()->create3DrepFromFile(repFile);
+	if (not newRep.isEmpty())
+	{
+		const int size= newRep.m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			m_pGeomList->append(newRep.m_pGeomList->at(i));
+		}
+		newRep.m_pGeomList->clear();
+		(*m_pIsLoaded)= true;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+// UnLoad the representation
+bool GLC_3DRep::unload()
+{
+	Q_ASSERT((not (*m_pIsLoaded)) == m_pGeomList->isEmpty());
+	if (not (*m_pIsLoaded) or fileName().isEmpty())
+	{
+		qDebug() << "GLC_3DRep::unload() Not loaded or empty fileName";
+		return false;
+	}
+
+	const int size= m_pGeomList->size();
+	for (int i= 0; i < size; ++i)
+	{
+		delete (*m_pGeomList)[i];
+	}
+
+	(*m_pIsLoaded)= false;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////
