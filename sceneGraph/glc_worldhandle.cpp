@@ -65,6 +65,19 @@ QList<GLC_StructReference*> GLC_WorldHandle::references() const
 	return referencesSet.toList();
 }
 
+// Return the number of body
+int GLC_WorldHandle::numberOfBody() const
+{
+	QList<GLC_StructReference*> referenceList(references());
+	const int size= referenceList.size();
+	int numberOfBody= 0;
+	for (int i= 0; i < size; ++i)
+	{
+		numberOfBody+= referenceList.at(i)->numberOfBody();
+	}
+	return numberOfBody;
+}
+
 
 // An Occurence has been added
 void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelected, GLuint shaderId)

@@ -91,6 +91,9 @@ public:
 	//! Return the list of Reference
 	QList<GLC_StructReference*> references() const;
 
+	//! Return the number of body
+	int numberOfBody() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
