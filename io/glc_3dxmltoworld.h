@@ -100,7 +100,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an GLC_World from an input 3DXML File
-	GLC_World* CreateWorldFrom3dxml(QFile &);
+	GLC_World* CreateWorldFrom3dxml(QFile &, bool StructureOnly);
+
+	//! Create 3DRep from an 3DXML rep
+	GLC_3DRep Create3DrepFrom3dxmlRep(QFile&);
 
 //@}
 
@@ -279,6 +282,9 @@ private:
 
 	//! The image file hash table
 	QHash<QString, QString> m_TextureImagesHash;
+
+	//! Flag indicate the loading method
+	bool m_LoadStructureOnly;
 
 
 };

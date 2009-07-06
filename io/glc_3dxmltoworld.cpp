@@ -61,6 +61,7 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 , m_SetOfExtRep()
 , m_pCurrentMaterial(NULL)
 , m_TextureImagesHash()
+, m_LoadStructureOnly(false)
 {
 
 }
@@ -101,16 +102,16 @@ GLC_3dxmlToWorld::~GLC_3dxmlToWorld()
 //////////////////////////////////////////////////////////////////////
 
 // Create an GLC_World from an input 3DXML File
-GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file)
+GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file, bool structureOnly)
 {
+	m_LoadStructureOnly= structureOnly;
 	m_FileName= file.fileName();
 
 	// Create the 3dxml Zip archive
-	m_p3dxmlArchive= new QuaZip(m_FileName);
+	if (not m_LoadStructureOnly) m_p3dxmlArchive= new QuaZip(m_FileName);
 	// Trying to load archive
-	if(not m_p3dxmlArchive->open(QuaZip::mdUnzip))
+	if(m_LoadStructureOnly or not m_p3dxmlArchive->open(QuaZip::mdUnzip))
 	{
-	  qDebug() << "The 3dxml file is not a valid zip archive";
 	  // In this case, the 3dxml is not compressed or is not valid
 	  m_RootName= m_FileName;
 	  delete m_p3dxmlArchive;
@@ -126,11 +127,14 @@ GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file)
 		loadManifest();
 	}
 
-	// Trying to Load CATRepImage file
-	loadCatRepImage();
+	if (not m_LoadStructureOnly)
+	{
+		// Trying to Load CATRepImage file
+		loadCatRepImage();
 
-	// Trying to Load CATRefMaterial File
-	loadCatMaterialRef();
+		// Trying to Load CATRefMaterial File
+		loadCatMaterialRef();
+	}
 
 	// Load the product structure
 	loadProductStructure();
@@ -138,6 +142,28 @@ GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file)
 
 	emit currentQuantum(100);
 	return m_pWorld;
+}
+
+// Create 3DRep from an 3DXML rep
+GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(QFile& file)
+{
+	GLC_3DRep resultRep;
+	QString fileName= file.fileName();
+	setStreamReaderToFile(fileName);
+	if (QFileInfo(file).suffix().toLower() == "3dxml")
+	{
+		GLC_StructReference* pStructRef= createReferenceRep(QString());
+		GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pStructRef->representationHandle());
+		if (NULL != pRep)
+		{
+			resultRep= GLC_3DRep(*pRep);
+		}
+	}
+	else if (QFileInfo(file).suffix().toLower() == "3drep")
+	{
+		resultRep= loadCurrentExtRep();
+	}
+	return resultRep;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -530,7 +556,7 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		const QString currentRefFileName= (*iExtRef);
 		//qDebug() << "Current File name : " << currentRefFileName;
 		// Get the refFile of the 3dxml
-		if (setStreamReaderToFile(currentRefFileName))
+		if (not m_LoadStructureOnly and setStreamReaderToFile(currentRefFileName))
 		{
 			GLC_StructReference* pCurrentRef= createReferenceRep();
 			if (NULL != pCurrentRef)
@@ -541,6 +567,13 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 			{
 				qDebug() << "GLC_3dxmlToWorld::loadExternalRef3D No File Found";
 			}
+		}
+		else if(m_LoadStructureOnly)
+		{
+			GLC_3DRep* pRep= new GLC_3DRep();
+			pRep->setFileName(QFileInfo(m_FileName).absolutePath() + QDir::separator() + currentRefFileName);
+			GLC_StructReference* pCurrentRef= new GLC_StructReference(pRep);
+			m_ExternalReferenceHash.insert(currentRefFileName, pCurrentRef);
 		}
 		else
 		{
@@ -1073,7 +1106,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 	{
 		delete m_pCurrentFile;
 		// Create the file to load
-		if (fileName != m_FileName)
+		if (fileName != m_FileName and not m_FileName.isEmpty())
 		{
 			fileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + fileName;
 		}
@@ -1154,7 +1187,7 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 		const QString currentRefFileName= iRefRep.value();
 		const unsigned int id= iRefRep.key();
 
-		if (setStreamReaderToFile(currentRefFileName))
+		if (not m_LoadStructureOnly and setStreamReaderToFile(currentRefFileName))
 		{
 			GLC_3DRep representation= loadCurrentExtRep();
 			representation.removeEmptyGeometry();
@@ -1162,6 +1195,12 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 			{
 				repHash.insert(id, representation);
 			}
+		}
+		else if (m_LoadStructureOnly)
+		{
+			GLC_3DRep representation;
+			representation.setFileName(QFileInfo(m_FileName).absolutePath() + QDir::separator() + currentRefFileName);
+			repHash.insert(id, representation);
 		}
 
 		// Progrees bar indicator
