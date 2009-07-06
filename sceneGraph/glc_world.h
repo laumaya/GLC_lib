@@ -130,6 +130,10 @@ public:
 	inline QList<GLC_StructReference*> references() const
 	{return m_pWorldHandle->references();}
 
+	//! Return the number of body
+	inline int numberOfBody() const
+	{return m_pWorldHandle->numberOfBody();}
+
 
 
 //@}

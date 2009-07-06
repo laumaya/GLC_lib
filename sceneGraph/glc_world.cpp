@@ -64,6 +64,7 @@ GLC_World::~GLC_World()
 // Merge this world with another world
 void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 {
+	qDebug() << "GLC_World::mergeWithAnotherWorld";
 	GLC_StructOccurence* pAnotherRoot= anotherWorld.rootOccurence();
 	if (pAnotherRoot->childCount() > 0)
 	{
@@ -71,13 +72,13 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 		const int size= childs.size();
 		for (int i= 0; i < size; ++i)
 		{
-			m_pRoot->addChild(childs.at(i)->clone(m_pWorldHandle));
+			m_pRoot->addChild(childs.at(i)->clone(m_pWorldHandle, true));
 		}
 		m_pRoot->updateChildrenAbsoluteMatrix();
 	}
 	else
 	{
-		m_pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pWorldHandle));
+		m_pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pWorldHandle, true));
 	}
 }
 
