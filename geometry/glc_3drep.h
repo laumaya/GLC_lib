@@ -134,6 +134,9 @@ public:
 	//! UnLoad the representation and return true if success
 	virtual bool unload();
 
+	//! Replace the representation
+	virtual void replace(GLC_Rep*);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
