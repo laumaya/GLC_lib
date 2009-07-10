@@ -220,8 +220,7 @@ bool GLC_3DRep::load()
 		qDebug() << "GLC_3DRep::load() Allready loaded or empty fileName";
 		return false;
 	}
-	QFile repFile(fileName());
-	GLC_3DRep newRep= GLC_Factory::instance()->create3DrepFromFile(repFile);
+	GLC_3DRep newRep= GLC_Factory::instance()->create3DrepFromFile(fileName());
 	if (not newRep.isEmpty())
 	{
 		const int size= newRep.m_pGeomList->size();
@@ -236,6 +235,26 @@ bool GLC_3DRep::load()
 	else
 	{
 		return false;
+	}
+}
+// Replace the representation
+void GLC_3DRep::replace(GLC_Rep* pRep)
+{
+	GLC_3DRep* p3DRep= dynamic_cast<GLC_3DRep*>(pRep);
+	Q_ASSERT(NULL != p3DRep);
+
+	setFileName(p3DRep->fileName());
+	setName(p3DRep->name());
+
+	if (not p3DRep->isEmpty())
+	{
+		const int size= p3DRep->m_pGeomList->size();
+		for (int i= 0; i < size; ++i)
+		{
+			m_pGeomList->append(p3DRep->m_pGeomList->at(i));
+		}
+		p3DRep->m_pGeomList->clear();
+		(*m_pIsLoaded)= true;
 	}
 }
 
