@@ -82,8 +82,7 @@ public:
 	inline bool hasRepresentation() const
 	{return NULL != m_pRepresentation;}
 
-	//! Return a clone the representation
-	/*! representation must exists*/
+	//! Return an handle on the representation
 	inline GLC_Rep* representationHandle() const
 	{
 		return m_pRepresentation;
