@@ -113,6 +113,9 @@ public:
 	//! UnLoad the representation
 	virtual bool unload()= 0;
 
+	//! Replace the representation
+	virtual void replace(GLC_Rep*)= 0;
+
 //@}
 //////////////////////////////////////////////////////////////////////
 // private services functions
