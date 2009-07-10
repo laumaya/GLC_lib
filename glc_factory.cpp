@@ -30,6 +30,7 @@
 #include "io/glc_offtoworld.h"
 #include "io/glc_3dstoworld.h"
 #include "io/glc_3dxmltoworld.h"
+#include "io/glc_colladatoworld.h"
 
 #include "viewport/glc_panmover.h"
 #include "viewport/glc_zoommover.h"
@@ -180,6 +181,12 @@ GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName)
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= d3dxmlToWorld.CreateWorldFrom3dxml(file, false);
 	}
+	else if (QFileInfo(file).suffix().toLower() == "dae")
+	{
+		GLC_ColladaToWorld colladaToWorld(m_pQGLContext);
+		connect(&colladaToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
+		pWorld= colladaToWorld.CreateWorldFromCollada(file);
+	}
 
 
 	return pWorld;
@@ -201,15 +208,15 @@ GLC_World* GLC_Factory::createWorldStructureFrom3dxml(QFile &file) const
 }
 
 // Create 3DRep from 3dxml or 3DRep file
-GLC_3DRep GLC_Factory::create3DrepFromFile(QFile &file) const
+GLC_3DRep GLC_Factory::create3DrepFromFile(const QString& fileName) const
 {
 	GLC_3DRep rep;
 
-	if ((QFileInfo(file).suffix().toLower() == "3dxml") or (QFileInfo(file).suffix().toLower() == "3drep"))
+	if ((QFileInfo(fileName).suffix().toLower() == "3dxml") or (QFileInfo(fileName).suffix().toLower() == "3drep"))
 	{
 		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		rep= d3dxmlToWorld.Create3DrepFrom3dxmlRep(file);
+		rep= d3dxmlToWorld.Create3DrepFrom3dxmlRep(fileName);
 	}
 
 	return rep;
