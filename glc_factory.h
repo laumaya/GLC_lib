@@ -105,7 +105,7 @@ public:
 	GLC_World* createWorldStructureFrom3dxml(QFile &file) const;
 
 	//! Create 3DRep from 3dxml or 3DRep file
-	GLC_3DRep create3DrepFromFile(QFile &file) const;
+	GLC_3DRep create3DrepFromFile(const QString&) const;
 
 	//! Create default material
 	GLC_Material* createMaterial() const;
