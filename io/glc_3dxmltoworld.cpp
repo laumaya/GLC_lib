@@ -108,9 +108,9 @@ GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file, bool structureOnl
 	m_FileName= file.fileName();
 
 	// Create the 3dxml Zip archive
-	if (not m_LoadStructureOnly) m_p3dxmlArchive= new QuaZip(m_FileName);
+	m_p3dxmlArchive= new QuaZip(m_FileName);
 	// Trying to load archive
-	if(m_LoadStructureOnly or not m_p3dxmlArchive->open(QuaZip::mdUnzip))
+	if(not m_p3dxmlArchive->open(QuaZip::mdUnzip))
 	{
 	  // In this case, the 3dxml is not compressed or is not valid
 	  m_RootName= m_FileName;
@@ -145,24 +145,58 @@ GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file, bool structureOnl
 }
 
 // Create 3DRep from an 3DXML rep
-GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(QFile& file)
+GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
 {
 	GLC_3DRep resultRep;
-	QString fileName= file.fileName();
-	setStreamReaderToFile(fileName);
-	if (QFileInfo(file).suffix().toLower() == "3dxml")
+	QString entryFileName;
+	if (fileName.left(5) == QString("Zip::"))
+	{
+		m_FileName= fileName;
+		m_FileName.remove("Zip::");
+		m_FileName= m_FileName.left(m_FileName.indexOf("::"));
+
+		// Create the 3dxml Zip archive
+		m_p3dxmlArchive= new QuaZip(m_FileName);
+		// Trying to load archive
+		if(not m_p3dxmlArchive->open(QuaZip::mdUnzip))
+		{
+		  delete m_p3dxmlArchive;
+		  return GLC_3DRep();
+		}
+		else
+		{
+			m_IsInArchive= true;
+			// Set the file Name Codec
+			m_p3dxmlArchive->setFileNameCodec("IBM866");
+		}
+		entryFileName= fileName;
+		entryFileName.remove(QString("Zip::") + m_FileName + "::");
+
+	}
+	else
+	{
+		entryFileName= fileName;
+	}
+	setStreamReaderToFile(entryFileName);
+	if (QFileInfo(entryFileName).suffix().toLower() == "3dxml")
 	{
 		GLC_StructReference* pStructRef= createReferenceRep(QString());
-		GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pStructRef->representationHandle());
+		GLC_3DRep* pRep= NULL;
+		if (( NULL != pStructRef) and pStructRef->hasRepresentation())
+		{
+			pRep= dynamic_cast<GLC_3DRep*>(pStructRef->representationHandle());
+		}
 		if (NULL != pRep)
 		{
 			resultRep= GLC_3DRep(*pRep);
+			resultRep.setName(pStructRef->name());
 		}
 	}
-	else if (QFileInfo(file).suffix().toLower() == "3drep")
+	else if (QFileInfo(entryFileName).suffix().toLower() == "3drep")
 	{
 		resultRep= loadCurrentExtRep();
 	}
+	resultRep.removeEmptyGeometry();
 	return resultRep;
 }
 
@@ -571,8 +605,16 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		else if(m_LoadStructureOnly)
 		{
 			GLC_3DRep* pRep= new GLC_3DRep();
-			pRep->setFileName(QFileInfo(m_FileName).absolutePath() + QDir::separator() + currentRefFileName);
+			if (m_IsInArchive)
+			{
+				pRep->setFileName("Zip::" + m_FileName + "::" + currentRefFileName);
+			}
+			else
+			{
+				pRep->setFileName(QFileInfo(m_FileName).absolutePath() + QDir::separator() + currentRefFileName);
+			}
 			GLC_StructReference* pCurrentRef= new GLC_StructReference(pRep);
+			pCurrentRef->setName(QFileInfo(currentRefFileName).baseName());
 			m_ExternalReferenceHash.insert(currentRefFileName, pCurrentRef);
 		}
 		else
@@ -1031,6 +1073,7 @@ void GLC_3dxmlToWorld::clearMaterialHash()
 		}
 		++iMaterial;
 	}
+
 	m_MaterialHash.clear();
 }
 
@@ -1199,7 +1242,15 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 		else if (m_LoadStructureOnly)
 		{
 			GLC_3DRep representation;
-			representation.setFileName(QFileInfo(m_FileName).absolutePath() + QDir::separator() + currentRefFileName);
+			if (m_IsInArchive)
+			{
+				representation.setFileName("Zip::" + m_FileName + "::" + currentRefFileName);
+			}
+			else
+			{
+				representation.setFileName(QFileInfo(m_FileName).absolutePath() + QDir::separator() + currentRefFileName);
+			}
+
 			repHash.insert(id, representation);
 		}
 
@@ -1236,6 +1287,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 {
 	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
 	GLC_3DRep currentMeshRep(pMesh);
+	currentMeshRep.setName(QString());
 	int numberOfMesh= 1;
 	while (not m_pStreamReader->atEnd())
 	{
@@ -1253,15 +1305,8 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 			}
 			else
 			{
-				if (numberOfMesh > 1)
-				{
-					pMesh->finished();
-					return currentMeshRep;
-				}
-				else
-				{
-					return currentMeshRep;
-				}
+				pMesh->finished();
+				return currentMeshRep;
 			}
 		}
 		if (numberOfMesh > 1)

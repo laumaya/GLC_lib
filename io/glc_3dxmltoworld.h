@@ -103,7 +103,7 @@ public:
 	GLC_World* CreateWorldFrom3dxml(QFile &, bool StructureOnly);
 
 	//! Create 3DRep from an 3DXML rep
-	GLC_3DRep Create3DrepFrom3dxmlRep(QFile&);
+	GLC_3DRep Create3DrepFrom3dxmlRep(const QString&);
 
 //@}
 
