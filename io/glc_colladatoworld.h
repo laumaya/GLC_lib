@@ -34,6 +34,7 @@
 #include <QColor>
 
 #include "../shading/glc_material.h"
+#include "../geometry/glc_extendedmesh.h"
 
 class GLC_World;
 class QGLContext;
@@ -47,7 +48,42 @@ class GLC_ColladaToWorld : public QObject
 private:
 	Q_OBJECT
 
+	// The 3 supported semantic
+	enum Semantic
+	{
+		VERTEX= 0,
+		NORMAL= 1,
+		TEXCOORD= 2
+	};
+
+	//! input data info
+	struct InputData
+	{
+		int m_Offset;
+		QString m_Source;
+		Semantic m_Semantic;
+	};
+	struct BulkAndMapping
+	{
+		QList<float> m_Bulk;
+		QHash<int, int> m_Mapping;
+	};
+	//! The loading mesh info
+	struct MeshInfo
+	{
+		MeshInfo()
+		: m_pMesh(NULL)
+		, m_BulkAndMappingVect(3)
+		, m_FreeIndex(0)
+		{}
+		~MeshInfo() {delete m_pMesh;}
+		GLC_ExtendedMesh* m_pMesh;
+		QVector<BulkAndMapping> m_BulkAndMappingVect;
+		int m_FreeIndex;
+	};
+
 	typedef QHash<const QString, GLC_Material*> MaterialHash;
+	typedef QHash<const QString, QList<float> > BulkDataHash;
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -165,6 +201,18 @@ private:
 	//! Load Vertex bulk data
 	void loadVertexBulkData();
 
+	//! Load attributes and identity of mesh vertices
+	void loadVertices();
+
+	//! Load polylist
+	void loadPolylist();
+
+	//! Add the polylist to the current mesh
+	void addPolylistToCurrentMesh(const QList<InputData>&, const QList<int>&, const QList<int>&);
+
+	//! Add the specified list of index to the current mesh info
+	void addListOffIndexToCurrentMeshInfo(QList<int>*, const InputData&);
+
 	//! Load library_visual_scenes element
 	void loadVisualScenes();
 
@@ -215,6 +263,16 @@ private:
 
 	//! Texture to material link
 	MaterialHash m_TextureToMaterialHash;
+
+	//! Bulk data hash table
+	BulkDataHash m_BulkDataHash;
+
+	//! Map vertices id to source data id
+	QHash<QString, QString> m_VerticesSourceHash;
+
+	//! The current loadeed mesh
+	MeshInfo* m_pMeshInfo;
+
 
 };
 

@@ -41,6 +41,9 @@ GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
 , m_MaterialEffectHash()
 , m_pCurrentMaterial(NULL)
 , m_TextureToMaterialHash()
+, m_BulkDataHash()
+, m_VerticesSourceHash()
+, m_pMeshInfo(NULL)
 {
 
 }
@@ -208,6 +211,13 @@ void GLC_ColladaToWorld::clear()
 	m_pCurrentMaterial= NULL;
 
 	m_TextureToMaterialHash.clear();
+
+	m_BulkDataHash.clear();
+
+	m_VerticesSourceHash.clear();
+
+	delete m_pMeshInfo;
+	m_pMeshInfo= NULL;
 }
 
 // Load library_images element
@@ -543,6 +553,16 @@ void GLC_ColladaToWorld::loadLibraryGeometries()
 // Load an geometry element
 void GLC_ColladaToWorld::loadGeometry()
 {
+	delete m_pMeshInfo;
+	m_pMeshInfo= new MeshInfo();
+	m_pMeshInfo->m_pMesh= new GLC_ExtendedMesh;
+
+	const QString name= readAttribute("name", false);
+	if (not name.isEmpty())
+	{
+		m_pMeshInfo->m_pMesh->setName(name);
+	}
+
 	while (endElementNotReached("geometry"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
@@ -565,8 +585,8 @@ void GLC_ColladaToWorld::loadMesh()
 		{
 			const QStringRef currentElementName= m_pStreamReader->name();
 			if (currentElementName == "source") loadVertexBulkData();
-			//else if (currentElementName == "vertices") loadVertices();
-			//else if ((currentElementName == "polygons") or (currentElementName == "polylist")) loadPolygons();
+			else if (currentElementName == "vertices") loadVertices();
+			else if (currentElementName == "polylist") loadPolylist();
 			//else if (currentElementName == "triangles") loadTriangles();
 			//else if (currentElementName == "trifans") loadTriFans();
 			//else if (currentElementName == "tristrips") loadTriStrip();
@@ -583,7 +603,7 @@ void GLC_ColladaToWorld::loadVertexBulkData()
 	qDebug() << "GLC_ColladaToWorld::loadVertexBulkData()";
 	// load Vertex Bulk data id
 	const QString id= readAttribute("id", true);
-
+	qDebug() << "id=" << id;
 	QList<float> vertices;
 
 	while (endElementNotReached("source"))
@@ -613,7 +633,200 @@ void GLC_ColladaToWorld::loadVertexBulkData()
 		m_pStreamReader->readNext();
 	}
 	checkForXmlError("Error occur while loading element : source");
+	m_BulkDataHash.insert(id, vertices);
+}
 
+// Load attributes and identity of mesh vertices
+void GLC_ColladaToWorld::loadVertices()
+{
+	qDebug() << "GLC_ColladaToWorld::loadVertices()";
+	// load Vertices id
+	const QString id= readAttribute("id", true);
+
+	goToElement("input");
+	const QString source= readAttribute("source", true).remove('#');
+	m_VerticesSourceHash.insert(id, source);
+	checkForXmlError("Error occur while loading element : vertices");
+}
+
+// Load polygons or polylist
+void GLC_ColladaToWorld::loadPolylist()
+{
+	qDebug() << "GLC_ColladaToWorld::loadPolylist()";
+	// The number of polygon
+	const int polygonCount= readAttribute("count", true).toInt();
+
+	// The material id
+	const QString materialId= readAttribute("material", false);
+
+	// Offsets and data source list
+	QList<InputData> inputDataList;
+
+	// Polygon number of vertice list
+	QList<int> vcountList;
+
+	// Polygon index list
+	QList<int> polyIndexList;
+
+	while (endElementNotReached("polylist"))
+	{
+		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+		{
+			const QStringRef currentElementName= m_pStreamReader->name();
+			if ((currentElementName == "input") and vcountList.isEmpty())
+			{
+				InputData currentInput;
+				// Get input data offset
+				currentInput.m_Offset= readAttribute("offset", true).toInt();
+				// Get input data semantic
+				const QString semantic= readAttribute("semantic", true);
+				if (semantic == "VERTEX") currentInput.m_Semantic= VERTEX;
+				else if (semantic == "NORMAL") currentInput.m_Semantic= NORMAL;
+				else if (semantic == "TEXCOORD") currentInput.m_Semantic= TEXCOORD;
+				else throwException("Source semantic :" + semantic + "Not supported");
+				// Get input data source id
+				currentInput.m_Source= readAttribute("source", true).remove('#');
+
+				// Bypasss vertices indirection
+				if (m_VerticesSourceHash.contains(currentInput.m_Source))
+				{
+					currentInput.m_Source= m_VerticesSourceHash.value(currentInput.m_Source);
+				}
+				inputDataList.append(currentInput);
+			}
+			else if ((currentElementName == "vcount") and (inputDataList.size() > 0))
+			{
+				QString vcountString= getContent("vcount");
+				QStringList vcountStringList= vcountString.split(' ');
+				if (vcountStringList.size() != polygonCount) throwException("vcount size not match");
+				bool toIntOK;
+				for (int i= 0; i < polygonCount; ++i)
+				{
+					vcountList.append(vcountStringList.at(i).toInt(&toIntOK));
+					if (not toIntOK) throwException("Unable to convert string :" + vcountStringList.at(i) + " To int");
+				}
+			}
+			else if ((currentElementName == "p") and not vcountList.isEmpty() and polyIndexList.isEmpty())
+			{
+
+				{ // Fill index List
+					QString pString= getContent("p");
+					QStringList pStringList= pString.split(' ');
+					bool toIntOK;
+					const int size= pStringList.size();
+					for (int i= 0; i < size; ++i)
+					{
+						polyIndexList.append(pStringList.at(i).toInt(&toIntOK));
+						if (not toIntOK) throwException("Unable to convert string :" + pStringList.at(i) + " To int");
+					}
+				}
+
+				// Add the polylist to the current mesh
+				addPolylistToCurrentMesh(inputDataList, vcountList, polyIndexList);
+			}
+		}
+		m_pStreamReader->readNext();
+	}
+
+}
+
+// Add the polylist to the current mesh
+void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputDataList, const QList<int>& vcountList, const QList<int>& polyIndexList)
+{
+	const int polygonCount= vcountList.size();
+	const int inputDataCount= inputDataList.size();
+	const int polyIndexCount= polyIndexList.size();
+
+
+	// Check the existance of data source
+	for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
+	{
+		const QString source= inputDataList.at(dataIndex).m_Source;
+		if ( not m_BulkDataHash.contains(source))
+		{
+			throwException(" Source : " + source + " Not found");
+		}
+	}
+
+	int maxOffset= 0;
+	for (int i= 0; i < maxOffset; ++i)
+	{
+		if (inputDataList.at(i).m_Offset > maxOffset)
+		{
+			maxOffset= inputDataList.at(i).m_Offset;
+		}
+	}
+	// The list of vertex index
+	QList<int> vertexIndex;
+	// The list of normal index
+	QList<int> normalIndex;
+	// The list of texel index
+	QList<int> texelIndex;
+
+	// The list of indexList
+	QList<QList<int>* > listOfIndexList;
+	listOfIndexList.append(&vertexIndex);
+	listOfIndexList.append(&normalIndex);
+	listOfIndexList.append(&texelIndex);
+
+	// The current index of polyIndexList
+	int currentIndex= 0;
+	int currentPolygon= 0;
+	int currentVerticeOfCurrentPolygon= 0;
+	bool addListOfIndex= false;
+	// Built 3 separate index for vertex, normal and texel
+	while(currentIndex < polyIndexCount)
+	{
+		listOfIndexList[inputDataList.at(0).m_Semantic]->append(polyIndexList.at(currentIndex));
+		if (addListOfIndex)
+		{
+			addListOffIndexToCurrentMeshInfo(listOfIndexList[inputDataList.at(0).m_Semantic], inputDataList.at(0));
+		}
+		if (inputDataCount > 1)
+		{
+			listOfIndexList[inputDataList.at(1).m_Semantic]->append(polyIndexList.at(currentIndex + inputDataList.at(1).m_Offset));
+			if (addListOfIndex)
+			{
+				addListOffIndexToCurrentMeshInfo(listOfIndexList[inputDataList.at(1).m_Semantic], inputDataList.at(1));
+			}
+
+			if (inputDataCount > 2)
+			{
+				listOfIndexList[inputDataList.at(2).m_Semantic]->append(polyIndexList.at(currentIndex + inputDataList.at(2).m_Offset));
+				if (addListOfIndex)
+				{
+					addListOffIndexToCurrentMeshInfo(listOfIndexList[inputDataList.at(2).m_Semantic], inputDataList.at(2));
+				}
+
+			}
+		}
+		currentIndex+= maxOffset + 1;
+	}
+}
+
+// Add the specified list of index to the current mesh info
+void GLC_ColladaToWorld::addListOffIndexToCurrentMeshInfo(QList<int>* pIndex, const InputData& inputData)
+{
+	const QString source= inputData.m_Source;
+	const Semantic semantic= inputData.m_Semantic;
+
+	BulkDataHash::const_iterator iDataSource= m_BulkDataHash.find(source);
+	const int size= pIndex->size();
+	QList<int> polygonIndex;
+	for (int i= 0; i < size; ++i)
+	{
+		BulkAndMapping* pCurrentBulkAndMapping= &(m_pMeshInfo->m_BulkAndMappingVect[semantic]);
+		// Check if the current index is already used
+		if (not pCurrentBulkAndMapping->m_Mapping.contains(pIndex->at(i)))
+		{
+			pCurrentBulkAndMapping->m_Mapping.insert(pIndex->at(i), m_pMeshInfo->m_FreeIndex);
+			++(m_pMeshInfo->m_FreeIndex);
+			pCurrentBulkAndMapping->m_Bulk.append(iDataSource.value().at(pIndex->at(i) * 3));
+			pCurrentBulkAndMapping->m_Bulk.append(iDataSource.value().at(pIndex->at(i) * 3 + 1));
+			pCurrentBulkAndMapping->m_Bulk.append(iDataSource.value().at(pIndex->at(i) * 3 + 2));
+		}
+		polygonIndex.append(pCurrentBulkAndMapping->m_Mapping.value(pIndex->at(i)));
+	}
 }
 
 // Load library_visual_scenes element
