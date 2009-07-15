@@ -189,7 +189,7 @@ bool GLC_ExtendedMesh::containsStrips(int lod, GLC_uint materialId) const
 }
 
 // Return the strips index
-QList<QVector<GLuint> > GLC_ExtendedMesh::getTripsIndex(int lod, GLC_uint materialId) const
+QList<QVector<GLuint> > GLC_ExtendedMesh::getStripsIndex(int lod, GLC_uint materialId) const
 {
 	// Check if the mesh contains trips
 	Q_ASSERT(containsStrips(lod, materialId));

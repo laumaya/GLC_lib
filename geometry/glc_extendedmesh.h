@@ -117,7 +117,7 @@ public:
 	bool containsStrips(int lod, GLC_uint materialId) const;
 
 	//! Return the strips index
-	QList<QVector<GLuint> > getTripsIndex(int lod, GLC_uint materialId) const;
+	QList<QVector<GLuint> > getStripsIndex(int lod, GLC_uint materialId) const;
 
 	//! Return the number of strips
 	int numberOfStrips(int lod, GLC_uint materialId) const;
