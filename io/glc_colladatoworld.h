@@ -56,29 +56,46 @@ private:
 		TEXCOORD= 2
 	};
 
-	//! input data info
+	// input data info
 	struct InputData
 	{
 		int m_Offset;
 		QString m_Source;
 		Semantic m_Semantic;
 	};
-	struct BulkAndMapping
+public:
+	// Collada Vertice (Position index, Normal index and TexCoord index)
+	struct ColladaVertice
 	{
-		QList<float> m_Bulk;
-		QHash<int, int> m_Mapping;
+		ColladaVertice()
+		: m_Values(3)
+		{
+			m_Values[0]= 0;
+			m_Values[1]= 0;
+			m_Values[2]= 0;
+		}
+
+		QVector<int> m_Values;
 	};
-	//! The loading mesh info
+private:
+
+	// The loading mesh info
 	struct MeshInfo
 	{
 		MeshInfo()
 		: m_pMesh(NULL)
-		, m_BulkAndMappingVect(3)
+		, m_Datas(3)
+		, m_Mapping()
+		, m_Index()
 		, m_FreeIndex(0)
 		{}
+
 		~MeshInfo() {delete m_pMesh;}
 		GLC_ExtendedMesh* m_pMesh;
-		QVector<BulkAndMapping> m_BulkAndMappingVect;
+		QVector<QList<float> > m_Datas;
+		QHash<ColladaVertice, int> m_Mapping;
+		QList<int> m_Index;
+
 		int m_FreeIndex;
 	};
 
@@ -210,9 +227,6 @@ private:
 	//! Add the polylist to the current mesh
 	void addPolylistToCurrentMesh(const QList<InputData>&, const QList<int>&, const QList<int>&);
 
-	//! Add the specified list of index to the current mesh info
-	void addListOffIndexToCurrentMeshInfo(QList<int>*, const InputData&);
-
 	//! Load library_visual_scenes element
 	void loadVisualScenes();
 
@@ -272,8 +286,13 @@ private:
 
 	//! The current loadeed mesh
 	MeshInfo* m_pMeshInfo;
-
-
 };
+
+// To use ColladaVertice as a QHash key
+inline bool operator==(const GLC_ColladaToWorld::ColladaVertice& vertice1, const GLC_ColladaToWorld::ColladaVertice& vertice2)
+{ return (vertice1.m_Values == vertice2.m_Values);}
+
+inline uint qHash(const GLC_ColladaToWorld::ColladaVertice& vertice)
+{ return qHash(QString::number(vertice.m_Values.at(0)) + QString::number(vertice.m_Values.at(1)) + QString::number(vertice.m_Values.at(2)));}
 
 #endif /* GLC_COLLADATOWORLD_H_ */

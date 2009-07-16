@@ -721,22 +721,25 @@ void GLC_ColladaToWorld::loadPolylist()
 					}
 				}
 
-				// Add the polylist to the current mesh
-				addPolylistToCurrentMesh(inputDataList, vcountList, polyIndexList);
 			}
 		}
 		m_pStreamReader->readNext();
 	}
-
+	// Add the polylist to the current mesh
+	addPolylistToCurrentMesh(inputDataList, vcountList, polyIndexList);
 }
 
 // Add the polylist to the current mesh
 void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputDataList, const QList<int>& vcountList, const QList<int>& polyIndexList)
 {
+	qDebug() << "GLC_ColladaToWorld::addPolylistToCurrentMesh";
+
 	const int polygonCount= vcountList.size();
 	const int inputDataCount= inputDataList.size();
 	const int polyIndexCount= polyIndexList.size();
 
+	// Flag to know if the polylist has normal
+	bool hasNormals= false;
 
 	// Check the existance of data source
 	for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
@@ -746,88 +749,74 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 		{
 			throwException(" Source : " + source + " Not found");
 		}
+		if (inputDataList.at(dataIndex).m_Semantic == NORMAL) hasNormals= true;
 	}
 
 	int maxOffset= 0;
-	for (int i= 0; i < maxOffset; ++i)
+	for (int i= 0; i < inputDataCount; ++i)
 	{
 		if (inputDataList.at(i).m_Offset > maxOffset)
 		{
 			maxOffset= inputDataList.at(i).m_Offset;
 		}
 	}
-	// The list of vertex index
-	QList<int> vertexIndex;
-	// The list of normal index
-	QList<int> normalIndex;
-	// The list of texel index
-	QList<int> texelIndex;
+	qDebug() << " Max Offset :" << maxOffset;
 
-	// The list of indexList
-	QList<QList<int>* > listOfIndexList;
-	listOfIndexList.append(&vertexIndex);
-	listOfIndexList.append(&normalIndex);
-	listOfIndexList.append(&texelIndex);
-
-	// The current index of polyIndexList
-	int currentIndex= 0;
-	int currentPolygon= 0;
-	int currentVerticeOfCurrentPolygon= 0;
-	bool addListOfIndex= false;
-	// Built 3 separate index for vertex, normal and texel
-	while(currentIndex < polyIndexCount)
-	{
-		listOfIndexList[inputDataList.at(0).m_Semantic]->append(polyIndexList.at(currentIndex));
-		if (addListOfIndex)
-		{
-			addListOffIndexToCurrentMeshInfo(listOfIndexList[inputDataList.at(0).m_Semantic], inputDataList.at(0));
-		}
-		if (inputDataCount > 1)
-		{
-			listOfIndexList[inputDataList.at(1).m_Semantic]->append(polyIndexList.at(currentIndex + inputDataList.at(1).m_Offset));
-			if (addListOfIndex)
-			{
-				addListOffIndexToCurrentMeshInfo(listOfIndexList[inputDataList.at(1).m_Semantic], inputDataList.at(1));
-			}
-
-			if (inputDataCount > 2)
-			{
-				listOfIndexList[inputDataList.at(2).m_Semantic]->append(polyIndexList.at(currentIndex + inputDataList.at(2).m_Offset));
-				if (addListOfIndex)
-				{
-					addListOffIndexToCurrentMeshInfo(listOfIndexList[inputDataList.at(2).m_Semantic], inputDataList.at(2));
-				}
-
-			}
-		}
-		currentIndex+= maxOffset + 1;
-	}
-}
-
-// Add the specified list of index to the current mesh info
-void GLC_ColladaToWorld::addListOffIndexToCurrentMeshInfo(QList<int>* pIndex, const InputData& inputData)
-{
-	const QString source= inputData.m_Source;
-	const Semantic semantic= inputData.m_Semantic;
-
-	BulkDataHash::const_iterator iDataSource= m_BulkDataHash.find(source);
-	const int size= pIndex->size();
+	// the polygonIndex of the polylist
 	QList<int> polygonIndex;
-	for (int i= 0; i < size; ++i)
+
+	// Fill the mapping, bulk data and index list of the current mesh info
+	for (int i= 0; i < polyIndexCount; i+= maxOffset + 1)
 	{
-		BulkAndMapping* pCurrentBulkAndMapping= &(m_pMeshInfo->m_BulkAndMappingVect[semantic]);
-		// Check if the current index is already used
-		if (not pCurrentBulkAndMapping->m_Mapping.contains(pIndex->at(i)))
+		// Create and set the current vertice
+		ColladaVertice currentVertice;
+		for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
 		{
-			pCurrentBulkAndMapping->m_Mapping.insert(pIndex->at(i), m_pMeshInfo->m_FreeIndex);
-			++(m_pMeshInfo->m_FreeIndex);
-			pCurrentBulkAndMapping->m_Bulk.append(iDataSource.value().at(pIndex->at(i) * 3));
-			pCurrentBulkAndMapping->m_Bulk.append(iDataSource.value().at(pIndex->at(i) * 3 + 1));
-			pCurrentBulkAndMapping->m_Bulk.append(iDataSource.value().at(pIndex->at(i) * 3 + 2));
+			currentVertice.m_Values[inputDataList.at(dataIndex).m_Semantic]= polyIndexList.at(i + inputDataList.at(dataIndex).m_Offset);
 		}
-		polygonIndex.append(pCurrentBulkAndMapping->m_Mapping.value(pIndex->at(i)));
+		if (m_pMeshInfo->m_Mapping.contains(currentVertice))
+		{
+			// Add the the index to the polygon index
+			polygonIndex.append(m_pMeshInfo->m_Mapping.value(currentVertice));
+		}
+		else
+		{
+			// Add the current vertice to the current mesh info mapping hash table and increment the freeIndex
+			m_pMeshInfo->m_Mapping.insert(currentVertice, (m_pMeshInfo->m_FreeIndex)++);
+			// Add the the index to the polygon index
+			polygonIndex.append(m_pMeshInfo->m_Mapping.value(currentVertice));
+
+			// Add the bulk data associated to the current vertice to the current mesh info
+			for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
+			{
+				// The current input data
+				InputData currentInputData= inputDataList.at(dataIndex);
+				// QHash iterator on the right QList<float>
+				BulkDataHash::const_iterator iBulkHash= m_BulkDataHash.find(currentInputData.m_Source);
+				// Firts value
+				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset)));
+				// Second value
+				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset + 1)));
+				// Fird value
+				if (currentInputData.m_Semantic != TEXCOORD)
+				{
+					m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset + 2)));
+				}
+			}
+		}
 	}
+	// Triangulate the polygons
+
+	// Append the triangulated index list to the current mesh info
+
+	// Check if normal computation is needed
+	if (not hasNormals)
+	{
+		// Compute the normals and add them to the current mesh info
+	}
+
 }
+
 
 // Load library_visual_scenes element
 void GLC_ColladaToWorld::loadVisualScenes()
