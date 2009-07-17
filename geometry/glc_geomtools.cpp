@@ -474,6 +474,91 @@ void glc::triangulateNoConvexPolygon(VertexList* pVertexList)
 	(*pVertexList)= newVertexList;
 }
 
+// Triangulate a no convex polygon
+void glc::triangulatePolygon(QList<int>* pIndexList, const QList<float>& bulkList)
+{
+	// Get the polygon vertice
+	QList<GLC_Point4d> originPoints;
+	int size= pIndexList->size();
+	QList<int> face;
+	for (int i= 0; i < size; ++i)
+	{
+		const int currentIndex= pIndexList->at(i);
+		originPoints.append(GLC_Point4d(bulkList.at(currentIndex), bulkList.at(currentIndex + 1), bulkList.at(currentIndex + 2)));
+		face.append(currentIndex);
+	}
+
+
+	//-------------- Change frame to mach polygon plane
+		// Compute face normal
+		const GLC_Point4d point1(originPoints[0]);
+		const GLC_Point4d point2(originPoints[1]);
+		const GLC_Point4d point3(originPoints[2]);
+
+		const GLC_Vector4d edge1(point2 - point1);
+		const GLC_Vector4d edge2(point3 - point2);
+
+		GLC_Vector4d polygonPlaneNormal(edge1 ^ edge2);
+		polygonPlaneNormal.setNormal(1.0);
+
+		// Create the transformation matrix
+		GLC_Matrix4x4 transformation;
+
+		GLC_Vector4d rotationAxis(polygonPlaneNormal ^ Z_AXIS);
+		if (!rotationAxis.isNull())
+		{
+			const double angle= acos(polygonPlaneNormal * Z_AXIS);
+			transformation.setMatRot(rotationAxis, angle);
+		}
+
+		QList<GLC_Point2d> polygon;
+		// Transforme polygon vertexs
+		for (int i=0; i < size; ++i)
+		{
+			originPoints[i]= transformation * originPoints[i];
+			// Create 2d vector
+			polygon << originPoints[i].toVector2d(Z_AXIS);
+		}
+		// Create the index
+		QList<int> index= face;
+
+		QList<int> tList;
+		const bool faceIsCounterclockwise= isCounterclockwiseOrdered(polygon);
+
+		if(not faceIsCounterclockwise)
+		{
+			const int max= size / 2;
+			for (int i= 0; i < max; ++i)
+			{
+				polygon.swap(i, size - 1 -i);
+				int temp= face[i];
+				face[i]= face[size - 1 - i];
+				face[size - 1 - i]= temp;
+			}
+		}
+
+		triangulate(polygon, index, tList);
+		size= tList.size();
+		pIndexList->clear();
+		for (int i= 0; i < size; i+= 3)
+		{
+			// Avoid normal problem
+			if (faceIsCounterclockwise)
+			{
+				pIndexList->append(face[tList[i]]);
+				pIndexList->append(face[tList[i + 1]]);
+				pIndexList->append(face[tList[i + 2]]);
+			}
+			else
+			{
+				pIndexList->append(face[tList[i + 2]]);
+				pIndexList->append(face[tList[i + 1]]);
+				pIndexList->append(face[tList[i]]);
+			}
+		}
+		Q_ASSERT(size == pIndexList->size());
+}
+
 // Triangulate a convex polygon
 void glc::triangulateConvexPolygon(VertexList* pVertexList)
 {

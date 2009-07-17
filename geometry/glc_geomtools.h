@@ -81,6 +81,9 @@ namespace glc
 	//! Triangulate a no convex polygon
 	void triangulateNoConvexPolygon(VertexList*);
 
+	//! Triangulate a no convex polygon
+	void triangulatePolygon(QList<int>*, const QList<float>&);
+
 	//! Triangulate a convex polygon
 	void triangulateConvexPolygon(VertexList*);
 
