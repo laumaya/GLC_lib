@@ -50,7 +50,7 @@ private:
 
 	// The 3 supported semantic
 	enum Semantic
-	{
+	{ // Values are very important !
 		VERTEX= 0,
 		NORMAL= 1,
 		TEXCOORD= 2
@@ -79,6 +79,12 @@ public:
 	};
 private:
 
+	// Material assignement
+	struct MatOffsetSize
+	{
+		int m_Offset;
+		int m_size;
+	};
 	// The loading mesh info
 	struct MeshInfo
 	{
@@ -95,8 +101,8 @@ private:
 		QVector<QList<float> > m_Datas;
 		QHash<ColladaVertice, int> m_Mapping;
 		QList<int> m_Index;
-
 		int m_FreeIndex;
+		QHash<QString, MatOffsetSize> m_Materials;
 	};
 
 	typedef QHash<const QString, GLC_Material*> MaterialHash;
@@ -197,8 +203,8 @@ private:
 	//! Load technique
 	void loadTechnique();
 
-	//! load phong material
-	void loadPhong();
+	//! load material technique
+	void loadMaterialTechnique(const QString&);
 
 	//! load common color or texture
 	void loadCommonColorOrTexture(const QString&);
@@ -225,7 +231,10 @@ private:
 	void loadPolylist();
 
 	//! Add the polylist to the current mesh
-	void addPolylistToCurrentMesh(const QList<InputData>&, const QList<int>&, const QList<int>&);
+	void addPolylistToCurrentMesh(const QList<InputData>&, const QList<int>&, const QList<int>&, const QString&);
+
+	//! Compute Normals for the current primitive element of the current mesh from the specified offset
+	void computeNormalOfCurrentPrimitiveOfCurrentMesh(int offset);
 
 	//! Load library_visual_scenes element
 	void loadVisualScenes();
@@ -235,6 +244,9 @@ private:
 
 	//! Link texture to material
 	void linkTexturesToMaterials();
+
+	//! Create mesh and link them to material
+	void createMesh();
 
 
 //@}
@@ -275,6 +287,9 @@ private:
 	//! The current material
 	GLC_Material* m_pCurrentMaterial;
 
+	//! Hash table of material
+	MaterialHash m_MaterialHash;
+
 	//! Texture to material link
 	MaterialHash m_TextureToMaterialHash;
 
@@ -286,6 +301,12 @@ private:
 
 	//! The current loadeed mesh
 	MeshInfo* m_pMeshInfo;
+
+	//! Hash table off geometry (MeshInfo*)
+	QHash<const QString, MeshInfo*> m_GeometryHash;
+
+
+
 };
 
 // To use ColladaVertice as a QHash key
