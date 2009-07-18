@@ -287,9 +287,6 @@ private:
 	//! The current material
 	GLC_Material* m_pCurrentMaterial;
 
-	//! Hash table of material
-	MaterialHash m_MaterialHash;
-
 	//! Texture to material link
 	MaterialHash m_TextureToMaterialHash;
 

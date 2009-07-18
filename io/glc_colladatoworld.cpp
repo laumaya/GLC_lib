@@ -41,7 +41,6 @@ GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
 , m_SurfaceImageHash()
 , m_MaterialEffectHash()
 , m_pCurrentMaterial(NULL)
-, m_MaterialHash()
 , m_TextureToMaterialHash()
 , m_BulkDataHash()
 , m_VerticesSourceHash()
@@ -65,7 +64,7 @@ GLC_ColladaToWorld::~GLC_ColladaToWorld()
 // Create an GLC_World from an input Collada File
 GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 {
-	m_pWorld= NULL;
+	m_pWorld= new GLC_World();
 	m_FileName= file.fileName();
 	m_pFile= &file;
 
@@ -205,6 +204,7 @@ void GLC_ColladaToWorld::clear()
 	m_MaterialLibHash.clear();
 	m_SurfaceImageHash.clear();
 
+	// Clear the material effect hash table
 	MaterialHash::iterator iMat= m_MaterialEffectHash.begin();
 	while (iMat != m_MaterialEffectHash.constEnd())
 	{
@@ -233,16 +233,6 @@ void GLC_ColladaToWorld::clear()
 		++iGeomHash;
 	}
 	m_GeometryHash.clear();
-
-	// Clear the material hash table
-	MaterialHash::iterator iMaterial= m_MaterialHash.begin();
-	while (m_MaterialHash.constEnd() != iMaterial)
-	{
-		GLC_Material* pCurrentMaterial= iMaterial.value();
-		if (pCurrentMaterial->isUnused()) delete pCurrentMaterial;
-		++iMaterial;
-	}
-	m_MaterialHash.clear();
 }
 
 // Load library_images element
@@ -377,7 +367,7 @@ void GLC_ColladaToWorld::loadEffect()
 
 	checkForXmlError("Error occur while loading element : effect");
 
-	m_MaterialHash.insert(id, m_pCurrentMaterial);
+	m_MaterialEffectHash.insert(id, m_pCurrentMaterial);
 	m_pCurrentMaterial= NULL;
 
 }
@@ -748,7 +738,6 @@ void GLC_ColladaToWorld::loadPolylist()
 			}
 			else if ((currentElementName == "p") and not vcountList.isEmpty() and polyIndexList.isEmpty())
 			{
-
 				{ // Fill index List
 					QString pString= getContent("p");
 					QStringList pStringList= pString.split(' ');
@@ -808,12 +797,13 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 	// Fill the mapping, bulk data and index list of the current mesh info
 	for (int i= 0; i < polyIndexCount; i+= maxOffset + 1)
 	{
-		// Create and set the current vertice
+		// Create and set the current vertice index
 		ColladaVertice currentVertice;
 		for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
 		{
 			currentVertice.m_Values[inputDataList.at(dataIndex).m_Semantic]= polyIndexList.at(i + inputDataList.at(dataIndex).m_Offset);
 		}
+
 		if (m_pMeshInfo->m_Mapping.contains(currentVertice))
 		{
 			// Add the the index to the polygon index
@@ -833,44 +823,38 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 				InputData currentInputData= inputDataList.at(dataIndex);
 				// QHash iterator on the right QList<float>
 				BulkDataHash::const_iterator iBulkHash= m_BulkDataHash.find(currentInputData.m_Source);
+				int stride;
+				if (currentInputData.m_Semantic != TEXCOORD) stride= 3; else stride= 2;
 				// Firts value
-				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset)));
+				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset) * stride));
 				// Second value
-				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset) + 1));
+				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset) * stride + 1));
 				// Fird value
 				if (currentInputData.m_Semantic != TEXCOORD)
 				{
-					m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset) + 2));
+					m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset) * stride + 2));
 				}
 			}
 		}
 	}
 
-	// Save index offset
+	// Save mesh info index offset
 	const int indexOffset= m_pMeshInfo->m_Index.size();
 	// Triangulate the polygons of the polylist
 	// Input polygon index must start from 0 and succesive : (0 1 2 3 4)
 	QList<int> onePolygonIndex;
-	QHash<int, int> indexMapping;
 	for (int i= 0; i < polygonCount; ++i)
 	{
 		const int polygonSize= vcountList.at(i);
 		for (int i= 0; i < polygonSize; ++i)
 		{
-			indexMapping.insert(i, polygonIndex.takeFirst());
-			onePolygonIndex.append(i);
+			onePolygonIndex.append(polygonIndex.takeFirst());
 		}
 		// Triangulate the current polygon
 		glc::triangulatePolygon(&onePolygonIndex, m_pMeshInfo->m_Datas.at(VERTEX));
 		// Add index to the mesh info
-		const int onePolygonIndexSize= onePolygonIndex.size();
-		for (int i= 0; i < onePolygonIndexSize; ++i)
-		{
-			onePolygonIndex[i]= indexMapping.value(onePolygonIndex.at(i));
-		}
 		m_pMeshInfo->m_Index.append(onePolygonIndex);
 		onePolygonIndex.clear();
-		indexMapping.clear();
 	}
 
 	// Check if normal computation is needed
@@ -884,13 +868,6 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 	matInfo.m_Offset= indexOffset;
 	matInfo.m_size= m_pMeshInfo->m_Index.size() - indexOffset;
 	m_pMeshInfo->m_Materials.insert(materialId, matInfo);
-
-	qDebug() << "Material Name= " << materialId;
-	qDebug() << "Material Offset= " << matInfo.m_Offset;
-	qDebug() << "Material Size= " << matInfo.m_size;
-
-	const int size= m_pMeshInfo->m_Datas.at(VERTEX).size();
-	qDebug() << "Bulk size= " << size;
 
 }
 // Compute Normals for the current primitive element of the current mesh
@@ -1002,13 +979,16 @@ void GLC_ColladaToWorld::createMesh()
 		// Add Bulk Data to the mesh
 		// Add vertice
 		pCurrentMeshInfo->m_pMesh->addVertices(pCurrentMeshInfo->m_Datas.at(VERTEX).toVector());
+		qDebug() << "Add " << pCurrentMeshInfo->m_Datas[VERTEX].size() << " Vertice";
 		pCurrentMeshInfo->m_Datas[VERTEX].clear();
 
 		// Add Normal
 		pCurrentMeshInfo->m_pMesh->addNormals(pCurrentMeshInfo->m_Datas.at(NORMAL).toVector());
+		qDebug() << "Add " << pCurrentMeshInfo->m_Datas[NORMAL].size() << " Normal";
 		pCurrentMeshInfo->m_Datas[NORMAL].clear();
 
 		// Add texel if necessary
+		qDebug() << "Add " << pCurrentMeshInfo->m_Datas[TEXCOORD].size() << " texel";
 		if (not pCurrentMeshInfo->m_Datas.at(TEXCOORD).isEmpty())
 		{
 			pCurrentMeshInfo->m_pMesh->addTexels(pCurrentMeshInfo->m_Datas.at(TEXCOORD).toVector());
@@ -1022,27 +1002,33 @@ void GLC_ColladaToWorld::createMesh()
 			// Trying to find the material
 			const QString materialId= iMatInfo.key();
 			GLC_Material* pCurrentMaterial= NULL;
-			if (m_MaterialEffectHash.contains(materialId))
+			if (m_MaterialEffectHash.contains(m_MaterialLibHash.value(materialId)))
 			{
 				qDebug() << "Material " << materialId << " find";
-				pCurrentMaterial= m_MaterialEffectHash.value(materialId);
+				pCurrentMaterial= m_MaterialEffectHash.value(m_MaterialLibHash.value(materialId));
 			}
 			else qDebug() << "Material " << materialId << " Not found";
 
-			// Create the list of traingles to add to the mesh
+			// Create the list of triangles to add to the mesh
 			const int offset= iMatInfo.value().m_Offset;
 			const int size= iMatInfo.value().m_size;
+			qDebug() << "Offset : " << offset << " size : " << size;
 			QList<GLuint> triangles;
 			for (int i= offset; i < (offset + size); ++i)
 			{
 				triangles.append(pCurrentMeshInfo->m_Index.at(i));
 			}
+			qDebug() << "Add " << triangles.size() << " elment to the triangle index";
 			// Add the list of triangle to the mesh
 			pCurrentMeshInfo->m_pMesh->addTriangles(pCurrentMaterial, triangles);
 
 			++iMatInfo;
 		}
 		pCurrentMeshInfo->m_pMesh->finished();
+		GLC_3DRep* pRep= new GLC_3DRep(pCurrentMeshInfo->m_pMesh);
+		pCurrentMeshInfo->m_pMesh= NULL;
+		GLC_StructInstance* pInstance= new GLC_StructInstance(new GLC_StructReference(pRep));
+		m_pWorld->rootOccurence()->addChild(pInstance);
 		++iMeshInfo;
 	}
 
