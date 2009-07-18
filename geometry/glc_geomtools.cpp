@@ -479,15 +479,16 @@ void glc::triangulatePolygon(QList<int>* pIndexList, const QList<float>& bulkLis
 {
 	// Get the polygon vertice
 	QList<GLC_Point4d> originPoints;
+	QHash<int, int> indexMap;
 	int size= pIndexList->size();
 	QList<int> face;
 	for (int i= 0; i < size; ++i)
 	{
 		const int currentIndex= pIndexList->at(i);
-		originPoints.append(GLC_Point4d(bulkList.at(currentIndex), bulkList.at(currentIndex + 1), bulkList.at(currentIndex + 2)));
-		face.append(currentIndex);
+		originPoints.append(GLC_Point4d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2)));
+		indexMap.insert(i, currentIndex);
+		face.append(i);
 	}
-
 
 	//-------------- Change frame to mach polygon plane
 		// Compute face normal
@@ -512,7 +513,7 @@ void glc::triangulatePolygon(QList<int>* pIndexList, const QList<float>& bulkLis
 		}
 
 		QList<GLC_Point2d> polygon;
-		// Transforme polygon vertexs
+		// Transform polygon vertexs
 		for (int i=0; i < size; ++i)
 		{
 			originPoints[i]= transformation * originPoints[i];
@@ -536,7 +537,6 @@ void glc::triangulatePolygon(QList<int>* pIndexList, const QList<float>& bulkLis
 				face[size - 1 - i]= temp;
 			}
 		}
-
 		triangulate(polygon, index, tList);
 		size= tList.size();
 		pIndexList->clear();
@@ -545,15 +545,15 @@ void glc::triangulatePolygon(QList<int>* pIndexList, const QList<float>& bulkLis
 			// Avoid normal problem
 			if (faceIsCounterclockwise)
 			{
-				pIndexList->append(face[tList[i]]);
-				pIndexList->append(face[tList[i + 1]]);
-				pIndexList->append(face[tList[i + 2]]);
+				pIndexList->append(indexMap.value(face[tList[i]]));
+				pIndexList->append(indexMap.value(face[tList[i + 1]]));
+				pIndexList->append(indexMap.value(face[tList[i + 2]]));
 			}
 			else
 			{
-				pIndexList->append(face[tList[i + 2]]);
-				pIndexList->append(face[tList[i + 1]]);
-				pIndexList->append(face[tList[i]]);
+				pIndexList->append(indexMap.value(face[tList[i + 2]]));
+				pIndexList->append(indexMap.value(face[tList[i + 1]]));
+				pIndexList->append(indexMap.value(face[tList[i]]));
 			}
 		}
 		Q_ASSERT(size == pIndexList->size());
