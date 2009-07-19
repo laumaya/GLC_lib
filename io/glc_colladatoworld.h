@@ -236,6 +236,12 @@ private:
 	//! Compute Normals for the current primitive element of the current mesh from the specified offset
 	void computeNormalOfCurrentPrimitiveOfCurrentMesh(int offset);
 
+	//! Load triangles
+	void loadTriangles();
+
+	//! Add the triangles to current mesh
+	void addTrianglesToCurrentMesh(const QList<InputData>&, const QList<int>&, const QString&);
+
 	//! Load library_visual_scenes element
 	void loadVisualScenes();
 

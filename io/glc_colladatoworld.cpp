@@ -617,7 +617,7 @@ void GLC_ColladaToWorld::loadMesh()
 			if (currentElementName == "source") loadVertexBulkData();
 			else if (currentElementName == "vertices") loadVertices();
 			else if (currentElementName == "polylist") loadPolylist();
-			//else if (currentElementName == "triangles") loadTriangles();
+			else if (currentElementName == "triangles") loadTriangles();
 			//else if (currentElementName == "trifans") loadTriFans();
 			//else if (currentElementName == "tristrips") loadTriStrip();
 		}
@@ -860,7 +860,7 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 	// Check if normal computation is needed
 	if (not hasNormals)
 	{
-		computeNormalOfCurrentPrimitiveOfCurrentMesh(m_pMeshInfo->m_Index.size());
+		computeNormalOfCurrentPrimitiveOfCurrentMesh(indexOffset);
 	}
 
 	// Add material the current mesh info
@@ -919,6 +919,168 @@ void GLC_ColladaToWorld::computeNormalOfCurrentPrimitiveOfCurrentMesh(int indexO
 			(*pNormal)[i + curVertex + 2]= curNormal.Z();
 		}
 	}
+}
+
+// Load triangles
+void  GLC_ColladaToWorld::loadTriangles()
+{
+	qDebug() << "GLC_ColladaToWorld::loadTriangles()";
+
+	// The material id
+	const QString materialId= readAttribute("material", false);
+
+	// Offsets and data source list
+	QList<InputData> inputDataList;
+
+	// triangle index list
+	QList<int> trianglesIndexList;
+
+	while (endElementNotReached("triangles"))
+	{
+		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+		{
+			const QStringRef currentElementName= m_pStreamReader->name();
+			if ((currentElementName == "input") and trianglesIndexList.isEmpty())
+			{
+				InputData currentInput;
+				// Get input data offset
+				currentInput.m_Offset= readAttribute("offset", true).toInt();
+				// Get input data semantic
+				const QString semantic= readAttribute("semantic", true);
+				if (semantic == "VERTEX") currentInput.m_Semantic= VERTEX;
+				else if (semantic == "NORMAL") currentInput.m_Semantic= NORMAL;
+				else if (semantic == "TEXCOORD") currentInput.m_Semantic= TEXCOORD;
+				else throwException("Source semantic :" + semantic + "Not supported");
+				// Get input data source id
+				currentInput.m_Source= readAttribute("source", true).remove('#');
+
+				// Bypasss vertices indirection
+				if (m_VerticesSourceHash.contains(currentInput.m_Source))
+				{
+					currentInput.m_Source= m_VerticesSourceHash.value(currentInput.m_Source);
+				}
+				inputDataList.append(currentInput);
+			}
+			else if ((currentElementName == "p") and trianglesIndexList.isEmpty())
+			{
+				{ // Fill index List
+					QString pString= getContent("p");
+					QStringList pStringList= pString.split(' ');
+					bool toIntOK;
+					const int size= pStringList.size();
+					for (int i= 0; i < size; ++i)
+					{
+						trianglesIndexList.append(pStringList.at(i).toInt(&toIntOK));
+						if (not toIntOK) throwException("Unable to convert string :" + pStringList.at(i) + " To int");
+					}
+				}
+
+			}
+		}
+		m_pStreamReader->readNext();
+	}
+	// Add the polylist to the current mesh
+	addTrianglesToCurrentMesh(inputDataList, trianglesIndexList, materialId);
+
+}
+
+// Add the triangles to current mesh
+void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& inputDataList, const QList<int>& trianglesIndexList, const QString& materialId)
+{
+	qDebug() << "GLC_ColladaToWorld::addTrianglesToCurrentMesh";
+
+	const int inputDataCount= inputDataList.size();
+	const int trianglesIndexCount= trianglesIndexList.size();
+
+	// Flag to know if the polylist has normal
+	bool hasNormals= false;
+
+	// Check the existance of data source
+	for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
+	{
+		const QString source= inputDataList.at(dataIndex).m_Source;
+		if ( not m_BulkDataHash.contains(source))
+		{
+			throwException(" Source : " + source + " Not found");
+		}
+		if (inputDataList.at(dataIndex).m_Semantic == NORMAL) hasNormals= true;
+	}
+
+	int maxOffset= 0;
+	for (int i= 0; i < inputDataCount; ++i)
+	{
+		if (inputDataList.at(i).m_Offset > maxOffset)
+		{
+			maxOffset= inputDataList.at(i).m_Offset;
+		}
+	}
+	qDebug() << " Triangles Max Offset :" << maxOffset;
+
+	// the polygonIndex of the polylist
+	QList<int> trianglesIndex;
+
+	// Fill the mapping, bulk data and index list of the current mesh info
+	for (int i= 0; i < trianglesIndexCount; i+= maxOffset + 1)
+	{
+		// Create and set the current vertice index
+		ColladaVertice currentVertice;
+		for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
+		{
+			currentVertice.m_Values[inputDataList.at(dataIndex).m_Semantic]= trianglesIndexList.at(i + inputDataList.at(dataIndex).m_Offset);
+		}
+
+		if (m_pMeshInfo->m_Mapping.contains(currentVertice))
+		{
+			// Add the the index to the triangles index
+			trianglesIndex.append(m_pMeshInfo->m_Mapping.value(currentVertice));
+		}
+		else
+		{
+			// Add the current vertice to the current mesh info mapping hash table and increment the freeIndex
+			m_pMeshInfo->m_Mapping.insert(currentVertice, (m_pMeshInfo->m_FreeIndex)++);
+			// Add the the index to the triangles index
+			trianglesIndex.append(m_pMeshInfo->m_Mapping.value(currentVertice));
+
+			// Add the bulk data associated to the current vertice to the current mesh info
+			for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
+			{
+				// The current input data
+				InputData currentInputData= inputDataList.at(dataIndex);
+				// QHash iterator on the right QList<float>
+				BulkDataHash::const_iterator iBulkHash= m_BulkDataHash.find(currentInputData.m_Source);
+				int stride;
+				if (currentInputData.m_Semantic != TEXCOORD) stride= 3; else stride= 2;
+				// Firts value
+				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(trianglesIndexList.at(i + currentInputData.m_Offset) * stride));
+				// Second value
+				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(trianglesIndexList.at(i + currentInputData.m_Offset) * stride + 1));
+				// Fird value
+				if (currentInputData.m_Semantic != TEXCOORD)
+				{
+					m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(trianglesIndexList.at(i + currentInputData.m_Offset) * stride + 2));
+				}
+			}
+		}
+	}
+
+	// Save mesh info index offset
+	const int indexOffset= m_pMeshInfo->m_Index.size();
+
+	// Add index to the mesh info
+	m_pMeshInfo->m_Index.append(trianglesIndex);
+
+	// Check if normal computation is needed
+	if (not hasNormals)
+	{
+		computeNormalOfCurrentPrimitiveOfCurrentMesh(indexOffset);
+	}
+
+	// Add material the current mesh info
+	MatOffsetSize matInfo;
+	matInfo.m_Offset= indexOffset;
+	matInfo.m_size= m_pMeshInfo->m_Index.size() - indexOffset;
+	m_pMeshInfo->m_Materials.insert(materialId, matInfo);
+
 }
 
 
@@ -1027,6 +1189,7 @@ void GLC_ColladaToWorld::createMesh()
 		pCurrentMeshInfo->m_pMesh->finished();
 		GLC_3DRep* pRep= new GLC_3DRep(pCurrentMeshInfo->m_pMesh);
 		pCurrentMeshInfo->m_pMesh= NULL;
+		pRep->removeEmptyGeometry();
 		GLC_StructInstance* pInstance= new GLC_StructInstance(new GLC_StructReference(pRep));
 		m_pWorld->rootOccurence()->addChild(pInstance);
 		++iMeshInfo;
