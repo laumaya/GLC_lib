@@ -35,6 +35,7 @@
 
 #include "../shading/glc_material.h"
 #include "../geometry/glc_extendedmesh.h"
+#include "../sceneGraph/glc_structoccurence.h"
 
 class GLC_World;
 class QGLContext;
@@ -97,12 +98,44 @@ private:
 		{}
 
 		~MeshInfo() {delete m_pMesh;}
+		// Mesh of the mesh info
 		GLC_ExtendedMesh* m_pMesh;
+		// Bulk data vector (Position, normal, texel)
 		QVector<QList<float> > m_Datas;
+		// Mapping between collada vertice and index
 		QHash<ColladaVertice, int> m_Mapping;
+		// Triangle index
 		QList<int> m_Index;
+		// Next index Position
 		int m_FreeIndex;
+		// QHash containing material id and associated offset and size
 		QHash<QString, MatOffsetSize> m_Materials;
+	};
+
+	// The collada Node
+	struct ColladaNode
+	{
+		ColladaNode(const QString id, ColladaNode* pParent)
+		: m_Id(id)
+		, m_Matrix()
+		, m_InstanceGeometryID()
+		, m_InstanceOffNodeId()
+		, m_ChildNodes()
+		, m_pParent(pParent)
+		{}
+		// Destrucot not needed
+		// The node id
+		QString m_Id;
+		// Position matrix
+		GLC_Matrix4x4 m_Matrix;
+		// Instance geometry id
+		QString m_InstanceGeometryID;
+		// Instance off another node
+		QString m_InstanceOffNodeId;
+		// Child Node
+		QList<ColladaNode*> m_ChildNodes;
+		// Parent Node
+		ColladaNode* m_pParent;
 	};
 
 	typedef QHash<const QString, GLC_Material*> MaterialHash;
@@ -242,8 +275,32 @@ private:
 	//! Add the triangles to current mesh
 	void addTrianglesToCurrentMesh(const QList<InputData>&, const QList<int>&, const QString&);
 
+	//! Load the library nodes
+	void loadLibraryNodes();
+
 	//! Load library_visual_scenes element
 	void loadVisualScenes();
+
+	//! Load an instance geometry
+	void loadInstanceGeometry(ColladaNode*);
+
+	//! Load an instance geometry
+	void loadInstanceNode(ColladaNode*);
+
+	//! Load a Collada Node element and return it
+	ColladaNode* loadNode(ColladaNode*);
+
+	//! Translate the node
+	void translateNode(ColladaNode*);
+
+	//! Scale the node
+	void scaleNode(ColladaNode*);
+
+	//! Rotate the node
+	void rotateNode(ColladaNode*);
+
+	//! Compose Node matrix
+	void composeMatrixNode(ColladaNode*);
 
 	//! Load scene element
 	void loadScene();
@@ -308,7 +365,11 @@ private:
 	//! Hash table off geometry (MeshInfo*)
 	QHash<const QString, MeshInfo*> m_GeometryHash;
 
+	//! Hash table off collada node
+	QHash<const QString, ColladaNode*> m_ColladaNodeHash;
 
+	//! The list of top level node
+	QList<ColladaNode*> m_TopLevelColladaNode;
 
 };
 

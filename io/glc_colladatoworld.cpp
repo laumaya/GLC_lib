@@ -46,6 +46,8 @@ GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
 , m_VerticesSourceHash()
 , m_pMeshInfo(NULL)
 , m_GeometryHash()
+, m_ColladaNodeHash()
+, m_TopLevelColladaNode()
 {
 
 }
@@ -94,6 +96,7 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 			else if (currentElementName == "library_materials") loadLibraryMaterials();
 			else if (currentElementName == "library_effects") loadLibraryEffects();
 			else if (currentElementName == "library_geometries") loadLibraryGeometries();
+			else if (currentElementName == "library_nodes") loadLibraryNodes();
 			else if (currentElementName == "library_visual_scenes") loadVisualScenes();
 			else if (currentElementName == "scene") loadScene();
 		}
@@ -233,6 +236,18 @@ void GLC_ColladaToWorld::clear()
 		++iGeomHash;
 	}
 	m_GeometryHash.clear();
+
+	// Delete all collada node from the colalda node hash
+	QHash<const QString, ColladaNode*>::iterator iColladaNode= m_ColladaNodeHash.begin();
+	while (m_ColladaNodeHash.constEnd() != iColladaNode)
+	{
+		delete iColladaNode.value();
+		++iColladaNode;
+	}
+	m_ColladaNodeHash.clear();
+
+	// Clear the list of top level node (Not must not to be deleted)
+	m_TopLevelColladaNode.clear();
 }
 
 // Load library_images element
@@ -1083,11 +1098,224 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 
 }
 
+// Load the library nodes
+void GLC_ColladaToWorld::loadLibraryNodes()
+{
+	qDebug() << "GLC_ColladaToWorld::loadLibraryNodes";
+
+	while (endElementNotReached("library_nodes"))
+	{
+		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+		{
+			const QStringRef currentElementName= m_pStreamReader->name();
+			if ((currentElementName == "node"))
+			{
+				GLC_ColladaToWorld::ColladaNode* pNode= loadNode(NULL);
+				if (NULL != pNode)
+				{
+
+				}
+			}
+		}
+		m_pStreamReader->readNext();
+	}
+
+}
 
 // Load library_visual_scenes element
 void GLC_ColladaToWorld::loadVisualScenes()
 {
+	qDebug() << "GLC_ColladaToWorld::loadVisualScenes";
+	// The element library visual scene must contains a visual scene element
+	goToElement("visual_scene");
+	// The element visual_scene must contains a node element
+	goToElement("node");
+	loadNode(NULL);
+	while (endElementNotReached("visual_scene"))
+	{
+		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+		{
+			const QStringRef currentElementName= m_pStreamReader->name();
+			if (currentElementName == "node")
+			{
+				GLC_ColladaToWorld::ColladaNode* pNode= loadNode(NULL);
+				if (NULL != pNode)
+				{
 
+				}
+			}
+		}
+		m_pStreamReader->readNext();
+	}
+}
+
+// Load an instance geometry
+void GLC_ColladaToWorld::loadInstanceGeometry(ColladaNode* pNode)
+{
+	qDebug() << "GLC_ColladaToWorld::loadInstanceGeometry";
+
+	const QString url= readAttribute("url", true).remove('#');
+	pNode->m_InstanceGeometryID= url;
+
+}
+
+// Load an instance of node
+void GLC_ColladaToWorld::loadInstanceNode(ColladaNode* pNode)
+{
+	qDebug() << "GLC_ColladaToWorld::loadInstanceNode";
+	const QString url= readAttribute("url", true).remove('#');
+	pNode->m_InstanceOffNodeId= url;
+}
+
+// Load a Collada Node element
+GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pParent)
+{
+	qDebug() << "GLC_ColladaToWorld::loadNode";
+
+	const QString id= readAttribute("id", true);
+
+	// The node
+	ColladaNode* pNode= new ColladaNode(id, pParent);
+	// To avoid infinite call
+	m_pStreamReader->readNext();
+
+	while (endElementNotReached("node"))
+	{
+		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+		{
+			const QStringRef currentElementName= m_pStreamReader->name();
+
+			if ((currentElementName == "translate")) translateNode(pNode);
+			else if ((currentElementName == "scale")) scaleNode(pNode);
+			else if ((currentElementName == "rotate")) rotateNode(pNode);
+			else if ((currentElementName == "matrix")) composeMatrixNode(pNode);
+			else if ((currentElementName == "instance_geometry")) loadInstanceGeometry(pNode);
+			else if ((currentElementName == "instance_node")) loadInstanceNode(pNode);
+			else if ((currentElementName == "node"))
+			{
+				GLC_ColladaToWorld::ColladaNode* pChildNode= loadNode(pNode);
+				if (NULL != pNode)
+				{
+					qDebug() << "Add child";
+					pNode->m_ChildNodes.append(pChildNode);
+
+				}
+			}
+			else if ((currentElementName == "instance_camera")
+					or (currentElementName == "instance_controller")
+					or (currentElementName == "instance_light"))
+			{
+				// Note type not supported
+				delete pNode;
+				pNode= NULL;
+			}
+		}
+		m_pStreamReader->readNext();
+	}
+
+	if (NULL != pNode)
+	{
+		// Add the collada node to the collada node hash table
+		m_ColladaNodeHash.insert(id, pNode);
+	}
+	return pNode;
+}
+
+
+// Translate the node
+void GLC_ColladaToWorld::translateNode(ColladaNode* pNode)
+{
+	Q_ASSERT(NULL != pNode);
+	// Load translation values
+	QStringList translateStringList= getContent("translate").simplified().split(' ');
+	// A translation must contains 3 string
+	const int size= translateStringList.size();
+	if (translateStringList.size() != 3) throwException("Translate element must contains 3 floats and it's contains :" + QString::number(translateStringList.size()));
+	// Convert the string to double
+	double translate[3];
+	bool toFloatOk= false;
+	for (int i= 0; i < size; ++i)
+	{
+		translate[i]= static_cast<double>(translateStringList.at(i).toFloat(&toFloatOk));
+		if (not toFloatOk) throwException("The number :" + translateStringList.at(i) + "Is not a float");
+	}
+	// Built the translation matrix
+	GLC_Matrix4x4 translationMatrix(translate[0], translate[1], translate[2]);
+	// Update the node matrix
+	pNode->m_Matrix= pNode->m_Matrix * translationMatrix;
+}
+
+// Scale the node
+void GLC_ColladaToWorld::scaleNode(ColladaNode* pNode)
+{
+	Q_ASSERT(NULL != pNode);
+	// Load scale values
+	QStringList scaleStringList= getContent("scale").simplified().split(' ');
+	// A scale must contains 3 string
+	const int size= scaleStringList.size();
+	if (scaleStringList.size() != 3) throwException("Scale element must contains 3 floats and it's contains :" + QString::number(scaleStringList.size()));
+	// Convert the string to double
+	double scale[3];
+	bool toFloatOk= false;
+	for (int i= 0; i < size; ++i)
+	{
+		scale[i]= static_cast<double>(scaleStringList.at(i).toFloat(&toFloatOk));
+		if (not toFloatOk) throwException("The number :" + scaleStringList.at(i) + "Is not a float");
+	}
+	// Built the translation matrix
+	GLC_Matrix4x4 scaleMatrix;
+	scaleMatrix.setMatScaling(scale[0], scale[1], scale[2]);
+	// Update the node matrix
+	pNode->m_Matrix= pNode->m_Matrix * scaleMatrix;
+}
+
+// Rotate the node
+void GLC_ColladaToWorld::rotateNode(ColladaNode* pNode)
+{
+	Q_ASSERT(NULL != pNode);
+	// Load rotate values
+	QStringList rotateStringList= getContent("rotate").simplified().split(' ');
+	// A rotate must contains 4 string (Axis Vector 3 + Angle)
+	const int size= rotateStringList.size();
+	if (rotateStringList.size() != 4) throwException("Rotate element must contains 4 floats and it's contains :" + QString::number(rotateStringList.size()));
+	// Convert the string to double
+	double rotate[4];
+	bool toFloatOk= false;
+	for (int i= 0; i < size; ++i)
+	{
+		rotate[i]= static_cast<double>(rotateStringList.at(i).toFloat(&toFloatOk));
+		if (not toFloatOk) throwException("The number :" + rotateStringList.at(i) + "Is not a float");
+	}
+	// Rotation vector
+	GLC_Vector4d rotationAxis(rotate[0], rotate[1], rotate[2]);
+	// Built the rotation matrix
+	GLC_Matrix4x4 rotationMatrix(rotationAxis, rotate[3]);
+	// Update the node matrix
+	pNode->m_Matrix= pNode->m_Matrix * rotationMatrix;
+}
+
+// Compose Node matrix
+void GLC_ColladaToWorld::composeMatrixNode(ColladaNode* pNode)
+{
+	Q_ASSERT(NULL != pNode);
+
+	// Load matrix values
+	QStringList matrixStringList= getContent("matrix").simplified().split(' ');
+	// A rotate must contains 16 string 4 x 4 Matrix
+	const int size= matrixStringList.size();
+	if (matrixStringList.size() != 16) throwException("Matrix element must contains 16 floats and it's contains :" + QString::number(matrixStringList.size()));
+	// Convert the string to double
+	double matrix[16];
+	bool toFloatOk= false;
+	for (int i= 0; i < size; ++i)
+	{
+		matrix[i]= static_cast<double>(matrixStringList.at(i).toFloat(&toFloatOk));
+		if (not toFloatOk) throwException("The number :" + matrixStringList.at(i) + "Is not a float");
+	}
+	// Built the matrix
+	GLC_Matrix4x4 currentMatrix(matrix);
+	// Update the node matrix
+	pNode->m_Matrix= pNode->m_Matrix * currentMatrix;
 }
 
 // Load scene element
@@ -1099,7 +1327,6 @@ void GLC_ColladaToWorld::loadScene()
 // Link texture to material
 void GLC_ColladaToWorld::linkTexturesToMaterials()
 {
-
 	// Iterat throuth the the texture id to material hash
 	MaterialHash::iterator iMat= m_TextureToMaterialHash.begin();
 	while (iMat != m_TextureToMaterialHash.constEnd())
