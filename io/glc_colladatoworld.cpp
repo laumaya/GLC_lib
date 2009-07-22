@@ -977,7 +977,6 @@ void GLC_ColladaToWorld::computeNormalOfCurrentPrimitiveOfCurrentMesh(int indexO
 void  GLC_ColladaToWorld::loadTriangles()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadTriangles()";
-
 	// The material id
 	const QString materialId= readAttribute("material", false);
 
@@ -1031,6 +1030,7 @@ void  GLC_ColladaToWorld::loadTriangles()
 		}
 		m_pStreamReader->readNext();
 	}
+
 	// Add the polylist to the current mesh
 	addTrianglesToCurrentMesh(inputDataList, trianglesIndexList, materialId);
 
@@ -1131,7 +1131,7 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 	MatOffsetSize matInfo;
 	matInfo.m_Offset= indexOffset;
 	matInfo.m_size= m_pMeshInfo->m_Index.size() - indexOffset;
-	m_pMeshInfo->m_Materials.insert(materialId, matInfo);
+	m_pMeshInfo->m_Materials.insertMulti(materialId, matInfo);
 
 }
 
