@@ -183,7 +183,7 @@ private:
 	QString getContent(const QString&);
 
 	//! Read the specified attribute
-	QString readAttribute(const QString&, bool mandatory= false);
+	QString readAttribute(const QString&, bool required= false);
 
 	//! Check for XML error
 	//! Throw ecxeption if error occur
@@ -278,6 +278,9 @@ private:
 	//! Load the library nodes
 	void loadLibraryNodes();
 
+	//! Load the library controllers
+	void loadLibraryContollers();
+
 	//! Load library_visual_scenes element
 	void loadVisualScenes();
 
@@ -286,6 +289,12 @@ private:
 
 	//! Load an instance geometry
 	void loadInstanceNode(ColladaNode*);
+
+	//! Load an instance Controller
+	void loadInstanceController(ColladaNode*);
+
+	//! Load a collada controller node
+	void loadController();
 
 	//! Load a Collada Node element and return it
 	ColladaNode* loadNode(ColladaNode*);
@@ -310,6 +319,13 @@ private:
 
 	//! Create mesh and link them to material
 	void createMesh();
+
+	//! Create the scene graph struct
+	void createSceneGraph();
+
+	//! Create Occurence tree from node tree
+	GLC_StructOccurence* createOccurenceFromNode(ColladaNode*);
+
 
 
 //@}
@@ -370,6 +386,18 @@ private:
 
 	//! The list of top level node
 	QList<ColladaNode*> m_TopLevelColladaNode;
+
+	//! Mapping between material instance and material
+	QHash<const QString, QString> m_MaterialInstanceMap;
+
+	//! 3DRep hash table
+	QHash<const QString, GLC_3DRep*> m_3DRepHash;
+
+	//! GLC instance Hash table
+	QHash<const QString, GLC_StructInstance*> m_StructInstanceHash;
+
+	//! The current Collada Element id
+	QString m_CurrentId;
 
 };
 
