@@ -180,12 +180,20 @@ GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName)
 		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= d3dxmlToWorld.CreateWorldFrom3dxml(file, false);
+		if (NULL != pAttachedFileName)
+		{
+			(*pAttachedFileName)= d3dxmlToWorld.listOfAttachedFileName();
+		}
 	}
 	else if (QFileInfo(file).suffix().toLower() == "dae")
 	{
 		GLC_ColladaToWorld colladaToWorld(m_pQGLContext);
 		connect(&colladaToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= colladaToWorld.CreateWorldFromCollada(file);
+		if (NULL != pAttachedFileName)
+		{
+			(*pAttachedFileName)= colladaToWorld.listOfAttachedFileName();
+		}
 	}
 
 
