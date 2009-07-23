@@ -52,6 +52,9 @@ GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
 , m_3DRepHash()
 , m_StructInstanceHash()
 , m_CurrentId()
+, m_FileSize(0)
+, m_CurrentOffset(0)
+, m_ListOfAttachedFileName()
 {
 
 }
@@ -83,6 +86,9 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotFound);
 		throw(fileFormatException);
 	}
+	// Get the file size
+	m_FileSize= QFileInfo(m_FileName).size();
+
 	m_pStreamReader= new QXmlStreamReader(m_pFile);
 
 	// Go to the collada root Element
@@ -117,6 +123,7 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 	// Create the scene graph struct
 	createSceneGraph();
 
+	emit currentQuantum(100);
 
 	return m_pWorld;
 }
@@ -273,6 +280,8 @@ void GLC_ColladaToWorld::clear()
 	m_StructInstanceHash.clear();
 
 	m_CurrentId.clear();
+
+	m_ListOfAttachedFileName.clear();
 }
 
 // Load library_images element
@@ -286,6 +295,8 @@ void GLC_ColladaToWorld::loadLibraryImage()
 			if (currentElementName == "image") loadImage();
 		}
 		m_pStreamReader->readNext();
+
+		updateProgressBar();
 	}
 	checkForXmlError("Error occur while loading element : library_images");
 }
@@ -330,6 +341,8 @@ void GLC_ColladaToWorld::loadLibraryMaterials()
 			if (currentElementName == "material") loadMaterial();
 		}
 		m_pStreamReader->readNext();
+
+		updateProgressBar();
 	}
 	checkForXmlError("Error occur while loading element : library_materials");
 
@@ -383,6 +396,8 @@ void GLC_ColladaToWorld::loadLibraryEffects()
 			if (currentElementName == "effect") loadEffect();
 		}
 		m_pStreamReader->readNext();
+
+		updateProgressBar();
 	}
 	checkForXmlError("Error occur while loading element : library_effects");
 
@@ -523,7 +538,8 @@ void GLC_ColladaToWorld::loadMaterialTechnique(const QString& elementName)
 					or (currentElementName == "diffuse")
 					or(currentElementName == "specular"))
 				loadCommonColorOrTexture(currentElementName.toString());
-
+			else if (currentElementName == "transparency") loadTransparency(currentElementName.toString());
+			else if (currentElementName == "shininess") loadShininess(currentElementName.toString());
 		}
 		m_pStreamReader->readNext();
 	}
@@ -559,6 +575,55 @@ void GLC_ColladaToWorld::loadCommonColorOrTexture(const QString& name)
 		m_pStreamReader->readNext();
 	}
 	checkForXmlError("Error occur while loading element : " + name);
+}
+
+// Load transparency
+void GLC_ColladaToWorld::loadTransparency(const QString& name)
+{
+	//qDebug() << "GLC_ColladaToWorld::loadTransparency";
+	Q_ASSERT(NULL != m_pCurrentMaterial);
+	while (endElementNotReached(name))
+	{
+		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+		{
+			const QStringRef currentElementName= m_pStreamReader->name();
+			if (currentElementName == "float")
+			{
+				bool stringToFloatOk= false;
+				const QString alphaString= getContent("float");
+				const float alpha= 1.0f - alphaString.toFloat(&stringToFloatOk);
+				m_pCurrentMaterial->setTransparency(alpha);
+				if (not stringToFloatOk) throwException("Error while trying to convert :" + alphaString + " to float");
+			}
+		}
+		m_pStreamReader->readNext();
+	}
+	checkForXmlError("Error occur while loading element : " + name);
+}
+
+// Load shininess
+void GLC_ColladaToWorld::loadShininess(const QString& name)
+{
+	//qDebug() << "GLC_ColladaToWorld::loadShininess";
+	Q_ASSERT(NULL != m_pCurrentMaterial);
+	while (endElementNotReached(name))
+	{
+		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+		{
+			const QStringRef currentElementName= m_pStreamReader->name();
+			if (currentElementName == "float")
+			{
+				bool stringToFloatOk= false;
+				const QString shininessString= getContent("float");
+				const float shininess= shininessString.toFloat(&stringToFloatOk);
+				m_pCurrentMaterial->setShininess(shininess);
+				if (not stringToFloatOk) throwException("Error while trying to convert :" + shininessString + " to float");
+			}
+		}
+		m_pStreamReader->readNext();
+	}
+	checkForXmlError("Error occur while loading element : " + name);
+
 }
 
 // Read a xml Color
@@ -615,6 +680,8 @@ void GLC_ColladaToWorld::loadLibraryGeometries()
 		}
 
 		m_pStreamReader->readNext();
+
+		updateProgressBar();
 	}
 	checkForXmlError("Error occur while loading element : library_geometries");
 }
@@ -1154,6 +1221,9 @@ void GLC_ColladaToWorld::loadLibraryNodes()
 				}
 			}
 		}
+
+		updateProgressBar();
+
 		m_pStreamReader->readNext();
 	}
 	checkForXmlError("Error occur while loading element : library_nodes");
@@ -1171,6 +1241,9 @@ void GLC_ColladaToWorld::loadLibraryContollers()
 			const QStringRef currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "controller")) loadController();
 		}
+
+		updateProgressBar();
+
 		m_pStreamReader->readNext();
 	}
 	checkForXmlError("Error occur while loading element : library_controllers");
@@ -1197,6 +1270,9 @@ void GLC_ColladaToWorld::loadVisualScenes()
 				}
 			}
 		}
+
+		updateProgressBar();
+
 		m_pStreamReader->readNext();
 	}
 	checkForXmlError("Error occur while loading element : visual_scene");
@@ -1494,6 +1570,7 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 			QString fullImageFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + imageFileName;
 			if (QFileInfo(fullImageFileName).exists())
 			{
+				m_ListOfAttachedFileName << fullImageFileName;
 				GLC_Texture* pTexture= new GLC_Texture(m_pQGLContext, fullImageFileName);
 				pCurrentMaterial->setTexture(pTexture);
 			}
@@ -1503,6 +1580,7 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 				QString fullImageFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(imageFileName).fileName();
 				if (QFileInfo(fullImageFileName).exists())
 				{
+					m_ListOfAttachedFileName << fullImageFileName;
 					GLC_Texture* pTexture= new GLC_Texture(m_pQGLContext, fullImageFileName);
 					pCurrentMaterial->setTexture(pTexture);
 				}
@@ -1693,5 +1771,20 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 	}
 
 	return pOccurence;
+}
+
+// Update progress bar
+void GLC_ColladaToWorld::updateProgressBar()
+{
+	qint64 currentOffset= m_pStreamReader->characterOffset();
+
+	int currentQuantumValue;
+	// Progrees bar indicator
+	currentQuantumValue = static_cast<int>((static_cast<double>(currentOffset) / m_FileSize) * 100);
+	if (currentQuantumValue > m_CurrentOffset)
+	{
+		emit currentQuantum(currentQuantumValue);
+		m_CurrentOffset= currentQuantumValue;
+	}
 
 }

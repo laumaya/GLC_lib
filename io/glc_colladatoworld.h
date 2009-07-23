@@ -160,6 +160,10 @@ public:
 	//! Create an GLC_World from an input Collada File
 	GLC_World* CreateWorldFromCollada(QFile &);
 
+	//! Get the list of attached files
+	inline QStringList listOfAttachedFileName() const
+	{return m_ListOfAttachedFileName.toList();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -241,6 +245,12 @@ private:
 
 	//! load common color or texture
 	void loadCommonColorOrTexture(const QString&);
+
+	//! Load transparency
+	void loadTransparency(const QString&);
+
+	//! Load shininess
+	void loadShininess(const QString&);
 
 	//! Read a xml Color
 	QColor readXmlColor();
@@ -326,6 +336,9 @@ private:
 	//! Create Occurence tree from node tree
 	GLC_StructOccurence* createOccurenceFromNode(ColladaNode*);
 
+	//! Update progress bar
+	void updateProgressBar();
+
 
 
 //@}
@@ -398,6 +411,16 @@ private:
 
 	//! The current Collada Element id
 	QString m_CurrentId;
+
+	//! The Collada file size
+	qint64 m_FileSize;
+
+	//! The current offset in the collada file
+	int m_CurrentOffset;
+
+	//! The list of attached file name
+	QSet<QString> m_ListOfAttachedFileName;
+
 
 };
 
