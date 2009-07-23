@@ -105,6 +105,11 @@ public:
 	//! Create 3DRep from an 3DXML rep
 	GLC_3DRep Create3DrepFrom3dxmlRep(const QString&);
 
+	//! Get the list of attached files
+	inline QStringList listOfAttachedFileName() const
+	{return m_ListOfAttachedFileName.toList();}
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -135,6 +140,9 @@ private:
 
 	// Return the content of an element
 	QString getContent(const QString&);
+
+	//! Read the specified attribute
+	QString readAttribute(const QString&, bool required= false);
 
 	//! Load the product structure
 	void loadProductStructure();
@@ -285,6 +293,10 @@ private:
 
 	//! Flag indicate the loading method
 	bool m_LoadStructureOnly;
+
+	//! The list of attached file name
+	QSet<QString> m_ListOfAttachedFileName;
+
 
 
 };
