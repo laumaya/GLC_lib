@@ -135,6 +135,27 @@ public:
 		return result;
 	}
 
+	//! Return the x Scaling
+	inline double scalingX() const
+	{
+		GLC_Vector4d x(matrix[0], matrix[1], matrix[2]);
+		return x.norm();
+	}
+
+	//! Return the y Scaling
+	inline double scalingY() const
+	{
+		GLC_Vector4d y(matrix[4], matrix[5], matrix[6]);
+		return y.norm();
+	}
+
+	//! Return the z Scaling
+	inline double scalingZ() const
+	{
+		GLC_Vector4d z(matrix[8], matrix[9], matrix[10]);
+		return z.norm();
+	}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
