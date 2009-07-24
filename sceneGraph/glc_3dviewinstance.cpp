@@ -390,7 +390,7 @@ void GLC_3DViewInstance::encodeIdInRGBA()
 int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewport* pView)
 {
 	if (NULL == pView) return 0;
-	const double diameter= boundingBox.boundingSphereRadius() * 2.0;
+	const double diameter= boundingBox.boundingSphereRadius() * 2.0 * m_MatPos.scalingX();
 	GLC_Vector4d center(m_MatPos * boundingBox.getCenter());
 
 	const double dist= (center - pView->cameraHandle()->getEye()).norm();
