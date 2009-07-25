@@ -106,6 +106,7 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 , m_pTexture(pTexture)			// init texture
 , m_Transparency(1.0)
 {
+	Q_ASSERT(NULL != m_pTexture);
 	//qDebug() << "GLC_Material::GLC_Material" << id();
 
 	// Diffuse Color
@@ -113,6 +114,12 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 
 	// Others
 	initOtherColor();
+
+	if (m_pTexture->hasAlphaChannel())
+	{
+		qDebug() << "Use texture transparency";
+		m_Transparency= 0.99;
+	}
 }
 
 // Copy constructor
@@ -318,6 +325,7 @@ void GLC_Material::setLightEmission(const QColor& lightEmission)
 // Set Texture
 void GLC_Material::setTexture(GLC_Texture* pTexture)
 {
+	Q_ASSERT(NULL != pTexture);
 	//qDebug() << "GLC_Material::SetTexture";
 	if (m_pTexture != NULL)
 	{
@@ -331,6 +339,11 @@ void GLC_Material::setTexture(GLC_Texture* pTexture)
 		m_pTexture= pTexture;
 	}
 
+	if (m_pTexture->hasAlphaChannel())
+	{
+		qDebug() << "Use texture transparency";
+		m_Transparency= 0.99;
+	}
 }
 
 // remove Material Texture

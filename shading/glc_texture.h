@@ -85,6 +85,10 @@ public:
 	//! Return true if texture are the same
 	bool operator==(const GLC_Texture&) const;
 
+	//! Return true if the texture has alpha channel
+	inline bool hasAlphaChannel() const
+	{ return m_HasAlphaChannel;}
+
 
 //@}
 
@@ -127,6 +131,9 @@ private:
 
 	//! Size of the texture
 	QSize m_TextureSize;
+
+	//! Flag to know if the texture has alpha channel
+	bool m_HasAlphaChannel;
 
 	//! Static member used to check texture size
 	static QSize m_MaxTextureSize;

@@ -46,6 +46,7 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
 , m_GlTextureID(0)
 , m_pTextureImage(new QImage(m_Name))
 , m_TextureSize()
+, m_HasAlphaChannel(m_pTextureImage->hasAlphaChannel())
 {
 	if (m_pTextureImage->isNull())
 	{
@@ -63,6 +64,7 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QFile &file)
 , m_GlTextureID(0)
 , m_pTextureImage(new QImage(m_Name))
 , m_TextureSize()
+, m_HasAlphaChannel(m_pTextureImage->hasAlphaChannel())
 {
 	if (m_pTextureImage->isNull())
 	{
@@ -81,6 +83,7 @@ GLC_Texture::GLC_Texture(const QGLContext* pContext, const QImage& image)
 , m_GlTextureID(0)
 , m_pTextureImage(new QImage(image))
 , m_TextureSize()
+, m_HasAlphaChannel(m_pTextureImage->hasAlphaChannel())
 {
 	Q_ASSERT(not m_pTextureImage->isNull());
 }
@@ -91,6 +94,7 @@ GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 , m_GlTextureID(0)
 , m_pTextureImage(new QImage(m_Name))
 , m_TextureSize(TextureToCopy.m_TextureSize)
+, m_HasAlphaChannel(m_pTextureImage->hasAlphaChannel())
 {
 	if (m_pTextureImage->isNull())
 	{
