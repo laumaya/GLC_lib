@@ -273,6 +273,9 @@ private:
 	//! Load polylist
 	void loadPolylist();
 
+	//! Load Polygons
+	void loadPolygons();
+
 	//! Add the polylist to the current mesh
 	void addPolylistToCurrentMesh(const QList<InputData>&, const QList<int>&, const QList<int>&, const QString&);
 
