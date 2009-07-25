@@ -115,11 +115,7 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 	// Others
 	initOtherColor();
 
-	if (m_pTexture->hasAlphaChannel())
-	{
-		qDebug() << "Use texture transparency";
-		m_Transparency= 0.99;
-	}
+	//if (m_pTexture->hasAlphaChannel()) m_Transparency= 0.99;
 }
 
 // Copy constructor
@@ -339,11 +335,7 @@ void GLC_Material::setTexture(GLC_Texture* pTexture)
 		m_pTexture= pTexture;
 	}
 
-	if (m_pTexture->hasAlphaChannel())
-	{
-		qDebug() << "Use texture transparency";
-		m_Transparency= 0.99;
-	}
+	//if (m_pTexture->hasAlphaChannel()) m_Transparency= 0.99;
 }
 
 // remove Material Texture
