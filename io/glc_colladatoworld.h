@@ -246,6 +246,9 @@ private:
 	//! load common color or texture
 	void loadCommonColorOrTexture(const QString&);
 
+	//! Load transparent
+	void loadTransparent();
+
 	//! Load transparency
 	void loadTransparency(const QString&);
 
@@ -423,6 +426,9 @@ private:
 
 	//! The list of attached file name
 	QSet<QString> m_ListOfAttachedFileName;
+
+	//! The transparent mode is RGB_ZERO
+	bool m_TransparentIsRgbZero;
 
 
 };

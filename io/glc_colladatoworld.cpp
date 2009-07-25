@@ -55,6 +55,7 @@ GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
 , m_FileSize(0)
 , m_CurrentOffset(0)
 , m_ListOfAttachedFileName()
+, m_TransparentIsRgbZero(false)
 {
 
 }
@@ -358,7 +359,7 @@ void GLC_ColladaToWorld::loadMaterial()
 
 	// Load instance effect url
 	const QString url= readAttribute("url", true).remove('#');
-	qDebug() << "instance effect URL : " << url;
+	//qDebug() << "instance effect URL : " << url;
 
 	// Read instance effect parameters
 	while (endElementNotReached("instance_effect"))
@@ -379,7 +380,7 @@ void GLC_ColladaToWorld::loadMaterial()
 	// Add the image in the image fileName Hash table
 	if (not url.isEmpty())
 	{
-		qDebug() << "insert material : " << m_CurrentId << " url: " << url;
+		//qDebug() << "insert material : " << m_CurrentId << " url: " << url;
 		m_MaterialLibHash.insert(m_CurrentId, url);
 	}
 
@@ -469,7 +470,7 @@ void GLC_ColladaToWorld::loadNewParam()
 // Load a surface
 void GLC_ColladaToWorld::loadSurface(const QString& sid)
 {
-	qDebug() << "GLC_ColladaToWorld::loadSurface sid=" << sid ;
+	//qDebug() << "GLC_ColladaToWorld::loadSurface sid=" << sid ;
 	while (endElementNotReached("surface"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
@@ -489,7 +490,7 @@ void GLC_ColladaToWorld::loadSurface(const QString& sid)
 // Load Sampler 2D
 void GLC_ColladaToWorld::loadSampler2D(const QString& sid)
 {
-	qDebug() << "GLC_ColladaToWorld::loadSampler2D sid= " << sid;
+	//qDebug() << "GLC_ColladaToWorld::loadSampler2D sid= " << sid;
 	while (endElementNotReached("sampler2D"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
@@ -538,6 +539,7 @@ void GLC_ColladaToWorld::loadMaterialTechnique(const QString& elementName)
 					or (currentElementName == "diffuse")
 					or(currentElementName == "specular"))
 				loadCommonColorOrTexture(currentElementName.toString());
+			else if (currentElementName == "transparent") loadTransparent();
 			else if (currentElementName == "transparency") loadTransparency(currentElementName.toString());
 			else if (currentElementName == "shininess") loadShininess(currentElementName.toString());
 		}
@@ -559,7 +561,7 @@ void GLC_ColladaToWorld::loadCommonColorOrTexture(const QString& name)
 			const QStringRef currentElementName= m_pStreamReader->name();
 			if (currentElementName == "color")
 			{
-				qDebug() << " Element Name : " << name;
+				//qDebug() << " Element Name : " << name;
 				if (name == "emission") m_pCurrentMaterial->setLightEmission(readXmlColor());
 				else if (name == "ambient") m_pCurrentMaterial->setAmbientColor(readXmlColor());
 				else if (name == "diffuse") m_pCurrentMaterial->setDiffuseColor(readXmlColor());
@@ -567,7 +569,7 @@ void GLC_ColladaToWorld::loadCommonColorOrTexture(const QString& name)
 			}
 			else if (currentElementName == "texture")
 			{
-				qDebug() << "Load texture " << name;
+				//qDebug() << "Load texture " << name;
 				const QString sid = m_CurrentId + "::" + readAttribute("texture", true);
 				m_TextureToMaterialHash.insert(sid, m_pCurrentMaterial);
 			}
@@ -575,6 +577,14 @@ void GLC_ColladaToWorld::loadCommonColorOrTexture(const QString& name)
 		m_pStreamReader->readNext();
 	}
 	checkForXmlError("Error occur while loading element : " + name);
+}
+
+// Load transparent
+void GLC_ColladaToWorld::loadTransparent()
+{
+	const QString opaque= readAttribute("opaque", false);
+	if (opaque == "RGB_ZERO") m_TransparentIsRgbZero= true;
+	else m_TransparentIsRgbZero= false;
 }
 
 // Load transparency
@@ -591,7 +601,16 @@ void GLC_ColladaToWorld::loadTransparency(const QString& name)
 			{
 				bool stringToFloatOk= false;
 				const QString alphaString= getContent("float");
-				const float alpha= 1.0f - alphaString.toFloat(&stringToFloatOk);
+				float alpha;
+				if (m_TransparentIsRgbZero)
+				{
+					alpha= alphaString.toFloat(&stringToFloatOk);
+				}
+				else
+				{
+					alpha= 1.0f - alphaString.toFloat(&stringToFloatOk);
+				}
+
 				m_pCurrentMaterial->setTransparency(alpha);
 				if (not stringToFloatOk) throwException("Error while trying to convert :" + alphaString + " to float");
 			}
@@ -1079,24 +1098,24 @@ void GLC_ColladaToWorld::computeNormalOfCurrentPrimitiveOfCurrentMesh(int indexO
 	// Compute the normals and add them to the current mesh info
 	const int size= m_pMeshInfo->m_Index.size() - indexOffset;
 	double xn, yn, zn;
-	for (int i= indexOffset; i < size; i+=9)
+	for (int i= indexOffset; i < size; i+=3)
 	{
 		// Vertex 1
-		xn= pData->at(i);
-		yn= pData->at(i + 1);
-		zn= pData->at(i + 2);
+		xn= pData->at(m_pMeshInfo->m_Index.at(i));
+		yn= pData->at(m_pMeshInfo->m_Index.at(i) + 1);
+		zn= pData->at(m_pMeshInfo->m_Index.at(i) + 2);
 		const GLC_Vector4d vect1(xn, yn, zn);
 
 		// Vertex 2
-		xn= pData->at(i + 3);
-		yn= pData->at(i + 4);
-		zn= pData->at(i + 5);
+		xn= pData->at(m_pMeshInfo->m_Index.at(i + 1));
+		yn= pData->at(m_pMeshInfo->m_Index.at(i + 1) + 1);
+		zn= pData->at(m_pMeshInfo->m_Index.at(i + 1) + 2);
 		const GLC_Vector4d vect2(xn, yn, zn);
 
 		// Vertex 3
-		xn= pData->at(i + 6);
-		yn= pData->at(i + 7);
-		zn= pData->at(i + 8);
+		xn= pData->at(m_pMeshInfo->m_Index.at(i + 2));
+		yn= pData->at(m_pMeshInfo->m_Index.at(i + 2) + 1);
+		zn= pData->at(m_pMeshInfo->m_Index.at(i + 2) + 2);
 		const GLC_Vector4d vect3(xn, yn, zn);
 
 		const GLC_Vector4d edge1(vect2 - vect1);
@@ -1106,11 +1125,11 @@ void GLC_ColladaToWorld::computeNormalOfCurrentPrimitiveOfCurrentMesh(int indexO
 		normal.setNormal(1);
 
 		GLC_Vector3df curNormal= normal.toVector3df();
-		for (int curVertex= 0; curVertex < 9; curVertex+= 3)
+		for (int curVertex= 0; curVertex < 3; ++curVertex)
 		{
-			(*pNormal)[i + curVertex]= curNormal.X();
-			(*pNormal)[i + curVertex + 1]= curNormal.Y();
-			(*pNormal)[i + curVertex + 2]= curNormal.Z();
+			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex)]= curNormal.X();
+			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) + 1]= curNormal.Y();
+			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) + 2]= curNormal.Z();
 		}
 	}
 }
@@ -1309,7 +1328,7 @@ void GLC_ColladaToWorld::loadLibraryNodes()
 // Load the library controllers
 void GLC_ColladaToWorld::loadLibraryContollers()
 {
-	qDebug() << "GLC_ColladaToWorld::loadLibraryContollers";
+	//qDebug() << "GLC_ColladaToWorld::loadLibraryContollers";
 
 	while (endElementNotReached("library_controllers"))
 	{
@@ -1329,7 +1348,7 @@ void GLC_ColladaToWorld::loadLibraryContollers()
 // Load library_visual_scenes element
 void GLC_ColladaToWorld::loadVisualScenes()
 {
-	qDebug() << "GLC_ColladaToWorld::loadVisualScenes";
+	//qDebug() << "GLC_ColladaToWorld::loadVisualScenes";
 	// The element library visual scene must contains a visual scene element
 	goToElement("visual_scene");
 
@@ -1605,7 +1624,7 @@ void GLC_ColladaToWorld::composeMatrixNode(ColladaNode* pNode)
 // Load scene element
 void GLC_ColladaToWorld::loadScene()
 {
-	qDebug() << "GLC_ColladaToWorld::loadScene";
+	//qDebug() << "GLC_ColladaToWorld::loadScene";
 	while (endElementNotReached("scene"))
 	{
 		// Nothing to do
@@ -1626,18 +1645,10 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 		// Check that the texture is present
 		if (m_Sampler2DSurfaceHash.contains(textureId))
 		{
-			qDebug() << "m_Sampler2DSurfaceHash contains :" << textureId;
 			const QString surfaceId= m_Sampler2DSurfaceHash.value(textureId);
-			qDebug() << "Surface Id = " << surfaceId;
 			if (m_SurfaceImageHash.contains(surfaceId))
 			{
-				qDebug() << "m_SurfaceImageHash contains :" << surfaceId;
 				const QString imageFileId=  m_SurfaceImageHash.value(surfaceId);
-				qDebug() << "imageFileId = " << imageFileId;
-				if (m_ImageFileHash.contains(imageFileId))
-				{
-					qDebug() << "m_ImageFileHash contains :" << imageFileId;
-				}
 			}
 		}
 		if (m_Sampler2DSurfaceHash.contains(textureId) and m_SurfaceImageHash.contains(m_Sampler2DSurfaceHash.value(textureId))
@@ -1762,9 +1773,7 @@ void GLC_ColladaToWorld::createMesh()
 // Create the scene graph struct
 void GLC_ColladaToWorld::createSceneGraph()
 {
-	qDebug() << "GLC_ColladaToWorld::createSceneGraph()";
 	const int topLevelNodeCount= m_TopLevelColladaNode.size();
-	qDebug() << "Number of topLevelColladaNode= " << topLevelNodeCount;
 	for (int i= 0; i < topLevelNodeCount; ++i)
 	{
 		ColladaNode* pCurrentColladaNode= m_TopLevelColladaNode.at(i);
