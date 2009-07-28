@@ -482,13 +482,32 @@ void glc::triangulatePolygon(QList<int>* pIndexList, const QList<float>& bulkLis
 	QHash<int, int> indexMap;
 	int size= pIndexList->size();
 	QList<int> face;
+	GLC_Point4d currentPoint;
+	int delta= 0;
 	for (int i= 0; i < size; ++i)
 	{
 		const int currentIndex= pIndexList->at(i);
-		originPoints.append(GLC_Point4d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2)));
-		indexMap.insert(i, currentIndex);
-		face.append(i);
+		currentPoint= GLC_Point4d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
+		if (not originPoints.contains(currentPoint))
+		{
+			originPoints.append(GLC_Point4d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2)));
+			indexMap.insert(i - delta, currentIndex);
+			face.append(i - delta);
+		}
+		else
+		{
+			qDebug() << "Multi points";
+			++delta;
+		}
 	}
+	// Values of PindexList must be reset
+	pIndexList->clear();
+
+	// Update size
+	size= size - delta;
+
+	// Check new size
+	if (size < 3) return;
 
 	//-------------- Change frame to mach polygon plane
 		// Compute face normal
@@ -528,6 +547,7 @@ void glc::triangulatePolygon(QList<int>* pIndexList, const QList<float>& bulkLis
 
 		if(not faceIsCounterclockwise)
 		{
+			//qDebug() << "face Is Not Counterclockwise";
 			const int max= size / 2;
 			for (int i= 0; i < max; ++i)
 			{
@@ -539,7 +559,6 @@ void glc::triangulatePolygon(QList<int>* pIndexList, const QList<float>& bulkLis
 		}
 		triangulate(polygon, index, tList);
 		size= tList.size();
-		pIndexList->clear();
 		for (int i= 0; i < size; i+= 3)
 		{
 			// Avoid normal problem
