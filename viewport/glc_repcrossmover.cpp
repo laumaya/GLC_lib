@@ -85,7 +85,7 @@ void GLC_RepCrossMover::glDraw()
 	glTranslated(m_pViewport->cameraHandle()->getTarget().X(), m_pViewport->cameraHandle()->getTarget().Y(),
 			m_pViewport->cameraHandle()->getTarget().Z() );
 
-	// Graphic propertys
+	// Graphic properties
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_LIGHTING);
 	glColor4d(m_MainColor.redF(), m_MainColor.greenF(), m_MainColor.blueF(), m_MainColor.alphaF());
