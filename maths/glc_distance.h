@@ -2,6 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Copyright (C) 2009 Pierre Soetewey
  Version 1.1.0, packaged on March, 2009.
 
  http://glc-lib.sourceforge.net
@@ -29,6 +30,9 @@
 #include "../glc_object.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 
+class GLC_ExtendedMesh;
+class PQP_Model;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Distance
 /*! \brief GLC_Distance is the minimum distance between to elements*/
@@ -43,6 +47,8 @@ class GLC_Distance : public GLC_Object
 		double m_Distance;
 		GLC_Point4d m_Point1;
 		GLC_Point4d m_Point2;
+		GLC_uint m_InstanceId1;
+		GLC_uint m_InstanceId2;
 	};
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -61,8 +67,6 @@ public:
 	//! Default destructor
 	virtual ~GLC_Distance();
 //@}
-
-
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -87,9 +91,17 @@ public:
 	//! Compute the minimum distance between the 2 groups
 	void computeMinimumDistance();
 
+	//! Set the relative Error value
+	inline void setRelativeError(double error)
+	{m_RelativeError= error;}
+
+	//! Set the absolute Error value
+	inline void setAbsoluteError(double error)
+	{m_RelativeError= error;}
+
 //@}
 //////////////////////////////////////////////////////////////////////
-/*! \name Set Functions*/
+/*! \name Get Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
@@ -101,9 +113,25 @@ public:
 	inline GLC_Point4d point1() const
 	{return m_Point1;}
 
-	//! Return Seconf point of the distance
+	//! Return Second point of the distance
 	inline GLC_Point4d point2() const
 	{return m_Point2;}
+
+	//! Return Instance 1 Id
+	inline GLC_uint getInstance1Id() const
+	{return m_InstanceId1;}
+
+	//! Return Instance 2 Id
+	inline GLC_uint getInstance2Id() const
+	{return m_InstanceId2;}
+
+	//! Return the relative error
+	inline double relativeError() const
+	{return m_RelativeError;}
+
+	//! Return the absolute error
+	inline double absoluteError() const
+	{return m_AbsoluteError;}
 
 //@}
 
@@ -114,6 +142,9 @@ public:
 private:
 	//! Return distance mini beween to instance
 	DistanceResult minimumDistance(GLC_3DViewInstance&, GLC_3DViewInstance&) const;
+
+	//! Add mesh triangles to PQP model
+	void addMeshTrianglesToPQP(PQP_Model*, const QList<GLC_ExtendedMesh*>, const QList<double>&) const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -135,7 +166,17 @@ private:
 	//! The minimum distance
 	double m_DistanceMini;
 
+	//! The instance1 Id
+	GLC_uint m_InstanceId1;
 
+	//! The instance2 Id
+	GLC_uint m_InstanceId2;
+
+	//! The PQP relative error
+	double m_RelativeError;
+
+	//! The PQP abolute error
+	double m_AbsoluteError;
 };
 
 #endif /* GLC_DISTANCE_H_ */
