@@ -26,7 +26,7 @@
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
 #include "../geometry/glc_geomtools.h"
-
+#include "../glc_factory.h"
 
 // Default constructor
 GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
@@ -165,7 +165,7 @@ QString GLC_ColladaToWorld::getContent(const QString& element)
 		}
 	}
 
-	return Content.trimmed();
+	return Content.simplified();
 }
 
 // Read the specified attribute
@@ -610,6 +610,8 @@ void GLC_ColladaToWorld::loadTransparency(const QString& name)
 				{
 					alpha= 1.0f - alphaString.toFloat(&stringToFloatOk);
 				}
+				// A material mustn't be invisible (no sense)
+				if (qFuzzyCompare(alpha, 0.0f)) alpha= 1.0f;
 
 				m_pCurrentMaterial->setTransparency(alpha);
 				if (not stringToFloatOk) throwException("Error while trying to convert :" + alphaString + " to float");
@@ -1062,17 +1064,29 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 		{
 			onePolygonIndex.append(polygonIndex.takeFirst());
 		}
-		// Triangulate the current polygon
-		glc::triangulatePolygon(&onePolygonIndex, m_pMeshInfo->m_Datas.at(VERTEX));
+		// Triangulate the current polygon if the polygon as more than 3 vertice
+		if (polygonSize > 3)
+		{
+			glc::triangulatePolygon(&onePolygonIndex, m_pMeshInfo->m_Datas.at(VERTEX));
+		}
 		// Add index to the mesh info
-		Q_ASSERT(not onePolygonIndex.isEmpty());
-		m_pMeshInfo->m_Index.append(onePolygonIndex);
+		//Q_ASSERT(not onePolygonIndex.isEmpty());
+		if (not onePolygonIndex.isEmpty())
+		{
+			m_pMeshInfo->m_Index.append(onePolygonIndex);
+		}
+		else
+		{
+			qDebug() << QString("Unable to triangulate a polygon of " + m_pMeshInfo->m_pMesh->name());
+			//throwException("Unable to triangulate a polygon of " + m_pMeshInfo->m_pMesh->name());
+		}
 		onePolygonIndex.clear();
 	}
 
 	// Check if normal computation is needed
 	if (not hasNormals)
 	{
+		qDebug() << "Compute Normals with offset " << indexOffset;
 		computeNormalOfCurrentPrimitiveOfCurrentMesh(indexOffset);
 	}
 
@@ -1098,28 +1112,30 @@ void GLC_ColladaToWorld::computeNormalOfCurrentPrimitiveOfCurrentMesh(int indexO
 	// Compute the normals and add them to the current mesh info
 	const int size= m_pMeshInfo->m_Index.size() - indexOffset;
 	double xn, yn, zn;
+
+
 	for (int i= indexOffset; i < size; i+=3)
 	{
 		// Vertex 1
-		xn= pData->at(m_pMeshInfo->m_Index.at(i));
-		yn= pData->at(m_pMeshInfo->m_Index.at(i) + 1);
-		zn= pData->at(m_pMeshInfo->m_Index.at(i) + 2);
+		xn= pData->at(m_pMeshInfo->m_Index.at(i) * 3);
+		yn= pData->at(m_pMeshInfo->m_Index.at(i) * 3 + 1);
+		zn= pData->at(m_pMeshInfo->m_Index.at(i) * 3 + 2);
 		const GLC_Vector4d vect1(xn, yn, zn);
 
 		// Vertex 2
-		xn= pData->at(m_pMeshInfo->m_Index.at(i + 1));
-		yn= pData->at(m_pMeshInfo->m_Index.at(i + 1) + 1);
-		zn= pData->at(m_pMeshInfo->m_Index.at(i + 1) + 2);
+		xn= pData->at(m_pMeshInfo->m_Index.at(i + 1) * 3);
+		yn= pData->at(m_pMeshInfo->m_Index.at(i + 1) * 3  + 1);
+		zn= pData->at(m_pMeshInfo->m_Index.at(i + 1) * 3 + 2);
 		const GLC_Vector4d vect2(xn, yn, zn);
 
 		// Vertex 3
-		xn= pData->at(m_pMeshInfo->m_Index.at(i + 2));
-		yn= pData->at(m_pMeshInfo->m_Index.at(i + 2) + 1);
-		zn= pData->at(m_pMeshInfo->m_Index.at(i + 2) + 2);
+		xn= pData->at(m_pMeshInfo->m_Index.at(i + 2) * 3);
+		yn= pData->at(m_pMeshInfo->m_Index.at(i + 2) * 3 + 1);
+		zn= pData->at(m_pMeshInfo->m_Index.at(i + 2) * 3 + 2);
 		const GLC_Vector4d vect3(xn, yn, zn);
 
-		const GLC_Vector4d edge1(vect2 - vect1);
-		const GLC_Vector4d edge2(vect3 - vect2);
+		const GLC_Vector4d edge1(vect3 - vect2);
+		const GLC_Vector4d edge2(vect1 - vect2);
 
 		GLC_Vector4d normal(edge1 ^ edge2);
 		normal.setNormal(1);
@@ -1127,9 +1143,9 @@ void GLC_ColladaToWorld::computeNormalOfCurrentPrimitiveOfCurrentMesh(int indexO
 		GLC_Vector3df curNormal= normal.toVector3df();
 		for (int curVertex= 0; curVertex < 3; ++curVertex)
 		{
-			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex)]= curNormal.X();
-			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) + 1]= curNormal.Y();
-			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) + 2]= curNormal.Z();
+			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) * 3]= curNormal.X();
+			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) * 3 + 1]= curNormal.Y();
+			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) * 3 + 2]= curNormal.Z();
 		}
 	}
 }
@@ -1845,8 +1861,16 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 	}
 	else if (not pNode->m_InstanceOffNodeId.isEmpty())
 	{
-		pOccurence= createOccurenceFromNode(m_ColladaNodeHash.value(pNode->m_InstanceOffNodeId));
-		pOccurence->structInstance()->move(pNode->m_Matrix);
+		if (m_ColladaNodeHash.contains(pNode->m_InstanceOffNodeId))
+		{
+			pOccurence= createOccurenceFromNode(m_ColladaNodeHash.value(pNode->m_InstanceOffNodeId));
+			pOccurence->structInstance()->move(pNode->m_Matrix);
+		}
+		else
+		{
+			const QString errorMsg= "Instance Node : " + pNode->m_InstanceOffNodeId + "Not Found";
+			throwException(errorMsg);
+		}
 	}
 	else
 	{
