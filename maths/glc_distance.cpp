@@ -250,8 +250,8 @@ GLC_Distance::DistanceResult GLC_Distance::minimumDistance(GLC_3DViewInstance& i
 	PQP_REAL R2[3][3];
 
 	// Avoid scaling problem
-	instance1Matrix= instance1Matrix.isomorphMatrix();
-	instance2Matrix= instance2Matrix.isomorphMatrix();
+	instance1Matrix= instance1Matrix.isometricMatrix();
+	instance2Matrix= instance2Matrix.isometricMatrix();
 
 	const double * pMat1= instance1Matrix.data();
 	const double * pMat2= instance2Matrix.data();
