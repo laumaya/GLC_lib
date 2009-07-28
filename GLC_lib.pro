@@ -15,7 +15,7 @@ unix:UI_DIR = ./Build
 DEPENDPATH += .
 INCLUDEPATH += .
 
-# Input
+# Input					
 HEADERS_QUAZIP +=	quazip/crypt.h \
 					quazip/ioapi.h \
 					quazip/quazip.h \
@@ -124,11 +124,23 @@ HEADERS_GLC += glc_enum.h \
            glc_ext.h \
            glc_state.h
            
-           
+HEADERS_PQP +=		PQP/PQP_Compile.h \
+					PQP/TriDist.h \
+					PQP/Tri.h \
+					PQP/RectDist.h \
+					PQP/PQP.h \
+					PQP/PQP_Internal.h \
+					PQP/OBB_Disjoint.h \
+					PQP/MatVec.h \
+					PQP/GetTime.h \
+					PQP/BVTQ.h \
+					PQP/BV.h \
+					PQP/build.h
+
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
-HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT}
-
+HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_PQP}
+		   
 SOURCES += quazip/ioapi.c \
            quazip/quazip.cpp \
            quazip/quazipfile.cpp \
@@ -226,6 +238,10 @@ SOURCES +=	glc_enum.cpp \
 			glc_ext.cpp \
 			glc_state.cpp
            
+SOURCES += PQP/TriDist.cpp \
+		   PQP/PQP.cpp \
+		   PQP/BV.cpp \
+		   PQP/Build.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
@@ -300,6 +316,7 @@ unix {
 	include_lib3ds.path = $${INCLUDE_DIR}/GLC_lib/lib3ds
 	include_glext.path = $${INCLUDE_DIR}/GLC_lib/glext
 	include_quazip.path = $${INCLUDE_DIR}/GLC_lib/quazip
+	include_pqp.path = $${INCLUDE_DIR}/GLC_lib/PQP
 	include_glc_maths.path = $${INCLUDE_DIR}/GLC_lib/maths
 	include_glc_io.path = $${INCLUDE_DIR}/GLC_lib/io
 	include_glc_scengraph.path = $${INCLUDE_DIR}/GLC_lib/sceneGraph
@@ -317,6 +334,7 @@ win32 {
     include_lib3ds.path = $${INCLUDE_DIR}/lib3ds
     include_glext.path = $${INCLUDE_DIR}/glext
     include_quazip.path = $${INCLUDE_DIR}/quazip
+    include_pqp.path = $${INCLUDE_DIR}/PQP
     include_glc_maths.path = $${INCLUDE_DIR}/maths
     include_glc_io.path = $${INCLUDE_DIR}/io
     include_glc_scengraph.path = $${INCLUDE_DIR}/sceneGraph
@@ -329,6 +347,7 @@ include.files = $${HEADERS_GLC} $${HEADERS_INST}
 include_lib3ds.files = $${HEADERS_LIB3DS}
 include_glext.files =$${HEADERS_GLEXT}
 include_quazip.files = $${HEADERS_QUAZIP}
+include_pqp.files = $${HEADERS_PQP}
 include_glc_maths.files= $${HEADERS_GLC_MATHS}
 include_glc_io.files= $${HEADERS_GLC_IO}
 include_glc_scengraph.files= $${HEADERS_GLC_SCENEGRAPH}
@@ -342,6 +361,7 @@ target.path = $${LIB_DIR}
 # "make install" configuration options
 INSTALLS += include_lib3ds include_glext include_quazip include_glc_maths include_glc_io
 INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport
+INSTALLS += include_pqp
 
 INSTALLS += target
 INSTALLS +=include
