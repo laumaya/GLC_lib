@@ -30,6 +30,7 @@ GLC_WorldHandle::GLC_WorldHandle()
 : m_Collection()
 , m_NumberOfWorld(1)
 , m_OccurenceHash()
+, m_UpVector(glc::Z_AXIS)
 {
 
 }
@@ -92,6 +93,8 @@ void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelec
 		GLC_3DViewInstance representation(*p3DRep);
 		// Force instance representation id
 		representation.setId(pOccurence->id());
+		// Force instance representation name
+		representation.setName(pOccurence->name());
 		if (0 != shaderId) m_Collection.bindShader(shaderId);
 		m_Collection.add(representation, shaderId);
 		if (isSelected)

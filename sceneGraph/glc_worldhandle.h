@@ -94,6 +94,10 @@ public:
 	//! Return the number of body
 	int numberOfBody() const;
 
+	//! Return the world Up vector
+	inline GLC_Vector4d upVector() const
+	{return m_UpVector;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -121,6 +125,10 @@ public:
 		m_OccurenceHash.clear();
 	}
 
+	//! Set the world Up Vector
+	inline void setUpVector(const GLC_Vector4d& vect)
+	{m_UpVector= vect;}
+
 
 //@}
 
@@ -136,6 +144,9 @@ private:
 
 	//! The hash table containing struct occurence
 	QHash<GLC_uint, GLC_StructOccurence*> m_OccurenceHash;
+
+	//! The world Up Vector
+	GLC_Vector4d m_UpVector;
 };
 
 #endif /* GLC_WORLDHANDLE_H_ */
