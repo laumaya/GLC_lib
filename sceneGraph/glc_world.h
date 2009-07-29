@@ -134,6 +134,9 @@ public:
 	inline int numberOfBody() const
 	{return m_pWorldHandle->numberOfBody();}
 
+	//! Return the world Up vector
+	inline GLC_Vector4d upVector() const
+	{return m_pWorldHandle->upVector();}
 
 
 //@}
@@ -157,6 +160,11 @@ public:
 	{
 		m_pRoot->setName(name);
 	}
+
+	//! Set the world Up Vector
+	inline void setUpVector(const GLC_Vector4d& vect)
+	{m_pWorldHandle->setUpVector(vect);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
