@@ -98,6 +98,25 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 	// Read the collada version
 	QString version= readAttribute("version", true);
 
+	// Go to the asset Element to get the Up vector
+	goToElement("asset");
+	while (endElementNotReached("asset"))
+	{
+		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+		{
+			const QStringRef currentElementName= m_pStreamReader->name();
+			if (currentElementName == "up_axis")
+			{
+				const QString upAxis= getContent("up_axis");
+				if (upAxis == "X_UP") m_pWorld->setUpVector(glc::X_AXIS);
+				else if (upAxis == "Y_UP") m_pWorld->setUpVector(glc::Y_AXIS);
+				else if (upAxis == "Z_UP") m_pWorld->setUpVector(glc::Z_AXIS);
+			}
+		}
+		m_pStreamReader->readNext();
+	}
+
+
 	while (endElementNotReached("COLLADA"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
