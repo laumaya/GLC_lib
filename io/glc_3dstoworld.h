@@ -39,7 +39,7 @@
 
 class GLC_World;
 class QGLContext;
-class GLC_Mesh2;
+class GLC_ExtendedMesh;
 class GLC_StructOccurence;
 class GLC_Material;
 
@@ -129,7 +129,7 @@ private:
 	const QGLContext* m_pQGLContext;
 
 	//! The current mesh
-	GLC_Mesh2* m_pCurrentMesh;
+	GLC_ExtendedMesh* m_pCurrentMesh;
 
 	//! The Lib3dsFile Structure
 	Lib3dsFile* m_pLib3dsFile;

@@ -26,7 +26,7 @@
 
 #include "glc_3dstoworld.h"
 
-#include "../geometry/glc_mesh2.h"
+#include "../geometry/glc_extendedmesh.h"
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
 #include "../geometry/glc_circle.h"
@@ -282,47 +282,45 @@ GLC_3DRep GLC_3dsToWorld::create3DRep(Lib3dsMesh* p3dsMesh)
 		//qDebug() << "instance";
 		return pCurrentInstance->representation();
 	}
-	GLC_Mesh2 * pMesh= new GLC_Mesh2();
+	GLC_ExtendedMesh * pMesh= new GLC_ExtendedMesh();
 	pMesh->setName(p3dsMesh->name);
 	// The mesh normals
 	const int normalsNumber= p3dsMesh->faces * 3;
+
 	Lib3dsVector *normalL= static_cast<Lib3dsVector*>(malloc(normalsNumber * sizeof(Lib3dsVector)));
 	lib3ds_mesh_calculate_normals(p3dsMesh, normalL);
 
+	// Position vector
+	QVector<float> position(normalsNumber * 3);
+
+	// Normal Vector
+	QVector<float> normal(normalsNumber * 3);
+	memcpy((void*)normal.data(), normalL, normalsNumber * 3 * sizeof(float));
+
+	// Texel Vector
+	QVector<float> texel;
+	if (p3dsMesh->texels > 0)
+	{
+		texel.resize(normalsNumber * 2);
+	}
+
 	int normalIndex= 0;
-	VertexList triangle;
-	GLC_Vertex testVertex;
-	triangle.append(testVertex);
-	triangle.append(testVertex);
-	triangle.append(testVertex);
 	for (unsigned int i= 0; i < p3dsMesh->faces; ++i)
 	{
+		IndexList triangleIndex;
 		Lib3dsFace *p3dsFace=&p3dsMesh->faceL[i];
 		for (int i=0; i < 3; ++i)
 		{
+			triangleIndex.append(normalIndex);
 			// Add vertex coordinate
-			memcpy((void*)&triangle[i].x, &p3dsMesh->pointL[p3dsFace->points[i]], 3 * sizeof(float));
-			//triangle[i].x= p3dsMesh->pointL[p3dsFace->points[i]].pos[0];
-			//triangle[i].y= p3dsMesh->pointL[p3dsFace->points[i]].pos[1];
-			//triangle[i].z= p3dsMesh->pointL[p3dsFace->points[i]].pos[2];
-			// Add vertex Normal
-			memcpy((void*)&triangle[i].nx, &normalL[normalIndex], 3 * sizeof(float));
-			//triangle[i].nx= normalL[normalIndex][0];
-			//triangle[i].ny= normalL[normalIndex][1];
-			//triangle[i].nz= normalL[normalIndex][2];
-			++normalIndex;
+			memcpy((void*)&(position.data()[normalIndex * 3]), &p3dsMesh->pointL[p3dsFace->points[i]], 3 * sizeof(float));
+
 			// Add texel
 			if (p3dsMesh->texels > 0)
 			{
-				memcpy((void*)&triangle[i].s, &p3dsMesh->texelL[p3dsFace->points[i]], 2 * sizeof(float));
-				//triangle[i].s= p3dsMesh->texelL[p3dsFace->points[i]][0];
-				//triangle[i].t= p3dsMesh->texelL[p3dsFace->points[i]][1];
+				memcpy((void*)&(texel.data()[normalIndex * 2]), &p3dsMesh->texelL[p3dsFace->points[i]], 2 * sizeof(float));
 			}
-			else
-			{
-				triangle[i].s= 0.0f;
-				triangle[i].t= 0.0f;
-			}
+			++normalIndex;
 		}
 
 		// Load the material
@@ -343,8 +341,15 @@ GLC_3DRep GLC_3dsToWorld::create3DRep(Lib3dsMesh* p3dsMesh)
 				pCurMaterial= m_Materials.value(materialName);
 			}
 		}
-		pMesh->addTriangles(triangle, pCurMaterial);
+		pMesh->addTriangles(pCurMaterial, triangleIndex);
 	}
+	pMesh->addVertices(position);
+	pMesh->addNormals(normal);
+	if (p3dsMesh->texels > 0)
+	{
+		pMesh->addTexels(texel);
+	}
+
 	// free normal memmory
 	delete normalL;
 	// Compute loading progress
