@@ -43,6 +43,9 @@ GLC_StlToWorld::GLC_StlToWorld()
 , m_StlStream()
 , m_pCurrentMesh(NULL)
 , m_CurrentFace()
+, m_VertexBulk()
+, m_NormalBulk()
+, m_CurrentIndex(0)
 {
 
 }
@@ -115,9 +118,15 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 	if (!lineBuff.startsWith("solid"))
 	{
 		// The STL File is not ASCII trying to load Binary STL File
-		m_pCurrentMesh= new GLC_Mesh2();
+		m_pCurrentMesh= new GLC_ExtendedMesh();
 		file.reset();
 		LoadBinariStl(file);
+		m_pCurrentMesh->addTriangles(NULL, m_CurrentFace);
+		m_CurrentFace.clear();
+		m_pCurrentMesh->addVertices(m_VertexBulk.toVector());
+		m_VertexBulk.clear();
+		m_pCurrentMesh->addNormals(m_NormalBulk.toVector());
+		m_NormalBulk.clear();
 		m_pCurrentMesh->finished();
 		GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
@@ -128,7 +137,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		// The STL File is ASCII
 		lineBuff.remove(0, 5);
 		lineBuff= lineBuff.trimmed();
-		m_pCurrentMesh= new GLC_Mesh2();
+		m_pCurrentMesh= new GLC_ExtendedMesh();
 		m_pCurrentMesh->setName(lineBuff);
 		// Read the mesh facet
 		while (!m_StlStream.atEnd())
@@ -177,6 +186,13 @@ void GLC_StlToWorld::scanFacet()
 	// Test if this is the end of current solid
 	if (lineBuff.startsWith("endsolid") || lineBuff.startsWith("end solid"))
 	{
+		m_pCurrentMesh->addTriangles(NULL, m_CurrentFace);
+		m_CurrentFace.clear();
+		m_pCurrentMesh->addVertices(m_VertexBulk.toVector());
+		m_VertexBulk.clear();
+		m_pCurrentMesh->addNormals(m_NormalBulk.toVector());
+		m_NormalBulk.clear();
+
 		m_pCurrentMesh->finished();
 		GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
@@ -189,7 +205,7 @@ void GLC_StlToWorld::scanFacet()
 		// The STL File is ASCII
 		lineBuff.remove(0, 5);
 		lineBuff= lineBuff.trimmed();
-		m_pCurrentMesh= new GLC_Mesh2();
+		m_pCurrentMesh= new GLC_ExtendedMesh();
 		m_pCurrentMesh->setName(lineBuff);
 		return;
 	}
@@ -205,14 +221,15 @@ void GLC_StlToWorld::scanFacet()
 		clear();
 		throw(fileFormatException);
 	}
-	GLC_Vertex curVertex;
 	lineBuff.remove(0,12); // Remove first 12 chars
 	lineBuff= lineBuff.trimmed().toLower();
 	GLC_Vector3df cur3dVect= extract3dVect(lineBuff);
-	curVertex.nx= cur3dVect.X();
-	curVertex.ny= cur3dVect.Y();
-	curVertex.nz= cur3dVect.Z();
-	//m_pCurrentMesh->addNormal(m_CurNormalIndex++, extract3dVect(lineBuff));
+	for (int i= 0; i < 3; ++i)
+	{
+		m_NormalBulk.append(cur3dVect.X());
+		m_NormalBulk.append(cur3dVect.Y());
+		m_NormalBulk.append(cur3dVect.Z());
+	}
 
 ////////////////////////////////////////////// Outer Loop////////////////////////////////
 	++m_CurrentLineNumber;
@@ -250,17 +267,13 @@ void GLC_StlToWorld::scanFacet()
 		lineBuff= lineBuff.trimmed();
 
 		cur3dVect= extract3dVect(lineBuff);
-		curVertex.x= cur3dVect.X();
-		curVertex.y= cur3dVect.Y();
-		curVertex.z= cur3dVect.Z();
+		m_VertexBulk.append(cur3dVect.X());
+		m_VertexBulk.append(cur3dVect.Y());
+		m_VertexBulk.append(cur3dVect.Z());
 
-		curVertex.s= 0.0f;
-		curVertex.t= 0.0f;
-		m_CurrentFace.append(curVertex);
+		m_CurrentFace.append(m_CurrentIndex);
+		++m_CurrentIndex;
 	}
-	// Add the face to the current mesh
-	m_pCurrentMesh->addTriangles(m_CurrentFace, NULL);
-	m_CurrentFace.clear();
 
 ////////////////////////////////////////////// End Loop////////////////////////////////
 	++m_CurrentLineNumber;
@@ -376,13 +389,6 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 			throw(fileFormatException);
 		}
 
-		GLC_Vertex curVertex;
-		curVertex.nx= nx;
-		curVertex.ny= ny;
-		curVertex.nz= nz;
-		curVertex.s= 0.0f;
-		curVertex.t= 0.0f;
-
 		// Extract the 3 Vertexs
 		for (int j= 0; j < 3; ++j)
 		{
@@ -396,10 +402,16 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 				clear();
 				throw(fileFormatException);
 			}
-			curVertex.x= x;
-			curVertex.y= y;
-			curVertex.z= z;
-			m_CurrentFace.append(curVertex);
+			m_VertexBulk.append(x);
+			m_VertexBulk.append(y);
+			m_VertexBulk.append(z);
+
+			m_NormalBulk.append(nx);
+			m_NormalBulk.append(ny);
+			m_NormalBulk.append(nz);
+
+			m_CurrentFace.append(m_CurrentIndex);
+			++m_CurrentIndex;
 		}
 		currentQuantumValue = static_cast<int>((static_cast<double>(i + 1) / numberOfFacet) * 100);
 		if (currentQuantumValue > previousQuantumValue)
@@ -408,9 +420,6 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 		}
 		previousQuantumValue= currentQuantumValue;
 
-		// Add the face to the current mesh
-		m_pCurrentMesh->addTriangles(m_CurrentFace, NULL);
-		m_CurrentFace.clear();
 		// Skip 2 fill-bytes not needed !!!!
 		stlBinFile.skipRawData(2);
 

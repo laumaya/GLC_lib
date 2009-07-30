@@ -32,7 +32,7 @@
 #include <QFile>
 #include <QTextStream>
 
-#include "../geometry/glc_mesh2.h"
+#include "../geometry/glc_extendedmesh.h"
 #include "../maths/glc_vector3df.h"
 
 class GLC_World;
@@ -100,16 +100,30 @@ private:
 private:
 	//! pointer to a GLC_World
 	GLC_World* m_pWorld;
+
 	//! The Stl File name
 	QString m_FileName;
+
 	//! The current line number
 	int m_CurrentLineNumber;
+
 	//! The Text Stream
 	QTextStream m_StlStream;
+
 	//! The current mesh
-	GLC_Mesh2* m_pCurrentMesh;
-	//! Current face vertex
-	VertexList m_CurrentFace;
+	GLC_ExtendedMesh* m_pCurrentMesh;
+
+	//! Current face index
+	IndexList m_CurrentFace;
+
+	//! Vertex Bulk data
+	QList<float> m_VertexBulk;
+
+	//! Normal Bulk data
+	QList<float> m_NormalBulk;
+
+	//! The current index
+	GLuint m_CurrentIndex;
 };
 
 #endif /*GLC_STLTOWORLD_H_*/
