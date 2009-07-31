@@ -2,6 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Copyright (C) 2009 Laurent Bauer
  Version 1.1.0, packaged on March, 2009.
 
  http://glc-lib.sourceforge.net
@@ -92,6 +93,9 @@ public:
 
 	//! equality operator
 	bool operator==(const GLC_Camera&) const;
+
+    //! almost equality (Bauer Laurent)
+    bool isAlmostEqualTo(const GLC_Camera&, const double distanceAccuracy=0.05) const;
 
 	//! Return the default up vector
 	inline GLC_Vector4d defaultUpVector() const
