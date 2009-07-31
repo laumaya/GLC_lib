@@ -33,11 +33,14 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine()
 , m_Positions()
 , m_Normals()
 , m_Texels()
+, m_Colors()
 , m_NormalVboId(0)
 , m_TexelVboId(0)
+, m_ColorVboId(0)
 , m_EngineLodList()
 , m_PositionSize(0)
 , m_TexelsSize(0)
+, m_ColorSize(0)
 {
 	//m_EngineLodList.append(new GLC_EngineLod());
 
@@ -49,11 +52,14 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine(const GLC_ExtendedGeomEngine& eng
 , m_Positions(engine.positionVector())
 , m_Normals(engine.normalVector())
 , m_Texels(engine.texelVector())
+, m_Colors(engine.colorVector())
 , m_NormalVboId(0)
 , m_TexelVboId(0)
+, m_ColorVboId(0)
 , m_EngineLodList()
 , m_PositionSize(engine.m_PositionSize)
 , m_TexelsSize(engine.m_TexelsSize)
+, m_ColorSize(engine.m_ColorSize)
 {
 
 	const int size= engine.m_EngineLodList.size();
@@ -77,6 +83,12 @@ GLC_ExtendedGeomEngine::~GLC_ExtendedGeomEngine()
 	if (0 != m_TexelVboId)
 	{
 		glDeleteBuffers(1, &m_TexelVboId);
+	}
+
+	// Delete Color VBO
+	if (0 != m_ColorVboId)
+	{
+		glDeleteBuffers(1, &m_ColorVboId);
 	}
 
 	const int size= m_EngineLodList.size();
@@ -159,6 +171,29 @@ GLfloatVector GLC_ExtendedGeomEngine::texelVector() const
 	}
 }
 
+// Return the color Vector
+GLfloatVector GLC_ExtendedGeomEngine::colorVector() const
+{
+	if (0 != m_ColorVboId)
+	{
+		// VBO created get data from VBO
+		const int sizeOfVbo= m_ColorSize;
+		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
+		GLfloatVector normalVector(sizeOfVbo);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_ColorVboId);
+		GLvoid* pVbo = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		memcpy(normalVector.data(), pVbo, dataSize);
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		return normalVector;
+	}
+	else
+	{
+		return m_Colors;
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -171,6 +206,8 @@ void GLC_ExtendedGeomEngine::finished()
 	m_Normals.clear();
 	m_TexelsSize= m_Texels.size();
 	m_Texels.clear();
+	m_ColorSize= m_Colors.size();
+	m_Colors.clear();
 
 	// Finish the LOD
 	const int size= m_EngineLodList.size();
@@ -243,6 +280,12 @@ void GLC_ExtendedGeomEngine::createVBOs()
 			glGenBuffers(1, &m_TexelVboId);
 		}
 
+		// Create Color VBO
+		if (0 == m_ColorVboId and not m_Colors.isEmpty())
+		{
+			glGenBuffers(1, &m_ColorVboId);
+		}
+
 		const int size= m_EngineLodList.size();
 		for (int i= 0; i < size; ++i)
 		{
@@ -269,6 +312,11 @@ bool GLC_ExtendedGeomEngine::useVBO(bool use, GLC_ExtendedGeomEngine::VboType ty
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_TexelVboId);
 		}
+		else if ((type == GLC_ExtendedGeomEngine::GLC_Color) and (0 != m_ColorVboId))
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, m_ColorVboId);
+		}
+
 		else result= false;
 	}
 	else

@@ -55,6 +55,7 @@ public:
 		GLC_Vertex= 30,
 		GLC_Normal,
 		GLC_Texel,
+		GLC_Color
 	};
 
 public:
@@ -85,6 +86,9 @@ public:
 	//! Return the texel Vector
 	GLfloatVector texelVector() const;
 
+	//! Return the color Vector
+	GLfloatVector colorVector() const;
+
 	//! Return the Position Vector handle
 	inline GLfloatVector* positionVectorHandle()
 	{ return &m_Positions;}
@@ -96,6 +100,10 @@ public:
 	//! Return the Texel Vector handle
 	inline GLfloatVector* texelVectorHandle()
 	{ return &m_Texels;}
+
+	//! Return the Color Vector handle
+	inline GLfloatVector* colorVectorHandle()
+	{ return &m_Colors;}
 
 	//! Return the Index Vector
 	inline GLuintVector indexVector(const int i= 0) const
@@ -178,11 +186,17 @@ private:
 	//! Vertex Texture coordinate
 	GLfloatVector m_Texels;
 
+	//! Color index
+	GLfloatVector m_Colors;
+
 	//! Normals VBO ID
 	GLuint m_NormalVboId;
 
 	//! Texture VBO ID
 	GLuint m_TexelVboId;
+
+	//! Color VBO ID
+	GLuint m_ColorVboId;
 
 	//! The list of LOD
 	QList<GLC_EngineLod*> m_EngineLodList;
@@ -192,6 +206,9 @@ private:
 
 	//! The size of texel VBO
 	int m_TexelsSize;
+
+	//! The size of Color VBO
+	int m_ColorSize;
 
 };
 

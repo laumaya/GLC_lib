@@ -175,6 +175,10 @@ public:
 	inline void addTexels(const GLfloatVector& texels)
 	{*(m_ExtendedGeomEngine.texelVectorHandle())+= texels;}
 
+	//! Add Colors
+	inline void addColors(const GLfloatVector& colors)
+	{*(m_ExtendedGeomEngine.colorVectorHandle())+= colors;}
+
 	//! Add triangles
 	void addTriangles(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
 

@@ -450,7 +450,15 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
 
-		//TODO test if color pear vertex is activated
+		// Activate Color VBO if needed
+		if ((m_ColorPearVertex and not m_IsSelected and not GLC_State::isInSelectionMode()) and m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Color))
+		{
+			glEnable(GL_COLOR_MATERIAL);
+			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+			glColorPointer(4, GL_FLOAT, 0, 0);
+			glEnableClientState(GL_COLOR_ARRAY);
+		}
+
 		m_ExtendedGeomEngine.useIBO(true, m_CurrentLod);
 	}
 	else
@@ -462,11 +470,22 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		glNormalPointer(GL_FLOAT, 0, m_ExtendedGeomEngine.normalVectorHandle()->data());
 		glEnableClientState(GL_NORMAL_ARRAY);
 
+		// Activate texel if needed
 		if (not m_ExtendedGeomEngine.texelVectorHandle()->isEmpty())
 		{
 			glTexCoordPointer(2, GL_FLOAT, 0, m_ExtendedGeomEngine.texelVectorHandle()->data());
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
+
+		// Activate Color VBO if needed
+		if ((m_ColorPearVertex and not m_IsSelected and not GLC_State::isInSelectionMode()) and not m_ExtendedGeomEngine.colorVectorHandle()->isEmpty())
+		{
+			glEnable(GL_COLOR_MATERIAL);
+			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+			glColorPointer(4, GL_FLOAT, 0, m_ExtendedGeomEngine.colorVectorHandle()->data());
+			glEnableClientState(GL_COLOR_ARRAY);
+		}
+
 	}
 
 
@@ -578,6 +597,17 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		m_ExtendedGeomEngine.useIBO(false);
 		m_ExtendedGeomEngine.useVBO(false, GLC_ExtendedGeomEngine::GLC_Normal);
 	}
+
+	if (m_ColorPearVertex and not m_IsSelected and not GLC_State::isInSelectionMode())
+	{
+		if (vboIsUsed)
+		{
+			m_ExtendedGeomEngine.useVBO(false, GLC_ExtendedGeomEngine::GLC_Color);
+		}
+		glDisableClientState(GL_COLOR_ARRAY);
+		glDisable(GL_COLOR_MATERIAL);
+	}
+
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -671,6 +701,15 @@ void GLC_ExtendedMesh::createVbos()
 		const GLsizei dataNbr= static_cast<GLsizei>(pTexelVector->size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		glBufferData(GL_ARRAY_BUFFER, dataSize, pTexelVector->data(), GL_STATIC_DRAW);
+	}
+
+	// Create VBO of color if needed
+	if (m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Color))
+	{
+		GLfloatVector* pColorVector= m_ExtendedGeomEngine.colorVectorHandle();
+		const GLsizei dataNbr= static_cast<GLsizei>(pColorVector->size());
+		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
+		glBufferData(GL_ARRAY_BUFFER, dataSize, pColorVector->data(), GL_STATIC_DRAW);
 	}
 
 	const int lodNumber= m_ExtendedGeomEngine.numberOfLod();
