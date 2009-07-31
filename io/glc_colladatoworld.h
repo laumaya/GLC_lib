@@ -103,11 +103,11 @@ private:
 		// Bulk data vector (Position, normal, texel)
 		QVector<QList<float> > m_Datas;
 		// Mapping between collada vertice and index
-		QHash<ColladaVertice, int> m_Mapping;
+		QHash<ColladaVertice, GLuint> m_Mapping;
 		// Triangle index
-		QList<int> m_Index;
+		IndexList m_Index;
 		// Next index Position
-		int m_FreeIndex;
+		GLuint m_FreeIndex;
 		// QHash containing material id and associated offset and size
 		QHash<QString, MatOffsetSize> m_Materials;
 	};

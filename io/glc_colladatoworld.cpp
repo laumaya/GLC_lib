@@ -1074,7 +1074,7 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 	const int indexOffset= m_pMeshInfo->m_Index.size();
 	// Triangulate the polygons of the polylist
 	// Input polygon index must start from 0 and succesive : (0 1 2 3 4)
-	QList<int> onePolygonIndex;
+	QList<GLuint> onePolygonIndex;
 	for (int i= 0; i < polygonCount; ++i)
 	{
 		const int polygonSize= vcountList.at(i);
@@ -1267,7 +1267,7 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 	//qDebug() << " Triangles Max Offset :" << maxOffset;
 
 	// the polygonIndex of the polylist
-	QList<int> trianglesIndex;
+	QList<GLuint> trianglesIndex;
 
 	// Fill the mapping, bulk data and index list of the current mesh info
 	for (int i= 0; i < trianglesIndexCount; i+= maxOffset + 1)
