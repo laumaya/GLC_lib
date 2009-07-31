@@ -46,18 +46,14 @@ GLC_ObjToWorld::GLC_ObjToWorld(const QGLContext *pContext)
 , m_pQGLContext(pContext)
 , m_pMtlLoader(NULL)
 , m_CurrentLineNumber(0)
-, m_pCurrentMesh(NULL)
-, m_VertexHash()
-, m_NormalHash()
-, m_TextCoordinateHash()
-, m_CurVertexIndex(0)
-, m_CurNormalIndex(0)
-, m_CurTextureCoordinateIndex(0)
+, m_pCurrentObjMesh(NULL)
 , m_FaceType(notSet)
 , m_CurrentMeshMaterials()
-, m_pCurrentMaterial(NULL)
-, m_CurrentListOfVertex()
+, m_CurrentMaterialName("GLC_Default")
 , m_ListOfAttachedFileName()
+, m_Positions()
+, m_Normals()
+, m_Texels()
 {
 }
 
@@ -177,24 +173,8 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	}
 	file.close();
 
-	if (NULL != m_pCurrentMesh)
-	{
-		if (0 == m_pCurrentMesh->numberOfFaces())
-		{
-			delete m_pCurrentMesh;
-			m_pCurrentMesh= NULL;
-		}
-		else
-		{
-			m_pCurrentMesh->finished();
-			GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
-			m_pCurrentMesh= NULL;
-			m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
-			// Clear the list of material already used
-			m_CurrentMeshMaterials.clear();
-			m_pCurrentMaterial= NULL;
-		}
-	}
+	addCurrentObjMeshToWorld();
+
 	//! Test if there is meshes in the world
 	if (m_pWorld->rootOccurence()->childCount() == 0)
 	{
@@ -251,7 +231,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	if (line.startsWith("v ")|| line.startsWith(QString("v") + QString(QChar(9))))
 	{
 		line.remove(0,2); // Remove first 2 char
-		m_VertexHash.insert(m_CurVertexIndex++, extract3dVect(line));
+		m_Positions.append(extract3dVect(line));
 		m_FaceType = notSet;
 	}
 
@@ -259,7 +239,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	else if (line.startsWith("vt ")|| line.startsWith(QString("vt") + QString(QChar(9))))
 	{
 		line.remove(0,3); // Remove first 3 char
-		m_TextCoordinateHash.insert(m_CurTextureCoordinateIndex++, extract2dVect(line));
+		m_Texels.append(extract2dVect(line));
 		m_FaceType = notSet;
 	}
 
@@ -267,7 +247,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	else if (line.startsWith("vn ") || line.startsWith(QString("vn") + QString(QChar(9))))
 	{
 		line.remove(0,3); // Remove first 3 char
-		m_NormalHash.insert(m_CurNormalIndex++, extract3dVect(line));
+		m_Normals.append(extract3dVect(line));
 		m_FaceType = notSet;
 	}
 
@@ -275,7 +255,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	else if (line.startsWith("f ") || line.startsWith(QString("f") + QString(QChar(9))))
 	{
 		// If there is no group or object in the OBJ file
-		if (NULL == m_pCurrentMesh)
+		if (NULL == m_pCurrentObjMesh)
 			{
 				changeGroup("GLC_Default");
 				//qDebug() << "Default group " << line;
@@ -325,23 +305,10 @@ void GLC_ObjToWorld::changeGroup(QString line)
 		//////////////////////////////////////////////////////////////
 		if("default" != groupName)
 		{
-			if (NULL != m_pCurrentMesh) // If there is a current mesh add it as part in world
-			{
-				if (m_pCurrentMesh->numberOfFaces() > 0)
-				{
-					m_pCurrentMesh->finished();
-					GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
-					m_pCurrentMesh= NULL;
-					m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
-				}
-				else
-				{
-					delete m_pCurrentMesh;
-					m_pCurrentMesh= NULL;
-				}
-			}
-			m_pCurrentMesh= new GLC_Mesh2();
-			m_pCurrentMesh->setName(groupName);
+			addCurrentObjMeshToWorld();
+			m_pCurrentObjMesh= new CurrentObjMesh(m_CurrentMaterialName);
+			m_pCurrentObjMesh->m_pMesh->setName(groupName);
+
 		}
 	}
 	else
@@ -357,13 +324,13 @@ void GLC_ObjToWorld::changeGroup(QString line)
 }
 
 // Extract a Vector from a string
-GLC_Vector3df GLC_ObjToWorld::extract3dVect(QString &line)
+QList<float> GLC_ObjToWorld::extract3dVect(QString &line)
 {
 	float x=0.0f;
 	float y=0.0f;
 	float z=0.0f;
 
-	GLC_Vector3df vectResult;
+	QList<float> vectResult;
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString, zString;
@@ -386,7 +353,7 @@ GLC_Vector3df GLC_ObjToWorld::extract3dVect(QString &line)
 		}
 		else
 		{
-			vectResult.setVect(x, y, z);
+			vectResult << x << y << z;
 		}
 	}
 
@@ -395,11 +362,11 @@ GLC_Vector3df GLC_ObjToWorld::extract3dVect(QString &line)
 }
 
 // Extract a Vector from a string
-GLC_Vector2df GLC_ObjToWorld::extract2dVect(QString &line)
+QList<float> GLC_ObjToWorld::extract2dVect(QString &line)
 {
 	float x=0.0f;
 	float y=0.0f;
-	GLC_Vector2df vectResult;
+	QList<float> vectResult;
 	QTextStream stringVecteur(&line);
 
 	QString xString, yString;
@@ -419,7 +386,7 @@ GLC_Vector2df GLC_ObjToWorld::extract2dVect(QString &line)
 			clear();
 			throw(fileFormatException);
 		}
-		vectResult.setVect(x, y);
+		vectResult << x << y;
 	}
 
 	return vectResult;
@@ -430,13 +397,11 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 {
 	QString buff;
 
-	QVector<int> vectorCoordinate;
-	QVector<int> vectorNormal;
-	QVector<int> vectorTextureCoordinate;
-
 	int coordinateIndex;
 	int normalIndex;
 	int textureCoordinateIndex;
+
+	QList<GLuint> currentFaceIndex;
 	//////////////////////////////////////////////////////////////////
 	// Parse the line containing face index
 	//////////////////////////////////////////////////////////////////
@@ -446,79 +411,96 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		streamFace >> buff;
 		extractVertexIndex(buff, coordinateIndex, normalIndex, textureCoordinateIndex);
 
-		vectorCoordinate.append(coordinateIndex);
-
-		if (-1 != textureCoordinateIndex)
-		{	// There is a texture coordinate
-			vectorTextureCoordinate.append(textureCoordinateIndex);
+		ObjVertice currentVertice(coordinateIndex, normalIndex, textureCoordinateIndex);
+		if (m_pCurrentObjMesh->m_ObjVerticeIndexMap.contains(currentVertice))
+		{
+			currentFaceIndex.append(m_pCurrentObjMesh->m_ObjVerticeIndexMap.value(currentVertice));
 		}
-
-		if (-1 != normalIndex)
-		{	// There is a normal index
-			vectorNormal.append(normalIndex);
+		else
+		{
+			// Add Vertex to the mesh bulk data
+			m_pCurrentObjMesh->m_Positions.append(m_Positions.value(coordinateIndex * 3));
+			m_pCurrentObjMesh->m_Positions.append(m_Positions.value(coordinateIndex * 3 + 1));
+			m_pCurrentObjMesh->m_Positions.append(m_Positions.value(coordinateIndex * 3 + 2));
+			if (-1 != normalIndex)
+			{
+				// Add Normal to the mesh bulk data
+				m_pCurrentObjMesh->m_Normals.append(m_Normals.value(normalIndex * 3));
+				m_pCurrentObjMesh->m_Normals.append(m_Normals.value(normalIndex * 3 + 1));
+				m_pCurrentObjMesh->m_Normals.append(m_Normals.value(normalIndex * 3 + 2));
+			}
+			else
+			{
+				// Add Null Normal to the mesh bulk data
+				m_pCurrentObjMesh->m_Normals.append(0.0f);
+				m_pCurrentObjMesh->m_Normals.append(0.0f);
+				m_pCurrentObjMesh->m_Normals.append(0.0f);
+			}
+			if (-1 != textureCoordinateIndex)
+			{
+				// Add texture coordinate to the mesh bulk data
+				m_pCurrentObjMesh->m_Texels.append(m_Texels.value(textureCoordinateIndex * 2));
+				m_pCurrentObjMesh->m_Texels.append(m_Texels.value(textureCoordinateIndex * 2 + 1));
+			}
+			else if (not m_pCurrentObjMesh->m_Texels.isEmpty())
+			{
+				// Add epmty texture coordinate
+				m_pCurrentObjMesh->m_Texels.append(0.0f);
+				m_pCurrentObjMesh->m_Texels.append(0.0f);
+			}
+			// Add the index to current face index
+			currentFaceIndex.append(m_pCurrentObjMesh->m_NextFreeIndex);
+			// Add ObjVertice to ObjVertice Map
+			m_pCurrentObjMesh->m_ObjVerticeIndexMap.insert(currentVertice, m_pCurrentObjMesh->m_NextFreeIndex);
+			// Increment next free index
+			++(m_pCurrentObjMesh->m_NextFreeIndex);
 		}
 
 	}
 	//////////////////////////////////////////////////////////////////
 	// Check the number of face's vertex
 	//////////////////////////////////////////////////////////////////
-	const int size= vectorCoordinate.size();
+	const int size= currentFaceIndex.size();
 	if (size < 3)
 	{
 		//qDebug() << "GLC_ObjToWorld::extractFaceIndex Face with less than 3 vertex found";
 		return;
 	}
-	// Fill the current list of index whith empty GLC_Vertex
-	fillCurrentListOfVertex(size);
 	//////////////////////////////////////////////////////////////////
 	// Add the face to the current mesh
 	//////////////////////////////////////////////////////////////////
-	if (m_FaceType == coordinateAndNormal)
+	if ((m_FaceType == coordinateAndNormal) or (m_FaceType == coordinateAndTextureAndNormal))
 	{
-		addVertexsToCurrentListOfVertex(vectorCoordinate);
-		addNormalsToCurrentListOfVertex(vectorNormal);
 		if (size > 3)
 		{
-			glc::triangulatePolygon(&m_CurrentListOfVertex);
+			glc::triangulatePolygon(&currentFaceIndex, m_pCurrentObjMesh->m_Positions);
 		}
-		m_pCurrentMesh->addTriangles(m_CurrentListOfVertex, m_pCurrentMaterial);
+		m_pCurrentObjMesh->m_Index.append(currentFaceIndex);
 	}
-	else if (m_FaceType == coordinate)
+	else if (m_FaceType != notSet)
 	{
-		addVertexsToCurrentListOfVertex(vectorCoordinate);
-		computeNormal(vectorCoordinate);
-
 		if (size > 3)
 		{
-			glc::triangulatePolygon(&m_CurrentListOfVertex);
+			glc::triangulatePolygon(&currentFaceIndex, m_pCurrentObjMesh->m_Positions);
 		}
-		m_pCurrentMesh->addTriangles(m_CurrentListOfVertex, m_pCurrentMaterial);
+		// Comput the face normal
+		if (currentFaceIndex.size() < 3) return;
+		GLC_Vector3df normal= computeNormal(currentFaceIndex.at(0), currentFaceIndex.at(1), currentFaceIndex.at(2));
 
-
-	}
-	else if (m_FaceType == coordinateAndTexture)
-	{
-		addVertexsToCurrentListOfVertex(vectorCoordinate);
-		addTextureCoordinatesToCurrentListOfVertex(vectorTextureCoordinate);
-		computeNormal(vectorCoordinate);
-		if (size > 3)
+		// Add Face normal to bulk data
+		QSet<GLuint> indexSet= currentFaceIndex.toSet();
+		QSet<GLuint>::iterator iIndexSet= indexSet.begin();
+		while (indexSet.constEnd() != iIndexSet)
 		{
-			glc::triangulatePolygon(&m_CurrentListOfVertex);
-		}
-		m_pCurrentMesh->addTriangles(m_CurrentListOfVertex, m_pCurrentMaterial);
+			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3]= normal.X();
+			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3 + 1]= normal.Y();
+			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3 + 2]= normal.Z();
 
-	}
-	else if (m_FaceType == coordinateAndTextureAndNormal)
-	{
-		addVertexsToCurrentListOfVertex(vectorCoordinate);
-		addNormalsToCurrentListOfVertex(vectorNormal);
-		addTextureCoordinatesToCurrentListOfVertex(vectorTextureCoordinate);
-
-		if (size > 3)
-		{
-			glc::triangulatePolygon(&m_CurrentListOfVertex);
+			++iIndexSet;
 		}
-		m_pCurrentMesh->addTriangles(m_CurrentListOfVertex, m_pCurrentMaterial);
+
+		m_pCurrentObjMesh->m_Index.append(currentFaceIndex);
+
 	}
 	else
 	{
@@ -550,10 +532,39 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	//////////////////////////////////////////////////////////////////
 	// Check if the material is already loaded from the current mesh
 	//////////////////////////////////////////////////////////////////
-	//qDebug() << "Material Name" << materialName;
 	if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
 	{
-		m_pCurrentMaterial= m_pMtlLoader->material(materialName);
+		Q_ASSERT(NULL != m_pCurrentObjMesh);
+		Q_ASSERT(NULL != m_pCurrentObjMesh->m_pLastOffsetSize);
+
+		if (m_pCurrentObjMesh->m_Index.size() != m_pCurrentObjMesh->m_pLastOffsetSize->m_Offset)
+		{
+			// Update last material offsetSize
+			m_pCurrentObjMesh->m_pLastOffsetSize->m_size= m_pCurrentObjMesh->m_Index.size() - m_pCurrentObjMesh->m_pLastOffsetSize->m_Offset;
+		}
+		else
+		{
+			QHash<QString, MatOffsetSize*>::iterator iMat= m_pCurrentObjMesh->m_Materials.begin();
+			while (m_pCurrentObjMesh->m_Materials.constEnd() != iMat)
+			{
+				if (iMat.value() == m_pCurrentObjMesh->m_pLastOffsetSize)
+				{
+					iMat= m_pCurrentObjMesh->m_Materials.erase(iMat);
+				}
+				else
+				{
+					++iMat;
+				}
+			}
+		}
+		// Create this material offsetSize
+		MatOffsetSize* pMatOffsetSize= new MatOffsetSize();
+		pMatOffsetSize->m_Offset= m_pCurrentObjMesh->m_Index.size();
+		// Update current Obj mesh
+		m_pCurrentObjMesh->m_pLastOffsetSize= pMatOffsetSize;
+		m_pCurrentObjMesh->m_Materials.insertMulti(materialName, pMatOffsetSize);
+		// Update current material name
+		m_CurrentMaterialName= materialName;
 	}
 
 }
@@ -757,145 +768,41 @@ void GLC_ObjToWorld::setObjType(QString& ligne)
 }
 
 // compute face normal
-void GLC_ObjToWorld::computeNormal(QVector<int> &listIndex)
+GLC_Vector3df GLC_ObjToWorld::computeNormal(GLuint index1, GLuint index2, GLuint index3)
 {
-	Q_ASSERT(listIndex.size() > 2);
+	double xn, yn, zn;
 
-	const GLC_Vector4d vect1(m_VertexHash.value(listIndex[0]));
-	const GLC_Vector4d vect2(m_VertexHash.value(listIndex[1]));
-	const GLC_Vector4d vect3(m_VertexHash.value(listIndex[2]));
+	// Vertex 1
+	xn= m_pCurrentObjMesh->m_Positions.at(index1 * 3);
+	yn= m_pCurrentObjMesh->m_Positions.at(index1 * 3 + 1);
+	zn= m_pCurrentObjMesh->m_Positions.at(index1 * 3 + 2);
+	const GLC_Vector4d vect1(xn, yn, zn);
 
-	const GLC_Vector4d edge1(vect2 - vect1);
-	const GLC_Vector4d edge2(vect3 - vect2);
+	// Vertex 2
+	xn= m_pCurrentObjMesh->m_Positions.at(index2 * 3);
+	yn= m_pCurrentObjMesh->m_Positions.at(index2 * 3 + 1);
+	zn= m_pCurrentObjMesh->m_Positions.at(index2 * 3 + 2);
+	const GLC_Vector4d vect2(xn, yn, zn);
+
+	// Vertex 3
+	xn= m_pCurrentObjMesh->m_Positions.at(index3 * 3);
+	yn= m_pCurrentObjMesh->m_Positions.at(index3 * 3 + 1);
+	zn= m_pCurrentObjMesh->m_Positions.at(index3 * 3 + 2);
+	const GLC_Vector4d vect3(xn, yn, zn);
+
+	const GLC_Vector4d edge1(vect3 - vect2);
+	const GLC_Vector4d edge2(vect1 - vect2);
 
 	GLC_Vector4d normal(edge1 ^ edge2);
 	normal.setNormal(1);
 
-	GLC_Vector3df curNormal= normal.toVector3df();
-
-	const int max= listIndex.count();
-	Q_ASSERT(max == m_CurrentListOfVertex.size());
-
-	for (int i= 0; i < max; ++i)
-	{
-		m_CurrentListOfVertex[i].nx= curNormal.X();
-		m_CurrentListOfVertex[i].ny= curNormal.Y();
-		m_CurrentListOfVertex[i].nz= curNormal.Z();
-	}
-}
-
-//! Fill the current list of vertex by empty vertex
-void GLC_ObjToWorld::fillCurrentListOfVertex(const int size)
-{
-	m_CurrentListOfVertex.clear();
-	GLC_Vertex empty;
-	empty.x= 0.0f;
-	empty.y= 0.0f;
-	empty.z= 0.0f;
-
-	empty.nx= 0.0f;
-	empty.ny= 0.0f;
-	empty.nz= 0.0f;
-
-	empty.s= 0.0f;
-	empty.t= 0.0f;
-
-	empty.r= 0.0f;
-	empty.g= 0.0f;
-	empty.b= 0.0f;
-	empty.a= 0.0f;
-
-	for (int i= 0; i < size; ++i)
-	{
-		m_CurrentListOfVertex.append(empty);
-	}
-}
-
-// Add Vertexs in the current list of vertex
-void GLC_ObjToWorld::addVertexsToCurrentListOfVertex(QVector<int> & vertexs)
-{
-	const int max= vertexs.count();
-	if(max == m_CurrentListOfVertex.size())
-	{
-		for (int i= 0; i < max; ++i)
-		{
-			GLC_Vector3df curVect= m_VertexHash[vertexs[i]];
-			m_CurrentListOfVertex[i].x= curVect.X();
-			m_CurrentListOfVertex[i].y= curVect.Y();
-			m_CurrentListOfVertex[i].z= curVect.Z();
-		}
-	}
-	else
-	{
-		QString message= "GLC_ObjToWorld::addVertexsToCurrentListOfVertex this Obj file type is not supported";
-		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));
-		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
-		clear();
-		throw(fileFormatException);
-	}
-}
-
-// Add Normals in the current list of vertex
-void GLC_ObjToWorld::addNormalsToCurrentListOfVertex(QVector<int> & normals)
-{
-	const int max= normals.count();
-	if(max == m_CurrentListOfVertex.size())
-	{
-		for (int i= 0; i < max; ++i)
-		{
-			GLC_Vector3df curVect= m_NormalHash[normals[i]];
-			m_CurrentListOfVertex[i].nx= curVect.X();
-			m_CurrentListOfVertex[i].ny= curVect.Y();
-			m_CurrentListOfVertex[i].nz= curVect.Z();
-		}
-	}
-	else
-	{
-		QString message= "GLC_ObjToWorld::addNormalsToCurrentListOfVertex this Obj file type is not supported";
-		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));
-		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
-		clear();
-		throw(fileFormatException);
-	}
-}
-
-// Add TextureCoordinate in the current list of vertex
-void GLC_ObjToWorld::addTextureCoordinatesToCurrentListOfVertex(QVector<int> & textureCoordinates)
-{
-	const int max= textureCoordinates.count();
-	if (max == m_CurrentListOfVertex.size())
-	{
-		for (int i= 0; i < max; ++i)
-		{
-			GLC_Vector2df curVect= m_TextCoordinateHash[textureCoordinates[i]];
-			m_CurrentListOfVertex[i].s= curVect.X();
-			m_CurrentListOfVertex[i].t= curVect.Y();
-		}
-	}
-	else
-	{
-		QString message= "GLC_ObjToWorld::addTextureCoordinatesToCurrentListOfVertex this Obj file type is not supported";
-		message.append("\nAt line : ");
-		message.append(QString::number(m_CurrentLineNumber));
-		qDebug() << message;
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
-		clear();
-		throw(fileFormatException);
-	}
+	return normal.toVector3df();
 }
 
 // clear objToWorld allocate memmory
 void GLC_ObjToWorld::clear()
 {
-	m_VertexHash.clear();
-	m_NormalHash.clear();
-	m_TextCoordinateHash.clear();
 	m_CurrentMeshMaterials.clear();
-	m_CurrentListOfVertex.clear();
 	m_ListOfAttachedFileName.clear();
 
 	if (NULL != m_pMtlLoader)
@@ -903,10 +810,10 @@ void GLC_ObjToWorld::clear()
 		delete m_pMtlLoader;
 		m_pMtlLoader= NULL;
 	}
-	if (NULL != m_pCurrentMesh)
+	if (NULL != m_pCurrentObjMesh)
 	{
-		delete m_pCurrentMesh;
-		m_pCurrentMesh= NULL;
+		delete m_pCurrentObjMesh;
+		m_pCurrentObjMesh= NULL;
 	}
 
 }
@@ -922,5 +829,71 @@ void GLC_ObjToWorld::mergeLines(QString* pLineBuff, QTextStream* p0bjStream)
 	}
 }
 
+// Add the current Obj mesh to the world
+void GLC_ObjToWorld::addCurrentObjMeshToWorld()
+{
+	if (NULL != m_pCurrentObjMesh)
+	{
+		if (not m_pCurrentObjMesh->m_Positions.isEmpty())
+		{
+			m_pCurrentObjMesh->m_pMesh->addVertices(m_pCurrentObjMesh->m_Positions.toVector());
+			m_pCurrentObjMesh->m_Positions.clear();
+			m_pCurrentObjMesh->m_pMesh->addNormals(m_pCurrentObjMesh->m_Normals.toVector());
+			m_pCurrentObjMesh->m_Normals.clear();
+			if (not m_pCurrentObjMesh->m_Texels.isEmpty())
+			{
+				m_pCurrentObjMesh->m_pMesh->addTexels(m_pCurrentObjMesh->m_Texels.toVector());
+				m_pCurrentObjMesh->m_Texels.clear();
+			}
+			QHash<QString, MatOffsetSize*>::iterator iMat= m_pCurrentObjMesh->m_Materials.begin();
+			while (m_pCurrentObjMesh->m_Materials.constEnd() != iMat)
+			{
+				GLC_Material* pCurrentMaterial= NULL;
+				if ((NULL != m_pMtlLoader) and (m_pMtlLoader->contains(iMat.key())))
+				{
+					pCurrentMaterial= m_pMtlLoader->material(iMat.key());
+				}
+				// Create the list of triangles to add to the mesh
+				const int offset= iMat.value()->m_Offset;
+				int size= iMat.value()->m_size;
+				if (0 == size)
+				{
+					size= m_pCurrentObjMesh->m_Index.size() - offset;
+				}
+				//qDebug() << "Offset : " << offset << " size : " << size;
+				QList<GLuint> triangles;
+				for (int i= offset; i < (offset + size); ++i)
+				{
+					triangles.append(m_pCurrentObjMesh->m_Index.at(i));
+				}
+				// Add the list of triangle to the mesh
+				if (not triangles.isEmpty())
+				{
+					m_pCurrentObjMesh->m_pMesh->addTriangles(pCurrentMaterial, triangles);
+				}
+
+				++iMat;
+			}
+			if (m_pCurrentObjMesh->m_pMesh->numberOfFaces() > 0)
+			{
+				m_pCurrentObjMesh->m_pMesh->finished();
+				GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentObjMesh->m_pMesh);
+				m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
+			}
+			else
+			{
+				delete m_pCurrentObjMesh->m_pMesh;
+			}
+
+		}
+		else
+		{
+			delete m_pCurrentObjMesh->m_pMesh;
+		}
+
+		delete m_pCurrentObjMesh;
+		m_pCurrentObjMesh= NULL;
+	}
+}
 
 

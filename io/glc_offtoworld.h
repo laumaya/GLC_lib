@@ -37,7 +37,7 @@
 #include "../maths/glc_vector3d.h"
 #include "../maths/glc_vector2df.h"
 #include "../maths/glc_vector3df.h"
-#include "../geometry/glc_mesh2.h"
+#include "../geometry/glc_extendedmesh.h"
 
 class GLC_World;
 class QGLContext;
@@ -84,14 +84,18 @@ public:
 private:
 	//! clear stlToWorld allocate memmory
 	void clear();
+
 	//! Extract a vertex from a string and add color component if needed
 	void extractVertex(QString &);
+
 	//! Extract Number off Vertex and faces
 	void extractNbrVertexsAndNbrFaces(QString &);
+
 	//! Extract a face from a string
 	void extractFaceIndex(QString &);
-	//! compute face normal
-	GLC_Vector3df computeNormal(QVector<int> &);
+
+	//! compute faces normal
+	void computeNormal();
 
 
 //@}
@@ -108,24 +112,44 @@ private:
 private:
 	//! pointer to a GLC_World
 	GLC_World* m_pWorld;
+
 	//! The Stl File name
 	QString m_FileName;
+
 	//! The current line number
 	int m_CurrentLineNumber;
+
 	//! The current mesh
-	GLC_Mesh2* m_pCurrentMesh;
+	GLC_ExtendedMesh* m_pCurrentMesh;
+
 	//! Index of the current vertex
 	int m_CurVertexIndex;
+
 	//! The number of vertexs
 	int m_NbrOfVertexs;
+
 	//! The number of faces
 	int m_NbrOfFaces;
+
 	//! The OFF is a COFF
 	bool m_IsCoff;
+
 	//! The OFF is 4OFF
 	bool m_Is4off;
-	// The list of GLC_Vertex of the current face
-	VertexList m_CurrentListOfVertex;
+
+	// The position bulk data
+	QList<float> m_PositionBulk;
+
+	//! The Normal Bulk data
+	QList<float> m_NormalBulk;
+
+	//! The color Bulk data
+	QList<float> m_ColorBulk;
+
+	//! The indexList
+	IndexList m_IndexList;
+
+
 
 
 };

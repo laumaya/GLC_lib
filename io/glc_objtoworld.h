@@ -37,10 +37,8 @@
 #include "../maths/glc_vector3d.h"
 #include "../maths/glc_vector2df.h"
 #include "../maths/glc_vector3df.h"
-#include "../geometry/glc_mesh2.h"
+#include "../geometry/glc_extendedmesh.h"
 
-typedef QHash<int, GLC_Vector3df> Vector3dHash;
-typedef QHash<int, GLC_Vector2df> Vector2dHash;
 
 enum FaceType
 {
@@ -71,6 +69,80 @@ class GLC_ObjToWorld : public QObject
 {
 	Q_OBJECT
 
+public:
+	// OBJ Vertice (Position index, Normal index and TexCoord index)
+	struct ObjVertice
+	{
+		ObjVertice()
+		: m_Values(3)
+		{
+			m_Values[0]= 0;
+			m_Values[1]= 0;
+			m_Values[2]= 0;
+		}
+		ObjVertice(int v1, int v2, int v3)
+		: m_Values(3)
+		{
+			m_Values[0]= v1;
+			m_Values[1]= v2;
+			m_Values[2]= v3;
+		}
+
+		QVector<int> m_Values;
+	};
+
+	// Material assignement
+	struct MatOffsetSize
+	{
+		MatOffsetSize()
+		: m_Offset(0)
+		, m_size(0)
+		{}
+		int m_Offset;
+		int m_size;
+	};
+
+	// Current OBJ Mesh
+	struct CurrentObjMesh
+	{
+		CurrentObjMesh(const QString materialName)
+		: m_pMesh(new GLC_ExtendedMesh())
+		, m_Positions()
+		, m_Normals()
+		, m_Texels()
+		, m_Index()
+		, m_pLastOffsetSize(new MatOffsetSize())
+		, m_Materials()
+		, m_NextFreeIndex(0)
+		, m_ObjVerticeIndexMap()
+		{
+			m_Materials.insert(materialName, m_pLastOffsetSize);
+		}
+		~CurrentObjMesh()
+		{
+			QHash<QString, MatOffsetSize*>::iterator i= m_Materials.begin();
+			while (m_Materials.constEnd() != i)
+			{
+				delete i.value();
+				++i;
+			}
+		}
+		GLC_ExtendedMesh* m_pMesh;
+		QList<float> m_Positions;
+		QList<float> m_Normals;
+		QList<float> m_Texels;
+		//! The index of the current Mesh
+		IndexList m_Index;
+		// Pointer to the last matOffsetSize
+		MatOffsetSize* m_pLastOffsetSize;
+		// QHash containing material id and associated offset and size
+		QHash<QString, MatOffsetSize*> m_Materials;
+		//! The next free index
+		int m_NextFreeIndex;
+		//! The Hash table of obj vertice mapping to index
+		QHash<ObjVertice, GLuint> m_ObjVerticeIndexMap;
+	};
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -99,36 +171,42 @@ public:
 private:
 	//! Return the name of the mtl file
 	QString getMtlLibFileName(QString);
+
 	//! Scan a line previously extracted from OBJ file
 	void scanLigne(QString &);
+
 	//! Change current group
 	void changeGroup(QString);
+
 	//! Extract a 3D Vector from a string
-	GLC_Vector3df extract3dVect(QString &);
+	QList<float> extract3dVect(QString &);
+
 	//! Extract a 2D Vector from a string
-	GLC_Vector2df extract2dVect(QString &);
+	QList<float> extract2dVect(QString &);
+
 	//! Extract a face from a string
 	void extractFaceIndex(QString &);
+
 	//! Set Current material index
 	void setCurrentMaterial(QString &line);
+
 	//! Extract a vertex from a string
 	void extractVertexIndex(QString ligne, int &Coordinate, int &Normal, int &TextureCoordinate);
+
 	//! set the OBJ File type
 	void setObjType(QString &);
+
 	//! compute face normal
-	void computeNormal(QVector<int> &);
-	//! Fill the current list of vertex by empty vertex
-	void fillCurrentListOfVertex(const int);
-	//! Add Vertexs in the current list of vertex
-	void addVertexsToCurrentListOfVertex(QVector<int> &);
-	//! Add Normals in the current list of vertex
-	void addNormalsToCurrentListOfVertex(QVector<int> &);
-	//! Add TextureCoordinate in the current list of vertex
-	void addTextureCoordinatesToCurrentListOfVertex(QVector<int> &);
+	GLC_Vector3df computeNormal(GLuint, GLuint, GLuint);
+
 	//! clear objToWorld allocate memmory
 	void clear();
+
 	//! Merge Mutli line in one
 	void mergeLines(QString*, QTextStream*);
+
+	//! Add the current Obj mesh to the world
+	void addCurrentObjMeshToWorld();
 
 
 
@@ -144,31 +222,21 @@ private:
 private:
 	//! pointer to a GLC_World
 	GLC_World* m_pWorld;
+
 	//! The Obj File name
 	QString m_FileName;
+
 	//! OpenGL Context
 	const QGLContext* m_pQGLContext;
+
 	//! the Obj Mtl loader
 	GLC_ObjMtlLoader* m_pMtlLoader;
+
 	//! The current line number
 	int m_CurrentLineNumber;
+
 	//! The current mesh
-	GLC_Mesh2* m_pCurrentMesh;
-
-	//! Coordinate hash table
-	Vector3dHash m_VertexHash;
-	//! Normal hash table
-	Vector3dHash m_NormalHash;
-	//! Texture coordinate Hash table
-	Vector2dHash m_TextCoordinateHash;
-
-	//! Index of the current vertex
-	int m_CurVertexIndex;
-
-	//! Index of the current normal
-	int m_CurNormalIndex;
-	//! Index of the current texture coordinate
-	int m_CurTextureCoordinateIndex;
+	CurrentObjMesh* m_pCurrentObjMesh;
 
 	//! Face type
 	FaceType m_FaceType;
@@ -176,16 +244,28 @@ private:
 	//! List of material already used by the current mesh
 	QHash<QString, int> m_CurrentMeshMaterials;
 
-	//! current mesh material index
-	GLC_Material* m_pCurrentMaterial;
-
-	//! The list of GLC_Vertex of the current face
-	VertexList m_CurrentListOfVertex;
+	//! Current material name
+	QString m_CurrentMaterialName;
 
 	//! The list of attached file name
 	QStringList m_ListOfAttachedFileName;
 
+	//! The position bulk data
+	QList<float> m_Positions;
 
+	//! The normal bulk data
+	QList<float> m_Normals;
+
+	//! The texture coordinate bulk data
+	QList<float> m_Texels;
 };
+
+// To use ObjVertice as a QHash key
+inline bool operator==(const GLC_ObjToWorld::ObjVertice& vertice1, const GLC_ObjToWorld::ObjVertice& vertice2)
+{ return (vertice1.m_Values == vertice2.m_Values);}
+
+inline uint qHash(const GLC_ObjToWorld::ObjVertice& vertice)
+{ return qHash(QString::number(vertice.m_Values.at(0)) + QString::number(vertice.m_Values.at(1)) + QString::number(vertice.m_Values.at(2)));}
+
 
 #endif /*GLC_OBJTOWORLD_H_*/
