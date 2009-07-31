@@ -29,8 +29,7 @@
 
 #include <QVector>
 #include <QList>
-
-#include "glc_mesh2.h"
+#include "glc_extendedmesh.h"
 
 namespace glc
 {
@@ -41,7 +40,7 @@ namespace glc
 //////////////////////////////////////////////////////////////////////
 	//! test if a polygon is convex
 	/*! The polygon must have mare than 3 vertexs */
-	bool polygonIsConvex(const VertexList*);
+	//bool polygonIsConvex(const VertexList*);
 
 	//! find intersection between two 2D segments
 	/*! Return the intersection as QVector of GLC_Point2d
@@ -75,17 +74,8 @@ namespace glc
 	//! return true if the polygon is couterclockwise ordered
 	bool isCounterclockwiseOrdered(const QList<GLC_Point2d>&);
 
-	//! Triangulate a polygon
-	void triangulatePolygon(VertexList*);
-
 	//! Triangulate a no convex polygon
-	void triangulateNoConvexPolygon(VertexList*);
-
-	//! Triangulate a no convex polygon
-	void triangulatePolygon(QList<int>*, const QList<float>&);
-
-	//! Triangulate a convex polygon
-	void triangulateConvexPolygon(VertexList*);
+	void triangulatePolygon(QList<GLuint>*, const QList<float>&);
 
 
 //@}

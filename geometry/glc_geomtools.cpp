@@ -32,6 +32,7 @@
 //////////////////////////////////////////////////////////////////////
 
 // test if a polygon of mesh is convex
+/*
 bool glc::polygonIsConvex(const VertexList* pVertexList)
 {
 	const int max= pVertexList->size();
@@ -67,6 +68,7 @@ bool glc::polygonIsConvex(const VertexList* pVertexList)
 	// Ok, the polygon is convexe
 	return true;
 }
+*/
 // find intersection between two 2D segments
 QVector<GLC_Point2d> glc::findIntersection(const GLC_Point2d& s1p1, const GLC_Point2d& s1p2, const GLC_Point2d& s2p1, const GLC_Point2d& s2p2)
 {
@@ -364,118 +366,9 @@ bool glc::isCounterclockwiseOrdered(const QList<GLC_Point2d>& polygon)
 	return true;
 
 }
-// Triangulate a polygon
-void glc::triangulatePolygon(VertexList* pVertexList)
-{
-	if (polygonIsConvex(pVertexList))
-	{
-		// TODO use triangulateConvexPolygon when fix bug
-		triangulateNoConvexPolygon(pVertexList);
-	}
-	else
-	{
-		triangulateNoConvexPolygon(pVertexList);
-	}
-}
-//! Triangulate a no convex polygon
-void glc::triangulateNoConvexPolygon(VertexList* pVertexList)
-{
-	// Get the mesh's polygon vertexs
-	QList<GLC_Point4d> originPoints;
-	int size= pVertexList->size();
-	QList<int> face;
-	for (int i= 0; i < size; ++i)
-	{
-		originPoints.append(GLC_Point4d((*pVertexList)[i].x, (*pVertexList)[i].y, (*pVertexList)[i].z));
-		face.append(i);
-	}
-
-//-------------- Change frame to mach polygon plane
-	// Compute face normal
-	const GLC_Point4d point1(originPoints[0]);
-	const GLC_Point4d point2(originPoints[1]);
-	const GLC_Point4d point3(originPoints[2]);
-
-	const GLC_Vector4d edge1(point2 - point1);
-	const GLC_Vector4d edge2(point3 - point2);
-
-	GLC_Vector4d polygonPlaneNormal(edge1 ^ edge2);
-	polygonPlaneNormal.setNormal(1.0);
-
-	// Create the transformation matrix
-	GLC_Matrix4x4 transformation;
-
-	GLC_Vector4d rotationAxis(polygonPlaneNormal ^ Z_AXIS);
-	if (!rotationAxis.isNull())
-	{
-		const double angle= acos(polygonPlaneNormal * Z_AXIS);
-		transformation.setMatRot(rotationAxis, angle);
-	}
-
-	QList<GLC_Point2d> polygon;
-	// Transforme polygon vertexs
-	for (int i=0; i < size; ++i)
-	{
-		//qDebug() << "b" << originPoints[i].toString();
-		originPoints[i]= transformation * originPoints[i];
-		//qDebug() << "a" << originPoints[i].toString();
-		// Create 2d vector
-		polygon << originPoints[i].toVector2d(Z_AXIS);
-		//qDebug() << polygon[i].toString();
-	}
-	// Create the index
-	QList<int> index;
-	for (int i= 0; i < size; ++i)
-		index.append(i);
-
-	QList<int> tList;
-	const bool faceIsCounterclockwise= isCounterclockwiseOrdered(polygon);
-
-	if(not faceIsCounterclockwise)
-	{
-		//qDebug() << "clockwiseOrdered -> reordering polygon";
-		const int max= size / 2;
-		for (int i= 0; i < max; ++i)
-		{
-			polygon.swap(i, size - 1 -i);
-			int temp= face[i];
-			face[i]= face[size - 1 - i];
-			face[size - 1 - i]= temp;
-		}
-	}
-
-	triangulate(polygon, index, tList);
-	size= tList.size();
-	QList<int> result;
-	for (int i= 0; i < size; i+= 3)
-	{
-		// Avoid normal problem
-		if (faceIsCounterclockwise)
-		{
-			result.append(face[tList[i]]);
-			result.append(face[tList[i + 1]]);
-			result.append(face[tList[i + 2]]);
-		}
-		else
-		{
-			result.append(face[tList[i + 2]]);
-			result.append(face[tList[i + 1]]);
-			result.append(face[tList[i]]);
-		}
-		//qDebug() << QString::number(result[i]);
-	}
-	Q_ASSERT(size == result.size());
-	VertexList newVertexList;
-	for (int i= 0; i < size; ++i)
-	{
-		newVertexList.append((*pVertexList)[result[i]]);
-	}
-
-	(*pVertexList)= newVertexList;
-}
 
 // Triangulate a no convex polygon
-void glc::triangulatePolygon(QList<int>* pIndexList, const QList<float>& bulkList)
+void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulkList)
 {
 	// Get the polygon vertice
 	QList<GLC_Point4d> originPoints;
@@ -577,24 +470,6 @@ void glc::triangulatePolygon(QList<int>* pIndexList, const QList<float>& bulkLis
 		}
 		Q_ASSERT(size == pIndexList->size());
 }
-
-// Triangulate a convex polygon
-void glc::triangulateConvexPolygon(VertexList* pVertexList)
-{
-	// TODO correct bug if face is in no conter clockwise
-	VertexList newVertexList;
-	const int nbrOfVertex= pVertexList->size();
-	const int triangleNbr= (nbrOfVertex / 3) + (nbrOfVertex % 3);
-	for (int i= 0; i < triangleNbr; ++i)
-	{
-		newVertexList.append((*pVertexList)[0]);
-		newVertexList.append((*pVertexList)[1 + i]);
-		newVertexList.append((*pVertexList)[2 + i]);
-	}
-
-	(*pVertexList)= newVertexList;
-}
-
 
 
 
