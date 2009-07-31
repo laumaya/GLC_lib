@@ -37,7 +37,6 @@
 #include "geometry/glc_circle.h"
 #include "geometry/glc_box.h"
 #include "geometry/glc_cylinder.h"
-#include "geometry/glc_mesh2.h"
 #include "geometry/glc_rectangle.h"
 #include "shading/glc_material.h"
 #include "shading/glc_texture.h"

@@ -80,7 +80,6 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
 							geometry/glc_cylinder.h \
 							geometry/glc_point.h \
 							geometry/glc_box.h \
-							geometry/glc_mesh2.h \
            					geometry/glc_geomtools.h \
 							geometry/glc_geomengine.h \
 							geometry/glc_simplegeomengine.h \
@@ -194,7 +193,6 @@ SOURCES +=	geometry/glc_vbogeom.cpp \
 			geometry/glc_cylinder.cpp \
 			geometry/glc_point.cpp \
 			geometry/glc_box.cpp \
-			geometry/glc_mesh2.cpp \
 			geometry/glc_geomtools.cpp \
 			geometry/glc_geomengine.cpp \
 			geometry/glc_simplegeomengine.cpp \
@@ -263,7 +261,6 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Light \
     		   include/GLC_Material \
     		   include/GLC_Matrix4x4 \
-    		   include/GLC_Mesh2 \
     		   include/GLC_Node \
     		   include/GLC_Object \
     		   include/GLC_OpenGlException \
