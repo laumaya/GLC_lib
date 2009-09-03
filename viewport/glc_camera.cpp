@@ -317,12 +317,12 @@ GLC_Camera &GLC_Camera::operator=(const GLC_Camera& cam)
 // almost equality (Bauer Laurent)
 bool GLC_Camera::isAlmostEqualTo(const GLC_Camera& cam, const double distanceAccuracy) const
 {
-      GLC_Vector4d incident1 = m_Target-m_Eye;
-      GLC_Vector4d incident2 = cam.m_Target-cam.m_Eye;
+      GLC_Vector4d incident1 = m_Target - m_Eye;
+      GLC_Vector4d incident2 = cam.m_Target - cam.m_Eye;
 
       double allowedGap =  incident1.norm() * distanceAccuracy;
-      GLC_Point4d left1 = incident1^m_VectUp;
-      GLC_Point4d left2 = incident2^cam.m_VectUp;
+      GLC_Point4d left1 = incident1 ^ m_VectUp;
+      GLC_Point4d left2 = incident2 ^ cam.m_VectUp;
 
       return ((m_Eye - cam.m_Eye).norm() < allowedGap ) && ( (m_Target - cam.m_Target).norm() < allowedGap)
                   && ((left1 - left2).norm() < allowedGap) ;
