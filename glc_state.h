@@ -49,34 +49,48 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return true if VBO is supported
-	inline static bool vboSupported() {return m_VboSupported;}
+	inline static bool vboSupported()
+	{return m_VboSupported;}
 
 	//! Return true if VBO is used
-	inline static bool vboUsed() {return m_UseVbo;}
+	inline static bool vboUsed()
+	{return m_UseVbo;}
 
 	//! Return true if GLSL is supported
-	inline static bool glslSupported() {return m_GlslSupported;}
+	inline static bool glslSupported()
+	{return m_GlslSupported;}
 
 	//! Return true if GLSL is used
-	inline static bool glslUsed() {return m_UseShader;}
+	inline static bool glslUsed()
+	{return m_UseShader;}
 
 	//! Return true if selection shader is used
-	inline static bool selectionShaderUsed() {return m_UseSelectionShader;}
+	inline static bool selectionShaderUsed()
+	{return m_UseSelectionShader;}
 
 	//! Return true if is in selection mode
-	inline static bool isInSelectionMode() {return m_IsInSelectionMode;}
+	inline static bool isInSelectionMode()
+	{return m_IsInSelectionMode;}
 
 	//! Return the Opengl version
-	inline static QString version() {return m_Version;}
+	inline static QString version()
+	{return m_Version;}
 
 	//! Return the Opengl vendor
-	inline static QString vendor() {return m_Vendor;}
+	inline static QString vendor()
+	{return m_Vendor;}
 
 	//! Return the Opengl renderer
-	inline static QString renderer() {return m_Renderer;}
+	inline static QString renderer()
+	{return m_Renderer;}
 
 	//! Return true if OpenGL Vendor is NVIDIA
-	inline static bool vendorIsNvidia() {return m_Vendor.contains("NVIDIA");}
+	inline static bool vendorIsNvidia()
+	{return m_Vendor.contains("NVIDIA");}
+
+	//! Return true if pixel culling is activate
+	inline static bool isPixelCullingActivated()
+	{return m_IsPixelCullingActivated;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -103,7 +117,12 @@ public:
 	static void setSelectionShaderUsage(const bool);
 
 	//! Set selection mode
-	inline static void setSelectionMode(const bool mode) {m_IsInSelectionMode= mode;}
+	inline static void setSelectionMode(const bool mode)
+	{m_IsInSelectionMode= mode;}
+
+	//! Set pixel culling state
+	inline static void setPixelCullingUsage(const bool activation)
+	{m_IsPixelCullingActivated= activation;}
 
 //@}
 
@@ -128,6 +147,9 @@ private:
 
 	//! In selection mode
 	static bool m_IsInSelectionMode;
+
+	//! Pixel culling activation
+	static bool m_IsPixelCullingActivated;
 
 	//! The Opengl card version
 	static QString m_Version;

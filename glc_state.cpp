@@ -33,6 +33,8 @@ bool GLC_State::m_GlslSupported= false;
 bool GLC_State::m_UseShader= true;
 bool GLC_State::m_UseSelectionShader= false;
 bool GLC_State::m_IsInSelectionMode= false;
+bool GLC_State::m_IsPixelCullingActivated= true;
+
 QString GLC_State::m_Version;
 QString GLC_State::m_Vendor;
 QString GLC_State::m_Renderer;
