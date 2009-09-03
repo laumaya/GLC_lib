@@ -33,6 +33,7 @@
 #include "../maths/glc_matrix4x4.h"
 #include "../glc_state.h"
 #include "../geometry/glc_3drep.h"
+#include <QMutex>
 
 class GLC_Viewport;
 
@@ -183,6 +184,12 @@ public:
 	inline int numberOfBody() const
 	{return m_3DRep.numberOfBody();}
 
+	//! Return the global default LOD value
+	inline static int globalDefaultLod()
+	{
+		return m_GlobalDefaultLOD;
+	}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -253,6 +260,8 @@ public:
 		m_DefaultLOD= lod;
 	}
 
+	//! Set the global default LOD value
+	static void setGlobalDefaultLod(int);
 
 //@}
 
@@ -325,6 +334,12 @@ private:
 
 	//! The Default LOD
 	int m_DefaultLOD;
+
+	//! A Mutex
+	static QMutex m_Mutex;
+
+	//! The global default LOD
+	static int m_GlobalDefaultLOD;
 
 };
 

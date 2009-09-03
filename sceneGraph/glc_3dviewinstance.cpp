@@ -27,6 +27,15 @@
 #include "glc_3dviewinstance.h"
 #include "../shading/glc_selectionmaterial.h"
 #include "../viewport/glc_viewport.h"
+#include <QMutexLocker>
+#include "../glc_state.h"
+
+//! A Mutex
+QMutex GLC_3DViewInstance::m_Mutex;
+
+//! The global default LOD
+int GLC_3DViewInstance::m_GlobalDefaultLOD= 10;
+
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -44,7 +53,7 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 , m_PolyMode(GL_FILL)
 , m_IsVisible(true)
 , m_colorId()
-, m_DefaultLOD(10)
+, m_DefaultLOD(m_GlobalDefaultLOD)
 {
 	// Encode Color Id
 	encodeIdInRGBA();
@@ -65,7 +74,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_VboGeom* pGeom)
 , m_PolyMode(GL_FILL)
 , m_IsVisible(true)
 , m_colorId()
-, m_DefaultLOD(10)
+, m_DefaultLOD(m_GlobalDefaultLOD)
 {
 	// Encode Color Id
 	encodeIdInRGBA();
@@ -88,7 +97,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
 , m_PolyMode(GL_FILL)
 , m_IsVisible(true)
 , m_colorId()
-, m_DefaultLOD(10)
+, m_DefaultLOD(m_GlobalDefaultLOD)
 {
 	// Encode Color Id
 	encodeIdInRGBA();
@@ -180,6 +189,13 @@ GLC_BoundingBox GLC_3DViewInstance::getBoundingBox(void)
 	}
 
 	return resultBox;
+}
+
+//! Set the global default LOD value
+void GLC_3DViewInstance::setGlobalDefaultLod(int lod)
+{
+	QMutexLocker locker(&m_Mutex);
+	m_GlobalDefaultLOD= lod;
 }
 
 // Clone the instance
@@ -297,7 +313,7 @@ void GLC_3DViewInstance::setPolygonMode(GLenum Face, GLenum Mode)
 //////////////////////////////////////////////////////////////////////
 
 // Display the instance
-void GLC_3DViewInstance::glExecute(bool transparent, bool useLoad, GLC_Viewport* pView)
+void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* pView)
 {
 	if (m_3DRep.isEmpty()) return;
 	// Save current OpenGL Matrix
@@ -308,7 +324,7 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLoad, GLC_Viewport*
 		glColor3ubv(m_colorId); // D'ont use Alpha component
 	}
 	const int size= m_3DRep.numberOfBody();
-	if (useLoad and (NULL != pView))
+	if (useLod and (NULL != pView))
 	{
 		for (int i= 0; i < size; ++i)
 		{
@@ -324,7 +340,12 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLoad, GLC_Viewport*
 	{
 		for (int i= 0; i < size; ++i)
 		{
-			const int lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
+			int lodValue= 0;
+			if (GLC_State::isPixelCullingActivated())
+			{
+				lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
+			}
+
 			if (lodValue <= 100)
 			{
 				m_3DRep.geomAt(i)->setCurrentLod(m_DefaultLOD);
@@ -399,7 +420,7 @@ int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewpor
 
 	if (ratio > 100.0) ratio= 100.0;
 	ratio= 100.0 - ratio;
-	if (ratio > 98.0) ratio= 110.0;
+	if ((ratio > 98.0) and GLC_State::isPixelCullingActivated()) ratio= 110.0;
 	if (ratio < static_cast<double>(m_DefaultLOD)) ratio= static_cast<double>(m_DefaultLOD);
 	//qDebug() << "RATIO = " << static_cast<int>(ratio);
 
