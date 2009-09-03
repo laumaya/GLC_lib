@@ -126,7 +126,7 @@ GLC_Vector4d GLC_Matrix4x4::operator * (const GLC_Vector4d &Vect) const
 	if (VectResult.vector[3] != 1.0)
 	{
 		//qDebug("Matrice4x4::operator * : Changement de W");
-		VectResult.setWToNull();
+		VectResult.normalizeW();
 	}
 
 	return VectResult;

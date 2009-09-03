@@ -62,9 +62,10 @@ GLC_Vector4d& GLC_Vector4d::setW(const double &dW)
 {
 	if (dW != 0)
 	{
-		vector[0]/= dW;
-		vector[1]/= dW;
-		vector[2]/= dW;
+		const double invDW= 1.0 / dW;
+		vector[0]*= invDW;
+		vector[1]*= invDW;
+		vector[2]*= invDW;
 		vector[3]= 1.0;		// For calculation, W = 1.
 	}
 	return *this;
@@ -81,9 +82,10 @@ GLC_Vector4d& GLC_Vector4d::setVect(const double &dX, const double &dY,
 	}
 	else
 	{
-		vector[0]= dX / dW;
-		vector[1]= dY / dW;
-		vector[2]= dZ / dW;
+		const double invDW= 1.0 / dW;
+		vector[0]= dX * invDW;
+		vector[1]= dY * invDW;
+		vector[2]= dZ * invDW;
 	}
 
 	vector[3]= 1.0;		// For calculation, W = 1.
@@ -166,14 +168,15 @@ GLC_Vector2d GLC_Vector4d::toVector2d(const GLC_Vector4d& mask) const
 // Services private function
 //////////////////////////////////////////////////////////////////////
 
-// Normalize Vector w <- 0
-void GLC_Vector4d::setWToNull(void)
+// Normalize Vector w <- 1
+void GLC_Vector4d::normalizeW(void)
 {
 	if (fabs(vector[3]) > 0.00001)
 	{
-		vector[0]/= vector[3];
-		vector[1]/= vector[3];
-		vector[2]/= vector[3];
+		const double invW= 1.0 / vector[3];
+		vector[0]*= invW;
+		vector[1]*= invW;
+		vector[2]*= invW;
 	}
 	vector[3]= 1.0;
 }

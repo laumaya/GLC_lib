@@ -129,20 +129,20 @@ public:
 	inline GLC_Matrix4x4 rotationMatrix() const
 	{
 		GLC_Matrix4x4 result(*this);
-		const double scaleX= scalingX();
-		const double scaleY= scalingY();
-		const double scaleZ= scalingZ();
-		result.matrix[0]= result.matrix[0] / scaleX;
-		result.matrix[1]= result.matrix[1] / scaleX;
-		result.matrix[2]= result.matrix[2] / scaleX;
+		const double invScaleX= 1.0 / scalingX();
+		const double invScaleY= 1.0 / scalingY();
+		const double invScaleZ= 1.0 / scalingZ();
+		result.matrix[0]= result.matrix[0] * invScaleX;
+		result.matrix[1]= result.matrix[1] * invScaleX;
+		result.matrix[2]= result.matrix[2] * invScaleX;
 
-		result.matrix[4]= result.matrix[4] / scaleY;
-		result.matrix[5]= result.matrix[5] / scaleY;
-		result.matrix[6]= result.matrix[6] / scaleY;
+		result.matrix[4]= result.matrix[4] * invScaleY;
+		result.matrix[5]= result.matrix[5] * invScaleY;
+		result.matrix[6]= result.matrix[6] * invScaleY;
 
-		result.matrix[8]= result.matrix[8] / scaleZ;
-		result.matrix[9]= result.matrix[9] / scaleZ;
-		result.matrix[10]= result.matrix[10] / scaleZ;
+		result.matrix[8]= result.matrix[8] * invScaleZ;
+		result.matrix[9]= result.matrix[9] * invScaleZ;
+		result.matrix[10]= result.matrix[10] * invScaleZ;
 
 		result.matrix[12]= 0.0; result.matrix[13]= 0.0; result.matrix[14]= 0.0;
 		result.matrix[3]= 0.0; result.matrix[7]= 0.0; result.matrix[11]= 0.0;
@@ -154,20 +154,20 @@ public:
 	inline GLC_Matrix4x4 isometricMatrix() const
 	{
 		GLC_Matrix4x4 result(*this);
-		const double scaleX= scalingX();
-		const double scaleY= scalingY();
-		const double scaleZ= scalingZ();
-		result.matrix[0]= result.matrix[0] / scaleX;
-		result.matrix[1]= result.matrix[1] / scaleX;
-		result.matrix[2]= result.matrix[2] / scaleX;
+		const double invScaleX= 1.0 / scalingX();
+		const double invScaleY= 1.0 / scalingY();
+		const double invScaleZ= 1.0 / scalingZ();
+		result.matrix[0]= result.matrix[0] * invScaleX;
+		result.matrix[1]= result.matrix[1] * invScaleX;
+		result.matrix[2]= result.matrix[2] * invScaleX;
 
-		result.matrix[4]= result.matrix[4] / scaleY;
-		result.matrix[5]= result.matrix[5] / scaleY;
-		result.matrix[6]= result.matrix[6] / scaleY;
+		result.matrix[4]= result.matrix[4] * invScaleY;
+		result.matrix[5]= result.matrix[5] * invScaleY;
+		result.matrix[6]= result.matrix[6] * invScaleY;
 
-		result.matrix[8]= result.matrix[8] / scaleZ;
-		result.matrix[9]= result.matrix[9] / scaleZ;
-		result.matrix[10]= result.matrix[10] / scaleZ;
+		result.matrix[8]= result.matrix[8] * invScaleZ;
+		result.matrix[9]= result.matrix[9] * invScaleZ;
+		result.matrix[10]= result.matrix[10] * invScaleZ;
 		return result;
 	}
 
