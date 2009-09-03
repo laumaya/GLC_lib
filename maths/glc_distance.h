@@ -30,6 +30,8 @@
 #include "../glc_object.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 
+//#include <../PQP/PQP.h>
+
 class GLC_ExtendedMesh;
 class PQP_Model;
 
@@ -117,14 +119,6 @@ public:
 	inline GLC_Point4d point2() const
 	{return m_Point2;}
 
-	//! Return Instance 1 Id
-	inline GLC_uint getInstance1Id() const
-	{return m_InstanceId1;}
-
-	//! Return Instance 2 Id
-	inline GLC_uint getInstance2Id() const
-	{return m_InstanceId2;}
-
 	//! Return the relative error
 	inline double relativeError() const
 	{return m_RelativeError;}
@@ -140,11 +134,16 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 private:
+
 	//! Return distance mini beween to instance
-	DistanceResult minimumDistance(GLC_3DViewInstance&, GLC_3DViewInstance&) const;
+	DistanceResult minimumDistance(QList<GLC_3DViewInstance>&, QList<GLC_3DViewInstance>&) const;
+
+	//! Get the PQP Point after matricial transformation
+	void getPQPPoint(double&, double&, double&, const double, const double, const double, const GLC_Matrix4x4&) const;
 
 	//! Add mesh triangles to PQP model
-	void addMeshTrianglesToPQP(PQP_Model*, const QList<GLC_ExtendedMesh*>, const QList<double>&) const;
+	void addMeshTrianglesToPQP(PQP_Model*, const QList<GLC_ExtendedMesh*>, const GLC_Matrix4x4&) const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -165,12 +164,6 @@ private:
 
 	//! The minimum distance
 	double m_DistanceMini;
-
-	//! The instance1 Id
-	GLC_uint m_InstanceId1;
-
-	//! The instance2 Id
-	GLC_uint m_InstanceId2;
 
 	//! The PQP relative error
 	double m_RelativeError;
