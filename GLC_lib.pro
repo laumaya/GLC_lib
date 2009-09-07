@@ -2,11 +2,13 @@
 TEMPLATE = lib
 QT += opengl \
     core
+
+CONFIG+= x86
 CONFIG += exceptions \
     debug \
     warn_on
 TARGET = GLC_lib
-VERSION = 1.1.0
+VERSION = 1.2.0
 
 unix:OBJECTS_DIR = ./Build
 unix:MOC_DIR = ./Build
