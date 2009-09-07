@@ -968,7 +968,6 @@ void GLC_3dxmlToWorld::loadLOD(GLC_ExtendedMesh* pMesh)
 					//qDebug() << m_p3dxmlFile->getActualFileName();
 					checkForXmlError("Material ID not found");
 					QString materialId= readAttribute("id", true).remove("urn:3DXML:CATMaterialRef.3dxml#");
-					if (m_MaterialHash.contains(materialId));
 					m_pCurrentMaterial= m_MaterialHash.value(materialId);
 				}
 			}
