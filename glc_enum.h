@@ -53,7 +53,7 @@ namespace glc
 
 // GLC_Lib version
 
-#define GLC_VERSION "1.1.0"
+#define GLC_VERSION "1.2.0"
 #define GLC_DESCRIPTION "GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4."
 
 
