@@ -3,7 +3,7 @@
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
  Copyright (C) 2009 Pierre Soetewey
- Version 1.1.0, packaged on March, 2009.
+ Version 1.2.0, packaged on September 2009.
 
  http://glc-lib.sourceforge.net
 
