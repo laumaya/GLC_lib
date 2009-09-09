@@ -84,34 +84,34 @@ public:
 	//! Return true if the material is used
 	bool isUnused() const {return m_WhereUsed.isEmpty();}
 
-	//! Return true is material add attached texture
-	bool getAddRgbaTexture()
+	//! Return true is material has attached texture
+	bool hasTexture()
 	{
 		return m_pTexture != NULL;
 	}
 	//! Get Ambiant color
-	QColor getAmbientColor() const;
+	QColor ambientColor() const;
 
 	//! Get diffuse color
-	QColor getDiffuseColor() const;
+	QColor diffuseColor() const;
 
 	//! Get specular color
-	QColor getSpecularColor() const;
+	QColor specularColor() const;
 
 	//! Get the emissive color
-	QColor getLightEmission() const;
+	QColor lightEmission() const;
 
 	//! Get Shininess
-	GLfloat getShininess() const
+	GLfloat shininess() const
 	{
 		return m_fShininess;
 	}
 
 	//! Get the texture File Name
-	QString getTextureFileName() const;
+	QString textureFileName() const;
 
 	//! Get Texture Id
-	GLuint getTextureID() const;
+	GLuint textureID() const;
 
 	//! return true if the texture is loaded
 	bool textureIsLoaded() const;
@@ -123,7 +123,7 @@ public:
 	bool operator==(const GLC_Material&) const;
 
 	//! Return the material alpha
-	inline double getAlpha() const
+	inline double alpha() const
 	{return m_DiffuseColor.alphaF();}
 
 	//! Return the number of this material usage

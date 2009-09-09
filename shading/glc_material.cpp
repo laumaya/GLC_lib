@@ -161,30 +161,30 @@ GLC_Material::~GLC_Material(void)
 //////////////////////////////////////////////////////////////////////
 
 // Get Ambiant color
-QColor GLC_Material::getAmbientColor() const
+QColor GLC_Material::ambientColor() const
 {
 	return m_AmbientColor;
 }
 
 // Get diffuse color
-QColor GLC_Material::getDiffuseColor() const
+QColor GLC_Material::diffuseColor() const
 {
 	return m_DiffuseColor;
 }
 
 // Get specular color
-QColor GLC_Material::getSpecularColor() const
+QColor GLC_Material::specularColor() const
 {
 	return m_SpecularColor;
 }
 
 // Get the emissive color
-QColor GLC_Material::getLightEmission() const
+QColor GLC_Material::lightEmission() const
 {
 	return m_LightEmission;
 }
 // Get the texture File Name
-QString GLC_Material::getTextureFileName() const
+QString GLC_Material::textureFileName() const
 {
 	if (m_pTexture != NULL)
 	{
@@ -197,7 +197,7 @@ QString GLC_Material::getTextureFileName() const
 }
 
 // Get Texture Id
-GLuint GLC_Material::getTextureID() const
+GLuint GLC_Material::textureID() const
 {
 	if (m_pTexture != NULL)
 	{
@@ -418,25 +418,25 @@ void GLC_Material::glLoadTexture(void)
 // Execute OpenGL Material
 void GLC_Material::glExecute()
 {
-	GLfloat pAmbientColor[4]= {getAmbientColor().redF(),
-								getAmbientColor().greenF(),
-								getAmbientColor().blueF(),
-								getAmbientColor().alphaF()};
+	GLfloat pAmbientColor[4]= {ambientColor().redF(),
+								ambientColor().greenF(),
+								ambientColor().blueF(),
+								ambientColor().alphaF()};
 
-	GLfloat pDiffuseColor[4]= {getDiffuseColor().redF(),
-								getDiffuseColor().greenF(),
-								getDiffuseColor().blueF(),
-								getDiffuseColor().alphaF()};
+	GLfloat pDiffuseColor[4]= {diffuseColor().redF(),
+								diffuseColor().greenF(),
+								diffuseColor().blueF(),
+								diffuseColor().alphaF()};
 
-	GLfloat pSpecularColor[4]= {getSpecularColor().redF(),
-								getSpecularColor().greenF(),
-								getSpecularColor().blueF(),
-								getSpecularColor().alphaF()};
+	GLfloat pSpecularColor[4]= {specularColor().redF(),
+								specularColor().greenF(),
+								specularColor().blueF(),
+								specularColor().alphaF()};
 
-	GLfloat pLightEmission[4]= {getLightEmission().redF(),
-								getLightEmission().greenF(),
-								getLightEmission().blueF(),
-								getLightEmission().alphaF()};
+	GLfloat pLightEmission[4]= {lightEmission().redF(),
+								lightEmission().greenF(),
+								lightEmission().blueF(),
+								lightEmission().alphaF()};
 
 	if (m_pTexture != NULL)
 	{
