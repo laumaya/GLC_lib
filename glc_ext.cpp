@@ -63,6 +63,11 @@ PFNGLUNIFORM1IARBPROC				glUniform1i				= NULL;
 PFNGLGETSHADERIVPROC				glGetShaderiv			= NULL;
 PFNGLGETPROGRAMIVARBPROC			glGetProgramiv			= NULL;
 PFNGLISPROGRAMARBPROC				glIsProgram				= NULL;
+
+// GL_point_parameters Point Sprite
+PFNGLPOINTPARAMETERFARBPROC			glPointParameterf		= NULL;
+PFNGLPOINTPARAMETERFVARBPROC		glPointParameterfv		= NULL;
+
 #endif
 
 //const QString glExtension(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)));
@@ -142,6 +147,23 @@ bool glc::loadGlSlExtension()
 	result= glCreateProgram and glDeleteProgram and glUseProgram and glCreateShader and glDeleteShader and
     glShaderSource and glCompileShader and glAttachShader and glDetachShader and glLinkProgram and
     glGetUniformLocation and glUniform4f and glUniform1i and glGetShaderiv and glGetProgramiv and glIsProgram;
+
+#endif
+    return result;
+}
+
+// Load Point Sprite extension
+bool glc::loadPointSpriteExtension()
+{
+	bool result= true;
+#if !defined(Q_OS_MAC)
+	const QGLContext* pContext= QGLContext::currentContext();
+	glPointParameterf				= (PFNGLPOINTPARAMETERFARBPROC)pContext->getProcAddress(QLatin1String("glPointParameterf"));
+	if (not glPointParameterf) qDebug() << "not glPointParameterf";
+	glPointParameterfv				= (PFNGLPOINTPARAMETERFVARBPROC)pContext->getProcAddress(QLatin1String("glPointParameterfv"));
+	if (not glPointParameterfv) qDebug() << "not glPointParameterf";
+
+	result= glPointParameterf and ;
 
 #endif
     return result;

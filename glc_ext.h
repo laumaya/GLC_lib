@@ -63,6 +63,11 @@ extern PFNGLUNIFORM1IARBPROC            glUniform1i;
 extern PFNGLGETSHADERIVPROC				glGetShaderiv;
 extern PFNGLGETPROGRAMIVARBPROC			glGetProgramiv;
 extern PFNGLISPROGRAMARBPROC			glIsProgram;
+
+// GL_point_parameters Point Sprite
+extern PFNGLPOINTPARAMETERFARBPROC  glPointParameterf;
+extern PFNGLPOINTPARAMETERFVARBPROC glPointParameterfv;
+
 #endif
 
 namespace glc
@@ -75,5 +80,8 @@ namespace glc
 
 	//! Load GLSL extensions
 	bool loadGlSlExtension();
+
+	//! Load Point Sprite extension
+	bool loadPointSpriteExtension();
 };
 #endif /*GLC_EXT_H_*/
