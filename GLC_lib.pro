@@ -92,7 +92,8 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
 							geometry/glc_rectangle.h \
 							geometry/glc_line.h \
 							geometry/glc_rep.h \
-							geometry/glc_3drep.h
+							geometry/glc_3drep.h \
+							geometry/glc_pointsprite.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -205,7 +206,8 @@ SOURCES +=	geometry/glc_vbogeom.cpp \
 			geometry/glc_rectangle.cpp \
 			geometry/glc_line.cpp \
 			geometry/glc_rep.cpp \
-			geometry/glc_3drep.cpp
+			geometry/glc_3drep.cpp \
+			geometry/glc_pointsprite.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -301,7 +303,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Distance \
     		   include/GLC_Line \
     		   include/GLC_Rep \
-    		   include/GLC_3DRep
+    		   include/GLC_3DRep \
+    		   include/GLC_PointSprite
     		   
     			   
 # Linux install configuration
