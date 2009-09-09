@@ -378,10 +378,10 @@ QString GLC_ObjMtlLoader::getTextureName(QTextStream &inputStream, const QString
 void GLC_ObjMtlLoader::processMayaSpecific()
 {
 	// Test if the current material have a texture
-	if (m_pCurrentMaterial->getAddRgbaTexture())
+	if (m_pCurrentMaterial->hasTexture())
 	{
 		// Test if the diffuse color of material is black
-		if (m_pCurrentMaterial->getDiffuseColor() == Qt::black)
+		if (m_pCurrentMaterial->diffuseColor() == Qt::black)
 		{
 			// Change the material's diffuse color in order to see the texture
 			m_pCurrentMaterial->setDiffuseColor(Qt::lightGray);
