@@ -248,10 +248,10 @@ void GLC_VboGeom::glPropGeom(bool isSelected)
 		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
-		const GLfloat red= pCurrentMaterial->getDiffuseColor().redF();
-		const GLfloat green= pCurrentMaterial->getDiffuseColor().greenF();
-		const GLfloat blue= pCurrentMaterial->getDiffuseColor().blueF();
-		const GLfloat alpha= pCurrentMaterial->getDiffuseColor().alphaF();
+		const GLfloat red= pCurrentMaterial->diffuseColor().redF();
+		const GLfloat green= pCurrentMaterial->diffuseColor().greenF();
+		const GLfloat blue= pCurrentMaterial->diffuseColor().blueF();
+		const GLfloat alpha= pCurrentMaterial->diffuseColor().alphaF();
 
 		glColor4f(red, green, blue, alpha);
 		if (isSelected) GLC_SelectionMaterial::glExecute();
@@ -259,7 +259,7 @@ void GLC_VboGeom::glPropGeom(bool isSelected)
 	else if (m_MaterialHash.size() == 1)
 	{
 		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
-		if (pCurrentMaterial->getAddRgbaTexture())
+		if (pCurrentMaterial->hasTexture())
 		{
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
