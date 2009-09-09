@@ -90,6 +90,13 @@ GLC_3DViewInstance GLC_Factory::createPoint(double x, double y, double z) const
 	return newPoint;
 }
 
+// Create an GLC_PointSprite
+GLC_3DViewInstance GLC_Factory::createPointSprite(float size, GLC_Material* pMaterial) const
+{
+	GLC_3DViewInstance newPoint(new GLC_PointSprite(size, pMaterial));
+	return newPoint;
+}
+
 // Create an GLC_Line
 GLC_3DViewInstance GLC_Factory::createLine(const GLC_Point4d& point1, const GLC_Point4d& point2) const
 {
