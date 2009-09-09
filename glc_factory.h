@@ -33,6 +33,7 @@
 
 //class to built
 #include "geometry/glc_point.h"
+#include "geometry/glc_pointsprite.h"
 #include "geometry/glc_line.h"
 #include "geometry/glc_circle.h"
 #include "geometry/glc_box.h"
@@ -80,6 +81,9 @@ public:
 	//! Create an GLC_Point
 	GLC_3DViewInstance createPoint(const GLC_Vector4d &coord) const;
 	GLC_3DViewInstance createPoint(double x, double y, double z) const;
+
+	//! Create an GLC_PointSprite
+	GLC_3DViewInstance createPointSprite(float, GLC_Material*) const;
 
 	//! Create an GLC_Line
 	GLC_3DViewInstance createLine(const GLC_Point4d&, const GLC_Point4d&) const;
