@@ -64,6 +64,10 @@ public:
 	inline static bool glslUsed()
 	{return m_UseShader;}
 
+	//! Return true if Point Sprite is supported
+	inline static bool pointSpriteSupported()
+	{return m_PointSpriteSupported;}
+
 	//! Return true if selection shader is used
 	inline static bool selectionShaderUsed()
 	{return m_UseSelectionShader;}
@@ -110,6 +114,9 @@ public:
 	//! Set GLSL support
 	static void setGlslSupport();
 
+	//! Set Point Sprite support
+	static void setPointSpriteSupport();
+
 	//! Set GLSL usage
 	static void setGlslUsage(const bool);
 
@@ -138,6 +145,9 @@ private:
 
 	//! GLSL supported flag
 	static bool m_GlslSupported;
+
+	//! Point Sprite supported flag
+	static bool m_PointSpriteSupported;
 
 	//! Use shader
 	static bool m_UseShader;

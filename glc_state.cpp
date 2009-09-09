@@ -30,6 +30,7 @@
 bool GLC_State::m_VboSupported= false;
 bool GLC_State::m_UseVbo= true;
 bool GLC_State::m_GlslSupported= false;
+bool GLC_State::m_PointSpriteSupported= false;
 bool GLC_State::m_UseShader= true;
 bool GLC_State::m_UseSelectionShader= false;
 bool GLC_State::m_IsInSelectionMode= false;
@@ -49,6 +50,7 @@ void GLC_State::init()
 {
 	setVboSupport();
 	setGlslSupport();
+	setPointSpriteSupport();
 	m_Version= (char *) glGetString(GL_VERSION);
 	m_Vendor= (char *) glGetString(GL_VENDOR);
 	m_Renderer= (char *) glGetString(GL_RENDERER);
@@ -70,6 +72,12 @@ void GLC_State::setVboUsage(const bool vboUsed)
 void GLC_State::setGlslSupport()
 {
 	m_GlslSupported= glc::extensionIsSupported("GL_ARB_shading_language_100") and glc::loadGlSlExtension();
+}
+
+// Set Point Sprite support
+void GLC_State::setPointSpriteSupport()
+{
+	m_PointSpriteSupported= glc::extensionIsSupported("GL_ARB_point_parameters") and glc::loadPointSpriteExtension();
 }
 
 // Set GLSL usage
