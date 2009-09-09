@@ -500,7 +500,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 			if (pCurrentMaterial->isTransparent() == transparent)
 			{
 				// Execute current material
-				if (pCurrentMaterial->getAddRgbaTexture())
+				if (pCurrentMaterial->hasTexture())
 				{
 					glEnable(GL_TEXTURE_2D);
 				}
@@ -510,10 +510,10 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 				}
 				// Activate material
 				pCurrentMaterial->glExecute();
-				const GLfloat red= pCurrentMaterial->getDiffuseColor().redF();
-				const GLfloat green= pCurrentMaterial->getDiffuseColor().greenF();
-				const GLfloat blue= pCurrentMaterial->getDiffuseColor().blueF();
-				const GLfloat alpha= pCurrentMaterial->getDiffuseColor().alphaF();
+				const GLfloat red= pCurrentMaterial->diffuseColor().redF();
+				const GLfloat green= pCurrentMaterial->diffuseColor().greenF();
+				const GLfloat blue= pCurrentMaterial->diffuseColor().blueF();
+				const GLfloat alpha= pCurrentMaterial->diffuseColor().alphaF();
 
 				glColor4f(red, green, blue, alpha);
 				if (m_IsSelected) GLC_SelectionMaterial::glExecute();
