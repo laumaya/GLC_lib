@@ -161,9 +161,9 @@ bool glc::loadPointSpriteExtension()
 	glPointParameterf				= (PFNGLPOINTPARAMETERFARBPROC)pContext->getProcAddress(QLatin1String("glPointParameterf"));
 	if (not glPointParameterf) qDebug() << "not glPointParameterf";
 	glPointParameterfv				= (PFNGLPOINTPARAMETERFVARBPROC)pContext->getProcAddress(QLatin1String("glPointParameterfv"));
-	if (not glPointParameterfv) qDebug() << "not glPointParameterf";
+	if (not glPointParameterfv) qDebug() << "not glPointParameterfv";
 
-	result= glPointParameterf and ;
+	result= glPointParameterf and glPointParameterfv;
 
 #endif
     return result;
