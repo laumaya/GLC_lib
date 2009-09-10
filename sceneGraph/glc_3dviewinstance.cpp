@@ -202,7 +202,10 @@ void GLC_3DViewInstance::setGlobalDefaultLod(int lod)
 GLC_3DViewInstance GLC_3DViewInstance::deepCopy() const
 {
 
-	GLC_3DViewInstance cloneInstance(m_3DRep.deepCopy());
+	GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_3DRep.deepCopy());
+	GLC_3DRep newRep(*pRep);
+	delete pRep;
+	GLC_3DViewInstance cloneInstance(newRep);
 
 	if (NULL != m_pBoundingBox)
 	{
