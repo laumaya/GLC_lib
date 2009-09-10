@@ -266,11 +266,24 @@ GLC_Material* GLC_Factory::createMaterial(const QString &textureFullFileName) co
 	return createMaterial(pTexture);
 }
 
+// create an material textured with a QImage
+GLC_Material* GLC_Factory::createMaterial(const QImage &image) const
+{
+	GLC_Texture* pTexture= createTexture(image);
+	return createMaterial(pTexture);
+}
+
 // Create an GLC_Texture
 
 GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName) const
 {
 	return new GLC_Texture(m_pQGLContext, textureFullFileName);
+}
+
+// Create an GLC_Texture with a QImage
+GLC_Texture* GLC_Factory::createTexture(const QImage & image) const
+{
+	return new GLC_Texture(m_pQGLContext, image);
 }
 
 // Create the default mover controller

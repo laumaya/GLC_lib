@@ -120,9 +120,14 @@ public:
 	GLC_Material* createMaterial(GLC_Texture* pTexture) const;
 	//! create an material textured with a image file name
 	GLC_Material* createMaterial(const QString &textureFullFileName) const;
+	//! create an material textured with a QImage
+	GLC_Material* createMaterial(const QImage &) const;
 
 	//! Create an GLC_Texture
 	GLC_Texture* createTexture(const QString &textureFullFileName) const;
+	//! Create an GLC_Texture with a QImage
+	GLC_Texture* createTexture(const QImage &) const;
+
 
 	//! Create the default mover controller
 	GLC_MoverController createDefaultMoverController(const QColor&, GLC_Viewport*);
