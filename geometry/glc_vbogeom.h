@@ -33,6 +33,7 @@
 #include "../glc_ext.h"
 
 typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
+typedef QHash<GLC_uint, GLC_uint> MaterialHashMap;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_VboGeom
@@ -246,6 +247,9 @@ protected:
 
 	//! Material Hash table
 	MaterialHash m_MaterialHash;
+
+	//! Material Hash map used by the copy constructor
+	MaterialHashMap m_MaterialHashMap;
 
 	//! Color per vertex usage
 	bool m_UseColorPerVertex;
