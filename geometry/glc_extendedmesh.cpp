@@ -40,10 +40,6 @@ GLC_ExtendedMesh::GLC_ExtendedMesh()
 , m_ExtendedGeomEngine()
 , m_CurrentLod(0)
 {
-	if(id() == 24)
-	{
-		qDebug() << "Default Constructor of " << id();
-	}
 
 }
 
@@ -59,10 +55,33 @@ GLC_ExtendedMesh::GLC_ExtendedMesh(const GLC_ExtendedMesh& mesh)
 , m_ExtendedGeomEngine(mesh.m_ExtendedGeomEngine)
 , m_CurrentLod(0)
 {
-	if(id() == 24)
+	qDebug() << "GLC_ExtendedMesh Copy constructor";
+
+	// Make a copy of m_PrimitiveGroups with new material id
+	PrimitiveGroupsHash::const_iterator iPrimitiveGroups= mesh.m_PrimitiveGroups.constBegin();
+	while (mesh.m_PrimitiveGroups.constEnd() != iPrimitiveGroups)
 	{
-		qDebug() << "Copy Constructor of " << id();
+		PrimitiveGroups* pPrimitiveGroups= new PrimitiveGroups();
+		m_PrimitiveGroups.insert(iPrimitiveGroups.key(), pPrimitiveGroups);
+
+		PrimitiveGroups::const_iterator iPrimitiveGroup= iPrimitiveGroups.value()->constBegin();
+		while (iPrimitiveGroups.value()->constEnd() != iPrimitiveGroup)
+		{
+			Q_ASSERT(m_MaterialHashMap.contains(iPrimitiveGroup.key()));
+			GLC_uint id= m_MaterialHashMap.value(iPrimitiveGroup.key());
+			GLC_PrimitiveGroup* pPrimitiveGroup= new GLC_PrimitiveGroup(*(iPrimitiveGroup.value()), id);
+			pPrimitiveGroups->insert(id, pPrimitiveGroup);
+
+			++iPrimitiveGroup;
+		}
+
+		++iPrimitiveGroups;
 	}
+
+	// Get the new default material id
+	m_DefaultMaterialId= m_MaterialHashMap.value(mesh.m_DefaultMaterialId);
+
+	m_MaterialHashMap.clear();
 
 }
 
