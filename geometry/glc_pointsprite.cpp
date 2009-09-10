@@ -31,7 +31,7 @@
 // The maximum point size
 float GLC_PointSprite::m_MaxSize= -1.0f;
 
-
+// Default constructor
 GLC_PointSprite::GLC_PointSprite(float size, GLC_Material* pMaterial)
 :GLC_VboGeom("PointSprite", false)
 , m_Size(size)
@@ -60,13 +60,12 @@ GLC_BoundingBox& GLC_PointSprite::boundingBox(void)
 	if (NULL == m_pBoundingBox)
 	{
 		m_pBoundingBox= new GLC_BoundingBox();
-		const double delta= m_Size/2.0;
 		const double epsilon= 1e-2;
-		GLC_Point3d lower( 	- delta,
-							- delta,
+		GLC_Point3d lower( 	- epsilon,
+							- epsilon,
 							- epsilon);
-		GLC_Point3d upper(  delta,
-							delta,
+		GLC_Point3d upper(  epsilon,
+							epsilon,
 							epsilon);
 		m_pBoundingBox->combine(lower);
 		m_pBoundingBox->combine(upper);
