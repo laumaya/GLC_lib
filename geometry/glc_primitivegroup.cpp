@@ -50,8 +50,8 @@ GLC_PrimitiveGroup::GLC_PrimitiveGroup(GLC_uint materialId)
 }
 
 //! Copy constructor
-GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group)
-: m_ID(group.m_ID)
+GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group, GLC_uint id)
+: m_ID(id)
 , m_TrianglesIndex(group.m_TrianglesIndex)
 , m_pBaseTrianglesOffset(group.m_pBaseTrianglesOffset)
 , m_BaseTrianglesOffseti(group.m_BaseTrianglesOffseti)
@@ -67,7 +67,6 @@ GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group)
 , m_TrianglesIndexSize(group.m_TrianglesIndexSize)
 , m_TrianglesStripSize(group.m_TrianglesStripSize)
 , m_TrianglesFanSize(group.m_TrianglesFanSize)
-
 {
 
 
