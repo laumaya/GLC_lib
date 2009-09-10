@@ -54,6 +54,9 @@ public:
 	//! Clone the representation
 	virtual GLC_Rep* clone() const;
 
+	//! Make a deep copy of the 3DRep
+	virtual GLC_Rep* deepCopy() const;
+
 	//! Destructor
 	virtual ~GLC_3DRep();
 
@@ -91,9 +94,6 @@ public:
 
 	//! Return true if the rep bounding box is valid
 	bool boundingBoxIsValid() const;
-
-	//! Make a deep copy of the 3DRep
-	GLC_3DRep deepCopy() const;
 
 	//! Return true if the 3DRep contains the geometry
 	inline bool contains(GLC_VboGeom* pGeom)

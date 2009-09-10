@@ -70,6 +70,22 @@ GLC_Rep* GLC_3DRep::clone() const
 	return new GLC_3DRep(*this);
 }
 
+// Make a deep copy of the 3DRep
+GLC_Rep* GLC_3DRep::deepCopy() const
+{
+	GLC_3DRep* pCloneRep= new GLC_3DRep;
+	// Copy fields of the base class
+	pCloneRep->setFileName(fileName());
+	pCloneRep->setName(name());
+	// Copy representation geometries
+	const int size= m_pGeomList->size();
+	for (int i= 0; i < size; ++i)
+	{
+		pCloneRep->addGeom(m_pGeomList->at(i)->clone());
+	}
+	return pCloneRep;
+}
+
 // Destructor
 GLC_3DRep::~GLC_3DRep()
 {
@@ -101,22 +117,6 @@ bool GLC_3DRep::boundingBoxIsValid() const
 		++index;
 	}
 	return result;
-}
-
-// Clone the 3DRep
-GLC_3DRep GLC_3DRep::deepCopy() const
-{
-	GLC_3DRep cloneRep;
-	// Copy fields of the base class
-	cloneRep.setFileName(fileName());
-	cloneRep.setName(name());
-	// Copy representation geometries
-	const int size= m_pGeomList->size();
-	for (int i= 0; i < size; ++i)
-	{
-		cloneRep.addGeom(m_pGeomList->at(i)->clone());
-	}
-	return cloneRep;
 }
 
 // Get number of faces
