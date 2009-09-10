@@ -52,12 +52,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 	//! Default constructor
-	GLC_PrimitiveGroup(GLC_uint= 0);
+	GLC_PrimitiveGroup(GLC_uint);
 
 	//! Copy constructor
-	GLC_PrimitiveGroup(const GLC_PrimitiveGroup&);
+	GLC_PrimitiveGroup(const GLC_PrimitiveGroup&, GLC_uint);
 
 	~GLC_PrimitiveGroup();
+private:
+	//! Copy constructor
+	GLC_PrimitiveGroup(const GLC_PrimitiveGroup&){}
+
+	//! = operator
+	GLC_PrimitiveGroup& operator=(const GLC_PrimitiveGroup&){return *this;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
