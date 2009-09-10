@@ -45,6 +45,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 	//! Default constructor
+	/*! The material must exist and had texture*/
 	GLC_PointSprite(float, GLC_Material*);
 
 	//! Default destructor
@@ -70,6 +71,11 @@ public:
 	inline float fadeThresoldSize()
 	{return m_FadeThresoldSize;}
 
+	//! Return the maximum point size
+	/*! Return -1 if the size is unknown*/
+	inline static float maximumPointSize()
+	{return m_MaxSize;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -82,6 +88,7 @@ public:
 	void setSize(float size);
 
 	//! Set the point distance attenuation values
+	/*! Vector size must be equal to 3*/
 	void setPointDistanceAttenuation(QVector<float>);
 
 	//! Set the fade thresold size
