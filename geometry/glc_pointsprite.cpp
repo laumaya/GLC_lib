@@ -45,7 +45,7 @@ GLC_PointSprite::GLC_PointSprite(float size, GLC_Material* pMaterial)
 	// Set Distance attenuation defaults values
 	m_DistanceAttenuation[0]= 1.0f;
 	m_DistanceAttenuation[1]= 0.0f;
-	m_DistanceAttenuation[2]= 0.01f;
+	m_DistanceAttenuation[2]= 0.0f;
 }
 
 GLC_PointSprite::~GLC_PointSprite()
