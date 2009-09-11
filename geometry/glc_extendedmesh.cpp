@@ -507,6 +507,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 
 	}
 
+	if (not GLC_State::isInSelectionMode()) glEnable(GL_LIGHTING);
 
 	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
