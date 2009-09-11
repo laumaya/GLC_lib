@@ -121,6 +121,34 @@ public:
 		m_RelativeMatrix= matrix * m_RelativeMatrix;
 		return this;
 	}
+
+	//! Translate Instance
+	inline GLC_StructInstance* translate(double Tx, double Ty, double Tz)
+	{
+		m_RelativeMatrix= GLC_Matrix4x4(Tx, Ty, Tz) * m_RelativeMatrix;
+		return this;
+	}
+
+	//! Translate Instance
+	inline GLC_StructInstance* translate(const GLC_Vector4d& v)
+	{
+		return translate(v.X(), v.Y(), v.Z());
+	}
+
+	//! Replace the instance Matrix
+	inline GLC_StructInstance* setMatrix(const GLC_Matrix4x4 &SetMat)
+	{
+		m_RelativeMatrix= SetMat;
+		return this;
+	}
+
+	//! Reset the instance Matrix
+	inline GLC_StructInstance* resetMatrix()
+	{
+		m_RelativeMatrix = GLC_Matrix4x4();
+		return this;
+	}
+
 	//! Set the instance name
 	inline void setName(const QString& name)
 	{m_Name= name;}
