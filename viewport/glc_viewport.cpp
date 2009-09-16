@@ -46,6 +46,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_dCamDistMax(500)			// Camera Maximum distance
 , m_dCamDistMin(0.01)			// Camera Minimum distance
 , m_dFov(35)					// Camera angle of view
+, m_ViewTangent(tan((m_dFov * glc::PI / 180.0)))
 , m_pImagePlane(NULL)			// Background image
 // OpenGL Window size
 , m_nWinHSize(0)				// Horizontal OpenGL viewport size
@@ -87,7 +88,7 @@ GLC_Vector4d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 	GLC_Vector4d VectMouse(Posx, Posy,0);
 
 	// Compute the length of camera's field of view
-	const double ChampsVision = 2 * m_pViewCam->getDistEyeTarget() *  tan((m_dFov * PI / 180) / 2);
+	const double ChampsVision = 2 * m_pViewCam->distEyeTarget() *  tan((m_dFov * PI / 180) / 2);
 
 	// the side of camera's square is mapped on Vertical length of window
 	// Ratio OpenGL/Pixel = dimend GL / dimens Pixel
@@ -332,7 +333,7 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	Q_ASSERT(!box.isEmpty());
 
 	// Center view on the BoundingBox
-	const GLC_Vector4d deltaVector(box.getCenter() - m_pViewCam->getTarget());
+	const GLC_Vector4d deltaVector(box.center() - m_pViewCam->target());
 	m_pViewCam->translate(deltaVector);
 
 	double cameraCover= box.boundingSphereRadius() * 2.0;
@@ -400,8 +401,8 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	if(not bBox.isEmpty())
 	{
 		// The scene is not empty
-		GLC_Matrix4x4 matTranslateCam(-m_pViewCam->getEye());
-		GLC_Matrix4x4 matRotateCam(m_pViewCam->getMatCompOrbit());
+		GLC_Matrix4x4 matTranslateCam(-m_pViewCam->eye());
+		GLC_Matrix4x4 matRotateCam(m_pViewCam->viewMatrix());
 		GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam);
 
 		// The bounding Box in Camera coordinate
@@ -410,12 +411,12 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		// Increase size of the bounding box
 		const double increaseFactor= 1.1;
 		// Convert box distance in sphere distance
-		const double center= fabs(boundingBox.getCenter().Z());
+		const double center= fabs(boundingBox.center().Z());
 		const double radius= boundingBox.boundingSphereRadius();
 		const double min= center - radius * increaseFactor;
 		const double max= center + radius * increaseFactor;
 
-		GLC_Point4d camEye(m_pViewCam->getEye());
+		GLC_Point4d camEye(m_pViewCam->eye());
 		camEye= matComp * camEye;
 
 		if (min > 0.0)
@@ -429,7 +430,7 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		else
 		{
 			// Inside bounding Sphere
-			m_dCamDistMin= qMin(0.01 * radius, m_pViewCam->getDistEyeTarget() / 4.0);
+			m_dCamDistMin= qMin(0.01 * radius, m_pViewCam->distEyeTarget() / 4.0);
 			m_dCamDistMax= max;
 			//qDebug() << "inside distmin" << m_dCamDistMin;
 			//qDebug() << "inside distmax" << m_dCamDistMax;
@@ -438,8 +439,8 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	else
 	{
 		// The scene is empty
-		m_dCamDistMin= m_pViewCam->getDistEyeTarget() / 2.0;
-		m_dCamDistMax= m_pViewCam->getDistEyeTarget();
+		m_dCamDistMin= m_pViewCam->distEyeTarget() / 2.0;
+		m_dCamDistMax= m_pViewCam->distEyeTarget();
 	}
 
 	// Update OpenGL projection matrix

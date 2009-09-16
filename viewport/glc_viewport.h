@@ -88,11 +88,11 @@ public:
 	{return m_pViewCam;}
 
 	//! Get The viewport Horizontal size
-	inline int getWinHSize() const
+	inline int viewHSize() const
 	{ return m_nWinHSize;}
 
 	//! Get The viewport Vertical size
-	inline int getWinVSize() const
+	inline int viewVSize() const
 	{ return m_nWinVSize;}
 
 	//! Get the viewport ratio
@@ -103,19 +103,24 @@ public:
 	GLC_Vector4d mapPosMouse( GLdouble Posx, GLdouble Posy) const;
 
 	//! Get camera's angle of view
-	inline double getFov() const
+	inline double viewAngle() const
 	{ return m_dFov;}
 
-	//! Get near clipping distance
-	inline double getDistMin(void) const
+	//! Get camera's tangent value of view
+	inline double viewTangent() const
+	{ return m_ViewTangent;}
+
+
+	//! Get near clipping plane distance
+	inline double nearClippingPlaneDist(void) const
 	{ return m_dCamDistMin;}
 
-	//! Get far clipping distance
-	inline double getDistMax(void) const
+	//! Get far clipping plane distance
+	inline double farClippingPlaneDist(void) const
 	{ return m_dCamDistMax;}
 
 	//! Get background Color
-	inline QColor getBackgroundColor(void) const
+	inline QColor backgroundColor(void) const
 	{ return m_BackgroundColor;}
 
 //@}
@@ -178,10 +183,10 @@ public:
 	void deleteBackGroundImage();
 
 	//! Set Camera's angle of view
-	void setFov(double TargetFov)
+	void setViewAngle(double TargetFov)
 	{
 		m_dFov= TargetFov;
-
+		m_ViewTangent= tan(m_dFov * glc::PI / 180.0);
 		updateProjectionMat();
 	}
 
@@ -220,9 +225,11 @@ private:
 	//! Viewport's Camera
 	GLC_Camera *m_pViewCam;
 
-	GLdouble m_dCamDistMax;		//!< Camera Maximum distance (far clipping plane)
-	GLdouble m_dCamDistMin;		//!< Camera Minimum distance (near clipping plane)
-	GLdouble m_dFov;			//!< Camera angle of view
+	double m_dCamDistMax;		//!< Camera Maximum distance (far clipping plane)
+	double m_dCamDistMin;		//!< Camera Minimum distance (near clipping plane)
+	double m_dFov;				//!< Camera angle of view
+	double m_ViewTangent;		//!< Camera angle tangent
+
 
 	//! Image plane (Background image)
 	GLC_ImagePlane* m_pImagePlane;
