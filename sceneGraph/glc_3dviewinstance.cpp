@@ -174,10 +174,10 @@ GLC_3DViewInstance::~GLC_3DViewInstance()
 //////////////////////////////////////////////////////////////////////
 
 // Get the bounding box
-GLC_BoundingBox GLC_3DViewInstance::getBoundingBox(void)
+GLC_BoundingBox GLC_3DViewInstance::boundingBox(void)
 {
 	GLC_BoundingBox resultBox;
-	if (getBoundingBoxValidity())
+	if (boundingBoxValidity())
 	{
 		resultBox= *m_pBoundingBox;
 	}
@@ -415,10 +415,10 @@ int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewpor
 {
 	if (NULL == pView) return 0;
 	const double diameter= boundingBox.boundingSphereRadius() * 2.0 * m_MatPos.scalingX();
-	GLC_Vector4d center(m_MatPos * boundingBox.getCenter());
+	GLC_Vector4d center(m_MatPos * boundingBox.center());
 
-	const double dist= (center - pView->cameraHandle()->getEye()).norm();
-	const double cameraCover= dist * (2.0 * tan((pView->getFov() * glc::PI / 180.0) / 2.0));
+	const double dist= (center - pView->cameraHandle()->eye()).norm();
+	const double cameraCover= dist * pView->viewTangent();
 	double ratio= diameter / cameraCover * 150.0;
 
 	if (ratio > 100.0) ratio= 100.0;

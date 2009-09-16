@@ -122,22 +122,22 @@ public:
 	{return m_3DRep.numberOfBody();}
 
 
-	//! Get the geometry of the instance
-	inline GLC_VboGeom* getGeometry(int index) const
+	//! Return the geometry at the specified position
+	inline GLC_VboGeom* geomAt(int index) const
 	{
 		if (not m_3DRep.isEmpty()) return m_3DRep.geomAt(index);
 		else return NULL;
 	}
 
 	//! Get the bounding box
-	GLC_BoundingBox getBoundingBox();
+	GLC_BoundingBox boundingBox();
 
 	//! Get the validity of the Bounding Box
-	inline bool getBoundingBoxValidity() const
+	inline bool boundingBoxValidity() const
 	{return (m_pBoundingBox != NULL) and m_IsBoundingBoxValid and m_3DRep.boundingBoxIsValid();}
 
 	//! Return transfomation 4x4Matrix
-	inline const GLC_Matrix4x4 getMatrix() const
+	inline const GLC_Matrix4x4 matrix() const
 	{return m_MatPos;}
 
 	//! Make a deep copy of the instance
@@ -148,7 +148,7 @@ public:
 
 	//! Get the Polygon mode off the instance
 	/*! Polygon Mode can Be : GL_POINT, GL_LINE, or GL_FILL*/
-	inline GLenum getPolygonMode() const {return m_PolyMode;}
+	inline GLenum polygonMode() const {return m_PolyMode;}
 
 	//! Get the visibility state of instance
 	inline bool isVisible() const {return m_IsVisible;}
