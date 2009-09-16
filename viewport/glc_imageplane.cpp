@@ -83,21 +83,21 @@ void GLC_ImagePlane::updatePlaneSize(void)
 
 	// compute quad size
 	int nCote;
-	if (m_pViewport->getWinHSize() < m_pViewport->getWinVSize())
+	if (m_pViewport->viewHSize() < m_pViewport->viewVSize())
 	{
-		nCote= m_pViewport->getWinVSize();
+		nCote= m_pViewport->viewVSize();
 	}
 	else
 	{
-		nCote= m_pViewport->getWinHSize();
+		nCote= m_pViewport->viewHSize();
 	}
 
 	// Calcul du coté du carré de vision de la caméra
 	// Le coté du carré de la caméra est mappé sur la hauteur de la fenètre
-	const double ChampsVision = 2 * m_dZpos *  tan((m_pViewport->getFov() * PI / 180)/ 2);
+	const double ChampsVision = 2 * m_dZpos *  tan((m_pViewport->viewAngle() * PI / 180)/ 2);
 
 	// Circle radius in openGL unit = RayonPixel * (dimens GL / dimens Pixel)
-	m_dLgImage= ((double)nCote * ChampsVision / (double)m_pViewport->getWinVSize());
+	m_dLgImage= ((double)nCote * ChampsVision / (double)m_pViewport->viewVSize());
 
 	// Invalidate OpenGL Display list
 	m_GeometryIsValid= false;
@@ -107,8 +107,8 @@ void GLC_ImagePlane::updatePlaneSize(void)
 void GLC_ImagePlane::updateZPosition(void)
 {
 	// Compute Plane Z position
-	const double n= m_pViewport->getDistMin();
-	const double f= m_pViewport->getDistMax();
+	const double n= m_pViewport->nearClippingPlaneDist();
+	const double f= m_pViewport->farClippingPlaneDist();
 	int nbrBits;
 
 	//glGetIntegerv(GL_DEPTH_BITS, &nbrBits);

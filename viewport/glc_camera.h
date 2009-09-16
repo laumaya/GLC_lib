@@ -68,27 +68,27 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get the distance between the eye and the target of camera
-	inline double getDistEyeTarget(void) const
+	inline double distEyeTarget(void) const
 	{return (m_Eye - m_Target).norm();}
 
 	//! Get camera's eye coordinate point
-	inline GLC_Point4d getEye(void) const
+	inline GLC_Point4d eye(void) const
 	{return m_Eye;}
 
 	//! Get camera's target coordinate point
-	inline GLC_Point4d getTarget(void) const
+	inline GLC_Point4d target(void) const
 	{return m_Target;}
 
 	//! Get camera's Up vector
-	inline GLC_Vector4d getVectUp(void) const
+	inline GLC_Vector4d upVector(void) const
 	{return m_VectUp;}
 
 	//! Get camera's Vector (from eye to target)
-	inline GLC_Vector4d getVectCam(void) const
+	inline GLC_Vector4d camVector(void) const
 	{return m_Eye - m_Target;}
 
 	//! Get camera's orbit composition matrix
-	inline GLC_Matrix4x4 getMatCompOrbit(void) const
+	inline GLC_Matrix4x4 viewMatrix(void) const
 	{return m_MatCompOrbit;}
 
 	//! equality operator

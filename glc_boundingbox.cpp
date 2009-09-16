@@ -80,24 +80,24 @@ bool GLC_BoundingBox::intersect(const GLC_Point4d& point) const
 // Test if a point is in the bounding Sphere
 bool GLC_BoundingBox::intersectBoundingSphere(const GLC_Point4d& point) const
 {
-	const double distance= (getCenter() - point).norm();
+	const double distance= (center() - point).norm();
 	return distance < boundingSphereRadius();
 }
 
 // Get the lower corner of the bounding box
-GLC_Point4d GLC_BoundingBox::getLower(void) const
+GLC_Point4d GLC_BoundingBox::lowerCorner(void) const
 {
 	return m_Lower;
 }
 
 // Get the upper corner of the bounding box
-GLC_Point4d GLC_BoundingBox::getUpper(void) const
+GLC_Point4d GLC_BoundingBox::upperCorner(void) const
 {
 	return m_Upper;
 }
 
 // Get the center of the bounding box
-GLC_Point4d GLC_BoundingBox::getCenter(void) const
+GLC_Point4d GLC_BoundingBox::center(void) const
 {
 	GLC_Vector4d vectResult = (m_Lower + m_Upper) * (1.0 / 2.0);
 	return vectResult;

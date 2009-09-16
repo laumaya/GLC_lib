@@ -47,6 +47,12 @@ public:
 	//! Default constructor
 	GLC_StructInstance(GLC_StructReference*);
 
+	//! Create instance with a rep
+	GLC_StructInstance(GLC_Rep*);
+
+	//! Copy constructor
+	GLC_StructInstance(const GLC_StructInstance&);
+
 	//! Copy constructor
 	GLC_StructInstance(GLC_StructInstance*);
 

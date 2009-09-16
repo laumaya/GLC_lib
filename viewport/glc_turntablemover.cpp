@@ -69,7 +69,7 @@ void GLC_TurnTableMover::init(int x, int y)
 	m_PreviousVector.setVect(static_cast<double>(x), static_cast<double>(y),0.0);
 	GLC_Camera* pCamera= m_pViewport->cameraHandle();
 	// Calculate angle sign
-	m_Sign= pCamera->defaultUpVector() * pCamera->getVectUp();
+	m_Sign= pCamera->defaultUpVector() * pCamera->upVector();
 	if (m_Sign == 0)
 	{
 		m_Sign= 1;
@@ -88,8 +88,8 @@ void GLC_TurnTableMover::move(int x, int y)
 	GLC_Camera* pCamera= m_pViewport->cameraHandle();
 	// Turn table rotation
 	const double rotSpeed= 2.3;
-	const double width= static_cast<double> ( m_pViewport->getWinVSize() );
-	const double height= static_cast<double> ( m_pViewport->getWinHSize() );
+	const double width= static_cast<double> ( m_pViewport->viewVSize() );
+	const double height= static_cast<double> ( m_pViewport->viewHSize() );
 
 	const double alpha = -((static_cast<double>(x) - m_PreviousVector.X()) / width) * rotSpeed;
 	const double beta = ((static_cast<double>(y) - m_PreviousVector.Y()) / height) * rotSpeed;
@@ -98,8 +98,8 @@ void GLC_TurnTableMover::move(int x, int y)
 	pCamera->rotateAroundTarget(pCamera->defaultUpVector(), alpha * m_Sign);
 
 	// Rotation around the screen horizontal axis
-	GLC_Vector4d incidentVector= pCamera->getVectCam();
-	GLC_Vector4d rightVector= incidentVector ^ pCamera->getVectUp();
+	GLC_Vector4d incidentVector= pCamera->camVector();
+	GLC_Vector4d rightVector= incidentVector ^ pCamera->upVector();
 	if (not rightVector.isNull())
 	{
 		pCamera->rotateAroundTarget(rightVector, beta);

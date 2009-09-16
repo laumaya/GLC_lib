@@ -73,22 +73,6 @@ GLC_Circle::~GLC_Circle()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Return Circle Discretion
-int GLC_Circle::getDiscretion(void) const
-{
-	return m_nDiscret;
-}
-// Return Circle radius
-double GLC_Circle::getRadius(void) const
-{
-	return m_Radius;
-}
-// return Circle diameter
-double GLC_Circle::getDiameter(void) const
-{
-	return 2 * m_Radius;
-}
-
 // return the circle bounding box
 GLC_BoundingBox& GLC_Circle::boundingBox(void)
 {

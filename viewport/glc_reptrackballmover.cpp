@@ -46,8 +46,8 @@ GLC_RepTrackBallMover::GLC_RepTrackBallMover(GLC_Viewport* pViewport)
 	GLC_Material* pMat= new GLC_Material(m_MainColor);
 
 	m_MainCircle.addMaterial(pMat);
-	m_Arc1.getGeometry(0)->addMaterial(pMat);
-	m_Arc2.getGeometry(0)->addMaterial(pMat);
+	m_Arc1.geomAt(0)->addMaterial(pMat);
+	m_Arc2.geomAt(0)->addMaterial(pMat);
 
 	// 2 circle arcs position
 	GLC_Matrix4x4 MatRot(Z_AXIS, -ARCANGLE / 2);
@@ -78,8 +78,8 @@ GLC_RepTrackBallMover::GLC_RepTrackBallMover(const GLC_RepTrackBallMover& repMov
 	// Don't share material
 	GLC_Material* pMat= new GLC_Material(m_MainColor);
 	m_MainCircle.replaceMasterMaterial(pMat);
-	m_Arc1.getGeometry(0)->replaceMasterMaterial(pMat);
-	m_Arc2.getGeometry(0)->replaceMasterMaterial(pMat);
+	m_Arc1.geomAt(0)->replaceMasterMaterial(pMat);
+	m_Arc2.geomAt(0)->replaceMasterMaterial(pMat);
 }
 
 GLC_RepTrackBallMover::~GLC_RepTrackBallMover()
@@ -162,13 +162,13 @@ void GLC_RepTrackBallMover::glDraw()
 	glLoadIdentity();
 
 
-	const double depth= m_pViewport->getDistMin() + (m_pViewport->getDistMax() - m_pViewport->getDistMin()) / 2.0;
+	const double depth= m_pViewport->nearClippingPlaneDist() + (m_pViewport->farClippingPlaneDist() - m_pViewport->nearClippingPlaneDist()) / 2.0;
 	// Put circle at the middle of camera range of depth
 	glTranslated(0, 0, - (depth) );
 
 	// Save Positionning matrix of arcs
-	const GLC_Matrix4x4 MatSavArc1(m_Arc1.getMatrix());
-	const GLC_Matrix4x4 MatSavArc2(m_Arc2.getMatrix());
+	const GLC_Matrix4x4 MatSavArc1(m_Arc1.matrix());
+	const GLC_Matrix4x4 MatSavArc2(m_Arc2.matrix());
 
 	// Scale Z to 0. Project arcs in the main circle plane
 	// Avoid perspective problems
@@ -202,8 +202,8 @@ void GLC_RepTrackBallMover::glDraw()
 void GLC_RepTrackBallMover::computeRadius()
 {
 	int nRayonSph;
-	const double winHSize= static_cast<double>(m_pViewport->getWinHSize());
-	const double winVSize= static_cast<double>(m_pViewport->getWinVSize());
+	const double winHSize= static_cast<double>(m_pViewport->viewHSize());
+	const double winVSize= static_cast<double>(m_pViewport->viewVSize());
 
 	if (winHSize > winVSize)
 	{
@@ -215,7 +215,7 @@ void GLC_RepTrackBallMover::computeRadius()
 	}
 
 	// Compute the length of camera's field of view
-	const double ChampsVision = 2.0 * ( m_pViewport->getDistMin() + (m_pViewport->getDistMax() - m_pViewport->getDistMin()) / 2.0) *  tan((m_pViewport->getFov() * PI / 180.0) / 2.0);
+	const double ChampsVision = 2.0 * ( m_pViewport->nearClippingPlaneDist() + (m_pViewport->farClippingPlaneDist() - m_pViewport->nearClippingPlaneDist()) / 2.0) *  tan((m_pViewport->viewAngle() * PI / 180.0) / 2.0);
 
 	// the side of camera's square is mapped on Vertical length of window
 	// Circle radius in OpenGL unit = Radius(Pixel) * (dimend GL / dimens Pixel)
@@ -228,10 +228,10 @@ void GLC_RepTrackBallMover::computeRadius()
 
 		GLC_Circle* pCircle;
 		// Arc 1 radius
-		pCircle= static_cast<GLC_Circle*>(m_Arc1.getGeometry(0));
+		pCircle= static_cast<GLC_Circle*>(m_Arc1.geomAt(0));
 		pCircle->setRadius(RayonSph);
 		// Arc 2 radius
-		pCircle= static_cast<GLC_Circle*>(m_Arc2.getGeometry(0));
+		pCircle= static_cast<GLC_Circle*>(m_Arc2.geomAt(0));
 		pCircle->setRadius(RayonSph);
 	}
 

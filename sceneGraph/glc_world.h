@@ -65,29 +65,41 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the entire world Bounding Box
+	inline GLC_BoundingBox boundingBox()
+	{ return m_pWorldHandle->collection()->boundingBox();}
+
 	//! Return the root of the world
-	inline GLC_StructOccurence* rootOccurence() const {return m_pRoot;}
+	inline GLC_StructOccurence* rootOccurence() const
+	{return m_pRoot;}
 
 	//! Return the world collection
-	inline GLC_3DViewCollection* collection() {return m_pWorldHandle->collection();}
+	inline GLC_3DViewCollection* collection()
+	{return m_pWorldHandle->collection();}
 
 	//! Return the size of the world
-	inline int size() const {return m_pWorldHandle->collection()->size();}
+	inline int size() const
+	{return m_pWorldHandle->collection()->size();}
 
 	//! Return true if the world is empty
-	inline bool isEmpty() const {return  m_pWorldHandle->collection()->isEmpty();}
+	inline bool isEmpty() const
+	{return  m_pWorldHandle->collection()->isEmpty();}
 
 	//! Return number of faces
-	inline int numberOfFaces() const {return m_pRoot->numberOfFaces();}
+	inline int numberOfFaces() const
+	{return m_pRoot->numberOfFaces();}
 
 	//! Return number of vertex
-	inline int numberOfVertex() const{return m_pRoot->numberOfVertex();}
+	inline int numberOfVertex() const
+	{return m_pRoot->numberOfVertex();}
 
 	//! Return the number of materials
-	inline int numberOfMaterials() const {return m_pRoot->numberOfMaterials();}
+	inline int numberOfMaterials() const
+	{return m_pRoot->numberOfMaterials();}
 
 	//! Return the list of material
-	inline QList<GLC_Material*> listOfMaterials() const {return m_pRoot->materialSet().toList();}
+	inline QList<GLC_Material*> listOfMaterials() const
+	{return m_pRoot->materialSet().toList();}
 
 	//! Return list of invisible instance name
 	inline QList<QString> invisibleInstanceName() const

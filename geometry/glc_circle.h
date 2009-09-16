@@ -65,16 +65,19 @@ public:
 public:
 
 	//! Return Circle Discretion
-	int getDiscretion(void) const;
+	inline int discretion() const
+	{ return m_nDiscret;}
 
 	//! Return Circle radius
-	double getRadius(void) const;
+	inline double radius() const
+	{return m_Radius;}
 
 	//! return Circle diameter
-	double getDiameter(void) const;
+	inline double diameter() const
+	{return m_Radius * 2.0;}
 
 	//! return the circle bounding box
-	virtual GLC_BoundingBox& boundingBox(void);
+	virtual GLC_BoundingBox& boundingBox();
 
 	//! Return a copy of the geometry
 	virtual GLC_VboGeom* clone() const;

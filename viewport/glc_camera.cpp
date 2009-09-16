@@ -246,7 +246,7 @@ GLC_Camera& GLC_Camera::setUpCam(const GLC_Vector4d &Up)
 {
 	if ( !(m_VectUp - Up).isNull() )
 	{
-		if (not qFuzzyCompare(getVectCam().getAngleWithVect(Up), 0.0))
+		if (not qFuzzyCompare(camVector().getAngleWithVect(Up), 0.0))
 		{
 			setCam(m_Eye, m_Target, Up);
 		}
@@ -344,7 +344,7 @@ GLC_Camera GLC_Camera::frontView() const
 	eye= eye + m_Target;
 
 	GLC_Camera newCam(eye, m_Target, m_DefaultVectUp);
-	newCam.setDistEyeTarget(getDistEyeTarget());
+	newCam.setDistEyeTarget(distEyeTarget());
 	newCam.setDefaultUpVector(m_DefaultVectUp);
 	return newCam;
 }
@@ -383,7 +383,7 @@ GLC_Camera GLC_Camera::topView() const
 	}
 
 	GLC_Camera newCam(eye, m_Target, up);
-	newCam.setDistEyeTarget(getDistEyeTarget());
+	newCam.setDistEyeTarget(distEyeTarget());
 	newCam.setDefaultUpVector(m_DefaultVectUp);
 
 	return newCam;
@@ -393,7 +393,7 @@ GLC_Camera GLC_Camera::topView() const
 GLC_Camera GLC_Camera::bottomView() const
 {
 	GLC_Camera newCam(topView());
-	newCam.rotateAroundTarget(newCam.getVectUp(), glc::PI);
+	newCam.rotateAroundTarget(newCam.upVector(), glc::PI);
 
 	return newCam;
 }
@@ -418,7 +418,7 @@ GLC_Camera GLC_Camera::isoView() const
 	eye= eye + m_Target;
 
 	GLC_Camera newCam(eye, m_Target, m_DefaultVectUp);
-	newCam.setDistEyeTarget(getDistEyeTarget());
+	newCam.setDistEyeTarget(distEyeTarget());
 	newCam.setDefaultUpVector(m_DefaultVectUp);
 	return newCam;
 }

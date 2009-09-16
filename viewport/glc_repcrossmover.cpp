@@ -62,8 +62,8 @@ GLC_RepMover* GLC_RepCrossMover::clone() const
 void GLC_RepCrossMover::glDraw()
 {
 	int nLgAxe;
-	const int winHSize= m_pViewport->getWinHSize();
-	const int winVSize= m_pViewport->getWinVSize();
+	const int winHSize= m_pViewport->viewHSize();
+	const int winVSize= m_pViewport->viewVSize();
 	if (winHSize > winVSize)
 	{
 		nLgAxe = static_cast<int>(static_cast<double>(winVSize) / 2.0);
@@ -74,7 +74,7 @@ void GLC_RepCrossMover::glDraw()
 	}
 
 	// Compute the length of camera's field of view
-	const double ChampsVision = 2 * (m_pViewport->cameraHandle()->getDistEyeTarget()) *  tan((m_pViewport->getFov() * glc::PI / 180.0) / 2.0);
+	const double ChampsVision = 2 * (m_pViewport->cameraHandle()->distEyeTarget()) *  tan((m_pViewport->viewAngle() * glc::PI / 180.0) / 2.0);
 
 	// the side of camera's square is mapped on Vertical length of window
 	// Axis length in OpenGL unit = length(Pixel) * (dimend GL / dimens Pixel)
@@ -82,8 +82,8 @@ void GLC_RepCrossMover::glDraw()
 	const double dDecAxe= dLgAxe / 3;
 	glPushMatrix();
 
-	glTranslated(m_pViewport->cameraHandle()->getTarget().X(), m_pViewport->cameraHandle()->getTarget().Y(),
-			m_pViewport->cameraHandle()->getTarget().Z() );
+	glTranslated(m_pViewport->cameraHandle()->target().X(), m_pViewport->cameraHandle()->target().Y(),
+			m_pViewport->cameraHandle()->target().Z() );
 
 	// Graphic properties
 	glDisable(GL_TEXTURE_2D);

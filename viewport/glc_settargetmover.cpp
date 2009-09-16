@@ -67,7 +67,7 @@ void GLC_SetTargetMover::init(int x, int y)
 	// Z Buffer component of selected point between 0 and 1
 	GLfloat Depth;
 	// read selected point
-	glReadPixels(x, m_pViewport->getWinVSize() - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
+	glReadPixels(x, m_pViewport->viewVSize() - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
 	// Current visualisation matrix
 	GLdouble ViewMatrix[16];
@@ -81,7 +81,7 @@ void GLC_SetTargetMover::init(int x, int y)
 
 	// OpenGL ccordinate of selected point
 	GLdouble pX, pY, pZ;
-	gluUnProject((GLdouble) x, (GLdouble) (m_pViewport->getWinVSize() - y) , Depth
+	gluUnProject((GLdouble) x, (GLdouble) (m_pViewport->viewVSize() - y) , Depth
 		, ViewMatrix, ProjMatrix, Viewport, &pX, &pY, &pZ);
 
 	// OpenGL error handler
@@ -102,7 +102,7 @@ void GLC_SetTargetMover::init(int x, int y)
 	{	// Geometrie not find -> panning
 
 		const GLC_Point4d curPos(m_pViewport->mapPosMouse(x, y));
-		const GLC_Point4d prevPos(m_pViewport->mapPosMouse(m_pViewport->getWinHSize() / 2, m_pViewport->getWinVSize() / 2));
+		const GLC_Point4d prevPos(m_pViewport->mapPosMouse(m_pViewport->viewHSize() / 2, m_pViewport->viewVSize() / 2));
 		const GLC_Vector4d VectPan(curPos - prevPos);	// panning vector
 		// pan camera
 		m_pViewport->cameraHandle()->pan(VectPan);

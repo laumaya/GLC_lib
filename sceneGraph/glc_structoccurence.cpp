@@ -284,7 +284,7 @@ GLC_BoundingBox GLC_StructOccurence::boundingBox() const
 		if (m_HasRepresentation)
 		{
 			Q_ASSERT(m_pWorldHandle->collection()->contains(id()));
-			boundingBox= m_pWorldHandle->collection()->instanceHandle(id())->getBoundingBox();
+			boundingBox= m_pWorldHandle->collection()->instanceHandle(id())->boundingBox();
 		}
 		else
 		{

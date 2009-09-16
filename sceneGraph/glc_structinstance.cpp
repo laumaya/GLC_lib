@@ -51,6 +51,52 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)
 	//qDebug() << "GLC_StructInstance::GLC_StructInstance : " << (*m_pNumberOfInstance) << " " << m_pNumberOfInstance;
 }
 
+// Create instance with a rep
+GLC_StructInstance::GLC_StructInstance(GLC_Rep* pRep)
+: m_pNumberOfInstance(NULL)
+, m_pStructReference(new GLC_StructReference(pRep))
+, m_ListOfOccurences()
+, m_RelativeMatrix()
+, m_Name(m_pStructReference->name())
+, m_pAttributes(NULL)
+{
+	if (m_pStructReference->hasStructInstance())
+	{
+		m_pNumberOfInstance= m_pStructReference->firstInstanceHandle()->m_pNumberOfInstance;
+		++(*m_pNumberOfInstance);
+	}
+	else
+	{
+		m_pNumberOfInstance= new int(1);
+	}
+	// Inform reference that an instance has been created
+	m_pStructReference->structInstanceCreated(this);
+	//qDebug() << "GLC_StructInstance::GLC_StructInstance : " << (*m_pNumberOfInstance) << " " << m_pNumberOfInstance;
+}
+
+// Copy constructor
+GLC_StructInstance::GLC_StructInstance(const GLC_StructInstance& structInstance)
+: m_pNumberOfInstance(structInstance.m_pNumberOfInstance)
+, m_pStructReference(structInstance.m_pStructReference)
+, m_ListOfOccurences()
+, m_RelativeMatrix(structInstance.m_RelativeMatrix)
+, m_Name(structInstance.name())
+, m_pAttributes(NULL)
+{
+	//qDebug() << "Instance Copy constructor";
+	Q_ASSERT(NULL != m_pStructReference);
+	// Copy attributes if necessary
+	if (NULL != structInstance.m_pAttributes)
+	{
+		m_pAttributes= new GLC_Attributes(*(structInstance.m_pAttributes));
+	}
+
+	++(*m_pNumberOfInstance);
+
+	// Inform reference that an instance has been created
+	m_pStructReference->structInstanceCreated(this);
+}
+
 // Copy constructor
 GLC_StructInstance::GLC_StructInstance(GLC_StructInstance* pStructInstance)
 : m_pNumberOfInstance(pStructInstance->m_pNumberOfInstance)
@@ -72,7 +118,6 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructInstance* pStructInstance)
 
 	// Inform reference that an instance has been created
 	m_pStructReference->structInstanceCreated(this);
-
 }
 
 // Create empty instance

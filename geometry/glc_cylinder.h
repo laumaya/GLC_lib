@@ -70,15 +70,15 @@ public:
 public:
 
 	//! Get Lenght of the Cylinder
-	inline double getLength(void) const
+	inline double length(void) const
 	{return m_Length;}
 
 	//! Get Radius of cylinder
-	inline double getRadius(void) const
+	inline double radius(void) const
 	{return m_Radius;}
 
 	//! Get Cylinder discretion
-	inline int getDiscretion(void) const
+	inline int discretion(void) const
 	{return m_Discret;}
 
 	//! return the cylinder bounding box

@@ -98,8 +98,8 @@ void GLC_TrackBallMover::move(int x, int y)
 GLC_Vector4d GLC_TrackBallMover::mapForTracking( double x, double y) const
 {
 	double AspectRatio;
-	const double winHSize= static_cast<double>(m_pViewport->getWinHSize());
-	const double winVSize= static_cast<double>(m_pViewport->getWinVSize());
+	const double winHSize= static_cast<double>(m_pViewport->viewHSize());
+	const double winVSize= static_cast<double>(m_pViewport->viewVSize());
 
 	// Change origine and cover
 	if (winHSize < winVSize)

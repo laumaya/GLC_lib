@@ -169,7 +169,7 @@ GLC_Distance::DistanceResult GLC_Distance::minimumDistance(QList<GLC_3DViewInsta
 			qDebug() << "Size = " << size;
 			for (int i= 0; i < size; ++i)
 			{
-				GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(instance1.getGeometry(i));
+				GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(instance1.geomAt(i));
 				if (NULL != pMesh) listOfMesh1.append(pMesh);
 			}
 		}
@@ -179,7 +179,7 @@ GLC_Distance::DistanceResult GLC_Distance::minimumDistance(QList<GLC_3DViewInsta
 			return distanceResult;
 		}
 
-		instance1Matrix= instance1.getMatrix();
+		instance1Matrix= instance1.matrix();
 		
 		// Avoid scaling problem (useful?)
 		//instance1Matrix= instance1Matrix.isomorphMatrix();
@@ -201,7 +201,7 @@ GLC_Distance::DistanceResult GLC_Distance::minimumDistance(QList<GLC_3DViewInsta
 			const int size= instance2.numberOfGeometry();
 			for (int i= 0; i < size; ++i)
 			{
-				GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(instance2.getGeometry(i));
+				GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(instance2.geomAt(i));
 				if (NULL != pMesh) listOfMesh2.append(pMesh);
 			}
 		}
@@ -212,7 +212,7 @@ GLC_Distance::DistanceResult GLC_Distance::minimumDistance(QList<GLC_3DViewInsta
 		}
 
 
-		instance2Matrix= instance2.getMatrix();
+		instance2Matrix= instance2.matrix();
 
 		// Avoid scaling problem (useful?)
 		//instance2Matrix= instance2Matrix.isomorphMatrix();

@@ -78,13 +78,13 @@ public:
 	//double maxDistance(const GLC_Vector4d& point) const;
 
 	//! Get the lower corner of the bounding box
-	GLC_Point4d getLower(void) const;
+	GLC_Point4d lowerCorner(void) const;
 
 	//! Get the upper corner of the bounding box
-	GLC_Point4d getUpper(void) const;
+	GLC_Point4d upperCorner(void) const;
 
 	//! Get the center of the bounding box
-	GLC_Point4d getCenter(void) const;
+	GLC_Point4d center(void) const;
 
 	//! Return the boundingSphere Radius
 	inline double boundingSphereRadius() const
