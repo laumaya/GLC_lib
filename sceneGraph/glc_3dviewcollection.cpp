@@ -582,7 +582,7 @@ GLC_BoundingBox GLC_3DViewCollection::boundingBox(void)
 	        if(iEntry.value().isVisible() == m_IsInShowSate)
 	        {
 	        	// Combine Collection BoundingBox with element Bounding Box
-	        	m_pBoundingBox->combine(iEntry.value().getBoundingBox());
+	        	m_pBoundingBox->combine(iEntry.value().boundingBox());
 	        }
 	        ++iEntry;
 	    }
@@ -842,7 +842,7 @@ void GLC_3DViewCollection::setBoundingBoxValidity(void)
 			CNodeMap::iterator iEntry= m_NodeMap.begin();
 		    while (iEntry != m_NodeMap.constEnd())
 		    {
-		    	if (not iEntry.value().getBoundingBoxValidity())
+		    	if (not iEntry.value().boundingBoxValidity())
 		    	{
 					delete m_pBoundingBox;
 					m_pBoundingBox= NULL;
