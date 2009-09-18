@@ -312,7 +312,7 @@ void GLC_3DViewCollection::clear(void)
 bool GLC_3DViewCollection::select(GLC_uint key)
 {
 	if (not m_NodeMap.contains(key)) return false;
-	qDebug() << "GLC_Collection::select " << key;
+	//qDebug() << "GLC_Collection::select " << key;
 
 	GLC_3DViewInstance* pSelectedNode;
 	CNodeMap::iterator iNode= m_NodeMap.find(key);
