@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 1.1.0, packaged on March, 2009.
+ Version 1.2.0, packaged on September 2009.
 
  http://glc-lib.sourceforge.net
 
@@ -63,12 +63,9 @@ GLC_Object::~GLC_Object()
 // Assignement operator
 GLC_Object &GLC_Object::operator=(const GLC_Object& object)
 {
-	if (&object != this)
-	{
-		m_QUuid= object.m_QUuid;
-		m_Uid= object.m_Uid;
-		m_Name= object.m_Name;
-	}
+	m_QUuid= object.m_QUuid;
+	m_Uid= object.m_Uid;
+	m_Name= object.m_Name;
 	return *this;
 }
 

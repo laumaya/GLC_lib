@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 1.1.0, packaged on March, 2009.
+ Version 1.2.0, packaged on September 2009.
 
  http://glc-lib.sourceforge.net
 
@@ -37,6 +37,9 @@ namespace glc
 	//! Simple ID generation
 	GLC_uint GLC_GenID(void);
 
+	//! Simple Geom ID generation
+	GLC_uint GLC_GenGeomID(void);
+
 	//! Simple User ID generation
 	GLC_uint GLC_GenUserID(void);
 
@@ -44,12 +47,13 @@ namespace glc
 	const int GLC_POLYDISCRET= 60;
 
 	extern QMutex iDMutex;
+	extern QMutex geomIdMutex;
 	extern QMutex userIdMutex;
 };
 
 // GLC_Lib version
 
-#define GLC_VERSION "1.1.0"
+#define GLC_VERSION "1.2.0"
 #define GLC_DESCRIPTION "GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4."
 
 

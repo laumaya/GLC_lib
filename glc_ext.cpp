@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 1.1.0, packaged on March, 2009.
+ Version 1.2.0, packaged on September 2009.
 
  http://glc-lib.sourceforge.net
 
@@ -21,6 +21,8 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 *****************************************************************************/
+//! \file glc_ext.cpp implementation of the GLC Opengl extension functions.
+
 #include "glc_ext.h"
 #include <QString>
 #include <QGLContext>
@@ -42,6 +44,8 @@ PFNGLGETBUFFERPOINTERVARBPROC		glGetBufferPointerv		= NULL;
 // glDrawRangElement
 //PFNGLDRAWRANGEELEMENTSPROC 			glDrawRangeElements		= NULL;
 
+// glMultiDrawElement
+PFNGLMULTIDRAWELEMENTSPROC			glMultiDrawElements		= NULL;
 // GL_ARB_shader_objects
 PFNGLCREATEPROGRAMOBJECTARBPROC		glCreateProgram			= NULL;
 PFNGLDELETEPROGRAMPROC				glDeleteProgram			= NULL;
@@ -59,6 +63,11 @@ PFNGLUNIFORM1IARBPROC				glUniform1i				= NULL;
 PFNGLGETSHADERIVPROC				glGetShaderiv			= NULL;
 PFNGLGETPROGRAMIVARBPROC			glGetProgramiv			= NULL;
 PFNGLISPROGRAMARBPROC				glIsProgram				= NULL;
+
+// GL_point_parameters Point Sprite
+PFNGLPOINTPARAMETERFARBPROC			glPointParameterf		= NULL;
+PFNGLPOINTPARAMETERFVARBPROC		glPointParameterfv		= NULL;
+
 #endif
 
 //const QString glExtension(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)));
@@ -88,9 +97,10 @@ bool glc::loadVboExtension()
     glGetBufferParameteriv		= (PFNGLGETBUFFERPARAMETERIVARBPROC)pContext->getProcAddress(QLatin1String("glGetBufferParameteriv"));
     glGetBufferPointerv			= (PFNGLGETBUFFERPOINTERVARBPROC)pContext->getProcAddress(QLatin1String("glGetBufferPointerv"));
     //glDrawRangeElements			= (PFNGLDRAWRANGEELEMENTSPROC)pContext->getProcAddress(QLatin1String("glDrawRangeElements"));
+    glMultiDrawElements			= (PFNGLMULTIDRAWELEMENTSPROC)pContext->getProcAddress(QLatin1String("glMultiDrawElements"));
 
     result= glBindBuffer and glDeleteBuffers and glGenBuffers and glIsBuffer and glBufferData and glBufferSubData and
-    glGetBufferSubData and glMapBuffer and glUnmapBuffer and glGetBufferParameteriv and glGetBufferPointerv;// and glDrawRangeElements;
+    glGetBufferSubData and glMapBuffer and glUnmapBuffer and glGetBufferParameteriv and glGetBufferPointerv and glMultiDrawElements;// and glDrawRangeElements;
 #endif
     return result;
 
@@ -137,6 +147,23 @@ bool glc::loadGlSlExtension()
 	result= glCreateProgram and glDeleteProgram and glUseProgram and glCreateShader and glDeleteShader and
     glShaderSource and glCompileShader and glAttachShader and glDetachShader and glLinkProgram and
     glGetUniformLocation and glUniform4f and glUniform1i and glGetShaderiv and glGetProgramiv and glIsProgram;
+
+#endif
+    return result;
+}
+
+// Load Point Sprite extension
+bool glc::loadPointSpriteExtension()
+{
+	bool result= true;
+#if !defined(Q_OS_MAC)
+	const QGLContext* pContext= QGLContext::currentContext();
+	glPointParameterf				= (PFNGLPOINTPARAMETERFARBPROC)pContext->getProcAddress(QLatin1String("glPointParameterf"));
+	if (not glPointParameterf) qDebug() << "not glPointParameterf";
+	glPointParameterfv				= (PFNGLPOINTPARAMETERFVARBPROC)pContext->getProcAddress(QLatin1String("glPointParameterfv"));
+	if (not glPointParameterfv) qDebug() << "not glPointParameterfv";
+
+	result= glPointParameterf and glPointParameterfv;
 
 #endif
     return result;

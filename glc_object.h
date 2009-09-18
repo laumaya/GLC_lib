@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 1.1.0, packaged on March, 2009.
+ Version 1.2.0, packaged on September 2009.
 
  http://glc-lib.sourceforge.net
 
@@ -72,8 +72,10 @@ public:
 public:
 	//! Return Object Uuid
 	inline QUuid uuid() const {return m_QUuid;};
+
 	//! Get Object ID
 	inline GLC_uint id() const {return m_Uid;}
+
 	//! Get Object Name
 	inline const QString name() const {return m_Name;}
 //@}
@@ -83,6 +85,10 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+
+	//! Set Object Id
+	inline void setId(const GLC_uint id)
+	{m_Uid= id;}
 
 	//! Set Object UUid
 	inline void setUuid(const QUuid& uuid) {m_QUuid= uuid;}

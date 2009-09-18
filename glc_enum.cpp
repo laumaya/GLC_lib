@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 1.1.0, packaged on March, 2009.
+ Version 1.2.0, packaged on September 2009.
 
  http://glc-lib.sourceforge.net
 
@@ -27,6 +27,7 @@
 #include "glc_enum.h"
 
 QMutex glc::iDMutex;
+QMutex glc::geomIdMutex;
 QMutex glc::userIdMutex;
 
 GLC_uint glc::GLC_GenID(void)
@@ -35,6 +36,15 @@ GLC_uint glc::GLC_GenID(void)
 	glc::iDMutex.lock();
 	Id++;
 	glc::iDMutex.unlock();
+	return Id;
+}
+
+GLC_uint glc::GLC_GenGeomID(void)
+{
+	static GLC_uint Id= 0;
+	glc::userIdMutex.lock();
+	Id++;
+	glc::userIdMutex.unlock();
 	return Id;
 }
 

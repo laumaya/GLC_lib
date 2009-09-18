@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 1.1.0, packaged on March, 2009.
+ Version 1.2.0, packaged on September 2009.
 
  http://glc-lib.sourceforge.net
 
@@ -32,16 +32,21 @@
 #include <QString>
 
 //class to built
-#include "glc_point.h"
-#include "glc_circle.h"
-#include "glc_box.h"
-#include "glc_cylinder.h"
-#include "glc_mesh2.h"
-#include "glc_material.h"
-#include "glc_texture.h"
+#include "geometry/glc_point.h"
+#include "geometry/glc_pointsprite.h"
+#include "geometry/glc_line.h"
+#include "geometry/glc_circle.h"
+#include "geometry/glc_box.h"
+#include "geometry/glc_cylinder.h"
+#include "geometry/glc_rectangle.h"
+#include "geometry/glc_3drep.h"
+#include "shading/glc_material.h"
+#include "shading/glc_texture.h"
+#include "sceneGraph/glc_world.h"
+#include "sceneGraph/glc_3dviewinstance.h"
 #include "glc_boundingbox.h"
-#include "glc_instance.h"
-#include "glc_world.h"
+#include "viewport/glc_movercontroller.h"
+#include "viewport/glc_viewport.h"
 
 // end of class to built
 
@@ -75,21 +80,36 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an GLC_Point
-	GLC_Instance createPoint(const GLC_Vector4d &coord) const;
-	GLC_Instance createPoint(double x, double y, double z) const;
+	GLC_3DRep createPoint(const GLC_Vector4d &coord) const;
+	GLC_3DRep createPoint(double x, double y, double z) const;
+
+	//! Create an GLC_PointSprite
+	GLC_3DRep createPointSprite(float, GLC_Material*) const;
+
+	//! Create an GLC_Line
+	GLC_3DRep createLine(const GLC_Point4d&, const GLC_Point4d&) const;
 
 	//!  Create an GLC_Circle
-	GLC_Instance createCircle(double radius, double angle= 2 * glc::PI) const;
+	GLC_3DRep createCircle(double radius, double angle= 2 * glc::PI) const;
 
 	//! Create an GLC_Box
-	GLC_Instance createBox(double lx, double ly, double lz) const;
-	GLC_Instance createBox(const GLC_BoundingBox& boundingBox) const;
+	GLC_3DRep createBox(double lx, double ly, double lz) const;
+	GLC_3DViewInstance createBox(const GLC_BoundingBox& boundingBox) const;
 
 	//! Create an GLC_Cylinder
-	GLC_Instance createCylinder(double radius, double length) const;
+	GLC_3DRep createCylinder(double radius, double length) const;
+
+	//!Create ang GLC_Rectangle
+	GLC_3DRep createRectangle(const GLC_Vector4d&, double, double);
 
 	//! Create an GLC_World* with a QFile
 	GLC_World* createWorld(QFile &file, QStringList* pAttachedFileName= NULL) const;
+
+	//! Create an GLC_World containing only the 3dxml structure
+	GLC_World* createWorldStructureFrom3dxml(QFile &file) const;
+
+	//! Create 3DRep from 3dxml or 3DRep file
+	GLC_3DRep create3DrepFromFile(const QString&) const;
 
 	//! Create default material
 	GLC_Material* createMaterial() const;
@@ -101,9 +121,17 @@ public:
 	GLC_Material* createMaterial(GLC_Texture* pTexture) const;
 	//! create an material textured with a image file name
 	GLC_Material* createMaterial(const QString &textureFullFileName) const;
+	//! create an material textured with a QImage
+	GLC_Material* createMaterial(const QImage &) const;
 
 	//! Create an GLC_Texture
 	GLC_Texture* createTexture(const QString &textureFullFileName) const;
+	//! Create an GLC_Texture with a QImage
+	GLC_Texture* createTexture(const QImage &) const;
+
+
+	//! Create the default mover controller
+	GLC_MoverController createDefaultMoverController(const QColor&, GLC_Viewport*);
 
 //@}
 

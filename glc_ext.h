@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 1.1.0, packaged on March, 2009.
+ Version 1.2.0, packaged on September 2009.
 
  http://glc-lib.sourceforge.net
 
@@ -21,6 +21,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 *****************************************************************************/
+//! \file glc_ext.h Header of the GLC Opengl extension functions.
 
 #ifndef GLC_EXT_H_
 #define GLC_EXT_H_
@@ -43,7 +44,8 @@ extern PFNGLGETBUFFERPARAMETERIVARBPROC	glGetBufferParameteriv;
 extern PFNGLGETBUFFERPOINTERVARBPROC	glGetBufferPointerv;
 // glDrawRangElement
 //extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
-
+// glMultiDrawElement
+extern PFNGLMULTIDRAWELEMENTSPROC		glMultiDrawElements;
 // GL_ARB_shader_objects
 extern PFNGLCREATEPROGRAMOBJECTARBPROC	glCreateProgram;
 extern PFNGLDELETEPROGRAMPROC		  	glDeleteProgram;
@@ -61,6 +63,11 @@ extern PFNGLUNIFORM1IARBPROC            glUniform1i;
 extern PFNGLGETSHADERIVPROC				glGetShaderiv;
 extern PFNGLGETPROGRAMIVARBPROC			glGetProgramiv;
 extern PFNGLISPROGRAMARBPROC			glIsProgram;
+
+// GL_point_parameters Point Sprite
+extern PFNGLPOINTPARAMETERFARBPROC  glPointParameterf;
+extern PFNGLPOINTPARAMETERFVARBPROC glPointParameterfv;
+
 #endif
 
 namespace glc
@@ -73,5 +80,8 @@ namespace glc
 
 	//! Load GLSL extensions
 	bool loadGlSlExtension();
+
+	//! Load Point Sprite extension
+	bool loadPointSpriteExtension();
 };
 #endif /*GLC_EXT_H_*/

@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 1.1.0, packaged on March, 2009.
+ Version 1.2.0, packaged on September 2009.
 
  http://glc-lib.sourceforge.net
 
@@ -27,9 +27,9 @@
 #ifndef GLC_BOUNDINGBOX_
 #define GLC_BOUNDINGBOX_
 
-#include "glc_vector4d.h"
-#include "glc_utils_maths.h"
-#include "glc_matrix4x4.h"
+#include "maths/glc_vector4d.h"
+#include "maths/glc_utils_maths.h"
+#include "maths/glc_matrix4x4.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_BoundingBox
@@ -78,17 +78,17 @@ public:
 	//double maxDistance(const GLC_Vector4d& point) const;
 
 	//! Get the lower corner of the bounding box
-	GLC_Point4d getLower(void) const;
+	GLC_Point4d lowerCorner(void) const;
 
 	//! Get the upper corner of the bounding box
-	GLC_Point4d getUpper(void) const;
+	GLC_Point4d upperCorner(void) const;
 
 	//! Get the center of the bounding box
-	GLC_Point4d getCenter(void) const;
+	GLC_Point4d center(void) const;
 
-	//! Return the boudingSphere Radius
+	//! Return the boundingSphere Radius
 	inline double boundingSphereRadius() const
-	{return fabs(GLC_Vector4d(m_Lower - m_Upper).norm()) / 2.0;}
+	{return GLC_Vector4d(m_Lower - m_Upper).norm() / 2.0;}
 
 //@}
 
