@@ -26,6 +26,7 @@
 
 #include "glc_material.h"
 #include "../geometry/glc_vbogeom.h"
+#include "../glc_factory.h"
 
 #include <QtDebug>
 
@@ -482,4 +483,61 @@ void GLC_Material::initOtherColor(void)
 
 	// Lighting emit
 	m_LightEmission.setRgbF(0.0, 0.0, 0.0, 1.0);
+}
+
+
+// Non-member stream operator
+QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
+{
+	// Store GLC_Object class members
+	stream << material.uuid() << material.name();
+
+	// Store GLC_Material class members
+	stream << material.ambientColor() << material.diffuseColor() << material.specularColor();
+	stream << material.lightEmission() << material.shininess() << material.alpha();
+
+	// Test if the material has texture
+	bool hasTexture= material.hasTexture();
+	stream << hasTexture;
+	if (hasTexture)
+	{
+		GLC_Texture texture(*(material.textureHandle()));
+		stream << texture;
+	}
+
+	return stream;
+}
+QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
+{
+	// Retrieve GLC_Object members
+	QUuid uuid;
+	QString name;
+	stream >> uuid >> name;
+	material.setUuid(uuid);
+	material.setName(name);
+
+	// Retrieve GLC_Material members
+	QColor ambient, diffuse, specular, lightEmission;
+	float shininess;
+	double alpha;
+	stream >> ambient >> diffuse >> specular >> lightEmission;
+	stream >> shininess >> alpha;
+	material.setAmbientColor(ambient);
+	material.setDiffuseColor(diffuse);
+	material.setSpecularColor(specular);
+	material.setLightEmission(lightEmission);
+	material.setShininess(shininess);
+	material.setTransparency(alpha);
+
+	// Test if material has texture
+	bool hasTexture;
+	stream >> hasTexture;
+	if (hasTexture)
+	{
+		GLC_Texture texture(GLC_Factory::instance()->context());
+		stream >> texture;
+		material.setTexture(new GLC_Texture(texture));
+	}
+
+	return stream;
 }

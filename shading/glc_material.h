@@ -45,8 +45,7 @@ typedef QHash< GLC_uint, GLC_VboGeom*> CWhereUsed;
 //////////////////////////////////////////////////////////////////////
 
 
-class GLC_Material :
-	public GLC_Object
+class GLC_Material : public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -85,10 +84,9 @@ public:
 	bool isUnused() const {return m_WhereUsed.isEmpty();}
 
 	//! Return true is material has attached texture
-	bool hasTexture()
-	{
-		return m_pTexture != NULL;
-	}
+	inline bool hasTexture() const
+	{return m_pTexture != NULL;}
+
 	//! Get Ambiant color
 	QColor ambientColor() const;
 
@@ -102,10 +100,8 @@ public:
 	QColor lightEmission() const;
 
 	//! Get Shininess
-	GLfloat shininess() const
-	{
-		return m_fShininess;
-	}
+	inline GLfloat shininess() const
+	{return m_fShininess;}
 
 	//! Get the texture File Name
 	QString textureFileName() const;
@@ -117,7 +113,8 @@ public:
 	bool textureIsLoaded() const;
 
 	//! Return true if the material is transparent
-	inline bool isTransparent() const {return  m_Transparency < 1.0;}
+	inline bool isTransparent() const
+	{return  m_Transparency < 1.0;}
 
 	//! Return true if material are the same
 	bool operator==(const GLC_Material&) const;
@@ -129,6 +126,10 @@ public:
 	//! Return the number of this material usage
 	inline int numberOfUsage() const
 	{return m_WhereUsed.size();}
+
+	//! Return the texture handle
+	inline GLC_Texture* textureHandle() const
+	{return m_pTexture;}
 
 //@}
 
@@ -166,10 +167,8 @@ public:
 	void setLightEmission(const QColor& lightEmission);
 
 	//! Set Shininess
-	void setShininess(GLfloat Shininess)
-	{
-		m_fShininess= Shininess;
-	}
+	inline void setShininess(GLfloat Shininess)
+	{ m_fShininess= Shininess;}
 
 	//! Set Texture
 	void setTexture(GLC_Texture* pTexture);
@@ -242,5 +241,9 @@ private:
 	qreal m_Transparency;
 
 };
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_Material &);
+QDataStream &operator>>(QDataStream &, GLC_Material &);
 
 #endif //GLC_MATERIAL_H_
