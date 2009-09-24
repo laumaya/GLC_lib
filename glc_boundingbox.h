@@ -112,9 +112,7 @@ public:
 	//! Transform the bounding Box
 	GLC_BoundingBox& transform(const GLC_Matrix4x4& matrix);
 
-
 //@}
-
 
 //////////////////////////////////////////////////////////////////////
 // Private members
@@ -125,4 +123,9 @@ private:
 	bool m_IsEmpty;
 
 };
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_BoundingBox &);
+QDataStream &operator>>(QDataStream &, GLC_BoundingBox &);
+
 #endif /*GLC_BOUNDINGBOX_*/

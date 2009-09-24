@@ -245,3 +245,17 @@ GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
 	return *this;
 }
 
+// Non-member stream operator
+QDataStream &operator<<(QDataStream &stream, const GLC_BoundingBox &bBox)
+{
+	stream << bBox.lowerCorner() << bBox.upperCorner();
+	return stream;
+}
+QDataStream &operator>>(QDataStream &stream, GLC_BoundingBox &bBox)
+{
+	GLC_Vector4d lower, upper;
+	stream >> lower >> upper;
+	bBox= GLC_BoundingBox(lower, upper);
+	return stream;
+}
+
