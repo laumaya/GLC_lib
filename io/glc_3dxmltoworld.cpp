@@ -1104,6 +1104,7 @@ GLC_Material* GLC_3dxmlToWorld::getMaterial()
 	const QString red(readAttribute("red", true));
 	const QString green(readAttribute("green", true));
 	const QString blue(readAttribute("blue", true));
+	const QString alpha(readAttribute("alpha", true));
 
 	const QString matKey= red + green + blue;
 	if (m_MaterialHash.contains(matKey))
@@ -1115,6 +1116,7 @@ GLC_Material* GLC_3dxmlToWorld::getMaterial()
 		qreal redReal= red.toDouble();
 		qreal greenReal= green.toDouble();
 		qreal blueReal= blue.toDouble();
+		qreal alphaReal= alpha.toDouble();
 		QColor diffuse;
 		diffuse.setRgbF(redReal, greenReal, blueReal);
 		pMaterial= new GLC_Material(diffuse);
@@ -1122,6 +1124,7 @@ GLC_Material* GLC_3dxmlToWorld::getMaterial()
 		pMaterial->setAmbientColor(Qt::black);
 		pMaterial->setSpecularColor(Qt::white);
 		pMaterial->setShininess(25.0);
+		pMaterial->setTransparency(alphaReal);
 		m_MaterialHash.insert(matKey, pMaterial);
 	}
 
