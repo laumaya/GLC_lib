@@ -27,14 +27,23 @@
 
 #include "glc_enginelod.h"
 
-// Default constructor
+// Default Constructor
+GLC_EngineLod::GLC_EngineLod()
+: m_Accuracy(0.0)
+, m_IboId(0)
+, m_IboVector()
+, m_IndexSize(0)
+{
+
+}
+
+// Construct an engine Lod with the specified accuracy
 GLC_EngineLod::GLC_EngineLod(double accuracy)
 : m_Accuracy(accuracy)
 , m_IboId(0)
 , m_IboVector()
 , m_IndexSize(0)
 {
-
 
 }
 
@@ -47,6 +56,15 @@ GLC_EngineLod::GLC_EngineLod(const GLC_EngineLod& lod)
 {
 
 
+}
+
+// Overload "=" operator
+GLC_EngineLod& GLC_EngineLod::operator=(const GLC_EngineLod& lod)
+{
+	m_Accuracy= lod.m_Accuracy;
+	m_IboId= lod.m_IboId;
+	m_IboVector= lod.indexVector();
+	m_IndexSize= lod.m_IndexSize;
 }
 
 GLC_EngineLod::~GLC_EngineLod()
@@ -83,5 +101,23 @@ QVector<GLuint> GLC_EngineLod::indexVector() const
 	{
 		return m_IboVector;
 	}
+}
+
+// Non-member stream operator
+QDataStream &operator<<(QDataStream &stream, const GLC_EngineLod &lod)
+{
+	stream << lod.accuracy() << lod.indexVector();
+
+	return stream;
+}
+QDataStream &operator>>(QDataStream &stream, GLC_EngineLod &lod)
+{
+	double accuracy;
+	QVector<GLuint> indexVector;
+
+	stream >> accuracy >> indexVector;
+	lod.setAccuracy(accuracy);
+	*(lod.indexVectorHandle())= indexVector;
+	return stream;
 }
 

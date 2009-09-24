@@ -39,11 +39,17 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Default constructor
+	//! Default Constructor
+	GLC_EngineLod();
+
+	//! Construct an engine Lod with the specified accuracy
 	GLC_EngineLod(double accuracy);
 
 	//! Copy constructor
 	GLC_EngineLod(const GLC_EngineLod&);
+
+	//! Overload "=" operator
+	GLC_EngineLod& operator=(const GLC_EngineLod&);
 
 	//!Destructor
 	virtual ~GLC_EngineLod();
@@ -126,5 +132,9 @@ private:
 	int m_IndexSize;
 
 };
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_EngineLod &);
+QDataStream &operator>>(QDataStream &, GLC_EngineLod &);
 
 #endif /* GLC_ENGINELOD_H_ */

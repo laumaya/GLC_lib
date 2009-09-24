@@ -90,7 +90,7 @@ public:
 
 	//! Return the number of lod
 	inline int numberOfLod()
-	{return m_ExtendedGeomEngine.numberOfLod();}
+	{return m_ExtendedGeomEngine.lodCount();}
 
 	//! Return the Position Vector
 	inline GLfloatVector positionVector() const

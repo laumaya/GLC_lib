@@ -328,3 +328,46 @@ bool GLC_ExtendedGeomEngine::useVBO(bool use, GLC_ExtendedGeomEngine::VboType ty
 
 }
 
+// Non-member stream operator
+QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedGeomEngine &engine)
+{
+	stream << engine.positionVector();
+	stream << engine.normalVector();
+	stream << engine.texelVector();
+	stream << engine.colorVector();
+
+	// Store the list of LOD
+	QList<GLC_EngineLod> engineLodList;
+	const int size= engine.lodCount();
+	for (int i= 0; i < size; ++i)
+	{
+		engineLodList.append(*(engine.getLod(i)));
+	}
+	stream << engineLodList;
+
+	return stream;
+}
+QDataStream &operator>>(QDataStream &stream, GLC_ExtendedGeomEngine &engine)
+{
+	engine.clear();
+
+	GLfloatVector position, normal, texel, color;
+	stream >> position >> normal >> texel >> color;
+	*(engine.positionVectorHandle())= position;
+	*(engine.normalVectorHandle())= normal;
+	*(engine.texelVectorHandle())= texel;
+	*(engine.colorVectorHandle())= color;
+
+	// retrieve the list of lod
+	QList<GLC_EngineLod> engineLodList;
+	stream >> engineLodList;
+	const int size= engineLodList.size();
+	for (int i= 0; i < size; ++i)
+	{
+		engine.appendLod(engineLodList.at(i).accuracy());
+		*(engine.getLod(i))= engineLodList.at(i);
+	}
+
+	return stream;
+}
+

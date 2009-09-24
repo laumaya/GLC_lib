@@ -403,7 +403,7 @@ void GLC_ExtendedMesh::setCurrentLod(const int value)
 {
 	if (value)
 	{
-		const int numberOfLod= m_ExtendedGeomEngine.numberOfLod() - 1;
+		const int numberOfLod= m_ExtendedGeomEngine.lodCount() - 1;
 		// Clamp value to number of load
 		m_CurrentLod= nearbyint(static_cast<int>((static_cast<double>(value) / 100.0) * numberOfLod));
 	}
@@ -732,7 +732,7 @@ void GLC_ExtendedMesh::createVbos()
 		glBufferData(GL_ARRAY_BUFFER, dataSize, pColorVector->data(), GL_STATIC_DRAW);
 	}
 
-	const int lodNumber= m_ExtendedGeomEngine.numberOfLod();
+	const int lodNumber= m_ExtendedGeomEngine.lodCount();
 	for (int i= 0; i < lodNumber; ++i)
 	{
 		//Create LOD IBO

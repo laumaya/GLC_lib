@@ -74,7 +74,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return the number of lod
-	inline int numberOfLod()
+	inline int lodCount() const
 	{return m_EngineLodList.size();}
 
 	//! Return the Position Vector
@@ -211,5 +211,9 @@ private:
 	int m_ColorSize;
 
 };
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_ExtendedGeomEngine &);
+QDataStream &operator>>(QDataStream &, GLC_ExtendedGeomEngine &);
 
 #endif /* GLC_EXTENDEDGEOMENGINE_H_ */
