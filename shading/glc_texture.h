@@ -46,6 +46,9 @@ class GLC_Texture
 //////////////////////////////////////////////////////////////////////
 
 public:
+	//! Default constructor
+	GLC_Texture(const QGLContext*);
+
 	//! Constructor with fileName
 	GLC_Texture(const QGLContext*, const QString&);
 
@@ -53,10 +56,13 @@ public:
 	GLC_Texture(const QGLContext*, const QFile&);
 
 	//! Constructor with QImage
-	GLC_Texture(const QGLContext*, const QImage&);
+	GLC_Texture(const QGLContext*, const QImage&, const QString& fileName= QString());
 
 	//! Copy constructor
 	GLC_Texture(const GLC_Texture& TextureToCopy);
+
+	//! Overload "=" operator
+	GLC_Texture& operator=(const GLC_Texture&);
 
 	//! Default Destructor
 	virtual ~GLC_Texture();
@@ -67,20 +73,29 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the QGLContext of the texture
+	inline QGLContext* context() const
+	{return m_pQGLContext;}
+
 	//! Return the texture File Name
-	inline QString fileName() const {return m_Name;}
+	inline QString fileName() const
+	{return m_FileName;}
 
 	//! Return OpenGL Texture Id
-	inline GLuint GL_ID() const {return m_GlTextureID;}
+	inline GLuint GL_ID() const
+	{return m_GlTextureID;}
 
 	//! Return true if the texture is loaded
-	inline bool isLoaded() const {return (m_GlTextureID != 0);}
+	inline bool isLoaded() const
+	{return (m_GlTextureID != 0);}
 
 	//! Return the texture size
-	inline QSize size() const {return m_TextureSize;}
+	inline QSize size() const
+	{return m_TextureSize;}
 
 	//! Return the maximum texture size
-	static QSize maxSize() {return m_MaxTextureSize;}
+	static QSize maxSize()
+	{return m_MaxTextureSize;}
 
 	//! Return true if texture are the same
 	bool operator==(const GLC_Texture&) const;
@@ -88,6 +103,10 @@ public:
 	//! Return true if the texture has alpha channel
 	inline bool hasAlphaChannel() const
 	{ return m_HasAlphaChannel;}
+
+	//! Return the an image of the texture
+	inline QImage imageOfTexture() const
+	{ return m_textureImage;}
 
 
 //@}
@@ -121,13 +140,13 @@ private:
 	QGLContext *m_pQGLContext;
 
 	//! Texture Name
-	QString m_Name;
+	QString m_FileName;
 
 	//! OpenGL Texture ID
 	GLuint	m_GlTextureID;
 
 	//! QImage off the texture
-	QImage *m_pTextureImage;
+	QImage m_textureImage;
 
 	//! Size of the texture
 	QSize m_TextureSize;
@@ -138,7 +157,11 @@ private:
 	//! Static member used to check texture size
 	static QSize m_MaxTextureSize;
 	static const QSize m_MinTextureSize;
-
 };
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_Texture &);
+QDataStream &operator>>(QDataStream &, GLC_Texture &);
+
 
 #endif //GLC_TEXTURE_H_
