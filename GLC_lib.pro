@@ -3,7 +3,7 @@ TEMPLATE = lib
 QT += opengl \
     core
 
-CONFIG+= x86
+
 CONFIG += exceptions \
     release \
     warn_on
