@@ -62,7 +62,7 @@ GLC_Factory* GLC_Factory::instance(const QGLContext *pContext)
 
 // Protected constructor
 GLC_Factory::GLC_Factory(const QGLContext *pContext)
-: m_pQGLContext(pContext)
+: m_pQGLContext(const_cast<QGLContext*>(pContext))
 {
 
 }

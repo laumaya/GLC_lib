@@ -63,6 +63,7 @@ class GLC_Factory : public QObject
 public:
 	//! Get unique instance of the factory
 	static GLC_Factory* instance(const QGLContext *);
+
 	//! Get unique instance of the factory
 	inline static GLC_Factory* instance()
 	{return m_pFactory;}
@@ -79,6 +80,10 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the current factory context
+	inline QGLContext* context() const
+	{return m_pQGLContext;}
+
 	//! Create an GLC_Point
 	GLC_3DRep createPoint(const GLC_Vector4d &coord) const;
 	GLC_3DRep createPoint(double x, double y, double z) const;
@@ -148,7 +153,7 @@ private:
 	static GLC_Factory* m_pFactory;
 
 	//! The QGLContext attached to the factory (rendering context)
-	const QGLContext* m_pQGLContext;
+	QGLContext* m_pQGLContext;
 
 };
 
