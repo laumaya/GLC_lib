@@ -28,6 +28,7 @@
 #define GLC_VECTOR4D_H_
 
 #include <QVector>
+#include <QDataStream>
 
 #include "glc_utils_maths.h"
 #include "glc_vector2d.h"
@@ -401,5 +402,9 @@ namespace glc
 
 //! Define GLC_Point4D
 typedef GLC_Vector4d GLC_Point4d;
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_Vector4d &);
+QDataStream &operator>>(QDataStream &, GLC_Vector4d &);
 
 #endif /*GLC_VECTOR4D_H_*/

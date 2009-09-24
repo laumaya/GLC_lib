@@ -181,4 +181,18 @@ void GLC_Vector4d::normalizeW(void)
 	vector[3]= 1.0;
 }
 
+// Non-member stream operator
+QDataStream &operator<<(QDataStream &stream, const GLC_Vector4d &vector)
+{
+	stream << vector.X() << vector.Y() << vector.Z() << vector.W();
+	return stream;
+}
+QDataStream &operator>>(QDataStream &stream, GLC_Vector4d &vector)
+{
+	double x, y, z, w;
+	stream >> x >> y >> z >> w;
+	vector.setVect(x, y, z, w);
+	return stream;
+}
+
 
