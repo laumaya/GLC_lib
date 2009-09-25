@@ -92,7 +92,7 @@ void GLC_PrimitiveGroup::addTrianglesStrip(const IndexList& input)
 		{
 			m_StripIndexOffset.append(BUFFER_OFFSET(0));
 		}
-		size_t offset= reinterpret_cast<size_t>(m_StripIndexOffset.last()) + static_cast<size_t>(m_StripIndexSizes.last()) * sizeof(GLvoid*);
+		GLsizeiptr offset= reinterpret_cast<GLsizeiptr>(m_StripIndexOffset.last()) + m_StripIndexSizes.last() * sizeof(GLuint);
 		m_StripIndexOffset.append(BUFFER_OFFSET(offset));
 	}
 	else
@@ -113,7 +113,7 @@ void GLC_PrimitiveGroup::setBaseTrianglesStripOffset(GLvoid* pOffset)
 	const int size= m_StripIndexOffset.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_StripIndexOffset[i]= static_cast<char *>(m_StripIndexOffset[i]) + reinterpret_cast<size_t>(pOffset);
+		m_StripIndexOffset[i]= BUFFER_OFFSET(reinterpret_cast<GLsizeiptr>(m_StripIndexOffset[i]) + reinterpret_cast<GLsizeiptr>(pOffset));
 	}
 }
 
@@ -142,7 +142,7 @@ void GLC_PrimitiveGroup::addTrianglesFan(const IndexList& input)
 		{
 			m_FanIndexOffset.append(BUFFER_OFFSET(0));
 		}
-		size_t offset= reinterpret_cast<size_t>(m_FanIndexOffset.last()) + static_cast<size_t>(m_FansIndexSizes.last()) * sizeof(GLvoid*);
+		GLsizeiptr offset= reinterpret_cast<GLsizeiptr>(m_FanIndexOffset.last()) + m_FansIndexSizes.last() * sizeof(GLuint);
 		m_FanIndexOffset.append(BUFFER_OFFSET(offset));
 	}
 	else
@@ -164,7 +164,7 @@ void GLC_PrimitiveGroup::setBaseTrianglesFanOffset(GLvoid* pOffset)
 	const int size= m_FanIndexOffset.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_FanIndexOffset[i]= static_cast<char *>(m_FanIndexOffset[i]) + reinterpret_cast<size_t>(pOffset);
+		m_FanIndexOffset[i]= BUFFER_OFFSET(reinterpret_cast<GLsizeiptr>(m_FanIndexOffset[i]) + reinterpret_cast<GLsizeiptr>(pOffset));
 	}
 }
 
@@ -197,5 +197,17 @@ void GLC_PrimitiveGroup::clear()
 	m_TrianglesIndexSize= 0;
 	m_TrianglesStripSize= 0;
 	m_TrianglesFanSize= 0;
+}
+
+// Non-member stream operator
+QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitiveGroup)
+{
+
+	return stream;
+}
+QDataStream &operator>>(QDataStream &stream, GLC_PrimitiveGroup &primitiveGroup)
+{
+
+	return stream;
 }
 

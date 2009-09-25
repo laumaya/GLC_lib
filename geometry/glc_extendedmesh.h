@@ -271,5 +271,8 @@ private:
 	int m_CurrentLod;
 
 };
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_ExtendedMesh &);
+QDataStream &operator>>(QDataStream &, GLC_ExtendedMesh &);
 
 #endif /* GLC_EXTENDEDMESH_H_ */

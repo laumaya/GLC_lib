@@ -255,7 +255,10 @@ private:
 	//! Flag to know if there is triangles fan
 	int m_TrianglesFanSize;
 
-
 };
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_PrimitiveGroup &);
+QDataStream &operator>>(QDataStream &, GLC_PrimitiveGroup &);
 
 #endif /* GLC_PRIMITIVEGROUP_H_ */

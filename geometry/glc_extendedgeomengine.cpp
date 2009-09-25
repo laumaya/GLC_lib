@@ -132,7 +132,7 @@ GLfloatVector GLC_ExtendedGeomEngine::normalVector() const
 	{
 		// VBO created get data from VBO
 		const int sizeOfVbo= m_PositionSize;
-		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
+		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLfloat);
 		GLfloatVector normalVector(sizeOfVbo);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_NormalVboId);
@@ -155,7 +155,7 @@ GLfloatVector GLC_ExtendedGeomEngine::texelVector() const
 	{
 		// VBO created get data from VBO
 		const int sizeOfVbo= m_TexelsSize;
-		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
+		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLfloat);
 		GLfloatVector texelVector(sizeOfVbo);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_TexelVboId);
@@ -178,7 +178,7 @@ GLfloatVector GLC_ExtendedGeomEngine::colorVector() const
 	{
 		// VBO created get data from VBO
 		const int sizeOfVbo= m_ColorSize;
-		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
+		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLfloat);
 		GLfloatVector normalVector(sizeOfVbo);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_ColorVboId);
@@ -336,14 +336,7 @@ QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedGeomEngine &engin
 	stream << engine.texelVector();
 	stream << engine.colorVector();
 
-	// Store the list of LOD
-	QList<GLC_EngineLod> engineLodList;
-	const int size= engine.lodCount();
-	for (int i= 0; i < size; ++i)
-	{
-		engineLodList.append(*(engine.getLod(i)));
-	}
-	stream << engineLodList;
+	// doesn't Store the list of LOD
 
 	return stream;
 }
@@ -357,16 +350,6 @@ QDataStream &operator>>(QDataStream &stream, GLC_ExtendedGeomEngine &engine)
 	*(engine.normalVectorHandle())= normal;
 	*(engine.texelVectorHandle())= texel;
 	*(engine.colorVectorHandle())= color;
-
-	// retrieve the list of lod
-	QList<GLC_EngineLod> engineLodList;
-	stream >> engineLodList;
-	const int size= engineLodList.size();
-	for (int i= 0; i < size; ++i)
-	{
-		engine.appendLod(engineLodList.at(i).accuracy());
-		*(engine.getLod(i))= engineLodList.at(i);
-	}
 
 	return stream;
 }

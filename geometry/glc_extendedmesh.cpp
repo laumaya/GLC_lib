@@ -173,7 +173,7 @@ QVector<GLuint> GLC_ExtendedMesh::getTrianglesIndex(int lod, GLC_uint materialId
 	int offset= 0;
 	if (GLC_State::vboUsed())
 	{
-		offset= reinterpret_cast<size_t>(pPrimitiveGroup->trianglesIndexOffset()) / sizeof(GLvoid*);
+		offset= reinterpret_cast<GLsizeiptr>(pPrimitiveGroup->trianglesIndexOffset()) / sizeof(GLvoid*);
 	}
 	else
 	{
@@ -183,7 +183,7 @@ QVector<GLuint> GLC_ExtendedMesh::getTrianglesIndex(int lod, GLC_uint materialId
 
 	QVector<GLuint> resultIndex(size);
 
-	memcpy((void*)resultIndex.data(), &(m_ExtendedGeomEngine.indexVector(lod).data())[offset], size * sizeof(int));
+	memcpy((void*)resultIndex.data(), &(m_ExtendedGeomEngine.indexVector(lod).data())[offset], size * sizeof(GLuint));
 
 	return resultIndex;
 }
@@ -224,7 +224,7 @@ QList<QVector<GLuint> > GLC_ExtendedMesh::getStripsIndex(int lod, GLC_uint mater
 		stripsCount= pPrimitiveGroup->stripsOffset().size();
 		for (int i= 0; i < stripsCount; ++i)
 		{
-			offsets.append(reinterpret_cast<size_t>(pPrimitiveGroup->stripsOffset().at(i)) / sizeof(GLvoid*));
+			offsets.append(reinterpret_cast<GLsizeiptr>(pPrimitiveGroup->stripsOffset().at(i)) / sizeof(GLvoid*));
 			sizes.append(static_cast<int>(pPrimitiveGroup->stripsSizes().at(i)));
 		}
 	}
@@ -297,7 +297,7 @@ QList<QVector<GLuint> > GLC_ExtendedMesh::getFansIndex(int lod, GLC_uint materia
 		fansCount= pPrimitiveGroup->fansOffset().size();
 		for (int i= 0; i < fansCount; ++i)
 		{
-			offsets.append(reinterpret_cast<size_t>(pPrimitiveGroup->fansOffset().at(i)) / sizeof(GLvoid*));
+			offsets.append(reinterpret_cast<GLsizeiptr>(pPrimitiveGroup->fansOffset().at(i)) / sizeof(GLvoid*));
 			sizes.append(static_cast<int>(pPrimitiveGroup->fansSizes().at(i)));
 		}
 	}
@@ -548,6 +548,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 
 		if (m_IsSelected or GLC_State::isInSelectionMode() or (pCurrentMaterial->isTransparent() == transparent))
 		{
+
 			if (vboIsUsed)
 			{
 				// Draw triangles
@@ -575,6 +576,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 						glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
 					}
 				}
+
 			}
 			else
 			{
@@ -608,6 +610,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 				}
 
 			}
+
 		}
 
 		++iGroup;
@@ -762,21 +765,21 @@ void GLC_ExtendedMesh::finishVbo()
 			// Add group triangles index to engine triangles index vector
 			if (iGroup.value()->containsTriangles())
 			{
-				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLvoid*)));
+				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
 				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
 			}
 
 			// Add group strip index to engine strip index vector
 			if (iGroup.value()->containsStrip())
 			{
-				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLvoid*)));
+				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
 				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
 			}
 
 			// Add group fan index to engine fan index vector
 			if (iGroup.value()->containsFan())
 			{
-				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLvoid*)));
+				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
 				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
 			}
 
@@ -823,8 +826,17 @@ void GLC_ExtendedMesh::finishNonVbo()
 			++iGroup;
 		}
 		++iGroups;
-
 	}
+}
 
+// Non-member stream operator
+QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedMesh &engine)
+{
 
+	return stream;
+}
+QDataStream &operator>>(QDataStream &stream, GLC_ExtendedMesh &engine)
+{
+
+	return stream;
 }
