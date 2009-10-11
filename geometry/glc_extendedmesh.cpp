@@ -405,7 +405,7 @@ void GLC_ExtendedMesh::setCurrentLod(const int value)
 	{
 		const int numberOfLod= m_ExtendedGeomEngine.lodCount() - 1;
 		// Clamp value to number of load
-		m_CurrentLod= nearbyint(static_cast<int>((static_cast<double>(value) / 100.0) * numberOfLod));
+		m_CurrentLod= qRound(static_cast<int>((static_cast<double>(value) / 100.0) * numberOfLod));
 	}
 	else
 	{
@@ -427,7 +427,7 @@ void GLC_ExtendedMesh::glExecute(bool isSelected, bool transparent)
 // Virtual interface for OpenGL Geometry set up.
 void GLC_ExtendedMesh::glDraw(bool transparent)
 {
-	Q_ASSERT(m_GeometryIsValid or not m_ExtendedGeomEngine.normalVectorHandle()->isEmpty());
+	Q_ASSERT(m_GeometryIsValid || !m_ExtendedGeomEngine.normalVectorHandle()->isEmpty());
 
 	const bool vboIsUsed= GLC_State::vboUsed();
 
