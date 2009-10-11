@@ -490,7 +490,7 @@ void GLC_Material::initOtherColor(void)
 QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
 {
 	// Store GLC_Object class members
-	stream << material.uuid() << material.name();
+	stream << material.id() << material.name();
 
 	// Store GLC_Material class members
 	stream << material.ambientColor() << material.diffuseColor() << material.specularColor();
@@ -510,10 +510,10 @@ QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
 QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 {
 	// Retrieve GLC_Object members
-	QUuid uuid;
+	GLC_uint id;
 	QString name;
-	stream >> uuid >> name;
-	material.setUuid(uuid);
+	stream >> id >> name;
+	material.setId(id);
 	material.setName(name);
 
 	// Retrieve GLC_Material members

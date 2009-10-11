@@ -34,7 +34,7 @@
 typedef QList<GLuint> IndexList;
 typedef QVector<GLsizei> IndexSizes;
 typedef QVector<GLvoid*> OffsetVector;
-typedef QVector<int> OffsetVectori;
+typedef QVector<GLuint> OffsetVectori;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_PrimitiveGroup
@@ -45,6 +45,9 @@ typedef QVector<int> OffsetVectori;
 //////////////////////////////////////////////////////////////////////
 class GLC_PrimitiveGroup
 {
+	friend QDataStream &operator<<(QDataStream &, const GLC_PrimitiveGroup &);
+	friend QDataStream &operator>>(QDataStream &, GLC_PrimitiveGroup &);
+
 public:
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -52,18 +55,18 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 	//! Default constructor
-	GLC_PrimitiveGroup(GLC_uint);
+	GLC_PrimitiveGroup(GLC_uint id= 0);
+
+	//! Copy constructor
+	GLC_PrimitiveGroup(const GLC_PrimitiveGroup&);
 
 	//! Copy constructor
 	GLC_PrimitiveGroup(const GLC_PrimitiveGroup&, GLC_uint);
 
-	~GLC_PrimitiveGroup();
-private:
-	//! Copy constructor
-	GLC_PrimitiveGroup(const GLC_PrimitiveGroup&){}
-
 	//! = operator
-	GLC_PrimitiveGroup& operator=(const GLC_PrimitiveGroup&){return *this;}
+	GLC_PrimitiveGroup& operator=(const GLC_PrimitiveGroup&);
+
+	~GLC_PrimitiveGroup();
 
 //@}
 
@@ -72,6 +75,10 @@ private:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+
+	//! Return true if the group is finished
+	inline bool isFinished() const
+	{return m_IsFinished;}
 
 	//! Return the group id
 	inline GLC_uint id() const
@@ -155,6 +162,7 @@ public:
 	{return m_FanIndexOffseti;}
 
 
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -162,6 +170,10 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Set the group id
+	inline void setId(GLC_uint id)
+	{m_ID= id;}
+
 	//! Add triangles to the group
 	inline void addTriangles(const IndexList& input)
 	{
@@ -221,7 +233,7 @@ private:
 
 	//! The base triangle index offset
 	GLvoid* m_pBaseTrianglesOffset;
-	int m_BaseTrianglesOffseti;
+	GLuint m_BaseTrianglesOffseti;
 
 	//! Strips index list
 	IndexList m_StripsIndex;

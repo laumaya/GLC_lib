@@ -830,13 +830,96 @@ void GLC_ExtendedMesh::finishNonVbo()
 }
 
 // Non-member stream operator
-QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedMesh &engine)
+QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedMesh &mesh)
 {
+	stream << mesh.id();
+	stream << mesh.name();
+
+	// Materials serialisation
+	// Used material list
+	QList<GLC_Material> materialsList;
+	MaterialHash::const_iterator iMat= mesh.m_MaterialHash.constBegin();
+	int i= 0;
+	while (mesh.m_MaterialHash.constEnd() != iMat)
+	{
+		materialsList.append(*(iMat.value()));
+		materialsList[i].setId(iMat.value()->id());
+		++iMat;
+		++i;
+	}
+	// Save the list of materials
+	stream << materialsList;
+
+	// Extended geom engine serialisation
+	stream << mesh.m_ExtendedGeomEngine;
+
+	// Primitive groups serialisation
+	QList<int> primitiveGroupLodList;
+	QList<QList<GLC_PrimitiveGroup> > primitiveListOfGroupList;
+
+	GLC_ExtendedMesh::PrimitiveGroupsHash::const_iterator iGroupsHash= mesh.m_PrimitiveGroups.constBegin();
+	while (mesh.m_PrimitiveGroups.constEnd() != iGroupsHash)
+	{
+		primitiveGroupLodList.append(iGroupsHash.key());
+		QList<GLC_PrimitiveGroup> primitiveGroupList;
+		GLC_ExtendedMesh::PrimitiveGroups::const_iterator iGroups= iGroupsHash.value()->constBegin();
+		while (iGroupsHash.value()->constEnd() != iGroups)
+		{
+			primitiveGroupList.append(*(iGroups.value()));
+			++iGroups;
+		}
+		primitiveListOfGroupList.append(primitiveGroupList);
+		++iGroupsHash;
+	}
+	stream << primitiveGroupLodList;
+	stream << primitiveListOfGroupList;
 
 	return stream;
 }
-QDataStream &operator>>(QDataStream &stream, GLC_ExtendedMesh &engine)
+QDataStream &operator>>(QDataStream &stream, GLC_ExtendedMesh &mesh)
 {
+	GLC_uint meshID;
+	QString meshName;
+	stream >> meshID >> meshName;
+	mesh.setId(meshID);
+	mesh.setName(meshName);
+
+	// Retrieve the list of mesh materials
+	QList<GLC_Material> materialsList;
+	stream >> materialsList;
+	// Update mesh materials hash table
+	QHash<GLC_uint, GLC_uint> materialIdMap;
+	const int materialsCount= materialsList.size();
+	for (int i= 0; i < materialsCount; ++i)
+	{
+		GLC_Material* pMaterial= new GLC_Material(materialsList.at(i));
+		materialIdMap.insert(materialsList.at(i).id(), pMaterial->id());
+		mesh.addMaterial(pMaterial);
+	}
+
+	// Retrieve primitiveGroupLodList
+	QList<int> primitiveGroupLodList;
+	stream >> primitiveGroupLodList;
+
+	// Retrieve primitiveGroup list
+	QList<QList<GLC_PrimitiveGroup> > primitiveListOfGroupList;
+	stream >> primitiveListOfGroupList;
+
+	// Construct mesh primitiveGroupHash
+	const int lodCount= primitiveGroupLodList.size();
+	for (int i= 0; i < lodCount; ++i)
+	{
+		GLC_ExtendedMesh::PrimitiveGroups* pCurrentPrimitiveGroup= new GLC_ExtendedMesh::PrimitiveGroups();
+		mesh.m_PrimitiveGroups.insert(primitiveGroupLodList.at(i), pCurrentPrimitiveGroup);
+		const int groupCount= primitiveListOfGroupList.at(i).size();
+		for (int iGroup= 0; iGroup < groupCount; ++iGroup)
+		{
+			const GLC_uint newId= materialIdMap.value(primitiveListOfGroupList.at(i).at(iGroup).id());
+			GLC_PrimitiveGroup* pGroup= new GLC_PrimitiveGroup(primitiveListOfGroupList.at(i).at(iGroup), newId);
+			mesh.m_PrimitiveGroups.value(primitiveGroupLodList.at(i))->insert(newId, pGroup);
+		}
+	}
+
 
 	return stream;
 }

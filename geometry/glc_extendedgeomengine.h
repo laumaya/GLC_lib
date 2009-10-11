@@ -47,6 +47,9 @@ typedef QVector<GLuint> GLuintVector;
 //////////////////////////////////////////////////////////////////////
 class GLC_ExtendedGeomEngine : public GLC_GeomEngine
 {
+	friend QDataStream &operator<<(QDataStream &, const GLC_ExtendedGeomEngine &);
+	friend QDataStream &operator>>(QDataStream &, GLC_ExtendedGeomEngine &);
+
 public:
 
 	//! Enum of VBO TYPE

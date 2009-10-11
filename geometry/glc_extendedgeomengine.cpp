@@ -336,7 +336,14 @@ QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedGeomEngine &engin
 	stream << engine.texelVector();
 	stream << engine.colorVector();
 
-	// doesn't Store the list of LOD
+	// List of lod serialisation
+	const int lodCount= engine.m_EngineLodList.size();
+	QList<GLC_EngineLod> lodsList;
+	for (int i= 0; i < lodCount; ++i)
+	{
+		lodsList.append(*(engine.m_EngineLodList[i]));
+	}
+	stream << lodsList;
 
 	return stream;
 }
@@ -350,6 +357,15 @@ QDataStream &operator>>(QDataStream &stream, GLC_ExtendedGeomEngine &engine)
 	*(engine.normalVectorHandle())= normal;
 	*(engine.texelVectorHandle())= texel;
 	*(engine.colorVectorHandle())= color;
+
+	// List of lod serialisation
+	QList<GLC_EngineLod> lodsList;
+	stream >> lodsList;
+	const int lodCount= lodsList.size();
+	for (int i= 0; i < lodCount; ++i)
+	{
+		engine.m_EngineLodList.append(new GLC_EngineLod(lodsList.at(i)));
+	}
 
 	return stream;
 }

@@ -46,6 +46,9 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_ExtendedMesh : public GLC_VboGeom
 {
+	friend QDataStream &operator<<(QDataStream &, const GLC_ExtendedMesh &);
+	friend QDataStream &operator>>(QDataStream &, GLC_ExtendedMesh &);
+
 public:
 	typedef QHash<GLC_uint, GLC_PrimitiveGroup*> PrimitiveGroups;
 	typedef QHash<const int, PrimitiveGroups*> PrimitiveGroupsHash;
