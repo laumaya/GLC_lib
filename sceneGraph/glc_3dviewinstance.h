@@ -87,9 +87,9 @@ public:
 		const int size= m_3DRep.numberOfBody();
 		bool result= true;
 		int i= 0;
-		while((i < size) and result)
+		while((i < size) && result)
 		{
-			result= result and m_3DRep.geomAt(i)->isTransparent();
+			result= result && m_3DRep.geomAt(i)->isTransparent();
 			++i;
 		}
 		return result;
@@ -102,9 +102,9 @@ public:
 		const int size= m_3DRep.numberOfBody();
 		bool result= false;
 		int i= 0;
-		while ((i < size) and not result)
+		while ((i < size) && !result)
 		{
-			result= result or m_3DRep.geomAt(i)->hasTransparentMaterials();
+			result= result || m_3DRep.geomAt(i)->hasTransparentMaterials();
 			++i;
 		}
 		return result;
@@ -125,7 +125,7 @@ public:
 	//! Return the geometry at the specified position
 	inline GLC_VboGeom* geomAt(int index) const
 	{
-		if (not m_3DRep.isEmpty()) return m_3DRep.geomAt(index);
+		if (!m_3DRep.isEmpty()) return m_3DRep.geomAt(index);
 		else return NULL;
 	}
 
@@ -134,7 +134,7 @@ public:
 
 	//! Get the validity of the Bounding Box
 	inline bool boundingBoxValidity() const
-	{return (m_pBoundingBox != NULL) and m_IsBoundingBoxValid and m_3DRep.boundingBoxIsValid();}
+	{return (m_pBoundingBox != NULL) && m_IsBoundingBoxValid && m_3DRep.boundingBoxIsValid();}
 
 	//! Return transfomation 4x4Matrix
 	inline const GLC_Matrix4x4 matrix() const

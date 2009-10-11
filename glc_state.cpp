@@ -59,35 +59,35 @@ void GLC_State::init()
 // Set VBO support
 void GLC_State::setVboSupport()
 {
-	m_VboSupported= glc::extensionIsSupported("ARB_vertex_buffer_object") and glc::loadVboExtension();
+	m_VboSupported= glc::extensionIsSupported("ARB_vertex_buffer_object") && glc::loadVboExtension();
 }
 
 // Set VBO usage
 void GLC_State::setVboUsage(const bool vboUsed)
 {
-	m_UseVbo= m_VboSupported and vboUsed;
+	m_UseVbo= m_VboSupported && vboUsed;
 }
 
 // Set GLSL support
 void GLC_State::setGlslSupport()
 {
-	m_GlslSupported= glc::extensionIsSupported("GL_ARB_shading_language_100") and glc::loadGlSlExtension();
+	m_GlslSupported= glc::extensionIsSupported("GL_ARB_shading_language_100") && glc::loadGlSlExtension();
 }
 
 // Set Point Sprite support
 void GLC_State::setPointSpriteSupport()
 {
-	m_PointSpriteSupported= glc::extensionIsSupported("GL_ARB_point_parameters") and glc::loadPointSpriteExtension();
+	m_PointSpriteSupported= glc::extensionIsSupported("GL_ARB_point_parameters") && glc::loadPointSpriteExtension();
 }
 
 // Set GLSL usage
 void GLC_State::setGlslUsage(const bool glslUsage)
 {
-	m_UseShader= m_GlslSupported and glslUsage;
+	m_UseShader= m_GlslSupported && glslUsage;
 }
 
 // Set selection shader usage
 void GLC_State::setSelectionShaderUsage(const bool shaderUsed)
 {
-	m_UseSelectionShader= shaderUsed and m_GlslSupported;
+	m_UseSelectionShader= shaderUsed && m_GlslSupported;
 }

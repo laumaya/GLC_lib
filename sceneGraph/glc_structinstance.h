@@ -71,7 +71,7 @@ public:
 public:
 	//! Return true if this instance have occurence
 	inline bool hasStructOccurence() const
-	{ return not m_ListOfOccurences.isEmpty();}
+	{ return !m_ListOfOccurences.isEmpty();}
 
 	//! Return the number of occurence
 	inline int numberOfOccurence() const
@@ -99,7 +99,7 @@ public:
 
 	//! Return true if the reference contains User attributes
 	inline bool containsAttributes() const
-	{ return ((NULL != m_pAttributes) and not m_pAttributes->isEmpty());}
+	{ return ((NULL != m_pAttributes) && !m_pAttributes->isEmpty());}
 
 	//! Return handle to the reference attributes
 	inline GLC_Attributes* attributesHandle() const
@@ -114,7 +114,7 @@ public:
 	//! An occurence of this instance have been created
 	inline void structOccurenceCreated(GLC_StructOccurence* pOccurence)
 	{
-		Q_ASSERT(not m_ListOfOccurences.contains(pOccurence));
+		Q_ASSERT(!m_ListOfOccurences.contains(pOccurence));
 		m_ListOfOccurences.append(pOccurence);
 	}
 

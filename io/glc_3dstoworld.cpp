@@ -377,7 +377,7 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 	{
 		const QString textureName(p3dsMaterial->texture1_map.name);
 		// TGA file type are not supported
-		if (not textureName.right(3).contains("TGA", Qt::CaseInsensitive))
+		if (!textureName.right(3).contains("TGA", Qt::CaseInsensitive))
 		{
 			// Retrieve the .3ds file path
 			QFileInfo fileInfo(m_FileName);

@@ -235,19 +235,19 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
 	else
 	{
 		result= m_AmbientColor == mat.m_AmbientColor;
-		result= result and (m_DiffuseColor == mat.m_DiffuseColor);
-		result= result and (m_SpecularColor == mat.m_SpecularColor);
-		result= result and (m_LightEmission == mat.m_LightEmission);
-		result= result and (m_fShininess == mat.m_fShininess);
-		if ((NULL != m_pTexture) and (NULL != mat.m_pTexture))
+		result= result && (m_DiffuseColor == mat.m_DiffuseColor);
+		result= result && (m_SpecularColor == mat.m_SpecularColor);
+		result= result && (m_LightEmission == mat.m_LightEmission);
+		result= result && (m_fShininess == mat.m_fShininess);
+		if ((NULL != m_pTexture) && (NULL != mat.m_pTexture))
 		{
-			result= result and ((*m_pTexture) == (*mat.m_pTexture));
+			result= result && ((*m_pTexture) == (*mat.m_pTexture));
 		}
 		else
 		{
-			result= result and (m_pTexture == mat.m_pTexture);
+			result= result && (m_pTexture == mat.m_pTexture);
 		}
-		result= result and (m_Transparency == mat.m_Transparency);
+		result= result && (m_Transparency == mat.m_Transparency);
 	}
 	return result;
 }

@@ -95,7 +95,7 @@ public:
 	//! Return first material of geometry
 	inline GLC_Material* firstMaterial(void) const
 	{
-		if (not m_MaterialHash.isEmpty())
+		if (!m_MaterialHash.isEmpty())
 		{
 			return m_MaterialHash.begin().value();
 		}
@@ -138,7 +138,7 @@ public:
 
 	//! Get the geometry transparency
 	inline bool isTransparent() const
-	{return (m_TransparentMaterialNumber == m_MaterialHash.size()) and hasTransparentMaterials();}
+	{return (m_TransparentMaterialNumber == m_MaterialHash.size()) && hasTransparentMaterials();}
 
 	//! Return true if the geometry contains transparent materials
 	inline bool hasTransparentMaterials() const

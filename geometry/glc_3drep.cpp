@@ -108,12 +108,12 @@ int GLC_3DRep::type() const
 // Return true if the rep bounding box is valid
 bool GLC_3DRep::boundingBoxIsValid() const
 {
-	bool result= not m_pGeomList->isEmpty();
+	bool result= !m_pGeomList->isEmpty();
 	const int max= m_pGeomList->size();
 	int index= 0;
-	while (result and (index < max))
+	while (result && (index < max))
 	{
-		result= result and m_pGeomList->at(index)->boundingBoxIsValid();
+		result= result && m_pGeomList->at(index)->boundingBoxIsValid();
 		++index;
 	}
 	return result;
@@ -123,7 +123,7 @@ bool GLC_3DRep::boundingBoxIsValid() const
 unsigned int GLC_3DRep::numberOfFaces() const
 {
 	unsigned int result= 0;
-	if (not m_pGeomList->isEmpty())
+	if (!m_pGeomList->isEmpty())
 	{
 		const int size= m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
@@ -139,7 +139,7 @@ unsigned int GLC_3DRep::numberOfFaces() const
 unsigned int GLC_3DRep::numberOfVertex() const
 {
 	unsigned int result= 0;
-	if (not m_pGeomList->isEmpty())
+	if (!m_pGeomList->isEmpty())
 	{
 		const int size= m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
@@ -155,7 +155,7 @@ unsigned int GLC_3DRep::numberOfVertex() const
 unsigned int GLC_3DRep::numberOfMaterials() const
 {
 	unsigned int result= 0;
-	if (not m_pGeomList->isEmpty())
+	if (!m_pGeomList->isEmpty())
 	{
 		const int size= m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
@@ -171,7 +171,7 @@ unsigned int GLC_3DRep::numberOfMaterials() const
 QSet<GLC_Material*> GLC_3DRep::materialSet() const
 {
 	QSet<GLC_Material*> result;
-	if (not m_pGeomList->isEmpty())
+	if (!m_pGeomList->isEmpty())
 	{
 		const int size= m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
@@ -214,14 +214,14 @@ void GLC_3DRep::reverseNormals()
 // Load the representation
 bool GLC_3DRep::load()
 {
-	Q_ASSERT((not (*m_pIsLoaded)) == m_pGeomList->isEmpty());
-	if ((*m_pIsLoaded) or fileName().isEmpty())
+	Q_ASSERT((!(*m_pIsLoaded)) == m_pGeomList->isEmpty());
+	if ((*m_pIsLoaded) || fileName().isEmpty())
 	{
 		qDebug() << "GLC_3DRep::load() Allready loaded or empty fileName";
 		return false;
 	}
 	GLC_3DRep newRep= GLC_Factory::instance()->create3DrepFromFile(fileName());
-	if (not newRep.isEmpty())
+	if (!newRep.isEmpty())
 	{
 		const int size= newRep.m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
@@ -246,7 +246,7 @@ void GLC_3DRep::replace(GLC_Rep* pRep)
 	setFileName(p3DRep->fileName());
 	setName(p3DRep->name());
 
-	if (not p3DRep->isEmpty())
+	if (!p3DRep->isEmpty())
 	{
 		const int size= p3DRep->m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
@@ -261,8 +261,8 @@ void GLC_3DRep::replace(GLC_Rep* pRep)
 // UnLoad the representation
 bool GLC_3DRep::unload()
 {
-	Q_ASSERT((not (*m_pIsLoaded)) == m_pGeomList->isEmpty());
-	if (not (*m_pIsLoaded) or fileName().isEmpty())
+	Q_ASSERT((!(*m_pIsLoaded)) == m_pGeomList->isEmpty());
+	if (!(*m_pIsLoaded) || fileName().isEmpty())
 	{
 		qDebug() << "GLC_3DRep::unload() Not loaded or empty fileName";
 		return false;

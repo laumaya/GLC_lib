@@ -85,7 +85,7 @@ void GLC_PointSprite::setSize(float size)
 	m_GeometryIsValid= false;
 	m_Size= size;
     // Clamp m_Size to m_MaxSize
-    if(qFuzzyCompare(-1.0f, m_MaxSize) and (m_MaxSize < m_Size))
+    if(qFuzzyCompare(-1.0f, m_MaxSize) && (m_MaxSize < m_Size))
     {
     	m_Size= m_MaxSize;
     }
@@ -105,11 +105,11 @@ void GLC_PointSprite::setPointDistanceAttenuation(QVector<float> parameters)
 void GLC_PointSprite::glExecute(bool, bool)
 {
 	// Check if extension GL_ARB_point_parameters is present
-	if (not GLC_State::pointSpriteSupported()) return;
+	if (!GLC_State::pointSpriteSupported()) return;
 
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-	if (not GLC_State::isInSelectionMode())
+	if (!GLC_State::isInSelectionMode())
 	{
 		glEnable( GL_BLEND );
 		glDepthMask(GL_FALSE);

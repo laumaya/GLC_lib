@@ -102,15 +102,15 @@ GLC_VboGeom* GLC_Circle::clone() const
 // Set Circle diameter
 void GLC_Circle::setDiameter(double D)
 {
-	Q_ASSERT(not qFuzzyCompare(D, 0.0));
+	Q_ASSERT(!qFuzzyCompare(D, 0.0));
 	setRadius(D / 2);
 }
 
 // Set Circle Radius
 void GLC_Circle::setRadius(double R)
 {
-	Q_ASSERT(not qFuzzyCompare(R, 0.0));
-	if (not qFuzzyCompare(R - m_Radius, 0.0))
+	Q_ASSERT(!qFuzzyCompare(R, 0.0));
+	if (!qFuzzyCompare(R - m_Radius, 0.0))
 	{	// Radius is changing
 		m_Radius= R;
 		m_GeometryIsValid= false;
@@ -137,8 +137,8 @@ void GLC_Circle::setDiscretion(int TargetDiscret)
 // Set Circle Angle
 void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 {
-	Q_ASSERT((not qFuzzyCompare(AngleRadians, 0.0)) && (AngleRadians < 2 * PI));
-	if (not qFuzzyCompare(AngleRadians - m_dAngle, 0.0))
+	Q_ASSERT((!qFuzzyCompare(AngleRadians, 0.0)) && (AngleRadians < 2 * PI));
+	if (!qFuzzyCompare(AngleRadians - m_dAngle, 0.0))
 	{	// Angle is changing
 			m_dAngle= AngleRadians;
 			m_GeometryIsValid= false;

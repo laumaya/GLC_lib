@@ -167,7 +167,7 @@ GLC_StructInstance::~GLC_StructInstance()
 		if ((--(*m_pNumberOfInstance)) == 0)
 		{
 			//qDebug() << "Delete structInstance";
-			Q_ASSERT(not m_pStructReference->hasStructInstance());
+			Q_ASSERT(!m_pStructReference->hasStructInstance());
 
 			delete m_pStructReference;
 			delete m_pNumberOfInstance;

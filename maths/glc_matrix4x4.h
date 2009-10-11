@@ -102,7 +102,7 @@ public:
 
 	//! Return true if the 2 matrix are not equals
 	inline bool operator!=(const GLC_Matrix4x4& mat) const
-	{return not operator==(mat);}
+	{return !operator==(mat);}
 
 //@}
 

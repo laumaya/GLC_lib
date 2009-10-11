@@ -178,7 +178,7 @@ QString GLC_ColladaToWorld::getContent(const QString& element)
 	while(endElementNotReached(element))
 	{
 		m_pStreamReader->readNext();
-		if (m_pStreamReader->isCharacters() and not m_pStreamReader->text().isEmpty())
+		if (m_pStreamReader->isCharacters() && !m_pStreamReader->text().isEmpty())
 		{
 			Content+= m_pStreamReader->text().toString();
 		}
@@ -191,7 +191,7 @@ QString GLC_ColladaToWorld::getContent(const QString& element)
 QString GLC_ColladaToWorld::readAttribute(const QString& name, bool required)
 {
 	QString attributeValue;
-	if (required and not m_pStreamReader->attributes().hasAttribute(name))
+	if (required && !m_pStreamReader->attributes().hasAttribute(name))
 	{
 		QString message(QString("required attribute ") + name + QString(" Not found"));
 		qDebug() << message;
@@ -209,7 +209,7 @@ QString GLC_ColladaToWorld::readAttribute(const QString& name, bool required)
 // Check for XML error
 void GLC_ColladaToWorld::checkForXmlError(const QString& info)
 {
-	if (m_pStreamReader->atEnd() or m_pStreamReader->hasError())
+	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
 		qDebug() << info << " " << m_FileName;
 		GLC_FileFormatException fileFormatException(info, m_FileName, GLC_FileFormatException::WrongFileFormat);
@@ -344,7 +344,7 @@ void GLC_ColladaToWorld::loadImage()
 	checkForXmlError("Error occur while loading element : image");
 
 	// Add the image in the image fileName Hash table
-	if (not fileName.isEmpty())
+	if (!fileName.isEmpty())
 	{
 		m_ImageFileHash.insert(m_CurrentId, fileName);
 	}
@@ -397,7 +397,7 @@ void GLC_ColladaToWorld::loadMaterial()
 	checkForXmlError("Error occur while loading element : material");
 
 	// Add the image in the image fileName Hash table
-	if (not url.isEmpty())
+	if (!url.isEmpty())
 	{
 		//qDebug() << "insert material : " << m_CurrentId << " url: " << url;
 		m_MaterialLibHash.insert(m_CurrentId, url);
@@ -554,9 +554,9 @@ void GLC_ColladaToWorld::loadMaterialTechnique(const QString& elementName)
 		{
 			const QStringRef currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "emission")
-					or (currentElementName == "ambient")
-					or (currentElementName == "diffuse")
-					or(currentElementName == "specular"))
+					|| (currentElementName == "ambient")
+					|| (currentElementName == "diffuse")
+					||(currentElementName == "specular"))
 				loadCommonColorOrTexture(currentElementName.toString());
 			else if (currentElementName == "transparent") loadTransparent();
 			else if (currentElementName == "transparency") loadTransparency(currentElementName.toString());
@@ -633,7 +633,7 @@ void GLC_ColladaToWorld::loadTransparency(const QString& name)
 				if (qFuzzyCompare(alpha, 0.0f)) alpha= 1.0f;
 
 				m_pCurrentMaterial->setTransparency(alpha);
-				if (not stringToFloatOk) throwException("Error while trying to convert :" + alphaString + " to float");
+				if (!stringToFloatOk) throwException("Error while trying to convert :" + alphaString + " to float");
 			}
 		}
 		m_pStreamReader->readNext();
@@ -657,7 +657,7 @@ void GLC_ColladaToWorld::loadShininess(const QString& name)
 				const QString shininessString= getContent("float");
 				const float shininess= shininessString.toFloat(&stringToFloatOk);
 				m_pCurrentMaterial->setShininess(shininess);
-				if (not stringToFloatOk) throwException("Error while trying to convert :" + shininessString + " to float");
+				if (!stringToFloatOk) throwException("Error while trying to convert :" + shininessString + " to float");
 			}
 		}
 		m_pStreamReader->readNext();
@@ -680,7 +680,7 @@ QColor GLC_ColladaToWorld::readXmlColor()
 		const float green= colors.at(1).toFloat(&okGreen);
 		const float blue= colors.at(2).toFloat(&okBlue);
 		const float alpha= colors.at(3).toFloat(&okAlpha);
-		if (okRed and okGreen and okBlue and okAlpha)
+		if (okRed && okGreen && okBlue && okAlpha)
 		{
 			resultColor.setRedF(red);
 			resultColor.setGreenF(green);
@@ -735,7 +735,7 @@ void GLC_ColladaToWorld::loadGeometry()
 
 	const QString id= readAttribute("id", false);
 	m_CurrentId= id;
-	if (not id.isEmpty())
+	if (!id.isEmpty())
 	{
 		m_pMeshInfo->m_pMesh->setName(id);
 		//qDebug() << "Loading geometry : " << id;
@@ -758,7 +758,7 @@ void GLC_ColladaToWorld::loadGeometry()
 	checkForXmlError("Error occur while loading element : geometry");
 
 	// Add the current mesh info to the geometry hash
-	if (not id.isEmpty())
+	if (!id.isEmpty())
 	{
 		m_GeometryHash.insert(id, m_pMeshInfo);
 		m_pMeshInfo= NULL;
@@ -865,7 +865,7 @@ void GLC_ColladaToWorld::loadPolylist()
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
 			const QStringRef currentElementName= m_pStreamReader->name();
-			if ((currentElementName == "input") and vcountList.isEmpty())
+			if ((currentElementName == "input") && vcountList.isEmpty())
 			{
 				InputData currentInput;
 				// Get input data offset
@@ -886,7 +886,7 @@ void GLC_ColladaToWorld::loadPolylist()
 				}
 				inputDataList.append(currentInput);
 			}
-			else if ((currentElementName == "vcount") and (inputDataList.size() > 0))
+			else if ((currentElementName == "vcount") && (inputDataList.size() > 0))
 			{
 				QString vcountString= getContent("vcount");
 				QStringList vcountStringList= vcountString.split(' ');
@@ -895,10 +895,10 @@ void GLC_ColladaToWorld::loadPolylist()
 				for (int i= 0; i < polygonCount; ++i)
 				{
 					vcountList.append(vcountStringList.at(i).toInt(&toIntOK));
-					if (not toIntOK) throwException("Unable to convert string :" + vcountStringList.at(i) + " To int");
+					if (!toIntOK) throwException("Unable to convert string :" + vcountStringList.at(i) + " To int");
 				}
 			}
-			else if ((currentElementName == "p") and not vcountList.isEmpty() and polyIndexList.isEmpty())
+			else if ((currentElementName == "p") && !vcountList.isEmpty() && polyIndexList.isEmpty())
 			{
 				{ // Fill index List
 					QString pString= getContent("p");
@@ -908,7 +908,7 @@ void GLC_ColladaToWorld::loadPolylist()
 					for (int i= 0; i < size; ++i)
 					{
 						polyIndexList.append(pStringList.at(i).toInt(&toIntOK));
-						if (not toIntOK) throwException("Unable to convert string :" + pStringList.at(i) + " To int");
+						if (!toIntOK) throwException("Unable to convert string :" + pStringList.at(i) + " To int");
 					}
 				}
 
@@ -943,7 +943,7 @@ void GLC_ColladaToWorld::loadPolygons()
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
 			const QStringRef currentElementName= m_pStreamReader->name();
-			if ((currentElementName == "input") and vcountList.isEmpty())
+			if ((currentElementName == "input") && vcountList.isEmpty())
 			{
 				++inputCount;
 				InputData currentInput;
@@ -975,7 +975,7 @@ void GLC_ColladaToWorld::loadPolygons()
 					for (int i= 0; i < size; ++i)
 					{
 						polyIndexList.append(pStringList.at(i).toInt(&toIntOK));
-						if (not toIntOK) throwException("Unable to convert string :" + pStringList.at(i) + " To int");
+						if (!toIntOK) throwException("Unable to convert string :" + pStringList.at(i) + " To int");
 					}
 					// Add the polygon size in vcountList
 					vcountList.append(size / inputCount);
@@ -1006,7 +1006,7 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 	for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
 	{
 		const QString source= inputDataList.at(dataIndex).m_Source;
-		if ( not m_BulkDataHash.contains(source))
+		if ( !m_BulkDataHash.contains(source))
 		{
 			throwException(" Source : " + source + " Not found");
 		}
@@ -1090,7 +1090,7 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 		}
 		// Add index to the mesh info
 		//Q_ASSERT(not onePolygonIndex.isEmpty());
-		if (not onePolygonIndex.isEmpty())
+		if (!onePolygonIndex.isEmpty())
 		{
 			m_pMeshInfo->m_Index.append(onePolygonIndex);
 		}
@@ -1103,7 +1103,7 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 	}
 
 	// Check if normal computation is needed
-	if (not hasNormals)
+	if (!hasNormals)
 	{
 		qDebug() << "Compute Normals with offset " << indexOffset;
 		computeNormalOfCurrentPrimitiveOfCurrentMesh(indexOffset);
@@ -1187,7 +1187,7 @@ void  GLC_ColladaToWorld::loadTriangles()
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
 			const QStringRef currentElementName= m_pStreamReader->name();
-			if ((currentElementName == "input") and trianglesIndexList.isEmpty())
+			if ((currentElementName == "input") && trianglesIndexList.isEmpty())
 			{
 				InputData currentInput;
 				// Get input data offset
@@ -1208,7 +1208,7 @@ void  GLC_ColladaToWorld::loadTriangles()
 				}
 				inputDataList.append(currentInput);
 			}
-			else if ((currentElementName == "p") and trianglesIndexList.isEmpty())
+			else if ((currentElementName == "p") && trianglesIndexList.isEmpty())
 			{
 				{ // Fill index List
 					QString pString= getContent("p");
@@ -1218,7 +1218,7 @@ void  GLC_ColladaToWorld::loadTriangles()
 					for (int i= 0; i < size; ++i)
 					{
 						trianglesIndexList.append(pStringList.at(i).toInt(&toIntOK));
-						if (not toIntOK) throwException("Unable to convert string :" + pStringList.at(i) + " To int");
+						if (!toIntOK) throwException("Unable to convert string :" + pStringList.at(i) + " To int");
 					}
 				}
 
@@ -1249,7 +1249,7 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 	for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
 	{
 		const QString source= inputDataList.at(dataIndex).m_Source;
-		if ( not m_BulkDataHash.contains(source))
+		if ( !m_BulkDataHash.contains(source))
 		{
 			throwException(" Source : " + source + " Not found");
 		}
@@ -1320,7 +1320,7 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 	m_pMeshInfo->m_Index.append(trianglesIndex);
 
 	// Check if normal computation is needed
-	if (not hasNormals)
+	if (!hasNormals)
 	{
 		computeNormalOfCurrentPrimitiveOfCurrentMesh(indexOffset);
 	}
@@ -1527,7 +1527,7 @@ GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pPare
 				}
 			}
 			else if ((currentElementName == "instance_camera")
-					or (currentElementName == "instance_light"))
+					|| (currentElementName == "instance_light"))
 			{
 				// Node type not supported
 				delete pNode;
@@ -1563,7 +1563,7 @@ void GLC_ColladaToWorld::translateNode(ColladaNode* pNode)
 	for (int i= 0; i < size; ++i)
 	{
 		translate[i]= static_cast<double>(translateStringList.at(i).toFloat(&toFloatOk));
-		if (not toFloatOk) throwException("The number :" + translateStringList.at(i) + "Is not a float");
+		if (!toFloatOk) throwException("The number :" + translateStringList.at(i) + "Is not a float");
 	}
 	// Built the translation matrix
 	GLC_Matrix4x4 translationMatrix(translate[0], translate[1], translate[2]);
@@ -1587,7 +1587,7 @@ void GLC_ColladaToWorld::scaleNode(ColladaNode* pNode)
 	for (int i= 0; i < size; ++i)
 	{
 		scale[i]= static_cast<double>(scaleStringList.at(i).toFloat(&toFloatOk));
-		if (not toFloatOk) throwException("The number :" + scaleStringList.at(i) + "Is not a float");
+		if (!toFloatOk) throwException("The number :" + scaleStringList.at(i) + "Is not a float");
 	}
 	// Built the translation matrix
 	GLC_Matrix4x4 scaleMatrix;
@@ -1612,7 +1612,7 @@ void GLC_ColladaToWorld::rotateNode(ColladaNode* pNode)
 	for (int i= 0; i < size; ++i)
 	{
 		rotate[i]= static_cast<double>(rotateStringList.at(i).toFloat(&toFloatOk));
-		if (not toFloatOk) throwException("The number :" + rotateStringList.at(i) + "Is not a float");
+		if (!toFloatOk) throwException("The number :" + rotateStringList.at(i) + "Is not a float");
 	}
 	// Rotation vector
 	GLC_Vector4d rotationAxis(rotate[0], rotate[1], rotate[2]);
@@ -1638,16 +1638,16 @@ void GLC_ColladaToWorld::composeMatrixNode(ColladaNode* pNode)
 	for (int i= 0; i < 4; ++i)
 	{
 		matrix[i]= static_cast<double>(matrixStringList.at(i * 4).toFloat(&toFloatOk));
-		if (not toFloatOk) throwException("The number :" + matrixStringList.at(i) + "Is not a float");
+		if (!toFloatOk) throwException("The number :" + matrixStringList.at(i) + "Is not a float");
 
 		matrix[i + 4]= static_cast<double>(matrixStringList.at(i * 4 + 1).toFloat(&toFloatOk));
-		if (not toFloatOk) throwException("The number :" + matrixStringList.at(i * 4 + 1) + "Is not a float");
+		if (!toFloatOk) throwException("The number :" + matrixStringList.at(i * 4 + 1) + "Is not a float");
 
 		matrix[i + 8]= static_cast<double>(matrixStringList.at(i * 4 + 2).toFloat(&toFloatOk));
-		if (not toFloatOk) throwException("The number :" + matrixStringList.at(i * 4 + 2) + "Is not a float");
+		if (!toFloatOk) throwException("The number :" + matrixStringList.at(i * 4 + 2) + "Is not a float");
 
 		matrix[i + 12]= static_cast<double>(matrixStringList.at(i * 4 + 3).toFloat(&toFloatOk));
-		if (not toFloatOk) throwException("The number :" + matrixStringList.at(i * 4 + 3) + "Is not a float");
+		if (!toFloatOk) throwException("The number :" + matrixStringList.at(i * 4 + 3) + "Is not a float");
 
 	}
 	// Built the matrix
@@ -1686,8 +1686,8 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 				const QString imageFileId=  m_SurfaceImageHash.value(surfaceId);
 			}
 		}
-		if (m_Sampler2DSurfaceHash.contains(textureId) and m_SurfaceImageHash.contains(m_Sampler2DSurfaceHash.value(textureId))
-				and m_ImageFileHash.contains(m_SurfaceImageHash.value(m_Sampler2DSurfaceHash.value(textureId))))
+		if (m_Sampler2DSurfaceHash.contains(textureId) && m_SurfaceImageHash.contains(m_Sampler2DSurfaceHash.value(textureId))
+				&& m_ImageFileHash.contains(m_SurfaceImageHash.value(m_Sampler2DSurfaceHash.value(textureId))))
 		{
 			const QString imageFileName= m_ImageFileHash.value(m_SurfaceImageHash.value(m_Sampler2DSurfaceHash.value(textureId)));
 			QString fullImageFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + imageFileName;
@@ -1746,7 +1746,7 @@ void GLC_ColladaToWorld::createMesh()
 
 		// Add texel if necessary
 		//qDebug() << "Add " << pCurrentMeshInfo->m_Datas[TEXCOORD].size() << " texel";
-		if (not pCurrentMeshInfo->m_Datas.at(TEXCOORD).isEmpty())
+		if (!pCurrentMeshInfo->m_Datas.at(TEXCOORD).isEmpty())
 		{
 			pCurrentMeshInfo->m_pMesh->addTexels(pCurrentMeshInfo->m_Datas.at(TEXCOORD).toVector());
 			pCurrentMeshInfo->m_Datas[TEXCOORD].clear();
@@ -1789,7 +1789,7 @@ void GLC_ColladaToWorld::createMesh()
 			}
 			//qDebug() << "Add " << triangles.size() << " elment to the triangle index";
 			// Add the list of triangle to the mesh
-			if (not triangles.isEmpty())
+			if (!triangles.isEmpty())
 			{
 				pCurrentMeshInfo->m_pMesh->addTriangles(pCurrentMaterial, triangles);
 			}
@@ -1830,7 +1830,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 	Q_ASSERT(NULL != pNode);
 	GLC_StructInstance* pInstance= NULL;
 	GLC_StructOccurence* pOccurence= NULL;
-	if (not pNode->m_InstanceGeometryID.isEmpty())
+	if (!pNode->m_InstanceGeometryID.isEmpty())
 	{
 		const QString geometryId= pNode->m_InstanceGeometryID;
 		if (m_3DRepHash.contains(geometryId))
@@ -1854,7 +1854,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 		}
 		else qDebug() << "Geometry Id : " << geometryId << " Not found";
 	}
-	else if (not pNode->m_ChildNodes.isEmpty())
+	else if (!pNode->m_ChildNodes.isEmpty())
 	{
 		if (m_StructInstanceHash.contains(pNode->m_Id))
 		{
@@ -1878,7 +1878,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 			}
 		}
 	}
-	else if (not pNode->m_InstanceOffNodeId.isEmpty())
+	else if (!pNode->m_InstanceOffNodeId.isEmpty())
 	{
 		if (m_ColladaNodeHash.contains(pNode->m_InstanceOffNodeId))
 		{

@@ -275,13 +275,13 @@ void GLC_ExtendedGeomEngine::createVBOs()
 		glGenBuffers(1, &m_NormalVboId);
 
 		// Create Texel VBO
-		if (0 == m_TexelVboId and not m_Texels.isEmpty())
+		if (0 == m_TexelVboId && !m_Texels.isEmpty())
 		{
 			glGenBuffers(1, &m_TexelVboId);
 		}
 
 		// Create Color VBO
-		if (0 == m_ColorVboId and not m_Colors.isEmpty())
+		if (0 == m_ColorVboId && !m_Colors.isEmpty())
 		{
 			glGenBuffers(1, &m_ColorVboId);
 		}
@@ -308,11 +308,11 @@ bool GLC_ExtendedGeomEngine::useVBO(bool use, GLC_ExtendedGeomEngine::VboType ty
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_NormalVboId);
 		}
-		else if ((type == GLC_ExtendedGeomEngine::GLC_Texel) and (0 != m_TexelVboId))
+		else if ((type == GLC_ExtendedGeomEngine::GLC_Texel) && (0 != m_TexelVboId))
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_TexelVboId);
 		}
-		else if ((type == GLC_ExtendedGeomEngine::GLC_Color) and (0 != m_ColorVboId))
+		else if ((type == GLC_ExtendedGeomEngine::GLC_Color) && (0 != m_ColorVboId))
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_ColorVboId);
 		}

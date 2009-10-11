@@ -122,7 +122,7 @@ void GLC_Distance::addInstancesInGroup2(const QList<GLC_3DViewInstance>& instanc
 void GLC_Distance::computeMinimumDistance()
 {
 	DistanceResult distanceResult;
-	if (not m_ListOfInstances1.isEmpty() and not m_ListOfInstances2.isEmpty())
+	if (!m_ListOfInstances1.isEmpty() && !m_ListOfInstances2.isEmpty())
 	{
 		distanceResult= minimumDistance(m_ListOfInstances1, m_ListOfInstances2);		
 	}

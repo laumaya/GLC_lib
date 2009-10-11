@@ -137,7 +137,7 @@ bool GLC_Matrix4x4::operator==(const GLC_Matrix4x4& mat) const
 {
 	bool result= true;
 	int i= 0;
-	while (result and (i < TAILLEMAT4X4))
+	while (result && (i < TAILLEMAT4X4))
 	{
 		result= (matrix[i] == mat.matrix[i]);
 		++i;
@@ -386,7 +386,7 @@ QVector<double> GLC_Matrix4x4::toEuler(void) const
 	angle_y= -asin(matrix[8]);
 	double C= cos(angle_y);
 
-	if (not qFuzzyCompare(C, 0.0)) // Gimball lock?
+	if (!qFuzzyCompare(C, 0.0)) // Gimball lock?
 	{
 		tracex= matrix[10] / C;
 		tracey= - matrix[9] / C;

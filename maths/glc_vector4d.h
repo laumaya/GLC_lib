@@ -334,8 +334,8 @@ public:
 	{
 		bool result;
 
-		result= qFuzzyCompare(vector[0], 0.0) and qFuzzyCompare(vector[1], 0.0)
-			and qFuzzyCompare(vector[2], 0.0);
+		result= qFuzzyCompare(vector[0], 0.0) && qFuzzyCompare(vector[1], 0.0)
+			&& qFuzzyCompare(vector[2], 0.0);
 
 		return result;
 	}

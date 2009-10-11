@@ -48,9 +48,9 @@ GLC_Vector4d GLC_Vector4d::operator^ (const GLC_Vector4d &Vect) const
 bool GLC_Vector4d::operator == (const GLC_Vector4d &Vect) const
 {
 	bool bResult= qFuzzyCompare(vector[0], Vect.vector[0]);
-	bResult= bResult and qFuzzyCompare(vector[1], Vect.vector[1]);
-	bResult= bResult and qFuzzyCompare(vector[2], Vect.vector[2]);
-	bResult= bResult and qFuzzyCompare(vector[3], Vect.vector[3]);
+	bResult= bResult && qFuzzyCompare(vector[1], Vect.vector[1]);
+	bResult= bResult && qFuzzyCompare(vector[2], Vect.vector[2]);
+	bResult= bResult && qFuzzyCompare(vector[3], Vect.vector[3]);
 
 	return bResult;
 }

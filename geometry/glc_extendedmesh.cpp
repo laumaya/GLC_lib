@@ -158,7 +158,7 @@ bool GLC_ExtendedMesh::containsTriangles(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
 	Q_ASSERT(m_PrimitiveGroups.contains(lod));
-	if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
+	if (!m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
 	else return m_PrimitiveGroups.value(lod)->value(materialId)->containsTriangles();
 }
 
@@ -192,8 +192,8 @@ QVector<GLuint> GLC_ExtendedMesh::getTrianglesIndex(int lod, GLC_uint materialId
 int GLC_ExtendedMesh::numberOfTriangles(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
-	if (not m_PrimitiveGroups.contains(lod))return 0;
-	else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return 0;
+	if (!m_PrimitiveGroups.contains(lod))return 0;
+	else if (!m_PrimitiveGroups.value(lod)->contains(materialId)) return 0;
 	else return m_PrimitiveGroups.value(lod)->value(materialId)->trianglesIndexSize();
 }
 
@@ -201,8 +201,8 @@ int GLC_ExtendedMesh::numberOfTriangles(int lod, GLC_uint materialId) const
 bool GLC_ExtendedMesh::containsStrips(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
-	if (not m_PrimitiveGroups.contains(lod))return false;
-	else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
+	if (!m_PrimitiveGroups.contains(lod))return false;
+	else if (!m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
 	else return m_PrimitiveGroups.value(lod)->value(materialId)->containsStrip();
 
 }
@@ -256,8 +256,8 @@ QList<QVector<GLuint> > GLC_ExtendedMesh::getStripsIndex(int lod, GLC_uint mater
 int GLC_ExtendedMesh::numberOfStrips(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
-	if (not m_PrimitiveGroups.contains(lod))return 0;
-	else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return 0;
+	if (!m_PrimitiveGroups.contains(lod))return 0;
+	else if (!m_PrimitiveGroups.value(lod)->contains(materialId)) return 0;
 	else return m_PrimitiveGroups.value(lod)->value(materialId)->stripsSizes().size();
 }
 
@@ -265,8 +265,8 @@ int GLC_ExtendedMesh::numberOfStrips(int lod, GLC_uint materialId) const
 bool GLC_ExtendedMesh::containsFans(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
-	if (not m_PrimitiveGroups.contains(lod))return false;
-	else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
+	if (!m_PrimitiveGroups.contains(lod))return false;
+	else if (!m_PrimitiveGroups.value(lod)->contains(materialId)) return false;
 	else return m_PrimitiveGroups.value(lod)->value(materialId)->containsFan();
 
 }
@@ -275,8 +275,8 @@ bool GLC_ExtendedMesh::containsFans(int lod, GLC_uint materialId) const
 int GLC_ExtendedMesh::numberOfFans(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
-	if(not m_PrimitiveGroups.contains(lod))return 0;
-	else if (not m_PrimitiveGroups.value(lod)->contains(materialId)) return 0;
+	if(!m_PrimitiveGroups.contains(lod))return 0;
+	else if (!m_PrimitiveGroups.value(lod)->contains(materialId)) return 0;
 	else return m_PrimitiveGroups.value(lod)->value(materialId)->fansSizes().size();
 }
 
@@ -334,7 +334,7 @@ void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& in
 {
 	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
-	Q_ASSERT(not indexList.isEmpty());
+	Q_ASSERT(!indexList.isEmpty());
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTriangles(indexList);
 
 	// Invalid the geometry
@@ -347,7 +347,7 @@ void GLC_ExtendedMesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexLis
 {
 	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
-	Q_ASSERT(not indexList.isEmpty());
+	Q_ASSERT(!indexList.isEmpty());
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesStrip(indexList);
 
 	// Invalid the geometry
@@ -359,7 +359,7 @@ void GLC_ExtendedMesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList&
 {
 	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
-	Q_ASSERT(not indexList.isEmpty());
+	Q_ASSERT(!indexList.isEmpty());
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesFan(indexList);
 
 	// Invalid the geometry
@@ -436,11 +436,11 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		m_ExtendedGeomEngine.createVBOs();
 
 		// Create VBO and IBO
-		if (not m_GeometryIsValid and not m_ExtendedGeomEngine.positionVectorHandle()->isEmpty())
+		if (!m_GeometryIsValid && !m_ExtendedGeomEngine.positionVectorHandle()->isEmpty())
 		{
 			createVbos();
 		}
-		else if (not m_GeometryIsValid and not m_ExtendedGeomEngine.normalVectorHandle()->isEmpty())
+		else if (!m_GeometryIsValid && !m_ExtendedGeomEngine.normalVectorHandle()->isEmpty())
 		{
 			// Normals has been inversed update normal vbo
 			m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Normal);
@@ -470,7 +470,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		}
 
 		// Activate Color VBO if needed
-		if ((m_ColorPearVertex and not m_IsSelected and not GLC_State::isInSelectionMode()) and m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Color))
+		if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Color))
 		{
 			glEnable(GL_COLOR_MATERIAL);
 			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
@@ -490,14 +490,14 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		glEnableClientState(GL_NORMAL_ARRAY);
 
 		// Activate texel if needed
-		if (not m_ExtendedGeomEngine.texelVectorHandle()->isEmpty())
+		if (!m_ExtendedGeomEngine.texelVectorHandle()->isEmpty())
 		{
 			glTexCoordPointer(2, GL_FLOAT, 0, m_ExtendedGeomEngine.texelVectorHandle()->data());
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
 
 		// Activate Color VBO if needed
-		if ((m_ColorPearVertex and not m_IsSelected and not GLC_State::isInSelectionMode()) and not m_ExtendedGeomEngine.colorVectorHandle()->isEmpty())
+		if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && !m_ExtendedGeomEngine.colorVectorHandle()->isEmpty())
 		{
 			glEnable(GL_COLOR_MATERIAL);
 			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
@@ -507,7 +507,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 
 	}
 
-	if (not GLC_State::isInSelectionMode()) glEnable(GL_LIGHTING);
+	if (!GLC_State::isInSelectionMode()) glEnable(GL_LIGHTING);
 
 	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
@@ -515,7 +515,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
 		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
 
-   		if ((not GLC_State::selectionShaderUsed() or not m_IsSelected) and not GLC_State::isInSelectionMode())
+   		if ((!GLC_State::selectionShaderUsed() || !m_IsSelected) && !GLC_State::isInSelectionMode())
     	{
 			if (pCurrentMaterial->isTransparent() == transparent)
 			{
@@ -539,14 +539,14 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 				if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 			}
 		}
-		else if(not GLC_State::isInSelectionMode())
+		else if(!GLC_State::isInSelectionMode())
 		{
 			// Use Shader
 			glDisable(GL_TEXTURE_2D);
 		}
 
 
-		if (m_IsSelected or GLC_State::isInSelectionMode() or (pCurrentMaterial->isTransparent() == transparent))
+		if (m_IsSelected || GLC_State::isInSelectionMode() || (pCurrentMaterial->isTransparent() == transparent))
 		{
 
 			if (vboIsUsed)
@@ -621,7 +621,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 		m_ExtendedGeomEngine.useVBO(false, GLC_ExtendedGeomEngine::GLC_Normal);
 	}
 
-	if (m_ColorPearVertex and not m_IsSelected and not GLC_State::isInSelectionMode())
+	if (m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode())
 	{
 		if (vboIsUsed)
 		{
@@ -645,7 +645,7 @@ GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, 
 {
 
 	// Test if a primitive group hash exists for the specified lod
-	if (not m_PrimitiveGroups.contains(lod))
+	if (!m_PrimitiveGroups.contains(lod))
 	{
 		m_PrimitiveGroups.insert(lod, new PrimitiveGroups());
 
@@ -668,7 +668,7 @@ GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, 
 
 		}
 		// Test if a primitive group for this material exist
-		if (not m_PrimitiveGroups.value(lod)->contains(returnId))
+		if (!m_PrimitiveGroups.value(lod)->contains(returnId))
 		{
 			m_PrimitiveGroups.value(lod)->insert(returnId, new GLC_PrimitiveGroup(returnId));
 		}
@@ -677,14 +677,14 @@ GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, 
 	{
 		returnId= pMaterial->id();
 		// Test if the material has been already load
-		if (not containsMaterial(returnId))
+		if (!containsMaterial(returnId))
 		{
 			// Add the material to the mesh
 			addMaterial(pMaterial);
 			m_PrimitiveGroups.value(lod)->insert(returnId, new GLC_PrimitiveGroup(returnId));
 
 		}
-		else if (not m_PrimitiveGroups.value(lod)->contains(returnId))
+		else if (!m_PrimitiveGroups.value(lod)->contains(returnId))
 		{
 			// Add the material to the group
 			m_PrimitiveGroups.value(lod)->insert(returnId, new GLC_PrimitiveGroup(returnId));
@@ -739,7 +739,7 @@ void GLC_ExtendedMesh::createVbos()
 	for (int i= 0; i < lodNumber; ++i)
 	{
 		//Create LOD IBO
-		if (not m_ExtendedGeomEngine.indexVectorHandle(i)->isEmpty())
+		if (!m_ExtendedGeomEngine.indexVectorHandle(i)->isEmpty())
 		{
 			QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.indexVectorHandle(i);
 			m_ExtendedGeomEngine.useIBO(true, i);

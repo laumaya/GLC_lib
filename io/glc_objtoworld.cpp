@@ -442,7 +442,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 				m_pCurrentObjMesh->m_Texels.append(m_Texels.value(textureCoordinateIndex * 2));
 				m_pCurrentObjMesh->m_Texels.append(m_Texels.value(textureCoordinateIndex * 2 + 1));
 			}
-			else if (not m_pCurrentObjMesh->m_Texels.isEmpty())
+			else if (!m_pCurrentObjMesh->m_Texels.isEmpty())
 			{
 				// Add epmty texture coordinate
 				m_pCurrentObjMesh->m_Texels.append(0.0f);
@@ -469,7 +469,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 	//////////////////////////////////////////////////////////////////
 	// Add the face to the current mesh
 	//////////////////////////////////////////////////////////////////
-	if ((m_FaceType == coordinateAndNormal) or (m_FaceType == coordinateAndTextureAndNormal))
+	if ((m_FaceType == coordinateAndNormal) || (m_FaceType == coordinateAndTextureAndNormal))
 	{
 		if (size > 3)
 		{
@@ -834,13 +834,13 @@ void GLC_ObjToWorld::addCurrentObjMeshToWorld()
 {
 	if (NULL != m_pCurrentObjMesh)
 	{
-		if (not m_pCurrentObjMesh->m_Positions.isEmpty())
+		if (!m_pCurrentObjMesh->m_Positions.isEmpty())
 		{
 			m_pCurrentObjMesh->m_pMesh->addVertices(m_pCurrentObjMesh->m_Positions.toVector());
 			m_pCurrentObjMesh->m_Positions.clear();
 			m_pCurrentObjMesh->m_pMesh->addNormals(m_pCurrentObjMesh->m_Normals.toVector());
 			m_pCurrentObjMesh->m_Normals.clear();
-			if (not m_pCurrentObjMesh->m_Texels.isEmpty())
+			if (!m_pCurrentObjMesh->m_Texels.isEmpty())
 			{
 				m_pCurrentObjMesh->m_pMesh->addTexels(m_pCurrentObjMesh->m_Texels.toVector());
 				m_pCurrentObjMesh->m_Texels.clear();
@@ -849,7 +849,7 @@ void GLC_ObjToWorld::addCurrentObjMeshToWorld()
 			while (m_pCurrentObjMesh->m_Materials.constEnd() != iMat)
 			{
 				GLC_Material* pCurrentMaterial= NULL;
-				if ((NULL != m_pMtlLoader) and (m_pMtlLoader->contains(iMat.key())))
+				if ((NULL != m_pMtlLoader) && (m_pMtlLoader->contains(iMat.key())))
 				{
 					pCurrentMaterial= m_pMtlLoader->material(iMat.key());
 				}
@@ -867,7 +867,7 @@ void GLC_ObjToWorld::addCurrentObjMeshToWorld()
 					triangles.append(m_pCurrentObjMesh->m_Index.at(i));
 				}
 				// Add the list of triangle to the mesh
-				if (not triangles.isEmpty())
+				if (!triangles.isEmpty())
 				{
 					m_pCurrentObjMesh->m_pMesh->addTriangles(pCurrentMaterial, triangles);
 				}

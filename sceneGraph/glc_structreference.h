@@ -62,7 +62,7 @@ public:
 public:
 	//! Return true if this reference has instance
 	inline bool hasStructInstance() const
-	{ return not m_ListOfInstance.isEmpty();}
+	{ return !m_ListOfInstance.isEmpty();}
 
 	//! Return first instance handle
 	inline GLC_StructInstance* firstInstanceHandle() const
@@ -142,7 +142,7 @@ public:
 
 	//! Return true if the reference contains User attributes
 	inline bool containsAttributes() const
-	{ return ((NULL != m_pAttributes) and not m_pAttributes->isEmpty());}
+	{ return ((NULL != m_pAttributes) && !m_pAttributes->isEmpty());}
 
 	//! Return handle to the reference attributes
 	inline GLC_Attributes* attributesHandle() const

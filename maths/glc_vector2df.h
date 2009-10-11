@@ -139,7 +139,7 @@ public:
 	//! Return true if the vector is null
 	inline bool isNull(void) const
 	{
-		return (qFuzzyCompare(vector[0], 0.0f) and qFuzzyCompare(vector[1], 0.0f));
+		return (qFuzzyCompare(vector[0], 0.0f) && qFuzzyCompare(vector[1], 0.0f));
 	}
 
 //@}

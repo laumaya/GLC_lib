@@ -95,7 +95,7 @@ public:
 	//! Return the list of triangles index of the group
 	inline const IndexList& trianglesIndex() const
 	{
-		Q_ASSERT(not m_IsFinished);
+		Q_ASSERT(!m_IsFinished);
 		return m_TrianglesIndex;
 	}
 
@@ -118,7 +118,7 @@ public:
 	//! Return the list of index of strips
 	inline const IndexList& stripsIndex() const
 	{
-		Q_ASSERT(not m_IsFinished);
+		Q_ASSERT(!m_IsFinished);
 		return m_StripsIndex;
 	}
 
@@ -145,7 +145,7 @@ public:
 	//! Return the list of index of fans
 	inline const IndexList& fansIndex() const
 	{
-		Q_ASSERT(not m_IsFinished);
+		Q_ASSERT(!m_IsFinished);
 		return m_FansIndex;
 	}
 

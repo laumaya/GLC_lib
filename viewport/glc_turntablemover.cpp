@@ -100,7 +100,7 @@ void GLC_TurnTableMover::move(int x, int y)
 	// Rotation around the screen horizontal axis
 	GLC_Vector4d incidentVector= pCamera->camVector();
 	GLC_Vector4d rightVector= incidentVector ^ pCamera->upVector();
-	if (not rightVector.isNull())
+	if (!rightVector.isNull())
 	{
 		pCamera->rotateAroundTarget(rightVector, beta);
 	}

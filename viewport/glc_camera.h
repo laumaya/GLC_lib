@@ -180,7 +180,7 @@ public:
 	/*! Must Be X, Y or Z Axis*/
 	inline GLC_Camera& setDefaultUpVector(const GLC_Vector4d& up)
 	{
-		Q_ASSERT((up == glc::X_AXIS) or (up == glc::Y_AXIS) or (up == glc::Z_AXIS));
+		Q_ASSERT((up == glc::X_AXIS) || (up == glc::Y_AXIS) || (up == glc::Z_AXIS));
 		m_DefaultVectUp= up;
 		return *this;
 	}

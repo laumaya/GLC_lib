@@ -181,7 +181,7 @@ GLC_BoundingBox GLC_3DViewInstance::boundingBox(void)
 	{
 		resultBox= *m_pBoundingBox;
 	}
-	else if (not m_3DRep.isEmpty())
+	else if (!m_3DRep.isEmpty())
 	{
 		computeBoundingBox();
 		m_IsBoundingBoxValid= true;
@@ -327,7 +327,7 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* 
 		glColor3ubv(m_colorId); // D'ont use Alpha component
 	}
 	const int size= m_3DRep.numberOfBody();
-	if (useLod and (NULL != pView))
+	if (useLod && (NULL != pView))
 	{
 		for (int i= 0; i < size; ++i)
 		{
@@ -423,7 +423,7 @@ int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewpor
 
 	if (ratio > 100.0) ratio= 100.0;
 	ratio= 100.0 - ratio;
-	if ((ratio > 98.0) and GLC_State::isPixelCullingActivated()) ratio= 110.0;
+	if ((ratio > 98.0) && GLC_State::isPixelCullingActivated()) ratio= 110.0;
 	if (ratio < static_cast<double>(m_DefaultLOD)) ratio= static_cast<double>(m_DefaultLOD);
 	//qDebug() << "RATIO = " << static_cast<int>(ratio);
 

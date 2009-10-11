@@ -102,7 +102,7 @@ public:
 	//! IBO creation
 	inline void createIBO()
 	{
-		if (0 == m_IboId and not m_IboVector.isEmpty())
+		if (0 == m_IboId && !m_IboVector.isEmpty())
 		{
 			glGenBuffers(1, &m_IboId);
 		}

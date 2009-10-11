@@ -97,7 +97,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GL
 	// Test if structOccurence has representation and has a shader
 	GLuint shaderId= 0;
 	bool instanceIsSelected= false;
-	if ((m_HasRepresentation) and (NULL != m_pWorldHandle) and (NULL != structOccurence.m_pWorldHandle))
+	if ((m_HasRepresentation) && (NULL != m_pWorldHandle) && (NULL != structOccurence.m_pWorldHandle))
 	{
 
 		if(structOccurence.m_pWorldHandle->collection()->isInAShadingGroup(structOccurence.id()))
@@ -255,15 +255,15 @@ bool GLC_StructOccurence::isVisible() const
 	bool isHidden= true;
 	if (m_HasRepresentation)
 	{
-		isHidden= not m_pWorldHandle->collection()->instanceHandle(id())->isVisible();
+		isHidden= !m_pWorldHandle->collection()->instanceHandle(id())->isVisible();
 	}
 	else if (childCount() > 0)
 	{
 		const int size= childCount();
 		int i= 0;
-		while ((i < size) and isHidden)
+		while ((i < size) && isHidden)
 		{
-			isHidden= isHidden and not child(i)->isVisible();
+			isHidden= isHidden && !child(i)->isVisible();
 			++i;
 		}
 	}
@@ -271,7 +271,7 @@ bool GLC_StructOccurence::isVisible() const
 	{
 		qDebug() << "Leaf occurence " << id() << " " << name() << " without rep";
 	}
-	return not isHidden;
+	return !isHidden;
 }
 
 // Return the occurence Bounding Box
@@ -279,7 +279,7 @@ GLC_BoundingBox GLC_StructOccurence::boundingBox() const
 {
 	GLC_BoundingBox boundingBox;
 
-	if (not isOrphan() and (NULL != m_pWorldHandle))
+	if (!isOrphan() && (NULL != m_pWorldHandle))
 	{
 		if (m_HasRepresentation)
 		{
@@ -320,7 +320,7 @@ GLC_StructOccurence* GLC_StructOccurence::updateAbsoluteMatrix()
 		m_AbsoluteMatrix= m_pStructInstance->relativeMatrix();
 	}
 	// If the occurence have a representation, update it.
-	if ((NULL != m_pWorldHandle) and m_HasRepresentation)
+	if ((NULL != m_pWorldHandle) && m_HasRepresentation)
 	{
 		m_pWorldHandle->collection()->instanceHandle(id())->setMatrix(m_AbsoluteMatrix);
 	}
@@ -343,7 +343,7 @@ GLC_StructOccurence* GLC_StructOccurence::updateChildrenAbsoluteMatrix()
 void GLC_StructOccurence::addChild(GLC_StructOccurence* pChild)
 {
 	Q_ASSERT(pChild->isOrphan());
-	Q_ASSERT((NULL == pChild->m_pWorldHandle) or (m_pWorldHandle == pChild->m_pWorldHandle));
+	Q_ASSERT((NULL == pChild->m_pWorldHandle) || (m_pWorldHandle == pChild->m_pWorldHandle));
 
 	//qDebug() << "Add Child " << pChild->name() << "id=" << pChild->id() << " to " << name() << " id=" << id();
 	// Add the child to the list of child
@@ -371,7 +371,7 @@ void GLC_StructOccurence::makeOrphan()
 {
 	//qDebug() << "GLC_StructOccurence::makeOrphan() " << id();
 	//qDebug() << name() << " " << id();
-	Q_ASSERT(not isOrphan());
+	Q_ASSERT(!isOrphan());
 	m_pParent->removeChild(this);
 	//qDebug() << "GLC_StructOccurence::makeOrphan() DONE!";
 }
@@ -395,7 +395,7 @@ void GLC_StructOccurence::detach()
 	{
 		m_pWorldHandle->removeOccurence(this);
 		m_pWorldHandle= NULL;
-		if (not m_Childs.isEmpty())
+		if (!m_Childs.isEmpty())
 		{
 			const int size= m_Childs.size();
 			for (int i= 0; i < size; ++i)

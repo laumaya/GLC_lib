@@ -167,7 +167,7 @@ void GLC_Rectangle::glDraw(bool)
 {
 	const bool vboIsUsed= GLC_State::vboUsed();
 
-	if (not m_GeometryIsValid)
+	if (!m_GeometryIsValid)
 	{
 		createRectangleMesh();
 		if (vboIsUsed)
@@ -277,7 +277,7 @@ void GLC_Rectangle::createVbos()
 	}
 
 	//Create IBO
-	if (not m_ExtendedGeomEngine.indexVectorHandle()->isEmpty())
+	if (!m_ExtendedGeomEngine.indexVectorHandle()->isEmpty())
 	{
 		QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.indexVectorHandle();
 		m_ExtendedGeomEngine.useIBO(true);
@@ -338,7 +338,7 @@ void GLC_Rectangle::createRectangleMesh()
 	}
 
 	// Rotate the rectangle
-	if ((m_Normal != glc::Y_AXIS) and (m_Normal != -glc::Y_AXIS))
+	if ((m_Normal != glc::Y_AXIS) && (m_Normal != -glc::Y_AXIS))
 	{
 		const GLC_Vector4d axis= normal ^ glc::Y_AXIS;
 		const double angle= normal.getAngleWithVect(glc::Y_AXIS);

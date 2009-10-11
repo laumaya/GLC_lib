@@ -86,14 +86,14 @@ QVector<GLC_Point2d> glc::findIntersection(const GLC_Point2d& s1p1, const GLC_Po
 	if (sqrKross > (EPSILON * sqrLen0 * sqrLen1))
 	{
 		const double s= (E ^ D1) / kross;
-		if ((s < 0.0) or (s > 1.0))
+		if ((s < 0.0) || (s > 1.0))
 		{
 			// Intersection of lines is not a point on segment s1p1 + s * DO
 			return result; // Return empty QVector
 		}
 		const double t= (E ^ D0) / kross;
 
-		if ((t < 0.0) or (t > 1.0))
+		if ((t < 0.0) || (t > 1.0))
 		{
 			// Intersection of lines is not a point on segment s2p1 + t * D1
 			return result; // Return empty QVector
@@ -143,14 +143,14 @@ bool glc::isIntersected(const GLC_Point2d& s1p1, const GLC_Point2d& s1p2, const 
 	if (sqrKross > (EPSILON * sqrLen0 * sqrLen1))
 	{
 		const double s= (E ^ D1) / kross;
-		if ((s < 0.0) or (s > 1.0))
+		if ((s < 0.0) || (s > 1.0))
 		{
 			// Intersection of lines is not a point on segment s1p1 + s * DO
 			return false;
 		}
 		const double t= (E ^ D0) / kross;
 
-		if ((t < 0.0) or (t > 1.0))
+		if ((t < 0.0) || (t > 1.0))
 		{
 			// Intersection of lines is not a point on segment s2p1 + t * D1
 			return false;
@@ -201,7 +201,7 @@ bool glc::isIntersectedRaySegment(const GLC_Point2d& s1p1, const GLC_Vector2d& s
 		}
 		const double t= (E ^ D0) / kross;
 
-		if ((t < 0.0) or (t > 1.0))
+		if ((t < 0.0) || (t > 1.0))
 		{
 			// Intersection of lines is not a point on segment s2p1 + t * D1
 			return false;
@@ -229,7 +229,7 @@ QVector<double> glc::findIntersection(const double& u0, const double& u1, const 
 {
 	//Q_ASSERT((u0 < u1) and (v0 < v1));
 	QVector<double> result;
-	if (u1 < v0 or u0 > v1) return result; // Return empty QVector
+	if (u1 < v0 || u0 > v1) return result; // Return empty QVector
 
 	if (u1 > v0)
 	{
@@ -262,12 +262,12 @@ bool glc::segmentInCone(const GLC_Point2d& V0, const GLC_Point2d& V1, const GLC_
 	if ((edgeR ^ edgeL) > 0)
 	{
 		// Vertex is convex
-		return (((diff ^ edgeR) < 0.0) and ((diff ^ edgeL) > 0.0));
+		return (((diff ^ edgeR) < 0.0) && ((diff ^ edgeL) > 0.0));
 	}
 	else
 	{
 		// Vertex is reflex
-		return (((diff ^ edgeR) < 0.0) or ((diff ^ edgeL) > 0.0));
+		return (((diff ^ edgeR) < 0.0) || ((diff ^ edgeL) > 0.0));
 	}
 }
 
@@ -279,7 +279,7 @@ bool glc::isDiagonal(const QList<GLC_Point2d>& polygon, const int i0, const int 
 	if (iM < 0) iM= size - 1;
 	int iP= (i0 + 1) % size;
 
-	if (not segmentInCone(polygon[i0], polygon[i1], polygon[iM], polygon[iP]))
+	if (!segmentInCone(polygon[i0], polygon[i1], polygon[iM], polygon[iP]))
 	{
 		return false;
 	}
@@ -348,9 +348,9 @@ bool glc::isCounterclockwiseOrdered(const QList<GLC_Point2d>& polygon)
 		bool isIntersect= false;
 		// Application of perp vector
 		GLC_Point2d moy((polygon[j0] + polygon[j1]) * 0.5);
-		while (j2 < size and not isIntersect)
+		while (j2 < size && !isIntersect)
 		{
-			if(j2 != j0 and j3 != j1)
+			if(j2 != j0 && j3 != j1)
 			{
 				if (isIntersectedRaySegment(moy, (perp + moy), polygon[j2], polygon[j3]))
 					isIntersect= true;
@@ -358,7 +358,7 @@ bool glc::isCounterclockwiseOrdered(const QList<GLC_Point2d>& polygon)
 			j3= j2;
 			++j2;
 		}
-		if(not isIntersect) return false;
+		if(!isIntersect) return false;
 		j1= j0;
 		++j0;
 	}
@@ -381,7 +381,7 @@ void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulk
 	{
 		const int currentIndex= pIndexList->at(i);
 		currentPoint= GLC_Point4d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
-		if (not originPoints.contains(currentPoint))
+		if (!originPoints.contains(currentPoint))
 		{
 			originPoints.append(GLC_Point4d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2)));
 			indexMap.insert(i - delta, currentIndex);
@@ -438,7 +438,7 @@ void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulk
 		QList<int> tList;
 		const bool faceIsCounterclockwise= isCounterclockwiseOrdered(polygon);
 
-		if(not faceIsCounterclockwise)
+		if(!faceIsCounterclockwise)
 		{
 			//qDebug() << "face Is Not Counterclockwise";
 			const int max= size / 2;

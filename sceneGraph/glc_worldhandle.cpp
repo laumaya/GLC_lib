@@ -83,7 +83,7 @@ int GLC_WorldHandle::numberOfBody() const
 // An Occurence has been added
 void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelected, GLuint shaderId)
 {
-	Q_ASSERT(not m_OccurenceHash.contains(pOccurence->id()));
+	Q_ASSERT(!m_OccurenceHash.contains(pOccurence->id()));
 	m_OccurenceHash.insert(pOccurence->id(), pOccurence);
 
 	// Add instance representation in the collection

@@ -111,7 +111,7 @@ GLC_uint GLC_VboGeom::materialIndex(const GLC_Material& mat) const
 	int index= 0;
 	MaterialHash::const_iterator iEntry= m_MaterialHash.begin();
 
-    while ((iEntry != m_MaterialHash.constEnd()) and !(*(iEntry.value()) == mat))
+    while ((iEntry != m_MaterialHash.constEnd()) && !(*(iEntry.value()) == mat))
     {
         ++iEntry;
     }
@@ -141,7 +141,7 @@ unsigned int GLC_VboGeom::numberOfVertex() const
 void GLC_VboGeom::replaceMasterMaterial(GLC_Material* pMaterial)
 {
 
-	if (not m_MaterialHash.isEmpty())
+	if (!m_MaterialHash.isEmpty())
 	{
 		Q_ASSERT(1 == m_MaterialHash.size());
 		if (pMaterial != firstMaterial())
@@ -234,7 +234,7 @@ void GLC_VboGeom::glExecute(bool isSelected, bool transparent)
 		addMaterial(pMaterial);
 	}
 	// Define Geometry's property
-	if(not GLC_State::isInSelectionMode())
+	if(!GLC_State::isInSelectionMode())
 	{
 		glPropGeom(isSelected);
 	}
@@ -252,9 +252,9 @@ void GLC_VboGeom::glExecute(bool isSelected, bool transparent)
 // Virtual interface for OpenGL Geometry properties.
 void GLC_VboGeom::glPropGeom(bool isSelected)
 {
-	Q_ASSERT(not m_MaterialHash.isEmpty());
+	Q_ASSERT(!m_MaterialHash.isEmpty());
 
-	if(m_IsWire and (m_MaterialHash.size() == 1))
+	if(m_IsWire && (m_MaterialHash.size() == 1))
 	{
 		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
 		glDisable(GL_TEXTURE_2D);

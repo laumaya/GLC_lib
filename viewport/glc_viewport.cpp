@@ -178,7 +178,7 @@ void GLC_Viewport::forceAspectRatio(double ratio)
 // Display background image
 void GLC_Viewport::glExecuteImagePlane()
 {
-	if(not GLC_State::isInSelectionMode())
+	if(!GLC_State::isInSelectionMode())
 	{
 		if (m_pImagePlane != NULL)
 		{
@@ -283,7 +283,7 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 	}
 	GLC_uint returnId= 0;
 	// If the list is empty return 0
-	if (not idList.isEmpty())
+	if (!idList.isEmpty())
 	{
 		int maxWeight= 0;
 		int maxIndex= 0;
@@ -398,7 +398,7 @@ bool GLC_Viewport::setDistMax(double DistMax)
 // Set Near and Far clipping distance
 void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 {
-	if(not bBox.isEmpty())
+	if(!bBox.isEmpty())
 	{
 		// The scene is not empty
 		GLC_Matrix4x4 matTranslateCam(-m_pViewCam->eye());

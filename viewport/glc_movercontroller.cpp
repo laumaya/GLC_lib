@@ -96,7 +96,7 @@ GLC_MoverController& GLC_MoverController::operator = (const GLC_MoverController&
 // Add a mover to the controller
 void GLC_MoverController::addMover(GLC_Mover* pMover, const int id)
 {
-	Q_ASSERT(not m_MoverHash.contains(id));
+	Q_ASSERT(!m_MoverHash.contains(id));
 	m_MoverHash.insert(id, pMover);
 }
 

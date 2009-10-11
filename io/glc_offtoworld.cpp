@@ -101,7 +101,7 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	++m_CurrentLineNumber;
 	lineBuff= offStream.readLine();
 	lineBuff= lineBuff.trimmed();
-	if(offStream.atEnd() || (!lineBuff.startsWith("OFF") and !lineBuff.startsWith("COFF")and !lineBuff.startsWith("4OFF")))
+	if(offStream.atEnd() || (!lineBuff.startsWith("OFF") && !lineBuff.startsWith("COFF") && !lineBuff.startsWith("4OFF")))
 	{
 		QString message= "GLC_OffToWorld::CreateWorldFromOff : OFF or COFF header not found";
 		qDebug() << message;
@@ -219,7 +219,7 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 
 	m_pCurrentMesh->addVertices(m_PositionBulk.toVector());
 	m_pCurrentMesh->addNormals(m_NormalBulk.toVector());
-	if (not m_ColorBulk.isEmpty())
+	if (!m_ColorBulk.isEmpty())
 	{
 		m_pCurrentMesh->addColors(m_ColorBulk.toVector());
 	}
@@ -489,7 +489,7 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 		r= rString.toFloat(&rOk);
 		g= gString.toFloat(&gOk);
 		b= bString.toFloat(&bOk);
-		if (!rOk or !gOk or !bOk)
+		if (!rOk || !gOk || !bOk)
 		{
 			QString message= "GLC_ObjToWorld::extractFaceIndex failed to convert String to float";
 			message.append("\nAt line : ");

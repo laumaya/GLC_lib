@@ -97,7 +97,7 @@ GLC_Texture::GLC_Texture(const QGLContext* pContext, const QImage& image, const 
 , m_TextureSize()
 , m_HasAlphaChannel(m_textureImage.hasAlphaChannel())
 {
-	Q_ASSERT(not m_textureImage.isNull());
+	Q_ASSERT(!m_textureImage.isNull());
 }
 
 GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
@@ -121,7 +121,7 @@ GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 // Overload "=" operator
 GLC_Texture& GLC_Texture::operator=(const GLC_Texture& texture)
 {
-	if (not (*this == texture))
+	if (!(*this == texture))
 	{
 		if (m_GlTextureID != 0)
 		{
@@ -163,7 +163,7 @@ bool GLC_Texture::operator==(const GLC_Texture& texture) const
 	}
 	else
 	{
-		result= (m_FileName == texture.m_FileName) and (m_textureImage == texture.m_textureImage);
+		result= (m_FileName == texture.m_FileName) && (m_textureImage == texture.m_textureImage);
 	}
 	return result;
 }
@@ -175,7 +175,7 @@ bool GLC_Texture::operator==(const GLC_Texture& texture) const
 // Set the maximum texture size
 void GLC_Texture::setMaxTextureSize(const QSize& size)
 {
-	if ((size.height() > m_MinTextureSize.height()) and (size.width() > m_MinTextureSize.width()))
+	if ((size.height() > m_MinTextureSize.height()) && (size.width() > m_MinTextureSize.width()))
 	{
 		m_MaxTextureSize= size;
 	}
@@ -196,7 +196,7 @@ void GLC_Texture::glLoadTexture(void)
 	{
 		// Test image size
 		if ((m_textureImage.height() > m_MaxTextureSize.height())
-				or (m_textureImage.width() > m_MaxTextureSize.width()))
+				|| (m_textureImage.width() > m_MaxTextureSize.width()))
 		{
 			QImage rescaledImage;
 			if(m_textureImage.height() > m_textureImage.width())
