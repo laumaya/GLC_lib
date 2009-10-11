@@ -184,8 +184,8 @@ void GLC_Cylinder::glDraw(bool)
 
 	if (!m_GeometryIsValid)
 	{
-		double cosArray[m_Discret + 1];
-		double sinArray[m_Discret + 1];
+		QVector<double> cosArray(m_Discret + 1);
+		QVector<double> sinArray(m_Discret + 1);
 		for (int i= 0; i <= m_Discret; ++i)
 		{
 			cosArray[i]= m_Radius * cos(i * (2 * PI) / m_Discret);
