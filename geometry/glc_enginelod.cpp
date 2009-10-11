@@ -65,6 +65,8 @@ GLC_EngineLod& GLC_EngineLod::operator=(const GLC_EngineLod& lod)
 	m_IboId= lod.m_IboId;
 	m_IboVector= lod.indexVector();
 	m_IndexSize= lod.m_IndexSize;
+
+	return *this;
 }
 
 GLC_EngineLod::~GLC_EngineLod()
