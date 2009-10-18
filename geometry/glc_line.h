@@ -27,6 +27,8 @@
 
 #include "glc_vbogeom.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Line
 /*! \brief GLC_Line : OpenGL 3D Line*/
@@ -34,7 +36,7 @@
 /*! An GLC_Line is just a simple 3D Line*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Line : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Line : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

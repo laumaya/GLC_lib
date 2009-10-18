@@ -30,6 +30,8 @@
 #include "glc_vbogeom.h"
 #include "glc_simplegeomengine.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Circle
 /*! \brief GLC_Circle : OpenGL 3D Circle*/
@@ -38,7 +40,7 @@
  * It can be an entire circle or an arc.
  * */
 //////////////////////////////////////////////////////////////////////
-class GLC_Circle : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Circle : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

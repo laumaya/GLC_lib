@@ -29,6 +29,8 @@
 
 #include "../glc_ext.h"
 
+#include "../glc_config.h"
+
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 //////////////////////////////////////////////////////////////////////
@@ -44,7 +46,7 @@
  *
  */
 //////////////////////////////////////////////////////////////////////
-class GLC_GeomEngine
+class GLC_LIB_EXPORT GLC_GeomEngine
 {
 
 public:

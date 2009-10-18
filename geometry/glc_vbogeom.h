@@ -32,6 +32,8 @@
 #include "../glc_boundingbox.h"
 #include "../glc_ext.h"
 
+#include "glc_config.h"
+
 typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
 typedef QHash<GLC_uint, GLC_uint> MaterialHashMap;
 
@@ -55,7 +57,7 @@ typedef QHash<GLC_uint, GLC_uint> MaterialHashMap;
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_VboGeom
+class GLC_LIB_EXPORT GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

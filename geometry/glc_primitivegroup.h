@@ -31,6 +31,8 @@
 #include "../glc_enum.h"
 #include "glc_geomengine.h"
 
+#include "glc_config.h"
+
 typedef QList<GLuint> IndexList;
 typedef QVector<GLsizei> IndexSizes;
 typedef QVector<GLvoid*> OffsetVector;
@@ -43,7 +45,7 @@ typedef QVector<GLuint> OffsetVectori;
 /*! An GLC_PrimitiveGroup is used to stored Triangles, strips and fans index
  * Grouped by material*/
 //////////////////////////////////////////////////////////////////////
-class GLC_PrimitiveGroup
+class GLC_LIB_EXPORT GLC_PrimitiveGroup
 {
 	friend QDataStream &operator<<(QDataStream &, const GLC_PrimitiveGroup &);
 	friend QDataStream &operator>>(QDataStream &, GLC_PrimitiveGroup &);

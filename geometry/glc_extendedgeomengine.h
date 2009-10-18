@@ -31,6 +31,8 @@
 #include "glc_geomengine.h"
 #include "glc_enginelod.h"
 
+#include "../glc_config.h"
+
 //! QVector of GLfloat
 typedef QVector<GLfloat> GLfloatVector;
 
@@ -45,7 +47,7 @@ typedef QVector<GLuint> GLuintVector;
 /*! GLC_ExtendedGeomEngine can handle mesh with Triangles, strips and fans
  */
 //////////////////////////////////////////////////////////////////////
-class GLC_ExtendedGeomEngine : public GLC_GeomEngine
+class GLC_LIB_EXPORT GLC_ExtendedGeomEngine : public GLC_GeomEngine
 {
 	friend QDataStream &operator<<(QDataStream &, const GLC_ExtendedGeomEngine &);
 	friend QDataStream &operator>>(QDataStream &, GLC_ExtendedGeomEngine &);

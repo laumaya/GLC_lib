@@ -31,13 +31,15 @@
 #include "glc_vbogeom.h"
 #include "glc_primitivegroup.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Rectangle
 /*! \brief GLC_Rectangle : OpenGL flat 3D Rectangle*/
 
 /*! An GLC_Rectangle is just a simple 3D Rectangle which use VBO*/
 //////////////////////////////////////////////////////////////////////
-class GLC_Rectangle : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Rectangle : public GLC_VboGeom
 {
 
 //////////////////////////////////////////////////////////////////////

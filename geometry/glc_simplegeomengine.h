@@ -29,6 +29,8 @@
 
 #include "glc_geomengine.h"
 
+#include "glc_config.h"
+
 //! \struct GLC_Vertex
 /*! \brief GLC_Vertex : OpenGL Vertex */
 struct GLC_Vertex
@@ -51,7 +53,7 @@ typedef QVector<GLC_Vertex> VertexVector;
 /*! \brief GLC_SimpleGeomEngine : specialized engine
  */
 //////////////////////////////////////////////////////////////////////
-class GLC_SimpleGeomEngine : public GLC_GeomEngine
+class GLC_LIB_EXPORT GLC_SimpleGeomEngine : public GLC_GeomEngine
 {
 public:
 	//! Default constructor

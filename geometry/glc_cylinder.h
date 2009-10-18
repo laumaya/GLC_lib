@@ -31,6 +31,8 @@
 #include "glc_vbogeom.h"
 #include "glc_simplegeomengine.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Cylinder
 /*! \brief GLC_Cylinder : OpenGL 3D Cylinder*/
@@ -40,7 +42,7 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Cylinder : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Cylinder : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

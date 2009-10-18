@@ -37,6 +37,8 @@
 #include "glc_vbogeom.h"
 #include "glc_primitivegroup.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ExtendedMesh
 /*! \brief GLC_ExtendedMesh : OpenGL 3D Mesh*/
@@ -44,7 +46,7 @@
 /*! An GLC_ExtendedMesh is Mesh composed of triangles, strips and fan
 */
 //////////////////////////////////////////////////////////////////////
-class GLC_ExtendedMesh : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_ExtendedMesh : public GLC_VboGeom
 {
 	friend QDataStream &operator<<(QDataStream &, const GLC_ExtendedMesh &);
 	friend QDataStream &operator>>(QDataStream &, GLC_ExtendedMesh &);
@@ -232,6 +234,9 @@ private:
 
 	//! Create VBO and IBO
 	void createVbos();
+
+	//! set primitive group offset
+	void finishSerialized();
 
 	//! Finish VBO mesh
 	void finishVbo();

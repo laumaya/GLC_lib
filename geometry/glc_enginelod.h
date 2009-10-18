@@ -30,7 +30,9 @@
 #include <QVector>
 #include "../glc_ext.h"
 
-class GLC_EngineLod
+#include "../glc_config.h"
+
+class GLC_LIB_EXPORT GLC_EngineLod
 {
 public:
 

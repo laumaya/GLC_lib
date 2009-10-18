@@ -29,6 +29,8 @@
 
 #include "glc_vbogeom.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Point
 /*! \brief GLC_Point : OpenGL 3D Point*/
@@ -36,7 +38,7 @@
 /*! An GLC_Point is just a simple 3D Point*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Point : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Point : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

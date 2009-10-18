@@ -24,13 +24,15 @@
 
 #include <QString>
 
+#include "../glc_config.h"
+
 #ifndef GLC_REP_H_
 #define GLC_REP_H_
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Rep
 /*! \brief GLC_Rep : Abstract class for a reference represention*/
 //////////////////////////////////////////////////////////////////////
-class GLC_Rep
+class GLC_LIB_EXPORT GLC_Rep
 {
 public:
 	enum Type

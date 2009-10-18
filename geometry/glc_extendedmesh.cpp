@@ -398,6 +398,7 @@ void GLC_ExtendedMesh::finished()
 	}
 }
 
+
 // Set the lod Index
 void GLC_ExtendedMesh::setCurrentLod(const int value)
 {
@@ -752,6 +753,19 @@ void GLC_ExtendedMesh::createVbos()
 	m_ExtendedGeomEngine.finished();
 
 }
+// set primitive group offset
+void GLC_ExtendedMesh::finishSerialized()
+{
+	if (GLC_State::vboUsed())
+	{
+		finishVbo();
+	}
+	else
+	{
+		finishNonVbo();
+	}
+}
+
 // Finish VBO mesh
 void GLC_ExtendedMesh::finishVbo()
 {

@@ -27,6 +27,8 @@
 #include "glc_vbogeom.h"
 #include <QVector>
 
+#include "../glc_config.h"
+
 #ifndef GLC_POINTSPRITE_H_
 #define GLC_POINTSPRITE_H_
 
@@ -37,7 +39,7 @@
 /*! An GLC_PointSprite is just a simple 3D Sprite Point*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_PointSprite : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_PointSprite : public GLC_VboGeom
 {
 public:
 //////////////////////////////////////////////////////////////////////

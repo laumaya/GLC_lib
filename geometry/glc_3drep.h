@@ -28,11 +28,13 @@
 #include "../geometry/glc_vbogeom.h"
 #include "glc_rep.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_3DRep
 /*! \brief GLC_3DRep : A referrence 3D Representation*/
 //////////////////////////////////////////////////////////////////////
-class GLC_3DRep : public GLC_Rep
+class GLC_LIB_EXPORT GLC_3DRep : public GLC_Rep
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
