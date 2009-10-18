@@ -29,19 +29,21 @@
 
 #include "QMutex"
 
+#include "glc_config.h"
+
 // Type for UID
 typedef unsigned int GLC_uint;
 
 namespace glc
 {
 	//! Simple ID generation
-	GLC_uint GLC_GenID(void);
+	GLC_LIB_EXPORT GLC_uint GLC_GenID(void);
 
 	//! Simple Geom ID generation
-	GLC_uint GLC_GenGeomID(void);
+	GLC_LIB_EXPORT GLC_uint GLC_GenGeomID(void);
 
 	//! Simple User ID generation
-	GLC_uint GLC_GenUserID(void);
+	GLC_LIB_EXPORT GLC_uint GLC_GenUserID(void);
 
 	const int GLC_DISCRET= 70;
 	const int GLC_POLYDISCRET= 60;
