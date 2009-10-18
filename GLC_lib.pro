@@ -333,6 +333,7 @@ unix {
 # Windows Install configuration
 win32 { 
     # Location of HEADERS and library
+	DEFINES *= CREATE_GLC_LIB_DLL
     LIB_DIR = C:\GLC_lib\lib
     INCLUDE_DIR = C:\GLC_lib\include
     include.path = $${INCLUDE_DIR}
