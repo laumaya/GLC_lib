@@ -35,6 +35,8 @@
 #include "glc_vector3d.h"
 #include "glc_vector3df.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Vector4d
 /*! \brief GLC_Vector4d is a 4 dimensions Vector*/
@@ -44,7 +46,7 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Vector4d
+class GLC_LIB_EXPORT GLC_Vector4d
 {
 	//! GLC_Matrix4x4 class
 	friend class GLC_Matrix4x4;

@@ -30,6 +30,8 @@
 #include <QVector>
 #include "glc_vector4d.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Matrix4x4
 /*! \brief GLC_Matrix4x4 is a 4 dimensions Matrix*/
@@ -38,7 +40,7 @@
  *  GLC_Matrix4x4 is a row first matrix compatible with OpenGL Matrix
  * */
 //////////////////////////////////////////////////////////////////////
-class GLC_Matrix4x4
+class GLC_LIB_EXPORT GLC_Matrix4x4
 {
 	friend class GLC_Vector4d;
 

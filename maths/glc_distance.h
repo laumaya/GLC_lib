@@ -30,7 +30,7 @@
 #include "../glc_object.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 
-//#include <../PQP/PQP.h>
+#include "../glc_config.h"
 
 class GLC_ExtendedMesh;
 class PQP_Model;
@@ -42,7 +42,7 @@ class PQP_Model;
 /*! GLC_Distance is used to compute the minimum distance between to Elements.
  */
 //////////////////////////////////////////////////////////////////////
-class GLC_Distance : public GLC_Object
+class GLC_LIB_EXPORT GLC_Distance : public GLC_Object
 {
 	struct DistanceResult
 	{

@@ -28,6 +28,8 @@
 #define GLC_VECTOR3DF_H_
 #include "glc_utils_maths.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Vector3df
 /*! \brief GLC_Vector3df is a 3 dimensions Vector*/
@@ -36,7 +38,7 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Vector3df
+class GLC_LIB_EXPORT GLC_Vector3df
 {
 	friend class GLC_Vector4d;
 	friend class GLC_Vector3d;
