@@ -309,7 +309,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   
     			   
 # Linux install configuration
-unix { 
+unix {
+    LIBS += -lz.1.2.3
     # Location of HEADERS and library
     LIB_DIR = /usr/lib
     INCLUDE_DIR = /usr/include
