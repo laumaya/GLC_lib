@@ -125,7 +125,8 @@ HEADERS_GLC += glc_enum.h \
            glc_openglexception.h \
            glc_fileformatexception.h \
            glc_ext.h \
-           glc_state.h
+           glc_state.h \
+           glc_config.h
            
 HEADERS_PQP +=		PQP/PQP_Compile.h \
 					PQP/TriDist.h \
