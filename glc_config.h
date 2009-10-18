@@ -30,7 +30,11 @@
 // Win 32 DLL export macros
 #ifdef Q_OS_WIN32
 # ifndef GLC_LIB_STATIC
+#  ifdef CREATE_GLC_LIB_DLL
 #   define GLC_LIB_EXPORT  __declspec(dllexport)
+#  else
+#   define GLC_LIB_EXPORT  __declspec(dllimport)
+#  endif
 # endif
 #endif // Q_OS_WIN32
 
