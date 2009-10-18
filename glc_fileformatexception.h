@@ -28,12 +28,14 @@
 #define GLC_FILEFORMATEXCEPTION_H_
 #include "glc_exception.h"
 
+#include "glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_FileFormatException
 /*! \brief GLC_FileFormatException : Class for all File Format ERROR
  */
 //////////////////////////////////////////////////////////////////////
-class GLC_FileFormatException : public GLC_Exception
+class GLC_LIB_EXPORT GLC_FileFormatException : public GLC_Exception
 {
 public:
 	//! Enum of exception Type

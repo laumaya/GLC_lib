@@ -30,12 +30,14 @@
 #include <exception>
 #include <QString>
 
+#include "glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Exception
 /*! \brief GLC_Exception : Base Class for all GLC_Exception Class
  */
 //////////////////////////////////////////////////////////////////////
-class GLC_Exception : public std::exception
+class GLC_LIB_EXPORT GLC_Exception : public std::exception
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

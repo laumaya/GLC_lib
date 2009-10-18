@@ -50,13 +50,14 @@
 
 // end of class to built
 
+#include "glc_config.h"
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Factory
 /*! \brief GLC_Factory : Factory for all geometrical objects
  *  this class is a singleton
  */
 //////////////////////////////////////////////////////////////////////
-class GLC_Factory : public QObject
+class GLC_LIB_EXPORT GLC_Factory : public QObject
 {
 	Q_OBJECT
 

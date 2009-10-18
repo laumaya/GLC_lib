@@ -31,13 +31,16 @@
 #include "glc_exception.h"
 
 #include <QtOpenGL>
+
+#include "glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_OpenGlException
 /*! \brief GLC_OpenGlException : Class for all OpenGL error
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_OpenGlException : public GLC_Exception
+class GLC_LIB_EXPORT GLC_OpenGlException : public GLC_Exception
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
