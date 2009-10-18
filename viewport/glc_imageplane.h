@@ -29,6 +29,7 @@
 
 #include "../geometry/glc_vbogeom.h"
 
+#include "../glc_config.h"
 
 class GLC_Viewport;
 
@@ -39,7 +40,7 @@ class GLC_Viewport;
 /*! An GLC_ImagePlane is just a plane with a image texture.*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_ImagePlane : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_ImagePlane : public GLC_VboGeom
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

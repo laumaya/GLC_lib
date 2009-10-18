@@ -27,11 +27,13 @@
 
 #include "glc_mover.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_SetTargetMover
 /*! \brief GLC_SetTargetMover : Define the view target */
 //////////////////////////////////////////////////////////////////////
-class GLC_SetTargetMover : public GLC_Mover
+class GLC_LIB_EXPORT GLC_SetTargetMover : public GLC_Mover
 {
 public:
 	//! Default constructor

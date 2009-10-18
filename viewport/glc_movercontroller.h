@@ -31,11 +31,13 @@
 #include <QHash>
 #include <QtDebug>
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_MoverController
 /*! \brief GLC_MoverController : Control activation of interactive manipulation mover */
 //////////////////////////////////////////////////////////////////////
-class GLC_MoverController
+class GLC_LIB_EXPORT GLC_MoverController
 {
 public:
 	//! The mover hash table

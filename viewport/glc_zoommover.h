@@ -27,11 +27,13 @@
 
 #include "glc_mover.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ZoomMover
 /*! \brief GLC_ZoomMover : Zoom interactive manipulation */
 //////////////////////////////////////////////////////////////////////
-class GLC_ZoomMover : public GLC_Mover
+class GLC_LIB_EXPORT GLC_ZoomMover : public GLC_Mover
 {
 public:
 	//! Default constructor

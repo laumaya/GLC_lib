@@ -29,13 +29,15 @@
 #include "../geometry/glc_circle.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 
+#include "../glc_config.h"
+
 class GLC_Factory;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_RepTrackBallMover
 /*! \brief GLC_RepTrackBallMover : Track Ball representation*/
 //////////////////////////////////////////////////////////////////////
-class GLC_RepTrackBallMover : public GLC_RepMover
+class GLC_LIB_EXPORT GLC_RepTrackBallMover : public GLC_RepMover
 {
 public:
 	//! Default constructor

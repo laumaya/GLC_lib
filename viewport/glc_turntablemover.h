@@ -28,11 +28,13 @@
 
 #include "glc_mover.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_TurnTableMover
 /*! \brief GLC_TurnTableMover : Turn table interactive manipulation */
 //////////////////////////////////////////////////////////////////////
-class GLC_TurnTableMover : public GLC_Mover
+class GLC_LIB_EXPORT GLC_TurnTableMover : public GLC_Mover
 {
 public:
 	//! Default constructor

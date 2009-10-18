@@ -32,6 +32,8 @@
 #include "../maths/glc_vector4d.h"
 #include "../maths/glc_matrix4x4.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Camera
 /*! \brief GLC_Camera : OpenGL perpective viewpoint */
@@ -40,7 +42,7 @@
  * of an OpenGL perpective camera*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Camera :
+class GLC_LIB_EXPORT GLC_Camera :
 	public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////

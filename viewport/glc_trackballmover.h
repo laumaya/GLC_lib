@@ -27,11 +27,13 @@
 
 #include "glc_mover.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_TrackBallMover
 /*! \brief GLC_TrackBallMover : Track ball interactive manipulation */
 //////////////////////////////////////////////////////////////////////
-class GLC_TrackBallMover : public GLC_Mover
+class GLC_LIB_EXPORT GLC_TrackBallMover : public GLC_Mover
 {
 public:
 	//! Default constructor

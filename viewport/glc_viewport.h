@@ -31,6 +31,7 @@
 #include "glc_imageplane.h"
 #include "../glc_boundingbox.h"
 
+#include "../glc_config.h"
 
 // Define selection square
 #define SELECT_WIDTH 5.0
@@ -54,7 +55,7 @@
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Viewport
+class GLC_LIB_EXPORT GLC_Viewport
 {
 
 //////////////////////////////////////////////////////////////////////

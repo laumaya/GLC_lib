@@ -29,11 +29,13 @@
 
 #include "glc_mover.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_PanMover
 /*! \brief GLC_PanMover : Panoramic interactive manipulation */
 //////////////////////////////////////////////////////////////////////
-class GLC_PanMover : public GLC_Mover
+class GLC_LIB_EXPORT GLC_PanMover : public GLC_Mover
 {
 public:
 	//! Default constructor

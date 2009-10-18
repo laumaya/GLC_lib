@@ -32,13 +32,15 @@
 
 #include <QList>
 
+#include "../glc_config.h"
+
 class GLC_Viewport;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Mover
 /*! \brief GLC_Mover : Base class for all interactive manipulation */
 //////////////////////////////////////////////////////////////////////
-class GLC_Mover
+class GLC_LIB_EXPORT GLC_Mover
 {
 public:
 	//! Default constructor

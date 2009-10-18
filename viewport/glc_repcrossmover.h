@@ -27,11 +27,13 @@
 
 #include "glc_repmover.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_RepCrossMover
 /*! \brief GLC_RepCrossMover : Cross representation*/
 //////////////////////////////////////////////////////////////////////
-class GLC_RepCrossMover : public GLC_RepMover
+class GLC_LIB_EXPORT GLC_RepCrossMover : public GLC_RepMover
 {
 public:
 	//! Default constructor
