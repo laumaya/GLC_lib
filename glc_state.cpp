@@ -45,6 +45,82 @@ GLC_State::~GLC_State()
 {
 }
 
+
+// Return true if VBO is supported
+bool GLC_State::vboSupported()
+{
+	return m_VboSupported;
+}
+
+// Return true if VBO is used
+bool GLC_State::vboUsed()
+{
+	return m_UseVbo;
+}
+
+// Return true if GLSL is supported
+bool GLC_State::glslSupported()
+{
+	return m_GlslSupported;
+}
+
+// Return true if GLSL is used
+bool GLC_State::glslUsed()
+{
+	return m_UseShader;
+}
+
+// Return true if Point Sprite is supported
+bool GLC_State::pointSpriteSupported()
+{
+	return m_PointSpriteSupported;
+}
+
+// Return true if selection shader is used
+bool GLC_State::selectionShaderUsed()
+{
+	return m_UseSelectionShader;
+}
+
+// Return true if is in selection mode
+bool GLC_State::isInSelectionMode()
+{
+	return m_IsInSelectionMode;
+}
+
+// Return the Opengl version
+QString GLC_State::version()
+{
+	return m_Version;
+}
+
+// Return the Opengl vendor
+QString GLC_State::vendor()
+{
+	return m_Vendor;
+}
+
+// Return the Opengl renderer
+QString GLC_State::renderer()
+{
+	return m_Renderer;
+}
+
+// Return true if OpenGL Vendor is NVIDIA
+bool GLC_State::vendorIsNvidia()
+{
+	return m_Vendor.contains("NVIDIA");
+}
+
+// Return true if pixel culling is activate
+bool GLC_State::isPixelCullingActivated()
+{
+	return m_IsPixelCullingActivated;
+}
+
+
+
+
 //! Intialize the state
 void GLC_State::init()
 {
@@ -90,4 +166,16 @@ void GLC_State::setGlslUsage(const bool glslUsage)
 void GLC_State::setSelectionShaderUsage(const bool shaderUsed)
 {
 	m_UseSelectionShader= shaderUsed && m_GlslSupported;
+}
+
+// Set selection mode
+void GLC_State::setSelectionMode(const bool mode)
+{
+	m_IsInSelectionMode= mode;
+}
+
+// Set pixel culling state
+void GLC_State::setPixelCullingUsage(const bool activation)
+{
+	m_IsPixelCullingActivated= activation;
 }
