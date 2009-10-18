@@ -33,6 +33,8 @@
 #include <QHash>
 #include <QColor>
 
+#include "../glc_config.h"
+
 class GLC_VboGeom;
 
 typedef QHash< GLC_uint, GLC_VboGeom*> CWhereUsed;
@@ -45,7 +47,7 @@ typedef QHash< GLC_uint, GLC_VboGeom*> CWhereUsed;
 //////////////////////////////////////////////////////////////////////
 
 
-class GLC_Material : public GLC_Object
+class GLC_LIB_EXPORT GLC_Material : public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

@@ -31,6 +31,7 @@
 #include "../glc_ext.h"
 #include "glc_shader.h"
 
+#include "../glc_config.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_SelectionMaterial
@@ -38,7 +39,7 @@
 
 //////////////////////////////////////////////////////////////////////
 
-class GLC_SelectionMaterial
+class GLC_LIB_EXPORT GLC_SelectionMaterial
 {
 private:
 	GLC_SelectionMaterial();

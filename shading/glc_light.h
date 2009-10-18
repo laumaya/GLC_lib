@@ -31,6 +31,8 @@
 #include "../glc_object.h"
 #include "../maths/glc_vector4d.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Light
 /*! \brief GLC_Light : OpenGL Point Light*/
@@ -39,7 +41,7 @@
  * Point light is omnidirectional and have color*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_Light :
+class GLC_LIB_EXPORT GLC_Light :
 	public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
