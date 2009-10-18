@@ -39,6 +39,7 @@
 #include "../maths/glc_vector3df.h"
 #include "../geometry/glc_extendedmesh.h"
 
+#include "../glc_config.h"
 
 enum FaceType
 {
@@ -65,7 +66,7 @@ class QGLContext;
  * 		- Normal coordinate
   */
 //////////////////////////////////////////////////////////////////////
-class GLC_ObjToWorld : public QObject
+class GLC_LIB_EXPORT GLC_ObjToWorld : public QObject
 {
 	Q_OBJECT
 

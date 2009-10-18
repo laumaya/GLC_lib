@@ -32,6 +32,8 @@
 #include <QTextStream>
 #include <../shading/glc_material.h>
 
+#include "../glc_config.h"
+
 class QGLContext;
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ObjMtlLoader
@@ -40,7 +42,7 @@ class QGLContext;
 /*! An GLC_ObjMtlLoader create GLC_Material from the .mtl file \n
   */
 //////////////////////////////////////////////////////////////////////
-class GLC_ObjMtlLoader
+class GLC_LIB_EXPORT GLC_ObjMtlLoader
 {
 
 //////////////////////////////////////////////////////////////////////

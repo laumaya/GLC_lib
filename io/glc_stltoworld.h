@@ -35,6 +35,8 @@
 #include "../geometry/glc_extendedmesh.h"
 #include "../maths/glc_vector3df.h"
 
+#include "../glc_config.h"
+
 class GLC_World;
 class QGLContext;
 
@@ -50,7 +52,7 @@ class QGLContext;
   */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_StlToWorld : public QObject
+class GLC_LIB_EXPORT GLC_StlToWorld : public QObject
 {
 	Q_OBJECT
 //////////////////////////////////////////////////////////////////////

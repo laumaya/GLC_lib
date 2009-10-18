@@ -37,6 +37,8 @@
 
 #include "../sceneGraph/glc_3dviewinstance.h"
 
+#include "../glc_config.h"
+
 class GLC_World;
 class QGLContext;
 class GLC_ExtendedMesh;
@@ -62,7 +64,7 @@ struct Lib3dsMaterial;
   */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_3dsToWorld : public QObject
+class GLC_LIB_EXPORT GLC_3dsToWorld : public QObject
 {
 	Q_OBJECT
 

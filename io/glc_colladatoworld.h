@@ -37,6 +37,8 @@
 #include "../geometry/glc_extendedmesh.h"
 #include "../sceneGraph/glc_structoccurence.h"
 
+#include "../glc_config.h"
+
 class GLC_World;
 class QGLContext;
 
@@ -44,7 +46,7 @@ class QGLContext;
 //! \class GLC_ColladaToWorld
 /*! \brief GLC_ColladaToWorld : Create an GLC_World from dae file */
 //////////////////////////////////////////////////////////////////////
-class GLC_ColladaToWorld : public QObject
+class GLC_LIB_EXPORT GLC_ColladaToWorld : public QObject
 {
 private:
 	Q_OBJECT

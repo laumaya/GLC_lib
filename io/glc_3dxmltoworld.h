@@ -35,6 +35,8 @@
 #include "../maths/glc_matrix4x4.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 
+#include "glc_config.h"
+
 class GLC_World;
 class QGLContext;
 class QuaZip;
@@ -47,7 +49,7 @@ class GLC_ExtendedMesh;
 //! \class GLC_3dxmlToWorld
 /*! \brief GLC_3dxmlToWorld : Create an GLC_World from 3dxml file */
 //////////////////////////////////////////////////////////////////////
-class GLC_3dxmlToWorld : public QObject
+class GLC_LIB_EXPORT GLC_3dxmlToWorld : public QObject
 {
 	Q_OBJECT
 
