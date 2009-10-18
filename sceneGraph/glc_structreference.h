@@ -35,11 +35,13 @@
 #include "glc_attributes.h"
 #include "glc_structinstance.h"
 
+#include "../glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_StructReference
 /*! \brief GLC_StructReference : A scene graph reference node */
 //////////////////////////////////////////////////////////////////////
-class GLC_StructReference
+class GLC_LIB_EXPORT GLC_StructReference
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

@@ -34,6 +34,8 @@
 #include "glc_3dviewinstance.h"
 #include "glc_attributes.h"
 
+#include "../glc_config.h"
+
 class GLC_StructReference;
 class GLC_StructOccurence;
 
@@ -41,7 +43,7 @@ class GLC_StructOccurence;
 //! \class GLC_StructInstance
 /*! \brief GLC_StructInstance : A scene graph instance node */
 //////////////////////////////////////////////////////////////////////
-class GLC_StructInstance
+class GLC_LIB_EXPORT GLC_StructInstance
 {
 public:
 	//! Default constructor

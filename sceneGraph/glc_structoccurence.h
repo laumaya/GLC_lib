@@ -32,6 +32,8 @@
 #include "glc_structinstance.h"
 #include <QSet>
 
+#include "../glc_config.h"
+
 class GLC_WorldHandle;
 class GLC_Material;
 
@@ -39,7 +41,7 @@ class GLC_Material;
 //! \class GLC_StructOccurence
 /*! \brief GLC_StructOccurence : A scene graph occurence node */
 //////////////////////////////////////////////////////////////////////
-class GLC_StructOccurence
+class GLC_LIB_EXPORT GLC_StructOccurence
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

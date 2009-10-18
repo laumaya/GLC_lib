@@ -35,6 +35,8 @@
 #include "../geometry/glc_3drep.h"
 #include <QMutex>
 
+#include "glc_config.h"
+
 class GLC_Viewport;
 
 //////////////////////////////////////////////////////////////////////
@@ -48,7 +50,7 @@ class GLC_Viewport;
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_3DViewInstance : public GLC_Object
+class GLC_LIB_EXPORT GLC_3DViewInstance : public GLC_Object
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

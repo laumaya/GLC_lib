@@ -32,6 +32,8 @@
 #include "glc_3dviewinstance.h"
 #include "../glc_enum.h"
 
+#include "../glc_config.h"
+
 class GLC_Material;
 class GLC_Shader;
 class GLC_Viewport;
@@ -55,7 +57,7 @@ typedef QHash<GLC_uint, GLuint> ShaderGroup;
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_3DViewCollection
+class GLC_LIB_EXPORT GLC_3DViewCollection
 {
 
 //////////////////////////////////////////////////////////////////////
