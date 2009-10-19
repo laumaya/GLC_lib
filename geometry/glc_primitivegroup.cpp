@@ -203,6 +203,29 @@ void GLC_PrimitiveGroup::setBaseTrianglesFanOffseti(int offset)
 	}
 }
 
+// Change index to VBO mode
+void GLC_PrimitiveGroup::changeToVboMode()
+{
+	m_pBaseTrianglesOffset= BUFFER_OFFSET(static_cast<GLsizei>(m_BaseTrianglesOffseti) * sizeof(GLuint));
+	m_BaseTrianglesOffseti= 0;
+
+	m_StripIndexOffset.clear();
+	const int stripOffsetSize= m_StripIndexOffseti.size();
+	for (int i= 0; i < stripOffsetSize; ++i)
+	{
+		m_StripIndexOffset.append(BUFFER_OFFSET(static_cast<GLsizei>(m_StripIndexOffseti.at(i)) * sizeof(GLuint)));
+	}
+	m_StripIndexOffseti.clear();
+
+	m_FanIndexOffset.clear();
+	const int fanOffsetSize= m_FanIndexOffseti.size();
+	for (int i= 0; i < fanOffsetSize; ++i)
+	{
+		m_FanIndexOffset.append(BUFFER_OFFSET(static_cast<GLsizei>(m_FanIndexOffseti.at(i)) * sizeof(GLuint)));
+	}
+	m_FanIndexOffseti.clear();
+}
+
 // Clear the group
 void GLC_PrimitiveGroup::clear()
 {
@@ -294,6 +317,8 @@ QDataStream &operator>>(QDataStream &stream, GLC_PrimitiveGroup &primitiveGroup)
 	stream >> primitiveGroup.m_FanIndexOffseti;
 	stream >> primitiveGroup.m_FansIndexSizes;
 
+
+	primitiveGroup.finished();
 
 	return stream;
 }
