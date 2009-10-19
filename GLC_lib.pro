@@ -10,6 +10,8 @@ CONFIG += exceptions \
 TARGET = GLC_lib
 VERSION = 1.2.0
 
+DEFINES += CREATE_GLC_LIB_DLL
+
 unix:OBJECTS_DIR = ./Build
 unix:MOC_DIR = ./Build
 unix:UI_DIR = ./Build
@@ -333,7 +335,6 @@ unix {
 # Windows Install configuration
 win32 { 
     # Location of HEADERS and library
-	DEFINES *= CREATE_GLC_LIB_DLL
     LIB_DIR = C:\GLC_lib\lib
     INCLUDE_DIR = C:\GLC_lib\include
     include.path = $${INCLUDE_DIR}
