@@ -758,11 +758,17 @@ void GLC_ExtendedMesh::finishSerialized()
 {
 	if (GLC_State::vboUsed())
 	{
-		finishVbo();
-	}
-	else
-	{
-		finishNonVbo();
+		PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
+		while (iGroups != m_PrimitiveGroups.constEnd())
+		{
+			PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+			while (iGroup != iGroups.value()->constEnd())
+			{
+				iGroup.value()->changeToVboMode();
+				++iGroup;
+			}
+			++iGroups;
+		}
 	}
 }
 
@@ -934,6 +940,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_ExtendedMesh &mesh)
 		}
 	}
 
+	mesh.finishSerialized();
 
 	return stream;
 }
