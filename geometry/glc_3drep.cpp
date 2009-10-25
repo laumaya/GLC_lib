@@ -24,6 +24,7 @@
 
 #include "glc_3drep.h"
 #include "../glc_factory.h"
+#include "glc_extendedmesh.h"
 
 // Default constructor
 GLC_3DRep::GLC_3DRep()
@@ -298,4 +299,37 @@ void GLC_3DRep::clear()
 		delete m_pType;
 		m_pType= NULL;
 	}
+}
+
+// Non-member stream operator
+QDataStream &operator<<(QDataStream & stream, const GLC_3DRep & rep)
+{
+	QList<GLC_ExtendedMesh> listOfMesh;
+	const int size= rep.m_pGeomList->size();
+	for (int i= 0; i < size; ++i)
+	{
+		GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(rep.m_pGeomList->at(i));
+		if (NULL != pMesh)
+		{
+			listOfMesh.append(*pMesh);
+		}
+
+	}
+	stream << listOfMesh;
+
+	return stream;
+}
+QDataStream &operator>>(QDataStream & stream, GLC_3DRep & rep)
+{
+	Q_ASSERT(rep.isEmpty());
+
+	QList<GLC_ExtendedMesh> listOfMesh;
+	stream >> listOfMesh;
+	const int size= listOfMesh.size();
+	for (int i= 0; i < size; ++i)
+	{
+		rep.addGeom(new GLC_ExtendedMesh(listOfMesh.at(i)));
+	}
+
+	return stream;
 }

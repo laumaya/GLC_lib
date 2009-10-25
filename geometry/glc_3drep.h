@@ -21,6 +21,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
+//! \file glc_3drep.h interface for the GLC_3DRep class.
 
 #ifndef GLC_3DREP_H_
 #define GLC_3DREP_H_
@@ -36,6 +37,9 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_3DRep : public GLC_Rep
 {
+	friend QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
+	friend QDataStream &operator>>(QDataStream &, GLC_3DRep &);
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -158,5 +162,9 @@ private:
 	//! The Type of representation
 	int* m_pType;
 };
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
+QDataStream &operator>>(QDataStream &, GLC_3DRep &);
 
 #endif /* GLC_3DREP_H_ */
