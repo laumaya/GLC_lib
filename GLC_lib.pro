@@ -96,7 +96,8 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
 							geometry/glc_line.h \
 							geometry/glc_rep.h \
 							geometry/glc_3drep.h \
-							geometry/glc_pointsprite.h
+							geometry/glc_pointsprite.h \
+							geometry/glc_bsrep.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -128,7 +129,8 @@ HEADERS_GLC += glc_enum.h \
            glc_fileformatexception.h \
            glc_ext.h \
            glc_state.h \
-           glc_config.h
+           glc_config.h \
+           glc_cachemanager.h
            
 HEADERS_PQP +=		PQP/PQP_Compile.h \
 					PQP/TriDist.h \
@@ -211,7 +213,8 @@ SOURCES +=	geometry/glc_vbogeom.cpp \
 			geometry/glc_line.cpp \
 			geometry/glc_rep.cpp \
 			geometry/glc_3drep.cpp \
-			geometry/glc_pointsprite.cpp
+			geometry/glc_pointsprite.cpp \
+			geometry/glc_bsrep.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -242,7 +245,8 @@ SOURCES +=	glc_enum.cpp \
 			glc_openglexception.cpp \
 			glc_fileformatexception.cpp \
 			glc_ext.cpp \
-			glc_state.cpp
+			glc_state.cpp \
+			glc_cachemanager.cpp
            
 SOURCES += PQP/TriDist.cpp \
 		   PQP/PQP.cpp \
@@ -308,7 +312,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Line \
     		   include/GLC_Rep \
     		   include/GLC_3DRep \
-    		   include/GLC_PointSprite
+    		   include/GLC_PointSprite \
+    		   include/GLC_CacheManager \
+    		   include/GLC_BSRep
     		   
     			   
 # Linux install configuration
