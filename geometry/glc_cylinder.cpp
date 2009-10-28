@@ -66,6 +66,9 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
         // update inner material use table
     	i.value()->delGLC_Geom(id());
     	GLC_Material* pNewMaterial= new GLC_Material(*(i.value()));
+    	pNewMaterial->setId(glc::GLC_GenID());
+    	pNewMaterial->setUuid(QUuid::createUuid());
+
     	newMaterialHash.insert(pNewMaterial->id(), pNewMaterial);
     	pNewMaterial->addGLC_Geom(this);
          ++i;

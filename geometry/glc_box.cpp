@@ -57,6 +57,9 @@ GLC_Box::GLC_Box(const GLC_Box& box)
         // update inner material use table
     	i.value()->delGLC_Geom(id());
     	GLC_Material* pNewMaterial= new GLC_Material(*(i.value()));
+    	pNewMaterial->setId(glc::GLC_GenID());
+    	pNewMaterial->setUuid(QUuid::createUuid());
+
     	newMaterialHash.insert(pNewMaterial->id(), pNewMaterial);
     	pNewMaterial->addGLC_Geom(this);
          ++i;
