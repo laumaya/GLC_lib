@@ -63,6 +63,8 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 , m_TextureImagesHash()
 , m_LoadStructureOnly(false)
 , m_ListOfAttachedFileName()
+, m_CurrentFileName()
+, m_CurrentDateTime()
 {
 
 }
@@ -120,6 +122,9 @@ GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file, bool structureOnl
 	}
 	else
 	{
+		// Get the 3DXML time stamp
+		m_CurrentDateTime= QFileInfo(m_FileName).lastModified();
+
 		m_IsInArchive= true;
 		// Set the file Name Codec
 		m_p3dxmlArchive->setFileNameCodec("IBM866");
@@ -178,7 +183,9 @@ GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
 	{
 		entryFileName= fileName;
 	}
+
 	setStreamReaderToFile(entryFileName);
+
 	if (QFileInfo(entryFileName).suffix().toLower() == "3dxml")
 	{
 		GLC_StructReference* pStructRef= createReferenceRep(QString());
@@ -198,6 +205,7 @@ GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
 		resultRep= loadCurrentExtRep();
 	}
 	resultRep.removeEmptyGeometry();
+
 	return resultRep;
 }
 
@@ -611,7 +619,20 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		const QString currentRefFileName= (*iExtRef);
 		//qDebug() << "Current File name : " << currentRefFileName;
 		// Get the refFile of the 3dxml
-		if (!m_LoadStructureOnly && setStreamReaderToFile(currentRefFileName))
+
+
+		if (!m_LoadStructureOnly && GLC_State::cacheIsUsed() && GLC_State::currentCacheManager().isUsable(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), currentRefFileName))
+		{
+			GLC_CacheManager cacheManager= GLC_State::currentCacheManager();
+
+			GLC_BSRep binaryRep= cacheManager.binary3DRep(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), currentRefFileName);
+			GLC_3DRep* pRep= new GLC_3DRep(binaryRep.loadRep());
+
+			GLC_StructReference* pCurrentRef= new GLC_StructReference(pRep);
+			pCurrentRef->setName(QFileInfo(currentRefFileName).baseName());
+			m_ExternalReferenceHash.insert(currentRefFileName, pCurrentRef);
+		}
+		else if (!m_LoadStructureOnly && setStreamReaderToFile(currentRefFileName))
 		{
 			GLC_StructReference* pCurrentRef= createReferenceRep();
 			if (NULL != pCurrentRef)
@@ -663,6 +684,8 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 // Create Instance from 3DXML Rep
 GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 {
+	qDebug() << "GLC_3dxmlToWorld::createReferenceRep";
+
 	QString refName;
 
 	if (repId.isEmpty())
@@ -717,6 +740,9 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
 	pMesh->setName(refName);
 	GLC_3DRep currentMesh3DRep(pMesh);
+	// Add time Stamp and file name to the 3D rep
+	currentMesh3DRep.setFileName(m_CurrentFileName);
+	currentMesh3DRep.setLastModified(m_CurrentDateTime);
 
 	int numberOfMesh= 1;
 	while (endElementNotReached("Representation"))
@@ -737,6 +763,21 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 				if (numberOfMesh > 1)
 				{
 					pMesh->finished();
+
+					if (GLC_State::cacheIsUsed())
+					{
+						qDebug() << "Cache is used";
+						GLC_CacheManager currentManager= GLC_State::currentCacheManager();
+						if (!currentManager.addToCache(QFileInfo(m_FileName).fileName(), currentMesh3DRep))
+						{
+							qDebug() << "File " << currentMesh3DRep.fileName() << " Not Added to cache";
+						}
+					}
+					else
+					{
+						qDebug() << "Cache is not used";
+					}
+
 					return new GLC_StructReference(new GLC_3DRep(currentMesh3DRep));
 				}
 				else
@@ -838,6 +879,18 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 	currentMesh3DRep.removeEmptyGeometry();
 	if (!currentMesh3DRep.isEmpty())
 	{
+		if (GLC_State::cacheIsUsed())
+		{
+			qDebug() << "Cache is used";
+			GLC_CacheManager currentManager= GLC_State::currentCacheManager();
+			currentManager.addToCache(QFileInfo(m_FileName).fileName(), currentMesh3DRep);
+		}
+		else
+		{
+			qDebug() << "Cache is not used";
+		}
+
+
 		return new GLC_StructReference(new GLC_3DRep(currentMesh3DRep));
 	}
 	else
@@ -1134,6 +1187,7 @@ GLC_Material* GLC_3dxmlToWorld::getMaterial()
 // Set the stream reader to the specified file
 bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 {
+	m_CurrentFileName= fileName;
 	if (m_IsInArchive)
 	{
 		delete m_p3dxmlFile;
@@ -1175,7 +1229,11 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		if (fileName != m_FileName && !m_FileName.isEmpty())
 		{
 			fileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + fileName;
+
 		}
+		// Get the 3DXML time stamp
+		m_CurrentDateTime= QFileInfo(m_FileName).lastModified();
+
 		m_pCurrentFile= new QFile(fileName);
 		if (!m_pCurrentFile->open(QIODevice::ReadOnly))
 		{
@@ -1259,8 +1317,21 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 
 		if (!m_LoadStructureOnly && setStreamReaderToFile(currentRefFileName))
 		{
-			GLC_3DRep representation= loadCurrentExtRep();
-			representation.removeEmptyGeometry();
+			GLC_3DRep representation;
+			if (GLC_State::cacheIsUsed())
+			{
+				GLC_CacheManager cacheManager= GLC_State::currentCacheManager();
+				if (cacheManager.isUsable(m_CurrentDateTime, m_FileName, currentRefFileName))
+				{
+					GLC_BSRep binaryRep= cacheManager.binary3DRep(m_CurrentDateTime, m_FileName, currentRefFileName);
+					representation= binaryRep.loadRep();
+				}
+			}
+			else
+			{
+				representation= loadCurrentExtRep();
+				representation.removeEmptyGeometry();
+			}
 			if (!representation.isEmpty())
 			{
 				repHash.insert(id, representation);
@@ -1317,6 +1388,10 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
 	GLC_3DRep currentMeshRep(pMesh);
 	currentMeshRep.setName(QString());
+	// Set rep file name and time stamp
+	currentMeshRep.setFileName(m_CurrentFileName);
+	currentMeshRep.setLastModified(m_CurrentDateTime);
+
 	int numberOfMesh= 1;
 	while (!m_pStreamReader->atEnd())
 	{
@@ -1603,7 +1678,7 @@ QImage GLC_3dxmlToWorld::loadImage(QString fileName)
 		if(!p3dxmlFile->open(QIODevice::ReadOnly))
 	    {
 			delete p3dxmlFile;
-			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile Unable to Open ") + fileName);
+			QString message(QString("GLC_3dxmlToWorld::loadImage Unable to Open ") + fileName);
 			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotSupported);
 			clear();
@@ -1624,7 +1699,7 @@ QImage GLC_3dxmlToWorld::loadImage(QString fileName)
 		if (!pCurrentFile->open(QIODevice::ReadOnly))
 		{
 			delete pCurrentFile;
-			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + fileName + QString(" not found"));
+			QString message(QString("GLC_3dxmlToWorld::loadImage File ") + fileName + QString(" not found"));
 			qDebug() << message;
 			return QImage();
 		}
