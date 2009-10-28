@@ -300,10 +300,15 @@ void GLC_3DRep::clear()
 		m_pType= NULL;
 	}
 }
+// Non Member methods
+#define GLC_BINARY_CHUNK_ID 0xA702
 
 // Non-member stream operator
 QDataStream &operator<<(QDataStream & stream, const GLC_3DRep & rep)
 {
+	quint32 chunckId= GLC_BINARY_CHUNK_ID;
+	stream << chunckId;
+
 	QList<GLC_ExtendedMesh> listOfMesh;
 	const int size= rep.m_pGeomList->size();
 	for (int i= 0; i < size; ++i)
@@ -322,6 +327,10 @@ QDataStream &operator<<(QDataStream & stream, const GLC_3DRep & rep)
 QDataStream &operator>>(QDataStream & stream, GLC_3DRep & rep)
 {
 	Q_ASSERT(rep.isEmpty());
+
+	quint32 chunckId;
+	stream >> chunckId;
+	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
 
 	QList<GLC_ExtendedMesh> listOfMesh;
 	stream >> listOfMesh;

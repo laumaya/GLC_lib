@@ -327,10 +327,15 @@ bool GLC_ExtendedGeomEngine::useVBO(bool use, GLC_ExtendedGeomEngine::VboType ty
 	return result;
 
 }
+// Non Member methods
+#define GLC_BINARY_CHUNK_ID 0xA704
 
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedGeomEngine &engine)
 {
+	quint32 chunckId= GLC_BINARY_CHUNK_ID;
+	stream << chunckId;
+
 	stream << engine.positionVector();
 	stream << engine.normalVector();
 	stream << engine.texelVector();
@@ -349,6 +354,10 @@ QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedGeomEngine &engin
 }
 QDataStream &operator>>(QDataStream &stream, GLC_ExtendedGeomEngine &engine)
 {
+	quint32 chunckId;
+	stream >> chunckId;
+	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
+
 	engine.clear();
 
 	GLfloatVector position, normal, texel, color;

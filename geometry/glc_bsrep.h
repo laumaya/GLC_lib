@@ -27,8 +27,13 @@
 #define GLC_BSREP_H_
 
 #include <QString>
+#include <QFileInfo>
+#include <QDataStream>
+#include <QUuid>
+#include <QDateTime>
 
 #include "../glc_config.h"
+#include "glc_3drep.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_BSRep
@@ -58,7 +63,16 @@ public:
 
 	//! Return the binary representation file name
 	inline QString absoluteFileName() const
-	{return m_FileName;}
+	{return m_FileInfo.fileName();}
+
+	//! Return true if the binary rep is up to date
+	bool repIsUpToDate(const QDateTime&);
+
+	//! Load the binary rep
+	GLC_3DRep loadRep();
+
+	//! Return bsrep suffix
+	static QString suffix();
 
 //@}
 
@@ -70,14 +84,51 @@ public:
 	//! Set the binary representation file name
 	void setAbsoluteFileName(const QString&);
 
+	//! Save the GLC_3DRep in serialised binary
+	bool save(const GLC_3DRep&);
+
 //@}
+
+//////////////////////////////////////////////////////////////////////
+// Private services function
+//////////////////////////////////////////////////////////////////////
+
+	//! Open the file
+	bool open(QIODevice::OpenMode);
+
+	//! Close the file
+	bool close();
+
+	//! Write the header
+	void writeHeader(const QDateTime&);
+
+	//! Check the header
+	bool headerIsOk();
+
+	//! Check the time Stamp
+	bool timeStampOk(const QDateTime&);
 
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! the Binary representation file name
-	QString m_FileName;
+	//! The binary rep suffix
+	static const QString m_Suffix;
+
+	//! The binary rep magic number
+	static const QUuid m_Uuid;
+
+	//! The binary rep version
+	static const quint32 m_Version;
+
+	//! the Binary representation file informations
+	QFileInfo m_FileInfo;
+
+	//! The brep file
+	QFile* m_pFile;
+
+	//! The Data stream
+	QDataStream m_DataStream;
 
 };
 

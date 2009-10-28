@@ -246,10 +246,15 @@ void GLC_PrimitiveGroup::clear()
 	m_TrianglesFanSize= 0;
 }
 
+
+// Non Member methods
+#define GLC_BINARY_CHUNK_ID 0xA700
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitiveGroup)
 {
 	Q_ASSERT(primitiveGroup.isFinished());
+	quint32 chunckId= GLC_BINARY_CHUNK_ID;
+	stream << chunckId;
 
 	// Primitive group id
 	stream << primitiveGroup.m_ID;
@@ -301,6 +306,9 @@ QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitive
 }
 QDataStream &operator>>(QDataStream &stream, GLC_PrimitiveGroup &primitiveGroup)
 {
+	quint32 chunckId;
+	stream >> chunckId;
+	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
 	stream >> primitiveGroup.m_ID;
 
 	// Triangles index

@@ -30,6 +30,7 @@ GLC_Rep::GLC_Rep()
 , m_pNumberOfRepresentation(new int(1))
 , m_pFileName(new QString())
 , m_pName(new QString())
+, m_pDateTime(new QDateTime)
 {
 
 }
@@ -40,6 +41,7 @@ GLC_Rep::GLC_Rep(const GLC_Rep& rep)
 , m_pNumberOfRepresentation(rep.m_pNumberOfRepresentation)
 , m_pFileName(rep.m_pFileName)
 , m_pName(rep.m_pName)
+, m_pDateTime(rep.m_pDateTime)
 {
 	++(*m_pNumberOfRepresentation);
 }
@@ -56,6 +58,7 @@ GLC_Rep& GLC_Rep::operator=(const GLC_Rep& rep)
 		++(*m_pNumberOfRepresentation);
 		m_pFileName= rep.m_pFileName;
 		m_pName= rep.m_pName;
+		m_pDateTime= rep.m_pDateTime;
 	}
 
 	return *this;
@@ -86,5 +89,7 @@ void GLC_Rep::clear()
 		m_pFileName= NULL;
 		delete m_pName;
 		m_pName= NULL;
+		delete m_pDateTime;
+		m_pDateTime= NULL;
 	}
 }

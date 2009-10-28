@@ -50,7 +50,7 @@ GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
 GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 : m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pBoundingBox(NULL)
-, m_MaterialHash()
+, m_MaterialHash(sourceGeom.m_MaterialHash)
 , m_MaterialHashMap()
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
 , m_IsWire(sourceGeom.m_IsWire)
@@ -62,6 +62,7 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 	MaterialHash::const_iterator i= sourceGeom.m_MaterialHash.constBegin();
     while (i != sourceGeom.m_MaterialHash.constEnd())
     {
+    	/*
     	GLC_uint currentOldID= i.key();
     	GLC_Material* pCurrentOldMaterial= i.value();
 
@@ -70,7 +71,7 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
     	pNewMaterial->addGLC_Geom(this);
     	m_MaterialHash.insert(newID, pNewMaterial);
     	m_MaterialHashMap.insert(currentOldID, newID);
-
+		*/
         // update inner material use table
         i.value()->addGLC_Geom(this);
         ++i;
