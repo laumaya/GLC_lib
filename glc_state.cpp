@@ -40,6 +40,9 @@ QString GLC_State::m_Version;
 QString GLC_State::m_Vendor;
 QString GLC_State::m_Renderer;
 
+bool GLC_State::m_UseCache= false;
+// The current cache manager
+GLC_CacheManager GLC_State::m_CacheManager;
 
 GLC_State::~GLC_State()
 {
@@ -118,6 +121,17 @@ bool GLC_State::isPixelCullingActivated()
 	return m_IsPixelCullingActivated;
 }
 
+// Return true if the cache is used
+bool GLC_State::cacheIsUsed()
+{
+	return m_UseCache;
+}
+
+// Return the current cache manager
+GLC_CacheManager& GLC_State::currentCacheManager()
+{
+	return m_CacheManager;
+}
 
 
 
@@ -178,4 +192,16 @@ void GLC_State::setSelectionMode(const bool mode)
 void GLC_State::setPixelCullingUsage(const bool activation)
 {
 	m_IsPixelCullingActivated= activation;
+}
+
+// Set the cache usage
+void GLC_State::setCacheUsage(const bool cacheUsage)
+{
+	m_UseCache= cacheUsage;
+}
+
+// Set the current cache manager
+void GLC_State::setCurrentCacheManager(const GLC_CacheManager& cacheManager)
+{
+	m_CacheManager= cacheManager;
 }

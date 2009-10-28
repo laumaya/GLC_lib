@@ -36,7 +36,7 @@ GLC_CacheManager::GLC_CacheManager(const QString& path)
 		QFileInfo pathInfo(path);
 		if (pathInfo.isDir())
 		{
-			m_Dir.setPath(pathInfo.absolutePath());
+			m_Dir.setPath(path);
 		}
 		else continu= false;
 	}
@@ -51,6 +51,20 @@ GLC_CacheManager::GLC_CacheManager(const QString& path)
 		m_Dir.mkpath(m_Dir.absolutePath());
 	}
 
+}
+
+// Copy constructor
+GLC_CacheManager::GLC_CacheManager(const GLC_CacheManager& cacheManager)
+:m_Dir(cacheManager.m_Dir)
+{
+
+}
+
+// Assignement operator
+GLC_CacheManager& GLC_CacheManager::operator=(const GLC_CacheManager& cacheManager)
+{
+	m_Dir= cacheManager.m_Dir;
+	return *this;
 }
 
 GLC_CacheManager::~GLC_CacheManager()
@@ -90,7 +104,7 @@ bool GLC_CacheManager::isCashed(const QString& context, const QString& fileName)
 {
 	if (! isReadable()) return false;
 
-	QFileInfo fileInfo(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName);
+	QFileInfo fileInfo(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName + '.' + GLC_BSRep::suffix());
 	return fileInfo.exists();
 }
 
@@ -98,12 +112,16 @@ bool GLC_CacheManager::isCashed(const QString& context, const QString& fileName)
 bool GLC_CacheManager::isUsable(const QDateTime& timeStamp, const QString& context, const QString& fileName) const
 {
 	bool result= isCashed(context, fileName);
+
 	if (result)
 	{
-		QFileInfo cacheFileInfo(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName);
-
-		result= result && (timeStamp <= cacheFileInfo.lastModified());
+		QFileInfo cacheFileInfo(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName+ '.' + GLC_BSRep::suffix());
+		//result= result && (timeStamp == cacheFileInfo.lastModified());
 		result= result && cacheFileInfo.isReadable();
+	}
+	else
+	{
+		QFileInfo cacheFileInfo(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName+ '.' + GLC_BSRep::suffix());
 	}
 
 	return result;
@@ -116,7 +134,7 @@ GLC_BSRep GLC_CacheManager::binary3DRep(const QDateTime& timeStamp, const QStrin
 
 	if (isUsable(timeStamp, context, fileName))
 	{
-		const QString absoluteFileName(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName);
+		const QString absoluteFileName(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName+ '.' + GLC_BSRep::suffix());
 		binaryRep.setAbsoluteFileName(absoluteFileName);
 
 	}
@@ -124,6 +142,29 @@ GLC_BSRep GLC_CacheManager::binary3DRep(const QDateTime& timeStamp, const QStrin
 	return binaryRep;
 }
 
+// Add the specified file in the cache
+bool GLC_CacheManager::addToCache(const QString& context, const GLC_3DRep& rep)
+{
+	Q_ASSERT(!rep.fileName().isEmpty());
+	bool addedToCache= isWritable();
+	if (addedToCache)
+	{
+		QFileInfo contextCacheInfo(m_Dir.absolutePath() + QDir::separator() + context);
+		if (! contextCacheInfo.exists())
+		{
+			addedToCache= m_Dir.mkdir(context);
+		}
+		if (addedToCache)
+		{
+
+			const QString binaryFileName= contextCacheInfo.filePath() + QDir::separator() + rep.fileName();
+			GLC_BSRep binariRep(binaryFileName);
+			addedToCache= binariRep.save(rep);
+		}
+	}
+
+	return addedToCache;
+}
 
 //////////////////////////////////////////////////////////////////////
 //Set Functions

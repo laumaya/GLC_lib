@@ -47,6 +47,12 @@ public:
 	//! Default constructor
 	GLC_CacheManager(const QString& path= QString());
 
+	//! Copy constructor
+	GLC_CacheManager(const GLC_CacheManager&);
+
+	//! Assignement operator
+	GLC_CacheManager& operator=(const GLC_CacheManager&);
+
 	//! Destructor
 	virtual ~GLC_CacheManager();
 //@}
@@ -82,6 +88,9 @@ public:
 
 	//! Return the binary serialized representation of the specified file
 	GLC_BSRep binary3DRep(const QDateTime&, const QString&, const QString&) const;
+
+	//! Add the specified file in the cache
+	bool addToCache(const QString&, const GLC_3DRep&);
 
 //@}
 
