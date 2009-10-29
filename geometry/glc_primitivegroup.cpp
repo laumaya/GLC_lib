@@ -272,12 +272,14 @@ QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitive
 		baseTrianglesOffseti= static_cast<GLuint>(reinterpret_cast<GLsizeiptr>(primitiveGroup.m_pBaseTrianglesOffset) / sizeof(GLuint));
 
 		// Trips offsets
-		for (int i= 0; i < primitiveGroup.m_TrianglesStripSize; ++i)
+		const int stripIndexOffsetSize= primitiveGroup.m_StripIndexOffset.size();
+		for (int i= 0; i < stripIndexOffsetSize; ++i)
 		{
 			stripIndexOffseti.append(static_cast<GLuint>(reinterpret_cast<GLsizeiptr>(primitiveGroup.m_StripIndexOffset.at(i)) / sizeof(GLuint)));
 		}
 		// Fans offsets
-		for (int i= 0; i < primitiveGroup.m_TrianglesFanSize; ++i)
+		const int fanIndexOffsetSize= primitiveGroup.m_FanIndexOffset.size();
+		for (int i= 0; i < fanIndexOffsetSize; ++i)
 		{
 			fanIndexOffseti.append(static_cast<GLuint>(reinterpret_cast<GLsizeiptr>(primitiveGroup.m_FanIndexOffset.at(i)) / sizeof(GLuint)));
 		}
