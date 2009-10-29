@@ -361,7 +361,12 @@ QDataStream &operator>>(QDataStream &stream, GLC_ExtendedGeomEngine &engine)
 	engine.clear();
 
 	GLfloatVector position, normal, texel, color;
-	stream >> position >> normal >> texel >> color;
+
+	stream >> position;
+	stream >> normal;
+	stream >> texel;
+	stream >> color;
+
 	*(engine.positionVectorHandle())= position;
 	*(engine.normalVectorHandle())= normal;
 	*(engine.texelVectorHandle())= texel;
