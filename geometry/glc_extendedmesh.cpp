@@ -855,10 +855,10 @@ void GLC_ExtendedMesh::finishNonVbo()
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedMesh &mesh)
 {
+
 	quint32 chunckId= GLC_BINARY_CHUNK_ID;
 	stream << chunckId;
 
-	stream << mesh.id();
 	stream << mesh.name();
 
 	// Materials serialisation
@@ -901,20 +901,22 @@ QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedMesh &mesh)
 	stream << primitiveGroupLodList;
 	stream << primitiveListOfGroupList;
 
+	stream << mesh.m_NumberOfFaces;
+	stream << mesh.m_NumberOfVertice;
+	stream << mesh.m_NumberOfNormals;
+
 	return stream;
 }
 QDataStream &operator>>(QDataStream &stream, GLC_ExtendedMesh &mesh)
 {
+
 	quint32 chunckId;
 	stream >> chunckId;
 	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
 
-	GLC_uint meshID;
 	QString meshName;
-	stream >> meshID;
 	stream >> meshName;
 
-	//mesh.setId(meshID);
 	mesh.setName(meshName);
 
 	// Retrieve the list of mesh materials
@@ -932,6 +934,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_ExtendedMesh &mesh)
 
 	// Retrieve Extended geom engine
 	stream >> mesh.m_ExtendedGeomEngine;
+
 
 	// Retrieve primitiveGroupLodList
 	QList<int> primitiveGroupLodList;
@@ -956,6 +959,10 @@ QDataStream &operator>>(QDataStream &stream, GLC_ExtendedMesh &mesh)
 			mesh.m_PrimitiveGroups.value(primitiveGroupLodList.at(i))->insert(newId, pGroup);
 		}
 	}
+
+	stream >> mesh.m_NumberOfFaces;
+	stream >> mesh.m_NumberOfVertice;
+	stream >> mesh.m_NumberOfNormals;
 
 	mesh.finishSerialized();
 
