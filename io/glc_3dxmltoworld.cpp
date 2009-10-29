@@ -1318,14 +1318,11 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 		if (!m_LoadStructureOnly && setStreamReaderToFile(currentRefFileName))
 		{
 			GLC_3DRep representation;
-			if (GLC_State::cacheIsUsed())
+			if (GLC_State::cacheIsUsed() && GLC_State::currentCacheManager().isUsable(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), currentRefFileName))
 			{
 				GLC_CacheManager cacheManager= GLC_State::currentCacheManager();
-				if (cacheManager.isUsable(m_CurrentDateTime, m_FileName, currentRefFileName))
-				{
-					GLC_BSRep binaryRep= cacheManager.binary3DRep(m_CurrentDateTime, m_FileName, currentRefFileName);
-					representation= binaryRep.loadRep();
-				}
+				GLC_BSRep binaryRep= cacheManager.binary3DRep(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), currentRefFileName);
+				representation= binaryRep.loadRep();
 			}
 			else
 			{
@@ -1410,6 +1407,13 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 			else
 			{
 				pMesh->finished();
+
+				if (GLC_State::cacheIsUsed())
+				{
+					GLC_CacheManager currentManager= GLC_State::currentCacheManager();
+					currentManager.addToCache(QFileInfo(m_FileName).fileName(), currentMeshRep);
+				}
+
 				return currentMeshRep;
 			}
 		}
@@ -1428,6 +1432,13 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		{
 			qDebug() << " Master LOD not found";
 			pMesh->finished();
+
+			if (GLC_State::cacheIsUsed())
+			{
+				GLC_CacheManager currentManager= GLC_State::currentCacheManager();
+				currentManager.addToCache(QFileInfo(m_FileName).fileName(), currentMeshRep);
+			}
+
 			return currentMeshRep;
 		}
 
@@ -1500,6 +1511,12 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 	}
 
 	pMesh->finished();
+
+	if (GLC_State::cacheIsUsed())
+	{
+		GLC_CacheManager currentManager= GLC_State::currentCacheManager();
+		currentManager.addToCache(QFileInfo(m_FileName).fileName(), currentMeshRep);
+	}
 
 	return currentMeshRep;
 }
