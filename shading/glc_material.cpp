@@ -497,7 +497,6 @@ QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
 	stream << chunckId;
 
 	// Store GLC_Object class members
-	qDebug() << "serialised material id " << material.id();
 	stream << material.id() << material.name();
 
 	// Store GLC_Material class members
@@ -519,6 +518,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 {
 	quint32 chunckId;
 	stream >> chunckId;
+
 	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
 
 	// Retrieve GLC_Object members
@@ -550,6 +550,5 @@ QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 		stream >> texture;
 		material.setTexture(new GLC_Texture(texture));
 	}
-
 	return stream;
 }
