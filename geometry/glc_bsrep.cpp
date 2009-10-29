@@ -43,6 +43,7 @@ GLC_BSRep::GLC_BSRep(const QString& fileName)
 , m_DataStream()
 {
 	setAbsoluteFileName(fileName);
+	m_DataStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
 }
 
 // Copy constructor
@@ -51,7 +52,7 @@ GLC_BSRep::GLC_BSRep(const GLC_BSRep& binaryRep)
 , m_pFile(NULL)
 , m_DataStream()
 {
-
+	m_DataStream.setFloatingPointPrecision(binaryRep.m_DataStream.floatingPointPrecision());
 }
 
 GLC_BSRep::~GLC_BSRep()
