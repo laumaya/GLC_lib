@@ -128,8 +128,8 @@ public:
 	inline void addGeom(GLC_VboGeom* pGeom)
 	{m_pGeomList->append(pGeom);}
 
-	//! Remove empty geometries
-	void removeEmptyGeometry();
+	//! Remove empty geometries and factorise materials
+	void clean();
 
 	//! Reverse geometries normals
 	void reverseNormals();

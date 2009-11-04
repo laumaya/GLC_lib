@@ -208,7 +208,7 @@ public:
 
 	//! Remove empty geometries
 	inline void removeEmptyGeometry()
-	{m_3DRep.removeEmptyGeometry();}
+	{m_3DRep.clean();}
 
 	//! Reverse geometry normals
 	inline void reverseGeometriesNormals()

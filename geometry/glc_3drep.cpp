@@ -185,13 +185,14 @@ QSet<GLC_Material*> GLC_3DRep::materialSet() const
 }
 
 // Remove empty geometries
-void GLC_3DRep::removeEmptyGeometry()
+void GLC_3DRep::clean()
 {
 	QList<GLC_VboGeom*>::iterator iGeomList= m_pGeomList->begin();
 	while(iGeomList != m_pGeomList->constEnd())
 	{
 		if ((*iGeomList)->numberOfVertex() == 0)
 		{
+			qDebug() << "Delete empty geom--------------------";
 			delete (*iGeomList);
 			iGeomList= m_pGeomList->erase(iGeomList);
 		}
@@ -309,6 +310,9 @@ QDataStream &operator<<(QDataStream & stream, const GLC_3DRep & rep)
 	quint32 chunckId= GLC_BINARY_CHUNK_ID;
 	stream << chunckId;
 
+	// The representation name
+	stream << rep.name();
+
 	QList<GLC_ExtendedMesh> listOfMesh;
 	const int size= rep.m_pGeomList->size();
 	for (int i= 0; i < size; ++i)
@@ -331,6 +335,11 @@ QDataStream &operator>>(QDataStream & stream, GLC_3DRep & rep)
 	quint32 chunckId;
 	stream >> chunckId;
 	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
+
+	// The rep name
+	QString name;
+	stream >> name;
+	rep.setName(name);
 
 	QList<GLC_ExtendedMesh> listOfMesh;
 	stream >> listOfMesh;
