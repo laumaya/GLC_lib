@@ -36,7 +36,7 @@
 #include <QString>
 #include <QGLContext>
 #include <QFileInfo>
-
+#include <QSet>
 GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 : QObject()
 , m_pQGLContext(pContext)
@@ -179,32 +179,64 @@ GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
 		entryFileName.remove(QString("Zip::") + m_FileName + "::");
 
 	}
+	else if (fileName.left(6) == QString("File::"))
+	{
+		m_FileName= fileName;
+		m_FileName.remove("File::");
+		m_FileName= m_FileName.left(m_FileName.indexOf("::"));
+		entryFileName= fileName;
+		entryFileName.remove(QString("File::") + m_FileName + "::");
+	}
 	else
 	{
-		entryFileName= fileName;
+		return resultRep;
 	}
 
 	setStreamReaderToFile(entryFileName);
+	// Keep only the file name
+	entryFileName= QFileInfo(entryFileName).fileName();
 
 	if (QFileInfo(entryFileName).suffix().toLower() == "3dxml")
 	{
-		GLC_StructReference* pStructRef= createReferenceRep(QString());
-		GLC_3DRep* pRep= NULL;
-		if (( NULL != pStructRef) && pStructRef->hasRepresentation())
+		if (GLC_State::cacheIsUsed() && GLC_State::currentCacheManager().isUsable(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), entryFileName))
 		{
-			pRep= dynamic_cast<GLC_3DRep*>(pStructRef->representationHandle());
+			GLC_CacheManager cacheManager = GLC_State::currentCacheManager();
+
+			GLC_BSRep binaryRep = cacheManager.binary3DRep(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), entryFileName);
+			resultRep = binaryRep.loadRep();
 		}
-		if (NULL != pRep)
+		else
 		{
-			resultRep= GLC_3DRep(*pRep);
-			resultRep.setName(pStructRef->name());
+			GLC_StructReference* pStructRef = createReferenceRep(QString());
+			GLC_3DRep* pRep = NULL;
+			if ((NULL != pStructRef) && pStructRef->hasRepresentation())
+			{
+				pRep= dynamic_cast<GLC_3DRep*> (pStructRef->representationHandle());
+			}
+			if (NULL != pRep)
+			{
+				resultRep = GLC_3DRep(*pRep);
+				resultRep.setName(pStructRef->name());
+			}
+
 		}
+
 	}
 	else if (QFileInfo(entryFileName).suffix().toLower() == "3drep")
 	{
-		resultRep= loadCurrentExtRep();
+        if (GLC_State::cacheIsUsed() && GLC_State::currentCacheManager().isUsable(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), entryFileName))
+		{
+			GLC_CacheManager cacheManager = GLC_State::currentCacheManager();
+			GLC_BSRep binaryRep = cacheManager.binary3DRep(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), entryFileName);
+			resultRep = binaryRep.loadRep();
+		}
+		else
+		{
+			resultRep = loadCurrentExtRep();
+		}
+
 	}
-	resultRep.removeEmptyGeometry();
+	resultRep.clean();
 
 	return resultRep;
 }
@@ -403,6 +435,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 
 	{ // Link external instance with reference
 
+		QSet<QString> usedExternalRefList;
 		InstanceOfExtRefHash::iterator iInstance= m_InstanceOfExtRefHash.begin();
 		while (iInstance != m_InstanceOfExtRefHash.constEnd())
 		{
@@ -410,6 +443,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 			GLC_StructReference* pRef;
 			if (m_ExternalReferenceHash.contains(iInstance.value()))
 			{
+				usedExternalRefList << iInstance.value();
 				pRef= m_ExternalReferenceHash.value(iInstance.value());
 			}
 			else
@@ -424,6 +458,24 @@ void GLC_3dxmlToWorld::loadProductStructure()
 
 			++iInstance;
 		}
+		// Removed broken branch
+		if (usedExternalRefList.size() != m_ExternalReferenceHash.size())
+		{
+			qDebug() << "WARNING Have to clean unused branch";
+			QSet<QString>::const_iterator iUsedRefList= usedExternalRefList.constBegin();
+			while (usedExternalRefList.constEnd() != iUsedRefList)
+			{
+				m_ExternalReferenceHash.remove(*iUsedRefList);
+				++iUsedRefList;
+			}
+			ExternalReferenceHash::const_iterator iExtRef= m_ExternalReferenceHash.constBegin();
+			while (m_ExternalReferenceHash.constEnd() != iExtRef)
+			{
+				delete iExtRef.value();
+				++iExtRef;
+			}
+		}
+
 		m_InstanceOfExtRefHash.clear();
 		m_ExternalReferenceHash.clear();
 
@@ -654,7 +706,7 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 			else
 			{
 				const QString repFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + currentRefFileName;
-				pRep->setFileName(repFileName);
+				pRep->setFileName("File::" + m_FileName + "::" + repFileName);
 				m_ListOfAttachedFileName << repFileName;
 			}
 			GLC_StructReference* pCurrentRef= new GLC_StructReference(pRep);
@@ -763,7 +815,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 				if (numberOfMesh > 1)
 				{
 					pMesh->finished();
-
+					currentMesh3DRep.clean();
 					if (GLC_State::cacheIsUsed())
 					{
 						qDebug() << "Cache is used";
@@ -876,7 +928,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 
 	pMesh->finished();
 
-	currentMesh3DRep.removeEmptyGeometry();
+	currentMesh3DRep.clean();
 	if (!currentMesh3DRep.isEmpty())
 	{
 		if (GLC_State::cacheIsUsed())
@@ -1228,7 +1280,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		// Create the file to load
 		if (fileName != m_FileName && !m_FileName.isEmpty())
 		{
-			fileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + fileName;
+			fileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(fileName).fileName();
 
 		}
 		// Get the 3DXML time stamp
@@ -1327,7 +1379,7 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 			else
 			{
 				representation= loadCurrentExtRep();
-				representation.removeEmptyGeometry();
+				representation.clean();
 			}
 			if (!representation.isEmpty())
 			{
@@ -1344,7 +1396,7 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 			else
 			{
 				const QString repFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + currentRefFileName;
-				representation.setFileName(repFileName);
+				representation.setFileName("File::" + m_FileName + "::" + repFileName);
 				m_ListOfAttachedFileName << repFileName;
 			}
 
@@ -1407,6 +1459,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 			else
 			{
 				pMesh->finished();
+				currentMeshRep.clean();
 
 				if (GLC_State::cacheIsUsed())
 				{
@@ -1432,6 +1485,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		{
 			qDebug() << " Master LOD not found";
 			pMesh->finished();
+			currentMeshRep.clean();
 
 			if (GLC_State::cacheIsUsed())
 			{
@@ -1511,6 +1565,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 	}
 
 	pMesh->finished();
+	currentMeshRep.clean();
 
 	if (GLC_State::cacheIsUsed())
 	{
