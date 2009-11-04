@@ -1799,7 +1799,7 @@ void GLC_ColladaToWorld::createMesh()
 		pCurrentMeshInfo->m_pMesh->finished();
 		GLC_3DRep* pRep= new GLC_3DRep(pCurrentMeshInfo->m_pMesh);
 		pCurrentMeshInfo->m_pMesh= NULL;
-		pRep->removeEmptyGeometry();
+		pRep->clean();
 		m_3DRepHash.insert(iMeshInfo.key(), pRep);
 		++iMeshInfo;
 	}
