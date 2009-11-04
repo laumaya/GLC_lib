@@ -27,7 +27,7 @@
 #ifndef GLC_CONFIG_H
 #define GLC_CONFIG_H
 
-#include <QtCore/QtGlobal>
+#include <QtGlobal>
 
 // Dynamic library export macros
 #ifndef GLC_LIB_STATIC
