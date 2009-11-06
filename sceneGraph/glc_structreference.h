@@ -28,7 +28,7 @@
 #define GLC_STRUCTREFERENCE_H_
 
 #include <QString>
-#include <QList>
+#include <QSet>
 
 #include "../geometry/glc_3drep.h"
 #include "glc_3dviewinstance.h"
@@ -64,18 +64,18 @@ public:
 public:
 	//! Return true if this reference has instance
 	inline bool hasStructInstance() const
-	{ return !m_ListOfInstance.isEmpty();}
+	{ return !m_SetOfInstance.isEmpty();}
 
 	//! Return first instance handle
 	inline GLC_StructInstance* firstInstanceHandle() const
-	{ return m_ListOfInstance.first();}
+	{ return *(m_SetOfInstance.begin());}
 
 	//! Create a Struct instance of this reference
 	GLC_StructInstance* createStructInstance();
 
 	//! Return the list of instance of this reference
 	inline QList<GLC_StructInstance*> listOfStructInstances() const
-	{ return m_ListOfInstance;}
+	{ return m_SetOfInstance.toList();}
 
 	//! Return the list of occurence of this reference
 	QList<GLC_StructOccurence*> listOfStructOccurence() const;
@@ -159,11 +159,14 @@ public:
 public:
 	//! An Instance of this reference have been created
 	inline void structInstanceCreated(GLC_StructInstance* pInstance)
-	{m_ListOfInstance.append(pInstance);}
+	{
+		Q_ASSERT(!m_SetOfInstance.contains(pInstance));
+		m_SetOfInstance << pInstance;
+	}
 
 	//! An Instance of this reference have been deleted
 	inline void structInstanceDeleted(GLC_StructInstance* pInstance)
-	{m_ListOfInstance.removeOne(pInstance);}
+	{m_SetOfInstance.remove(pInstance);}
 
 	//! Set the reference name
 	inline void setName(const QString& name)
@@ -186,8 +189,8 @@ public:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! The list of reference's instances
-	QList<GLC_StructInstance*> m_ListOfInstance;
+	//! The Set of reference's instances
+	QSet<GLC_StructInstance*> m_SetOfInstance;
 
 	//! The representation of reference
 	GLC_Rep* m_pRepresentation;
@@ -197,7 +200,7 @@ private:
 
 	//! The Reference attributes
 	GLC_Attributes* m_pAttributes;
-
+	
 };
 
 #endif /* GLC_STRUCTREFERENCE_H_ */
