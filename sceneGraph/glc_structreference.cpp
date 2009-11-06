@@ -29,7 +29,7 @@
 
 // Default constructor
 GLC_StructReference::GLC_StructReference(const QString& name)
-: m_ListOfInstance()
+: m_SetOfInstance()
 , m_pRepresentation(NULL)
 , m_Name(name)
 , m_pAttributes(NULL)
@@ -40,7 +40,7 @@ GLC_StructReference::GLC_StructReference(const QString& name)
 
 // Create reference with representation
 GLC_StructReference::GLC_StructReference(GLC_Rep* pRep)
-: m_ListOfInstance()
+: m_SetOfInstance()
 , m_pRepresentation(pRep)
 , m_Name(m_pRepresentation->name())
 , m_pAttributes(NULL)
