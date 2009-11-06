@@ -218,6 +218,7 @@ GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
 				resultRep = GLC_3DRep(*pRep);
 				resultRep.setName(pStructRef->name());
 			}
+			delete pStructRef;
 
 		}
 
@@ -435,7 +436,6 @@ void GLC_3dxmlToWorld::loadProductStructure()
 
 	{ // Link external instance with reference
 
-		QSet<QString> usedExternalRefList;
 		InstanceOfExtRefHash::iterator iInstance= m_InstanceOfExtRefHash.begin();
 		while (iInstance != m_InstanceOfExtRefHash.constEnd())
 		{
@@ -443,14 +443,13 @@ void GLC_3dxmlToWorld::loadProductStructure()
 			GLC_StructReference* pRef;
 			if (m_ExternalReferenceHash.contains(iInstance.value()))
 			{
-				usedExternalRefList << iInstance.value();
 				pRef= m_ExternalReferenceHash.value(iInstance.value());
 			}
 			else
 			{
 				QString referenceName= pInstance->name();
 				referenceName= referenceName.left(pInstance->name().lastIndexOf('.'));
-				//qDebug() << referenceName;
+				qDebug() << " Reference not found : " << referenceName;
 				pRef= new GLC_StructReference(referenceName);
 			}
 
@@ -458,25 +457,19 @@ void GLC_3dxmlToWorld::loadProductStructure()
 
 			++iInstance;
 		}
-		// Removed broken branch
-		if (usedExternalRefList.size() != m_ExternalReferenceHash.size())
-		{
-			qDebug() << "WARNING Have to clean unused branch";
-			QSet<QString>::const_iterator iUsedRefList= usedExternalRefList.constBegin();
-			while (usedExternalRefList.constEnd() != iUsedRefList)
-			{
-				m_ExternalReferenceHash.remove(*iUsedRefList);
-				++iUsedRefList;
-			}
-			ExternalReferenceHash::const_iterator iExtRef= m_ExternalReferenceHash.constBegin();
-			while (m_ExternalReferenceHash.constEnd() != iExtRef)
-			{
-				delete iExtRef.value();
-				++iExtRef;
-			}
-		}
 
-		m_InstanceOfExtRefHash.clear();
+		// Check usage of reference in the external reference hash
+		ExternalReferenceHash::const_iterator iRef= m_ExternalReferenceHash.constBegin();
+		while (m_ExternalReferenceHash.constEnd() != iRef)
+		{
+			GLC_StructReference* pRef= iRef.value();
+			if (! pRef->hasStructInstance())
+			{
+				qDebug() << "Orphan reference : " << pRef->name();
+				delete pRef;
+			}
+			++iRef;
+		}
 		m_ExternalReferenceHash.clear();
 
 	}
@@ -484,6 +477,35 @@ void GLC_3dxmlToWorld::loadProductStructure()
 
 	// Create the unfolded tree
 	createUnfoldedTree();
+	// Check usage of Instance
+	InstanceOfExtRefHash::const_iterator iInstance= m_InstanceOfExtRefHash.constBegin();
+	while (m_InstanceOfExtRefHash.constEnd() != iInstance)
+	{
+		GLC_StructInstance* pInstance= iInstance.key();
+		if (!pInstance->hasStructOccurence())
+		{
+			qDebug() << "Orphan Instance : " << pInstance->name();
+			delete pInstance;
+		}
+		else
+		{
+			QList<GLC_StructOccurence*> occurences= pInstance->listOfStructOccurences();
+			const int size= occurences.size();
+			for (int i= 0; i < size; ++i)
+			{
+				const GLC_StructOccurence* pOccurence= occurences.at(i);
+				if (pOccurence->isOrphan())
+				{
+					qDebug() << "Orphan occurence :" << pOccurence->name();
+					delete pOccurence;
+				}
+			}
+		}
+		++iInstance;
+	}
+
+	m_InstanceOfExtRefHash.clear();
+
 
 	//qDebug() << "Unfolded tree created";
 
@@ -736,7 +758,7 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 // Create Instance from 3DXML Rep
 GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 {
-	qDebug() << "GLC_3dxmlToWorld::createReferenceRep";
+	qDebug() << "GLC_3dxmlToWorld::createReferenceRep :" << repId;
 
 	QString refName;
 
@@ -812,10 +834,10 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 			}
 			else
 			{
-				if (numberOfMesh > 1)
+				pMesh->finished();
+				currentMesh3DRep.clean();
+				if (!currentMesh3DRep.isEmpty())
 				{
-					pMesh->finished();
-					currentMesh3DRep.clean();
 					if (GLC_State::cacheIsUsed())
 					{
 						qDebug() << "Cache is used";
@@ -834,7 +856,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 				}
 				else
 				{
-					return new GLC_StructReference(refName);
+					return new GLC_StructReference("Empty Rep");
 				}
 			}
 		}
@@ -852,7 +874,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		loadLOD(pMesh);
 		if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 		{
-			//qDebug() << " Master LOD not found";
+			qDebug() << " Master LOD not found";
 			return new GLC_StructReference("Empty Rep");
 		}
 
@@ -987,12 +1009,14 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 {
 	//qDebug() << "createUnfoldedTree";
 	// Run throw all link in the list of link
+
 	AssyLinkList::iterator iLink= m_AssyLinkList.begin();
 	while(iLink != m_AssyLinkList.constEnd())
 	{
 		GLC_StructInstance* pChildInstance= (*iLink).m_pChildInstance;
 		if (pChildInstance->structReference() == NULL)
 		{
+			qDebug() << "Instance without reference";
 			pChildInstance->setReference(new GLC_StructReference("Part"));
 		}
 		Q_ASSERT(m_ReferenceHash.contains((*iLink).m_ParentRefId));
@@ -1022,7 +1046,6 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 			else
 			{
 				GLC_StructOccurence* pOccurence= new GLC_StructOccurence(m_pWorld->worldHandle(), instanceList.at(i));
-
 				if (pChildInstance->hasStructOccurence() && pChildInstance->firstOccurenceHandle()->isOrphan())
 				{
 					Q_ASSERT(pChildInstance->listOfStructOccurences().size() == 1);
@@ -1037,7 +1060,55 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 
 		++iLink;
 	}
+
 	m_AssyLinkList.clear();
+	if (true)
+	{
+		ReferenceHash::const_iterator iRef= m_ReferenceHash.constBegin();
+		while (m_ReferenceHash.constEnd() != iRef)
+		{
+			if (iRef.key() != 1)
+			{
+				GLC_StructReference* pReference= iRef.value();
+				if (!pReference->hasStructInstance())
+				{
+					qDebug() << "GLC_3dxmlToWorld::createUnfoldedTree() : Orphan reference: " << pReference->name();
+					delete pReference;
+				}
+				else
+				{
+
+					QList<GLC_StructInstance*> instances= pReference->listOfStructInstances();
+					const int size= instances.size();
+					for (int i= 0; i < size; ++i)
+					{
+						GLC_StructInstance* pInstance= instances.at(i);
+						if (!pInstance->hasStructOccurence())
+						{
+							qDebug() << "GLC_3dxmlToWorld::createUnfoldedTree() : Orphan Instance: " << pInstance->name();
+							delete pInstance;
+						}
+						else
+						{
+							QList<GLC_StructOccurence*> occurences= pInstance->listOfStructOccurences();
+							const int occurencesSize= occurences.size();
+							for (int j= 0; j < occurencesSize; ++j)
+							{
+								GLC_StructOccurence* pOcc= occurences.at(j);
+								if (pOcc->isOrphan())
+								{
+									qDebug() << "GLC_3dxmlToWorld::createUnfoldedTree(): Orphan occurence: " << pOcc->name();
+									delete pOcc;
+								}
+							}
+						}
+
+					}
+				}
+			}
+			++iRef;
+		}
+	}
 	m_ReferenceHash.clear();
 
 	// Update position
@@ -1310,6 +1381,8 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 // Load the local representation
 void GLC_3dxmlToWorld::loadLocalRepresentations()
 {
+	qDebug() << "GLC_3dxmlToWorld::loadLocalRepresentations()";
+
 	if (m_LocalRepLinkList.isEmpty()) return;
 	QHash<const QString, GLC_3DRep> repHash;
 
@@ -1423,7 +1496,6 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 		unsigned int refId= (*iExtRep).m_RepId;
 
 		GLC_StructReference* pReference= m_ReferenceHash.value(referenceId);
-		const QString representationID= m_ReferenceRepHash.value(refId);
 		pReference->setRepresentation(repHash.value(refId));
 
 		++iExtRep;
