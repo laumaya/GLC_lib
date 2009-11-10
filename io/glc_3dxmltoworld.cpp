@@ -202,7 +202,7 @@ GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
 		{
 			GLC_CacheManager cacheManager = GLC_State::currentCacheManager();
 
-			GLC_BSRep binaryRep = cacheManager.binary3DRep(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), entryFileName);
+			GLC_BSRep binaryRep = cacheManager.binary3DRep(QFileInfo(m_FileName).fileName(), entryFileName);
 			resultRep = binaryRep.loadRep();
 		}
 		else
@@ -228,7 +228,7 @@ GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
         if (GLC_State::cacheIsUsed() && GLC_State::currentCacheManager().isUsable(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), entryFileName))
 		{
 			GLC_CacheManager cacheManager = GLC_State::currentCacheManager();
-			GLC_BSRep binaryRep = cacheManager.binary3DRep(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), entryFileName);
+			GLC_BSRep binaryRep = cacheManager.binary3DRep(QFileInfo(m_FileName).fileName(), entryFileName);
 			resultRep = binaryRep.loadRep();
 		}
 		else
@@ -699,7 +699,7 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		{
 			GLC_CacheManager cacheManager= GLC_State::currentCacheManager();
 
-			GLC_BSRep binaryRep= cacheManager.binary3DRep(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), currentRefFileName);
+			GLC_BSRep binaryRep= cacheManager.binary3DRep(QFileInfo(m_FileName).fileName(), currentRefFileName);
 			GLC_3DRep* pRep= new GLC_3DRep(binaryRep.loadRep());
 
 			GLC_StructReference* pCurrentRef= new GLC_StructReference(pRep);
@@ -1446,7 +1446,7 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 			if (GLC_State::cacheIsUsed() && GLC_State::currentCacheManager().isUsable(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), currentRefFileName))
 			{
 				GLC_CacheManager cacheManager= GLC_State::currentCacheManager();
-				GLC_BSRep binaryRep= cacheManager.binary3DRep(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), currentRefFileName);
+				GLC_BSRep binaryRep= cacheManager.binary3DRep(QFileInfo(m_FileName).fileName(), currentRefFileName);
 				representation= binaryRep.loadRep();
 			}
 			else
