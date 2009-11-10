@@ -87,7 +87,7 @@ public:
 	bool isUsable(const QDateTime&, const QString&, const QString&) const;
 
 	//! Return the binary serialized representation of the specified file
-	GLC_BSRep binary3DRep(const QDateTime&, const QString&, const QString&) const;
+	GLC_BSRep binary3DRep(const QString&, const QString&) const;
 
 	//! Add the specified file in the cache
 	bool addToCache(const QString&, const GLC_3DRep&);
