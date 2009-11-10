@@ -47,7 +47,7 @@ class GLC_LIB_EXPORT GLC_BSRep
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_BSRep(const QString& absoluteFileName= QString());
+	GLC_BSRep(const QString& absoluteFileName= QString(), bool useCompression= true, int compressionLevel= -1);
 
 	//! Copy constructor
 	GLC_BSRep(const GLC_BSRep&);
@@ -89,6 +89,7 @@ public:
 
 //@}
 
+private:
 //////////////////////////////////////////////////////////////////////
 // Private services function
 //////////////////////////////////////////////////////////////////////
@@ -129,6 +130,12 @@ private:
 
 	//! The Data stream
 	QDataStream m_DataStream;
+
+	//! Compress Data
+	bool m_UseCompression;
+
+	//! The compression level
+	int m_CompressionLevel;
 
 };
 

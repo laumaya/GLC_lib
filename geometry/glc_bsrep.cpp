@@ -37,10 +37,12 @@ const quint32 GLC_BSRep::m_Version= 100;
 
 
 // Default constructor
-GLC_BSRep::GLC_BSRep(const QString& fileName)
+GLC_BSRep::GLC_BSRep(const QString& fileName, bool useCompression, int compressionLevel)
 : m_FileInfo()
 , m_pFile(NULL)
 , m_DataStream()
+, m_UseCompression(useCompression)
+, m_CompressionLevel(compressionLevel)
 {
 	setAbsoluteFileName(fileName);
 	m_DataStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
@@ -51,18 +53,21 @@ GLC_BSRep::GLC_BSRep(const GLC_BSRep& binaryRep)
 : m_FileInfo(binaryRep.m_FileInfo)
 , m_pFile(NULL)
 , m_DataStream()
+, m_UseCompression(binaryRep.m_UseCompression)
+, m_CompressionLevel(binaryRep.m_CompressionLevel)
 {
 	m_DataStream.setFloatingPointPrecision(binaryRep.m_DataStream.floatingPointPrecision());
 }
 
 GLC_BSRep::~GLC_BSRep()
 {
-
+	delete m_pFile;
 }
 
 // Return true if the binary rep is up to date
 bool GLC_BSRep::repIsUpToDate(const QDateTime& timeStamp)
 {
+	qDebug() << "GLC_BSRep::repIsUpToDate";
 	bool isUpToDate= false;
 	if (open(QIODevice::ReadOnly))
 	{
@@ -98,7 +103,7 @@ bool GLC_BSRep::repIsUpToDate(const QDateTime& timeStamp)
 // Load the binary rep
 GLC_3DRep GLC_BSRep::loadRep()
 {
-
+	qDebug() << "GLC_BSRep::loadRep";
 	GLC_3DRep loadedRep;
 
 	if (open(QIODevice::ReadOnly))
@@ -106,7 +111,24 @@ GLC_3DRep GLC_BSRep::loadRep()
 		if (headerIsOk())
 		{
 			timeStampOk(QDateTime());
-			m_DataStream >> loadedRep;
+			GLC_BoundingBox boundingBox;
+			m_DataStream >> boundingBox;
+			bool useCompression;
+			m_DataStream >> useCompression;
+			if (useCompression)
+			{
+				QByteArray CompresseBuffer;
+				m_DataStream >> CompresseBuffer;
+				QByteArray uncompressedBuffer= qUncompress(CompresseBuffer);
+				CompresseBuffer.clear();
+				QDataStream bufferStream(uncompressedBuffer);
+				bufferStream >> loadedRep;
+			}
+			else
+			{
+				m_DataStream >> loadedRep;
+			}
+
 			if (!close())
 			{
 				QString message(QString("GLC_BSRep::loadRep An error occur when loading file ") + m_FileInfo.fileName());
@@ -160,15 +182,31 @@ void GLC_BSRep::setAbsoluteFileName(const QString& fileName)
 // Save the GLC_3DRep in serialised binary
 bool GLC_BSRep::save(const GLC_3DRep& rep)
 {
+	qDebug() << "GLC_BSRep::save";
 	//! Check if the currentFileInfo is valid and writable
 	bool saveOk= open(QIODevice::WriteOnly);
 	if (saveOk)
 	{
 		writeHeader(rep.lastModified());
 
-		// Binary representation geometry
-		// Add the rep
-		m_DataStream << rep;
+		// Representation Bounding Box
+		m_DataStream << rep.boundingBox();
+
+		// Compression usage
+		m_DataStream << m_UseCompression;
+		if (m_UseCompression)
+		{
+			QByteArray uncompressedBuffer;
+			QDataStream bufferStream(&uncompressedBuffer, QIODevice::WriteOnly);
+			bufferStream << rep;
+			m_DataStream << qCompress(uncompressedBuffer, m_CompressionLevel);
+		}
+		else
+		{
+			// Binary representation geometry
+			// Add the rep
+			m_DataStream << rep;
+		}
 
 		// Close the file
 		saveOk= close();
@@ -180,6 +218,7 @@ bool GLC_BSRep::save(const GLC_3DRep& rep)
 // Open the file
 bool GLC_BSRep::open(QIODevice::OpenMode mode)
 {
+	qDebug() << "Open :" << m_FileInfo.fileName();
 	bool openOk= m_FileInfo.exists();
 	if (openOk || (mode == QIODevice::WriteOnly))
 	{
@@ -257,8 +296,15 @@ bool GLC_BSRep::timeStampOk(const QDateTime& timeStamp)
 	QDateTime dateTime;
 	m_DataStream >> dateTime;
 
-	bool timeStampOk= (dateTime <= timeStamp);
-
+	bool timeStampOk= (dateTime == timeStamp);
+	if (timeStampOk)
+	{
+		qDebug() << "Time Stamp OK";
+	}
+	else
+	{
+		qDebug() << "Time Stamp KO";
+	}
 	return timeStampOk;
 }
 
