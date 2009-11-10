@@ -120,6 +120,18 @@ bool GLC_3DRep::boundingBoxIsValid() const
 	return result;
 }
 
+// Return the 3DRep bounding Box
+GLC_BoundingBox GLC_3DRep::boundingBox() const
+{
+	GLC_BoundingBox resultBox;
+	const int size= m_pGeomList->size();
+	for (int i= 0; i < size; ++i)
+	{
+		resultBox.combine(m_pGeomList->at(i)->boundingBox());
+	}
+	return resultBox;
+}
+
 // Get number of faces
 unsigned int GLC_3DRep::numberOfFaces() const
 {

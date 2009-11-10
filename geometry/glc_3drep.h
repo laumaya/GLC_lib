@@ -101,6 +101,9 @@ public:
 	//! Return true if the rep bounding box is valid
 	bool boundingBoxIsValid() const;
 
+	//! Return the 3DRep bounding Box
+	GLC_BoundingBox boundingBox() const;
+
 	//! Return true if the 3DRep contains the geometry
 	inline bool contains(GLC_VboGeom* pGeom)
 	{return m_pGeomList->contains(pGeom);}
