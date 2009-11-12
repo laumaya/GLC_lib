@@ -178,6 +178,9 @@ GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
 		entryFileName= fileName;
 		entryFileName.remove(QString("Zip::") + m_FileName + "::");
 
+		// Get the 3DXML time stamp
+		m_CurrentDateTime= QFileInfo(QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(fileName).fileName()).lastModified();
+
 	}
 	else if (fileName.left(6) == QString("File::"))
 	{
@@ -186,13 +189,17 @@ GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
 		m_FileName= m_FileName.left(m_FileName.indexOf("::"));
 		entryFileName= fileName;
 		entryFileName.remove(QString("File::") + m_FileName + "::");
+
+		// Get the rep time stamp
+		m_CurrentDateTime= QFileInfo(entryFileName).lastModified();
+
 	}
 	else
 	{
 		return resultRep;
 	}
 
-	setStreamReaderToFile(entryFileName);
+
 	// Keep only the file name
 	entryFileName= QFileInfo(entryFileName).fileName();
 
@@ -207,6 +214,7 @@ GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
 		}
 		else
 		{
+			setStreamReaderToFile(entryFileName);
 			GLC_StructReference* pStructRef = createReferenceRep(QString());
 			GLC_3DRep* pRep = NULL;
 			if ((NULL != pStructRef) && pStructRef->hasRepresentation())
@@ -233,6 +241,7 @@ GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
 		}
 		else
 		{
+			setStreamReaderToFile(entryFileName);
 			resultRep = loadCurrentExtRep();
 		}
 
@@ -694,6 +703,13 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		//qDebug() << "Current File name : " << currentRefFileName;
 		// Get the refFile of the 3dxml
 
+		if (! m_IsInArchive)
+		{
+			// Get the 3DXML time stamp
+			m_CurrentDateTime= QFileInfo(QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(currentRefFileName).fileName()).lastModified();
+			qDebug() << "m_CurrentDateTime : " << m_CurrentDateTime.toString();
+
+		}
 
 		if (!m_LoadStructureOnly && GLC_State::cacheIsUsed() && GLC_State::currentCacheManager().isUsable(m_CurrentDateTime, QFileInfo(m_FileName).fileName(), currentRefFileName))
 		{
@@ -1310,6 +1326,7 @@ GLC_Material* GLC_3dxmlToWorld::getMaterial()
 // Set the stream reader to the specified file
 bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 {
+	qDebug() << "GLC_3dxmlToWorld::setStreamReaderToFile";
 	m_CurrentFileName= fileName;
 	if (m_IsInArchive)
 	{
@@ -1355,7 +1372,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 
 		}
 		// Get the 3DXML time stamp
-		m_CurrentDateTime= QFileInfo(m_FileName).lastModified();
+		m_CurrentDateTime= QFileInfo(fileName).lastModified();
 
 		m_pCurrentFile= new QFile(fileName);
 		if (!m_pCurrentFile->open(QIODevice::ReadOnly))
@@ -1439,6 +1456,14 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 	{
 		const QString currentRefFileName= iRefRep.value();
 		const unsigned int id= iRefRep.key();
+
+		if (! m_IsInArchive)
+		{
+			// Get the 3DXML time stamp
+			m_CurrentDateTime= QFileInfo(QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(currentRefFileName).fileName()).lastModified();
+			qDebug() << "m_CurrentDateTime : " << m_CurrentDateTime.toString();
+		}
+
 
 		if (!m_LoadStructureOnly && setStreamReaderToFile(currentRefFileName))
 		{
@@ -1858,3 +1883,4 @@ QImage GLC_3dxmlToWorld::loadImage(QString fileName)
 
 	return resultImage;
 }
+
