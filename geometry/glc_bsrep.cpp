@@ -94,6 +94,7 @@ bool GLC_BSRep::repIsUpToDate(const QDateTime& timeStamp)
 		throw(fileFormatException);
 	}
 
+	if (!isUpToDate) qDebug() << "Rep is not up to date";
 	return isUpToDate;
 }
 
@@ -103,7 +104,7 @@ bool GLC_BSRep::repIsUpToDate(const QDateTime& timeStamp)
 // Load the binary rep
 GLC_3DRep GLC_BSRep::loadRep()
 {
-	qDebug() << "GLC_BSRep::loadRep";
+	//qDebug() << "GLC_BSRep::loadRep";
 	GLC_3DRep loadedRep;
 
 	if (open(QIODevice::ReadOnly))
@@ -218,7 +219,7 @@ bool GLC_BSRep::save(const GLC_3DRep& rep)
 // Open the file
 bool GLC_BSRep::open(QIODevice::OpenMode mode)
 {
-	qDebug() << "Open :" << m_FileInfo.fileName();
+	//qDebug() << "Open :" << m_FileInfo.fileName();
 	bool openOk= m_FileInfo.exists();
 	if (openOk || (mode == QIODevice::WriteOnly))
 	{
@@ -296,15 +297,7 @@ bool GLC_BSRep::timeStampOk(const QDateTime& timeStamp)
 	QDateTime dateTime;
 	m_DataStream >> dateTime;
 
-	bool timeStampOk= (dateTime == timeStamp);
-	if (timeStampOk)
-	{
-		qDebug() << "Time Stamp OK";
-	}
-	else
-	{
-		qDebug() << "Time Stamp KO";
-	}
+	bool timeStampOk= !timeStamp.isValid() || (dateTime == timeStamp);
 	return timeStampOk;
 }
 
