@@ -133,6 +133,7 @@ bool GLC_CacheManager::isUsable(const QDateTime& timeStamp, const QString& conte
 	{
 		QFileInfo cacheFileInfo(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName+ '.' + GLC_BSRep::suffix());
 	}
+	if (! result) qDebug() << "NOT USABLE";
 
 	return result;
 }
