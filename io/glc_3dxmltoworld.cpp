@@ -850,7 +850,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 			}
 			else
 			{
-				pMesh->finished();
+				pMesh->finish();
 				currentMesh3DRep.clean();
 				if (!currentMesh3DRep.isEmpty())
 				{
@@ -878,7 +878,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		}
 		if (numberOfMesh > 1)
 		{
-			pMesh->finished();
+			pMesh->finish();
 			pMesh = new GLC_ExtendedMesh();
 			pMesh->setName(refName);
 			currentMesh3DRep.addGeom(pMesh);
@@ -964,7 +964,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		++numberOfMesh;
 	}
 
-	pMesh->finished();
+	pMesh->finish();
 
 	currentMesh3DRep.clean();
 	if (!currentMesh3DRep.isEmpty())
@@ -1555,7 +1555,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 			}
 			else
 			{
-				pMesh->finished();
+				pMesh->finish();
 				currentMeshRep.clean();
 
 				if (GLC_State::cacheIsUsed())
@@ -1569,7 +1569,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		}
 		if (numberOfMesh > 1)
 		{
-			pMesh->finished();
+			pMesh->finish();
 			pMesh = new GLC_ExtendedMesh();
 			currentMeshRep.addGeom(pMesh);
 		}
@@ -1581,7 +1581,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 		{
 			qDebug() << " Master LOD not found";
-			pMesh->finished();
+			pMesh->finish();
 			currentMeshRep.clean();
 
 			if (GLC_State::cacheIsUsed())
@@ -1661,7 +1661,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		++numberOfMesh;
 	}
 
-	pMesh->finished();
+	pMesh->finish();
 	currentMeshRep.clean();
 
 	if (GLC_State::cacheIsUsed())
