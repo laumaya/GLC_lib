@@ -224,7 +224,7 @@ bool GLC_Material::textureIsLoaded() const
 	}
 }
 
-// Return true if material are the same
+// Return true if materials are equivalent
 bool GLC_Material::operator==(const GLC_Material& mat) const
 {
 	bool result;
