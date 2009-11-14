@@ -213,7 +213,7 @@ public:
 	void changeToVboMode();
 
 	//! The mesh wich use this group is finished
-	inline void finished()
+	inline void finish()
 	{
 		m_TrianglesIndex.clear();
 		m_StripsIndex.clear();

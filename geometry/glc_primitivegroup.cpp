@@ -328,7 +328,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_PrimitiveGroup &primitiveGroup)
 	stream >> primitiveGroup.m_FansIndexSizes;
 
 
-	primitiveGroup.finished();
+	primitiveGroup.finish();
 
 	return stream;
 }
