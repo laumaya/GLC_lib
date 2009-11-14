@@ -225,7 +225,7 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	}
 	m_pCurrentMesh->addTriangles(NULL, m_IndexList);
 
-	m_pCurrentMesh->finished();
+	m_pCurrentMesh->finish();
 	GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 	m_pCurrentMesh= NULL;
 	m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());

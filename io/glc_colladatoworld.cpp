@@ -1796,7 +1796,7 @@ void GLC_ColladaToWorld::createMesh()
 
 			++iMatInfo;
 		}
-		pCurrentMeshInfo->m_pMesh->finished();
+		pCurrentMeshInfo->m_pMesh->finish();
 		GLC_3DRep* pRep= new GLC_3DRep(pCurrentMeshInfo->m_pMesh);
 		pCurrentMeshInfo->m_pMesh= NULL;
 		pRep->clean();
