@@ -325,18 +325,29 @@ QDataStream &operator<<(QDataStream & stream, const GLC_3DRep & rep)
 	// The representation name
 	stream << rep.name();
 
-	QList<GLC_ExtendedMesh> listOfMesh;
-	const int size= rep.m_pGeomList->size();
-	for (int i= 0; i < size; ++i)
+	// Save the list of 3DRep materials
+	QList<GLC_Material> materialsList;
+	QList<GLC_Material*> sourceMaterialsList= rep.materialSet().toList();
+	const int materialNumber= sourceMaterialsList.size();
+	for (int i= 0; i < materialNumber; ++i)
+	{
+		materialsList.append(*(sourceMaterialsList.at(i)));
+		materialsList[i].setId(sourceMaterialsList.at(i)->id());
+	}
+	// Save the list of materials
+	stream << materialsList;
+
+	// Save the list of mesh
+	const int meshNumber= rep.m_pGeomList->size();
+	stream << meshNumber;
+	for (int i= 0; i < meshNumber; ++i)
 	{
 		GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(rep.m_pGeomList->at(i));
 		if (NULL != pMesh)
 		{
-			listOfMesh.append(*pMesh);
+			pMesh->saveToDataStream(stream);
 		}
-
 	}
-	stream << listOfMesh;
 
 	return stream;
 }
@@ -353,12 +364,28 @@ QDataStream &operator>>(QDataStream & stream, GLC_3DRep & rep)
 	stream >> name;
 	rep.setName(name);
 
-	QList<GLC_ExtendedMesh> listOfMesh;
-	stream >> listOfMesh;
-	const int size= listOfMesh.size();
-	for (int i= 0; i < size; ++i)
+	// Retrieve the list of rep materials
+	QList<GLC_Material> materialsList;
+	stream >> materialsList;
+	MaterialHash materialHash;
+	// Update mesh materials hash table
+	QHash<GLC_uint, GLC_uint> materialIdMap;
+	const int materialsCount= materialsList.size();
+	for (int i= 0; i < materialsCount; ++i)
 	{
-		rep.addGeom(new GLC_ExtendedMesh(listOfMesh.at(i)));
+		GLC_Material* pMaterial= new GLC_Material(materialsList.at(i));
+		materialIdMap.insert(materialsList.at(i).id(), pMaterial->id());
+		materialHash.insert(pMaterial->id(), pMaterial);
+	}
+
+	int meshNumber;
+	stream >> meshNumber;
+	for (int i= 0; i < meshNumber; ++i)
+	{
+		GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
+		pMesh->loadFromDataStream(stream, materialHash, materialIdMap);
+
+		rep.addGeom(pMesh);
 	}
 
 	return stream;
