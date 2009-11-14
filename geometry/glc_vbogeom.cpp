@@ -106,22 +106,6 @@ GLC_VboGeom::~GLC_VboGeom()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-//! Return material index if Material is the same than a material already in the mesh
-GLC_uint GLC_VboGeom::materialIndex(const GLC_Material& mat) const
-{
-	int index= 0;
-	MaterialHash::const_iterator iEntry= m_MaterialHash.begin();
-
-    while ((iEntry != m_MaterialHash.constEnd()) && !(*(iEntry.value()) == mat))
-    {
-        ++iEntry;
-    }
-    if (iEntry != m_MaterialHash.constEnd())
-    {
-    	index= iEntry.key();
-    }
-	return index;
-}
 // Get number of faces
 unsigned int GLC_VboGeom::numberOfFaces() const
 {
