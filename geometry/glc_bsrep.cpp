@@ -67,7 +67,7 @@ GLC_BSRep::~GLC_BSRep()
 // Return true if the binary rep is up to date
 bool GLC_BSRep::repIsUpToDate(const QDateTime& timeStamp)
 {
-	qDebug() << "GLC_BSRep::repIsUpToDate";
+	//qDebug() << "GLC_BSRep::repIsUpToDate";
 	bool isUpToDate= false;
 	if (open(QIODevice::ReadOnly))
 	{
