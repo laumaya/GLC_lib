@@ -389,6 +389,8 @@ void GLC_ExtendedMesh::reverseNormals()
 // Copy index list in a vector for Vertex Array Use
 void GLC_ExtendedMesh::finish()
 {
+	boundingBox();
+
 	m_ExtendedGeomEngine.finishedLod();
 	if (GLC_State::vboUsed())
 	{
