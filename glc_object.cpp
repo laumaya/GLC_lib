@@ -59,10 +59,32 @@ GLC_Object::~GLC_Object()
 // Set function
 //////////////////////////////////////////////////////////////////////
 
+// Set Object Id
+void GLC_Object::setId(const GLC_uint id)
+{
+	QMutexLocker mutexLocker(&m_Mutex);
+	m_Uid= id;
+}
+
+// Set Object UUid
+void GLC_Object::setUuid(const QUuid& uuid)
+{
+	QMutexLocker mutexLocker(&m_Mutex);
+	m_QUuid= uuid;
+}
+
+// Set Object Name
+void GLC_Object::setName(const QString& name)
+{
+	QMutexLocker mutexLocker(&m_Mutex);
+	m_Name= name;
+}
+
 
 // Assignement operator
-GLC_Object &GLC_Object::operator=(const GLC_Object& object)
+GLC_Object& GLC_Object::operator=(const GLC_Object& object)
 {
+	QMutexLocker mutexLocker(&m_Mutex);
 	m_QUuid= object.m_QUuid;
 	m_Uid= object.m_Uid;
 	m_Name= object.m_Name;
