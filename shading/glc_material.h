@@ -133,6 +133,9 @@ public:
 	inline GLC_Texture* textureHandle() const
 	{return m_pTexture;}
 
+	//! Return the material hash code
+	uint hashCode() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -179,9 +182,11 @@ public:
 	void removeTexture();
 
 	//! Add Geometry to the "where used" hash table
+	/*! This method is thread safe*/
 	bool addGLC_Geom(GLC_VboGeom* pGeom);
 
 	//! Remove Geometry to the "where used" hash table
+	/*! This method is thread safe*/
 	bool delGLC_Geom(GLC_uint Key);
 
 	//! Set the material transparency

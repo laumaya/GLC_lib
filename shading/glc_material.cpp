@@ -252,6 +252,23 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
 	return result;
 }
 
+// Return the material hash code
+uint GLC_Material::hashCode() const
+{
+	QString stringKey= QString::number(m_AmbientColor.rgba());
+	stringKey+= QString::number(m_DiffuseColor.rgba());
+	stringKey+= QString::number(m_SpecularColor.rgba());
+	stringKey+= QString::number(m_LightEmission.rgba());
+	stringKey+= QString::number(m_fShininess);
+	stringKey+= QString::number(m_Transparency);
+	if (NULL != m_pTexture)
+	{
+		stringKey+= QString::number((size_t)m_pTexture);
+	}
+
+	return qHash(stringKey);
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -352,6 +369,7 @@ void GLC_Material::removeTexture()
 // Add Geometry to where used hash table
 bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
 {
+	QMutexLocker mutexLocker(&m_Mutex);
 	//qDebug() << "GLC_Material::addGLC_Geom" << pGeom->id();
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->id());
 
@@ -371,6 +389,7 @@ bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
 // Remove a geometry from the collection
 bool GLC_Material::delGLC_Geom(GLC_uint Key)
 {
+	QMutexLocker mutexLocker(&m_Mutex);
 	//qDebug() << "GLC_Material::delGLC_Geom" << Key;
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(Key);
 
