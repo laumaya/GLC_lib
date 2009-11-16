@@ -222,6 +222,9 @@ private:
 	//! try to load the specified image
 	QImage loadImage(QString);
 
+	//! Factorize material use
+	void factorizeMaterial(GLC_3DRep*);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
