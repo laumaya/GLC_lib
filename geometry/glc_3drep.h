@@ -146,6 +146,10 @@ public:
 	//! Replace the representation
 	virtual void replace(GLC_Rep*);
 
+	//! Replace the specified material by a new one
+	void replaceMaterial(GLC_uint, GLC_Material*);
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

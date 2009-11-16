@@ -272,6 +272,26 @@ void GLC_3DRep::replace(GLC_Rep* pRep)
 	}
 }
 
+// Replace the specified material by a new one
+void GLC_3DRep::replaceMaterial(GLC_uint oldId, GLC_Material* pNewMaterial)
+{
+	//qDebug() << "GLC_3DRep::replaceMaterial";
+	const int size= m_pGeomList->size();
+	for (int i= 0; i < size; ++i)
+	{
+		GLC_VboGeom* pGeom= m_pGeomList->at(i);
+		if (pGeom->containsMaterial(oldId))
+		{
+			Q_ASSERT(!pGeom->containsMaterial(pNewMaterial->id()));
+			GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(m_pGeomList->at(i));
+			if (NULL != pMesh)
+			{
+				pMesh->replaceMaterial(oldId, pNewMaterial);
+			}
+		}
+	}
+}
+
 // UnLoad the representation
 bool GLC_3DRep::unload()
 {
@@ -374,6 +394,7 @@ QDataStream &operator>>(QDataStream & stream, GLC_3DRep & rep)
 	for (int i= 0; i < materialsCount; ++i)
 	{
 		GLC_Material* pMaterial= new GLC_Material(materialsList.at(i));
+		pMaterial->setId(glc::GLC_GenID());
 		materialIdMap.insert(materialsList.at(i).id(), pMaterial->id());
 		materialHash.insert(pMaterial->id(), pMaterial);
 	}
