@@ -118,7 +118,7 @@ public:
 	inline bool isTransparent() const
 	{return  m_Transparency < 1.0;}
 
-	//! Return true if material are the same
+	//! Return true if materials are equivalent
 	bool operator==(const GLC_Material&) const;
 
 	//! Return the material alpha
@@ -132,6 +132,9 @@ public:
 	//! Return the texture handle
 	inline GLC_Texture* textureHandle() const
 	{return m_pTexture;}
+
+	//! Return the material hash code
+	uint hashCode() const;
 
 //@}
 
@@ -179,9 +182,11 @@ public:
 	void removeTexture();
 
 	//! Add Geometry to the "where used" hash table
+	/*! This method is thread safe*/
 	bool addGLC_Geom(GLC_VboGeom* pGeom);
 
 	//! Remove Geometry to the "where used" hash table
+	/*! This method is thread safe*/
 	bool delGLC_Geom(GLC_uint Key);
 
 	//! Set the material transparency

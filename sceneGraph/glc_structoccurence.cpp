@@ -77,7 +77,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GL
 : m_Uid(glc::GLC_GenID())
 , m_pWorldHandle(pWorldHandle)
 , m_pNumberOfOccurence(structOccurence.m_pNumberOfOccurence)
-, m_pStructInstance(new GLC_StructInstance(structOccurence.m_pStructInstance))
+, m_pStructInstance(NULL)
 , m_pParent(NULL)
 , m_Childs()
 , m_AbsoluteMatrix(structOccurence.m_AbsoluteMatrix)

@@ -121,7 +121,7 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 
 // Copy constructor
 GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
-:GLC_Object(InitMaterial.name())
+:GLC_Object(InitMaterial)
 , m_AmbientColor(InitMaterial.m_AmbientColor)
 , m_DiffuseColor(InitMaterial.m_DiffuseColor)
 , m_SpecularColor(InitMaterial.m_SpecularColor)
@@ -131,7 +131,7 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 , m_pTexture(NULL)
 , m_Transparency(InitMaterial.m_Transparency)
 {
-	//qDebug() << "GLC_Material::GLC_Material" << id();
+	//qDebug() << "GLC_Material::GLC_Material copy constructor" << id();
 	if (NULL != InitMaterial.m_pTexture)
 	{
 		m_pTexture= new GLC_Texture(*(InitMaterial.m_pTexture));
@@ -224,7 +224,7 @@ bool GLC_Material::textureIsLoaded() const
 	}
 }
 
-// Return true if material are the same
+// Return true if materials are equivalent
 bool GLC_Material::operator==(const GLC_Material& mat) const
 {
 	bool result;
@@ -250,6 +250,23 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
 		result= result && (m_Transparency == mat.m_Transparency);
 	}
 	return result;
+}
+
+// Return the material hash code
+uint GLC_Material::hashCode() const
+{
+	QString stringKey= QString::number(m_AmbientColor.rgba());
+	stringKey+= QString::number(m_DiffuseColor.rgba());
+	stringKey+= QString::number(m_SpecularColor.rgba());
+	stringKey+= QString::number(m_LightEmission.rgba());
+	stringKey+= QString::number(m_fShininess);
+	stringKey+= QString::number(m_Transparency);
+	if (NULL != m_pTexture)
+	{
+		stringKey+= QString::number((size_t)m_pTexture);
+	}
+
+	return qHash(stringKey);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -352,6 +369,8 @@ void GLC_Material::removeTexture()
 // Add Geometry to where used hash table
 bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
 {
+	QMutexLocker mutexLocker(&m_Mutex);
+	//qDebug() << "GLC_Material::addGLC_Geom" << pGeom->id();
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->id());
 
 	if (iGeom == m_WhereUsed.end())
@@ -370,6 +389,8 @@ bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
 // Remove a geometry from the collection
 bool GLC_Material::delGLC_Geom(GLC_uint Key)
 {
+	QMutexLocker mutexLocker(&m_Mutex);
+	//qDebug() << "GLC_Material::delGLC_Geom" << Key;
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(Key);
 
 	if (iGeom != m_WhereUsed.end())
@@ -485,10 +506,15 @@ void GLC_Material::initOtherColor(void)
 	m_LightEmission.setRgbF(0.0, 0.0, 0.0, 1.0);
 }
 
+// Non Member methods
+#define GLC_BINARY_CHUNK_ID 0xA703
 
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
 {
+	quint32 chunckId= GLC_BINARY_CHUNK_ID;
+	stream << chunckId;
+
 	// Store GLC_Object class members
 	stream << material.id() << material.name();
 
@@ -509,6 +535,11 @@ QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
 }
 QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 {
+	quint32 chunckId;
+	stream >> chunckId;
+
+	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
+
 	// Retrieve GLC_Object members
 	GLC_uint id;
 	QString name;
@@ -538,6 +569,5 @@ QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 		stream >> texture;
 		material.setTexture(new GLC_Texture(texture));
 	}
-
 	return stream;
 }

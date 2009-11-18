@@ -20,75 +20,44 @@
  along with GLC-lib; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-*****************************************************************************/
+ *****************************************************************************/
+//! \file glc_octree.h interface for the GLC_Octree class.
 
-//! \file GLC_Object.cpp Implementation of the GLC_Object class.
+#ifndef GLC_OCTREE_H_
+#define GLC_OCTREE_H_
 
-#include "glc_object.h"
-
-//////////////////////////////////////////////////////////////////////
-// Constructor/Destructor
-//////////////////////////////////////////////////////////////////////
-
-GLC_Object::GLC_Object(const QString& name)
-: m_QUuid(QUuid::createUuid())
-, m_Uid(glc::GLC_GenID())	// Object ID
-, m_Name(name)			// Object Name
-{
-
-}
-// Copy constructor
-GLC_Object::GLC_Object(const GLC_Object& sourceObject)
-: m_QUuid(sourceObject.m_QUuid)
-, m_Uid(sourceObject.m_Uid)
-, m_Name(sourceObject.m_Name)
-{
-}
-
-GLC_Object::~GLC_Object()
-{
-
-}
-
+#include "glc_spacepartitioning.h"
 
 //////////////////////////////////////////////////////////////////////
-// Get function
+//! \class GLC_Octree
+/*! \brief GLC_Octree : Space partioning implementation with octree */
 //////////////////////////////////////////////////////////////////////
+class GLC_LIB_EXPORT GLC_Octree : public GLC_SpacePartitioning
+{
+//////////////////////////////////////////////////////////////////////
+/*! @name Constructor / Destructor */
+//@{
+//////////////////////////////////////////////////////////////////////s
+public:
+	GLC_Octree();
+	virtual ~GLC_Octree();
+
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Set function
+/*! \name Set Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
+public:
 
-// Set Object Id
-void GLC_Object::setId(const GLC_uint id)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_Uid= id;
-}
+	//! Update QHash table of visible GLC_3DViewInstance
+	virtual void updateViewableInstances();
 
-// Set Object UUid
-void GLC_Object::setUuid(const QUuid& uuid)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_QUuid= uuid;
-}
+	//! Update the space partionning
+	virtual void updateSpacePartitionning();
 
-// Set Object Name
-void GLC_Object::setName(const QString& name)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_Name= name;
-}
+//@}
 
+};
 
-// Assignement operator
-GLC_Object& GLC_Object::operator=(const GLC_Object& object)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_QUuid= object.m_QUuid;
-	m_Uid= object.m_Uid;
-	m_Name= object.m_Name;
-	return *this;
-}
-
-
+#endif /* GLC_OCTREE_H_ */

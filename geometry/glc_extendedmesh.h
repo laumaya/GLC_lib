@@ -200,10 +200,19 @@ public:
 	inline void setColorPearVertex(bool flag){m_ColorPearVertex= flag;}
 
 	//! Copy vertex list in a vector list for Vertex Array Use
-	void finished();
+	void finish();
 
 	//! Set the lod Index
 	virtual void setCurrentLod(const int);
+
+	//! Replace the material specified by id with another one
+	void replaceMaterial(const GLC_uint, GLC_Material*);
+
+	//! Load the mesh from binary data stream
+	void loadFromDataStream(QDataStream&, MaterialHash&, QHash<GLC_uint, GLC_uint>&);
+
+	//! Save the mesh to binary data stream
+	void saveToDataStream(QDataStream&);
 
 //@}
 
@@ -279,8 +288,5 @@ private:
 	int m_CurrentLod;
 
 };
-//! Non-member stream operator
-QDataStream &operator<<(QDataStream &, const GLC_ExtendedMesh &);
-QDataStream &operator>>(QDataStream &, GLC_ExtendedMesh &);
 
 #endif /* GLC_EXTENDEDMESH_H_ */

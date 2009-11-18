@@ -127,7 +127,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		m_VertexBulk.clear();
 		m_pCurrentMesh->addNormals(m_NormalBulk.toVector());
 		m_NormalBulk.clear();
-		m_pCurrentMesh->finished();
+		m_pCurrentMesh->finish();
 		GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
 		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
@@ -193,7 +193,7 @@ void GLC_StlToWorld::scanFacet()
 		m_pCurrentMesh->addNormals(m_NormalBulk.toVector());
 		m_NormalBulk.clear();
 
-		m_pCurrentMesh->finished();
+		m_pCurrentMesh->finish();
 		GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
 		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());

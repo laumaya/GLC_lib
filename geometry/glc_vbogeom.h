@@ -124,11 +124,6 @@ public:
 	inline const bool containsMaterial(const GLC_uint key) const
 	{return m_MaterialHash.contains(key);}
 
-	//! Return material index if Material is the same than a material already in the mesh
-	/*! Return 0 if the material is not found
-	 */
-	GLC_uint materialIndex(const GLC_Material& mat) const;
-
 	//! return the geometry bounding box
 	virtual GLC_BoundingBox& boundingBox(void) = 0;
 

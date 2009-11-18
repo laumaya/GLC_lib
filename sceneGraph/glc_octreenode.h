@@ -20,75 +20,51 @@
  along with GLC-lib; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-*****************************************************************************/
+ *****************************************************************************/
+//! \file glc_octreenode.h interface for the GLC_OctreeNode class.
 
-//! \file GLC_Object.cpp Implementation of the GLC_Object class.
+#include "../glc_config.h"
+#include "../maths/glc_vector4d.h"
 
-#include "glc_object.h"
+#ifndef GLC_OCTREENODE_H_
+#define GLC_OCTREENODE_H_
 
-//////////////////////////////////////////////////////////////////////
-// Constructor/Destructor
-//////////////////////////////////////////////////////////////////////
-
-GLC_Object::GLC_Object(const QString& name)
-: m_QUuid(QUuid::createUuid())
-, m_Uid(glc::GLC_GenID())	// Object ID
-, m_Name(name)			// Object Name
-{
-
-}
-// Copy constructor
-GLC_Object::GLC_Object(const GLC_Object& sourceObject)
-: m_QUuid(sourceObject.m_QUuid)
-, m_Uid(sourceObject.m_Uid)
-, m_Name(sourceObject.m_Name)
-{
-}
-
-GLC_Object::~GLC_Object()
-{
-
-}
-
+class GLC_OctreeNode;
 
 //////////////////////////////////////////////////////////////////////
-// Get function
+//! \class GLC_OctreeNode
+/*! \brief GLC_OctreeNode : A node of Space partioning implementated with octree */
 //////////////////////////////////////////////////////////////////////
-
+class GLC_LIB_EXPORT GLC_OctreeNode
+{
+	typedef QList<GLC_OctreeNode*> NodeList;
 //////////////////////////////////////////////////////////////////////
-// Set function
+/*! @name Constructor / Destructor */
+//@{
 //////////////////////////////////////////////////////////////////////
+public:
+	//! Default constructor
+	GLC_OctreeNode(GLC_OctreeNode* pParent= NULL);
 
-// Set Object Id
-void GLC_Object::setId(const GLC_uint id)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_Uid= id;
-}
+	//! Destructor
+	virtual ~GLC_OctreeNode();
+//@}
+//////////////////////////////////////////////////////////////////////
+// Private members
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Octree node center position
+	GLC_Vector4d m_Center;
 
-// Set Object UUid
-void GLC_Object::setUuid(const QUuid& uuid)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_QUuid= uuid;
-}
+	//! Parent Octree node
+	GLC_OctreeNode* m_Parent;
 
-// Set Object Name
-void GLC_Object::setName(const QString& name)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_Name= name;
-}
+	//! Child Octree node
+	NodeList m_Childs;
 
+	//! Set of 3DViewInstance
+	QSet<GLC_3DViewInstance*> m_3DViewInstanceSet;
 
-// Assignement operator
-GLC_Object& GLC_Object::operator=(const GLC_Object& object)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_QUuid= object.m_QUuid;
-	m_Uid= object.m_Uid;
-	m_Name= object.m_Name;
-	return *this;
-}
+};
 
-
+#endif /* GLC_OCTREENODE_H_ */

@@ -203,6 +203,29 @@ void GLC_PrimitiveGroup::setBaseTrianglesFanOffseti(int offset)
 	}
 }
 
+// Change index to VBO mode
+void GLC_PrimitiveGroup::changeToVboMode()
+{
+	m_pBaseTrianglesOffset= BUFFER_OFFSET(static_cast<GLsizei>(m_BaseTrianglesOffseti) * sizeof(GLuint));
+	m_BaseTrianglesOffseti= 0;
+
+	m_StripIndexOffset.clear();
+	const int stripOffsetSize= m_StripIndexOffseti.size();
+	for (int i= 0; i < stripOffsetSize; ++i)
+	{
+		m_StripIndexOffset.append(BUFFER_OFFSET(static_cast<GLsizei>(m_StripIndexOffseti.at(i)) * sizeof(GLuint)));
+	}
+	m_StripIndexOffseti.clear();
+
+	m_FanIndexOffset.clear();
+	const int fanOffsetSize= m_FanIndexOffseti.size();
+	for (int i= 0; i < fanOffsetSize; ++i)
+	{
+		m_FanIndexOffset.append(BUFFER_OFFSET(static_cast<GLsizei>(m_FanIndexOffseti.at(i)) * sizeof(GLuint)));
+	}
+	m_FanIndexOffseti.clear();
+}
+
 // Clear the group
 void GLC_PrimitiveGroup::clear()
 {
@@ -223,10 +246,15 @@ void GLC_PrimitiveGroup::clear()
 	m_TrianglesFanSize= 0;
 }
 
+
+// Non Member methods
+#define GLC_BINARY_CHUNK_ID 0xA700
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitiveGroup)
 {
 	Q_ASSERT(primitiveGroup.isFinished());
+	quint32 chunckId= GLC_BINARY_CHUNK_ID;
+	stream << chunckId;
 
 	// Primitive group id
 	stream << primitiveGroup.m_ID;
@@ -244,12 +272,14 @@ QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitive
 		baseTrianglesOffseti= static_cast<GLuint>(reinterpret_cast<GLsizeiptr>(primitiveGroup.m_pBaseTrianglesOffset) / sizeof(GLuint));
 
 		// Trips offsets
-		for (int i= 0; i < primitiveGroup.m_TrianglesStripSize; ++i)
+		const int stripIndexOffsetSize= primitiveGroup.m_StripIndexOffset.size();
+		for (int i= 0; i < stripIndexOffsetSize; ++i)
 		{
 			stripIndexOffseti.append(static_cast<GLuint>(reinterpret_cast<GLsizeiptr>(primitiveGroup.m_StripIndexOffset.at(i)) / sizeof(GLuint)));
 		}
 		// Fans offsets
-		for (int i= 0; i < primitiveGroup.m_TrianglesFanSize; ++i)
+		const int fanIndexOffsetSize= primitiveGroup.m_FanIndexOffset.size();
+		for (int i= 0; i < fanIndexOffsetSize; ++i)
 		{
 			fanIndexOffseti.append(static_cast<GLuint>(reinterpret_cast<GLsizeiptr>(primitiveGroup.m_FanIndexOffset.at(i)) / sizeof(GLuint)));
 		}
@@ -278,6 +308,9 @@ QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitive
 }
 QDataStream &operator>>(QDataStream &stream, GLC_PrimitiveGroup &primitiveGroup)
 {
+	quint32 chunckId;
+	stream >> chunckId;
+	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
 	stream >> primitiveGroup.m_ID;
 
 	// Triangles index
@@ -294,6 +327,8 @@ QDataStream &operator>>(QDataStream &stream, GLC_PrimitiveGroup &primitiveGroup)
 	stream >> primitiveGroup.m_FanIndexOffseti;
 	stream >> primitiveGroup.m_FansIndexSizes;
 
+
+	primitiveGroup.finish();
 
 	return stream;
 }

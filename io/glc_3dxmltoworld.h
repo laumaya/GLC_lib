@@ -32,6 +32,7 @@
 #include <QXmlStreamReader>
 #include <QHash>
 #include <QSet>
+#include <QDateTime>
 #include "../maths/glc_matrix4x4.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 
@@ -221,6 +222,9 @@ private:
 	//! try to load the specified image
 	QImage loadImage(QString);
 
+	//! Factorize material use
+	void factorizeMaterial(GLC_3DRep*);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -299,7 +303,11 @@ private:
 	//! The list of attached file name
 	QSet<QString> m_ListOfAttachedFileName;
 
+	//! The current file name
+	QString m_CurrentFileName;
 
+	//! The current file time and date
+	QDateTime m_CurrentDateTime;
 
 };
 

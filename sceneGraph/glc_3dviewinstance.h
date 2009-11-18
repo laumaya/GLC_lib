@@ -41,11 +41,11 @@ class GLC_Viewport;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_3DViewInstance
-/*! \brief GLC_3DViewInstance : GLC_VboGeom + bounding box*/
+/*! \brief GLC_3DViewInstance : GLC_3DRep + bounding box*/
 
 /*! An GLC_3DViewInstance contain  :
- * 		- GLC_VboGeom pointer
- * 		- Geometry Bounding box
+ * 		- GLC_3DRep
+ * 		- Geometry Bounding box in position
  * 		- Positionning 4 x 4 matrix
  */
 //////////////////////////////////////////////////////////////////////
@@ -208,7 +208,7 @@ public:
 
 	//! Remove empty geometries
 	inline void removeEmptyGeometry()
-	{m_3DRep.removeEmptyGeometry();}
+	{m_3DRep.clean();}
 
 	//! Reverse geometry normals
 	inline void reverseGeometriesNormals()

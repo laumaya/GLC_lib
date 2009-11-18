@@ -361,7 +361,7 @@ GLC_3DRep GLC_3dsToWorld::create3DRep(Lib3dsMesh* p3dsMesh)
 	}
 	m_PreviousQuantumValue= m_CurrentQuantumValue;
 
-	pMesh->finished();
+	pMesh->finish();
 	return GLC_3DRep(pMesh);
 }
 

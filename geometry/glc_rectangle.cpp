@@ -298,7 +298,7 @@ void GLC_Rectangle::finishVbo()
 	m_PrimitiveGroup.setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize() * sizeof(GLvoid*)));
 	(*m_ExtendedGeomEngine.indexVectorHandle())+= m_PrimitiveGroup.stripsIndex().toVector();
 
-	m_PrimitiveGroup.finished();
+	m_PrimitiveGroup.finish();
 }
 
 // Finish non Vbo mesh
@@ -307,7 +307,7 @@ void GLC_Rectangle::finishNonVbo()
 	m_PrimitiveGroup.setBaseTrianglesStripOffseti(m_ExtendedGeomEngine.indexVectorSize());
 	(*m_ExtendedGeomEngine.indexVectorHandle())+= m_PrimitiveGroup.stripsIndex().toVector();
 
-	m_PrimitiveGroup.finished();
+	m_PrimitiveGroup.finish();
 }
 
 // Create rectangle mesh

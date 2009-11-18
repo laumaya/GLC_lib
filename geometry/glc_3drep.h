@@ -21,6 +21,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
+//! \file glc_3drep.h interface for the GLC_3DRep class.
 
 #ifndef GLC_3DREP_H_
 #define GLC_3DREP_H_
@@ -36,6 +37,9 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_3DRep : public GLC_Rep
 {
+	friend QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
+	friend QDataStream &operator>>(QDataStream &, GLC_3DRep &);
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -97,6 +101,9 @@ public:
 	//! Return true if the rep bounding box is valid
 	bool boundingBoxIsValid() const;
 
+	//! Return the 3DRep bounding Box
+	GLC_BoundingBox boundingBox() const;
+
 	//! Return true if the 3DRep contains the geometry
 	inline bool contains(GLC_VboGeom* pGeom)
 	{return m_pGeomList->contains(pGeom);}
@@ -124,8 +131,8 @@ public:
 	inline void addGeom(GLC_VboGeom* pGeom)
 	{m_pGeomList->append(pGeom);}
 
-	//! Remove empty geometries
-	void removeEmptyGeometry();
+	//! Remove empty geometries and factorise materials
+	void clean();
 
 	//! Reverse geometries normals
 	void reverseNormals();
@@ -138,6 +145,10 @@ public:
 
 	//! Replace the representation
 	virtual void replace(GLC_Rep*);
+
+	//! Replace the specified material by a new one
+	void replaceMaterial(GLC_uint, GLC_Material*);
+
 
 //@}
 
@@ -158,5 +169,9 @@ private:
 	//! The Type of representation
 	int* m_pType;
 };
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
+QDataStream &operator>>(QDataStream &, GLC_3DRep &);
 
 #endif /* GLC_3DREP_H_ */

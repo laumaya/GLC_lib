@@ -20,75 +20,55 @@
  along with GLC-lib; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-*****************************************************************************/
+ *****************************************************************************/
+//! \file glc_spacepartitioning.h interface for the GLC_SpacePartitioning class.
 
-//! \file GLC_Object.cpp Implementation of the GLC_Object class.
+#ifndef GLC_SPACEPARTITIONING_H_
+#define GLC_SPACEPARTITIONING_H_
 
-#include "glc_object.h"
+#include "../glc_config.h"
 
-//////////////////////////////////////////////////////////////////////
-// Constructor/Destructor
-//////////////////////////////////////////////////////////////////////
-
-GLC_Object::GLC_Object(const QString& name)
-: m_QUuid(QUuid::createUuid())
-, m_Uid(glc::GLC_GenID())	// Object ID
-, m_Name(name)			// Object Name
-{
-
-}
-// Copy constructor
-GLC_Object::GLC_Object(const GLC_Object& sourceObject)
-: m_QUuid(sourceObject.m_QUuid)
-, m_Uid(sourceObject.m_Uid)
-, m_Name(sourceObject.m_Name)
-{
-}
-
-GLC_Object::~GLC_Object()
-{
-
-}
-
+class GLC_3DViewCollection;
 
 //////////////////////////////////////////////////////////////////////
-// Get function
+//! \class GLC_SpacePartitioning
+/*! \brief GLC_SpacePartitioning : Abstract class for space partitionning */
 //////////////////////////////////////////////////////////////////////
+class GLC_LIB_EXPORT GLC_SpacePartitioning
+{
+//////////////////////////////////////////////////////////////////////
+/*! @name Constructor / Destructor */
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Default constructor
+	GLC_SpacePartitioning(GLC_3DViewCollection*);
+
+	//! Destructor
+	virtual ~GLC_SpacePartitioning();
+//@}
 
 //////////////////////////////////////////////////////////////////////
-// Set function
+/*! \name Set Functions*/
+//@{
 //////////////////////////////////////////////////////////////////////
+public:
 
-// Set Object Id
-void GLC_Object::setId(const GLC_uint id)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_Uid= id;
-}
+	//! Update QHash table of visible GLC_3DViewInstance
+	virtual void updateViewableInstances()= 0;
 
-// Set Object UUid
-void GLC_Object::setUuid(const QUuid& uuid)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_QUuid= uuid;
-}
+	//! Update the space partionning
+	virtual void updateSpacePartitionning()= 0;
 
-// Set Object Name
-void GLC_Object::setName(const QString& name)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_Name= name;
-}
+//@}
 
+//////////////////////////////////////////////////////////////////////
+// Protected members
+//////////////////////////////////////////////////////////////////////
+protected:
+	//! The Collection containing 3dview Instances
+	GLC_3DViewCollection* m_pCollection;
 
-// Assignement operator
-GLC_Object& GLC_Object::operator=(const GLC_Object& object)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_QUuid= object.m_QUuid;
-	m_Uid= object.m_Uid;
-	m_Name= object.m_Name;
-	return *this;
-}
+};
 
-
+#endif /* GLC_SPACEPARTITIONING_H_ */
