@@ -103,9 +103,13 @@ public:
 	inline QList<GLC_Material*> listOfMaterials() const
 	{return m_pRoot->materialSet().toList();}
 
-	//! Return list of invisible instance name
-	inline QList<QString> invisibleInstanceName() const
-	{return m_pWorldHandle->collection()->invisibleInstanceName();}
+	//! Return list of world's instances
+	inline QList<GLC_3DViewInstance*> instancesHandle() const
+	{return m_pWorldHandle->collection()->instancesHandle();}
+
+	//! Return all visible GLC_3DViewInstance from the world
+	inline QList<GLC_3DViewInstance*> visibleInstancesHandle() const
+	{return m_pWorldHandle->collection()->visibleInstancesHandle();}
 
 	//! Return instances name from the specified shading group
 	inline QList<QString> instanceNamesFromShadingGroup(GLuint id) const

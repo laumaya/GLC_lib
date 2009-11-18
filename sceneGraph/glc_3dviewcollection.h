@@ -38,22 +38,25 @@ class GLC_Material;
 class GLC_Shader;
 class GLC_Viewport;
 
-//! Geometry hash table
-typedef QHash< GLC_uint, GLC_3DViewInstance> CNodeMap;
-typedef QHash< GLC_uint, GLC_3DViewInstance*> PointerNodeHash;
+//! GLC_3DViewInstance Hash table
+typedef QHash< GLC_uint, GLC_3DViewInstance> ViewInstancesHash;
 
-//! Hash of geometry hash table which use a shader
-typedef QHash<GLuint, PointerNodeHash*> HashList;
+//! GLC_3DViewInstance pointer Hash table
+typedef QHash< GLC_uint, GLC_3DViewInstance*> PointerViewInstanceHash;
 
-//! Hash of shader group id
-typedef QHash<GLC_uint, GLuint> ShaderGroup;
+//! Hash table of GLC_3DViewInstance Hash table which use a shader
+typedef QHash<GLuint, PointerViewInstanceHash*> HashList;
+
+//! Map Shader id to instances id (instances which use the shader)
+typedef QHash<GLC_uint, GLuint> ShaderIdToInstancesId;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_3DViewCollection
 /*! \brief GLC_3DViewCollection : GLC_3DViewInstance flat collection */
 
-/*! An GLC_3DViewCollection contain  :
+/*! An GLC_3DViewCollection contains  :
  * 		- A hash table containing GLC_3DViewInstance Class
+ * 		- A hash table use to associate shader with GLC_3DViewInstance
  */
 //////////////////////////////////////////////////////////////////////
 
@@ -82,20 +85,20 @@ public:
 
 	//! Return true if the collection is empty
 	inline bool isEmpty() const
-	{return m_NodeMap.size() == 0;}
+	{return m_3DViewInstanceHash.size() == 0;}
 
 	//! Return the number of Node in the collection
 	inline int size(void) const
-	{return m_NodeMap.size();}
+	{return m_3DViewInstanceHash.size();}
 
 	//! Return all GLC_3DViewInstance from collection
 	QList<GLC_3DViewInstance*> instancesHandle();
 
 	//! Return all visible GLC_3DViewInstance from the collection
-	QList<GLC_3DViewInstance*> visibleInstanceHandle();
+	QList<GLC_3DViewInstance*> visibleInstancesHandle();
 
-	//! Return list of invisible instance name
-	QList<QString> invisibleInstanceName() const;
+	//! Return all viewable GLC_3DViewInstance from the collection
+	QList<GLC_3DViewInstance*> viewableInstancesHandle();
 
 	//! Return a GLC_3DViewInstance from collection
 	/*! If the element is not found in collection a empty node is return*/
@@ -106,19 +109,19 @@ public:
 
 	//! Return the number of Node in the selection Hash
 	inline int selectionSize(void) const
-	{return m_SelectedNodes.size();}
+	{return m_SelectedInstances.size();}
 
 	//! Get the Hash table of Selected Nodes
-	inline PointerNodeHash* selection()
-	{return &m_SelectedNodes;}
+	inline PointerViewInstanceHash* selection()
+	{return &m_SelectedInstances;}
 
 	//! Return true if the Instance Id is in the collection
 	inline bool contains(GLC_uint key) const
-	{return m_NodeMap.contains(key);}
+	{return m_3DViewInstanceHash.contains(key);}
 
 	//! Return true if the element is selected
 	inline bool isSelected(GLC_uint key) const
-	{return m_SelectedNodes.contains(key);}
+	{return m_SelectedInstances.contains(key);}
 
 	//! Return the showing state
 	inline bool showState() const
@@ -274,22 +277,22 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! GLC_3DViewInstance Hash Table
-	CNodeMap m_NodeMap;
+	ViewInstancesHash m_3DViewInstanceHash;
 
 	//! BoundingBox of the collection
 	GLC_BoundingBox* m_pBoundingBox;
 
 	//! Selected Node Hash Table
-	PointerNodeHash m_SelectedNodes;
+	PointerViewInstanceHash m_SelectedInstances;
 
 	//! List of other Node Hash Table
-	HashList m_OtherNodeHashList;
+	HashList m_ShadedPointerViewInstanceHash;
 
 	//! Shader groups hash
-	ShaderGroup m_ShaderGroup;
+	ShaderIdToInstancesId m_ShaderGroup;
 
 	//! Normal Node Hash Table
-	PointerNodeHash m_MainNodes;
+	PointerViewInstanceHash m_MainInstances;
 
 	//! Show State
 	bool m_IsInShowSate;
