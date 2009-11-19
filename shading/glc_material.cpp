@@ -25,7 +25,7 @@
 //! \file glc_material.cpp implementation of the GLC_Material class.
 
 #include "glc_material.h"
-#include "../geometry/glc_vbogeom.h"
+#include "../geometry/glc_geometry.h"
 #include "../glc_factory.h"
 
 #include <QtDebug>
@@ -367,7 +367,7 @@ void GLC_Material::removeTexture()
 }
 
 // Add Geometry to where used hash table
-bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
+bool GLC_Material::addGLC_Geom(GLC_Geometry* pGeom)
 {
 	QMutexLocker mutexLocker(&m_Mutex);
 	//qDebug() << "GLC_Material::addGLC_Geom" << pGeom->id();
@@ -466,12 +466,14 @@ void GLC_Material::glExecute()
 		//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 		m_pTexture->glcBindTexture();
 	}
-	glColor4fv(pDiffuseColor);
+
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, pAmbientColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pDiffuseColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pSpecularColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, pLightEmission);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &m_fShininess);
+
+	glColor4fv(pDiffuseColor);
 
 	// OpenGL Error handler
 	GLenum errCode;

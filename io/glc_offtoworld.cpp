@@ -117,7 +117,7 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	m_Is4off= lineBuff.startsWith("4OFF");
 
 	// Create the mesh
-	m_pCurrentMesh= new GLC_ExtendedMesh();
+	m_pCurrentMesh= new GLC_Mesh();
 
 	// Set mesh color per vertex if needed
 	if (m_IsCoff)

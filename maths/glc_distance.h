@@ -32,7 +32,7 @@
 
 #include "../glc_config.h"
 
-class GLC_ExtendedMesh;
+class GLC_Mesh;
 class PQP_Model;
 
 //////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ private:
 	void getPQPPoint(double&, double&, double&, const double, const double, const double, const GLC_Matrix4x4&) const;
 
 	//! Add mesh triangles to PQP model
-	void addMeshTrianglesToPQP(PQP_Model*, const QList<GLC_ExtendedMesh*>, const GLC_Matrix4x4&) const;
+	void addMeshTrianglesToPQP(PQP_Model*, const QList<GLC_Mesh*>, const GLC_Matrix4x4&) const;
 
 //@}
 

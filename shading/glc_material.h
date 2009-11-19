@@ -35,9 +35,9 @@
 
 #include "../glc_config.h"
 
-class GLC_VboGeom;
+class GLC_Geometry;
 
-typedef QHash< GLC_uint, GLC_VboGeom*> CWhereUsed;
+typedef QHash< GLC_uint, GLC_Geometry*> CWhereUsed;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Material
@@ -183,7 +183,7 @@ public:
 
 	//! Add Geometry to the "where used" hash table
 	/*! This method is thread safe*/
-	bool addGLC_Geom(GLC_VboGeom* pGeom);
+	bool addGLC_Geom(GLC_Geometry* pGeom);
 
 	//! Remove Geometry to the "where used" hash table
 	/*! This method is thread safe*/

@@ -31,7 +31,7 @@
 
 // Construct an GLC_Line by to point
 GLC_Line::GLC_Line(const GLC_Point4d & point1, const GLC_Point4d & point2)
-: GLC_VboGeom("Line", true)
+: GLC_Geometry("Line", true)
 , m_Point1(point1)
 , m_Point2(point2)
 {
@@ -40,7 +40,7 @@ GLC_Line::GLC_Line(const GLC_Point4d & point1, const GLC_Point4d & point2)
 
 // Copy constructor
 GLC_Line::GLC_Line(const GLC_Line& line)
-: GLC_VboGeom(line)
+: GLC_Geometry(line)
 , m_Point1(line.m_Point1)
 , m_Point2(line.m_Point2)
 {
@@ -72,7 +72,7 @@ GLC_BoundingBox& GLC_Line::boundingBox(void)
 }
 
 // Return a copy of the current geometry
-GLC_VboGeom* GLC_Line::clone() const
+GLC_Geometry* GLC_Line::clone() const
 {
 	return new GLC_Line(*this);
 }

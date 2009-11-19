@@ -33,7 +33,7 @@ float GLC_PointSprite::m_MaxSize= -1.0f;
 
 // Default constructor
 GLC_PointSprite::GLC_PointSprite(float size, GLC_Material* pMaterial)
-:GLC_VboGeom("PointSprite", false)
+:GLC_Geometry("PointSprite", false)
 , m_Size(size)
 , m_DistanceAttenuation(3)
 , m_FadeThresoldSize(60.0f)
@@ -74,7 +74,7 @@ GLC_BoundingBox& GLC_PointSprite::boundingBox(void)
 }
 
 // Return a copy of the current geometry
-GLC_VboGeom* GLC_PointSprite::clone() const
+GLC_Geometry* GLC_PointSprite::clone() const
 {
 	return new GLC_PointSprite(*this);
 }

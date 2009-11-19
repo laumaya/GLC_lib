@@ -731,7 +731,7 @@ void GLC_ColladaToWorld::loadGeometry()
 {
 	delete m_pMeshInfo;
 	m_pMeshInfo= new MeshInfo();
-	m_pMeshInfo->m_pMesh= new GLC_ExtendedMesh;
+	m_pMeshInfo->m_pMesh= new GLC_Mesh;
 
 	const QString id= readAttribute("id", false);
 	m_CurrentId= id;

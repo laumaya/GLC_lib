@@ -22,36 +22,36 @@
 
 *****************************************************************************/
 
-//! \file glc_enginelod.cpp implementation of the GLC_EngineLod class.
+//! \file glc_lod.cpp implementation of the GLC_Lod class.
 
 
-#include "glc_enginelod.h"
+#include "glc_lod.h"
 
 // Default Constructor
-GLC_EngineLod::GLC_EngineLod()
+GLC_Lod::GLC_Lod()
 : m_Accuracy(0.0)
 , m_IboId(0)
-, m_IboVector()
+, m_IndexVector()
 , m_IndexSize(0)
 {
 
 }
 
 // Construct an engine Lod with the specified accuracy
-GLC_EngineLod::GLC_EngineLod(double accuracy)
+GLC_Lod::GLC_Lod(double accuracy)
 : m_Accuracy(accuracy)
 , m_IboId(0)
-, m_IboVector()
+, m_IndexVector()
 , m_IndexSize(0)
 {
 
 }
 
 // Copy Constructor
-GLC_EngineLod::GLC_EngineLod(const GLC_EngineLod& lod)
+GLC_Lod::GLC_Lod(const GLC_Lod& lod)
 : m_Accuracy(lod.m_Accuracy)
 , m_IboId(0)
-, m_IboVector(lod.indexVector())
+, m_IndexVector(lod.indexVector())
 , m_IndexSize(lod.m_IndexSize)
 {
 
@@ -59,17 +59,17 @@ GLC_EngineLod::GLC_EngineLod(const GLC_EngineLod& lod)
 }
 
 // Overload "=" operator
-GLC_EngineLod& GLC_EngineLod::operator=(const GLC_EngineLod& lod)
+GLC_Lod& GLC_Lod::operator=(const GLC_Lod& lod)
 {
 	m_Accuracy= lod.m_Accuracy;
 	m_IboId= lod.m_IboId;
-	m_IboVector= lod.indexVector();
+	m_IndexVector= lod.indexVector();
 	m_IndexSize= lod.m_IndexSize;
 
 	return *this;
 }
 
-GLC_EngineLod::~GLC_EngineLod()
+GLC_Lod::~GLC_Lod()
 {
 	// Delete IBO
 	if (0 != m_IboId)
@@ -83,7 +83,7 @@ GLC_EngineLod::~GLC_EngineLod()
 //////////////////////////////////////////////////////////////////////
 
 // Return the Triangle Index Vector
-QVector<GLuint> GLC_EngineLod::indexVector() const
+QVector<GLuint> GLC_Lod::indexVector() const
 {
 	if (0 != m_IboId)
 	{
@@ -101,18 +101,18 @@ QVector<GLuint> GLC_EngineLod::indexVector() const
 	}
 	else
 	{
-		return m_IboVector;
+		return m_IndexVector;
 	}
 }
 
 // Non-member stream operator
-QDataStream &operator<<(QDataStream &stream, const GLC_EngineLod &lod)
+QDataStream &operator<<(QDataStream &stream, const GLC_Lod &lod)
 {
 	stream << lod.accuracy() << lod.indexVector();
 
 	return stream;
 }
-QDataStream &operator>>(QDataStream &stream, GLC_EngineLod &lod)
+QDataStream &operator>>(QDataStream &stream, GLC_Lod &lod)
 {
 	double accuracy;
 	QVector<GLuint> indexVector;

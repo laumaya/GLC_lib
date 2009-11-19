@@ -37,7 +37,7 @@
 #include "../maths/glc_vector3d.h"
 #include "../maths/glc_vector2df.h"
 #include "../maths/glc_vector3df.h"
-#include "../geometry/glc_extendedmesh.h"
+#include "../geometry/glc_mesh.h"
 
 #include "../glc_config.h"
 
@@ -107,7 +107,7 @@ public:
 	struct CurrentObjMesh
 	{
 		CurrentObjMesh(const QString materialName)
-		: m_pMesh(new GLC_ExtendedMesh())
+		: m_pMesh(new GLC_Mesh())
 		, m_Positions()
 		, m_Normals()
 		, m_Texels()
@@ -128,7 +128,7 @@ public:
 				++i;
 			}
 		}
-		GLC_ExtendedMesh* m_pMesh;
+		GLC_Mesh* m_pMesh;
 		QList<float> m_Positions;
 		QList<float> m_Normals;
 		QList<float> m_Texels;

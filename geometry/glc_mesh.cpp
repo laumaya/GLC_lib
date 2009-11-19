@@ -22,16 +22,18 @@
 
 *****************************************************************************/
 
-//! \file glc_extendedmesh.cpp Implementation for the GLC_ExtendedMesh class.
+//! \file glc_mesh.cpp Implementation for the GLC_Mesh class.
 
-#include "glc_extendedmesh.h"
+#include "glc_mesh.h"
 #include "../glc_state.h"
 #include "../shading/glc_selectionmaterial.h"
 
+// The Mesh chunk id
 #define GLC_BINARY_CHUNK_ID 0xA701
 
-GLC_ExtendedMesh::GLC_ExtendedMesh()
-:GLC_VboGeom("ExtendedMesh", false)
+GLC_Mesh::GLC_Mesh()
+:GLC_Geometry("Mesh", false)
+, m_LocalId(1)
 , m_PrimitiveGroups()
 , m_DefaultMaterialId(0)
 , m_NumberOfFaces(0)
@@ -39,14 +41,15 @@ GLC_ExtendedMesh::GLC_ExtendedMesh()
 , m_NumberOfNormals(0)
 , m_IsSelected(false)
 , m_ColorPearVertex(false)
-, m_ExtendedGeomEngine()
+, m_MeshData()
 , m_CurrentLod(0)
 {
 
 }
 
-GLC_ExtendedMesh::GLC_ExtendedMesh(const GLC_ExtendedMesh& mesh)
-:GLC_VboGeom(mesh)
+GLC_Mesh::GLC_Mesh(const GLC_Mesh& mesh)
+:GLC_Geometry(mesh)
+, m_LocalId(mesh.m_LocalId)
 , m_PrimitiveGroups(mesh.m_PrimitiveGroups)
 , m_DefaultMaterialId(mesh.m_DefaultMaterialId)
 , m_NumberOfFaces(mesh.m_NumberOfFaces)
@@ -54,10 +57,10 @@ GLC_ExtendedMesh::GLC_ExtendedMesh(const GLC_ExtendedMesh& mesh)
 , m_NumberOfNormals(mesh.m_NumberOfNormals)
 , m_IsSelected(false)
 , m_ColorPearVertex(mesh.m_ColorPearVertex)
-, m_ExtendedGeomEngine(mesh.m_ExtendedGeomEngine)
+, m_MeshData(mesh.m_MeshData)
 , m_CurrentLod(0)
 {
-	//qDebug() << "GLC_ExtendedMesh Copy constructor";
+	//qDebug() << "GLC_Mesh Copy constructor";
 
 	// Make a copy of m_PrimitiveGroups with new material id
 	PrimitiveGroupsHash::const_iterator iPrimitiveGroups= mesh.m_PrimitiveGroups.constBegin();
@@ -80,14 +83,9 @@ GLC_ExtendedMesh::GLC_ExtendedMesh(const GLC_ExtendedMesh& mesh)
 		++iPrimitiveGroups;
 	}
 
-	// Get the new default material id
-	//m_DefaultMaterialId= m_MaterialHashMap.value(mesh.m_DefaultMaterialId);
-
-	//m_MaterialHashMap.clear();
-
 }
 
-GLC_ExtendedMesh::~GLC_ExtendedMesh()
+GLC_Mesh::~GLC_Mesh()
 {
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
 	while (iGroups != m_PrimitiveGroups.constEnd())
@@ -110,32 +108,32 @@ GLC_ExtendedMesh::~GLC_ExtendedMesh()
 //////////////////////////////////////////////////////////////////////
 
 // Get number of faces
-unsigned int GLC_ExtendedMesh::numberOfFaces() const
+unsigned int GLC_Mesh::numberOfFaces() const
 {
 	return m_NumberOfFaces;
 }
 
 // Get number of vertex
-unsigned int GLC_ExtendedMesh::numberOfVertex() const
+unsigned int GLC_Mesh::numberOfVertex() const
 {
 	return m_NumberOfVertice;
 }
 
 // return the mesh bounding box
-GLC_BoundingBox& GLC_ExtendedMesh::boundingBox()
+GLC_BoundingBox& GLC_Mesh::boundingBox()
 {
 	if (NULL == m_pBoundingBox)
 	{
 		//qDebug() << "GLC_Mesh2::boundingBox create boundingBox";
 		m_pBoundingBox= new GLC_BoundingBox();
 
-		if (m_ExtendedGeomEngine.positionVectorHandle()->isEmpty())
+		if (m_MeshData.positionVectorHandle()->isEmpty())
 		{
 			qDebug() << "GLC_ExtendedMesh::getBoundingBox empty m_Positions";
 		}
 		else
 		{
-			GLfloatVector* pVertexVector= m_ExtendedGeomEngine.positionVectorHandle();
+			GLfloatVector* pVertexVector= m_MeshData.positionVectorHandle();
 			const int max= pVertexVector->size();
 			for (int i= 0; i < max; i= i + 3)
 			{
@@ -150,13 +148,13 @@ GLC_BoundingBox& GLC_ExtendedMesh::boundingBox()
 }
 
 // Return a copy of the geometry
-GLC_VboGeom* GLC_ExtendedMesh::clone() const
+GLC_Geometry* GLC_Mesh::clone() const
 {
-	return new GLC_ExtendedMesh(*this);
+	return new GLC_Mesh(*this);
 }
 
 // Return true if the mesh contains triangles
-bool GLC_ExtendedMesh::containsTriangles(int lod, GLC_uint materialId) const
+bool GLC_Mesh::containsTriangles(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
 	Q_ASSERT(m_PrimitiveGroups.contains(lod));
@@ -165,7 +163,7 @@ bool GLC_ExtendedMesh::containsTriangles(int lod, GLC_uint materialId) const
 }
 
 // Return the specified index
-QVector<GLuint> GLC_ExtendedMesh::getTrianglesIndex(int lod, GLC_uint materialId) const
+QVector<GLuint> GLC_Mesh::getTrianglesIndex(int lod, GLC_uint materialId) const
 {
 	// Check if the mesh contains triangles
 	Q_ASSERT(containsTriangles(lod, materialId));
@@ -185,13 +183,13 @@ QVector<GLuint> GLC_ExtendedMesh::getTrianglesIndex(int lod, GLC_uint materialId
 
 	QVector<GLuint> resultIndex(size);
 
-	memcpy((void*)resultIndex.data(), &(m_ExtendedGeomEngine.indexVector(lod).data())[offset], size * sizeof(GLuint));
+	memcpy((void*)resultIndex.data(), &(m_MeshData.indexVector(lod).data())[offset], size * sizeof(GLuint));
 
 	return resultIndex;
 }
 
 // Return the number of triangles
-int GLC_ExtendedMesh::numberOfTriangles(int lod, GLC_uint materialId) const
+int GLC_Mesh::numberOfTriangles(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
 	if (!m_PrimitiveGroups.contains(lod))return 0;
@@ -200,7 +198,7 @@ int GLC_ExtendedMesh::numberOfTriangles(int lod, GLC_uint materialId) const
 }
 
 // Return true if the mesh contains trips
-bool GLC_ExtendedMesh::containsStrips(int lod, GLC_uint materialId) const
+bool GLC_Mesh::containsStrips(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
 	if (!m_PrimitiveGroups.contains(lod))return false;
@@ -210,7 +208,7 @@ bool GLC_ExtendedMesh::containsStrips(int lod, GLC_uint materialId) const
 }
 
 // Return the strips index
-QList<QVector<GLuint> > GLC_ExtendedMesh::getStripsIndex(int lod, GLC_uint materialId) const
+QList<QVector<GLuint> > GLC_Mesh::getStripsIndex(int lod, GLC_uint materialId) const
 {
 	// Check if the mesh contains trips
 	Q_ASSERT(containsStrips(lod, materialId));
@@ -243,7 +241,7 @@ QList<QVector<GLuint> > GLC_ExtendedMesh::getStripsIndex(int lod, GLC_uint mater
 	// The result list of vector
 	QList<QVector<GLuint> > result;
 	// The copy of the engine index vector
-	QVector<GLuint> SourceIndex(m_ExtendedGeomEngine.indexVector(lod));
+	QVector<GLuint> SourceIndex(m_MeshData.indexVector(lod));
 	for (int i= 0; i < stripsCount; ++i)
 	{
 		QVector<GLuint> currentStrip(sizes.at(i));
@@ -255,7 +253,7 @@ QList<QVector<GLuint> > GLC_ExtendedMesh::getStripsIndex(int lod, GLC_uint mater
 }
 
 // Return the number of strips
-int GLC_ExtendedMesh::numberOfStrips(int lod, GLC_uint materialId) const
+int GLC_Mesh::numberOfStrips(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
 	if (!m_PrimitiveGroups.contains(lod))return 0;
@@ -264,7 +262,7 @@ int GLC_ExtendedMesh::numberOfStrips(int lod, GLC_uint materialId) const
 }
 
 // Return true if the mesh contains fans
-bool GLC_ExtendedMesh::containsFans(int lod, GLC_uint materialId) const
+bool GLC_Mesh::containsFans(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
 	if (!m_PrimitiveGroups.contains(lod))return false;
@@ -274,7 +272,7 @@ bool GLC_ExtendedMesh::containsFans(int lod, GLC_uint materialId) const
 }
 
 //! Return the number of fans
-int GLC_ExtendedMesh::numberOfFans(int lod, GLC_uint materialId) const
+int GLC_Mesh::numberOfFans(int lod, GLC_uint materialId) const
 {
 	// Check if the lod exist and material exists
 	if(!m_PrimitiveGroups.contains(lod))return 0;
@@ -283,7 +281,7 @@ int GLC_ExtendedMesh::numberOfFans(int lod, GLC_uint materialId) const
 }
 
 // Return the strips index
-QList<QVector<GLuint> > GLC_ExtendedMesh::getFansIndex(int lod, GLC_uint materialId) const
+QList<QVector<GLuint> > GLC_Mesh::getFansIndex(int lod, GLC_uint materialId) const
 {
 	// Check if the mesh contains trips
 	Q_ASSERT(containsFans(lod, materialId));
@@ -316,7 +314,7 @@ QList<QVector<GLuint> > GLC_ExtendedMesh::getFansIndex(int lod, GLC_uint materia
 	// The result list of vector
 	QList<QVector<GLuint> > result;
 	// The copy of the engine index vector
-	QVector<GLuint> SourceIndex(m_ExtendedGeomEngine.indexVector(lod));
+	QVector<GLuint> SourceIndex(m_MeshData.indexVector(lod));
 	for (int i= 0; i < fansCount; ++i)
 	{
 		QVector<GLuint> currentFan(sizes.at(i));
@@ -332,7 +330,7 @@ QList<QVector<GLuint> > GLC_ExtendedMesh::getFansIndex(int lod, GLC_uint materia
 //////////////////////////////////////////////////////////////////////
 
 // Add triangles
-void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
+void GLC_Mesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
 {
 	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
@@ -344,38 +342,54 @@ void GLC_ExtendedMesh::addTriangles(GLC_Material* pMaterial, const IndexList& in
 	if (0 == lod) m_NumberOfFaces+= indexList.size() / 3;
 }
 
-// Add triangles Strip
-void GLC_ExtendedMesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
+// Add triangles Strip ans return his id
+GLC_uint GLC_Mesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
 {
 	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
 	Q_ASSERT(!indexList.isEmpty());
-	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesStrip(indexList);
+
+	GLC_uint id= 0;
+	if (0 == lod)
+	{
+		id= m_LocalId++;
+		m_NumberOfFaces+= indexList.size() - 2;
+	}
+	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesStrip(indexList, id);
 
 	// Invalid the geometry
 	m_GeometryIsValid = false;
-	if (0 == lod) m_NumberOfFaces+= indexList.size() - 2;
+
+	return id;
 }
 // Add triangles Fan
-void GLC_ExtendedMesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
+GLC_uint GLC_Mesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
 {
 	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
 	Q_ASSERT(!indexList.isEmpty());
-	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesFan(indexList);
+
+	GLC_uint id= 0;
+	if (0 == lod)
+	{
+		id= m_LocalId++;
+		m_NumberOfFaces+= indexList.size() - 2;
+	}
+	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesFan(indexList, id);
 
 	// Invalid the geometry
 	m_GeometryIsValid = false;
-	if (0 == lod) m_NumberOfFaces+= indexList.size() - 2;
+
+	return id;
 }
 
-//!Reverse mesh normal
-void GLC_ExtendedMesh::reverseNormals()
+// Reverse mesh normal
+void GLC_Mesh::reverseNormals()
 {
-	GLfloatVector* pNormalVector= m_ExtendedGeomEngine.normalVectorHandle();
+	GLfloatVector* pNormalVector= m_MeshData.normalVectorHandle();
 	if (pNormalVector->isEmpty())
 	{
-		(*m_ExtendedGeomEngine.normalVectorHandle())= m_ExtendedGeomEngine.normalVector();
+		(*m_MeshData.normalVectorHandle())= m_MeshData.normalVector();
 	}
 	const int size= pNormalVector->size();
 	for (int i= 0; i < size; ++i)
@@ -387,11 +401,11 @@ void GLC_ExtendedMesh::reverseNormals()
 }
 
 // Copy index list in a vector for Vertex Array Use
-void GLC_ExtendedMesh::finish()
+void GLC_Mesh::finish()
 {
 	boundingBox();
 
-	m_ExtendedGeomEngine.finishedLod();
+	m_MeshData.finishedLod();
 	if (GLC_State::vboUsed())
 	{
 		finishVbo();
@@ -404,11 +418,11 @@ void GLC_ExtendedMesh::finish()
 
 
 // Set the lod Index
-void GLC_ExtendedMesh::setCurrentLod(const int value)
+void GLC_Mesh::setCurrentLod(const int value)
 {
 	if (value)
 	{
-		const int numberOfLod= m_ExtendedGeomEngine.lodCount() - 1;
+		const int numberOfLod= m_MeshData.lodCount() - 1;
 		// Clamp value to number of load
 		m_CurrentLod= qRound(static_cast<int>((static_cast<double>(value) / 100.0) * numberOfLod));
 	}
@@ -419,7 +433,7 @@ void GLC_ExtendedMesh::setCurrentLod(const int value)
 }
 
 // Replace the material specified by id with another one
-void GLC_ExtendedMesh::replaceMaterial(const GLC_uint oldId, GLC_Material* pMat)
+void GLC_Mesh::replaceMaterial(const GLC_uint oldId, GLC_Material* pMat)
 {
 	Q_ASSERT(containsMaterial(oldId));
 	Q_ASSERT(!containsMaterial(pMat->id()));
@@ -469,19 +483,24 @@ void GLC_ExtendedMesh::replaceMaterial(const GLC_uint oldId, GLC_Material* pMat)
 }
 
 // Load the mesh from binary data stream
-void GLC_ExtendedMesh::loadFromDataStream(QDataStream& stream, MaterialHash& materialHash, QHash<GLC_uint, GLC_uint>& materialIdMap)
+void GLC_Mesh::loadFromDataStream(QDataStream& stream, MaterialHash& materialHash, QHash<GLC_uint, GLC_uint>& materialIdMap)
 {
 	quint32 chunckId;
 	stream >> chunckId;
 	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
 
+	// The mesh name
 	QString meshName;
 	stream >> meshName;
-
 	setName(meshName);
 
+	// The mesh next primitive local id
+	GLC_uint localId;
+	stream >> localId;
+	setNextPrimitiveLocalId(localId);
+
 	// Retrieve Extended geom engine
-	stream >> m_ExtendedGeomEngine;
+	stream >> m_MeshData;
 
 	// Retrieve primitiveGroupLodList
 	QList<int> primitiveGroupLodList;
@@ -495,7 +514,7 @@ void GLC_ExtendedMesh::loadFromDataStream(QDataStream& stream, MaterialHash& mat
 	const int lodCount= primitiveGroupLodList.size();
 	for (int i= 0; i < lodCount; ++i)
 	{
-		GLC_ExtendedMesh::PrimitiveGroups* pCurrentPrimitiveGroup= new GLC_ExtendedMesh::PrimitiveGroups();
+		GLC_Mesh::PrimitiveGroups* pCurrentPrimitiveGroup= new GLC_Mesh::PrimitiveGroups();
 		m_PrimitiveGroups.insert(primitiveGroupLodList.at(i), pCurrentPrimitiveGroup);
 		const int groupCount= primitiveListOfGroupList.at(i).size();
 		for (int iGroup= 0; iGroup < groupCount; ++iGroup)
@@ -520,26 +539,30 @@ void GLC_ExtendedMesh::loadFromDataStream(QDataStream& stream, MaterialHash& mat
 }
 
 // Save the mesh to binary data stream
-void GLC_ExtendedMesh::saveToDataStream(QDataStream& stream)
+void GLC_Mesh::saveToDataStream(QDataStream& stream)
 {
 	quint32 chunckId= GLC_BINARY_CHUNK_ID;
 	stream << chunckId;
 
+	// The mesh name
 	stream << name();
 
-	// Extended geom engine serialisation
-	stream << m_ExtendedGeomEngine;
+	// The mesh next primitive local id
+	stream << nextPrimitiveLocalId();
+
+	// Mesh data serialisation
+	stream << m_MeshData;
 
 	// Primitive groups serialisation
 	QList<int> primitiveGroupLodList;
 	QList<QList<GLC_PrimitiveGroup> > primitiveListOfGroupList;
 
-	GLC_ExtendedMesh::PrimitiveGroupsHash::const_iterator iGroupsHash= m_PrimitiveGroups.constBegin();
+	GLC_Mesh::PrimitiveGroupsHash::const_iterator iGroupsHash= m_PrimitiveGroups.constBegin();
 	while (m_PrimitiveGroups.constEnd() != iGroupsHash)
 	{
 		primitiveGroupLodList.append(iGroupsHash.key());
 		QList<GLC_PrimitiveGroup> primitiveGroupList;
-		GLC_ExtendedMesh::PrimitiveGroups::const_iterator iGroups= iGroupsHash.value()->constBegin();
+		GLC_Mesh::PrimitiveGroups::const_iterator iGroups= iGroupsHash.value()->constBegin();
 		while (iGroupsHash.value()->constEnd() != iGroups)
 		{
 			primitiveGroupList.append(*(iGroups.value()));
@@ -560,60 +583,60 @@ void GLC_ExtendedMesh::saveToDataStream(QDataStream& stream)
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 // Specific glExecute method
-void GLC_ExtendedMesh::glExecute(bool isSelected, bool transparent)
+void GLC_Mesh::glExecute(bool isSelected, bool transparent)
 {
 	m_IsSelected= isSelected;
-	GLC_VboGeom::glExecute(isSelected, transparent);
+	GLC_Geometry::glExecute(isSelected, transparent);
 	m_IsSelected= false;
 }
 
 // Virtual interface for OpenGL Geometry set up.
-void GLC_ExtendedMesh::glDraw(bool transparent)
+void GLC_Mesh::glDraw(bool transparent)
 {
-	Q_ASSERT(m_GeometryIsValid || !m_ExtendedGeomEngine.normalVectorHandle()->isEmpty());
+	Q_ASSERT(m_GeometryIsValid || !m_MeshData.normalVectorHandle()->isEmpty());
 
 	const bool vboIsUsed= GLC_State::vboUsed();
 
 	if (vboIsUsed)
 	{
-		m_ExtendedGeomEngine.createVBOs();
+		m_MeshData.createVBOs();
 
 		// Create VBO and IBO
-		if (!m_GeometryIsValid && !m_ExtendedGeomEngine.positionVectorHandle()->isEmpty())
+		if (!m_GeometryIsValid && !m_MeshData.positionVectorHandle()->isEmpty())
 		{
 			createVbos();
 		}
-		else if (!m_GeometryIsValid && !m_ExtendedGeomEngine.normalVectorHandle()->isEmpty())
+		else if (!m_GeometryIsValid && !m_MeshData.normalVectorHandle()->isEmpty())
 		{
 			// Normals has been inversed update normal vbo
-			m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Normal);
+			m_MeshData.useVBO(true, GLC_MeshData::GLC_Normal);
 
-			GLfloatVector* pNormalVector= m_ExtendedGeomEngine.normalVectorHandle();
+			GLfloatVector* pNormalVector= m_MeshData.normalVectorHandle();
 			const GLsizei dataNbr= static_cast<GLsizei>(pNormalVector->size());
 			const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 			glBufferData(GL_ARRAY_BUFFER, dataSize, pNormalVector->data(), GL_STATIC_DRAW);
-			m_ExtendedGeomEngine.normalVectorHandle()->clear();
+			m_MeshData.normalVectorHandle()->clear();
 		}
 
 		// Activate Vertices VBO
-		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Vertex);
+		m_MeshData.useVBO(true, GLC_MeshData::GLC_Vertex);
 		glVertexPointer(3, GL_FLOAT, 0, 0);
 		glEnableClientState(GL_VERTEX_ARRAY);
 
 		// Activate Normals VBO
-		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Normal);
+		m_MeshData.useVBO(true, GLC_MeshData::GLC_Normal);
 		glNormalPointer(GL_FLOAT, 0, 0);
 		glEnableClientState(GL_NORMAL_ARRAY);
 
 		// Activate texel VBO if needed
-		if (m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Texel))
+		if (m_MeshData.useVBO(true, GLC_MeshData::GLC_Texel))
 		{
 			glTexCoordPointer(2, GL_FLOAT, 0, 0);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
 
 		// Activate Color VBO if needed
-		if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Color))
+		if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && m_MeshData.useVBO(true, GLC_MeshData::GLC_Color))
 		{
 			glEnable(GL_COLOR_MATERIAL);
 			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
@@ -621,30 +644,30 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 			glEnableClientState(GL_COLOR_ARRAY);
 		}
 
-		m_ExtendedGeomEngine.useIBO(true, m_CurrentLod);
+		m_MeshData.useIBO(true, m_CurrentLod);
 	}
 	else
 	{
 		// Use Vertex Array
-		glVertexPointer(3, GL_FLOAT, 0, m_ExtendedGeomEngine.positionVectorHandle()->data());
+		glVertexPointer(3, GL_FLOAT, 0, m_MeshData.positionVectorHandle()->data());
 		glEnableClientState(GL_VERTEX_ARRAY);
 
-		glNormalPointer(GL_FLOAT, 0, m_ExtendedGeomEngine.normalVectorHandle()->data());
+		glNormalPointer(GL_FLOAT, 0, m_MeshData.normalVectorHandle()->data());
 		glEnableClientState(GL_NORMAL_ARRAY);
 
 		// Activate texel if needed
-		if (!m_ExtendedGeomEngine.texelVectorHandle()->isEmpty())
+		if (!m_MeshData.texelVectorHandle()->isEmpty())
 		{
-			glTexCoordPointer(2, GL_FLOAT, 0, m_ExtendedGeomEngine.texelVectorHandle()->data());
+			glTexCoordPointer(2, GL_FLOAT, 0, m_MeshData.texelVectorHandle()->data());
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
 
 		// Activate Color VBO if needed
-		if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && !m_ExtendedGeomEngine.colorVectorHandle()->isEmpty())
+		if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && !m_MeshData.colorVectorHandle()->isEmpty())
 		{
 			glEnable(GL_COLOR_MATERIAL);
 			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-			glColorPointer(4, GL_FLOAT, 0, m_ExtendedGeomEngine.colorVectorHandle()->data());
+			glColorPointer(4, GL_FLOAT, 0, m_MeshData.colorVectorHandle()->data());
 			glEnableClientState(GL_COLOR_ARRAY);
 		}
 
@@ -673,12 +696,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 				}
 				// Activate material
 				pCurrentMaterial->glExecute();
-				const GLfloat red= pCurrentMaterial->diffuseColor().redF();
-				const GLfloat green= pCurrentMaterial->diffuseColor().greenF();
-				const GLfloat blue= pCurrentMaterial->diffuseColor().blueF();
-				const GLfloat alpha= pCurrentMaterial->diffuseColor().alphaF();
 
-				glColor4f(red, green, blue, alpha);
 				if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 			}
 		}
@@ -726,7 +744,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 				// Draw triangles
 				if (pCurrentGroup->containsTriangles())
 				{
-					GLvoid* pOffset= &(m_ExtendedGeomEngine.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesIndexOffseti()]);
+					GLvoid* pOffset= &(m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesIndexOffseti()]);
 					glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSize(), GL_UNSIGNED_INT, pOffset);
 				}
 
@@ -736,7 +754,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 					const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffseti().size());
 					for (GLint i= 0; i < stripsCount; ++i)
 					{
-						GLvoid* pOffset= &m_ExtendedGeomEngine.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
+						GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
 						glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pOffset);
 					}
 				}
@@ -747,7 +765,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 					const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffseti().size());
 					for (GLint i= 0; i < fansCount; ++i)
 					{
-						GLvoid* pOffset= &m_ExtendedGeomEngine.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
+						GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
 						glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pOffset);
 					}
 				}
@@ -760,15 +778,15 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 	}
 	if (vboIsUsed)
 	{
-		m_ExtendedGeomEngine.useIBO(false);
-		m_ExtendedGeomEngine.useVBO(false, GLC_ExtendedGeomEngine::GLC_Normal);
+		m_MeshData.useIBO(false);
+		m_MeshData.useVBO(false, GLC_MeshData::GLC_Normal);
 	}
 
 	if (m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode())
 	{
 		if (vboIsUsed)
 		{
-			m_ExtendedGeomEngine.useVBO(false, GLC_ExtendedGeomEngine::GLC_Color);
+			m_MeshData.useVBO(false, GLC_MeshData::GLC_Color);
 		}
 		glDisableClientState(GL_COLOR_ARRAY);
 		glDisable(GL_COLOR_MATERIAL);
@@ -784,7 +802,7 @@ void GLC_ExtendedMesh::glDraw(bool transparent)
 //////////////////////////////////////////////////////////////////////
 
 // Set the current material
-GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, double accuracy)
+GLC_uint GLC_Mesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, double accuracy)
 {
 
 	// Test if a primitive group hash exists for the specified lod
@@ -792,7 +810,7 @@ GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, 
 	{
 		m_PrimitiveGroups.insert(lod, new PrimitiveGroups());
 
-		m_ExtendedGeomEngine.appendLod(accuracy);
+		m_MeshData.appendLod(accuracy);
 	}
 
 	GLC_uint returnId;
@@ -838,13 +856,13 @@ GLC_uint GLC_ExtendedMesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, 
 }
 
 // Create VBO and IBO
-void GLC_ExtendedMesh::createVbos()
+void GLC_Mesh::createVbos()
 {
 	// Create VBO of vertices
 	{
-		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Vertex);
+		m_MeshData.useVBO(true, GLC_MeshData::GLC_Vertex);
 
-		GLfloatVector* pPositionVector= m_ExtendedGeomEngine.positionVectorHandle();
+		GLfloatVector* pPositionVector= m_MeshData.positionVectorHandle();
 		const GLsizei dataNbr= static_cast<GLsizei>(pPositionVector->size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		glBufferData(GL_ARRAY_BUFFER, dataSize, pPositionVector->data(), GL_STATIC_DRAW);
@@ -852,51 +870,51 @@ void GLC_ExtendedMesh::createVbos()
 
 	// Create VBO of normals
 	{
-		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Normal);
+		m_MeshData.useVBO(true, GLC_MeshData::GLC_Normal);
 
-		GLfloatVector* pNormalVector= m_ExtendedGeomEngine.normalVectorHandle();
+		GLfloatVector* pNormalVector= m_MeshData.normalVectorHandle();
 		const GLsizei dataNbr= static_cast<GLsizei>(pNormalVector->size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		glBufferData(GL_ARRAY_BUFFER, dataSize, pNormalVector->data(), GL_STATIC_DRAW);
 	}
 
 	// Create VBO of texel if needed
-	if (m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Texel))
+	if (m_MeshData.useVBO(true, GLC_MeshData::GLC_Texel))
 	{
-		GLfloatVector* pTexelVector= m_ExtendedGeomEngine.texelVectorHandle();
+		GLfloatVector* pTexelVector= m_MeshData.texelVectorHandle();
 		const GLsizei dataNbr= static_cast<GLsizei>(pTexelVector->size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		glBufferData(GL_ARRAY_BUFFER, dataSize, pTexelVector->data(), GL_STATIC_DRAW);
 	}
 
 	// Create VBO of color if needed
-	if (m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Color))
+	if (m_MeshData.useVBO(true, GLC_MeshData::GLC_Color))
 	{
-		GLfloatVector* pColorVector= m_ExtendedGeomEngine.colorVectorHandle();
+		GLfloatVector* pColorVector= m_MeshData.colorVectorHandle();
 		const GLsizei dataNbr= static_cast<GLsizei>(pColorVector->size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		glBufferData(GL_ARRAY_BUFFER, dataSize, pColorVector->data(), GL_STATIC_DRAW);
 	}
 
-	const int lodNumber= m_ExtendedGeomEngine.lodCount();
+	const int lodNumber= m_MeshData.lodCount();
 	for (int i= 0; i < lodNumber; ++i)
 	{
 		//Create LOD IBO
-		if (!m_ExtendedGeomEngine.indexVectorHandle(i)->isEmpty())
+		if (!m_MeshData.indexVectorHandle(i)->isEmpty())
 		{
-			QVector<GLuint>* pIndexVector= m_ExtendedGeomEngine.indexVectorHandle(i);
-			m_ExtendedGeomEngine.useIBO(true, i);
+			QVector<GLuint>* pIndexVector= m_MeshData.indexVectorHandle(i);
+			m_MeshData.useIBO(true, i);
 			const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
 			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
 		}
 	}
 	//Clear engine
-	m_ExtendedGeomEngine.finished();
+	m_MeshData.finished();
 
 }
 // set primitive group offset
-void GLC_ExtendedMesh::finishSerialized()
+void GLC_Mesh::finishSerialized()
 {
 	if (GLC_State::vboUsed())
 	{
@@ -915,7 +933,7 @@ void GLC_ExtendedMesh::finishSerialized()
 }
 
 // Finish VBO mesh
-void GLC_ExtendedMesh::finishVbo()
+void GLC_Mesh::finishVbo()
 {
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
 	while (iGroups != m_PrimitiveGroups.constEnd())
@@ -927,22 +945,22 @@ void GLC_ExtendedMesh::finishVbo()
 			// Add group triangles index to engine triangles index vector
 			if (iGroup.value()->containsTriangles())
 			{
-				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
-				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
+				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_MeshData.indexVectorSize(currentLod) * sizeof(GLuint)));
+				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
 			}
 
 			// Add group strip index to engine strip index vector
 			if (iGroup.value()->containsStrip())
 			{
-				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
-				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
+				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_MeshData.indexVectorSize(currentLod) * sizeof(GLuint)));
+				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
 			}
 
 			// Add group fan index to engine fan index vector
 			if (iGroup.value()->containsFan())
 			{
-				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_ExtendedGeomEngine.indexVectorSize(currentLod) * sizeof(GLuint)));
-				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
+				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_MeshData.indexVectorSize(currentLod) * sizeof(GLuint)));
+				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
 			}
 
 			iGroup.value()->finish();
@@ -954,7 +972,7 @@ void GLC_ExtendedMesh::finishVbo()
 }
 
 // Finish non Vbo mesh
-void GLC_ExtendedMesh::finishNonVbo()
+void GLC_Mesh::finishNonVbo()
 {
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
 	while (iGroups != m_PrimitiveGroups.constEnd())
@@ -966,22 +984,22 @@ void GLC_ExtendedMesh::finishNonVbo()
 			// Add group triangles index to engine triangles index vector
 			if (iGroup.value()->containsTriangles())
 			{
-				iGroup.value()->setTrianglesOffseti(m_ExtendedGeomEngine.indexVectorSize(currentLod));
-				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
+				iGroup.value()->setTrianglesOffseti(m_MeshData.indexVectorSize(currentLod));
+				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
 			}
 
 			// Add group strip index to engine strip index vector
 			if (iGroup.value()->containsStrip())
 			{
-				iGroup.value()->setBaseTrianglesStripOffseti(m_ExtendedGeomEngine.indexVectorSize(currentLod));
-				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
+				iGroup.value()->setBaseTrianglesStripOffseti(m_MeshData.indexVectorSize(currentLod));
+				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
 			}
 
 			// Add group fan index to engine fan index vector
 			if (iGroup.value()->containsFan())
 			{
-				iGroup.value()->setBaseTrianglesFanOffseti(m_ExtendedGeomEngine.indexVectorSize(currentLod));
-				(*m_ExtendedGeomEngine.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
+				iGroup.value()->setBaseTrianglesFanOffseti(m_MeshData.indexVectorSize(currentLod));
+				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
 			}
 
 			iGroup.value()->finish();

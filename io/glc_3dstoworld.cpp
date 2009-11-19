@@ -26,7 +26,7 @@
 
 #include "glc_3dstoworld.h"
 
-#include "../geometry/glc_extendedmesh.h"
+#include "../geometry/glc_mesh.h"
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
 #include "../geometry/glc_circle.h"
@@ -282,7 +282,7 @@ GLC_3DRep GLC_3dsToWorld::create3DRep(Lib3dsMesh* p3dsMesh)
 		//qDebug() << "instance";
 		return pCurrentInstance->representation();
 	}
-	GLC_ExtendedMesh * pMesh= new GLC_ExtendedMesh();
+	GLC_Mesh * pMesh= new GLC_Mesh();
 	pMesh->setName(p3dsMesh->name);
 	// The mesh normals
 	const int normalsNumber= p3dsMesh->faces * 3;

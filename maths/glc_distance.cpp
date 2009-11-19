@@ -24,7 +24,7 @@
  *****************************************************************************/
 
 #include "glc_distance.h"
-#include "../geometry/glc_extendedmesh.h"
+#include "../geometry/glc_mesh.h"
 #include <stdio.h>
 #include <math.h>
 #include <../PQP/PQP.h>
@@ -163,13 +163,13 @@ GLC_Distance::DistanceResult GLC_Distance::minimumDistance(QList<GLC_3DViewInsta
 		instance1= GLC_3DViewList1.at(i);
 	
 		//! Create the list ot the instance1 meshs
-		QList<GLC_ExtendedMesh*> listOfMesh1;
+		QList<GLC_Mesh*> listOfMesh1;
 		{
 			const int size= instance1.numberOfGeometry();
 			qDebug() << "Size = " << size;
 			for (int i= 0; i < size; ++i)
 			{
-				GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(instance1.geomAt(i));
+				GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(instance1.geomAt(i));
 				if (NULL != pMesh) listOfMesh1.append(pMesh);
 			}
 		}
@@ -196,12 +196,12 @@ GLC_Distance::DistanceResult GLC_Distance::minimumDistance(QList<GLC_3DViewInsta
 		instance2= GLC_3DViewList2.at(i);
 	
 		//! Create the list ot the instance2 meshs
-		QList<GLC_ExtendedMesh*> listOfMesh2;
+		QList<GLC_Mesh*> listOfMesh2;
 		{
 			const int size= instance2.numberOfGeometry();
 			for (int i= 0; i < size; ++i)
 			{
-				GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(instance2.geomAt(i));
+				GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(instance2.geomAt(i));
 				if (NULL != pMesh) listOfMesh2.append(pMesh);
 			}
 		}
@@ -288,7 +288,7 @@ void GLC_Distance::getPQPPoint(double &p0, double &p1, double &p2, const double 
 }
 
 // Add mesh triangles to PQP model
-void GLC_Distance::addMeshTrianglesToPQP(PQP_Model* pPQP_Model, const QList<GLC_ExtendedMesh*> listOfMeshes, const GLC_Matrix4x4& instanceMatrix) const
+void GLC_Distance::addMeshTrianglesToPQP(PQP_Model* pPQP_Model, const QList<GLC_Mesh*> listOfMeshes, const GLC_Matrix4x4& instanceMatrix) const
 {
 	int generalCount=0;
 	
@@ -298,7 +298,7 @@ void GLC_Distance::addMeshTrianglesToPQP(PQP_Model* pPQP_Model, const QList<GLC_
 	//scaleFactors << 1.0 << 1.0 << 1.0;
 
 	int i, j, k, l, size2, size3, size4, pos1, pos2, pos3;
-	GLC_ExtendedMesh * pMesh=NULL;
+	GLC_Mesh * pMesh=NULL;
 	GLC_uint materialId;
 	GLfloatVector positionVector;
 	PQP_REAL p1[3], p2[3], p3[3];

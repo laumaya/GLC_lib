@@ -27,7 +27,7 @@
 #ifndef GLC_POINT_H_
 #define GLC_POINT_H_
 
-#include "glc_vbogeom.h"
+#include "glc_geometry.h"
 
 #include "../glc_config.h"
 
@@ -38,7 +38,7 @@
 /*! An GLC_Point is just a simple 3D Point*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_Point : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Point : public GLC_Geometry
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -66,7 +66,7 @@ public:
 	virtual GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the geometry
-	virtual GLC_VboGeom* clone() const;
+	virtual GLC_Geometry* clone() const;
 
 //@}
 

@@ -37,7 +37,7 @@
 #include "../maths/glc_vector3d.h"
 #include "../maths/glc_vector2df.h"
 #include "../maths/glc_vector3df.h"
-#include "../geometry/glc_extendedmesh.h"
+#include "../geometry/glc_mesh.h"
 
 #include "../glc_config.h"
 
@@ -122,7 +122,7 @@ private:
 	int m_CurrentLineNumber;
 
 	//! The current mesh
-	GLC_ExtendedMesh* m_pCurrentMesh;
+	GLC_Mesh* m_pCurrentMesh;
 
 	//! Index of the current vertex
 	int m_CurVertexIndex;

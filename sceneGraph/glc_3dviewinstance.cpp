@@ -63,7 +63,7 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 }
 
 // Contruct instance with a geometry
-GLC_3DViewInstance::GLC_3DViewInstance(GLC_VboGeom* pGeom)
+GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom)
 : GLC_Object()
 , m_3DRep(pGeom)
 , m_pBoundingBox(NULL)
@@ -251,7 +251,7 @@ GLC_uint GLC_3DViewInstance::decodeRgbId(const GLubyte* pcolorId)
 
 
 // Set the instance Geometry
-bool GLC_3DViewInstance::setGeometry(GLC_VboGeom* pGeom)
+bool GLC_3DViewInstance::setGeometry(GLC_Geometry* pGeom)
 {
 	if (m_3DRep.contains(pGeom))
 	{

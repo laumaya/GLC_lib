@@ -26,7 +26,7 @@
 #ifndef GLC_3DREP_H_
 #define GLC_3DREP_H_
 
-#include "../geometry/glc_vbogeom.h"
+#include "../geometry/glc_geometry.h"
 #include "glc_rep.h"
 
 #include "../glc_config.h"
@@ -49,7 +49,7 @@ public:
 	GLC_3DRep();
 
 	//! Construct a 3DRep with a geometry
-	GLC_3DRep(GLC_VboGeom*);
+	GLC_3DRep(GLC_Geometry*);
 
 	//! Copy Constructor
 	GLC_3DRep(const GLC_3DRep&);
@@ -77,7 +77,7 @@ public:
 	virtual int type() const;
 
 	//! Get Geometry
-	inline GLC_VboGeom* geomAt(int index) const
+	inline GLC_Geometry* geomAt(int index) const
 	{
 		Q_ASSERT(NULL != m_pGeomList);
 		Q_ASSERT(m_pGeomList->size() > index);
@@ -105,7 +105,7 @@ public:
 	GLC_BoundingBox boundingBox() const;
 
 	//! Return true if the 3DRep contains the geometry
-	inline bool contains(GLC_VboGeom* pGeom)
+	inline bool contains(GLC_Geometry* pGeom)
 	{return m_pGeomList->contains(pGeom);}
 
 	//! Get number of faces
@@ -128,7 +128,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Add Geometry to the 3DRep
-	inline void addGeom(GLC_VboGeom* pGeom)
+	inline void addGeom(GLC_Geometry* pGeom)
 	{m_pGeomList->append(pGeom);}
 
 	//! Remove empty geometries and factorise materials
@@ -164,7 +164,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Geometries of the 3D representation
-	QList<GLC_VboGeom*>* m_pGeomList;
+	QList<GLC_Geometry*>* m_pGeomList;
 
 	//! The Type of representation
 	int* m_pType;

@@ -33,7 +33,7 @@
 //////////////////////////////////////////////////////////////////////
 
 GLC_Box::GLC_Box(double dLx, double dLy, double dlz)
-:GLC_VboGeom("Box", false)
+:GLC_Geometry("Box", false)
 , m_dLgX(dLx)
 , m_dLgY(dLy)
 , m_dLgZ(dlz)
@@ -43,7 +43,7 @@ GLC_Box::GLC_Box(double dLx, double dLy, double dlz)
 }
 // Copy constructor
 GLC_Box::GLC_Box(const GLC_Box& box)
-:GLC_VboGeom(box)
+:GLC_Geometry(box)
 , m_dLgX(box.m_dLgX)
 , m_dLgY(box.m_dLgY)
 , m_dLgZ(box.m_dLgZ)
@@ -109,7 +109,7 @@ GLC_BoundingBox& GLC_Box::boundingBox(void)
 }
 
 // Return a copy of the current geometry
-GLC_VboGeom* GLC_Box::clone() const
+GLC_Geometry* GLC_Box::clone() const
 {
 	return new GLC_Box(*this);
 }

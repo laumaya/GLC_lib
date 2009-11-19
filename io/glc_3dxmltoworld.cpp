@@ -27,7 +27,7 @@
 #include "glc_3dxmltoworld.h"
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
-#include "../geometry/glc_extendedmesh.h"
+#include "../geometry/glc_mesh.h"
 
 // Quazip library
 #include "../quazip/quazip.h"
@@ -827,7 +827,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		checkForXmlError("repId not found");
 	}
 
-	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
+	GLC_Mesh* pMesh= new GLC_Mesh();
 	pMesh->setName(refName);
 	GLC_3DRep currentMesh3DRep(pMesh);
 	// Add time Stamp and file name to the 3D rep
@@ -874,7 +874,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		if (numberOfMesh > 1)
 		{
 			pMesh->finish();
-			pMesh = new GLC_ExtendedMesh();
+			pMesh = new GLC_Mesh();
 			pMesh->setName(refName);
 			currentMesh3DRep.addGeom(pMesh);
 		}
@@ -1133,7 +1133,7 @@ void GLC_3dxmlToWorld::checkForXmlError(const QString& info)
 	}
 }
 // Go to the master LOD
-void GLC_3dxmlToWorld::loadLOD(GLC_ExtendedMesh* pMesh)
+void GLC_3dxmlToWorld::loadLOD(GLC_Mesh* pMesh)
 {
 	int lodIndex= 1;
 	while(!m_pStreamReader->atEnd() && !((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Faces")))
@@ -1171,7 +1171,7 @@ void GLC_3dxmlToWorld::loadLOD(GLC_ExtendedMesh* pMesh)
 	}
 }
 // Load a face
-void GLC_3dxmlToWorld::loadFace(GLC_ExtendedMesh* pMesh, const int lod, double accuracy)
+void GLC_3dxmlToWorld::loadFace(GLC_Mesh* pMesh, const int lod, double accuracy)
 {
 	//qDebug() << "GLC_3dxmlToWorld::loadFace" << m_pStreamReader->name();
 	// List of index declaration
@@ -1524,7 +1524,7 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 // Return the instance of the current extern representation
 GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 {
-	GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
+	GLC_Mesh* pMesh= new GLC_Mesh();
 	GLC_3DRep currentMeshRep(pMesh);
 	currentMeshRep.setName(QString());
 	// Set rep file name and time stamp
@@ -1563,7 +1563,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		if (numberOfMesh > 1)
 		{
 			pMesh->finish();
-			pMesh = new GLC_ExtendedMesh();
+			pMesh = new GLC_Mesh();
 			currentMeshRep.addGeom(pMesh);
 		}
 

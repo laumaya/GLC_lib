@@ -24,7 +24,7 @@
  *****************************************************************************/
 //! \file glc_pointsprite.h interface for the GLC_PointSprite class.
 
-#include "glc_vbogeom.h"
+#include "glc_geometry.h"
 #include <QVector>
 
 #include "../glc_config.h"
@@ -39,7 +39,7 @@
 /*! An GLC_PointSprite is just a simple 3D Sprite Point*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_PointSprite : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_PointSprite : public GLC_Geometry
 {
 public:
 //////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ public:
 	virtual GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the geometry
-	virtual GLC_VboGeom* clone() const;
+	virtual GLC_Geometry* clone() const;
 
 	//! Return the fade thresold size
 	inline float fadeThresoldSize()

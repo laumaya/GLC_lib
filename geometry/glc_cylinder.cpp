@@ -38,7 +38,7 @@ using namespace glc;
 
 
 GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength)
-:GLC_VboGeom("Cylinder", false)
+:GLC_Geometry("Cylinder", false)
 , m_Radius(dRadius)
 , m_Length(dLength)
 , m_Discret(GLC_POLYDISCRET)	// Default discretion
@@ -49,7 +49,7 @@ GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength)
 }
 
 GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
-:GLC_VboGeom(sourceCylinder)
+:GLC_Geometry(sourceCylinder)
 , m_Radius(sourceCylinder.m_Radius)
 , m_Length(sourceCylinder.m_Length)
 , m_Discret(sourceCylinder.m_Discret)
@@ -100,7 +100,7 @@ GLC_BoundingBox& GLC_Cylinder::boundingBox(void)
 }
 
 // Return a copy of the current geometry
-GLC_VboGeom* GLC_Cylinder::clone() const
+GLC_Geometry* GLC_Cylinder::clone() const
 {
 	return new GLC_Cylinder(*this);
 }

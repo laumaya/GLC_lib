@@ -34,7 +34,7 @@ using namespace glc;
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_ImagePlane::GLC_ImagePlane(GLC_Viewport* pViewport)
-:GLC_VboGeom("Image Plane", false)
+:GLC_Geometry("Image Plane", false)
 , m_pViewport(pViewport)
 , m_dLgImage(0)
 , m_dZpos(0)
@@ -56,7 +56,7 @@ GLC_ImagePlane::~GLC_ImagePlane(void)
 //////////////////////////////////////////////////////////////////////
 
 // Return a copy of the current geometry
-GLC_VboGeom* GLC_ImagePlane::clone() const
+GLC_Geometry* GLC_ImagePlane::clone() const
 {
 	return NULL;
 }

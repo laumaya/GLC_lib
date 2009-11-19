@@ -22,10 +22,10 @@
 
 *****************************************************************************/
 
-//! \file glc_extendedmesh.h interface for the GLC_ExtendedMesh class.
+//! \file glc_mesh.h interface for the GLC_Mesh class.
 
-#ifndef GLC_EXTENDEDMESH_H_
-#define GLC_EXTENDEDMESH_H_
+#ifndef GLC_MESH_H_
+#define GLC_MESH_H_
 
 #include <QHash>
 #include <QList>
@@ -33,23 +33,23 @@
 #include "../maths/glc_vector3df.h"
 #include "../glc_enum.h"
 #include "../shading/glc_material.h"
-#include "glc_extendedgeomengine.h"
-#include "glc_vbogeom.h"
+#include "glc_meshdata.h"
+#include "glc_geometry.h"
 #include "glc_primitivegroup.h"
 
 #include "../glc_config.h"
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_ExtendedMesh
-/*! \brief GLC_ExtendedMesh : OpenGL 3D Mesh*/
+//! \class GLC_Mesh
+/*! \brief GLC_Mesh : OpenGL 3D Mesh*/
 
-/*! An GLC_ExtendedMesh is Mesh composed of triangles, strips and fan
+/*! An GLC_Mesh is Mesh composed of triangles, strips and fan
 */
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_ExtendedMesh : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Mesh : public GLC_Geometry
 {
-	friend QDataStream &operator<<(QDataStream &, const GLC_ExtendedMesh &);
-	friend QDataStream &operator>>(QDataStream &, GLC_ExtendedMesh &);
+	friend QDataStream &operator<<(QDataStream &, const GLC_Mesh &);
+	friend QDataStream &operator>>(QDataStream &, GLC_Mesh &);
 
 public:
 	typedef QHash<GLC_uint, GLC_PrimitiveGroup*> PrimitiveGroups;
@@ -61,12 +61,12 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_ExtendedMesh();
+	GLC_Mesh();
 
 	//! Copy constructor
-	GLC_ExtendedMesh(const GLC_ExtendedMesh&);
+	GLC_Mesh(const GLC_Mesh&);
 
-	virtual ~GLC_ExtendedMesh();
+	virtual ~GLC_Mesh();
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
@@ -87,7 +87,7 @@ public:
 	virtual GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the geometry
-	virtual GLC_VboGeom* clone() const;
+	virtual GLC_Geometry* clone() const;
 
 	//! Return true if color pear vertex is activated
 	inline bool ColorPearVertexIsAcivated() const
@@ -95,19 +95,19 @@ public:
 
 	//! Return the number of lod
 	inline int numberOfLod()
-	{return m_ExtendedGeomEngine.lodCount();}
+	{return m_MeshData.lodCount();}
 
 	//! Return the Position Vector
 	inline GLfloatVector positionVector() const
-	{return m_ExtendedGeomEngine.positionVector();}
+	{return m_MeshData.positionVector();}
 
 	//! Return the normal Vector
 	inline GLfloatVector normalVector() const
-	{return m_ExtendedGeomEngine.normalVector();}
+	{return m_MeshData.normalVector();}
 
 	//! Return the texel Vector
 	inline GLfloatVector texelVector() const
-	{return m_ExtendedGeomEngine.texelVector();}
+	{return m_MeshData.texelVector();}
 
 	//! Return true if the mesh contains triangles
 	bool containsTriangles(int lod, GLC_uint materialId) const;
@@ -138,7 +138,7 @@ public:
 
 	//! Return true if the mesh contains the specified LOD
 	inline bool containsLod(int lod) const
-	{return (NULL != m_ExtendedGeomEngine.getLod(lod));}
+	{return (NULL != m_MeshData.getLod(lod));}
 
 	//! Return true if the specified LOD conatins the specified material
 	inline bool lodContainsMaterial(int lod, GLC_uint materialId) const
@@ -151,8 +151,12 @@ public:
 	inline double getLodAccuracy(int lod) const
 	{
 		Q_ASSERT(containsLod(lod));
-		return m_ExtendedGeomEngine.getLod(lod)->accuracy();
+		return m_MeshData.getLod(lod)->accuracy();
 	}
+
+	//! Return the next primitive local id
+	inline GLC_uint nextPrimitiveLocalId() const
+	{return m_LocalId;}
 
 
 //@}
@@ -165,33 +169,33 @@ public:
 	//! Add vertices coordinate
 	inline void addVertices(const GLfloatVector& vertices)
 	{
-		*(m_ExtendedGeomEngine.positionVectorHandle())+= vertices;
+		*(m_MeshData.positionVectorHandle())+= vertices;
 		m_NumberOfVertice+= vertices.size() / 3;
 	}
 
 	//! Add Normals
 	inline void addNormals(const GLfloatVector& normals)
 	{
-		*(m_ExtendedGeomEngine.normalVectorHandle())+= normals;
+		*(m_MeshData.normalVectorHandle())+= normals;
 		m_NumberOfNormals+= normals.size() / 3;
 	}
 
 	//! Add texel
 	inline void addTexels(const GLfloatVector& texels)
-	{*(m_ExtendedGeomEngine.texelVectorHandle())+= texels;}
+	{*(m_MeshData.texelVectorHandle())+= texels;}
 
 	//! Add Colors
 	inline void addColors(const GLfloatVector& colors)
-	{*(m_ExtendedGeomEngine.colorVectorHandle())+= colors;}
+	{*(m_MeshData.colorVectorHandle())+= colors;}
 
 	//! Add triangles
 	void addTriangles(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
 
-	//! Add triangles Strip
-	void addTrianglesStrip(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
+	//! Add triangles Strip and return his id
+	GLC_uint addTrianglesStrip(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
 
-	//! Add triangles Fan
-	void addTrianglesFan(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
+	//! Add triangles Fan and return his id
+	GLC_uint addTrianglesFan(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
 
 	//! Reverse mesh normal
 	void reverseNormals();
@@ -213,6 +217,10 @@ public:
 
 	//! Save the mesh to binary data stream
 	void saveToDataStream(QDataStream&);
+
+	//! Set the mesh next primitive local id
+	inline void setNextPrimitiveLocalId(GLC_uint id)
+	{m_LocalId= id;}
 
 //@}
 
@@ -259,11 +267,13 @@ private:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
+	//! The next primitive local id
+	GLC_uint m_LocalId;
 
-	//! the list of Hash table of primitive group
+	//! The hash table of Hash table of primitive group
 	PrimitiveGroupsHash m_PrimitiveGroups;
 
-	//! the default material Id
+	//! The default material Id
 	GLC_uint m_DefaultMaterialId;
 
 	//! Mesh number of faces
@@ -282,11 +292,11 @@ private:
 	bool m_ColorPearVertex;
 
 	//! Geom engine
-	GLC_ExtendedGeomEngine m_ExtendedGeomEngine;
+	GLC_MeshData m_MeshData;
 
 	//! The current LOD index
 	int m_CurrentLod;
 
 };
 
-#endif /* GLC_EXTENDEDMESH_H_ */
+#endif /* GLC_MESH_H_ */

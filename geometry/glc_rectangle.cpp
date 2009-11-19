@@ -29,7 +29,7 @@
 
 // Default constructor
 GLC_Rectangle::GLC_Rectangle()
-:GLC_VboGeom("Rectangle", false)
+:GLC_Geometry("Rectangle", false)
 , m_PrimitiveGroup(0)
 , m_IsSelected(false)
 , m_ExtendedGeomEngine()
@@ -42,7 +42,7 @@ GLC_Rectangle::GLC_Rectangle()
 
 // Complete constructor
 GLC_Rectangle::GLC_Rectangle(const GLC_Vector4d& normal, double l1, double l2)
-:GLC_VboGeom("Rectangle", false)
+:GLC_Geometry("Rectangle", false)
 , m_PrimitiveGroup(0)
 , m_IsSelected(false)
 , m_ExtendedGeomEngine()
@@ -55,7 +55,7 @@ GLC_Rectangle::GLC_Rectangle(const GLC_Vector4d& normal, double l1, double l2)
 
 // Copy constructor
 GLC_Rectangle::GLC_Rectangle(const GLC_Rectangle& rect)
-:GLC_VboGeom(rect)
+:GLC_Geometry(rect)
 , m_PrimitiveGroup(rect.m_PrimitiveGroup, 0)
 , m_IsSelected(rect.m_IsSelected)
 , m_ExtendedGeomEngine(rect.m_ExtendedGeomEngine)
@@ -76,7 +76,7 @@ GLC_Rectangle::~GLC_Rectangle()
 //////////////////////////////////////////////////////////////////////
 
 // clone the rectangle
-GLC_VboGeom* GLC_Rectangle::clone() const
+GLC_Geometry* GLC_Rectangle::clone() const
 {
 	return new GLC_Rectangle(*this);
 }
@@ -179,17 +179,17 @@ void GLC_Rectangle::glDraw(bool)
 	if (vboIsUsed)
 	{
 		// Activate Vertices VBO
-		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Vertex);
+		m_ExtendedGeomEngine.useVBO(true, GLC_MeshData::GLC_Vertex);
 		glVertexPointer(3, GL_FLOAT, 0, 0);
 		glEnableClientState(GL_VERTEX_ARRAY);
 
 		// Activate Normals VBO
-		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Normal);
+		m_ExtendedGeomEngine.useVBO(true, GLC_MeshData::GLC_Normal);
 		glNormalPointer(GL_FLOAT, 0, 0);
 		glEnableClientState(GL_NORMAL_ARRAY);
 
 		// Activate texel VBO if needed
-		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Texel);
+		m_ExtendedGeomEngine.useVBO(true, GLC_MeshData::GLC_Texel);
 		glTexCoordPointer(2, GL_FLOAT, 0, 0);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -233,7 +233,7 @@ void GLC_Rectangle::glDraw(bool)
 	if (vboIsUsed)
 	{
 		m_ExtendedGeomEngine.useIBO(false);
-		m_ExtendedGeomEngine.useVBO(false, GLC_ExtendedGeomEngine::GLC_Normal);
+		m_ExtendedGeomEngine.useVBO(false, GLC_MeshData::GLC_Normal);
 	}
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
@@ -249,7 +249,7 @@ void GLC_Rectangle::createVbos()
 	qDebug() << "GLC_Rectangle::createVbos";
 	// Create VBO of vertices
 	{
-		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Vertex);
+		m_ExtendedGeomEngine.useVBO(true, GLC_MeshData::GLC_Vertex);
 
 		GLfloatVector* pPositionVector= m_ExtendedGeomEngine.positionVectorHandle();
 		const GLsizei dataNbr= static_cast<GLsizei>(pPositionVector->size());
@@ -259,7 +259,7 @@ void GLC_Rectangle::createVbos()
 
 	// Create VBO of normals
 	{
-		m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Normal);
+		m_ExtendedGeomEngine.useVBO(true, GLC_MeshData::GLC_Normal);
 
 		GLfloatVector* pNormalVector= m_ExtendedGeomEngine.normalVectorHandle();
 		const GLsizei dataNbr= static_cast<GLsizei>(pNormalVector->size());
@@ -268,7 +268,7 @@ void GLC_Rectangle::createVbos()
 	}
 
 	// Create VBO of texel if needed
-	if (m_ExtendedGeomEngine.useVBO(true, GLC_ExtendedGeomEngine::GLC_Texel))
+	if (m_ExtendedGeomEngine.useVBO(true, GLC_MeshData::GLC_Texel))
 	{
 		GLfloatVector* pTexelVector= m_ExtendedGeomEngine.texelVectorHandle();
 		const GLsizei dataNbr= static_cast<GLsizei>(pTexelVector->size());

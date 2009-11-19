@@ -34,7 +34,7 @@ using namespace glc;
 //////////////////////////////////////////////////////////////////////
 
 GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
-:GLC_VboGeom("Circle", true)
+:GLC_Geometry("Circle", true)
 , m_Radius(dRadius)
 , m_nDiscret(GLC_DISCRET)
 , m_dAngle(Angle)
@@ -45,7 +45,7 @@ GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
 }
 
 GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
-:GLC_VboGeom(sourceCircle)
+:GLC_Geometry(sourceCircle)
 , m_Radius(sourceCircle.m_Radius)
 , m_nDiscret(sourceCircle.m_nDiscret)
 , m_dAngle(sourceCircle.m_dAngle)
@@ -92,7 +92,7 @@ GLC_BoundingBox& GLC_Circle::boundingBox(void)
 }
 
 // Return a copy of the current geometry
-GLC_VboGeom* GLC_Circle::clone() const
+GLC_Geometry* GLC_Circle::clone() const
 {
 	return new GLC_Circle(*this);
 }

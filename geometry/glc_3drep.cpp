@@ -24,21 +24,21 @@
 
 #include "glc_3drep.h"
 #include "../glc_factory.h"
-#include "glc_extendedmesh.h"
+#include "glc_mesh.h"
 
 // Default constructor
 GLC_3DRep::GLC_3DRep()
 : GLC_Rep()
-, m_pGeomList(new QList<GLC_VboGeom*>)
+, m_pGeomList(new QList<GLC_Geometry*>)
 , m_pType(new int(GLC_Rep::GLC_VBOGEOM))
 {
 
 }
 
 // Construct a 3DRep with a geometry
-GLC_3DRep::GLC_3DRep(GLC_VboGeom* pGeom)
+GLC_3DRep::GLC_3DRep(GLC_Geometry* pGeom)
 : GLC_Rep()
-, m_pGeomList(new QList<GLC_VboGeom*>)
+, m_pGeomList(new QList<GLC_Geometry*>)
 , m_pType(new int(GLC_Rep::GLC_VBOGEOM))
 {
 	m_pGeomList->append(pGeom);
@@ -199,7 +199,7 @@ QSet<GLC_Material*> GLC_3DRep::materialSet() const
 // Remove empty geometries
 void GLC_3DRep::clean()
 {
-	QList<GLC_VboGeom*>::iterator iGeomList= m_pGeomList->begin();
+	QList<GLC_Geometry*>::iterator iGeomList= m_pGeomList->begin();
 	while(iGeomList != m_pGeomList->constEnd())
 	{
 		if ((*iGeomList)->numberOfVertex() == 0)
@@ -279,11 +279,11 @@ void GLC_3DRep::replaceMaterial(GLC_uint oldId, GLC_Material* pNewMaterial)
 	const int size= m_pGeomList->size();
 	for (int i= 0; i < size; ++i)
 	{
-		GLC_VboGeom* pGeom= m_pGeomList->at(i);
+		GLC_Geometry* pGeom= m_pGeomList->at(i);
 		if (pGeom->containsMaterial(oldId))
 		{
 			Q_ASSERT(!pGeom->containsMaterial(pNewMaterial->id()));
-			GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(m_pGeomList->at(i));
+			GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(m_pGeomList->at(i));
 			if (NULL != pMesh)
 			{
 				pMesh->replaceMaterial(oldId, pNewMaterial);
@@ -362,7 +362,7 @@ QDataStream &operator<<(QDataStream & stream, const GLC_3DRep & rep)
 	stream << meshNumber;
 	for (int i= 0; i < meshNumber; ++i)
 	{
-		GLC_ExtendedMesh* pMesh= dynamic_cast<GLC_ExtendedMesh*>(rep.m_pGeomList->at(i));
+		GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(rep.m_pGeomList->at(i));
 		if (NULL != pMesh)
 		{
 			pMesh->saveToDataStream(stream);
@@ -403,7 +403,7 @@ QDataStream &operator>>(QDataStream & stream, GLC_3DRep & rep)
 	stream >> meshNumber;
 	for (int i= 0; i < meshNumber; ++i)
 	{
-		GLC_ExtendedMesh* pMesh= new GLC_ExtendedMesh();
+		GLC_Mesh* pMesh= new GLC_Mesh();
 		pMesh->loadFromDataStream(stream, materialHash, materialIdMap);
 
 		rep.addGeom(pMesh);

@@ -28,7 +28,7 @@
 #define GLC_BOX_H_
 
 
-#include "glc_vbogeom.h"
+#include "glc_geometry.h"
 #include "glc_simplegeomengine.h"
 
 #include "../glc_config.h"
@@ -43,7 +43,7 @@
 
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_Box : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Box : public GLC_Geometry
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor */
@@ -80,7 +80,7 @@ public:
 	virtual GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the geometry
-	virtual GLC_VboGeom* clone() const;
+	virtual GLC_Geometry* clone() const;
 
 	//! Get number of faces
 	virtual unsigned int numberOfFaces() const;

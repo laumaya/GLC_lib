@@ -29,7 +29,7 @@
 
 #include <QVector>
 #include <QList>
-#include "glc_extendedmesh.h"
+#include "glc_mesh.h"
 
 namespace glc
 {

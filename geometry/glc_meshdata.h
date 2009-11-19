@@ -22,14 +22,14 @@
 
 *****************************************************************************/
 
-//! \file glc_extendedgeomengine.h Interface for the GLC_ExtendedGeomEngine class.
+//! \file glc_extendedgeomengine.h Interface for the GLC_MeshData class.
 
-#ifndef GLC_EXTENDEDGEOMENGINE_H_
-#define GLC_EXTENDEDGEOMENGINE_H_
+#ifndef GLC_MESHDATA_H_
+#define GLC_MESHDATA_H_
 
 #include <QVector>
 #include "glc_geomengine.h"
-#include "glc_enginelod.h"
+#include "glc_lod.h"
 
 #include "../glc_config.h"
 
@@ -40,17 +40,14 @@ typedef QVector<GLfloat> GLfloatVector;
 typedef QVector<GLuint> GLuintVector;
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_ExtendedGeomEngine
-/*! \brief GLC_ExtendedGeomEngine : Specialized engine
- */
-
-/*! GLC_ExtendedGeomEngine can handle mesh with Triangles, strips and fans
+//! \class GLC_MeshData
+/*! \brief GLC_MeshData : Contains all data of the mesh
  */
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_ExtendedGeomEngine : public GLC_GeomEngine
+class GLC_LIB_EXPORT GLC_MeshData
 {
-	friend QDataStream &operator<<(QDataStream &, const GLC_ExtendedGeomEngine &);
-	friend QDataStream &operator>>(QDataStream &, GLC_ExtendedGeomEngine &);
+	friend QDataStream &operator<<(QDataStream &, const GLC_MeshData &);
+	friend QDataStream &operator>>(QDataStream &, GLC_MeshData &);
 
 public:
 
@@ -65,12 +62,12 @@ public:
 
 public:
 	//! Default constructor
-	GLC_ExtendedGeomEngine();
+	GLC_MeshData();
 
 	//! Copy constructor
-	GLC_ExtendedGeomEngine(const GLC_ExtendedGeomEngine&);
+	GLC_MeshData(const GLC_MeshData&);
 
-	virtual ~GLC_ExtendedGeomEngine();
+	virtual ~GLC_MeshData();
 
 
 //////////////////////////////////////////////////////////////////////
@@ -131,7 +128,7 @@ public:
 		return m_EngineLodList.at(i)->indexVectorSize();
 	}
 	//! Return the specified LOD
-	inline GLC_EngineLod* getLod(int index) const
+	inline GLC_Lod* getLod(int index) const
 	{
 		return m_EngineLodList.value(index);
 	}
@@ -145,7 +142,7 @@ public:
 public:
 	//! Add a Lod to the engine
 	inline void appendLod(double accuracy= 0.0)
-	{m_EngineLodList.append(new GLC_EngineLod(accuracy));}
+	{m_EngineLodList.append(new GLC_Lod(accuracy));}
 
 	//! The mesh wich use this engine is finished
 	void finished();
@@ -167,7 +164,7 @@ public:
 	void createVBOs();
 
 	//! Ibo Usage
-	bool useVBO(bool, GLC_ExtendedGeomEngine::VboType);
+	bool useVBO(bool, GLC_MeshData::VboType);
 
 	//! Ibo Usage
 	inline void useIBO(bool use, const int currentLod= 0)
@@ -182,6 +179,10 @@ public:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
+
+	//! Main VBO ID
+	GLuint m_VboId;
+
 	//! Vertex Position Vector
 	GLfloatVector m_Positions;
 
@@ -204,7 +205,7 @@ private:
 	GLuint m_ColorVboId;
 
 	//! The list of LOD
-	QList<GLC_EngineLod*> m_EngineLodList;
+	QList<GLC_Lod*> m_EngineLodList;
 
 	//! The size of Position and normal VBO
 	int m_PositionSize;
@@ -218,7 +219,7 @@ private:
 };
 
 //! Non-member stream operator
-QDataStream &operator<<(QDataStream &, const GLC_ExtendedGeomEngine &);
-QDataStream &operator>>(QDataStream &, GLC_ExtendedGeomEngine &);
+QDataStream &operator<<(QDataStream &, const GLC_MeshData &);
+QDataStream &operator>>(QDataStream &, GLC_MeshData &);
 
-#endif /* GLC_EXTENDEDGEOMENGINE_H_ */
+#endif /* GLC_MESHDATA_H_ */

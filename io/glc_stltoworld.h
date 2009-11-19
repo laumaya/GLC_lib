@@ -32,7 +32,7 @@
 #include <QFile>
 #include <QTextStream>
 
-#include "../geometry/glc_extendedmesh.h"
+#include "../geometry/glc_mesh.h"
 #include "../maths/glc_vector3df.h"
 
 #include "../glc_config.h"
@@ -113,7 +113,7 @@ private:
 	QTextStream m_StlStream;
 
 	//! The current mesh
-	GLC_ExtendedMesh* m_pCurrentMesh;
+	GLC_Mesh* m_pCurrentMesh;
 
 	//! Current face index
 	IndexList m_CurrentFace;

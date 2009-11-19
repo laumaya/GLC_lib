@@ -118,7 +118,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 	if (!lineBuff.startsWith("solid"))
 	{
 		// The STL File is not ASCII trying to load Binary STL File
-		m_pCurrentMesh= new GLC_ExtendedMesh();
+		m_pCurrentMesh= new GLC_Mesh();
 		file.reset();
 		LoadBinariStl(file);
 		m_pCurrentMesh->addTriangles(NULL, m_CurrentFace);
@@ -137,7 +137,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		// The STL File is ASCII
 		lineBuff.remove(0, 5);
 		lineBuff= lineBuff.trimmed();
-		m_pCurrentMesh= new GLC_ExtendedMesh();
+		m_pCurrentMesh= new GLC_Mesh();
 		m_pCurrentMesh->setName(lineBuff);
 		// Read the mesh facet
 		while (!m_StlStream.atEnd())
@@ -205,7 +205,7 @@ void GLC_StlToWorld::scanFacet()
 		// The STL File is ASCII
 		lineBuff.remove(0, 5);
 		lineBuff= lineBuff.trimmed();
-		m_pCurrentMesh= new GLC_ExtendedMesh();
+		m_pCurrentMesh= new GLC_Mesh();
 		m_pCurrentMesh->setName(lineBuff);
 		return;
 	}

@@ -27,8 +27,8 @@
 #ifndef GLC_RECTANGLE_H_
 #define GLC_RECTANGLE_H_
 
-#include "glc_extendedgeomengine.h"
-#include "glc_vbogeom.h"
+#include "glc_meshdata.h"
+#include "glc_geometry.h"
 #include "glc_primitivegroup.h"
 
 #include "../glc_config.h"
@@ -39,7 +39,7 @@
 
 /*! An GLC_Rectangle is just a simple 3D Rectangle which use VBO*/
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_Rectangle : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Rectangle : public GLC_Geometry
 {
 
 //////////////////////////////////////////////////////////////////////
@@ -77,7 +77,7 @@ public:
 	{ return m_Normal;}
 
 	//! clone the rectangle
-	virtual GLC_VboGeom* clone() const;
+	virtual GLC_Geometry* clone() const;
 
 	//! return the rectangle bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
@@ -168,7 +168,7 @@ private:
 	bool m_IsSelected;
 
 	//! Geom engine
-	GLC_ExtendedGeomEngine m_ExtendedGeomEngine;
+	GLC_MeshData m_ExtendedGeomEngine;
 
 	//! Normal Vector of the rectangle
 	GLC_Vector4d m_Normal;

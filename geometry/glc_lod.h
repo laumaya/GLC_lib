@@ -22,39 +22,42 @@
 
 *****************************************************************************/
 
-//! \file glc_enginelod.h interface for the GLC_EngineLod class.
+//! \file glc_lod.h interface for the GLC_Lod class.
 
-#ifndef GLC_ENGINELOD_H_
-#define GLC_ENGINELOD_H_
+#ifndef GLC_LOD_H_
+#define GLC_LOD_H_
 
 #include <QVector>
 #include "../glc_ext.h"
 
 #include "../glc_config.h"
 
-class GLC_LIB_EXPORT GLC_EngineLod
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_Lod
+/*! \brief GLC_Lod is a Level of detail index and accuracy*/
+//////////////////////////////////////////////////////////////////////
+class GLC_LIB_EXPORT GLC_Lod
 {
 public:
-
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default Constructor
-	GLC_EngineLod();
+	GLC_Lod();
 
-	//! Construct an engine Lod with the specified accuracy
-	GLC_EngineLod(double accuracy);
+	//! Construct a Lod with the specified accuracy
+	GLC_Lod(double accuracy);
 
 	//! Copy constructor
-	GLC_EngineLod(const GLC_EngineLod&);
+	GLC_Lod(const GLC_Lod&);
 
 	//! Overload "=" operator
-	GLC_EngineLod& operator=(const GLC_EngineLod&);
+	GLC_Lod& operator=(const GLC_Lod&);
 
 	//!Destructor
-	virtual ~GLC_EngineLod();
+	virtual ~GLC_Lod();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -66,16 +69,16 @@ public:
 	inline double accuracy() const
 	{return m_Accuracy;}
 
-	//! Return the Triangle Index Vector
+	//! Return Index Vector
 	QVector<GLuint> indexVector() const;
 
-	//! Return the Triangle Index Vector handle
+	//! Return Index Vector handle
 	inline QVector<GLuint>* indexVectorHandle()
-	{ return &m_IboVector;}
+	{ return &m_IndexVector;}
 
-	//! Return the size of the triangles index Vector
+	//! Return the size of the index Vector
 	inline int indexVectorSize() const
-	{return m_IboVector.size();}
+	{return m_IndexVector.size();}
 
 //@}
 
@@ -85,10 +88,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! The mesh wich use this lod is finished
-	inline void finished()
+	inline void finish()
 	{
-		m_IndexSize= m_IboVector.size();
-		m_IboVector.clear();
+		m_IndexSize= m_IndexVector.size();
+		m_IndexVector.clear();
 	}
 	//! Set accuracy of the LOD
 	inline void setAccuracy(const double& accuracy)
@@ -104,7 +107,7 @@ public:
 	//! IBO creation
 	inline void createIBO()
 	{
-		if (0 == m_IboId && !m_IboVector.isEmpty())
+		if (0 == m_IboId && !m_IndexVector.isEmpty())
 		{
 			glGenBuffers(1, &m_IboId);
 		}
@@ -127,8 +130,8 @@ private:
 	//! The IBO ID
 	GLuint m_IboId;
 
-	//! The IBO Vector
-	QVector<GLuint> m_IboVector;
+	//! The Index Vector
+	QVector<GLuint> m_IndexVector;
 
 	//! The Index vector size
 	int m_IndexSize;
@@ -136,7 +139,7 @@ private:
 };
 
 //! Non-member stream operator
-QDataStream &operator<<(QDataStream &, const GLC_EngineLod &);
-QDataStream &operator>>(QDataStream &, GLC_EngineLod &);
+QDataStream &operator<<(QDataStream &, const GLC_Lod &);
+QDataStream &operator>>(QDataStream &, GLC_Lod &);
 
-#endif /* GLC_ENGINELOD_H_ */
+#endif /* GLC_LOD_H_ */

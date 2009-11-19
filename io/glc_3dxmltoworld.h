@@ -44,7 +44,7 @@ class QuaZip;
 class QuaZipFile;
 class GLC_StructReference;
 class GLC_StructInstance;
-class GLC_ExtendedMesh;
+class GLC_Mesh;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_3dxmlToWorld
@@ -179,7 +179,7 @@ private:
 	void checkForXmlError(const QString&);
 
 	//! Load Level of detail
-	void loadLOD(GLC_ExtendedMesh*);
+	void loadLOD(GLC_Mesh*);
 
 	//! Return true if the end of specified element is not reached
 	inline bool endElementNotReached(const QString& element)
@@ -190,7 +190,7 @@ private:
 	{return !m_pStreamReader->atEnd() && !(m_pStreamReader->isStartElement() && (m_pStreamReader->name() == element));}
 
 	//! Load a face
-	void loadFace(GLC_ExtendedMesh*, const int lod, double accuracy);
+	void loadFace(GLC_Mesh*, const int lod, double accuracy);
 
 	//! Clear material hash
 	void clearMaterialHash();

@@ -27,7 +27,7 @@
 #ifndef GLC_CIRCLE_H_
 #define GLC_CIRCLE_H_
 
-#include "glc_vbogeom.h"
+#include "glc_geometry.h"
 #include "glc_simplegeomengine.h"
 
 #include "../glc_config.h"
@@ -40,7 +40,7 @@
  * It can be an entire circle or an arc.
  * */
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_Circle : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Circle : public GLC_Geometry
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -82,7 +82,7 @@ public:
 	virtual GLC_BoundingBox& boundingBox();
 
 	//! Return a copy of the geometry
-	virtual GLC_VboGeom* clone() const;
+	virtual GLC_Geometry* clone() const;
 //@}
 
 //////////////////////////////////////////////////////////////////////

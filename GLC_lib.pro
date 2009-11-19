@@ -5,7 +5,7 @@ QT += opengl \
 
 
 CONFIG += exceptions \
-    release \
+    debug \
     warn_on
 TARGET = GLC_lib
 VERSION = 1.2.0
@@ -80,7 +80,7 @@ HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_attributes.h \
 							sceneGraph/glc_worldhandle.h
 							
-HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
+HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_circle.h \
 							geometry/glc_cylinder.h \
 							geometry/glc_point.h \
@@ -88,10 +88,10 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
            					geometry/glc_geomtools.h \
 							geometry/glc_geomengine.h \
 							geometry/glc_simplegeomengine.h \
-							geometry/glc_extendedgeomengine.h \
+							geometry/glc_meshdata.h \
 							geometry/glc_primitivegroup.h \
-							geometry/glc_extendedmesh.h \
-							geometry/glc_enginelod.h \
+							geometry/glc_mesh.h \
+							geometry/glc_lod.h \
 							geometry/glc_rectangle.h \
 							geometry/glc_line.h \
 							geometry/glc_rep.h \
@@ -197,7 +197,7 @@ SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
 			sceneGraph/glc_attributes.cpp \
 			sceneGraph/glc_worldhandle.cpp
 
-SOURCES +=	geometry/glc_vbogeom.cpp \
+SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_circle.cpp \
 			geometry/glc_cylinder.cpp \
 			geometry/glc_point.cpp \
@@ -205,10 +205,10 @@ SOURCES +=	geometry/glc_vbogeom.cpp \
 			geometry/glc_geomtools.cpp \
 			geometry/glc_geomengine.cpp \
 			geometry/glc_simplegeomengine.cpp \
-			geometry/glc_extendedgeomengine.cpp \
+			geometry/glc_meshdata.cpp \
 			geometry/glc_primitivegroup.cpp \
-			geometry/glc_extendedmesh.cpp \
-			geometry/glc_enginelod.cpp \
+			geometry/glc_mesh.cpp \
+			geometry/glc_lod.cpp \
 			geometry/glc_rectangle.cpp \
 			geometry/glc_line.cpp \
 			geometry/glc_rep.cpp \
@@ -266,7 +266,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Exception \
     		   include/GLC_Factory \
     		   include/GLC_FileFormatException \
-    		   include/GLC_VboGeom \
+    		   include/GLC_Geometry \
     		   include/GLC_ImagePlane \
     		   include/GLC_3DViewInstance \
     		   include/GLC_Interpolator \
@@ -304,7 +304,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_TurnTableMover \
     		   include/GLC_Attribute \
     		   include/GLC_Rectangle \
-    		   include/GLC_ExtendedMesh \
+    		   include/GLC_Mesh \
     		   include/GLC_StructOccurence \
     		   include/GLC_StructInstance \
     		   include/GLC_StructReference \

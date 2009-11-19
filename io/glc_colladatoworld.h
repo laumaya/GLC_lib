@@ -34,7 +34,7 @@
 #include <QColor>
 
 #include "../shading/glc_material.h"
-#include "../geometry/glc_extendedmesh.h"
+#include "../geometry/glc_mesh.h"
 #include "../sceneGraph/glc_structoccurence.h"
 
 #include "../glc_config.h"
@@ -101,7 +101,7 @@ private:
 
 		~MeshInfo() {delete m_pMesh;}
 		// Mesh of the mesh info
-		GLC_ExtendedMesh* m_pMesh;
+		GLC_Mesh* m_pMesh;
 		// Bulk data vector (Position, normal, texel)
 		QVector<QList<float> > m_Datas;
 		// Mapping between collada vertice and index

@@ -61,7 +61,7 @@ public:
 	GLC_3DViewInstance();
 
 	//! Contruct instance with a geometry
-	GLC_3DViewInstance(GLC_VboGeom* pGeom);
+	GLC_3DViewInstance(GLC_Geometry* pGeom);
 
 	//! Contruct instance with a 3DRep
 	GLC_3DViewInstance(const GLC_3DRep&);
@@ -125,7 +125,7 @@ public:
 
 
 	//! Return the geometry at the specified position
-	inline GLC_VboGeom* geomAt(int index) const
+	inline GLC_Geometry* geomAt(int index) const
 	{
 		if (!m_3DRep.isEmpty()) return m_3DRep.geomAt(index);
 		else return NULL;
@@ -204,7 +204,7 @@ public:
 	/*!
 	 *  instance must be null
 	 */
-	bool setGeometry(GLC_VboGeom* pGeom);
+	bool setGeometry(GLC_Geometry* pGeom);
 
 	//! Remove empty geometries
 	inline void removeEmptyGeometry()
