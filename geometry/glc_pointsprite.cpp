@@ -27,6 +27,7 @@
 #include "glc_pointsprite.h"
 #include "../glc_openglexception.h"
 #include "../glc_state.h"
+#include "../glc_ext.h"
 
 // The maximum point size
 float GLC_PointSprite::m_MaxSize= -1.0f;
