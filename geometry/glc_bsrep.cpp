@@ -37,12 +37,12 @@ const quint32 GLC_BSRep::m_Version= 100;
 
 
 // Default constructor
-GLC_BSRep::GLC_BSRep(const QString& fileName, bool useCompression, int compressionLevel)
+GLC_BSRep::GLC_BSRep(const QString& fileName, bool useCompression)
 : m_FileInfo()
 , m_pFile(NULL)
 , m_DataStream()
 , m_UseCompression(useCompression)
-, m_CompressionLevel(compressionLevel)
+, m_CompressionLevel(-1)
 {
 	setAbsoluteFileName(fileName);
 	m_DataStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
@@ -158,6 +158,23 @@ GLC_3DRep GLC_BSRep::loadRep()
 
 
 	return loadedRep;
+}
+
+// Return the bounding box of the binary representation
+GLC_BoundingBox GLC_BSRep::boundingBox()
+{
+	GLC_BoundingBox boundingBox;
+
+	if (open(QIODevice::ReadOnly))
+	{
+		if (headerIsOk())
+		{
+			timeStampOk(QDateTime());
+
+			m_DataStream >> boundingBox;
+		}
+	}
+	return boundingBox;
 }
 
 // Return bsrep suffix

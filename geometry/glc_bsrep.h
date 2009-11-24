@@ -47,7 +47,7 @@ class GLC_LIB_EXPORT GLC_BSRep
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_BSRep(const QString& absoluteFileName= QString(), bool useCompression= true, int compressionLevel= -1);
+	GLC_BSRep(const QString& absoluteFileName= QString(), bool useCompression= true);
 
 	//! Copy constructor
 	GLC_BSRep(const GLC_BSRep&);
@@ -71,9 +71,11 @@ public:
 	//! Load the binary rep
 	GLC_3DRep loadRep();
 
+	//! Return the bounding box of the binary representation
+	GLC_BoundingBox boundingBox();
+
 	//! Return bsrep suffix
 	static QString suffix();
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -86,6 +88,14 @@ public:
 
 	//! Save the GLC_3DRep in serialised binary
 	bool save(const GLC_3DRep&);
+
+	//! Set the compression usage for saving a 3DREP in binary format
+	inline void setCompressionUsage(bool usage)
+	{m_UseCompression= usage;}
+
+	//! Set the compression level if compression is used when saving in binary format
+	inline void setCompressionLevel(int level)
+	{m_CompressionLevel= level;}
 
 //@}
 
