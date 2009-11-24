@@ -103,11 +103,19 @@ public:
 
 	//! Return the offset of triangles index
 	inline const GLvoid* trianglesIndexOffset() const
-	{return m_pBaseTrianglesOffset;}
+	{return m_TrianglesGroupOffset.first();}
 
 	//! Return the offset of triangles index
 	inline const int trianglesIndexOffseti() const
-	{return m_BaseTrianglesOffseti;}
+	{return m_TrianglesGroupOffseti.first();}
+
+	//! Return the offset of triangles index
+	inline const OffsetVector& trianglesGroupOffset() const
+	{return m_TrianglesGroupOffset;}
+
+	//! Return the offset of triangles index
+	inline const OffsetVectori& trianglesGroupOffseti() const
+	{return m_TrianglesGroupOffseti;}
 
 	//! Return true if the group contains strips
 	inline bool containsStrip() const
@@ -182,12 +190,10 @@ public:
 	void addTriangles(const IndexList& input, GLC_uint id= 0);
 
 	//! Set the triangle index offset
-	inline void setTrianglesOffset(GLvoid* pOffset)
-	{m_pBaseTrianglesOffset= pOffset;}
+	void setTrianglesOffset(GLvoid* pOffset);
 
 	//! Set the triangle index offset
-	inline void setTrianglesOffseti(int offset)
-	{m_BaseTrianglesOffseti= offset;}
+	void setTrianglesOffseti(int offset);
 
 	//! Add triangle strip to the group
 	void addTrianglesStrip(const IndexList&, GLC_uint id= 0);
@@ -234,12 +240,12 @@ private:
 	//! Triangles index list
 	IndexList m_TrianglesIndex;
 
-	//! The base triangle index offset
-	GLvoid* m_pBaseTrianglesOffset;
-	GLuint m_BaseTrianglesOffseti;
-
 	//! Triangles groups index size
 	IndexSizes m_TrianglesGroupsSizes;
+
+	//! Vector of triangles group offset
+	OffsetVector m_TrianglesGroupOffset;
+	OffsetVectori m_TrianglesGroupOffseti;
 
 	//! Triangles groups id
 	QList<GLC_uint> m_TrianglesId;
