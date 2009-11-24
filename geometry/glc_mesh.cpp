@@ -330,16 +330,25 @@ QList<QVector<GLuint> > GLC_Mesh::getFansIndex(int lod, GLC_uint materialId) con
 //////////////////////////////////////////////////////////////////////
 
 // Add triangles
-void GLC_Mesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
+GLC_uint GLC_Mesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
 {
 	GLC_uint groupId= setCurrentMaterial(pMaterial, lod, accuracy);
 	Q_ASSERT(m_PrimitiveGroups.value(lod)->contains(groupId));
 	Q_ASSERT(!indexList.isEmpty());
-	m_PrimitiveGroups.value(lod)->value(groupId)->addTriangles(indexList);
+
+	GLC_uint id= 0;
+	if (0 == lod)
+	{
+		id= m_LocalId++;
+		m_NumberOfFaces+= indexList.size() / 3;
+	}
+
+	m_PrimitiveGroups.value(lod)->value(groupId)->addTriangles(indexList, id);
 
 	// Invalid the geometry
 	m_GeometryIsValid = false;
-	if (0 == lod) m_NumberOfFaces+= indexList.size() / 3;
+
+	return id;
 }
 
 // Add triangles Strip ans return his id

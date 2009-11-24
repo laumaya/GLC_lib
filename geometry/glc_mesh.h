@@ -189,7 +189,7 @@ public:
 	{*(m_MeshData.colorVectorHandle())+= colors;}
 
 	//! Add triangles
-	void addTriangles(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
+	GLC_uint addTriangles(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
 
 	//! Add triangles Strip and return his id
 	GLC_uint addTrianglesStrip(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
