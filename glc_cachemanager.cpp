@@ -28,6 +28,8 @@
 
 GLC_CacheManager::GLC_CacheManager(const QString& path)
 : m_Dir()
+, m_UseCompression(true)
+, m_CompressionLevel(-1)
 {
 	bool continu= true;
 
@@ -56,6 +58,8 @@ GLC_CacheManager::GLC_CacheManager(const QString& path)
 // Copy constructor
 GLC_CacheManager::GLC_CacheManager(const GLC_CacheManager& cacheManager)
 :m_Dir(cacheManager.m_Dir)
+, m_UseCompression(cacheManager.m_UseCompression)
+, m_CompressionLevel(cacheManager.m_CompressionLevel)
 {
 
 }
@@ -64,6 +68,9 @@ GLC_CacheManager::GLC_CacheManager(const GLC_CacheManager& cacheManager)
 GLC_CacheManager& GLC_CacheManager::operator=(const GLC_CacheManager& cacheManager)
 {
 	m_Dir= cacheManager.m_Dir;
+	m_UseCompression= cacheManager.m_UseCompression;
+	m_CompressionLevel= cacheManager.m_CompressionLevel;
+
 	return *this;
 }
 
@@ -141,11 +148,8 @@ bool GLC_CacheManager::isUsable(const QDateTime& timeStamp, const QString& conte
 // Return the binary serialized representation of the specified file
 GLC_BSRep GLC_CacheManager::binary3DRep(const QString& context, const QString& fileName) const
 {
-	GLC_BSRep binaryRep;
-
 	const QString absoluteFileName(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName+ '.' + GLC_BSRep::suffix());
-	binaryRep.setAbsoluteFileName(absoluteFileName);
-
+	GLC_BSRep binaryRep(absoluteFileName);
 
 	return binaryRep;
 }
@@ -166,7 +170,8 @@ bool GLC_CacheManager::addToCache(const QString& context, const GLC_3DRep& rep)
 		{
 
 			const QString binaryFileName= contextCacheInfo.filePath() + QDir::separator() + rep.fileName();
-			GLC_BSRep binariRep(binaryFileName);
+			GLC_BSRep binariRep(binaryFileName, m_UseCompression);
+			binariRep.setCompressionLevel(m_CompressionLevel);
 			addedToCache= binariRep.save(rep);
 		}
 	}

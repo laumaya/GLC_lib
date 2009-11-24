@@ -36,6 +36,10 @@
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_CacheManager
 /*! \brief GLC_CacheManager : The 3D Rep Binary cache manager*/
+
+/*! By default the binary rep are compressed with a default
+ * compression level
+ */
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_CacheManager
 {
@@ -102,6 +106,14 @@ public:
 
 	//! Set the cache file path
 	bool setCachePath(const QString&);
+
+	//! Set the cache compression usage
+	inline void setCompressionUsage(bool use)
+	{m_UseCompression= use;}
+
+	//! Set the cache compression level
+	inline void setCompressionLevel(int level)
+	{m_CompressionLevel= level;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -111,6 +123,12 @@ private:
 
 	//! The cache directory
 	QDir m_Dir;
+
+	//! Compress Data
+	bool m_UseCompression;
+
+	//! The compression level
+	int m_CompressionLevel;
 };
 
 #endif /* GLC_CACHEMANAGER_H_ */
