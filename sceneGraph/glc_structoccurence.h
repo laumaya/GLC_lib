@@ -158,8 +158,8 @@ public:
 	/*! The new child must be orphan*/
 	void addChild(GLC_StructOccurence*);
 
-	//! Add Child instance (the occurence is created)
-	void addChild(GLC_StructInstance*);
+	//! Add Child instance and returns the newly created occurence
+	GLC_StructOccurence* addChild(GLC_StructInstance*);
 
 	//! make the occurence orphan
 	void makeOrphan();

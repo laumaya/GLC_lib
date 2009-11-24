@@ -357,13 +357,15 @@ void GLC_StructOccurence::addChild(GLC_StructOccurence* pChild)
 	pChild->updateChildrenAbsoluteMatrix();
 }
 
-// Add Child instance (the occurence is created)
-void GLC_StructOccurence::addChild(GLC_StructInstance* pInstance)
+// Add Child instance and returns the newly created occurence
+GLC_StructOccurence* GLC_StructOccurence::addChild(GLC_StructInstance* pInstance)
 {
 	GLC_StructOccurence* pOccurence;
 	pOccurence= new GLC_StructOccurence(m_pWorldHandle, pInstance);
 
 	addChild(pOccurence);
+
+	return pOccurence;
 }
 
 // make the occurence orphan
