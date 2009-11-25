@@ -28,8 +28,7 @@
 #define GLC_CYLINDER_H_
 
 
-#include "glc_geometry.h"
-#include "glc_simplegeomengine.h"
+#include "glc_mesh.h"
 
 #include "../glc_config.h"
 
@@ -42,7 +41,7 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_Cylinder : public GLC_Geometry
+class GLC_LIB_EXPORT GLC_Cylinder : public GLC_Mesh
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -83,20 +82,14 @@ public:
 	inline int discretion(void) const
 	{return m_Discret;}
 
-	//! return the cylinder bounding box
-	virtual GLC_BoundingBox& boundingBox(void);
-
-	//! Return a copy of the geometry
+	//! Return a copy of the Cylinder
 	virtual GLC_Geometry* clone() const;
-
-	//! Get number of faces
-	virtual unsigned int numberOfFaces() const;
-
-	//! Get number of vertex
-	virtual unsigned int numberOfVertex() const;
 
 	//! return true if cylinder's ended are capped
 	bool EndedIsCaped() const {return m_EndedIsCaped;}
+
+	//! return the cylinder bounding box
+	virtual GLC_BoundingBox& boundingBox(void);
 
 //@}
 
@@ -138,6 +131,16 @@ private:
 //@}
 
 //////////////////////////////////////////////////////////////////////
+/*! \name Private services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Create the cylinder mesh
+	void createMesh();
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
@@ -153,9 +156,6 @@ private:
 
 	//! Cylinder is capped
 	bool m_EndedIsCaped;
-
-	//! Geom engine
-	GLC_SimpleGeomEngine m_SimpleGeomEngine;
 
 
 };

@@ -38,42 +38,23 @@ using namespace glc;
 
 
 GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength)
-:GLC_Geometry("Cylinder", false)
+:GLC_Mesh()
 , m_Radius(dRadius)
 , m_Length(dLength)
 , m_Discret(GLC_POLYDISCRET)	// Default discretion
 , m_EndedIsCaped(true)			// Cylinder ended are closed
-, m_SimpleGeomEngine()
 {
 	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0));
 }
 
 GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
-:GLC_Geometry(sourceCylinder)
+:GLC_Mesh(sourceCylinder)
 , m_Radius(sourceCylinder.m_Radius)
 , m_Length(sourceCylinder.m_Length)
 , m_Discret(sourceCylinder.m_Discret)
 , m_EndedIsCaped(sourceCylinder.m_EndedIsCaped)
-, m_SimpleGeomEngine(sourceCylinder.m_SimpleGeomEngine)
 {
 	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0) && (m_Discret > 0));
-
-	// Copy inner material hash
-	MaterialHash::const_iterator i= m_MaterialHash.begin();
-	MaterialHash newMaterialHash;
-    while (i != m_MaterialHash.constEnd())
-    {
-        // update inner material use table
-    	i.value()->delGLC_Geom(id());
-    	GLC_Material* pNewMaterial= new GLC_Material(*(i.value()));
-    	pNewMaterial->setId(glc::GLC_GenID());
-    	pNewMaterial->setUuid(QUuid::createUuid());
-
-    	newMaterialHash.insert(pNewMaterial->id(), pNewMaterial);
-    	pNewMaterial->addGLC_Geom(this);
-         ++i;
-    }
-    m_MaterialHash= newMaterialHash;
 
 }
 GLC_Cylinder::~GLC_Cylinder()
@@ -85,37 +66,20 @@ GLC_Cylinder::~GLC_Cylinder()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// return the cylinder bounding box
-GLC_BoundingBox& GLC_Cylinder::boundingBox(void)
-{
-	if (NULL == m_pBoundingBox)
-	{
-		m_pBoundingBox= new GLC_BoundingBox();
-		GLC_Point3d lower(-m_Radius, -m_Radius, 0.0);
-		GLC_Point3d upper(m_Radius, m_Radius, m_Length);
-		m_pBoundingBox->combine(lower);
-		m_pBoundingBox->combine(upper);
-	}
-	return *m_pBoundingBox;
-}
-
 // Return a copy of the current geometry
 GLC_Geometry* GLC_Cylinder::clone() const
 {
 	return new GLC_Cylinder(*this);
 }
 
-
-// Get number of faces
-unsigned int GLC_Cylinder::numberOfFaces() const
+// return the cylinder bounding box
+GLC_BoundingBox& GLC_Cylinder::boundingBox()
 {
-	return m_SimpleGeomEngine.numberOfFaces();
-}
-
-// Get number of vertex
-unsigned int GLC_Cylinder::numberOfVertex() const
-{
-	return m_SimpleGeomEngine.numberOfVertex();
+	if (numberOfVertex() == 0)
+	{
+		createMesh();
+	}
+	return GLC_Mesh::boundingBox();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -127,11 +91,8 @@ void GLC_Cylinder::setLength(double Length)
 	Q_ASSERT(Length > 0.0);
 	m_Length= Length;
 
-	if (NULL != m_pBoundingBox)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
+	delete m_pBoundingBox;
+	m_pBoundingBox= NULL;
 	m_GeometryIsValid= false;
 }
 
@@ -141,11 +102,8 @@ void GLC_Cylinder::setRadius(double Radius)
 	Q_ASSERT(Radius > 0.0);
 	m_Radius= Radius;
 
-	if (NULL != m_pBoundingBox)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
+	delete m_pBoundingBox;
+	m_pBoundingBox= NULL;
 	m_GeometryIsValid= false;
 }
 
@@ -158,6 +116,9 @@ void GLC_Cylinder::setDiscretion(int TargetDiscret)
 		m_Discret= TargetDiscret;
 		if (m_Discret < 6) m_Discret= 6;
 
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+
 		m_GeometryIsValid= false;
 	}
 }
@@ -168,6 +129,12 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 	if (m_EndedIsCaped != CapsEnded)
 	{
 		m_EndedIsCaped= CapsEnded;
+
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+
+		m_GeometryIsValid= false;
+
 	}
 }
 
@@ -176,195 +143,166 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 //////////////////////////////////////////////////////////////////////
 
 // Dessin du GLC_Cylinder
-void GLC_Cylinder::glDraw(bool)
+void GLC_Cylinder::glDraw(bool transparent)
 {
-	const bool vboIsUsed= GLC_State::vboUsed();
-	if (vboIsUsed)
+
+	if (numberOfVertex() == 0)
 	{
-		m_SimpleGeomEngine.createVBOs();
-		m_SimpleGeomEngine.useVBOs(true);
+		createMesh();
 	}
 
-	if (!m_GeometryIsValid)
+	GLC_Mesh::glDraw(transparent);
+
+}
+
+// Create the cylinder mesh
+void GLC_Cylinder::createMesh()
+{
+	qDebug() << "GLC_Cylinder::createMesh";
+	// Clear the mesh of the cylinder
+	GLC_Mesh::clearOnlyMesh();
+
+	// Create cosinus and sinus array according to the discretion and radius
+	const int vertexNumber= m_Discret + 1;
+	// Normals values
+	QVector<float> cosNormalArray(vertexNumber);
+	QVector<float> sinNormalArray(vertexNumber);
+
+	QVector<float> cosArray(vertexNumber);
+	QVector<float> sinArray(vertexNumber);
+
+	const double angle= (2.0 * PI) / static_cast<double>(m_Discret);
+
+	for (int i= 0; i < vertexNumber; ++i)
 	{
-		QVector<double> cosArray(m_Discret + 1);
-		QVector<double> sinArray(m_Discret + 1);
-		for (int i= 0; i <= m_Discret; ++i)
-		{
-			cosArray[i]= m_Radius * cos(i * (2 * PI) / m_Discret);
-			sinArray[i]= m_Radius * sin(i * (2 * PI) / m_Discret);
-		}
+		const double cosValue= cos(static_cast<double>(i) * angle);
+		const double sinValue= sin(static_cast<double>(i) * angle);
 
-		// Vertex Vector
-		const GLsizei dataNbr= (m_Discret + 1) * 4;
-		// Resize the Vertex vector
-		VertexVector* pVertexVector= m_SimpleGeomEngine.vertexVectorHandle();
-		pVertexVector->resize(dataNbr);
+		cosNormalArray[i]= static_cast<GLfloat>(cosValue);
+		sinNormalArray[i]= static_cast<GLfloat>(sinValue);
 
-		for (GLsizei i= 0; i < (dataNbr / 4); ++i)
-		{
-			// Bottom
-			(*pVertexVector)[i].x= static_cast<GLfloat>(cosArray[i]);
-			(*pVertexVector)[i].y= static_cast<GLfloat>(sinArray[i]);
-			(*pVertexVector)[i].z= 0.0f;
-			GLC_Vector4d normal(cosArray[i], sinArray[i], 0.0);
-			normal.setNormal(1.0);
-			(*pVertexVector)[i].nx= static_cast<GLfloat>(normal.X());
-			(*pVertexVector)[i].ny= static_cast<GLfloat>(normal.Y());
-			(*pVertexVector)[i].nz= 0.0f;
-			(*pVertexVector)[i].s= static_cast<float>(i) / static_cast<float>(m_Discret);
-			(*pVertexVector)[i].t= 0.0f;
-
-			// Top
-			(*pVertexVector)[i + (m_Discret + 1)].x= (*pVertexVector)[i].x;
-			(*pVertexVector)[i + (m_Discret + 1)].y= (*pVertexVector)[i].y;
-			(*pVertexVector)[i + (m_Discret + 1)].z= static_cast<GLfloat>(m_Length);
-			(*pVertexVector)[i + (m_Discret + 1)].nx= (*pVertexVector)[i].nx;
-			(*pVertexVector)[i + (m_Discret + 1)].ny= (*pVertexVector)[i].ny;
-			(*pVertexVector)[i + (m_Discret + 1)].nz= 0.0f;
-			(*pVertexVector)[i + (m_Discret + 1)].s= (*pVertexVector)[i].s;
-			(*pVertexVector)[i + (m_Discret + 1)].t= 1.0f;
-
-			// Bottom Cap
-			(*pVertexVector)[i + 2 * (m_Discret + 1)].x= (*pVertexVector)[i].x;
-			(*pVertexVector)[i + 2 * (m_Discret + 1)].y= (*pVertexVector)[i].y;
-			(*pVertexVector)[i + 2 * (m_Discret + 1)].z= 0.0f;
-			(*pVertexVector)[i + 2 * (m_Discret + 1)].nx= 0.0f;
-			(*pVertexVector)[i + 2 * (m_Discret + 1)].ny= 0.0f;
-			(*pVertexVector)[i + 2 * (m_Discret + 1)].nz= -1.0f;
-			(*pVertexVector)[i + 2 * (m_Discret + 1)].s= (*pVertexVector)[i].s;
-			(*pVertexVector)[i + 2 * (m_Discret + 1)].t= 1.0f;
-
-			// Top Cap
-			(*pVertexVector)[i + 3 * (m_Discret + 1)].x= (*pVertexVector)[i].x;
-			(*pVertexVector)[i + 3 * (m_Discret + 1)].y= (*pVertexVector)[i].y;
-			(*pVertexVector)[i + 3 * (m_Discret + 1)].z= static_cast<GLfloat>(m_Length);
-			(*pVertexVector)[i + 3 * (m_Discret + 1)].nx= 0.0f;
-			(*pVertexVector)[i + 3 * (m_Discret + 1)].ny= 0.0f;
-			(*pVertexVector)[i + 3 * (m_Discret + 1)].nz= 1.0f;
-			(*pVertexVector)[i + 3 * (m_Discret + 1)].s= (*pVertexVector)[i].s;
-			(*pVertexVector)[i + 3 * (m_Discret + 1)].t= 1.0f;
-		}
-
-		// IBO Vector
-		const GLsizei indexNbr= 2 * (m_Discret + 1) + 2 * m_Discret;
-		// Resize index vector
-		QVector<GLuint>* pIndexVector= m_SimpleGeomEngine.indexVectorHandle();
-		pIndexVector->resize(indexNbr);
-
-		GLsizei j= 0;
-		for (GLsizei i= 0; i < 2 * (m_Discret + 1); i+=2, ++j)
-		{
-			(*pIndexVector)[i]= j;
-			(*pIndexVector)[i + 1]= j + (m_Discret + 1);
-		}
-
-		// Caps end
-		j= 2 * (m_Discret + 1) + m_Discret / 2;
-		GLsizei k= j - 1;
-		GLsizei max = 2 * (m_Discret + 1) + m_Discret;
-		for (GLsizei i= 2 * (m_Discret + 1); i < max; i+= 2, ++j, --k)
-		{
-			(*pIndexVector)[i]= j;
-			if (i < (max - 1))
-				(*pIndexVector)[i + 1]= k;
-		}
-
-		j= 3 * (m_Discret + 1) + m_Discret / 2;
-		k= j - 1;
-		for (GLsizei i= max; i < indexNbr; i+= 2, ++j, --k)
-		{
-			(*pIndexVector)[i]= j;
-			if (i < (indexNbr - 1))
-				(*pIndexVector)[i + 1]= k;
-		}
-
-		if (vboIsUsed)
-		{
-			// Create VBO
-			const GLsizeiptr dataSize= dataNbr * sizeof(GLC_Vertex);
-			glBufferData(GL_ARRAY_BUFFER, dataSize, pVertexVector->data(), GL_STATIC_DRAW);
-			// Create IBO
-			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
-		}
-
+		cosArray[i]= static_cast<GLfloat>(m_Radius * cosValue);
+		sinArray[i]= static_cast<GLfloat>(m_Radius * sinValue);
 	}
 
-	if (vboIsUsed)
+	GLfloatVector verticeVector;
+	GLfloatVector normalsVector;
+	GLfloatVector texelVector;
+
+	if (m_EndedIsCaped)
 	{
-		// Use VBO
-		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
-		glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(12));
-		glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(24));
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_NORMAL_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-		GLuint max= (m_Discret + 1) * 2;
-		// Draw cylinder
-		//glDrawRangeElements(GL_TRIANGLE_STRIP, 0, max, max, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-		glDrawElements(GL_TRIANGLE_STRIP, max, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-
-		// Fill ended if needed
-		if (m_EndedIsCaped)
-		{
-			// Draw bottom cap
-			//glDrawRangeElements(GL_TRIANGLE_STRIP, 0, m_Discret, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
-			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
-			max+= m_Discret;
-			// Draw top cap
-			//glDrawRangeElements(GL_TRIANGLE_STRIP, 0, m_Discret, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
-			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, BUFFER_OFFSET((max) * sizeof(unsigned int)));
-		}
-
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_NORMAL_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		const int size= vertexNumber * 4;
+		verticeVector.resize(3 * size);
+		normalsVector.resize(3 * size);
+		texelVector.resize(2 * size);
 	}
 	else
 	{
-		// Use Vertex Array
-		float* pVertexData= (float *) m_SimpleGeomEngine.vertexVectorHandle()->data();
-		glVertexPointer(3, GL_FLOAT, sizeof(GLC_Vertex), pVertexData);
-		glNormalPointer(GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[3]);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(GLC_Vertex), &pVertexData[6]);
+		const int size= vertexNumber * 2;
+		verticeVector.resize(3 * size);
+		normalsVector.resize(3 * size);
+		texelVector.resize(2 * size);
+	}
+	for (int i= 0; i < vertexNumber; ++i)
+	{
+		// Bottom
+		verticeVector[3 * i]= cosArray[i];
+		verticeVector[3 * i + 1]= sinArray[i];
+		verticeVector[3 * i + 2]= 0.0f;
 
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_NORMAL_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		normalsVector[3 * i]= cosNormalArray[i];
+		normalsVector[3 * i + 1]= sinNormalArray[i];
+		normalsVector[3 * i + 2]= 0.0f;
 
-		GLuint max= (m_Discret + 1) * 2;
-		// Draw cylinder
-		glDrawElements(GL_TRIANGLE_STRIP, max, GL_UNSIGNED_INT, m_SimpleGeomEngine.indexVectorHandle()->data());
+		texelVector[2 * i]= static_cast<float>(i) / static_cast<float>(m_Discret);
+		texelVector[2 * i + 1]= 0.0f;
 
-		// Fill ended if needed
+		// Top
+		verticeVector[3 * i + 3 * vertexNumber]= cosArray[i];
+		verticeVector[3 * i + 1 + 3 * vertexNumber]= sinArray[i];
+		verticeVector[3 * i + 2 + 3 * vertexNumber]= static_cast<float>(m_Length);
+
+		normalsVector[3 * i + 3 * vertexNumber]= cosNormalArray[i];
+		normalsVector[3 * i + 1 + 3 * vertexNumber]= sinNormalArray[i];
+		normalsVector[3 * i + 2 + 3 * vertexNumber]= 0.0f;
+
+		texelVector[2 * i + 2 * vertexNumber]= texelVector[i];
+		texelVector[2 * i + 1 + 2 * vertexNumber]= 1.0f;
+
 		if (m_EndedIsCaped)
 		{
-			// Draw bottom cap
-			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, &m_SimpleGeomEngine.indexVectorHandle()->data()[max]);
-			max+= m_Discret;
-			// Draw top cap
-			glDrawElements(GL_TRIANGLE_STRIP, m_Discret, GL_UNSIGNED_INT, &m_SimpleGeomEngine.indexVectorHandle()->data()[max]);
+			// Bottom Cap ends
+			verticeVector[3 * i + 2 * 3 * vertexNumber]= cosArray[i];
+			verticeVector[3 * i + 1 + 2 * 3 * vertexNumber]= sinArray[i];
+			verticeVector[3 * i + 2 + 2 * 3 * vertexNumber]= 0.0f;
+
+			normalsVector[3 * i + 2 * 3 * vertexNumber]= 0.0f;
+			normalsVector[3 * i + 1 + 2 * 3 * vertexNumber]= 0.0f;
+			normalsVector[3 * i + 2 + 2 * 3 * vertexNumber]= -1.0f;
+
+			texelVector[2 * i + 2 * 2 * vertexNumber]= texelVector[i];
+			texelVector[2 * i + 1 + 2 * 2 * vertexNumber]= 0.0f;
+
+			// Top Cap ends
+			verticeVector[3 * i + 3 * 3 * vertexNumber]= cosArray[i];
+			verticeVector[3 * i + 1 + 3 * 3 * vertexNumber]= sinArray[i];
+			verticeVector[3 * i + 2 + 3 * 3 * vertexNumber]= static_cast<float>(m_Length);
+
+			normalsVector[3 * i + 3 * 3 * vertexNumber]= 0.0f;
+			normalsVector[3 * i + 1 + 3 * 3 * vertexNumber]= 0.0f;
+			normalsVector[3 * i + 2 + 3 * 3 * vertexNumber]= 1.0f;
+
+			texelVector[2 * i + 3 * 2 * vertexNumber]= texelVector[i];
+			texelVector[2 * i + 1 + 3 * 2 * vertexNumber]= 0.0f;
 		}
-
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_NORMAL_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 
-	if (vboIsUsed)
+	// Add bulk data in to the mesh
+	addVertices(verticeVector);
+	addNormals(normalsVector);
+	addTexels(texelVector);
+
+	// Set the material to use
+	GLC_Material* pCylinderMaterial;
+	if (hasMaterial())
 	{
-		m_SimpleGeomEngine.useVBOs(false);
+		pCylinderMaterial= this->firstMaterial();
 	}
-
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
+	else
 	{
-		GLC_OpenGlException OpenGlException("GLC_Cylinder::GlDraw ", error);
-		throw(OpenGlException);
+		pCylinderMaterial= new GLC_Material();
 	}
 
+	IndexList circumferenceStrips;
+	// Create the index
+	for (int i= 0; i < vertexNumber; ++i)
+	{
+		circumferenceStrips.append(i);
+		circumferenceStrips.append(i + vertexNumber);
+	}
+	addTrianglesStrip(pCylinderMaterial, circumferenceStrips);
+
+	if (m_EndedIsCaped)
+	{
+		IndexList bottomCap;
+		IndexList topCap;
+		int id1= 0;
+		int id2= m_Discret - 1;
+		const int size= m_Discret / 2 + (m_Discret % 2);
+		for (int i= 0; i < size; ++i)
+		{
+			bottomCap.append(id1 + 2 * vertexNumber);
+			topCap.append(id1 + 3 * vertexNumber);
+
+			bottomCap.append(id2 + 2 * vertexNumber);
+			topCap.append(id2 + 3 * vertexNumber);
+
+			id1+= 1;
+			id2-= 1;
+		}
+		addTrianglesStrip(pCylinderMaterial, bottomCap);
+		addTrianglesStrip(pCylinderMaterial, topCap);
+	}
+
+	finish();
 }
