@@ -286,8 +286,8 @@ void GLC_Rectangle::createVbos()
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
 	}
 
-	//Clear engine
-	m_ExtendedGeomEngine.finished();
+	//Remove unecessary mesh data.
+	m_ExtendedGeomEngine.finishVbo();
 
 }
 
