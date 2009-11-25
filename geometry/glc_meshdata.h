@@ -67,6 +67,10 @@ public:
 	//! Copy constructor
 	GLC_MeshData(const GLC_MeshData&);
 
+	//! Overload "=" operator
+	GLC_MeshData& operator=(const GLC_MeshData&);
+
+	//! Destructor
 	virtual ~GLC_MeshData();
 
 
@@ -77,7 +81,7 @@ public:
 public:
 	//! Return the number of lod
 	inline int lodCount() const
-	{return m_EngineLodList.size();}
+	{return m_LodList.size();}
 
 	//! Return the Position Vector
 	GLfloatVector positionVector() const;
@@ -107,30 +111,30 @@ public:
 	inline GLfloatVector* colorVectorHandle()
 	{ return &m_Colors;}
 
-	//! Return the Index Vector
+	//! Return the Index Vector of the specified LOD
 	inline GLuintVector indexVector(const int i= 0) const
 	{
-		Q_ASSERT(i < m_EngineLodList.size());
-		return m_EngineLodList.at(i)->indexVector();
+		Q_ASSERT(i < m_LodList.size());
+		return m_LodList.at(i)->indexVector();
 	}
 
-	//! Return the Index Vector handle
+	//! Return the Index Vector handle of the specified LOD
 	inline GLuintVector* indexVectorHandle(const int i= 0) const
 	{
-		Q_ASSERT(i < m_EngineLodList.size());
-		return m_EngineLodList.at(i)->indexVectorHandle();
+		Q_ASSERT(i < m_LodList.size());
+		return m_LodList.at(i)->indexVectorHandle();
 	}
 
-	//! Return the size of the triangles index Vector
+	//! Return the size of the triangles index Vector of the specified LOD
 	inline int indexVectorSize(const int i= 0) const
 	{
-		Q_ASSERT(i < m_EngineLodList.size());
-		return m_EngineLodList.at(i)->indexVectorSize();
+		Q_ASSERT(i < m_LodList.size());
+		return m_LodList.at(i)->indexVectorSize();
 	}
-	//! Return the specified LOD
+	//! Return the specified LOD if the LOD doesn't exists, return NULL
 	inline GLC_Lod* getLod(int index) const
 	{
-		return m_EngineLodList.value(index);
+		return m_LodList.value(index);
 	}
 
 //@}
@@ -140,17 +144,17 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Add a Lod to the engine
+	//! Add a empty Lod to the engine
 	inline void appendLod(double accuracy= 0.0)
-	{m_EngineLodList.append(new GLC_Lod(accuracy));}
+	{m_LodList.append(new GLC_Lod(accuracy));}
 
-	//! The mesh wich use this engine is finished
-	void finished();
+	//! The mesh wich use the data is finished and VBO is used
+	void finishVbo();
 
 	//! If the there is more than 2 LOD Swap the first and last
-	void finishedLod();
+	void finishLod();
 
-	//! Clear the engine
+	//! Clear the content of the meshData and makes it empty
 	void clear();
 
 //@}
@@ -169,10 +173,10 @@ public:
 	//! Ibo Usage
 	inline void useIBO(bool use, const int currentLod= 0)
 	{
-		if (use) m_EngineLodList.at(currentLod)->useIBO();
+		if (use) m_LodList.at(currentLod)->useIBO();
 		else glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
-	//!
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -205,7 +209,7 @@ private:
 	GLuint m_ColorVboId;
 
 	//! The list of LOD
-	QList<GLC_Lod*> m_EngineLodList;
+	QList<GLC_Lod*> m_LodList;
 
 	//! The size of Position and normal VBO
 	int m_PositionSize;
