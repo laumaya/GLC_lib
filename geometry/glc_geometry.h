@@ -46,6 +46,7 @@ typedef QHash<GLC_uint, GLC_uint> MaterialHashMap;
  * 		- Method to draw Geometry                                                             : GLC_Geometry::glExecute()
  * 		- Virtual method to overload for visual property                                      : GLC_Geometry::glPropGeom()
  * 		- Virtual method to load and generate Opengl textures for each materials              : GLC_Geometry::glLoadTexture()
+ * 		- Virtual method to clear the content of the geometry and makes it empty			  : GLC_Geometry::clear()
  *
  * 		- Pure virtual method to overload for Object topology                                 : GLC_Geometry::glDraw()
  * 		- Pure virtual Clone method                                                           : GLC_Geometry::clone()
@@ -77,6 +78,10 @@ public:
 	 * const GLC_VboGeom geometry to copy
 	 */
 	GLC_Geometry(const GLC_Geometry&);
+
+	//! Overload "=" operator
+	GLC_Geometry& operator=(const GLC_Geometry&);
+
 	//! Destructor
 	virtual ~GLC_Geometry();
 //@}
@@ -95,6 +100,10 @@ public:
 	//! Return true if the geometry is valid
 	inline bool isValid(void) const
 	{return m_GeometryIsValid;}
+
+	//! Return true if the geometry has material
+	inline bool hasMaterial() const
+	{return !m_MaterialHash.isEmpty();}
 
 	//! Return first material of geometry
 	inline GLC_Material* firstMaterial(void) const
@@ -165,9 +174,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+	//! Clear the content of the geometry and makes it empty
+	virtual void clear();
+
 	//! Replace the Master material
-	//! The number of materials must be <= 1
-	void replaceMasterMaterial(GLC_Material*);
+	virtual void replaceMasterMaterial(GLC_Material*);
 
 	//! Add material to the geometry
 	void addMaterial(GLC_Material *);
@@ -222,6 +233,26 @@ protected:
 	virtual void glPropGeom(bool);
 
 //@}
+//////////////////////////////////////////////////////////////////////
+/*! \name Protected services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+protected:
+	//! Remove the specified material from the geometry
+	void removeMaterial(GLC_uint);
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Private services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Clear the content of this object and makes it empty
+	void clearGeometry();
+
+//@}
+
 //////////////////////////////////////////////////////////////////////
 // Protected members
 //////////////////////////////////////////////////////////////////////

@@ -71,6 +71,24 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 	}
 }
 
+// Overload "=" operator
+GLC_Geometry& GLC_Geometry::operator=(const GLC_Geometry& sourceGeom)
+{
+	if (this != &sourceGeom)
+	{
+		clear();
+		m_GeometryIsValid= false;
+		m_pBoundingBox= NULL;
+		m_MaterialHash= sourceGeom.m_MaterialHash;
+		m_UseColorPerVertex= sourceGeom.m_UseColorPerVertex;
+		m_IsWire= sourceGeom.m_IsWire;
+		m_TransparentMaterialNumber= sourceGeom.m_TransparentMaterialNumber;
+		m_Uid= glc::GLC_GenGeomID();
+		m_Name= sourceGeom.m_Name;
+	}
+	return *this;
+}
+
 GLC_Geometry::~GLC_Geometry()
 {
 	// delete mesh inner material
@@ -109,6 +127,11 @@ unsigned int GLC_Geometry::numberOfVertex() const
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+// Clear the content of the geometry and makes it empty
+void GLC_Geometry::clear()
+{
+	clearGeometry();
+}
 
 // Replace the Master material
 void GLC_Geometry::replaceMasterMaterial(GLC_Material* pMaterial)
@@ -116,22 +139,14 @@ void GLC_Geometry::replaceMasterMaterial(GLC_Material* pMaterial)
 
 	if (!m_MaterialHash.isEmpty())
 	{
-		Q_ASSERT(1 == m_MaterialHash.size());
 		if (pMaterial != firstMaterial())
 		{
-			const bool saveValidity= m_GeometryIsValid;
 			// Remove the first material
 			MaterialHash::iterator iMaterial= m_MaterialHash.begin();
-	        // delete the material if necessary
-			iMaterial.value()->delGLC_Geom(id());
-			if (iMaterial.value()->isTransparent())
-			{
-				--m_TransparentMaterialNumber;
-			}
-	        if (iMaterial.value()->isUnused()) delete iMaterial.value();
-			m_MaterialHash.erase(iMaterial);
+			removeMaterial(iMaterial.value()->id());
+
+			// Add the new material
 			addMaterial(pMaterial);
-			m_GeometryIsValid= saveValidity;
 		}
 	}
 	else
@@ -175,8 +190,6 @@ void GLC_Geometry::addMaterial(GLC_Material* pMaterial)
 			//qDebug() << "Add transparent material";
 			++m_TransparentMaterialNumber;
 		}
-		// Invalid the geometry
-		m_GeometryIsValid = false;
 	}
 }
 
@@ -262,4 +275,50 @@ void GLC_Geometry::glPropGeom(bool isSelected)
 		GLC_OpenGlException OpenGlException("GLC_Geometry::GlPropGeom ", error);
 		throw(OpenGlException);
 	}
+}
+
+// Remove the specified material from the geometry
+void GLC_Geometry::removeMaterial(GLC_uint id)
+{
+	Q_ASSERT(containsMaterial(id));
+	// Remove the first material
+	GLC_Material* pMaterial= m_MaterialHash.value(id);
+    // delete the material if necessary
+	pMaterial->delGLC_Geom(this->id());
+	if (pMaterial->isTransparent())
+	{
+		--m_TransparentMaterialNumber;
+	}
+    if (pMaterial->isUnused()) delete pMaterial;
+	m_MaterialHash.remove(id);
+
+}
+
+// Clear the content of this object and makes it empty
+void  GLC_Geometry::clearGeometry()
+{
+	m_GeometryIsValid= false;
+
+	delete m_pBoundingBox;
+	m_pBoundingBox= NULL;
+
+	// delete mesh inner material
+	{
+		MaterialHash::const_iterator i= m_MaterialHash.begin();
+	    while (i != m_MaterialHash.constEnd())
+	    {
+	        // delete the material if necessary
+	        i.value()->delGLC_Geom(id());
+	        if (i.value()->isUnused()) delete i.value();
+	        ++i;
+	    }
+	}
+	m_MaterialHash.clear();
+
+	m_UseColorPerVertex= false;
+
+	m_IsWire= false;
+	m_TransparentMaterialNumber= 0;
+	m_Name.clear();
+
 }
