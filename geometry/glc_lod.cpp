@@ -61,10 +61,13 @@ GLC_Lod::GLC_Lod(const GLC_Lod& lod)
 // Overload "=" operator
 GLC_Lod& GLC_Lod::operator=(const GLC_Lod& lod)
 {
-	m_Accuracy= lod.m_Accuracy;
-	m_IboId= lod.m_IboId;
-	m_IndexVector= lod.indexVector();
-	m_IndexSize= lod.m_IndexSize;
+	if (this != &lod)
+	{
+		m_Accuracy= lod.m_Accuracy;
+		m_IboId= 0;
+		m_IndexVector= lod.indexVector();
+		m_IndexSize= lod.m_IndexSize;
+	}
 
 	return *this;
 }
@@ -82,7 +85,7 @@ GLC_Lod::~GLC_Lod()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Return the Triangle Index Vector
+// Return The unique index Vector
 QVector<GLuint> GLC_Lod::indexVector() const
 {
 	if (0 != m_IboId)

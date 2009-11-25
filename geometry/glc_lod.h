@@ -69,10 +69,20 @@ public:
 	inline double accuracy() const
 	{return m_Accuracy;}
 
-	//! Return Index Vector
+	//! Return The unique index Vector which contains :
+	/*!
+	 * - Triangles index
+	 * - Triangles Strips index
+	 * - Triangles Fans index
+	 */
 	QVector<GLuint> indexVector() const;
 
-	//! Return Index Vector handle
+	//! Return The unique index Vector handle which contains :
+	/*!
+	 * - Triangles index
+	 * - Triangles Strips index
+	 * - Triangles Fans index
+	 */
 	inline QVector<GLuint>* indexVectorHandle()
 	{ return &m_IndexVector;}
 
@@ -88,7 +98,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! The mesh wich use this lod is finished
-	inline void finish()
+	inline void finishVbo()
 	{
 		m_IndexSize= m_IndexVector.size();
 		m_IndexVector.clear();
