@@ -33,7 +33,7 @@
 
 GLC_Mesh::GLC_Mesh()
 :GLC_Geometry("Mesh", false)
-, m_LocalId(1)
+, m_NextPrimitiveLocalId(1)
 , m_PrimitiveGroups()
 , m_DefaultMaterialId(0)
 , m_NumberOfFaces(0)
@@ -49,7 +49,7 @@ GLC_Mesh::GLC_Mesh()
 
 GLC_Mesh::GLC_Mesh(const GLC_Mesh& mesh)
 :GLC_Geometry(mesh)
-, m_LocalId(mesh.m_LocalId)
+, m_NextPrimitiveLocalId(mesh.m_NextPrimitiveLocalId)
 , m_PrimitiveGroups(mesh.m_PrimitiveGroups)
 , m_DefaultMaterialId(mesh.m_DefaultMaterialId)
 , m_NumberOfFaces(mesh.m_NumberOfFaces)
@@ -60,8 +60,6 @@ GLC_Mesh::GLC_Mesh(const GLC_Mesh& mesh)
 , m_MeshData(mesh.m_MeshData)
 , m_CurrentLod(0)
 {
-	//qDebug() << "GLC_Mesh Copy constructor";
-
 	// Make a copy of m_PrimitiveGroups with new material id
 	PrimitiveGroupsHash::const_iterator iPrimitiveGroups= mesh.m_PrimitiveGroups.constBegin();
 	while (mesh.m_PrimitiveGroups.constEnd() != iPrimitiveGroups)
@@ -72,8 +70,6 @@ GLC_Mesh::GLC_Mesh(const GLC_Mesh& mesh)
 		PrimitiveGroups::const_iterator iPrimitiveGroup= iPrimitiveGroups.value()->constBegin();
 		while (iPrimitiveGroups.value()->constEnd() != iPrimitiveGroup)
 		{
-			//Q_ASSERT(m_MaterialHashMap.contains(iPrimitiveGroup.key()));
-			//GLC_uint id= m_MaterialHashMap.value(iPrimitiveGroup.key());
 			GLC_PrimitiveGroup* pPrimitiveGroup= new GLC_PrimitiveGroup(*(iPrimitiveGroup.value()), iPrimitiveGroup.key());
 			pPrimitiveGroups->insert(iPrimitiveGroup.key(), pPrimitiveGroup);
 
@@ -85,6 +81,53 @@ GLC_Mesh::GLC_Mesh(const GLC_Mesh& mesh)
 
 }
 
+// Overload "=" operator
+GLC_Mesh& GLC_Mesh::operator=(const GLC_Mesh& mesh)
+{
+	if (this != &mesh)
+	{
+		// Call the operator of the super class
+		GLC_Geometry::operator=(mesh);
+
+		// Clear the mesh
+		clearOnlyMesh();
+
+		// Copy members
+		m_NextPrimitiveLocalId= mesh.m_NextPrimitiveLocalId;
+		m_PrimitiveGroups= mesh.m_PrimitiveGroups;
+		m_DefaultMaterialId= mesh.m_DefaultMaterialId;
+		m_NumberOfFaces= mesh.m_NumberOfFaces;
+		m_NumberOfVertice= mesh.m_NumberOfVertice;
+		m_NumberOfNormals= mesh.m_NumberOfNormals;
+		m_IsSelected= false;
+		m_ColorPearVertex= mesh.m_ColorPearVertex;
+		m_MeshData= mesh.m_MeshData;
+		m_CurrentLod= 0;
+
+		// Make a copy of m_PrimitiveGroups with new material id
+		PrimitiveGroupsHash::const_iterator iPrimitiveGroups= mesh.m_PrimitiveGroups.constBegin();
+		while (mesh.m_PrimitiveGroups.constEnd() != iPrimitiveGroups)
+		{
+			PrimitiveGroups* pPrimitiveGroups= new PrimitiveGroups();
+			m_PrimitiveGroups.insert(iPrimitiveGroups.key(), pPrimitiveGroups);
+
+			PrimitiveGroups::const_iterator iPrimitiveGroup= iPrimitiveGroups.value()->constBegin();
+			while (iPrimitiveGroups.value()->constEnd() != iPrimitiveGroup)
+			{
+				GLC_PrimitiveGroup* pPrimitiveGroup= new GLC_PrimitiveGroup(*(iPrimitiveGroup.value()), iPrimitiveGroup.key());
+				pPrimitiveGroups->insert(iPrimitiveGroup.key(), pPrimitiveGroup);
+
+				++iPrimitiveGroup;
+			}
+
+			++iPrimitiveGroups;
+		}
+	}
+
+	return *this;
+}
+
+// Destructor
 GLC_Mesh::~GLC_Mesh()
 {
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
@@ -101,7 +144,6 @@ GLC_Mesh::~GLC_Mesh()
 		++iGroups;
 	}
 }
-
 
 //////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -147,7 +189,7 @@ GLC_BoundingBox& GLC_Mesh::boundingBox()
 
 }
 
-// Return a copy of the geometry
+// Return a copy of the Mesh as GLC_Geometry pointer
 GLC_Geometry* GLC_Mesh::clone() const
 {
 	return new GLC_Mesh(*this);
@@ -240,7 +282,7 @@ QList<QVector<GLuint> > GLC_Mesh::getStripsIndex(int lod, GLC_uint materialId) c
 	}
 	// The result list of vector
 	QList<QVector<GLuint> > result;
-	// The copy of the engine index vector
+	// The copy of the mesh Data LOD index vector
 	QVector<GLuint> SourceIndex(m_MeshData.indexVector(lod));
 	for (int i= 0; i < stripsCount; ++i)
 	{
@@ -313,7 +355,7 @@ QList<QVector<GLuint> > GLC_Mesh::getFansIndex(int lod, GLC_uint materialId) con
 	}
 	// The result list of vector
 	QList<QVector<GLuint> > result;
-	// The copy of the engine index vector
+	// The copy of the mesh Data LOD index vector
 	QVector<GLuint> SourceIndex(m_MeshData.indexVector(lod));
 	for (int i= 0; i < fansCount; ++i)
 	{
@@ -329,6 +371,52 @@ QList<QVector<GLuint> > GLC_Mesh::getFansIndex(int lod, GLC_uint materialId) con
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
+// Clear the content of the mesh and super class GLC_Geometry
+void GLC_Mesh::clear()
+{
+	// Clear the super class GLC_Geometry
+	GLC_Geometry::clear();
+
+	// Clear the mesh content
+	clearOnlyMesh();
+}
+
+// Clear the content off the mesh and makes it empty
+void GLC_Mesh::clearOnlyMesh()
+{
+	// Reset primitive local id
+	m_NextPrimitiveLocalId= 1;
+
+	// Remove all primitive groups
+	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
+	while (iGroups != m_PrimitiveGroups.constEnd())
+	{
+		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+		while (iGroup != iGroups.value()->constEnd())
+		{
+			delete iGroup.value();
+
+			++iGroup;
+		}
+		delete iGroups.value();
+		++iGroups;
+	}
+	m_PrimitiveGroups.clear();
+
+	m_DefaultMaterialId= 0;
+	m_NumberOfFaces= 0;
+	m_NumberOfVertice= 0;
+	m_NumberOfNormals= 0;
+	m_IsSelected= false;
+	m_ColorPearVertex= false;
+	// Clear data of the mesh
+	m_MeshData.clear();
+	m_CurrentLod= 0;
+
+	// Invalidate the geometry
+	m_GeometryIsValid= false;
+}
+
 // Add triangles
 GLC_uint GLC_Mesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexList, const int lod, double accuracy)
 {
@@ -339,7 +427,7 @@ GLC_uint GLC_Mesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexL
 	GLC_uint id= 0;
 	if (0 == lod)
 	{
-		id= m_LocalId++;
+		id= m_NextPrimitiveLocalId++;
 		m_NumberOfFaces+= indexList.size() / 3;
 	}
 
@@ -361,7 +449,7 @@ GLC_uint GLC_Mesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexList& i
 	GLC_uint id= 0;
 	if (0 == lod)
 	{
-		id= m_LocalId++;
+		id= m_NextPrimitiveLocalId++;
 		m_NumberOfFaces+= indexList.size() - 2;
 	}
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesStrip(indexList, id);
@@ -381,7 +469,7 @@ GLC_uint GLC_Mesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList& ind
 	GLC_uint id= 0;
 	if (0 == lod)
 	{
-		id= m_LocalId++;
+		id= m_NextPrimitiveLocalId++;
 		m_NumberOfFaces+= indexList.size() - 2;
 	}
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesFan(indexList, id);
@@ -414,7 +502,7 @@ void GLC_Mesh::finish()
 {
 	boundingBox();
 
-	m_MeshData.finishedLod();
+	m_MeshData.finishLod();
 	if (GLC_State::vboUsed())
 	{
 		finishVbo();
@@ -440,52 +528,62 @@ void GLC_Mesh::setCurrentLod(const int value)
 		m_CurrentLod= 0;
 	}
 }
+// Replace the Master material
+void GLC_Mesh::replaceMasterMaterial(GLC_Material* pMat)
+{
+	if (hasMaterial())
+	{
+		GLC_uint oldId= firstMaterial()->id();
+		replaceMaterial(oldId, pMat);
+	}
+	else
+	{
+		addMaterial(pMat);
+	}
+}
 
 // Replace the material specified by id with another one
 void GLC_Mesh::replaceMaterial(const GLC_uint oldId, GLC_Material* pMat)
 {
 	Q_ASSERT(containsMaterial(oldId));
-	Q_ASSERT(!containsMaterial(pMat->id()));
-	// Iterate over Level of detail
-	PrimitiveGroupsHash::const_iterator iGroups= m_PrimitiveGroups.constBegin();
-	while (m_PrimitiveGroups.constEnd() != iGroups)
+	Q_ASSERT(!containsMaterial(pMat->id()) || (pMat->id() == oldId));
+
+	if (pMat->id() != oldId)
 	{
-		PrimitiveGroups* pPrimitiveGroups= iGroups.value();
-		// Iterate over material group
-		PrimitiveGroups::iterator iGroup= pPrimitiveGroups->begin();
-		while (pPrimitiveGroups->constEnd() != iGroup)
+		// Iterate over Level of detail
+		PrimitiveGroupsHash::const_iterator iGroups= m_PrimitiveGroups.constBegin();
+		while (m_PrimitiveGroups.constEnd() != iGroups)
 		{
-			if (iGroup.key() == oldId)
+			PrimitiveGroups* pPrimitiveGroups= iGroups.value();
+			// Iterate over material group
+			PrimitiveGroups::iterator iGroup= pPrimitiveGroups->begin();
+			while (pPrimitiveGroups->constEnd() != iGroup)
 			{
-				GLC_PrimitiveGroup* pGroup= iGroup.value();
-				// Erase old group pointer
-				pPrimitiveGroups->erase(iGroup);
-				// Change the group ID
-				pGroup->setId(pMat->id());
-				// Add the group with  new ID
-				pPrimitiveGroups->insert(pMat->id(), pGroup);
-				iGroup= pPrimitiveGroups->end();
+				if (iGroup.key() == oldId)
+				{
+					GLC_PrimitiveGroup* pGroup= iGroup.value();
+					// Erase old group pointer
+					pPrimitiveGroups->erase(iGroup);
+					// Change the group ID
+					pGroup->setId(pMat->id());
+					// Add the group with  new ID
+					pPrimitiveGroups->insert(pMat->id(), pGroup);
+					iGroup= pPrimitiveGroups->end();
+				}
+				else
+				{
+					++iGroup;
+				}
 			}
-			else
-			{
-				++iGroup;
-			}
-
+			++iGroups;
 		}
-		++iGroups;
 	}
 
-	// Remove old material
-	GLC_Material* pOldMaterial= m_MaterialHash.value(oldId);
-	m_MaterialHash.remove(oldId);
-	pOldMaterial->delGLC_Geom(id());
-	if (pOldMaterial->isUnused())
+	if (pMat != m_MaterialHash.value(oldId))
 	{
-		delete pOldMaterial;
-	}
-	// Add the new material if necessary
-	if (! containsMaterial(pMat->id()))
-	{
+		// Remove old material
+		removeMaterial(oldId);
+
 		addMaterial(pMat);
 	}
 
@@ -508,7 +606,7 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, MaterialHash& materialHas
 	stream >> localId;
 	setNextPrimitiveLocalId(localId);
 
-	// Retrieve Extended geom engine
+	// Retrieve Extended geom mesh data
 	stream >> m_MeshData;
 
 	// Retrieve primitiveGroupLodList
@@ -613,7 +711,7 @@ void GLC_Mesh::glDraw(bool transparent)
 		// Create VBO and IBO
 		if (!m_GeometryIsValid && !m_MeshData.positionVectorHandle()->isEmpty())
 		{
-			createVbos();
+			fillVbosAndIbos();
 		}
 		else if (!m_GeometryIsValid && !m_MeshData.normalVectorHandle()->isEmpty())
 		{
@@ -864,8 +962,8 @@ GLC_uint GLC_Mesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, double a
 	return returnId;
 }
 
-// Create VBO and IBO
-void GLC_Mesh::createVbos()
+// Fill VBOs and IBOs
+void GLC_Mesh::fillVbosAndIbos()
 {
 	// Create VBO of vertices
 	{
@@ -918,8 +1016,8 @@ void GLC_Mesh::createVbos()
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
 		}
 	}
-	//Clear engine
-	m_MeshData.finished();
+	// Remove client side data
+	m_MeshData.finishVbo();
 
 }
 // set primitive group offset
@@ -941,7 +1039,7 @@ void GLC_Mesh::finishSerialized()
 	}
 }
 
-// Finish VBO mesh
+// Move Indexs from the primitive groups to the mesh Data LOD and Set IBOs offsets
 void GLC_Mesh::finishVbo()
 {
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
@@ -951,21 +1049,21 @@ void GLC_Mesh::finishVbo()
 		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
 		while (iGroup != iGroups.value()->constEnd())
 		{
-			// Add group triangles index to engine triangles index vector
+			// Add group triangles index to mesh Data LOD triangles index vector
 			if (iGroup.value()->containsTriangles())
 			{
 				iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_MeshData.indexVectorSize(currentLod) * sizeof(GLuint)));
 				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
 			}
 
-			// Add group strip index to engine strip index vector
+			// Add group strip index to mesh Data LOD strip index vector
 			if (iGroup.value()->containsStrip())
 			{
 				iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_MeshData.indexVectorSize(currentLod) * sizeof(GLuint)));
 				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
 			}
 
-			// Add group fan index to engine fan index vector
+			// Add group fan index to mesh Data LOD fan index vector
 			if (iGroup.value()->containsFan())
 			{
 				iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_MeshData.indexVectorSize(currentLod) * sizeof(GLuint)));
@@ -980,7 +1078,7 @@ void GLC_Mesh::finishVbo()
 	}
 }
 
-// Finish non Vbo mesh
+// Move Indexs from the primitive groups to the mesh Data LOD and Set Index offsets
 void GLC_Mesh::finishNonVbo()
 {
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
@@ -990,21 +1088,21 @@ void GLC_Mesh::finishNonVbo()
 		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
 		while (iGroup != iGroups.value()->constEnd())
 		{
-			// Add group triangles index to engine triangles index vector
+			// Add group triangles index to mesh Data LOD triangles index vector
 			if (iGroup.value()->containsTriangles())
 			{
 				iGroup.value()->setTrianglesOffseti(m_MeshData.indexVectorSize(currentLod));
 				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
 			}
 
-			// Add group strip index to engine strip index vector
+			// Add group strip index to mesh Data LOD strip index vector
 			if (iGroup.value()->containsStrip())
 			{
 				iGroup.value()->setBaseTrianglesStripOffseti(m_MeshData.indexVectorSize(currentLod));
 				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
 			}
 
-			// Add group fan index to engine fan index vector
+			// Add group fan index to mesh Data LOD fan index vector
 			if (iGroup.value()->containsFan())
 			{
 				iGroup.value()->setBaseTrianglesFanOffseti(m_MeshData.indexVectorSize(currentLod));

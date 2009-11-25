@@ -66,6 +66,10 @@ public:
 	//! Copy constructor
 	GLC_Mesh(const GLC_Mesh&);
 
+	//! Overload "=" operator
+	GLC_Mesh& operator=(const GLC_Mesh&);
+
+	//! Destructor
 	virtual ~GLC_Mesh();
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -86,7 +90,7 @@ public:
 	//! return the mesh bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
 
-	//! Return a copy of the geometry
+	//! Return a copy of the Mesh as GLC_Geometry pointer
 	virtual GLC_Geometry* clone() const;
 
 	//! Return true if color pear vertex is activated
@@ -109,31 +113,34 @@ public:
 	inline GLfloatVector texelVector() const
 	{return m_MeshData.texelVector();}
 
-	//! Return true if the mesh contains triangles
+	//! Return true if the mesh contains triangles in the specified LOD
 	bool containsTriangles(int lod, GLC_uint materialId) const;
 
 	//! Return the triangle index
+	/*! The specified LOD must exists and uses the specified material id*/
 	QVector<GLuint> getTrianglesIndex(int lod, GLC_uint materialId) const;
 
-	//! Return the number of triangles
+	//! Return the number of triangles in the specified LOD
 	int numberOfTriangles(int lod, GLC_uint materialId) const;
 
-	//! Return true if the mesh contains trips
+	//! Return true if the mesh contains trips in the specified LOD with the specified material id
 	bool containsStrips(int lod, GLC_uint materialId) const;
 
 	//! Return the strips index
+	/*! The specified LOD must exists and uses the specified material id*/
 	QList<QVector<GLuint> > getStripsIndex(int lod, GLC_uint materialId) const;
 
-	//! Return the number of strips
+	//! Return the number of strips in the specified LOD with the specified material id
 	int numberOfStrips(int lod, GLC_uint materialId) const;
 
-	//! Return true if the mesh contains fans
+	//! Return true if the mesh contains fans in the specified LOD with the specified material id
 	bool containsFans(int lod, GLC_uint materialId) const;
 
 	//! Return the fans index
+	/*! The specified LOD must exists and uses the specified material id*/
 	QList<QVector<GLuint> > getFansIndex(int lod, GLC_uint materialId) const;
 
-	//! Return the number of fans
+	//! Return the number of fans in the specified LOD with the specified material id
 	int numberOfFans(int lod, GLC_uint materialId) const;
 
 	//! Return true if the mesh contains the specified LOD
@@ -148,6 +155,7 @@ public:
 	}
 
 	//! Return the specified LOD accuracy
+	/*! The specified LOD must exists*/
 	inline double getLodAccuracy(int lod) const
 	{
 		Q_ASSERT(containsLod(lod));
@@ -156,7 +164,7 @@ public:
 
 	//! Return the next primitive local id
 	inline GLC_uint nextPrimitiveLocalId() const
-	{return m_LocalId;}
+	{return m_NextPrimitiveLocalId;}
 
 
 //@}
@@ -165,6 +173,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+
+	//! Clear the content of the mesh and super class and makes them empty
+	virtual void clear();
+
+	//! Clear only the content off the mesh and makes it empty
+	void clearOnlyMesh();
 
 	//! Add vertices coordinate
 	inline void addVertices(const GLfloatVector& vertices)
@@ -200,14 +214,18 @@ public:
 	//! Reverse mesh normal
 	void reverseNormals();
 
-	//! Set color per vertex flag
-	inline void setColorPearVertex(bool flag){m_ColorPearVertex= flag;}
+	//! Set color per vertex flag to use indexed color
+	inline void setColorPearVertex(bool flag)
+	{m_ColorPearVertex= flag;}
 
 	//! Copy vertex list in a vector list for Vertex Array Use
 	void finish();
 
 	//! Set the lod Index
 	virtual void setCurrentLod(const int);
+
+	//! Replace the Master material
+	virtual void replaceMasterMaterial(GLC_Material*);
 
 	//! Replace the material specified by id with another one
 	void replaceMaterial(const GLC_uint, GLC_Material*);
@@ -220,7 +238,7 @@ public:
 
 	//! Set the mesh next primitive local id
 	inline void setNextPrimitiveLocalId(GLC_uint id)
-	{m_LocalId= id;}
+	{m_NextPrimitiveLocalId= id;}
 
 //@}
 
@@ -232,7 +250,7 @@ public:
 	//! Specific glExecute method
 	virtual void glExecute(bool, bool transparent= false);
 
-private:
+protected:
 
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
@@ -249,17 +267,18 @@ private:
 	//! Set the current material
 	GLC_uint setCurrentMaterial(GLC_Material*, const int, double);
 
-	//! Create VBO and IBO
-	void createVbos();
+	//! Fill VBOs and IBOs
+	void fillVbosAndIbos();
 
-	//! set primitive group offset
+	//! Set primitive group offset after loading mesh from binary
 	void finishSerialized();
 
-	//! Finish VBO mesh
+	//! Move Indexs from the primitive groups to the mesh Data LOD and Set IBOs offsets
 	void finishVbo();
 
-	//! Finish non Vbo mesh
+	//! Move Indexs from the primitive groups to the mesh Data LOD and Set Index offsets
 	void finishNonVbo();
+
 //@}
 
 
@@ -268,7 +287,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! The next primitive local id
-	GLC_uint m_LocalId;
+	GLC_uint m_NextPrimitiveLocalId;
 
 	//! The hash table of Hash table of primitive group
 	PrimitiveGroupsHash m_PrimitiveGroups;
@@ -291,7 +310,7 @@ private:
 	//! Color pear vertex
 	bool m_ColorPearVertex;
 
-	//! Geom engine
+	//! Data of the mesh (Bulk Data + LOD with indexs)
 	GLC_MeshData m_MeshData;
 
 	//! The current LOD index
