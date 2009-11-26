@@ -42,9 +42,9 @@ GLC_uint glc::GLC_GenID(void)
 GLC_uint glc::GLC_GenGeomID(void)
 {
 	static GLC_uint Id= 0;
-	glc::userIdMutex.lock();
+	glc::geomIdMutex.lock();
 	Id++;
-	glc::userIdMutex.unlock();
+	glc::geomIdMutex.unlock();
 	return Id;
 }
 
