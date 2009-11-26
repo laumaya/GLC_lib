@@ -166,6 +166,10 @@ public:
 	inline GLC_uint nextPrimitiveLocalId() const
 	{return m_NextPrimitiveLocalId;}
 
+	//! Return true if the mesh position data is empty
+	inline bool isEmpty() const
+	{return m_MeshData.isEmpty();}
+
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -230,12 +234,6 @@ public:
 	//! Replace the material specified by id with another one
 	void replaceMaterial(const GLC_uint, GLC_Material*);
 
-	//! Load the mesh from binary data stream
-	void loadFromDataStream(QDataStream&, MaterialHash&, QHash<GLC_uint, GLC_uint>&);
-
-	//! Save the mesh to binary data stream
-	void saveToDataStream(QDataStream&);
-
 	//! Set the mesh next primitive local id
 	inline void setNextPrimitiveLocalId(GLC_uint id)
 	{m_NextPrimitiveLocalId= id;}
@@ -243,19 +241,35 @@ public:
 //@}
 
 //////////////////////////////////////////////////////////////////////
+/*! \name Binary serialisation Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Load the mesh from binary data stream
+	/*! The MaterialHash contains a hash table of GLC_Material that the mesh can use
+	 *  The QHash<GLC_uint, GLC_uint> is used to map serialised material ID to the new
+	 *  constructed materials
+	 */
+	void loadFromDataStream(QDataStream&, const MaterialHash&, const QHash<GLC_uint, GLC_uint>&);
+
+	//! Save the mesh to binary data stream
+	void saveToDataStream(QDataStream&) const;
+
+//@}
+//////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Specific glExecute method
-	virtual void glExecute(bool, bool transparent= false);
+	virtual void glExecute(const GLC_RenderProperties&);
 
 protected:
 
 	//! Virtual interface for OpenGL Geometry set up.
-	/*! This Virtual function is implemented here.\n
+	/*! This Virtual function is implemented here.
 	 *  Throw GLC_OpenGlException*/
-	virtual void glDraw(bool transparent= false);
+	virtual void glDraw(const GLC_RenderProperties&);
 
 //@}
 
