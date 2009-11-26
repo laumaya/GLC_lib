@@ -103,7 +103,8 @@ HEADERS_GLC_SHADING +=	shading/glc_material.h \
 						shading/glc_texture.h \
 						shading/glc_shader.h \
 						shading/glc_selectionmaterial.h \
-						shading/glc_light.h
+						shading/glc_light.h \
+						shading/glc_renderproperties.h
 						
 HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_imageplane.h \
@@ -221,7 +222,8 @@ SOURCES +=	shading/glc_material.cpp \
 			shading/glc_texture.cpp \
 			shading/glc_light.cpp \
 			shading/glc_selectionmaterial.cpp \
-			shading/glc_shader.cpp
+			shading/glc_shader.cpp \
+			shading/glc_renderproperties.cpp
 
 SOURCES +=	viewport/glc_camera.cpp \
 			viewport/glc_imageplane.cpp \
