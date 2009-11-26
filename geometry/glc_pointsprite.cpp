@@ -103,7 +103,7 @@ void GLC_PointSprite::setPointDistanceAttenuation(QVector<float> parameters)
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 // Specific glExecute method
-void GLC_PointSprite::glExecute(bool, bool)
+void GLC_PointSprite::glExecute(const GLC_RenderProperties& renderProperties)
 {
 	// Check if extension GL_ARB_point_parameters is present
 	if (!GLC_State::pointSpriteSupported()) return;
@@ -168,13 +168,13 @@ void GLC_PointSprite::glExecute(bool, bool)
     glTexEnvf(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
 
     glEnable(GL_POINT_SPRITE);
-    glDraw(false);
+    glDraw(renderProperties);
 
     glPopAttrib();
 
 }
 // Point sprite set up
-void GLC_PointSprite::glDraw(bool)
+void GLC_PointSprite::glDraw(const GLC_RenderProperties&)
 {
 	// Point Display
 	glBegin(GL_POINTS);

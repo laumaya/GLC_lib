@@ -175,7 +175,7 @@ void GLC_Box::setLgZ(double LgZ)
 //////////////////////////////////////////////////////////////////////
 
 // Box Set Up
-void GLC_Box::glDraw(bool)
+void GLC_Box::glDraw(const GLC_RenderProperties&)
 {
 	const bool vboIsUsed= GLC_State::vboUsed();
 	if (vboIsUsed)

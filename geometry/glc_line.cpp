@@ -81,7 +81,7 @@ GLC_Geometry* GLC_Line::clone() const
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Line::glDraw(bool)
+void GLC_Line::glDraw(const GLC_RenderProperties&)
 {
 	// Point Display
 	glBegin(GL_LINES);

@@ -99,7 +99,7 @@ void GLC_Point::setCoordinate(double x, double y, double z)
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Point::glDraw(bool)
+void GLC_Point::glDraw(const GLC_RenderProperties&)
 {
 	// Point Display
 	glBegin(GL_POINTS);

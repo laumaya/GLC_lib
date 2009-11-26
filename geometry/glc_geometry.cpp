@@ -211,7 +211,7 @@ void GLC_Geometry::glLoadTexture(void)
 }
 
 // Geometry display
-void GLC_Geometry::glExecute(bool isSelected, bool transparent)
+void GLC_Geometry::glExecute(const GLC_RenderProperties& renderProperties)
 {
 	if (m_MaterialHash.isEmpty())
 	{
@@ -222,7 +222,7 @@ void GLC_Geometry::glExecute(bool isSelected, bool transparent)
 	// Define Geometry's property
 	if(!GLC_State::isInSelectionMode())
 	{
-		glPropGeom(isSelected);
+		glPropGeom(renderProperties);
 	}
 	else
 	{
@@ -231,12 +231,12 @@ void GLC_Geometry::glExecute(bool isSelected, bool transparent)
 		glDisable(GL_LIGHTING);
 	}
 
-	glDraw(transparent);
+	glDraw(renderProperties);
 	m_GeometryIsValid= true;
 }
 
 // Virtual interface for OpenGL Geometry properties.
-void GLC_Geometry::glPropGeom(bool isSelected)
+void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 {
 	Q_ASSERT(!m_MaterialHash.isEmpty());
 
@@ -247,7 +247,7 @@ void GLC_Geometry::glPropGeom(bool isSelected)
 		glDisable(GL_LIGHTING);
 		pCurrentMaterial->glExecute();
 
-		if (isSelected) GLC_SelectionMaterial::glExecute();
+		if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 	}
 	else if (m_MaterialHash.size() == 1)
 	{
@@ -257,13 +257,13 @@ void GLC_Geometry::glPropGeom(bool isSelected)
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
 			pCurrentMaterial->glExecute();
-			if (isSelected) GLC_SelectionMaterial::glExecute();
+			if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 		}
 		else
 		{
 			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
-			if (isSelected) GLC_SelectionMaterial::glExecute();
+			if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 			else pCurrentMaterial->glExecute();
 		}
 	}

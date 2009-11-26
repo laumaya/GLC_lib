@@ -157,7 +157,7 @@ void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 //////////////////////////////////////////////////////////////////////
 
 // Circle drawing
-void GLC_Circle::glDraw(bool)
+void GLC_Circle::glDraw(const GLC_RenderProperties&)
 {
 	const bool vboIsUsed= GLC_State::vboUsed();
 	if (vboIsUsed)

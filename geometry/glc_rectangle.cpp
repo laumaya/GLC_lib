@@ -163,7 +163,7 @@ void GLC_Rectangle::finished()
 //////////////////////////////////////////////////////////////////////
 
 // Virtual interface for OpenGL Geometry set up.
-void GLC_Rectangle::glDraw(bool)
+void GLC_Rectangle::glDraw(const GLC_RenderProperties&)
 {
 	const bool vboIsUsed= GLC_State::vboUsed();
 

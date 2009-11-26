@@ -27,6 +27,8 @@
 #ifndef GLC_GEOMETRY_H_
 #define GLC_GEOMETRY_H_
 #include "../shading/glc_material.h"
+#include "../shading/glc_renderproperties.h"
+
 #include "../glc_boundingbox.h"
 
 #include "glc_config.h"
@@ -139,7 +141,8 @@ public:
 	virtual GLC_BoundingBox& boundingBox(void) = 0;
 
 	//! Return true if the bounding box is valid
-	inline bool boundingBoxIsValid() const {return NULL != m_pBoundingBox;}
+	inline bool boundingBoxIsValid() const
+	{return NULL != m_pBoundingBox;}
 
 	//! Clone the geometry
 	virtual GLC_Geometry* clone() const = 0;
@@ -221,16 +224,16 @@ public:
 	virtual void glLoadTexture(void);
 
 	//! Virtual interface for OpenGL execution.
-	virtual void glExecute(bool, bool transparent= false);
+	virtual void glExecute(const GLC_RenderProperties&);
 
 
 protected:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function have to be implemented in concrete class.*/
-	virtual void glDraw(bool transparent= false) = 0;
+	virtual void glDraw(const GLC_RenderProperties&) = 0;
 
 	//! Virtual interface for OpenGL Geometry properties.
-	virtual void glPropGeom(bool);
+	virtual void glPropGeom(const GLC_RenderProperties&);
 
 //@}
 //////////////////////////////////////////////////////////////////////

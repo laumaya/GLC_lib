@@ -105,11 +105,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Specific glExecute method
-	virtual void glExecute(bool, bool transparent= false);
+	virtual void glExecute(const GLC_RenderProperties&);
 
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n*/
-	virtual void glDraw(bool transparent= false);
+	virtual void glDraw(const GLC_RenderProperties&);
 //@}
 //////////////////////////////////////////////////////////////////////
 // Private Member
