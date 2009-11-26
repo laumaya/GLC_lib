@@ -178,6 +178,9 @@ void GLC_Viewport::forceAspectRatio(double ratio)
 // Display background image
 void GLC_Viewport::glExecuteImagePlane()
 {
+	// The static rendering propertis
+	static GLC_RenderProperties renderProperties;
+
 	if(!GLC_State::isInSelectionMode())
 	{
 		if (m_pImagePlane != NULL)
@@ -200,7 +203,7 @@ void GLC_Viewport::glExecuteImagePlane()
 					m_ImagePlaneListID= glGenLists(1);
 				}
 				glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
-					m_pImagePlane->glExecute(false, false);
+					m_pImagePlane->glExecute(renderProperties);
 				glEndList();
 				//qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ImagePlaneListID << " created";
 			}

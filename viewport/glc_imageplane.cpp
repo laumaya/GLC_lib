@@ -131,7 +131,7 @@ void GLC_ImagePlane::updateZPosition(void)
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 // Plane Display
-void GLC_ImagePlane::glDraw(bool)
+void GLC_ImagePlane::glDraw(const GLC_RenderProperties&)
 {
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	const double LgImgSur2= m_dLgImage / 2;

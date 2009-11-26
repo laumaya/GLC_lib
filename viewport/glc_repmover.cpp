@@ -31,6 +31,7 @@
 GLC_RepMover::GLC_RepMover(GLC_Viewport* pViewport)
 : m_pViewport(pViewport)
 , m_MainColor()
+, m_RenderProperties()
 {
 
 }
@@ -38,6 +39,7 @@ GLC_RepMover::GLC_RepMover(GLC_Viewport* pViewport)
 GLC_RepMover::GLC_RepMover(const GLC_RepMover& repMover)
 : m_pViewport(repMover.m_pViewport)
 , m_MainColor(repMover.m_MainColor)
+, m_RenderProperties(repMover.m_RenderProperties)
 {
 
 }

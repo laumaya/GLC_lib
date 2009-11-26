@@ -90,7 +90,7 @@ public:
 public:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n*/
-	virtual void glDraw(bool transparent= false);
+	virtual void glDraw(const GLC_RenderProperties&);
 //@}
 
 //////////////////////////////////////////////////////////////////////

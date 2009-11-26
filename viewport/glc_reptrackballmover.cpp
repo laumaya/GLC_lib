@@ -186,7 +186,7 @@ void GLC_RepTrackBallMover::glDraw()
 	m_Arc2.setMatrix(MatSavArc2);
 
 	// Display base class (Main circle)
-	m_MainCircle.glExecute(false, false);
+	m_MainCircle.glExecute(m_RenderProperties);
 
 	glPopMatrix();
 
