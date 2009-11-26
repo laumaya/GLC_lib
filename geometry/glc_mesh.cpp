@@ -590,7 +590,7 @@ void GLC_Mesh::replaceMaterial(const GLC_uint oldId, GLC_Material* pMat)
 }
 
 // Load the mesh from binary data stream
-void GLC_Mesh::loadFromDataStream(QDataStream& stream, MaterialHash& materialHash, QHash<GLC_uint, GLC_uint>& materialIdMap)
+void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& materialHash, const QHash<GLC_uint, GLC_uint>& materialIdMap)
 {
 	quint32 chunckId;
 	stream >> chunckId;
@@ -646,7 +646,7 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, MaterialHash& materialHas
 }
 
 // Save the mesh to binary data stream
-void GLC_Mesh::saveToDataStream(QDataStream& stream)
+void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 {
 	quint32 chunckId= GLC_BINARY_CHUNK_ID;
 	stream << chunckId;
@@ -690,15 +690,15 @@ void GLC_Mesh::saveToDataStream(QDataStream& stream)
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 // Specific glExecute method
-void GLC_Mesh::glExecute(bool isSelected, bool transparent)
+void GLC_Mesh::glExecute(const GLC_RenderProperties& renderProperties)
 {
-	m_IsSelected= isSelected;
-	GLC_Geometry::glExecute(isSelected, transparent);
+	m_IsSelected= renderProperties.isSelected();
+	GLC_Geometry::glExecute(renderProperties);
 	m_IsSelected= false;
 }
 
 // Virtual interface for OpenGL Geometry set up.
-void GLC_Mesh::glDraw(bool transparent)
+void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 {
 	Q_ASSERT(m_GeometryIsValid || !m_MeshData.normalVectorHandle()->isEmpty());
 
@@ -790,7 +790,7 @@ void GLC_Mesh::glDraw(bool transparent)
 
    		if ((!GLC_State::selectionShaderUsed() || !m_IsSelected) && !GLC_State::isInSelectionMode())
     	{
-			if (pCurrentMaterial->isTransparent() == transparent)
+			if (pCurrentMaterial->isTransparent() == (renderProperties.renderingMode() == glc::TransparentMaterial))
 			{
 				// Execute current material
 				if (pCurrentMaterial->hasTexture())
@@ -814,7 +814,7 @@ void GLC_Mesh::glDraw(bool transparent)
 		}
 
 
-		if (m_IsSelected || GLC_State::isInSelectionMode() || (pCurrentMaterial->isTransparent() == transparent))
+		if (m_IsSelected || GLC_State::isInSelectionMode() || (pCurrentMaterial->isTransparent() == (renderProperties.renderingMode() == glc::TransparentMaterial)))
 		{
 
 			if (vboIsUsed)
