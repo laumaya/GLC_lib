@@ -42,6 +42,7 @@ GLC_Material::GLC_Material()
 , m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
 , m_WhereUsed()
+, m_OtherUsage()
 , m_pTexture(NULL)			// no texture
 , m_Transparency(1.0)
 {
@@ -61,6 +62,7 @@ GLC_Material::GLC_Material(const QColor &diffuseColor)
 , m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
 , m_WhereUsed()
+, m_OtherUsage()
 , m_pTexture(NULL)			// no texture
 , m_Transparency(1.0)
 {
@@ -77,6 +79,7 @@ GLC_Material::GLC_Material(const QString& name ,const GLfloat *pDiffuseColor)
 , m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
 , m_WhereUsed()
+, m_OtherUsage()
 , m_pTexture(NULL)			// no texture
 , m_Transparency(1.0)
 {
@@ -104,6 +107,7 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 , m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
 , m_WhereUsed()
+, m_OtherUsage()
 , m_pTexture(pTexture)			// init texture
 , m_Transparency(1.0)
 {
@@ -128,6 +132,7 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 , m_LightEmission(InitMaterial.m_LightEmission)
 , m_fShininess(InitMaterial.m_fShininess)
 , m_WhereUsed()
+, m_OtherUsage()
 , m_pTexture(NULL)
 , m_Transparency(InitMaterial.m_Transparency)
 {
@@ -143,17 +148,7 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 // Destructor
 GLC_Material::~GLC_Material(void)
 {
-	//qDebug() << "GLC_Material::~GLC_Material" << id();
-    // clear whereUSED Hash table
-    m_WhereUsed.clear();
-
-    if (NULL != m_pTexture)
-    {
-   		delete m_pTexture;
-    	m_pTexture= NULL;
-    }
-
-
+   	delete m_pTexture;
 }
 
 
@@ -390,10 +385,8 @@ bool GLC_Material::addGLC_Geom(GLC_Geometry* pGeom)
 bool GLC_Material::delGLC_Geom(GLC_uint Key)
 {
 	QMutexLocker mutexLocker(&m_Mutex);
-	//qDebug() << "GLC_Material::delGLC_Geom" << Key;
-	CWhereUsed::iterator iGeom= m_WhereUsed.find(Key);
 
-	if (iGeom != m_WhereUsed.end())
+	if (m_WhereUsed.contains(Key))
 	{	// Ok, ID exist
 		m_WhereUsed.remove(Key);	// Remove container
 
@@ -406,6 +399,38 @@ bool GLC_Material::delGLC_Geom(GLC_uint Key)
 	}
 
 }
+// Add the id to the other used Set
+bool GLC_Material::addUsage(GLC_uint id)
+{
+	QMutexLocker mutexLocker(&m_Mutex);
+	if (!m_OtherUsage.contains(id))
+	{
+		m_OtherUsage << id;
+		return true;
+	}
+	else
+	{
+		qDebug("GLC_Material::addUsage : id not added");
+		return false;
+	}
+}
+
+// Remove the id to the other used Set
+bool GLC_Material::delUsage(GLC_uint id)
+{
+	QMutexLocker mutexLocker(&m_Mutex);
+	if (m_OtherUsage.contains(id))
+	{
+		m_OtherUsage.remove(id);
+		return true;
+	}
+	else
+	{
+		qDebug("GLC_Material::addUsage : id not removed");
+		return false;
+	}
+}
+
 
 // Set the material transparency
 void GLC_Material::setTransparency(const qreal alpha)

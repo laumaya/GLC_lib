@@ -32,6 +32,7 @@
 #include "glc_texture.h"
 #include <QHash>
 #include <QColor>
+#include <QSet>
 
 #include "../glc_config.h"
 
@@ -83,7 +84,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return true if the material is used
-	bool isUnused() const {return m_WhereUsed.isEmpty();}
+	bool isUnused() const
+	{return m_WhereUsed.isEmpty() && m_OtherUsage.isEmpty();}
 
 	//! Return true is material has attached texture
 	inline bool hasTexture() const
@@ -127,7 +129,7 @@ public:
 
 	//! Return the number of this material usage
 	inline int numberOfUsage() const
-	{return m_WhereUsed.size();}
+	{return m_WhereUsed.size() + m_OtherUsage.size();}
 
 	//! Return the texture handle
 	inline GLC_Texture* textureHandle() const
@@ -189,6 +191,14 @@ public:
 	/*! This method is thread safe*/
 	bool delGLC_Geom(GLC_uint Key);
 
+	//! Add the id to the other used Set
+	/*! This method is thread safe*/
+	bool addUsage(GLC_uint);
+
+	//! Remove the id to the other used Set
+	/*! This method is thread safe*/
+	bool delUsage(GLC_uint);
+
 	//! Set the material transparency
 	void setTransparency(const qreal);
 
@@ -238,8 +248,11 @@ private:
 	//! Shiness
 	GLfloat m_fShininess;
 
-	//! Where Used Hash table
+	//! Hash table of geomtries which used this material
 	CWhereUsed m_WhereUsed;
+
+	//! Set of id of other objects that uses this material
+	QSet<GLC_uint> m_OtherUsage;
 
 	//! material's texture
 	GLC_Texture* m_pTexture;
