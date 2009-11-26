@@ -137,6 +137,11 @@ public:
 		return m_LodList.value(index);
 	}
 
+	//! Return true if the mesh data position Vector is empty
+	inline bool isEmpty() const
+	{return m_Positions.isEmpty();}
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
