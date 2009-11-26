@@ -48,9 +48,7 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 , m_pBoundingBox(NULL)
 , m_MatPos()
 , m_IsBoundingBoxValid(false)
-, m_IsSelected(false)
-, m_PolyFace(GL_FRONT_AND_BACK)
-, m_PolyMode(GL_FILL)
+, m_RenderProperties()
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
@@ -69,9 +67,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom)
 , m_pBoundingBox(NULL)
 , m_MatPos()
 , m_IsBoundingBoxValid(false)
-, m_IsSelected(false)
-, m_PolyFace(GL_FRONT_AND_BACK)
-, m_PolyMode(GL_FILL)
+, m_RenderProperties()
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
@@ -92,9 +88,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
 , m_pBoundingBox(NULL)
 , m_MatPos()
 , m_IsBoundingBoxValid(false)
-, m_IsSelected(false)
-, m_PolyFace(GL_FRONT_AND_BACK)
-, m_PolyMode(GL_FILL)
+, m_RenderProperties()
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
@@ -115,9 +109,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
 , m_pBoundingBox(NULL)
 , m_MatPos(inputNode.m_MatPos)
 , m_IsBoundingBoxValid(inputNode.m_IsBoundingBoxValid)
-, m_IsSelected(inputNode.m_IsSelected)
-, m_PolyFace(inputNode.m_PolyFace)
-, m_PolyMode(inputNode.m_PolyMode)
+, m_RenderProperties(inputNode.m_RenderProperties)
 , m_IsVisible(inputNode.m_IsVisible)
 , m_colorId()
 , m_DefaultLOD(inputNode.m_DefaultLOD)
@@ -150,9 +142,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 		}
 		m_MatPos= inputNode.m_MatPos;
 		m_IsBoundingBoxValid= inputNode.m_IsBoundingBoxValid;
-		m_IsSelected= inputNode.m_IsSelected;
-		m_PolyFace= inputNode.m_PolyFace;
-		m_PolyMode= inputNode.m_PolyMode;
+		m_RenderProperties= inputNode.m_RenderProperties;
 		m_IsVisible= inputNode.m_IsVisible;
 		m_DefaultLOD= inputNode.m_DefaultLOD;
 
@@ -214,9 +204,7 @@ GLC_3DViewInstance GLC_3DViewInstance::deepCopy() const
 
 	cloneInstance.m_MatPos= m_MatPos;
 	cloneInstance.m_IsBoundingBoxValid= m_IsBoundingBoxValid;
-	cloneInstance.m_IsSelected= m_IsSelected;
-	cloneInstance.m_PolyFace= m_PolyFace;
-	cloneInstance.m_PolyMode= m_PolyMode;
+	cloneInstance.m_RenderProperties= m_RenderProperties;
 	cloneInstance.m_IsVisible= m_IsVisible;
 	return cloneInstance;
 }
@@ -300,17 +288,6 @@ GLC_3DViewInstance& GLC_3DViewInstance::resetMatrix(void)
 	return *this;
 }
 
-// Polygon's display style
-void GLC_3DViewInstance::setPolygonMode(GLenum Face, GLenum Mode)
-{
-	// Change the polygon mode only if there is a change
-	if ((m_PolyFace != Face) || (m_PolyMode != Mode))
-	{
-		m_PolyFace= Face;
-		m_PolyMode= Mode;
-	}
-}
-
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
@@ -335,7 +312,7 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* 
 			if (lodValue <= 100)
 			{
 				m_3DRep.geomAt(i)->setCurrentLod(lodValue);
-				m_3DRep.geomAt(i)->glExecute(m_IsSelected, transparent);
+				m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
 			}
 		}
 	}
@@ -352,7 +329,7 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* 
 			if (lodValue <= 100)
 			{
 				m_3DRep.geomAt(i)->setCurrentLod(m_DefaultLOD);
-				m_3DRep.geomAt(i)->glExecute(m_IsSelected, transparent);
+				m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
 			}
 
 		}

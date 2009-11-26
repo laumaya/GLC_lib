@@ -33,6 +33,8 @@
 #include "../maths/glc_matrix4x4.h"
 #include "../glc_state.h"
 #include "../geometry/glc_3drep.h"
+#include "../shading/glc_renderproperties.h"
+
 #include <QMutex>
 
 #include "glc_config.h"
@@ -117,7 +119,8 @@ public:
 	{return m_3DRep.isEmpty();}
 
 	//! Return true if the instance is selected
-	inline const bool isSelected(void) const {return m_IsSelected;}
+	inline const bool isSelected(void) const
+	{return m_RenderProperties.isSelected();}
 
 	//! Return the number of geometry
 	inline int numberOfGeometry() const
@@ -150,7 +153,8 @@ public:
 
 	//! Get the Polygon mode off the instance
 	/*! Polygon Mode can Be : GL_POINT, GL_LINE, or GL_FILL*/
-	inline GLenum polygonMode() const {return m_PolyMode;}
+	inline GLenum polygonMode() const
+	{return m_RenderProperties.polygonMode();}
 
 	//! Get the visibility state of instance
 	inline bool isVisible() const {return m_IsVisible;}
@@ -235,15 +239,16 @@ public:
 	//! Polygon's display style
 	/*! Face Polygon Mode can be : GL_FRONT_AND_BACK, GL_FRONT, or GL_BACK
 	 *  mode can be : GL_POINT, GL_LINE, or GL_FILL */
-	void setPolygonMode(GLenum Face, GLenum Mode);
+	inline void setPolygonMode(GLenum Face, GLenum Mode)
+	{m_RenderProperties.setPolygonMode(Face, Mode);}
 
 	//! Select the instance
 	inline void select(void)
-	{m_IsSelected= true;}
+	{m_RenderProperties.select();}
 
 	//! Unselect the instance
 	inline void unselect(void)
-	{m_IsSelected= false;}
+	{m_RenderProperties.unselect();}
 
 	//! Set instance visibility
 	inline void setVisibility(const bool visibility)
@@ -280,7 +285,7 @@ private:
 	inline void glVisProperties()
 	{
 		// Polygons display mode
-		glPolygonMode(m_PolyFace, m_PolyMode);
+		glPolygonMode(m_RenderProperties.polyFaceMode(), m_RenderProperties.polygonMode());
 		// Change the current matrix
 		glMultMatrixd(m_MatPos.data());
 	}
@@ -321,12 +326,8 @@ private:
 	//! Bounding box validity
 	bool m_IsBoundingBoxValid;
 
-	//! Selection state
-	bool m_IsSelected;
-
-	//! Polygons display style
-	GLenum m_PolyFace;
-	GLenum m_PolyMode;
+	//! The 3DViewInstance rendering properties
+	GLC_RenderProperties m_RenderProperties;
 
 	//! Visibility
 	bool m_IsVisible;
