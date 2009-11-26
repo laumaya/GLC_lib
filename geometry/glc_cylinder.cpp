@@ -31,17 +31,16 @@
 
 #include <QVector>
 
-using namespace glc;
+#define GLC_BINARY_CHUNK_ID   0xA705
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
-
 
 GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength)
 :GLC_Mesh()
 , m_Radius(dRadius)
 , m_Length(dLength)
-, m_Discret(GLC_POLYDISCRET)	// Default discretion
+, m_Discret(glc::GLC_POLYDISCRET)	// Default discretion
 , m_EndedIsCaped(true)			// Cylinder ended are closed
 {
 	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0));
@@ -75,7 +74,7 @@ GLC_Geometry* GLC_Cylinder::clone() const
 // return the cylinder bounding box
 GLC_BoundingBox& GLC_Cylinder::boundingBox()
 {
-	if (numberOfVertex() == 0)
+	if (GLC_Mesh::isEmpty())
 	{
 		createMesh();
 	}
@@ -93,7 +92,8 @@ void GLC_Cylinder::setLength(double Length)
 
 	delete m_pBoundingBox;
 	m_pBoundingBox= NULL;
-	m_GeometryIsValid= false;
+
+	GLC_Mesh::clearOnlyMesh();
 }
 
 // Set Cylinder radius
@@ -104,7 +104,8 @@ void GLC_Cylinder::setRadius(double Radius)
 
 	delete m_pBoundingBox;
 	m_pBoundingBox= NULL;
-	m_GeometryIsValid= false;
+
+	GLC_Mesh::clearOnlyMesh();
 }
 
 // Set Discretion
@@ -119,7 +120,7 @@ void GLC_Cylinder::setDiscretion(int TargetDiscret)
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
 
-		m_GeometryIsValid= false;
+		GLC_Mesh::clearOnlyMesh();
 	}
 }
 
@@ -133,8 +134,7 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
 
-		m_GeometryIsValid= false;
-
+		GLC_Mesh::clearOnlyMesh();
 	}
 }
 
@@ -143,24 +143,22 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 //////////////////////////////////////////////////////////////////////
 
 // Dessin du GLC_Cylinder
-void GLC_Cylinder::glDraw(bool transparent)
+void GLC_Cylinder::glDraw(const GLC_RenderProperties& renderProperties)
 {
 
-	if (numberOfVertex() == 0)
+	if (GLC_Mesh::isEmpty())
 	{
 		createMesh();
 	}
 
-	GLC_Mesh::glDraw(transparent);
-
+	GLC_Mesh::glDraw(renderProperties);
 }
 
 // Create the cylinder mesh
 void GLC_Cylinder::createMesh()
 {
-	qDebug() << "GLC_Cylinder::createMesh";
 	// Clear the mesh of the cylinder
-	GLC_Mesh::clearOnlyMesh();
+	Q_ASSERT(GLC_Mesh::isEmpty());
 
 	// Create cosinus and sinus array according to the discretion and radius
 	const int vertexNumber= m_Discret + 1;
@@ -171,7 +169,7 @@ void GLC_Cylinder::createMesh()
 	QVector<float> cosArray(vertexNumber);
 	QVector<float> sinArray(vertexNumber);
 
-	const double angle= (2.0 * PI) / static_cast<double>(m_Discret);
+	const double angle= (2.0 * glc::PI) / static_cast<double>(m_Discret);
 
 	for (int i= 0; i < vertexNumber; ++i)
 	{
