@@ -47,7 +47,9 @@ namespace glc
 		OverwriteMaterial,
 		OverwriteTransparency,
 		PrimitiveSelected,
-		OverwritePrimitiveMaterial
+		OverwritePrimitiveMaterial,
+		BodySelection,
+		PrimitiveSelection
 	};
 };
 //////////////////////////////////////////////////////////////////////
