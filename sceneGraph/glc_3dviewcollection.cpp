@@ -708,7 +708,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, bool transparent)
 	        	{
 		            if (!iEntry.value()->isTransparent())
 		            {
-		            	iEntry.value()->glExecute(false, m_UseLod, m_pViewport);
+		            	iEntry.value()->glExecute(glc::NonTransparentMaterial, m_UseLod, m_pViewport);
 		            }
 	        	}
 	            ++iEntry;
@@ -732,7 +732,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, bool transparent)
 	        	{
 	        		 if (iEntry.value()->hasTransparentMaterials())
 		            {
-		            	iEntry.value()->glExecute(true, m_UseLod, m_pViewport);
+		            	iEntry.value()->glExecute(glc::TransparentMaterial, m_UseLod, m_pViewport);
 		            }
 	        	}
 	            ++iEntry;
@@ -756,7 +756,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, bool transparent)
 	        {
 	            if (iEntry.value()->isVisible() == m_IsInShowSate)
 	            {
-	            	iEntry.value()->glExecute(false, m_UseLod, m_pViewport);
+	            	iEntry.value()->glExecute(glc::NonTransparentMaterial, m_UseLod, m_pViewport);
 	            }
 	            ++iEntry;
 	        }
@@ -784,7 +784,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, bool transparent)
 		            {
 			            if (!iEntry.value()->isTransparent())
 			            {
-			            	iEntry.value()->glExecute(false, m_UseLod, m_pViewport);
+			            	iEntry.value()->glExecute(glc::NonTransparentMaterial, m_UseLod, m_pViewport);
 			            }
 		            }
 		            ++iEntry;
@@ -806,7 +806,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, bool transparent)
 		            {
 		            	if (iEntry.value()->hasTransparentMaterials())
 			            {
-			            	iEntry.value()->glExecute(true, m_UseLod, m_pViewport);
+			            	iEntry.value()->glExecute(glc::TransparentMaterial, m_UseLod, m_pViewport);
 			            }
 		            }
 		            ++iEntry;
