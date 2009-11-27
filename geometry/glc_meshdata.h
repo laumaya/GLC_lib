@@ -137,9 +137,9 @@ public:
 		return m_LodList.value(index);
 	}
 
-	//! Return true if the mesh data position Vector is empty
+	//! Return true if the mesh data doesn't contains vertice
 	inline bool isEmpty() const
-	{return m_Positions.isEmpty();}
+	{return (0 == m_PositionSize) and (0 == m_Positions.size());}
 
 
 //@}
