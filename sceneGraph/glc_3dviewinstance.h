@@ -156,11 +156,12 @@ public:
 	inline GLenum polygonMode() const
 	{return m_RenderProperties.polygonMode();}
 
+	//! Return an handle to the renderProperties
+	inline GLC_RenderProperties* renderPropertiesHandle()
+	{return &m_RenderProperties;}
+
 	//! Get the visibility state of instance
 	inline bool isVisible() const {return m_IsVisible;}
-
-	//! Return the GLC_uint decoded ID from RGB encoded ID
-	static GLC_uint decodeRgbId(const GLubyte*);
 
 	//! Get number of faces
 	inline unsigned int numberOfFaces() const
@@ -258,7 +259,7 @@ public:
 	inline void setId(const GLC_uint id)
 	{
 		GLC_Object::setId(id);
-		encodeIdInRGBA();
+		glc::encodeRgbId(m_Uid, m_colorId);
 	}
 
 	//! Set the default LOD value
@@ -278,11 +279,18 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the instance
-	void glExecute(bool transparent= false, bool useLoad= false, GLC_Viewport* pView= NULL);
+	void glExecute(glc::RenderMode renderMode= glc::NonTransparentMaterial, bool useLoad= false, GLC_Viewport* pView= NULL);
+
+	//! Display the instance in Body selection mode
+	void glExecuteForBodySelection();
+
+	//! Display the instance in Primitive selection mode
+	void glExecuteForPrimitiveSelection(GLC_uint);
+
 
 private:
 	//! Set instance visualisation properties
-	inline void glVisProperties()
+	inline void OpenglVisProperties()
 	{
 		// Polygons display mode
 		glPolygonMode(m_RenderProperties.polyFaceMode(), m_RenderProperties.polygonMode());
@@ -302,9 +310,6 @@ private:
 
 	//! Clear current instance
 	void clear();
-
-	//! Encode Id to RGBA color
-	void encodeIdInRGBA();
 
 	//! Compute LOD
 	int choseLod(const GLC_BoundingBox&, GLC_Viewport*);
