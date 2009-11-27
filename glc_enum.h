@@ -27,7 +27,8 @@
 #ifndef GLC_ENUM_H_
 #define GLC_ENUM_H_
 
-#include "QMutex"
+#include <QMutex>
+#include <QtOpenGL>
 
 #include "glc_config.h"
 
@@ -45,6 +46,12 @@ namespace glc
 	//! Simple User ID generation
 	GLC_LIB_EXPORT GLC_uint GLC_GenUserID(void);
 
+	//! Return the GLC_uint decoded ID from RGB encoded ID
+	inline GLC_LIB_EXPORT GLC_uint decodeRgbId(const GLubyte*);
+
+	//! Return the encoded color of the id
+	inline GLC_LIB_EXPORT void encodeRgbId(GLC_uint, GLubyte*);
+
 	const int GLC_DISCRET= 70;
 	const int GLC_POLYDISCRET= 60;
 
@@ -52,6 +59,28 @@ namespace glc
 	extern QMutex geomIdMutex;
 	extern QMutex userIdMutex;
 };
+
+// Return the GLC_uint decoded ID from RGBA encoded ID
+GLC_uint glc::decodeRgbId(const GLubyte* pcolorId)
+{
+	GLC_uint returnId= 0;
+	returnId|= (GLC_uint)pcolorId[0] << (0 * 8);
+	returnId|= (GLC_uint)pcolorId[1] << (1 * 8);
+	returnId|= (GLC_uint)pcolorId[2] << (2 * 8);
+	// Only get first 24 bits
+	//returnId|= (GLC_uint)pcolorId[3] << (3 * 8);
+
+	return returnId;
+}
+
+// Encode Id to RGBA color
+void glc::encodeRgbId(GLC_uint id, GLubyte* colorId)
+{
+	colorId[0]= static_cast<GLubyte>((id >> (0 * 8)) & 0xFF);
+	colorId[1]= static_cast<GLubyte>((id >> (1 * 8)) & 0xFF);
+	colorId[2]= static_cast<GLubyte>((id >> (2 * 8)) & 0xFF);
+	colorId[3]= static_cast<GLubyte>((id >> (3 * 8)) & 0xFF);
+}
 
 // GLC_Lib version
 
