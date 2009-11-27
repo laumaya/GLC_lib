@@ -25,7 +25,6 @@
 //! \file glc_mesh.cpp Implementation for the GLC_Mesh class.
 
 #include "glc_mesh.h"
-#include "../glc_state.h"
 #include "../shading/glc_selectionmaterial.h"
 
 // The Mesh chunk id
@@ -725,59 +724,12 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 			m_MeshData.normalVectorHandle()->clear();
 		}
 
-		// Activate Vertices VBO
-		m_MeshData.useVBO(true, GLC_MeshData::GLC_Vertex);
-		glVertexPointer(3, GL_FLOAT, 0, 0);
-		glEnableClientState(GL_VERTEX_ARRAY);
-
-		// Activate Normals VBO
-		m_MeshData.useVBO(true, GLC_MeshData::GLC_Normal);
-		glNormalPointer(GL_FLOAT, 0, 0);
-		glEnableClientState(GL_NORMAL_ARRAY);
-
-		// Activate texel VBO if needed
-		if (m_MeshData.useVBO(true, GLC_MeshData::GLC_Texel))
-		{
-			glTexCoordPointer(2, GL_FLOAT, 0, 0);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		}
-
-		// Activate Color VBO if needed
-		if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && m_MeshData.useVBO(true, GLC_MeshData::GLC_Color))
-		{
-			glEnable(GL_COLOR_MATERIAL);
-			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-			glColorPointer(4, GL_FLOAT, 0, 0);
-			glEnableClientState(GL_COLOR_ARRAY);
-		}
-
-		m_MeshData.useIBO(true, m_CurrentLod);
+		// Activate mesh VBOs and IBO of the current LOD
+		activateVboAndIbo();
 	}
 	else
 	{
-		// Use Vertex Array
-		glVertexPointer(3, GL_FLOAT, 0, m_MeshData.positionVectorHandle()->data());
-		glEnableClientState(GL_VERTEX_ARRAY);
-
-		glNormalPointer(GL_FLOAT, 0, m_MeshData.normalVectorHandle()->data());
-		glEnableClientState(GL_NORMAL_ARRAY);
-
-		// Activate texel if needed
-		if (!m_MeshData.texelVectorHandle()->isEmpty())
-		{
-			glTexCoordPointer(2, GL_FLOAT, 0, m_MeshData.texelVectorHandle()->data());
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		}
-
-		// Activate Color VBO if needed
-		if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && !m_MeshData.colorVectorHandle()->isEmpty())
-		{
-			glEnable(GL_COLOR_MATERIAL);
-			glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-			glColorPointer(4, GL_FLOAT, 0, m_MeshData.colorVectorHandle()->data());
-			glEnableClientState(GL_COLOR_ARRAY);
-		}
-
+		activateVertexArray();
 	}
 
 	if (!GLC_State::isInSelectionMode()) glEnable(GL_LIGHTING);
@@ -788,101 +740,41 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
 		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
 
-   		if ((!GLC_State::selectionShaderUsed() || !m_IsSelected) && !GLC_State::isInSelectionMode())
+		// Test if the current material is renderable
+		const bool materialIsrenderable = pCurrentMaterial->isTransparent() == (renderProperties.renderingMode() == glc::TransparentMaterial);
+
+		// Choose the material to render
+   		if (materialIsrenderable && (!m_IsSelected && !GLC_State::isInSelectionMode()))
     	{
-			if (pCurrentMaterial->isTransparent() == (renderProperties.renderingMode() == glc::TransparentMaterial))
+			// Execute current material
+			if (pCurrentMaterial->hasTexture())
 			{
-				// Execute current material
-				if (pCurrentMaterial->hasTexture())
-				{
-					glEnable(GL_TEXTURE_2D);
-				}
-				else
-				{
-					glDisable(GL_TEXTURE_2D);
-				}
-				// Activate material
-				pCurrentMaterial->glExecute();
-
-				if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-			}
-		}
-		else if(!GLC_State::isInSelectionMode())
-		{
-			// Use Shader
-			glDisable(GL_TEXTURE_2D);
-		}
-
-
-		if (m_IsSelected || GLC_State::isInSelectionMode() || (pCurrentMaterial->isTransparent() == (renderProperties.renderingMode() == glc::TransparentMaterial)))
-		{
-
-			if (vboIsUsed)
-			{
-				// Draw triangles
-				if (pCurrentGroup->containsTriangles())
-				{
-					glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSize(), GL_UNSIGNED_INT, pCurrentGroup->trianglesIndexOffset());
-				}
-
-				// Draw Triangles strip
-				if (pCurrentGroup->containsStrip())
-				{
-					const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffset().size());
-					for (GLint i= 0; i < stripsCount; ++i)
-					{
-						glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
-					}
-				}
-
-				// Draw Triangles fan
-				if (pCurrentGroup->containsFan())
-				{
-					const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffset().size());
-					for (GLint i= 0; i < fansCount; ++i)
-					{
-						glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
-					}
-				}
-
+				glEnable(GL_TEXTURE_2D);
 			}
 			else
 			{
-				// Draw triangles
-				if (pCurrentGroup->containsTriangles())
-				{
-					GLvoid* pOffset= &(m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesIndexOffseti()]);
-					glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSize(), GL_UNSIGNED_INT, pOffset);
-				}
-
-				// Draw Triangles strip
-				if (pCurrentGroup->containsStrip())
-				{
-					const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffseti().size());
-					for (GLint i= 0; i < stripsCount; ++i)
-					{
-						GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
-						glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pOffset);
-					}
-				}
-
-				// Draw Triangles fan
-				if (pCurrentGroup->containsFan())
-				{
-					const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffseti().size());
-					for (GLint i= 0; i < fansCount; ++i)
-					{
-						GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
-						glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pOffset);
-					}
-				}
-
+				glDisable(GL_TEXTURE_2D);
 			}
+			// Activate material
+			pCurrentMaterial->glExecute();
 
+			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		}
+
+   		// Choose the primitives to render
+		if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
+		{
+
+			if (vboIsUsed)
+				vboDrawPrimitivesOf(pCurrentGroup);
+			else
+				vertexArrayDrawPrimitivesOf(pCurrentGroup);
 		}
 
 		++iGroup;
 	}
+
+	// Restore client state
 	if (vboIsUsed)
 	{
 		m_MeshData.useIBO(false);
@@ -891,10 +783,6 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 
 	if (m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode())
 	{
-		if (vboIsUsed)
-		{
-			m_MeshData.useVBO(false, GLC_MeshData::GLC_Color);
-		}
 		glDisableClientState(GL_COLOR_ARRAY);
 		glDisable(GL_COLOR_MATERIAL);
 	}
