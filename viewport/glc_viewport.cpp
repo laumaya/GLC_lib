@@ -43,7 +43,7 @@ using namespace glc;
 GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // Camera definition
 : m_pViewCam(NULL)				// Camera
-, m_dCamDistMax(500)			// Camera Maximum distance
+, m_dCamDistMax(500.0)			// Camera Maximum distance
 , m_dCamDistMin(0.01)			// Camera Minimum distance
 , m_dFov(35)					// Camera angle of view
 , m_ViewTangent(tan((m_dFov * glc::PI / 180.0)))
@@ -55,6 +55,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // the default backgroundColor
 , m_BackgroundColor(Qt::black)
 , m_ImagePlaneListID(0)
+, m_SelectionSquareSize(4)
 {
 	// create a camera
 	m_pViewCam= new GLC_Camera;
@@ -63,12 +64,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // Delete Camera, Image Plane and orbit circle
 GLC_Viewport::~GLC_Viewport()
 {
-	// Delete the camera
-	if (m_pViewCam != NULL)
-	{
-		delete m_pViewCam;
-		m_pViewCam= NULL;
-	}
+	delete m_pViewCam;
 
 	// delete background image
 	deleteBackGroundImage();
@@ -82,17 +78,17 @@ GLC_Viewport::~GLC_Viewport()
 GLC_Vector4d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 {
 	// Change the window origin (Up Left -> centred)
-	Posx= Posx - (double)m_nWinHSize  / 2;
-	Posy= (double)m_nWinVSize / 2 - Posy;
+	Posx= Posx - static_cast<double>(m_nWinHSize)  / 2.0;
+	Posy= static_cast<double>(m_nWinVSize) / 2.0 - Posy;
 
 	GLC_Vector4d VectMouse(Posx, Posy,0);
 
 	// Compute the length of camera's field of view
-	const double ChampsVision = 2 * m_pViewCam->distEyeTarget() *  tan((m_dFov * PI / 180) / 2);
+	const double ChampsVision = 2.0 * m_pViewCam->distEyeTarget() *  tan((m_dFov * PI / 180.0) / 2.0);
 
 	// the side of camera's square is mapped on Vertical length of window
 	// Ratio OpenGL/Pixel = dimend GL / dimens Pixel
-	const double Ratio= ChampsVision / (double)m_nWinVSize;
+	const double Ratio= ChampsVision / static_cast<double>(m_nWinVSize);
 
 	VectMouse= VectMouse * Ratio;
 
@@ -251,58 +247,143 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 	pGLWidget->updateGL();
 	GLC_State::setSelectionMode(false);
 
-	// Read the back buffer
-	glReadBuffer(GL_BACK);
-	// Use 5 pixels by 5 pixels Square
-	GLubyte colorId[100]; // 5 * 5= 25 pixels 25 * 4 = 100 bytes
-	// Lower left corner of the square
-	int newX= x - 2;
-	int newY= (pGLWidget->size().height() - y) - 2;
+	GLsizei width= m_SelectionSquareSize;
+	GLsizei height= width;
+	GLint newX= x - width / 2;
+	GLint newY= (pGLWidget->size().height() - y) - height / 2;
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
+	return meaningfulIdInsideSquare(newX, newY, width, height);
+
+}
+// select an object inside a 3DViewInstance and return is UID
+GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, GLC_3DViewInstance* pInstance, int x, int y)
+{
+	m_pQGLWidget->qglClearColor(Qt::black);
+	GLC_State::setSelectionMode(true);
+	// Draw the scene
+	pInstance->glExecute(glc::BodySelection, false, this);
+	GLC_State::setSelectionMode(false);
+
+	GLsizei width= 6;
+	GLsizei height= width;
+	GLint newX= x - width / 2;
+	GLint newY= (pGLWidget->size().height() - y) - height / 2;
+	if (newX < 0) newX= 0;
+	if (newY < 0) newY= 0;
+
+	return meaningfulIdInsideSquare(newX, newY, width, height);
+}
+
+// Select objects inside specified square and return its UID in a set
+QSet<GLC_uint> GLC_Viewport::selectInsideSquare(QGLWidget *pGLWidget, int x1, int y1, int x2, int y2)
+{
+	if (x1 > x2)
+	{
+		int xTemp= x1;
+		x1= x2;
+		x2= xTemp;
+	}
+	if (y2 > y1)
+	{
+		int yTemp= y1;
+		y1= y2;
+		y2= yTemp;
+	}
+	m_pQGLWidget->qglClearColor(Qt::black);
+	GLC_State::setSelectionMode(true);
+	// Draw the scene
+	pGLWidget->updateGL();
+	GLC_State::setSelectionMode(false);
+
+	GLsizei width= x2 - x1;
+	GLsizei height= y1 - y2;
+	GLint newX= x1;
+	GLint newY= (pGLWidget->size().height() - y1);
+	if (newX < 0) newX= 0;
+	if (newY < 0) newY= 0;
+
+	return listOfIdInsideSquare(newX, newY, width, height);
+}
+
+// Return the meaningful color ID inside a square in screen coordinates
+GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+	// Read the back buffer
+	glReadBuffer(GL_BACK);
+
+	const int squareSize= width * height;
+	const GLsizei arraySize= squareSize * 4; // 4 -> R G B A
+	GLubyte colorId[arraySize];
+
 	// Get the array of pixels
-	glReadPixels(newX, newY, 5, 5, GL_RGBA, GL_UNSIGNED_BYTE, colorId);
+	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId);
 
 	// Restore Background color
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);
 
-	QList<GLC_uint> idList;
+	QHash<GLC_uint, int> idHash;
 	QList<int> idWeight;
 
 	// Find the most meaningful color
-	for (int i= 0; i < 25; ++i)
+	GLC_uint returnId= 0;
+	// There is nothing at the center
+	int maxWeight= 0;
+	int currentIndex= 0;
+	for (int i= 0; i < squareSize; ++i)
 	{
-		GLC_uint id= GLC_3DViewInstance::decodeRgbId(&colorId[i * 4]);
-		if (idList.contains(id))
+		GLC_uint id= glc::decodeRgbId(&colorId[i * 4]);
+		if (idHash.contains(id))
 		{
-			++(idWeight[idList.indexOf(id)]);
+			const int currentWeight= ++(idWeight[idHash.value(id)]);
+			if (maxWeight < currentWeight)
+			{
+				returnId= id;
+				maxWeight= currentWeight;
+			}
 		}
 		else if (id != 0)
 		{
-			idList.append(id);
+			idHash.insert(id, currentIndex++);
 			idWeight.append(1);
-		}
-	}
-	GLC_uint returnId= 0;
-	// If the list is empty return 0
-	if (!idList.isEmpty())
-	{
-		int maxWeight= 0;
-		int maxIndex= 0;
-		const int listSize= idWeight.size();
-		for (int i= 0; i < listSize; ++i)
-		{
-			if (maxWeight < idWeight[i])
+			if (maxWeight < 1)
 			{
-				maxWeight= idWeight[i];
-				maxIndex= i;
+				returnId= id;
+				maxWeight= 1;
 			}
 		}
-		returnId= idList[maxIndex];
 	}
 
 	return returnId;
+}
+
+// Return the Set of ID inside a square in screen coordinate
+QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+	// Read the back buffer
+	glReadBuffer(GL_BACK);
+
+	const int squareSize= width * height;
+	const GLsizei arraySize= squareSize * 4; // 4 -> R G B A
+	GLubyte colorId[arraySize];
+
+	// Get the array of pixels
+	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId);
+
+	// Restore Background color
+	m_pQGLWidget->qglClearColor(m_BackgroundColor);
+
+	QSet<GLC_uint> idSet;
+
+	// get the color inside square
+	for (int i= 0; i < squareSize; ++i)
+	{
+		GLC_uint id= glc::decodeRgbId(&colorId[i * 4]);
+		idSet << id;
+	}
+
+	return idSet;
 }
 
 // load background image

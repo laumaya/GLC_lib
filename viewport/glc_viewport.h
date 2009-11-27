@@ -33,13 +33,7 @@
 
 #include "../glc_config.h"
 
-// Define selection square
-#define SELECT_WIDTH 5.0
-
-#define SELECT_HEIGHT 5.0
-
-// end selection quare
-
+class GLC_3DViewInstance;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Viewport
@@ -50,11 +44,9 @@
  * 		- Max distance of view
  * 		- Min distance of view
  * 		- Angle of view
- * 		- Selection square
  * 		- Maximum zoom factor
  */
 //////////////////////////////////////////////////////////////////////
-
 class GLC_LIB_EXPORT GLC_Viewport
 {
 
@@ -69,7 +61,6 @@ public:
 	 * 		- Max distance of view	: <b>500</b>
 	 * 		- Min distance of view	: <b>0.01</b>
 	 * 		- Angle of view			: <b>35</b>
-	 * 		- Selection square		: <b>5.0</b>
 	 * 		- Maximum zoom factor	: <b>3.0</b>
 	 * */
 	GLC_Viewport(QGLWidget *GLWidget);
@@ -124,6 +115,10 @@ public:
 	inline QColor backgroundColor(void) const
 	{ return m_BackgroundColor;}
 
+	//! Return the selection square size
+	inline GLsizei selectionSquareSize() const
+	{return m_SelectionSquareSize;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -136,14 +131,10 @@ public:
 	void initGl();
 
 	//! Load camera's transformation Matrix and if image plane exist, display it
-	void glExecuteCam(void)
+	inline void glExecuteCam(void)
 	{
 		m_pViewCam->glExecute();
 		glExecuteImagePlane();
-	}
-	//! If necessary, display orbit circle and camera's target
-	void glExecute()
-	{
 	}
 
 	//! Update OpenGL Projection Matrix
@@ -177,6 +168,13 @@ public:
 	/*! Return UID of the nearest picked object */
 	GLC_uint select(QGLWidget *pGLWidget, int x, int y);
 
+	//! Select an object inside a 3DViewInstance and return its UID
+	/*! Return UID of the nearest picked object */
+	GLC_uint select(QGLWidget *pGLWidget, GLC_3DViewInstance*, int x, int y);
+
+	//! Select objects inside specified square and return its UID in a set
+	QSet<GLC_uint> selectInsideSquare(QGLWidget *pGLWidget, int x1, int y1, int x2, int y2);
+
 	//! load background image
 	void loadBackGroundImage(const QString Image);
 
@@ -184,7 +182,7 @@ public:
 	void deleteBackGroundImage();
 
 	//! Set Camera's angle of view
-	void setViewAngle(double TargetFov)
+	inline void setViewAngle(double TargetFov)
 	{
 		m_dFov= TargetFov;
 		m_ViewTangent= tan(m_dFov * glc::PI / 180.0);
@@ -204,6 +202,10 @@ public:
 	//! Set the Background color
 	void setBackgroundColor(QColor setColor);
 
+	//! Set the selection square size
+	inline void setSelectionSquareSize(GLsizei size)
+	{m_SelectionSquareSize= size;}
+
 //@}
 
 
@@ -216,6 +218,16 @@ public:
 
 //@} End Zooming functions
 /////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// private services functions
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Return the meaningful color ID inside a square in screen coordinates
+	GLC_uint meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height);
+
+	//! Return the Set of ID inside a square in screen coordinate
+	QSet<GLC_uint> listOfIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height);
 
 
 //////////////////////////////////////////////////////////////////////
@@ -247,6 +259,9 @@ private:
 
 	//! OpenGL list of the Image Plane
 	GLuint m_ImagePlaneListID;
+
+	//! The selection square size
+	GLsizei m_SelectionSquareSize;
 
 
 };
