@@ -139,7 +139,7 @@ public:
 
 	//! Return true if the mesh data doesn't contains vertice
 	inline bool isEmpty() const
-	{return (0 == m_PositionSize) and (0 == m_Positions.size());}
+	{return (0 == m_PositionSize) && (0 == m_Positions.size());}
 
 
 //@}
