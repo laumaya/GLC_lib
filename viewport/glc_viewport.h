@@ -257,13 +257,8 @@ private:
 	//! Viewport Background color
 	QColor m_BackgroundColor;
 
-	//! OpenGL list of the Image Plane
-	GLuint m_ImagePlaneListID;
-
 	//! The selection square size
 	GLsizei m_SelectionSquareSize;
-
-
 };
 
 #endif //GLC_VIEWPORT_H_

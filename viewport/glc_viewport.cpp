@@ -54,7 +54,6 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_pQGLWidget(GLWidget)		// Attached QGLWidget
 // the default backgroundColor
 , m_BackgroundColor(Qt::black)
-, m_ImagePlaneListID(0)
 , m_SelectionSquareSize(4)
 {
 	// create a camera
@@ -181,32 +180,7 @@ void GLC_Viewport::glExecuteImagePlane()
 	{
 		if (m_pImagePlane != NULL)
 		{
-			// Geometry validity
-			if (!m_pImagePlane->isValid())
-			{
-				m_pImagePlane->glLoadTexture();
-			}
-
-			// Geometry invalid or collection node list ID == 0
-			if ((!m_pImagePlane->isValid()) || (m_ImagePlaneListID == 0))
-			{
-				//qDebug() << "GLC_CollectionNode::GlExecute: geometry validity : " << m_pImagePlane->isValid();
-				//qDebug() << "GLC_CollectionNode::GlExecute: list ID : " << m_ImagePlaneListID;
-
-				if (m_ImagePlaneListID == 0)
-				{
-					//qDebug() << "GLC_CollectionNode::GlExecute: List not found";
-					m_ImagePlaneListID= glGenLists(1);
-				}
-				glNewList(m_ImagePlaneListID, GL_COMPILE_AND_EXECUTE);
-					m_pImagePlane->glExecute(renderProperties);
-				glEndList();
-				//qDebug() << "GLC_CollectionNode::GlExecute : Display list " << m_ImagePlaneListID << " created";
-			}
-			else
-			{
-				glCallList(m_ImagePlaneListID);
-			}
+			m_pImagePlane->glExecute(renderProperties);
 		}
 	}
 }
@@ -397,12 +371,6 @@ void GLC_Viewport::loadBackGroundImage(const QString Image)
 // delete background image
 void GLC_Viewport::deleteBackGroundImage()
 {
-	if (m_ImagePlaneListID != 0)
-	{
-		glDeleteLists(m_ImagePlaneListID, 1);
-		m_ImagePlaneListID= 0;
-
-	}
 	if (m_pImagePlane != NULL)
 	{
 		delete m_pImagePlane;
