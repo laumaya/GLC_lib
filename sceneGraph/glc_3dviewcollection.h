@@ -42,7 +42,7 @@ class GLC_Viewport;
 typedef QHash< GLC_uint, GLC_3DViewInstance> ViewInstancesHash;
 
 //! GLC_3DViewInstance pointer Hash table
-typedef QHash< GLC_uint, GLC_3DViewInstance*> PointerViewInstanceHash;
+typedef QHash<GLC_uint, GLC_3DViewInstance*> PointerViewInstanceHash;
 
 //! Hash table of GLC_3DViewInstance Hash table which use a shader
 typedef QHash<GLuint, PointerViewInstanceHash*> HashList;
@@ -259,6 +259,9 @@ private:
 	//! Display collection's member
 	void glDraw(GLuint, bool);
 
+	//! Draw instances of a PointerViewInstanceHash
+	inline void glDrawInstancesOf(PointerViewInstanceHash*, bool);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -304,4 +307,61 @@ private:
 	GLC_Viewport* m_pViewport;
 
 };
+
+// Draw instances of a PointerViewInstanceHash
+void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, bool transparentMaterial)
+{
+	bool forceDisplay= false;
+	if (GLC_State::isInSelectionMode())
+	{
+		forceDisplay= true;
+	}
+
+	PointerViewInstanceHash::iterator iEntry= pHash->begin();
+	if (forceDisplay)
+	{
+		while (iEntry != pHash->constEnd())
+		{
+			if ((iEntry.value()->isVisible() == m_IsInShowSate))
+			{
+				iEntry.value()->glExecute(transparentMaterial, m_UseLod, m_pViewport);
+			}
+			++iEntry;
+		}
+	}
+	else
+	{
+		if (!transparentMaterial)
+		{
+			while (iEntry != pHash->constEnd())
+			{
+				if ((iEntry.value()->isVisible() == m_IsInShowSate))
+				{
+					if (!iEntry.value()->isTransparent() || iEntry.value()->renderPropertiesHandle()->isSelected())
+					{
+						iEntry.value()->glExecute(transparentMaterial, m_UseLod, m_pViewport);
+					}
+				}
+				++iEntry;
+			}
+
+		}
+		else
+		{
+			while (iEntry != pHash->constEnd())
+			{
+				if ((iEntry.value()->isVisible() == m_IsInShowSate))
+				{
+					if (iEntry.value()->hasTransparentMaterials())
+					{
+						iEntry.value()->glExecute(transparentMaterial, m_UseLod, m_pViewport);
+					}
+				}
+				++iEntry;
+			}
+	   }
+
+	}
+}
+
 #endif //GLC_3DVIEWCOLLECTION_H_

@@ -644,188 +644,97 @@ int GLC_3DViewCollection::numberOfUsedShadingGroup() const
 
 void GLC_3DViewCollection::glExecute(GLuint groupId, bool transparent)
 {
-	//qDebug() << "GLC_3DViewCollection::glExecute";
-	if (size() > 0)
+	if (!isEmpty())
 	{
-
-		glDraw(groupId, transparent);
-
-		// OpenGL error handler
-		GLenum errCode;
-		if ((errCode= glGetError()) != GL_NO_ERROR)
+		if (GLC_State::isInSelectionMode())
 		{
-			const GLubyte* errString;
-			errString = gluErrorString(errCode);
-			qDebug("GLC_Collection::GlExecute OPENGL ERROR %s", errString);
+			glDisable(GL_BLEND);
+			glDisable(GL_LIGHTING);
+			glDisable(GL_TEXTURE_2D);
 		}
+		else
+		{
+			glEnable(GL_LIGHTING);
+		}
+		glDraw(groupId, transparent);
 	}
 }
 // Display all shader group
 void GLC_3DViewCollection::glExecuteShaderGroup(bool transparent)
 {
-	//qDebug() << "GLC_3DViewCollection::glExecuteShaderGroup";
-	if (size() > 0)
+	if (!isEmpty())
 	{
+		if (GLC_State::isInSelectionMode())
+		{
+			glDisable(GL_BLEND);
+			glDisable(GL_LIGHTING);
+			glDisable(GL_TEXTURE_2D);
+		}
+
 		HashList::iterator iEntry= m_ShadedPointerViewInstanceHash.begin();
 	    while (iEntry != m_ShadedPointerViewInstanceHash.constEnd())
 	    {
 	    	glDraw(iEntry.key(), transparent);
 	    	++iEntry;
 	    }
-
-		// OpenGL error handler
-		GLenum errCode;
-		if ((errCode= glGetError()) != GL_NO_ERROR)
-		{
-			const GLubyte* errString;
-			errString = gluErrorString(errCode);
-			qDebug("GLC_Collection::GlExecute OPENGL ERROR %s", errString);
-		}
 	}
-
 }
 
 // Display the specified collection group
 void GLC_3DViewCollection::glDraw(GLuint groupId, bool transparent)
 {
-	if (groupId == 0)
+	// Set render Mode and OpenGL state
+	if (!GLC_State::isInSelectionMode() && (groupId == 0))
 	{
-		// Display non transparent instance
-	    glDisable(GL_BLEND);
-	    //glDisable(GL_CULL_FACE);
-	    glEnable(GL_DEPTH_TEST);
-
-	    PointerViewInstanceHash::iterator iEntry;
-	    QList<GLC_3DViewInstance*> transparentInstances;
-	    if (!m_MainInstances.empty() && !transparent)
-	    {
-	    	// Display not transparent object
-	    	iEntry= m_MainInstances.begin();
-	        while (iEntry != m_MainInstances.constEnd())
-	        {
-	        	//qDebug() << "no transparent";
-	        	if ((iEntry.value()->isVisible() == m_IsInShowSate))
-	        	{
-		            if (!iEntry.value()->isTransparent())
-		            {
-		            	iEntry.value()->glExecute(glc::NonTransparentMaterial, m_UseLod, m_pViewport);
-		            }
-	        	}
-	            ++iEntry;
-	        }
-	    }
-
-	    else if(!m_MainInstances.empty())
-	    {
-	    	//Display Transparent objects
-	        // Set attributes for blending activation
+		if (transparent)
+		{
 	        glEnable(GL_BLEND);
 	        glDepthMask(GL_FALSE);
 	        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
-	    	iEntry= m_MainInstances.begin();
-	        while (iEntry != m_MainInstances.constEnd())
-	        {
-	        	//qDebug() << "Transparent";
-	        	if ((iEntry.value()->isVisible() == m_IsInShowSate))
-	        	{
-	        		 if (iEntry.value()->hasTransparentMaterials())
-		            {
-		            	iEntry.value()->glExecute(glc::TransparentMaterial, m_UseLod, m_pViewport);
-		            }
-	        	}
-	            ++iEntry;
-	        }
-	        // Restore attributtes
-	        glDepthMask(GL_TRUE);
-	        glDisable(GL_BLEND);
-	    }
-
+		}
+		else
+		{
+		    glDisable(GL_BLEND);
+		    glDepthMask(GL_TRUE);
+		    glEnable(GL_DEPTH_TEST);
+		}
 	}
-	else if (groupId == 1)
+
+	// Normal GLC_3DViewInstance
+	if ((groupId == 0) && !m_MainInstances.isEmpty())
 	{
-	    if(!m_SelectedInstances.isEmpty())
-	    {
-			if (GLC_State::selectionShaderUsed())
-			{
-				GLC_SelectionMaterial::useShader();
-			}
-			PointerViewInstanceHash::iterator iEntry= m_SelectedInstances.begin();
-	        while (iEntry != m_SelectedInstances.constEnd())
-	        {
-	            if (iEntry.value()->isVisible() == m_IsInShowSate)
-	            {
-	            	iEntry.value()->glExecute(glc::NonTransparentMaterial, m_UseLod, m_pViewport);
-	            }
-	            ++iEntry;
-	        }
-			if (GLC_State::selectionShaderUsed())
-			{
-				GLC_SelectionMaterial::unUseShader();
-			}
-	    }
+	    glDrawInstancesOf(&m_MainInstances, transparent);
 
 	}
-	else
+	// Selected GLC_3DVIewInstance
+	else if ((groupId == 1) && !m_SelectedInstances.isEmpty())
+	{
+		if (GLC_State::selectionShaderUsed()) GLC_SelectionMaterial::useShader();
+
+		glDrawInstancesOf(&m_SelectedInstances, transparent);
+
+		if (GLC_State::selectionShaderUsed()) GLC_SelectionMaterial::unUseShader();
+	}
+	// GLC_3DViewInstance with shader
+	else if (!m_ShadedPointerViewInstanceHash.isEmpty())
 	{
 	    if(m_ShadedPointerViewInstanceHash.contains(groupId) && !m_ShadedPointerViewInstanceHash.value(groupId)->isEmpty())
 	    {
-	    	GLC_Shader::use(groupId);
 	    	PointerViewInstanceHash* pNodeHash= m_ShadedPointerViewInstanceHash.value(groupId);
 
-			if (!transparent)
-			{
-				PointerViewInstanceHash::iterator iEntry= pNodeHash->begin();
-		        while (iEntry != pNodeHash->constEnd())
-		        {
-		        	//qDebug() << "transparent";
-		            if (iEntry.value()->isVisible() == m_IsInShowSate)
-		            {
-			            if (!iEntry.value()->isTransparent())
-			            {
-			            	iEntry.value()->glExecute(glc::NonTransparentMaterial, m_UseLod, m_pViewport);
-			            }
-		            }
-		            ++iEntry;
-		        }
-			}
-			else
-		    {
-				PointerViewInstanceHash::iterator iEntry= pNodeHash->begin();
-		        // Set attributes for blending activation
-		        glEnable(GL_BLEND);
-		        glDepthMask(GL_FALSE);
-		        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		    	// Display transparent instance
-		        while (iEntry != pNodeHash->constEnd())
-		        {
-		        	//qDebug() << "transparent";
-		            if (iEntry.value()->isVisible() == m_IsInShowSate)
-		            {
-		            	if (iEntry.value()->hasTransparentMaterials())
-			            {
-			            	iEntry.value()->glExecute(glc::TransparentMaterial, m_UseLod, m_pViewport);
-			            }
-		            }
-		            ++iEntry;
-		        }
-		        // Restore attributtes
-		        glDepthMask(GL_TRUE);
-		        glDisable(GL_BLEND);
-		    }
-
-			GLC_Shader::unuse();
+	    	GLC_Shader::use(groupId);
+	    	glDrawInstancesOf(pNodeHash, transparent);
+	    	GLC_Shader::unuse();
 	    }
 	}
-	// OpenGL error handler
-	GLenum errCode;
-	if ((errCode= glGetError()) != GL_NO_ERROR)
+
+	// Restore OpenGL state
+	if (transparent && !GLC_State::isInSelectionMode() && (groupId == 0))
 	{
-		const GLubyte* errString;
-		errString = gluErrorString(errCode);
-		qDebug("GLC_Collection::GlDraw OPENGL ERROR %s", errString);
+		glDisable(GL_BLEND);
+		glDepthMask(GL_TRUE);
+		glEnable(GL_DEPTH_TEST);
 	}
 
 }
