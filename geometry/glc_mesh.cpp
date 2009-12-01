@@ -25,7 +25,6 @@
 //! \file glc_mesh.cpp Implementation for the GLC_Mesh class.
 
 #include "glc_mesh.h"
-#include "../shading/glc_selectionmaterial.h"
 
 // The Mesh chunk id
 #define GLC_BINARY_CHUNK_ID 0xA701
@@ -691,9 +690,24 @@ void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 // Specific glExecute method
 void GLC_Mesh::glExecute(const GLC_RenderProperties& renderProperties)
 {
+	if (m_MaterialHash.isEmpty())
+	{
+		GLC_Material* pMaterial= new GLC_Material();
+		pMaterial->setName(name());
+		addMaterial(pMaterial);
+	}
+	m_IsSelected= renderProperties.isSelected();
+	glDraw(renderProperties);
+	m_IsSelected= false;
+	m_GeometryIsValid= true;
+
+
+
+/*
 	m_IsSelected= renderProperties.isSelected();
 	GLC_Geometry::glExecute(renderProperties);
 	m_IsSelected= false;
+	*/
 }
 
 // Virtual interface for OpenGL Geometry set up.
@@ -732,47 +746,47 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		activateVertexArray();
 	}
 
-	if (!GLC_State::isInSelectionMode()) glEnable(GL_LIGHTING);
-
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
-	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	if (GLC_State::isInSelectionMode())
 	{
-		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
-		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
-
-		// Test if the current material is renderable
-		const bool materialIsrenderable = pCurrentMaterial->isTransparent() == (renderProperties.renderingMode() == glc::TransparentMaterial);
-
-		// Choose the material to render
-   		if (materialIsrenderable && (!m_IsSelected && !GLC_State::isInSelectionMode()))
-    	{
-			// Execute current material
-			if (pCurrentMaterial->hasTexture())
-			{
-				glEnable(GL_TEXTURE_2D);
-			}
-			else
-			{
-				glDisable(GL_TEXTURE_2D);
-			}
-			// Activate material
-			pCurrentMaterial->glExecute();
-
-			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-		}
-
-   		// Choose the primitives to render
-		if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
+		if (renderProperties.renderingMode() == glc::PrimitiveSelection)
 		{
-
-			if (vboIsUsed)
-				vboDrawPrimitivesOf(pCurrentGroup);
-			else
-				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+			normalRenderLoop(renderProperties, vboIsUsed);
 		}
-
-		++iGroup;
+		else if (renderProperties.renderingMode() == glc::BodySelection)
+		{
+			normalRenderLoop(renderProperties, vboIsUsed);
+		}
+		else
+		{
+			normalRenderLoop(renderProperties, vboIsUsed);
+		}
 	}
+	else
+	{
+		// Choose the accurate render loop
+		switch (renderProperties.renderingMode())
+		{
+		case glc::Normal:
+			normalRenderLoop(renderProperties, vboIsUsed);
+			break;
+		case glc::OverwriteMaterial:
+			OverwriteMaterialRenderLoop(renderProperties, vboIsUsed);
+			break;
+		case glc::OverwriteTransparency:
+			OverwriteTransparencyRenderLoop(renderProperties, vboIsUsed);
+			break;
+		case glc::PrimitiveSelected:
+			normalRenderLoop(renderProperties, vboIsUsed);
+			break;
+		case glc::OverwritePrimitiveMaterial:
+			normalRenderLoop(renderProperties, vboIsUsed);
+			break;
+		default:
+			Q_ASSERT(false);
+			break;
+		}
+	}
+
 
 	// Restore client state
 	if (vboIsUsed)

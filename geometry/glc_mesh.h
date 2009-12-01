@@ -37,6 +37,7 @@
 #include "glc_geometry.h"
 #include "glc_primitivegroup.h"
 #include "../glc_state.h"
+#include "../shading/glc_selectionmaterial.h"
 
 #include "../glc_config.h"
 
@@ -306,6 +307,15 @@ private:
 	//! Activate vertex Array
 	inline void activateVertexArray();
 
+	//! The normal display loop
+	inline void normalRenderLoop(const GLC_RenderProperties&, bool);
+
+	//! The overwrite material render loop
+	inline void OverwriteMaterialRenderLoop(const GLC_RenderProperties&, bool);
+
+	//! The overwrite transparency render loop
+	inline void OverwriteTransparencyRenderLoop(const GLC_RenderProperties&, bool);
+
 //@}
 
 
@@ -464,6 +474,108 @@ void GLC_Mesh::activateVertexArray()
 		glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
 		glColorPointer(4, GL_FLOAT, 0, m_MeshData.colorVectorHandle()->data());
 		glEnableClientState(GL_COLOR_ARRAY);
+	}
+}
+
+// The normal display loop
+void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
+
+		// Test if the current material is renderable
+		bool materialIsrenderable = (pCurrentMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
+
+		// Choose the material to render
+   		if ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode())
+    	{
+			// Execute current material
+			pCurrentMaterial->glExecute();
+
+			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		}
+
+   		// Choose the primitives to render
+		if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
+		{
+
+			if (vboIsUsed)
+				vboDrawPrimitivesOf(pCurrentGroup);
+			else
+				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+		}
+
+		++iGroup;
+	}
+}
+
+//  The overwrite material render loop
+void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	// Get the overwrite material
+	GLC_Material* pOverwriteMaterial= renderProperties.overwriteMaterial();
+	Q_ASSERT(NULL != pOverwriteMaterial);
+	pOverwriteMaterial->glExecute();
+	if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+
+	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+
+		// Test if the current material is renderable
+		bool materialIsrenderable = (pOverwriteMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
+
+   		// Choose the primitives to render
+		if (m_IsSelected || materialIsrenderable)
+		{
+
+			if (vboIsUsed)
+				vboDrawPrimitivesOf(pCurrentGroup);
+			else
+				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+		}
+
+		++iGroup;
+	}
+}
+// The overwrite transparency render loop
+void GLC_Mesh::OverwriteTransparencyRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	// Get transparency value
+	const float alpha= renderProperties.overwriteTransparency();
+	Q_ASSERT(-1.0f != alpha);
+
+	// Test if the current material is renderable
+	bool materialIsrenderable = (true == renderProperties.transparentMaterialRenderFlag());
+
+	if (materialIsrenderable || m_IsSelected)
+	{
+		PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+		{
+			GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+			GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
+
+			// Execute current material
+			pCurrentMaterial->glExecute(alpha);
+
+			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+
+	   		// Choose the primitives to render
+			if (m_IsSelected || materialIsrenderable)
+			{
+
+				if (vboIsUsed)
+					vboDrawPrimitivesOf(pCurrentGroup);
+				else
+					vertexArrayDrawPrimitivesOf(pCurrentGroup);
+			}
+			++iGroup;
+		}
 	}
 }
 
