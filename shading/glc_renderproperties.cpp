@@ -31,11 +31,12 @@ GLC_RenderProperties::GLC_RenderProperties()
 , m_IsSelected(false)
 , m_PolyFace(GL_FRONT_AND_BACK)
 , m_PolyMode(GL_FILL)
-, m_RenderMode(glc::NonTransparentMaterial)
+, m_RenderMode(glc::Normal)
 , m_pOverwriteMaterial(NULL)
-, m_OverwriteTransparency(0.0f)
+, m_OverwriteTransparency(-1.0f)
 , m_pSelectedPrimitvesId(NULL)
 , m_pOverwritePrimitiveMaterialMap(NULL)
+, m_Transparent(false)
 {
 
 }
@@ -51,6 +52,7 @@ GLC_RenderProperties::GLC_RenderProperties(const GLC_RenderProperties& renderPro
 , m_OverwriteTransparency(renderProperties.m_OverwriteTransparency)
 , m_pSelectedPrimitvesId(NULL)
 , m_pOverwritePrimitiveMaterialMap(NULL)
+, m_Transparent(renderProperties.m_Transparent)
 {
 	// Update overwrite material usage
 	if (NULL != m_pOverwriteMaterial)
@@ -92,6 +94,7 @@ GLC_RenderProperties& GLC_RenderProperties::operator=(const GLC_RenderProperties
 		m_OverwriteTransparency= renderProperties.m_OverwriteTransparency;
 		m_pSelectedPrimitvesId= NULL;
 		m_pOverwritePrimitiveMaterialMap= NULL;
+		m_Transparent= renderProperties.m_Transparent;
 
 		// Update overwrite material usage
 		if (NULL != m_pOverwriteMaterial)

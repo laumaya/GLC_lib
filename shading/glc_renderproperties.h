@@ -42,8 +42,7 @@ namespace glc
 	//! Geometry rendering mode enumeration
 	enum RenderMode
 	{
-		NonTransparentMaterial,
-		TransparentMaterial,
+		Normal,
 		OverwriteMaterial,
 		OverwriteTransparency,
 		PrimitiveSelected,
@@ -94,6 +93,10 @@ public:
 	inline GLC_Material* overwriteMaterial() const
 	{return m_pOverwriteMaterial;}
 
+	//! Return the overwrite transparency
+	inline float overwriteTransparency() const
+	{return m_OverwriteTransparency;}
+
 	//! Return an handle to the list of selected primitives id
 	inline QList<GLC_uint>* listOfSelectedPrimitivesId() const
 	{return m_pSelectedPrimitvesId;}
@@ -111,6 +114,10 @@ public:
 	/*! Polygon Mode can Be : GL_POINT, GL_LINE, or GL_FILL*/
 	inline GLenum polygonMode() const
 	{return m_PolyMode;}
+
+	//! Return the transparent material render flag
+	inline bool transparentMaterialRenderFlag() const
+	{return m_Transparent;}
 
 //@}
 
@@ -143,6 +150,10 @@ public:
 	//! Set the overwrite material
 	void setOverwriteMaterial(GLC_Material*);
 
+	//! Set the overwrite transparency
+	inline void setOverwriteTransparency(float alpha)
+	{m_OverwriteTransparency= alpha;}
+
 	//! Set the list of selected primitives id
 	void setlistOfSelectedPrimitivesId(const QList<GLC_uint>&);
 
@@ -157,6 +168,10 @@ public:
 		m_PolyFace= Face;
 		m_PolyMode= Mode;
 	}
+
+	//! Set the transparency material rendering flag
+	inline void setTransparentMaterialRenderFlag(bool flag)
+	{m_Transparent= flag;}
 
 
 //@}
@@ -189,6 +204,9 @@ private:
 
 	//! The overwrite primitive material mapping
 	QHash<GLC_uint, GLC_Material*>* m_pOverwritePrimitiveMaterialMap;
+
+	//! Transparent material render flag
+	bool m_Transparent;
 
 };
 
