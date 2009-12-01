@@ -94,10 +94,12 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get Object ID
-	inline GLC_uint id() const {return m_Uid;}
+	inline GLC_uint id() const
+	{return m_Uid;}
 
 	//! Get Object Name
-	inline const QString name() const {return m_Name;}
+	inline QString name() const
+	{return m_Name;}
 
 	//! Return true if the geometry is valid
 	inline bool isValid(void) const
@@ -118,7 +120,7 @@ public:
 	}
 
 	//! Return the number of materials
-	inline unsigned int numberOfMaterials() const
+	inline int numberOfMaterials() const
 	{return m_MaterialHash.size();}
 
 	//! Return the specified mesh sub material
@@ -134,7 +136,7 @@ public:
 	{return m_MaterialHash.keys();}
 
 	//! Return true if Material key is in the mesh
-	inline const bool containsMaterial(const GLC_uint key) const
+	inline bool containsMaterial(const GLC_uint key) const
 	{return m_MaterialHash.contains(key);}
 
 	//! Return the geometry bounding box
