@@ -229,9 +229,8 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 	if (newY < 0) newY= 0;
 
 	return meaningfulIdInsideSquare(newX, newY, width, height);
-
 }
-// select an object inside a 3DViewInstance and return is UID
+// Select an object inside a 3DViewInstance and return is UID
 GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, GLC_3DViewInstance* pInstance, int x, int y)
 {
 	m_pQGLWidget->qglClearColor(Qt::black);
@@ -289,10 +288,10 @@ GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width,
 
 	const int squareSize= width * height;
 	const GLsizei arraySize= squareSize * 4; // 4 -> R G B A
-	GLubyte colorId[arraySize];
+	QVector<GLubyte> colorId(arraySize);
 
 	// Get the array of pixels
-	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId);
+	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId.data());
 
 	// Restore Background color
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);
@@ -340,10 +339,10 @@ QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei widt
 
 	const int squareSize= width * height;
 	const GLsizei arraySize= squareSize * 4; // 4 -> R G B A
-	GLubyte colorId[arraySize];
+	QVector<GLubyte> colorId(arraySize);
 
 	// Get the array of pixels
-	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId);
+	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId.data());
 
 	// Restore Background color
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);
