@@ -200,10 +200,12 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the world
-	inline void glExecute(GLuint groupId, bool transparent= false) {m_pWorldHandle->collection()->glExecute(groupId, transparent);}
+	inline void glExecute(GLuint groupId, bool transparent= false)
+	{m_pWorldHandle->collection()->glExecute(groupId, transparent);}
 
 	//! Display the world's shader group
-	inline void glExecuteShaderGroup(bool transparent= false) {m_pWorldHandle->collection()->glExecuteShaderGroup(transparent);}
+	inline void glExecuteShaderGroup(bool transparent= false)
+	{m_pWorldHandle->collection()->glExecuteShaderGroup(transparent);}
 
 //@}
 //////////////////////////////////////////////////////////////////////
