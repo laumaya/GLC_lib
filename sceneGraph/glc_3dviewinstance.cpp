@@ -280,10 +280,10 @@ GLC_3DViewInstance& GLC_3DViewInstance::resetMatrix(void)
 //////////////////////////////////////////////////////////////////////
 
 // Display the instance
-void GLC_3DViewInstance::glExecute(glc::RenderMode renderMode, bool useLod, GLC_Viewport* pView)
+void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* pView)
 {
 	if (m_3DRep.isEmpty()) return;
-	m_RenderProperties.setRenderingMode(renderMode);
+	m_RenderProperties.setTransparentMaterialRenderFlag(transparent);
 
 	// Save current OpenGL Matrix
 	glPushMatrix();

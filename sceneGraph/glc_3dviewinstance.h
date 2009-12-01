@@ -85,34 +85,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return true if the all instance's mesh are transparent
-	inline bool isTransparent() const
-	{
-		if (m_3DRep.isEmpty()) return false;
-		const int size= m_3DRep.numberOfBody();
-		bool result= true;
-		int i= 0;
-		while((i < size) && result)
-		{
-			result= result && m_3DRep.geomAt(i)->isTransparent();
-			++i;
-		}
-		return result;
-	}
+	inline bool isTransparent() const;
 
 	//! Return true if the instance contains mesh which contains transparent material
-	inline bool hasTransparentMaterials() const
-	{
-		if (m_3DRep.isEmpty()) return false;
-		const int size= m_3DRep.numberOfBody();
-		bool result= false;
-		int i= 0;
-		while ((i < size) && !result)
-		{
-			result= result || m_3DRep.geomAt(i)->hasTransparentMaterials();
-			++i;
-		}
-		return result;
-	}
+	inline bool hasTransparentMaterials() const;
 
 	//! Return true if the instance as no geometry
 	inline const bool isEmpty() const
@@ -279,7 +255,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the instance
-	void glExecute(glc::RenderMode renderMode= glc::NonTransparentMaterial, bool useLoad= false, GLC_Viewport* pView= NULL);
+	void glExecute(bool transparent= false, bool useLoad= false, GLC_Viewport* pView= NULL);
 
 	//! Display the instance in Body selection mode
 	void glExecuteForBodySelection();
@@ -350,6 +326,38 @@ private:
 	static int m_GlobalDefaultLOD;
 
 };
+
+// Return true if the all instance's mesh are transparent
+bool GLC_3DViewInstance::isTransparent() const
+{
+	if (m_3DRep.isEmpty()) return false;
+	if (m_RenderProperties.renderingMode() == glc::OverwriteTransparency) return true;
+	const int size= m_3DRep.numberOfBody();
+	bool result= true;
+	int i= 0;
+	while((i < size) && result)
+	{
+		result= result && m_3DRep.geomAt(i)->isTransparent();
+		++i;
+	}
+	return result;
+}
+
+// Return true if the instance contains mesh which contains transparent material
+bool GLC_3DViewInstance::hasTransparentMaterials() const
+{
+	if (m_3DRep.isEmpty()) return false;
+	if (m_RenderProperties.renderingMode() == glc::OverwriteTransparency) return true;
+	const int size= m_3DRep.numberOfBody();
+	bool result= false;
+	int i= 0;
+	while ((i < size) && !result)
+	{
+		result= result || m_3DRep.geomAt(i)->hasTransparentMaterials();
+		++i;
+	}
+	return result;
+}
 
 
 #endif /*GLC_3DVIEWINSTANCE_H_*/
