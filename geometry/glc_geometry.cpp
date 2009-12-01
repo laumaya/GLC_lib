@@ -224,15 +224,17 @@ void GLC_Geometry::glExecute(const GLC_RenderProperties& renderProperties)
 	{
 		glPropGeom(renderProperties);
 	}
-	else
-	{
-		glDisable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_LIGHTING);
-	}
 
 	glDraw(renderProperties);
 	m_GeometryIsValid= true;
+
+	// OpenGL error handler
+	GLenum error= glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Geometry::glExecute " + name(), error);
+		throw(OpenGlException);
+	}
 }
 
 // Virtual interface for OpenGL Geometry properties.
@@ -243,7 +245,6 @@ void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 	if(m_IsWire && (m_MaterialHash.size() == 1))
 	{
 		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
-		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
 		pCurrentMaterial->glExecute();
 
@@ -254,26 +255,16 @@ void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
 		if (pCurrentMaterial->hasTexture())
 		{
-			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
 			pCurrentMaterial->glExecute();
 			if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 		}
 		else
 		{
-			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
 			if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 			else pCurrentMaterial->glExecute();
 		}
-	}
-
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Geometry::GlPropGeom ", error);
-		throw(OpenGlException);
 	}
 }
 
