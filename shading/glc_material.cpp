@@ -487,9 +487,12 @@ void GLC_Material::glExecute()
 
 	if (m_pTexture != NULL)
 	{
-		// for blend managing
-		//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+		glEnable(GL_TEXTURE_2D);
 		m_pTexture->glcBindTexture();
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
 	}
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, pAmbientColor);
@@ -508,8 +511,59 @@ void GLC_Material::glExecute()
 		errString = gluErrorString(errCode);
 		qDebug("GLC_Material::GlExecute OpenGL Error %s", errString);
 	}
-
 }
+
+// Execute OpenGL Material
+void GLC_Material::glExecute(float overwriteTransparency)
+{
+	GLfloat pAmbientColor[4]= {ambientColor().redF(),
+								ambientColor().greenF(),
+								ambientColor().blueF(),
+								overwriteTransparency};
+
+	GLfloat pDiffuseColor[4]= {diffuseColor().redF(),
+								diffuseColor().greenF(),
+								diffuseColor().blueF(),
+								overwriteTransparency};
+
+	GLfloat pSpecularColor[4]= {specularColor().redF(),
+								specularColor().greenF(),
+								specularColor().blueF(),
+								overwriteTransparency};
+
+	GLfloat pLightEmission[4]= {lightEmission().redF(),
+								lightEmission().greenF(),
+								lightEmission().blueF(),
+								overwriteTransparency};
+
+	if (m_pTexture != NULL)
+	{
+		glEnable(GL_TEXTURE_2D);
+		m_pTexture->glcBindTexture();
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+	}
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, pAmbientColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pDiffuseColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pSpecularColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, pLightEmission);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &m_fShininess);
+
+	glColor4fv(pDiffuseColor);
+
+	// OpenGL Error handler
+	GLenum errCode;
+	if ((errCode= glGetError()) != GL_NO_ERROR)
+	{
+		const GLubyte* errString;
+		errString = gluErrorString(errCode);
+		qDebug("GLC_Material::GlExecute OpenGL Error %s", errString);
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 // Private servicies Functions
 //////////////////////////////////////////////////////////////////////

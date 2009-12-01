@@ -216,6 +216,9 @@ public:
 	//! Execute OpenGL Material
 	virtual void glExecute();
 
+	//! Execute OpenGL Material with overWrite transparency
+	virtual void glExecute(float);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
