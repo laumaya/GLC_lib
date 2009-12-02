@@ -160,6 +160,9 @@ public:
 	//! Set the overwrite primitive material Hash
 	void setOfOverwritePrimitiveMaterials(const QHash<GLC_uint, GLC_Material*>&);
 
+	//! Add an overwrite primitive material
+	void addOverwritePrimitiveMaterial(GLC_uint, GLC_Material*);
+
 	//! Polygon's display style
 	/*! Face Polygon Mode can be : GL_FRONT_AND_BACK, GL_FRONT, or GL_BACK
 	 *  mode can be : GL_POINT, GL_LINE, or GL_FILL */

@@ -189,14 +189,17 @@ void GLC_RenderProperties::setOfOverwritePrimitiveMaterials(const QHash<GLC_uint
 	// Delete the current primitive material map
 	if (NULL != m_pOverwritePrimitiveMaterialMap)
 	{
-		// Delete unused materials from the Hash table
-		QHash<GLC_uint, GLC_Material*>::iterator iMatMap= m_pOverwritePrimitiveMaterialMap->begin();
-		while (m_pOverwritePrimitiveMaterialMap->constEnd() != iMatMap)
-		{
-			iMatMap.value()->delUsage(m_Uid);
-			if (iMatMap.value()->isUnused()) delete iMatMap.value();
+		// Get the list of material
+		QSet<GLC_Material*> materialSet= QSet<GLC_Material*>::fromList(m_pOverwritePrimitiveMaterialMap->values());
 
-			++iMatMap;
+		// Delete unused materials from the Set
+		QSet<GLC_Material*>::iterator iMat= materialSet.begin();
+		while (materialSet.constEnd() != iMat)
+		{
+			(*iMat)->delUsage(m_Uid);
+			if ((*iMat)->isUnused()) delete (*iMat);
+
+			++iMat;
 		}
 		delete m_pOverwritePrimitiveMaterialMap;
 	}
@@ -210,6 +213,58 @@ void GLC_RenderProperties::setOfOverwritePrimitiveMaterials(const QHash<GLC_uint
 	{
 		iMatMap.value()->addUsage(m_Uid);
 		++iMatMap;
+	}
+}
+
+// Add an overwrite primitive material
+void GLC_RenderProperties::addOverwritePrimitiveMaterial(GLC_uint id, GLC_Material* pMaterial)
+{
+	if (NULL != m_pOverwritePrimitiveMaterialMap)
+	{
+		// Get the list of hash material
+		QList<GLC_Material*> materialList= m_pOverwritePrimitiveMaterialMap->values();
+		const int size= materialList.size();
+
+		if (m_pOverwritePrimitiveMaterialMap->contains(id))
+		{
+			if (pMaterial != m_pOverwritePrimitiveMaterialMap->value(id))
+			{
+				// Get the material to replace
+				GLC_Material* pMaterialToReplace= m_pOverwritePrimitiveMaterialMap->value(id);
+
+				// Find the number of material to replace usage
+				int materialOccurence= 0;
+				for (int i= 0; i < size; ++i)
+				{
+					if (materialList.at(i) == pMaterialToReplace) ++materialOccurence;
+				}
+				Q_ASSERT(materialOccurence != 0);
+				if (materialOccurence == 1)
+				{
+					// Delete this usage
+					pMaterialToReplace->delUsage(m_Uid);
+					if (pMaterialToReplace->isUnused()) delete pMaterialToReplace;
+				}
+				// Insert the material
+				m_pOverwritePrimitiveMaterialMap->insert(id, pMaterial);
+				pMaterial->addUsage(m_Uid);
+			}
+		}
+		else if (materialList.contains(pMaterial))
+		{
+			m_pOverwritePrimitiveMaterialMap->insert(id, pMaterial);
+		}
+		else
+		{
+			m_pOverwritePrimitiveMaterialMap->insert(id, pMaterial);
+			pMaterial->addUsage(m_Uid);
+		}
+	}
+	else
+	{
+		m_pOverwritePrimitiveMaterialMap= new QHash<GLC_uint, GLC_Material*>();
+		m_pOverwritePrimitiveMaterialMap->insert(id, pMaterial);
+		pMaterial->addUsage(m_Uid);
 	}
 }
 
