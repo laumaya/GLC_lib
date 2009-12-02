@@ -750,11 +750,11 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	{
 		if (renderProperties.renderingMode() == glc::PrimitiveSelection)
 		{
-			normalRenderLoop(renderProperties, vboIsUsed);
+			primitiveSelectionRenderLoop(vboIsUsed);
 		}
 		else if (renderProperties.renderingMode() == glc::BodySelection)
 		{
-			normalRenderLoop(renderProperties, vboIsUsed);
+			bodySelectionRenderLoop(vboIsUsed);
 		}
 		else
 		{
@@ -779,7 +779,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 			normalRenderLoop(renderProperties, vboIsUsed);
 			break;
 		case glc::OverwritePrimitiveMaterial:
-			normalRenderLoop(renderProperties, vboIsUsed);
+			primitiveRenderLoop(renderProperties, vboIsUsed);
 			break;
 		default:
 			Q_ASSERT(false);
