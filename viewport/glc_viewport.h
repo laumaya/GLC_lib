@@ -168,9 +168,13 @@ public:
 	/*! Return UID of the nearest picked object */
 	GLC_uint select(QGLWidget *pGLWidget, int x, int y);
 
-	//! Select an object inside a 3DViewInstance and return its UID
-	/*! Return UID of the nearest picked object */
-	GLC_uint select(QGLWidget *pGLWidget, GLC_3DViewInstance*, int x, int y);
+	//! Select a body inside a 3DViewInstance and return its UID
+	/*! Return UID of the nearest picked body */
+	GLC_uint selectBody(QGLWidget *pGLWidget, GLC_3DViewInstance*, int x, int y);
+
+	//! Select a primitive inside a 3DViewInstance and return its UID
+	/*! Return UID of the nearest picked primitive */
+	GLC_uint selectPrimitive(QGLWidget *pGLWidget, GLC_3DViewInstance*, int x, int y);
 
 	//! Select objects inside specified square and return its UID in a set
 	QSet<GLC_uint> selectInsideSquare(QGLWidget *pGLWidget, int x1, int y1, int x2, int y2);

@@ -230,13 +230,22 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
 
 	return meaningfulIdInsideSquare(newX, newY, width, height);
 }
-// Select an object inside a 3DViewInstance and return is UID
-GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, GLC_3DViewInstance* pInstance, int x, int y)
+// Select a body inside a 3DViewInstance and return is UID
+GLC_uint GLC_Viewport::selectBody(QGLWidget *pGLWidget, GLC_3DViewInstance* pInstance, int x, int y)
 {
 	m_pQGLWidget->qglClearColor(Qt::black);
 	GLC_State::setSelectionMode(true);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	glExecuteCam();
+
 	// Draw the scene
-	pInstance->glExecute(glc::BodySelection, false, this);
+	glDisable(GL_BLEND);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_2D);
+
+	pInstance->glExecuteForBodySelection();
 	GLC_State::setSelectionMode(false);
 
 	GLsizei width= 6;
@@ -245,6 +254,41 @@ GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, GLC_3DViewInstance* pInstanc
 	GLint newY= (pGLWidget->size().height() - y) - height / 2;
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
+
+	return meaningfulIdInsideSquare(newX, newY, width, height);
+}
+
+// Select a primitive inside a 3DViewInstance and return is UID
+GLC_uint GLC_Viewport::selectPrimitive(QGLWidget *pGLWidget, GLC_3DViewInstance* pInstance, int x, int y)
+{
+	m_pQGLWidget->qglClearColor(Qt::black);
+	GLC_State::setSelectionMode(true);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	glExecuteCam();
+
+	// Draw the scene
+	glDisable(GL_BLEND);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_2D);
+
+	pInstance->glExecuteForBodySelection();
+
+
+	GLsizei width= 6;
+	GLsizei height= width;
+	GLint newX= x - width / 2;
+	GLint newY= (pGLWidget->size().height() - y) - height / 2;
+	if (newX < 0) newX= 0;
+	if (newY < 0) newY= 0;
+
+	GLC_uint bodyId= meaningfulIdInsideSquare(newX, newY, width, height);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	pInstance->glExecuteForPrimitiveSelection(bodyId);
+
+	GLC_State::setSelectionMode(false);
 
 	return meaningfulIdInsideSquare(newX, newY, width, height);
 }
