@@ -90,9 +90,21 @@ public:
 	inline bool containsTriangles() const
 	{return m_TrianglesIndexSize > 0;}
 
+	//! Return true if the group contains triangles group id
+	inline bool containsTrianglesGroupId() const
+	{return !m_TrianglesId.isEmpty();}
+
+	//! Return the Triangle group ID
+	inline GLC_uint triangleGroupId(int index)
+	{return m_TrianglesId.at(index);}
+
 	//! Return the size of list of triangles index of the group
 	inline const int trianglesIndexSize() const
 	{return m_TrianglesIndexSize;}
+
+	//! Return the size of list of triangles index of the group
+	inline const IndexSizes& trianglesIndexSizes() const
+	{return m_TrianglesGroupsSizes;}
 
 	//! Return the list of triangles index of the group
 	inline const IndexList& trianglesIndex() const
@@ -121,6 +133,14 @@ public:
 	inline bool containsStrip() const
 	{return m_TrianglesStripSize > 0;}
 
+	//! Return true if the group contains strips group id
+	inline bool containsStripGroupId() const
+	{return !m_StripsId.isEmpty();}
+
+	//! Return the strip ID
+	inline GLC_uint stripGroupId(int index)
+	{return m_StripsId.at(index);}
+
 	//! Return the size of index of strips
 	inline const int stripsIndexSize() const
 	{return m_TrianglesStripSize;}
@@ -148,6 +168,14 @@ public:
 	inline bool containsFan() const
 	{return m_TrianglesFanSize > 0;}
 
+	//! Return true if the group contains fans group id
+	inline bool containsFanGroupId() const
+	{return !m_FansId.isEmpty();}
+
+	//! Return the fan ID
+	inline GLC_uint fanGroupId(int index)
+	{return m_FansId.at(index);}
+
 	//! Return the size of index of fans
 	inline const int fansIndexSize() const
 	{return m_TrianglesFanSize;}
@@ -170,10 +198,6 @@ public:
 	//! Return the vector of strip offset
 	inline const OffsetVectori& fansOffseti() const
 	{return m_FanIndexOffseti;}
-
-	//! Return the strip ID
-	inline GLC_uint stripId(int index)
-	{return m_StripsId.at(index);}
 
 //@}
 
