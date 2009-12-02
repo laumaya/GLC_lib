@@ -331,6 +331,9 @@ void GLC_3DViewInstance::glExecuteForBodySelection()
 {
 	Q_ASSERT(GLC_State::isInSelectionMode());
 	if (m_3DRep.isEmpty()) return;
+
+	// Save previous rendering mode and set the rendering mode to BodySelection
+	glc::RenderMode previousRenderMode= m_RenderProperties.renderingMode();
 	m_RenderProperties.setRenderingMode(glc::BodySelection);
 
 	// Save current OpenGL Matrix
@@ -348,6 +351,8 @@ void GLC_3DViewInstance::glExecuteForBodySelection()
 		pGeom->glExecute(m_RenderProperties);
 	}
 
+	// Restore rendering mode
+	m_RenderProperties.setRenderingMode(previousRenderMode);
 	// Restore OpenGL Matrix
 	glPopMatrix();
 }
@@ -357,6 +362,8 @@ void GLC_3DViewInstance::glExecuteForPrimitiveSelection(GLC_uint bodyId)
 {
 	Q_ASSERT(GLC_State::isInSelectionMode());
 	if (m_3DRep.isEmpty()) return;
+	// Save previous rendering mode and set the rendering mode to BodySelection
+	glc::RenderMode previousRenderMode= m_RenderProperties.renderingMode();
 	m_RenderProperties.setRenderingMode(glc::PrimitiveSelection);
 
 	// Save current OpenGL Matrix
@@ -373,6 +380,8 @@ void GLC_3DViewInstance::glExecuteForPrimitiveSelection(GLC_uint bodyId)
 			pGeom->glExecute(m_RenderProperties);
 		}
 	}
+
+	m_RenderProperties.setRenderingMode(previousRenderMode);
 
 	// Restore OpenGL Matrix
 	glPopMatrix();
