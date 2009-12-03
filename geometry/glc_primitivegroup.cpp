@@ -96,6 +96,7 @@ GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group, GLC_uint
 , m_FansIndexSizes(group.m_FansIndexSizes)
 , m_FanIndexOffset(group.m_FanIndexOffset)
 , m_FanIndexOffseti(group.m_FanIndexOffseti)
+, m_FansId(group.m_FansId)
 , m_IsFinished(group.m_IsFinished)
 , m_TrianglesIndexSize(group.m_TrianglesIndexSize)
 , m_TrianglesStripSize(group.m_TrianglesStripSize)
