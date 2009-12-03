@@ -880,7 +880,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		}
 
 		// Get the master lod accuracy
-		double masteLodAccuracy= readAttribute("accuracy", false).toDouble();
+		double masterLodAccuracy= readAttribute("accuracy", false).toDouble();
 
 		loadLOD(pMesh);
 		if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
@@ -895,7 +895,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 			m_pStreamReader->readNext();
 			if ( m_pStreamReader->name() == "Face")
 			{
-				loadFace(pMesh, 0, masteLodAccuracy);
+				loadFace(pMesh, 0, masterLodAccuracy);
 			}
 		}
 		checkForXmlError("End of Faces not found");
