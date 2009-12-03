@@ -779,7 +779,10 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 			normalRenderLoop(renderProperties, vboIsUsed);
 			break;
 		case glc::OverwritePrimitiveMaterial:
-			primitiveRenderLoop(renderProperties, vboIsUsed);
+			if (m_CurrentLod == 0)
+				primitiveRenderLoop(renderProperties, vboIsUsed);
+			else
+				normalRenderLoop(renderProperties, vboIsUsed);
 			break;
 		default:
 			Q_ASSERT(false);
@@ -1015,5 +1018,175 @@ void GLC_Mesh::finishNonVbo()
 			++iGroup;
 		}
 		++iGroups;
+	}
+}
+
+// The normal display loop
+void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
+
+		// Test if the current material is renderable
+		bool materialIsrenderable = (pCurrentMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
+
+		// Choose the material to render
+   		if ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode())
+    	{
+			// Execute current material
+			pCurrentMaterial->glExecute();
+
+			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+		}
+
+   		// Choose the primitives to render
+		if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
+		{
+
+			if (vboIsUsed)
+				vboDrawPrimitivesOf(pCurrentGroup);
+			else
+				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+		}
+
+		++iGroup;
+	}
+}
+
+//  The overwrite material render loop
+void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	// Get the overwrite material
+	GLC_Material* pOverwriteMaterial= renderProperties.overwriteMaterial();
+	Q_ASSERT(NULL != pOverwriteMaterial);
+	pOverwriteMaterial->glExecute();
+	if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+
+	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+
+		// Test if the current material is renderable
+		bool materialIsrenderable = (pOverwriteMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
+
+   		// Choose the primitives to render
+		if (m_IsSelected || materialIsrenderable)
+		{
+
+			if (vboIsUsed)
+				vboDrawPrimitivesOf(pCurrentGroup);
+			else
+				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+		}
+
+		++iGroup;
+	}
+}
+// The overwrite transparency render loop
+void GLC_Mesh::OverwriteTransparencyRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	// Get transparency value
+	const float alpha= renderProperties.overwriteTransparency();
+	Q_ASSERT(-1.0f != alpha);
+
+	// Test if the current material is renderable
+	bool materialIsrenderable = (true == renderProperties.transparentMaterialRenderFlag());
+
+	if (materialIsrenderable || m_IsSelected)
+	{
+		PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+		{
+			GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+			GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
+
+			// Execute current material
+			pCurrentMaterial->glExecute(alpha);
+
+			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+
+	   		// Choose the primitives to render
+			if (m_IsSelected || materialIsrenderable)
+			{
+
+				if (vboIsUsed)
+					vboDrawPrimitivesOf(pCurrentGroup);
+				else
+					vertexArrayDrawPrimitivesOf(pCurrentGroup);
+			}
+			++iGroup;
+		}
+	}
+}
+
+// The body selection render loop
+void GLC_Mesh::bodySelectionRenderLoop(bool vboIsUsed)
+{
+	Q_ASSERT(GLC_State::isInSelectionMode());
+
+	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+
+		if (vboIsUsed)
+			vboDrawPrimitivesOf(pCurrentGroup);
+		else
+			vertexArrayDrawPrimitivesOf(pCurrentGroup);
+
+		++iGroup;
+	}
+}
+
+// The primitive selection render loop
+void GLC_Mesh::primitiveSelectionRenderLoop(bool vboIsUsed)
+{
+	Q_ASSERT(GLC_State::isInSelectionMode());
+
+	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+
+		if (vboIsUsed)
+			vboDrawInSelectionModePrimitivesOf(pCurrentGroup);
+		else
+			vertexArrayDrawInSelectionModePrimitivesOf(pCurrentGroup);
+
+		++iGroup;
+	}
+}
+
+// The primitive rendeder loop
+void GLC_Mesh::primitiveRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
+
+		// Test if the current material is renderable
+		bool materialIsrenderable = (pCurrentMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
+
+		// Choose the material to render
+   		if (materialIsrenderable)
+    	{
+			// Execute current material
+			pCurrentMaterial->glExecute();
+
+		}
+
+		if (vboIsUsed)
+			vboDrawPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, renderProperties.hashOfOverwritePrimitiveMaterials());
+		else
+			vertexArrayDrawPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, renderProperties.hashOfOverwritePrimitiveMaterials());
+
+		++iGroup;
 	}
 }

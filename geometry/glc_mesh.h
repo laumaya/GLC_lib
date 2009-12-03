@@ -320,22 +320,22 @@ private:
 	inline void activateVertexArray();
 
 	//! The normal display loop
-	inline void normalRenderLoop(const GLC_RenderProperties&, bool);
+	void normalRenderLoop(const GLC_RenderProperties&, bool);
 
 	//! The overwrite material render loop
-	inline void OverwriteMaterialRenderLoop(const GLC_RenderProperties&, bool);
+	void OverwriteMaterialRenderLoop(const GLC_RenderProperties&, bool);
 
 	//! The overwrite transparency render loop
-	inline void OverwriteTransparencyRenderLoop(const GLC_RenderProperties&, bool);
+	void OverwriteTransparencyRenderLoop(const GLC_RenderProperties&, bool);
 
 	//! The body selection render loop
-	inline void bodySelectionRenderLoop(bool);
+	void bodySelectionRenderLoop(bool);
 
 	//! The primitive selection render loop
-	inline void primitiveSelectionRenderLoop(bool);
+	void primitiveSelectionRenderLoop(bool);
 
 	//! The primitive rendeder loop
-	inline void primitiveRenderLoop(const GLC_RenderProperties&, bool);
+	void primitiveRenderLoop(const GLC_RenderProperties&, bool);
 
 //@}
 
@@ -535,6 +535,7 @@ void GLC_Mesh::vertexArrayDrawInSelectionModePrimitivesOf(GLC_PrimitiveGroup* pC
 // Use VBO to Draw primitives with specific materials from the specified GLC_PrimitiveGroup
 void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable, QHash<GLC_uint, GLC_Material*>* pMaterialHash)
 {
+	GLC_Material* pCurrentLocalMaterial= pCurrentMaterial;
 	// Draw triangles
 	if (pCurrentGroup->containsTrianglesGroupId())
 	{
@@ -542,13 +543,15 @@ void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_M
 		for (GLint i= 0; i < trianglesGroupCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->triangleGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId))
+			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
-				pMaterialHash->value(currentPrimitiveId)->glExecute();
+				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+				pCurrentLocalMaterial->glExecute();
 			}
-			else
+			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
-				pCurrentMaterial->glExecute();
+				pCurrentLocalMaterial= pCurrentMaterial;
+				pCurrentLocalMaterial->glExecute();
 			}
 			glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->trianglesGroupOffset().at(i));
 		}
@@ -566,13 +569,15 @@ void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_M
 		for (GLint i= 0; i < stripsCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->stripGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId))
+			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
-				pMaterialHash->value(currentPrimitiveId)->glExecute();
+				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+				pCurrentLocalMaterial->glExecute();
 			}
-			else
+			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
-				pCurrentMaterial->glExecute();
+				pCurrentLocalMaterial= pCurrentMaterial;
+				pCurrentLocalMaterial->glExecute();
 			}
 			glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
 		}
@@ -594,13 +599,15 @@ void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_M
 		for (GLint i= 0; i < fansCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->fanGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId))
+			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
-				pMaterialHash->value(currentPrimitiveId)->glExecute();
+				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+				pCurrentLocalMaterial->glExecute();
 			}
-			else
+			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
-				pCurrentMaterial->glExecute();
+				pCurrentLocalMaterial= pCurrentMaterial;
+				pCurrentLocalMaterial->glExecute();
 			}
 			glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
 		}
@@ -620,6 +627,7 @@ void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_M
 // Use Vertex Array to Draw primitives with specific materials from the specified GLC_PrimitiveGroup
 void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable, QHash<GLC_uint, GLC_Material*>* pMaterialHash)
 {
+	GLC_Material* pCurrentLocalMaterial= pCurrentMaterial;
 	// Draw triangles
 	if (pCurrentGroup->containsTrianglesGroupId())
 	{
@@ -627,14 +635,17 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 		for (GLint i= 0; i < trianglesGroupCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->triangleGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId))
+			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
-				pMaterialHash->value(currentPrimitiveId)->glExecute();
+				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+				pCurrentLocalMaterial->glExecute();
 			}
-			else
+			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
-				pCurrentMaterial->glExecute();
+				pCurrentLocalMaterial= pCurrentMaterial;
+				pCurrentLocalMaterial->glExecute();
 			}
+
 			GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesGroupOffseti().at(i)];
 			glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pOffset);
 		}
@@ -656,13 +667,15 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 		for (GLint i= 0; i < stripsCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->stripGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId))
+			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
-				pMaterialHash->value(currentPrimitiveId)->glExecute();
+				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+				pCurrentLocalMaterial->glExecute();
 			}
-			else
+			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
-				pCurrentMaterial->glExecute();
+				pCurrentLocalMaterial= pCurrentMaterial;
+				pCurrentLocalMaterial->glExecute();
 			}
 			GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
 			glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pOffset);
@@ -686,13 +699,15 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 		for (GLint i= 0; i < fansCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->fanGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId))
+			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
-				pMaterialHash->value(currentPrimitiveId)->glExecute();
+				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+				pCurrentLocalMaterial->glExecute();
 			}
-			else
+			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
-				pCurrentMaterial->glExecute();
+				pCurrentLocalMaterial= pCurrentMaterial;
+				pCurrentLocalMaterial->glExecute();
 			}
 			GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
 			glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pOffset);
@@ -770,176 +785,6 @@ void GLC_Mesh::activateVertexArray()
 	}
 }
 
-// The normal display loop
-void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
-{
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
-	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
-	{
-		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
-		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
-
-		// Test if the current material is renderable
-		bool materialIsrenderable = (pCurrentMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
-
-		// Choose the material to render
-   		if ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode())
-    	{
-			// Execute current material
-			pCurrentMaterial->glExecute();
-
-			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-		}
-
-   		// Choose the primitives to render
-		if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
-		{
-
-			if (vboIsUsed)
-				vboDrawPrimitivesOf(pCurrentGroup);
-			else
-				vertexArrayDrawPrimitivesOf(pCurrentGroup);
-		}
-
-		++iGroup;
-	}
-}
-
-//  The overwrite material render loop
-void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
-{
-	// Get the overwrite material
-	GLC_Material* pOverwriteMaterial= renderProperties.overwriteMaterial();
-	Q_ASSERT(NULL != pOverwriteMaterial);
-	pOverwriteMaterial->glExecute();
-	if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
-	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
-	{
-		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
-
-		// Test if the current material is renderable
-		bool materialIsrenderable = (pOverwriteMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
-
-   		// Choose the primitives to render
-		if (m_IsSelected || materialIsrenderable)
-		{
-
-			if (vboIsUsed)
-				vboDrawPrimitivesOf(pCurrentGroup);
-			else
-				vertexArrayDrawPrimitivesOf(pCurrentGroup);
-		}
-
-		++iGroup;
-	}
-}
-// The overwrite transparency render loop
-void GLC_Mesh::OverwriteTransparencyRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
-{
-	// Get transparency value
-	const float alpha= renderProperties.overwriteTransparency();
-	Q_ASSERT(-1.0f != alpha);
-
-	// Test if the current material is renderable
-	bool materialIsrenderable = (true == renderProperties.transparentMaterialRenderFlag());
-
-	if (materialIsrenderable || m_IsSelected)
-	{
-		PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
-		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
-		{
-			GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
-			GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
-
-			// Execute current material
-			pCurrentMaterial->glExecute(alpha);
-
-			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-
-	   		// Choose the primitives to render
-			if (m_IsSelected || materialIsrenderable)
-			{
-
-				if (vboIsUsed)
-					vboDrawPrimitivesOf(pCurrentGroup);
-				else
-					vertexArrayDrawPrimitivesOf(pCurrentGroup);
-			}
-			++iGroup;
-		}
-	}
-}
-
-// The body selection render loop
-void GLC_Mesh::bodySelectionRenderLoop(bool vboIsUsed)
-{
-	Q_ASSERT(GLC_State::isInSelectionMode());
-
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
-	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
-	{
-		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
-
-		if (vboIsUsed)
-			vboDrawPrimitivesOf(pCurrentGroup);
-		else
-			vertexArrayDrawPrimitivesOf(pCurrentGroup);
-
-		++iGroup;
-	}
-}
-
-// The primitive selection render loop
-void GLC_Mesh::primitiveSelectionRenderLoop(bool vboIsUsed)
-{
-	Q_ASSERT(GLC_State::isInSelectionMode());
-
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
-
-	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
-	{
-		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
-
-		if (vboIsUsed)
-			vboDrawInSelectionModePrimitivesOf(pCurrentGroup);
-		else
-			vertexArrayDrawInSelectionModePrimitivesOf(pCurrentGroup);
-
-		++iGroup;
-	}
-}
-
-// The primitive rendeder loop
-void GLC_Mesh::primitiveRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
-{
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
-	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
-	{
-		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
-		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
-
-		// Test if the current material is renderable
-		bool materialIsrenderable = (pCurrentMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
-
-		// Choose the material to render
-   		if (materialIsrenderable)
-    	{
-			// Execute current material
-			pCurrentMaterial->glExecute();
-
-		}
-
-		if (vboIsUsed)
-			vboDrawPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, renderProperties.hashOfOverwritePrimitiveMaterials());
-		else
-			vertexArrayDrawPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, renderProperties.hashOfOverwritePrimitiveMaterials());
-
-		++iGroup;
-	}
-
-}
 
 
 #endif /* GLC_MESH_H_ */
