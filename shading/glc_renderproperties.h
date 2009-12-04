@@ -30,7 +30,7 @@
 #include "glc_material.h"
 #include "../glc_enum.h"
 
-#include <QList>
+#include <QSet>
 #include <QHash>
 #include <QtOpenGL>
 
@@ -42,7 +42,7 @@ namespace glc
 	//! Geometry rendering mode enumeration
 	enum RenderMode
 	{
-		Normal,
+		NormalRenderMode,
 		OverwriteMaterial,
 		OverwriteTransparency,
 		PrimitiveSelected,
@@ -97,8 +97,8 @@ public:
 	inline float overwriteTransparency() const
 	{return m_OverwriteTransparency;}
 
-	//! Return an handle to the list of selected primitives id
-	inline QList<GLC_uint>* listOfSelectedPrimitivesId() const
+	//! Return an handle to the set of selected primitives id
+	inline QSet<GLC_uint>* listOfSelectedPrimitivesId() const
 	{return m_pSelectedPrimitvesId;}
 
 	//! Return an handle to the overwrite primitive material Hash
@@ -119,6 +119,9 @@ public:
 	inline bool transparentMaterialRenderFlag() const
 	{return m_Transparent;}
 
+	//! Return true if rendering properties needs to render with transparency
+	bool needToRenderWithTransparency() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -136,12 +139,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Select the instance
-	inline void select(void)
-	{m_IsSelected= true;}
+	inline void select(bool primitive);
 
 	//! Unselect the instance
-	inline void unselect(void)
-	{m_IsSelected= false;}
+	inline void unselect(void);
 
 	//! Set the rendering mode
 	inline void setRenderingMode(glc::RenderMode mode)
@@ -154,8 +155,14 @@ public:
 	inline void setOverwriteTransparency(float alpha)
 	{m_OverwriteTransparency= alpha;}
 
-	//! Set the list of selected primitives id
-	void setlistOfSelectedPrimitivesId(const QList<GLC_uint>&);
+	//! Set the set of selected primitives id
+	void setSetOfSelectedPrimitivesId(const QSet<GLC_uint>&);
+
+	//! Add a selected primitive
+	void addSelectedPrimitive(GLC_uint);
+
+	//! Clear selectedPrimitive Set
+	void clearSelectedPrimitives();
 
 	//! Set the overwrite primitive material Hash
 	void setOfOverwritePrimitiveMaterials(const QHash<GLC_uint, GLC_Material*>&);
@@ -196,6 +203,9 @@ private:
 	//! Geometry rendering mode
 	glc::RenderMode m_RenderMode;
 
+	//! Geometry saved rendering mode
+	glc::RenderMode m_SavedRenderMode;
+
 	//! The overwrite material
 	GLC_Material* m_pOverwriteMaterial;
 
@@ -203,7 +213,7 @@ private:
 	float m_OverwriteTransparency;
 
 	//! The selected primitive id
-	QList<GLC_uint>* m_pSelectedPrimitvesId;
+	QSet<GLC_uint>* m_pSelectedPrimitvesId;
 
 	//! The overwrite primitive material mapping
 	QHash<GLC_uint, GLC_Material*>* m_pOverwritePrimitiveMaterialMap;
@@ -212,5 +222,26 @@ private:
 	bool m_Transparent;
 
 };
+
+// Select the instance
+void GLC_RenderProperties::select(bool primitive)
+{
+	m_IsSelected= true;
+	if (primitive && (m_RenderMode != glc::PrimitiveSelected))
+	{
+		m_SavedRenderMode= m_RenderMode;
+		m_RenderMode= glc::PrimitiveSelected;
+	}
+}
+
+// Unselect the instance
+void GLC_RenderProperties::unselect(void)
+{
+	m_IsSelected= false;
+	if (m_RenderMode == glc::PrimitiveSelected)
+	{
+		m_RenderMode= m_SavedRenderMode;
+	}
+}
 
 #endif /* GLC_RENDERPROPERTIES_H_ */
