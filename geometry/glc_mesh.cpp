@@ -717,6 +717,11 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 
 	const bool vboIsUsed= GLC_State::vboUsed();
 
+	if (m_IsSelected && (renderProperties.renderingMode() == glc::PrimitiveSelected) && !GLC_State::isInSelectionMode())
+	{
+		m_CurrentLod= 0;
+	}
+
 	if (vboIsUsed)
 	{
 		m_MeshData.createVBOs();
@@ -761,12 +766,23 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 			normalRenderLoop(renderProperties, vboIsUsed);
 		}
 	}
+	else if (m_IsSelected)
+	{
+		if (renderProperties.renderingMode() == glc::PrimitiveSelected)
+		{
+			primitiveSelectedRenderLoop(renderProperties, vboIsUsed);
+		}
+		else
+		{
+			normalRenderLoop(renderProperties, vboIsUsed);
+		}
+	}
 	else
 	{
 		// Choose the accurate render loop
 		switch (renderProperties.renderingMode())
 		{
-		case glc::Normal:
+		case glc::NormalRenderMode:
 			normalRenderLoop(renderProperties, vboIsUsed);
 			break;
 		case glc::OverwriteMaterial:
@@ -774,9 +790,6 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 			break;
 		case glc::OverwriteTransparency:
 			OverwriteTransparencyRenderLoop(renderProperties, vboIsUsed);
-			break;
-		case glc::PrimitiveSelected:
-			normalRenderLoop(renderProperties, vboIsUsed);
 			break;
 		case glc::OverwritePrimitiveMaterial:
 			if (m_CurrentLod == 0)
@@ -1024,35 +1037,39 @@ void GLC_Mesh::finishNonVbo()
 // The normal display loop
 void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
-	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	const bool isTransparent= renderProperties.transparentMaterialRenderFlag();
+	if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
 	{
-		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
-		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
-
-		// Test if the current material is renderable
-		bool materialIsrenderable = (pCurrentMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
-
-		// Choose the material to render
-   		if ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode())
-    	{
-			// Execute current material
-			pCurrentMaterial->glExecute();
-
-			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-		}
-
-   		// Choose the primitives to render
-		if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
+		PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 		{
+			GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+			GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
 
-			if (vboIsUsed)
-				vboDrawPrimitivesOf(pCurrentGroup);
-			else
-				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+			// Test if the current material is renderable
+			bool materialIsrenderable = (pCurrentMaterial->isTransparent() == isTransparent);
+
+			// Choose the material to render
+	   		if ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode())
+	    	{
+				// Execute current material
+				pCurrentMaterial->glExecute();
+
+				if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+			}
+
+	   		// Choose the primitives to render
+			if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
+			{
+
+				if (vboIsUsed)
+					vboDrawPrimitivesOf(pCurrentGroup);
+				else
+					vertexArrayDrawPrimitivesOf(pCurrentGroup);
+			}
+
+			++iGroup;
 		}
-
-		++iGroup;
 	}
 }
 
@@ -1165,6 +1182,7 @@ void GLC_Mesh::primitiveSelectionRenderLoop(bool vboIsUsed)
 // The primitive rendeder loop
 void GLC_Mesh::primitiveRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
+	const bool isTransparent= renderProperties.transparentMaterialRenderFlag();
 	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 	{
@@ -1172,21 +1190,45 @@ void GLC_Mesh::primitiveRenderLoop(const GLC_RenderProperties& renderProperties,
 		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
 
 		// Test if the current material is renderable
-		bool materialIsrenderable = (pCurrentMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
+		const bool materialIsrenderable = (pCurrentMaterial->isTransparent() == isTransparent);
 
-		// Choose the material to render
-   		if (materialIsrenderable)
-    	{
-			// Execute current material
+		if (materialIsrenderable)
+		{
 			pCurrentMaterial->glExecute();
-
 		}
-
 		if (vboIsUsed)
-			vboDrawPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, renderProperties.hashOfOverwritePrimitiveMaterials());
+			vboDrawPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, isTransparent, renderProperties.hashOfOverwritePrimitiveMaterials());
 		else
-			vertexArrayDrawPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, renderProperties.hashOfOverwritePrimitiveMaterials());
+			vertexArrayDrawPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, isTransparent, renderProperties.hashOfOverwritePrimitiveMaterials());
 
 		++iGroup;
 	}
 }
+
+// The primitive Selected render loop
+void GLC_Mesh::primitiveSelectedRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	const bool isTransparent= renderProperties.transparentMaterialRenderFlag();
+	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+		GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
+
+		// Test if the current material is renderable
+		const bool materialIsrenderable = (pCurrentMaterial->isTransparent() == isTransparent);
+
+		if (materialIsrenderable)
+		{
+			pCurrentMaterial->glExecute();
+		}
+
+		if (vboIsUsed)
+			vboDrawSelectedPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, isTransparent, renderProperties);
+		else
+			vertexArrayDrawSelectedPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, isTransparent, renderProperties);
+
+		++iGroup;
+	}
+}
+

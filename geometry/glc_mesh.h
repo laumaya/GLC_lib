@@ -308,10 +308,16 @@ private:
 	inline void vertexArrayDrawInSelectionModePrimitivesOf(GLC_PrimitiveGroup*);
 
 	//! Use VBO to Draw primitives with specific materials from the specified GLC_PrimitiveGroup
-	inline void vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup*, GLC_Material*, bool, QHash<GLC_uint, GLC_Material*>*);
+	inline void vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup*, GLC_Material*, bool, bool, QHash<GLC_uint, GLC_Material*>*);
 
 	//! Use Vertex Array to Draw primitives with specific materials from the specified GLC_PrimitiveGroup
-	inline void vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup*, GLC_Material*, bool, QHash<GLC_uint, GLC_Material*>*);
+	inline void vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup*, GLC_Material*, bool, bool, QHash<GLC_uint, GLC_Material*>*);
+
+	//! Use VBO to Draw primitives with selection materials from the specified GLC_PrimitiveGroup
+	inline void vboDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup*, GLC_Material*, bool, bool, const GLC_RenderProperties&);
+
+	//! Use Vertex Array to Draw primitives with selection materials from the specified GLC_PrimitiveGroup
+	inline void vertexArrayDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup*, GLC_Material*, bool, bool, const GLC_RenderProperties&);
 
 	//! Activate mesh VBOs and IBO of the current LOD
 	inline void activateVboAndIbo();
@@ -334,8 +340,11 @@ private:
 	//! The primitive selection render loop
 	void primitiveSelectionRenderLoop(bool);
 
-	//! The primitive rendeder loop
+	//! The primitive render loop
 	void primitiveRenderLoop(const GLC_RenderProperties&, bool);
+
+	//! The primitive Selected render loop
+	void primitiveSelectedRenderLoop(const GLC_RenderProperties&, bool);
 
 //@}
 
@@ -533,12 +542,14 @@ void GLC_Mesh::vertexArrayDrawInSelectionModePrimitivesOf(GLC_PrimitiveGroup* pC
 }
 
 // Use VBO to Draw primitives with specific materials from the specified GLC_PrimitiveGroup
-void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable, QHash<GLC_uint, GLC_Material*>* pMaterialHash)
+void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable
+		, bool isTransparent,  QHash<GLC_uint, GLC_Material*>* pMaterialHash)
 {
 	GLC_Material* pCurrentLocalMaterial= pCurrentMaterial;
 	// Draw triangles
-	if (pCurrentGroup->containsTrianglesGroupId())
+	if (pCurrentGroup->containsTriangles())
 	{
+		Q_ASSERT(pCurrentGroup->containsTrianglesGroupId());
 		const GLsizei trianglesGroupCount= static_cast<GLsizei>(pCurrentGroup->trianglesGroupOffset().size());
 		for (GLint i= 0; i < trianglesGroupCount; ++i)
 		{
@@ -546,25 +557,24 @@ void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_M
 			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
 				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
 				pCurrentLocalMaterial= pCurrentMaterial;
-				pCurrentLocalMaterial->glExecute();
+				if (materialIsRenderable) pCurrentLocalMaterial->glExecute();
 			}
-			glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->trianglesGroupOffset().at(i));
+			if (pCurrentLocalMaterial->isTransparent() == isTransparent)
+			{
+				glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->trianglesGroupOffset().at(i));
+			}
 		}
-	}
-	else if (pCurrentGroup->containsTriangles() && materialIsRenderable)
-	{
-		pCurrentMaterial->glExecute();
-		glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSize(), GL_UNSIGNED_INT, pCurrentGroup->trianglesIndexOffset());
 	}
 
 	// Draw Triangles strip
-	if (pCurrentGroup->containsStripGroupId())
+	if (pCurrentGroup->containsStrip())
 	{
+		Q_ASSERT(pCurrentGroup->containsStripGroupId());
 		const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffset().size());
 		for (GLint i= 0; i < stripsCount; ++i)
 		{
@@ -572,29 +582,24 @@ void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_M
 			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
 				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
 				pCurrentLocalMaterial= pCurrentMaterial;
-				pCurrentLocalMaterial->glExecute();
+				if (materialIsRenderable) pCurrentLocalMaterial->glExecute();
 			}
-			glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
-		}
-	}
-	else if (pCurrentGroup->containsStrip() && materialIsRenderable)
-	{
-		pCurrentMaterial->glExecute();
-		const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffset().size());
-		for (GLint i= 0; i < stripsCount; ++i)
-		{
-			glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
+			if (pCurrentLocalMaterial->isTransparent() == isTransparent)
+			{
+				glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
+			}
 		}
 	}
 
 	// Draw Triangles fan
-	if (pCurrentGroup->containsFanGroupId())
+	if (pCurrentGroup->containsFan())
 	{
+		Q_ASSERT(pCurrentGroup->containsFanGroupId());
 		const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffset().size());
 		for (GLint i= 0; i < fansCount; ++i)
 		{
@@ -602,35 +607,31 @@ void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_M
 			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
 				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
 				pCurrentLocalMaterial= pCurrentMaterial;
-				pCurrentLocalMaterial->glExecute();
+				if (materialIsRenderable) pCurrentLocalMaterial->glExecute();
 			}
-			glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
-		}
-	}
-	else if (pCurrentGroup->containsFan() && materialIsRenderable)
-	{
-		pCurrentMaterial->glExecute();
-		const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffset().size());
-		for (GLint i= 0; i < fansCount; ++i)
-		{
-			glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
+			if (pCurrentLocalMaterial->isTransparent() == isTransparent)
+			{
+				glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
+			}
 		}
 	}
 
 }
 
 // Use Vertex Array to Draw primitives with specific materials from the specified GLC_PrimitiveGroup
-void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable, QHash<GLC_uint, GLC_Material*>* pMaterialHash)
+void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable
+		, bool isTransparent, QHash<GLC_uint, GLC_Material*>* pMaterialHash)
 {
 	GLC_Material* pCurrentLocalMaterial= pCurrentMaterial;
 	// Draw triangles
-	if (pCurrentGroup->containsTrianglesGroupId())
+	if (pCurrentGroup->containsTriangles())
 	{
+		Q_ASSERT(pCurrentGroup->containsTrianglesGroupId());
 		const GLsizei trianglesGroupCount= static_cast<GLsizei>(pCurrentGroup->trianglesGroupOffseti().size());
 		for (GLint i= 0; i < trianglesGroupCount; ++i)
 		{
@@ -638,31 +639,25 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
 				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
 				pCurrentLocalMaterial= pCurrentMaterial;
-				pCurrentLocalMaterial->glExecute();
+				if (materialIsRenderable) pCurrentLocalMaterial->glExecute();
 			}
-
-			GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesGroupOffseti().at(i)];
-			glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pOffset);
+			if (pCurrentLocalMaterial->isTransparent() == isTransparent)
+			{
+				GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesGroupOffseti().at(i)];
+				glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pOffset);
+			}
 		}
-
-		GLvoid* pOffset= &(m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesIndexOffseti()]);
-		glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSize(), GL_UNSIGNED_INT, pOffset);
-	}
-	else if (pCurrentGroup->containsTriangles() && materialIsRenderable)
-	{
-		pCurrentMaterial->glExecute();
-		GLvoid* pOffset= &(m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesIndexOffseti()]);
-		glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSize(), GL_UNSIGNED_INT, pOffset);
 	}
 
 	// Draw Triangles strip
-	if (pCurrentGroup->containsStripGroupId())
+	if (pCurrentGroup->containsStrip())
 	{
+		Q_ASSERT(pCurrentGroup->containsStripGroupId());
 		const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffseti().size());
 		for (GLint i= 0; i < stripsCount; ++i)
 		{
@@ -670,31 +665,25 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
 				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
 				pCurrentLocalMaterial= pCurrentMaterial;
-				pCurrentLocalMaterial->glExecute();
+				if (materialIsRenderable) pCurrentLocalMaterial->glExecute();
 			}
-			GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
-			glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pOffset);
-		}
-	}
-	else if (pCurrentGroup->containsStrip() && materialIsRenderable)
-	{
-		pCurrentMaterial->glExecute();
-		const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffseti().size());
-		for (GLint i= 0; i < stripsCount; ++i)
-		{
-			GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
-			glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pOffset);
+			if (pCurrentLocalMaterial->isTransparent() == isTransparent)
+			{
+				GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
+				glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pOffset);
+			}
 		}
 	}
 
 	// Draw Triangles fan
-	if (pCurrentGroup->containsFanGroupId())
+	if (pCurrentGroup->containsFan())
 	{
+		Q_ASSERT(pCurrentGroup->containsFanGroupId());
 		const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffseti().size());
 		for (GLint i= 0; i < fansCount; ++i)
 		{
@@ -702,25 +691,309 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
 			{
 				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
 				pCurrentLocalMaterial= pCurrentMaterial;
-				pCurrentLocalMaterial->glExecute();
+				if (materialIsRenderable) pCurrentLocalMaterial->glExecute();
 			}
-			GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
-			glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pOffset);
+			if (pCurrentLocalMaterial->isTransparent() == isTransparent)
+			{
+				GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
+				glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pOffset);
+			}
 		}
 	}
-	else if (pCurrentGroup->containsFan() && materialIsRenderable)
+
+}
+
+// Use VBO to Draw primitives with specific materials from the specified GLC_PrimitiveGroup
+void GLC_Mesh::vboDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable
+		, bool isTransparent, const GLC_RenderProperties& renderProperties)
+{
+	QSet<GLC_uint>* pSelectedPrimitive= renderProperties.listOfSelectedPrimitivesId();
+	Q_ASSERT(NULL != pSelectedPrimitive);
+
+	QHash<GLC_uint, GLC_Material*>* pMaterialHash= renderProperties.hashOfOverwritePrimitiveMaterials();
+
+	GLC_Material* pCurrentLocalMaterial= pCurrentMaterial;
+	// Draw triangles
+	if (pCurrentGroup->containsTriangles())
 	{
-		pCurrentMaterial->glExecute();
+		Q_ASSERT(pCurrentGroup->containsTrianglesGroupId());
+		const GLsizei trianglesGroupCount= static_cast<GLsizei>(pCurrentGroup->trianglesGroupOffset().size());
+		for (GLint i= 0; i < trianglesGroupCount; ++i)
+		{
+			GLC_uint currentPrimitiveId= pCurrentGroup->triangleGroupId(i);
+			if (pSelectedPrimitive->contains(currentPrimitiveId))
+			{
+				if (!isTransparent)
+				{
+					GLC_SelectionMaterial::glExecute();
+					pCurrentLocalMaterial= NULL;
+					glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->trianglesGroupOffset().at(i));
+				}
+			}
+			else if ((NULL != pMaterialHash) && pMaterialHash->contains(currentPrimitiveId))
+			{
+				if (pMaterialHash->value(currentPrimitiveId)->isTransparent() == isTransparent)
+				{
+					GLC_Material* pMat= pMaterialHash->value(currentPrimitiveId);
+					if (pMat != pCurrentLocalMaterial)
+					{
+						pCurrentLocalMaterial= pMat;
+						pCurrentLocalMaterial->glExecute();
+					}
+					glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->trianglesGroupOffset().at(i));
+				}
+
+			}
+			else if (materialIsRenderable)
+			{
+				if (pCurrentLocalMaterial != pCurrentMaterial)
+				{
+					pCurrentLocalMaterial= pCurrentMaterial;
+					pCurrentLocalMaterial->glExecute();
+				}
+				glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->trianglesGroupOffset().at(i));
+			}
+		}
+	}
+
+	// Draw Triangles strip
+	if (pCurrentGroup->containsStrip())
+	{
+		Q_ASSERT(pCurrentGroup->containsStripGroupId());
+		const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffset().size());
+		for (GLint i= 0; i < stripsCount; ++i)
+		{
+			GLC_uint currentPrimitiveId= pCurrentGroup->stripGroupId(i);
+			if (pSelectedPrimitive->contains(currentPrimitiveId))
+			{
+				if (!isTransparent)
+				{
+					GLC_SelectionMaterial::glExecute();
+					pCurrentLocalMaterial= NULL;
+					glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
+				}
+			}
+			else if ((NULL != pMaterialHash) && pMaterialHash->contains(currentPrimitiveId))
+			{
+				if (pMaterialHash->value(currentPrimitiveId)->isTransparent() == isTransparent)
+				{
+					GLC_Material* pMat= pMaterialHash->value(currentPrimitiveId);
+					if (pMat != pCurrentLocalMaterial)
+					{
+						pCurrentLocalMaterial= pMat;
+						pCurrentLocalMaterial->glExecute();
+					}
+					glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
+				}
+
+			}
+			else if (materialIsRenderable)
+			{
+				if (pCurrentLocalMaterial != pCurrentMaterial)
+				{
+					pCurrentLocalMaterial= pCurrentMaterial;
+					pCurrentLocalMaterial->glExecute();
+				}
+				glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
+			}
+		}
+	}
+
+	// Draw Triangles fan
+	if (pCurrentGroup->containsFan())
+	{
+		Q_ASSERT(pCurrentGroup->containsFanGroupId());
+		const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffset().size());
+		for (GLint i= 0; i < fansCount; ++i)
+		{
+			GLC_uint currentPrimitiveId= pCurrentGroup->fanGroupId(i);
+			if (pSelectedPrimitive->contains(currentPrimitiveId))
+			{
+				if (!isTransparent)
+				{
+					GLC_SelectionMaterial::glExecute();
+					pCurrentLocalMaterial= NULL;
+					glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
+				}
+			}
+			else if ((NULL != pMaterialHash) && pMaterialHash->contains(currentPrimitiveId))
+			{
+				if (pMaterialHash->value(currentPrimitiveId)->isTransparent() == isTransparent)
+				{
+					GLC_Material* pMat= pMaterialHash->value(currentPrimitiveId);
+					if (pMat != pCurrentLocalMaterial)
+					{
+						pCurrentLocalMaterial= pMat;
+						pCurrentLocalMaterial->glExecute();
+					}
+					glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
+				}
+
+			}
+			else if (materialIsRenderable)
+			{
+				if (pCurrentLocalMaterial != pCurrentMaterial)
+				{
+					pCurrentLocalMaterial= pCurrentMaterial;
+					pCurrentLocalMaterial->glExecute();
+				}
+				glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
+			}
+		}
+	}
+
+}
+
+// Use Vertex Array to Draw primitives with specific materials from the specified GLC_PrimitiveGroup
+void GLC_Mesh::vertexArrayDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable
+		, bool isTransparent, const GLC_RenderProperties& renderProperties)
+{
+	QSet<GLC_uint>* pSelectedPrimitive= renderProperties.listOfSelectedPrimitivesId();
+	Q_ASSERT(NULL != pSelectedPrimitive);
+
+	QHash<GLC_uint, GLC_Material*>* pMaterialHash= renderProperties.hashOfOverwritePrimitiveMaterials();
+
+	GLC_Material* pCurrentLocalMaterial= pCurrentMaterial;
+	// Draw triangles
+	if (pCurrentGroup->containsTriangles())
+	{
+		Q_ASSERT(pCurrentGroup->containsTrianglesGroupId());
+		const GLsizei trianglesGroupCount= static_cast<GLsizei>(pCurrentGroup->trianglesGroupOffseti().size());
+		for (GLint i= 0; i < trianglesGroupCount; ++i)
+		{
+			GLC_uint currentPrimitiveId= pCurrentGroup->triangleGroupId(i);
+			if (pSelectedPrimitive->contains(currentPrimitiveId))
+			{
+				if (!isTransparent)
+				{
+					GLC_SelectionMaterial::glExecute();
+					pCurrentLocalMaterial= NULL;
+					GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesGroupOffseti().at(i)];
+					glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pOffset);
+				}
+			}
+			else if ((NULL != pMaterialHash) && pMaterialHash->contains(currentPrimitiveId))
+			{
+				if (pMaterialHash->value(currentPrimitiveId)->isTransparent() == isTransparent)
+				{
+					GLC_Material* pMat= pMaterialHash->value(currentPrimitiveId);
+					if (pMat != pCurrentLocalMaterial)
+					{
+						pCurrentLocalMaterial= pMat;
+						pCurrentLocalMaterial->glExecute();
+					}
+					GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesGroupOffseti().at(i)];
+					glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pOffset);
+				}
+
+			}
+			else if (materialIsRenderable)
+			{
+				if (pCurrentLocalMaterial != pCurrentMaterial)
+				{
+					pCurrentLocalMaterial= pCurrentMaterial;
+					pCurrentLocalMaterial->glExecute();
+				}
+				GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->trianglesGroupOffseti().at(i)];
+				glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pOffset);
+			}
+		}
+	}
+
+	// Draw Triangles strip
+	if (pCurrentGroup->containsStrip())
+	{
+		Q_ASSERT(pCurrentGroup->containsStripGroupId());
+		const GLsizei stripsCount= static_cast<GLsizei>(pCurrentGroup->stripsOffseti().size());
+		for (GLint i= 0; i < stripsCount; ++i)
+		{
+			GLC_uint currentPrimitiveId= pCurrentGroup->stripGroupId(i);
+			if (pSelectedPrimitive->contains(currentPrimitiveId))
+			{
+				if (!isTransparent)
+				{
+					GLC_SelectionMaterial::glExecute();
+					pCurrentLocalMaterial= NULL;
+					GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
+					glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pOffset);
+				}
+			}
+			else if ((NULL != pMaterialHash) && pMaterialHash->contains(currentPrimitiveId))
+			{
+				if (pMaterialHash->value(currentPrimitiveId)->isTransparent() == isTransparent)
+				{
+					GLC_Material* pMat= pMaterialHash->value(currentPrimitiveId);
+					if (pMat != pCurrentLocalMaterial)
+					{
+						pCurrentLocalMaterial= pMat;
+						pCurrentLocalMaterial->glExecute();
+					}
+					GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
+					glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pOffset);
+				}
+
+			}
+			else if (materialIsRenderable)
+			{
+				if (pCurrentLocalMaterial != pCurrentMaterial)
+				{
+					pCurrentLocalMaterial= pCurrentMaterial;
+					pCurrentLocalMaterial->glExecute();
+				}
+				GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->stripsOffseti().at(i)];
+				glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pOffset);
+			}
+		}
+	}
+
+	// Draw Triangles fan
+	if (pCurrentGroup->containsFan())
+	{
+		Q_ASSERT(pCurrentGroup->containsFanGroupId());
 		const GLsizei fansCount= static_cast<GLsizei>(pCurrentGroup->fansOffseti().size());
 		for (GLint i= 0; i < fansCount; ++i)
 		{
-			GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
-			glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pOffset);
+			GLC_uint currentPrimitiveId= pCurrentGroup->fanGroupId(i);
+			if (pSelectedPrimitive->contains(currentPrimitiveId))
+			{
+				if (!isTransparent)
+				{
+					GLC_SelectionMaterial::glExecute();
+					pCurrentLocalMaterial= NULL;
+					GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
+					glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pOffset);
+				}
+			}
+			else if ((NULL != pMaterialHash) && pMaterialHash->contains(currentPrimitiveId))
+			{
+				if (pMaterialHash->value(currentPrimitiveId)->isTransparent() == isTransparent)
+				{
+					GLC_Material* pMat= pMaterialHash->value(currentPrimitiveId);
+					if (pMat != pCurrentLocalMaterial)
+					{
+						pCurrentLocalMaterial= pMat;
+						pCurrentLocalMaterial->glExecute();
+					}
+					GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
+					glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pOffset);
+				}
+
+			}
+			else if (materialIsRenderable)
+			{
+				if (pCurrentLocalMaterial != pCurrentMaterial)
+				{
+					pCurrentLocalMaterial= pCurrentMaterial;
+					pCurrentLocalMaterial->glExecute();
+				}
+				GLvoid* pOffset= &m_MeshData.indexVectorHandle(m_CurrentLod)->data()[pCurrentGroup->fansOffseti().at(i)];
+				glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pOffset);
+			}
 		}
 	}
 
