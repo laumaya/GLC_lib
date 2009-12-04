@@ -220,8 +220,8 @@ public:
 	{m_RenderProperties.setPolygonMode(Face, Mode);}
 
 	//! Select the instance
-	inline void select(void)
-	{m_RenderProperties.select();}
+	inline void select(bool primitive)
+	{m_RenderProperties.select(primitive);}
 
 	//! Unselect the instance
 	inline void unselect(void)
@@ -340,14 +340,14 @@ bool GLC_3DViewInstance::isTransparent() const
 		result= result && m_3DRep.geomAt(i)->isTransparent();
 		++i;
 	}
-	return result;
+	return result && m_RenderProperties.needToRenderWithTransparency();
 }
 
 // Return true if the instance contains mesh which contains transparent material
 bool GLC_3DViewInstance::hasTransparentMaterials() const
 {
 	if (m_3DRep.isEmpty()) return false;
-	if (m_RenderProperties.renderingMode() == glc::OverwriteTransparency) return true;
+	if (m_RenderProperties.needToRenderWithTransparency()) return true;
 	const int size= m_3DRep.numberOfBody();
 	bool result= false;
 	int i= 0;
