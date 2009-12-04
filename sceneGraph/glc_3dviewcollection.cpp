@@ -309,7 +309,7 @@ void GLC_3DViewCollection::clear(void)
 }
 
 // Select a node
-bool GLC_3DViewCollection::select(GLC_uint key)
+bool GLC_3DViewCollection::select(GLC_uint key, bool primitive)
 {
 	if (!m_3DViewInstanceHash.contains(key)) return false;
 	//qDebug() << "GLC_Collection::select " << key;
@@ -333,7 +333,7 @@ bool GLC_3DViewCollection::select(GLC_uint key)
 		{
 			m_MainInstances.remove(key);
 		}
-		pSelectedNode->select();
+		pSelectedNode->select(primitive);
 
 		//qDebug("GLC_3DViewCollection::selectNode : Element succesfuly selected");
 		return true;
@@ -357,7 +357,7 @@ void GLC_3DViewCollection::selectAll()
 
 		if (pCurrentInstance->isVisible() == m_IsInShowSate)
 		{
-			pCurrentInstance->select();
+			pCurrentInstance->select(false);
 			m_SelectedInstances.insert(instanceId, pCurrentInstance);
 			m_MainInstances.remove(instanceId);
 			if(isInAShadingGroup(instanceId))

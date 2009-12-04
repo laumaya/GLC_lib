@@ -189,7 +189,7 @@ public:
 	void clear(void);
 
 	//! Select a Instance
-	bool select(GLC_uint);
+	bool select(GLC_uint, bool primitive= false);
 
 	//! Select all instances in current show state
 	void selectAll();
