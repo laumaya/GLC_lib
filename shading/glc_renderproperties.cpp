@@ -35,9 +35,10 @@ GLC_RenderProperties::GLC_RenderProperties()
 , m_SavedRenderMode(m_RenderMode)
 , m_pOverwriteMaterial(NULL)
 , m_OverwriteTransparency(-1.0f)
-, m_pSelectedPrimitvesId(NULL)
+, m_pBodySelectedPrimitvesId(NULL)
 , m_pOverwritePrimitiveMaterialMap(NULL)
 , m_Transparent(false)
+, m_CurrentBody(0)
 {
 
 }
@@ -52,9 +53,10 @@ GLC_RenderProperties::GLC_RenderProperties(const GLC_RenderProperties& renderPro
 , m_SavedRenderMode(renderProperties.m_SavedRenderMode)
 , m_pOverwriteMaterial(renderProperties.m_pOverwriteMaterial)
 , m_OverwriteTransparency(renderProperties.m_OverwriteTransparency)
-, m_pSelectedPrimitvesId(NULL)
+, m_pBodySelectedPrimitvesId(NULL)
 , m_pOverwritePrimitiveMaterialMap(NULL)
 , m_Transparent(renderProperties.m_Transparent)
+, m_CurrentBody(renderProperties.m_CurrentBody)
 {
 	// Update overwrite material usage
 	if (NULL != m_pOverwriteMaterial)
@@ -62,10 +64,17 @@ GLC_RenderProperties::GLC_RenderProperties(const GLC_RenderProperties& renderPro
 		m_pOverwriteMaterial->addUsage(m_Uid);
 	}
 
-	// Copy the set of id of selected primitive
-	if (NULL != renderProperties.m_pSelectedPrimitvesId)
+	// Copy the Hash of set of id of selected primitives
+	if (NULL != renderProperties.m_pBodySelectedPrimitvesId)
 	{
-		m_pSelectedPrimitvesId= new QSet<GLC_uint>(*m_pSelectedPrimitvesId);
+		m_pBodySelectedPrimitvesId= new QHash<int, QSet<GLC_uint>* >();
+		QHash<int, QSet<GLC_uint>* >::const_iterator iSet= renderProperties.m_pBodySelectedPrimitvesId->constBegin();
+		while (renderProperties.m_pBodySelectedPrimitvesId->constEnd() != iSet)
+		{
+			// Copy the current body set of id of selected primitive
+			m_pBodySelectedPrimitvesId->insert(iSet.key(), new QSet<GLC_uint>(*(iSet.value())));
+			++iSet;
+		}
 	}
 
 	// Update primitive overwrite material usage
@@ -95,9 +104,10 @@ GLC_RenderProperties& GLC_RenderProperties::operator=(const GLC_RenderProperties
 		m_SavedRenderMode= renderProperties.m_SavedRenderMode;
 		m_pOverwriteMaterial= renderProperties.m_pOverwriteMaterial;
 		m_OverwriteTransparency= renderProperties.m_OverwriteTransparency;
-		m_pSelectedPrimitvesId= NULL;
+		m_pBodySelectedPrimitvesId= NULL;
 		m_pOverwritePrimitiveMaterialMap= NULL;
 		m_Transparent= renderProperties.m_Transparent;
+		m_CurrentBody= renderProperties.m_CurrentBody;
 
 		// Update overwrite material usage
 		if (NULL != m_pOverwriteMaterial)
@@ -105,10 +115,17 @@ GLC_RenderProperties& GLC_RenderProperties::operator=(const GLC_RenderProperties
 			m_pOverwriteMaterial->addUsage(m_Uid);
 		}
 
-		// Copy the Set of id of selected primitive
-		if (NULL != renderProperties.m_pSelectedPrimitvesId)
+		// Copy the Hash of set of id of selected primitives
+		if (NULL != renderProperties.m_pBodySelectedPrimitvesId)
 		{
-			m_pSelectedPrimitvesId= new QSet<GLC_uint>(*m_pSelectedPrimitvesId);
+			m_pBodySelectedPrimitvesId= new QHash<int, QSet<GLC_uint>* >();
+			QHash<int, QSet<GLC_uint>* >::const_iterator iSet= renderProperties.m_pBodySelectedPrimitvesId->constBegin();
+			while (renderProperties.m_pBodySelectedPrimitvesId->constEnd() != iSet)
+			{
+				// Copy the current body set of id of selected primitive
+				m_pBodySelectedPrimitvesId->insert(iSet.key(), new QSet<GLC_uint>(*(iSet.value())));
+				++iSet;
+			}
 		}
 
 		// Update primitive overwrite material usage
@@ -177,8 +194,7 @@ void GLC_RenderProperties::clear()
 		m_pOverwriteMaterial= NULL;
 	}
 
-	delete m_pSelectedPrimitvesId;
-	m_pSelectedPrimitvesId= NULL;
+	clearSelectedPrimitives();
 
 	if (NULL != m_pOverwritePrimitiveMaterialMap)
 	{
@@ -212,27 +228,53 @@ void GLC_RenderProperties::setOverwriteMaterial(GLC_Material* pMaterial)
 }
 
 // Set the list of selected primitives id
-void GLC_RenderProperties::setSetOfSelectedPrimitivesId(const QSet<GLC_uint>& set)
+void GLC_RenderProperties::setSetOfSelectedPrimitivesId(const QSet<GLC_uint>& set, int body)
 {
-	if (NULL != m_pSelectedPrimitvesId) delete m_pSelectedPrimitvesId;
-	m_pSelectedPrimitvesId= new QSet<GLC_uint>(set);
+	if (NULL == m_pBodySelectedPrimitvesId)
+	{
+		m_pBodySelectedPrimitvesId= new QHash<int, QSet<GLC_uint>* >();
+		m_pBodySelectedPrimitvesId->insert(body, new QSet<GLC_uint>(set));
+	}
+	else if (!m_pBodySelectedPrimitvesId->contains(body))
+	{
+		m_pBodySelectedPrimitvesId->insert(body, new QSet<GLC_uint>(set));
+	}
+	else
+	{
+		m_pBodySelectedPrimitvesId->value(body)->unite(set);
+	}
 }
 
 // Add a selected primitive
-void GLC_RenderProperties::addSelectedPrimitive(GLC_uint id)
+void GLC_RenderProperties::addSelectedPrimitive(GLC_uint id, int body)
 {
-	if (NULL == m_pSelectedPrimitvesId)
+	if (NULL == m_pBodySelectedPrimitvesId)
 	{
-		m_pSelectedPrimitvesId= new QSet<GLC_uint>();
+		m_pBodySelectedPrimitvesId= new QHash<int, QSet<GLC_uint>* >();
+		m_pBodySelectedPrimitvesId->insert(body, new QSet<GLC_uint>());
+
 	}
-	m_pSelectedPrimitvesId->insert(id);
+	else if (!m_pBodySelectedPrimitvesId->contains(body))
+	{
+		m_pBodySelectedPrimitvesId->insert(body, new QSet<GLC_uint>());
+	}
+	m_pBodySelectedPrimitvesId->value(body)->insert(id);
 }
 
 // Clear selectedPrimitive Set
 void GLC_RenderProperties::clearSelectedPrimitives()
 {
-	delete m_pSelectedPrimitvesId;
-	m_pSelectedPrimitvesId= NULL;
+	if (NULL != m_pBodySelectedPrimitvesId)
+	{
+		QHash<int, QSet<GLC_uint>* >::const_iterator iSet= m_pBodySelectedPrimitvesId->constBegin();
+		while (m_pBodySelectedPrimitvesId->constEnd() != iSet)
+		{
+			delete iSet.value();
+			++iSet;
+		}
+	}
+	delete m_pBodySelectedPrimitvesId;
+	m_pBodySelectedPrimitvesId= NULL;
 }
 
 // Set the overwrite primitive material Hash

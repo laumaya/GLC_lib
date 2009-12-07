@@ -54,7 +54,7 @@ namespace glc
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_RenderProperties
 /*! \brief GLC_RenderProperties encapsulate the render properties
- * off all GLC_Geom class*/
+ * off all GLC_3DViewInstance class*/
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_RenderProperties
 {
@@ -89,6 +89,10 @@ public:
 	inline glc::RenderMode renderingMode() const
 	{return m_RenderMode;}
 
+	//! Return the saved rendering mode
+	inline glc::RenderMode savedRenderingMode() const
+	{return m_SavedRenderMode;}
+
 	//! Return an handle to the overwrite material
 	inline GLC_Material* overwriteMaterial() const
 	{return m_pOverwriteMaterial;}
@@ -97,9 +101,18 @@ public:
 	inline float overwriteTransparency() const
 	{return m_OverwriteTransparency;}
 
-	//! Return an handle to the set of selected primitives id
-	inline QSet<GLC_uint>* listOfSelectedPrimitivesId() const
-	{return m_pSelectedPrimitvesId;}
+	//! Return an handle to the set of selected primitives id of the current body
+	inline QSet<GLC_uint>* setOfSelectedPrimitivesId() const
+	{
+		Q_ASSERT(NULL != m_pBodySelectedPrimitvesId);
+		if (m_pBodySelectedPrimitvesId->contains(m_CurrentBody))
+			return m_pBodySelectedPrimitvesId->value(m_CurrentBody);
+		else return NULL;
+	}
+
+	//! Return true if there the set of selected primitive id is empty
+	inline bool setOfSelectedPrimitiveIdIsEmpty() const
+	{return (!((NULL != m_pBodySelectedPrimitvesId) && m_pBodySelectedPrimitvesId->contains(m_CurrentBody)));}
 
 	//! Return an handle to the overwrite primitive material Hash
 	inline QHash<GLC_uint, GLC_Material*>* hashOfOverwritePrimitiveMaterials() const
@@ -121,6 +134,10 @@ public:
 
 	//! Return true if rendering properties needs to render with transparency
 	bool needToRenderWithTransparency() const;
+
+	//! Return the current body index
+	inline int currentBodyIndex() const
+	{return m_CurrentBody;}
 
 //@}
 
@@ -155,11 +172,11 @@ public:
 	inline void setOverwriteTransparency(float alpha)
 	{m_OverwriteTransparency= alpha;}
 
-	//! Set the set of selected primitives id
-	void setSetOfSelectedPrimitivesId(const QSet<GLC_uint>&);
+	//! Set the set of selected primitives id of the specified body
+	void setSetOfSelectedPrimitivesId(const QSet<GLC_uint>&, int body= 0);
 
-	//! Add a selected primitive
-	void addSelectedPrimitive(GLC_uint);
+	//! Add a selected primitive of the specified body
+	void addSelectedPrimitive(GLC_uint, int body= 0);
 
 	//! Clear selectedPrimitive Set
 	void clearSelectedPrimitives();
@@ -182,6 +199,10 @@ public:
 	//! Set the transparency material rendering flag
 	inline void setTransparentMaterialRenderFlag(bool flag)
 	{m_Transparent= flag;}
+
+	//! Set the current body index
+	inline void setCurrentBodyIndex(int index)
+	{m_CurrentBody= index;}
 
 
 //@}
@@ -212,14 +233,17 @@ private:
 	//! The overwrite transparency
 	float m_OverwriteTransparency;
 
-	//! The selected primitive id
-	QSet<GLC_uint>* m_pSelectedPrimitvesId;
+	//! The selected primitive id regrouped by body
+	QHash<int, QSet<GLC_uint>* >* m_pBodySelectedPrimitvesId;
 
 	//! The overwrite primitive material mapping
-	QHash<GLC_uint, GLC_Material*>* m_pOverwritePrimitiveMaterialMap;
+	QHash<GLC_uint, GLC_Material* >* m_pOverwritePrimitiveMaterialMap;
 
 	//! Transparent material render flag
 	bool m_Transparent;
+
+	//! The current rendere body
+	int m_CurrentBody;
 
 };
 
