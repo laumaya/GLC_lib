@@ -301,6 +301,7 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* 
 			if (lodValue <= 100)
 			{
 				m_3DRep.geomAt(i)->setCurrentLod(lodValue);
+				m_RenderProperties.setCurrentBodyIndex(i);
 				m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
 			}
 		}
@@ -318,6 +319,7 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* 
 			if (lodValue <= 100)
 			{
 				m_3DRep.geomAt(i)->setCurrentLod(m_DefaultLOD);
+				m_RenderProperties.setCurrentBodyIndex(i);
 				m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
 			}
 		}
@@ -348,6 +350,7 @@ void GLC_3DViewInstance::glExecuteForBodySelection()
 		glc::encodeRgbId(pGeom->id(), colorId);
 		glColor3ubv(colorId);
 		pGeom->setCurrentLod(m_DefaultLOD);
+		m_RenderProperties.setCurrentBodyIndex(i);
 		pGeom->glExecute(m_RenderProperties);
 	}
 
@@ -357,11 +360,11 @@ void GLC_3DViewInstance::glExecuteForBodySelection()
 	glPopMatrix();
 }
 
-// Display the instance in Primitive selection mode
-void GLC_3DViewInstance::glExecuteForPrimitiveSelection(GLC_uint bodyId)
+// Display the instance in Primitive selection mode and return the body index
+int GLC_3DViewInstance::glExecuteForPrimitiveSelection(GLC_uint bodyId)
 {
 	Q_ASSERT(GLC_State::isInSelectionMode());
-	if (m_3DRep.isEmpty()) return;
+	if (m_3DRep.isEmpty()) return -1;
 	// Save previous rendering mode and set the rendering mode to BodySelection
 	glc::RenderMode previousRenderMode= m_RenderProperties.renderingMode();
 	m_RenderProperties.setRenderingMode(glc::PrimitiveSelection);
@@ -371,20 +374,26 @@ void GLC_3DViewInstance::glExecuteForPrimitiveSelection(GLC_uint bodyId)
 	OpenglVisProperties();
 
 	const int size= m_3DRep.numberOfBody();
-	for (int i= 0; i < size; ++i)
+	int i= 0;
+	bool continu= true;
+	while ((i < size) && continu)
 	{
 		GLC_Geometry* pGeom= m_3DRep.geomAt(i);
 		if (pGeom->id() == bodyId)
 		{
 			pGeom->setCurrentLod(0);
 			pGeom->glExecute(m_RenderProperties);
+			continu= false;
 		}
+		else ++i;
 	}
 
 	m_RenderProperties.setRenderingMode(previousRenderMode);
 
 	// Restore OpenGL Matrix
 	glPopMatrix();
+
+	return i;
 }
 
 

@@ -260,8 +260,8 @@ public:
 	//! Display the instance in Body selection mode
 	void glExecuteForBodySelection();
 
-	//! Display the instance in Primitive selection mode
-	void glExecuteForPrimitiveSelection(GLC_uint);
+	//! Display the instance in Primitive selection mode of the specified body id and return the body index
+	int glExecuteForPrimitiveSelection(GLC_uint);
 
 
 private:
