@@ -258,9 +258,11 @@ GLC_uint GLC_Viewport::selectBody(QGLWidget *pGLWidget, GLC_3DViewInstance* pIns
 	return meaningfulIdInsideSquare(newX, newY, width, height);
 }
 
-// Select a primitive inside a 3DViewInstance and return is UID
-GLC_uint GLC_Viewport::selectPrimitive(QGLWidget *pGLWidget, GLC_3DViewInstance* pInstance, int x, int y)
+// Select a primitive inside a 3DViewInstance and return its UID and its body index
+QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(QGLWidget *pGLWidget, GLC_3DViewInstance* pInstance, int x, int y)
 {
+	QPair<int, GLC_uint> result;
+
 	m_pQGLWidget->qglClearColor(Qt::black);
 	GLC_State::setSelectionMode(true);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -284,13 +286,20 @@ GLC_uint GLC_Viewport::selectPrimitive(QGLWidget *pGLWidget, GLC_3DViewInstance*
 	if (newY < 0) newY= 0;
 
 	GLC_uint bodyId= meaningfulIdInsideSquare(newX, newY, width, height);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if (bodyId == 0)
+	{
+		result.first= -1;
+		result.second= 0;
+	}
+	else
+	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	pInstance->glExecuteForPrimitiveSelection(bodyId);
-
+		result.first= pInstance->glExecuteForPrimitiveSelection(bodyId);
+		result.second= meaningfulIdInsideSquare(newX, newY, width, height);
+	}
 	GLC_State::setSelectionMode(false);
-
-	return meaningfulIdInsideSquare(newX, newY, width, height);
+	return result;
 }
 
 // Select objects inside specified square and return its UID in a set

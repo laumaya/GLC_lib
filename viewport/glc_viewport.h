@@ -27,6 +27,7 @@
 #ifndef GLC_VIEWPORT_H_
 #define GLC_VIEWPORT_H_
 #include <QGLWidget>
+#include <QPair>
 #include "glc_camera.h"
 #include "glc_imageplane.h"
 #include "../glc_boundingbox.h"
@@ -172,9 +173,9 @@ public:
 	/*! Return UID of the nearest picked body */
 	GLC_uint selectBody(QGLWidget *pGLWidget, GLC_3DViewInstance*, int x, int y);
 
-	//! Select a primitive inside a 3DViewInstance and return its UID
+	//! Select a primitive inside a 3DViewInstance and return its UID and its body index
 	/*! Return UID of the nearest picked primitive */
-	GLC_uint selectPrimitive(QGLWidget *pGLWidget, GLC_3DViewInstance*, int x, int y);
+	QPair<int, GLC_uint> selectPrimitive(QGLWidget *pGLWidget, GLC_3DViewInstance*, int x, int y);
 
 	//! Select objects inside specified square and return its UID in a set
 	QSet<GLC_uint> selectInsideSquare(QGLWidget *pGLWidget, int x1, int y1, int x2, int y2);
