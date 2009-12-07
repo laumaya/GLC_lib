@@ -717,7 +717,8 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 
 	const bool vboIsUsed= GLC_State::vboUsed();
 
-	if (m_IsSelected && (renderProperties.renderingMode() == glc::PrimitiveSelected) && !GLC_State::isInSelectionMode())
+	if (m_IsSelected && (renderProperties.renderingMode() == glc::PrimitiveSelected) && !GLC_State::isInSelectionMode()
+	&& !renderProperties.setOfSelectedPrimitiveIdIsEmpty())
 	{
 		m_CurrentLod= 0;
 	}
@@ -770,11 +771,23 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	{
 		if (renderProperties.renderingMode() == glc::PrimitiveSelected)
 		{
-			primitiveSelectedRenderLoop(renderProperties, vboIsUsed);
+			if (!renderProperties.setOfSelectedPrimitiveIdIsEmpty())
+			{
+				primitiveSelectedRenderLoop(renderProperties, vboIsUsed);
+			}
+			else
+			{
+				m_IsSelected= false;
+				if ((m_CurrentLod == 0) && (renderProperties.savedRenderingMode() == glc::OverwritePrimitiveMaterial))
+					primitiveRenderLoop(renderProperties, vboIsUsed);
+				else
+					normalRenderLoop(renderProperties, vboIsUsed);
+				m_IsSelected= true;
+			}
 		}
 		else
 		{
-			normalRenderLoop(renderProperties, vboIsUsed);
+			primitiveSelectedRenderLoop(renderProperties, vboIsUsed);
 		}
 	}
 	else

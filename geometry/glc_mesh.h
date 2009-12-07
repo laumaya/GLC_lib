@@ -712,7 +712,7 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 void GLC_Mesh::vboDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable
 		, bool isTransparent, const GLC_RenderProperties& renderProperties)
 {
-	QSet<GLC_uint>* pSelectedPrimitive= renderProperties.listOfSelectedPrimitivesId();
+	QSet<GLC_uint>* pSelectedPrimitive= renderProperties.setOfSelectedPrimitivesId();
 	Q_ASSERT(NULL != pSelectedPrimitive);
 
 	QHash<GLC_uint, GLC_Material*>* pMaterialHash= renderProperties.hashOfOverwritePrimitiveMaterials();
@@ -853,7 +853,7 @@ void GLC_Mesh::vboDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 void GLC_Mesh::vertexArrayDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable
 		, bool isTransparent, const GLC_RenderProperties& renderProperties)
 {
-	QSet<GLC_uint>* pSelectedPrimitive= renderProperties.listOfSelectedPrimitivesId();
+	QSet<GLC_uint>* pSelectedPrimitive= renderProperties.setOfSelectedPrimitivesId();
 	Q_ASSERT(NULL != pSelectedPrimitive);
 
 	QHash<GLC_uint, GLC_Material*>* pMaterialHash= renderProperties.hashOfOverwritePrimitiveMaterials();
