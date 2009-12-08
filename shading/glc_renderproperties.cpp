@@ -36,9 +36,10 @@ GLC_RenderProperties::GLC_RenderProperties()
 , m_pOverwriteMaterial(NULL)
 , m_OverwriteTransparency(-1.0f)
 , m_pBodySelectedPrimitvesId(NULL)
-, m_pOverwritePrimitiveMaterialMap(NULL)
+, m_pOverwritePrimitiveMaterialMaps(NULL)
 , m_Transparent(false)
 , m_CurrentBody(0)
+, m_MaterialsUsage()
 {
 
 }
@@ -54,9 +55,10 @@ GLC_RenderProperties::GLC_RenderProperties(const GLC_RenderProperties& renderPro
 , m_pOverwriteMaterial(renderProperties.m_pOverwriteMaterial)
 , m_OverwriteTransparency(renderProperties.m_OverwriteTransparency)
 , m_pBodySelectedPrimitvesId(NULL)
-, m_pOverwritePrimitiveMaterialMap(NULL)
+, m_pOverwritePrimitiveMaterialMaps(NULL)
 , m_Transparent(renderProperties.m_Transparent)
 , m_CurrentBody(renderProperties.m_CurrentBody)
+, m_MaterialsUsage(renderProperties.m_MaterialsUsage)
 {
 	// Update overwrite material usage
 	if (NULL != m_pOverwriteMaterial)
@@ -77,17 +79,26 @@ GLC_RenderProperties::GLC_RenderProperties(const GLC_RenderProperties& renderPro
 		}
 	}
 
-	// Update primitive overwrite material usage
-	if (renderProperties.m_pOverwritePrimitiveMaterialMap)
+	// Copy of the overwrite primitive materials maps
+	if (NULL != renderProperties.m_pOverwritePrimitiveMaterialMaps)
 	{
 		// Copy the hash table of overwrite materials
-		m_pOverwritePrimitiveMaterialMap= new QHash<GLC_uint, GLC_Material*>(*(renderProperties.m_pOverwritePrimitiveMaterialMap));
-		QHash<GLC_uint, GLC_Material*>::iterator iMatMap= m_pOverwritePrimitiveMaterialMap->begin();
-		while (m_pOverwritePrimitiveMaterialMap->constEnd() != iMatMap)
+		m_pOverwritePrimitiveMaterialMaps= new QHash<int, QHash<GLC_uint, GLC_Material*>* >;
+		QHash<int, QHash<GLC_uint, GLC_Material*>* >::const_iterator iMatMaps= renderProperties.m_pOverwritePrimitiveMaterialMaps->constBegin();
+		while (renderProperties.m_pOverwritePrimitiveMaterialMaps->constEnd() != iMatMaps)
 		{
-			iMatMap.value()->addUsage(m_Uid);
-			++iMatMap;
+			QHash<GLC_uint, GLC_Material*>* pBodyMatMap= new QHash<GLC_uint, GLC_Material*>(*(iMatMaps.value()));
+			m_pOverwritePrimitiveMaterialMaps->insert(iMatMaps.key(), pBodyMatMap);
+			++iMatMaps;
 		}
+	}
+
+	// Update material usage
+	QHash<GLC_Material*, int>::iterator iMatUsage= m_MaterialsUsage.begin();
+	while (m_MaterialsUsage.constEnd() != iMatUsage)
+	{
+		iMatUsage.key()->addUsage(m_Uid);
+		++iMatUsage;
 	}
 }
 
@@ -105,7 +116,7 @@ GLC_RenderProperties& GLC_RenderProperties::operator=(const GLC_RenderProperties
 		m_pOverwriteMaterial= renderProperties.m_pOverwriteMaterial;
 		m_OverwriteTransparency= renderProperties.m_OverwriteTransparency;
 		m_pBodySelectedPrimitvesId= NULL;
-		m_pOverwritePrimitiveMaterialMap= NULL;
+		m_pOverwritePrimitiveMaterialMaps= NULL;
 		m_Transparent= renderProperties.m_Transparent;
 		m_CurrentBody= renderProperties.m_CurrentBody;
 
@@ -129,15 +140,24 @@ GLC_RenderProperties& GLC_RenderProperties::operator=(const GLC_RenderProperties
 		}
 
 		// Update primitive overwrite material usage
-		if (renderProperties.m_pOverwritePrimitiveMaterialMap)
+		if (NULL != renderProperties.m_pOverwritePrimitiveMaterialMaps)
 		{
 			// Copy the hash table of overwrite materials
-			m_pOverwritePrimitiveMaterialMap= new QHash<GLC_uint, GLC_Material*>(*(renderProperties.m_pOverwritePrimitiveMaterialMap));
-			QHash<GLC_uint, GLC_Material*>::iterator iMatMap= m_pOverwritePrimitiveMaterialMap->begin();
-			while (m_pOverwritePrimitiveMaterialMap->constEnd() != iMatMap)
+			m_pOverwritePrimitiveMaterialMaps= new QHash<int, QHash<GLC_uint, GLC_Material*>* >;
+			QHash<int, QHash<GLC_uint, GLC_Material*>* >::const_iterator iMatMaps= renderProperties.m_pOverwritePrimitiveMaterialMaps->constBegin();
+			while (renderProperties.m_pOverwritePrimitiveMaterialMaps->constEnd() != iMatMaps)
 			{
-				iMatMap.value()->addUsage(m_Uid);
-				++iMatMap;
+				QHash<GLC_uint, GLC_Material*>* pBodyMatMap= new QHash<GLC_uint, GLC_Material*>(*(iMatMaps.value()));
+				m_pOverwritePrimitiveMaterialMaps->insert(iMatMaps.key(), pBodyMatMap);
+
+				QHash<GLC_uint, GLC_Material*>::iterator iMatMap= pBodyMatMap->begin();
+				while (pBodyMatMap->constEnd() != iMatMap)
+				{
+					iMatMap.value()->addUsage(m_Uid);
+					++iMatMap;
+				}
+
+				++iMatMaps;
 			}
 		}
 	}
@@ -166,12 +186,19 @@ bool GLC_RenderProperties::needToRenderWithTransparency() const
 		renderWithTransparency= (m_OverwriteTransparency < 1.0f);
 	}
 	else if ((m_RenderMode == glc::OverwritePrimitiveMaterial)
-			|| ((m_RenderMode == glc::PrimitiveSelected) && (NULL != m_pOverwritePrimitiveMaterialMap) && (!m_pOverwritePrimitiveMaterialMap->isEmpty())))
+			|| ((m_RenderMode == glc::PrimitiveSelected) && (NULL != m_pOverwritePrimitiveMaterialMaps) && (!m_pOverwritePrimitiveMaterialMaps->isEmpty())))
 	{
-		Q_ASSERT(NULL != m_pOverwritePrimitiveMaterialMap);
-		Q_ASSERT(!m_pOverwritePrimitiveMaterialMap->isEmpty());
+		Q_ASSERT(NULL != m_pOverwritePrimitiveMaterialMaps);
+		Q_ASSERT(!m_pOverwritePrimitiveMaterialMaps->isEmpty());
 
-		QSet<GLC_Material*> materialSet= QSet<GLC_Material*>::fromList(m_pOverwritePrimitiveMaterialMap->values());
+		QList<QHash<GLC_uint, GLC_Material* >* > hashList= m_pOverwritePrimitiveMaterialMaps->values();
+		QSet<GLC_Material*> materialSet;
+		const int size= hashList.size();
+		for (int i= 0; i < size; ++i)
+		{
+			materialSet.unite(QSet<GLC_Material*>::fromList(hashList.at(i)->values()));
+		}
+
 		QSet<GLC_Material*>::const_iterator iMat= materialSet.constBegin();
 		while ((materialSet.constEnd() != iMat) && !renderWithTransparency)
 		{
@@ -196,21 +223,7 @@ void GLC_RenderProperties::clear()
 
 	clearSelectedPrimitives();
 
-	if (NULL != m_pOverwritePrimitiveMaterialMap)
-	{
-		// Delete unused materials from the Hash table
-		QHash<GLC_uint, GLC_Material*>::iterator iMatMap= m_pOverwritePrimitiveMaterialMap->begin();
-		while (m_pOverwritePrimitiveMaterialMap->constEnd() != iMatMap)
-		{
-			iMatMap.value()->delUsage(m_Uid);
-			if (iMatMap.value()->isUnused()) delete iMatMap.value();
-
-			++iMatMap;
-		}
-		delete m_pOverwritePrimitiveMaterialMap;
-		m_pOverwritePrimitiveMaterialMap= NULL;
-	}
-
+	clearOverwritePrimitiveMaterials();
 }
 
 // Set the overwrite material
@@ -277,88 +290,81 @@ void GLC_RenderProperties::clearSelectedPrimitives()
 	m_pBodySelectedPrimitvesId= NULL;
 }
 
-// Set the overwrite primitive material Hash
-void GLC_RenderProperties::setOfOverwritePrimitiveMaterials(const QHash<GLC_uint, GLC_Material*>& primitiveMaterialMap)
-{
-	// Delete the current primitive material map
-	if (NULL != m_pOverwritePrimitiveMaterialMap)
-	{
-		// Get the list of material
-		QSet<GLC_Material*> materialSet= QSet<GLC_Material*>::fromList(m_pOverwritePrimitiveMaterialMap->values());
-
-		// Delete unused materials from the Set
-		QSet<GLC_Material*>::iterator iMat= materialSet.begin();
-		while (materialSet.constEnd() != iMat)
-		{
-			(*iMat)->delUsage(m_Uid);
-			if ((*iMat)->isUnused()) delete (*iMat);
-
-			++iMat;
-		}
-		delete m_pOverwritePrimitiveMaterialMap;
-	}
-
-	// Create the new primitive material map
-	m_pOverwritePrimitiveMaterialMap= new QHash<GLC_uint, GLC_Material*>(primitiveMaterialMap);
-
-	// Update usage off materials
-	QHash<GLC_uint, GLC_Material*>::iterator iMatMap= m_pOverwritePrimitiveMaterialMap->begin();
-	while (m_pOverwritePrimitiveMaterialMap->constEnd() != iMatMap)
-	{
-		iMatMap.value()->addUsage(m_Uid);
-		++iMatMap;
-	}
-}
-
 // Add an overwrite primitive material
-void GLC_RenderProperties::addOverwritePrimitiveMaterial(GLC_uint id, GLC_Material* pMaterial)
+void GLC_RenderProperties::addOverwritePrimitiveMaterial(GLC_uint id, GLC_Material* pMaterial, int bodyIndex)
 {
-	if (NULL != m_pOverwritePrimitiveMaterialMap)
+	Q_ASSERT(NULL != pMaterial);
+	if (NULL != m_pOverwritePrimitiveMaterialMaps)
 	{
-		// Get the list of hash material
-		QList<GLC_Material*> materialList= m_pOverwritePrimitiveMaterialMap->values();
-		const int size= materialList.size();
-
-		if (m_pOverwritePrimitiveMaterialMap->contains(id))
+		if (m_pOverwritePrimitiveMaterialMaps->contains(bodyIndex))
 		{
-			if (pMaterial != m_pOverwritePrimitiveMaterialMap->value(id))
+			QHash<GLC_uint, GLC_Material*>* pHash= m_pOverwritePrimitiveMaterialMaps->value(bodyIndex);
+			if (pHash->contains(id))
 			{
-				// Get the material to replace
-				GLC_Material* pMaterialToReplace= m_pOverwritePrimitiveMaterialMap->value(id);
+				if (pHash->value(id) != pMaterial)
+				{
+					GLC_Material* pOldMaterial= pHash->value(id);
+					unUseMaterial(pOldMaterial);
+					pHash->remove(id);
 
-				// Find the number of material to replace usage
-				int materialOccurence= 0;
-				for (int i= 0; i < size; ++i)
-				{
-					if (materialList.at(i) == pMaterialToReplace) ++materialOccurence;
+					pHash->insert(id, pMaterial);
+					useMaterial(pMaterial);
 				}
-				Q_ASSERT(materialOccurence != 0);
-				if (materialOccurence == 1)
-				{
-					// Delete this usage
-					pMaterialToReplace->delUsage(m_Uid);
-					if (pMaterialToReplace->isUnused()) delete pMaterialToReplace;
-				}
-				// Insert the material
-				m_pOverwritePrimitiveMaterialMap->insert(id, pMaterial);
-				pMaterial->addUsage(m_Uid);
+				// Else, noting to do
 			}
-		}
-		else if (materialList.contains(pMaterial))
-		{
-			m_pOverwritePrimitiveMaterialMap->insert(id, pMaterial);
+			else
+			{
+				pHash->insert(id, pMaterial);
+				useMaterial(pMaterial);
+			}
 		}
 		else
 		{
-			m_pOverwritePrimitiveMaterialMap->insert(id, pMaterial);
-			pMaterial->addUsage(m_Uid);
+			QHash<GLC_uint, GLC_Material*>* pHash= new QHash<GLC_uint, GLC_Material*>();
+			pHash->insert(id, pMaterial);
+			useMaterial(pMaterial);
+			m_pOverwritePrimitiveMaterialMaps->insert(bodyIndex, pHash);
 		}
 	}
 	else
 	{
-		m_pOverwritePrimitiveMaterialMap= new QHash<GLC_uint, GLC_Material*>();
-		m_pOverwritePrimitiveMaterialMap->insert(id, pMaterial);
-		pMaterial->addUsage(m_Uid);
+		m_pOverwritePrimitiveMaterialMaps= new QHash<int, QHash<GLC_uint, GLC_Material*>* >();
+		QHash<GLC_uint, GLC_Material*>* pHash= new QHash<GLC_uint, GLC_Material*>();
+		pHash->insert(id, pMaterial);
+		m_pOverwritePrimitiveMaterialMaps->insert(bodyIndex, pHash);
+		useMaterial(pMaterial);
 	}
+}
+
+// Clear overwrite primitive materials
+void GLC_RenderProperties::clearOverwritePrimitiveMaterials()
+{
+	if (NULL != m_pOverwritePrimitiveMaterialMaps)
+	{
+		Q_ASSERT(!m_MaterialsUsage.isEmpty());
+		QHash<int, QHash<GLC_uint, GLC_Material* >* >::iterator iHash= m_pOverwritePrimitiveMaterialMaps->begin();
+		while (m_pOverwritePrimitiveMaterialMaps->constEnd() != iHash)
+		{
+			delete iHash.value();
+			++iHash;
+		}
+
+		QHash<GLC_Material*, int>::iterator iMat= m_MaterialsUsage.begin();
+		while (m_MaterialsUsage.constEnd() != iMat)
+		{
+			GLC_Material* pMat= iMat.key();
+			pMat->delUsage(m_Uid);
+			if (pMat->isUnused()) delete pMat;
+			++iMat;
+		}
+		m_MaterialsUsage.clear();
+	}
+	else
+	{
+		Q_ASSERT(m_MaterialsUsage.isEmpty());
+	}
+
+	delete m_pOverwritePrimitiveMaterialMaps;
+	m_pOverwritePrimitiveMaterialMaps= NULL;
 }
 

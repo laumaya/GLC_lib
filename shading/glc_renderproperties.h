@@ -110,13 +110,22 @@ public:
 		else return NULL;
 	}
 
-	//! Return true if there the set of selected primitive id is empty
+	//! Return true if the set of selected primitive id is empty
 	inline bool setOfSelectedPrimitiveIdIsEmpty() const
 	{return (!((NULL != m_pBodySelectedPrimitvesId) && m_pBodySelectedPrimitvesId->contains(m_CurrentBody)));}
 
 	//! Return an handle to the overwrite primitive material Hash
 	inline QHash<GLC_uint, GLC_Material*>* hashOfOverwritePrimitiveMaterials() const
-	{return m_pOverwritePrimitiveMaterialMap;}
+	{
+		Q_ASSERT(NULL != m_pOverwritePrimitiveMaterialMaps);
+		if (m_pOverwritePrimitiveMaterialMaps->contains(m_CurrentBody))
+			return m_pOverwritePrimitiveMaterialMaps->value(m_CurrentBody);
+		else return NULL;
+	}
+
+	//! Return true if the hash of overwrite primitive material is empty
+	inline bool hashOfOverwritePrimitiveMaterialsIsEmpty() const
+	{return (!((NULL != m_pOverwritePrimitiveMaterialMaps) && m_pOverwritePrimitiveMaterialMaps->contains(m_CurrentBody)));}
 
 	//! Get the PolyFace mode
 	/*! PolyFace Mode can Be : GL_FRONT_AND_BACK, GL_FRONT, or GL_BACK*/
@@ -181,11 +190,11 @@ public:
 	//! Clear selectedPrimitive Set
 	void clearSelectedPrimitives();
 
-	//! Set the overwrite primitive material Hash
-	void setOfOverwritePrimitiveMaterials(const QHash<GLC_uint, GLC_Material*>&);
-
 	//! Add an overwrite primitive material
-	void addOverwritePrimitiveMaterial(GLC_uint, GLC_Material*);
+	void addOverwritePrimitiveMaterial(GLC_uint, GLC_Material*, int bodyIndex= 0);
+
+	//! Clear overwrite primitive materials
+	void clearOverwritePrimitiveMaterials();
 
 	//! Polygon's display style
 	/*! Face Polygon Mode can be : GL_FRONT_AND_BACK, GL_FRONT, or GL_BACK
@@ -203,6 +212,12 @@ public:
 	//! Set the current body index
 	inline void setCurrentBodyIndex(int index)
 	{m_CurrentBody= index;}
+
+	//! Used the specified material
+	inline void useMaterial(GLC_Material*);
+
+	//! Unused the specified material
+	inline void unUseMaterial(GLC_Material*);
 
 
 //@}
@@ -237,13 +252,16 @@ private:
 	QHash<int, QSet<GLC_uint>* >* m_pBodySelectedPrimitvesId;
 
 	//! The overwrite primitive material mapping
-	QHash<GLC_uint, GLC_Material* >* m_pOverwritePrimitiveMaterialMap;
+	QHash<int, QHash<GLC_uint, GLC_Material* >* >* m_pOverwritePrimitiveMaterialMaps;
 
 	//! Transparent material render flag
 	bool m_Transparent;
 
 	//! The current rendere body
 	int m_CurrentBody;
+
+	//! The Hash table of overwrite primitive maped to the number of usages in this render properties
+	QHash<GLC_Material*, int> m_MaterialsUsage;
 
 };
 
@@ -265,6 +283,35 @@ void GLC_RenderProperties::unselect(void)
 	if (m_RenderMode == glc::PrimitiveSelected)
 	{
 		m_RenderMode= m_SavedRenderMode;
+	}
+}
+// Used the specified material
+void GLC_RenderProperties::useMaterial(GLC_Material* pMaterial)
+{
+	if (m_MaterialsUsage.contains(pMaterial))
+	{
+		QHash<GLC_Material*, int>::iterator iMat= m_MaterialsUsage.find(pMaterial);
+		iMat.value()= iMat.value() + 1;
+	}
+	else
+	{
+		m_MaterialsUsage.insert(pMaterial, 1);
+		pMaterial->addUsage(m_Uid);
+	}
+
+}
+
+// Unused the specified material
+void GLC_RenderProperties::unUseMaterial(GLC_Material* pMaterial)
+{
+	Q_ASSERT(m_MaterialsUsage.contains(pMaterial));
+	QHash<GLC_Material*, int>::iterator iMat= m_MaterialsUsage.find(pMaterial);
+	iMat.value()= iMat.value() - 1;
+	if (iMat.value() == 0)
+	{
+		pMaterial->delUsage(m_Uid);
+		if (pMaterial->isUnused()) delete pMaterial;
+		m_MaterialsUsage.remove(pMaterial);
 	}
 }
 
