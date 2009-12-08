@@ -715,7 +715,11 @@ void GLC_Mesh::vboDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 	QSet<GLC_uint>* pSelectedPrimitive= renderProperties.setOfSelectedPrimitivesId();
 	Q_ASSERT(NULL != pSelectedPrimitive);
 
-	QHash<GLC_uint, GLC_Material*>* pMaterialHash= renderProperties.hashOfOverwritePrimitiveMaterials();
+	QHash<GLC_uint, GLC_Material*>* pMaterialHash= NULL;
+	if (!renderProperties.hashOfOverwritePrimitiveMaterialsIsEmpty())
+	{
+		pMaterialHash= renderProperties.hashOfOverwritePrimitiveMaterials();
+	}
 
 	GLC_Material* pCurrentLocalMaterial= pCurrentMaterial;
 	// Draw triangles
@@ -856,7 +860,11 @@ void GLC_Mesh::vertexArrayDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCur
 	QSet<GLC_uint>* pSelectedPrimitive= renderProperties.setOfSelectedPrimitivesId();
 	Q_ASSERT(NULL != pSelectedPrimitive);
 
-	QHash<GLC_uint, GLC_Material*>* pMaterialHash= renderProperties.hashOfOverwritePrimitiveMaterials();
+	QHash<GLC_uint, GLC_Material*>* pMaterialHash= NULL;
+	if (!renderProperties.hashOfOverwritePrimitiveMaterialsIsEmpty())
+	{
+		pMaterialHash= renderProperties.hashOfOverwritePrimitiveMaterials();
+	}
 
 	GLC_Material* pCurrentLocalMaterial= pCurrentMaterial;
 	// Draw triangles

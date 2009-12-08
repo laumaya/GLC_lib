@@ -778,7 +778,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 			else
 			{
 				m_IsSelected= false;
-				if ((m_CurrentLod == 0) && (renderProperties.savedRenderingMode() == glc::OverwritePrimitiveMaterial))
+				if ((m_CurrentLod == 0) && (renderProperties.savedRenderingMode() == glc::OverwritePrimitiveMaterial) && !renderProperties.hashOfOverwritePrimitiveMaterialsIsEmpty())
 					primitiveRenderLoop(renderProperties, vboIsUsed);
 				else
 					normalRenderLoop(renderProperties, vboIsUsed);
@@ -805,7 +805,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 			OverwriteTransparencyRenderLoop(renderProperties, vboIsUsed);
 			break;
 		case glc::OverwritePrimitiveMaterial:
-			if (m_CurrentLod == 0)
+			if ((m_CurrentLod == 0) && !renderProperties.hashOfOverwritePrimitiveMaterialsIsEmpty())
 				primitiveRenderLoop(renderProperties, vboIsUsed);
 			else
 				normalRenderLoop(renderProperties, vboIsUsed);
