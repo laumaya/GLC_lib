@@ -426,7 +426,7 @@ bool GLC_Material::delUsage(GLC_uint id)
 	}
 	else
 	{
-		qDebug("GLC_Material::addUsage : id not removed");
+		qDebug() << "GLC_Material::delUsage : id not removed " << m_Uid;
 		return false;
 	}
 }
