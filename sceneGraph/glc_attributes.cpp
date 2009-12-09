@@ -39,6 +39,16 @@ GLC_Attributes::GLC_Attributes(const GLC_Attributes& attr)
 
 }
 
+// Overload "=" operator
+GLC_Attributes& GLC_Attributes::operator=(const GLC_Attributes& attr)
+{
+	if (this != &attr)
+	{
+		m_AttributesHash= attr.m_AttributesHash;
+	}
+	return *this;
+}
+
 // Destructor
 GLC_Attributes::~GLC_Attributes()
 {
