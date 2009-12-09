@@ -50,7 +50,13 @@ class GLC_LIB_EXPORT GLC_StructOccurence
 
 public:
 	//! Default constructor
-	GLC_StructOccurence(GLC_WorldHandle*, GLC_StructInstance*, GLuint shaderId=0);
+	GLC_StructOccurence();
+
+	//! Create Occurence of the specified instance
+	GLC_StructOccurence(GLC_StructInstance*, GLC_WorldHandle* pWorldHandle= NULL, GLuint shaderId=0);
+
+	//! Construct Occurence withe the specified GLC_3DRep
+	GLC_StructOccurence(GLC_3DRep*);
 
 	//! Copy constructor
 	GLC_StructOccurence(GLC_WorldHandle*, const GLC_StructOccurence&, bool shareInstance);

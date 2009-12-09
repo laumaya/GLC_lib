@@ -54,6 +54,12 @@ public:
 	//! Create reference with representation
 	GLC_StructReference(GLC_Rep*);
 
+	//! Copy constructor
+	GLC_StructReference(const GLC_StructReference&);
+
+	//! Overload "=" operator
+	GLC_StructReference& operator=(const GLC_StructReference&);
+
 	//! Destructor
 	virtual ~GLC_StructReference();
 //@}
@@ -69,9 +75,6 @@ public:
 	//! Return first instance handle
 	inline GLC_StructInstance* firstInstanceHandle() const
 	{ return *(m_SetOfInstance.begin());}
-
-	//! Create a Struct instance of this reference
-	GLC_StructInstance* createStructInstance();
 
 	//! Return the list of instance of this reference
 	inline QList<GLC_StructInstance*> listOfStructInstances() const

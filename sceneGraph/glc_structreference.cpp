@@ -48,6 +48,39 @@ GLC_StructReference::GLC_StructReference(GLC_Rep* pRep)
 
 }
 
+// Copy constructor
+GLC_StructReference::GLC_StructReference(const GLC_StructReference& ref)
+: m_SetOfInstance()
+, m_pRepresentation(NULL)
+, m_Name(ref.m_Name)
+, m_pAttributes(new GLC_Attributes(*(ref.m_pAttributes)))
+{
+	if (NULL != ref.m_pRepresentation)
+	{
+		m_pRepresentation= ref.m_pRepresentation->clone();
+	}
+}
+
+//! Overload "=" operator
+GLC_StructReference& GLC_StructReference::operator=(const GLC_StructReference& ref)
+{
+	if (this != &ref)
+	{
+		m_SetOfInstance.clear();
+		delete m_pAttributes;
+		m_pAttributes= NULL;
+
+		m_Name= ref.m_Name;
+		m_pAttributes= new GLC_Attributes(*(ref.m_pAttributes));
+
+		if (NULL != ref.m_pRepresentation)
+		{
+			m_pRepresentation= ref.m_pRepresentation->clone();
+		}
+	}
+	return *this;
+}
+
 GLC_StructReference::~GLC_StructReference()
 {
 	delete m_pRepresentation;
@@ -58,13 +91,6 @@ GLC_StructReference::~GLC_StructReference()
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
-
-// Create a Struct instance of this reference
-GLC_StructInstance* GLC_StructReference::createStructInstance()
-{
-	GLC_StructInstance* pInstance= new GLC_StructInstance(this);
-	return pInstance;
-}
 
 // Return the list of occurence of this reference
 QList<GLC_StructOccurence*> GLC_StructReference::listOfStructOccurence() const
