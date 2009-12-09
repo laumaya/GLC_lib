@@ -27,9 +27,7 @@
 #ifndef GLC_RECTANGLE_H_
 #define GLC_RECTANGLE_H_
 
-#include "glc_meshdata.h"
-#include "glc_geometry.h"
-#include "glc_primitivegroup.h"
+#include "glc_mesh.h"
 
 #include "../glc_config.h"
 
@@ -39,7 +37,7 @@
 
 /*! An GLC_Rectangle is just a simple 3D Rectangle which use VBO*/
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_Rectangle : public GLC_Geometry
+class GLC_LIB_EXPORT GLC_Rectangle : public GLC_Mesh
 {
 
 //////////////////////////////////////////////////////////////////////
@@ -51,7 +49,7 @@ public:
 	GLC_Rectangle();
 
 	//! Complete constructor
-	GLC_Rectangle(const GLC_Vector4d&, double, double);
+	GLC_Rectangle(double, double);
 
 	//! Copy constructor
 	GLC_Rectangle(const GLC_Rectangle&);
@@ -72,21 +70,11 @@ public:
 	inline double length2() const
 	{ return m_L2;}
 
-	//! Return the rectangle normal
-	inline GLC_Vector4d normal() const
-	{ return m_Normal;}
-
 	//! clone the rectangle
 	virtual GLC_Geometry* clone() const;
 
 	//! return the rectangle bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
-
-	//! Get number of faces
-	virtual unsigned int numberOfFaces() const;
-
-	//! Get number of vertex
-	virtual unsigned int numberOfVertex() const;
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -95,33 +83,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set the rectangle
-	GLC_Rectangle& setRectangle(const GLC_Vector4d&, double, double);
+	GLC_Rectangle& setRectangle(double, double);
 
-	//! Set the rectangle normal
-	inline void setNormal(const GLC_Vector4d& normal)
-	{
-		m_Normal= normal;
-		// Invalid the geometry
-		m_GeometryIsValid = false;
-	}
 	//! Set rectangle length 1
-	inline void setLength1(double value)
-	{
-		m_L1= value;
-		// Invalid the geometry
-		m_GeometryIsValid = false;
-	}
+	void setLength1(double);
 
 	//! Set rectangle length 2
-	inline void setLength2(double value)
-	{
-		m_L2= value;
-		// Invalid the geometry
-		m_GeometryIsValid = false;
-	}
-
-	//! Copy vertex list in a vector list for Vertex Array Use
-	void finished();
+	void setLength2(double);
 
 //@}
 
@@ -143,17 +111,8 @@ private:
 //@{
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Create VBO and IBO
-	void createVbos();
-
-	//! Finish VBO mesh
-	void finishVbo();
-
-	//! Finish non Vbo mesh
-	void finishNonVbo();
-
 	//! Create rectangle mesh
-	void createRectangleMesh();
+	void createMesh();
 //@}
 
 
@@ -161,18 +120,6 @@ private:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! the list of Hash table of primitive group
-	GLC_PrimitiveGroup m_PrimitiveGroup;
-
-	//! Selection state
-	bool m_IsSelected;
-
-	//! Geom engine
-	GLC_MeshData m_ExtendedGeomEngine;
-
-	//! Normal Vector of the rectangle
-	GLC_Vector4d m_Normal;
-
 	//! The Rectangle length 1
 	double m_L1;
 
