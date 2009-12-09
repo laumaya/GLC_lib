@@ -31,8 +31,9 @@
 // Default constructor
 GLC_World::GLC_World()
 : m_pWorldHandle(new GLC_WorldHandle())
-, m_pRoot(new GLC_StructOccurence(m_pWorldHandle, (new GLC_StructReference())->createStructInstance()))
+, m_pRoot(new GLC_StructOccurence())
 {
+	m_pRoot->setWorldHandle(m_pWorldHandle);
 	//qDebug() << "GLC_World::GLC_World() : " << (*m_pNumberOfWorld) << " " << this;
 }
 
@@ -85,17 +86,20 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 // Assignment operator
 GLC_World& GLC_World::operator=(const GLC_World& world)
 {
-	// Decrement the number of world
-	m_pWorldHandle->decrement();
-	if (m_pWorldHandle->isOrphan())
+	if (this != &world)
 	{
-		// this is the last World, delete the root product and collection
-		//m_pWorldHandle->collection()->clear(); // Clear collection first (performance)
-		delete m_pRoot;
-		delete m_pWorldHandle;
+		// Decrement the number of world
+		m_pWorldHandle->decrement();
+		if (m_pWorldHandle->isOrphan())
+		{
+			// this is the last World, delete the root product and collection
+			//m_pWorldHandle->collection()->clear(); // Clear collection first (performance)
+			delete m_pRoot;
+			delete m_pWorldHandle;
+		}
+		m_pRoot= world.m_pRoot;
+		m_pWorldHandle= world.m_pWorldHandle;
+		m_pWorldHandle->increment();
 	}
-	m_pRoot= world.m_pRoot;
-	m_pWorldHandle= world.m_pWorldHandle;
-	m_pWorldHandle->increment();
 	return *this;
 }
