@@ -157,7 +157,6 @@ void GLC_Cylinder::glDraw(const GLC_RenderProperties& renderProperties)
 // Create the cylinder mesh
 void GLC_Cylinder::createMesh()
 {
-	// Clear the mesh of the cylinder
 	Q_ASSERT(GLC_Mesh::isEmpty());
 
 	// Create cosinus and sinus array according to the discretion and radius
@@ -256,9 +255,9 @@ void GLC_Cylinder::createMesh()
 	}
 
 	// Add bulk data in to the mesh
-	addVertices(verticeVector);
-	addNormals(normalsVector);
-	addTexels(texelVector);
+	GLC_Mesh::addVertices(verticeVector);
+	GLC_Mesh::addNormals(normalsVector);
+	GLC_Mesh::addTexels(texelVector);
 
 	// Set the material to use
 	GLC_Material* pCylinderMaterial;
