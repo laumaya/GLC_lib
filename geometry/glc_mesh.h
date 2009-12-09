@@ -554,10 +554,13 @@ void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_M
 		for (GLint i= 0; i < trianglesGroupCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->triangleGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
+			if (pMaterialHash->contains(currentPrimitiveId))
 			{
-				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId))
+				{
+					pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+					if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				}
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
@@ -579,10 +582,13 @@ void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_M
 		for (GLint i= 0; i < stripsCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->stripGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
+			if (pMaterialHash->contains(currentPrimitiveId))
 			{
-				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId))
+				{
+					pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+					if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				}
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
@@ -604,10 +610,13 @@ void GLC_Mesh::vboDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_M
 		for (GLint i= 0; i < fansCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->fanGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
+			if (pMaterialHash->contains(currentPrimitiveId))
 			{
-				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId))
+				{
+					pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+					if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				}
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
@@ -636,10 +645,13 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 		for (GLint i= 0; i < trianglesGroupCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->triangleGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
+			if (pMaterialHash->contains(currentPrimitiveId))
 			{
-				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId))
+				{
+					pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+					if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				}
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
@@ -662,10 +674,13 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 		for (GLint i= 0; i < stripsCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->stripGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
+			if (pMaterialHash->contains(currentPrimitiveId))
 			{
-				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId))
+				{
+					pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+					if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				}
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
@@ -688,10 +703,13 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 		for (GLint i= 0; i < fansCount; ++i)
 		{
 			GLC_uint currentPrimitiveId= pCurrentGroup->fanGroupId(i);
-			if (pMaterialHash->contains(currentPrimitiveId) && (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId)))
+			if (pMaterialHash->contains(currentPrimitiveId))
 			{
-				pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
-				if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				if (pCurrentLocalMaterial != pMaterialHash->value(currentPrimitiveId))
+				{
+					pCurrentLocalMaterial= pMaterialHash->value(currentPrimitiveId);
+					if (pCurrentLocalMaterial->isTransparent() == isTransparent) pCurrentLocalMaterial->glExecute();
+				}
 			}
 			else if (pCurrentLocalMaterial != pCurrentMaterial)
 			{
