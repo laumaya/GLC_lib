@@ -44,7 +44,7 @@ GLC_Material::GLC_Material()
 , m_WhereUsed()
 , m_OtherUsage()
 , m_pTexture(NULL)			// no texture
-, m_Transparency(1.0)
+, m_Opacity(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << id();
 	// Diffuse Color
@@ -64,7 +64,7 @@ GLC_Material::GLC_Material(const QColor &diffuseColor)
 , m_WhereUsed()
 , m_OtherUsage()
 , m_pTexture(NULL)			// no texture
-, m_Transparency(1.0)
+, m_Opacity(1.0)
 {
 	// Others
 	initOtherColor();
@@ -81,7 +81,7 @@ GLC_Material::GLC_Material(const QString& name ,const GLfloat *pDiffuseColor)
 , m_WhereUsed()
 , m_OtherUsage()
 , m_pTexture(NULL)			// no texture
-, m_Transparency(1.0)
+, m_Opacity(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << id();
 	// Init Diffuse Color
@@ -109,7 +109,7 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 , m_WhereUsed()
 , m_OtherUsage()
 , m_pTexture(pTexture)			// init texture
-, m_Transparency(1.0)
+, m_Opacity(1.0)
 {
 	Q_ASSERT(NULL != m_pTexture);
 	//qDebug() << "GLC_Material::GLC_Material" << id();
@@ -134,7 +134,7 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 , m_WhereUsed()
 , m_OtherUsage()
 , m_pTexture(NULL)
-, m_Transparency(InitMaterial.m_Transparency)
+, m_Opacity(InitMaterial.m_Opacity)
 {
 	//qDebug() << "GLC_Material::GLC_Material copy constructor" << id();
 	if (NULL != InitMaterial.m_pTexture)
@@ -242,7 +242,7 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
 		{
 			result= result && (m_pTexture == mat.m_pTexture);
 		}
-		result= result && (m_Transparency == mat.m_Transparency);
+		result= result && (m_Opacity == mat.m_Opacity);
 	}
 	return result;
 }
@@ -255,7 +255,7 @@ uint GLC_Material::hashCode() const
 	stringKey+= QString::number(m_SpecularColor.rgba());
 	stringKey+= QString::number(m_LightEmission.rgba());
 	stringKey+= QString::number(m_fShininess);
-	stringKey+= QString::number(m_Transparency);
+	stringKey+= QString::number(m_Opacity);
 	if (NULL != m_pTexture)
 	{
 		stringKey+= QString::number((size_t)m_pTexture);
@@ -292,7 +292,7 @@ uint GLC_Material::hashCode() const
  	// Shininess
  	m_fShininess= pMat->m_fShininess;
  	// Transparency
- 	m_Transparency= pMat->m_Transparency;
+ 	m_Opacity= pMat->m_Opacity;
 	// Update geometry which use this material
 	CWhereUsed::const_iterator iGeom= m_WhereUsed.constBegin();
 	while (iGeom != m_WhereUsed.constEnd())
@@ -307,28 +307,28 @@ uint GLC_Material::hashCode() const
 void GLC_Material::setAmbientColor(const QColor& ambientColor)
 {
 	m_AmbientColor= ambientColor;
-	m_AmbientColor.setAlphaF(m_Transparency);
+	m_AmbientColor.setAlphaF(m_Opacity);
 }
 
 // Set Diffuse color
 void GLC_Material::setDiffuseColor(const QColor& diffuseColor)
 {
 	m_DiffuseColor= diffuseColor;
-	m_DiffuseColor.setAlphaF(m_Transparency);
+	m_DiffuseColor.setAlphaF(m_Opacity);
 }
 
 // Set Specular color
 void GLC_Material::setSpecularColor(const QColor& specularColor)
 {
 	m_SpecularColor= specularColor;
-	m_SpecularColor.setAlphaF(m_Transparency);
+	m_SpecularColor.setAlphaF(m_Opacity);
 }
 
 // Set Emissive
 void GLC_Material::setLightEmission(const QColor& lightEmission)
 {
 	m_LightEmission= lightEmission;
-	m_LightEmission.setAlphaF(m_Transparency);
+	m_LightEmission.setAlphaF(m_Opacity);
 }
 
 // Set Texture
@@ -432,14 +432,14 @@ bool GLC_Material::delUsage(GLC_uint id)
 }
 
 
-// Set the material transparency
-void GLC_Material::setTransparency(const qreal alpha)
+// Set the material opacity
+void GLC_Material::setOpacity(const qreal alpha)
 {
-	m_Transparency= alpha;
-	m_AmbientColor.setAlphaF(m_Transparency);
-	m_DiffuseColor.setAlphaF(m_Transparency);
-	m_SpecularColor.setAlphaF(m_Transparency);
-	m_LightEmission.setAlphaF(m_Transparency);
+	m_Opacity= alpha;
+	m_AmbientColor.setAlphaF(m_Opacity);
+	m_DiffuseColor.setAlphaF(m_Opacity);
+	m_SpecularColor.setAlphaF(m_Opacity);
+	m_LightEmission.setAlphaF(m_Opacity);
 	// Update geometry which use this material
 	CWhereUsed::const_iterator iGeom= m_WhereUsed.constBegin();
 	while (iGeom != m_WhereUsed.constEnd())
@@ -601,7 +601,7 @@ QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
 
 	// Store GLC_Material class members
 	stream << material.ambientColor() << material.diffuseColor() << material.specularColor();
-	stream << material.lightEmission() << material.shininess() << material.alpha();
+	stream << material.lightEmission() << material.shininess() << material.opacity();
 
 	// Test if the material has texture
 	bool hasTexture= material.hasTexture();
@@ -639,7 +639,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 	material.setSpecularColor(specular);
 	material.setLightEmission(lightEmission);
 	material.setShininess(shininess);
-	material.setTransparency(alpha);
+	material.setOpacity(alpha);
 
 	// Test if material has texture
 	bool hasTexture;

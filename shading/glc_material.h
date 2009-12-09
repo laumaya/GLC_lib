@@ -118,13 +118,13 @@ public:
 
 	//! Return true if the material is transparent
 	inline bool isTransparent() const
-	{return  m_Transparency < 1.0;}
+	{return  m_Opacity < 1.0;}
 
 	//! Return true if materials are equivalent
 	bool operator==(const GLC_Material&) const;
 
-	//! Return the material alpha
-	inline double alpha() const
+	//! Return the material opacity
+	inline double opacity() const
 	{return m_DiffuseColor.alphaF();}
 
 	//! Return the number of this material usage
@@ -199,8 +199,8 @@ public:
 	/*! This method is thread safe*/
 	bool delUsage(GLC_uint);
 
-	//! Set the material transparency
-	void setTransparency(const qreal);
+	//! Set the material opacity
+	void setOpacity(const qreal);
 
 //@}
 
@@ -257,11 +257,11 @@ private:
 	//! Set of id of other objects that uses this material
 	QSet<GLC_uint> m_OtherUsage;
 
-	//! material's texture
+	//! Material's texture
 	GLC_Texture* m_pTexture;
 
-	//! material transparency
-	qreal m_Transparency;
+	//! Material opacity
+	qreal m_Opacity;
 
 };
 
