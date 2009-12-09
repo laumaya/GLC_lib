@@ -632,7 +632,7 @@ void GLC_ColladaToWorld::loadTransparency(const QString& name)
 				// A material mustn't be invisible (no sense)
 				if (qFuzzyCompare(alpha, 0.0f)) alpha= 1.0f;
 
-				m_pCurrentMaterial->setTransparency(alpha);
+				m_pCurrentMaterial->setOpacity(alpha);
 				if (!stringToFloatOk) throwException("Error while trying to convert :" + alphaString + " to float");
 			}
 		}
@@ -1850,7 +1850,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 			}
 			pInstance->move(pNode->m_Matrix);
 			//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
-			pOccurence= new GLC_StructOccurence(NULL, pInstance);
+			pOccurence= new GLC_StructOccurence(pInstance);
 		}
 		else qDebug() << "Geometry Id : " << geometryId << " Not found";
 	}
@@ -1867,7 +1867,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 		}
 
 		pInstance->move(pNode->m_Matrix);
-		pOccurence= new GLC_StructOccurence(NULL, pInstance);
+		pOccurence= new GLC_StructOccurence(pInstance);
 
 		const int size= pNode->m_ChildNodes.size();
 		for (int i= 0; i < size; ++i)
@@ -1905,7 +1905,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 		}
 
 		pInstance->move(pNode->m_Matrix);
-		pOccurence= new GLC_StructOccurence(NULL, pInstance);
+		pOccurence= new GLC_StructOccurence(pInstance);
 	}
 
 	return pOccurence;

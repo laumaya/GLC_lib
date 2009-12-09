@@ -228,7 +228,7 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	m_pCurrentMesh->finish();
 	GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 	m_pCurrentMesh= NULL;
-	m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
+	m_pWorld->rootOccurence()->addChild(new GLC_StructOccurence(pRep));
 
 	return m_pWorld;
 }

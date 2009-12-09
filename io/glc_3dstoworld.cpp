@@ -224,7 +224,7 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 					// Compute the part matrix
 					nodeMat= nodeMat * trans * matInv; // I don't know why...
 					// move the part by the matrix
-					pProduct->addChild((new GLC_StructReference(new GLC_3DRep(representation)))->createStructInstance()->move(nodeMat));
+					pProduct->addChild((new GLC_StructInstance(new GLC_3DRep(representation)))->move(nodeMat));
 		    	}
 		    	else
 		    	{
@@ -247,8 +247,7 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 	// If there is a child, create a child product
 	if (NULL != pFatherNode->childs)
 	{
-		GLC_StructInstance* pInstance= (new GLC_StructReference())->createStructInstance();
-		pChildProduct= new GLC_StructOccurence(m_pWorld->worldHandle(), pInstance);
+		pChildProduct= new GLC_StructOccurence();
 		pProduct->addChild(pChildProduct);
 
 		pChildProduct->setName(QString("Product") + QString::number(pFatherNode->node_id));
@@ -422,7 +421,7 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 	}
 	// Transparency
 
-	pMaterial->setTransparency(1.0 - p3dsMaterial->transparency);
+	pMaterial->setOpacity(1.0 - p3dsMaterial->transparency);
 
 	// Add the material to the hash table
 	m_Materials.insert(materialName, pMaterial);

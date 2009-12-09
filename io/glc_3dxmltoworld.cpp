@@ -1050,7 +1050,7 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 			}
 			else
 			{
-				GLC_StructOccurence* pOccurence= new GLC_StructOccurence(m_pWorld->worldHandle(), instanceList.at(i));
+				GLC_StructOccurence* pOccurence= new GLC_StructOccurence(instanceList.at(i), m_pWorld->worldHandle());
 				if (pChildInstance->hasStructOccurence() && pChildInstance->firstOccurenceHandle()->isOrphan())
 				{
 					Q_ASSERT(pChildInstance->listOfStructOccurences().size() == 1);
@@ -1298,7 +1298,7 @@ GLC_Material* GLC_3dxmlToWorld::getMaterial()
 	pMaterial->setAmbientColor(Qt::black);
 	pMaterial->setSpecularColor(Qt::white);
 	pMaterial->setShininess(25.0);
-	pMaterial->setTransparency(alphaReal);
+	pMaterial->setOpacity(alphaReal);
 
 	const QString matKey= QString::number(pMaterial->hashCode());
 	if (m_MaterialHash.contains(matKey))
@@ -1736,9 +1736,9 @@ void GLC_3dxmlToWorld::loadMaterialDef(const MaterialRef& materialRef)
 			}
 			else if (currentName == "Transparency")
 			{
-				double transparency= readAttribute("Value", true).toDouble();
-				transparency= 1.0 - transparency;
-				pMaterial->setTransparency(transparency);
+				double opacity= readAttribute("Value", true).toDouble();
+				opacity= 1.0 - opacity;
+				pMaterial->setOpacity(opacity);
 			}
 			else if (currentName == "SpecularExponent")
 			{
