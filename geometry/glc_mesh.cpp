@@ -787,7 +787,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		}
 		else
 		{
-			primitiveSelectedRenderLoop(renderProperties, vboIsUsed);
+			normalRenderLoop(renderProperties, vboIsUsed);
 		}
 	}
 	else
