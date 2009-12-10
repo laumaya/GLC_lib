@@ -29,6 +29,9 @@
 #include <QtOpenGL>
 #include "glext/glext.h"
 
+// Buffer offset used by VBO
+#define BUFFER_OFFSET(i) ((char*)NULL + (i))
+
 #if !defined(Q_OS_MAC)
 // ARB_vertex_buffer_object
 extern PFNGLBINDBUFFERARBPROC			glBindBuffer;
