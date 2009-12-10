@@ -22,22 +22,18 @@
 
 *****************************************************************************/
 
-//! \file glc_extendedgeomengine.h Interface for the GLC_MeshData class.
+//! \file glc_meshdata.h Interface for the GLC_MeshData class.
 
 #ifndef GLC_MESHDATA_H_
 #define GLC_MESHDATA_H_
 
 #include <QVector>
-#include "glc_geomengine.h"
+
 #include "glc_lod.h"
+#include "../glc_global.h"
 
 #include "../glc_config.h"
 
-//! QVector of GLfloat
-typedef QVector<GLfloat> GLfloatVector;
-
-//! QVector of GLuint
-typedef QVector<GLuint> GLuintVector;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_MeshData
@@ -60,6 +56,10 @@ public:
 		GLC_Color
 	};
 
+//////////////////////////////////////////////////////////////////////
+/*! @name Constructor / Destructor */
+//@{
+//////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
 	GLC_MeshData();
@@ -72,7 +72,7 @@ public:
 
 	//! Destructor
 	virtual ~GLC_MeshData();
-
+//@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
