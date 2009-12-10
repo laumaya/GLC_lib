@@ -22,18 +22,29 @@
 
 *****************************************************************************/
 
-//! \file glc_enum.h provide usefull utilities
+//! \file glc_global.h provide usefull utilities
 
-#ifndef GLC_ENUM_H_
-#define GLC_ENUM_H_
+#ifndef GLC_GLOBAL_H_
+#define GLC_GLOBAL_H_
 
 #include <QMutex>
 #include <QtOpenGL>
+#include <QList>
+#include <QVector>
+#include <QHash>
 
 #include "glc_config.h"
 
-// Type for UID
+// GLC_lib typedef
+//! Type used for all GLC_lib ID
 typedef unsigned int GLC_uint;
+
+//! Types used for Bulk Opengl Data : QVector of GLfloat
+typedef QVector<GLfloat> GLfloatVector;
+
+//! Types used for index Opengl Data : QVector of GLuint
+typedef QVector<GLuint> GLuintVector;
+
 
 namespace glc
 {
@@ -88,6 +99,6 @@ void glc::encodeRgbId(GLC_uint id, GLubyte* colorId)
 #define GLC_DESCRIPTION "GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4."
 
 
-#endif //GLC_ENUM_H_
+#endif //GLC_GLOBAL_H_
 
 

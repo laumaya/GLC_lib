@@ -22,9 +22,9 @@
 
 *****************************************************************************/
 
-//! \file glc_enum.cpp implementation of usefull utilities
+//! \file glc_global.cpp implementation of usefull utilities
 
-#include "glc_enum.h"
+#include "glc_global.h"
 
 QMutex glc::iDMutex;
 QMutex glc::geomIdMutex;
