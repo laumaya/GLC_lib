@@ -39,7 +39,7 @@ GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
 , m_nDiscret(GLC_DISCRET)
 , m_dAngle(Angle)
 , m_Step(0)
-, m_SimpleGeomEngine()
+, m_WireData()
 {
 
 }
@@ -49,23 +49,9 @@ GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
 , m_Radius(sourceCircle.m_Radius)
 , m_nDiscret(sourceCircle.m_nDiscret)
 , m_dAngle(sourceCircle.m_dAngle)
-, m_SimpleGeomEngine(sourceCircle.m_SimpleGeomEngine)
+, m_WireData(sourceCircle.m_WireData)
 {
-	// Copy inner material hash
-	MaterialHash::const_iterator i= m_MaterialHash.begin();
-	MaterialHash newMaterialHash;
-    while (i != m_MaterialHash.constEnd())
-    {
-        // update inner material use table
-    	i.value()->delGLC_Geom(id());
-    	GLC_Material* pNewMaterial= new GLC_Material(*(i.value()));
-    	pNewMaterial->setId(glc::GLC_GenID());
-    	pNewMaterial->setUuid(QUuid::createUuid());
-    	newMaterialHash.insert(pNewMaterial->id(), pNewMaterial);
-    	pNewMaterial->addGLC_Geom(this);
-         ++i;
-    }
-    m_MaterialHash= newMaterialHash;
+
 }
 GLC_Circle::~GLC_Circle()
 {
@@ -80,14 +66,11 @@ GLC_BoundingBox& GLC_Circle::boundingBox(void)
 {
 	if (NULL == m_pBoundingBox)
 	{
+		//qDebug() << "GLC_Mesh2::boundingBox create boundingBox";
 		m_pBoundingBox= new GLC_BoundingBox();
-
-		GLC_Point3d lower(-m_Radius, -m_Radius, -2.0 * EPSILON);
-		GLC_Point3d upper(m_Radius, m_Radius, 2.0 * EPSILON);
-		m_pBoundingBox->combine(lower);
-		m_pBoundingBox->combine(upper);
+		m_pBoundingBox->combine(m_WireData.boundingBox());
+		m_pBoundingBox->combine(GLC_Vector3d(0.0, 0.0, -2 * glc::EPSILON));
 	}
-
 	return *m_pBoundingBox;
 }
 
@@ -116,11 +99,10 @@ void GLC_Circle::setRadius(double R)
 	{	// Radius is changing
 		m_Radius= R;
 		m_GeometryIsValid= false;
-		if (NULL != m_pBoundingBox)
-		{
-			delete m_pBoundingBox;
-			m_pBoundingBox= NULL;
-		}
+
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+		m_WireData.clear();
 	}
 }
 
@@ -133,6 +115,10 @@ void GLC_Circle::setDiscretion(int TargetDiscret)
 		m_nDiscret= TargetDiscret;
 		if (m_nDiscret < 6) m_nDiscret= 6;
 		m_GeometryIsValid= false;
+
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+		m_WireData.clear();
 	}
 }
 
@@ -144,11 +130,10 @@ void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 	{	// Angle is changing
 			m_dAngle= AngleRadians;
 			m_GeometryIsValid= false;
-			if (NULL != m_pBoundingBox)
-			{
-				delete m_pBoundingBox;
-				m_pBoundingBox= NULL;
-			}
+
+			delete m_pBoundingBox;
+			m_pBoundingBox= NULL;
+			m_WireData.clear();
 	}
 }
 
@@ -157,85 +142,36 @@ void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 //////////////////////////////////////////////////////////////////////
 
 // Circle drawing
-void GLC_Circle::glDraw(const GLC_RenderProperties&)
+void GLC_Circle::glDraw(const GLC_RenderProperties& renderProperties)
 {
-	const bool vboIsUsed= GLC_State::vboUsed();
-	if (vboIsUsed)
+	if (m_WireData.isEmpty())
 	{
-		m_SimpleGeomEngine.createVBOs();
-		m_SimpleGeomEngine.useVBOs(true);
+		createWire();
 	}
 
-	if (!m_GeometryIsValid)
+	m_WireData.glDraw(renderProperties);
+}
+
+// Create the wire
+void GLC_Circle::createWire()
+{
+	Q_ASSERT(m_WireData.isEmpty());
+
+	m_Step= static_cast<GLuint>(static_cast<double>(m_nDiscret) * (m_dAngle / (2 * glc::PI)));
+	if (m_Step < 2) m_Step= 2;
+
+	// Float vector
+	GLfloatVector* pFloatVector= m_WireData.positionVectorHandle();
+
+	// Resize the Vertex vector
+	const int size= (m_Step + 1) * 3;
+	pFloatVector->resize(size);
+	// Fill Vertex Vector
+	const double angleOnStep= m_dAngle / static_cast<double>(m_Step);
+	for (GLuint i= 0; i <= m_Step; ++i)
 	{
-		VertexVector* pVertexVector= m_SimpleGeomEngine.vertexVectorHandle();
-		// Calculate number of step
-		m_Step= static_cast<GLuint>(static_cast<double>(m_nDiscret) * (m_dAngle / (2 * glc::PI)));
-		if (m_Step < 2) m_Step= 2;
-
-		// Vertex Vector
-		const GLsizeiptr size= (m_Step + 1) * sizeof(GLC_Vertex);
-		// Resize the Vertex vector
-		pVertexVector->resize(m_Step + 1);
-		// Fill Vertex Vector
-		for (GLuint i= 0; i <= m_Step; ++i)
-		{
-			(*pVertexVector)[i].x= static_cast<float>(m_Radius * cos(i * m_dAngle / m_Step));
-			(*pVertexVector)[i].y= static_cast<float>(m_Radius * sin(i * m_dAngle / m_Step));
-		}
-
-		// Index Vector
-		const GLsizeiptr IndexSize = (m_Step + 1) * sizeof(GLuint);
-		// Resize index vector
-		QVector<GLuint>* pIndexVector= m_SimpleGeomEngine.indexVectorHandle();
-		pIndexVector->resize(m_Step + 1);
-		// Fill index vector
-		for (GLuint i= 0; i <= m_Step; ++i)
-		{
-			(*pIndexVector)[i]= i;
-		}
-
-		if (vboIsUsed)
-		{
-			// Create VBO
-			glBufferData(GL_ARRAY_BUFFER, size, pVertexVector->data(), GL_STATIC_DRAW);
-			// Create IBO
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize, pIndexVector->data(), GL_STATIC_DRAW);
-			// Clear Vector
-			pVertexVector->clear();
-			pIndexVector->clear();
-		}
-	}
-
-	if (vboIsUsed)
-	{
-		// Use VBO
-		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), BUFFER_OFFSET(0));
-		glEnableClientState(GL_VERTEX_ARRAY);
-		//glDrawRangeElements(GL_LINE_STRIP, 0, m_Step + 1, m_Step + 1, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-		glDrawElements(GL_LINE_STRIP, m_Step + 1, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-		glDisableClientState(GL_VERTEX_ARRAY);
-	}
-	else
-	{
-		// Use Vertex Array
-		glVertexPointer(2, GL_FLOAT, sizeof(GLC_Vertex), m_SimpleGeomEngine.vertexVectorHandle()->data());
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glDrawElements(GL_LINE_STRIP, m_Step + 1, GL_UNSIGNED_INT, m_SimpleGeomEngine.indexVectorHandle()->data());
-		glDisableClientState(GL_VERTEX_ARRAY);
-	}
-
-	if (vboIsUsed)
-	{
-		m_SimpleGeomEngine.useVBOs(false);
-	}
-
-
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Circle::GlDraw ", error);
-		throw(OpenGlException);
+		(*pFloatVector)[(i * 3)]= static_cast<float>(m_Radius * cos(static_cast<double>(i) * angleOnStep));
+		(*pFloatVector)[(i * 3) + 1]= static_cast<float>(m_Radius * sin(static_cast<double>(i) * angleOnStep));
+		(*pFloatVector)[(i * 3) + 2]= 0.0f;
 	}
 }

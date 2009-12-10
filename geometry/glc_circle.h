@@ -28,7 +28,7 @@
 #define GLC_CIRCLE_H_
 
 #include "glc_geometry.h"
-#include "glc_simplegeomengine.h"
+#include "glc_wiredata.h"
 
 #include "../glc_config.h"
 
@@ -120,6 +120,17 @@ private:
 	 *  Throw GLC_OpenGlException*/
 	virtual void glDraw(const GLC_RenderProperties&);
 
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Private services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Create the wire
+	void createWire();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -139,7 +150,7 @@ private:
 	GLuint m_Step;
 
 	//! Geom engine
-	GLC_SimpleGeomEngine m_SimpleGeomEngine;
+	GLC_WireData m_WireData;
 
 };
 #endif //GLC_CIRCLE_H_
