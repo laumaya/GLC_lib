@@ -134,7 +134,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! The accuracy of the load
+	//! The accuracy of the LOD
 	double m_Accuracy;
 
 	//! The IBO ID
