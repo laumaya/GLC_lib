@@ -28,7 +28,7 @@
 #define GLC_RENDERPROPERTIES_H_
 
 #include "glc_material.h"
-#include "../glc_enum.h"
+#include "../glc_global.h"
 
 #include <QSet>
 #include <QHash>
