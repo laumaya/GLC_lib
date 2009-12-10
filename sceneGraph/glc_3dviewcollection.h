@@ -30,7 +30,7 @@
 
 #include <QHash>
 #include "glc_3dviewinstance.h"
-#include "../glc_enum.h"
+#include "../glc_global.h"
 
 #include "../glc_config.h"
 
