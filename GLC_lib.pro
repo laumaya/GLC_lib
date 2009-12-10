@@ -86,8 +86,6 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_point.h \
 							geometry/glc_box.h \
            					geometry/glc_geomtools.h \
-							geometry/glc_geomengine.h \
-							geometry/glc_simplegeomengine.h \
 							geometry/glc_meshdata.h \
 							geometry/glc_primitivegroup.h \
 							geometry/glc_mesh.h \
@@ -97,7 +95,8 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_rep.h \
 							geometry/glc_3drep.h \
 							geometry/glc_pointsprite.h \
-							geometry/glc_bsrep.h
+							geometry/glc_bsrep.h \
+							geometry/glc_wiredata.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -121,7 +120,7 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_turntablemover.h
 
 
-HEADERS_GLC += glc_enum.h \
+HEADERS_GLC += glc_global.h \
            glc_object.h \
            glc_factory.h \
            glc_boundingbox.h \
@@ -204,8 +203,6 @@ SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_point.cpp \
 			geometry/glc_box.cpp \
 			geometry/glc_geomtools.cpp \
-			geometry/glc_geomengine.cpp \
-			geometry/glc_simplegeomengine.cpp \
 			geometry/glc_meshdata.cpp \
 			geometry/glc_primitivegroup.cpp \
 			geometry/glc_mesh.cpp \
@@ -215,7 +212,8 @@ SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_rep.cpp \
 			geometry/glc_3drep.cpp \
 			geometry/glc_pointsprite.cpp \
-			geometry/glc_bsrep.cpp
+			geometry/glc_bsrep.cpp \
+			geometry/glc_wiredata.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -239,7 +237,7 @@ SOURCES +=	viewport/glc_camera.cpp \
 			viewport/glc_settargetmover.cpp \
 			viewport/glc_turntablemover.cpp
 		
-SOURCES +=	glc_enum.cpp \
+SOURCES +=	glc_global.cpp \
 			glc_object.cpp \			
 			glc_factory.cpp \
 			glc_boundingbox.cpp \
@@ -316,7 +314,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_3DRep \
     		   include/GLC_PointSprite \
     		   include/GLC_CacheManager \
-    		   include/GLC_BSRep
+    		   include/GLC_BSRep \
+    		   include/GLC_RenderProperties \
+    		   include/GLC_Global
     		   
     			   
 # Linux install configuration
