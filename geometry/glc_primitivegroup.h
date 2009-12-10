@@ -28,8 +28,7 @@
 #define GLC_PRIMITIVEGROUP_H_
 
 #include "../glc_ext.h"
-#include "../glc_enum.h"
-#include "glc_geomengine.h"
+#include "../glc_global.h"
 
 #include "glc_config.h"
 
