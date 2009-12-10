@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-//! \file glc_extendedgeomengine.cpp Implementation for the GLC_MeshData class.
+//! \file glc_meshdata.cpp Implementation for the GLC_MeshData class.
 
 #include "glc_meshdata.h"
 #include "../glc_state.h"
