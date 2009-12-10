@@ -31,7 +31,7 @@
 #include <QList>
 #include "../maths/glc_vector2df.h"
 #include "../maths/glc_vector3df.h"
-#include "../glc_enum.h"
+#include "../glc_global.h"
 #include "../shading/glc_material.h"
 #include "glc_meshdata.h"
 #include "glc_geometry.h"
@@ -269,8 +269,7 @@ public:
 protected:
 
 	//! Virtual interface for OpenGL Geometry set up.
-	/*! This Virtual function is implemented here.
-	 *  Throw GLC_OpenGlException*/
+	/*! This Virtual function is implemented here.*/
 	virtual void glDraw(const GLC_RenderProperties&);
 
 //@}
