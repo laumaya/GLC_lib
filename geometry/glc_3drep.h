@@ -26,7 +26,7 @@
 #ifndef GLC_3DREP_H_
 #define GLC_3DREP_H_
 
-#include "../geometry/glc_geometry.h"
+#include "glc_geometry.h"
 #include "glc_rep.h"
 
 #include "../glc_config.h"
