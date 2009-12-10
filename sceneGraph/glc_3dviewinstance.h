@@ -27,7 +27,7 @@
 #ifndef GLC_3DVIEWINSTANCE_H_
 #define GLC_3DVIEWINSTANCE_H_
 
-#include "../glc_enum.h"
+#include "../glc_global.h"
 #include "../glc_boundingbox.h"
 #include "../glc_object.h"
 #include "../maths/glc_matrix4x4.h"
