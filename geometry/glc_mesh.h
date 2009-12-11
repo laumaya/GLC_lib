@@ -79,6 +79,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
+
 	//! Get number of faces
 	virtual unsigned int numberOfFaces() const;
 
@@ -381,6 +384,10 @@ private:
 
 	//! The current LOD index
 	int m_CurrentLod;
+
+	//! Class chunk id
+	static quint32 m_ChunkId;
+
 };
 
 // Inline functions

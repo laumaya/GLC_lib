@@ -26,8 +26,8 @@
 
 #include "glc_mesh.h"
 
-// The Mesh chunk id
-#define GLC_BINARY_CHUNK_ID 0xA701
+// Class chunk id
+quint32 GLC_Mesh::m_ChunkId= 0xA701;
 
 GLC_Mesh::GLC_Mesh()
 :GLC_Geometry("Mesh", false)
@@ -146,6 +146,11 @@ GLC_Mesh::~GLC_Mesh()
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+// Return the class Chunk ID
+quint32 GLC_Mesh::chunckID()
+{
+	return m_ChunkId;
+}
 
 // Get number of faces
 unsigned int GLC_Mesh::numberOfFaces() const
@@ -592,7 +597,7 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& mater
 {
 	quint32 chunckId;
 	stream >> chunckId;
-	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
+	Q_ASSERT(chunckId == m_ChunkId);
 
 	// The mesh name
 	QString meshName;
@@ -646,7 +651,7 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& mater
 // Save the mesh to binary data stream
 void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 {
-	quint32 chunckId= GLC_BINARY_CHUNK_ID;
+	quint32 chunckId= m_ChunkId;
 	stream << chunckId;
 
 	// The mesh name
