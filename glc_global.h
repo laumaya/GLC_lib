@@ -45,6 +45,11 @@ typedef QVector<GLfloat> GLfloatVector;
 //! Types used for index Opengl Data : QVector of GLuint
 typedef QVector<GLuint> GLuintVector;
 
+typedef QList<GLuint> IndexList;
+typedef QVector<GLsizei> IndexSizes;
+typedef QVector<GLvoid*> OffsetVector;
+typedef QVector<GLuint> OffsetVectori;
+
 
 namespace glc
 {
