@@ -27,6 +27,10 @@
 #include "glc_primitivegroup.h"
 #include "../glc_state.h"
 
+// Class chunk id
+quint32 GLC_PrimitiveGroup::m_ChunkId= 0xA700;
+
+// Default constructor
 GLC_PrimitiveGroup::GLC_PrimitiveGroup(GLC_uint materialId)
 : m_ID(materialId)
 , m_TrianglesIndex()
@@ -138,6 +142,11 @@ GLC_PrimitiveGroup& GLC_PrimitiveGroup::operator=(const GLC_PrimitiveGroup& grou
 GLC_PrimitiveGroup::~GLC_PrimitiveGroup()
 {
 
+}
+// Return the class Chunk ID
+quint32 GLC_PrimitiveGroup::chunckID()
+{
+	return m_ChunkId;
 }
 
 // Add triangles to the group
@@ -322,12 +331,11 @@ void GLC_PrimitiveGroup::clear()
 
 
 // Non Member methods
-#define GLC_BINARY_CHUNK_ID 0xA700
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitiveGroup)
 {
 	Q_ASSERT(primitiveGroup.isFinished());
-	quint32 chunckId= GLC_BINARY_CHUNK_ID;
+	quint32 chunckId= GLC_PrimitiveGroup::m_ChunkId;
 	stream << chunckId;
 
 	// Primitive group id
@@ -392,7 +400,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_PrimitiveGroup &primitiveGroup)
 {
 	quint32 chunckId;
 	stream >> chunckId;
-	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
+	Q_ASSERT(chunckId == GLC_PrimitiveGroup::m_ChunkId);
 	stream >> primitiveGroup.m_ID;
 
 	// Triangles index

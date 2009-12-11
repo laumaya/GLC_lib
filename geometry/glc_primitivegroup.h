@@ -32,11 +32,6 @@
 
 #include "glc_config.h"
 
-typedef QList<GLuint> IndexList;
-typedef QVector<GLsizei> IndexSizes;
-typedef QVector<GLvoid*> OffsetVector;
-typedef QVector<GLuint> OffsetVectori;
-
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_PrimitiveGroup
 /*! \brief GLC_PrimitiveGroup : Triangles, Strip and fan index*/
@@ -76,6 +71,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
 
 	//! Return true if the group is finished
 	inline bool isFinished() const
@@ -310,6 +307,9 @@ private:
 
 	//! Flag to know if there is triangles fan
 	int m_TrianglesFanSize;
+
+	//! Class chunk id
+	static quint32 m_ChunkId;
 
 };
 
