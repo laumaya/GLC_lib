@@ -50,6 +50,9 @@ typedef QHash< GLC_uint, GLC_Geometry*> CWhereUsed;
 
 class GLC_LIB_EXPORT GLC_Material : public GLC_Object
 {
+	friend QDataStream &operator<<(QDataStream &, const GLC_Material &);
+	friend QDataStream &operator>>(QDataStream &, GLC_Material &);
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -83,6 +86,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
+
 	//! Return true if the material is used
 	bool isUnused() const
 	{return m_WhereUsed.isEmpty() && m_OtherUsage.isEmpty();}
@@ -262,6 +268,9 @@ private:
 
 	//! Material opacity
 	qreal m_Opacity;
+
+	//! Class chunk id
+	static quint32 m_ChunkId;
 
 };
 

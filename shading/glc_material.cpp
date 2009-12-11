@@ -30,10 +30,13 @@
 
 #include <QtDebug>
 
+// Class chunk id
+quint32 GLC_Material::m_ChunkId= 0xA703;
+
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
-
+// Default constructor
 GLC_Material::GLC_Material()
 :GLC_Object("Material")
 , m_AmbientColor()
@@ -155,6 +158,11 @@ GLC_Material::~GLC_Material(void)
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+// Return the class Chunk ID
+quint32 GLC_Material::chunckID()
+{
+	return m_ChunkId;
+}
 
 // Get Ambiant color
 QColor GLC_Material::ambientColor() const
@@ -588,12 +596,10 @@ void GLC_Material::initOtherColor(void)
 }
 
 // Non Member methods
-#define GLC_BINARY_CHUNK_ID 0xA703
-
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
 {
-	quint32 chunckId= GLC_BINARY_CHUNK_ID;
+	quint32 chunckId= GLC_Material::m_ChunkId;
 	stream << chunckId;
 
 	// Store GLC_Object class members
@@ -619,7 +625,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 	quint32 chunckId;
 	stream >> chunckId;
 
-	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
+	Q_ASSERT(chunckId == GLC_Material::m_ChunkId);
 
 	// Retrieve GLC_Object members
 	GLC_uint id;
