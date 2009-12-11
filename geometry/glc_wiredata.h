@@ -38,6 +38,9 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_WireData
 {
+	friend QDataStream &operator<<(QDataStream &, GLC_WireData &);
+	friend QDataStream &operator>>(QDataStream &, GLC_WireData &);
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -61,9 +64,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the Position Vector handle
-	inline GLfloatVector* positionVectorHandle()
-	{ return &m_Positions;}
+	//! Return the class Chunk ID
+	static quint32 chunckID();
 
 	//! Return the Position Vector
 	GLfloatVector positionVector() const;
@@ -82,6 +84,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Add a Polyline to the wire and returns its id
+	GLC_uint addPolyline(const GLfloatVector&);
+
 	//! Clear the content of the wire Data and makes it empty
 	void clear();
 
@@ -116,6 +121,9 @@ private:
 	//! VBO ID
 	GLuint m_VboId;
 
+	//! The next primitive local id
+	GLC_uint m_NextPrimitiveLocalId;
+
 	//! Vertex Position Vector
 	GLfloatVector m_Positions;
 
@@ -125,6 +133,24 @@ private:
 	//! Wire data bounding box
 	GLC_BoundingBox* m_pBoundingBox;
 
+	//! Polylines size
+	IndexSizes m_PolylinesSizes;
+
+	//! Vector of triangles group offset
+	OffsetVectori m_PolylinesOffset;
+
+	//! Triangles groups id
+	QList<GLC_uint> m_PolylinesId;
+
+	//! The number of polylines
+	int m_PolylinesCount;
+
+	//! Class chunk id
+	static quint32 m_ChunkId;
 };
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, GLC_WireData &);
+QDataStream &operator>>(QDataStream &, GLC_WireData &);
 
 #endif /* GLC_WIREDATA_H_ */

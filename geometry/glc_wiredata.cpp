@@ -27,12 +27,20 @@
 #include "glc_wiredata.h"
 #include "../glc_state.h"
 
+// Class chunk id
+quint32 GLC_WireData::m_ChunkId= 0xA706;
+
 // Default constructor
 GLC_WireData::GLC_WireData()
 : m_VboId(0)
+, m_NextPrimitiveLocalId(1)
 , m_Positions()
 , m_PositionSize(0)
 , m_pBoundingBox(NULL)
+, m_PolylinesSizes()
+, m_PolylinesOffset()
+, m_PolylinesId()
+, m_PolylinesCount(0)
 {
 
 }
@@ -40,22 +48,38 @@ GLC_WireData::GLC_WireData()
 // Copy constructor
 GLC_WireData::GLC_WireData(const GLC_WireData& data)
 : m_VboId(0)
+, m_NextPrimitiveLocalId(data.m_NextPrimitiveLocalId)
 , m_Positions(data.positionVector())
 , m_PositionSize(data.m_PositionSize)
 , m_pBoundingBox(NULL)
+, m_PolylinesSizes(data.m_PolylinesSizes)
+, m_PolylinesOffset(data.m_PolylinesOffset)
+, m_PolylinesId(data.m_PolylinesId)
+, m_PolylinesCount(data.m_PolylinesCount)
 {
-
+	if (NULL != data.m_pBoundingBox)
+	{
+		m_pBoundingBox= new GLC_BoundingBox(*(data.m_pBoundingBox));
+	}
 }
 
 // Overload "=" operator
 GLC_WireData& GLC_WireData::operator=(const GLC_WireData& data)
 {
-	clear();
-
 	if (this != &data)
 	{
+		clear();
+		m_NextPrimitiveLocalId= data.m_NextPrimitiveLocalId;
 		m_Positions= data.positionVector();
 		m_PositionSize= data.m_PositionSize;
+		if (NULL != data.m_pBoundingBox)
+		{
+			m_pBoundingBox= new GLC_BoundingBox(*(data.m_pBoundingBox));
+		}
+		m_PolylinesSizes= data.m_PolylinesSizes;
+		m_PolylinesOffset= data.m_PolylinesOffset;
+		m_PolylinesId= data.m_PolylinesId;
+		m_PolylinesCount= data.m_PolylinesCount;
 	}
 	return *this;
 }
@@ -74,6 +98,12 @@ GLC_WireData::~GLC_WireData()
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+
+// Return the class Chunk ID
+quint32 GLC_WireData::chunckID()
+{
+	return m_ChunkId;
+}
 
 // Return the Position Vector
 GLfloatVector GLC_WireData::positionVector() const
@@ -126,13 +156,43 @@ GLC_BoundingBox& GLC_WireData::boundingBox()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+
+// Add a Polyline to the wire and returns its id
+GLC_uint GLC_WireData::addPolyline(const GLfloatVector& floatVector)
+{
+	Q_ASSERT((floatVector.size() % 3) == 0);
+
+	++m_PolylinesCount;
+	m_Positions+= floatVector;
+
+	m_PolylinesSizes.append(static_cast<GLsizei>(floatVector.size() / 3));
+
+	if (m_PolylinesOffset.isEmpty())
+	{
+		m_PolylinesOffset.append(0);
+	}
+	int offset= m_PolylinesOffset.last() + m_PolylinesSizes.last();
+	m_PolylinesOffset.append(offset);
+
+	// The Polyline id
+	m_PolylinesId.append(m_NextPrimitiveLocalId);
+
+	return m_NextPrimitiveLocalId++;
+}
+
 // Clear the content of the meshData and makes it empty
 void GLC_WireData::clear()
 {
+	m_NextPrimitiveLocalId= 1;
 	m_Positions.clear();
 	m_PositionSize= 0;
 	delete m_pBoundingBox;
 	m_pBoundingBox= NULL;
+
+	m_PolylinesSizes.clear();
+	m_PolylinesOffset.clear();
+	m_PolylinesId.clear();
+	m_PolylinesCount= 0;
 }
 
 
@@ -191,8 +251,11 @@ void GLC_WireData::glDraw(const GLC_RenderProperties&)
 	}
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	// Render wires
-	glDrawArrays(GL_LINE_STRIP, 0, static_cast<GLsizei>(m_PositionSize / 3));
+	// Render polylines
+	for (int i= 0; i < m_PolylinesCount; ++i)
+	{
+		glDrawArrays(GL_LINE_STRIP, m_PolylinesOffset.at(i), m_PolylinesSizes.at(i));
+	}
 
 	// Desactivate VBO or Vertex Array
 	if (vboIsUsed)
@@ -220,4 +283,47 @@ void GLC_WireData::fillVBOs()
 	const GLsizei dataNbr= static_cast<GLsizei>(m_Positions.size());
 	const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 	glBufferData(GL_ARRAY_BUFFER, dataSize, m_Positions.data(), GL_STATIC_DRAW);
+}
+
+// Non Member methods
+// Non-member stream operator
+QDataStream &operator<<(QDataStream &stream, GLC_WireData &wireData)
+{
+	quint32 chunckId= GLC_WireData::m_ChunkId;
+	stream << chunckId;
+
+	stream << wireData.m_NextPrimitiveLocalId;
+	stream << wireData.positionVector();
+	stream << wireData.m_PositionSize;
+	stream << wireData.boundingBox();
+
+	stream << wireData.m_PolylinesSizes;
+	stream << wireData.m_PolylinesOffset;
+	stream << wireData.m_PolylinesId;
+	stream << wireData.m_PolylinesCount;
+
+	return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, GLC_WireData &wireData)
+{
+	quint32 chunckId;
+	stream >> chunckId;
+	Q_ASSERT(chunckId == GLC_WireData::m_ChunkId);
+
+	wireData.clear();
+	stream >> wireData.m_NextPrimitiveLocalId;
+	stream >> wireData.m_Positions;
+	stream >> wireData.m_PositionSize;
+
+	GLC_BoundingBox boundingBox;
+	stream >> boundingBox;
+	wireData.m_pBoundingBox= new GLC_BoundingBox(boundingBox);
+
+	stream >> wireData.m_PolylinesSizes;
+	stream >> wireData.m_PolylinesOffset;
+	stream >> wireData.m_PolylinesId;
+	stream >> wireData.m_PolylinesCount;
+
+	return stream;
 }
