@@ -27,6 +27,9 @@
 
 #include "glc_lod.h"
 
+// Class chunk id
+quint32 GLC_Lod::m_ChunkId= 0xA708;
+
 // Default Constructor
 GLC_Lod::GLC_Lod()
 : m_Accuracy(0.0)
@@ -84,6 +87,11 @@ GLC_Lod::~GLC_Lod()
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+// Return the class Chunk ID
+quint32 GLC_Lod::chunckID()
+{
+	return m_ChunkId;
+}
 
 // Return The unique index Vector
 QVector<GLuint> GLC_Lod::indexVector() const
@@ -111,17 +119,25 @@ QVector<GLuint> GLC_Lod::indexVector() const
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_Lod &lod)
 {
-	stream << lod.accuracy() << lod.indexVector();
+	quint32 chunckId= GLC_Lod::m_ChunkId;
+	stream << chunckId;
+
+	stream << lod.m_Accuracy;
+	stream << lod.indexVector();
 
 	return stream;
 }
 QDataStream &operator>>(QDataStream &stream, GLC_Lod &lod)
 {
-	double accuracy;
-	QVector<GLuint> indexVector;
+	quint32 chunckId;
+	stream >> chunckId;
+	Q_ASSERT(chunckId == GLC_Lod::m_ChunkId);
 
-	stream >> accuracy >> indexVector;
-	lod.setAccuracy(accuracy);
+	stream >> lod.m_Accuracy;
+
+	QVector<GLuint> indexVector;
+	stream >> indexVector;
+
 	*(lod.indexVectorHandle())= indexVector;
 	return stream;
 }

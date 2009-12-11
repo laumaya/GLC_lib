@@ -38,6 +38,9 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_Lod
 {
+	friend QDataStream &operator<<(QDataStream &, const GLC_Lod &);
+	friend QDataStream &operator>>(QDataStream &, GLC_Lod &);
+
 public:
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -65,6 +68,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
+
 	//! Return the accuracy of the LOD
 	inline double accuracy() const
 	{return m_Accuracy;}
@@ -145,6 +151,9 @@ private:
 
 	//! The Index vector size
 	int m_IndexSize;
+
+	//! Class chunk id
+	static quint32 m_ChunkId;
 
 };
 
