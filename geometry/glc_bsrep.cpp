@@ -282,6 +282,10 @@ void GLC_BSRep::writeHeader(const QDateTime& dateTime)
 	m_DataStream << m_Uuid;
 	// Add the version
 	m_DataStream << m_Version;
+
+	// Set the version of the data stream
+	m_DataStream.setVersion(QDataStream::Qt_4_6);
+
 	// Add the time stamp
 	m_DataStream << dateTime;
 }
@@ -297,6 +301,9 @@ bool GLC_BSRep::headerIsOk()
 	quint32 version;
 	m_DataStream >> uuid;
 	m_DataStream >> version;
+
+	// Set the version of the data stream
+	m_DataStream.setVersion(QDataStream::Qt_4_6);
 
 	bool headerOk= (uuid == m_Uuid);
 	headerOk= headerOk && (version == m_Version);
