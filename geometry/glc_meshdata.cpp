@@ -27,6 +27,9 @@
 #include "glc_meshdata.h"
 #include "../glc_state.h"
 
+// Class chunk id
+quint32 GLC_MeshData::m_ChunkId= 0xA704;
+
 // Default constructor
 GLC_MeshData::GLC_MeshData()
 : m_VboId(0)
@@ -102,6 +105,11 @@ GLC_MeshData::~GLC_MeshData()
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+// Return the class Chunk ID
+quint32 GLC_MeshData::chunckID()
+{
+	return m_ChunkId;
+}
 
 // Return the Position Vector
 GLfloatVector GLC_MeshData::positionVector() const
@@ -336,38 +344,36 @@ bool GLC_MeshData::useVBO(bool use, GLC_MeshData::VboType type)
 
 }
 // Non Member methods
-#define GLC_BINARY_CHUNK_ID 0xA704
-
 // Non-member stream operator
-QDataStream &operator<<(QDataStream &stream, const GLC_MeshData &engine)
+QDataStream &operator<<(QDataStream &stream, const GLC_MeshData &meshData)
 {
-	quint32 chunckId= GLC_BINARY_CHUNK_ID;
+	quint32 chunckId= GLC_MeshData::m_ChunkId;
 	stream << chunckId;
 
-	stream << engine.positionVector();
-	stream << engine.normalVector();
-	stream << engine.texelVector();
-	stream << engine.colorVector();
+	stream << meshData.positionVector();
+	stream << meshData.normalVector();
+	stream << meshData.texelVector();
+	stream << meshData.colorVector();
 
 	// List of lod serialisation
-	const int lodCount= engine.m_LodList.size();
+	const int lodCount= meshData.m_LodList.size();
 	QList<GLC_Lod> lodsList;
 	for (int i= 0; i < lodCount; ++i)
 	{
-		lodsList.append(*(engine.m_LodList[i]));
+		lodsList.append(*(meshData.m_LodList[i]));
 	}
 	stream << lodsList;
 
 	return stream;
 }
 
-QDataStream &operator>>(QDataStream &stream, GLC_MeshData &engine)
+QDataStream &operator>>(QDataStream &stream, GLC_MeshData &meshData)
 {
 	quint32 chunckId;
 	stream >> chunckId;
-	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
+	Q_ASSERT(chunckId == GLC_MeshData::m_ChunkId);
 
-	engine.clear();
+	meshData.clear();
 
 	GLfloatVector position, normal, texel, color;
 
@@ -376,10 +382,10 @@ QDataStream &operator>>(QDataStream &stream, GLC_MeshData &engine)
 	stream >> texel;
 	stream >> color;
 
-	*(engine.positionVectorHandle())= position;
-	*(engine.normalVectorHandle())= normal;
-	*(engine.texelVectorHandle())= texel;
-	*(engine.colorVectorHandle())= color;
+	*(meshData.positionVectorHandle())= position;
+	*(meshData.normalVectorHandle())= normal;
+	*(meshData.texelVectorHandle())= texel;
+	*(meshData.colorVectorHandle())= color;
 
 	// List of lod serialisation
 	QList<GLC_Lod> lodsList;
@@ -387,7 +393,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_MeshData &engine)
 	const int lodCount= lodsList.size();
 	for (int i= 0; i < lodCount; ++i)
 	{
-		engine.m_LodList.append(new GLC_Lod(lodsList.at(i)));
+		meshData.m_LodList.append(new GLC_Lod(lodsList.at(i)));
 	}
 
 	return stream;

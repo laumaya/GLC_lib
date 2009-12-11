@@ -79,6 +79,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
+
 	//! Return the number of lod
 	inline int lodCount() const
 	{return m_LodList.size();}
@@ -225,6 +228,8 @@ private:
 	//! The size of Color VBO
 	int m_ColorSize;
 
+	//! Class chunk id
+	static quint32 m_ChunkId;
 };
 
 //! Non-member stream operator
