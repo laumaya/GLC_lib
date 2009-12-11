@@ -69,6 +69,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
 
 	//! Get Lenght of the Cylinder
 	inline double length(void) const
@@ -157,6 +159,8 @@ private:
 	//! Cylinder is capped
 	bool m_EndedIsCaped;
 
+	//! Class chunk id
+	static quint32 m_ChunkId;
 
 };
 #endif //GLC_CYLINDER_H_
