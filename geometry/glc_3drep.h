@@ -73,6 +73,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
+
 	//! Return the type of representation
 	virtual int type() const;
 
@@ -168,6 +171,10 @@ private:
 
 	//! The Type of representation
 	int* m_pType;
+
+	//! Class chunk id
+	static quint32 m_ChunkId;
+
 };
 
 //! Non-member stream operator

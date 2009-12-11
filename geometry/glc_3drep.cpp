@@ -26,6 +26,9 @@
 #include "../glc_factory.h"
 #include "glc_mesh.h"
 
+// Class chunk id
+quint32 GLC_3DRep::m_ChunkId= 0xA702;
+
 // Default constructor
 GLC_3DRep::GLC_3DRep()
 : GLC_Rep()
@@ -96,6 +99,12 @@ GLC_3DRep::~GLC_3DRep()
 //////////////////////////////////////////////////////////////////////
 // Get functions
 //////////////////////////////////////////////////////////////////////
+// Return the class Chunk ID
+quint32 GLC_3DRep::chunckID()
+{
+	return m_ChunkId;
+}
+
 // Return the type of representation
 int GLC_3DRep::type() const
 {
@@ -334,12 +343,10 @@ void GLC_3DRep::clear()
 	}
 }
 // Non Member methods
-#define GLC_BINARY_CHUNK_ID 0xA702
-
 // Non-member stream operator
 QDataStream &operator<<(QDataStream & stream, const GLC_3DRep & rep)
 {
-	quint32 chunckId= GLC_BINARY_CHUNK_ID;
+	quint32 chunckId= GLC_3DRep::m_ChunkId;
 	stream << chunckId;
 
 	// The representation name
@@ -377,7 +384,7 @@ QDataStream &operator>>(QDataStream & stream, GLC_3DRep & rep)
 
 	quint32 chunckId;
 	stream >> chunckId;
-	Q_ASSERT(chunckId == GLC_BINARY_CHUNK_ID);
+	Q_ASSERT(chunckId == GLC_3DRep::m_ChunkId);
 
 	// The rep name
 	QString name;
