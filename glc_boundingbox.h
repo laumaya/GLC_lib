@@ -44,6 +44,9 @@
 
 class GLC_LIB_EXPORT GLC_BoundingBox
 {
+	friend QDataStream &operator<<(QDataStream &, const GLC_BoundingBox &);
+	friend QDataStream &operator>>(QDataStream &, GLC_BoundingBox &);
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor */
 //@{
@@ -63,6 +66,9 @@ public:
 /*! \name Get Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
+public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
 
 	//! Get the empty state of the bounding Box
 	bool isEmpty(void) const
@@ -120,10 +126,17 @@ public:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
+	//! Lower corner point
 	GLC_Point4d m_Lower;
+
+	//! Upper corner point
 	GLC_Point4d m_Upper;
+
+	//! Flag to know if the bounding box is empty
 	bool m_IsEmpty;
 
+	//! Class chunk id
+	static quint32 m_ChunkId;
 };
 
 //! Non-member stream operator
