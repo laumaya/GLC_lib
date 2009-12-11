@@ -103,10 +103,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an GLC_World from an input 3DXML File
-	GLC_World* CreateWorldFrom3dxml(QFile &, bool StructureOnly);
+	GLC_World* createWorldFrom3dxml(QFile &, bool StructureOnly);
 
 	//! Create 3DRep from an 3DXML rep
-	GLC_3DRep Create3DrepFrom3dxmlRep(const QString&);
+	GLC_3DRep create3DrepFrom3dxmlRep(const QString&);
 
 	//! Get the list of attached files
 	inline QStringList listOfAttachedFileName() const

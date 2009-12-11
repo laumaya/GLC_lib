@@ -105,7 +105,7 @@ GLC_3dxmlToWorld::~GLC_3dxmlToWorld()
 //////////////////////////////////////////////////////////////////////
 
 // Create an GLC_World from an input 3DXML File
-GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file, bool structureOnly)
+GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnly)
 {
 	m_LoadStructureOnly= structureOnly;
 	m_FileName= file.fileName();
@@ -151,7 +151,7 @@ GLC_World* GLC_3dxmlToWorld::CreateWorldFrom3dxml(QFile &file, bool structureOnl
 }
 
 // Create 3DRep from an 3DXML rep
-GLC_3DRep GLC_3dxmlToWorld::Create3DrepFrom3dxmlRep(const QString& fileName)
+GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 {
 	GLC_3DRep resultRep;
 	QString entryFileName;
