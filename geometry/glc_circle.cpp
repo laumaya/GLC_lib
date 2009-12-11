@@ -161,17 +161,18 @@ void GLC_Circle::createWire()
 	if (m_Step < 2) m_Step= 2;
 
 	// Float vector
-	GLfloatVector* pFloatVector= m_WireData.positionVectorHandle();
+	GLfloatVector floatVector;
 
 	// Resize the Vertex vector
 	const int size= (m_Step + 1) * 3;
-	pFloatVector->resize(size);
+	floatVector.resize(size);
 	// Fill Vertex Vector
 	const double angleOnStep= m_dAngle / static_cast<double>(m_Step);
 	for (GLuint i= 0; i <= m_Step; ++i)
 	{
-		(*pFloatVector)[(i * 3)]= static_cast<float>(m_Radius * cos(static_cast<double>(i) * angleOnStep));
-		(*pFloatVector)[(i * 3) + 1]= static_cast<float>(m_Radius * sin(static_cast<double>(i) * angleOnStep));
-		(*pFloatVector)[(i * 3) + 2]= 0.0f;
+		floatVector[(i * 3)]= static_cast<float>(m_Radius * cos(static_cast<double>(i) * angleOnStep));
+		floatVector[(i * 3) + 1]= static_cast<float>(m_Radius * sin(static_cast<double>(i) * angleOnStep));
+		floatVector[(i * 3) + 2]= 0.0f;
 	}
+	m_WireData.addPolyline(floatVector);
 }
