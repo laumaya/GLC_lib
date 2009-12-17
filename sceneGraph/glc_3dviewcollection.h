@@ -243,10 +243,10 @@ public:
 	 * The selection group is 1
 	 * User group are identified by user id
 	 */
-	void glExecute(GLuint, bool);
+	void glExecute(GLuint, glc::RenderFlag);
 
 	//! Display all shader group
-	void glExecuteShaderGroup(bool);
+	void glExecuteShaderGroup(glc::RenderFlag);
 
 //@}
 
@@ -257,10 +257,10 @@ public:
 
 private:
 	//! Display collection's member
-	void glDraw(GLuint, bool);
+	void glDraw(GLuint, glc::RenderFlag);
 
 	//! Draw instances of a PointerViewInstanceHash
-	inline void glDrawInstancesOf(PointerViewInstanceHash*, bool);
+	inline void glDrawInstancesOf(PointerViewInstanceHash*, glc::RenderFlag);
 
 //@}
 
@@ -309,7 +309,7 @@ private:
 };
 
 // Draw instances of a PointerViewInstanceHash
-void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, bool transparentMaterial)
+void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc::RenderFlag renderFlag)
 {
 	bool forceDisplay= false;
 	if (GLC_State::isInSelectionMode())
@@ -324,22 +324,22 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, boo
 		{
 			if ((iEntry.value()->isVisible() == m_IsInShowSate))
 			{
-				iEntry.value()->glExecute(transparentMaterial, m_UseLod, m_pViewport);
+				iEntry.value()->glExecute(renderFlag, m_UseLod, m_pViewport);
 			}
 			++iEntry;
 		}
 	}
 	else
 	{
-		if (!transparentMaterial)
+		if (!(renderFlag == glc::TransparentRenderFlag))
 		{
 			while (iEntry != pHash->constEnd())
 			{
 				if ((iEntry.value()->isVisible() == m_IsInShowSate))
 				{
-					if (!iEntry.value()->isTransparent() || iEntry.value()->renderPropertiesHandle()->isSelected())
+					if (!iEntry.value()->isTransparent() || iEntry.value()->renderPropertiesHandle()->isSelected() || (renderFlag == glc::WireRenderFlag))
 					{
-						iEntry.value()->glExecute(transparentMaterial, m_UseLod, m_pViewport);
+						iEntry.value()->glExecute(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
 				++iEntry;
@@ -354,7 +354,7 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, boo
 				{
 					if (iEntry.value()->hasTransparentMaterials())
 					{
-						iEntry.value()->glExecute(transparentMaterial, m_UseLod, m_pViewport);
+						iEntry.value()->glExecute(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
 				++iEntry;

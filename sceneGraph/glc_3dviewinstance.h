@@ -255,7 +255,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the instance
-	void glExecute(bool transparent= false, bool useLoad= false, GLC_Viewport* pView= NULL);
+	void glExecute(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLoad= false, GLC_Viewport* pView= NULL);
 
 	//! Display the instance in Body selection mode
 	void glExecuteForBodySelection();
@@ -332,6 +332,10 @@ bool GLC_3DViewInstance::isTransparent() const
 {
 	if (m_3DRep.isEmpty()) return false;
 	if (m_RenderProperties.renderingMode() == glc::OverwriteTransparency) return true;
+	if (m_RenderProperties.renderingMode() == glc::OverwriteMaterial)
+	{
+		return m_RenderProperties.overwriteMaterial()->isTransparent();
+	}
 	const int size= m_3DRep.numberOfBody();
 	bool result= true;
 	int i= 0;

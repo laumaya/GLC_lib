@@ -642,7 +642,7 @@ int GLC_3DViewCollection::numberOfUsedShadingGroup() const
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_3DViewCollection::glExecute(GLuint groupId, bool transparent)
+void GLC_3DViewCollection::glExecute(GLuint groupId, glc::RenderFlag renderFlag)
 {
 	if (!isEmpty())
 	{
@@ -656,11 +656,11 @@ void GLC_3DViewCollection::glExecute(GLuint groupId, bool transparent)
 		{
 			glEnable(GL_LIGHTING);
 		}
-		glDraw(groupId, transparent);
+		glDraw(groupId, renderFlag);
 	}
 }
 // Display all shader group
-void GLC_3DViewCollection::glExecuteShaderGroup(bool transparent)
+void GLC_3DViewCollection::glExecuteShaderGroup(glc::RenderFlag renderFlag)
 {
 	if (!isEmpty())
 	{
@@ -674,19 +674,19 @@ void GLC_3DViewCollection::glExecuteShaderGroup(bool transparent)
 		HashList::iterator iEntry= m_ShadedPointerViewInstanceHash.begin();
 	    while (iEntry != m_ShadedPointerViewInstanceHash.constEnd())
 	    {
-	    	glDraw(iEntry.key(), transparent);
+	    	glDraw(iEntry.key(), renderFlag);
 	    	++iEntry;
 	    }
 	}
 }
 
 // Display the specified collection group
-void GLC_3DViewCollection::glDraw(GLuint groupId, bool transparent)
+void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 {
 	// Set render Mode and OpenGL state
 	if (!GLC_State::isInSelectionMode() && (groupId == 0))
 	{
-		if (transparent)
+		if (renderFlag == glc::TransparentRenderFlag)
 		{
 	        glEnable(GL_BLEND);
 	        glDepthMask(GL_FALSE);
@@ -704,7 +704,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, bool transparent)
 	// Normal GLC_3DViewInstance
 	if ((groupId == 0) && !m_MainInstances.isEmpty())
 	{
-	    glDrawInstancesOf(&m_MainInstances, transparent);
+	    glDrawInstancesOf(&m_MainInstances, renderFlag);
 
 	}
 	// Selected GLC_3DVIewInstance
@@ -712,7 +712,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, bool transparent)
 	{
 		if (GLC_State::selectionShaderUsed()) GLC_SelectionMaterial::useShader();
 
-		glDrawInstancesOf(&m_SelectedInstances, transparent);
+		glDrawInstancesOf(&m_SelectedInstances, renderFlag);
 
 		if (GLC_State::selectionShaderUsed()) GLC_SelectionMaterial::unUseShader();
 	}
@@ -724,13 +724,13 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, bool transparent)
 	    	PointerViewInstanceHash* pNodeHash= m_ShadedPointerViewInstanceHash.value(groupId);
 
 	    	GLC_Shader::use(groupId);
-	    	glDrawInstancesOf(pNodeHash, transparent);
+	    	glDrawInstancesOf(pNodeHash, renderFlag);
 	    	GLC_Shader::unuse();
 	    }
 	}
 
 	// Restore OpenGL state
-	if (transparent && !GLC_State::isInSelectionMode() && (groupId == 0))
+	if (renderFlag && !GLC_State::isInSelectionMode() && (groupId == 0))
 	{
 		glDisable(GL_BLEND);
 		glDepthMask(GL_TRUE);
