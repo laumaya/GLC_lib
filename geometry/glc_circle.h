@@ -28,7 +28,6 @@
 #define GLC_CIRCLE_H_
 
 #include "glc_geometry.h"
-#include "glc_wiredata.h"
 
 #include "../glc_config.h"
 
@@ -148,9 +147,6 @@ private:
 
 	//! Circle Step
 	GLuint m_Step;
-
-	//! Geom engine
-	GLC_WireData m_WireData;
 
 };
 #endif //GLC_CIRCLE_H_

@@ -39,7 +39,6 @@ GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
 , m_nDiscret(GLC_DISCRET)
 , m_dAngle(Angle)
 , m_Step(0)
-, m_WireData()
 {
 
 }
@@ -49,7 +48,6 @@ GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
 , m_Radius(sourceCircle.m_Radius)
 , m_nDiscret(sourceCircle.m_nDiscret)
 , m_dAngle(sourceCircle.m_dAngle)
-, m_WireData(sourceCircle.m_WireData)
 {
 
 }
