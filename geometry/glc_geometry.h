@@ -28,7 +28,7 @@
 #define GLC_GEOMETRY_H_
 #include "../shading/glc_material.h"
 #include "../shading/glc_renderproperties.h"
-
+#include "glc_wiredata.h"
 #include "../glc_boundingbox.h"
 
 #include "glc_config.h"
@@ -274,6 +274,13 @@ protected:
 
 	//! Color per vertex usage
 	bool m_UseColorPerVertex;
+
+	//! Selection state
+	bool m_IsSelected;
+
+	//! Wire Data
+	GLC_WireData m_WireData;
+
 
 //////////////////////////////////////////////////////////////////////
 // Private members
