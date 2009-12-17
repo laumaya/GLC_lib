@@ -125,7 +125,13 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Create the box mesh
-	void createMesh();
+	void createMeshAndWire();
+
+	//! Create the wire of the mesh
+	void createWire();
+
+	//! Clear mesh and wire
+	void clearMeshAndWireData();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -141,6 +147,5 @@ private:
 
 	//! Z Length
 	double m_dLgZ;
-
 };
 #endif //GLC_BOX_H_

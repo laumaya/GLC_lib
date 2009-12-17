@@ -63,10 +63,9 @@ GLC_BoundingBox& GLC_Box::boundingBox(void)
 {
 	if (GLC_Mesh::isEmpty())
 	{
-		createMesh();
+		createMeshAndWire();
 	}
 	return GLC_Mesh::boundingBox();
-
 }
 
 // Return a copy of the current geometry
@@ -86,10 +85,7 @@ void GLC_Box::setLgX(double LgX)
 	Q_ASSERT(LgX > 0);
 	m_dLgX= LgX;
 
-	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
-
-	GLC_Mesh::clearOnlyMesh();
+	clearMeshAndWireData();
 }
 
 // Set Y length
@@ -98,10 +94,7 @@ void GLC_Box::setLgY(double LgY)
 	Q_ASSERT(LgY > 0);
 	m_dLgY= LgY;
 
-	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
-
-	GLC_Mesh::clearOnlyMesh();
+	clearMeshAndWireData();
 }
 
 // Set Z length
@@ -110,10 +103,7 @@ void GLC_Box::setLgZ(double LgZ)
 	Q_ASSERT(LgZ > 0);
 	m_dLgZ= LgZ;
 
-	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
-
-	GLC_Mesh::clearOnlyMesh();
+	clearMeshAndWireData();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -125,15 +115,16 @@ void GLC_Box::glDraw(const GLC_RenderProperties& renderProperties)
 {
 	if (GLC_Mesh::isEmpty())
 	{
-		createMesh();
+		createMeshAndWire();
 	}
 
 	GLC_Mesh::glDraw(renderProperties);
 }
 // Create the box mesh
-void GLC_Box::createMesh()
+void GLC_Box::createMeshAndWire()
 {
 	Q_ASSERT(GLC_Mesh::isEmpty());
+	createWire();
 
 	const GLfloat lgX= static_cast<const GLfloat>(m_dLgX / 2.0);
 	const GLfloat lgY= static_cast<const GLfloat>(m_dLgY / 2.0);
@@ -288,5 +279,63 @@ void GLC_Box::createMesh()
 	index.clear();
 
 	GLC_Mesh::finish();
+}
+
+// Create the wire of the mesh
+void GLC_Box::createWire()
+{
+	Q_ASSERT(m_WireData.isEmpty());
+
+	const GLfloat lgX= static_cast<const GLfloat>(m_dLgX / 2.0);
+	const GLfloat lgY= static_cast<const GLfloat>(m_dLgY / 2.0);
+	const GLfloat lgZ= static_cast<const GLfloat>(m_dLgZ / 2.0);
+
+	// Float vector
+	GLfloatVector floatVector;
+	floatVector << lgX << lgY << lgZ;
+	floatVector << lgX << lgY << -lgZ;
+	floatVector << -lgX << lgY << -lgZ;
+	floatVector << -lgX << lgY << lgZ;
+	floatVector << lgX << lgY << lgZ;
+	m_WireData.addPolyline(floatVector);
+	floatVector.clear();
+
+	floatVector << lgX << -lgY << lgZ;
+	floatVector << lgX << -lgY << -lgZ;
+	floatVector << -lgX << -lgY << -lgZ;
+	floatVector << -lgX << -lgY << lgZ;
+	floatVector << lgX << -lgY << lgZ;
+	m_WireData.addPolyline(floatVector);
+	floatVector.clear();
+
+	floatVector << lgX << lgY << lgZ;
+	floatVector << lgX << -lgY << lgZ;
+	m_WireData.addPolyline(floatVector);
+	floatVector.clear();
+
+	floatVector << lgX << lgY << -lgZ;
+	floatVector << lgX << -lgY << -lgZ;
+	m_WireData.addPolyline(floatVector);
+	floatVector.clear();
+
+	floatVector << -lgX << lgY << -lgZ;
+	floatVector << -lgX << -lgY << -lgZ;
+	m_WireData.addPolyline(floatVector);
+	floatVector.clear();
+
+	floatVector << -lgX << lgY << lgZ;
+	floatVector << -lgX << -lgY << lgZ;
+	m_WireData.addPolyline(floatVector);
+	floatVector.clear();
+}
+
+// Clear mesh and wire
+void GLC_Box::clearMeshAndWireData()
+{
+	delete m_pBoundingBox;
+	m_pBoundingBox= NULL;
+
+	GLC_Mesh::clearOnlyMesh();
+	m_WireData.clear();
 }
 
