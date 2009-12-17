@@ -194,13 +194,13 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3df& pointf)
 // Combine the bounding Box with another bounding box
 GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
 {
-	if (m_IsEmpty)
+	if (m_IsEmpty && !box.m_IsEmpty)
 	{
 		m_Lower= box.m_Lower;
 		m_Upper= box.m_Upper;
 		m_IsEmpty= box.m_IsEmpty;
 	}
-	else
+	else if (! box.m_IsEmpty)
 	{
 		double lowerX= qMin(box.m_Lower.X(), m_Lower.X());
 		double lowerY= qMin(box.m_Lower.Y(), m_Lower.Y());
