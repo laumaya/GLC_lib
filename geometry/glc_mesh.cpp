@@ -37,7 +37,6 @@ GLC_Mesh::GLC_Mesh()
 , m_NumberOfFaces(0)
 , m_NumberOfVertice(0)
 , m_NumberOfNormals(0)
-, m_IsSelected(false)
 , m_ColorPearVertex(false)
 , m_MeshData()
 , m_CurrentLod(0)
@@ -53,7 +52,6 @@ GLC_Mesh::GLC_Mesh(const GLC_Mesh& mesh)
 , m_NumberOfFaces(mesh.m_NumberOfFaces)
 , m_NumberOfVertice(mesh.m_NumberOfVertice)
 , m_NumberOfNormals(mesh.m_NumberOfNormals)
-, m_IsSelected(false)
 , m_ColorPearVertex(mesh.m_ColorPearVertex)
 , m_MeshData(mesh.m_MeshData)
 , m_CurrentLod(0)
@@ -97,7 +95,6 @@ GLC_Mesh& GLC_Mesh::operator=(const GLC_Mesh& mesh)
 		m_NumberOfFaces= mesh.m_NumberOfFaces;
 		m_NumberOfVertice= mesh.m_NumberOfVertice;
 		m_NumberOfNormals= mesh.m_NumberOfNormals;
-		m_IsSelected= false;
 		m_ColorPearVertex= mesh.m_ColorPearVertex;
 		m_MeshData= mesh.m_MeshData;
 		m_CurrentLod= 0;
@@ -186,7 +183,8 @@ GLC_BoundingBox& GLC_Mesh::boundingBox()
 				m_pBoundingBox->combine(vector);
 			}
 		}
-
+		// Combine with the wiredata bounding box
+		m_pBoundingBox->combine(m_WireData.boundingBox());
 	}
 	return *m_pBoundingBox;
 
@@ -692,28 +690,6 @@ void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
-// Specific glExecute method
-void GLC_Mesh::glExecute(const GLC_RenderProperties& renderProperties)
-{
-	if (m_MaterialHash.isEmpty())
-	{
-		GLC_Material* pMaterial= new GLC_Material();
-		pMaterial->setName(name());
-		addMaterial(pMaterial);
-	}
-	m_IsSelected= renderProperties.isSelected();
-	glDraw(renderProperties);
-	m_IsSelected= false;
-	m_GeometryIsValid= true;
-
-
-
-/*
-	m_IsSelected= renderProperties.isSelected();
-	GLC_Geometry::glExecute(renderProperties);
-	m_IsSelected= false;
-	*/
-}
 
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
@@ -1055,7 +1031,7 @@ void GLC_Mesh::finishNonVbo()
 // The normal display loop
 void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
-	const bool isTransparent= renderProperties.transparentMaterialRenderFlag();
+	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
 	if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
 	{
 		PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
@@ -1106,7 +1082,7 @@ void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderPro
 		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
 
 		// Test if the current material is renderable
-		bool materialIsrenderable = (pOverwriteMaterial->isTransparent() == renderProperties.transparentMaterialRenderFlag());
+		bool materialIsrenderable = (pOverwriteMaterial->isTransparent() == (renderProperties.renderingFlag() == glc::TransparentRenderFlag));
 
    		// Choose the primitives to render
 		if (m_IsSelected || materialIsrenderable)
@@ -1129,7 +1105,7 @@ void GLC_Mesh::OverwriteTransparencyRenderLoop(const GLC_RenderProperties& rende
 	Q_ASSERT(-1.0f != alpha);
 
 	// Test if the current material is renderable
-	bool materialIsrenderable = (true == renderProperties.transparentMaterialRenderFlag());
+	bool materialIsrenderable = (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
 
 	if (materialIsrenderable || m_IsSelected)
 	{
@@ -1200,7 +1176,7 @@ void GLC_Mesh::primitiveSelectionRenderLoop(bool vboIsUsed)
 // The primitive rendeder loop
 void GLC_Mesh::primitiveRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
-	const bool isTransparent= renderProperties.transparentMaterialRenderFlag();
+	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
 	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 	{
@@ -1226,7 +1202,7 @@ void GLC_Mesh::primitiveRenderLoop(const GLC_RenderProperties& renderProperties,
 // The primitive Selected render loop
 void GLC_Mesh::primitiveSelectedRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
-	const bool isTransparent= renderProperties.transparentMaterialRenderFlag();
+	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
 	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 	{

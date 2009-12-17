@@ -265,10 +265,6 @@ public:
 /*! \name OpenGL Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-public:
-	//! Specific glExecute method
-	virtual void glExecute(const GLC_RenderProperties&);
-
 protected:
 
 	//! Virtual interface for OpenGL Geometry set up.
@@ -372,9 +368,6 @@ private:
 
 	//! Mesh number of normals
 	unsigned int m_NumberOfNormals;
-
-	//! Selection state
-	bool m_IsSelected;
 
 	//! Color pear vertex
 	bool m_ColorPearVertex;
