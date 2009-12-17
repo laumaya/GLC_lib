@@ -25,6 +25,7 @@
 //! \file glc_wiredata.cpp Implementation for the GLC_WireData class.
 
 #include "glc_wiredata.h"
+#include "../glc_ext.h"
 #include "../glc_state.h"
 
 // Class chunk id
