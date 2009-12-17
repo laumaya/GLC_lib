@@ -37,7 +37,7 @@ GLC_RenderProperties::GLC_RenderProperties()
 , m_OverwriteTransparency(-1.0f)
 , m_pBodySelectedPrimitvesId(NULL)
 , m_pOverwritePrimitiveMaterialMaps(NULL)
-, m_Transparent(false)
+, m_RenderingFlag(glc::ShadingFlag)
 , m_CurrentBody(0)
 , m_MaterialsUsage()
 {
@@ -56,7 +56,7 @@ GLC_RenderProperties::GLC_RenderProperties(const GLC_RenderProperties& renderPro
 , m_OverwriteTransparency(renderProperties.m_OverwriteTransparency)
 , m_pBodySelectedPrimitvesId(NULL)
 , m_pOverwritePrimitiveMaterialMaps(NULL)
-, m_Transparent(renderProperties.m_Transparent)
+, m_RenderingFlag(renderProperties.m_RenderingFlag)
 , m_CurrentBody(renderProperties.m_CurrentBody)
 , m_MaterialsUsage(renderProperties.m_MaterialsUsage)
 {
@@ -117,7 +117,7 @@ GLC_RenderProperties& GLC_RenderProperties::operator=(const GLC_RenderProperties
 		m_OverwriteTransparency= renderProperties.m_OverwriteTransparency;
 		m_pBodySelectedPrimitvesId= NULL;
 		m_pOverwritePrimitiveMaterialMaps= NULL;
-		m_Transparent= renderProperties.m_Transparent;
+		m_RenderingFlag= renderProperties.m_RenderingFlag;
 		m_CurrentBody= renderProperties.m_CurrentBody;
 
 		// Update overwrite material usage

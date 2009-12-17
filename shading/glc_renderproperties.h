@@ -50,6 +50,14 @@ namespace glc
 		BodySelection,
 		PrimitiveSelection
 	};
+
+	//! Geometry rendring flag enumaration
+	enum RenderFlag
+	{
+		ShadingFlag= 800,
+		WireRenderFlag,
+		TransparentRenderFlag
+	};
 };
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_RenderProperties
@@ -137,9 +145,9 @@ public:
 	inline GLenum polygonMode() const
 	{return m_PolyMode;}
 
-	//! Return the transparent material render flag
-	inline bool transparentMaterialRenderFlag() const
-	{return m_Transparent;}
+	//! Return rendering flag render flag
+	inline glc::RenderFlag renderingFlag() const
+	{return m_RenderingFlag;}
 
 	//! Return true if rendering properties needs to render with transparency
 	bool needToRenderWithTransparency() const;
@@ -205,9 +213,9 @@ public:
 		m_PolyMode= Mode;
 	}
 
-	//! Set the transparency material rendering flag
-	inline void setTransparentMaterialRenderFlag(bool flag)
-	{m_Transparent= flag;}
+	//! Set the rendering flag
+	inline void setRenderingFlag(glc::RenderFlag flag)
+	{m_RenderingFlag= flag;}
 
 	//! Set the current body index
 	inline void setCurrentBodyIndex(int index)
@@ -255,7 +263,7 @@ private:
 	QHash<int, QHash<GLC_uint, GLC_Material* >* >* m_pOverwritePrimitiveMaterialMaps;
 
 	//! Transparent material render flag
-	bool m_Transparent;
+	glc::RenderFlag m_RenderingFlag;
 
 	//! The current rendere body
 	int m_CurrentBody;
