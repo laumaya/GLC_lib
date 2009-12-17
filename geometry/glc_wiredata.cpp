@@ -137,7 +137,7 @@ GLC_BoundingBox& GLC_WireData::boundingBox()
 
 		if (m_Positions.isEmpty())
 		{
-			qDebug() << "GLC_WireData::getBoundingBox empty m_Positions";
+			//qDebug() << "GLC_WireData::getBoundingBox empty m_Positions";
 		}
 		else
 		{
