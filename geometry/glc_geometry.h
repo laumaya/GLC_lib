@@ -216,6 +216,11 @@ public:
 	inline void setName(const QString name)
 	{m_Name= name;}
 
+	//! Add a Polyline to the geometry and returns its id
+	inline GLC_uint addPolyline(const GLfloatVector& vector)
+	{return m_WireData.addPolyline(vector);}
+
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
