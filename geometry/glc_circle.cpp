@@ -172,5 +172,5 @@ void GLC_Circle::createWire()
 		floatVector[(i * 3) + 1]= static_cast<float>(m_Radius * sin(static_cast<double>(i) * angleOnStep));
 		floatVector[(i * 3) + 2]= 0.0f;
 	}
-	m_WireData.addPolyline(floatVector);
+	GLC_Geometry::addPolyline(floatVector);
 }
