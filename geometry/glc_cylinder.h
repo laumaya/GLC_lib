@@ -137,8 +137,11 @@ private:
 //@{
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Create the cylinder mesh
-	void createMesh();
+	//! Create the cylinder mesh and wire
+	void createMeshAndWire();
+
+	//! Clear mesh and wire
+	void clearMeshAndWireData();
 
 //@}
 

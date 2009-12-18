@@ -83,7 +83,7 @@ GLC_BoundingBox& GLC_Cylinder::boundingBox()
 {
 	if (GLC_Mesh::isEmpty())
 	{
-		createMesh();
+		createMeshAndWire();
 	}
 	return GLC_Mesh::boundingBox();
 }
@@ -97,10 +97,7 @@ void GLC_Cylinder::setLength(double Length)
 	Q_ASSERT(Length > 0.0);
 	m_Length= Length;
 
-	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
-
-	GLC_Mesh::clearOnlyMesh();
+	clearMeshAndWireData();
 }
 
 // Set Cylinder radius
@@ -109,10 +106,7 @@ void GLC_Cylinder::setRadius(double Radius)
 	Q_ASSERT(Radius > 0.0);
 	m_Radius= Radius;
 
-	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
-
-	GLC_Mesh::clearOnlyMesh();
+	clearMeshAndWireData();
 }
 
 // Set Discretion
@@ -124,10 +118,7 @@ void GLC_Cylinder::setDiscretion(int TargetDiscret)
 		m_Discret= TargetDiscret;
 		if (m_Discret < 6) m_Discret= 6;
 
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-
-		GLC_Mesh::clearOnlyMesh();
+		clearMeshAndWireData();
 	}
 }
 
@@ -138,10 +129,7 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 	{
 		m_EndedIsCaped= CapsEnded;
 
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-
-		GLC_Mesh::clearOnlyMesh();
+		clearMeshAndWireData();
 	}
 }
 
@@ -155,16 +143,17 @@ void GLC_Cylinder::glDraw(const GLC_RenderProperties& renderProperties)
 
 	if (GLC_Mesh::isEmpty())
 	{
-		createMesh();
+		createMeshAndWire();
 	}
 
 	GLC_Mesh::glDraw(renderProperties);
 }
 
 // Create the cylinder mesh
-void GLC_Cylinder::createMesh()
+void GLC_Cylinder::createMeshAndWire()
 {
 	Q_ASSERT(GLC_Mesh::isEmpty());
+	Q_ASSERT(m_WireData.isEmpty());
 
 	// Create cosinus and sinus array according to the discretion and radius
 	const int vertexNumber= m_Discret + 1;
@@ -189,9 +178,14 @@ void GLC_Cylinder::createMesh()
 		sinArray[i]= static_cast<GLfloat>(m_Radius * sinValue);
 	}
 
+	// Mesh Data
 	GLfloatVector verticeVector;
 	GLfloatVector normalsVector;
 	GLfloatVector texelVector;
+
+	// Wire Data
+	GLfloatVector bottomWireData(vertexNumber * 3);
+	GLfloatVector topWireData(vertexNumber * 3);
 
 	if (m_EndedIsCaped)
 	{
@@ -209,7 +203,7 @@ void GLC_Cylinder::createMesh()
 	}
 	for (int i= 0; i < vertexNumber; ++i)
 	{
-		// Bottom
+		// Bottom Mesh
 		verticeVector[3 * i]= cosArray[i];
 		verticeVector[3 * i + 1]= sinArray[i];
 		verticeVector[3 * i + 2]= 0.0f;
@@ -220,6 +214,11 @@ void GLC_Cylinder::createMesh()
 
 		texelVector[2 * i]= static_cast<float>(i) / static_cast<float>(m_Discret);
 		texelVector[2 * i + 1]= 0.0f;
+
+		// Bottom Wire
+		bottomWireData[3 * i]= cosArray[i];
+		bottomWireData[3 * i + 1]= sinArray[i];
+		bottomWireData[3 * i + 2]= 0.0f;
 
 		// Top
 		verticeVector[3 * i + 3 * vertexNumber]= cosArray[i];
@@ -232,6 +231,11 @@ void GLC_Cylinder::createMesh()
 
 		texelVector[2 * i + 2 * vertexNumber]= texelVector[i];
 		texelVector[2 * i + 1 + 2 * vertexNumber]= 1.0f;
+
+		// Top Wire
+		topWireData[3 * i]= cosArray[i];
+		topWireData[3 * i + 1]= sinArray[i];
+		topWireData[3 * i + 2]= static_cast<float>(m_Length);
 
 		if (m_EndedIsCaped)
 		{
@@ -265,6 +269,10 @@ void GLC_Cylinder::createMesh()
 	GLC_Mesh::addVertices(verticeVector);
 	GLC_Mesh::addNormals(normalsVector);
 	GLC_Mesh::addTexels(texelVector);
+
+	// Add polyline to wire data
+	GLC_Geometry::addPolyline(bottomWireData);
+	GLC_Geometry::addPolyline(topWireData);
 
 	// Set the material to use
 	GLC_Material* pCylinderMaterial;
@@ -309,4 +317,14 @@ void GLC_Cylinder::createMesh()
 	}
 
 	finish();
+}
+
+// Clear mesh and wire
+void GLC_Cylinder::clearMeshAndWireData()
+{
+	delete m_pBoundingBox;
+	m_pBoundingBox= NULL;
+
+	GLC_Mesh::clearOnlyMesh();
+	m_WireData.clear();
 }
