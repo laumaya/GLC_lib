@@ -171,6 +171,10 @@ public:
 	//! Get the number of vertex
 	virtual unsigned int numberOfVertex() const;
 
+	//! Return the line width
+	GLfloat lineWidth() const
+	{return m_LineWidth;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -219,6 +223,10 @@ public:
 	//! Add a Polyline to the geometry and returns its id
 	inline GLC_uint addPolyline(const GLfloatVector& vector)
 	{return m_WireData.addPolyline(vector);}
+
+	//! Set Line width
+	inline void setLineWidth(GLfloat lineWidth)
+	{m_LineWidth= lineWidth;}
 
 
 //@}
@@ -285,6 +293,9 @@ protected:
 
 	//! Wire Data
 	GLC_WireData m_WireData;
+
+	//! The line width
+	GLfloat m_LineWidth;
 
 
 //////////////////////////////////////////////////////////////////////
