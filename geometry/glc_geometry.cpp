@@ -40,6 +40,7 @@ GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 , m_UseColorPerVertex(false)
 , m_IsSelected(false)
 , m_WireData()
+, m_LineWidth(1.0f)
 , m_IsWire(typeIsWire)		// the geometry type
 , m_TransparentMaterialNumber(0)
 , m_Uid(glc::GLC_GenGeomID())
@@ -55,6 +56,7 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
 , m_IsSelected(false)
 , m_WireData(sourceGeom.m_WireData)
+, m_LineWidth(sourceGeom.m_LineWidth)
 , m_IsWire(sourceGeom.m_IsWire)
 , m_TransparentMaterialNumber(sourceGeom.m_TransparentMaterialNumber)
 , m_Uid(glc::GLC_GenGeomID())
@@ -87,6 +89,7 @@ GLC_Geometry& GLC_Geometry::operator=(const GLC_Geometry& sourceGeom)
 		m_UseColorPerVertex= sourceGeom.m_UseColorPerVertex;
 		m_IsSelected= false;
 		m_WireData= sourceGeom.m_WireData;
+		m_LineWidth= sourceGeom.m_LineWidth;
 		m_IsWire= sourceGeom.m_IsWire;
 		m_TransparentMaterialNumber= sourceGeom.m_TransparentMaterialNumber;
 		m_Uid= glc::GLC_GenGeomID();
@@ -235,13 +238,6 @@ void GLC_Geometry::glExecute(const GLC_RenderProperties& renderProperties)
 
 	glDraw(renderProperties);
 
-	if ((renderProperties.renderingFlag() == glc::WireRenderFlag) && !m_WireData.isEmpty())
-	{
-		glDisable(GL_LIGHTING);
-		glColor3f(0.0, 0.0, 0.0);
-		m_WireData.glDraw(renderProperties);
-	}
-
 	m_IsSelected= false;
 	m_GeometryIsValid= true;
 
@@ -259,8 +255,10 @@ void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 {
 	Q_ASSERT(!m_MaterialHash.isEmpty());
 
-	if(m_IsWire && (m_MaterialHash.size() == 1))
+	if(m_IsWire)
 	{
+		glLineWidth(m_LineWidth);
+		Q_ASSERT(m_MaterialHash.size() == 1);
 		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
 		glDisable(GL_LIGHTING);
 		pCurrentMaterial->glExecute();
