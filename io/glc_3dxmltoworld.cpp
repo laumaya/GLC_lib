@@ -900,8 +900,25 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		}
 		checkForXmlError("End of Faces not found");
 
-		goToElement("VertexBuffer");
+		while (startElementNotReached("Edges") && startElementNotReached("VertexBuffer"))
+		{
+			m_pStreamReader->readNext();
+		}
+
 		checkForXmlError("Element VertexBuffer not found");
+		if (m_pStreamReader->name() == "Edges")
+		{
+			while (endElementNotReached("Edges"))
+			{
+				m_pStreamReader->readNext();
+				if ( m_pStreamReader->name() == "Polyline")
+				{
+					loadPolyline(pMesh);
+					m_pStreamReader->readNext();
+				}
+			}
+		}
+
 
 		{
 			QString verticePosition= getContent("Positions").replace(',', ' ');
@@ -1262,6 +1279,23 @@ void GLC_3dxmlToWorld::loadFace(GLC_Mesh* pMesh, const int lod, double accuracy)
 
 }
 
+// Load polyline
+void GLC_3dxmlToWorld::loadPolyline(GLC_Mesh* pMesh)
+{
+	QString data= readAttribute("vertices", true);
+
+	data.replace(',', ' ');
+	QTextStream dataStream(&data);
+	GLfloatVector dataVector;
+	QString buff;
+	while ((!dataStream.atEnd()))
+	{
+		dataStream >> buff;
+		dataVector.append(buff.toFloat());
+	}
+	pMesh->addPolyline(dataVector);
+}
+
 // Clear material hash
 void GLC_3dxmlToWorld::clearMaterialHash()
 {
@@ -1597,8 +1631,24 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		}
 		checkForXmlError("End of Faces not found");
 
-		goToElement("VertexBuffer");
+		while (startElementNotReached("Edges") && startElementNotReached("VertexBuffer"))
+		{
+			m_pStreamReader->readNext();
+		}
+
 		checkForXmlError("Element VertexBuffer not found");
+		if (m_pStreamReader->name() == "Edges")
+		{
+			while (endElementNotReached("Edges"))
+			{
+				m_pStreamReader->readNext();
+				if ( m_pStreamReader->name() == "Polyline")
+				{
+					loadPolyline(pMesh);
+					m_pStreamReader->readNext();
+				}
+			}
+		}
 
 		{
 			QString verticePosition= getContent("Positions").replace(',', ' ');

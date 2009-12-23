@@ -192,6 +192,9 @@ private:
 	//! Load a face
 	void loadFace(GLC_Mesh*, const int lod, double accuracy);
 
+	//! Load polyline
+	void loadPolyline(GLC_Mesh*);
+
 	//! Clear material hash
 	void clearMaterialHash();
 
