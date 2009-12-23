@@ -26,6 +26,7 @@
 #ifndef GLC_WIREDATA_H_
 #define GLC_WIREDATA_H_
 
+#include <QColor>
 #include "../glc_global.h"
 #include "../glc_boundingbox.h"
 #include "../shading/glc_renderproperties.h"
@@ -38,7 +39,7 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_WireData
 {
-	friend QDataStream &operator<<(QDataStream &, GLC_WireData &);
+	friend QDataStream &operator<<(QDataStream &, const GLC_WireData &);
 	friend QDataStream &operator>>(QDataStream &, GLC_WireData &);
 
 //////////////////////////////////////////////////////////////////////
@@ -150,7 +151,7 @@ private:
 };
 
 //! Non-member stream operator
-QDataStream &operator<<(QDataStream &, GLC_WireData &);
+QDataStream &operator<<(QDataStream &, const GLC_WireData &);
 QDataStream &operator>>(QDataStream &, GLC_WireData &);
 
 #endif /* GLC_WIREDATA_H_ */

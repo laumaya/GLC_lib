@@ -288,7 +288,7 @@ void GLC_WireData::fillVBOs()
 
 // Non Member methods
 // Non-member stream operator
-QDataStream &operator<<(QDataStream &stream, GLC_WireData &wireData)
+QDataStream &operator<<(QDataStream &stream, const GLC_WireData &wireData)
 {
 	quint32 chunckId= GLC_WireData::m_ChunkId;
 	stream << chunckId;
@@ -296,7 +296,6 @@ QDataStream &operator<<(QDataStream &stream, GLC_WireData &wireData)
 	stream << wireData.m_NextPrimitiveLocalId;
 	stream << wireData.positionVector();
 	stream << wireData.m_PositionSize;
-	stream << wireData.boundingBox();
 
 	stream << wireData.m_PolylinesSizes;
 	stream << wireData.m_PolylinesOffset;
@@ -316,10 +315,6 @@ QDataStream &operator>>(QDataStream &stream, GLC_WireData &wireData)
 	stream >> wireData.m_NextPrimitiveLocalId;
 	stream >> wireData.m_Positions;
 	stream >> wireData.m_PositionSize;
-
-	GLC_BoundingBox boundingBox;
-	stream >> boundingBox;
-	wireData.m_pBoundingBox= new GLC_BoundingBox(boundingBox);
 
 	stream >> wireData.m_PolylinesSizes;
 	stream >> wireData.m_PolylinesOffset;
