@@ -175,6 +175,9 @@ public:
 	inline bool isEmpty() const
 	{return m_MeshData.isEmpty();}
 
+	//! Return the mesh wire color
+	inline QColor wireColor() const
+	{return m_WireColor;}
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -242,6 +245,10 @@ public:
 	//! Set the mesh next primitive local id
 	inline void setNextPrimitiveLocalId(GLC_uint id)
 	{m_NextPrimitiveLocalId= id;}
+
+	//! Set the mesh wire color
+	inline void setWireColor(const QColor& color)
+	{m_WireColor= color;}
 
 //@}
 
@@ -377,6 +384,9 @@ private:
 
 	//! The current LOD index
 	int m_CurrentLod;
+
+	//! The wire color
+	QColor m_WireColor;
 
 	//! Class chunk id
 	static quint32 m_ChunkId;

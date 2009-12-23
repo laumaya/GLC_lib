@@ -40,6 +40,7 @@ GLC_Mesh::GLC_Mesh()
 , m_ColorPearVertex(false)
 , m_MeshData()
 , m_CurrentLod(0)
+, m_WireColor(Qt::black)
 {
 
 }
@@ -55,6 +56,7 @@ GLC_Mesh::GLC_Mesh(const GLC_Mesh& mesh)
 , m_ColorPearVertex(mesh.m_ColorPearVertex)
 , m_MeshData(mesh.m_MeshData)
 , m_CurrentLod(0)
+, m_WireColor(mesh.m_WireColor)
 {
 	// Make a copy of m_PrimitiveGroups with new material id
 	PrimitiveGroupsHash::const_iterator iPrimitiveGroups= mesh.m_PrimitiveGroups.constBegin();
@@ -98,6 +100,7 @@ GLC_Mesh& GLC_Mesh::operator=(const GLC_Mesh& mesh)
 		m_ColorPearVertex= mesh.m_ColorPearVertex;
 		m_MeshData= mesh.m_MeshData;
 		m_CurrentLod= 0;
+		m_WireColor= mesh.m_WireColor;
 
 		// Make a copy of m_PrimitiveGroups with new material id
 		PrimitiveGroupsHash::const_iterator iPrimitiveGroups= mesh.m_PrimitiveGroups.constBegin();
@@ -602,6 +605,9 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& mater
 	stream >> meshName;
 	setName(meshName);
 
+	// The wire data
+	stream >> GLC_Geometry::m_WireData;
+
 	// The mesh next primitive local id
 	GLC_uint localId;
 	stream >> localId;
@@ -654,6 +660,9 @@ void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 
 	// The mesh name
 	stream << name();
+
+	// The wire data
+	stream << m_WireData;
 
 	// The mesh next primitive local id
 	stream << nextPrimitiveLocalId();
@@ -814,6 +823,29 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	// Draw mesh's wire if necessary
+	if ((renderProperties.renderingFlag() == glc::WireRenderFlag) && !m_WireData.isEmpty() && !GLC_Geometry::typeIsWire())
+	{
+		if (!GLC_State::isInSelectionMode())
+		{
+			glDisable(GL_LIGHTING);
+			// Set polyline colors
+			GLfloat color[4]= {static_cast<float>(m_WireColor.redF()),
+									static_cast<float>(m_WireColor.greenF()),
+									static_cast<float>(m_WireColor.blueF()),
+									static_cast<float>(m_WireColor.alphaF())};
+
+			glColor4fv(color);
+		}
+		glLineWidth(GLC_Geometry::lineWidth());
+		m_WireData.glDraw(renderProperties);
+
+		if (!GLC_State::isInSelectionMode())
+		{
+			glEnable(GL_LIGHTING);
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
