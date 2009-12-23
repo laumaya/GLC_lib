@@ -1198,11 +1198,8 @@ void GLC_3dxmlToWorld::loadFace(GLC_Mesh* pMesh, const int lod, double accuracy)
 
 	if (triangles.isEmpty() && strips.isEmpty() && fans.isEmpty())
 	{
-		QString message(QString("Empty face Found ") + m_FileName);
-		qDebug() << message << " " << m_pStreamReader->errorString();
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
-		clear();
-		throw(fileFormatException);
+		qDebug() << "GLC_3dxmlToWorld::loadFace : Empty face found";
+		return;
 	}
 
 	GLC_Material* pCurrentMaterial= NULL;
