@@ -646,6 +646,11 @@ void GLC_3DViewCollection::glExecute(GLuint groupId, glc::RenderFlag renderFlag)
 {
 	if (!isEmpty())
 	{
+		if (renderFlag == glc::WireRenderFlag)
+		{
+	        glEnable(GL_POLYGON_OFFSET_FILL);
+	        glPolygonOffset (1.0, 1.0);
+		}
 		if (GLC_State::isInSelectionMode())
 		{
 			glDisable(GL_BLEND);
@@ -657,6 +662,12 @@ void GLC_3DViewCollection::glExecute(GLuint groupId, glc::RenderFlag renderFlag)
 			glEnable(GL_LIGHTING);
 		}
 		glDraw(groupId, renderFlag);
+
+		if (renderFlag == glc::WireRenderFlag)
+		{
+	        glDisable(GL_POLYGON_OFFSET_FILL);
+		}
+
 	}
 }
 // Display all shader group
