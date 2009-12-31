@@ -95,7 +95,7 @@ public:
 	{return m_TrianglesId.at(index);}
 
 	//! Return the size of list of triangles index of the group
-	inline const int trianglesIndexSize() const
+	inline int trianglesIndexSize() const
 	{return m_TrianglesIndexSize;}
 
 	//! Return the size of list of triangles index of the group
@@ -114,7 +114,7 @@ public:
 	{return m_TrianglesGroupOffset.first();}
 
 	//! Return the offset of triangles index
-	inline const int trianglesIndexOffseti() const
+	inline int trianglesIndexOffseti() const
 	{return m_TrianglesGroupOffseti.first();}
 
 	//! Return the offset of triangles index
@@ -138,7 +138,7 @@ public:
 	{return m_StripsId.at(index);}
 
 	//! Return the size of index of strips
-	inline const int stripsIndexSize() const
+	inline int stripsIndexSize() const
 	{return m_TrianglesStripSize;}
 
 	//! Return the list of index of strips
@@ -173,7 +173,7 @@ public:
 	{return m_FansId.at(index);}
 
 	//! Return the size of index of fans
-	inline const int fansIndexSize() const
+	inline int fansIndexSize() const
 	{return m_TrianglesFanSize;}
 
 	//! Return the list of index of fans

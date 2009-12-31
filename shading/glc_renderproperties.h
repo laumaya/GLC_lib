@@ -90,7 +90,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return true if it is selected
-	inline const bool isSelected() const
+	inline bool isSelected() const
 	{return m_IsSelected;}
 
 	//! Return the rendering mode

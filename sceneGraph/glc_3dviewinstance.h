@@ -91,11 +91,11 @@ public:
 	inline bool hasTransparentMaterials() const;
 
 	//! Return true if the instance as no geometry
-	inline const bool isEmpty() const
+	inline bool isEmpty() const
 	{return m_3DRep.isEmpty();}
 
 	//! Return true if the instance is selected
-	inline const bool isSelected(void) const
+	inline bool isSelected(void) const
 	{return m_RenderProperties.isSelected();}
 
 	//! Return the number of geometry
