@@ -68,15 +68,11 @@ public:
 public:
 	//! Return the cache absolute path
 	inline QString absolutePath() const
-	{
-		return m_Dir.absolutePath();
-	}
+	{return m_Dir.absolutePath();}
 
 	//! Return true if the cache dir exists
 	inline bool exists() const
-	{
-		return m_Dir.exists();
-	}
+	{return m_Dir.exists();}
 
 	//! Return true if the cache is is readable
 	bool isReadable() const;
@@ -95,6 +91,14 @@ public:
 
 	//! Add the specified file in the cache
 	bool addToCache(const QString&, const GLC_3DRep&);
+
+	//! Return true if the compression is used
+	inline bool compressionIsUsed() const
+	{return m_UseCompression;}
+
+	//! Return the cache compression level
+	inline int compressionLevel() const
+	{return m_CompressionLevel;}
 
 //@}
 
