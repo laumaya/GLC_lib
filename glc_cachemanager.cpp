@@ -31,28 +31,14 @@ GLC_CacheManager::GLC_CacheManager(const QString& path)
 , m_UseCompression(true)
 , m_CompressionLevel(-1)
 {
-	bool continu= true;
-
 	if (! path.isEmpty())
 	{
 		QFileInfo pathInfo(path);
-		if (pathInfo.isDir())
+		if (pathInfo.isDir() && pathInfo.isReadable())
 		{
 			m_Dir.setPath(path);
 		}
-		else continu= false;
 	}
-	else
-	{
-		// Set the cache to his default location
-		m_Dir.setPath(QDir::tempPath() + QDir::separator() + QString("GLC_Cache"));
-	}
-
-	if (!m_Dir.exists() && continu)
-	{
-		m_Dir.mkpath(m_Dir.absolutePath());
-	}
-
 }
 
 // Copy constructor
@@ -187,9 +173,8 @@ bool GLC_CacheManager::addToCache(const QString& context, const GLC_3DRep& rep)
 bool GLC_CacheManager::setCachePath(const QString& path)
 {
 	QFileInfo pathInfo(path);
-	bool result= pathInfo.exists();
-	result= result && pathInfo.isDir();
-	result= result && pathInfo.isWritable();
+	bool result= pathInfo.isDir();
+	result= result && pathInfo.isReadable();
 
 	if (result)
 	{
