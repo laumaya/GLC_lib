@@ -5,10 +5,12 @@ QT += opengl \
 
 
 CONFIG += exceptions \
-    release \
+    debug \
     warn_on
 TARGET = GLC_lib
 VERSION = 1.2.0
+
+DEFINES += CREATE_GLC_LIB_DLL
 
 unix:OBJECTS_DIR = ./Build
 unix:MOC_DIR = ./Build
@@ -78,29 +80,30 @@ HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_attributes.h \
 							sceneGraph/glc_worldhandle.h
 							
-HEADERS_GLC_GEOMETRY +=		geometry/glc_vbogeom.h \
+HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_circle.h \
 							geometry/glc_cylinder.h \
 							geometry/glc_point.h \
 							geometry/glc_box.h \
            					geometry/glc_geomtools.h \
-							geometry/glc_geomengine.h \
-							geometry/glc_simplegeomengine.h \
-							geometry/glc_extendedgeomengine.h \
+							geometry/glc_meshdata.h \
 							geometry/glc_primitivegroup.h \
-							geometry/glc_extendedmesh.h \
-							geometry/glc_enginelod.h \
+							geometry/glc_mesh.h \
+							geometry/glc_lod.h \
 							geometry/glc_rectangle.h \
 							geometry/glc_line.h \
 							geometry/glc_rep.h \
 							geometry/glc_3drep.h \
-							geometry/glc_pointsprite.h
+							geometry/glc_pointsprite.h \
+							geometry/glc_bsrep.h \
+							geometry/glc_wiredata.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
 						shading/glc_shader.h \
 						shading/glc_selectionmaterial.h \
-						shading/glc_light.h
+						shading/glc_light.h \
+						shading/glc_renderproperties.h
 						
 HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_imageplane.h \
@@ -117,7 +120,7 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_turntablemover.h
 
 
-HEADERS_GLC += glc_enum.h \
+HEADERS_GLC += glc_global.h \
            glc_object.h \
            glc_factory.h \
            glc_boundingbox.h \
@@ -126,7 +129,8 @@ HEADERS_GLC += glc_enum.h \
            glc_fileformatexception.h \
            glc_ext.h \
            glc_state.h \
-           glc_config.h
+           glc_config.h \
+           glc_cachemanager.h
            
 HEADERS_PQP +=		PQP/PQP_Compile.h \
 					PQP/TriDist.h \
@@ -193,30 +197,31 @@ SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
 			sceneGraph/glc_attributes.cpp \
 			sceneGraph/glc_worldhandle.cpp
 
-SOURCES +=	geometry/glc_vbogeom.cpp \
+SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_circle.cpp \
 			geometry/glc_cylinder.cpp \
 			geometry/glc_point.cpp \
 			geometry/glc_box.cpp \
 			geometry/glc_geomtools.cpp \
-			geometry/glc_geomengine.cpp \
-			geometry/glc_simplegeomengine.cpp \
-			geometry/glc_extendedgeomengine.cpp \
+			geometry/glc_meshdata.cpp \
 			geometry/glc_primitivegroup.cpp \
-			geometry/glc_extendedmesh.cpp \
-			geometry/glc_enginelod.cpp \
+			geometry/glc_mesh.cpp \
+			geometry/glc_lod.cpp \
 			geometry/glc_rectangle.cpp \
 			geometry/glc_line.cpp \
 			geometry/glc_rep.cpp \
 			geometry/glc_3drep.cpp \
-			geometry/glc_pointsprite.cpp
+			geometry/glc_pointsprite.cpp \
+			geometry/glc_bsrep.cpp \
+			geometry/glc_wiredata.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
 			shading/glc_texture.cpp \
 			shading/glc_light.cpp \
 			shading/glc_selectionmaterial.cpp \
-			shading/glc_shader.cpp
+			shading/glc_shader.cpp \
+			shading/glc_renderproperties.cpp
 
 SOURCES +=	viewport/glc_camera.cpp \
 			viewport/glc_imageplane.cpp \
@@ -232,7 +237,7 @@ SOURCES +=	viewport/glc_camera.cpp \
 			viewport/glc_settargetmover.cpp \
 			viewport/glc_turntablemover.cpp
 		
-SOURCES +=	glc_enum.cpp \
+SOURCES +=	glc_global.cpp \
 			glc_object.cpp \			
 			glc_factory.cpp \
 			glc_boundingbox.cpp \
@@ -240,7 +245,8 @@ SOURCES +=	glc_enum.cpp \
 			glc_openglexception.cpp \
 			glc_fileformatexception.cpp \
 			glc_ext.cpp \
-			glc_state.cpp
+			glc_state.cpp \
+			glc_cachemanager.cpp
            
 SOURCES += PQP/TriDist.cpp \
 		   PQP/PQP.cpp \
@@ -260,7 +266,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Exception \
     		   include/GLC_Factory \
     		   include/GLC_FileFormatException \
-    		   include/GLC_VboGeom \
+    		   include/GLC_Geometry \
     		   include/GLC_ImagePlane \
     		   include/GLC_3DViewInstance \
     		   include/GLC_Interpolator \
@@ -298,7 +304,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_TurnTableMover \
     		   include/GLC_Attribute \
     		   include/GLC_Rectangle \
-    		   include/GLC_ExtendedMesh \
+    		   include/GLC_Mesh \
     		   include/GLC_StructOccurence \
     		   include/GLC_StructInstance \
     		   include/GLC_StructReference \
@@ -306,7 +312,11 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Line \
     		   include/GLC_Rep \
     		   include/GLC_3DRep \
-    		   include/GLC_PointSprite
+    		   include/GLC_PointSprite \
+    		   include/GLC_CacheManager \
+    		   include/GLC_BSRep \
+    		   include/GLC_RenderProperties \
+    		   include/GLC_Global
     		   
     			   
 # Linux install configuration
@@ -333,7 +343,6 @@ unix {
 # Windows Install configuration
 win32 { 
     # Location of HEADERS and library
-	DEFINES *= CREATE_GLC_LIB_DLL
     LIB_DIR = C:\GLC_lib\lib
     INCLUDE_DIR = C:\GLC_lib\include
     include.path = $${INCLUDE_DIR}

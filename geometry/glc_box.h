@@ -28,8 +28,7 @@
 #define GLC_BOX_H_
 
 
-#include "glc_vbogeom.h"
-#include "glc_simplegeomengine.h"
+#include "glc_mesh.h"
 
 #include "../glc_config.h"
 
@@ -43,7 +42,7 @@
 
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_Box : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Box : public GLC_Mesh
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor */
@@ -68,25 +67,22 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get X length
-	double getLgX(void) const;
+	inline double getLgX(void) const
+	{return m_dLgX;}
 
 	//! Get Y length
-	double getLgY(void) const;
+	inline double getLgY(void) const
+	{return m_dLgY;}
 
 	//! Get Z length
-	double getLgZ(void) const;
+	inline double getLgZ(void) const
+	{return m_dLgZ;}
 
 	//! return the box bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the geometry
-	virtual GLC_VboGeom* clone() const;
-
-	//! Get number of faces
-	virtual unsigned int numberOfFaces() const;
-
-	//! Get number of vertex
-	virtual unsigned int numberOfVertex() const;
+	virtual GLC_Geometry* clone() const;
 
 //@}
 
@@ -120,13 +116,27 @@ private:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
-	virtual void glDraw(bool transparent= false);
+	virtual void glDraw(const GLC_RenderProperties&);
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Private services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Create the box mesh
+	void createMeshAndWire();
+
+	//! Create the wire of the mesh
+	void createWire();
+
+	//! Clear mesh and wire
+	void clearMeshAndWireData();
 //@}
 
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
-
 private:
 
 	//! X Length
@@ -137,9 +147,5 @@ private:
 
 	//! Z Length
 	double m_dLgZ;
-
-	//! Geom engine
-	GLC_SimpleGeomEngine m_SimpleGeomEngine;
-
 };
 #endif //GLC_BOX_H_

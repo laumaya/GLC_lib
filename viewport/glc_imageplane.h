@@ -27,7 +27,7 @@
 #ifndef GLC_IMAGEPLANE_H_
 #define GLC_IMAGEPLANE_H_
 
-#include "../geometry/glc_vbogeom.h"
+#include "../geometry/glc_geometry.h"
 
 #include "../glc_config.h"
 
@@ -40,7 +40,7 @@ class GLC_Viewport;
 /*! An GLC_ImagePlane is just a plane with a image texture.*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_ImagePlane : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_ImagePlane : public GLC_Geometry
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -61,7 +61,7 @@ public:
 public:
 
 	//! Return a copy of the geometry
-	virtual GLC_VboGeom* clone() const;
+	virtual GLC_Geometry* clone() const;
 
 	//! Return the geometry bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
@@ -90,7 +90,7 @@ public:
 public:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n*/
-	virtual void glDraw(bool transparent= false);
+	virtual void glDraw(const GLC_RenderProperties&);
 //@}
 
 //////////////////////////////////////////////////////////////////////

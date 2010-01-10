@@ -24,20 +24,24 @@
 
 #include "glc_3drep.h"
 #include "../glc_factory.h"
+#include "glc_mesh.h"
+
+// Class chunk id
+quint32 GLC_3DRep::m_ChunkId= 0xA702;
 
 // Default constructor
 GLC_3DRep::GLC_3DRep()
 : GLC_Rep()
-, m_pGeomList(new QList<GLC_VboGeom*>)
+, m_pGeomList(new QList<GLC_Geometry*>)
 , m_pType(new int(GLC_Rep::GLC_VBOGEOM))
 {
 
 }
 
 // Construct a 3DRep with a geometry
-GLC_3DRep::GLC_3DRep(GLC_VboGeom* pGeom)
+GLC_3DRep::GLC_3DRep(GLC_Geometry* pGeom)
 : GLC_Rep()
-, m_pGeomList(new QList<GLC_VboGeom*>)
+, m_pGeomList(new QList<GLC_Geometry*>)
 , m_pType(new int(GLC_Rep::GLC_VBOGEOM))
 {
 	m_pGeomList->append(pGeom);
@@ -95,6 +99,12 @@ GLC_3DRep::~GLC_3DRep()
 //////////////////////////////////////////////////////////////////////
 // Get functions
 //////////////////////////////////////////////////////////////////////
+// Return the class Chunk ID
+quint32 GLC_3DRep::chunckID()
+{
+	return m_ChunkId;
+}
+
 // Return the type of representation
 int GLC_3DRep::type() const
 {
@@ -117,6 +127,18 @@ bool GLC_3DRep::boundingBoxIsValid() const
 		++index;
 	}
 	return result;
+}
+
+// Return the 3DRep bounding Box
+GLC_BoundingBox GLC_3DRep::boundingBox() const
+{
+	GLC_BoundingBox resultBox;
+	const int size= m_pGeomList->size();
+	for (int i= 0; i < size; ++i)
+	{
+		resultBox.combine(m_pGeomList->at(i)->boundingBox());
+	}
+	return resultBox;
 }
 
 // Get number of faces
@@ -184,13 +206,14 @@ QSet<GLC_Material*> GLC_3DRep::materialSet() const
 }
 
 // Remove empty geometries
-void GLC_3DRep::removeEmptyGeometry()
+void GLC_3DRep::clean()
 {
-	QList<GLC_VboGeom*>::iterator iGeomList= m_pGeomList->begin();
+	QList<GLC_Geometry*>::iterator iGeomList= m_pGeomList->begin();
 	while(iGeomList != m_pGeomList->constEnd())
 	{
 		if ((*iGeomList)->numberOfVertex() == 0)
 		{
+			qDebug() << "Delete empty geom--------------------";
 			delete (*iGeomList);
 			iGeomList= m_pGeomList->erase(iGeomList);
 		}
@@ -258,6 +281,26 @@ void GLC_3DRep::replace(GLC_Rep* pRep)
 	}
 }
 
+// Replace the specified material by a new one
+void GLC_3DRep::replaceMaterial(GLC_uint oldId, GLC_Material* pNewMaterial)
+{
+	//qDebug() << "GLC_3DRep::replaceMaterial";
+	const int size= m_pGeomList->size();
+	for (int i= 0; i < size; ++i)
+	{
+		GLC_Geometry* pGeom= m_pGeomList->at(i);
+		if (pGeom->containsMaterial(oldId))
+		{
+			Q_ASSERT(!pGeom->containsMaterial(pNewMaterial->id()));
+			GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(m_pGeomList->at(i));
+			if (NULL != pMesh)
+			{
+				pMesh->replaceMaterial(oldId, pNewMaterial);
+			}
+		}
+	}
+}
+
 // UnLoad the representation
 bool GLC_3DRep::unload()
 {
@@ -298,4 +341,80 @@ void GLC_3DRep::clear()
 		delete m_pType;
 		m_pType= NULL;
 	}
+}
+// Non Member methods
+// Non-member stream operator
+QDataStream &operator<<(QDataStream & stream, const GLC_3DRep & rep)
+{
+	quint32 chunckId= GLC_3DRep::m_ChunkId;
+	stream << chunckId;
+
+	// The representation name
+	stream << rep.name();
+
+	// Save the list of 3DRep materials
+	QList<GLC_Material> materialsList;
+	QList<GLC_Material*> sourceMaterialsList= rep.materialSet().toList();
+	const int materialNumber= sourceMaterialsList.size();
+	for (int i= 0; i < materialNumber; ++i)
+	{
+		materialsList.append(*(sourceMaterialsList.at(i)));
+		materialsList[i].setId(sourceMaterialsList.at(i)->id());
+	}
+	// Save the list of materials
+	stream << materialsList;
+
+	// Save the list of mesh
+	const int meshNumber= rep.m_pGeomList->size();
+	stream << meshNumber;
+	for (int i= 0; i < meshNumber; ++i)
+	{
+		GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(rep.m_pGeomList->at(i));
+		if (NULL != pMesh)
+		{
+			pMesh->saveToDataStream(stream);
+		}
+	}
+
+	return stream;
+}
+QDataStream &operator>>(QDataStream & stream, GLC_3DRep & rep)
+{
+	Q_ASSERT(rep.isEmpty());
+
+	quint32 chunckId;
+	stream >> chunckId;
+	Q_ASSERT(chunckId == GLC_3DRep::m_ChunkId);
+
+	// The rep name
+	QString name;
+	stream >> name;
+	rep.setName(name);
+
+	// Retrieve the list of rep materials
+	QList<GLC_Material> materialsList;
+	stream >> materialsList;
+	MaterialHash materialHash;
+	// Update mesh materials hash table
+	QHash<GLC_uint, GLC_uint> materialIdMap;
+	const int materialsCount= materialsList.size();
+	for (int i= 0; i < materialsCount; ++i)
+	{
+		GLC_Material* pMaterial= new GLC_Material(materialsList.at(i));
+		pMaterial->setId(glc::GLC_GenID());
+		materialIdMap.insert(materialsList.at(i).id(), pMaterial->id());
+		materialHash.insert(pMaterial->id(), pMaterial);
+	}
+
+	int meshNumber;
+	stream >> meshNumber;
+	for (int i= 0; i < meshNumber; ++i)
+	{
+		GLC_Mesh* pMesh= new GLC_Mesh();
+		pMesh->loadFromDataStream(stream, materialHash, materialIdMap);
+
+		rep.addGeom(pMesh);
+	}
+
+	return stream;
 }

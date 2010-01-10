@@ -23,6 +23,7 @@
  *****************************************************************************/
 
 #include <QString>
+#include <QDateTime>
 
 #include "../glc_config.h"
 
@@ -97,6 +98,10 @@ public:
 	inline bool isLoaded() const
 	{return *m_pIsLoaded;}
 
+	//! Return the rep file las modified date and time
+	inline QDateTime lastModified() const
+	{return *m_pDateTime;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -120,6 +125,10 @@ public:
 
 	//! Replace the representation
 	virtual void replace(GLC_Rep*)= 0;
+
+	//! Set the last modified date and time
+	inline void setLastModified(const QDateTime& dateTime)
+	{*m_pDateTime= dateTime;}
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -149,6 +158,9 @@ private:
 
 	//! The Name of the rep
 	QString* m_pName;
+
+	//! The Date and time of the rep
+	QDateTime* m_pDateTime;
 
 };
 

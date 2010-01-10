@@ -47,7 +47,7 @@ class GLC_LIB_EXPORT GLC_StructInstance
 {
 public:
 	//! Default constructor
-	GLC_StructInstance(GLC_StructReference*);
+	GLC_StructInstance(GLC_StructReference* pRef= NULL);
 
 	//! Create instance with a rep
 	GLC_StructInstance(GLC_Rep*);

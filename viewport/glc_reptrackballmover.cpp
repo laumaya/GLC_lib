@@ -186,7 +186,7 @@ void GLC_RepTrackBallMover::glDraw()
 	m_Arc2.setMatrix(MatSavArc2);
 
 	// Display base class (Main circle)
-	m_MainCircle.glExecute(false, false);
+	m_MainCircle.glExecute(m_RenderProperties);
 
 	glPopMatrix();
 
@@ -221,7 +221,7 @@ void GLC_RepTrackBallMover::computeRadius()
 	// Circle radius in OpenGL unit = Radius(Pixel) * (dimend GL / dimens Pixel)
 	const double RayonSph= fabs((static_cast<double>(nRayonSph) * ChampsVision / winVSize));
 
-	if (!qFuzzyCompare(RayonSph, 0.0) && !qFuzzyCompare(RayonSph - m_Radius, 0.0) || (RayonSph < 2.0))
+	if ((!qFuzzyCompare(RayonSph, 0.0) && !qFuzzyCompare(RayonSph - m_Radius, 0.0)) || (RayonSph < 2.0))
 	{
 		// Main circle radius
 		m_MainCircle.setRadius(RayonSph);

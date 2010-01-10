@@ -20,39 +20,18 @@
  along with GLC-lib; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-*****************************************************************************/
+ *****************************************************************************/
+//! \file glc_octreenode.cpp implementation for the GLC_OctreeNode class.
 
-//! \file glc_enum.cpp implementation of usefull utilities
+#include "glc_octreenode.h"
 
-#include "glc_enum.h"
-
-QMutex glc::iDMutex;
-QMutex glc::geomIdMutex;
-QMutex glc::userIdMutex;
-
-GLC_uint glc::GLC_GenID(void)
+GLC_OctreeNode::GLC_OctreeNode()
 {
-	static GLC_uint Id= 0;
-	glc::iDMutex.lock();
-	Id++;
-	glc::iDMutex.unlock();
-	return Id;
+
+
 }
 
-GLC_uint glc::GLC_GenGeomID(void)
+GLC_OctreeNode::~GLC_OctreeNode()
 {
-	static GLC_uint Id= 0;
-	glc::userIdMutex.lock();
-	Id++;
-	glc::userIdMutex.unlock();
-	return Id;
-}
 
-GLC_uint glc::GLC_GenUserID(void)
-{
-	static GLC_uint Id= 0;
-	glc::userIdMutex.lock();
-	Id++;
-	glc::userIdMutex.unlock();
-	return Id;
 }

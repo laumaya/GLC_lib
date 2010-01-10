@@ -28,8 +28,7 @@
 #define GLC_CYLINDER_H_
 
 
-#include "glc_vbogeom.h"
-#include "glc_simplegeomengine.h"
+#include "glc_mesh.h"
 
 #include "../glc_config.h"
 
@@ -42,7 +41,7 @@
  * */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_Cylinder : public GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Cylinder : public GLC_Mesh
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -70,6 +69,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
 
 	//! Get Lenght of the Cylinder
 	inline double length(void) const
@@ -83,20 +84,14 @@ public:
 	inline int discretion(void) const
 	{return m_Discret;}
 
-	//! return the cylinder bounding box
-	virtual GLC_BoundingBox& boundingBox(void);
-
-	//! Return a copy of the geometry
-	virtual GLC_VboGeom* clone() const;
-
-	//! Get number of faces
-	virtual unsigned int numberOfFaces() const;
-
-	//! Get number of vertex
-	virtual unsigned int numberOfVertex() const;
+	//! Return a copy of the Cylinder
+	virtual GLC_Geometry* clone() const;
 
 	//! return true if cylinder's ended are capped
 	bool EndedIsCaped() const {return m_EndedIsCaped;}
+
+	//! return the cylinder bounding box
+	virtual GLC_BoundingBox& boundingBox(void);
 
 //@}
 
@@ -134,7 +129,20 @@ private:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
-	virtual void glDraw(bool transparent= false);
+	virtual void glDraw(const GLC_RenderProperties&);
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Private services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Create the cylinder mesh and wire
+	void createMeshAndWire();
+
+	//! Clear mesh and wire
+	void clearMeshAndWireData();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -154,9 +162,8 @@ private:
 	//! Cylinder is capped
 	bool m_EndedIsCaped;
 
-	//! Geom engine
-	GLC_SimpleGeomEngine m_SimpleGeomEngine;
-
+	//! Class chunk id
+	static quint32 m_ChunkId;
 
 };
 #endif //GLC_CYLINDER_H_

@@ -25,15 +25,18 @@
 //! \file glc_material.cpp implementation of the GLC_Material class.
 
 #include "glc_material.h"
-#include "../geometry/glc_vbogeom.h"
+#include "../geometry/glc_geometry.h"
 #include "../glc_factory.h"
 
 #include <QtDebug>
 
+// Class chunk id
+quint32 GLC_Material::m_ChunkId= 0xA703;
+
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
-
+// Default constructor
 GLC_Material::GLC_Material()
 :GLC_Object("Material")
 , m_AmbientColor()
@@ -42,8 +45,9 @@ GLC_Material::GLC_Material()
 , m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
 , m_WhereUsed()
+, m_OtherUsage()
 , m_pTexture(NULL)			// no texture
-, m_Transparency(1.0)
+, m_Opacity(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << id();
 	// Diffuse Color
@@ -61,8 +65,9 @@ GLC_Material::GLC_Material(const QColor &diffuseColor)
 , m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
 , m_WhereUsed()
+, m_OtherUsage()
 , m_pTexture(NULL)			// no texture
-, m_Transparency(1.0)
+, m_Opacity(1.0)
 {
 	// Others
 	initOtherColor();
@@ -77,8 +82,9 @@ GLC_Material::GLC_Material(const QString& name ,const GLfloat *pDiffuseColor)
 , m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
 , m_WhereUsed()
+, m_OtherUsage()
 , m_pTexture(NULL)			// no texture
-, m_Transparency(1.0)
+, m_Opacity(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << id();
 	// Init Diffuse Color
@@ -104,8 +110,9 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 , m_LightEmission()
 , m_fShininess(50.0)		// By default shininess 50
 , m_WhereUsed()
+, m_OtherUsage()
 , m_pTexture(pTexture)			// init texture
-, m_Transparency(1.0)
+, m_Opacity(1.0)
 {
 	Q_ASSERT(NULL != m_pTexture);
 	//qDebug() << "GLC_Material::GLC_Material" << id();
@@ -121,17 +128,18 @@ GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
 
 // Copy constructor
 GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
-:GLC_Object(InitMaterial.name())
+:GLC_Object(InitMaterial)
 , m_AmbientColor(InitMaterial.m_AmbientColor)
 , m_DiffuseColor(InitMaterial.m_DiffuseColor)
 , m_SpecularColor(InitMaterial.m_SpecularColor)
 , m_LightEmission(InitMaterial.m_LightEmission)
 , m_fShininess(InitMaterial.m_fShininess)
 , m_WhereUsed()
+, m_OtherUsage()
 , m_pTexture(NULL)
-, m_Transparency(InitMaterial.m_Transparency)
+, m_Opacity(InitMaterial.m_Opacity)
 {
-	//qDebug() << "GLC_Material::GLC_Material" << id();
+	//qDebug() << "GLC_Material::GLC_Material copy constructor" << id();
 	if (NULL != InitMaterial.m_pTexture)
 	{
 		m_pTexture= new GLC_Texture(*(InitMaterial.m_pTexture));
@@ -143,23 +151,18 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 // Destructor
 GLC_Material::~GLC_Material(void)
 {
-	//qDebug() << "GLC_Material::~GLC_Material" << id();
-    // clear whereUSED Hash table
-    m_WhereUsed.clear();
-
-    if (NULL != m_pTexture)
-    {
-   		delete m_pTexture;
-    	m_pTexture= NULL;
-    }
-
-
+   	delete m_pTexture;
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+// Return the class Chunk ID
+quint32 GLC_Material::chunckID()
+{
+	return m_ChunkId;
+}
 
 // Get Ambiant color
 QColor GLC_Material::ambientColor() const
@@ -224,7 +227,7 @@ bool GLC_Material::textureIsLoaded() const
 	}
 }
 
-// Return true if material are the same
+// Return true if materials are equivalent
 bool GLC_Material::operator==(const GLC_Material& mat) const
 {
 	bool result;
@@ -247,9 +250,26 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
 		{
 			result= result && (m_pTexture == mat.m_pTexture);
 		}
-		result= result && (m_Transparency == mat.m_Transparency);
+		result= result && (m_Opacity == mat.m_Opacity);
 	}
 	return result;
+}
+
+// Return the material hash code
+uint GLC_Material::hashCode() const
+{
+	QString stringKey= QString::number(m_AmbientColor.rgba());
+	stringKey+= QString::number(m_DiffuseColor.rgba());
+	stringKey+= QString::number(m_SpecularColor.rgba());
+	stringKey+= QString::number(m_LightEmission.rgba());
+	stringKey+= QString::number(m_fShininess);
+	stringKey+= QString::number(m_Opacity);
+	if (NULL != m_pTexture)
+	{
+		stringKey+= QString::number((size_t)m_pTexture);
+	}
+
+	return qHash(stringKey);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -280,7 +300,7 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
  	// Shininess
  	m_fShininess= pMat->m_fShininess;
  	// Transparency
- 	m_Transparency= pMat->m_Transparency;
+ 	m_Opacity= pMat->m_Opacity;
 	// Update geometry which use this material
 	CWhereUsed::const_iterator iGeom= m_WhereUsed.constBegin();
 	while (iGeom != m_WhereUsed.constEnd())
@@ -295,28 +315,28 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
 void GLC_Material::setAmbientColor(const QColor& ambientColor)
 {
 	m_AmbientColor= ambientColor;
-	m_AmbientColor.setAlphaF(m_Transparency);
+	m_AmbientColor.setAlphaF(m_Opacity);
 }
 
 // Set Diffuse color
 void GLC_Material::setDiffuseColor(const QColor& diffuseColor)
 {
 	m_DiffuseColor= diffuseColor;
-	m_DiffuseColor.setAlphaF(m_Transparency);
+	m_DiffuseColor.setAlphaF(m_Opacity);
 }
 
 // Set Specular color
 void GLC_Material::setSpecularColor(const QColor& specularColor)
 {
 	m_SpecularColor= specularColor;
-	m_SpecularColor.setAlphaF(m_Transparency);
+	m_SpecularColor.setAlphaF(m_Opacity);
 }
 
 // Set Emissive
 void GLC_Material::setLightEmission(const QColor& lightEmission)
 {
 	m_LightEmission= lightEmission;
-	m_LightEmission.setAlphaF(m_Transparency);
+	m_LightEmission.setAlphaF(m_Opacity);
 }
 
 // Set Texture
@@ -350,8 +370,10 @@ void GLC_Material::removeTexture()
 }
 
 // Add Geometry to where used hash table
-bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
+bool GLC_Material::addGLC_Geom(GLC_Geometry* pGeom)
 {
+	QMutexLocker mutexLocker(&m_Mutex);
+	//qDebug() << "GLC_Material::addGLC_Geom" << pGeom->id();
 	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->id());
 
 	if (iGeom == m_WhereUsed.end())
@@ -370,9 +392,9 @@ bool GLC_Material::addGLC_Geom(GLC_VboGeom* pGeom)
 // Remove a geometry from the collection
 bool GLC_Material::delGLC_Geom(GLC_uint Key)
 {
-	CWhereUsed::iterator iGeom= m_WhereUsed.find(Key);
+	QMutexLocker mutexLocker(&m_Mutex);
 
-	if (iGeom != m_WhereUsed.end())
+	if (m_WhereUsed.contains(Key))
 	{	// Ok, ID exist
 		m_WhereUsed.remove(Key);	// Remove container
 
@@ -385,15 +407,47 @@ bool GLC_Material::delGLC_Geom(GLC_uint Key)
 	}
 
 }
-
-// Set the material transparency
-void GLC_Material::setTransparency(const qreal alpha)
+// Add the id to the other used Set
+bool GLC_Material::addUsage(GLC_uint id)
 {
-	m_Transparency= alpha;
-	m_AmbientColor.setAlphaF(m_Transparency);
-	m_DiffuseColor.setAlphaF(m_Transparency);
-	m_SpecularColor.setAlphaF(m_Transparency);
-	m_LightEmission.setAlphaF(m_Transparency);
+	QMutexLocker mutexLocker(&m_Mutex);
+	if (!m_OtherUsage.contains(id))
+	{
+		m_OtherUsage << id;
+		return true;
+	}
+	else
+	{
+		qDebug("GLC_Material::addUsage : id not added");
+		return false;
+	}
+}
+
+// Remove the id to the other used Set
+bool GLC_Material::delUsage(GLC_uint id)
+{
+	QMutexLocker mutexLocker(&m_Mutex);
+	if (m_OtherUsage.contains(id))
+	{
+		m_OtherUsage.remove(id);
+		return true;
+	}
+	else
+	{
+		qDebug() << "GLC_Material::delUsage : id not removed " << m_Uid;
+		return false;
+	}
+}
+
+
+// Set the material opacity
+void GLC_Material::setOpacity(const qreal alpha)
+{
+	m_Opacity= alpha;
+	m_AmbientColor.setAlphaF(m_Opacity);
+	m_DiffuseColor.setAlphaF(m_Opacity);
+	m_SpecularColor.setAlphaF(m_Opacity);
+	m_LightEmission.setAlphaF(m_Opacity);
 	// Update geometry which use this material
 	CWhereUsed::const_iterator iGeom= m_WhereUsed.constBegin();
 	while (iGeom != m_WhereUsed.constEnd())
@@ -441,16 +495,21 @@ void GLC_Material::glExecute()
 
 	if (m_pTexture != NULL)
 	{
-		// for blend managing
-		//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+		glEnable(GL_TEXTURE_2D);
 		m_pTexture->glcBindTexture();
 	}
-	glColor4fv(pDiffuseColor);
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+	}
+
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, pAmbientColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pDiffuseColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pSpecularColor);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, pLightEmission);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &m_fShininess);
+
+	glColor4fv(pDiffuseColor);
 
 	// OpenGL Error handler
 	GLenum errCode;
@@ -460,8 +519,59 @@ void GLC_Material::glExecute()
 		errString = gluErrorString(errCode);
 		qDebug("GLC_Material::GlExecute OpenGL Error %s", errString);
 	}
-
 }
+
+// Execute OpenGL Material
+void GLC_Material::glExecute(float overwriteTransparency)
+{
+	GLfloat pAmbientColor[4]= {ambientColor().redF(),
+								ambientColor().greenF(),
+								ambientColor().blueF(),
+								overwriteTransparency};
+
+	GLfloat pDiffuseColor[4]= {diffuseColor().redF(),
+								diffuseColor().greenF(),
+								diffuseColor().blueF(),
+								overwriteTransparency};
+
+	GLfloat pSpecularColor[4]= {specularColor().redF(),
+								specularColor().greenF(),
+								specularColor().blueF(),
+								overwriteTransparency};
+
+	GLfloat pLightEmission[4]= {lightEmission().redF(),
+								lightEmission().greenF(),
+								lightEmission().blueF(),
+								overwriteTransparency};
+
+	if (m_pTexture != NULL)
+	{
+		glEnable(GL_TEXTURE_2D);
+		m_pTexture->glcBindTexture();
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+	}
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, pAmbientColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pDiffuseColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pSpecularColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, pLightEmission);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &m_fShininess);
+
+	glColor4fv(pDiffuseColor);
+
+	// OpenGL Error handler
+	GLenum errCode;
+	if ((errCode= glGetError()) != GL_NO_ERROR)
+	{
+		const GLubyte* errString;
+		errString = gluErrorString(errCode);
+		qDebug("GLC_Material::GlExecute OpenGL Error %s", errString);
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 // Private servicies Functions
 //////////////////////////////////////////////////////////////////////
@@ -485,16 +595,19 @@ void GLC_Material::initOtherColor(void)
 	m_LightEmission.setRgbF(0.0, 0.0, 0.0, 1.0);
 }
 
-
+// Non Member methods
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
 {
+	quint32 chunckId= GLC_Material::m_ChunkId;
+	stream << chunckId;
+
 	// Store GLC_Object class members
 	stream << material.id() << material.name();
 
 	// Store GLC_Material class members
 	stream << material.ambientColor() << material.diffuseColor() << material.specularColor();
-	stream << material.lightEmission() << material.shininess() << material.alpha();
+	stream << material.lightEmission() << material.shininess() << material.opacity();
 
 	// Test if the material has texture
 	bool hasTexture= material.hasTexture();
@@ -509,6 +622,11 @@ QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
 }
 QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 {
+	quint32 chunckId;
+	stream >> chunckId;
+
+	Q_ASSERT(chunckId == GLC_Material::m_ChunkId);
+
 	// Retrieve GLC_Object members
 	GLC_uint id;
 	QString name;
@@ -527,7 +645,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 	material.setSpecularColor(specular);
 	material.setLightEmission(lightEmission);
 	material.setShininess(shininess);
-	material.setTransparency(alpha);
+	material.setOpacity(alpha);
 
 	// Test if material has texture
 	bool hasTexture;
@@ -538,6 +656,5 @@ QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 		stream >> texture;
 		material.setTexture(new GLC_Texture(texture));
 	}
-
 	return stream;
 }

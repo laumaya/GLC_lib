@@ -77,40 +77,40 @@ GLC_Factory::~GLC_Factory()
 // Create functions
 //////////////////////////////////////////////////////////////////////
 
-// Create an GLC_Point
+// Create a GLC_Point
 GLC_3DRep GLC_Factory::createPoint(const GLC_Vector4d &coord) const
 {
 	GLC_3DRep newPoint(new GLC_Point(coord));
 	return newPoint;
 }
-// Create an GLC_Point
+// Create a GLC_Point
 GLC_3DRep GLC_Factory::createPoint(double x, double y, double z) const
 {
 	GLC_3DRep newPoint(new GLC_Point(x, y, z));
 	return newPoint;
 }
 
-// Create an GLC_PointSprite
+// Create a GLC_PointSprite
 GLC_3DRep GLC_Factory::createPointSprite(float size, GLC_Material* pMaterial) const
 {
 	GLC_3DRep newPoint(new GLC_PointSprite(size, pMaterial));
 	return newPoint;
 }
 
-// Create an GLC_Line
+// Create a GLC_Line
 GLC_3DRep GLC_Factory::createLine(const GLC_Point4d& point1, const GLC_Point4d& point2) const
 {
 	GLC_3DRep newPoint(new GLC_Line(point1, point2));
 	return newPoint;
 }
 
-//  Create an GLC_Circle
+//  Create a GLC_Circle
 GLC_3DRep GLC_Factory::createCircle(double radius, double angle) const
 {
 	GLC_3DRep newCircle(new GLC_Circle(radius, angle));
 	return newCircle;
 }
-// Create an GLC_Box
+// Create a GLC_Box
 GLC_3DRep GLC_Factory::createBox(double lx, double ly, double lz) const
 {
 
@@ -118,7 +118,7 @@ GLC_3DRep GLC_Factory::createBox(double lx, double ly, double lz) const
 	return newBox;
 }
 
-// Create an GLC_Box
+// Create a GLC_Box
 GLC_3DViewInstance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 {
 	const double lx= boundingBox.upperCorner().X() - boundingBox.lowerCorner().X();
@@ -131,7 +131,7 @@ GLC_3DViewInstance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) co
 	return newBox;
 }
 
-// Create an GLC_Cylinder
+// Create a GLC_Cylinder
 GLC_3DRep GLC_Factory::createCylinder(double radius, double length) const
 {
 
@@ -139,14 +139,14 @@ GLC_3DRep GLC_Factory::createCylinder(double radius, double length) const
 	return newCylinder;
 }
 
-// Create ang GLC_Rectangle
-GLC_3DRep GLC_Factory::createRectangle(const GLC_Vector4d& normal, double l1, double l2)
+// Create a GLC_Rectangle
+GLC_3DRep GLC_Factory::createRectangle(double l1, double l2)
 {
-	GLC_3DRep newRectangle(new GLC_Rectangle(normal, l1, l2));
+	GLC_3DRep newRectangle(new GLC_Rectangle(l1, l2));
 	return newRectangle;
 }
 
-// Create an GLC_World* with a QFile
+// Create a GLC_World* with a QFile
 GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName) const
 {
 	GLC_World* pWorld= NULL;
@@ -186,7 +186,7 @@ GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName)
 	{
 		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		pWorld= d3dxmlToWorld.CreateWorldFrom3dxml(file, false);
+		pWorld= d3dxmlToWorld.createWorldFrom3dxml(file, false);
 		if (NULL != pAttachedFileName)
 		{
 			(*pAttachedFileName)= d3dxmlToWorld.listOfAttachedFileName();
@@ -207,7 +207,7 @@ GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName)
 	return pWorld;
 }
 
-// Create an GLC_World containing only the 3dxml structure
+// Create a GLC_World containing only the 3dxml structure
 GLC_World* GLC_Factory::createWorldStructureFrom3dxml(QFile &file) const
 {
 	GLC_World* pWorld= NULL;
@@ -216,7 +216,7 @@ GLC_World* GLC_Factory::createWorldStructureFrom3dxml(QFile &file) const
 	{
 		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		pWorld= d3dxmlToWorld.CreateWorldFrom3dxml(file, true);
+		pWorld= d3dxmlToWorld.createWorldFrom3dxml(file, true);
 	}
 
 	return pWorld;
@@ -231,25 +231,25 @@ GLC_3DRep GLC_Factory::create3DrepFromFile(const QString& fileName) const
 	{
 		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		rep= d3dxmlToWorld.Create3DrepFrom3dxmlRep(fileName);
+		rep= d3dxmlToWorld.create3DrepFrom3dxmlRep(fileName);
 	}
 
 	return rep;
 
 }
 
-// Create an GLC_Material
+// Create a GLC_Material
 GLC_Material* GLC_Factory::createMaterial() const
 {
 	return new GLC_Material();
 }
 
-// Create an GLC_Material
+// Create a GLC_Material
 GLC_Material* GLC_Factory::createMaterial(const GLfloat *pAmbiantColor) const
 {
 	return new GLC_Material("Material", pAmbiantColor);
 }
-// Create an GLC_Material
+// Create a GLC_Material
 GLC_Material* GLC_Factory::createMaterial(const QColor &color) const
 {
 	return new GLC_Material(color);
@@ -259,28 +259,28 @@ GLC_Material* GLC_Factory::createMaterial(GLC_Texture* pTexture) const
 {
 	return new GLC_Material(pTexture, "TextureMaterial");
 }
-// create an material textured with a image file name
+// create a material textured with a image file name
 GLC_Material* GLC_Factory::createMaterial(const QString &textureFullFileName) const
 {
 	GLC_Texture* pTexture= createTexture(textureFullFileName);
 	return createMaterial(pTexture);
 }
 
-// create an material textured with a QImage
+// create a material textured with a QImage
 GLC_Material* GLC_Factory::createMaterial(const QImage &image) const
 {
 	GLC_Texture* pTexture= createTexture(image);
 	return createMaterial(pTexture);
 }
 
-// Create an GLC_Texture
+// Create a GLC_Texture
 
 GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName) const
 {
 	return new GLC_Texture(m_pQGLContext, textureFullFileName);
 }
 
-// Create an GLC_Texture with a QImage
+// Create a GLC_Texture with a QImage
 GLC_Texture* GLC_Factory::createTexture(const QImage & image) const
 {
 	return new GLC_Texture(m_pQGLContext, image);

@@ -22,14 +22,17 @@
 
 *****************************************************************************/
 
-//! \file glc_extendedgeomengine.cpp Implementation for the GLC_ExtendedGeomEngine class.
+//! \file glc_meshdata.cpp Implementation for the GLC_MeshData class.
 
-#include "glc_extendedgeomengine.h"
+#include "glc_meshdata.h"
 #include "../glc_state.h"
 
+// Class chunk id
+quint32 GLC_MeshData::m_ChunkId= 0xA704;
+
 // Default constructor
-GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine()
-: GLC_GeomEngine()
+GLC_MeshData::GLC_MeshData()
+: m_VboId(0)
 , m_Positions()
 , m_Normals()
 , m_Texels()
@@ -37,72 +40,79 @@ GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine()
 , m_NormalVboId(0)
 , m_TexelVboId(0)
 , m_ColorVboId(0)
-, m_EngineLodList()
+, m_LodList()
 , m_PositionSize(0)
 , m_TexelsSize(0)
 , m_ColorSize(0)
 {
-	//m_EngineLodList.append(new GLC_EngineLod());
 
 }
 
 // Copy constructor
-GLC_ExtendedGeomEngine::GLC_ExtendedGeomEngine(const GLC_ExtendedGeomEngine& engine)
-: GLC_GeomEngine(engine)
-, m_Positions(engine.positionVector())
-, m_Normals(engine.normalVector())
-, m_Texels(engine.texelVector())
-, m_Colors(engine.colorVector())
+GLC_MeshData::GLC_MeshData(const GLC_MeshData& meshData)
+: m_VboId(0)
+, m_Positions(meshData.positionVector())
+, m_Normals(meshData.normalVector())
+, m_Texels(meshData.texelVector())
+, m_Colors(meshData.colorVector())
 , m_NormalVboId(0)
 , m_TexelVboId(0)
 , m_ColorVboId(0)
-, m_EngineLodList()
-, m_PositionSize(engine.m_PositionSize)
-, m_TexelsSize(engine.m_TexelsSize)
-, m_ColorSize(engine.m_ColorSize)
+, m_LodList()
+, m_PositionSize(meshData.m_PositionSize)
+, m_TexelsSize(meshData.m_TexelsSize)
+, m_ColorSize(meshData.m_ColorSize)
 {
-
-	const int size= engine.m_EngineLodList.size();
+	// Copy meshData LOD list
+	const int size= meshData.m_LodList.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_EngineLodList.append(new GLC_EngineLod(*engine.m_EngineLodList.at(i)));
+		m_LodList.append(new GLC_Lod(*meshData.m_LodList.at(i)));
 	}
-
 }
 
-GLC_ExtendedGeomEngine::~GLC_ExtendedGeomEngine()
+// Overload "=" operator
+GLC_MeshData& GLC_MeshData::operator=(const GLC_MeshData& meshData)
 {
-
-	// Delete Normal VBO
-	if (0 != m_NormalVboId)
+	if (this != &meshData)
 	{
-		glDeleteBuffers(1, &m_NormalVboId);
-	}
+		// Clear the content of the mesh Data
+		clear();
 
-	// Delete Texel VBO
-	if (0 != m_TexelVboId)
-	{
-		glDeleteBuffers(1, &m_TexelVboId);
-	}
+		// Copy mesh Data members
+		m_Positions= meshData.positionVector();
+		m_Normals= meshData.normalVector();
+		m_Texels= meshData.texelVector();
+		m_Colors= meshData.colorVector();
+		m_PositionSize= meshData.m_PositionSize;
+		m_TexelsSize= meshData.m_TexelsSize;
+		m_ColorSize= meshData.m_ColorSize;
 
-	// Delete Color VBO
-	if (0 != m_ColorVboId)
-	{
-		glDeleteBuffers(1, &m_ColorVboId);
+		// Copy meshData LOD list
+		const int size= meshData.m_LodList.size();
+		for (int i= 0; i < size; ++i)
+		{
+			m_LodList.append(new GLC_Lod(*meshData.m_LodList.at(i)));
+		}
 	}
+	return *this;
+}
 
-	const int size= m_EngineLodList.size();
-	for (int i= 0; i < size; ++i)
-	{
-		delete m_EngineLodList.at(i);
-	}
+GLC_MeshData::~GLC_MeshData()
+{
+	clear();
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+// Return the class Chunk ID
+quint32 GLC_MeshData::chunckID()
+{
+	return m_ChunkId;
+}
 
 // Return the Position Vector
-GLfloatVector GLC_ExtendedGeomEngine::positionVector() const
+GLfloatVector GLC_MeshData::positionVector() const
 {
 	if (0 != m_VboId)
 	{
@@ -122,11 +132,10 @@ GLfloatVector GLC_ExtendedGeomEngine::positionVector() const
 	{
 		return m_Positions;
 	}
-
 }
 
 // Return the normal Vector
-GLfloatVector GLC_ExtendedGeomEngine::normalVector() const
+GLfloatVector GLC_MeshData::normalVector() const
 {
 	if (0 != m_NormalVboId)
 	{
@@ -149,7 +158,7 @@ GLfloatVector GLC_ExtendedGeomEngine::normalVector() const
 }
 
 // Return the texel Vector
-GLfloatVector GLC_ExtendedGeomEngine::texelVector() const
+GLfloatVector GLC_MeshData::texelVector() const
 {
 	if (0 != m_TexelVboId)
 	{
@@ -172,7 +181,7 @@ GLfloatVector GLC_ExtendedGeomEngine::texelVector() const
 }
 
 // Return the color Vector
-GLfloatVector GLC_ExtendedGeomEngine::colorVector() const
+GLfloatVector GLC_MeshData::colorVector() const
 {
 	if (0 != m_ColorVboId)
 	{
@@ -198,8 +207,8 @@ GLfloatVector GLC_ExtendedGeomEngine::colorVector() const
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// The mesh wich use this engine is finished
-void GLC_ExtendedGeomEngine::finished()
+// The mesh wich use the data is finished
+void GLC_MeshData::finishVbo()
 {
 	m_PositionSize= m_Positions.size();
 	m_Positions.clear();
@@ -210,34 +219,41 @@ void GLC_ExtendedGeomEngine::finished()
 	m_Colors.clear();
 
 	// Finish the LOD
-	const int size= m_EngineLodList.size();
+	const int size= m_LodList.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_EngineLodList[i]->finished();
-	}
-}
-// If the there is more than 2 LOD Swap the first and last
-void GLC_ExtendedGeomEngine::finishedLod()
-{
-	// PLace the master LOD at the beginning of the list
-	const int size= m_EngineLodList.size();
-	if (size > 1)
-	{
-		GLC_EngineLod* PMasterLod= m_EngineLodList.at(size - 1);
-		m_EngineLodList.removeAt(size - 1);
-		m_EngineLodList.prepend(PMasterLod);
+		m_LodList[i]->finishVbo();
 	}
 }
 
-// Clear the engine
-void GLC_ExtendedGeomEngine::clear()
+// If the there is more than 2 LOD Swap the first and last
+void GLC_MeshData::finishLod()
 {
-	GLC_GeomEngine::clear();
+	// PLace the master LOD at the beginning of the list
+	const int size= m_LodList.size();
+	if (size > 1)
+	{
+		GLC_Lod* PMasterLod= m_LodList.at(size - 1);
+		m_LodList.removeAt(size - 1);
+		m_LodList.prepend(PMasterLod);
+	}
+}
+
+// Clear the content of the meshData and makes it empty
+void GLC_MeshData::clear()
+{
 	m_Positions.clear();
 	m_Normals.clear();
 	m_Texels.clear();
 	m_PositionSize= 0;
 	m_TexelsSize= 0;
+
+	// Delete Main Vbo ID
+	if (0 != m_VboId)
+	{
+		glDeleteBuffers(1, &m_VboId);
+		m_VboId= 0;
+	}
 
 	// Delete Normal VBO
 	if (0 != m_NormalVboId)
@@ -253,20 +269,19 @@ void GLC_ExtendedGeomEngine::clear()
 		m_TexelVboId= 0;
 	}
 
-	const int size= m_EngineLodList.size();
+	const int size= m_LodList.size();
 	for (int i= 0; i < size; ++i)
 	{
-		delete m_EngineLodList.at(i);
+		delete m_LodList.at(i);
 	}
-	m_EngineLodList.clear();
+	m_LodList.clear();
 }
-
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
-//! Vbo creation
-void GLC_ExtendedGeomEngine::createVBOs()
+// Vbo creation
+void GLC_MeshData::createVBOs()
 {
 	// Create position VBO
 	if (0 == m_VboId)
@@ -286,33 +301,34 @@ void GLC_ExtendedGeomEngine::createVBOs()
 			glGenBuffers(1, &m_ColorVboId);
 		}
 
-		const int size= m_EngineLodList.size();
+		const int size= m_LodList.size();
 		for (int i= 0; i < size; ++i)
 		{
-			m_EngineLodList.at(i)->createIBO();
+			m_LodList.at(i)->createIBO();
 		}
 	}
 }
-//! Ibo Usage
-bool GLC_ExtendedGeomEngine::useVBO(bool use, GLC_ExtendedGeomEngine::VboType type)
+
+// Ibo Usage
+bool GLC_MeshData::useVBO(bool use, GLC_MeshData::VboType type)
 {
 	bool result= true;
 	if (use)
 	{
 		// Chose the right VBO
-		if (type == GLC_ExtendedGeomEngine::GLC_Vertex)
+		if (type == GLC_MeshData::GLC_Vertex)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
 		}
-		else if (type == GLC_ExtendedGeomEngine::GLC_Normal)
+		else if (type == GLC_MeshData::GLC_Normal)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_NormalVboId);
 		}
-		else if ((type == GLC_ExtendedGeomEngine::GLC_Texel) && (0 != m_TexelVboId))
+		else if ((type == GLC_MeshData::GLC_Texel) && (0 != m_TexelVboId))
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_TexelVboId);
 		}
-		else if ((type == GLC_ExtendedGeomEngine::GLC_Color) && (0 != m_ColorVboId))
+		else if ((type == GLC_MeshData::GLC_Color) && (0 != m_ColorVboId))
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_ColorVboId);
 		}
@@ -327,44 +343,57 @@ bool GLC_ExtendedGeomEngine::useVBO(bool use, GLC_ExtendedGeomEngine::VboType ty
 	return result;
 
 }
-
+// Non Member methods
 // Non-member stream operator
-QDataStream &operator<<(QDataStream &stream, const GLC_ExtendedGeomEngine &engine)
+QDataStream &operator<<(QDataStream &stream, const GLC_MeshData &meshData)
 {
-	stream << engine.positionVector();
-	stream << engine.normalVector();
-	stream << engine.texelVector();
-	stream << engine.colorVector();
+	quint32 chunckId= GLC_MeshData::m_ChunkId;
+	stream << chunckId;
+
+	stream << meshData.positionVector();
+	stream << meshData.normalVector();
+	stream << meshData.texelVector();
+	stream << meshData.colorVector();
 
 	// List of lod serialisation
-	const int lodCount= engine.m_EngineLodList.size();
-	QList<GLC_EngineLod> lodsList;
+	const int lodCount= meshData.m_LodList.size();
+	QList<GLC_Lod> lodsList;
 	for (int i= 0; i < lodCount; ++i)
 	{
-		lodsList.append(*(engine.m_EngineLodList[i]));
+		lodsList.append(*(meshData.m_LodList[i]));
 	}
 	stream << lodsList;
 
 	return stream;
 }
-QDataStream &operator>>(QDataStream &stream, GLC_ExtendedGeomEngine &engine)
+
+QDataStream &operator>>(QDataStream &stream, GLC_MeshData &meshData)
 {
-	engine.clear();
+	quint32 chunckId;
+	stream >> chunckId;
+	Q_ASSERT(chunckId == GLC_MeshData::m_ChunkId);
+
+	meshData.clear();
 
 	GLfloatVector position, normal, texel, color;
-	stream >> position >> normal >> texel >> color;
-	*(engine.positionVectorHandle())= position;
-	*(engine.normalVectorHandle())= normal;
-	*(engine.texelVectorHandle())= texel;
-	*(engine.colorVectorHandle())= color;
+
+	stream >> position;
+	stream >> normal;
+	stream >> texel;
+	stream >> color;
+
+	*(meshData.positionVectorHandle())= position;
+	*(meshData.normalVectorHandle())= normal;
+	*(meshData.texelVectorHandle())= texel;
+	*(meshData.colorVectorHandle())= color;
 
 	// List of lod serialisation
-	QList<GLC_EngineLod> lodsList;
+	QList<GLC_Lod> lodsList;
 	stream >> lodsList;
 	const int lodCount= lodsList.size();
 	for (int i= 0; i < lodCount; ++i)
 	{
-		engine.m_EngineLodList.append(new GLC_EngineLod(lodsList.at(i)));
+		meshData.m_LodList.append(new GLC_Lod(lodsList.at(i)));
 	}
 
 	return stream;

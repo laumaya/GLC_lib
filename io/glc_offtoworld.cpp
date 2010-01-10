@@ -117,7 +117,7 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	m_Is4off= lineBuff.startsWith("4OFF");
 
 	// Create the mesh
-	m_pCurrentMesh= new GLC_ExtendedMesh();
+	m_pCurrentMesh= new GLC_Mesh();
 
 	// Set mesh color per vertex if needed
 	if (m_IsCoff)
@@ -225,10 +225,10 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	}
 	m_pCurrentMesh->addTriangles(NULL, m_IndexList);
 
-	m_pCurrentMesh->finished();
+	m_pCurrentMesh->finish();
 	GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 	m_pCurrentMesh= NULL;
-	m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
+	m_pWorld->rootOccurence()->addChild(new GLC_StructOccurence(pRep));
 
 	return m_pWorld;
 }

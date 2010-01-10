@@ -48,36 +48,32 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 , m_pBoundingBox(NULL)
 , m_MatPos()
 , m_IsBoundingBoxValid(false)
-, m_IsSelected(false)
-, m_PolyFace(GL_FRONT_AND_BACK)
-, m_PolyMode(GL_FILL)
+, m_RenderProperties()
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
 {
 	// Encode Color Id
-	encodeIdInRGBA();
+	glc::encodeRgbId(m_Uid, m_colorId);
 
 	//qDebug() << "GLC_3DViewInstance::GLC_3DViewInstance null instance ID = " << m_Uid;
 	//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
 }
 
 // Contruct instance with a geometry
-GLC_3DViewInstance::GLC_3DViewInstance(GLC_VboGeom* pGeom)
+GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom)
 : GLC_Object()
 , m_3DRep(pGeom)
 , m_pBoundingBox(NULL)
 , m_MatPos()
 , m_IsBoundingBoxValid(false)
-, m_IsSelected(false)
-, m_PolyFace(GL_FRONT_AND_BACK)
-, m_PolyMode(GL_FILL)
+, m_RenderProperties()
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
 {
 	// Encode Color Id
-	encodeIdInRGBA();
+	glc::encodeRgbId(m_Uid, m_colorId);
 
 	setName(m_3DRep.name());
 
@@ -92,15 +88,13 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
 , m_pBoundingBox(NULL)
 , m_MatPos()
 , m_IsBoundingBoxValid(false)
-, m_IsSelected(false)
-, m_PolyFace(GL_FRONT_AND_BACK)
-, m_PolyMode(GL_FILL)
+, m_RenderProperties()
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
 {
 	// Encode Color Id
-	encodeIdInRGBA();
+	glc::encodeRgbId(m_Uid, m_colorId);
 
 	setName(m_3DRep.name());
 
@@ -115,15 +109,13 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
 , m_pBoundingBox(NULL)
 , m_MatPos(inputNode.m_MatPos)
 , m_IsBoundingBoxValid(inputNode.m_IsBoundingBoxValid)
-, m_IsSelected(inputNode.m_IsSelected)
-, m_PolyFace(inputNode.m_PolyFace)
-, m_PolyMode(inputNode.m_PolyMode)
+, m_RenderProperties(inputNode.m_RenderProperties)
 , m_IsVisible(inputNode.m_IsVisible)
 , m_colorId()
 , m_DefaultLOD(inputNode.m_DefaultLOD)
 {
 	// Encode Color Id
-	encodeIdInRGBA();
+	glc::encodeRgbId(m_Uid, m_colorId);
 
 	if (NULL != inputNode.m_pBoundingBox)
 	{
@@ -141,7 +133,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 		clear();
 		GLC_Object::operator=(inputNode);
 		// Encode Color Id
-		encodeIdInRGBA();
+		glc::encodeRgbId(m_Uid, m_colorId);
 
 		m_3DRep= inputNode.m_3DRep;
 		if (NULL != inputNode.m_pBoundingBox)
@@ -150,9 +142,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 		}
 		m_MatPos= inputNode.m_MatPos;
 		m_IsBoundingBoxValid= inputNode.m_IsBoundingBoxValid;
-		m_IsSelected= inputNode.m_IsSelected;
-		m_PolyFace= inputNode.m_PolyFace;
-		m_PolyMode= inputNode.m_PolyMode;
+		m_RenderProperties= inputNode.m_RenderProperties;
 		m_IsVisible= inputNode.m_IsVisible;
 		m_DefaultLOD= inputNode.m_DefaultLOD;
 
@@ -214,9 +204,7 @@ GLC_3DViewInstance GLC_3DViewInstance::deepCopy() const
 
 	cloneInstance.m_MatPos= m_MatPos;
 	cloneInstance.m_IsBoundingBoxValid= m_IsBoundingBoxValid;
-	cloneInstance.m_IsSelected= m_IsSelected;
-	cloneInstance.m_PolyFace= m_PolyFace;
-	cloneInstance.m_PolyMode= m_PolyMode;
+	cloneInstance.m_RenderProperties= m_RenderProperties;
 	cloneInstance.m_IsVisible= m_IsVisible;
 	return cloneInstance;
 }
@@ -227,22 +215,9 @@ GLC_3DViewInstance GLC_3DViewInstance::instanciate()
 	GLC_3DViewInstance instance(*this);
 	instance.m_Uid= glc::GLC_GenID();
 	// Encode Color Id
-	encodeIdInRGBA();
+	glc::encodeRgbId(m_Uid, m_colorId);
 
 	return instance;
-}
-
-// Return the GLC_uint decoded ID from RGBA encoded ID
-GLC_uint GLC_3DViewInstance::decodeRgbId(const GLubyte* pcolorId)
-{
-	GLC_uint returnId= 0;
-	returnId|= (GLC_uint)pcolorId[0] << (0 * 8);
-	returnId|= (GLC_uint)pcolorId[1] << (1 * 8);
-	returnId|= (GLC_uint)pcolorId[2] << (2 * 8);
-	// Only get first 24 bits
-	//returnId|= (GLC_uint)pcolorId[3] << (3 * 8);
-
-	return returnId;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -251,7 +226,7 @@ GLC_uint GLC_3DViewInstance::decodeRgbId(const GLubyte* pcolorId)
 
 
 // Set the instance Geometry
-bool GLC_3DViewInstance::setGeometry(GLC_VboGeom* pGeom)
+bool GLC_3DViewInstance::setGeometry(GLC_Geometry* pGeom)
 {
 	if (m_3DRep.contains(pGeom))
 	{
@@ -300,28 +275,19 @@ GLC_3DViewInstance& GLC_3DViewInstance::resetMatrix(void)
 	return *this;
 }
 
-// Polygon's display style
-void GLC_3DViewInstance::setPolygonMode(GLenum Face, GLenum Mode)
-{
-	// Change the polygon mode only if there is a change
-	if ((m_PolyFace != Face) || (m_PolyMode != Mode))
-	{
-		m_PolyFace= Face;
-		m_PolyMode= Mode;
-	}
-}
-
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
 // Display the instance
-void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* pView)
+void GLC_3DViewInstance::glExecute(glc::RenderFlag renderFlag, bool useLod, GLC_Viewport* pView)
 {
 	if (m_3DRep.isEmpty()) return;
+	m_RenderProperties.setRenderingFlag(renderFlag);
+
 	// Save current OpenGL Matrix
 	glPushMatrix();
-	glVisProperties();
+	OpenglVisProperties();
 	if(GLC_State::isInSelectionMode())
 	{
 		glColor3ubv(m_colorId); // D'ont use Alpha component
@@ -335,7 +301,8 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* 
 			if (lodValue <= 100)
 			{
 				m_3DRep.geomAt(i)->setCurrentLod(lodValue);
-				m_3DRep.geomAt(i)->glExecute(m_IsSelected, transparent);
+				m_RenderProperties.setCurrentBodyIndex(i);
+				m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
 			}
 		}
 	}
@@ -344,7 +311,7 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* 
 		for (int i= 0; i < size; ++i)
 		{
 			int lodValue= 0;
-			if (GLC_State::isPixelCullingActivated())
+			if (GLC_State::isPixelCullingActivated() && (NULL != pView))
 			{
 				lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
 			}
@@ -352,13 +319,81 @@ void GLC_3DViewInstance::glExecute(bool transparent, bool useLod, GLC_Viewport* 
 			if (lodValue <= 100)
 			{
 				m_3DRep.geomAt(i)->setCurrentLod(m_DefaultLOD);
-				m_3DRep.geomAt(i)->glExecute(m_IsSelected, transparent);
+				m_RenderProperties.setCurrentBodyIndex(i);
+				m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
 			}
-
 		}
 	}
 	// Restore OpenGL Matrix
 	glPopMatrix();
+}
+
+// Display the instance in Body selection mode
+void GLC_3DViewInstance::glExecuteForBodySelection()
+{
+	Q_ASSERT(GLC_State::isInSelectionMode());
+	if (m_3DRep.isEmpty()) return;
+
+	// Save previous rendering mode and set the rendering mode to BodySelection
+	glc::RenderMode previousRenderMode= m_RenderProperties.renderingMode();
+	m_RenderProperties.setRenderingMode(glc::BodySelection);
+
+	// Save current OpenGL Matrix
+	glPushMatrix();
+	OpenglVisProperties();
+
+	GLubyte colorId[4];
+	const int size= m_3DRep.numberOfBody();
+	for (int i= 0; i < size; ++i)
+	{
+		GLC_Geometry* pGeom= m_3DRep.geomAt(i);
+		glc::encodeRgbId(pGeom->id(), colorId);
+		glColor3ubv(colorId);
+		pGeom->setCurrentLod(m_DefaultLOD);
+		m_RenderProperties.setCurrentBodyIndex(i);
+		pGeom->glExecute(m_RenderProperties);
+	}
+
+	// Restore rendering mode
+	m_RenderProperties.setRenderingMode(previousRenderMode);
+	// Restore OpenGL Matrix
+	glPopMatrix();
+}
+
+// Display the instance in Primitive selection mode and return the body index
+int GLC_3DViewInstance::glExecuteForPrimitiveSelection(GLC_uint bodyId)
+{
+	Q_ASSERT(GLC_State::isInSelectionMode());
+	if (m_3DRep.isEmpty()) return -1;
+	// Save previous rendering mode and set the rendering mode to BodySelection
+	glc::RenderMode previousRenderMode= m_RenderProperties.renderingMode();
+	m_RenderProperties.setRenderingMode(glc::PrimitiveSelection);
+
+	// Save current OpenGL Matrix
+	glPushMatrix();
+	OpenglVisProperties();
+
+	const int size= m_3DRep.numberOfBody();
+	int i= 0;
+	bool continu= true;
+	while ((i < size) && continu)
+	{
+		GLC_Geometry* pGeom= m_3DRep.geomAt(i);
+		if (pGeom->id() == bodyId)
+		{
+			pGeom->setCurrentLod(0);
+			pGeom->glExecute(m_RenderProperties);
+			continu= false;
+		}
+		else ++i;
+	}
+
+	m_RenderProperties.setRenderingMode(previousRenderMode);
+
+	// Restore OpenGL Matrix
+	glPopMatrix();
+
+	return i;
 }
 
 
@@ -399,15 +434,6 @@ void GLC_3DViewInstance::clear()
 	// invalidate the bounding box
 	m_IsBoundingBoxValid= false;
 
-}
-
-//! Encode Id to RGBA color
-void GLC_3DViewInstance::encodeIdInRGBA()
-{
-	m_colorId[0]= static_cast<GLubyte>((m_Uid >> (0 * 8)) & 0xFF);
-	m_colorId[1]= static_cast<GLubyte>((m_Uid >> (1 * 8)) & 0xFF);
-	m_colorId[2]= static_cast<GLubyte>((m_Uid >> (2 * 8)) & 0xFF);
-	m_colorId[3]= static_cast<GLubyte>((m_Uid >> (3 * 8)) & 0xFF);
 }
 
 // Compute LOD

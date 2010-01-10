@@ -876,9 +876,9 @@ void GLC_ObjToWorld::addCurrentObjMeshToWorld()
 			}
 			if (m_pCurrentObjMesh->m_pMesh->numberOfFaces() > 0)
 			{
-				m_pCurrentObjMesh->m_pMesh->finished();
+				m_pCurrentObjMesh->m_pMesh->finish();
 				GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentObjMesh->m_pMesh);
-				m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
+				m_pWorld->rootOccurence()->addChild((new GLC_StructInstance(pRep)));
 			}
 			else
 			{

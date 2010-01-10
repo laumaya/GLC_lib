@@ -85,33 +85,33 @@ public:
 	inline QGLContext* context() const
 	{return m_pQGLContext;}
 
-	//! Create an GLC_Point
+	//! Create a GLC_Point
 	GLC_3DRep createPoint(const GLC_Vector4d &coord) const;
 	GLC_3DRep createPoint(double x, double y, double z) const;
 
-	//! Create an GLC_PointSprite
+	//! Create a GLC_PointSprite
 	GLC_3DRep createPointSprite(float, GLC_Material*) const;
 
-	//! Create an GLC_Line
+	//! Create a GLC_Line
 	GLC_3DRep createLine(const GLC_Point4d&, const GLC_Point4d&) const;
 
-	//!  Create an GLC_Circle
+	//!  Create a GLC_Circle
 	GLC_3DRep createCircle(double radius, double angle= 2 * glc::PI) const;
 
-	//! Create an GLC_Box
+	//! Create a GLC_Box
 	GLC_3DRep createBox(double lx, double ly, double lz) const;
 	GLC_3DViewInstance createBox(const GLC_BoundingBox& boundingBox) const;
 
-	//! Create an GLC_Cylinder
+	//! Create a GLC_Cylinder
 	GLC_3DRep createCylinder(double radius, double length) const;
 
-	//!Create ang GLC_Rectangle
-	GLC_3DRep createRectangle(const GLC_Vector4d&, double, double);
+	//!Create a GLC_Rectangle
+	GLC_3DRep createRectangle(double, double);
 
-	//! Create an GLC_World* with a QFile
+	//! Create a GLC_World* with a QFile
 	GLC_World* createWorld(QFile &file, QStringList* pAttachedFileName= NULL) const;
 
-	//! Create an GLC_World containing only the 3dxml structure
+	//! Create a GLC_World containing only the 3dxml structure
 	GLC_World* createWorldStructureFrom3dxml(QFile &file) const;
 
 	//! Create 3DRep from 3dxml or 3DRep file
@@ -123,16 +123,16 @@ public:
 	GLC_Material* createMaterial(const GLfloat *pAmbiantColor) const;
 	//! create a material with an ambient color
 	GLC_Material* createMaterial(const QColor &color) const;
-	//! create an material textured with a texture
+	//! create a material textured with a texture
 	GLC_Material* createMaterial(GLC_Texture* pTexture) const;
-	//! create an material textured with a image file name
+	//! create a material textured with a image file name
 	GLC_Material* createMaterial(const QString &textureFullFileName) const;
-	//! create an material textured with a QImage
+	//! create a material textured with a QImage
 	GLC_Material* createMaterial(const QImage &) const;
 
-	//! Create an GLC_Texture
+	//! Create a GLC_Texture
 	GLC_Texture* createTexture(const QString &textureFullFileName) const;
-	//! Create an GLC_Texture with a QImage
+	//! Create a GLC_Texture with a QImage
 	GLC_Texture* createTexture(const QImage &) const;
 
 

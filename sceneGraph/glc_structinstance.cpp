@@ -34,9 +34,15 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)
 , m_pStructReference(pStructReference)
 , m_ListOfOccurences()
 , m_RelativeMatrix()
-, m_Name(pStructReference->name())
+, m_Name()
 , m_pAttributes(NULL)
 {
+	if (NULL == m_pStructReference)
+	{
+		m_pStructReference= new GLC_StructReference();
+	}
+	m_Name= m_pStructReference->name();
+
 	if (m_pStructReference->hasStructInstance())
 	{
 		m_pNumberOfInstance= m_pStructReference->firstInstanceHandle()->m_pNumberOfInstance;

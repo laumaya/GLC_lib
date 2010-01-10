@@ -21,11 +21,12 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
+//! \file glc_3drep.h interface for the GLC_3DRep class.
 
 #ifndef GLC_3DREP_H_
 #define GLC_3DREP_H_
 
-#include "../geometry/glc_vbogeom.h"
+#include "glc_geometry.h"
 #include "glc_rep.h"
 
 #include "../glc_config.h"
@@ -36,6 +37,9 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_3DRep : public GLC_Rep
 {
+	friend QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
+	friend QDataStream &operator>>(QDataStream &, GLC_3DRep &);
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -45,7 +49,7 @@ public:
 	GLC_3DRep();
 
 	//! Construct a 3DRep with a geometry
-	GLC_3DRep(GLC_VboGeom*);
+	GLC_3DRep(GLC_Geometry*);
 
 	//! Copy Constructor
 	GLC_3DRep(const GLC_3DRep&);
@@ -69,11 +73,14 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
+
 	//! Return the type of representation
 	virtual int type() const;
 
 	//! Get Geometry
-	inline GLC_VboGeom* geomAt(int index) const
+	inline GLC_Geometry* geomAt(int index) const
 	{
 		Q_ASSERT(NULL != m_pGeomList);
 		Q_ASSERT(m_pGeomList->size() > index);
@@ -97,8 +104,11 @@ public:
 	//! Return true if the rep bounding box is valid
 	bool boundingBoxIsValid() const;
 
+	//! Return the 3DRep bounding Box
+	GLC_BoundingBox boundingBox() const;
+
 	//! Return true if the 3DRep contains the geometry
-	inline bool contains(GLC_VboGeom* pGeom)
+	inline bool contains(GLC_Geometry* pGeom)
 	{return m_pGeomList->contains(pGeom);}
 
 	//! Get number of faces
@@ -121,11 +131,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Add Geometry to the 3DRep
-	inline void addGeom(GLC_VboGeom* pGeom)
+	inline void addGeom(GLC_Geometry* pGeom)
 	{m_pGeomList->append(pGeom);}
 
-	//! Remove empty geometries
-	void removeEmptyGeometry();
+	//! Remove empty geometries and factorise materials
+	void clean();
 
 	//! Reverse geometries normals
 	void reverseNormals();
@@ -138,6 +148,10 @@ public:
 
 	//! Replace the representation
 	virtual void replace(GLC_Rep*);
+
+	//! Replace the specified material by a new one
+	void replaceMaterial(GLC_uint, GLC_Material*);
+
 
 //@}
 
@@ -153,10 +167,18 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Geometries of the 3D representation
-	QList<GLC_VboGeom*>* m_pGeomList;
+	QList<GLC_Geometry*>* m_pGeomList;
 
 	//! The Type of representation
 	int* m_pType;
+
+	//! Class chunk id
+	static quint32 m_ChunkId;
+
 };
+
+//! Non-member stream operator
+QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
+QDataStream &operator>>(QDataStream &, GLC_3DRep &);
 
 #endif /* GLC_3DREP_H_ */

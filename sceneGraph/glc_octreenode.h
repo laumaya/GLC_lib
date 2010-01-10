@@ -20,62 +20,51 @@
  along with GLC-lib; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-*****************************************************************************/
-
-//! \file glc_geomengine.h Interface for the GLC_GeomEngine class.
-
-#ifndef GLC_GEOMENGINE_H_
-#define GLC_GEOMENGINE_H_
-
-#include "../glc_ext.h"
+ *****************************************************************************/
+//! \file glc_octreenode.h interface for the GLC_OctreeNode class.
 
 #include "../glc_config.h"
+#include "../maths/glc_vector4d.h"
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+#ifndef GLC_OCTREENODE_H_
+#define GLC_OCTREENODE_H_
+
+class GLC_OctreeNode;
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_GeomEngine
-/*! \brief GLC_GeomEngine : Parent class for all specialized engine
- */
-
-/*! GLC_GeomEngine is a abstract class. \n \n
- *  Main attributes of GLC_GeomEngine:
- *
- * GLC_GeomEngine provide :
- * 		- Function to create VBO : GLC_GeomEngine::createVbo
- *
- */
+//! \class GLC_OctreeNode
+/*! \brief GLC_OctreeNode : A node of Space partioning implementated with octree */
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_GeomEngine
+class GLC_LIB_EXPORT GLC_OctreeNode
 {
-
-public:
-	//! Default constructor
-	GLC_GeomEngine();
-
-	//! Copy constructor
-	GLC_GeomEngine(const GLC_GeomEngine&);
-
-	//! Destructor
-	virtual ~GLC_GeomEngine();
+	typedef QList<GLC_OctreeNode*> NodeList;
 //////////////////////////////////////////////////////////////////////
-/*! \name Set Functions*/
+/*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Default constructor
+	GLC_OctreeNode(GLC_OctreeNode* pParent= NULL);
 
-	//! Clear the engine
-	void clear();
-
+	//! Destructor
+	virtual ~GLC_OctreeNode();
 //@}
+//////////////////////////////////////////////////////////////////////
+// Private members
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Octree node center position
+	GLC_Vector4d m_Center;
 
-//////////////////////////////////////////////////////////////////////
-// Protected members
-//////////////////////////////////////////////////////////////////////
-protected:
-	//! Main VBO ID
-	GLuint m_VboId;
+	//! Parent Octree node
+	GLC_OctreeNode* m_Parent;
+
+	//! Child Octree node
+	NodeList m_Childs;
+
+	//! Set of 3DViewInstance
+	QSet<GLC_3DViewInstance*> m_3DViewInstanceSet;
 
 };
 
-#endif /* GLC_GEOMENGINE_H_ */
+#endif /* GLC_OCTREENODE_H_ */

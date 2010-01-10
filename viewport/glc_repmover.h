@@ -30,7 +30,7 @@
 #include <QColor>
 #include "../maths/glc_vector4d.h"
 #include "../maths/glc_matrix4x4.h"
-
+#include "../shading/glc_renderproperties.h"
 #include "../glc_config.h"
 
 class GLC_Viewport;
@@ -103,6 +103,9 @@ protected:
 
 	//! The rep main color
 	QColor m_MainColor;
+
+	//! The rep rendering properties
+	GLC_RenderProperties m_RenderProperties;
 };
 
 #endif /* GLC_REPMOVER_H_ */

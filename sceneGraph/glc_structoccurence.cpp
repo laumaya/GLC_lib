@@ -30,7 +30,23 @@
 #include "glc_worldhandle.h"
 
 // Default constructor
-GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, GLC_StructInstance* pStructInstance, GLuint shaderId)
+GLC_StructOccurence::GLC_StructOccurence()
+: m_Uid(glc::GLC_GenID())
+, m_pWorldHandle(NULL)
+, m_pNumberOfOccurence(new int(1))
+, m_pStructInstance(new GLC_StructInstance())
+, m_pParent(NULL)
+, m_Childs()
+, m_AbsoluteMatrix()
+, m_HasRepresentation(m_pStructInstance->structReference()->hasRepresentation())
+{
+	// Update instance
+	m_pStructInstance->structOccurenceCreated(this);
+}
+
+
+// Default constructor
+GLC_StructOccurence::GLC_StructOccurence(GLC_StructInstance* pStructInstance, GLC_WorldHandle* pWorldHandle, GLuint shaderId)
 : m_Uid(glc::GLC_GenID())
 , m_pWorldHandle(pWorldHandle)
 , m_pNumberOfOccurence(NULL)
@@ -72,12 +88,31 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, GLC_Stru
 	// Update instance
 	m_pStructInstance->structOccurenceCreated(this);
 }
+// Construct Occurence withe the specified GLC_3DRep
+GLC_StructOccurence::GLC_StructOccurence(GLC_3DRep* pRep)
+: m_Uid(glc::GLC_GenID())
+, m_pWorldHandle(NULL)
+, m_pNumberOfOccurence(new int(1))
+, m_pStructInstance(NULL)
+, m_pParent(NULL)
+, m_Childs()
+, m_AbsoluteMatrix()
+, m_HasRepresentation()
+{
+	m_pStructInstance= new GLC_StructInstance(pRep);
+	m_HasRepresentation= m_pStructInstance->structReference()->hasRepresentation();
+	setName(m_pStructInstance->name());
+
+	// Update instance
+	m_pStructInstance->structOccurenceCreated(this);
+}
+
 // Copy constructor
 GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GLC_StructOccurence& structOccurence, bool shareInstance)
 : m_Uid(glc::GLC_GenID())
 , m_pWorldHandle(pWorldHandle)
 , m_pNumberOfOccurence(structOccurence.m_pNumberOfOccurence)
-, m_pStructInstance(new GLC_StructInstance(structOccurence.m_pStructInstance))
+, m_pStructInstance(NULL)
 , m_pParent(NULL)
 , m_Childs()
 , m_AbsoluteMatrix(structOccurence.m_AbsoluteMatrix)
@@ -357,13 +392,15 @@ void GLC_StructOccurence::addChild(GLC_StructOccurence* pChild)
 	pChild->updateChildrenAbsoluteMatrix();
 }
 
-// Add Child instance (the occurence is created)
-void GLC_StructOccurence::addChild(GLC_StructInstance* pInstance)
+// Add Child instance and returns the newly created occurence
+GLC_StructOccurence* GLC_StructOccurence::addChild(GLC_StructInstance* pInstance)
 {
 	GLC_StructOccurence* pOccurence;
-	pOccurence= new GLC_StructOccurence(m_pWorldHandle, pInstance);
+	pOccurence= new GLC_StructOccurence(pInstance, m_pWorldHandle);
 
 	addChild(pOccurence);
+
+	return pOccurence;
 }
 
 // make the occurence orphan

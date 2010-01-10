@@ -312,7 +312,7 @@ bool GLC_ObjMtlLoader::extractOneValue(QString &ligne)
 				qDebug() << m_LoadStatus;
 				return false;
 			}
-			m_pCurrentMaterial->setTransparency(static_cast<qreal>(value));
+			m_pCurrentMaterial->setOpacity(static_cast<qreal>(value));
 			return true;
 		}
 

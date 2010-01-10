@@ -114,10 +114,12 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Enable the light
-	inline void enable(void) {glEnable(m_LightID);}
+	inline void enable(void)
+	{glEnable(m_LightID);}
 
 	// Disable the light
-	inline void disable(void) {glDisable(m_LightID);}
+	inline void disable(void)
+	{glDisable(m_LightID);}
 
 	//! Execute OpenGL light
 	virtual void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);

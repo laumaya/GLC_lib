@@ -29,6 +29,8 @@
 
 #include <QString>
 
+#include "glc_cachemanager.h"
+
 #include "glc_config.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -85,6 +87,12 @@ public:
 
 	//! Return true if pixel culling is activate
 	static bool isPixelCullingActivated();
+
+	//! Return true if the cache is used
+	static bool cacheIsUsed();
+
+	//! Return the current cache manager
+	static GLC_CacheManager& currentCacheManager();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -118,6 +126,12 @@ public:
 
 	//! Set pixel culling state
 	static void setPixelCullingUsage(const bool);
+
+	//! Set the cache usage
+	static void setCacheUsage(const bool);
+
+	//! Set the current cache manager
+	static void setCurrentCacheManager(const GLC_CacheManager&);
 
 //@}
 
@@ -157,6 +171,12 @@ private:
 
 	//! The Opengl card renderer
 	static QString m_Renderer;
+
+	//! Cache usage
+	static bool m_UseCache;
+
+	//! The current cache manager
+	static GLC_CacheManager m_CacheManager;
 
 };
 

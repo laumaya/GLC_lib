@@ -27,19 +27,27 @@
 #include "glc_primitivegroup.h"
 #include "../glc_state.h"
 
+// Class chunk id
+quint32 GLC_PrimitiveGroup::m_ChunkId= 0xA700;
+
+// Default constructor
 GLC_PrimitiveGroup::GLC_PrimitiveGroup(GLC_uint materialId)
 : m_ID(materialId)
 , m_TrianglesIndex()
-, m_pBaseTrianglesOffset(NULL)
-, m_BaseTrianglesOffseti(0)
+, m_TrianglesGroupsSizes()
+, m_TrianglesGroupOffset()
+, m_TrianglesGroupOffseti()
+, m_TrianglesId()
 , m_StripsIndex()
 , m_StripIndexSizes()
 , m_StripIndexOffset()
 , m_StripIndexOffseti()
+, m_StripsId()
 , m_FansIndex()
 , m_FansIndexSizes()
 , m_FanIndexOffset()
 , m_FanIndexOffseti()
+, m_FansId()
 , m_IsFinished(false)
 , m_TrianglesIndexSize(0)
 , m_TrianglesStripSize(0)
@@ -52,16 +60,20 @@ GLC_PrimitiveGroup::GLC_PrimitiveGroup(GLC_uint materialId)
 GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group)
 : m_ID(group.m_ID)
 , m_TrianglesIndex(group.m_TrianglesIndex)
-, m_pBaseTrianglesOffset(group.m_pBaseTrianglesOffset)
-, m_BaseTrianglesOffseti(group.m_BaseTrianglesOffseti)
+, m_TrianglesGroupsSizes(group.m_TrianglesGroupsSizes)
+, m_TrianglesGroupOffset(group.m_TrianglesGroupOffset)
+, m_TrianglesGroupOffseti(group.m_TrianglesGroupOffseti)
+, m_TrianglesId(group.m_TrianglesId)
 , m_StripsIndex(group.m_StripsIndex)
 , m_StripIndexSizes(group.m_StripIndexSizes)
 , m_StripIndexOffset(group.m_StripIndexOffset)
 , m_StripIndexOffseti(group.m_StripIndexOffseti)
+, m_StripsId(group.m_StripsId)
 , m_FansIndex(group.m_FansIndex)
 , m_FansIndexSizes(group.m_FansIndexSizes)
 , m_FanIndexOffset(group.m_FanIndexOffset)
 , m_FanIndexOffseti(group.m_FanIndexOffseti)
+, m_FansId(group.m_FansId)
 , m_IsFinished(group.m_IsFinished)
 , m_TrianglesIndexSize(group.m_TrianglesIndexSize)
 , m_TrianglesStripSize(group.m_TrianglesStripSize)
@@ -75,16 +87,20 @@ GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group)
 GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group, GLC_uint id)
 : m_ID(id)
 , m_TrianglesIndex(group.m_TrianglesIndex)
-, m_pBaseTrianglesOffset(group.m_pBaseTrianglesOffset)
-, m_BaseTrianglesOffseti(group.m_BaseTrianglesOffseti)
+, m_TrianglesGroupsSizes(group.m_TrianglesGroupsSizes)
+, m_TrianglesGroupOffset(group.m_TrianglesGroupOffset)
+, m_TrianglesGroupOffseti(group.m_TrianglesGroupOffseti)
+, m_TrianglesId(group.m_TrianglesId)
 , m_StripsIndex(group.m_StripsIndex)
 , m_StripIndexSizes(group.m_StripIndexSizes)
 , m_StripIndexOffset(group.m_StripIndexOffset)
 , m_StripIndexOffseti(group.m_StripIndexOffseti)
+, m_StripsId(group.m_StripsId)
 , m_FansIndex(group.m_FansIndex)
 , m_FansIndexSizes(group.m_FansIndexSizes)
 , m_FanIndexOffset(group.m_FanIndexOffset)
 , m_FanIndexOffseti(group.m_FanIndexOffseti)
+, m_FansId(group.m_FansId)
 , m_IsFinished(group.m_IsFinished)
 , m_TrianglesIndexSize(group.m_TrianglesIndexSize)
 , m_TrianglesStripSize(group.m_TrianglesStripSize)
@@ -101,16 +117,20 @@ GLC_PrimitiveGroup& GLC_PrimitiveGroup::operator=(const GLC_PrimitiveGroup& grou
 	{
 		m_ID= group.m_ID;
 		m_TrianglesIndex= group.m_TrianglesIndex;
-		m_pBaseTrianglesOffset= group.m_pBaseTrianglesOffset;
-		m_BaseTrianglesOffseti= group.m_BaseTrianglesOffseti;
+		m_TrianglesGroupsSizes= group.m_TrianglesGroupsSizes;
+		m_TrianglesGroupOffset= group.m_TrianglesGroupOffset;
+		m_TrianglesGroupOffseti= group.m_TrianglesGroupOffseti;
+		m_TrianglesId= group.m_TrianglesId;
 		m_StripsIndex= group.m_StripsIndex;
 		m_StripIndexSizes= group.m_StripIndexSizes;
 		m_StripIndexOffset= group.m_StripIndexOffset;
 		m_StripIndexOffseti= group.m_StripIndexOffseti;
+		m_StripsId= group.m_StripsId;
 		m_FansIndex= group.m_FansIndex;
 		m_FansIndexSizes= group.m_FansIndexSizes;
 		m_FanIndexOffset= group.m_FanIndexOffset;
 		m_FanIndexOffseti= group.m_FanIndexOffseti;
+		m_FansId= group.m_FansId;
 		m_IsFinished= group.m_IsFinished;
 		m_TrianglesIndexSize= group.m_TrianglesIndexSize;
 		m_TrianglesStripSize= group.m_TrianglesStripSize;
@@ -123,9 +143,34 @@ GLC_PrimitiveGroup::~GLC_PrimitiveGroup()
 {
 
 }
+// Return the class Chunk ID
+quint32 GLC_PrimitiveGroup::chunckID()
+{
+	return m_ChunkId;
+}
+
+// Add triangles to the group
+void GLC_PrimitiveGroup::addTriangles(const IndexList& input, GLC_uint id)
+{
+	m_TrianglesIndex+= input;
+	m_TrianglesIndexSize= m_TrianglesIndex.size();
+
+	m_TrianglesGroupsSizes.append(static_cast<GLsizei>(input.size()));
+
+	if (m_TrianglesGroupOffseti.isEmpty())
+	{
+		m_TrianglesGroupOffseti.append(0);
+	}
+	int offset= m_TrianglesGroupOffseti.last() + m_TrianglesGroupsSizes.last();
+	m_TrianglesGroupOffseti.append(offset);
+
+	// The Triangles group id
+	if (0 != id) m_TrianglesId.append(id);
+	else Q_ASSERT(m_TrianglesId.isEmpty());
+}
 
 // Add triangle strip to the group
-void GLC_PrimitiveGroup::addTrianglesStrip(const IndexList& input)
+void GLC_PrimitiveGroup::addTrianglesStrip(const IndexList& input, GLC_uint id)
 {
 	m_StripsIndex+= input;
 	m_TrianglesStripSize= m_StripsIndex.size();
@@ -138,6 +183,32 @@ void GLC_PrimitiveGroup::addTrianglesStrip(const IndexList& input)
 	}
 	int offset= m_StripIndexOffseti.last() + m_StripIndexSizes.last();
 	m_StripIndexOffseti.append(offset);
+
+	// The strip id
+	if (0 != id) m_StripsId.append(id);
+	else Q_ASSERT(m_StripsId.isEmpty());
+}
+// Set the triangle index offset
+void GLC_PrimitiveGroup::setTrianglesOffset(GLvoid* pOffset)
+{
+	m_TrianglesGroupOffseti.pop_back();
+	const int size= m_TrianglesGroupOffseti.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_TrianglesGroupOffset.append(BUFFER_OFFSET(static_cast<GLsizei>(m_TrianglesGroupOffseti[i]) * sizeof(GLuint) + reinterpret_cast<GLsizeiptr>(pOffset)));
+	}
+	m_TrianglesGroupOffseti.clear();
+}
+
+// Set the triangle index offset
+void GLC_PrimitiveGroup::setTrianglesOffseti(int offset)
+{
+	m_TrianglesGroupOffseti.pop_back();
+	const int size= m_TrianglesGroupOffseti.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_TrianglesGroupOffseti[i]= m_TrianglesGroupOffseti[i] + offset;
+	}
 }
 
 // Set base triangle strip offset
@@ -164,7 +235,7 @@ void GLC_PrimitiveGroup::setBaseTrianglesStripOffseti(int offset)
 }
 
 //! Add triangle fan to the group
-void GLC_PrimitiveGroup::addTrianglesFan(const IndexList& input)
+void GLC_PrimitiveGroup::addTrianglesFan(const IndexList& input, GLC_uint id)
 {
 	m_FansIndex+= input;
 	m_TrianglesFanSize= m_FansIndex.size();
@@ -177,6 +248,11 @@ void GLC_PrimitiveGroup::addTrianglesFan(const IndexList& input)
 	}
 	int offset= m_FanIndexOffseti.last() + m_FansIndexSizes.last();
 	m_FanIndexOffseti.append(offset);
+
+	// The fan id
+	if (0 != id) m_FansId.append(id);
+	else Q_ASSERT(m_FansId.isEmpty());
+
 
 }
 
@@ -203,12 +279,42 @@ void GLC_PrimitiveGroup::setBaseTrianglesFanOffseti(int offset)
 	}
 }
 
+// Change index to VBO mode
+void GLC_PrimitiveGroup::changeToVboMode()
+{
+
+	m_TrianglesGroupOffset.clear();
+	const int triangleOffsetSize= m_TrianglesGroupOffseti.size();
+	for (int i= 0; i < triangleOffsetSize; ++i)
+	{
+		m_TrianglesGroupOffset.append(BUFFER_OFFSET(static_cast<GLsizei>(m_TrianglesGroupOffseti.at(i)) * sizeof(GLuint)));
+	}
+	m_TrianglesGroupOffseti.clear();
+
+	m_StripIndexOffset.clear();
+	const int stripOffsetSize= m_StripIndexOffseti.size();
+	for (int i= 0; i < stripOffsetSize; ++i)
+	{
+		m_StripIndexOffset.append(BUFFER_OFFSET(static_cast<GLsizei>(m_StripIndexOffseti.at(i)) * sizeof(GLuint)));
+	}
+	m_StripIndexOffseti.clear();
+
+	m_FanIndexOffset.clear();
+	const int fanOffsetSize= m_FanIndexOffseti.size();
+	for (int i= 0; i < fanOffsetSize; ++i)
+	{
+		m_FanIndexOffset.append(BUFFER_OFFSET(static_cast<GLsizei>(m_FanIndexOffseti.at(i)) * sizeof(GLuint)));
+	}
+	m_FanIndexOffseti.clear();
+}
+
 // Clear the group
 void GLC_PrimitiveGroup::clear()
 {
 	m_TrianglesIndex.clear();
-	m_pBaseTrianglesOffset= NULL;
-	m_BaseTrianglesOffseti= 0;
+	m_TrianglesGroupsSizes.clear();
+	m_TrianglesGroupOffset.clear();
+	m_TrianglesGroupOffseti.clear();
 	m_StripsIndex.clear();
 	m_StripIndexSizes.clear();
 	m_StripIndexOffset.clear();
@@ -223,16 +329,20 @@ void GLC_PrimitiveGroup::clear()
 	m_TrianglesFanSize= 0;
 }
 
+
+// Non Member methods
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitiveGroup)
 {
 	Q_ASSERT(primitiveGroup.isFinished());
+	quint32 chunckId= GLC_PrimitiveGroup::m_ChunkId;
+	stream << chunckId;
 
 	// Primitive group id
 	stream << primitiveGroup.m_ID;
 
 	// Triangles, strips and fan offset index
-	GLuint baseTrianglesOffseti;
+	OffsetVectori trianglesGroupOffseti;
 	OffsetVectori stripIndexOffseti;
 	OffsetVectori fanIndexOffseti;
 
@@ -241,59 +351,78 @@ QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitive
 	{
 		// Convert offset to index
 		// Triangles offset
-		baseTrianglesOffseti= static_cast<GLuint>(reinterpret_cast<GLsizeiptr>(primitiveGroup.m_pBaseTrianglesOffset) / sizeof(GLuint));
+		const int triangleIndexOffsetSize= primitiveGroup.m_TrianglesGroupOffset.size();
+		for (int i= 0; i < triangleIndexOffsetSize; ++i)
+		{
+			trianglesGroupOffseti.append(static_cast<GLuint>(reinterpret_cast<GLsizeiptr>(primitiveGroup.m_TrianglesGroupOffset.at(i)) / sizeof(GLuint)));
+		}
 
 		// Trips offsets
-		for (int i= 0; i < primitiveGroup.m_TrianglesStripSize; ++i)
+		const int stripIndexOffsetSize= primitiveGroup.m_StripIndexOffset.size();
+		for (int i= 0; i < stripIndexOffsetSize; ++i)
 		{
 			stripIndexOffseti.append(static_cast<GLuint>(reinterpret_cast<GLsizeiptr>(primitiveGroup.m_StripIndexOffset.at(i)) / sizeof(GLuint)));
 		}
 		// Fans offsets
-		for (int i= 0; i < primitiveGroup.m_TrianglesFanSize; ++i)
+		const int fanIndexOffsetSize= primitiveGroup.m_FanIndexOffset.size();
+		for (int i= 0; i < fanIndexOffsetSize; ++i)
 		{
 			fanIndexOffseti.append(static_cast<GLuint>(reinterpret_cast<GLsizeiptr>(primitiveGroup.m_FanIndexOffset.at(i)) / sizeof(GLuint)));
 		}
 	}
 	else
 	{
-		baseTrianglesOffseti= primitiveGroup.m_BaseTrianglesOffseti;
+		trianglesGroupOffseti= primitiveGroup.m_TrianglesGroupOffseti;
 		stripIndexOffseti= primitiveGroup.m_StripIndexOffseti;
 		fanIndexOffseti= primitiveGroup.m_FanIndexOffseti;
 	}
 	// Triangles index
 	stream << primitiveGroup.m_TrianglesIndexSize;
-	stream << baseTrianglesOffseti;
+	stream << trianglesGroupOffseti;
+	stream << primitiveGroup.m_TrianglesGroupsSizes;
+	stream << primitiveGroup.m_TrianglesId;
 
 	// Triangles strips index
 	stream << primitiveGroup.m_TrianglesStripSize;
 	stream << stripIndexOffseti;
 	stream << primitiveGroup.m_StripIndexSizes;
+	stream << primitiveGroup.m_StripsId;
 
 	// Triangles fans index
 	stream << primitiveGroup.m_TrianglesFanSize;
 	stream << fanIndexOffseti;
 	stream << primitiveGroup.m_FansIndexSizes;
+	stream << primitiveGroup.m_FansId;
 
 	return stream;
 }
 QDataStream &operator>>(QDataStream &stream, GLC_PrimitiveGroup &primitiveGroup)
 {
+	quint32 chunckId;
+	stream >> chunckId;
+	Q_ASSERT(chunckId == GLC_PrimitiveGroup::m_ChunkId);
 	stream >> primitiveGroup.m_ID;
 
 	// Triangles index
 	stream >> primitiveGroup.m_TrianglesIndexSize;
-	stream >> primitiveGroup.m_BaseTrianglesOffseti;
+	stream >> primitiveGroup.m_TrianglesGroupOffseti;
+	stream >> primitiveGroup.m_TrianglesGroupsSizes;
+	stream >> primitiveGroup.m_TrianglesId;
 
 	// Triangles strips index
 	stream >> primitiveGroup.m_TrianglesStripSize;
 	stream >> primitiveGroup.m_StripIndexOffseti;
 	stream >> primitiveGroup.m_StripIndexSizes;
+	stream >> primitiveGroup.m_StripsId;
 
 	// Triangles fans index
 	stream >> primitiveGroup.m_TrianglesFanSize;
 	stream >> primitiveGroup.m_FanIndexOffseti;
 	stream >> primitiveGroup.m_FansIndexSizes;
+	stream >> primitiveGroup.m_FansId;
 
+
+	primitiveGroup.finish();
 
 	return stream;
 }

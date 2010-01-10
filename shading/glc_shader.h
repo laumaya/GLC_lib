@@ -71,16 +71,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return the program shader id
-	inline GLuint id() const {return m_ProgramShader;}
+	inline GLuint id() const
+	{return m_ProgramShader;}
 
 	//! Return true if the shader is usable
-	inline bool isUsable() const {return m_ProgramShader != 0;}
+	inline bool isUsable() const
+	{return m_ProgramShader != 0;}
 
 	//! Return true if the shader can be deleted
 	bool canBeDeleted() const;
 
 	//! Return the shader's name
-	QString name() const {return m_Name;}
+	inline QString name() const
+	{return m_Name;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -103,7 +106,8 @@ public:
 	}
 
 	//! Set the Shader Name
-	inline void setName(const QString& name) {m_Name= name;}
+	inline void setName(const QString& name)
+	{m_Name= name;}
 
 //@}
 

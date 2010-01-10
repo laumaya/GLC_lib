@@ -118,7 +118,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 	if (!lineBuff.startsWith("solid"))
 	{
 		// The STL File is not ASCII trying to load Binary STL File
-		m_pCurrentMesh= new GLC_ExtendedMesh();
+		m_pCurrentMesh= new GLC_Mesh();
 		file.reset();
 		LoadBinariStl(file);
 		m_pCurrentMesh->addTriangles(NULL, m_CurrentFace);
@@ -127,17 +127,17 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		m_VertexBulk.clear();
 		m_pCurrentMesh->addNormals(m_NormalBulk.toVector());
 		m_NormalBulk.clear();
-		m_pCurrentMesh->finished();
+		m_pCurrentMesh->finish();
 		GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
-		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
+		m_pWorld->rootOccurence()->addChild(new GLC_StructOccurence(pRep));
 	}
 	else
 	{
 		// The STL File is ASCII
 		lineBuff.remove(0, 5);
 		lineBuff= lineBuff.trimmed();
-		m_pCurrentMesh= new GLC_ExtendedMesh();
+		m_pCurrentMesh= new GLC_Mesh();
 		m_pCurrentMesh->setName(lineBuff);
 		// Read the mesh facet
 		while (!m_StlStream.atEnd())
@@ -193,10 +193,10 @@ void GLC_StlToWorld::scanFacet()
 		m_pCurrentMesh->addNormals(m_NormalBulk.toVector());
 		m_NormalBulk.clear();
 
-		m_pCurrentMesh->finished();
+		m_pCurrentMesh->finish();
 		GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
-		m_pWorld->rootOccurence()->addChild((new GLC_StructReference(pRep))->createStructInstance());
+		m_pWorld->rootOccurence()->addChild(new GLC_StructOccurence(pRep));
 		return;
 	}
 	// Test if this is the start of new solid
@@ -205,7 +205,7 @@ void GLC_StlToWorld::scanFacet()
 		// The STL File is ASCII
 		lineBuff.remove(0, 5);
 		lineBuff= lineBuff.trimmed();
-		m_pCurrentMesh= new GLC_ExtendedMesh();
+		m_pCurrentMesh= new GLC_Mesh();
 		m_pCurrentMesh->setName(lineBuff);
 		return;
 	}

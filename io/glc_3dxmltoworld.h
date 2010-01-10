@@ -32,6 +32,7 @@
 #include <QXmlStreamReader>
 #include <QHash>
 #include <QSet>
+#include <QDateTime>
 #include "../maths/glc_matrix4x4.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 
@@ -43,7 +44,7 @@ class QuaZip;
 class QuaZipFile;
 class GLC_StructReference;
 class GLC_StructInstance;
-class GLC_ExtendedMesh;
+class GLC_Mesh;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_3dxmlToWorld
@@ -102,10 +103,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an GLC_World from an input 3DXML File
-	GLC_World* CreateWorldFrom3dxml(QFile &, bool StructureOnly);
+	GLC_World* createWorldFrom3dxml(QFile &, bool StructureOnly);
 
 	//! Create 3DRep from an 3DXML rep
-	GLC_3DRep Create3DrepFrom3dxmlRep(const QString&);
+	GLC_3DRep create3DrepFrom3dxmlRep(const QString&);
 
 	//! Get the list of attached files
 	inline QStringList listOfAttachedFileName() const
@@ -178,7 +179,7 @@ private:
 	void checkForXmlError(const QString&);
 
 	//! Load Level of detail
-	void loadLOD(GLC_ExtendedMesh*);
+	void loadLOD(GLC_Mesh*);
 
 	//! Return true if the end of specified element is not reached
 	inline bool endElementNotReached(const QString& element)
@@ -189,7 +190,10 @@ private:
 	{return !m_pStreamReader->atEnd() && !(m_pStreamReader->isStartElement() && (m_pStreamReader->name() == element));}
 
 	//! Load a face
-	void loadFace(GLC_ExtendedMesh*, const int lod, double accuracy);
+	void loadFace(GLC_Mesh*, const int lod, double accuracy);
+
+	//! Load polyline
+	void loadPolyline(GLC_Mesh*);
 
 	//! Clear material hash
 	void clearMaterialHash();
@@ -220,6 +224,9 @@ private:
 
 	//! try to load the specified image
 	QImage loadImage(QString);
+
+	//! Factorize material use
+	void factorizeMaterial(GLC_3DRep*);
 
 //@}
 
@@ -299,7 +306,11 @@ private:
 	//! The list of attached file name
 	QSet<QString> m_ListOfAttachedFileName;
 
+	//! The current file name
+	QString m_CurrentFileName;
 
+	//! The current file time and date
+	QDateTime m_CurrentDateTime;
 
 };
 

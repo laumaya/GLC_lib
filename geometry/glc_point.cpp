@@ -34,13 +34,13 @@ using namespace glc;
 
 
 GLC_Point::GLC_Point(const GLC_Point4d &setCoord)
-:GLC_VboGeom("Point", true), m_Coordinate(setCoord)
+:GLC_Geometry("Point", true), m_Coordinate(setCoord)
 {
 
 }
 //! Construct an GLC_Point
 GLC_Point::GLC_Point(double x, double y, double z)
-:GLC_VboGeom("Point", true), m_Coordinate(x, y, z)
+:GLC_Geometry("Point", true), m_Coordinate(x, y, z)
 {
 }
 
@@ -75,7 +75,7 @@ GLC_BoundingBox& GLC_Point::boundingBox(void)
 }
 
 // Return a copy of the current geometry
-GLC_VboGeom* GLC_Point::clone() const
+GLC_Geometry* GLC_Point::clone() const
 {
 	return new GLC_Point(*this);
 }
@@ -99,7 +99,7 @@ void GLC_Point::setCoordinate(double x, double y, double z)
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Point::glDraw(bool)
+void GLC_Point::glDraw(const GLC_RenderProperties&)
 {
 	// Point Display
 	glBegin(GL_POINTS);

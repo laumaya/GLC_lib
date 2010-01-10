@@ -32,12 +32,13 @@
 #include "glc_texture.h"
 #include <QHash>
 #include <QColor>
+#include <QSet>
 
 #include "../glc_config.h"
 
-class GLC_VboGeom;
+class GLC_Geometry;
 
-typedef QHash< GLC_uint, GLC_VboGeom*> CWhereUsed;
+typedef QHash< GLC_uint, GLC_Geometry*> CWhereUsed;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Material
@@ -49,6 +50,9 @@ typedef QHash< GLC_uint, GLC_VboGeom*> CWhereUsed;
 
 class GLC_LIB_EXPORT GLC_Material : public GLC_Object
 {
+	friend QDataStream &operator<<(QDataStream &, const GLC_Material &);
+	friend QDataStream &operator>>(QDataStream &, GLC_Material &);
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -82,8 +86,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
+
 	//! Return true if the material is used
-	bool isUnused() const {return m_WhereUsed.isEmpty();}
+	bool isUnused() const
+	{return m_WhereUsed.isEmpty() && m_OtherUsage.isEmpty();}
 
 	//! Return true is material has attached texture
 	inline bool hasTexture() const
@@ -116,22 +124,25 @@ public:
 
 	//! Return true if the material is transparent
 	inline bool isTransparent() const
-	{return  m_Transparency < 1.0;}
+	{return  m_Opacity < 1.0;}
 
-	//! Return true if material are the same
+	//! Return true if materials are equivalent
 	bool operator==(const GLC_Material&) const;
 
-	//! Return the material alpha
-	inline double alpha() const
+	//! Return the material opacity
+	inline double opacity() const
 	{return m_DiffuseColor.alphaF();}
 
 	//! Return the number of this material usage
 	inline int numberOfUsage() const
-	{return m_WhereUsed.size();}
+	{return m_WhereUsed.size() + m_OtherUsage.size();}
 
 	//! Return the texture handle
 	inline GLC_Texture* textureHandle() const
 	{return m_pTexture;}
+
+	//! Return the material hash code
+	uint hashCode() const;
 
 //@}
 
@@ -179,13 +190,23 @@ public:
 	void removeTexture();
 
 	//! Add Geometry to the "where used" hash table
-	bool addGLC_Geom(GLC_VboGeom* pGeom);
+	/*! This method is thread safe*/
+	bool addGLC_Geom(GLC_Geometry* pGeom);
 
 	//! Remove Geometry to the "where used" hash table
+	/*! This method is thread safe*/
 	bool delGLC_Geom(GLC_uint Key);
 
-	//! Set the material transparency
-	void setTransparency(const qreal);
+	//! Add the id to the other used Set
+	/*! This method is thread safe*/
+	bool addUsage(GLC_uint);
+
+	//! Remove the id to the other used Set
+	/*! This method is thread safe*/
+	bool delUsage(GLC_uint);
+
+	//! Set the material opacity
+	void setOpacity(const qreal);
 
 //@}
 
@@ -200,6 +221,9 @@ public:
 
 	//! Execute OpenGL Material
 	virtual void glExecute();
+
+	//! Execute OpenGL Material with overWrite transparency
+	virtual void glExecute(float);
 
 //@}
 
@@ -233,14 +257,20 @@ private:
 	//! Shiness
 	GLfloat m_fShininess;
 
-	//! Where Used Hash table
+	//! Hash table of geomtries which used this material
 	CWhereUsed m_WhereUsed;
 
-	//! material's texture
+	//! Set of id of other objects that uses this material
+	QSet<GLC_uint> m_OtherUsage;
+
+	//! Material's texture
 	GLC_Texture* m_pTexture;
 
-	//! material transparency
-	qreal m_Transparency;
+	//! Material opacity
+	qreal m_Opacity;
+
+	//! Class chunk id
+	static quint32 m_ChunkId;
 
 };
 

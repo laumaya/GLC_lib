@@ -26,6 +26,10 @@
 
 #include "glc_boundingbox.h"
 #include "maths/glc_matrix4x4.h"
+
+// Class chunk id
+quint32 GLC_BoundingBox::m_ChunkId= 0xA707;
+
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
@@ -59,6 +63,11 @@ GLC_BoundingBox::GLC_BoundingBox(const GLC_Point4d& lower, const GLC_Point4d& up
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+// Return the class Chunk ID
+quint32 GLC_BoundingBox::chunckID()
+{
+	return m_ChunkId;
+}
 
 // Test if a point is in the bounding Box
 bool GLC_BoundingBox::intersect(const GLC_Point4d& point) const
@@ -185,13 +194,13 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3df& pointf)
 // Combine the bounding Box with another bounding box
 GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
 {
-	if (m_IsEmpty)
+	if (m_IsEmpty && !box.m_IsEmpty)
 	{
 		m_Lower= box.m_Lower;
 		m_Upper= box.m_Upper;
 		m_IsEmpty= box.m_IsEmpty;
 	}
-	else
+	else if (! box.m_IsEmpty)
 	{
 		double lowerX= qMin(box.m_Lower.X(), m_Lower.X());
 		double lowerY= qMin(box.m_Lower.Y(), m_Lower.Y());
@@ -248,14 +257,25 @@ GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_BoundingBox &bBox)
 {
-	stream << bBox.lowerCorner() << bBox.upperCorner();
+	quint32 chunckId= GLC_BoundingBox::m_ChunkId;
+	stream << chunckId;
+
+	stream << bBox.m_IsEmpty;
+	stream << bBox.lowerCorner();
+	stream << bBox.upperCorner();
+
 	return stream;
 }
 QDataStream &operator>>(QDataStream &stream, GLC_BoundingBox &bBox)
 {
-	GLC_Vector4d lower, upper;
-	stream >> lower >> upper;
-	bBox= GLC_BoundingBox(lower, upper);
+	quint32 chunckId;
+	stream >> chunckId;
+	Q_ASSERT(chunckId == GLC_BoundingBox::m_ChunkId);
+
+	stream >> bBox.m_IsEmpty;
+	stream >> bBox.m_Lower;
+	stream >> bBox.m_Upper;
+
 	return stream;
 }
 

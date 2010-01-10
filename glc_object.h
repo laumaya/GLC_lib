@@ -30,8 +30,8 @@
 #include <QtOpenGL>
 #include <QString>
 #include <QUuid>
-
-#include "glc_enum.h"
+#include <QMutex>
+#include "glc_global.h"
 
 #include "glc_config.h"
 
@@ -56,9 +56,8 @@ public:
 
 	//! Default constructor
 	/*! Create a GLC_Object , Generate is UID GLC_Object::m_Uid
-	 * and set GLC_Object::m_Name to pName*/
-	//GLC_Object(const char *pName= "");
-	GLC_Object(const QString& name= "");
+	 * and set GLC_Object::m_Name to specified name*/
+	GLC_Object(const QString& name= QString());
 
 	//! Copy constructor
 	GLC_Object(const GLC_Object& sourceObject);
@@ -73,13 +72,16 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return Object Uuid
-	inline QUuid uuid() const {return m_QUuid;};
+	inline QUuid uuid() const
+	{return m_QUuid;};
 
 	//! Get Object ID
-	inline GLC_uint id() const {return m_Uid;}
+	inline GLC_uint id() const
+	{return m_Uid;}
 
 	//! Get Object Name
-	inline const QString name() const {return m_Name;}
+	inline const QString name() const
+	{return m_Name;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -89,23 +91,26 @@ public:
 public:
 
 	//! Set Object Id
-	inline void setId(const GLC_uint id)
-	{m_Uid= id;}
+	/*! This method is thread safe*/
+	void setId(const GLC_uint id);
 
 	//! Set Object UUid
-	inline void setUuid(const QUuid& uuid) {m_QUuid= uuid;}
+	/*! This method is thread safe*/
+	void setUuid(const QUuid& uuid);
 
 	//! Set Object Name
-	inline void setName(const QString name) {m_Name= name;}
+	/*! This method is thread safe*/
+	void setName(const QString& name);
 
 	//! Assignement operator
+	/*! This method is thread safe*/
 	GLC_Object &operator=(const GLC_Object&);
 
 //@}
 
 
 //////////////////////////////////////////////////////////////////////
-// Private member
+// Protected member
 //////////////////////////////////////////////////////////////////////
 
 protected:
@@ -118,5 +123,8 @@ protected:
 
 	//! Name of an GLC_Object
 	QString m_Name;
+
+	//! GLC_Object Mutex
+	QMutex m_Mutex;
 };
 #endif //GLC_OBJECT_H_

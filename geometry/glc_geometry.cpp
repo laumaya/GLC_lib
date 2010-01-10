@@ -22,23 +22,25 @@
 
 *****************************************************************************/
 
-//! \file glc_vbogeom.cpp Implementation of the GLC_VboGeom class.
+//! \file glc_geometry.cpp Implementation of the GLC_Geometry class.
 
 #include "../shading/glc_selectionmaterial.h"
 #include "../glc_openglexception.h"
 #include "../glc_state.h"
-#include "glc_vbogeom.h"
+#include "glc_geometry.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor destructor
 //////////////////////////////////////////////////////////////////////
 // Default constructor
-GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
+GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 : m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pBoundingBox(NULL)
 , m_MaterialHash()
-, m_MaterialHashMap()
 , m_UseColorPerVertex(false)
+, m_IsSelected(false)
+, m_WireData()
+, m_LineWidth(1.0f)
 , m_IsWire(typeIsWire)		// the geometry type
 , m_TransparentMaterialNumber(0)
 , m_Uid(glc::GLC_GenGeomID())
@@ -47,12 +49,14 @@ GLC_VboGeom::GLC_VboGeom(const QString& name, const bool typeIsWire)
 
 }
 // Copy constructor
-GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
+GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 : m_GeometryIsValid(false)	// By default geometry is invalid
 , m_pBoundingBox(NULL)
-, m_MaterialHash()
-, m_MaterialHashMap()
+, m_MaterialHash(sourceGeom.m_MaterialHash)
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
+, m_IsSelected(false)
+, m_WireData(sourceGeom.m_WireData)
+, m_LineWidth(sourceGeom.m_LineWidth)
 , m_IsWire(sourceGeom.m_IsWire)
 , m_TransparentMaterialNumber(sourceGeom.m_TransparentMaterialNumber)
 , m_Uid(glc::GLC_GenGeomID())
@@ -62,15 +66,6 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 	MaterialHash::const_iterator i= sourceGeom.m_MaterialHash.constBegin();
     while (i != sourceGeom.m_MaterialHash.constEnd())
     {
-    	GLC_uint currentOldID= i.key();
-    	GLC_Material* pCurrentOldMaterial= i.value();
-
-    	GLC_Material* pNewMaterial= new GLC_Material(*pCurrentOldMaterial);
-    	GLC_uint newID= pNewMaterial->id();
-    	pNewMaterial->addGLC_Geom(this);
-    	m_MaterialHash.insert(newID, pNewMaterial);
-    	m_MaterialHashMap.insert(currentOldID, newID);
-
         // update inner material use table
         i.value()->addGLC_Geom(this);
         ++i;
@@ -82,7 +77,28 @@ GLC_VboGeom::GLC_VboGeom(const GLC_VboGeom& sourceGeom)
 	}
 }
 
-GLC_VboGeom::~GLC_VboGeom()
+// Overload "=" operator
+GLC_Geometry& GLC_Geometry::operator=(const GLC_Geometry& sourceGeom)
+{
+	if (this != &sourceGeom)
+	{
+		clear();
+		m_GeometryIsValid= false;
+		m_pBoundingBox= NULL;
+		m_MaterialHash= sourceGeom.m_MaterialHash;
+		m_UseColorPerVertex= sourceGeom.m_UseColorPerVertex;
+		m_IsSelected= false;
+		m_WireData= sourceGeom.m_WireData;
+		m_LineWidth= sourceGeom.m_LineWidth;
+		m_IsWire= sourceGeom.m_IsWire;
+		m_TransparentMaterialNumber= sourceGeom.m_TransparentMaterialNumber;
+		m_Uid= glc::GLC_GenGeomID();
+		m_Name= sourceGeom.m_Name;
+	}
+	return *this;
+}
+
+GLC_Geometry::~GLC_Geometry()
 {
 	// delete mesh inner material
 	{
@@ -105,30 +121,14 @@ GLC_VboGeom::~GLC_VboGeom()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-//! Return material index if Material is the same than a material already in the mesh
-GLC_uint GLC_VboGeom::materialIndex(const GLC_Material& mat) const
-{
-	int index= 0;
-	MaterialHash::const_iterator iEntry= m_MaterialHash.begin();
-
-    while ((iEntry != m_MaterialHash.constEnd()) && !(*(iEntry.value()) == mat))
-    {
-        ++iEntry;
-    }
-    if (iEntry != m_MaterialHash.constEnd())
-    {
-    	index= iEntry.key();
-    }
-	return index;
-}
 // Get number of faces
-unsigned int GLC_VboGeom::numberOfFaces() const
+unsigned int GLC_Geometry::numberOfFaces() const
 {
 	return 0;
 }
 
 // Get number of vertex
-unsigned int GLC_VboGeom::numberOfVertex() const
+unsigned int GLC_Geometry::numberOfVertex() const
 {
 	return 0;
 }
@@ -136,29 +136,26 @@ unsigned int GLC_VboGeom::numberOfVertex() const
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+// Clear the content of the geometry and makes it empty
+void GLC_Geometry::clear()
+{
+	clearGeometry();
+}
 
 // Replace the Master material
-void GLC_VboGeom::replaceMasterMaterial(GLC_Material* pMaterial)
+void GLC_Geometry::replaceMasterMaterial(GLC_Material* pMaterial)
 {
 
 	if (!m_MaterialHash.isEmpty())
 	{
-		Q_ASSERT(1 == m_MaterialHash.size());
 		if (pMaterial != firstMaterial())
 		{
-			const bool saveValidity= m_GeometryIsValid;
 			// Remove the first material
 			MaterialHash::iterator iMaterial= m_MaterialHash.begin();
-	        // delete the material if necessary
-			iMaterial.value()->delGLC_Geom(id());
-			if (iMaterial.value()->isTransparent())
-			{
-				--m_TransparentMaterialNumber;
-			}
-	        if (iMaterial.value()->isUnused()) delete iMaterial.value();
-			m_MaterialHash.erase(iMaterial);
+			removeMaterial(iMaterial.value()->id());
+
+			// Add the new material
 			addMaterial(pMaterial);
-			m_GeometryIsValid= saveValidity;
 		}
 	}
 	else
@@ -167,7 +164,7 @@ void GLC_VboGeom::replaceMasterMaterial(GLC_Material* pMaterial)
 	}
 }
 //! Update the transparent material number
-void GLC_VboGeom::updateTransparentMaterialNumber()
+void GLC_Geometry::updateTransparentMaterialNumber()
 {
 	m_TransparentMaterialNumber= 0;
 	MaterialHash::const_iterator iMat= m_MaterialHash.constBegin();
@@ -182,7 +179,7 @@ void GLC_VboGeom::updateTransparentMaterialNumber()
 }
 
 // Add material to mesh
-void GLC_VboGeom::addMaterial(GLC_Material* pMaterial)
+void GLC_Geometry::addMaterial(GLC_Material* pMaterial)
 {
 	if (pMaterial != NULL)
 	{
@@ -202,8 +199,6 @@ void GLC_VboGeom::addMaterial(GLC_Material* pMaterial)
 			//qDebug() << "Add transparent material";
 			++m_TransparentMaterialNumber;
 		}
-		// Invalid the geometry
-		m_GeometryIsValid = false;
 	}
 }
 
@@ -212,7 +207,7 @@ void GLC_VboGeom::addMaterial(GLC_Material* pMaterial)
 //////////////////////////////////////////////////////////////////////
 
 // if the geometry have a texture, load it
-void GLC_VboGeom::glLoadTexture(void)
+void GLC_Geometry::glLoadTexture(void)
 {
 	MaterialHash::iterator iMaterial= m_MaterialHash.begin();
 
@@ -225,7 +220,7 @@ void GLC_VboGeom::glLoadTexture(void)
 }
 
 // Geometry display
-void GLC_VboGeom::glExecute(bool isSelected, bool transparent)
+void GLC_Geometry::glExecute(const GLC_RenderProperties& renderProperties)
 {
 	if (m_MaterialHash.isEmpty())
 	{
@@ -233,64 +228,104 @@ void GLC_VboGeom::glExecute(bool isSelected, bool transparent)
 		pMaterial->setName(name());
 		addMaterial(pMaterial);
 	}
+	m_IsSelected= renderProperties.isSelected();
+
 	// Define Geometry's property
 	if(!GLC_State::isInSelectionMode())
 	{
-		glPropGeom(isSelected);
-	}
-	else
-	{
-		glDisable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_LIGHTING);
+		glPropGeom(renderProperties);
 	}
 
-	glDraw(transparent);
+	glDraw(renderProperties);
+
+	m_IsSelected= false;
 	m_GeometryIsValid= true;
+
+	// OpenGL error handler
+	GLenum error= glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		GLC_OpenGlException OpenGlException("GLC_Geometry::glExecute " + name(), error);
+		throw(OpenGlException);
+	}
 }
 
 // Virtual interface for OpenGL Geometry properties.
-void GLC_VboGeom::glPropGeom(bool isSelected)
+void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 {
 	Q_ASSERT(!m_MaterialHash.isEmpty());
 
-	if(m_IsWire && (m_MaterialHash.size() == 1))
+	if(m_IsWire)
 	{
+		glLineWidth(m_LineWidth);
+		Q_ASSERT(m_MaterialHash.size() == 1);
 		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
-		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
-		const GLfloat red= pCurrentMaterial->diffuseColor().redF();
-		const GLfloat green= pCurrentMaterial->diffuseColor().greenF();
-		const GLfloat blue= pCurrentMaterial->diffuseColor().blueF();
-		const GLfloat alpha= pCurrentMaterial->diffuseColor().alphaF();
+		pCurrentMaterial->glExecute();
 
-		glColor4f(red, green, blue, alpha);
-		if (isSelected) GLC_SelectionMaterial::glExecute();
+		if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 	}
 	else if (m_MaterialHash.size() == 1)
 	{
 		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
 		if (pCurrentMaterial->hasTexture())
 		{
-			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
 			pCurrentMaterial->glExecute();
-			if (isSelected) GLC_SelectionMaterial::glExecute();
+			if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 		}
 		else
 		{
-			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_LIGHTING);
-			if (isSelected) GLC_SelectionMaterial::glExecute();
+			if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 			else pCurrentMaterial->glExecute();
 		}
 	}
+}
 
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
+// Remove the specified material from the geometry
+void GLC_Geometry::removeMaterial(GLC_uint id)
+{
+	Q_ASSERT(containsMaterial(id));
+	// Remove the first material
+	GLC_Material* pMaterial= m_MaterialHash.value(id);
+    // delete the material if necessary
+	pMaterial->delGLC_Geom(this->id());
+	if (pMaterial->isTransparent())
 	{
-		GLC_OpenGlException OpenGlException("GLC_VboGeom::GlPropGeom ", error);
-		throw(OpenGlException);
+		--m_TransparentMaterialNumber;
 	}
+    if (pMaterial->isUnused()) delete pMaterial;
+	m_MaterialHash.remove(id);
+
+}
+
+// Clear the content of this object and makes it empty
+void  GLC_Geometry::clearGeometry()
+{
+	m_GeometryIsValid= false;
+
+	delete m_pBoundingBox;
+	m_pBoundingBox= NULL;
+
+	// delete mesh inner material
+	{
+		MaterialHash::const_iterator i= m_MaterialHash.begin();
+	    while (i != m_MaterialHash.constEnd())
+	    {
+	        // delete the material if necessary
+	        i.value()->delGLC_Geom(id());
+	        if (i.value()->isUnused()) delete i.value();
+	        ++i;
+	    }
+	}
+	m_MaterialHash.clear();
+
+	m_UseColorPerVertex= false;
+	m_IsSelected= false;
+	m_WireData.clear();
+	m_IsWire= false;
+	m_TransparentMaterialNumber= 0;
+	m_Name.clear();
+
 }

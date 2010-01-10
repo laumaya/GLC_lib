@@ -50,6 +50,9 @@ public:
 	//! Copy Constructor
 	GLC_Attributes(const GLC_Attributes&);
 
+	//! Overload "=" operator
+	GLC_Attributes& operator=(const GLC_Attributes&);
+
 	//! Destructor
 	virtual ~GLC_Attributes();
 
@@ -103,12 +106,6 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Assignement operator overload
-	inline GLC_Attributes& operator=(const GLC_Attributes& attr)
-	{
-		m_AttributesHash= attr.m_AttributesHash;
-		return *this;
-	}
 
 	//! Equal operator overload
 	inline bool operator==(const GLC_Attributes& attr) const

@@ -28,15 +28,9 @@
 #define GLC_PRIMITIVEGROUP_H_
 
 #include "../glc_ext.h"
-#include "../glc_enum.h"
-#include "glc_geomengine.h"
+#include "../glc_global.h"
 
 #include "glc_config.h"
-
-typedef QList<GLuint> IndexList;
-typedef QVector<GLsizei> IndexSizes;
-typedef QVector<GLvoid*> OffsetVector;
-typedef QVector<GLuint> OffsetVectori;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_PrimitiveGroup
@@ -77,6 +71,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the class Chunk ID
+	static quint32 chunckID();
 
 	//! Return true if the group is finished
 	inline bool isFinished() const
@@ -90,9 +86,21 @@ public:
 	inline bool containsTriangles() const
 	{return m_TrianglesIndexSize > 0;}
 
+	//! Return true if the group contains triangles group id
+	inline bool containsTrianglesGroupId() const
+	{return !m_TrianglesId.isEmpty();}
+
+	//! Return the Triangle group ID
+	inline GLC_uint triangleGroupId(int index)
+	{return m_TrianglesId.at(index);}
+
 	//! Return the size of list of triangles index of the group
-	inline const int trianglesIndexSize() const
+	inline int trianglesIndexSize() const
 	{return m_TrianglesIndexSize;}
+
+	//! Return the size of list of triangles index of the group
+	inline const IndexSizes& trianglesIndexSizes() const
+	{return m_TrianglesGroupsSizes;}
 
 	//! Return the list of triangles index of the group
 	inline const IndexList& trianglesIndex() const
@@ -103,18 +111,34 @@ public:
 
 	//! Return the offset of triangles index
 	inline const GLvoid* trianglesIndexOffset() const
-	{return m_pBaseTrianglesOffset;}
+	{return m_TrianglesGroupOffset.first();}
 
 	//! Return the offset of triangles index
-	inline const int trianglesIndexOffseti() const
-	{return m_BaseTrianglesOffseti;}
+	inline int trianglesIndexOffseti() const
+	{return m_TrianglesGroupOffseti.first();}
+
+	//! Return the offset of triangles index
+	inline const OffsetVector& trianglesGroupOffset() const
+	{return m_TrianglesGroupOffset;}
+
+	//! Return the offset of triangles index
+	inline const OffsetVectori& trianglesGroupOffseti() const
+	{return m_TrianglesGroupOffseti;}
 
 	//! Return true if the group contains strips
 	inline bool containsStrip() const
 	{return m_TrianglesStripSize > 0;}
 
+	//! Return true if the group contains strips group id
+	inline bool containsStripGroupId() const
+	{return !m_StripsId.isEmpty();}
+
+	//! Return the strip ID
+	inline GLC_uint stripGroupId(int index)
+	{return m_StripsId.at(index);}
+
 	//! Return the size of index of strips
-	inline const int stripsIndexSize() const
+	inline int stripsIndexSize() const
 	{return m_TrianglesStripSize;}
 
 	//! Return the list of index of strips
@@ -140,8 +164,16 @@ public:
 	inline bool containsFan() const
 	{return m_TrianglesFanSize > 0;}
 
+	//! Return true if the group contains fans group id
+	inline bool containsFanGroupId() const
+	{return !m_FansId.isEmpty();}
+
+	//! Return the fan ID
+	inline GLC_uint fanGroupId(int index)
+	{return m_FansId.at(index);}
+
 	//! Return the size of index of fans
-	inline const int fansIndexSize() const
+	inline int fansIndexSize() const
 	{return m_TrianglesFanSize;}
 
 	//! Return the list of index of fans
@@ -163,8 +195,6 @@ public:
 	inline const OffsetVectori& fansOffseti() const
 	{return m_FanIndexOffseti;}
 
-
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -177,22 +207,16 @@ public:
 	{m_ID= id;}
 
 	//! Add triangles to the group
-	inline void addTriangles(const IndexList& input)
-	{
-		m_TrianglesIndex+= input;
-		m_TrianglesIndexSize= m_TrianglesIndex.size();
-	}
+	void addTriangles(const IndexList& input, GLC_uint id= 0);
 
 	//! Set the triangle index offset
-	inline void setTrianglesOffset(GLvoid* pOffset)
-	{m_pBaseTrianglesOffset= pOffset;}
+	void setTrianglesOffset(GLvoid* pOffset);
 
 	//! Set the triangle index offset
-	inline void setTrianglesOffseti(int offset)
-	{m_BaseTrianglesOffseti= offset;}
+	void setTrianglesOffseti(int offset);
 
 	//! Add triangle strip to the group
-	void addTrianglesStrip(const IndexList&);
+	void addTrianglesStrip(const IndexList&, GLC_uint id= 0);
 
 	//! Set base triangle strip offset
 	void setBaseTrianglesStripOffset(GLvoid*);
@@ -201,7 +225,7 @@ public:
 	void setBaseTrianglesStripOffseti(int);
 
 	//! Add triangle fan to the group
-	void addTrianglesFan(const IndexList&);
+	void addTrianglesFan(const IndexList&, GLC_uint id= 0);
 
 	//! Set base triangle fan offset
 	void setBaseTrianglesFanOffset(GLvoid*);
@@ -209,8 +233,11 @@ public:
 	//! Set base triangle fan offset
 	void setBaseTrianglesFanOffseti(int);
 
+	//! Change index to VBO mode
+	void changeToVboMode();
+
 	//! The mesh wich use this group is finished
-	inline void finished()
+	inline void finish()
 	{
 		m_TrianglesIndex.clear();
 		m_StripsIndex.clear();
@@ -233,9 +260,15 @@ private:
 	//! Triangles index list
 	IndexList m_TrianglesIndex;
 
-	//! The base triangle index offset
-	GLvoid* m_pBaseTrianglesOffset;
-	GLuint m_BaseTrianglesOffseti;
+	//! Triangles groups index size
+	IndexSizes m_TrianglesGroupsSizes;
+
+	//! Vector of triangles group offset
+	OffsetVector m_TrianglesGroupOffset;
+	OffsetVectori m_TrianglesGroupOffseti;
+
+	//! Triangles groups id
+	QList<GLC_uint> m_TrianglesId;
 
 	//! Strips index list
 	IndexList m_StripsIndex;
@@ -247,6 +280,9 @@ private:
 	OffsetVector m_StripIndexOffset;
 	OffsetVectori m_StripIndexOffseti;
 
+	//! Strips id
+	QList<GLC_uint> m_StripsId;
+
 	//! Fans index list
 	IndexList m_FansIndex;
 
@@ -256,6 +292,9 @@ private:
 	//! Vector of fan Offset
 	OffsetVector m_FanIndexOffset;
 	OffsetVectori m_FanIndexOffseti;
+
+	//! Fans id
+	QList<GLC_uint> m_FansId;
 
 	//! Flag to know if the group is finish
 	int m_IsFinished;
@@ -268,6 +307,9 @@ private:
 
 	//! Flag to know if there is triangles fan
 	int m_TrianglesFanSize;
+
+	//! Class chunk id
+	static quint32 m_ChunkId;
 
 };
 

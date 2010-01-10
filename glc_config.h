@@ -27,18 +27,18 @@
 #ifndef GLC_CONFIG_H
 #define GLC_CONFIG_H
 
-// Win 32 DLL export macros
-#ifdef Q_OS_WIN32
-# ifndef GLC_LIB_STATIC
-#  ifdef CREATE_GLC_LIB_DLL
-#   define GLC_LIB_EXPORT  __declspec(dllexport)
-#  else
-#   define GLC_LIB_EXPORT  __declspec(dllimport)
-#  endif
-# endif
-#endif // Q_OS_WIN32
+#include <QtGlobal>
 
-// For other architectures, this macro is empty
+// Dynamic library export macros
+#ifndef GLC_LIB_STATIC
+# ifdef CREATE_GLC_LIB_DLL
+#  define GLC_LIB_EXPORT Q_DECL_EXPORT
+# else
+#  define GLC_LIB_EXPORT Q_DECL_IMPORT
+# endif
+#endif
+
+// For static library, this macro is empty
 #ifndef GLC_LIB_EXPORT
 # define GLC_LIB_EXPORT
 #endif

@@ -22,39 +22,37 @@
 
 *****************************************************************************/
 
-//! \file glc_geomengine.cpp Implementation of the GLC_GeomEngine class.
+//! \file glc_global.cpp implementation of usefull utilities
 
-#include "glc_geomengine.h"
-#include "../glc_state.h"
+#include "glc_global.h"
 
-GLC_GeomEngine::GLC_GeomEngine()
-: m_VboId(0)
+QMutex glc::iDMutex;
+QMutex glc::geomIdMutex;
+QMutex glc::userIdMutex;
+
+GLC_uint glc::GLC_GenID(void)
 {
-
-
+	static GLC_uint Id= 0;
+	glc::iDMutex.lock();
+	Id++;
+	glc::iDMutex.unlock();
+	return Id;
 }
-// Copy constructor
-GLC_GeomEngine::GLC_GeomEngine(const GLC_GeomEngine&)
-: m_VboId(0)
-{
 
+GLC_uint glc::GLC_GenGeomID(void)
+{
+	static GLC_uint Id= 0;
+	glc::geomIdMutex.lock();
+	Id++;
+	glc::geomIdMutex.unlock();
+	return Id;
 }
 
-// Destructor
-GLC_GeomEngine::~GLC_GeomEngine()
+GLC_uint glc::GLC_GenUserID(void)
 {
-	clear();
-}
-//////////////////////////////////////////////////////////////////////
-// Set Functions
-//////////////////////////////////////////////////////////////////////
-
-// Clear the engine
-void GLC_GeomEngine::clear()
-{
-	if (0 != m_VboId)
-	{
-		glDeleteBuffers(1, &m_VboId);
-		m_VboId= 0;
-	}
+	static GLC_uint Id= 0;
+	glc::userIdMutex.lock();
+	Id++;
+	glc::userIdMutex.unlock();
+	return Id;
 }

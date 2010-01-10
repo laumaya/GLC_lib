@@ -22,15 +22,14 @@
 
 *****************************************************************************/
 
-//! \file glc_vbogeom.h Interface for the GLC_VboGeom class.
+//! \file glc_geometry.h Interface for the GLC_Geometry class.
 
-#ifndef GLC_VBOGEOM_H_
-#define GLC_VBOGEOM_H_
-#include <QColor>
-#include "../glc_object.h"
+#ifndef GLC_GEOMETRY_H_
+#define GLC_GEOMETRY_H_
 #include "../shading/glc_material.h"
+#include "../shading/glc_renderproperties.h"
+#include "glc_wiredata.h"
 #include "../glc_boundingbox.h"
-#include "../glc_ext.h"
 
 #include "glc_config.h"
 
@@ -38,26 +37,32 @@ typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
 typedef QHash<GLC_uint, GLC_uint> MaterialHashMap;
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_VboGeom
-/*! \brief GLC_VboGeom : parent class for all GLC class which contain
- *  vbo geometrical data*/
+//! \class GLC_Geometry
+/*! \brief GLC_Geometry : parent class for all geometry*/
 
-/*! GLC_VboGeom is a abstract class. \n \n
- *  Main attributes of GLC_VboGeom:
- *		- Material : 	GLC_Material
- * 		- Graphic properties
- * 		- Transformation Matrix
+/*! GLC_Geometry is a abstract class. \n \n
+ *  Main attributes of GLC_Geometry:
+ *		- Materials Hash table : 	QHash<GLC_Material*>
  *
- * GLC_Geometry provide :
- * 		- Function to create VBO : GLC_VboGeom::createVbo
- * 		- Function to draw Geometry : GLC_VboGeom::glExecute
- * 		- Virtual function to overload for visual property: GLC_VboGeom::glPropGeom
- * 		- Virtual function to overload for Object topology: GLC_VboGeom::glDraw
+ * GLC_Geometry provides :
+ * 		- Method to draw Geometry                                                             : GLC_Geometry::glExecute()
+ * 		- Virtual method to overload for visual property                                      : GLC_Geometry::glPropGeom()
+ * 		- Virtual method to load and generate Opengl textures for each materials              : GLC_Geometry::glLoadTexture()
+ * 		- Virtual method to clear the content of the geometry and makes it empty			  : GLC_Geometry::clear()
+ *
+ * 		- Pure virtual method to overload for Object topology                                 : GLC_Geometry::glDraw()
+ * 		- Pure virtual Clone method                                                           : GLC_Geometry::clone()
+ * 		- Pure virtual method to get geometry bounding box                                    : GLC_Geometry::boundingBox()
+ *
+ * 		- Empty virtual method for reversing normals                                          : GLC_Geometry::reverseNormals()
+ *      - Empty virtual method for setting the current level of detail (between 0 and 100)    : GLC_Geometry::setCurrentLod()
+ *      - Empty virtual method to get the number of vertex                                    : GLC_Geometry::numberOfVertex()
+ *      - Empty virtual method to get the number of faces                                     : GLC_Geoetry::numberOfFaces()
  *
  */
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_VboGeom
+class GLC_LIB_EXPORT GLC_Geometry
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -69,14 +74,18 @@ public:
 	 * QString Name
 	 * const bool typeIsWire
 	 */
-	GLC_VboGeom(const QString &, const bool);
+	GLC_Geometry(const QString &, const bool);
 	//! Copy constructor
 	/*!
 	 * const GLC_VboGeom geometry to copy
 	 */
-	GLC_VboGeom(const GLC_VboGeom&);
+	GLC_Geometry(const GLC_Geometry&);
+
+	//! Overload "=" operator
+	GLC_Geometry& operator=(const GLC_Geometry&);
+
 	//! Destructor
-	virtual ~GLC_VboGeom();
+	virtual ~GLC_Geometry();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -85,14 +94,20 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Get Object ID
-	inline GLC_uint id() const {return m_Uid;}
+	inline GLC_uint id() const
+	{return m_Uid;}
 
 	//! Get Object Name
-	inline const QString name() const {return m_Name;}
+	inline QString name() const
+	{return m_Name;}
 
 	//! Return true if the geometry is valid
 	inline bool isValid(void) const
 	{return m_GeometryIsValid;}
+
+	//! Return true if the geometry has material
+	inline bool hasMaterial() const
+	{return !m_MaterialHash.isEmpty();}
 
 	//! Return first material of geometry
 	inline GLC_Material* firstMaterial(void) const
@@ -105,7 +120,7 @@ public:
 	}
 
 	//! Return the number of materials
-	inline unsigned int numberOfMaterials() const
+	inline int numberOfMaterials() const
 	{return m_MaterialHash.size();}
 
 	//! Return the specified mesh sub material
@@ -121,22 +136,18 @@ public:
 	{return m_MaterialHash.keys();}
 
 	//! Return true if Material key is in the mesh
-	inline const bool containsMaterial(const GLC_uint key) const
+	inline bool containsMaterial(const GLC_uint key) const
 	{return m_MaterialHash.contains(key);}
 
-	//! Return material index if Material is the same than a material already in the mesh
-	/*! Return 0 if the material is not found
-	 */
-	GLC_uint materialIndex(const GLC_Material& mat) const;
-
-	//! return the geometry bounding box
+	//! Return the geometry bounding box
 	virtual GLC_BoundingBox& boundingBox(void) = 0;
 
 	//! Return true if the bounding box is valid
-	inline bool boundingBoxIsValid() const {return NULL != m_pBoundingBox;}
+	inline bool boundingBoxIsValid() const
+	{return NULL != m_pBoundingBox;}
 
-	//! clone the geometry
-	virtual GLC_VboGeom* clone() const = 0;
+	//! Clone the geometry
+	virtual GLC_Geometry* clone() const = 0;
 
 	//! Get the geometry transparency
 	inline bool isTransparent() const
@@ -146,7 +157,7 @@ public:
 	inline bool hasTransparentMaterials() const
 	{return m_TransparentMaterialNumber > 0;}
 
-	//! return true if color per vertex is used
+	//! Return true if color per vertex is used
 	inline bool usedColorPerVertex() const
 	{return m_UseColorPerVertex;}
 
@@ -154,11 +165,15 @@ public:
 	inline bool typeIsWire() const
 	{return m_IsWire;}
 
-	//! Get number of faces
+	//! Get the number of faces
 	virtual unsigned int numberOfFaces() const;
 
-	//! Get number of vertex
+	//! Get the number of vertex
 	virtual unsigned int numberOfVertex() const;
+
+	//! Return the line width
+	GLfloat lineWidth() const
+	{return m_LineWidth;}
 
 //@}
 
@@ -168,13 +183,16 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+	//! Clear the content of the geometry and makes it empty
+	virtual void clear();
+
 	//! Replace the Master material
-	//! The number of materials must be <= 1
-	void replaceMasterMaterial(GLC_Material*);
+	virtual void replaceMasterMaterial(GLC_Material*);
 
 	//! Add material to the geometry
 	void addMaterial(GLC_Material *);
 
+	//! Set the color per vertex usage
 	inline void colorPerVertex(const bool colorPerVertex)
 	{
 		if (m_UseColorPerVertex != colorPerVertex)
@@ -194,12 +212,22 @@ public:
 	/*! The value must be between 0 and 100*/
 	virtual void setCurrentLod(const int) {}
 
-	//! Set Object Id
+	//! Set Geometry Id
 	inline void setId(const GLC_uint id)
 	{m_Uid= id;}
 
-	//! Set geometry Name
-	inline void setName(const QString name) {m_Name= name;}
+	//! Set geometry name
+	inline void setName(const QString name)
+	{m_Name= name;}
+
+	//! Add a Polyline to the geometry and returns its id
+	inline GLC_uint addPolyline(const GLfloatVector& vector)
+	{return m_WireData.addPolyline(vector);}
+
+	//! Set Line width
+	inline void setLineWidth(GLfloat lineWidth)
+	{m_LineWidth= lineWidth;}
+
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -207,35 +235,42 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! if the geometry have a texture, load it
+	//! Load each textures of materials
 	virtual void glLoadTexture(void);
 
-	//! Virtual interface for OpenGL execution from GLC_Object.
-	/*! This Virtual function is implemented here.\n
-	 * At the first call, this function call virtual function
-	 * GLC_VboGeom::glPropGeom and set up :
-	 * 		- Geometry
-	 * 		- VBO
-	 * AfterWard this function
-	 *		- Call virtual function GLC_VboGeom::glPropGeom
-	 *        virtual function GLC_Geometry::glDraw
-	 */
-	virtual void glExecute(bool, bool transparent= false);
+	//! Virtual interface for OpenGL execution.
+	virtual void glExecute(const GLC_RenderProperties&);
 
 
 protected:
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function have to be implemented in concrete class.*/
-	virtual void glDraw(bool transparent= false) = 0;
+	virtual void glDraw(const GLC_RenderProperties&) = 0;
 
 	//! Virtual interface for OpenGL Geometry properties.
-	/*! This Virtual function can be modify in concrete class.
-	 * bool IsSelected
-	 * bool ForceWire
-	 */
-	virtual void glPropGeom(bool);
+	virtual void glPropGeom(const GLC_RenderProperties&);
 
 //@}
+//////////////////////////////////////////////////////////////////////
+/*! \name Protected services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+protected:
+	//! Remove the specified material from the geometry
+	void removeMaterial(GLC_uint);
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Private services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Clear the content of this object and makes it empty
+	void clearGeometry();
+
+//@}
+
 //////////////////////////////////////////////////////////////////////
 // Protected members
 //////////////////////////////////////////////////////////////////////
@@ -250,11 +285,18 @@ protected:
 	//! Material Hash table
 	MaterialHash m_MaterialHash;
 
-	//! Material Hash map used by the copy constructor
-	MaterialHashMap m_MaterialHashMap;
-
 	//! Color per vertex usage
 	bool m_UseColorPerVertex;
+
+	//! Selection state
+	bool m_IsSelected;
+
+	//! Wire Data
+	GLC_WireData m_WireData;
+
+	//! The line width
+	GLfloat m_LineWidth;
+
 
 //////////////////////////////////////////////////////////////////////
 // Private members
@@ -264,7 +306,7 @@ private:
 	//! Geometry type is wire
 	bool m_IsWire;
 
-	//! Transparency
+	//! The number of transparent materials
 	int m_TransparentMaterialNumber;
 
 	//! The Unique id of an Geometry
@@ -276,4 +318,4 @@ private:
 
 };
 
-#endif /*GLC_VBOGEOM_H_*/
+#endif /*GLC_GEOMETRY_H_*/

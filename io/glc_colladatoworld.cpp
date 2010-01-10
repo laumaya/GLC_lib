@@ -632,7 +632,7 @@ void GLC_ColladaToWorld::loadTransparency(const QString& name)
 				// A material mustn't be invisible (no sense)
 				if (qFuzzyCompare(alpha, 0.0f)) alpha= 1.0f;
 
-				m_pCurrentMaterial->setTransparency(alpha);
+				m_pCurrentMaterial->setOpacity(alpha);
 				if (!stringToFloatOk) throwException("Error while trying to convert :" + alphaString + " to float");
 			}
 		}
@@ -731,7 +731,7 @@ void GLC_ColladaToWorld::loadGeometry()
 {
 	delete m_pMeshInfo;
 	m_pMeshInfo= new MeshInfo();
-	m_pMeshInfo->m_pMesh= new GLC_ExtendedMesh;
+	m_pMeshInfo->m_pMesh= new GLC_Mesh;
 
 	const QString id= readAttribute("id", false);
 	m_CurrentId= id;
@@ -1796,10 +1796,10 @@ void GLC_ColladaToWorld::createMesh()
 
 			++iMatInfo;
 		}
-		pCurrentMeshInfo->m_pMesh->finished();
+		pCurrentMeshInfo->m_pMesh->finish();
 		GLC_3DRep* pRep= new GLC_3DRep(pCurrentMeshInfo->m_pMesh);
 		pCurrentMeshInfo->m_pMesh= NULL;
-		pRep->removeEmptyGeometry();
+		pRep->clean();
 		m_3DRepHash.insert(iMeshInfo.key(), pRep);
 		++iMeshInfo;
 	}
@@ -1850,7 +1850,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 			}
 			pInstance->move(pNode->m_Matrix);
 			//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
-			pOccurence= new GLC_StructOccurence(NULL, pInstance);
+			pOccurence= new GLC_StructOccurence(pInstance);
 		}
 		else qDebug() << "Geometry Id : " << geometryId << " Not found";
 	}
@@ -1867,7 +1867,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 		}
 
 		pInstance->move(pNode->m_Matrix);
-		pOccurence= new GLC_StructOccurence(NULL, pInstance);
+		pOccurence= new GLC_StructOccurence(pInstance);
 
 		const int size= pNode->m_ChildNodes.size();
 		for (int i= 0; i < size; ++i)
@@ -1905,7 +1905,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 		}
 
 		pInstance->move(pNode->m_Matrix);
-		pOccurence= new GLC_StructOccurence(NULL, pInstance);
+		pOccurence= new GLC_StructOccurence(pInstance);
 	}
 
 	return pOccurence;
