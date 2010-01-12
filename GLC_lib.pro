@@ -8,7 +8,7 @@ CONFIG += exceptions \
     debug \
     warn_on
 TARGET = GLC_lib
-VERSION = 1.2.0
+VERSION = 2.0.0 Alpha 1
 
 DEFINES += CREATE_GLC_LIB_DLL
 
@@ -321,7 +321,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     			   
 # Linux install configuration
 unix {
-    LIBS += -lz.1.2.3
+   	LIBS += -lz.1.2.3
     # Location of HEADERS and library
     LIB_DIR = /usr/lib
     INCLUDE_DIR = /usr/include
