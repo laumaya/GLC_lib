@@ -120,8 +120,8 @@ private:
 		ColladaNode(const QString id, ColladaNode* pParent)
 		: m_Id(id)
 		, m_Matrix()
-		, m_InstanceGeometryID()
-		, m_InstanceOffNodeId()
+		, m_InstanceGeometryIDs()
+		, m_InstanceOffNodeIds()
 		, m_ChildNodes()
 		, m_pParent(pParent)
 		{}
@@ -131,9 +131,9 @@ private:
 		// Position matrix
 		GLC_Matrix4x4 m_Matrix;
 		// Instance geometry id
-		QString m_InstanceGeometryID;
+		QList<QString> m_InstanceGeometryIDs;
 		// Instance off another node
-		QString m_InstanceOffNodeId;
+		QList<QString> m_InstanceOffNodeIds;
 		// Child Node
 		QList<ColladaNode*> m_ChildNodes;
 		// Parent Node

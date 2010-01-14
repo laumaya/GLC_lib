@@ -152,6 +152,9 @@ public:
 	//! Replace the specified material by a new one
 	void replaceMaterial(GLC_uint, GLC_Material*);
 
+	//! Merge this 3Drep with another 3DRep
+	void merge(GLC_3DRep*);
+
 
 //@}
 
