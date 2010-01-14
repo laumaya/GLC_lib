@@ -116,7 +116,6 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 		m_pStreamReader->readNext();
 	}
 
-
 	while (endElementNotReached("COLLADA"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
@@ -324,6 +323,7 @@ void GLC_ColladaToWorld::loadLibraryImage()
 // Load image element
 void GLC_ColladaToWorld::loadImage()
 {
+	//qDebug() << "GLC_ColladaToWorld::loadImage()";
 	// load image id
 	m_CurrentId= readAttribute("id", true);
 	QString fileName;
@@ -580,7 +580,6 @@ void GLC_ColladaToWorld::loadCommonColorOrTexture(const QString& name)
 			const QStringRef currentElementName= m_pStreamReader->name();
 			if (currentElementName == "color")
 			{
-				//qDebug() << " Element Name : " << name;
 				if (name == "emission") m_pCurrentMaterial->setLightEmission(readXmlColor());
 				else if (name == "ambient") m_pCurrentMaterial->setAmbientColor(readXmlColor());
 				else if (name == "diffuse") m_pCurrentMaterial->setDiffuseColor(readXmlColor());
@@ -656,19 +655,19 @@ void GLC_ColladaToWorld::loadShininess(const QString& name)
 				bool stringToFloatOk= false;
 				const QString shininessString= getContent("float");
 				const float shininess= shininessString.toFloat(&stringToFloatOk);
-				m_pCurrentMaterial->setShininess(shininess);
-				if (!stringToFloatOk) throwException("Error while trying to convert :" + shininessString + " to float");
+				if (!stringToFloatOk) qDebug() << QString("Error while trying to convert :" + shininessString + " to float");
+				else m_pCurrentMaterial->setShininess(shininess);
 			}
 		}
 		m_pStreamReader->readNext();
 	}
 	checkForXmlError("Error occur while loading element : " + name);
-
 }
 
 // Read a xml Color
 QColor GLC_ColladaToWorld::readXmlColor()
 {
+	//qDebug() << "GLC_ColladaToWorld::readXmlColor()";
 	QColor resultColor;
 
 	QString colorString= getContent("color");
@@ -793,7 +792,7 @@ void GLC_ColladaToWorld::loadVertexBulkData()
 	//qDebug() << "GLC_ColladaToWorld::loadVertexBulkData()";
 	// load Vertex Bulk data id
 	m_CurrentId= readAttribute("id", true);
-	//qDebug() << "id=" << id;
+	//qDebug() << "id=" << m_CurrentId;
 	QList<float> vertices;
 
 	while (endElementNotReached("source"))
@@ -1336,7 +1335,7 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 // Load the library nodes
 void GLC_ColladaToWorld::loadLibraryNodes()
 {
-	qDebug() << "GLC_ColladaToWorld::loadLibraryNodes";
+	//qDebug() << "GLC_ColladaToWorld::loadLibraryNodes";
 
 	while (endElementNotReached("library_nodes"))
 	{
@@ -1415,7 +1414,7 @@ void GLC_ColladaToWorld::loadInstanceGeometry(ColladaNode* pNode)
 	//qDebug() << "GLC_ColladaToWorld::loadInstanceGeometry";
 
 	const QString url= readAttribute("url", true).remove('#');
-	pNode->m_InstanceGeometryID= url;
+	pNode->m_InstanceGeometryIDs.append(url);
 
 	while (endElementNotReached("instance_geometry"))
 	{
@@ -1440,14 +1439,14 @@ void GLC_ColladaToWorld::loadInstanceNode(ColladaNode* pNode)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadInstanceNode";
 	const QString url= readAttribute("url", true).remove('#');
-	pNode->m_InstanceOffNodeId= url;
+	pNode->m_InstanceOffNodeIds.append(url);
 }
 
 // Load an instance Controller
 void GLC_ColladaToWorld::loadInstanceController(ColladaNode* pNode)
 {
 	const QString url= readAttribute("url", true).remove('#');
-	pNode->m_InstanceOffNodeId= url;
+	pNode->m_InstanceOffNodeIds.append(url);
 
 	while (endElementNotReached("instance_controller"))
 	{
@@ -1480,7 +1479,7 @@ void GLC_ColladaToWorld::loadController()
 			{
 				const QString source= readAttribute("source", true).remove('#');
 				ColladaNode* pNode= new ColladaNode(m_CurrentId, NULL);
-				pNode->m_InstanceGeometryID= source;
+				pNode->m_InstanceGeometryIDs.append(source);
 				m_ColladaNodeHash.insert(m_CurrentId, pNode);
 			}
 		}
@@ -1494,7 +1493,12 @@ void GLC_ColladaToWorld::loadController()
 GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pParent)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadNode";
-	const QString id= readAttribute("id", true);
+	QString id= readAttribute("id", false);
+	if (id.isEmpty())
+	{
+		id= readAttribute("name", true);
+	}
+	//qDebug() << "Load Node " << id;
 	m_CurrentId= id;
 	// The node
 	ColladaNode* pNode= new ColladaNode(id, pParent);
@@ -1516,8 +1520,15 @@ GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pPare
 			else if ((currentElementName == "instance_controller")) loadInstanceController(pNode);
 			else if ((currentElementName == "node"))
 			{
-				if (readAttribute("id", true) != id)
+				QString newId= readAttribute("id", false);
+				if (newId.isEmpty())
 				{
+					//qDebug() << "Child ReadAttribute name";
+					newId= readAttribute("name", true);
+				}
+				if (newId != id)
+				{
+					//qDebug() << "New ID = " << newId;
 					GLC_ColladaToWorld::ColladaNode* pChildNode= loadNode(pNode);
 					if (NULL != pNode)
 					{
@@ -1800,6 +1811,7 @@ void GLC_ColladaToWorld::createMesh()
 		GLC_3DRep* pRep= new GLC_3DRep(pCurrentMeshInfo->m_pMesh);
 		pCurrentMeshInfo->m_pMesh= NULL;
 		pRep->clean();
+		//qDebug() << "Insert Rep : " << iMeshInfo.key();
 		m_3DRepHash.insert(iMeshInfo.key(), pRep);
 		++iMeshInfo;
 	}
@@ -1812,6 +1824,7 @@ void GLC_ColladaToWorld::createSceneGraph()
 	for (int i= 0; i < topLevelNodeCount; ++i)
 	{
 		ColladaNode* pCurrentColladaNode= m_TopLevelColladaNode.at(i);
+		//qDebug() << "Top level node is : " << pCurrentColladaNode->m_Id;
 		if (NULL != pCurrentColladaNode)
 		{
 			GLC_StructOccurence* pOccurence= createOccurenceFromNode(pCurrentColladaNode);
@@ -1827,13 +1840,54 @@ void GLC_ColladaToWorld::createSceneGraph()
 // Create Occurence tree from node tree
 GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pNode)
 {
+	//qDebug() << "GLC_ColladaToWorld::createOccurenceFromNode";
 	Q_ASSERT(NULL != pNode);
 	GLC_StructInstance* pInstance= NULL;
 	GLC_StructOccurence* pOccurence= NULL;
-	if (!pNode->m_InstanceGeometryID.isEmpty())
+	if (!pNode->m_InstanceGeometryIDs.isEmpty())
 	{
-		const QString geometryId= pNode->m_InstanceGeometryID;
-		if (m_3DRepHash.contains(geometryId))
+		if (m_StructInstanceHash.contains(pNode->m_Id))
+		{
+			pInstance= new GLC_StructInstance(m_StructInstanceHash.value(pNode->m_Id));
+			pInstance->move(pNode->m_Matrix);
+			//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
+			pOccurence= new GLC_StructOccurence(pInstance);
+		}
+		else
+		{
+			const int size= pNode->m_InstanceGeometryIDs.size();
+			GLC_3DRep* pRep= NULL;
+			for (int i= 0; i < size; ++i)
+			{
+				const QString geometryId= pNode->m_InstanceGeometryIDs.at(i);
+				if (NULL == pRep)
+				{
+					pRep= new GLC_3DRep(*(m_3DRepHash.value(geometryId)));
+				}
+				else
+				{
+					pRep->merge(m_3DRepHash.value(geometryId));
+				}
+			}
+			if (NULL != pRep)
+			{
+				GLC_StructReference* pStructRef= new GLC_StructReference(pRep);
+				pInstance= new GLC_StructInstance(pStructRef);
+
+				// Save instance in instance hash Table
+				m_StructInstanceHash.insert(pNode->m_Id, pInstance);
+
+				pInstance->move(pNode->m_Matrix);
+				//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
+				pOccurence= new GLC_StructOccurence(pInstance);
+
+			}
+			else qDebug() << "Geometry Id Not found";
+		}
+	}
+	if (!pNode->m_ChildNodes.isEmpty())
+	{
+		if (NULL == pOccurence) //  The node hasn't geometry -> Create an occurence
 		{
 			if (m_StructInstanceHash.contains(pNode->m_Id))
 			{
@@ -1841,33 +1895,13 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 			}
 			else
 			{
-				GLC_3DRep* pRep= new GLC_3DRep(*(m_3DRepHash.value(geometryId)));
-				GLC_StructReference* pStructRef= new GLC_StructReference(pRep);
+				GLC_StructReference* pStructRef= new GLC_StructReference(pNode->m_Id);
 				pInstance= new GLC_StructInstance(pStructRef);
-
-				// Save instance in instance hash Table
-				m_StructInstanceHash.insert(pNode->m_Id, pInstance);
 			}
+
 			pInstance->move(pNode->m_Matrix);
-			//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
 			pOccurence= new GLC_StructOccurence(pInstance);
 		}
-		else qDebug() << "Geometry Id : " << geometryId << " Not found";
-	}
-	else if (!pNode->m_ChildNodes.isEmpty())
-	{
-		if (m_StructInstanceHash.contains(pNode->m_Id))
-		{
-			pInstance= new GLC_StructInstance(m_StructInstanceHash.value(pNode->m_Id));
-		}
-		else
-		{
-			GLC_StructReference* pStructRef= new GLC_StructReference(pNode->m_Id);
-			pInstance= new GLC_StructInstance(pStructRef);
-		}
-
-		pInstance->move(pNode->m_Matrix);
-		pOccurence= new GLC_StructOccurence(pInstance);
 
 		const int size= pNode->m_ChildNodes.size();
 		for (int i= 0; i < size; ++i)
@@ -1878,20 +1912,39 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 			}
 		}
 	}
-	else if (!pNode->m_InstanceOffNodeId.isEmpty())
+	if (!pNode->m_InstanceOffNodeIds.isEmpty())
 	{
-		if (m_ColladaNodeHash.contains(pNode->m_InstanceOffNodeId))
+		if (NULL == pOccurence) //  The node hasn't geometry and childs -> Create an occurence
 		{
-			pOccurence= createOccurenceFromNode(m_ColladaNodeHash.value(pNode->m_InstanceOffNodeId));
-			pOccurence->structInstance()->move(pNode->m_Matrix);
+			if (m_StructInstanceHash.contains(pNode->m_Id))
+			{
+				pInstance= new GLC_StructInstance(m_StructInstanceHash.value(pNode->m_Id));
+			}
+			else
+			{
+				GLC_StructReference* pStructRef= new GLC_StructReference(pNode->m_Id);
+				pInstance= new GLC_StructInstance(pStructRef);
+			}
+
+			pInstance->move(pNode->m_Matrix);
+			pOccurence= new GLC_StructOccurence(pInstance);
 		}
-		else
+
+		const int size= pNode->m_InstanceOffNodeIds.size();
+		for (int i= 0; i < size; ++i)
 		{
-			const QString errorMsg= "Instance Node : " + pNode->m_InstanceOffNodeId + "Not Found";
-			throwException(errorMsg);
+			if (m_ColladaNodeHash.contains(pNode->m_InstanceOffNodeIds.at(i)))
+			{
+				pOccurence->addChild(createOccurenceFromNode(m_ColladaNodeHash.value(pNode->m_InstanceOffNodeIds.at(i))));
+			}
+			else
+			{
+				const QString errorMsg= "Instance Node : " + pNode->m_InstanceOffNodeIds.at(i) + "Not Found";
+				throwException(errorMsg);
+			}
 		}
 	}
-	else
+	if (NULL == pOccurence)
 	{
 		qDebug() << "Empty Node";
 		if (m_StructInstanceHash.contains(pNode->m_Id))
