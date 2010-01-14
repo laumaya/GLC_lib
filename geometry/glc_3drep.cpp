@@ -301,6 +301,17 @@ void GLC_3DRep::replaceMaterial(GLC_uint oldId, GLC_Material* pNewMaterial)
 	}
 }
 
+// Merge this 3Drep with another 3DRep
+void GLC_3DRep::merge(GLC_3DRep* pRep)
+{
+	// Get the number of geometry of pRep
+	const int pRepSize= pRep->m_pGeomList->size();
+	for (int i= 0; i < pRepSize; ++i)
+	{
+		addGeom(pRep->geomAt(i)->clone());
+	}
+}
+
 // UnLoad the representation
 bool GLC_3DRep::unload()
 {
