@@ -63,10 +63,10 @@ namespace glc
 	GLC_LIB_EXPORT GLC_uint GLC_GenUserID(void);
 
 	//! Return the GLC_uint decoded ID from RGB encoded ID
-	inline GLC_LIB_EXPORT GLC_uint decodeRgbId(const GLubyte*);
+	inline GLC_uint decodeRgbId(const GLubyte*);
 
 	//! Return the encoded color of the id
-	inline GLC_LIB_EXPORT void encodeRgbId(GLC_uint, GLubyte*);
+	inline void encodeRgbId(GLC_uint, GLubyte*);
 
 	const int GLC_DISCRET= 70;
 	const int GLC_POLYDISCRET= 60;
@@ -100,7 +100,7 @@ void glc::encodeRgbId(GLC_uint id, GLubyte* colorId)
 
 // GLC_Lib version
 
-#define GLC_VERSION "2.0.0 Alpha 1"
+#define GLC_VERSION "2.0.0 Alpha 2"
 #define GLC_DESCRIPTION "GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4."
 
 
