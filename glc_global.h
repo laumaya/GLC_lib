@@ -63,10 +63,10 @@ namespace glc
 	GLC_LIB_EXPORT GLC_uint GLC_GenUserID(void);
 
 	//! Return the GLC_uint decoded ID from RGB encoded ID
-	inline GLC_LIB_EXPORT GLC_uint decodeRgbId(const GLubyte*);
+	inline GLC_uint decodeRgbId(const GLubyte*);
 
 	//! Return the encoded color of the id
-	inline GLC_LIB_EXPORT void encodeRgbId(GLC_uint, GLubyte*);
+	inline void encodeRgbId(GLC_uint, GLubyte*);
 
 	const int GLC_DISCRET= 70;
 	const int GLC_POLYDISCRET= 60;
