@@ -24,14 +24,22 @@
 //! \file glc_spacepartitioning.cpp implementation for the GLC_SpacePartitioning class.
 
 #include "glc_spacepartitioning.h"
-
-#include <QtGlobal>
 #include "glc_3dviewcollection.h"
 
+#include <QtGlobal>
+
+// Default constructor
 GLC_SpacePartitioning::GLC_SpacePartitioning(GLC_3DViewCollection* pCollection)
 : m_pCollection(pCollection)
 {
 	Q_ASSERT(m_pCollection != NULL);
+}
+
+// Copy constructor
+GLC_SpacePartitioning::GLC_SpacePartitioning(const GLC_SpacePartitioning& spacePartitionning)
+: m_pCollection(spacePartitionning.m_pCollection)
+{
+
 }
 
 GLC_SpacePartitioning::~GLC_SpacePartitioning()

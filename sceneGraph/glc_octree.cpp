@@ -24,14 +24,65 @@
 //! \file glc_octree.cpp implementation for the GLC_Octree class.
 
 #include "glc_octree.h"
+#include "glc_octreenode.h"
+#include "glc_3dviewcollection.h"
 
-GLC_Octree::GLC_Octree()
+// Default constructor
+GLC_Octree::GLC_Octree(GLC_3DViewCollection* pCollection)
+: GLC_SpacePartitioning(pCollection)
+, m_pRootNode(NULL)
+, m_OctreeDepth(4)
 {
 
 
 }
 
+// Copy constructor
+GLC_Octree::GLC_Octree(const GLC_Octree& octree)
+: GLC_SpacePartitioning(octree)
+, m_pRootNode(NULL)
+, m_OctreeDepth(octree.m_OctreeDepth)
+{
+	if (NULL != octree.m_pRootNode)
+	{
+		m_pRootNode= new GLC_OctreeNode(*(octree.m_pRootNode));
+	}
+}
+
+// Destructor
 GLC_Octree::~GLC_Octree()
 {
+	delete m_pRootNode;
+}
+
+//////////////////////////////////////////////////////////////////////
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+
+// Update QHash table of visible GLC_3DViewInstance
+void GLC_Octree::updateViewableInstances()
+{
 
 }
+
+// Update the space partionning
+void GLC_Octree::updateSpacePartitioning()
+{
+	qDebug() << "Create octree";
+	delete m_pRootNode;
+	m_pRootNode= new GLC_OctreeNode(m_pCollection->boundingBox());
+	m_pRootNode->addChildren(m_OctreeDepth);
+	qDebug() << "Octree created";
+
+	qDebug() << "fill Octree";
+	// fill the octree
+	QList<GLC_3DViewInstance*> instanceList(m_pCollection->instancesHandle());
+	const int size= instanceList.size();
+	qDebug() << "Number of instances :" << size;
+	for (int i= 0; i < size; ++i)
+	{
+		m_pRootNode->addInstance(instanceList.at(i));
+	}
+	qDebug() << "Octree filled";
+}
+

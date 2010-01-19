@@ -32,8 +32,10 @@
 #include "glc_3dviewinstance.h"
 #include "../glc_global.h"
 
+
 #include "../glc_config.h"
 
+class GLC_SpacePartitioning;
 class GLC_Material;
 class GLC_Shader;
 class GLC_Viewport;
@@ -144,6 +146,14 @@ public:
 	//! Return the number of used shading group
 	int numberOfUsedShadingGroup() const;
 
+	//! Return true if the space partitioning is used
+	inline bool spacePartitioningIsUsed() const
+	{return m_UseSpacePartitioning;}
+
+	//! Return an handle to  the space partitioning
+	inline GLC_SpacePartitioning* spacePartitioningHandle()
+	{return m_pSpacePartitioning;}
+
 
 //@}
 
@@ -231,6 +241,15 @@ public:
 		m_pViewport= pView;
 	}
 
+	//! Bind the space partitioning
+	void bindSpacePartitioning(GLC_SpacePartitioning*);
+
+	//! Unbind the space partitioning
+	void unbindSpacePartitioning();
+
+	//! Use the space partitioning
+	void setSpacePartitionningUsage(bool);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -305,6 +324,13 @@ private:
 
 	//! The viewport associted to the collection for LOD Usage
 	GLC_Viewport* m_pViewport;
+
+	//! The space partitioning
+	GLC_SpacePartitioning* m_pSpacePartitioning;
+
+	//! The space partition usage
+	bool m_UseSpacePartitioning;
+
 
 };
 

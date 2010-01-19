@@ -27,6 +27,9 @@
 #define GLC_OCTREE_H_
 
 #include "glc_spacepartitioning.h"
+#include "../glc_config.h"
+
+class GLC_OctreeNode;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Octree
@@ -39,7 +42,13 @@ class GLC_LIB_EXPORT GLC_Octree : public GLC_SpacePartitioning
 //@{
 //////////////////////////////////////////////////////////////////////s
 public:
-	GLC_Octree();
+	//! Default constructor
+	GLC_Octree(GLC_3DViewCollection*);
+
+	//! Copy constructor
+	GLC_Octree(const GLC_Octree&);
+
+	//! Destructor
 	virtual ~GLC_Octree();
 
 //@}
@@ -54,10 +63,22 @@ public:
 	virtual void updateViewableInstances();
 
 	//! Update the space partionning
-	virtual void updateSpacePartitionning();
+	virtual void updateSpacePartitioning();
+
+	//! Set the octree depth
+	void setDepth(int);
 
 //@}
 
+//////////////////////////////////////////////////////////////////////
+// Private members
+//////////////////////////////////////////////////////////////////////
+private:
+	//! The octree root node
+	GLC_OctreeNode* m_pRootNode;
+
+	//! The octree depth
+	int m_OctreeDepth;
 };
 
 #endif /* GLC_OCTREE_H_ */

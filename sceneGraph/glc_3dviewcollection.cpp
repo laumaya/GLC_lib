@@ -32,6 +32,7 @@
 #include "../glc_state.h"
 #include "../shading/glc_shader.h"
 #include "../viewport/glc_viewport.h"
+#include "glc_spacepartitioning.h"
 
 #include <QtDebug>
 
@@ -49,6 +50,8 @@ GLC_3DViewCollection::GLC_3DViewCollection()
 , m_IsInShowSate(true)
 , m_UseLod(false)
 , m_pViewport(NULL)
+, m_pSpacePartitioning(NULL)
+, m_UseSpacePartitioning(false)
 {
 }
 
@@ -306,6 +309,9 @@ void GLC_3DViewCollection::clear(void)
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
 	}
+
+	// delete the space partitioning
+	delete m_pSpacePartitioning;
 }
 
 // Select a node
@@ -499,6 +505,30 @@ void GLC_3DViewCollection::hideAll()
 		m_pBoundingBox= NULL;
 	}
 
+}
+
+// Bind the space partitioning
+void GLC_3DViewCollection::bindSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning)
+{
+	Q_ASSERT(NULL != pSpacePartitioning);
+	Q_ASSERT(pSpacePartitioning->collectionHandle() == this);
+
+	delete m_pSpacePartitioning;
+	m_pSpacePartitioning= pSpacePartitioning;
+}
+
+// Unbind the space partitioning
+void GLC_3DViewCollection::unbindSpacePartitioning()
+{
+	delete m_pSpacePartitioning;
+	m_UseSpacePartitioning= false;
+}
+
+// Use the space partitioning
+void GLC_3DViewCollection::setSpacePartitionningUsage(bool use)
+{
+	m_UseSpacePartitioning= use;
+	Q_ASSERT(m_UseSpacePartitioning && (NULL != m_pSpacePartitioning));
 }
 
 // Return all GLC_3DViewInstance from collection

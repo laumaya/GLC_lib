@@ -23,11 +23,15 @@
  *****************************************************************************/
 //! \file glc_octreenode.h interface for the GLC_OctreeNode class.
 
-#include "../glc_config.h"
-#include "../maths/glc_vector4d.h"
 
 #ifndef GLC_OCTREENODE_H_
 #define GLC_OCTREENODE_H_
+
+#include "glc_3dviewinstance.h"
+#include "../glc_boundingbox.h"
+#include "../glc_config.h"
+#include <QList>
+#include <QSet>
 
 class GLC_OctreeNode;
 
@@ -35,7 +39,7 @@ class GLC_OctreeNode;
 //! \class GLC_OctreeNode
 /*! \brief GLC_OctreeNode : A node of Space partioning implementated with octree */
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_OctreeNode
+class GLC_OctreeNode
 {
 	typedef QList<GLC_OctreeNode*> NodeList;
 //////////////////////////////////////////////////////////////////////
@@ -44,23 +48,61 @@ class GLC_LIB_EXPORT GLC_OctreeNode
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_OctreeNode(GLC_OctreeNode* pParent= NULL);
+	GLC_OctreeNode(const GLC_BoundingBox&, GLC_OctreeNode* pParent= NULL);
+
+	//! Copy constructor
+	GLC_OctreeNode(const GLC_OctreeNode&, GLC_OctreeNode* pParent= NULL);
 
 	//! Destructor
 	virtual ~GLC_OctreeNode();
 //@}
 //////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+
+	// Return the node bounding box
+	inline GLC_BoundingBox& boundingBox()
+	{return m_BoundingBox;}
+
+	//! Return True if the node intersect the bounding box
+	inline bool intersect(const GLC_BoundingBox& boundingSphere)
+	{return m_BoundingBox.intersectBoundingSphere(boundingSphere);}
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+
+	//! Add children to the node with the specified level
+	void addChildren(int);
+
+	//! Clear instances set
+	void clearInstanceOfNode();
+
+	//! Add instance
+	void addInstance(GLC_3DViewInstance*);
+
+	//! Update instances visibility
+	void updateInstancesVisibility();
+//@}
+
+//////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Octree node center position
-	GLC_Vector4d m_Center;
+	//! Octree node bounding box
+	GLC_BoundingBox m_BoundingBox;
 
 	//! Parent Octree node
-	GLC_OctreeNode* m_Parent;
+	GLC_OctreeNode* m_pParent;
 
-	//! Child Octree node
-	NodeList m_Childs;
+	//! Children Octree node
+	NodeList m_Children;
 
 	//! Set of 3DViewInstance
 	QSet<GLC_3DViewInstance*> m_3DViewInstanceSet;

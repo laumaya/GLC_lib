@@ -27,6 +27,7 @@
 #define GLC_SPACEPARTITIONING_H_
 
 #include "../glc_config.h"
+#include "../glc_boundingbox.h"
 
 class GLC_3DViewCollection;
 
@@ -44,21 +45,34 @@ public:
 	//! Default constructor
 	GLC_SpacePartitioning(GLC_3DViewCollection*);
 
+	//! Copy constructor
+	GLC_SpacePartitioning(const GLC_SpacePartitioning&);
+
 	//! Destructor
 	virtual ~GLC_SpacePartitioning();
 //@}
 
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Return the 3DViewCollection of the space partitioning
+	inline GLC_3DViewCollection* collectionHandle()
+	{return m_pCollection;}
+
+//@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Update QHash table of visible GLC_3DViewInstance
+	//! Update visible GLC_3DViewInstance
 	virtual void updateViewableInstances()= 0;
 
 	//! Update the space partionning
-	virtual void updateSpacePartitionning()= 0;
+	virtual void updateSpacePartitioning()= 0;
 
 //@}
 
