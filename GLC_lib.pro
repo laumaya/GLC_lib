@@ -78,7 +78,10 @@ HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_structoccurence.h \
 							sceneGraph/glc_world.h \
 							sceneGraph/glc_attributes.h \
-							sceneGraph/glc_worldhandle.h
+							sceneGraph/glc_worldhandle.h \
+							sceneGraph/glc_spacepartitioning.h \
+							sceneGraph/glc_octree.h \
+							sceneGraph/glc_octreenode.h
 							
 HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_circle.h \
@@ -195,7 +198,10 @@ SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
 			sceneGraph/glc_structoccurence.cpp \
 			sceneGraph/glc_world.cpp \
 			sceneGraph/glc_attributes.cpp \
-			sceneGraph/glc_worldhandle.cpp
+			sceneGraph/glc_worldhandle.cpp \
+			sceneGraph/glc_spacepartitioning.cpp \
+			sceneGraph/glc_octree.cpp \
+			sceneGraph/glc_octreenode.cpp
 
 SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_circle.cpp \
@@ -316,7 +322,10 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_CacheManager \
     		   include/GLC_BSRep \
     		   include/GLC_RenderProperties \
-    		   include/GLC_Global
+    		   include/GLC_Global \
+    		   include/GLC_SpacePartitioning \
+    		   include/GLC_Octree \
+    		   include/GLC_OctreeNode
     		   
     			   
 # Linux install configuration
