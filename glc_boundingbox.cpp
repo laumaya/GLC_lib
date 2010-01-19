@@ -93,6 +93,13 @@ bool GLC_BoundingBox::intersectBoundingSphere(const GLC_Point4d& point) const
 	return distance < boundingSphereRadius();
 }
 
+// Test if the bounding sphere of a bounding box interserct with the bounding sphere
+bool GLC_BoundingBox::intersectBoundingSphere(const GLC_BoundingBox& boundingSphere) const
+{
+	const double distance= (center() - boundingSphere.center()).norm();
+	return distance < (boundingSphereRadius() + boundingSphere.boundingSphereRadius());
+}
+
 // Get the lower corner of the bounding box
 GLC_Point4d GLC_BoundingBox::lowerCorner(void) const
 {

@@ -82,6 +82,9 @@ public:
 	//! Test if a point is in the bounding Sphere
 	bool intersectBoundingSphere(const GLC_Point4d&) const;
 
+	//! Test if the bounding sphere of a bounding box interserct with the bounding sphere
+	bool intersectBoundingSphere(const GLC_BoundingBox&) const;
+
 	//! Return the max distance between a point and a corner of the bounding box
 	//double maxDistance(const GLC_Vector4d& point) const;
 
