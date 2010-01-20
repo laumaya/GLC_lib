@@ -70,6 +70,29 @@ public:
 	inline bool intersect(const GLC_BoundingBox& boundingSphere)
 	{return m_BoundingBox.intersectBoundingSphere(boundingSphere);}
 
+	//! Return true if the node has child
+	inline bool hasChild() const
+	{return !m_Children.isEmpty();}
+
+	//! Return the child at the index
+	inline GLC_OctreeNode* childAt(int i) const
+	{
+		Q_ASSERT(i < m_Children.size());
+		return m_Children.at(i);
+	}
+
+	//! Return the none child count
+	inline int childCount() const
+	{return m_Children.size();}
+
+	//! Return true if the node has geometry
+	inline bool hasGeometry() const
+	{return !m_3DViewInstanceSet.isEmpty();}
+
+	//! Return true if the node is empty
+	inline bool isEmpty() const
+	{return m_Empty;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -79,16 +102,16 @@ public:
 public:
 
 	//! Add children to the node with the specified level
-	void addChildren(int);
-
-	//! Clear instances set
-	void clearInstanceOfNode();
+	void addChildren();
 
 	//! Add instance
-	void addInstance(GLC_3DViewInstance*);
+	void addInstance(GLC_3DViewInstance*, int);
 
 	//! Update instances visibility
 	void updateInstancesVisibility();
+
+	//! Remove empty node
+	void removeEmptyChildren();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -106,6 +129,9 @@ private:
 
 	//! Set of 3DViewInstance
 	QSet<GLC_3DViewInstance*> m_3DViewInstanceSet;
+
+	//! Flag to know if the node is empty
+	bool m_Empty;
 
 };
 

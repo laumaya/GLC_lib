@@ -26,12 +26,13 @@
 #include "glc_octree.h"
 #include "glc_octreenode.h"
 #include "glc_3dviewcollection.h"
+#include "../glc_factory.h"
 
 // Default constructor
 GLC_Octree::GLC_Octree(GLC_3DViewCollection* pCollection)
 : GLC_SpacePartitioning(pCollection)
 , m_pRootNode(NULL)
-, m_OctreeDepth(4)
+, m_OctreeDepth(3)
 {
 
 
@@ -71,7 +72,6 @@ void GLC_Octree::updateSpacePartitioning()
 	qDebug() << "Create octree";
 	delete m_pRootNode;
 	m_pRootNode= new GLC_OctreeNode(m_pCollection->boundingBox());
-	m_pRootNode->addChildren(m_OctreeDepth);
 	qDebug() << "Octree created";
 
 	qDebug() << "fill Octree";
@@ -81,8 +81,54 @@ void GLC_Octree::updateSpacePartitioning()
 	qDebug() << "Number of instances :" << size;
 	for (int i= 0; i < size; ++i)
 	{
-		m_pRootNode->addInstance(instanceList.at(i));
+		m_pRootNode->addInstance(instanceList.at(i), m_OctreeDepth);
 	}
 	qDebug() << "Octree filled";
+	qDebug() << "Remove empty node";
+	m_pRootNode->removeEmptyChildren();
+	qDebug() << "Empty nodes removed";
+}
+
+// Set the octree depth
+void GLC_Octree::setDepth(int depth)
+{
+	m_OctreeDepth= depth;
+	updateSpacePartitioning();
+}
+
+// Create box
+void GLC_Octree::createBox()
+{
+	if (!m_pRootNode->isEmpty())
+	{
+		GLC_Material* pMat= new GLC_Material(Qt::red);
+		pMat->setOpacity(0.1);
+		createBoxWithMaterial(m_pRootNode, pMat);
+	}
+}
+
+// CreateBox with specified Material
+void GLC_Octree::createBoxWithMaterial(GLC_OctreeNode* pNode, GLC_Material* pMat)
+{
+	if (!pNode->isEmpty())
+	{
+		if (pNode->hasGeometry())
+		{
+			GLC_3DViewInstance box= GLC_Factory::instance()->createBox(pNode->boundingBox());
+			box.geomAt(0)->replaceMasterMaterial(pMat);
+			m_pCollection->add(box);
+		}
+
+		if (pNode->hasChild())
+		{
+			const int size= pNode->childCount();
+			for (int i= 0; i < size; ++i)
+			{
+				createBoxWithMaterial(pNode->childAt(i), pMat);
+			}
+		}
+
+	}
+
 }
 
