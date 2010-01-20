@@ -61,7 +61,8 @@ HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
 						maths/glc_vector4d.h \
 						maths/glc_matrix4x4.h \
 						maths/glc_interpolator.h \
-						maths/glc_distance.h
+						maths/glc_distance.h \
+						maths/glc_plane.h
 						
 HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_objtoworld.h \
@@ -120,7 +121,8 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_trackballmover.h \
 						viewport/glc_reptrackballmover.h \
 						viewport/glc_settargetmover.h \
-						viewport/glc_turntablemover.h
+						viewport/glc_turntablemover.h \
+						viewport/glc_frustum.h
 
 
 HEADERS_GLC += glc_global.h \
@@ -181,7 +183,8 @@ SOURCES += lib3ds/atmosphere.c \
 SOURCES +=	maths/glc_vector4d.cpp \
 			maths/glc_matrix4x4.cpp \
 			maths/glc_interpolator.cpp \
-			maths/glc_distance.cpp
+			maths/glc_distance.cpp \
+			maths/glc_plane.cpp
 
 SOURCES +=	io/glc_objmtlloader.cpp \
 			io/glc_objtoworld.cpp \
@@ -241,7 +244,8 @@ SOURCES +=	viewport/glc_camera.cpp \
 			viewport/glc_trackballmover.cpp \
 			viewport/glc_reptrackballmover.cpp \
 			viewport/glc_settargetmover.cpp \
-			viewport/glc_turntablemover.cpp
+			viewport/glc_turntablemover.cpp \
+			viewport/glc_frustum.cpp
 		
 SOURCES +=	glc_global.cpp \
 			glc_object.cpp \			
@@ -325,7 +329,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Global \
     		   include/GLC_SpacePartitioning \
     		   include/GLC_Octree \
-    		   include/GLC_OctreeNode
+    		   include/GLC_OctreeNode \
+    		   include/GLC_Plane \
+    		   include/GLC_Frustum
     		   
     			   
 # Linux install configuration
