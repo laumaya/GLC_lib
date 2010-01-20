@@ -120,6 +120,10 @@ public:
 	inline GLsizei selectionSquareSize() const
 	{return m_SelectionSquareSize;}
 
+	//! Return the projection matrix
+	inline GLC_Matrix4x4 projectionMatrix() const
+	{return m_ProjectionMatrix;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -139,7 +143,7 @@ public:
 	}
 
 	//! Update OpenGL Projection Matrix
-	void updateProjectionMat(void) const;
+	void updateProjectionMat(void);
 
 	//! Force the aspect ratio of the window
 	void forceAspectRatio(double);
@@ -264,6 +268,9 @@ private:
 
 	//! The selection square size
 	GLsizei m_SelectionSquareSize;
+
+	//! The projection matrix
+	GLC_Matrix4x4 m_ProjectionMatrix;
 };
 
 #endif //GLC_VIEWPORT_H_

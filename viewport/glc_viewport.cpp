@@ -55,6 +55,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // the default backgroundColor
 , m_BackgroundColor(Qt::black)
 , m_SelectionSquareSize(4)
+, m_ProjectionMatrix()
 {
 	// create a camera
 	m_pViewCam= new GLC_Camera;
@@ -114,7 +115,7 @@ void GLC_Viewport::initGl()
 }
 
 // Update OpenGL Projection Matrix
-void GLC_Viewport::updateProjectionMat(void) const
+void GLC_Viewport::updateProjectionMat(void)
 {
 	// Make opengl context attached the current One
 	m_pQGLWidget->makeCurrent();
@@ -126,6 +127,9 @@ void GLC_Viewport::updateProjectionMat(void) const
 	double AspectRatio;
 	AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
 	gluPerspective(m_dFov, AspectRatio, m_dCamDistMin, m_dCamDistMax);
+
+	// Save the projection matrix
+	glGetDoublev(GL_PROJECTION_MATRIX, m_ProjectionMatrix.data());
 
 	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
