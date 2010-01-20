@@ -51,7 +51,6 @@ GLC_Camera::GLC_Camera(const GLC_Point4d &Eye, const GLC_Point4d &Target, const 
 , m_VectUp()
 , m_MatCompOrbit()
 , m_DefaultVectUp(Y_AXIS)
-
 {
 	setCam(Eye, Target, Up);
 	createMatComp();
@@ -443,30 +442,27 @@ void GLC_Camera::createMatComp(void)
 	const GLC_Vector4d VectCam((m_Eye - m_Target).setNormal(1));
 	const GLC_Vector4d orthoVect(m_VectUp ^ VectCam);
 
-	// Create camera matrix
-	double newMat[16];
-	newMat[0]= orthoVect.X();
-	newMat[1]= orthoVect.Y();
-	newMat[2]= orthoVect.Z();
-	newMat[3]= 0.0;
+	// Update camera matrix
+	m_MatCompOrbit.data()[0]= orthoVect.X();
+	m_MatCompOrbit.data()[1]= orthoVect.Y();
+	m_MatCompOrbit.data()[2]= orthoVect.Z();
+	m_MatCompOrbit.data()[3]= 0.0;
 
 	// Vector Up is Y Axis
-	newMat[4]= m_VectUp.X();
-	newMat[5]= m_VectUp.Y();
-	newMat[6]= m_VectUp.Z();
-	newMat[7]= 0.0;
+	m_MatCompOrbit.data()[4]= m_VectUp.X();
+	m_MatCompOrbit.data()[5]= m_VectUp.Y();
+	m_MatCompOrbit.data()[6]= m_VectUp.Z();
+	m_MatCompOrbit.data()[7]= 0.0;
 
 	// Vector Cam is Z axis
-	newMat[8]= VectCam.X();
-	newMat[9]= VectCam.Y();
-	newMat[10]= VectCam.Z();
-	newMat[11]= 0.0;
+	m_MatCompOrbit.data()[8]= VectCam.X();
+	m_MatCompOrbit.data()[9]= VectCam.Y();
+	m_MatCompOrbit.data()[10]= VectCam.Z();
+	m_MatCompOrbit.data()[11]= 0.0;
 
-	newMat[12]= 0.0;
-	newMat[13]= 0.0;
-	newMat[14]= 0.0;
-	newMat[15]= 1.0;
+	m_MatCompOrbit.data()[12]= 0.0;
+	m_MatCompOrbit.data()[13]= 0.0;
+	m_MatCompOrbit.data()[14]= 0.0;
+	m_MatCompOrbit.data()[15]= 1.0;
 
-	// Load the result matrix into camera matrix
-	m_MatCompOrbit= GLC_Matrix4x4(newMat);
 }
