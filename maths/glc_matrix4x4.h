@@ -117,7 +117,7 @@ public:
 	double determinant(void) const;
 
 	//! return a pointer to a row first array of 16 elements
-	inline const double *data(void) const
+	inline double* data(void)
 	{
 		return matrix;
 	}
