@@ -125,6 +125,16 @@ public:
 	/*! Iso View is at the front top left*/
 	GLC_Camera isoView() const;
 
+	//! Return the model view matrix of the camera
+	inline GLC_Matrix4x4 modelViewMatrix() const
+	{
+		GLC_Matrix4x4 modelView(m_MatCompOrbit);
+		modelView.data()[12]= -m_Eye.X();
+		modelView.data()[13]= -m_Eye.Y();
+		modelView.data()[14]= -m_Eye.Z();
+		return modelView;
+	}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
