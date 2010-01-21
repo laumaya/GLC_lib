@@ -31,6 +31,7 @@
 #include "glc_camera.h"
 #include "glc_imageplane.h"
 #include "../glc_boundingbox.h"
+#include "glc_frustum.h"
 
 #include "../glc_config.h"
 
@@ -147,6 +148,11 @@ public:
 
 	//! Force the aspect ratio of the window
 	void forceAspectRatio(double);
+
+	//! Return the frustum associated to this viewport
+	const GLC_Frustum& frustum() const
+	{return m_Frustum;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -215,6 +221,10 @@ public:
 	inline void setSelectionSquareSize(GLsizei size)
 	{m_SelectionSquareSize= size;}
 
+	//! Update the viewport frustum (frustum cullin purpose)
+	inline void updateFrustum()
+	{m_Frustum.update(this);}
+
 //@}
 
 
@@ -271,6 +281,9 @@ private:
 
 	//! The projection matrix
 	GLC_Matrix4x4 m_ProjectionMatrix;
+
+	//! The frustum associated to the viewport
+	GLC_Frustum m_Frustum;
 };
 
 #endif //GLC_VIEWPORT_H_

@@ -26,8 +26,10 @@
 #ifndef GLC_FRUSTUM_H_
 #define GLC_FRUSTUM_H_
 
-#include "glc_viewport.h"
 #include "../maths/glc_plane.h"
+#include "../glc_boundingbox.h"
+
+class GLC_Viewport;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Frustum
@@ -37,13 +39,30 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_Frustum
 {
+private:
+	enum planeId
+	{
+		LeftPlane= 0,
+		RightPlane= 1,
+		TopPlane= 2,
+		BottomPlane= 3,
+		NearPlane= 4,
+		FarPlane= 5
+	};
+public:
+	enum Localisation
+	{
+		InFrustum = 0,
+		IntersectFrustum = 1,
+		OutFrustum= 3
+	};
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_Frustum(GLC_Viewport*);
+	GLC_Frustum();
 
 	//! Copy constructor
 	GLC_Frustum(const GLC_Frustum&);
@@ -60,27 +79,30 @@ public:
 
 	//! Return the left clipping plane
 	inline GLC_Plane leftClippingPlane() const
-	{return m_LeftPlane;}
+	{return m_PlaneList.at(LeftPlane);}
 
 	//! Return the Right clipping plane
 	inline GLC_Plane rightClippingPlane() const
-	{return m_RightPlane;}
+	{return m_PlaneList.at(RightPlane);}
 
 	//! Return the top clipping plane
 	inline GLC_Plane topClippingPlane() const
-	{return m_TopPlane;}
+	{return m_PlaneList.at(TopPlane);}
 
 	//! Return the bottom clipping plane
 	inline GLC_Plane bottomClippingPlane() const
-	{return m_BottomPlane;}
+	{return m_PlaneList.at(BottomPlane);}
 
 	//! Return the near clipping plane
 	inline GLC_Plane nearClippingPlane() const
-	{return m_NearPlane;}
+	{return m_PlaneList.at(NearPlane);}
 
 	//! Return the far clipping plane
 	inline GLC_Plane farClippingPlane() const
-	{return m_FarPlane;}
+	{return m_PlaneList.at(FarPlane);}
+
+	//! Localize bounding box
+	Localisation localizeBoundingBox(const GLC_BoundingBox&) const;
 
 //@}
 
@@ -92,54 +114,46 @@ public:
 
 	//! Set the left clipping plane
 	inline void setLeftClippingPlane(const GLC_Plane& plane)
-	{m_LeftPlane= plane;}
+	{m_PlaneList[LeftPlane]= plane;}
 
 	//! Set the right clipping plane
 	inline void setRightClippingPlane(const GLC_Plane& plane)
-	{m_RightPlane= plane;}
+	{m_PlaneList[RightPlane]= plane;}
 
 	//! Set the top clipping plane
 	inline void setTopClippingPlane(const GLC_Plane& plane)
-	{m_TopPlane= plane;}
+	{m_PlaneList[TopPlane]= plane;}
 
 	//! Set the bottom clipping plane
 	inline void setBottomClippingPlane(const GLC_Plane& plane)
-	{m_BottomPlane= plane;}
+	{m_PlaneList[BottomPlane]= plane;}
 
 	//! Set the near clipping plane
 	inline void setNearClippingPlane(const GLC_Plane& plane)
-	{m_NearPlane= plane;}
+	{m_PlaneList[NearPlane]= plane;}
 
 	//! Set the far clipping plane
 	inline void setFarClippingPlane(const GLC_Plane& plane)
-	{m_FarPlane= plane;}
+	{m_PlaneList[FarPlane]= plane;}
 
 	//! Update the frustum
 	void update(GLC_Viewport*);
 
 //@}
+//////////////////////////////////////////////////////////////////////
+// Private services function
+//////////////////////////////////////////////////////////////////////
+private:
+	//! localize a sphere to a plane
+	Localisation localizeSphereToPlane(const GLC_Point4d&, double, const GLC_Plane&) const;
 
 //////////////////////////////////////////////////////////////////////
 // Private Member
 //////////////////////////////////////////////////////////////////////
 private:
-	//! The left clip plane
-	GLC_Plane m_LeftPlane;
 
-	//! The right clip plane
-	GLC_Plane m_RightPlane;
-
-	//! The right clip plane
-	GLC_Plane m_TopPlane;
-
-	//! The right clip plane
-	GLC_Plane m_BottomPlane;
-
-	//! The right clip plane
-	GLC_Plane m_NearPlane;
-
-	//! The right clip plane
-	GLC_Plane m_FarPlane;
+	//! The list of frustum plane
+	QList<GLC_Plane> m_PlaneList;
 };
 
 #endif /* GLC_FRUSTUM_H_ */

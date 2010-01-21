@@ -56,6 +56,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_BackgroundColor(Qt::black)
 , m_SelectionSquareSize(4)
 , m_ProjectionMatrix()
+, m_Frustum()
 {
 	// create a camera
 	m_pViewCam= new GLC_Camera;
@@ -510,8 +511,8 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	{
 		// The scene is not empty
 		GLC_Matrix4x4 matTranslateCam(-m_pViewCam->eye());
-		GLC_Matrix4x4 matRotateCam(m_pViewCam->viewMatrix());
-		GLC_Matrix4x4 matComp(matRotateCam.invert() * matTranslateCam);
+		GLC_Matrix4x4 matRotateCam(m_pViewCam->viewMatrix1());
+		GLC_Matrix4x4 matComp(matRotateCam * matTranslateCam);
 
 		// The bounding Box in Camera coordinate
 		GLC_BoundingBox boundingBox(bBox);

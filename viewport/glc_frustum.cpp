@@ -24,27 +24,21 @@
 //! \file glc_frustum.cpp Implementation of the GLC_Frustum class.
 
 #include "glc_frustum.h"
+#include "glc_viewport.h"
 
 // Default constructor
-GLC_Frustum::GLC_Frustum(GLC_Viewport* pViewport)
-: m_LeftPlane()
-, m_RightPlane()
-, m_TopPlane()
-, m_BottomPlane()
-, m_NearPlane()
-, m_FarPlane()
+GLC_Frustum::GLC_Frustum()
+: m_PlaneList()
 {
-	update(pViewport);
+	for (int i= 0; i < 6; ++i)
+	{
+		m_PlaneList.append(GLC_Plane());
+	}
 }
 
 // Copy constructor
 GLC_Frustum::GLC_Frustum(const GLC_Frustum& frustum)
-: m_LeftPlane(frustum.m_LeftPlane)
-, m_RightPlane(frustum.m_RightPlane)
-, m_TopPlane(frustum.m_TopPlane)
-, m_BottomPlane(frustum.m_BottomPlane)
-, m_NearPlane(frustum.m_NearPlane)
-, m_FarPlane(frustum.m_FarPlane)
+: m_PlaneList(frustum.m_PlaneList)
 {
 
 }
@@ -54,58 +48,110 @@ GLC_Frustum::~GLC_Frustum()
 
 }
 
+// Localize bounding box
+GLC_Frustum::Localisation GLC_Frustum::localizeBoundingBox(const GLC_BoundingBox& box) const
+{
+	const GLC_Point4d center= box.center();
+	const double radius= box.boundingSphereRadius();
+	qDebug() << "Radius " << radius;
+	GLC_Frustum::Localisation localisationResult= InFrustum;
+
+
+	int i= 0;
+	bool continu= true;
+	while (continu && (i < 6))
+	{
+		qDebug() << "Localisation of plane " << i;
+		localisationResult= static_cast<GLC_Frustum::Localisation>(localisationResult | localizeSphereToPlane(center, radius, m_PlaneList.at(i)));
+		continu= (localisationResult != GLC_Frustum::OutFrustum);
+		++i;
+	}
+
+	return localisationResult;
+}
+// localize a bounding box to a plane
+GLC_Frustum::Localisation GLC_Frustum::localizeSphereToPlane(const GLC_Point4d& center, double radius, const GLC_Plane& plane) const
+{
+	GLC_Frustum::Localisation localisationResult;
+	const double signedDistance= plane.distanceToPoint(center);
+	const double distance= fabs(signedDistance);
+	qDebug() << "signed Distance " << signedDistance;
+	if (distance > radius)
+	{
+		if (signedDistance > 0) localisationResult= GLC_Frustum::InFrustum;
+		else localisationResult= GLC_Frustum::OutFrustum;
+	}
+	else
+	{
+		localisationResult= GLC_Frustum::IntersectFrustum;
+	}
+
+	return localisationResult;
+}
 
 // Update the frustum
 void GLC_Frustum::update(GLC_Viewport* pViewport)
 {
+	qDebug() << "update frustum";
+
 	// Get the viewport projection matrix
 	GLC_Matrix4x4 projectionMatrix= pViewport->projectionMatrix();
 
 	// Get the camera modelView matrix
 	GLC_Matrix4x4 modelViewMatrix= pViewport->cameraHandle()->modelViewMatrix();
+	qDebug() << "My Model View MATRIX";
+	qDebug() << modelViewMatrix.toString();
 
 	// Composition matrix
-	GLC_Matrix4x4 compMatrix= modelViewMatrix * projectionMatrix;
+	GLC_Matrix4x4 compMatrix= projectionMatrix * modelViewMatrix;
 
 	// Left plane
-	m_LeftPlane.setA(compMatrix.data()[12] + compMatrix.data()[0]);
-	m_LeftPlane.setB(compMatrix.data()[13] + compMatrix.data()[1]);
-	m_LeftPlane.setC(compMatrix.data()[14] + compMatrix.data()[2]);
-	m_LeftPlane.setD(compMatrix.data()[15] + compMatrix.data()[3]);
-	m_LeftPlane.normalize();
+	m_PlaneList[LeftPlane].setA(compMatrix.data()[3] + compMatrix.data()[0]);
+	m_PlaneList[LeftPlane].setB(compMatrix.data()[7] + compMatrix.data()[4]);
+	m_PlaneList[LeftPlane].setC(compMatrix.data()[11] + compMatrix.data()[8]);
+	m_PlaneList[LeftPlane].setD(compMatrix.data()[15] + compMatrix.data()[12]);
+	m_PlaneList[LeftPlane].normalize();
+	qDebug() << "Left Plane : x=" << m_PlaneList[LeftPlane].coefA() << " y=" << m_PlaneList[LeftPlane].coefB() << " z=" << m_PlaneList[LeftPlane].coefC();
+	qDebug() << "Left plane coef d=" << m_PlaneList[LeftPlane].coefD();
 
 	// Right plane
-	m_RightPlane.setA(compMatrix.data()[12] - compMatrix.data()[0]);
-	m_RightPlane.setB(compMatrix.data()[13] - compMatrix.data()[1]);
-	m_RightPlane.setC(compMatrix.data()[14] - compMatrix.data()[2]);
-	m_RightPlane.setD(compMatrix.data()[15] - compMatrix.data()[3]);
-	m_RightPlane.normalize();
+	m_PlaneList[RightPlane].setA(compMatrix.data()[3] - compMatrix.data()[0]);
+	m_PlaneList[RightPlane].setB(compMatrix.data()[7] - compMatrix.data()[4]);
+	m_PlaneList[RightPlane].setC(compMatrix.data()[11] - compMatrix.data()[8]);
+	m_PlaneList[RightPlane].setD(compMatrix.data()[15] - compMatrix.data()[12]);
+	m_PlaneList[RightPlane].normalize();
+	qDebug() << "Right Plane : x=" << m_PlaneList[RightPlane].coefA() << " y=" << m_PlaneList[RightPlane].coefB() << " z=" << m_PlaneList[RightPlane].coefC();
+	qDebug() << "Right plane coef d=" << m_PlaneList[RightPlane].coefD();
 
 	//Top plane
-	m_TopPlane.setA(compMatrix.data()[12] + compMatrix.data()[4]);
-	m_TopPlane.setB(compMatrix.data()[13] + compMatrix.data()[5]);
-	m_TopPlane.setC(compMatrix.data()[14] + compMatrix.data()[6]);
-	m_TopPlane.setD(compMatrix.data()[15] + compMatrix.data()[7]);
-	m_TopPlane.normalize();
+	m_PlaneList[TopPlane].setA(compMatrix.data()[3] + compMatrix.data()[1]);
+	m_PlaneList[TopPlane].setB(compMatrix.data()[7] + compMatrix.data()[5]);
+	m_PlaneList[TopPlane].setC(compMatrix.data()[11] + compMatrix.data()[9]);
+	m_PlaneList[TopPlane].setD(compMatrix.data()[15] + compMatrix.data()[13]);
+	m_PlaneList[TopPlane].normalize();
+	qDebug() << "Top Plane : x=" << m_PlaneList[TopPlane].coefA() << " y=" << m_PlaneList[TopPlane].coefB() << " z=" << m_PlaneList[TopPlane].coefC();
+	qDebug() << "Top plane coef d=" << m_PlaneList[TopPlane].coefD();
 
 	//Bottom plane
-	m_BottomPlane.setA(compMatrix.data()[12] - compMatrix.data()[4]);
-	m_BottomPlane.setB(compMatrix.data()[13] - compMatrix.data()[5]);
-	m_BottomPlane.setC(compMatrix.data()[14] - compMatrix.data()[6]);
-	m_BottomPlane.setD(compMatrix.data()[15] - compMatrix.data()[7]);
-	m_BottomPlane.normalize();
+	m_PlaneList[BottomPlane].setA(compMatrix.data()[3] - compMatrix.data()[1]);
+	m_PlaneList[BottomPlane].setB(compMatrix.data()[7] - compMatrix.data()[5]);
+	m_PlaneList[BottomPlane].setC(compMatrix.data()[11] - compMatrix.data()[9]);
+	m_PlaneList[BottomPlane].setD(compMatrix.data()[15] - compMatrix.data()[13]);
+	m_PlaneList[BottomPlane].normalize();
+	qDebug() << "Bottom Plane : x=" << m_PlaneList[BottomPlane].coefA() << " y=" << m_PlaneList[BottomPlane].coefB() << " z=" << m_PlaneList[BottomPlane].coefC();
+	qDebug() << "Bottom plane coef d=" << m_PlaneList[BottomPlane].coefD();
 
 	//Near plane
-	m_NearPlane.setA(compMatrix.data()[12] + compMatrix.data()[8]);
-	m_NearPlane.setB(compMatrix.data()[13] + compMatrix.data()[9]);
-	m_NearPlane.setC(compMatrix.data()[14] + compMatrix.data()[10]);
-	m_NearPlane.setD(compMatrix.data()[15] + compMatrix.data()[11]);
-	m_NearPlane.normalize();
+	m_PlaneList[NearPlane].setA(compMatrix.data()[3] + compMatrix.data()[2]);
+	m_PlaneList[NearPlane].setB(compMatrix.data()[7] + compMatrix.data()[6]);
+	m_PlaneList[NearPlane].setC(compMatrix.data()[11] + compMatrix.data()[10]);
+	m_PlaneList[NearPlane].setD(compMatrix.data()[15] + compMatrix.data()[14]);
+	m_PlaneList[NearPlane].normalize();
 
 	//Far plane
-	m_FarPlane.setA(compMatrix.data()[12] - compMatrix.data()[8]);
-	m_FarPlane.setB(compMatrix.data()[13] - compMatrix.data()[9]);
-	m_FarPlane.setC(compMatrix.data()[14] - compMatrix.data()[10]);
-	m_FarPlane.setD(compMatrix.data()[15] - compMatrix.data()[11]);
-	m_FarPlane.normalize();
+	m_PlaneList[FarPlane].setA(compMatrix.data()[3] - compMatrix.data()[2]);
+	m_PlaneList[FarPlane].setB(compMatrix.data()[7] - compMatrix.data()[6]);
+	m_PlaneList[FarPlane].setC(compMatrix.data()[11] - compMatrix.data()[10]);
+	m_PlaneList[FarPlane].setD(compMatrix.data()[15] - compMatrix.data()[14]);
+	m_PlaneList[FarPlane].normalize();
 }
