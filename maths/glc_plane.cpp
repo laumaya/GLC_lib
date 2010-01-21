@@ -100,7 +100,7 @@ bool GLC_Plane::operator==(GLC_Plane p2) const
 void GLC_Plane::normalize()
 {
 	double mag;
-	mag= sqrt(m_A * m_A + m_B * m_B + m_C * m_C + m_D * m_D);
+	mag= sqrt(m_A * m_A + m_B * m_B + m_C * m_C);
 
 	m_A= m_A / mag;
 	m_B= m_B / mag;
