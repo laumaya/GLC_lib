@@ -52,6 +52,7 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
+, m_IsViewable(true)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -71,6 +72,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom)
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
+, m_IsViewable(true)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -92,6 +94,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
+, m_IsViewable(true)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -113,6 +116,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
 , m_IsVisible(inputNode.m_IsVisible)
 , m_colorId()
 , m_DefaultLOD(inputNode.m_DefaultLOD)
+, m_IsViewable(inputNode.m_IsViewable)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -145,6 +149,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 		m_RenderProperties= inputNode.m_RenderProperties;
 		m_IsVisible= inputNode.m_IsVisible;
 		m_DefaultLOD= inputNode.m_DefaultLOD;
+		m_IsViewable= inputNode.m_IsViewable;
 
 		//qDebug() << "GLC_3DViewInstance::operator= :ID = " << m_Uid;
 		//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
@@ -206,6 +211,7 @@ GLC_3DViewInstance GLC_3DViewInstance::deepCopy() const
 	cloneInstance.m_IsBoundingBoxValid= m_IsBoundingBoxValid;
 	cloneInstance.m_RenderProperties= m_RenderProperties;
 	cloneInstance.m_IsVisible= m_IsVisible;
+	cloneInstance.m_IsViewable= m_IsViewable;
 	return cloneInstance;
 }
 

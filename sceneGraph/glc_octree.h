@@ -61,7 +61,7 @@ public:
 public:
 
 	//! Update QHash table of visible GLC_3DViewInstance
-	virtual void updateViewableInstances();
+	virtual void updateViewableInstances(const GLC_Frustum&);
 
 	//! Update the space partionning
 	virtual void updateSpacePartitioning();

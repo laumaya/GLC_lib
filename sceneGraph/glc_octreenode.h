@@ -30,6 +30,7 @@
 #include "glc_3dviewinstance.h"
 #include "../glc_boundingbox.h"
 #include "../glc_config.h"
+#include "../viewport/glc_frustum.h"
 #include <QList>
 #include <QSet>
 
@@ -108,11 +109,18 @@ public:
 	void addInstance(GLC_3DViewInstance*, int);
 
 	//! Update instances visibility
-	void updateInstancesVisibility();
+	void updateViewableInstances(const GLC_Frustum&);
 
 	//! Remove empty node
 	void removeEmptyChildren();
 //@}
+
+//////////////////////////////////////////////////////////////////////
+// Private services function
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Set the viewable flag
+	void setViewFlag(bool);
 
 //////////////////////////////////////////////////////////////////////
 // Private members

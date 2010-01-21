@@ -28,6 +28,7 @@
 
 #include "../glc_config.h"
 #include "../glc_boundingbox.h"
+#include "../viewport/glc_frustum.h"
 
 class GLC_3DViewCollection;
 
@@ -69,7 +70,7 @@ public:
 public:
 
 	//! Update visible GLC_3DViewInstance
-	virtual void updateViewableInstances()= 0;
+	virtual void updateViewableInstances(const GLC_Frustum&)= 0;
 
 	//! Update the space partionning
 	virtual void updateSpacePartitioning()= 0;

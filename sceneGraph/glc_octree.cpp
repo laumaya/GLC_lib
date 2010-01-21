@@ -61,9 +61,9 @@ GLC_Octree::~GLC_Octree()
 //////////////////////////////////////////////////////////////////////
 
 // Update QHash table of visible GLC_3DViewInstance
-void GLC_Octree::updateViewableInstances()
+void GLC_Octree::updateViewableInstances(const GLC_Frustum& frustum)
 {
-
+	m_pRootNode->updateViewableInstances(frustum);
 }
 
 // Update the space partionning

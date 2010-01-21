@@ -137,7 +137,12 @@ public:
 	{return &m_RenderProperties;}
 
 	//! Get the visibility state of instance
-	inline bool isVisible() const {return m_IsVisible;}
+	inline bool isVisible() const
+	{return m_IsVisible;}
+
+	//! Return true if the instance is viewable
+	inline bool isViewable() const
+	{return m_IsViewable;}
 
 	//! Get number of faces
 	inline unsigned int numberOfFaces() const
@@ -228,7 +233,7 @@ public:
 	{m_RenderProperties.unselect();}
 
 	//! Set instance visibility
-	inline void setVisibility(const bool visibility)
+	inline void setVisibility(bool visibility)
 	{m_IsVisible= visibility;}
 
 	//! Set Instance Id
@@ -243,6 +248,10 @@ public:
 	{
 		m_DefaultLOD= lod;
 	}
+
+	//! Set the viewable flag
+	inline void setViewable(bool flag)
+	{m_IsViewable= flag;}
 
 	//! Set the global default LOD value
 	static void setGlobalDefaultLod(int);
@@ -324,6 +333,9 @@ private:
 
 	//! The global default LOD
 	static int m_GlobalDefaultLOD;
+
+	//! Flag to know if the instance is viewable
+	bool m_IsViewable;
 
 };
 

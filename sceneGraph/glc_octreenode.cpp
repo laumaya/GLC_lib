@@ -201,6 +201,35 @@ void GLC_OctreeNode::addInstance(GLC_3DViewInstance* pInstance, int depth)
 	}
 }
 
+// Update instances visibility
+void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum)
+{
+	GLC_Frustum::Localisation nodeLocalisation= frustum.localizeBoundingBox(m_BoundingBox);
+
+	if (nodeLocalisation == GLC_Frustum::OutFrustum)
+	{
+		setViewFlag(false);
+	}
+	else if (nodeLocalisation == GLC_Frustum::InFrustum)
+	{
+		setViewFlag(true);
+	}
+	else
+	{
+		QSet<GLC_3DViewInstance*>::iterator iInstance= m_3DViewInstanceSet.begin();
+		while (m_3DViewInstanceSet.constEnd() != iInstance)
+		{
+			(*iInstance)->setViewable(true);
+			++iInstance;
+		}
+		const int size= m_Children.size();
+		for (int i= 0; i < size; ++i)
+		{
+			m_Children.at(i)->updateViewableInstances(frustum);
+		}
+	}
+}
+
 // Remove empty node
 void GLC_OctreeNode::removeEmptyChildren()
 {
@@ -219,6 +248,23 @@ void GLC_OctreeNode::removeEmptyChildren()
 			++iList;
 		}
 
+	}
+
+}
+
+//! Set the viewable flag
+void GLC_OctreeNode::setViewFlag(bool flag)
+{
+	QSet<GLC_3DViewInstance*>::iterator iInstance= m_3DViewInstanceSet.begin();
+	while (m_3DViewInstanceSet.constEnd() != iInstance)
+	{
+		(*iInstance)->setViewable(flag);
+		++iInstance;
+	}
+	const int size= m_Children.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_Children.at(i)->setViewFlag(flag);
 	}
 
 }

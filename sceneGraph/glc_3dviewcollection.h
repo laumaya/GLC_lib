@@ -250,6 +250,9 @@ public:
 	//! Use the space partitioning
 	void setSpacePartitionningUsage(bool);
 
+	//! Update the instance viewble state using frustrum culling
+	void updateInstanceViewableState();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -344,13 +347,16 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 	}
 
 	PointerViewInstanceHash::iterator iEntry= pHash->begin();
+	// The current instance
+	GLC_3DViewInstance* pCurInstance;
 	if (forceDisplay)
 	{
 		while (iEntry != pHash->constEnd())
 		{
-			if ((iEntry.value()->isVisible() == m_IsInShowSate))
+			pCurInstance= iEntry.value();
+			if (pCurInstance->isViewable() && (pCurInstance->isVisible() == m_IsInShowSate))
 			{
-				iEntry.value()->glExecute(renderFlag, m_UseLod, m_pViewport);
+				pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
 			}
 			++iEntry;
 		}
@@ -361,11 +367,12 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 		{
 			while (iEntry != pHash->constEnd())
 			{
-				if ((iEntry.value()->isVisible() == m_IsInShowSate))
+				pCurInstance= iEntry.value();
+				if (pCurInstance->isViewable() && (pCurInstance->isVisible() == m_IsInShowSate))
 				{
-					if (!iEntry.value()->isTransparent() || iEntry.value()->renderPropertiesHandle()->isSelected() || (renderFlag == glc::WireRenderFlag))
+					if (!pCurInstance->isTransparent() || pCurInstance->renderPropertiesHandle()->isSelected() || (renderFlag == glc::WireRenderFlag))
 					{
-						iEntry.value()->glExecute(renderFlag, m_UseLod, m_pViewport);
+						pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
 				++iEntry;
@@ -376,11 +383,12 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 		{
 			while (iEntry != pHash->constEnd())
 			{
-				if ((iEntry.value()->isVisible() == m_IsInShowSate))
+				pCurInstance= iEntry.value();
+				if (pCurInstance->isViewable() && (pCurInstance->isVisible() == m_IsInShowSate))
 				{
-					if (iEntry.value()->hasTransparentMaterials())
+					if (pCurInstance->hasTransparentMaterials())
 					{
-						iEntry.value()->glExecute(renderFlag, m_UseLod, m_pViewport);
+						pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
 				++iEntry;
