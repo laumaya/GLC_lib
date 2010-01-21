@@ -90,7 +90,7 @@ public:
 	{return m_Eye - m_Target;}
 
 	//! Get camera's orbit composition matrix
-	inline GLC_Matrix4x4 viewMatrix(void) const
+	inline GLC_Matrix4x4 viewMatrix1(void) const
 	{return m_MatCompOrbit;}
 
 	//! equality operator
@@ -128,10 +128,8 @@ public:
 	//! Return the model view matrix of the camera
 	inline GLC_Matrix4x4 modelViewMatrix() const
 	{
-		GLC_Matrix4x4 modelView(m_MatCompOrbit);
-		modelView.data()[12]= -m_Eye.X();
-		modelView.data()[13]= -m_Eye.Y();
-		modelView.data()[14]= -m_Eye.Z();
+		GLC_Matrix4x4 translate(-m_Eye.X(), -m_Eye.Y(), -m_Eye.Z());
+		GLC_Matrix4x4 modelView= GLC_Matrix4x4(m_MatCompOrbit * translate);
 		return modelView;
 	}
 

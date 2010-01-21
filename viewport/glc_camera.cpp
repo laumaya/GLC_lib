@@ -86,8 +86,10 @@ bool GLC_Camera::operator==(const GLC_Camera& cam) const
 GLC_Camera& GLC_Camera::orbit(GLC_Vector4d VectOldPoss, GLC_Vector4d VectCurPoss)
 {
 	// Map Vectors
-	VectOldPoss= m_MatCompOrbit * VectOldPoss;
-	VectCurPoss= m_MatCompOrbit * VectCurPoss;
+	GLC_Matrix4x4 invMat(m_MatCompOrbit);
+	invMat.invert();
+	VectOldPoss= invMat * VectOldPoss;
+	VectCurPoss= invMat * VectCurPoss;
 
 	// Compute rotation matrix
 	const GLC_Vector4d VectAxeRot(VectCurPoss ^ VectOldPoss);
@@ -100,7 +102,7 @@ GLC_Camera& GLC_Camera::orbit(GLC_Vector4d VectOldPoss, GLC_Vector4d VectCurPoss
 		// Camera transformation
 		m_Eye= (MatOrbit * (m_Eye - m_Target)) + m_Target;
 		m_VectUp= MatOrbit * m_VectUp;
-		m_MatCompOrbit= MatOrbit * m_MatCompOrbit;
+		createMatComp();
 	}
 
 	return *this;
@@ -109,7 +111,9 @@ GLC_Camera& GLC_Camera::orbit(GLC_Vector4d VectOldPoss, GLC_Vector4d VectCurPoss
 GLC_Camera& GLC_Camera::pan(GLC_Vector4d VectDep)
 {
 	// Vector mapping
-	VectDep= m_MatCompOrbit * VectDep;
+	GLC_Matrix4x4 invMat(m_MatCompOrbit);
+	invMat.invert();
+	VectDep= invMat * VectDep;
 
 	// Camera transformation
 	m_Eye= m_Eye + VectDep;
@@ -430,7 +434,9 @@ void GLC_Camera::glExecute()
 	gluLookAt(m_Eye.X(), m_Eye.Y(), m_Eye.Z(),
 		m_Target.X(), m_Target.Y(), m_Target.Z(),
 		m_VectUp.X(), m_VectUp.Y(), m_VectUp.Z());
-
+	//GLC_Matrix4x4 modelView;
+	//glGetDoublev(GL_MODELVIEW_MATRIX, modelView.data());
+	//qDebug() << modelView.toString();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -439,30 +445,30 @@ void GLC_Camera::glExecute()
 
 void GLC_Camera::createMatComp(void)
 {
-	const GLC_Vector4d VectCam((m_Eye - m_Target).setNormal(1));
-	const GLC_Vector4d orthoVect(m_VectUp ^ VectCam);
+	const GLC_Vector4d forward((m_Target - m_Eye).setNormal(1.0));
+	const GLC_Vector4d side((forward ^ m_VectUp).setNormal(1.0));
 
 	// Update camera matrix
-	m_MatCompOrbit.data()[0]= orthoVect.X();
-	m_MatCompOrbit.data()[1]= orthoVect.Y();
-	m_MatCompOrbit.data()[2]= orthoVect.Z();
-	m_MatCompOrbit.data()[3]= 0.0;
+	m_MatCompOrbit.data()[0]= side.X();
+	m_MatCompOrbit.data()[4]= side.Y();
+	m_MatCompOrbit.data()[8]= side.Z();
+	m_MatCompOrbit.data()[12]= 0.0;
 
 	// Vector Up is Y Axis
-	m_MatCompOrbit.data()[4]= m_VectUp.X();
+	m_MatCompOrbit.data()[1]= m_VectUp.X();
 	m_MatCompOrbit.data()[5]= m_VectUp.Y();
-	m_MatCompOrbit.data()[6]= m_VectUp.Z();
-	m_MatCompOrbit.data()[7]= 0.0;
+	m_MatCompOrbit.data()[9]= m_VectUp.Z();
+	m_MatCompOrbit.data()[13]= 0.0;
 
 	// Vector Cam is Z axis
-	m_MatCompOrbit.data()[8]= VectCam.X();
-	m_MatCompOrbit.data()[9]= VectCam.Y();
-	m_MatCompOrbit.data()[10]= VectCam.Z();
-	m_MatCompOrbit.data()[11]= 0.0;
-
-	m_MatCompOrbit.data()[12]= 0.0;
-	m_MatCompOrbit.data()[13]= 0.0;
+	m_MatCompOrbit.data()[2]= - forward.X();
+	m_MatCompOrbit.data()[6]= - forward.Y();
+	m_MatCompOrbit.data()[10]= - forward.Z();
 	m_MatCompOrbit.data()[14]= 0.0;
+
+	m_MatCompOrbit.data()[3]= 0.0;
+	m_MatCompOrbit.data()[7]= 0.0;
+	m_MatCompOrbit.data()[11]= 0.0;
 	m_MatCompOrbit.data()[15]= 1.0;
 
 }
