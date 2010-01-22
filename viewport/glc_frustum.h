@@ -104,6 +104,9 @@ public:
 	//! Localize bounding box
 	Localisation localizeBoundingBox(const GLC_BoundingBox&) const;
 
+	//! Localize sphere
+	Localisation localizeSphere(const GLC_Point4d&, double) const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

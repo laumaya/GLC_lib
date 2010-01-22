@@ -53,15 +53,20 @@ GLC_Frustum::Localisation GLC_Frustum::localizeBoundingBox(const GLC_BoundingBox
 {
 	const GLC_Point4d center= box.center();
 	const double radius= box.boundingSphereRadius();
-	qDebug() << "Radius " << radius;
-	GLC_Frustum::Localisation localisationResult= InFrustum;
 
+	return localizeSphere(center, radius);
+}
+
+// Localize sphere
+GLC_Frustum::Localisation GLC_Frustum::localizeSphere(const GLC_Point4d& center, double radius) const
+{
+	GLC_Frustum::Localisation localisationResult= InFrustum;
 
 	int i= 0;
 	bool continu= true;
 	while (continu && (i < 6))
 	{
-		qDebug() << "Localisation of plane " << i;
+		//qDebug() << "Localisation of plane " << i;
 		localisationResult= static_cast<GLC_Frustum::Localisation>(localisationResult | localizeSphereToPlane(center, radius, m_PlaneList.at(i)));
 		continu= (localisationResult != GLC_Frustum::OutFrustum);
 		++i;
@@ -69,13 +74,14 @@ GLC_Frustum::Localisation GLC_Frustum::localizeBoundingBox(const GLC_BoundingBox
 
 	return localisationResult;
 }
+
 // localize a bounding box to a plane
 GLC_Frustum::Localisation GLC_Frustum::localizeSphereToPlane(const GLC_Point4d& center, double radius, const GLC_Plane& plane) const
 {
 	GLC_Frustum::Localisation localisationResult;
 	const double signedDistance= plane.distanceToPoint(center);
 	const double distance= fabs(signedDistance);
-	qDebug() << "signed Distance " << signedDistance;
+	//qDebug() << "signed Distance " << signedDistance;
 	if (distance > radius)
 	{
 		if (signedDistance > 0) localisationResult= GLC_Frustum::InFrustum;
@@ -99,8 +105,8 @@ void GLC_Frustum::update(GLC_Viewport* pViewport)
 
 	// Get the camera modelView matrix
 	GLC_Matrix4x4 modelViewMatrix= pViewport->cameraHandle()->modelViewMatrix();
-	qDebug() << "My Model View MATRIX";
-	qDebug() << modelViewMatrix.toString();
+	//qDebug() << "My Model View MATRIX";
+	//qDebug() << modelViewMatrix.toString();
 
 	// Composition matrix
 	GLC_Matrix4x4 compMatrix= projectionMatrix * modelViewMatrix;
@@ -111,8 +117,8 @@ void GLC_Frustum::update(GLC_Viewport* pViewport)
 	m_PlaneList[LeftPlane].setC(compMatrix.data()[11] + compMatrix.data()[8]);
 	m_PlaneList[LeftPlane].setD(compMatrix.data()[15] + compMatrix.data()[12]);
 	m_PlaneList[LeftPlane].normalize();
-	qDebug() << "Left Plane : x=" << m_PlaneList[LeftPlane].coefA() << " y=" << m_PlaneList[LeftPlane].coefB() << " z=" << m_PlaneList[LeftPlane].coefC();
-	qDebug() << "Left plane coef d=" << m_PlaneList[LeftPlane].coefD();
+	//qDebug() << "Left Plane : x=" << m_PlaneList[LeftPlane].coefA() << " y=" << m_PlaneList[LeftPlane].coefB() << " z=" << m_PlaneList[LeftPlane].coefC();
+	//qDebug() << "Left plane coef d=" << m_PlaneList[LeftPlane].coefD();
 
 	// Right plane
 	m_PlaneList[RightPlane].setA(compMatrix.data()[3] - compMatrix.data()[0]);
@@ -120,8 +126,8 @@ void GLC_Frustum::update(GLC_Viewport* pViewport)
 	m_PlaneList[RightPlane].setC(compMatrix.data()[11] - compMatrix.data()[8]);
 	m_PlaneList[RightPlane].setD(compMatrix.data()[15] - compMatrix.data()[12]);
 	m_PlaneList[RightPlane].normalize();
-	qDebug() << "Right Plane : x=" << m_PlaneList[RightPlane].coefA() << " y=" << m_PlaneList[RightPlane].coefB() << " z=" << m_PlaneList[RightPlane].coefC();
-	qDebug() << "Right plane coef d=" << m_PlaneList[RightPlane].coefD();
+	//qDebug() << "Right Plane : x=" << m_PlaneList[RightPlane].coefA() << " y=" << m_PlaneList[RightPlane].coefB() << " z=" << m_PlaneList[RightPlane].coefC();
+	//qDebug() << "Right plane coef d=" << m_PlaneList[RightPlane].coefD();
 
 	//Top plane
 	m_PlaneList[TopPlane].setA(compMatrix.data()[3] + compMatrix.data()[1]);
@@ -129,8 +135,8 @@ void GLC_Frustum::update(GLC_Viewport* pViewport)
 	m_PlaneList[TopPlane].setC(compMatrix.data()[11] + compMatrix.data()[9]);
 	m_PlaneList[TopPlane].setD(compMatrix.data()[15] + compMatrix.data()[13]);
 	m_PlaneList[TopPlane].normalize();
-	qDebug() << "Top Plane : x=" << m_PlaneList[TopPlane].coefA() << " y=" << m_PlaneList[TopPlane].coefB() << " z=" << m_PlaneList[TopPlane].coefC();
-	qDebug() << "Top plane coef d=" << m_PlaneList[TopPlane].coefD();
+	//qDebug() << "Top Plane : x=" << m_PlaneList[TopPlane].coefA() << " y=" << m_PlaneList[TopPlane].coefB() << " z=" << m_PlaneList[TopPlane].coefC();
+	//qDebug() << "Top plane coef d=" << m_PlaneList[TopPlane].coefD();
 
 	//Bottom plane
 	m_PlaneList[BottomPlane].setA(compMatrix.data()[3] - compMatrix.data()[1]);
@@ -138,8 +144,8 @@ void GLC_Frustum::update(GLC_Viewport* pViewport)
 	m_PlaneList[BottomPlane].setC(compMatrix.data()[11] - compMatrix.data()[9]);
 	m_PlaneList[BottomPlane].setD(compMatrix.data()[15] - compMatrix.data()[13]);
 	m_PlaneList[BottomPlane].normalize();
-	qDebug() << "Bottom Plane : x=" << m_PlaneList[BottomPlane].coefA() << " y=" << m_PlaneList[BottomPlane].coefB() << " z=" << m_PlaneList[BottomPlane].coefC();
-	qDebug() << "Bottom plane coef d=" << m_PlaneList[BottomPlane].coefD();
+	//qDebug() << "Bottom Plane : x=" << m_PlaneList[BottomPlane].coefA() << " y=" << m_PlaneList[BottomPlane].coefB() << " z=" << m_PlaneList[BottomPlane].coefC();
+	//qDebug() << "Bottom plane coef d=" << m_PlaneList[BottomPlane].coefD();
 
 	//Near plane
 	m_PlaneList[NearPlane].setA(compMatrix.data()[3] + compMatrix.data()[2]);
