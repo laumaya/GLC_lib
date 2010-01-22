@@ -45,6 +45,7 @@ GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 , m_TransparentMaterialNumber(0)
 , m_Uid(glc::GLC_GenGeomID())
 , m_Name(name)
+, m_Viewable(true)
 {
 
 }
@@ -61,6 +62,7 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_TransparentMaterialNumber(sourceGeom.m_TransparentMaterialNumber)
 , m_Uid(glc::GLC_GenGeomID())
 , m_Name(sourceGeom.m_Name)
+, m_Viewable(sourceGeom.m_Viewable)
 {
 	// Add this mesh to inner material
 	MaterialHash::const_iterator i= sourceGeom.m_MaterialHash.constBegin();
@@ -94,6 +96,7 @@ GLC_Geometry& GLC_Geometry::operator=(const GLC_Geometry& sourceGeom)
 		m_TransparentMaterialNumber= sourceGeom.m_TransparentMaterialNumber;
 		m_Uid= glc::GLC_GenGeomID();
 		m_Name= sourceGeom.m_Name;
+		m_Viewable= sourceGeom.m_Viewable;
 	}
 	return *this;
 }
