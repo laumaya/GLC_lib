@@ -54,6 +54,14 @@ class GLC_Viewport;
 
 class GLC_LIB_EXPORT GLC_3DViewInstance : public GLC_Object
 {
+public:
+	//! Viewable instance property
+	enum Viewable
+	{
+		FullViewable= 120,
+		PartialViewable= 121,
+		NoViewable= 122
+	};
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -141,8 +149,8 @@ public:
 	{return m_IsVisible;}
 
 	//! Return true if the instance is viewable
-	inline bool isViewable() const
-	{return m_IsViewable;}
+	inline GLC_3DViewInstance::Viewable viewableFlag() const
+	{return m_ViewableFlag;}
 
 	//! Get number of faces
 	inline unsigned int numberOfFaces() const
@@ -250,8 +258,8 @@ public:
 	}
 
 	//! Set the viewable flag
-	inline void setViewable(bool flag)
-	{m_IsViewable= flag;}
+	inline bool setViewable(GLC_3DViewInstance::Viewable flag);
+
 
 	//! Set the global default LOD value
 	static void setGlobalDefaultLod(int);
@@ -335,7 +343,7 @@ private:
 	static int m_GlobalDefaultLOD;
 
 	//! Flag to know if the instance is viewable
-	bool m_IsViewable;
+	Viewable m_ViewableFlag;
 
 };
 
@@ -373,6 +381,30 @@ bool GLC_3DViewInstance::hasTransparentMaterials() const
 		++i;
 	}
 	return result;
+}
+//! Set the viewable flag
+bool GLC_3DViewInstance::setViewable(GLC_3DViewInstance::Viewable flag)
+{
+
+	bool asChange= m_ViewableFlag != flag;
+	if (asChange)
+	{
+		m_ViewableFlag= flag;
+		if (flag != GLC_3DViewInstance::PartialViewable)
+		{
+			bool viewable= (flag == GLC_3DViewInstance::FullViewable);
+			const int size= m_3DRep.numberOfBody();
+			for (int i= 0; i < size; ++i)
+			{
+				m_3DRep.geomAt(i)->setViewable(viewable);
+			}
+		}
+		else
+		{
+			qDebug() << "Partial " << name();
+		}
+	}
+	return asChange;
 }
 
 

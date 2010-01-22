@@ -202,32 +202,78 @@ void GLC_OctreeNode::addInstance(GLC_3DViewInstance* pInstance, int depth)
 }
 
 // Update instances visibility
-void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum)
+void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GLC_3DViewInstance*>* pInstanceSet)
 {
 	GLC_Frustum::Localisation nodeLocalisation= frustum.localizeBoundingBox(m_BoundingBox);
+	bool firstCall= false;
+	if (NULL == pInstanceSet)
+	{
+		pInstanceSet= new QSet<GLC_3DViewInstance*>();
+		firstCall= true;
+	}
 
 	if (nodeLocalisation == GLC_Frustum::OutFrustum)
 	{
-		setViewFlag(false);
+		disableViewFlag(pInstanceSet);
 	}
 	else if (nodeLocalisation == GLC_Frustum::InFrustum)
 	{
-		setViewFlag(true);
+		unableViewFlag(pInstanceSet);
 	}
 	else
 	{
 		QSet<GLC_3DViewInstance*>::iterator iInstance= m_3DViewInstanceSet.begin();
 		while (m_3DViewInstanceSet.constEnd() != iInstance)
 		{
-			(*iInstance)->setViewable(true);
+			if (!pInstanceSet->contains(*iInstance))
+			{
+				GLC_3DViewInstance* pCurrentInstance= (*iInstance);
+				nodeLocalisation= frustum.localizeBoundingBox(pCurrentInstance->boundingBox());
+
+				if (nodeLocalisation == GLC_Frustum::OutFrustum)
+				{
+					pCurrentInstance->setViewable(GLC_3DViewInstance::NoViewable);
+				}
+				else if (nodeLocalisation == GLC_Frustum::InFrustum)
+				{
+					pInstanceSet->insert(pCurrentInstance);
+					pCurrentInstance->setViewable(GLC_3DViewInstance::FullViewable);
+				}
+				else
+				{
+					pInstanceSet->insert(pCurrentInstance);
+					pCurrentInstance->setViewable(GLC_3DViewInstance::PartialViewable);
+					//Update the geometries viewable property of the instance
+					GLC_Matrix4x4 instanceMat= pCurrentInstance->matrix();
+					const int size= pCurrentInstance->numberOfBody();
+					for (int i= 0; i < size; ++i)
+					{
+						// Get the geometry bounding box
+						GLC_BoundingBox geomBox= pCurrentInstance->geomAt(i)->boundingBox();
+						GLC_Point4d center(instanceMat * geomBox.center());
+						double radius= geomBox.boundingSphereRadius() * instanceMat.scalingX();
+						nodeLocalisation= frustum.localizeSphere(center, radius);
+						if (nodeLocalisation == GLC_Frustum::OutFrustum)
+						{
+							//pCurrentInstance->geomAt(i)->setViewable(true);
+						}
+						else
+						{
+							//pCurrentInstance->geomAt(i)->setViewable(true);
+						}
+					}
+				}
+			}
+
 			++iInstance;
 		}
 		const int size= m_Children.size();
 		for (int i= 0; i < size; ++i)
 		{
-			m_Children.at(i)->updateViewableInstances(frustum);
+			m_Children.at(i)->updateViewableInstances(frustum, pInstanceSet);
 		}
 	}
+	if (firstCall) delete pInstanceSet;
 }
 
 // Remove empty node
@@ -247,25 +293,45 @@ void GLC_OctreeNode::removeEmptyChildren()
 			pCurrentChild->removeEmptyChildren();
 			++iList;
 		}
-
 	}
-
 }
 
-//! Set the viewable flag
-void GLC_OctreeNode::setViewFlag(bool flag)
+// Unable the node and sub node view flag
+void GLC_OctreeNode::unableViewFlag(QSet<GLC_3DViewInstance*>* pInstanceSet)
 {
 	QSet<GLC_3DViewInstance*>::iterator iInstance= m_3DViewInstanceSet.begin();
 	while (m_3DViewInstanceSet.constEnd() != iInstance)
 	{
-		(*iInstance)->setViewable(flag);
+		if (!pInstanceSet->contains(*iInstance))
+		{
+			(*iInstance)->setViewable(GLC_3DViewInstance::FullViewable);
+			pInstanceSet->insert(*iInstance);
+		}
+
 		++iInstance;
 	}
 	const int size= m_Children.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_Children.at(i)->setViewFlag(flag);
+		m_Children.at(i)->unableViewFlag(pInstanceSet);
 	}
+}
 
+// Disable the node and sub node view flag
+void GLC_OctreeNode::disableViewFlag(QSet<GLC_3DViewInstance*>* pInstanceSet)
+{
+	QSet<GLC_3DViewInstance*>::iterator iInstance= m_3DViewInstanceSet.begin();
+	while (m_3DViewInstanceSet.constEnd() != iInstance)
+	{
+		if (!pInstanceSet->contains(*iInstance))
+			(*iInstance)->setViewable(GLC_3DViewInstance::NoViewable);
+
+		++iInstance;
+	}
+	const int size= m_Children.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_Children.at(i)->disableViewFlag(pInstanceSet);
+	}
 }
 

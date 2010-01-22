@@ -109,7 +109,7 @@ public:
 	void addInstance(GLC_3DViewInstance*, int);
 
 	//! Update instances visibility
-	void updateViewableInstances(const GLC_Frustum&);
+	void updateViewableInstances(const GLC_Frustum&, QSet<GLC_3DViewInstance*>* pInstanceSet= NULL);
 
 	//! Remove empty node
 	void removeEmptyChildren();
@@ -119,8 +119,11 @@ public:
 // Private services function
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Set the viewable flag
-	void setViewFlag(bool);
+	//! Unable the node and sub node view flag
+	void unableViewFlag(QSet<GLC_3DViewInstance*>*);
+
+	//! Disable the node and sub node view flag
+	void disableViewFlag(QSet<GLC_3DViewInstance*>*);
 
 //////////////////////////////////////////////////////////////////////
 // Private members

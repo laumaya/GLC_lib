@@ -354,9 +354,13 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 		while (iEntry != pHash->constEnd())
 		{
 			pCurInstance= iEntry.value();
-			if (pCurInstance->isViewable() && (pCurInstance->isVisible() == m_IsInShowSate))
+			if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
 			{
 				pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
+			}
+			else
+			{
+				qDebug() << "Flag == GLC_3DViewInstance::NoViewable " << pCurInstance->viewableFlag();
 			}
 			++iEntry;
 		}
@@ -368,13 +372,18 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 			while (iEntry != pHash->constEnd())
 			{
 				pCurInstance= iEntry.value();
-				if (pCurInstance->isViewable() && (pCurInstance->isVisible() == m_IsInShowSate))
+				if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
 				{
 					if (!pCurInstance->isTransparent() || pCurInstance->renderPropertiesHandle()->isSelected() || (renderFlag == glc::WireRenderFlag))
 					{
 						pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
+				else
+				{
+					qDebug() << "Flag == GLC_3DViewInstance::NoViewable " << pCurInstance->viewableFlag();
+				}
+
 				++iEntry;
 			}
 
@@ -384,13 +393,18 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 			while (iEntry != pHash->constEnd())
 			{
 				pCurInstance= iEntry.value();
-				if (pCurInstance->isViewable() && (pCurInstance->isVisible() == m_IsInShowSate))
+				if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
 				{
 					if (pCurInstance->hasTransparentMaterials())
 					{
 						pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
+				else
+				{
+					qDebug() << "Flag == GLC_3DViewInstance::NoViewable " << pCurInstance->viewableFlag();
+				}
+
 				++iEntry;
 			}
 	   }

@@ -527,7 +527,7 @@ void GLC_3DViewCollection::unbindSpacePartitioning()
     while (iEntry != m_3DViewInstanceHash.constEnd())
     {
     	// Update Instance viewable flag
-    	iEntry.value().setViewable(true);
+    	iEntry.value().setViewable(GLC_3DViewInstance::FullViewable);
     	iEntry++;
     }
 
@@ -539,7 +539,7 @@ void GLC_3DViewCollection::setSpacePartitionningUsage(bool use)
 	if (m_UseSpacePartitioning != use)
 	{
 		m_UseSpacePartitioning= use;
-		Q_ASSERT(m_UseSpacePartitioning && (NULL != m_pSpacePartitioning));
+/*
 		if (!m_UseSpacePartitioning)
 		{
 			ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
@@ -550,6 +550,7 @@ void GLC_3DViewCollection::setSpacePartitionningUsage(bool use)
 		    	iEntry++;
 		    }
 		}
+		*/
 	}
 
 }
@@ -557,10 +558,11 @@ void GLC_3DViewCollection::setSpacePartitionningUsage(bool use)
 // Update the instance viewble state using frustrum culling
 void GLC_3DViewCollection::updateInstanceViewableState()
 {
-	Q_ASSERT(m_UseSpacePartitioning);
-	Q_ASSERT(NULL != m_pSpacePartitioning);
-	m_pViewport->updateFrustum();
-	m_pSpacePartitioning->updateViewableInstances(m_pViewport->frustum());
+	if (m_UseSpacePartitioning and (NULL != m_pSpacePartitioning))
+	{
+		m_pViewport->updateFrustum();
+		m_pSpacePartitioning->updateViewableInstances(m_pViewport->frustum());
+	}
 }
 
 // Return all GLC_3DViewInstance from collection

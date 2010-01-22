@@ -52,7 +52,7 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
-, m_IsViewable(true)
+, m_ViewableFlag(GLC_3DViewInstance::FullViewable)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -72,7 +72,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom)
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
-, m_IsViewable(true)
+, m_ViewableFlag(GLC_3DViewInstance::FullViewable)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -94,7 +94,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
 , m_IsVisible(true)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
-, m_IsViewable(true)
+, m_ViewableFlag(GLC_3DViewInstance::FullViewable)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -116,7 +116,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
 , m_IsVisible(inputNode.m_IsVisible)
 , m_colorId()
 , m_DefaultLOD(inputNode.m_DefaultLOD)
-, m_IsViewable(inputNode.m_IsViewable)
+, m_ViewableFlag(inputNode.m_ViewableFlag)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -149,7 +149,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 		m_RenderProperties= inputNode.m_RenderProperties;
 		m_IsVisible= inputNode.m_IsVisible;
 		m_DefaultLOD= inputNode.m_DefaultLOD;
-		m_IsViewable= inputNode.m_IsViewable;
+		m_ViewableFlag= inputNode.m_ViewableFlag;
 
 		//qDebug() << "GLC_3DViewInstance::operator= :ID = " << m_Uid;
 		//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
@@ -211,7 +211,7 @@ GLC_3DViewInstance GLC_3DViewInstance::deepCopy() const
 	cloneInstance.m_IsBoundingBoxValid= m_IsBoundingBoxValid;
 	cloneInstance.m_RenderProperties= m_RenderProperties;
 	cloneInstance.m_IsVisible= m_IsVisible;
-	cloneInstance.m_IsViewable= m_IsViewable;
+	cloneInstance.m_ViewableFlag= m_ViewableFlag;
 	return cloneInstance;
 }
 
@@ -303,12 +303,15 @@ void GLC_3DViewInstance::glExecute(glc::RenderFlag renderFlag, bool useLod, GLC_
 	{
 		for (int i= 0; i < size; ++i)
 		{
-			const int lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
-			if (lodValue <= 100)
+			if (m_3DRep.geomAt(i)->viewable())
 			{
-				m_3DRep.geomAt(i)->setCurrentLod(lodValue);
-				m_RenderProperties.setCurrentBodyIndex(i);
-				m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
+				const int lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
+				if (lodValue <= 100)
+				{
+					m_3DRep.geomAt(i)->setCurrentLod(lodValue);
+					m_RenderProperties.setCurrentBodyIndex(i);
+					m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
+				}
 			}
 		}
 	}
@@ -316,17 +319,20 @@ void GLC_3DViewInstance::glExecute(glc::RenderFlag renderFlag, bool useLod, GLC_
 	{
 		for (int i= 0; i < size; ++i)
 		{
-			int lodValue= 0;
-			if (GLC_State::isPixelCullingActivated() && (NULL != pView))
+			if (m_3DRep.geomAt(i)->viewable())
 			{
-				lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
-			}
+				int lodValue= 0;
+				if (GLC_State::isPixelCullingActivated() && (NULL != pView))
+				{
+					lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
+				}
 
-			if (lodValue <= 100)
-			{
-				m_3DRep.geomAt(i)->setCurrentLod(m_DefaultLOD);
-				m_RenderProperties.setCurrentBodyIndex(i);
-				m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
+				if (lodValue <= 100)
+				{
+					m_3DRep.geomAt(i)->setCurrentLod(m_DefaultLOD);
+					m_RenderProperties.setCurrentBodyIndex(i);
+					m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
+				}
 			}
 		}
 	}

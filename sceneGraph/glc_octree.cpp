@@ -69,24 +69,18 @@ void GLC_Octree::updateViewableInstances(const GLC_Frustum& frustum)
 // Update the space partionning
 void GLC_Octree::updateSpacePartitioning()
 {
-	qDebug() << "Create octree";
+	qDebug() << "Update space partitioning";
 	delete m_pRootNode;
 	m_pRootNode= new GLC_OctreeNode(m_pCollection->boundingBox());
-	qDebug() << "Octree created";
-
-	qDebug() << "fill Octree";
 	// fill the octree
 	QList<GLC_3DViewInstance*> instanceList(m_pCollection->instancesHandle());
 	const int size= instanceList.size();
-	qDebug() << "Number of instances :" << size;
 	for (int i= 0; i < size; ++i)
 	{
 		m_pRootNode->addInstance(instanceList.at(i), m_OctreeDepth);
 	}
-	qDebug() << "Octree filled";
-	qDebug() << "Remove empty node";
 	m_pRootNode->removeEmptyChildren();
-	qDebug() << "Empty nodes removed";
+	qDebug() << "Update space partitioning DONE";
 }
 
 // Set the octree depth
