@@ -81,6 +81,7 @@ GLC_Frustum::Localisation GLC_Frustum::localizeSphereToPlane(const GLC_Point4d& 
 	GLC_Frustum::Localisation localisationResult;
 	const double signedDistance= plane.distanceToPoint(center);
 	const double distance= fabs(signedDistance);
+	//qDebug() << "radius " << radius;
 	//qDebug() << "signed Distance " << signedDistance;
 	if (distance > radius)
 	{
@@ -98,7 +99,7 @@ GLC_Frustum::Localisation GLC_Frustum::localizeSphereToPlane(const GLC_Point4d& 
 // Update the frustum
 void GLC_Frustum::update(GLC_Viewport* pViewport)
 {
-	qDebug() << "update frustum";
+	//qDebug() << "update frustum";
 
 	// Get the viewport projection matrix
 	GLC_Matrix4x4 projectionMatrix= pViewport->projectionMatrix();
