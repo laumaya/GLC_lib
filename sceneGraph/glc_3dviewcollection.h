@@ -358,10 +358,6 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 			{
 				pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
 			}
-			else
-			{
-				qDebug() << "Flag == GLC_3DViewInstance::NoViewable " << pCurInstance->viewableFlag();
-			}
 			++iEntry;
 		}
 	}
@@ -379,10 +375,6 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 						pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
-				else
-				{
-					qDebug() << "Flag == GLC_3DViewInstance::NoViewable " << pCurInstance->viewableFlag();
-				}
 
 				++iEntry;
 			}
@@ -399,10 +391,6 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 					{
 						pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
 					}
-				}
-				else
-				{
-					qDebug() << "Flag == GLC_3DViewInstance::NoViewable " << pCurInstance->viewableFlag();
 				}
 
 				++iEntry;
