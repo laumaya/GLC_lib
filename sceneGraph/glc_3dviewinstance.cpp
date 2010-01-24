@@ -53,6 +53,7 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
 , m_ViewableFlag(GLC_3DViewInstance::FullViewable)
+, m_ViewableGeomFlag()
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -73,6 +74,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
 , m_ViewableFlag(GLC_3DViewInstance::FullViewable)
+, m_ViewableGeomFlag()
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -95,6 +97,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
 , m_colorId()
 , m_DefaultLOD(m_GlobalDefaultLOD)
 , m_ViewableFlag(GLC_3DViewInstance::FullViewable)
+, m_ViewableGeomFlag()
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -117,6 +120,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
 , m_colorId()
 , m_DefaultLOD(inputNode.m_DefaultLOD)
 , m_ViewableFlag(inputNode.m_ViewableFlag)
+, m_ViewableGeomFlag(inputNode.m_ViewableGeomFlag)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -150,6 +154,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 		m_IsVisible= inputNode.m_IsVisible;
 		m_DefaultLOD= inputNode.m_DefaultLOD;
 		m_ViewableFlag= inputNode.m_ViewableFlag;
+		m_ViewableGeomFlag= inputNode.m_ViewableGeomFlag;
 
 		//qDebug() << "GLC_3DViewInstance::operator= :ID = " << m_Uid;
 		//qDebug() << "Number of instance" << (*m_pNumberOfInstance);
@@ -289,6 +294,13 @@ GLC_3DViewInstance& GLC_3DViewInstance::resetMatrix(void)
 void GLC_3DViewInstance::glExecute(glc::RenderFlag renderFlag, bool useLod, GLC_Viewport* pView)
 {
 	if (m_3DRep.isEmpty()) return;
+	const int bodyCount= m_3DRep.numberOfBody();
+
+	if (bodyCount != m_ViewableGeomFlag.size())
+	{
+		m_ViewableGeomFlag.fill(true, bodyCount);
+	}
+
 	m_RenderProperties.setRenderingFlag(renderFlag);
 
 	// Save current OpenGL Matrix
@@ -298,12 +310,12 @@ void GLC_3DViewInstance::glExecute(glc::RenderFlag renderFlag, bool useLod, GLC_
 	{
 		glColor3ubv(m_colorId); // D'ont use Alpha component
 	}
-	const int size= m_3DRep.numberOfBody();
+
 	if (useLod && (NULL != pView))
 	{
-		for (int i= 0; i < size; ++i)
+		for (int i= 0; i < bodyCount; ++i)
 		{
-			if (m_3DRep.geomAt(i)->viewable())
+			if (m_ViewableGeomFlag.at(i))
 			{
 				const int lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
 				if (lodValue <= 100)
@@ -317,9 +329,9 @@ void GLC_3DViewInstance::glExecute(glc::RenderFlag renderFlag, bool useLod, GLC_
 	}
 	else
 	{
-		for (int i= 0; i < size; ++i)
+		for (int i= 0; i < bodyCount; ++i)
 		{
-			if (m_3DRep.geomAt(i)->viewable())
+			if (m_ViewableGeomFlag.at(i))
 			{
 				int lodValue= 0;
 				if (GLC_State::isPixelCullingActivated() && (NULL != pView))

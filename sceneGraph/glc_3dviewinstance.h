@@ -152,6 +152,10 @@ public:
 	inline GLC_3DViewInstance::Viewable viewableFlag() const
 	{return m_ViewableFlag;}
 
+	//! Return true if the geom at the index is viewable
+	inline bool isGeomViewable(int index) const
+	{return m_ViewableGeomFlag.at(index);}
+
 	//! Get number of faces
 	inline unsigned int numberOfFaces() const
 	{return m_3DRep.numberOfFaces();}
@@ -260,6 +264,10 @@ public:
 	//! Set the viewable flag
 	inline bool setViewable(GLC_3DViewInstance::Viewable flag);
 
+	//! Set the viewable flag of a geometry
+	inline void setGeomViewable(int index, bool flag)
+	{m_ViewableGeomFlag[index]= flag;}
+
 
 	//! Set the global default LOD value
 	static void setGlobalDefaultLod(int);
@@ -345,6 +353,9 @@ private:
 	//! Flag to know if the instance is viewable
 	Viewable m_ViewableFlag;
 
+	//! vector of Flag to know if geometies of this instance are viewable
+	QVector<bool> m_ViewableGeomFlag;
+
 };
 
 // Return true if the all instance's mesh are transparent
@@ -385,7 +396,11 @@ bool GLC_3DViewInstance::hasTransparentMaterials() const
 //! Set the viewable flag
 bool GLC_3DViewInstance::setViewable(GLC_3DViewInstance::Viewable flag)
 {
-
+	const int bodyCount= m_3DRep.numberOfBody();
+	if (bodyCount != m_ViewableGeomFlag.size())
+	{
+		m_ViewableGeomFlag.fill(true, bodyCount);
+	}
 	bool asChange= m_ViewableFlag != flag;
 	if (asChange)
 	{
@@ -393,15 +408,11 @@ bool GLC_3DViewInstance::setViewable(GLC_3DViewInstance::Viewable flag)
 		if (flag != GLC_3DViewInstance::PartialViewable)
 		{
 			bool viewable= (flag == GLC_3DViewInstance::FullViewable);
-			const int size= m_3DRep.numberOfBody();
-			for (int i= 0; i < size; ++i)
+
+			for (int i= 0; i < bodyCount; ++i)
 			{
-				m_3DRep.geomAt(i)->setViewable(viewable);
+				m_ViewableGeomFlag[i]= viewable;
 			}
-		}
-		else
-		{
-			qDebug() << "Partial " << name();
 		}
 	}
 	return asChange;

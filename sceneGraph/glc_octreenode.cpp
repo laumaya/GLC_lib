@@ -228,13 +228,14 @@ void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GL
 			if (!pInstanceSet->contains(*iInstance))
 			{
 				GLC_3DViewInstance* pCurrentInstance= (*iInstance);
-				nodeLocalisation= frustum.localizeBoundingBox(pCurrentInstance->boundingBox());
+				QString iname= pCurrentInstance->name();
+				GLC_Frustum::Localisation instanceLocalisation= frustum.localizeBoundingBox(pCurrentInstance->boundingBox());
 
-				if (nodeLocalisation == GLC_Frustum::OutFrustum)
+				if (instanceLocalisation == GLC_Frustum::OutFrustum)
 				{
 					pCurrentInstance->setViewable(GLC_3DViewInstance::NoViewable);
 				}
-				else if (nodeLocalisation == GLC_Frustum::InFrustum)
+				else if (instanceLocalisation == GLC_Frustum::InFrustum)
 				{
 					pInstanceSet->insert(pCurrentInstance);
 					pCurrentInstance->setViewable(GLC_3DViewInstance::FullViewable);
@@ -252,15 +253,9 @@ void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GL
 						GLC_BoundingBox geomBox= pCurrentInstance->geomAt(i)->boundingBox();
 						GLC_Point4d center(instanceMat * geomBox.center());
 						double radius= geomBox.boundingSphereRadius() * instanceMat.scalingX();
-						nodeLocalisation= frustum.localizeSphere(center, radius);
-						if (nodeLocalisation == GLC_Frustum::OutFrustum)
-						{
-							//pCurrentInstance->geomAt(i)->setViewable(true);
-						}
-						else
-						{
-							//pCurrentInstance->geomAt(i)->setViewable(true);
-						}
+						GLC_Frustum::Localisation geomLocalisation= frustum.localizeSphere(center, radius);
+
+						pCurrentInstance->setGeomViewable(i, geomLocalisation != GLC_Frustum::OutFrustum);
 					}
 				}
 			}
