@@ -175,10 +175,6 @@ public:
 	GLfloat lineWidth() const
 	{return m_LineWidth;}
 
-	//! Return the viewable flag
-	bool viewable() const
-	{return m_Viewable;}
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -231,10 +227,6 @@ public:
 	//! Set Line width
 	inline void setLineWidth(GLfloat lineWidth)
 	{m_LineWidth= lineWidth;}
-
-	//! Set the viewable flag
-	inline void setViewable(bool flag)
-	{m_Viewable= flag;}
 
 
 //@}
@@ -323,10 +315,6 @@ private:
 
 	//! Name of geometry
 	QString m_Name;
-
-	//! Flag to know if the geometry is viewable
-	bool m_Viewable;
-
 };
 
 #endif /*GLC_GEOMETRY_H_*/
