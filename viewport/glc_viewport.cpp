@@ -511,7 +511,7 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	{
 		// The scene is not empty
 		GLC_Matrix4x4 matTranslateCam(-m_pViewCam->eye());
-		GLC_Matrix4x4 matRotateCam(m_pViewCam->viewMatrix1());
+		GLC_Matrix4x4 matRotateCam(m_pViewCam->viewMatrix());
 		GLC_Matrix4x4 matComp(matRotateCam * matTranslateCam);
 
 		// The bounding Box in Camera coordinate
