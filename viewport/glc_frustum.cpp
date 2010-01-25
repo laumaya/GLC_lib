@@ -29,6 +29,7 @@
 // Default constructor
 GLC_Frustum::GLC_Frustum()
 : m_PlaneList()
+, m_PreviousMatrix()
 {
 	for (int i= 0; i < 6; ++i)
 	{
@@ -39,6 +40,7 @@ GLC_Frustum::GLC_Frustum()
 // Copy constructor
 GLC_Frustum::GLC_Frustum(const GLC_Frustum& frustum)
 : m_PlaneList(frustum.m_PlaneList)
+, m_PreviousMatrix(frustum.m_PreviousMatrix)
 {
 
 }
@@ -97,7 +99,7 @@ GLC_Frustum::Localisation GLC_Frustum::localizeSphereToPlane(const GLC_Point4d& 
 }
 
 // Update the frustum
-void GLC_Frustum::update(GLC_Viewport* pViewport)
+bool GLC_Frustum::update(GLC_Viewport* pViewport)
 {
 	//qDebug() << "update frustum";
 
@@ -112,53 +114,65 @@ void GLC_Frustum::update(GLC_Viewport* pViewport)
 	// Composition matrix
 	GLC_Matrix4x4 compMatrix= projectionMatrix * modelViewMatrix;
 
-	// Left plane
-	m_PlaneList[LeftPlane].setA(compMatrix.data()[3] + compMatrix.data()[0]);
-	m_PlaneList[LeftPlane].setB(compMatrix.data()[7] + compMatrix.data()[4]);
-	m_PlaneList[LeftPlane].setC(compMatrix.data()[11] + compMatrix.data()[8]);
-	m_PlaneList[LeftPlane].setD(compMatrix.data()[15] + compMatrix.data()[12]);
-	m_PlaneList[LeftPlane].normalize();
-	//qDebug() << "Left Plane : x=" << m_PlaneList[LeftPlane].coefA() << " y=" << m_PlaneList[LeftPlane].coefB() << " z=" << m_PlaneList[LeftPlane].coefC();
-	//qDebug() << "Left plane coef d=" << m_PlaneList[LeftPlane].coefD();
+	// Test if the frustum change
+	if (compMatrix == m_PreviousMatrix)
+	{
+		//qDebug() << "No change in frustum";
+		return false;
+	}
+	else
+	{
+		//qDebug() << "-------------CHANGE---------------";
+		m_PreviousMatrix= compMatrix;
+		// Left plane
+		m_PlaneList[LeftPlane].setA(compMatrix.data()[3] + compMatrix.data()[0]);
+		m_PlaneList[LeftPlane].setB(compMatrix.data()[7] + compMatrix.data()[4]);
+		m_PlaneList[LeftPlane].setC(compMatrix.data()[11] + compMatrix.data()[8]);
+		m_PlaneList[LeftPlane].setD(compMatrix.data()[15] + compMatrix.data()[12]);
+		m_PlaneList[LeftPlane].normalize();
+		//qDebug() << "Left Plane : x=" << m_PlaneList[LeftPlane].coefA() << " y=" << m_PlaneList[LeftPlane].coefB() << " z=" << m_PlaneList[LeftPlane].coefC();
+		//qDebug() << "Left plane coef d=" << m_PlaneList[LeftPlane].coefD();
 
-	// Right plane
-	m_PlaneList[RightPlane].setA(compMatrix.data()[3] - compMatrix.data()[0]);
-	m_PlaneList[RightPlane].setB(compMatrix.data()[7] - compMatrix.data()[4]);
-	m_PlaneList[RightPlane].setC(compMatrix.data()[11] - compMatrix.data()[8]);
-	m_PlaneList[RightPlane].setD(compMatrix.data()[15] - compMatrix.data()[12]);
-	m_PlaneList[RightPlane].normalize();
-	//qDebug() << "Right Plane : x=" << m_PlaneList[RightPlane].coefA() << " y=" << m_PlaneList[RightPlane].coefB() << " z=" << m_PlaneList[RightPlane].coefC();
-	//qDebug() << "Right plane coef d=" << m_PlaneList[RightPlane].coefD();
+		// Right plane
+		m_PlaneList[RightPlane].setA(compMatrix.data()[3] - compMatrix.data()[0]);
+		m_PlaneList[RightPlane].setB(compMatrix.data()[7] - compMatrix.data()[4]);
+		m_PlaneList[RightPlane].setC(compMatrix.data()[11] - compMatrix.data()[8]);
+		m_PlaneList[RightPlane].setD(compMatrix.data()[15] - compMatrix.data()[12]);
+		m_PlaneList[RightPlane].normalize();
+		//qDebug() << "Right Plane : x=" << m_PlaneList[RightPlane].coefA() << " y=" << m_PlaneList[RightPlane].coefB() << " z=" << m_PlaneList[RightPlane].coefC();
+		//qDebug() << "Right plane coef d=" << m_PlaneList[RightPlane].coefD();
 
-	//Top plane
-	m_PlaneList[TopPlane].setA(compMatrix.data()[3] + compMatrix.data()[1]);
-	m_PlaneList[TopPlane].setB(compMatrix.data()[7] + compMatrix.data()[5]);
-	m_PlaneList[TopPlane].setC(compMatrix.data()[11] + compMatrix.data()[9]);
-	m_PlaneList[TopPlane].setD(compMatrix.data()[15] + compMatrix.data()[13]);
-	m_PlaneList[TopPlane].normalize();
-	//qDebug() << "Top Plane : x=" << m_PlaneList[TopPlane].coefA() << " y=" << m_PlaneList[TopPlane].coefB() << " z=" << m_PlaneList[TopPlane].coefC();
-	//qDebug() << "Top plane coef d=" << m_PlaneList[TopPlane].coefD();
+		//Top plane
+		m_PlaneList[TopPlane].setA(compMatrix.data()[3] + compMatrix.data()[1]);
+		m_PlaneList[TopPlane].setB(compMatrix.data()[7] + compMatrix.data()[5]);
+		m_PlaneList[TopPlane].setC(compMatrix.data()[11] + compMatrix.data()[9]);
+		m_PlaneList[TopPlane].setD(compMatrix.data()[15] + compMatrix.data()[13]);
+		m_PlaneList[TopPlane].normalize();
+		//qDebug() << "Top Plane : x=" << m_PlaneList[TopPlane].coefA() << " y=" << m_PlaneList[TopPlane].coefB() << " z=" << m_PlaneList[TopPlane].coefC();
+		//qDebug() << "Top plane coef d=" << m_PlaneList[TopPlane].coefD();
 
-	//Bottom plane
-	m_PlaneList[BottomPlane].setA(compMatrix.data()[3] - compMatrix.data()[1]);
-	m_PlaneList[BottomPlane].setB(compMatrix.data()[7] - compMatrix.data()[5]);
-	m_PlaneList[BottomPlane].setC(compMatrix.data()[11] - compMatrix.data()[9]);
-	m_PlaneList[BottomPlane].setD(compMatrix.data()[15] - compMatrix.data()[13]);
-	m_PlaneList[BottomPlane].normalize();
-	//qDebug() << "Bottom Plane : x=" << m_PlaneList[BottomPlane].coefA() << " y=" << m_PlaneList[BottomPlane].coefB() << " z=" << m_PlaneList[BottomPlane].coefC();
-	//qDebug() << "Bottom plane coef d=" << m_PlaneList[BottomPlane].coefD();
+		//Bottom plane
+		m_PlaneList[BottomPlane].setA(compMatrix.data()[3] - compMatrix.data()[1]);
+		m_PlaneList[BottomPlane].setB(compMatrix.data()[7] - compMatrix.data()[5]);
+		m_PlaneList[BottomPlane].setC(compMatrix.data()[11] - compMatrix.data()[9]);
+		m_PlaneList[BottomPlane].setD(compMatrix.data()[15] - compMatrix.data()[13]);
+		m_PlaneList[BottomPlane].normalize();
+		//qDebug() << "Bottom Plane : x=" << m_PlaneList[BottomPlane].coefA() << " y=" << m_PlaneList[BottomPlane].coefB() << " z=" << m_PlaneList[BottomPlane].coefC();
+		//qDebug() << "Bottom plane coef d=" << m_PlaneList[BottomPlane].coefD();
 
-	//Near plane
-	m_PlaneList[NearPlane].setA(compMatrix.data()[3] + compMatrix.data()[2]);
-	m_PlaneList[NearPlane].setB(compMatrix.data()[7] + compMatrix.data()[6]);
-	m_PlaneList[NearPlane].setC(compMatrix.data()[11] + compMatrix.data()[10]);
-	m_PlaneList[NearPlane].setD(compMatrix.data()[15] + compMatrix.data()[14]);
-	m_PlaneList[NearPlane].normalize();
+		//Near plane
+		m_PlaneList[NearPlane].setA(compMatrix.data()[3] + compMatrix.data()[2]);
+		m_PlaneList[NearPlane].setB(compMatrix.data()[7] + compMatrix.data()[6]);
+		m_PlaneList[NearPlane].setC(compMatrix.data()[11] + compMatrix.data()[10]);
+		m_PlaneList[NearPlane].setD(compMatrix.data()[15] + compMatrix.data()[14]);
+		m_PlaneList[NearPlane].normalize();
 
-	//Far plane
-	m_PlaneList[FarPlane].setA(compMatrix.data()[3] - compMatrix.data()[2]);
-	m_PlaneList[FarPlane].setB(compMatrix.data()[7] - compMatrix.data()[6]);
-	m_PlaneList[FarPlane].setC(compMatrix.data()[11] - compMatrix.data()[10]);
-	m_PlaneList[FarPlane].setD(compMatrix.data()[15] - compMatrix.data()[14]);
-	m_PlaneList[FarPlane].normalize();
+		//Far plane
+		m_PlaneList[FarPlane].setA(compMatrix.data()[3] - compMatrix.data()[2]);
+		m_PlaneList[FarPlane].setB(compMatrix.data()[7] - compMatrix.data()[6]);
+		m_PlaneList[FarPlane].setC(compMatrix.data()[11] - compMatrix.data()[10]);
+		m_PlaneList[FarPlane].setD(compMatrix.data()[15] - compMatrix.data()[14]);
+		m_PlaneList[FarPlane].normalize();
+	}
+
 }

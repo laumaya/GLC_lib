@@ -140,7 +140,8 @@ public:
 	{m_PlaneList[FarPlane]= plane;}
 
 	//! Update the frustum
-	void update(GLC_Viewport*);
+	/*! Return true if the frustum as change*/
+	bool update(GLC_Viewport*);
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -157,6 +158,9 @@ private:
 
 	//! The list of frustum plane
 	QList<GLC_Plane> m_PlaneList;
+
+	//! The previous frustum matrix
+	GLC_Matrix4x4 m_PreviousMatrix;
 };
 
 #endif /* GLC_FRUSTUM_H_ */
