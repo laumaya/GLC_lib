@@ -204,14 +204,17 @@ void GLC_OctreeNode::addInstance(GLC_3DViewInstance* pInstance, int depth)
 // Update instances visibility
 void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GLC_3DViewInstance*>* pInstanceSet)
 {
-	GLC_Frustum::Localisation nodeLocalisation= frustum.localizeBoundingBox(m_BoundingBox);
+
 	bool firstCall= false;
+	// Create the set of viewable instance if necessary
 	if (NULL == pInstanceSet)
 	{
 		pInstanceSet= new QSet<GLC_3DViewInstance*>();
 		firstCall= true;
 	}
 
+	// Test the localisation of current octree node
+	GLC_Frustum::Localisation nodeLocalisation= frustum.localizeBoundingBox(m_BoundingBox);
 	if (nodeLocalisation == GLC_Frustum::OutFrustum)
 	{
 		disableViewFlag(pInstanceSet);
@@ -220,15 +223,16 @@ void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GL
 	{
 		unableViewFlag(pInstanceSet);
 	}
-	else
+	else // The current node intersect the frustum
 	{
 		QSet<GLC_3DViewInstance*>::iterator iInstance= m_3DViewInstanceSet.begin();
 		while (m_3DViewInstanceSet.constEnd() != iInstance)
 		{
+			// Test if the instances is in the viewable set
 			if (!pInstanceSet->contains(*iInstance))
 			{
 				GLC_3DViewInstance* pCurrentInstance= (*iInstance);
-				QString iname= pCurrentInstance->name();
+				// Test the localisation of the current instance
 				GLC_Frustum::Localisation instanceLocalisation= frustum.localizeBoundingBox(pCurrentInstance->boundingBox());
 
 				if (instanceLocalisation == GLC_Frustum::OutFrustum)
