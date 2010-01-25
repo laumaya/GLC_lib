@@ -222,8 +222,9 @@ public:
 	{m_SelectionSquareSize= size;}
 
 	//! Update the viewport frustum (frustum cullin purpose)
-	inline void updateFrustum()
-	{m_Frustum.update(this);}
+	/*! Return true if the frustum has changed*/
+	inline bool updateFrustum()
+	{return m_Frustum.update(this);}
 
 //@}
 
