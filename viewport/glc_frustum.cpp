@@ -173,6 +173,7 @@ bool GLC_Frustum::update(GLC_Viewport* pViewport)
 		m_PlaneList[FarPlane].setC(compMatrix.data()[11] - compMatrix.data()[10]);
 		m_PlaneList[FarPlane].setD(compMatrix.data()[15] - compMatrix.data()[14]);
 		m_PlaneList[FarPlane].normalize();
+		return true;
 	}
 
 }
