@@ -558,10 +558,10 @@ void GLC_3DViewCollection::setSpacePartitionningUsage(bool use)
 // Update the instance viewble state using frustrum culling
 void GLC_3DViewCollection::updateInstanceViewableState()
 {
-	if (m_UseSpacePartitioning && (NULL != m_pSpacePartitioning))
+	if ((NULL != m_pViewport) && m_UseSpacePartitioning && (NULL != m_pSpacePartitioning))
 	{
-		m_pViewport->updateFrustum();
-		m_pSpacePartitioning->updateViewableInstances(m_pViewport->frustum());
+		if (m_pViewport->updateFrustum())
+			m_pSpacePartitioning->updateViewableInstances(m_pViewport->frustum());
 	}
 }
 
