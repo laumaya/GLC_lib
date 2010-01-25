@@ -90,7 +90,7 @@ public:
 	{return m_Eye - m_Target;}
 
 	//! Get camera's orbit composition matrix
-	inline GLC_Matrix4x4 viewMatrix1(void) const
+	inline GLC_Matrix4x4 viewMatrix(void) const
 	{return m_MatCompOrbit;}
 
 	//! equality operator
