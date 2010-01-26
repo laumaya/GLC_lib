@@ -534,7 +534,10 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	//////////////////////////////////////////////////////////////////
 	if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
 	{
-		Q_ASSERT(NULL != m_pCurrentObjMesh);
+		if (NULL == m_pCurrentObjMesh)
+		{
+			changeGroup("GLC_Default");
+		}
 		Q_ASSERT(NULL != m_pCurrentObjMesh->m_pLastOffsetSize);
 
 		if (m_pCurrentObjMesh->m_Index.size() != m_pCurrentObjMesh->m_pLastOffsetSize->m_Offset)
