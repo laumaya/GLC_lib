@@ -521,6 +521,7 @@ void GLC_3DViewCollection::bindSpacePartitioning(GLC_SpacePartitioning* pSpacePa
 void GLC_3DViewCollection::unbindSpacePartitioning()
 {
 	delete m_pSpacePartitioning;
+	m_pSpacePartitioning= NULL;
 	m_UseSpacePartitioning= false;
 
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
