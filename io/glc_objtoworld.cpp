@@ -779,24 +779,24 @@ GLC_Vector3df GLC_ObjToWorld::computeNormal(GLuint index1, GLuint index2, GLuint
 	xn= m_pCurrentObjMesh->m_Positions.at(index1 * 3);
 	yn= m_pCurrentObjMesh->m_Positions.at(index1 * 3 + 1);
 	zn= m_pCurrentObjMesh->m_Positions.at(index1 * 3 + 2);
-	const GLC_Vector4d vect1(xn, yn, zn);
+	const GLC_Vector3d vect1(xn, yn, zn);
 
 	// Vertex 2
 	xn= m_pCurrentObjMesh->m_Positions.at(index2 * 3);
 	yn= m_pCurrentObjMesh->m_Positions.at(index2 * 3 + 1);
 	zn= m_pCurrentObjMesh->m_Positions.at(index2 * 3 + 2);
-	const GLC_Vector4d vect2(xn, yn, zn);
+	const GLC_Vector3d vect2(xn, yn, zn);
 
 	// Vertex 3
 	xn= m_pCurrentObjMesh->m_Positions.at(index3 * 3);
 	yn= m_pCurrentObjMesh->m_Positions.at(index3 * 3 + 1);
 	zn= m_pCurrentObjMesh->m_Positions.at(index3 * 3 + 2);
-	const GLC_Vector4d vect3(xn, yn, zn);
+	const GLC_Vector3d vect3(xn, yn, zn);
 
-	const GLC_Vector4d edge1(vect3 - vect2);
-	const GLC_Vector4d edge2(vect1 - vect2);
+	const GLC_Vector3d edge1(vect3 - vect2);
+	const GLC_Vector3d edge2(vect1 - vect2);
 
-	GLC_Vector4d normal(edge1 ^ edge2);
+	GLC_Vector3d normal(edge1 ^ edge2);
 	normal.setNormal(1);
 
 	return normal.toVector3df();

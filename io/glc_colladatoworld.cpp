@@ -1138,24 +1138,24 @@ void GLC_ColladaToWorld::computeNormalOfCurrentPrimitiveOfCurrentMesh(int indexO
 		xn= pData->at(m_pMeshInfo->m_Index.at(i) * 3);
 		yn= pData->at(m_pMeshInfo->m_Index.at(i) * 3 + 1);
 		zn= pData->at(m_pMeshInfo->m_Index.at(i) * 3 + 2);
-		const GLC_Vector4d vect1(xn, yn, zn);
+		const GLC_Vector3d vect1(xn, yn, zn);
 
 		// Vertex 2
 		xn= pData->at(m_pMeshInfo->m_Index.at(i + 1) * 3);
 		yn= pData->at(m_pMeshInfo->m_Index.at(i + 1) * 3  + 1);
 		zn= pData->at(m_pMeshInfo->m_Index.at(i + 1) * 3 + 2);
-		const GLC_Vector4d vect2(xn, yn, zn);
+		const GLC_Vector3d vect2(xn, yn, zn);
 
 		// Vertex 3
 		xn= pData->at(m_pMeshInfo->m_Index.at(i + 2) * 3);
 		yn= pData->at(m_pMeshInfo->m_Index.at(i + 2) * 3 + 1);
 		zn= pData->at(m_pMeshInfo->m_Index.at(i + 2) * 3 + 2);
-		const GLC_Vector4d vect3(xn, yn, zn);
+		const GLC_Vector3d vect3(xn, yn, zn);
 
-		const GLC_Vector4d edge1(vect3 - vect2);
-		const GLC_Vector4d edge2(vect1 - vect2);
+		const GLC_Vector3d edge1(vect3 - vect2);
+		const GLC_Vector3d edge2(vect1 - vect2);
 
-		GLC_Vector4d normal(edge1 ^ edge2);
+		GLC_Vector3d normal(edge1 ^ edge2);
 		normal.setNormal(1);
 
 		GLC_Vector3df curNormal= normal.toVector3df();
@@ -1626,7 +1626,7 @@ void GLC_ColladaToWorld::rotateNode(ColladaNode* pNode)
 		if (!toFloatOk) throwException("The number :" + rotateStringList.at(i) + "Is not a float");
 	}
 	// Rotation vector
-	GLC_Vector4d rotationAxis(rotate[0], rotate[1], rotate[2]);
+	GLC_Vector3d rotationAxis(rotate[0], rotate[1], rotate[2]);
 	// Built the rotation matrix
 	GLC_Matrix4x4 rotationMatrix(rotationAxis, rotate[3]);
 	// Update the node matrix
