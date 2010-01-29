@@ -46,7 +46,7 @@ class GLC_LIB_EXPORT GLC_Point : public GLC_Geometry
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct an GLC_Point
-	GLC_Point(const GLC_Point4d &);
+	GLC_Point(const GLC_Point3d &);
 
 	//! Construct an GLC_Point
 	GLC_Point(double, double, double);
@@ -59,8 +59,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Return a GLC_Point4d of coordinate
-	GLC_Point4d coordinate(void) const;
+	//! Return a GLC_Point3d of coordinate
+	GLC_Point3d coordinate(void) const;
 
 	//! Return the point bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
@@ -76,7 +76,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set Point coordinate by 4D point
-	void setCoordinate(const GLC_Point4d &);
+	void setCoordinate(const GLC_Point3d &);
 
 	//! Set Point coordinate by 3 double
 	void setCoordinate(double x, double y, double z);
@@ -100,7 +100,7 @@ private:
 
 private:
 	//! 4d point for point coordinate
-	GLC_Point4d m_Coordinate;
+	GLC_Point3d m_Coordinate;
 
 };
 #endif //GLC_POINT_H_

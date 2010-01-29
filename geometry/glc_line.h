@@ -44,7 +44,7 @@ class GLC_LIB_EXPORT GLC_Line : public GLC_Geometry
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct an GLC_Line by to point
-	GLC_Line(const GLC_Point4d &, const GLC_Point4d &);
+	GLC_Line(const GLC_Point3d &, const GLC_Point3d &);
 
 	//! Copy constructor
 	GLC_Line(const GLC_Line&);
@@ -61,11 +61,11 @@ public:
 public:
 
 	//! Return the point1 coordinate
-	inline GLC_Point4d point1(void) const
+	inline GLC_Point3d point1(void) const
 	{return m_Point1;}
 
 	//! Return the point2 coordinate
-	inline GLC_Point4d point2(void) const
+	inline GLC_Point3d point2(void) const
 	{return m_Point2;}
 
 	//! Return the point bounding box
@@ -82,7 +82,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set Line coordinate by 4D point
-	void setCoordinate(const GLC_Point4d &, const GLC_Point4d &);
+	void setCoordinate(const GLC_Point3d &, const GLC_Point3d &);
 
 //@}
 
@@ -104,10 +104,10 @@ private:
 
 private:
 	//! First point of the line
-	GLC_Point4d m_Point1;
+	GLC_Point3d m_Point1;
 
 	//! First point of the line
-	GLC_Point4d m_Point2;
+	GLC_Point3d m_Point2;
 
 };
 

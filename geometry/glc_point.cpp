@@ -33,7 +33,7 @@ using namespace glc;
 //////////////////////////////////////////////////////////////////////
 
 
-GLC_Point::GLC_Point(const GLC_Point4d &setCoord)
+GLC_Point::GLC_Point(const GLC_Point3d &setCoord)
 :GLC_Geometry("Point", true), m_Coordinate(setCoord)
 {
 
@@ -49,7 +49,7 @@ GLC_Point::GLC_Point(double x, double y, double z)
 //////////////////////////////////////////////////////////////////////
 
 // Get a 4D point represent point coordinate
-GLC_Point4d GLC_Point::coordinate(void) const
+GLC_Point3d GLC_Point::coordinate(void) const
 {
 	return m_Coordinate;
 }
@@ -85,7 +85,7 @@ GLC_Geometry* GLC_Point::clone() const
 //////////////////////////////////////////////////////////////////////
 
 // Set Point coordinate by 4D Vector
-void GLC_Point::setCoordinate(const GLC_Point4d &point)
+void GLC_Point::setCoordinate(const GLC_Point3d &point)
 {
 	m_Coordinate= point;
 }

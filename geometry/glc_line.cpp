@@ -30,7 +30,7 @@
 //////////////////////////////////////////////////////////////////////
 
 // Construct an GLC_Line by to point
-GLC_Line::GLC_Line(const GLC_Point4d & point1, const GLC_Point4d & point2)
+GLC_Line::GLC_Line(const GLC_Point3d & point1, const GLC_Point3d & point2)
 : GLC_Geometry("Line", true)
 , m_Point1(point1)
 , m_Point2(point2)

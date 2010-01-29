@@ -38,13 +38,13 @@ bool glc::polygonIsConvex(const VertexList* pVertexList)
 	const int max= pVertexList->size();
 	if (max < 4) return true;
 
-	GLC_Vector4d vertex1((*pVertexList)[0].x, (*pVertexList)[0].y, (*pVertexList)[0].z);
-	GLC_Vector4d vertex2((*pVertexList)[1].x, (*pVertexList)[1].y, (*pVertexList)[1].z);
-	GLC_Vector4d edge1(vertex2 - vertex1);
+	GLC_Vector3d vertex1((*pVertexList)[0].x, (*pVertexList)[0].y, (*pVertexList)[0].z);
+	GLC_Vector3d vertex2((*pVertexList)[1].x, (*pVertexList)[1].y, (*pVertexList)[1].z);
+	GLC_Vector3d edge1(vertex2 - vertex1);
 
 	vertex1= vertex2;
-	vertex2= GLC_Vector4d((*pVertexList)[2].x, (*pVertexList)[2].y, (*pVertexList)[2].z);
-	GLC_Vector4d edge2(vertex2 - vertex1);
+	vertex2= GLC_Vector3d((*pVertexList)[2].x, (*pVertexList)[2].y, (*pVertexList)[2].z);
+	GLC_Vector3d edge2(vertex2 - vertex1);
 
 	const bool direction= (edge1 ^ edge2).Z() >= 0.0;
 
@@ -52,7 +52,7 @@ bool glc::polygonIsConvex(const VertexList* pVertexList)
 	{
 		edge1= edge2;
 		vertex1= vertex2;
-		vertex2= GLC_Vector4d((*pVertexList)[i].x, (*pVertexList)[i].y, (*pVertexList)[i].z);
+		vertex2= GLC_Vector3d((*pVertexList)[i].x, (*pVertexList)[i].y, (*pVertexList)[i].z);
 		edge2= vertex2 - vertex1;
 		if (((edge1 ^ edge2).Z() >= 0.0) != direction)
 			return false;
@@ -60,7 +60,7 @@ bool glc::polygonIsConvex(const VertexList* pVertexList)
 	// The last edge with the first
 	edge1= edge2;
 	vertex1= vertex2;
-	vertex2= GLC_Vector4d((*pVertexList)[0].x, (*pVertexList)[0].y, (*pVertexList)[0].z);
+	vertex2= GLC_Vector3d((*pVertexList)[0].x, (*pVertexList)[0].y, (*pVertexList)[0].z);
 	edge2= vertex2 - vertex1;
 	if (((edge1 ^ edge2).Z() >= 0.0) != direction)
 		return false;
@@ -371,19 +371,19 @@ bool glc::isCounterclockwiseOrdered(const QList<GLC_Point2d>& polygon)
 void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulkList)
 {
 	// Get the polygon vertice
-	QList<GLC_Point4d> originPoints;
+	QList<GLC_Point3d> originPoints;
 	QHash<int, int> indexMap;
 	int size= pIndexList->size();
 	QList<int> face;
-	GLC_Point4d currentPoint;
+	GLC_Point3d currentPoint;
 	int delta= 0;
 	for (int i= 0; i < size; ++i)
 	{
 		const int currentIndex= pIndexList->at(i);
-		currentPoint= GLC_Point4d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
+		currentPoint= GLC_Point3d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
 		if (!originPoints.contains(currentPoint))
 		{
-			originPoints.append(GLC_Point4d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2)));
+			originPoints.append(GLC_Point3d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2)));
 			indexMap.insert(i - delta, currentIndex);
 			face.append(i - delta);
 		}
@@ -404,20 +404,20 @@ void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulk
 
 	//-------------- Change frame to mach polygon plane
 		// Compute face normal
-		const GLC_Point4d point1(originPoints[0]);
-		const GLC_Point4d point2(originPoints[1]);
-		const GLC_Point4d point3(originPoints[2]);
+		const GLC_Point3d point1(originPoints[0]);
+		const GLC_Point3d point2(originPoints[1]);
+		const GLC_Point3d point3(originPoints[2]);
 
-		const GLC_Vector4d edge1(point2 - point1);
-		const GLC_Vector4d edge2(point3 - point2);
+		const GLC_Vector3d edge1(point2 - point1);
+		const GLC_Vector3d edge2(point3 - point2);
 
-		GLC_Vector4d polygonPlaneNormal(edge1 ^ edge2);
+		GLC_Vector3d polygonPlaneNormal(edge1 ^ edge2);
 		polygonPlaneNormal.setNormal(1.0);
 
 		// Create the transformation matrix
 		GLC_Matrix4x4 transformation;
 
-		GLC_Vector4d rotationAxis(polygonPlaneNormal ^ Z_AXIS);
+		GLC_Vector3d rotationAxis(polygonPlaneNormal ^ Z_AXIS);
 		if (!rotationAxis.isNull())
 		{
 			const double angle= acos(polygonPlaneNormal * Z_AXIS);
