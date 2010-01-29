@@ -76,13 +76,13 @@ GLC_Viewport::~GLC_Viewport()
 //////////////////////////////////////////////////////////////////////
 
 // Map Screen position to OpenGL position (On image Plane)
-GLC_Vector4d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
+GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 {
 	// Change the window origin (Up Left -> centred)
 	Posx= Posx - static_cast<double>(m_nWinHSize)  / 2.0;
 	Posy= static_cast<double>(m_nWinVSize) / 2.0 - Posy;
 
-	GLC_Vector4d VectMouse(Posx, Posy,0);
+	GLC_Vector3d VectMouse(Posx, Posy,0);
 
 	// Compute the length of camera's field of view
 	const double ChampsVision = 2.0 * m_pViewCam->distEyeTarget() *  tan((m_dFov * PI / 180.0) / 2.0);
@@ -442,7 +442,7 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	Q_ASSERT(!box.isEmpty());
 
 	// Center view on the BoundingBox
-	const GLC_Vector4d deltaVector(box.center() - m_pViewCam->target());
+	const GLC_Vector3d deltaVector(box.center() - m_pViewCam->target());
 	m_pViewCam->translate(deltaVector);
 
 	double cameraCover= box.boundingSphereRadius() * 2.0;
@@ -510,13 +510,12 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	if(!bBox.isEmpty())
 	{
 		// The scene is not empty
-		GLC_Matrix4x4 matTranslateCam(-m_pViewCam->eye());
-		GLC_Matrix4x4 matRotateCam(m_pViewCam->viewMatrix());
-		GLC_Matrix4x4 matComp(matRotateCam * matTranslateCam);
+		GLC_Matrix4x4 matComp(m_pViewCam->modelViewMatrix());
 
 		// The bounding Box in Camera coordinate
 		GLC_BoundingBox boundingBox(bBox);
 		boundingBox.transform(matComp);
+
 		// Increase size of the bounding box
 		const double increaseFactor= 1.1;
 		// Convert box distance in sphere distance
@@ -525,7 +524,7 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		const double min= center - radius * increaseFactor;
 		const double max= center + radius * increaseFactor;
 
-		GLC_Point4d camEye(m_pViewCam->eye());
+		GLC_Point3d camEye(m_pViewCam->eye());
 		camEye= matComp * camEye;
 
 		if (min > 0.0)
