@@ -534,34 +534,12 @@ void GLC_3DViewCollection::unbindSpacePartitioning()
 
 }
 
-// Use the space partitioning
-void GLC_3DViewCollection::setSpacePartitionningUsage(bool use)
-{
-	if (m_UseSpacePartitioning != use)
-	{
-		m_UseSpacePartitioning= use;
-/*
-		if (!m_UseSpacePartitioning)
-		{
-			ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
-		    while (iEntry != m_3DViewInstanceHash.constEnd())
-		    {
-		    	// Update Instance viewable flag
-		    	iEntry.value().setViewable(true);
-		    	iEntry++;
-		    }
-		}
-		*/
-	}
-
-}
-
 // Update the instance viewble state using frustrum culling
-void GLC_3DViewCollection::updateInstanceViewableState()
+void GLC_3DViewCollection::updateInstanceViewableState(GLC_Matrix4x4* pFrustum)
 {
 	if ((NULL != m_pViewport) && m_UseSpacePartitioning && (NULL != m_pSpacePartitioning))
 	{
-		if (m_pViewport->updateFrustum())
+		if (m_pViewport->updateFrustum(pFrustum))
 			m_pSpacePartitioning->updateViewableInstances(m_pViewport->frustum());
 	}
 }
