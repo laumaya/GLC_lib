@@ -58,7 +58,6 @@ HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
 						maths/glc_vector2df.h \
 						maths/glc_vector3d.h \
 						maths/glc_vector3df.h \
-						maths/glc_vector4d.h \
 						maths/glc_matrix4x4.h \
 						maths/glc_interpolator.h \
 						maths/glc_distance.h \
@@ -180,8 +179,7 @@ SOURCES += lib3ds/atmosphere.c \
            lib3ds/vector.c \
            lib3ds/viewport.c
    
-SOURCES +=	maths/glc_vector4d.cpp \
-			maths/glc_matrix4x4.cpp \
+SOURCES +=	maths/glc_matrix4x4.cpp \
 			maths/glc_interpolator.cpp \
 			maths/glc_distance.cpp \
 			maths/glc_plane.cpp
@@ -291,13 +289,11 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Point2df \
     		   include/GLC_Point3d \
     		   include/GLC_Point3df \
-    		   include/GLC_Point4d \
     		   include/GLC_Texture \
     		   include/GLC_Vector2d \
     		   include/GLC_Vector2df \
     		   include/GLC_Vector3d \
     		   include/GLC_Vector3df \
-    		   include/GLC_Vector4d \
     		   include/GLC_Viewport \
     		   include/GLC_World \
     		   include/GLC_Shader \
