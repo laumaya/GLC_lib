@@ -65,7 +65,7 @@ public:
 public:
 
 	//! Set Arcs orientation and position in concordance with mouse position
-	virtual void init(const GLC_Vector4d& VectAngle, const GLC_Matrix4x4 &Matrice);
+	virtual void init(const GLC_Vector3d& VectAngle, const GLC_Matrix4x4 &Matrice);
 
 	//! Set Arcs position in concordance with mouse position
 	virtual void update(const GLC_Matrix4x4 &Matrice);

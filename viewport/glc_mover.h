@@ -28,7 +28,7 @@
 #define GLC_MOVER_H_
 
 #include "glc_repmover.h"
-#include "../maths/glc_vector4d.h"
+#include "../maths/glc_vector3d.h"
 
 #include <QList>
 
@@ -77,7 +77,7 @@ public:
 	void setRepresentationsList(const QList<GLC_RepMover*>&);
 
 	//! Init representation
-	void initRepresentation(const GLC_Vector4d&, const GLC_Matrix4x4&);
+	void initRepresentation(const GLC_Vector3d&, const GLC_Matrix4x4&);
 
 	//! Update representation
 	void updateRepresentation(const GLC_Matrix4x4&);
@@ -115,7 +115,7 @@ private:
 protected:
 
 	//! The previous mover value
-	GLC_Vector4d m_PreviousVector;
+	GLC_Vector3d m_PreviousVector;
 
 	//! The Viewport
 	GLC_Viewport* m_pViewport;

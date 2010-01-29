@@ -103,9 +103,9 @@ GLC_RepMover* GLC_RepTrackBallMover::clone() const
 //////////////////////////////////////////////////////////////////////
 
 // Set Arcs orientation and position in concordance with mouse position
-void GLC_RepTrackBallMover::init(const GLC_Vector4d& vect, const GLC_Matrix4x4 &Matrice)
+void GLC_RepTrackBallMover::init(const GLC_Vector3d& vect, const GLC_Matrix4x4 &Matrice)
 {
-	GLC_Vector4d VectAngle(vect);
+	GLC_Vector3d VectAngle(vect);
 	VectAngle.setZ(0);
 	VectAngle.setNormal(1);
 

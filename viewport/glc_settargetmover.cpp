@@ -95,15 +95,15 @@ void GLC_SetTargetMover::init(int x, int y)
 	// Test if there is geometry under picking point
 	if (!qFuzzyCompare(Depth, 1.0f))
 	{	// Geometry find -> Update camera's target position
-		const GLC_Point4d target(pX, pY, pZ);
+		const GLC_Point3d target(pX, pY, pZ);
 		m_pViewport->cameraHandle()->setTargetCam(target);
 	}
 	else
 	{	// Geometrie not find -> panning
 
-		const GLC_Point4d curPos(m_pViewport->mapPosMouse(x, y));
-		const GLC_Point4d prevPos(m_pViewport->mapPosMouse(m_pViewport->viewHSize() / 2, m_pViewport->viewVSize() / 2));
-		const GLC_Vector4d VectPan(curPos - prevPos);	// panning vector
+		const GLC_Point3d curPos(m_pViewport->mapPosMouse(x, y));
+		const GLC_Point3d prevPos(m_pViewport->mapPosMouse(m_pViewport->viewHSize() / 2, m_pViewport->viewVSize() / 2));
+		const GLC_Vector3d VectPan(curPos - prevPos);	// panning vector
 		// pan camera
 		m_pViewport->cameraHandle()->pan(VectPan);
 	}

@@ -66,7 +66,7 @@ void GLC_TrackBallMover::init(int x, int y)
 	m_PreviousVector.setVect(mapForTracking(static_cast<double>(x), static_cast<double>(y)));
 
 	const double Angle= acos(glc::Z_AXIS * m_PreviousVector);
-	const GLC_Vector4d AxeRot(glc::Z_AXIS ^ m_PreviousVector);
+	const GLC_Vector3d AxeRot(glc::Z_AXIS ^ m_PreviousVector);
 
 	GLC_Matrix4x4 Matrice(AxeRot, Angle);
 
@@ -77,7 +77,7 @@ void GLC_TrackBallMover::init(int x, int y)
 // Move the camera
 void GLC_TrackBallMover::move(int x, int y)
 {
-	const GLC_Vector4d VectCurOrbit(mapForTracking(static_cast<double>(x), static_cast<double>(y)));
+	const GLC_Vector3d VectCurOrbit(mapForTracking(static_cast<double>(x), static_cast<double>(y)));
 
 	// Update camera position (orbit)
 	m_pViewport->cameraHandle()->orbit(m_PreviousVector, VectCurOrbit);
@@ -95,7 +95,7 @@ void GLC_TrackBallMover::move(int x, int y)
 //////////////////////////////////////////////////////////////////////
 
 // Convert mouse View coordinate to tracking coordinate (Centred and betwen (-1,-1) and (1,1))
-GLC_Vector4d GLC_TrackBallMover::mapForTracking( double x, double y) const
+GLC_Vector3d GLC_TrackBallMover::mapForTracking( double x, double y) const
 {
 	double AspectRatio;
 	const double winHSize= static_cast<double>(m_pViewport->viewHSize());
@@ -116,7 +116,7 @@ GLC_Vector4d GLC_TrackBallMover::mapForTracking( double x, double y) const
 	}
 
 	// Distance between pick point and origine can't be over then 1 (1 is radius of orbit circle)
-	GLC_Vector4d mousePos(x, y, 0.0);
+	GLC_Vector3d mousePos(x, y, 0.0);
 	if (mousePos.norm() > 1.0)
 	{
 		mousePos.setNormal(1.0);

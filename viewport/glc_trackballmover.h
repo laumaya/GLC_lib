@@ -72,7 +72,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Convert mouse View coordinate to tracking coordinate (Centred and betwen (-1,-1) and (1,1))
-	GLC_Vector4d mapForTracking( double , double) const;
+	GLC_Vector3d mapForTracking( double , double) const;
 
 //////////////////////////////////////////////////////////////////////
 // Private Members

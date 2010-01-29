@@ -28,7 +28,7 @@
 #define GLC_REPMOVER_H_
 
 #include <QColor>
-#include "../maths/glc_vector4d.h"
+#include "../maths/GLC_Vector3d.h"
 #include "../maths/glc_matrix4x4.h"
 #include "../shading/glc_renderproperties.h"
 #include "../glc_config.h"
@@ -74,7 +74,7 @@ public:
 	{m_MainColor= color;}
 
 	//! Init the representation
-	virtual void init(const GLC_Vector4d&, const GLC_Matrix4x4&){}
+	virtual void init(const GLC_Vector3d&, const GLC_Matrix4x4&){}
 
 	//! Init the representation
 	virtual void update(const GLC_Matrix4x4&){}

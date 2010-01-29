@@ -29,7 +29,7 @@
 #define GLC_CAMERA_H_
 
 #include "../glc_object.h"
-#include "../maths/glc_vector4d.h"
+#include "../maths/glc_vector3d.h"
 #include "../maths/glc_matrix4x4.h"
 
 #include "../glc_config.h"
@@ -58,7 +58,7 @@ public:
 	/* VectUp and VectCam could not be parallel
 	 * VectUp could not be NULL
 	 * VectCam could not be NULL */
-   GLC_Camera(const GLC_Point4d &, const GLC_Point4d &, const GLC_Vector4d &);
+   GLC_Camera(const GLC_Point3d &, const GLC_Point3d &, const GLC_Vector3d &);
 
    //! Copy constructor
    GLC_Camera(const GLC_Camera&);
@@ -74,19 +74,19 @@ public:
 	{return (m_Eye - m_Target).norm();}
 
 	//! Get camera's eye coordinate point
-	inline GLC_Point4d eye(void) const
+	inline GLC_Point3d eye(void) const
 	{return m_Eye;}
 
 	//! Get camera's target coordinate point
-	inline GLC_Point4d target(void) const
+	inline GLC_Point3d target(void) const
 	{return m_Target;}
 
 	//! Get camera's Up vector
-	inline GLC_Vector4d upVector(void) const
+	inline GLC_Vector3d upVector(void) const
 	{return m_VectUp;}
 
 	//! Get camera's Vector (from eye to target)
-	inline GLC_Vector4d camVector(void) const
+	inline GLC_Vector3d camVector(void) const
 	{return m_Eye - m_Target;}
 
 	//! Get camera's orbit composition matrix
@@ -100,7 +100,7 @@ public:
     bool isAlmostEqualTo(const GLC_Camera&, const double distanceAccuracy=0.05) const;
 
 	//! Return the default up vector
-	inline GLC_Vector4d defaultUpVector() const
+	inline GLC_Vector3d defaultUpVector() const
 	{return m_DefaultVectUp;}
 
 	//! Return the standard front view form this camera
@@ -141,10 +141,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Camera orbiting
-	GLC_Camera& orbit(GLC_Vector4d VectOldPoss, GLC_Vector4d VectCurPoss);
+	GLC_Camera& orbit(GLC_Vector3d VectOldPoss, GLC_Vector3d VectCurPoss);
 
 	//! panoramic movement
-	GLC_Camera& pan(GLC_Vector4d VectDep);
+	GLC_Camera& pan(GLC_Vector3d VectDep);
 
 	//! move camera's eye along camera vector (eye -> target)
 	/*! Factor must be > 0*/
@@ -154,31 +154,31 @@ public:
 	GLC_Camera& move(const GLC_Matrix4x4 &MatMove);
 
 	//! Rotate around an axis
-	GLC_Camera& rotateAround(const GLC_Vector4d&, const double&, const GLC_Point4d&);
+	GLC_Camera& rotateAround(const GLC_Vector3d&, const double&, const GLC_Point3d&);
 
 	//! Rotate around camera target
-	GLC_Camera& rotateAroundTarget(const GLC_Vector4d&, const double&);
+	GLC_Camera& rotateAroundTarget(const GLC_Vector3d&, const double&);
 
  	//! Camera translation
-	GLC_Camera& translate(const GLC_Vector4d &VectTrans);
+	GLC_Camera& translate(const GLC_Vector3d &VectTrans);
 
 	//! Set the camera
 	/* VectUp and VectCam could not be parallel
 	 * VectUp could not be NULL
 	 * VectCam could not be NULL */
-	GLC_Camera& setCam(GLC_Point4d Eye, GLC_Point4d Target, GLC_Vector4d Up);
+	GLC_Camera& setCam(GLC_Point3d Eye, GLC_Point3d Target, GLC_Vector3d Up);
 
 	//! Set the camera by copying another camera
 	GLC_Camera& setCam(const GLC_Camera&);
 
    //! Set camera's eye coordinate vector
-	GLC_Camera& setEyeCam(const GLC_Point4d &Eye);
+	GLC_Camera& setEyeCam(const GLC_Point3d &Eye);
 
 	//! Set camera's target coordinate vector
-	GLC_Camera& setTargetCam(const GLC_Point4d &Target);
+	GLC_Camera& setTargetCam(const GLC_Point3d &Target);
 
 	//! Set camera's Up vector
-	GLC_Camera& setUpCam(const GLC_Vector4d &Up);
+	GLC_Camera& setUpCam(const GLC_Vector3d &Up);
 
 	//! Set the distance between eye and target (move eye)
 	GLC_Camera& setDistEyeTarget(double Longueur);
@@ -188,7 +188,7 @@ public:
 
 	//! Set the default Up vector
 	/*! Must Be X, Y or Z Axis*/
-	inline GLC_Camera& setDefaultUpVector(const GLC_Vector4d& up)
+	inline GLC_Camera& setDefaultUpVector(const GLC_Vector3d& up)
 	{
 		Q_ASSERT((up == glc::X_AXIS) || (up == glc::Y_AXIS) || (up == glc::Z_AXIS));
 		m_DefaultVectUp= up;
@@ -249,18 +249,18 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Camera's eye point
-	GLC_Point4d m_Eye;
+	GLC_Point3d m_Eye;
 
 	//! Camera's target point
-	GLC_Point4d m_Target;
+	GLC_Point3d m_Target;
 
 	//! Camera's Up vector
-	GLC_Vector4d m_VectUp;
+	GLC_Vector3d m_VectUp;
 
 	//! Camera orbit composition matrix
 	GLC_Matrix4x4 m_MatCompOrbit;
 
 	//! The default Up axis
-	GLC_Vector4d m_DefaultVectUp;
+	GLC_Vector3d m_DefaultVectUp;
 };
 #endif //GLC_CAMERA_H_

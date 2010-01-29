@@ -66,7 +66,7 @@ void GLC_Mover::setRepresentationsList(const QList<GLC_RepMover*>& listOfRep)
 }
 
 // Update representation
-void GLC_Mover::initRepresentation(const GLC_Vector4d& vector, const GLC_Matrix4x4& matrix)
+void GLC_Mover::initRepresentation(const GLC_Vector3d& vector, const GLC_Matrix4x4& matrix)
 {
 	const int size= m_RepMoverList.size();
 	for (int i= 0; i < size; ++i)
