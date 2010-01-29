@@ -86,14 +86,14 @@ public:
 	{return m_pQGLContext;}
 
 	//! Create a GLC_Point
-	GLC_3DRep createPoint(const GLC_Vector4d &coord) const;
+	GLC_3DRep createPoint(const GLC_Point3d &coord) const;
 	GLC_3DRep createPoint(double x, double y, double z) const;
 
 	//! Create a GLC_PointSprite
 	GLC_3DRep createPointSprite(float, GLC_Material*) const;
 
 	//! Create a GLC_Line
-	GLC_3DRep createLine(const GLC_Point4d&, const GLC_Point4d&) const;
+	GLC_3DRep createLine(const GLC_Point3d&, const GLC_Point3d&) const;
 
 	//!  Create a GLC_Circle
 	GLC_3DRep createCircle(double radius, double angle= 2 * glc::PI) const;

@@ -27,7 +27,7 @@
 #ifndef GLC_BOUNDINGBOX_
 #define GLC_BOUNDINGBOX_
 
-#include "maths/glc_vector4d.h"
+#include "maths/glc_vector3d.h"
 #include "maths/glc_utils_maths.h"
 #include "maths/glc_matrix4x4.h"
 
@@ -59,7 +59,7 @@ public:
 	GLC_BoundingBox(const GLC_BoundingBox& boundingBox);
 
 	//! Constructor with 2 points.
-	GLC_BoundingBox(const GLC_Point4d& lower, const GLC_Point4d& upper);
+	GLC_BoundingBox(const GLC_Point3d& lower, const GLC_Point3d& upper);
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -77,29 +77,29 @@ public:
 	}
 
 	//! Test if a point is in the bounding Box
-	bool intersect(const GLC_Point4d& point) const;
+	bool intersect(const GLC_Point3d& point) const;
 
 	//! Test if a point is in the bounding Sphere
-	bool intersectBoundingSphere(const GLC_Point4d&) const;
+	bool intersectBoundingSphere(const GLC_Point3d&) const;
 
 	//! Test if the bounding sphere of a bounding box interserct with the bounding sphere
 	bool intersectBoundingSphere(const GLC_BoundingBox&) const;
 
 	//! Return the max distance between a point and a corner of the bounding box
-	//double maxDistance(const GLC_Vector4d& point) const;
+	//double maxDistance(const GLC_Vector3d& point) const;
 
 	//! Get the lower corner of the bounding box
-	GLC_Point4d lowerCorner(void) const;
+	GLC_Point3d lowerCorner(void) const;
 
 	//! Get the upper corner of the bounding box
-	GLC_Point4d upperCorner(void) const;
+	GLC_Point3d upperCorner(void) const;
 
 	//! Get the center of the bounding box
-	GLC_Point4d center(void) const;
+	GLC_Point3d center(void) const;
 
 	//! Return the boundingSphere Radius
 	inline double boundingSphereRadius() const
-	{return GLC_Vector4d(m_Lower - m_Upper).norm() / 2.0;}
+	{return GLC_Vector3d(m_Lower - m_Upper).norm() / 2.0;}
 
 //@}
 
@@ -108,9 +108,6 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Combine the bounding Box with new geometry point
-	GLC_BoundingBox& combine(const GLC_Point4d& point);
-
 	//! Combine the bounding Box with new geometry point
 	GLC_BoundingBox& combine(const GLC_Point3d& point);
 
@@ -130,10 +127,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Lower corner point
-	GLC_Point4d m_Lower;
+	GLC_Point3d m_Lower;
 
 	//! Upper corner point
-	GLC_Point4d m_Upper;
+	GLC_Point3d m_Upper;
 
 	//! Flag to know if the bounding box is empty
 	bool m_IsEmpty;

@@ -78,7 +78,7 @@ GLC_Factory::~GLC_Factory()
 //////////////////////////////////////////////////////////////////////
 
 // Create a GLC_Point
-GLC_3DRep GLC_Factory::createPoint(const GLC_Vector4d &coord) const
+GLC_3DRep GLC_Factory::createPoint(const GLC_Point3d &coord) const
 {
 	GLC_3DRep newPoint(new GLC_Point(coord));
 	return newPoint;
@@ -98,7 +98,7 @@ GLC_3DRep GLC_Factory::createPointSprite(float size, GLC_Material* pMaterial) co
 }
 
 // Create a GLC_Line
-GLC_3DRep GLC_Factory::createLine(const GLC_Point4d& point1, const GLC_Point4d& point2) const
+GLC_3DRep GLC_Factory::createLine(const GLC_Point3d& point1, const GLC_Point3d& point2) const
 {
 	GLC_3DRep newPoint(new GLC_Line(point1, point2));
 	return newPoint;
