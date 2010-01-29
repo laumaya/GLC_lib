@@ -27,7 +27,7 @@
 #ifndef GLC_INTERPOLATOR_H_
 #define GLC_INTERPOLATOR_H_
 
-#include "glc_vector4d.h"
+#include "glc_vector3d.h"
 #include "glc_matrix4x4.h"
 
 #include "../glc_config.h"
@@ -61,14 +61,14 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	// Défini la matrice d'interpolation
-	void SetInterpolMat(int NbrPas, const GLC_Vector4d &VectDepart, const GLC_Vector4d &VectArrive
+	void SetInterpolMat(int NbrPas, const GLC_Vector3d &VectDepart, const GLC_Vector3d &VectArrive
 		, INTERPOL_TYPE Interpolation = INTERPOL_LINEAIRE);
 	// Type d'interpolation
 	void SetType(INTERPOL_TYPE Interpolation);
 	// Nombre de pas
 	void SetNbrPas(int NbrPas);
 	// Vecteur d'arrivée et de depart
-	void SetVecteurs(const GLC_Vector4d &VectDepart, const GLC_Vector4d &VectArrive);
+	void SetVecteurs(const GLC_Vector3d &VectDepart, const GLC_Vector3d &VectArrive);
 
 //////////////////////////////////////////////////////////////////////
 // Fonctions Get
@@ -98,9 +98,9 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	// Vecteur de départ
-	GLC_Vector4d m_VectDepart;
+	GLC_Vector3d m_VectDepart;
 	// Vecteur d'arriver
-	GLC_Vector4d m_VectArrive;
+	GLC_Vector3d m_VectArrive;
 
 	// Type d'interpolation courante
 	INTERPOL_TYPE m_InterpolType;

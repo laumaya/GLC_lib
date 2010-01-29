@@ -48,6 +48,7 @@
 class GLC_LIB_EXPORT GLC_Vector2d
 {
 	friend class GLC_Vector4d;
+	friend class GLC_Vector3d;
 
 	/*! Overload unary "-" operator*/
 	inline friend GLC_Vector2d operator - (const GLC_Vector2d &Vect)

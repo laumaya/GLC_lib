@@ -89,8 +89,8 @@ void GLC_Distance::clear()
 {
 	m_ListOfInstances1.clear();
 	m_ListOfInstances2.clear();
-	m_Point1.setVect(GLC_Point4d());
-	m_Point2.setVect(GLC_Point4d());
+	m_Point1.setVect(GLC_Point3d());
+	m_Point2.setVect(GLC_Point3d());
 	m_DistanceMini= 0.0;
 }
 
@@ -130,8 +130,8 @@ void GLC_Distance::computeMinimumDistance()
 	{
 		qDebug() << "a list is empty";
 		distanceResult.m_Distance= -1.0;
-		distanceResult.m_Point1= GLC_Point4d();
-		distanceResult.m_Point2= GLC_Point4d();
+		distanceResult.m_Point1= GLC_Point3d();
+		distanceResult.m_Point2= GLC_Point3d();
 	}
 
 	m_DistanceMini= distanceResult.m_Distance;
@@ -267,8 +267,8 @@ GLC_Distance::DistanceResult GLC_Distance::minimumDistance(QList<GLC_3DViewInsta
 	const PQP_REAL * p1 = dres.P1();
 	const PQP_REAL * p2 = dres.P2();
 
-	GLC_Point4d point1(p1[0],p1[1],p1[2]);
-	GLC_Point4d point2(p2[0],p2[1],p2[2]);
+	GLC_Point3d point1(p1[0],p1[1],p1[2]);
+	GLC_Point3d point2(p2[0],p2[1],p2[2]);
 
 	distanceResult.m_Distance= distance;
 	distanceResult.m_Point1= point1;
@@ -280,7 +280,7 @@ GLC_Distance::DistanceResult GLC_Distance::minimumDistance(QList<GLC_3DViewInsta
 
 void GLC_Distance::getPQPPoint(double &p0, double &p1, double &p2, const double x, const double y, const double z, const GLC_Matrix4x4& instanceMatrix) const
 {
-	GLC_Vector4d vector(x, y, z);
+	GLC_Vector3d vector(x, y, z);
 	vector= instanceMatrix * vector;
 	p0= vector.X();
 	p1= vector.Y();

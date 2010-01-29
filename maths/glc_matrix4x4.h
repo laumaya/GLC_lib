@@ -28,7 +28,7 @@
 #define GLC_MATRIX4X4_H_
 
 #include <QVector>
-#include "glc_vector4d.h"
+#include "glc_vector3d.h"
 
 #include "../glc_config.h"
 
@@ -42,7 +42,7 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_Matrix4x4
 {
-	friend class GLC_Vector4d;
+	friend class GLC_Vector3d;
 
 //////////////////////////////////////////////////////////////////////
 // Constructor
@@ -64,19 +64,19 @@ public:
 	GLC_Matrix4x4(const float *);
 
 	//! Construct rotation matrix by a vector and an angle
-	inline GLC_Matrix4x4(const GLC_Vector4d &Vect, const double &dAngleRad)
+	inline GLC_Matrix4x4(const GLC_Vector3d &Vect, const double &dAngleRad)
 	{
 		setMatRot(Vect, dAngleRad);
 	}
 
 	//! Construct rotation matrix by 2 vectors
-	inline GLC_Matrix4x4(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2)
+	inline GLC_Matrix4x4(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2)
 	{
 		setMatRot(Vect1, Vect2);
 	}
 
 	//! Construct translation matrix by a vector
-	inline GLC_Matrix4x4(const GLC_Vector4d &Vect)
+	inline GLC_Matrix4x4(const GLC_Vector3d &Vect)
 	{
 		setMatTranslate(Vect);
 	}
@@ -97,7 +97,7 @@ public:
 	GLC_Matrix4x4 operator * (const GLC_Matrix4x4 &Mat) const;
 
 	//! Vector transformation
-	GLC_Vector4d operator * (const GLC_Vector4d &Vect) const;
+	GLC_Vector3d operator * (const GLC_Vector3d &Vect) const;
 
 	//! Return true if the 2 matrix are equals
 	bool operator==(const GLC_Matrix4x4& mat) const;
@@ -116,7 +116,13 @@ public:
 	//! Return the matrix determinant
 	double determinant(void) const;
 
-	//! return a pointer to a row first array of 16 elements
+	//! Return a pointer to a row first array of 16 elements
+	inline const double* data(void) const
+	{
+		return matrix;
+	}
+
+	//! Return a pointer to a row first array of 16 elements
 	inline double* data(void)
 	{
 		return matrix;
@@ -152,7 +158,7 @@ public:
 		return result;
 	}
 
-	//! Return the ismetric of this matrix
+	//! Return the isometric of this matrix
 	inline GLC_Matrix4x4 isometricMatrix() const
 	{
 		GLC_Matrix4x4 result(*this);
@@ -176,23 +182,27 @@ public:
 	//! Return the x Scaling
 	inline double scalingX() const
 	{
-		GLC_Vector4d x(matrix[0], matrix[1], matrix[2]);
+		GLC_Vector3d x(matrix[0], matrix[1], matrix[2]);
 		return x.norm();
 	}
 
 	//! Return the y Scaling
 	inline double scalingY() const
 	{
-		GLC_Vector4d y(matrix[4], matrix[5], matrix[6]);
+		GLC_Vector3d y(matrix[4], matrix[5], matrix[6]);
 		return y.norm();
 	}
 
 	//! Return the z Scaling
 	inline double scalingZ() const
 	{
-		GLC_Vector4d z(matrix[8], matrix[9], matrix[10]);
+		GLC_Vector3d z(matrix[8], matrix[9], matrix[10]);
 		return z.norm();
 	}
+
+	//! Return the inverted matrix
+	inline GLC_Matrix4x4 inverted() const
+	{return GLC_Matrix4x4(*this).invert();}
 
 //@}
 
@@ -202,13 +212,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set matrix to a rotation matrix define by a vector and an angle in radians
-	GLC_Matrix4x4& setMatRot(const GLC_Vector4d &, const double &);
+	GLC_Matrix4x4& setMatRot(const GLC_Vector3d &, const double &);
 
 	//! Set matrix to a rotation matrix define by 2 vectors
-	GLC_Matrix4x4& setMatRot(const GLC_Vector4d &, const GLC_Vector4d &);
+	GLC_Matrix4x4& setMatRot(const GLC_Vector3d &, const GLC_Vector3d &);
 
 	//! Set Matrix to a translation matrix by a vector
-	GLC_Matrix4x4& setMatTranslate(const GLC_Vector4d &);
+	GLC_Matrix4x4& setMatTranslate(const GLC_Vector3d &);
 
 	//! Set Matrix to a translation matrix by 3 coordinates
 	GLC_Matrix4x4& setMatTranslate(const double, const double, const double);
@@ -237,7 +247,7 @@ public:
 private:
 
 	//! Return true if the index (argument) is in the diagonal of the matrix
-	inline bool isDiagonal(const int index) const
+	inline bool isInDiagonal(const int index) const
 	{
 		if ((index == 0) || (index == 5) || (index == 10) || (index == 15))
 			return true;

@@ -43,7 +43,7 @@ GLC_Interpolator::GLC_Interpolator()
 // Fonction Set
 //////////////////////////////////////////////////////////////////////
 // Défini la matrice d'interpolation
-void GLC_Interpolator::SetInterpolMat(int NbrPas, const GLC_Vector4d &VectDepart, const GLC_Vector4d &VectArrive
+void GLC_Interpolator::SetInterpolMat(int NbrPas, const GLC_Vector3d &VectDepart, const GLC_Vector3d &VectArrive
 								   , INTERPOL_TYPE Interpolation)
 {
 	// Mise à jour des données membre
@@ -86,7 +86,7 @@ void GLC_Interpolator::SetNbrPas(int NbrPas)
 	}
 }
 // Vecteur d'arrivée et de depart
-void GLC_Interpolator::SetVecteurs(const GLC_Vector4d &VectDepart, const GLC_Vector4d &VectArrive)
+void GLC_Interpolator::SetVecteurs(const GLC_Vector3d &VectDepart, const GLC_Vector3d &VectArrive)
 {
 	m_VectDepart= VectDepart;
 	m_VectArrive= VectArrive;
@@ -138,7 +138,7 @@ bool GLC_Interpolator::CalcInterpolLineaireMat(void)
 {
 
 	// Calcul la matrice de translation
-	const GLC_Vector4d VectTrans= (m_VectArrive - m_VectDepart) * (1.0 / m_nNbrPas);
+	const GLC_Vector3d VectTrans= (m_VectArrive - m_VectDepart) * (1.0 / m_nNbrPas);
 	if(VectTrans.isNull())
 	{
 		//TRACE("GLC_Interpolator::CalcInterpolLineaireMat -> Translation NULL\n");
@@ -156,7 +156,7 @@ bool GLC_Interpolator::CalcInterpolLineaireMat(void)
 bool GLC_Interpolator::CalcInterpolAngulaireMat(void)
 {
 	// Calcul de l'axe de rotation
-	const GLC_Vector4d AxeRot(m_VectDepart ^ m_VectArrive);
+	const GLC_Vector3d AxeRot(m_VectDepart ^ m_VectArrive);
 	// Calcul de l'angle entre les vecteurs
 	const double Angle= m_VectArrive.getAngleWithVect(m_VectDepart) / m_nNbrPas;
 	// Calcul de la matrice de rotation

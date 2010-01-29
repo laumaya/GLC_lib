@@ -107,27 +107,33 @@ GLC_Matrix4x4 GLC_Matrix4x4::operator * (const GLC_Matrix4x4 &Mat) const
 }
 
 // Vector transformation
-GLC_Vector4d GLC_Matrix4x4::operator * (const GLC_Vector4d &Vect) const
+GLC_Vector3d GLC_Matrix4x4::operator * (const GLC_Vector3d &Vect) const
 {
 	double ValInt;
 	int i;
-	GLC_Vector4d VectResult;
+	GLC_Vector3d VectResult;
+	double mat[4];
 
 	for (int Index= 0; Index < DIMMAT4X4; Index++)
 	{
 		ValInt= 0.0;
-		for (i= 0; i < DIMMAT4X4; i++)
+		for (i= 0; i < DIMMAT4X4 - 1; i++)
 		{
 			ValInt+= matrix[(i * DIMMAT4X4) + Index] * Vect.vector[i];
 		}
-		VectResult.vector[Index]= ValInt;
+		ValInt+= matrix[(3 * DIMMAT4X4) + Index];
+		mat[Index]= ValInt;
 	}
 
-	if (VectResult.vector[3] != 1.0)
+	double invW= 1.0;
+	if (fabs(mat[3]) > 0.00001)
 	{
-		//qDebug("Matrice4x4::operator * : Changement de W");
-		VectResult.normalizeW();
+		invW/= mat[3];
 	}
+	VectResult.vector[0]= mat[0] * invW;
+	VectResult.vector[1]= mat[1] * invW;
+	VectResult.vector[2]= mat[2] * invW;
+
 
 	return VectResult;
 }
@@ -172,10 +178,10 @@ double GLC_Matrix4x4::determinant(void) const
 //////////////////////////////////////////////////////////////////////
 
 // Set matrix to a rotation matrix define by a vector and an angle in radians
-GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector4d &Vect, const double &dAngleRad)
+GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect, const double &dAngleRad)
 {
 	// Normalize the vector
-	GLC_Vector4d VectRot(Vect);
+	GLC_Vector3d VectRot(Vect);
 	VectRot.setNormal(1);
 
 	// Code optimisation
@@ -215,11 +221,11 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector4d &Vect, const double &
 }
 
 // Set matrix to a rotation matrix define by 2 vectors
-GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector4d &Vect1, const GLC_Vector4d &Vect2)
+GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2)
 {
 
 	// Compute rotation matrix
-	const GLC_Vector4d VectAxeRot(Vect1 ^ Vect2);
+	const GLC_Vector3d VectAxeRot(Vect1 ^ Vect2);
 	// Check if rotation vector axis is not null
 	if (!VectAxeRot.isNull())
 	{  // Ok, vector not null
@@ -231,7 +237,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector4d &Vect1, const GLC_Vec
 }
 
 // Set Matrix to a translation matrix by a vector
-GLC_Matrix4x4& GLC_Matrix4x4::setMatTranslate(const GLC_Vector4d &Vect)
+GLC_Matrix4x4& GLC_Matrix4x4::setMatTranslate(const GLC_Vector3d &Vect)
 {
 	matrix[0]= 1.0; matrix[4]= 0.0; matrix[8]=  0.0; matrix[12]= Vect.vector[0];
 	matrix[1]= 0.0; matrix[5]= 1.0; matrix[9]=  0.0; matrix[13]= Vect.vector[1];
@@ -292,7 +298,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::setToIdentity()
 {
 	for (int i= 0; i < TAILLEMAT4X4; i++)
 	{
-		if (isDiagonal(i))
+		if (isInDiagonal(i))
 			matrix[i]= 1;
 		else
 			matrix[i]= 0;

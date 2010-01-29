@@ -277,7 +277,7 @@ public:
 	GLC_Vector4d& setNormal(const double &Norme);
 
 	/*! Invert Vector*/
-	inline GLC_Vector4d& setInv(void)
+	inline GLC_Vector4d& invert(void)
 	{
 		vector[0]= - vector[0];
 		vector[1]= - vector[1];
@@ -385,25 +385,8 @@ private:
 
 }; //class GLC_Vector4d
 
-// Vector constant in glc namespace
-namespace glc
-{
-	// Axis definition
-	/*! \var X_AXIS
-	 *  \brief X axis Vector*/
-	const GLC_Vector4d X_AXIS(1.0, 0.0, 0.0);
-
-	/*! \var Y_AXIS
-	 *  \brief Y axis Vector*/
-	const GLC_Vector4d Y_AXIS(0.0, 1.0, 0.0);
-
-	/*! \var Z_AXIS
-	 *  \brief Z axis Vector*/
-	const GLC_Vector4d Z_AXIS(0.0, 0.0, 1.0);
-};
-
 //! Define GLC_Point4D
-typedef GLC_Vector4d GLC_Point4d;
+//typedef GLC_Vector4d GLC_Point4d;
 
 //! Non-member stream operator
 QDataStream &operator<<(QDataStream &, const GLC_Vector4d &);

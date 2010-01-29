@@ -27,8 +27,6 @@
 #define GLC_PLANE_H_
 
 #include "glc_vector3d.h"
-#include "glc_vector4d.h"
-
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Plane
 /*! \brief GLC_Plane : Math plane representation */
@@ -82,10 +80,6 @@ public:
 
 	//! Return the signed distance to a point
 	inline double distanceToPoint(const GLC_Point3d& p) const
-	{return m_A * p.X() + m_B * p.Y() + m_C * p.Z() + m_D;}
-
-	//! Return the signed distance to a point
-	inline double distanceToPoint(const GLC_Point4d& p) const
 	{return m_A * p.X() + m_B * p.Y() + m_C * p.Z() + m_D;}
 
 	//! Equality operator

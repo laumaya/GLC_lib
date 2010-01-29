@@ -47,8 +47,8 @@ class GLC_LIB_EXPORT GLC_Distance : public GLC_Object
 	struct DistanceResult
 	{
 		double m_Distance;
-		GLC_Point4d m_Point1;
-		GLC_Point4d m_Point2;
+		GLC_Point3d m_Point1;
+		GLC_Point3d m_Point2;
 		GLC_uint m_InstanceId1;
 		GLC_uint m_InstanceId2;
 	};
@@ -112,11 +112,11 @@ public:
 	{return m_DistanceMini;}
 
 	//! Return First point of the distance
-	inline GLC_Point4d point1() const
+	inline GLC_Point3d point1() const
 	{return m_Point1;}
 
 	//! Return Second point of the distance
-	inline GLC_Point4d point2() const
+	inline GLC_Point3d point2() const
 	{return m_Point2;}
 
 	//! Return the relative error
@@ -157,10 +157,10 @@ private:
 	QList<GLC_3DViewInstance> m_ListOfInstances2;
 
 	//! The Minimum Distance point 1
-	GLC_Point4d m_Point1;
+	GLC_Point3d m_Point1;
 
 	//! The Minimum Distance point 2
-	GLC_Point4d m_Point2;
+	GLC_Point3d m_Point2;
 
 	//! The minimum distance
 	double m_DistanceMini;
