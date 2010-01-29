@@ -240,6 +240,17 @@ void GLC_RenderProperties::setOverwriteMaterial(GLC_Material* pMaterial)
 	m_pOverwriteMaterial->addUsage(m_Uid);
 }
 
+// Return true if the specified primitive id of the specified body index is selected
+bool GLC_RenderProperties::primitiveIsSelected(int index, GLC_uint id) const
+{
+	bool result= false;
+	if ((NULL != m_pBodySelectedPrimitvesId) && m_pBodySelectedPrimitvesId->contains(m_CurrentBody))
+	{
+		result= m_pBodySelectedPrimitvesId->value(index)->contains(id);
+	}
+	return result;
+}
+
 // Set the list of selected primitives id
 void GLC_RenderProperties::setSetOfSelectedPrimitivesId(const QSet<GLC_uint>& set, int body)
 {

@@ -122,6 +122,9 @@ public:
 	inline bool setOfSelectedPrimitiveIdIsEmpty() const
 	{return (!((NULL != m_pBodySelectedPrimitvesId) && m_pBodySelectedPrimitvesId->contains(m_CurrentBody)));}
 
+	//! Return true if the specified primitive id of the specified body index is selected
+	bool primitiveIsSelected(int index, GLC_uint id) const;
+
 	//! Return an handle to the overwrite primitive material Hash
 	inline QHash<GLC_uint, GLC_Material*>* hashOfOverwritePrimitiveMaterials() const
 	{

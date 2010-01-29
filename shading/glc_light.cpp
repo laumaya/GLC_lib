@@ -70,7 +70,7 @@ GLC_Light::~GLC_Light(void)
 //////////////////////////////////////////////////////////////////////
 
 // Set the light position by a 4D point
-void GLC_Light::setPosition(const GLC_Point4d &pos)
+void GLC_Light::setPosition(const GLC_Point3d &pos)
 {
 	m_Position= pos;
 	m_ListIsValid = false;
@@ -209,7 +209,6 @@ void GLC_Light::glDraw(void)
 	setArray[0]= static_cast<GLfloat>(m_Position.X());
 	setArray[1]= static_cast<GLfloat>(m_Position.Y());
 	setArray[2]= static_cast<GLfloat>(m_Position.Z());
-	setArray[3]= static_cast<GLfloat>(m_Position.W());
 	glLightfv(m_LightID, GL_POSITION, setArray);	// Position The Light
 
 	// OpenGL error handler

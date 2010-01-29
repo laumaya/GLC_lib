@@ -29,7 +29,7 @@
 
 #include <QColor>
 #include "../glc_object.h"
-#include "../maths/glc_vector4d.h"
+#include "../maths/glc_vector3d.h"
 
 #include "../glc_config.h"
 
@@ -64,8 +64,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return a 4D GLC_Point4d representing light position
-	inline GLC_Point4d position(void) const {return m_Position;}
+	//! Return a 4D GLC_Point3d representing light position
+	inline GLC_Point3d position(void) const {return m_Position;}
 
 	//! Return the QColor of the light's ambient color
 	inline QColor ambientColor() {return m_AmbientColor;}
@@ -86,7 +86,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set lihgt's position by a 4D point
-	void setPosition(const GLC_Point4d &);
+	void setPosition(const GLC_Point3d &);
 
 	//! Set lihgt's position by a 3 GLfloat
 	void setPosition(GLfloat, GLfloat, GLfloat);
@@ -166,7 +166,7 @@ private:
 	QColor m_SpecularColor;
 
 	//! Light position
-	GLC_Point4d m_Position;
+	GLC_Point3d m_Position;
 
 	//! Lighting mode
 	bool m_TwoSided;
