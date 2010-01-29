@@ -216,7 +216,7 @@ public:
 	GLC_3DViewInstance& translate(double Tx, double Ty, double Tz);
 
 	//! Translate Instance
-	inline GLC_3DViewInstance& translate(const GLC_Vector4d& v)
+	inline GLC_3DViewInstance& translate(const GLC_Vector3d& v)
 	{
 		return translate(v.X(), v.Y(), v.Z());
 	}

@@ -92,8 +92,8 @@ void GLC_OctreeNode::addChildren()
 
 
 	// Add 8 Children
-	GLC_Point4d lower;
-	GLC_Point4d upper;
+	GLC_Point3d lower;
+	GLC_Point3d upper;
 	GLC_OctreeNode* pOctreeNode= NULL;
 
 	{ // Child 1
@@ -255,7 +255,7 @@ void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GL
 					{
 						// Get the geometry bounding box
 						GLC_BoundingBox geomBox= pCurrentInstance->geomAt(i)->boundingBox();
-						GLC_Point4d center(instanceMat * geomBox.center());
+						GLC_Point3d center(instanceMat * geomBox.center());
 						double radius= geomBox.boundingSphereRadius() * instanceMat.scalingX();
 						GLC_Frustum::Localisation geomLocalisation= frustum.localizeSphere(center, radius);
 

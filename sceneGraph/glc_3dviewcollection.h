@@ -248,10 +248,15 @@ public:
 	void unbindSpacePartitioning();
 
 	//! Use the space partitioning
-	void setSpacePartitionningUsage(bool);
+	inline void setSpacePartitionningUsage(bool use)
+	{m_UseSpacePartitioning= use;}
 
-	//! Update the instance viewble state using frustrum culling
-	void updateInstanceViewableState();
+	//! Update the instance viewble state
+	/*! use the frustrum culling from the viewport
+	 * If the specified matrix pointer is NULL*/
+	void updateInstanceViewableState(GLC_Matrix4x4* pFrustum= NULL);
+
+
 
 //@}
 

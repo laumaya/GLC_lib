@@ -125,7 +125,7 @@ public:
 
 	//! Return the occurence specified by an id
 	/*! Id must be a valid identifier*/
-	inline GLC_StructOccurence* getOccurence(GLC_uint id) const
+	inline GLC_StructOccurence* occurence(GLC_uint id) const
 	{return m_pWorldHandle->getOccurence(id);}
 
 	//! Return the list off occurences
@@ -153,7 +153,7 @@ public:
 	{return m_pWorldHandle->numberOfBody();}
 
 	//! Return the world Up vector
-	inline GLC_Vector4d upVector() const
+	inline GLC_Vector3d upVector() const
 	{return m_pWorldHandle->upVector();}
 
 
@@ -180,7 +180,7 @@ public:
 	}
 
 	//! Set the world Up Vector
-	inline void setUpVector(const GLC_Vector4d& vect)
+	inline void setUpVector(const GLC_Vector3d& vect)
 	{m_pWorldHandle->setUpVector(vect);}
 
 //@}

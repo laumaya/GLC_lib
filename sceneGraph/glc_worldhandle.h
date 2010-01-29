@@ -97,7 +97,7 @@ public:
 	int numberOfBody() const;
 
 	//! Return the world Up vector
-	inline GLC_Vector4d upVector() const
+	inline GLC_Vector3d upVector() const
 	{return m_UpVector;}
 
 //@}
@@ -128,7 +128,7 @@ public:
 	}
 
 	//! Set the world Up Vector
-	inline void setUpVector(const GLC_Vector4d& vect)
+	inline void setUpVector(const GLC_Vector3d& vect)
 	{m_UpVector= vect;}
 
 
@@ -148,7 +148,7 @@ private:
 	QHash<GLC_uint, GLC_StructOccurence*> m_OccurenceHash;
 
 	//! The world Up Vector
-	GLC_Vector4d m_UpVector;
+	GLC_Vector3d m_UpVector;
 };
 
 #endif /* GLC_WORLDHANDLE_H_ */

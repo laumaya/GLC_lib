@@ -138,7 +138,7 @@ public:
 	}
 
 	//! Translate Instance
-	inline GLC_StructInstance* translate(const GLC_Vector4d& v)
+	inline GLC_StructInstance* translate(const GLC_Vector3d& v)
 	{
 		return translate(v.X(), v.Y(), v.Z());
 	}
