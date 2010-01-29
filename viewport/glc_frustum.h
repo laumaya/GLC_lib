@@ -105,7 +105,7 @@ public:
 	Localisation localizeBoundingBox(const GLC_BoundingBox&) const;
 
 	//! Localize sphere
-	Localisation localizeSphere(const GLC_Point4d&, double) const;
+	Localisation localizeSphere(const GLC_Point3d&, double) const;
 
 //@}
 
@@ -141,7 +141,7 @@ public:
 
 	//! Update the frustum
 	/*! Return true if the frustum as change*/
-	bool update(GLC_Viewport*);
+	bool update(const GLC_Matrix4x4&);
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -149,7 +149,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! localize a sphere to a plane
-	Localisation localizeSphereToPlane(const GLC_Point4d&, double, const GLC_Plane&) const;
+	Localisation localizeSphereToPlane(const GLC_Point3d&, double, const GLC_Plane&) const;
 
 //////////////////////////////////////////////////////////////////////
 // Private Member

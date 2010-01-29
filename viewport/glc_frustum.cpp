@@ -53,14 +53,14 @@ GLC_Frustum::~GLC_Frustum()
 // Localize bounding box
 GLC_Frustum::Localisation GLC_Frustum::localizeBoundingBox(const GLC_BoundingBox& box) const
 {
-	const GLC_Point4d center= box.center();
+	const GLC_Point3d center= box.center();
 	const double radius= box.boundingSphereRadius();
 
 	return localizeSphere(center, radius);
 }
 
 // Localize sphere
-GLC_Frustum::Localisation GLC_Frustum::localizeSphere(const GLC_Point4d& center, double radius) const
+GLC_Frustum::Localisation GLC_Frustum::localizeSphere(const GLC_Point3d& center, double radius) const
 {
 	GLC_Frustum::Localisation localisationResult= InFrustum;
 
@@ -78,7 +78,7 @@ GLC_Frustum::Localisation GLC_Frustum::localizeSphere(const GLC_Point4d& center,
 }
 
 // localize a bounding box to a plane
-GLC_Frustum::Localisation GLC_Frustum::localizeSphereToPlane(const GLC_Point4d& center, double radius, const GLC_Plane& plane) const
+GLC_Frustum::Localisation GLC_Frustum::localizeSphereToPlane(const GLC_Point3d& center, double radius, const GLC_Plane& plane) const
 {
 	GLC_Frustum::Localisation localisationResult;
 	const double signedDistance= plane.distanceToPoint(center);
@@ -99,20 +99,8 @@ GLC_Frustum::Localisation GLC_Frustum::localizeSphereToPlane(const GLC_Point4d& 
 }
 
 // Update the frustum
-bool GLC_Frustum::update(GLC_Viewport* pViewport)
+bool GLC_Frustum::update(const GLC_Matrix4x4& compMatrix)
 {
-	//qDebug() << "update frustum";
-
-	// Get the viewport projection matrix
-	GLC_Matrix4x4 projectionMatrix= pViewport->projectionMatrix();
-
-	// Get the camera modelView matrix
-	GLC_Matrix4x4 modelViewMatrix= pViewport->cameraHandle()->modelViewMatrix();
-	//qDebug() << "My Model View MATRIX";
-	//qDebug() << modelViewMatrix.toString();
-
-	// Composition matrix
-	GLC_Matrix4x4 compMatrix= projectionMatrix * modelViewMatrix;
 
 	// Test if the frustum change
 	if (compMatrix == m_PreviousMatrix)
