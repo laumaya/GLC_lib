@@ -94,18 +94,18 @@ public:
 	//! Copy from an GLC_Vector3d
 	inline GLC_Vector4d(const GLC_Vector3d &Vect)
 	{
-		vector[0]= Vect.vector[0];
-		vector[1]= Vect.vector[1];
-		vector[2]= Vect.vector[2];
+		vector[0]= Vect.m_Vector[0];
+		vector[1]= Vect.m_Vector[1];
+		vector[2]= Vect.m_Vector[2];
 		vector[3]= 1.0;
 	}
 
 	//! Copy from an GLC_Vector3d
 	inline GLC_Vector4d(const GLC_Vector3df &Vect)
 	{
-		vector[0]= static_cast<double>(Vect.dVector[0]);
-		vector[1]= static_cast<double>(Vect.dVector[1]);
-		vector[2]= static_cast<double>(Vect.dVector[2]);
+		vector[0]= static_cast<double>(Vect.m_Vector[0]);
+		vector[1]= static_cast<double>(Vect.m_Vector[1]);
+		vector[2]= static_cast<double>(Vect.m_Vector[2]);
 		vector[3]= 1.0;
 	}
 
@@ -148,9 +148,9 @@ public:
 	//! Overload "=" operator
 	inline GLC_Vector4d& operator = (const GLC_Vector3d &Vect)
 	{
-		vector[0]= Vect.vector[0];
-		vector[1]= Vect.vector[1];
-		vector[2]= Vect.vector[2];
+		vector[0]= Vect.m_Vector[0];
+		vector[1]= Vect.m_Vector[1];
+		vector[2]= Vect.m_Vector[2];
 		vector[3]= 1.0;
 
 		return *this;
@@ -159,9 +159,9 @@ public:
 	//! Overload "=" operator
 	inline GLC_Vector4d& operator = (const GLC_Vector3df &Vect)
 	{
-		vector[0]= static_cast<double>(Vect.dVector[0]);
-		vector[1]= static_cast<double>(Vect.dVector[1]);
-		vector[2]= static_cast<double>(Vect.dVector[2]);
+		vector[0]= static_cast<double>(Vect.m_Vector[0]);
+		vector[1]= static_cast<double>(Vect.m_Vector[1]);
+		vector[2]= static_cast<double>(Vect.m_Vector[2]);
 		vector[3]= 1.0;
 
 		return *this;

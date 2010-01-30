@@ -52,40 +52,34 @@ public:
 //@{
 	//! Default Constructor
 	/*! Create an identity Matrix */
-	GLC_Matrix4x4();
+	inline GLC_Matrix4x4();
 
 	//! Construct a Matrix by copy
-	GLC_Matrix4x4(const GLC_Matrix4x4 &);
+	inline GLC_Matrix4x4(const GLC_Matrix4x4 &matrix)
+	{memcpy(m_Matrix, matrix.m_Matrix, sizeof(double) * 16);}
 
 	//! Construct a Matrix by an array of 16 elements.
-	GLC_Matrix4x4(const double *);
+	inline GLC_Matrix4x4(const double *pArray)
+	{memcpy(m_Matrix, pArray, sizeof(double) * 16);}
 
 	//! Construct a Matrix by an array of 16 elements.
-	GLC_Matrix4x4(const float *);
+	inline GLC_Matrix4x4(const float *);
 
 	//! Construct rotation matrix by a vector and an angle
 	inline GLC_Matrix4x4(const GLC_Vector3d &Vect, const double &dAngleRad)
-	{
-		setMatRot(Vect, dAngleRad);
-	}
+	{setMatRot(Vect, dAngleRad);}
 
 	//! Construct rotation matrix by 2 vectors
 	inline GLC_Matrix4x4(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2)
-	{
-		setMatRot(Vect1, Vect2);
-	}
+	{setMatRot(Vect1, Vect2);}
 
 	//! Construct translation matrix by a vector
 	inline GLC_Matrix4x4(const GLC_Vector3d &Vect)
-	{
-		setMatTranslate(Vect);
-	}
+	{setMatTranslate(Vect);}
 
 	//! Construct translation matrix by 3 coordinates
 	inline GLC_Matrix4x4(const double Tx, const double Ty, const double Tz)
-	{
-		setMatTranslate(Tx, Ty, Tz);
-	}
+	{setMatTranslate(Tx, Ty, Tz);}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -114,19 +108,16 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return the matrix determinant
-	double determinant(void) const;
+	inline double determinant(void) const;
 
 	//! Return a pointer to a row first array of 16 elements
 	inline const double* data(void) const
-	{
-		return matrix;
-	}
+	{return m_Matrix;}
 
 	//! Return a pointer to a row first array of 16 elements
 	inline double* data(void)
-	{
-		return matrix;
-	}
+	{return m_Matrix;}
+
 	//! Return a vector which contains radians Euler angle of the matrix
 	QVector<double> toEuler(void) const;
 
@@ -134,71 +125,22 @@ public:
 	QString toString() const;
 
 	//! Return the rotation matrix of this matrix
-	inline GLC_Matrix4x4 rotationMatrix() const
-	{
-		GLC_Matrix4x4 result(*this);
-		const double invScaleX= 1.0 / scalingX();
-		const double invScaleY= 1.0 / scalingY();
-		const double invScaleZ= 1.0 / scalingZ();
-		result.matrix[0]= result.matrix[0] * invScaleX;
-		result.matrix[1]= result.matrix[1] * invScaleX;
-		result.matrix[2]= result.matrix[2] * invScaleX;
-
-		result.matrix[4]= result.matrix[4] * invScaleY;
-		result.matrix[5]= result.matrix[5] * invScaleY;
-		result.matrix[6]= result.matrix[6] * invScaleY;
-
-		result.matrix[8]= result.matrix[8] * invScaleZ;
-		result.matrix[9]= result.matrix[9] * invScaleZ;
-		result.matrix[10]= result.matrix[10] * invScaleZ;
-
-		result.matrix[12]= 0.0; result.matrix[13]= 0.0; result.matrix[14]= 0.0;
-		result.matrix[3]= 0.0; result.matrix[7]= 0.0; result.matrix[11]= 0.0;
-		result.matrix[15]= 1.0;
-		return result;
-	}
+	inline GLC_Matrix4x4 rotationMatrix() const;
 
 	//! Return the isometric of this matrix
-	inline GLC_Matrix4x4 isometricMatrix() const
-	{
-		GLC_Matrix4x4 result(*this);
-		const double invScaleX= 1.0 / scalingX();
-		const double invScaleY= 1.0 / scalingY();
-		const double invScaleZ= 1.0 / scalingZ();
-		result.matrix[0]= result.matrix[0] * invScaleX;
-		result.matrix[1]= result.matrix[1] * invScaleX;
-		result.matrix[2]= result.matrix[2] * invScaleX;
-
-		result.matrix[4]= result.matrix[4] * invScaleY;
-		result.matrix[5]= result.matrix[5] * invScaleY;
-		result.matrix[6]= result.matrix[6] * invScaleY;
-
-		result.matrix[8]= result.matrix[8] * invScaleZ;
-		result.matrix[9]= result.matrix[9] * invScaleZ;
-		result.matrix[10]= result.matrix[10] * invScaleZ;
-		return result;
-	}
+	inline GLC_Matrix4x4 isometricMatrix() const;
 
 	//! Return the x Scaling
 	inline double scalingX() const
-	{
-		GLC_Vector3d x(matrix[0], matrix[1], matrix[2]);
-		return x.norm();
-	}
+	{return GLC_Vector3d(m_Matrix[0], m_Matrix[1], m_Matrix[2]).lenght();}
 
 	//! Return the y Scaling
 	inline double scalingY() const
-	{
-		GLC_Vector3d y(matrix[4], matrix[5], matrix[6]);
-		return y.norm();
-	}
+	{return GLC_Vector3d(m_Matrix[4], m_Matrix[5], m_Matrix[6]).lenght();}
 
 	//! Return the z Scaling
 	inline double scalingZ() const
-	{
-		GLC_Vector3d z(matrix[8], matrix[9], matrix[10]);
-		return z.norm();
-	}
+	{return GLC_Vector3d(m_Matrix[8], m_Matrix[9], m_Matrix[10]).lenght();}
 
 	//! Return the inverted matrix
 	inline GLC_Matrix4x4 inverted() const
@@ -212,28 +154,28 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set matrix to a rotation matrix define by a vector and an angle in radians
-	GLC_Matrix4x4& setMatRot(const GLC_Vector3d &, const double &);
+	inline GLC_Matrix4x4& setMatRot(const GLC_Vector3d &, const double &);
 
 	//! Set matrix to a rotation matrix define by 2 vectors
-	GLC_Matrix4x4& setMatRot(const GLC_Vector3d &, const GLC_Vector3d &);
+	inline GLC_Matrix4x4& setMatRot(const GLC_Vector3d &, const GLC_Vector3d &);
 
 	//! Set Matrix to a translation matrix by a vector
-	GLC_Matrix4x4& setMatTranslate(const GLC_Vector3d &);
+	inline GLC_Matrix4x4& setMatTranslate(const GLC_Vector3d &);
 
 	//! Set Matrix to a translation matrix by 3 coordinates
-	GLC_Matrix4x4& setMatTranslate(const double, const double, const double);
+	inline GLC_Matrix4x4& setMatTranslate(const double, const double, const double);
 
 	//! Set Matrix to a scaling matrix define by 3 double
-	GLC_Matrix4x4& setMatScaling(const double, const double, const double);
+	inline GLC_Matrix4x4& setMatScaling(const double, const double, const double);
 
 	//! Reverse the Matrix
-	GLC_Matrix4x4& invert(void);
+	inline GLC_Matrix4x4& invert(void);
 
 	//! Set the matrix to identify matrix
-	GLC_Matrix4x4& setToIdentity();
+	inline GLC_Matrix4x4& setToIdentity();
 
 	//! Set the matrix by its transpose
-	GLC_Matrix4x4& transpose(void);
+	inline GLC_Matrix4x4& transpose(void);
 
 	//! Set the matrix with Euler angle
 	GLC_Matrix4x4& fromEuler(const double, const double, const double);
@@ -282,7 +224,7 @@ private:
 	//! Matrix size
 	enum {DIMMAT4X4 = 4};
 	//! Matrix row first array
-	double matrix[TAILLEMAT4X4];
+	double m_Matrix[TAILLEMAT4X4];
 /*
 the matrix :
 					a[00] a[04] a[08] a[12]
@@ -295,4 +237,234 @@ the matrix :
  */
 //					Tx = 12,	Ty = 13,	Tz = 14
 };
+
+//////////////////////////////////////////////////////////////////////
+// Constructor/Destructor
+//////////////////////////////////////////////////////////////////////
+
+// Default Constructor
+GLC_Matrix4x4::GLC_Matrix4x4()
+{
+	m_Matrix[0]= 1.0; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= 0.0;
+	m_Matrix[1]= 0.0; m_Matrix[5]= 1.0; m_Matrix[9]=  0.0; m_Matrix[13]= 0.0;
+	m_Matrix[2]= 0.0; m_Matrix[6]= 0.0; m_Matrix[10]= 1.0; m_Matrix[14]= 0.0;
+	m_Matrix[3]= 0.0; m_Matrix[7]= 0.0; m_Matrix[11]= 0.0; m_Matrix[15]= 1.0;
+}
+
+// Construct a Matrix by an array of 16 elements.
+GLC_Matrix4x4::GLC_Matrix4x4(const float *Tableau)
+{
+
+	for (int i=0; i < TAILLEMAT4X4; i++)
+	{
+		m_Matrix[i]= static_cast<double>(Tableau[i]);
+	}
+}
+
+// Return the rotation matrix of this matrix
+GLC_Matrix4x4 GLC_Matrix4x4::rotationMatrix() const
+{
+	GLC_Matrix4x4 result(*this);
+	const double invScaleX= 1.0 / scalingX();
+	const double invScaleY= 1.0 / scalingY();
+	const double invScaleZ= 1.0 / scalingZ();
+	result.m_Matrix[0]= result.m_Matrix[0] * invScaleX;
+	result.m_Matrix[1]= result.m_Matrix[1] * invScaleX;
+	result.m_Matrix[2]= result.m_Matrix[2] * invScaleX;
+
+	result.m_Matrix[4]= result.m_Matrix[4] * invScaleY;
+	result.m_Matrix[5]= result.m_Matrix[5] * invScaleY;
+	result.m_Matrix[6]= result.m_Matrix[6] * invScaleY;
+
+	result.m_Matrix[8]= result.m_Matrix[8] * invScaleZ;
+	result.m_Matrix[9]= result.m_Matrix[9] * invScaleZ;
+	result.m_Matrix[10]= result.m_Matrix[10] * invScaleZ;
+
+	result.m_Matrix[12]= 0.0; result.m_Matrix[13]= 0.0; result.m_Matrix[14]= 0.0;
+	result.m_Matrix[3]= 0.0; result.m_Matrix[7]= 0.0; result.m_Matrix[11]= 0.0;
+	result.m_Matrix[15]= 1.0;
+	return result;
+}
+
+// Return the isometric of this matrix
+GLC_Matrix4x4 GLC_Matrix4x4::isometricMatrix() const
+{
+	GLC_Matrix4x4 result(*this);
+	const double invScaleX= 1.0 / scalingX();
+	const double invScaleY= 1.0 / scalingY();
+	const double invScaleZ= 1.0 / scalingZ();
+	result.m_Matrix[0]= result.m_Matrix[0] * invScaleX;
+	result.m_Matrix[1]= result.m_Matrix[1] * invScaleX;
+	result.m_Matrix[2]= result.m_Matrix[2] * invScaleX;
+
+	result.m_Matrix[4]= result.m_Matrix[4] * invScaleY;
+	result.m_Matrix[5]= result.m_Matrix[5] * invScaleY;
+	result.m_Matrix[6]= result.m_Matrix[6] * invScaleY;
+
+	result.m_Matrix[8]= result.m_Matrix[8] * invScaleZ;
+	result.m_Matrix[9]= result.m_Matrix[9] * invScaleZ;
+	result.m_Matrix[10]= result.m_Matrix[10] * invScaleZ;
+	return result;
+}
+// Set matrix to a rotation matrix define by a vector and an angle in radians
+GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect, const double &dAngleRad)
+{
+	// Normalize the vector
+	GLC_Vector3d VectRot(Vect);
+	VectRot.setNormal(1);
+
+	// Code optimisation
+	const double SinAngleSur2= sin(dAngleRad / 2.0);
+
+	// Quaternion computation
+	const double q0= cos(dAngleRad / 2);
+	const double q1= VectRot.m_Vector[0] * SinAngleSur2;
+	const double q2= VectRot.m_Vector[1] * SinAngleSur2;
+	const double q3= VectRot.m_Vector[2] * SinAngleSur2;
+
+	// Code optimisation
+	const double q0Carre= (q0 * q0);
+	const double q1Carre= (q1 * q1);
+	const double q2Carre= (q2 * q2);
+	const double q3Carre= (q3 * q3);
+
+	m_Matrix[0]= q0Carre + q1Carre - q2Carre - q3Carre;
+	m_Matrix[1]= 2.0 * (q1 *q2 + q0 * q3);
+	m_Matrix[2]= 2.0 * (q1 * q3 - q0 * q2);
+	m_Matrix[3]= 0.0;
+	m_Matrix[4]= 2.0 * (q1 * q2 - q0 * q3);
+	m_Matrix[5]= q0Carre + q2Carre - q3Carre - q1Carre;
+	m_Matrix[6]= 2.0 * (q2 * q3 + q0 * q1);
+	m_Matrix[7]= 0.0;
+	m_Matrix[8]= 2.0 * (q1 * q3 + q0 * q2);
+	m_Matrix[9]= 2.0 * (q2 * q3 - q0 * q1);
+	m_Matrix[10]= q0Carre + q3Carre - q1Carre - q2Carre;
+	m_Matrix[11]= 0.0;
+
+	m_Matrix[12]= 0.0;	//TX
+	m_Matrix[13]= 0.0;	//TY
+	m_Matrix[14]= 0.0;	//TZ
+	m_Matrix[15]= 1.0;
+
+	return *this;
+}
+
+// Set matrix to a rotation matrix define by 2 vectors
+GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2)
+{
+
+	// Compute rotation matrix
+	const GLC_Vector3d VectAxeRot(Vect1 ^ Vect2);
+	// Check if rotation vector axis is not null
+	if (!VectAxeRot.isNull())
+	{  // Ok, vector not null
+		const double Angle= acos(Vect1 * Vect2);
+		setMatRot(VectAxeRot, Angle);
+	}
+
+	return *this;
+}
+
+// Set Matrix to a translation matrix by a vector
+GLC_Matrix4x4& GLC_Matrix4x4::setMatTranslate(const GLC_Vector3d &Vect)
+{
+	m_Matrix[0]= 1.0; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= Vect.m_Vector[0];
+	m_Matrix[1]= 0.0; m_Matrix[5]= 1.0; m_Matrix[9]=  0.0; m_Matrix[13]= Vect.m_Vector[1];
+	m_Matrix[2]= 0.0; m_Matrix[6]= 0.0; m_Matrix[10]= 1.0; m_Matrix[14]= Vect.m_Vector[2];
+	m_Matrix[3]= 0.0; m_Matrix[7]= 0.0; m_Matrix[11]= 0.0; m_Matrix[15]= 1.0;
+
+	return *this;
+}
+// Set Matrix to a translation matrix by 3 coordinates
+GLC_Matrix4x4& GLC_Matrix4x4::setMatTranslate(const double Tx, const double Ty, const double Tz)
+{
+	m_Matrix[0]= 1.0; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= Tx;
+	m_Matrix[1]= 0.0; m_Matrix[5]= 1.0; m_Matrix[9]=  0.0; m_Matrix[13]= Ty;
+	m_Matrix[2]= 0.0; m_Matrix[6]= 0.0; m_Matrix[10]= 1.0; m_Matrix[14]= Tz;
+	m_Matrix[3]= 0.0; m_Matrix[7]= 0.0; m_Matrix[11]= 0.0; m_Matrix[15]= 1.0;
+
+	return *this;
+}
+
+// Set Matrix to a scaling matrix define by 3 double
+GLC_Matrix4x4& GLC_Matrix4x4::setMatScaling(const double sX, const double sY, const double sZ)
+{
+	m_Matrix[0]= sX; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= 0.0;
+	m_Matrix[1]= 0.0; m_Matrix[5]= sY; m_Matrix[9]=  0.0; m_Matrix[13]= 0.0;
+	m_Matrix[2]= 0.0; m_Matrix[6]= 0.0; m_Matrix[10]= sZ; m_Matrix[14]= 0.0;
+	m_Matrix[3]= 0.0; m_Matrix[7]= 0.0; m_Matrix[11]= 0.0; m_Matrix[15]= 1.0;
+
+	return *this;
+}
+
+
+// Reverse the Matrix
+GLC_Matrix4x4& GLC_Matrix4x4::invert(void)
+{
+	const double det= determinant();
+
+	// Test if the inverion is possible
+	if (det == 0.0f) return *this;
+
+	const double invDet = 1.0 / det;
+	GLC_Matrix4x4 TCoMat= getCoMat4x4().getTranspose();
+
+	for (int i= 0; i < TAILLEMAT4X4; i++)
+	{
+		m_Matrix[i]= TCoMat.m_Matrix[i] * invDet;
+	}
+
+	return *this;
+}
+// Set the matrix to identify matrix
+GLC_Matrix4x4& GLC_Matrix4x4::setToIdentity()
+{
+	m_Matrix[0]= 1.0; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= 0.0;
+	m_Matrix[1]= 0.0; m_Matrix[5]= 1.0; m_Matrix[9]=  0.0; m_Matrix[13]= 0.0;
+	m_Matrix[2]= 0.0; m_Matrix[6]= 0.0; m_Matrix[10]= 1.0; m_Matrix[14]= 0.0;
+	m_Matrix[3]= 0.0; m_Matrix[7]= 0.0; m_Matrix[11]= 0.0; m_Matrix[15]= 1.0;
+
+	return *this;
+}
+
+// Set the matrix by its transpose
+GLC_Matrix4x4& GLC_Matrix4x4::transpose(void)
+{
+	GLC_Matrix4x4 MatT(m_Matrix);
+	int IndexOrigine;
+	int IndexTrans;
+	for (int Colonne= 0; Colonne < DIMMAT4X4; Colonne++)
+	{
+		for (int Ligne=0 ; Ligne < DIMMAT4X4; Ligne++)
+		{
+			IndexOrigine= (Colonne * DIMMAT4X4) + Ligne;
+			IndexTrans= (Ligne * DIMMAT4X4) + Colonne;
+
+			MatT.m_Matrix[IndexTrans]= m_Matrix[IndexOrigine];
+		}
+	}
+
+	// Load the transposed in matrix in this matrix
+	memcpy(m_Matrix, MatT.m_Matrix, sizeof(double) * 16);
+
+	return *this;
+}
+
+// Compute matrix determinant
+double GLC_Matrix4x4::determinant(void) const
+{
+	double Determinant= 0.0;
+	double SubMat3x3[9];
+	int Signe= 1;
+
+	for (int Colonne= 0; Colonne < DIMMAT4X4; Colonne++, Signe*= -1)
+	{
+		getSubMat(0, Colonne, SubMat3x3);
+		Determinant+= Signe * m_Matrix[Colonne * DIMMAT4X4] * getDeterminant3x3(SubMat3x3);
+	}
+
+	return Determinant;
+
+}
+
 #endif /*GLC_MATRIX4X4_H_*/

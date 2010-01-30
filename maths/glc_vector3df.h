@@ -55,9 +55,9 @@ public:
 	*/
 	inline GLC_Vector3df()
 	{
-		dVector[0]= 0.0f;
-		dVector[1]= 0.0f;
-		dVector[2]= 0.0f;
+		m_Vector[0]= 0.0f;
+		m_Vector[1]= 0.0f;
+		m_Vector[2]= 0.0f;
 	}
 
 	//! Standard constructor With x, y, z
@@ -74,9 +74,9 @@ public:
 	 */
 	inline GLC_Vector3df(const GLC_Vector3df &Vect)
 	{
-		dVector[0]= Vect.dVector[0];
-		dVector[1]= Vect.dVector[1];
-		dVector[2]= Vect.dVector[2];
+		m_Vector[0]= Vect.m_Vector[0];
+		m_Vector[1]= Vect.m_Vector[1];
+		m_Vector[2]= Vect.m_Vector[2];
 	}
 //@}
 
@@ -89,30 +89,30 @@ public:
 	//! X Compound
 	inline GLC_Vector3df& setX(const float &dX)
 	{
-		dVector[0]= dX;
+		m_Vector[0]= dX;
 		return *this;
 	}
 
 	//! Y Compound
 	inline GLC_Vector3df& setY(const float &dY)
 	{
-		dVector[1]= dY;
+		m_Vector[1]= dY;
 		return *this;
 	}
 
 	//! Z Compound
 	inline GLC_Vector3df& setZ(const float &dZ)
 	{
-		dVector[2]= dZ;
+		m_Vector[2]= dZ;
 		return *this;
 	}
 
 	//! All Compound
 	inline GLC_Vector3df& setVect(const float &dX, const float &dY, const float &dZ)
 	{
-		dVector[0]= dX;
-		dVector[1]= dY;
-		dVector[2]= dZ;
+		m_Vector[0]= dX;
+		m_Vector[1]= dY;
+		m_Vector[2]= dZ;
 
 		return *this;
 	}
@@ -120,18 +120,18 @@ public:
 	//! From another Vector
 	GLC_Vector3df& setVect(const GLC_Vector3df &Vect)
 	{
-		dVector[0]= Vect.dVector[0];
-		dVector[1]= Vect.dVector[1];
-		dVector[2]= Vect.dVector[2];
+		m_Vector[0]= Vect.m_Vector[0];
+		m_Vector[1]= Vect.m_Vector[1];
+		m_Vector[2]= Vect.m_Vector[2];
 		return *this;
 	}
 
 	//! Invert Vector
 	inline GLC_Vector3df& setInv(void)
 	{
-		dVector[0]= - dVector[0];
-		dVector[1]= - dVector[1];
-		dVector[2]= - dVector[2];
+		m_Vector[0]= - m_Vector[0];
+		m_Vector[1]= - m_Vector[1];
+		m_Vector[2]= - m_Vector[2];
 		return *this;
 	}
 
@@ -145,28 +145,28 @@ public:
 	//! Return X Compound
 	inline float X(void) const
 	{
-		return dVector[0];
+		return m_Vector[0];
 	}
 	//! Return Y Compound
 	inline float Y(void) const
 	{
-		return dVector[1];
+		return m_Vector[1];
 	}
 	//! Return Z Compound
 	inline float Z(void) const
 	{
-		return dVector[2];
+		return m_Vector[2];
 	}
 	//! Return a pointer to vector data
 	inline const float *data(void) const
 	{
-		return dVector;
+		return m_Vector;
 	}
 	//! Return true if the vector is null
 	inline bool isNull(void) const
 	{
-		return qFuzzyCompare(dVector[0], 0.0f) && qFuzzyCompare(dVector[1], 0.0f)
-		&& qFuzzyCompare(dVector[2], 0.0f);
+		return qFuzzyCompare(m_Vector[0], 0.0f) && qFuzzyCompare(m_Vector[1], 0.0f)
+		&& qFuzzyCompare(m_Vector[2], 0.0f);
 	}
 
 //@}
@@ -180,7 +180,7 @@ private:
 	*	data[1]	Y \n
 	*	data[2]	Z \n
 	*/
-	float dVector[3];
+	float m_Vector[3];
 
 }; //class GLC_Vector3d
 

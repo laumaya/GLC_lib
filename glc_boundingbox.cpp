@@ -89,14 +89,14 @@ bool GLC_BoundingBox::intersect(const GLC_Point3d& point) const
 // Test if a point is in the bounding Sphere
 bool GLC_BoundingBox::intersectBoundingSphere(const GLC_Point3d& point) const
 {
-	const double distance= (center() - point).norm();
+	const double distance= (center() - point).lenght();
 	return distance < boundingSphereRadius();
 }
 
 // Test if the bounding sphere of a bounding box interserct with the bounding sphere
 bool GLC_BoundingBox::intersectBoundingSphere(const GLC_BoundingBox& boundingSphere) const
 {
-	const double distance= (center() - boundingSphere.center()).norm();
+	const double distance= (center() - boundingSphere.center()).lenght();
 	return distance < (boundingSphereRadius() + boundingSphere.boundingSphereRadius());
 }
 

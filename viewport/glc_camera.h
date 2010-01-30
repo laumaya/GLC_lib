@@ -71,7 +71,7 @@ public:
 public:
 	//! Get the distance between the eye and the target of camera
 	inline double distEyeTarget(void) const
-	{return (m_Eye - m_Target).norm();}
+	{return (m_Eye - m_Target).lenght();}
 
 	//! Get camera's eye coordinate point
 	inline GLC_Point3d eye(void) const

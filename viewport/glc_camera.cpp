@@ -129,7 +129,7 @@ GLC_Camera& GLC_Camera::zoom(double factor)
 	GLC_Vector3d VectCam(m_Eye - m_Target);
 
 	// Compute new vector length
-	const double Norme= VectCam.norm() * 1 / factor;
+	const double Norme= VectCam.lenght() * 1 / factor;
 	VectCam.setNormal(Norme);
 
 	m_Eye= VectCam + m_Target;
@@ -249,7 +249,7 @@ GLC_Camera& GLC_Camera::setUpCam(const GLC_Vector3d &Up)
 {
 	if ( !(m_VectUp - Up).isNull() )
 	{
-		if (!qFuzzyCompare(camVector().getAngleWithVect(Up), 0.0))
+		if (!qFuzzyCompare(camVector().angleWithVect(Up), 0.0))
 		{
 			setCam(m_Eye, m_Target, Up);
 		}
@@ -323,12 +323,12 @@ bool GLC_Camera::isAlmostEqualTo(const GLC_Camera& cam, const double distanceAcc
       GLC_Vector3d incident1 = m_Target - m_Eye;
       GLC_Vector3d incident2 = cam.m_Target - cam.m_Eye;
 
-      double allowedGap =  incident1.norm() * distanceAccuracy;
+      double allowedGap =  incident1.lenght() * distanceAccuracy;
       GLC_Point3d left1 = incident1 ^ m_VectUp;
       GLC_Point3d left2 = incident2 ^ cam.m_VectUp;
 
-      return ((m_Eye - cam.m_Eye).norm() < allowedGap ) && ( (m_Target - cam.m_Target).norm() < allowedGap)
-                  && ((left1 - left2).norm() < allowedGap) ;
+      return ((m_Eye - cam.m_Eye).lenght() < allowedGap ) && ( (m_Target - cam.m_Target).lenght() < allowedGap)
+                  && ((left1 - left2).lenght() < allowedGap) ;
 }
 
 // Return the standard front view form this camera

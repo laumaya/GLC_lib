@@ -99,7 +99,7 @@ public:
 
 	//! Return the boundingSphere Radius
 	inline double boundingSphereRadius() const
-	{return GLC_Vector3d(m_Lower - m_Upper).norm() / 2.0;}
+	{return GLC_Vector3d(m_Lower - m_Upper).lenght() / 2.0;}
 
 //@}
 

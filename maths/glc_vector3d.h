@@ -49,7 +49,7 @@ class GLC_LIB_EXPORT GLC_Vector3d
 	//! Overload unary "-" operator
 	inline friend GLC_Vector3d operator - (const GLC_Vector3d &Vect)
 	{
-		return GLC_Vector3d(-Vect.vector[0], -Vect.vector[1], -Vect.vector[2]);
+		return GLC_Vector3d(-Vect.m_Vector[0], -Vect.m_Vector[1], -Vect.m_Vector[2]);
 	}
 
 //////////////////////////////////////////////////////////////////////
@@ -63,45 +63,17 @@ public:
 	* \n Y =  0.0
 	* \n Z =  0.0
 	*/
-	inline GLC_Vector3d()
-	{
-		vector[0]= 0.0;
-		vector[1]= 0.0;
-		vector[2]= 0.0;
-	}
+	inline GLC_Vector3d();
 
-	/*! Standard constructor With x, y, z*/
-	inline GLC_Vector3d(const double &dX, const double &dY, const double &dZ)
-	{
-		vector[0]= dX;
-		vector[1]= dY;
-		vector[2]= dZ;
-	}
+	//! Standard constructor With x, y, z
+	inline GLC_Vector3d(double, double , double);
 
-	/*! Copy constructor
-	 * Sample use
-	 * \code
-	 * NewVect = new GLC_Vector3d(OldVect);
-	 * \endcode
-	 */
-	inline GLC_Vector3d(const GLC_Vector3d &Vect)
-	{
-		vector[0]= Vect.vector[0];
-		vector[1]= Vect.vector[1];
-		vector[2]= Vect.vector[2];
-	}
-	/*! Copy constructor from a float vector
-	 * Sample use
-	 * \code
-	 * NewVect = new GLC_Vector3d(OldVectf);
-	 * \endcode
-	 */
-	inline GLC_Vector3d(const GLC_Vector3df &Vect)
-	{
-		vector[0]= static_cast<double>(Vect.dVector[0]);
-		vector[1]= static_cast<double>(Vect.dVector[1]);
-		vector[2]= static_cast<double>(Vect.dVector[2]);
-	}
+	//! Copy constructor
+	inline GLC_Vector3d(const GLC_Vector3d &vector)
+	{memcpy(m_Vector, vector.m_Vector, sizeof(double) * 3);}
+
+	//! Copy constructor from a float vector
+	inline GLC_Vector3d(const GLC_Vector3df &Vect);
 
 //@}
 
@@ -112,98 +84,54 @@ public:
 public:
 	//! Overload binary "+" operator
 	inline GLC_Vector3d operator + (const GLC_Vector3d &Vect) const
-	{
-		GLC_Vector3d VectResult(vector[0] + Vect.vector[0], vector[1] + Vect.vector[1],
-			vector[2] + Vect.vector[2]);
-
-		return VectResult;
-	}
-
+	{return GLC_Vector3d(m_Vector[0] + Vect.m_Vector[0], m_Vector[1] + Vect.m_Vector[1], m_Vector[2] + Vect.m_Vector[2]);}
 
 	//! Overload "=" operator
-	inline GLC_Vector3d& operator = (const GLC_Vector3d &Vect)
+	inline GLC_Vector3d& operator = (const GLC_Vector3d &vector)
 	{
-		vector[0]= Vect.vector[0];
-		vector[1]= Vect.vector[1];
-		vector[2]= Vect.vector[2];
-
+		memcpy(m_Vector, vector.m_Vector, sizeof(double) * 3);
 		return *this;
 	}
 
 	//! Overload "=" operator
-	inline GLC_Vector3d& operator = (const GLC_Vector3df &Vect)
-	{
-		vector[0]= static_cast<double>(Vect.dVector[0]);
-		vector[1]= static_cast<double>(Vect.dVector[1]);
-		vector[2]= static_cast<double>(Vect.dVector[2]);
-
-		return *this;
-	}
+	inline GLC_Vector3d& operator = (const GLC_Vector3df &);
 
 	//! Overload "+=" operator
-	inline GLC_Vector3d* operator += (const GLC_Vector3d &Vect)
+	inline GLC_Vector3d& operator += (const GLC_Vector3d &vector)
 	{
-		*this= *this + Vect;
-		return this;
+		*this= *this + vector;
+		return *this;
 	}
-
 
 	//! Overload binary "-" operator
 	inline GLC_Vector3d operator - (const GLC_Vector3d &Vect) const
-	{
-		GLC_Vector3d VectResult(vector[0] - Vect.vector[0], vector[1] - Vect.vector[1],
-			vector[2] - Vect.vector[2]);
-
-		return VectResult;
-	}
+	{return GLC_Vector3d(m_Vector[0] - Vect.m_Vector[0], m_Vector[1] - Vect.m_Vector[1], m_Vector[2] - Vect.m_Vector[2]);}
 
 	//! Overload binary "-=" operator
-	GLC_Vector3d* operator -= (const GLC_Vector3d &Vect)
+	GLC_Vector3d& operator -= (const GLC_Vector3d &Vect)
 	{
 		*this= *this - Vect;
-		return this;
+		return *this;
 	}
 
 	//! Overload dot product "^" operator
-	inline GLC_Vector3d operator ^ (const GLC_Vector3d &Vect) const
-	{
-		GLC_Vector3d VectResult;
-		VectResult.vector[0]= vector[1] * Vect.vector[2] - vector[2] * Vect.vector[1];
-		VectResult.vector[1]= vector[2] * Vect.vector[0] - vector[0] * Vect.vector[2];
-		VectResult.vector[2]= vector[0] * Vect.vector[1] - vector[1] * Vect.vector[0];
-
-		return VectResult;
-	}
+	inline GLC_Vector3d operator ^ (const GLC_Vector3d &vector) const;
 
 	//! Overload scalar product "*" operator between 2 vector
 	inline double operator * (const GLC_Vector3d &Vect) const
-	{
-		return vector[0] * Vect.vector[0] + vector[1] * Vect.vector[1] +
-			vector[2] * Vect.vector[2];
-	}
+	{return m_Vector[0] * Vect.m_Vector[0] + m_Vector[1] * Vect.m_Vector[1] + m_Vector[2] * Vect.m_Vector[2];}
 
 	//! Overload scalar product "*" operator between 1 vector and one scalar
 	inline GLC_Vector3d operator * (double Scalaire) const
-	{
-		return GLC_Vector3d(vector[0] * Scalaire, vector[1] * Scalaire, vector[2] * Scalaire);
-	}
+	{return GLC_Vector3d(m_Vector[0] * Scalaire, m_Vector[1] * Scalaire, m_Vector[2] * Scalaire);}
 
 
 	//! Overload equality "==" operator
-	bool operator == (const GLC_Vector3d &Vect) const
-	{
-		bool bResult= qFuzzyCompare(vector[0], Vect.vector[0]);
-		bResult= bResult && qFuzzyCompare(vector[1], Vect.vector[1]);
-		bResult= bResult && qFuzzyCompare(vector[2], Vect.vector[2]);
-
-		return bResult;
-	}
+	inline bool operator == (const GLC_Vector3d &vector) const;
 
 	//! Overload dot product "!=" operator
 	inline bool operator != (const GLC_Vector3d &Vect) const
-	{
-		return !(*this == Vect);
-	}
+	{return !(*this == Vect);}
 
 //@}
 
@@ -215,65 +143,43 @@ public:
 	//! X Compound
 	inline GLC_Vector3d& setX(const double &dX)
 	{
-		vector[0]= dX;
+		m_Vector[0]= dX;
 		return *this;
 	}
 
 	//! Y Compound
 	inline GLC_Vector3d& setY(const double &dY)
 	{
-		vector[1]= dY;
+		m_Vector[1]= dY;
 		return *this;
 	}
 
 	//! Z Compound
 	inline GLC_Vector3d& setZ(const double &dZ)
 	{
-		vector[2]= dZ;
+		m_Vector[2]= dZ;
 		return *this;
 	}
 
 	//! All Compound
-	inline GLC_Vector3d& setVect(const double &dX, const double &dY, const double &dZ)
-	{
-		vector[0]= dX;
-		vector[1]= dY;
-		vector[2]= dZ;
-
-		return *this;
-	}
+	inline GLC_Vector3d& setVect(double, double, double);
 
 	//! From another Vector
-	GLC_Vector3d& setVect(const GLC_Vector3d &Vect)
+	GLC_Vector3d& setVect(const GLC_Vector3d &vector)
 	{
-		vector[0]= Vect.vector[0];
-		vector[1]= Vect.vector[1];
-		vector[2]= Vect.vector[2];
+		memcpy(m_Vector, vector.m_Vector, sizeof(double) * 3);
 		return *this;
 	}
 
 	//! Vector Normal
-	inline GLC_Vector3d& setNormal(const double &Norme)
-	{
-		const double normCur= sqrt( vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
-
-		if (normCur != 0)
-		{
-			const double Coef = Norme / normCur;
-
-			vector[0] = vector[0] * Coef;
-			vector[1] = vector[1] * Coef;
-			vector[2] = vector[2] * Coef;
-		}
-		return *this;
-	}
+	inline GLC_Vector3d& setNormal(double);
 
 	/*! Invert Vector*/
 	inline GLC_Vector3d& invert(void)
 	{
-		vector[0]= - vector[0];
-		vector[1]= - vector[1];
-		vector[2]= - vector[2];
+		m_Vector[0]= - m_Vector[0];
+		m_Vector[1]= - m_Vector[1];
+		m_Vector[2]= - m_Vector[2];
 		return *this;
 	}
 
@@ -287,95 +193,44 @@ public:
 	//! Return X Compound
 	inline double X() const
 	{
-		return vector[0];
+		return m_Vector[0];
 	}
 	//! Return Y Compound
 	inline double Y() const
 	{
-		return vector[1];
+		return m_Vector[1];
 	}
 	//! Return Z Compound
 	inline double Z() const
 	{
-		return vector[2];
+		return m_Vector[2];
 	}
 	//! Return a pointer to vector data
 	inline const double *data() const
 	{
-		return vector;
+		return m_Vector;
 	}
 	//! Return true if the vector is null
 	inline bool isNull() const
-	{
-		return qFuzzyCompare(vector[0], 0.0) && qFuzzyCompare(vector[1], 0.0)
-		&& qFuzzyCompare(vector[2], 0.0);
-	}
+	{return (m_Vector[0] == 0.0f) && (m_Vector[1] == 0.0f) && (m_Vector[2] == 0.0f);}
 
-	//! Return Vector Norm
-	inline double norm() const
-	{
-		return sqrt(vector[0] * vector[0] + vector[1] * vector[1]
-			+ vector[2] * vector[2]);
-	}
+	//! Return Vector Lenght
+	inline double lenght() const
+	{return sqrt(m_Vector[0] * m_Vector[0] + m_Vector[1] * m_Vector[1] + m_Vector[2] * m_Vector[2]);}
 
 	//! Return the 2D vector specified by a mask vector
 	/*! retrieve component corresponding to
 	 * mask NULL component*/
-	inline GLC_Vector2d toVector2d(const GLC_Vector3d& mask) const
-	{
-		double x;
-		double y;
-		if (mask.vector[0] == 0.0)
-		{
-			x= vector[0];
-			if (mask.vector[1] == 0.0)
-				y= vector[1];
-			else
-				y= vector[2];
-
-		}
-		else
-		{
-			x= vector[1];
-			y= vector[2];
-
-		}
-		return GLC_Vector2d(x, y);
-	}
+	inline GLC_Vector2d toVector2d(const GLC_Vector3d& mask) const;
 
 	//! Return the Angle with another vector
-	inline double getAngleWithVect(GLC_Vector3d Vect) const
-	{
-		GLC_Vector3d ThisVect(*this);
-		ThisVect.setNormal(1);
-		Vect.setNormal(1);
-		// Rotation axis
-		const GLC_Vector3d VectAxeRot(ThisVect ^ Vect);
-		// Check if the rotation axis vector is null
-		if (!VectAxeRot.isNull())
-		{
-			return acos(ThisVect * Vect);
-		}
-		else return 0.0;
-	}
+	inline double angleWithVect(GLC_Vector3d Vect) const;
 
 	inline GLC_Vector3df toVector3df() const
-	{
-		return GLC_Vector3df(static_cast<float>(vector[0]), static_cast<float>(vector[1]), static_cast<float>(vector[2]));
-	}
+	{return GLC_Vector3df(static_cast<float>(m_Vector[0]), static_cast<float>(m_Vector[1]), static_cast<float>(m_Vector[2]));}
 
-
-	// return the vector string
-	inline QString toString() const
-	{
-		QString result("[");
-
-		result+= QString::number(vector[0]) + QString(" , ");
-		result+= QString::number(vector[1]) + QString(" , ");
-		result+= QString::number(vector[2]) + QString("]");
-
-		return result;
-	}
+	// Return the vector string
+	inline QString toString() const;
 
 //@}
 
@@ -388,7 +243,7 @@ private:
 	*	vector[1]	Y \n
 	*	vector[2]	Z \n
 	*/
-	double vector[3];
+	double m_Vector[3];
 
 }; //class GLC_Vector3d
 
@@ -427,5 +282,127 @@ inline QDataStream &operator>>(QDataStream &stream, GLC_Vector3d &vector)
 	return stream;
 }
 
+// Default constructor
+GLC_Vector3d::GLC_Vector3d()
+{
+	m_Vector[0]= 0.0;
+	m_Vector[1]= 0.0;
+	m_Vector[2]= 0.0;
+}
+
+// Standard constructor With x, y, z
+GLC_Vector3d::GLC_Vector3d(double x, double y, double z)
+{
+	m_Vector[0]= x;
+	m_Vector[1]= y;
+	m_Vector[2]= z;
+}
+
+// Copy constructor from a float vector
+GLC_Vector3d::GLC_Vector3d(const GLC_Vector3df &vector)
+{
+	m_Vector[0]= static_cast<double>(vector.m_Vector[0]);
+	m_Vector[1]= static_cast<double>(vector.m_Vector[1]);
+	m_Vector[2]= static_cast<double>(vector.m_Vector[2]);
+}
+
+// Overload "=" operator
+GLC_Vector3d& GLC_Vector3d::operator = (const GLC_Vector3df &Vect)
+{
+	m_Vector[0]= static_cast<double>(Vect.m_Vector[0]);
+	m_Vector[1]= static_cast<double>(Vect.m_Vector[1]);
+	m_Vector[2]= static_cast<double>(Vect.m_Vector[2]);
+
+	return *this;
+}
+
+//  Overload dot product "^" operator
+GLC_Vector3d GLC_Vector3d::operator ^ (const GLC_Vector3d &vector) const
+{
+	GLC_Vector3d vectResult;
+	vectResult.m_Vector[0]= m_Vector[1] * vector.m_Vector[2] - m_Vector[2] * vector.m_Vector[1];
+	vectResult.m_Vector[1]= m_Vector[2] * vector.m_Vector[0] - m_Vector[0] * vector.m_Vector[2];
+	vectResult.m_Vector[2]= m_Vector[0] * vector.m_Vector[1] - m_Vector[1] * vector.m_Vector[0];
+
+	return vectResult;
+}
+
+// Overload equality "==" operator
+bool GLC_Vector3d::operator == (const GLC_Vector3d &vector) const
+{
+	bool bResult= qFuzzyCompare(m_Vector[0], vector.m_Vector[0]);
+	bResult= bResult && qFuzzyCompare(m_Vector[1], vector.m_Vector[1]);
+	bResult= bResult && qFuzzyCompare(m_Vector[2], vector.m_Vector[2]);
+
+	return bResult;
+}
+
+// All Compound
+GLC_Vector3d& GLC_Vector3d::setVect(double x, double y, double z)
+{
+	m_Vector[0]= x;
+	m_Vector[1]= y;
+	m_Vector[2]= z;
+
+	return *this;
+}
+
+// Vector Normal
+inline GLC_Vector3d& GLC_Vector3d::setNormal(double norme)
+{
+	const double normCur= sqrt( m_Vector[0] * m_Vector[0] + m_Vector[1] * m_Vector[1] + m_Vector[2] * m_Vector[2]);
+
+	if (normCur != 0.0f)
+	{
+		const double Coef = norme / normCur;
+
+		m_Vector[0] = m_Vector[0] * Coef;
+		m_Vector[1] = m_Vector[1] * Coef;
+		m_Vector[2] = m_Vector[2] * Coef;
+	}
+	return *this;
+}
+
+// Return the 2D vector specified by a mask vector
+GLC_Vector2d GLC_Vector3d::toVector2d(const GLC_Vector3d& mask) const
+{
+	GLC_Vector2d resultVect;
+	if (mask.m_Vector[0] == 0.0)
+	{
+		resultVect.setX(m_Vector[0]);
+		if (mask.m_Vector[1] == 0.0) resultVect.setY(m_Vector[1]);
+		else resultVect.setY(m_Vector[2]);
+	}
+	else resultVect.setVect(m_Vector[1], m_Vector[2]);
+
+	return resultVect;
+}
+
+// Return the Angle with another vector
+double GLC_Vector3d::angleWithVect(GLC_Vector3d Vect) const
+{
+	GLC_Vector3d ThisVect(*this);
+	ThisVect.setNormal(1.0);
+	Vect.setNormal(1.0);
+	// Rotation axis
+	const GLC_Vector3d VectAxeRot(ThisVect ^ Vect);
+	// Check if the rotation axis vector is null
+	if (!VectAxeRot.isNull())
+	{
+		return acos(ThisVect * Vect);
+	}
+	else return 0.0;
+}
+// Return the vector string
+QString GLC_Vector3d::toString() const
+{
+	QString result("[");
+
+	result+= QString::number(m_Vector[0]) + QString(" , ");
+	result+= QString::number(m_Vector[1]) + QString(" , ");
+	result+= QString::number(m_Vector[2]) + QString("]");
+
+	return result;
+}
 
 #endif /*GLC_VECTOR3D_H_*/

@@ -158,7 +158,7 @@ bool GLC_Interpolator::CalcInterpolAngulaireMat(void)
 	// Calcul de l'axe de rotation
 	const GLC_Vector3d AxeRot(m_VectDepart ^ m_VectArrive);
 	// Calcul de l'angle entre les vecteurs
-	const double Angle= m_VectArrive.getAngleWithVect(m_VectDepart) / m_nNbrPas;
+	const double Angle= m_VectArrive.angleWithVect(m_VectDepart) / m_nNbrPas;
 	// Calcul de la matrice de rotation
 	if (qFuzzyCompare(Angle, 0.0))
 	{
