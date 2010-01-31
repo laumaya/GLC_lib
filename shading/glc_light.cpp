@@ -206,9 +206,9 @@ void GLC_Light::glDraw(void)
 	glLightfv(m_LightID, GL_SPECULAR, setArray);	// Setup The specular Light
 
 	// Position
-	setArray[0]= static_cast<GLfloat>(m_Position.X());
-	setArray[1]= static_cast<GLfloat>(m_Position.Y());
-	setArray[2]= static_cast<GLfloat>(m_Position.Z());
+	setArray[0]= static_cast<GLfloat>(m_Position.x());
+	setArray[1]= static_cast<GLfloat>(m_Position.y());
+	setArray[2]= static_cast<GLfloat>(m_Position.z());
 	glLightfv(m_LightID, GL_POSITION, setArray);	// Position The Light
 
 	// OpenGL error handler
