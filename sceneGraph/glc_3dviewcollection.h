@@ -31,7 +31,7 @@
 #include <QHash>
 #include "glc_3dviewinstance.h"
 #include "../glc_global.h"
-
+#include "../viewport/glc_frustum.h"
 
 #include "../glc_config.h"
 
@@ -251,11 +251,13 @@ public:
 	inline void setSpacePartitionningUsage(bool use)
 	{m_UseSpacePartitioning= use;}
 
-	//! Update the instance viewble state
-	/*! use the frustrum culling from the viewport
-	 * If the specified matrix pointer is NULL*/
-	void updateInstanceViewableState(GLC_Matrix4x4* pFrustum= NULL);
+	//! Update the instance viewable state
+	/*! Update the frustrum culling from the viewport
+	 * If the specified matrix pointer is not null*/
+	void updateInstanceViewableState(GLC_Matrix4x4* pMatrix= NULL);
 
+	//! Update the instance viewable state with the specified frustum
+	void updateInstanceViewableState(const GLC_Frustum&);
 
 
 //@}

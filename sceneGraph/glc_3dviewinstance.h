@@ -218,7 +218,7 @@ public:
 	//! Translate Instance
 	inline GLC_3DViewInstance& translate(const GLC_Vector3d& v)
 	{
-		return translate(v.X(), v.Y(), v.Z());
+		return translate(v.x(), v.y(), v.z());
 	}
 
 	//! Move instance with a 4x4Matrix

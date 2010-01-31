@@ -140,7 +140,7 @@ public:
 	//! Translate Instance
 	inline GLC_StructInstance* translate(const GLC_Vector3d& v)
 	{
-		return translate(v.X(), v.Y(), v.Z());
+		return translate(v.x(), v.y(), v.z());
 	}
 
 	//! Replace the instance Matrix

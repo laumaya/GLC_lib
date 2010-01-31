@@ -79,15 +79,15 @@ void GLC_OctreeNode::addChildren()
 	Q_ASSERT(m_Children.isEmpty());
 	Q_ASSERT(!m_BoundingBox.isEmpty());
 
-	const double xLower=  m_BoundingBox.lowerCorner().X();
-	const double yLower=  m_BoundingBox.lowerCorner().Y();
-	const double zLower=  m_BoundingBox.lowerCorner().Z();
+	const double xLower=  m_BoundingBox.lowerCorner().x();
+	const double yLower=  m_BoundingBox.lowerCorner().y();
+	const double zLower=  m_BoundingBox.lowerCorner().z();
 
-	const double xUpper=  m_BoundingBox.upperCorner().X();
+	const double xUpper=  m_BoundingBox.upperCorner().x();
 	const double dX= (xUpper - xLower) / 2.0;
-	const double yUpper=  m_BoundingBox.upperCorner().Y();
+	const double yUpper=  m_BoundingBox.upperCorner().y();
 	const double dY= (yUpper - yLower) / 2.0;
-	const double zUpper=  m_BoundingBox.upperCorner().Z();
+	const double zUpper=  m_BoundingBox.upperCorner().z();
 	const double dZ= (zUpper - zLower) / 2.0;
 
 
