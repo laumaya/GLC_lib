@@ -121,13 +121,13 @@ GLC_3DRep GLC_Factory::createBox(double lx, double ly, double lz) const
 // Create a GLC_Box
 GLC_3DViewInstance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 {
-	const double lx= boundingBox.upperCorner().X() - boundingBox.lowerCorner().X();
-	const double ly= boundingBox.upperCorner().Y() - boundingBox.lowerCorner().Y();
-	const double lz= boundingBox.upperCorner().Z() - boundingBox.lowerCorner().Z();
+	const double lx= boundingBox.upperCorner().x() - boundingBox.lowerCorner().x();
+	const double ly= boundingBox.upperCorner().y() - boundingBox.lowerCorner().y();
+	const double lz= boundingBox.upperCorner().z() - boundingBox.lowerCorner().z();
 	GLC_Box* pBox= new GLC_Box(lx, ly, lz);
 	GLC_3DViewInstance newBox(pBox);
-	newBox.translate(boundingBox.center().X(), boundingBox.center().Y()
-					, boundingBox.center().Z());
+	newBox.translate(boundingBox.center().x(), boundingBox.center().y()
+					, boundingBox.center().z());
 	return newBox;
 }
 
