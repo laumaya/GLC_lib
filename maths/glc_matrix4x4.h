@@ -311,7 +311,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect, const double &
 {
 	// Normalize the vector
 	GLC_Vector3d VectRot(Vect);
-	VectRot.setNormal(1);
+	VectRot.normalize();
 
 	// Code optimisation
 	const double SinAngleSur2= sin(dAngleRad / 2.0);

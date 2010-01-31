@@ -282,9 +282,9 @@ void GLC_Distance::getPQPPoint(double &p0, double &p1, double &p2, const double 
 {
 	GLC_Vector3d vector(x, y, z);
 	vector= instanceMatrix * vector;
-	p0= vector.X();
-	p1= vector.Y();
-	p2= vector.Z();
+	p0= vector.x();
+	p1= vector.y();
+	p2= vector.z();
 }
 
 // Add mesh triangles to PQP model

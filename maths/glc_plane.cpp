@@ -44,6 +44,16 @@ GLC_Plane::GLC_Plane(double a, double b, double c, double d)
 
 }
 
+// Construct a plane with normal vector and lenght
+GLC_Plane::GLC_Plane(const GLC_Vector3d& normal, double d)
+: m_A(normal.x())
+, m_B(normal.y())
+, m_C(normal.z())
+, m_D(d)
+{
+
+}
+
 // Copy constructor
 GLC_Plane::GLC_Plane(const GLC_Plane& plane)
 : m_A(plane.m_A)

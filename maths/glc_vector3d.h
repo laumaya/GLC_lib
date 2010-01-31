@@ -46,11 +46,10 @@ class GLC_LIB_EXPORT GLC_Vector3d
 {
 	friend class GLC_Vector4d;
 	friend class GLC_Matrix4x4;
+
 	//! Overload unary "-" operator
 	inline friend GLC_Vector3d operator - (const GLC_Vector3d &Vect)
-	{
-		return GLC_Vector3d(-Vect.m_Vector[0], -Vect.m_Vector[1], -Vect.m_Vector[2]);
-	}
+	{return GLC_Vector3d(-Vect.m_Vector[0], -Vect.m_Vector[1], -Vect.m_Vector[2]);}
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -171,17 +170,15 @@ public:
 		return *this;
 	}
 
-	//! Vector Normal
-	inline GLC_Vector3d& setNormal(double);
+	//! Set vector lenght
+	inline GLC_Vector3d& setLenght(double);
 
-	/*! Invert Vector*/
-	inline GLC_Vector3d& invert(void)
-	{
-		m_Vector[0]= - m_Vector[0];
-		m_Vector[1]= - m_Vector[1];
-		m_Vector[2]= - m_Vector[2];
-		return *this;
-	}
+	//! Normalize the vector
+	inline GLC_Vector3d& normalize()
+	{return setLenght(1.0);}
+
+	//! Invert Vector
+	inline GLC_Vector3d& invert();
 
 //@}
 
@@ -191,25 +188,21 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return X Compound
-	inline double X() const
-	{
-		return m_Vector[0];
-	}
+	inline double x() const
+	{return m_Vector[0];}
+
 	//! Return Y Compound
-	inline double Y() const
-	{
-		return m_Vector[1];
-	}
+	inline double y() const
+	{return m_Vector[1];}
+
 	//! Return Z Compound
-	inline double Z() const
-	{
-		return m_Vector[2];
-	}
+	inline double z() const
+	{return m_Vector[2];}
+
 	//! Return a pointer to vector data
 	inline const double *data() const
-	{
-		return m_Vector;
-	}
+	{return m_Vector;}
+
 	//! Return true if the vector is null
 	inline bool isNull() const
 	{return (m_Vector[0] == 0.0f) && (m_Vector[1] == 0.0f) && (m_Vector[2] == 0.0f);}
@@ -229,8 +222,12 @@ public:
 	inline GLC_Vector3df toVector3df() const
 	{return GLC_Vector3df(static_cast<float>(m_Vector[0]), static_cast<float>(m_Vector[1]), static_cast<float>(m_Vector[2]));}
 
-	// Return the vector string
+	//! Return the vector string
 	inline QString toString() const;
+
+	//! Return the inverted vector
+	inline GLC_Vector3d inverted() const
+	{return GLC_Vector3d(*this).invert();}
 
 //@}
 
@@ -270,7 +267,7 @@ typedef GLC_Vector3d GLC_Point3d;
 //! Non-member stream operator
 inline QDataStream &operator<<(QDataStream & stream, const GLC_Vector3d & vector)
 {
-	stream << vector.X() << vector.Y() << vector.Z();
+	stream << vector.x() << vector.y() << vector.z();
 	return stream;
 }
 
@@ -348,7 +345,7 @@ GLC_Vector3d& GLC_Vector3d::setVect(double x, double y, double z)
 }
 
 // Vector Normal
-inline GLC_Vector3d& GLC_Vector3d::setNormal(double norme)
+inline GLC_Vector3d& GLC_Vector3d::setLenght(double norme)
 {
 	const double normCur= sqrt( m_Vector[0] * m_Vector[0] + m_Vector[1] * m_Vector[1] + m_Vector[2] * m_Vector[2]);
 
@@ -360,6 +357,15 @@ inline GLC_Vector3d& GLC_Vector3d::setNormal(double norme)
 		m_Vector[1] = m_Vector[1] * Coef;
 		m_Vector[2] = m_Vector[2] * Coef;
 	}
+	return *this;
+}
+
+// Invert Vector
+GLC_Vector3d& GLC_Vector3d::invert()
+{
+	m_Vector[0]= - m_Vector[0];
+	m_Vector[1]= - m_Vector[1];
+	m_Vector[2]= - m_Vector[2];
 	return *this;
 }
 
@@ -382,8 +388,8 @@ GLC_Vector2d GLC_Vector3d::toVector2d(const GLC_Vector3d& mask) const
 double GLC_Vector3d::angleWithVect(GLC_Vector3d Vect) const
 {
 	GLC_Vector3d ThisVect(*this);
-	ThisVect.setNormal(1.0);
-	Vect.setNormal(1.0);
+	ThisVect.normalize();
+	Vect.normalize();
 	// Rotation axis
 	const GLC_Vector3d VectAxeRot(ThisVect ^ Vect);
 	// Check if the rotation axis vector is null

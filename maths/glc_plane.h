@@ -46,6 +46,9 @@ public:
 	//! Contruct a plan with specified parameter
 	GLC_Plane(double, double, double, double);
 
+	//! Construct a plane with normal vector and lenght
+	GLC_Plane(const GLC_Vector3d&, double);
+
 	//! Copy constructor
 	GLC_Plane(const GLC_Plane&);
 
@@ -80,7 +83,7 @@ public:
 
 	//! Return the signed distance to a point
 	inline double distanceToPoint(const GLC_Point3d& p) const
-	{return m_A * p.X() + m_B * p.Y() + m_C * p.Z() + m_D;}
+	{return m_A * p.x() + m_B * p.y() + m_C * p.z() + m_D;}
 
 	//! Equality operator
 	bool operator==(GLC_Plane) const;
