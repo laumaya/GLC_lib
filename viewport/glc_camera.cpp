@@ -130,7 +130,7 @@ GLC_Camera& GLC_Camera::zoom(double factor)
 
 	// Compute new vector length
 	const double Norme= VectCam.lenght() * 1 / factor;
-	VectCam.setNormal(Norme);
+	VectCam.setLenght(Norme);
 
 	m_Eye= VectCam + m_Target;
 
@@ -149,7 +149,7 @@ GLC_Camera& GLC_Camera::move(const GLC_Matrix4x4 &MatMove)
 	// Backup m_VectUp
 	const GLC_Vector3d VectUpOld(m_VectUp);
 	m_VectUp= (MatMove * VectUpOld) - (MatMove * VectOrigine); // Up Vector Origin must be equal to 0,0,0
-	m_VectUp.setNormal(1.0);
+	m_VectUp.normalize();
 	createMatComp();
 
 	return *this;
@@ -191,8 +191,8 @@ GLC_Camera& GLC_Camera::setEyeCam(const GLC_Point3d &Eye)
 	GLC_Vector3d VectCam(Eye - m_Target);
 	if ( !(VectOldCam - VectCam).isNull() )
 	{
-		VectOldCam.setNormal(1);
-		VectCam.setNormal(1);
+		VectOldCam.setLenght(1);
+		VectCam.setLenght(1);
 		const double Angle= acos(VectOldCam * VectCam);
 		if ( !qFuzzyCompare(Angle, 0.0) && !qFuzzyCompare(PI - Angle, 0.0))
 		{
@@ -222,8 +222,8 @@ GLC_Camera& GLC_Camera::setTargetCam(const GLC_Point3d &Target)
 	GLC_Vector3d VectCam(m_Eye - Target);
 	if ( !(VectOldCam - VectCam).isNull() )
 	{
-		VectOldCam.setNormal(1);
-		VectCam.setNormal(1);
+		VectOldCam.setLenght(1);
+		VectCam.setLenght(1);
 		const double Angle= acos(VectOldCam * VectCam);
 		if ( !qFuzzyCompare(Angle, 0.0) && !qFuzzyCompare(PI - Angle, 0.0))
 		{
@@ -249,7 +249,7 @@ GLC_Camera& GLC_Camera::setUpCam(const GLC_Vector3d &Up)
 {
 	if ( !(m_VectUp - Up).isNull() )
 	{
-		if (!qFuzzyCompare(camVector().angleWithVect(Up), 0.0))
+		if (!qFuzzyCompare(forward().angleWithVect(Up), 0.0))
 		{
 			setCam(m_Eye, m_Target, Up);
 		}
@@ -260,9 +260,9 @@ GLC_Camera& GLC_Camera::setUpCam(const GLC_Vector3d &Up)
 
 GLC_Camera& GLC_Camera::setCam(GLC_Point3d Eye, GLC_Point3d Target, GLC_Vector3d Up)
 {
-	Up.setNormal(1);
+	Up.setLenght(1);
 
-	const GLC_Vector3d VectCam((Eye - Target).setNormal(1));
+	const GLC_Vector3d VectCam((Eye - Target).setLenght(1));
 	const double Angle= acos(VectCam * Up);
 
 	/* m_VectUp and VectCam could not be parallel
@@ -299,9 +299,9 @@ GLC_Camera& GLC_Camera::setCam(const GLC_Camera& cam)
 
 GLC_Camera& GLC_Camera::setDistEyeTarget(double Longueur)
 {
-    GLC_Vector3d VectCam(m_Eye - m_Target);
-    VectCam.setNormal(Longueur);
-    m_Eye= VectCam + m_Target;
+    GLC_Vector3d VectCam(forward());
+    VectCam.setLenght(Longueur);
+    m_Eye= m_Target - VectCam;
 
     return *this;
 }
@@ -431,9 +431,9 @@ GLC_Camera GLC_Camera::isoView() const
 //////////////////////////////////////////////////////////////////////
 void GLC_Camera::glExecute()
 {
-	gluLookAt(m_Eye.X(), m_Eye.Y(), m_Eye.Z(),
-		m_Target.X(), m_Target.Y(), m_Target.Z(),
-		m_VectUp.X(), m_VectUp.Y(), m_VectUp.Z());
+	gluLookAt(m_Eye.x(), m_Eye.y(), m_Eye.z(),
+		m_Target.x(), m_Target.y(), m_Target.z(),
+		m_VectUp.x(), m_VectUp.y(), m_VectUp.z());
 	//GLC_Matrix4x4 modelView;
 	//glGetDoublev(GL_MODELVIEW_MATRIX, modelView.data());
 	//qDebug() << modelView.toString();
@@ -445,25 +445,25 @@ void GLC_Camera::glExecute()
 
 void GLC_Camera::createMatComp(void)
 {
-	const GLC_Vector3d forward((m_Target - m_Eye).setNormal(1.0));
-	const GLC_Vector3d side((forward ^ m_VectUp).setNormal(1.0));
+	const GLC_Vector3d forward((m_Target - m_Eye).normalize());
+	const GLC_Vector3d side((forward ^ m_VectUp).normalize());
 
 	// Update camera matrix
-	m_MatCompOrbit.data()[0]= side.X();
-	m_MatCompOrbit.data()[4]= side.Y();
-	m_MatCompOrbit.data()[8]= side.Z();
+	m_MatCompOrbit.data()[0]= side.x();
+	m_MatCompOrbit.data()[4]= side.y();
+	m_MatCompOrbit.data()[8]= side.z();
 	m_MatCompOrbit.data()[12]= 0.0;
 
 	// Vector Up is Y Axis
-	m_MatCompOrbit.data()[1]= m_VectUp.X();
-	m_MatCompOrbit.data()[5]= m_VectUp.Y();
-	m_MatCompOrbit.data()[9]= m_VectUp.Z();
+	m_MatCompOrbit.data()[1]= m_VectUp.x();
+	m_MatCompOrbit.data()[5]= m_VectUp.y();
+	m_MatCompOrbit.data()[9]= m_VectUp.z();
 	m_MatCompOrbit.data()[13]= 0.0;
 
 	// Vector Cam is Z axis
-	m_MatCompOrbit.data()[2]= - forward.X();
-	m_MatCompOrbit.data()[6]= - forward.Y();
-	m_MatCompOrbit.data()[10]= - forward.Z();
+	m_MatCompOrbit.data()[2]= - forward.x();
+	m_MatCompOrbit.data()[6]= - forward.y();
+	m_MatCompOrbit.data()[10]= - forward.z();
 	m_MatCompOrbit.data()[14]= 0.0;
 
 	m_MatCompOrbit.data()[3]= 0.0;

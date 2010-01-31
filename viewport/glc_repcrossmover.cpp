@@ -82,8 +82,8 @@ void GLC_RepCrossMover::glDraw()
 	const double dDecAxe= dLgAxe / 3;
 	glPushMatrix();
 
-	glTranslated(m_pViewport->cameraHandle()->target().X(), m_pViewport->cameraHandle()->target().Y(),
-			m_pViewport->cameraHandle()->target().Z() );
+	glTranslated(m_pViewport->cameraHandle()->target().x(), m_pViewport->cameraHandle()->target().y(),
+			m_pViewport->cameraHandle()->target().z() );
 
 	// Graphic properties
 	glDisable(GL_TEXTURE_2D);

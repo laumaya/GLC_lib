@@ -171,6 +171,71 @@ void GLC_Viewport::forceAspectRatio(double ratio)
 
 }
 
+// Return the frustum associated to a selection coordinate
+GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
+{
+	const int halfSize= m_SelectionSquareSize / 2;
+	const int xUp= x + halfSize;
+	const int yUp= y - halfSize;
+
+	const int xBottom= x - halfSize;
+	const int yBottom= y + halfSize;
+
+	// Get the point in world coordinate space
+	const GLC_Point3d uppPoint(unProject(xUp, yUp));
+	const GLC_Point3d bottomPoint(unProject(xBottom, yBottom));
+	// the point lenght
+	const double uppLenght= uppPoint.lenght();
+	const double bottomLenght= bottomPoint.lenght();
+
+	const GLC_Vector3d side((m_pViewCam->forward() ^ m_pViewCam->upVector()).normalize());
+	// Create plane normal vector
+	const GLC_Vector3d leftNormal(side);
+	const GLC_Vector3d rightNormal(-side);
+	const GLC_Vector3d upNormal(m_pViewCam->upVector());
+	const GLC_Vector3d bottomNormal(-upNormal);
+	// Create frustum planes
+	const GLC_Plane leftPlane(leftNormal, bottomLenght);
+	const GLC_Plane rightPlane(rightNormal, uppLenght);
+	const GLC_Plane upPlane(upNormal, uppLenght);
+	const GLC_Plane bottomPlane(bottomNormal, bottomLenght);
+
+	GLC_Frustum selectionFrustum(m_Frustum);
+	selectionFrustum.setLeftClippingPlane(leftPlane);
+	selectionFrustum.setRightClippingPlane(rightPlane);
+	selectionFrustum.setTopClippingPlane(upPlane);
+	selectionFrustum.setBottomClippingPlane(bottomPlane);
+
+	return selectionFrustum;
+
+}
+
+// Return the world 3d point of the screen coordinate
+GLC_Point3d GLC_Viewport::unProject(int x, int y) const
+{
+	// Z Buffer component of selected point between 0 and 1
+	GLfloat Depth;
+	// read selected point
+	glReadPixels(x, m_nWinVSize - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
+
+	// Current visualisation matrix
+	GLdouble ViewMatrix[16];
+	glGetDoublev(GL_MODELVIEW_MATRIX, ViewMatrix);
+	// Current projection matrix
+	GLdouble ProjMatrix[16];
+	glGetDoublev(GL_PROJECTION_MATRIX, ProjMatrix);
+	// definition of the current viewport
+	GLint Viewport[4];
+	glGetIntegerv(GL_VIEWPORT, Viewport);
+
+	// OpenGL ccordinate of selected point
+	GLdouble pX, pY, pZ;
+	gluUnProject((GLdouble) x, (GLdouble) (m_nWinVSize - y) , Depth
+		, ViewMatrix, ProjMatrix, Viewport, &pX, &pY, &pZ);
+
+	return GLC_Point3d(pX, pY, pZ);
+}
+
 //////////////////////////////////////////////////////////////////////
 // Private OpenGL Functions
 //////////////////////////////////////////////////////////////////////
@@ -217,26 +282,26 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 
 }
 
-//! select an object and return is UID
-GLC_uint GLC_Viewport::select(QGLWidget *pGLWidget, int x, int y)
+// select an object and return is UID
+GLC_uint GLC_Viewport::select(int x, int y)
 {
 	m_pQGLWidget->qglClearColor(Qt::black);
 	GLC_State::setSelectionMode(true);
 	// Draw the scene
-	pGLWidget->updateGL();
+	m_pQGLWidget->updateGL();
 	GLC_State::setSelectionMode(false);
 
 	GLsizei width= m_SelectionSquareSize;
 	GLsizei height= width;
 	GLint newX= x - width / 2;
-	GLint newY= (pGLWidget->size().height() - y) - height / 2;
+	GLint newY= (m_pQGLWidget->size().height() - y) - height / 2;
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
 	return meaningfulIdInsideSquare(newX, newY, width, height);
 }
 // Select a body inside a 3DViewInstance and return is UID
-GLC_uint GLC_Viewport::selectBody(QGLWidget *pGLWidget, GLC_3DViewInstance* pInstance, int x, int y)
+GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y)
 {
 	m_pQGLWidget->qglClearColor(Qt::black);
 	GLC_State::setSelectionMode(true);
@@ -256,7 +321,7 @@ GLC_uint GLC_Viewport::selectBody(QGLWidget *pGLWidget, GLC_3DViewInstance* pIns
 	GLsizei width= 6;
 	GLsizei height= width;
 	GLint newX= x - width / 2;
-	GLint newY= (pGLWidget->size().height() - y) - height / 2;
+	GLint newY= (m_pQGLWidget->size().height() - y) - height / 2;
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
@@ -264,7 +329,7 @@ GLC_uint GLC_Viewport::selectBody(QGLWidget *pGLWidget, GLC_3DViewInstance* pIns
 }
 
 // Select a primitive inside a 3DViewInstance and return its UID and its body index
-QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(QGLWidget *pGLWidget, GLC_3DViewInstance* pInstance, int x, int y)
+QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance, int x, int y)
 {
 	QPair<int, GLC_uint> result;
 
@@ -286,7 +351,7 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(QGLWidget *pGLWidget, GLC_3DV
 	GLsizei width= 6;
 	GLsizei height= width;
 	GLint newX= x - width / 2;
-	GLint newY= (pGLWidget->size().height() - y) - height / 2;
+	GLint newY= (m_pQGLWidget->size().height() - y) - height / 2;
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
@@ -308,7 +373,7 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(QGLWidget *pGLWidget, GLC_3DV
 }
 
 // Select objects inside specified square and return its UID in a set
-QSet<GLC_uint> GLC_Viewport::selectInsideSquare(QGLWidget *pGLWidget, int x1, int y1, int x2, int y2)
+QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2)
 {
 	if (x1 > x2)
 	{
@@ -325,13 +390,13 @@ QSet<GLC_uint> GLC_Viewport::selectInsideSquare(QGLWidget *pGLWidget, int x1, in
 	m_pQGLWidget->qglClearColor(Qt::black);
 	GLC_State::setSelectionMode(true);
 	// Draw the scene
-	pGLWidget->updateGL();
+	m_pQGLWidget->updateGL();
 	GLC_State::setSelectionMode(false);
 
 	GLsizei width= x2 - x1;
 	GLsizei height= y1 - y2;
 	GLint newX= x1;
-	GLint newY= (pGLWidget->size().height() - y1);
+	GLint newY= (m_pQGLWidget->size().height() - y1);
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
@@ -519,7 +584,7 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		// Increase size of the bounding box
 		const double increaseFactor= 1.1;
 		// Convert box distance in sphere distance
-		const double center= fabs(boundingBox.center().Z());
+		const double center= fabs(boundingBox.center().z());
 		const double radius= boundingBox.boundingSphereRadius();
 		const double min= center - radius * increaseFactor;
 		const double max= center + radius * increaseFactor;

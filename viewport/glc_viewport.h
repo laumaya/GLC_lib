@@ -153,6 +153,12 @@ public:
 	const GLC_Frustum& frustum() const
 	{return m_Frustum;}
 
+	//! Return the frustum associated to a selection coordinate
+	GLC_Frustum selectionFrustum(int, int) const;
+
+	//! Return the world 3d vector of the screen coordinate
+	GLC_Point3d unProject(int, int) const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -177,18 +183,18 @@ public:
 
 	//! select an object and return is UID
 	/*! Return UID of the nearest picked object */
-	GLC_uint select(QGLWidget *pGLWidget, int x, int y);
+	GLC_uint select(int x, int y);
 
 	//! Select a body inside a 3DViewInstance and return its UID
 	/*! Return UID of the nearest picked body */
-	GLC_uint selectBody(QGLWidget *pGLWidget, GLC_3DViewInstance*, int x, int y);
+	GLC_uint selectBody(GLC_3DViewInstance*, int x, int y);
 
 	//! Select a primitive inside a 3DViewInstance and return its UID and its body index
 	/*! Return UID of the nearest picked primitive */
-	QPair<int, GLC_uint> selectPrimitive(QGLWidget *pGLWidget, GLC_3DViewInstance*, int x, int y);
+	QPair<int, GLC_uint> selectPrimitive(GLC_3DViewInstance*, int x, int y);
 
 	//! Select objects inside specified square and return its UID in a set
-	QSet<GLC_uint> selectInsideSquare(QGLWidget *pGLWidget, int x1, int y1, int x2, int y2);
+	QSet<GLC_uint> selectInsideSquare(int x1, int y1, int x2, int y2);
 
 	//! load background image
 	void loadBackGroundImage(const QString Image);

@@ -91,14 +91,14 @@ void GLC_TurnTableMover::move(int x, int y)
 	const double width= static_cast<double> ( m_pViewport->viewVSize() );
 	const double height= static_cast<double> ( m_pViewport->viewHSize() );
 
-	const double alpha = -((static_cast<double>(x) - m_PreviousVector.X()) / width) * rotSpeed;
-	const double beta = ((static_cast<double>(y) - m_PreviousVector.Y()) / height) * rotSpeed;
+	const double alpha = -((static_cast<double>(x) - m_PreviousVector.x()) / width) * rotSpeed;
+	const double beta = ((static_cast<double>(y) - m_PreviousVector.y()) / height) * rotSpeed;
 
 	// Rotation around the screen vertical axis
 	pCamera->rotateAroundTarget(pCamera->defaultUpVector(), alpha * m_Sign);
 
 	// Rotation around the screen horizontal axis
-	GLC_Vector3d incidentVector= pCamera->camVector();
+	GLC_Vector3d incidentVector= -pCamera->forward();
 	GLC_Vector3d rightVector= incidentVector ^ pCamera->upVector();
 	if (!rightVector.isNull())
 	{

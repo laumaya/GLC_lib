@@ -69,33 +69,10 @@ void GLC_SetTargetMover::init(int x, int y)
 	// read selected point
 	glReadPixels(x, m_pViewport->viewVSize() - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
-	// Current visualisation matrix
-	GLdouble ViewMatrix[16];
-	glGetDoublev(GL_MODELVIEW_MATRIX, ViewMatrix);
-	// Current projection matrix
-	GLdouble ProjMatrix[16];
-	glGetDoublev(GL_PROJECTION_MATRIX, ProjMatrix);
-	// definition of the current viewport
-	GLint Viewport[4];
-	glGetIntegerv(GL_VIEWPORT, Viewport);
-
-	// OpenGL ccordinate of selected point
-	GLdouble pX, pY, pZ;
-	gluUnProject((GLdouble) x, (GLdouble) (m_pViewport->viewVSize() - y) , Depth
-		, ViewMatrix, ProjMatrix, Viewport, &pX, &pY, &pZ);
-
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Viewport::GlPointing ", error);
-		throw(OpenGlException);
-	}
-
 	// Test if there is geometry under picking point
 	if (!qFuzzyCompare(Depth, 1.0f))
 	{	// Geometry find -> Update camera's target position
-		const GLC_Point3d target(pX, pY, pZ);
+		const GLC_Point3d target(m_pViewport->unProject(x, y));
 		m_pViewport->cameraHandle()->setTargetCam(target);
 	}
 	else

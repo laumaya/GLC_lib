@@ -107,20 +107,20 @@ void GLC_RepTrackBallMover::init(const GLC_Vector3d& vect, const GLC_Matrix4x4 &
 {
 	GLC_Vector3d VectAngle(vect);
 	VectAngle.setZ(0);
-	VectAngle.setNormal(1);
+	VectAngle.setLenght(1);
 
 	GLC_Matrix4x4 MatRot;
 	double Angle;
 
 	// Compute the 2 arcs orientation
-	if (VectAngle.Y() > 0)
+	if (VectAngle.y() > 0)
 	{	// Angle entre 0 et PI
-		Angle= acos(VectAngle.X());
+		Angle= acos(VectAngle.x());
 		MatRot.setMatRot(Z_AXIS, Angle);
 	}
 	else
 	{	// Angle between 0 et -PI
-		Angle= -acos(VectAngle.X());
+		Angle= -acos(VectAngle.x());
 		MatRot.setMatRot(Z_AXIS, Angle);
 	}
 

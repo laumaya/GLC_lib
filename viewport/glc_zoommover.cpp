@@ -77,7 +77,7 @@ void GLC_ZoomMover::move(int, int y)
 	const double Posy= (vSize / 2.0 - y) / ( vSize / 2.0);
 
 	// Compute zoom factor between (1 / MAXZOOMFACTOR) and (MAXZOOMFACTOR)
-	double ZoomFactor= Posy - m_PreviousVector.Y();
+	double ZoomFactor= Posy - m_PreviousVector.y();
 
 	if (ZoomFactor > 0)
 	{
