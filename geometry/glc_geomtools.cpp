@@ -412,7 +412,7 @@ void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulk
 		const GLC_Vector3d edge2(point3 - point2);
 
 		GLC_Vector3d polygonPlaneNormal(edge1 ^ edge2);
-		polygonPlaneNormal.setNormal(1.0);
+		polygonPlaneNormal.normalize();
 
 		// Create the transformation matrix
 		GLC_Matrix4x4 transformation;

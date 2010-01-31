@@ -62,12 +62,12 @@ GLC_BoundingBox& GLC_Point::boundingBox(void)
 	{
 		m_pBoundingBox= new GLC_BoundingBox();
 		const double delta= 1e-2;
-		GLC_Point3d lower(m_Coordinate.X() - delta,
-				m_Coordinate.Y() - delta,
-				m_Coordinate.Z() - delta);
-		GLC_Point3d upper(m_Coordinate.X() + delta,
-				m_Coordinate.Y() + delta,
-				m_Coordinate.Z() + delta);
+		GLC_Point3d lower(m_Coordinate.x() - delta,
+				m_Coordinate.y() - delta,
+				m_Coordinate.z() - delta);
+		GLC_Point3d upper(m_Coordinate.x() + delta,
+				m_Coordinate.y() + delta,
+				m_Coordinate.z() + delta);
 		m_pBoundingBox->combine(lower);
 		m_pBoundingBox->combine(upper);
 	}
