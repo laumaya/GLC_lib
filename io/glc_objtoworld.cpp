@@ -797,7 +797,7 @@ GLC_Vector3df GLC_ObjToWorld::computeNormal(GLuint index1, GLuint index2, GLuint
 	const GLC_Vector3d edge2(vect1 - vect2);
 
 	GLC_Vector3d normal(edge1 ^ edge2);
-	normal.setNormal(1);
+	normal.normalize();
 
 	return normal.toVector3df();
 }

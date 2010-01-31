@@ -555,7 +555,7 @@ void GLC_OffToWorld::computeNormal()
 		const GLC_Vector3d edge2(vect1 - vect2);
 
 		GLC_Vector3d normal(edge1 ^ edge2);
-		normal.setNormal(1);
+		normal.normalize();
 
 		GLC_Vector3df curNormal= normal.toVector3df();
 		for (int curVertex= 0; curVertex < 3; ++curVertex)
