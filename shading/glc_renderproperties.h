@@ -192,8 +192,8 @@ public:
 	inline void setOverwriteTransparency(float alpha)
 	{m_OverwriteTransparency= alpha;}
 
-	//! Set the set of selected primitives id of the specified body
-	void setSetOfSelectedPrimitivesId(const QSet<GLC_uint>&, int body= 0);
+	//! Add the set of selected primitives id of the specified body
+	void addSetOfSelectedPrimitivesId(const QSet<GLC_uint>&, int body= 0);
 
 	//! Add a selected primitive of the specified body
 	void addSelectedPrimitive(GLC_uint, int body= 0);

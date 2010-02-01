@@ -252,7 +252,7 @@ bool GLC_RenderProperties::primitiveIsSelected(int index, GLC_uint id) const
 }
 
 // Set the list of selected primitives id
-void GLC_RenderProperties::setSetOfSelectedPrimitivesId(const QSet<GLC_uint>& set, int body)
+void GLC_RenderProperties::addSetOfSelectedPrimitivesId(const QSet<GLC_uint>& set, int body)
 {
 	if (NULL == m_pBodySelectedPrimitvesId)
 	{
