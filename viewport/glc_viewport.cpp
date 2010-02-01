@@ -184,21 +184,21 @@ GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
 	// Get the point in world coordinate space
 	const GLC_Point3d uppPoint(unProject(xUp, yUp));
 	const GLC_Point3d bottomPoint(unProject(xBottom, yBottom));
-	// the point lenght
-	const double uppLenght= uppPoint.lenght();
-	const double bottomLenght= bottomPoint.lenght();
 
 	const GLC_Vector3d side((m_pViewCam->forward() ^ m_pViewCam->upVector()).normalize());
+
 	// Create plane normal vector
 	const GLC_Vector3d leftNormal(side);
 	const GLC_Vector3d rightNormal(-side);
-	const GLC_Vector3d upNormal(m_pViewCam->upVector());
-	const GLC_Vector3d bottomNormal(-upNormal);
+	const GLC_Vector3d upNormal(-m_pViewCam->upVector());
+	const GLC_Vector3d bottomNormal(m_pViewCam->upVector());
+
+
 	// Create frustum planes
-	const GLC_Plane leftPlane(leftNormal, bottomLenght);
-	const GLC_Plane rightPlane(rightNormal, uppLenght);
-	const GLC_Plane upPlane(upNormal, uppLenght);
-	const GLC_Plane bottomPlane(bottomNormal, bottomLenght);
+	const GLC_Plane leftPlane(leftNormal, rightNormal * bottomPoint);
+	const GLC_Plane rightPlane(rightNormal, leftNormal * uppPoint);
+	const GLC_Plane upPlane(upNormal, bottomNormal * uppPoint);
+	const GLC_Plane bottomPlane(bottomNormal, upNormal * bottomPoint);
 
 	GLC_Frustum selectionFrustum(m_Frustum);
 	selectionFrustum.setLeftClippingPlane(leftPlane);
@@ -207,7 +207,6 @@ GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
 	selectionFrustum.setBottomClippingPlane(bottomPlane);
 
 	return selectionFrustum;
-
 }
 
 // Return the world 3d point of the screen coordinate
@@ -218,12 +217,6 @@ GLC_Point3d GLC_Viewport::unProject(int x, int y) const
 	// read selected point
 	glReadPixels(x, m_nWinVSize - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
-	// Current visualisation matrix
-	GLdouble ViewMatrix[16];
-	glGetDoublev(GL_MODELVIEW_MATRIX, ViewMatrix);
-	// Current projection matrix
-	GLdouble ProjMatrix[16];
-	glGetDoublev(GL_PROJECTION_MATRIX, ProjMatrix);
 	// definition of the current viewport
 	GLint Viewport[4];
 	glGetIntegerv(GL_VIEWPORT, Viewport);
@@ -231,7 +224,7 @@ GLC_Point3d GLC_Viewport::unProject(int x, int y) const
 	// OpenGL ccordinate of selected point
 	GLdouble pX, pY, pZ;
 	gluUnProject((GLdouble) x, (GLdouble) (m_nWinVSize - y) , Depth
-		, ViewMatrix, ProjMatrix, Viewport, &pX, &pY, &pZ);
+		, m_pViewCam->modelViewMatrix().data(), m_ProjectionMatrix.data(), Viewport, &pX, &pY, &pZ);
 
 	return GLC_Point3d(pX, pY, pZ);
 }

@@ -229,23 +229,7 @@ public:
 
 	//! Update the viewport frustum (frustum cullin purpose)
 	/*! Return true if the frustum has changed*/
-	inline bool updateFrustum(GLC_Matrix4x4* pMat= NULL)
-	{
-		if (NULL == pMat)
-		{
-			// Get the viewport projection matrix
-			GLC_Matrix4x4 projectionMatrix= m_ProjectionMatrix;
-			// Get the camera modelView matrix
-			GLC_Matrix4x4 modelViewMatrix= m_pViewCam->modelViewMatrix();
-			// Composition matrix
-			GLC_Matrix4x4 compMatrix= projectionMatrix * modelViewMatrix;
-			return m_Frustum.update(compMatrix);
-		}
-		else
-		{
-			return m_Frustum.update(*pMat);
-		}
-	}
+	inline bool updateFrustum(GLC_Matrix4x4* pMat= NULL);
 
 //@}
 
@@ -307,5 +291,23 @@ private:
 	//! The frustum associated to the viewport
 	GLC_Frustum m_Frustum;
 };
+
+bool GLC_Viewport::updateFrustum(GLC_Matrix4x4* pMat)
+{
+	if (NULL == pMat)
+	{
+		// Get the viewport projection matrix
+		GLC_Matrix4x4 projectionMatrix= m_ProjectionMatrix;
+		// Get the camera modelView matrix
+		GLC_Matrix4x4 modelViewMatrix= m_pViewCam->modelViewMatrix();
+		// Composition matrix
+		GLC_Matrix4x4 compMatrix= projectionMatrix * modelViewMatrix;
+		return m_Frustum.update(compMatrix);
+	}
+	else
+	{
+		return m_Frustum.update(*pMat);
+	}
+}
 
 #endif //GLC_VIEWPORT_H_
