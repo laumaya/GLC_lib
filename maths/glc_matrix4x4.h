@@ -36,7 +36,7 @@
 //! \class GLC_Matrix4x4
 /*! \brief GLC_Matrix4x4 is a 4 dimensions Matrix*/
 
-/*! GLC_Matrix4x4 is used to represent 3D homogeneous 3d transformation \n
+/*! GLC_Matrix4x4 is used to represent 3d homogeneous transformation in 3d space \n
  *  GLC_Matrix4x4 is a row first matrix compatible with OpenGL Matrix
  * */
 //////////////////////////////////////////////////////////////////////
@@ -50,34 +50,33 @@ class GLC_LIB_EXPORT GLC_Matrix4x4
 public:
 //! @name Constructor
 //@{
-	//! Default Constructor
-	/*! Create an identity Matrix */
+	//! Construct an identity matrix
 	inline GLC_Matrix4x4();
 
-	//! Construct a Matrix by copy
+	//! Construct a matrix from another matrix
 	inline GLC_Matrix4x4(const GLC_Matrix4x4 &matrix)
 	{memcpy(m_Matrix, matrix.m_Matrix, sizeof(double) * 16);}
 
-	//! Construct a Matrix by an array of 16 elements.
+	//! Construct a matrix from an array of 16 double elements.
 	inline GLC_Matrix4x4(const double *pArray)
 	{memcpy(m_Matrix, pArray, sizeof(double) * 16);}
 
-	//! Construct a Matrix by an array of 16 elements.
+	//! Construct a Matrix from an array of 16 float elements.
 	inline GLC_Matrix4x4(const float *);
 
-	//! Construct rotation matrix by a vector and an angle
+	//! Construct rotation matrix from a 3d vector and an angle in radians
 	inline GLC_Matrix4x4(const GLC_Vector3d &Vect, const double &dAngleRad)
 	{setMatRot(Vect, dAngleRad);}
 
-	//! Construct rotation matrix by 2 vectors
+	//! Construct rotation matrix from 2 3d vectors
 	inline GLC_Matrix4x4(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2)
 	{setMatRot(Vect1, Vect2);}
 
-	//! Construct translation matrix by a vector
+	//! Construct translation matrix from a 3d vector
 	inline GLC_Matrix4x4(const GLC_Vector3d &Vect)
 	{setMatTranslate(Vect);}
 
-	//! Construct translation matrix by 3 coordinates
+	//! Construct translation matrix from coordinates in double
 	inline GLC_Matrix4x4(const double Tx, const double Ty, const double Tz)
 	{setMatTranslate(Tx, Ty, Tz);}
 //@}
@@ -87,16 +86,16 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Matrix cross product
-	GLC_Matrix4x4 operator * (const GLC_Matrix4x4 &Mat) const;
+	//! Return the product of this matrix to the given matrix
+	inline GLC_Matrix4x4 operator * (const GLC_Matrix4x4 &Mat) const;
 
-	//! Vector transformation
-	GLC_Vector3d operator * (const GLC_Vector3d &Vect) const;
+	//! Return the result of transforming the given vector by this matrix
+	inline GLC_Vector3d operator * (const GLC_Vector3d &Vect) const;
 
-	//! Return true if the 2 matrix are equals
-	bool operator==(const GLC_Matrix4x4& mat) const;
+	//! Return true if this matrix is equal to the given matrix
+	inline bool operator==(const GLC_Matrix4x4& mat) const;
 
-	//! Return true if the 2 matrix are not equals
+	//! Return true if this matrix is not equal to the given matrix
 	inline bool operator!=(const GLC_Matrix4x4& mat) const
 	{return !operator==(mat);}
 
@@ -107,42 +106,42 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the matrix determinant
+	//! Return the determinant of this matrix
 	inline double determinant(void) const;
 
-	//! Return a pointer to a row first array of 16 elements
+	//! Return a const pointer to the row first array of 16 elements of this matrix
 	inline const double* data(void) const
 	{return m_Matrix;}
 
-	//! Return a pointer to a row first array of 16 elements
+	//! Return a pointer to the row first array of 16 elements of this matrix
 	inline double* data(void)
 	{return m_Matrix;}
 
-	//! Return a vector which contains radians Euler angle of the matrix
+	//! Return a QVector<double> which contains radians Euler angle of this matrix
 	QVector<double> toEuler(void) const;
 
-	//! Return the matrix string
+	//! Return the string representation of this matrix
 	QString toString() const;
 
 	//! Return the rotation matrix of this matrix
 	inline GLC_Matrix4x4 rotationMatrix() const;
 
-	//! Return the isometric of this matrix
+	//! Return the isometric matrix of this matrix
 	inline GLC_Matrix4x4 isometricMatrix() const;
 
-	//! Return the x Scaling
+	//! Return the x Scaling of this matrix
 	inline double scalingX() const
 	{return GLC_Vector3d(m_Matrix[0], m_Matrix[1], m_Matrix[2]).lenght();}
 
-	//! Return the y Scaling
+	//! Return the y Scaling of this matrix
 	inline double scalingY() const
 	{return GLC_Vector3d(m_Matrix[4], m_Matrix[5], m_Matrix[6]).lenght();}
 
-	//! Return the z Scaling
+	//! Return the z Scaling of this matrix
 	inline double scalingZ() const
 	{return GLC_Vector3d(m_Matrix[8], m_Matrix[9], m_Matrix[10]).lenght();}
 
-	//! Return the inverted matrix
+	//! Return the inverse of this matrix
 	inline GLC_Matrix4x4 inverted() const
 	{return GLC_Matrix4x4(*this).invert();}
 
@@ -153,31 +152,31 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set matrix to a rotation matrix define by a vector and an angle in radians
+	//! Set this matrix to a rotation matrix given by a 3d vector and an angle in radian
 	inline GLC_Matrix4x4& setMatRot(const GLC_Vector3d &, const double &);
 
-	//! Set matrix to a rotation matrix define by 2 vectors
+	//! Set this matrix to a rotation matrix given by 2 3d vectors
 	inline GLC_Matrix4x4& setMatRot(const GLC_Vector3d &, const GLC_Vector3d &);
 
-	//! Set Matrix to a translation matrix by a vector
+	//! Set this matrix to a translation matrix given by a 3d vector
 	inline GLC_Matrix4x4& setMatTranslate(const GLC_Vector3d &);
 
-	//! Set Matrix to a translation matrix by 3 coordinates
+	//! Set this matrix to a translation matrix given by 3 double coordinates
 	inline GLC_Matrix4x4& setMatTranslate(const double, const double, const double);
 
-	//! Set Matrix to a scaling matrix define by 3 double
+	//! Set this matrix to a scaling matrix define by 3 double
 	inline GLC_Matrix4x4& setMatScaling(const double, const double, const double);
 
-	//! Reverse the Matrix
+	//! Inverse this Matrix and return a reference to this matrix
 	inline GLC_Matrix4x4& invert(void);
 
-	//! Set the matrix to identify matrix
+	//! Set this matrix to the identify matrix and return a reference to this matrix
 	inline GLC_Matrix4x4& setToIdentity();
 
-	//! Set the matrix by its transpose
+	//! Transpose this matrix and return a reference to this matrix
 	inline GLC_Matrix4x4& transpose(void);
 
-	//! Set the matrix with Euler angle
+	//! Set this matrix with Euler angle and return a reference to this matrix
 	GLC_Matrix4x4& fromEuler(const double, const double, const double);
 
 
@@ -188,7 +187,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! Return true if the index (argument) is in the diagonal of the matrix
+	//! Return true if the index (argument) is in the diagonal of this matrix
 	inline bool isInDiagonal(const int index) const
 	{
 		if ((index == 0) || (index == 5) || (index == 10) || (index == 15))
@@ -197,20 +196,17 @@ private:
 			return false;
 	}
 
-	//! Return the determinant of a matrix cell
-	double getDeterminantLC(const int, const int) const;
+	//! Return the determinant of this matrix cell given from 2 int
+	inline double getDeterminantLC(const int, const int) const;
 
-	//! Compute Sub 3X3 matrix
-	void getSubMat(const int, const int, double *) const;
+	//! Compute Sub 3X3 matrix given by 2 int and set the given double pointeur
+	inline void getSubMat(const int, const int, double *) const;
 
-	// Return the Matrix 3X3 determinant
-	double getDeterminant3x3(const double *) const;
+	//! Return the transpose matrix of this matrix
+	inline GLC_Matrix4x4 getTranspose(void) const;
 
-	//! Return the transpose matrix
-	GLC_Matrix4x4 getTranspose(void) const;
-
-	//! Return the co-matrix
-	GLC_Matrix4x4 getCoMat4x4(void) const;
+	//! Return the co-matrix of this matrix
+	inline GLC_Matrix4x4 getCoMat4x4(void) const;
 
 
 
@@ -238,11 +234,22 @@ the matrix :
 //					Tx = 12,	Ty = 13,	Tz = 14
 };
 
+//! Return the determinant of the given Matrix 3X3
+inline double getDeterminant3x3(const double *Mat3x3)
+{
+	double Determinant;
+
+	Determinant= Mat3x3[0] * ( Mat3x3[4] * Mat3x3[8] - Mat3x3[7] * Mat3x3[5]);
+	Determinant+= - Mat3x3[3] * ( Mat3x3[1] * Mat3x3[8] - Mat3x3[7] * Mat3x3[2]);
+	Determinant+= Mat3x3[6] * ( Mat3x3[1] * Mat3x3[5] - Mat3x3[4] * Mat3x3[2]);
+
+	return Determinant;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Constructor/Destructor
 //////////////////////////////////////////////////////////////////////
 
-// Default Constructor
 GLC_Matrix4x4::GLC_Matrix4x4()
 {
 	m_Matrix[0]= 1.0; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= 0.0;
@@ -251,7 +258,6 @@ GLC_Matrix4x4::GLC_Matrix4x4()
 	m_Matrix[3]= 0.0; m_Matrix[7]= 0.0; m_Matrix[11]= 0.0; m_Matrix[15]= 1.0;
 }
 
-// Construct a Matrix by an array of 16 elements.
 GLC_Matrix4x4::GLC_Matrix4x4(const float *Tableau)
 {
 
@@ -261,7 +267,76 @@ GLC_Matrix4x4::GLC_Matrix4x4(const float *Tableau)
 	}
 }
 
-// Return the rotation matrix of this matrix
+GLC_Matrix4x4 GLC_Matrix4x4::operator * (const GLC_Matrix4x4 &Mat) const
+{
+	int Colonne;
+	int Ligne;
+	int i;
+	double ValInt;
+
+	int IndexInt;
+
+	GLC_Matrix4x4 MatResult;
+	for (Ligne= 0; Ligne < DIMMAT4X4; Ligne++)
+	{
+		for (Colonne=0; Colonne < DIMMAT4X4; Colonne++)
+		{
+			ValInt= 0.0;
+			IndexInt= Colonne * DIMMAT4X4;
+
+			for (i= 0; i < DIMMAT4X4; i++)
+			{
+				ValInt+= m_Matrix[ (i * DIMMAT4X4) + Ligne] * Mat.m_Matrix[ IndexInt + i];
+			}
+			MatResult.m_Matrix[ IndexInt + Ligne]= ValInt;
+		}
+	}
+	return MatResult;
+}
+
+GLC_Vector3d GLC_Matrix4x4::operator * (const GLC_Vector3d &Vect) const
+{
+	double ValInt;
+	int i;
+	GLC_Vector3d VectResult;
+	double mat[4];
+
+	for (int Index= 0; Index < DIMMAT4X4; Index++)
+	{
+		ValInt= 0.0;
+		for (i= 0; i < DIMMAT4X4 - 1; i++)
+		{
+			ValInt+= m_Matrix[(i * DIMMAT4X4) + Index] * Vect.m_Vector[i];
+		}
+		ValInt+= m_Matrix[(3 * DIMMAT4X4) + Index];
+		mat[Index]= ValInt;
+	}
+
+	double invW= 1.0;
+	if (fabs(mat[3]) > 0.00001)
+	{
+		invW/= mat[3];
+	}
+	VectResult.m_Vector[0]= mat[0] * invW;
+	VectResult.m_Vector[1]= mat[1] * invW;
+	VectResult.m_Vector[2]= mat[2] * invW;
+
+
+	return VectResult;
+}
+
+bool GLC_Matrix4x4::operator==(const GLC_Matrix4x4& mat) const
+{
+	bool result= true;
+	int i= 0;
+	while (result && (i < TAILLEMAT4X4))
+	{
+		result= (m_Matrix[i] == mat.m_Matrix[i]);
+		++i;
+	}
+	return result;
+}
+
 GLC_Matrix4x4 GLC_Matrix4x4::rotationMatrix() const
 {
 	GLC_Matrix4x4 result(*this);
@@ -286,7 +361,6 @@ GLC_Matrix4x4 GLC_Matrix4x4::rotationMatrix() const
 	return result;
 }
 
-// Return the isometric of this matrix
 GLC_Matrix4x4 GLC_Matrix4x4::isometricMatrix() const
 {
 	GLC_Matrix4x4 result(*this);
@@ -306,7 +380,7 @@ GLC_Matrix4x4 GLC_Matrix4x4::isometricMatrix() const
 	result.m_Matrix[10]= result.m_Matrix[10] * invScaleZ;
 	return result;
 }
-// Set matrix to a rotation matrix define by a vector and an angle in radians
+
 GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect, const double &dAngleRad)
 {
 	// Normalize the vector
@@ -349,7 +423,6 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect, const double &
 	return *this;
 }
 
-// Set matrix to a rotation matrix define by 2 vectors
 GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2)
 {
 
@@ -365,7 +438,6 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect1, const GLC_Vec
 	return *this;
 }
 
-// Set Matrix to a translation matrix by a vector
 GLC_Matrix4x4& GLC_Matrix4x4::setMatTranslate(const GLC_Vector3d &Vect)
 {
 	m_Matrix[0]= 1.0; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= Vect.m_Vector[0];
@@ -375,7 +447,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatTranslate(const GLC_Vector3d &Vect)
 
 	return *this;
 }
-// Set Matrix to a translation matrix by 3 coordinates
+
 GLC_Matrix4x4& GLC_Matrix4x4::setMatTranslate(const double Tx, const double Ty, const double Tz)
 {
 	m_Matrix[0]= 1.0; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= Tx;
@@ -386,7 +458,6 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatTranslate(const double Tx, const double Ty, 
 	return *this;
 }
 
-// Set Matrix to a scaling matrix define by 3 double
 GLC_Matrix4x4& GLC_Matrix4x4::setMatScaling(const double sX, const double sY, const double sZ)
 {
 	m_Matrix[0]= sX; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= 0.0;
@@ -398,7 +469,6 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatScaling(const double sX, const double sY, co
 }
 
 
-// Reverse the Matrix
 GLC_Matrix4x4& GLC_Matrix4x4::invert(void)
 {
 	const double det= determinant();
@@ -416,7 +486,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::invert(void)
 
 	return *this;
 }
-// Set the matrix to identify matrix
+
 GLC_Matrix4x4& GLC_Matrix4x4::setToIdentity()
 {
 	m_Matrix[0]= 1.0; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= 0.0;
@@ -427,7 +497,6 @@ GLC_Matrix4x4& GLC_Matrix4x4::setToIdentity()
 	return *this;
 }
 
-// Set the matrix by its transpose
 GLC_Matrix4x4& GLC_Matrix4x4::transpose(void)
 {
 	GLC_Matrix4x4 MatT(m_Matrix);
@@ -450,7 +519,6 @@ GLC_Matrix4x4& GLC_Matrix4x4::transpose(void)
 	return *this;
 }
 
-// Compute matrix determinant
 double GLC_Matrix4x4::determinant(void) const
 {
 	double Determinant= 0.0;
@@ -466,5 +534,97 @@ double GLC_Matrix4x4::determinant(void) const
 	return Determinant;
 
 }
+
+double GLC_Matrix4x4::getDeterminantLC(const int Ligne, const int Colonne) const
+{
+	double Mat3x3[9];
+	double Determinant;
+
+	getSubMat(Ligne, Colonne, Mat3x3);
+
+	if ( 0 == ((Ligne + Colonne) % 2)) // Even number
+		Determinant= m_Matrix[(Colonne + DIMMAT4X4) + Ligne] * getDeterminant3x3(Mat3x3);
+	else
+		Determinant= - m_Matrix[(Colonne + DIMMAT4X4) + Ligne] * getDeterminant3x3(Mat3x3);
+
+	return Determinant;
+}
+
+void GLC_Matrix4x4::getSubMat(const int Ligne, const int Colonne, double *ResultMat) const
+{
+
+	int LigneResult;
+	int ColonneResult;
+	int IndexOrigine;
+	int IndexResult;
+
+	for (int ColonneOrigine= 0; ColonneOrigine < DIMMAT4X4; ColonneOrigine++)
+	{
+		if (ColonneOrigine != Colonne)
+		{
+			if (ColonneOrigine < Colonne)
+				ColonneResult= ColonneOrigine;
+			else
+				ColonneResult= ColonneOrigine - 1;
+
+			for (int LigneOrigine= 0; LigneOrigine < DIMMAT4X4; LigneOrigine++)
+			{
+				if (LigneOrigine != Ligne)
+				{
+					if (LigneOrigine < Ligne)
+						LigneResult= LigneOrigine;
+					else
+						LigneResult= LigneOrigine - 1;
+					IndexOrigine= (ColonneOrigine * DIMMAT4X4) + LigneOrigine;
+					IndexResult= (ColonneResult * (DIMMAT4X4 - 1)) + LigneResult;
+
+					ResultMat[IndexResult]= m_Matrix[IndexOrigine];
+				}
+			}
+		}
+	}
+}
+
+GLC_Matrix4x4 GLC_Matrix4x4::getTranspose(void) const
+{
+	GLC_Matrix4x4 MatT(m_Matrix);
+	int IndexOrigine;
+	int IndexTrans;
+	for (int Colonne= 0; Colonne < DIMMAT4X4; Colonne++)
+	{
+		for (int Ligne=0 ; Ligne < DIMMAT4X4; Ligne++)
+		{
+			IndexOrigine= (Colonne * DIMMAT4X4) + Ligne;
+			IndexTrans= (Ligne * DIMMAT4X4) + Colonne;
+
+			MatT.m_Matrix[IndexTrans]= m_Matrix[IndexOrigine];
+		}
+	}
+
+	return MatT;
+}
+
+GLC_Matrix4x4 GLC_Matrix4x4::getCoMat4x4(void) const
+{
+	GLC_Matrix4x4 CoMat(m_Matrix);
+	double SubMat3x3[9];
+	int Index;
+
+	for (int Colonne= 0; Colonne < DIMMAT4X4; Colonne++)
+	{
+		for (int Ligne=0 ; Ligne < DIMMAT4X4; Ligne++)
+		{
+			getSubMat(Ligne, Colonne, SubMat3x3);
+			Index= (Colonne * DIMMAT4X4) + Ligne;
+			if (((Colonne + Ligne + 2) % 2) == 0) // Even Number
+				CoMat.m_Matrix[Index]= getDeterminant3x3(SubMat3x3);
+			else
+				CoMat.m_Matrix[Index]= -getDeterminant3x3(SubMat3x3);
+		}
+	}
+
+	return CoMat;
+}
+
 
 #endif /*GLC_MATRIX4X4_H_*/
