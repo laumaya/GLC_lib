@@ -22,10 +22,9 @@
 
  *****************************************************************************/
 //! \file glc_plane.cpp Implementation of the GLC_Plane class.
-
+#include <QtDebug>
 #include "glc_plane.h"
 
-// Default constructor
 GLC_Plane::GLC_Plane()
 : m_A(0.0)
 , m_B(0.0)
@@ -34,7 +33,7 @@ GLC_Plane::GLC_Plane()
 {
 
 }
-// Contruct a plan with specified parameter
+
 GLC_Plane::GLC_Plane(double a, double b, double c, double d)
 : m_A(a)
 , m_B(b)
@@ -44,7 +43,6 @@ GLC_Plane::GLC_Plane(double a, double b, double c, double d)
 
 }
 
-// Construct a plane with normal vector and lenght
 GLC_Plane::GLC_Plane(const GLC_Vector3d& normal, double d)
 : m_A(normal.x())
 , m_B(normal.y())
@@ -54,7 +52,22 @@ GLC_Plane::GLC_Plane(const GLC_Vector3d& normal, double d)
 
 }
 
-// Copy constructor
+GLC_Plane::GLC_Plane(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3)
+: m_A()
+, m_B()
+, m_C()
+, m_D()
+{
+	const GLC_Vector3d v1(p2 - p1);
+	const GLC_Vector3d v2(p3 - p1);
+	const GLC_Vector3d normal((v1 ^ v2).normalize());
+	m_A= normal.x();
+	m_B= normal.y();
+	m_C= normal.z();
+	m_D= -normal * p1;
+}
+
+
 GLC_Plane::GLC_Plane(const GLC_Plane& plane)
 : m_A(plane.m_A)
 , m_B(plane.m_B)
@@ -64,7 +77,7 @@ GLC_Plane::GLC_Plane(const GLC_Plane& plane)
 
 }
 
-// Assignement operator
+
 GLC_Plane& GLC_Plane::operator=(const GLC_Plane& p)
 {
 	if ((this != &p) && (*this != p))
@@ -77,7 +90,7 @@ GLC_Plane& GLC_Plane::operator=(const GLC_Plane& p)
 	return *this;
 }
 
-// Destructor
+
 GLC_Plane::~GLC_Plane()
 {
 
@@ -87,7 +100,7 @@ GLC_Plane::~GLC_Plane()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Equality operator
+
 bool GLC_Plane::operator==(GLC_Plane p2) const
 {
 	GLC_Plane p1(*this);
@@ -109,11 +122,10 @@ bool GLC_Plane::operator==(GLC_Plane p2) const
 // Normalize the plane
 void GLC_Plane::normalize()
 {
-	double mag;
-	mag= sqrt(m_A * m_A + m_B * m_B + m_C * m_C);
+	const double invMag= 1.0 / sqrt(m_A * m_A + m_B * m_B + m_C * m_C);
 
-	m_A= m_A / mag;
-	m_B= m_B / mag;
-	m_C= m_C / mag;
-	m_D= m_D / mag;
+	m_A= m_A * invMag;
+	m_B= m_B * invMag;
+	m_C= m_C * invMag;
+	m_D= m_D * invMag;
 }

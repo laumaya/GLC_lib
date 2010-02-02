@@ -49,6 +49,10 @@ public:
 	//! Construct a plane with normal vector and lenght
 	GLC_Plane(const GLC_Vector3d&, double);
 
+	//! Contruct a plane with 3 given 3d points
+	/*! first : origine, second x, third y*/
+	GLC_Plane(const GLC_Point3d&, const GLC_Point3d&, const GLC_Point3d&);
+
 	//! Copy constructor
 	GLC_Plane(const GLC_Plane&);
 
@@ -91,6 +95,14 @@ public:
 	//! diff operator
 	inline bool operator!=(const GLC_Plane& p) const
 	{return !operator==(p);}
+
+	//! Return this plane normal
+	inline GLC_Vector3d normal() const
+	{return GLC_Vector3d(m_A, m_B, m_C);}
+
+	//! Return true if the given point is on the plane
+	inline bool lieOnThePlane(const GLC_Point3d p)
+	{return (m_A * p.x() + m_B * p.y() + m_C * p.z() + m_D) == 0.0f;}
 
 //@}
 
