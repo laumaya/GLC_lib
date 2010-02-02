@@ -177,6 +177,12 @@ public:
 	//! Return true if this vector is fuzzyequal to the given vector
 	inline bool operator == (const GLC_Vector3d &vector) const;
 
+	//! Return true if this vector is > to the given vector
+	inline bool operator > (const GLC_Vector3d &vector) const;
+
+	//! Return true if this vector is < to the given vector
+	inline bool operator < (const GLC_Vector3d &vector) const;
+
 	//! Return false if this vector is fuzzyequal to the given vector
 	inline bool operator != (const GLC_Vector3d &Vect) const
 	{return !(*this == Vect);}
@@ -332,6 +338,22 @@ bool GLC_Vector3d::operator == (const GLC_Vector3d &vector) const
 	bResult= bResult && qFuzzyCompare(m_Vector[2], vector.m_Vector[2]);
 
 	return bResult;
+}
+
+bool GLC_Vector3d::operator > (const GLC_Vector3d &vector) const
+{
+	bool result= m_Vector[0] > vector.m_Vector[0];
+	result= result && (m_Vector[1] > vector.m_Vector[1]);
+	result= result && (m_Vector[2] > vector.m_Vector[2]);
+	return result;
+}
+
+bool GLC_Vector3d::operator < (const GLC_Vector3d &vector) const
+{
+	bool result= m_Vector[0] < vector.m_Vector[0];
+	result= result && (m_Vector[1] < vector.m_Vector[1]);
+	result= result && (m_Vector[2] < vector.m_Vector[2]);
+	return result;
 }
 
 GLC_Vector3d& GLC_Vector3d::setVect(double x, double y, double z)
