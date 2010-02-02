@@ -38,7 +38,7 @@ class GLC_OctreeNode;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_OctreeNode
-/*! \brief GLC_OctreeNode : A node of Space partioning implementated with octree */
+/*! \brief GLC_OctreeNode : A node of Space partioning implemented with octree */
 //////////////////////////////////////////////////////////////////////
 class GLC_OctreeNode
 {
@@ -48,10 +48,10 @@ class GLC_OctreeNode
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Default constructor
+	//! Construct a octree node from the given bounding box within the given octree node
 	GLC_OctreeNode(const GLC_BoundingBox&, GLC_OctreeNode* pParent= NULL);
 
-	//! Copy constructor
+	//! Construct a octree node from the first given octree node within the second given octree node
 	GLC_OctreeNode(const GLC_OctreeNode&, GLC_OctreeNode* pParent= NULL);
 
 	//! Destructor
@@ -63,34 +63,36 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	// Return the node bounding box
+	// Return this octree node bounding box
 	inline GLC_BoundingBox& boundingBox()
 	{return m_BoundingBox;}
 
-	//! Return True if the node intersect the bounding box
-	inline bool intersect(const GLC_BoundingBox& boundingSphere)
-	{return m_BoundingBox.intersectBoundingSphere(boundingSphere);}
+	//! Return True if this octree node intersect the bounding box
+	inline bool intersect(const GLC_BoundingBox& boundingBox)
+	{return m_BoundingBox.intersectBoundingSphere(boundingBox);}
 
-	//! Return true if the node has child
+	//! Return true if this octree has child octree node
 	inline bool hasChild() const
 	{return !m_Children.isEmpty();}
 
-	//! Return the child at the index
+	//! Return the child octree node at the given index
+	/*! The child must exist*/
 	inline GLC_OctreeNode* childAt(int i) const
 	{
 		Q_ASSERT(i < m_Children.size());
 		return m_Children.at(i);
 	}
 
-	//! Return the none child count
+	//! Return this octree node child octree node count
 	inline int childCount() const
 	{return m_Children.size();}
 
-	//! Return true if the node has geometry
+	//! Return true if this node contains 3D view instances
 	inline bool hasGeometry() const
 	{return !m_3DViewInstanceSet.isEmpty();}
 
-	//! Return true if the node is empty
+	//! Return true if this octree node is empty
+	/*! An empty node doesn't contains child and 3d view instance*/
 	inline bool isEmpty() const
 	{return m_Empty;}
 
@@ -102,16 +104,17 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Add children to the node with the specified level
+	//! Add 8 octree node children to this octree node
 	void addChildren();
 
-	//! Add instance
+	//! Add 3d view instance in this octree node branch
 	void addInstance(GLC_3DViewInstance*, int);
 
-	//! Update instances visibility
+	//! Update 3d view instances visibility of this octree node branch from the given frustum
+	/*! Viewable 3d view instance are inserted the the given set if exist also the set is created*/
 	void updateViewableInstances(const GLC_Frustum&, QSet<GLC_3DViewInstance*>* pInstanceSet= NULL);
 
-	//! Remove empty node
+	//! Remove empty child octree node from this octree node
 	void removeEmptyChildren();
 //@}
 
@@ -135,10 +138,10 @@ private:
 	//! Parent Octree node
 	GLC_OctreeNode* m_pParent;
 
-	//! Children Octree node
+	//! Children list of octree node
 	NodeList m_Children;
 
-	//! Set of 3DViewInstance
+	//! This node set of 3DViewInstance
 	QSet<GLC_3DViewInstance*> m_3DViewInstanceSet;
 
 	//! Flag to know if the node is empty

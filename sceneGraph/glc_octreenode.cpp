@@ -25,7 +25,7 @@
 
 #include "glc_octreenode.h"
 
-// Default constructor
+
 GLC_OctreeNode::GLC_OctreeNode(const GLC_BoundingBox& boundingBox, GLC_OctreeNode* pParent)
 : m_BoundingBox(boundingBox)
 , m_pParent(pParent)
@@ -37,7 +37,6 @@ GLC_OctreeNode::GLC_OctreeNode(const GLC_BoundingBox& boundingBox, GLC_OctreeNod
 
 }
 
-// Copy constructor
 GLC_OctreeNode::GLC_OctreeNode(const GLC_OctreeNode& octreeNode, GLC_OctreeNode* pParent)
 : m_BoundingBox(octreeNode.m_BoundingBox)
 , m_pParent(pParent)
@@ -55,7 +54,6 @@ GLC_OctreeNode::GLC_OctreeNode(const GLC_OctreeNode& octreeNode, GLC_OctreeNode*
 	}
 }
 
-// Destructor
 GLC_OctreeNode::~GLC_OctreeNode()
 {
 	const int size= m_Children.size();
@@ -65,15 +63,11 @@ GLC_OctreeNode::~GLC_OctreeNode()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////
-// Get Functions
-//////////////////////////////////////////////////////////////////////
-
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-// Add children to the node with the specified level
+
 void GLC_OctreeNode::addChildren()
 {
 	Q_ASSERT(m_Children.isEmpty());
@@ -154,7 +148,7 @@ void GLC_OctreeNode::addChildren()
 	}
 }
 
-// Add instance
+
 void GLC_OctreeNode::addInstance(GLC_3DViewInstance* pInstance, int depth)
 {
 	m_Empty= false;
@@ -201,7 +195,7 @@ void GLC_OctreeNode::addInstance(GLC_3DViewInstance* pInstance, int depth)
 	}
 }
 
-// Update instances visibility
+
 void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GLC_3DViewInstance*>* pInstanceSet)
 {
 
@@ -275,7 +269,7 @@ void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GL
 	if (firstCall) delete pInstanceSet;
 }
 
-// Remove empty node
+
 void GLC_OctreeNode::removeEmptyChildren()
 {
 	NodeList::iterator iList= m_Children.begin();
@@ -290,12 +284,27 @@ void GLC_OctreeNode::removeEmptyChildren()
 		else
 		{
 			pCurrentChild->removeEmptyChildren();
-			++iList;
+			if (pCurrentChild->isEmpty())
+			{
+				delete pCurrentChild;
+				iList= m_Children.erase(iList);
+			}
+			else ++iList;
 		}
+	}
+	// Update empty flag
+	if (m_Children.isEmpty() && (NULL != m_pParent))
+	{
+		if (1 == m_3DViewInstanceSet.size())
+		{
+			m_pParent->m_3DViewInstanceSet.insert(*(m_3DViewInstanceSet.begin()));
+			m_3DViewInstanceSet.clear();
+		}
+		m_Empty= m_3DViewInstanceSet.isEmpty();
 	}
 }
 
-// Unable the node and sub node view flag
+
 void GLC_OctreeNode::unableViewFlag(QSet<GLC_3DViewInstance*>* pInstanceSet)
 {
 	QSet<GLC_3DViewInstance*>::iterator iInstance= m_3DViewInstanceSet.begin();
@@ -316,7 +325,7 @@ void GLC_OctreeNode::unableViewFlag(QSet<GLC_3DViewInstance*>* pInstanceSet)
 	}
 }
 
-// Disable the node and sub node view flag
+
 void GLC_OctreeNode::disableViewFlag(QSet<GLC_3DViewInstance*>* pInstanceSet)
 {
 	QSet<GLC_3DViewInstance*>::iterator iInstance= m_3DViewInstanceSet.begin();
