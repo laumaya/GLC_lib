@@ -156,8 +156,12 @@ public:
 	//! Return the frustum associated to a selection coordinate
 	GLC_Frustum selectionFrustum(int, int) const;
 
-	//! Return the world 3d vector of the screen coordinate
+	//! Return the world 3d point from the given screen coordinate
 	GLC_Point3d unProject(int, int) const;
+
+	//! Return the list af world 3d point form the givne list af screen coordinates
+	/*! The size of the given list must be a multiple of 2*/
+	QList<GLC_Point3d> unproject(const QList<int>&)const;
 
 //@}
 

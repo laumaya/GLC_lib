@@ -39,7 +39,6 @@ using namespace glc;
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 
-// Default constructor
 GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // Camera definition
 : m_pViewCam(NULL)				// Camera
@@ -62,7 +61,6 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 	m_pViewCam= new GLC_Camera;
 }
 
-// Delete Camera, Image Plane and orbit circle
 GLC_Viewport::~GLC_Viewport()
 {
 	delete m_pViewCam;
@@ -75,7 +73,6 @@ GLC_Viewport::~GLC_Viewport()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Map Screen position to OpenGL position (On image Plane)
 GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 {
 	// Change the window origin (Up Left -> centred)
@@ -99,7 +96,7 @@ GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 //////////////////////////////////////////////////////////////////////
 // Public OpenGL Functions
 //////////////////////////////////////////////////////////////////////
-// Initialize OpenGL with default values
+
 void GLC_Viewport::initGl()
 {
 	// OpenGL initialisation from NEHE production
@@ -115,7 +112,6 @@ void GLC_Viewport::initGl()
 	GLC_State::init();
 }
 
-// Update OpenGL Projection Matrix
 void GLC_Viewport::updateProjectionMat(void)
 {
 	// Make opengl context attached the current One
@@ -136,7 +132,6 @@ void GLC_Viewport::updateProjectionMat(void)
 	glLoadIdentity();									// Reset The Modelview Matrix
 }
 
-//! Force the aspect ratio of the window
 void GLC_Viewport::forceAspectRatio(double ratio)
 {
 	// Make opengl context attached the current One
@@ -171,34 +166,33 @@ void GLC_Viewport::forceAspectRatio(double ratio)
 
 }
 
-// Return the frustum associated to a selection coordinate
 GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
 {
 	const int halfSize= m_SelectionSquareSize / 2;
-	const int xUp= x + halfSize;
-	const int yUp= y - halfSize;
+	// Calculate the 4 points of the selection
+	//p1->p2
+	//
+	//p0  p3
+	QList<int> coordinates;
+	// Point 0
+	coordinates << (x - halfSize) << (y + halfSize);
+	// Point 1
+	coordinates << (x - halfSize) << (y - halfSize);
+	// Point 2
+	coordinates << (x + halfSize) << (y - halfSize);
+	// Point 3
+	coordinates << (x + halfSize) << (y + halfSize);
 
-	const int xBottom= x - halfSize;
-	const int yBottom= y + halfSize;
+	// Unproject the 4 point
+	QList<GLC_Point3d> listOfPoint= unproject(coordinates);
 
-	// Get the point in world coordinate space
-	const GLC_Point3d uppPoint(unProject(xUp, yUp));
-	const GLC_Point3d bottomPoint(unProject(xBottom, yBottom));
-
-	const GLC_Vector3d side((m_pViewCam->forward() ^ m_pViewCam->upVector()).normalize());
-
-	// Create plane normal vector
-	const GLC_Vector3d leftNormal(side);
-	const GLC_Vector3d rightNormal(-side);
-	const GLC_Vector3d upNormal(-m_pViewCam->upVector());
-	const GLC_Vector3d bottomNormal(m_pViewCam->upVector());
-
-
-	// Create frustum planes
-	const GLC_Plane leftPlane(leftNormal, rightNormal * bottomPoint);
-	const GLC_Plane rightPlane(rightNormal, leftNormal * uppPoint);
-	const GLC_Plane upPlane(upNormal, bottomNormal * uppPoint);
-	const GLC_Plane bottomPlane(bottomNormal, upNormal * bottomPoint);
+	Q_ASSERT(4 == listOfPoint.size());
+	// Create the four frustum planes
+	GLC_Point3d eye= m_pViewCam->eye();
+	const GLC_Plane leftPlane(listOfPoint.at(0), listOfPoint.at(1), eye);
+	const GLC_Plane rightPlane(listOfPoint.at(3), eye , listOfPoint.at(2));
+	const GLC_Plane upPlane(listOfPoint.at(2), eye, listOfPoint.at(1));
+	const GLC_Plane bottomPlane(listOfPoint.at(0), eye, listOfPoint.at(3));
 
 	GLC_Frustum selectionFrustum(m_Frustum);
 	selectionFrustum.setLeftClippingPlane(leftPlane);
@@ -209,15 +203,14 @@ GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
 	return selectionFrustum;
 }
 
-// Return the world 3d point of the screen coordinate
 GLC_Point3d GLC_Viewport::unProject(int x, int y) const
 {
-	// Z Buffer component of selected point between 0 and 1
+	// Z Buffer component of the given coordinate is between 0 and 1
 	GLfloat Depth;
 	// read selected point
 	glReadPixels(x, m_nWinVSize - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
-	// definition of the current viewport
+	// The current viewport opengl definition
 	GLint Viewport[4];
 	glGetIntegerv(GL_VIEWPORT, Viewport);
 
@@ -229,11 +222,39 @@ GLC_Point3d GLC_Viewport::unProject(int x, int y) const
 	return GLC_Point3d(pX, pY, pZ);
 }
 
+QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list)const
+{
+	const int size= list.size();
+	Q_ASSERT((size % 2) == 0);
+
+	// The current viewport opengl definition
+	GLint Viewport[4];
+	glGetIntegerv(GL_VIEWPORT, Viewport);
+
+	// Z Buffer component of the given coordinate is between 0 and 1
+	GLfloat Depth;
+
+	// Coordinate of readed points
+	GLdouble pX, pY, pZ;
+	QList<GLC_Point3d> unprojectedPoints;
+	for (int i= 0; i < size; i+= 2)
+	{
+		const int x= list.at(i);
+		const int y= m_nWinVSize - list.at(i + 1);
+		glReadPixels(x, y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
+
+		gluUnProject(static_cast<GLdouble>(x), static_cast<GLdouble>(y) , Depth , m_pViewCam->modelViewMatrix().data()
+				, m_ProjectionMatrix.data(), Viewport, &pX, &pY, &pZ);
+		unprojectedPoints.append(GLC_Point3d(pX, pY, pZ));
+	}
+
+	return unprojectedPoints;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Private OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-// Display background image
 void GLC_Viewport::glExecuteImagePlane()
 {
 	// The static rendering propertis
@@ -253,7 +274,6 @@ void GLC_Viewport::glExecuteImagePlane()
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Inform the viewport that the OpenGL Viewport has been modified
 void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 {
 	m_nWinHSize= HSize;
@@ -275,7 +295,6 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 
 }
 
-// select an object and return is UID
 GLC_uint GLC_Viewport::select(int x, int y)
 {
 	m_pQGLWidget->qglClearColor(Qt::black);
@@ -293,7 +312,7 @@ GLC_uint GLC_Viewport::select(int x, int y)
 
 	return meaningfulIdInsideSquare(newX, newY, width, height);
 }
-// Select a body inside a 3DViewInstance and return is UID
+
 GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y)
 {
 	m_pQGLWidget->qglClearColor(Qt::black);
@@ -321,7 +340,6 @@ GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y)
 	return meaningfulIdInsideSquare(newX, newY, width, height);
 }
 
-// Select a primitive inside a 3DViewInstance and return its UID and its body index
 QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance, int x, int y)
 {
 	QPair<int, GLC_uint> result;
@@ -365,7 +383,6 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance
 	return result;
 }
 
-// Select objects inside specified square and return its UID in a set
 QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2)
 {
 	if (x1 > x2)
@@ -396,7 +413,6 @@ QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2)
 	return listOfIdInsideSquare(newX, newY, width, height);
 }
 
-// Return the meaningful color ID inside a square in screen coordinates
 GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height)
 {
 	// Read the back buffer
@@ -447,7 +463,6 @@ GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width,
 	return returnId;
 }
 
-// Return the Set of ID inside a square in screen coordinate
 QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height)
 {
 	// Read the back buffer
@@ -475,7 +490,6 @@ QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei widt
 	return idSet;
 }
 
-// load background image
 void GLC_Viewport::loadBackGroundImage(const QString Image)
 {
 	deleteBackGroundImage();
@@ -483,7 +497,6 @@ void GLC_Viewport::loadBackGroundImage(const QString Image)
 	m_pImagePlane->loadImageFile(m_pQGLWidget->context(), Image);
 }
 
-// delete background image
 void GLC_Viewport::deleteBackGroundImage()
 {
 	if (m_pImagePlane != NULL)
@@ -494,7 +507,6 @@ void GLC_Viewport::deleteBackGroundImage()
 
 }
 
-// reframe the current scene
 void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 {
 	Q_ASSERT(!box.isEmpty());
@@ -512,7 +524,6 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	m_pViewCam->setDistEyeTarget(distance);
 }
 
-// Set near clipping distance
 bool GLC_Viewport::setDistMin(double DistMin)
 {
 	DistMin= fabs(DistMin);
@@ -537,7 +548,6 @@ bool GLC_Viewport::setDistMin(double DistMin)
 
 }
 
-// Set far clipping distance
 bool GLC_Viewport::setDistMax(double DistMax)
 {
 	DistMax= fabs(DistMax);
@@ -562,7 +572,6 @@ bool GLC_Viewport::setDistMax(double DistMax)
 	}
 }
 
-// Set Near and Far clipping distance
 void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 {
 	if(!bBox.isEmpty())
@@ -623,6 +632,3 @@ void GLC_Viewport::setBackgroundColor(QColor setColor)
 	m_BackgroundColor= setColor;
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);
 }
-//////////////////////////////////////////////////////////////////////
-// Private services functions
-//////////////////////////////////////////////////////////////////////
