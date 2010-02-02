@@ -34,7 +34,7 @@ class GLC_Material;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Octree
-/*! \brief GLC_Octree : Space partioning implementation with octree */
+/*! \brief GLC_Octree : represent space partioning implementation with octree */
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_Octree : public GLC_SpacePartitioning
 {
@@ -43,10 +43,10 @@ class GLC_LIB_EXPORT GLC_Octree : public GLC_SpacePartitioning
 //@{
 //////////////////////////////////////////////////////////////////////s
 public:
-	//! Default constructor
+	//! Create an empty octree of the given 3D view collection
 	GLC_Octree(GLC_3DViewCollection*);
 
-	//! Copy constructor
+	//! Create the octree from the given octree
 	GLC_Octree(const GLC_Octree&);
 
 	//! Destructor
@@ -60,17 +60,18 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Update QHash table of visible GLC_3DViewInstance
+	//! Update the viewable 3d view instance of this octree from the given frustum
 	virtual void updateViewableInstances(const GLC_Frustum&);
 
-	//! Update the space partionning
+	//! Update this octree space partionning
 	virtual void updateSpacePartitioning();
 
-	//! Set the octree depth
+	//! Set this octree depth
+	/*! If space partitionning is already done, update it*/
 	void setDepth(int);
 
-	//! Create box
-	void createBox();
+	//! Create octree box representation in the given collection with the specified material
+	void createBox(GLC_Material*, GLC_3DViewCollection* pCol= NULL);
 
 //@}
 
@@ -79,17 +80,18 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! CreateBox with specified Material
-	void createBoxWithMaterial(GLC_OctreeNode*, GLC_Material*);
+	//! Create octree box representation in the given 3d view collection
+	/*! Create box of the given Octree node with the given material*/
+	void createBoxWithMaterial(GLC_3DViewCollection*, GLC_OctreeNode*, GLC_Material*);
 
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! The octree root node
+	//! Octree root node
 	GLC_OctreeNode* m_pRootNode;
 
-	//! The octree depth
+	//! Octree depth
 	int m_OctreeDepth;
 };
 
