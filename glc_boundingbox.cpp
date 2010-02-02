@@ -27,14 +27,12 @@
 #include "glc_boundingbox.h"
 #include "maths/glc_matrix4x4.h"
 
-// Class chunk id
 quint32 GLC_BoundingBox::m_ChunkId= 0xA707;
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 
-// Default constructor
 GLC_BoundingBox::GLC_BoundingBox()
 : m_Lower(0, 0, 0)
 , m_Upper(0, 0, 0)
@@ -43,7 +41,6 @@ GLC_BoundingBox::GLC_BoundingBox()
 
 }
 
-// Copy constructor
 GLC_BoundingBox::GLC_BoundingBox(const GLC_BoundingBox& boundingBox)
 : m_Lower(boundingBox.m_Lower)
 , m_Upper(boundingBox.m_Upper)
@@ -51,7 +48,6 @@ GLC_BoundingBox::GLC_BoundingBox(const GLC_BoundingBox& boundingBox)
 {
 }
 
-// Constructor with 2 points.
 GLC_BoundingBox::GLC_BoundingBox(const GLC_Point3d& lower, const GLC_Point3d& upper)
 : m_Lower(lower)
 , m_Upper(upper)
@@ -63,13 +59,12 @@ GLC_BoundingBox::GLC_BoundingBox(const GLC_Point3d& lower, const GLC_Point3d& up
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
-// Return the class Chunk ID
+
 quint32 GLC_BoundingBox::chunckID()
 {
 	return m_ChunkId;
 }
 
-// Test if a point is in the bounding Box
 bool GLC_BoundingBox::intersect(const GLC_Point3d& point) const
 {
 	if (!m_IsEmpty)
@@ -86,36 +81,31 @@ bool GLC_BoundingBox::intersect(const GLC_Point3d& point) const
 	}
 }
 
-// Test if a point is in the bounding Sphere
 bool GLC_BoundingBox::intersectBoundingSphere(const GLC_Point3d& point) const
 {
 	const double distance= (center() - point).lenght();
 	return distance < boundingSphereRadius();
 }
 
-// Test if the bounding sphere of a bounding box interserct with the bounding sphere
 bool GLC_BoundingBox::intersectBoundingSphere(const GLC_BoundingBox& boundingSphere) const
 {
 	const double distance= (center() - boundingSphere.center()).lenght();
 	return distance < (boundingSphereRadius() + boundingSphere.boundingSphereRadius());
 }
 
-// Get the lower corner of the bounding box
-GLC_Point3d GLC_BoundingBox::lowerCorner(void) const
+GLC_Point3d GLC_BoundingBox::lowerCorner() const
 {
 	return m_Lower;
 }
 
-// Get the upper corner of the bounding box
-GLC_Point3d GLC_BoundingBox::upperCorner(void) const
+GLC_Point3d GLC_BoundingBox::upperCorner() const
 {
 	return m_Upper;
 }
 
-// Get the center of the bounding box
 GLC_Point3d GLC_BoundingBox::center(void) const
 {
-	GLC_Vector3d vectResult = (m_Lower + m_Upper) * (1.0 / 2.0);
+	GLC_Vector3d vectResult = (m_Lower + m_Upper) * 0.5;
 	return vectResult;
 
 }
@@ -125,7 +115,6 @@ GLC_Point3d GLC_BoundingBox::center(void) const
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Combine the bounding Box with new geometry point
 GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3d& point)
 {
 	if (m_IsEmpty)
@@ -149,7 +138,6 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3d& point)
 	return *this;
 }
 
-// Combine the bounding Box with new geometry point
 GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3df& pointf)
 {
 	GLC_Point3d point(pointf);
@@ -174,7 +162,6 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3df& pointf)
 	return *this;
 }
 
-// Combine the bounding Box with another bounding box
 GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
 {
 	if (m_IsEmpty && !box.m_IsEmpty)
@@ -199,7 +186,6 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
 	return *this;
 }
 
-// Transform the bounding Box
 GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
 {
 	// Compute Transformed BoundingBox Corner
@@ -237,7 +223,6 @@ GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
 	return *this;
 }
 
-// Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_BoundingBox &bBox)
 {
 	quint32 chunckId= GLC_BoundingBox::m_ChunkId;
@@ -249,6 +234,7 @@ QDataStream &operator<<(QDataStream &stream, const GLC_BoundingBox &bBox)
 
 	return stream;
 }
+
 QDataStream &operator>>(QDataStream &stream, GLC_BoundingBox &bBox)
 {
 	quint32 chunckId;

@@ -30,7 +30,7 @@
 #include "maths/glc_vector3d.h"
 #include "maths/glc_utils_maths.h"
 #include "maths/glc_matrix4x4.h"
-
+#include <QtDebug>
 #include "glc_config.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -52,13 +52,13 @@ class GLC_LIB_EXPORT GLC_BoundingBox
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Default constructor
+	//! Construct an empty bounding box
 	GLC_BoundingBox();
 
-	//! Copy constructor
+	//! Construct a bounding box from  the given bounding box
 	GLC_BoundingBox(const GLC_BoundingBox& boundingBox);
 
-	//! Constructor with 2 points.
+	//! Construct a bounding box from the given 3d point
 	GLC_BoundingBox(const GLC_Point3d& lower, const GLC_Point3d& upper);
 
 //@}
@@ -67,39 +67,59 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the class Chunk ID
+	//! Return this class Chunk ID
 	static quint32 chunckID();
 
-	//! Get the empty state of the bounding Box
+	//! Return true if this bounding box is empty
 	bool isEmpty(void) const
 	{
 		return m_IsEmpty;
 	}
 
-	//! Test if a point is in the bounding Box
+	//! Return true if the given 3d point intersect this bounding box
 	bool intersect(const GLC_Point3d& point) const;
 
-	//! Test if a point is in the bounding Sphere
+	//! Return true if the given bounding box intersect this bounding box
+	inline bool intersect(const GLC_BoundingBox& boundingBox) const;
+
+	//! Return true if the given 3d point intersect this bounding sphere of bounding box
 	bool intersectBoundingSphere(const GLC_Point3d&) const;
 
-	//! Test if the bounding sphere of a bounding box interserct with the bounding sphere
+	//! Return true if the given bounding sphere of bounding box intersect the bounding sphere of box bounding box
 	bool intersectBoundingSphere(const GLC_BoundingBox&) const;
 
-	//! Return the max distance between a point and a corner of the bounding box
-	//double maxDistance(const GLC_Vector3d& point) const;
+	//! Return the lower corner of this bounding box
+	GLC_Point3d lowerCorner() const;
 
-	//! Get the lower corner of the bounding box
-	GLC_Point3d lowerCorner(void) const;
+	//! Return the upper corner of this bounding box
+	GLC_Point3d upperCorner() const;
 
-	//! Get the upper corner of the bounding box
-	GLC_Point3d upperCorner(void) const;
+	//! Return the center of this bounding box
+	GLC_Point3d center() const;
 
-	//! Get the center of the bounding box
-	GLC_Point3d center(void) const;
-
-	//! Return the boundingSphere Radius
+	//! Return the radius of this bounding sphere of bounding box
 	inline double boundingSphereRadius() const
 	{return GLC_Vector3d(m_Lower - m_Upper).lenght() / 2.0;}
+
+	//! Return true if this bounding box is equal of the given bounding box
+	inline bool operator == (const GLC_BoundingBox& boundingBox);
+
+	//! Return true if this bounding box is not equal of the given bounding box
+	inline bool operator != (const GLC_BoundingBox& boundingBox)
+	{return !(*this == boundingBox);}
+
+	//! Return the lenght off this bounding box on x axis
+	inline double xLenght() const
+	{return fabs(m_Upper.x() - m_Lower.x());}
+
+	//! Return the lenght off this bounding box on y axis
+	inline double yLenght() const
+	{return fabs(m_Upper.y() - m_Lower.y());}
+
+	//! Return the lenght off this bounding box on z axis
+	inline double zLenght() const
+	{return fabs(m_Upper.z() - m_Lower.z());}
+
 
 //@}
 
@@ -108,16 +128,16 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Combine the bounding Box with new geometry point
+	//! Combine this bounding Box with the given 3d point and return a reference of this bounding box
 	GLC_BoundingBox& combine(const GLC_Point3d& point);
 
-	//! Combine the bounding Box with new geometry point
+	//! Combine this bounding Box with the given 3d point and return a reference of this bounding box
 	GLC_BoundingBox& combine(const GLC_Point3df& point);
 
-	//! Combine the bounding Box with another bounding box
+	//! Combine this bounding Box with the given bounding box and return a reference of this bounding box
 	GLC_BoundingBox& combine(const GLC_BoundingBox& box);
 
-	//! Transform the bounding Box
+	//! Transform this bounding Box with the given matrix and return a reference of this bounding box
 	GLC_BoundingBox& transform(const GLC_Matrix4x4& matrix);
 
 //@}
@@ -126,21 +146,42 @@ public:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Lower corner point
+	//! Lower corner 3d point
 	GLC_Point3d m_Lower;
 
-	//! Upper corner point
+	//! Upper corner 3d point
 	GLC_Point3d m_Upper;
 
-	//! Flag to know if the bounding box is empty
+	//! Flag to know if this bounding box is empty
 	bool m_IsEmpty;
 
-	//! Class chunk id
+	//! This class chunk id
 	static quint32 m_ChunkId;
 };
 
 //! Non-member stream operator
 QDataStream &operator<<(QDataStream &, const GLC_BoundingBox &);
 QDataStream &operator>>(QDataStream &, GLC_BoundingBox &);
+
+// Return true if the given bounding box intersect this bounding box
+bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox) const
+{
+	// Distance between bounding box center
+	GLC_Vector3d thisCenter= center();
+	GLC_Vector3d otherCenter= boundingBox.center();
+	const double distanceX= fabs(thisCenter.x() - otherCenter.x());
+	const double distanceY= fabs(thisCenter.y() - otherCenter.y());
+	const double distanceZ= fabs(thisCenter.z() - otherCenter.z());
+
+	bool intersect= distanceX < ((xLenght() + boundingBox.xLenght()) * 0.5);
+	intersect= intersect && (distanceY < ((yLenght() + boundingBox.yLenght()) * 0.5));
+	intersect= intersect && (distanceZ < ((zLenght() + boundingBox.zLenght()) * 0.5));
+	return intersect;
+}
+
+bool GLC_BoundingBox::operator == (const GLC_BoundingBox& box)
+{
+	return (m_Lower == box.m_Lower) && (m_Upper == box.m_Upper);
+}
 
 #endif /*GLC_BOUNDINGBOX_*/
