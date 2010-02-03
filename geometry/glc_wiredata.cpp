@@ -31,7 +31,7 @@
 // Class chunk id
 quint32 GLC_WireData::m_ChunkId= 0xA706;
 
-// Default constructor
+
 GLC_WireData::GLC_WireData()
 : m_VboId(0)
 , m_NextPrimitiveLocalId(1)
@@ -46,7 +46,7 @@ GLC_WireData::GLC_WireData()
 
 }
 
-// Copy constructor
+
 GLC_WireData::GLC_WireData(const GLC_WireData& data)
 : m_VboId(0)
 , m_NextPrimitiveLocalId(data.m_NextPrimitiveLocalId)
@@ -64,7 +64,7 @@ GLC_WireData::GLC_WireData(const GLC_WireData& data)
 	}
 }
 
-// Overload "=" operator
+
 GLC_WireData& GLC_WireData::operator=(const GLC_WireData& data)
 {
 	if (this != &data)
@@ -100,13 +100,13 @@ GLC_WireData::~GLC_WireData()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Return the class Chunk ID
+
 quint32 GLC_WireData::chunckID()
 {
 	return m_ChunkId;
 }
 
-// Return the Position Vector
+
 GLfloatVector GLC_WireData::positionVector() const
 {
 	if (0 != m_VboId)
@@ -129,7 +129,7 @@ GLfloatVector GLC_WireData::positionVector() const
 	}
 }
 
-// Return the wire bounding box
+
 GLC_BoundingBox& GLC_WireData::boundingBox()
 {
 	if (NULL == m_pBoundingBox)
@@ -158,7 +158,7 @@ GLC_BoundingBox& GLC_WireData::boundingBox()
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Add a Polyline to the wire and returns its id
+
 GLC_uint GLC_WireData::addPolyline(const GLfloatVector& floatVector)
 {
 	Q_ASSERT((floatVector.size() % 3) == 0);
@@ -177,11 +177,9 @@ GLC_uint GLC_WireData::addPolyline(const GLfloatVector& floatVector)
 
 	// The Polyline id
 	m_PolylinesId.append(m_NextPrimitiveLocalId);
-
 	return m_NextPrimitiveLocalId++;
 }
 
-// Clear the content of the meshData and makes it empty
 void GLC_WireData::clear()
 {
 	m_NextPrimitiveLocalId= 1;
@@ -200,7 +198,7 @@ void GLC_WireData::clear()
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
-// The mesh wich use the data is finished
+
 void GLC_WireData::finishVbo()
 {
 	createVBOs();
@@ -212,7 +210,6 @@ void GLC_WireData::finishVbo()
 	m_Positions.clear();
 }
 
-// Ibo Usage
 void GLC_WireData::useVBO(bool use)
 {
 	if (use)
@@ -225,7 +222,6 @@ void GLC_WireData::useVBO(bool use)
 	}
 }
 
-// Display wires data
 void GLC_WireData::glDraw(const GLC_RenderProperties&)
 {
 	Q_ASSERT(!isEmpty());
@@ -267,8 +263,6 @@ void GLC_WireData::glDraw(const GLC_RenderProperties&)
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-
-// Vbo creation
 void GLC_WireData::createVBOs()
 {
 	// Create position VBO
@@ -278,7 +272,6 @@ void GLC_WireData::createVBOs()
 	}
 }
 
-// Fill the VBO
 void GLC_WireData::fillVBOs()
 {
 	const GLsizei dataNbr= static_cast<GLsizei>(m_Positions.size());
@@ -286,8 +279,6 @@ void GLC_WireData::fillVBOs()
 	glBufferData(GL_ARRAY_BUFFER, dataSize, m_Positions.data(), GL_STATIC_DRAW);
 }
 
-// Non Member methods
-// Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_WireData &wireData)
 {
 	quint32 chunckId= GLC_WireData::m_ChunkId;

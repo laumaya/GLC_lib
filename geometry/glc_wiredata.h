@@ -34,7 +34,7 @@
 #include "../glc_config.h"
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_WireData
-/*! \brief GLC_WireData : Contains all data of wires geometries
+/*! \brief GLC_WireData : Contains geometries's wire data
  */
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_WireData
@@ -47,13 +47,13 @@ class GLC_LIB_EXPORT GLC_WireData
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Default constructor
+	//! Construct a empty wire data
 	GLC_WireData();
 
-	//! Copy constructor
+	//! Construct wire data from the given wire data
 	GLC_WireData(const GLC_WireData&);
 
-	//! Overload "=" operator
+	//! Copy the given wire data in this wire data
 	GLC_WireData& operator=(const GLC_WireData&);
 
 	//! Destructor
@@ -65,17 +65,17 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the class Chunk ID
+	//! Return this wire data class Chunk ID
 	static quint32 chunckID();
 
-	//! Return the Position Vector
+	//! Return this wire data Position Vector
 	GLfloatVector positionVector() const;
 
-	//! Return true if the wire data is empty
+	//! Return true if this wire data is empty
 	inline bool isEmpty() const
 	{return ((m_PositionSize == 0) && m_Positions.isEmpty());}
 
-	//! Return the wire bounding box
+	//! Return this wire data bounding box
 	GLC_BoundingBox& boundingBox();
 
 //@}
@@ -85,10 +85,10 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Add a Polyline to the wire and returns its id
+	//! Add a Polyline to this wire and returns its id if id are managed
 	GLC_uint addPolyline(const GLfloatVector&);
 
-	//! Clear the content of the wire Data and makes it empty
+	//! Clear the content of this wire Data and makes it empty
 	void clear();
 
 //@}
@@ -98,20 +98,20 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! The Object wich use the data is finished and VBO is used
+	//! Make this wire data a VBO
 	void finishVbo();
 
-	//! Ibo Usage
-	void useVBO(bool);
+	//! Set vbo usage of this wire data
+	void useVBO(bool usage);
 
-	//! Display wires data
+	//! Render this wire data using Opengl
 	void glDraw(const GLC_RenderProperties&);
 
 private:
-	//! Vbo creation
+	//! Create this wire data VBO id
 	void createVBOs();
 
-	//! Fill the VBO
+	//! Fill this wire data VBO from memmory
 	void fillVBOs();
 //@}
 
@@ -137,10 +137,10 @@ private:
 	//! Polylines size
 	IndexSizes m_PolylinesSizes;
 
-	//! Vector of triangles group offset
+	//! Vector of polyline group offset
 	OffsetVectori m_PolylinesOffset;
 
-	//! Triangles groups id
+	//! Polyline groups id
 	QList<GLC_uint> m_PolylinesId;
 
 	//! The number of polylines
