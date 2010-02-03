@@ -37,7 +37,7 @@
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Object
-/*! \brief GLC_Object is base class for most GLC class*/
+/*! \brief GLC_Object is base class for some GLC class*/
 
 /*! GLC_Object is a abstract class. \n \n
  *  Every GLC_Object have :
@@ -55,11 +55,11 @@ class GLC_LIB_EXPORT GLC_Object
 public:
 
 	//! Default constructor
-	/*! Create a GLC_Object , Generate is UID GLC_Object::m_Uid
+	/*! Construct a GLC_Object , Generate is UID GLC_Object::m_Uid
 	 * and set GLC_Object::m_Name to specified name*/
 	GLC_Object(const QString& name= QString());
 
-	//! Copy constructor
+	//! Construct a GLC_Object from the given GLC_Object
 	GLC_Object(const GLC_Object& sourceObject);
 
 	//! Virtual destructor
@@ -71,17 +71,17 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return Object Uuid
-	inline QUuid uuid() const
-	{return m_QUuid;};
-
-	//! Get Object ID
+	//! Return this object id
 	inline GLC_uint id() const
 	{return m_Uid;}
 
-	//! Get Object Name
+	//! Return this object name
 	inline const QString name() const
 	{return m_Name;}
+
+	//! Return true if this object is equal to the given object
+	inline bool operator == (const GLC_Object& obj)
+	{return (m_Uid == obj.m_Uid) && (m_Name == obj.m_Name);}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -90,19 +90,15 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Set Object Id
+	//! Set this object Id
 	/*! This method is thread safe*/
 	void setId(const GLC_uint id);
 
-	//! Set Object UUid
-	/*! This method is thread safe*/
-	void setUuid(const QUuid& uuid);
-
-	//! Set Object Name
+	//! Set this object Name
 	/*! This method is thread safe*/
 	void setName(const QString& name);
 
-	//! Assignement operator
+	//! Set this object from the given object
 	/*! This method is thread safe*/
 	GLC_Object &operator=(const GLC_Object&);
 
@@ -114,9 +110,6 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 protected:
-	//! The universal Unique Id of an Object
-	QUuid m_QUuid;
-
 	//! The Unique ID of an GLC_Object
 	/*! Generated on GLC_Object creation*/
 	GLC_uint m_Uid;

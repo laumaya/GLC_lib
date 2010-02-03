@@ -31,16 +31,14 @@
 //////////////////////////////////////////////////////////////////////
 
 GLC_Object::GLC_Object(const QString& name)
-: m_QUuid(QUuid::createUuid())
-, m_Uid(glc::GLC_GenID())	// Object ID
+: m_Uid(glc::GLC_GenID())	// Object ID
 , m_Name(name)			// Object Name
 {
 
 }
-// Copy constructor
+
 GLC_Object::GLC_Object(const GLC_Object& sourceObject)
-: m_QUuid(sourceObject.m_QUuid)
-, m_Uid(sourceObject.m_Uid)
+: m_Uid(sourceObject.m_Uid)
 , m_Name(sourceObject.m_Name)
 {
 }
@@ -52,28 +50,15 @@ GLC_Object::~GLC_Object()
 
 
 //////////////////////////////////////////////////////////////////////
-// Get function
-//////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////
 // Set function
 //////////////////////////////////////////////////////////////////////
 
-// Set Object Id
 void GLC_Object::setId(const GLC_uint id)
 {
 	QMutexLocker mutexLocker(&m_Mutex);
 	m_Uid= id;
 }
 
-// Set Object UUid
-void GLC_Object::setUuid(const QUuid& uuid)
-{
-	QMutexLocker mutexLocker(&m_Mutex);
-	m_QUuid= uuid;
-}
-
-// Set Object Name
 void GLC_Object::setName(const QString& name)
 {
 	QMutexLocker mutexLocker(&m_Mutex);
@@ -81,11 +66,9 @@ void GLC_Object::setName(const QString& name)
 }
 
 
-// Assignement operator
 GLC_Object& GLC_Object::operator=(const GLC_Object& object)
 {
 	QMutexLocker mutexLocker(&m_Mutex);
-	m_QUuid= object.m_QUuid;
 	m_Uid= object.m_Uid;
 	m_Name= object.m_Name;
 	return *this;
