@@ -377,15 +377,10 @@ QDataStream &operator>>(QDataStream &stream, GLC_MeshData &meshData)
 
 	GLfloatVector position, normal, texel, color;
 
-	stream >> position;
-	stream >> normal;
-	stream >> texel;
-	stream >> color;
-
-	*(meshData.positionVectorHandle())= position;
-	*(meshData.normalVectorHandle())= normal;
-	*(meshData.texelVectorHandle())= texel;
-	*(meshData.colorVectorHandle())= color;
+	stream >> *(meshData.positionVectorHandle());
+	stream >> *(meshData.normalVectorHandle());
+	stream >> *(meshData.texelVectorHandle());
+	stream >> *(meshData.colorVectorHandle());
 
 	// List of lod serialisation
 	QList<GLC_Lod> lodsList;
