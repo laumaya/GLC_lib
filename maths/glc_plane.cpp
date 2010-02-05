@@ -26,55 +26,51 @@
 #include "glc_plane.h"
 
 GLC_Plane::GLC_Plane()
-: m_A(0.0)
-, m_B(0.0)
-, m_C(1.0)
-, m_D(0.0)
+: m_Eq()
 {
-
+	m_Eq[0]= 0.0;
+	m_Eq[1]= 0.0;
+	m_Eq[2]= 0.0;
+	m_Eq[3]= 0.0;
 }
 
 GLC_Plane::GLC_Plane(double a, double b, double c, double d)
-: m_A(a)
-, m_B(b)
-, m_C(c)
-, m_D(d)
+: m_Eq()
 {
+	m_Eq[0]= a;
+	m_Eq[1]= b;
+	m_Eq[2]= c;
+	m_Eq[3]= d;
 
 }
 
 GLC_Plane::GLC_Plane(const GLC_Vector3d& normal, double d)
-: m_A(normal.x())
-, m_B(normal.y())
-, m_C(normal.z())
-, m_D(d)
+: m_Eq()
 {
+	m_Eq[0]= normal.x();
+	m_Eq[1]= normal.y();
+	m_Eq[2]= normal.z();
+	m_Eq[3]= d;
 
 }
 
 GLC_Plane::GLC_Plane(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3)
-: m_A()
-, m_B()
-, m_C()
-, m_D()
+: m_Eq()
 {
 	const GLC_Vector3d v1(p2 - p1);
 	const GLC_Vector3d v2(p3 - p1);
 	const GLC_Vector3d normal((v1 ^ v2).normalize());
-	m_A= normal.x();
-	m_B= normal.y();
-	m_C= normal.z();
-	m_D= -normal * p1;
+	m_Eq[0]= normal.x();
+	m_Eq[1]= normal.y();
+	m_Eq[2]= normal.z();
+	m_Eq[3]= -normal * p1;
 }
 
 
 GLC_Plane::GLC_Plane(const GLC_Plane& plane)
-: m_A(plane.m_A)
-, m_B(plane.m_B)
-, m_C(plane.m_C)
-, m_D(plane.m_D)
+: m_Eq()
 {
-
+	memcpy(m_Eq, plane.m_Eq, sizeof(double) * 4);
 }
 
 
@@ -82,10 +78,7 @@ GLC_Plane& GLC_Plane::operator=(const GLC_Plane& p)
 {
 	if ((this != &p) && (*this != p))
 	{
-		m_A= p.m_A;
-		m_B= p.m_B;
-		m_C= p.m_C;
-		m_D= p.m_D;
+		memcpy(m_Eq, p.m_Eq, sizeof(double) * 4);
 	}
 	return *this;
 }
@@ -106,10 +99,10 @@ bool GLC_Plane::operator==(GLC_Plane p2) const
 	GLC_Plane p1(*this);
 	p1.normalize();
 	p2.normalize();
-	bool areEqual= qFuzzyCompare(p1.m_A, p2.m_A);
-	areEqual= areEqual && qFuzzyCompare(p1.m_B, p2.m_B);
-	areEqual= areEqual && qFuzzyCompare(p1.m_C, p2.m_C);
-	areEqual= areEqual && qFuzzyCompare(p1.m_D, p2.m_D);
+	bool areEqual= qFuzzyCompare(p1.m_Eq[0], p2.m_Eq[0]);
+	areEqual= areEqual && qFuzzyCompare(p1.m_Eq[1], p2.m_Eq[1]);
+	areEqual= areEqual && qFuzzyCompare(p1.m_Eq[2], p2.m_Eq[2]);
+	areEqual= areEqual && qFuzzyCompare(p1.m_Eq[3], p2.m_Eq[3]);
 
 	return areEqual;
 }
@@ -122,10 +115,10 @@ bool GLC_Plane::operator==(GLC_Plane p2) const
 // Normalize the plane
 void GLC_Plane::normalize()
 {
-	const double invMag= 1.0 / sqrt(m_A * m_A + m_B * m_B + m_C * m_C);
+	const double invMag= 1.0 / sqrt(m_Eq[0] * m_Eq[0] + m_Eq[1] * m_Eq[1] + m_Eq[2] * m_Eq[2]);
 
-	m_A= m_A * invMag;
-	m_B= m_B * invMag;
-	m_C= m_C * invMag;
-	m_D= m_D * invMag;
+	m_Eq[0]= m_Eq[0] * invMag;
+	m_Eq[1]= m_Eq[1] * invMag;
+	m_Eq[2]= m_Eq[2] * invMag;
+	m_Eq[3]= m_Eq[3] * invMag;
 }

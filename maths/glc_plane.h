@@ -71,23 +71,23 @@ public:
 
 	//! Return A coef
 	inline double coefA() const
-	{return m_A;}
+	{return m_Eq[0];}
 
 	//! Return B coef
 	inline double coefB() const
-	{return m_B;}
+	{return m_Eq[1];}
 
 	//! Return C coef
 	inline double coefC() const
-	{return m_C;}
+	{return m_Eq[2];}
 
 	//! Return D coef
 	inline double coefD() const
-	{return m_D;}
+	{return m_Eq[3];}
 
 	//! Return the signed distance to a point
 	inline double distanceToPoint(const GLC_Point3d& p) const
-	{return m_A * p.x() + m_B * p.y() + m_C * p.z() + m_D;}
+	{return m_Eq[0] * p.x() + m_Eq[1] * p.y() + m_Eq[2] * p.z() + m_Eq[3];}
 
 	//! Equality operator
 	bool operator==(GLC_Plane) const;
@@ -98,11 +98,15 @@ public:
 
 	//! Return this plane normal
 	inline GLC_Vector3d normal() const
-	{return GLC_Vector3d(m_A, m_B, m_C);}
+	{return GLC_Vector3d(m_Eq[0], m_Eq[1], m_Eq[2]);}
 
 	//! Return true if the given point is on the plane
 	inline bool lieOnThePlane(const GLC_Point3d p)
-	{return (m_A * p.x() + m_B * p.y() + m_C * p.z() + m_D) == 0.0f;}
+	{return (m_Eq[0] * p.x() + m_Eq[1] * p.y() + m_Eq[2] * p.z() + m_Eq[3]) == 0.0f;}
+
+	//! Return a pointer to this plane equation data
+	const double* data() const
+	{return m_Eq;}
 
 //@}
 
@@ -113,19 +117,19 @@ public:
 public:
 	//! Set A coef
 	inline void setA(double a)
-	{m_A= a;}
+	{m_Eq[0]= a;}
 
 	//! Set B coef
 	inline void setB(double b)
-	{m_B= b;}
+	{m_Eq[1]= b;}
 
 	//! Set C coef
 	inline void setC(double c)
-	{m_C= c;}
+	{m_Eq[2]= c;}
 
 	//! Set D coef
 	inline void setD(double d)
-	{m_D= d;}
+	{m_Eq[3]= d;}
 
 	//! Normalize the plane
 	void normalize();
@@ -138,7 +142,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Plane is define by equation : Ax + By + Cz + D= 0
-	double m_A, m_B, m_C, m_D;
+	double m_Eq[4];
 };
 
 #endif /* GLC_PLANE_H_ */
