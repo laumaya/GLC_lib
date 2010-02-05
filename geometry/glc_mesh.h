@@ -103,7 +103,7 @@ public:
 	{return m_ColorPearVertex;}
 
 	//! Return the number of lod
-	inline int numberOfLod()
+	inline int lodCount()
 	{return m_MeshData.lodCount();}
 
 	//! Return the Position Vector
@@ -178,6 +178,7 @@ public:
 	//! Return the mesh wire color
 	inline QColor wireColor() const
 	{return m_WireColor;}
+
 
 //@}
 //////////////////////////////////////////////////////////////////////

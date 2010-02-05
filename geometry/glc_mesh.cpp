@@ -385,6 +385,7 @@ void GLC_Mesh::clear()
 	clearOnlyMesh();
 }
 
+
 // Clear the content off the mesh and makes it empty
 void GLC_Mesh::clearOnlyMesh()
 {
@@ -507,6 +508,7 @@ void GLC_Mesh::finish()
 	boundingBox();
 
 	m_MeshData.finishLod();
+
 	if (GLC_State::vboUsed())
 	{
 		finishVbo();
@@ -515,6 +517,8 @@ void GLC_Mesh::finish()
 	{
 		finishNonVbo();
 	}
+
+	//qDebug() << "Mesh mem size= " << memmorySize();
 }
 
 
@@ -613,7 +617,7 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& mater
 	stream >> localId;
 	setNextPrimitiveLocalId(localId);
 
-	// Retrieve Extended geom mesh data
+	// Retrieve geom mesh data
 	stream >> m_MeshData;
 
 	// Retrieve primitiveGroupLodList
@@ -641,6 +645,8 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& mater
 				addMaterial(materialHash.value(newId));
 			}
 			GLC_PrimitiveGroup* pGroup= new GLC_PrimitiveGroup(primitiveListOfGroupList.at(i).at(iGroup), newId);
+
+			Q_ASSERT(! m_PrimitiveGroups.value(primitiveGroupLodList.at(i))->contains(newId));
 			m_PrimitiveGroups.value(primitiveGroupLodList.at(i))->insert(newId, pGroup);
 		}
 	}
@@ -650,6 +656,7 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& mater
 	stream >> m_NumberOfNormals;
 
 	finishSerialized();
+	//qDebug() << "Mesh mem size= " << memmorySize();
 }
 
 // Save the mesh to binary data stream
@@ -1025,6 +1032,7 @@ void GLC_Mesh::finishVbo()
 // Move Indexs from the primitive groups to the mesh Data LOD and Set Index offsets
 void GLC_Mesh::finishNonVbo()
 {
+	//qDebug() << "GLC_Mesh::finishNonVbo()";
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
 	while (iGroups != m_PrimitiveGroups.constEnd())
 	{
