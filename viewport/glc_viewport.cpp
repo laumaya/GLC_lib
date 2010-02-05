@@ -56,6 +56,8 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_SelectionSquareSize(4)
 , m_ProjectionMatrix()
 , m_Frustum()
+, m_ClipPlane()
+, m_UseClipPlane(false)
 {
 	// create a camera
 	m_pViewCam= new GLC_Camera;
@@ -67,6 +69,14 @@ GLC_Viewport::~GLC_Viewport()
 
 	// delete background image
 	deleteBackGroundImage();
+
+	// Delete clip planes
+	QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlane.begin();
+	while (m_ClipPlane.constEnd() != iClip)
+	{
+		delete iClip.value();
+		++iClip;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -112,6 +122,12 @@ void GLC_Viewport::initGl()
 	GLC_State::init();
 }
 
+void GLC_Viewport::glExecuteCam(void)
+{
+	m_pViewCam->glExecute();
+	glExecuteImagePlane();
+}
+
 void GLC_Viewport::updateProjectionMat(void)
 {
 	// Make opengl context attached the current One
@@ -144,26 +160,6 @@ void GLC_Viewport::forceAspectRatio(double ratio)
 
 	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
-
-	// Calculate The Aspect Ratio Of The Window
-	double AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
-
-	if (ratio > AspectRatio)
-	{
-		// Save window size
-		const int width= m_nWinHSize;
-
-		// Calculate new width
-		m_nWinHSize= static_cast<int>(static_cast<double>(m_nWinVSize) * ratio);
-
-		// Update image plane size
-		if (m_pImagePlane != NULL)
-			m_pImagePlane->updatePlaneSize();
-
-		// Restore width
-		m_nWinHSize= width;
-	}
-
 }
 
 GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
@@ -257,18 +253,15 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list)const
 
 void GLC_Viewport::glExecuteImagePlane()
 {
-	// The static rendering propertis
-	static GLC_RenderProperties renderProperties;
 
 	if(!GLC_State::isInSelectionMode())
 	{
 		if (m_pImagePlane != NULL)
 		{
-			m_pImagePlane->glExecute(renderProperties);
+			m_pImagePlane->glExecute();
 		}
 	}
 }
-
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
@@ -288,10 +281,6 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 	glViewport(0,0,m_nWinHSize,m_nWinVSize);			// Reset The Current Viewport
 
 	updateProjectionMat();
-
-	// Update image plane size
-	if (m_pImagePlane != NULL)
-		m_pImagePlane->updatePlaneSize();
 
 }
 
@@ -492,19 +481,14 @@ QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei widt
 
 void GLC_Viewport::loadBackGroundImage(const QString Image)
 {
-	deleteBackGroundImage();
-	m_pImagePlane= new GLC_ImagePlane(this);
-	m_pImagePlane->loadImageFile(m_pQGLWidget->context(), Image);
+	delete m_pImagePlane;
+	m_pImagePlane= new GLC_ImagePlane(m_pQGLWidget->context(), Image);
 }
 
 void GLC_Viewport::deleteBackGroundImage()
 {
-	if (m_pImagePlane != NULL)
-	{
-		delete m_pImagePlane;
-		m_pImagePlane= NULL;
-	}
-
+	delete m_pImagePlane;
+	m_pImagePlane= NULL;
 }
 
 void GLC_Viewport::reframe(const GLC_BoundingBox& box)
@@ -533,11 +517,6 @@ bool GLC_Viewport::setDistMin(double DistMin)
 
 		updateProjectionMat();	// Update OpenGL projection matrix
 
-		if (m_pImagePlane != NULL)
-		{
-			m_pImagePlane->updateZPosition();	// Update image plane Z Position
-		}
-
 		return true;
 	}
 	else
@@ -558,11 +537,6 @@ bool GLC_Viewport::setDistMax(double DistMax)
 		// Update OpenGL projection matrix
 		updateProjectionMat();
 
-		// Update image plane Z Position
-		if (m_pImagePlane != NULL)
-		{
-			m_pImagePlane->updateZPosition();
-		}
 		return true;
 	}
 	else
@@ -620,15 +594,48 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 
 	// Update OpenGL projection matrix
 	updateProjectionMat();
-	// Update image plane Z Position
-	if (m_pImagePlane != NULL)
-	{
-		m_pImagePlane->updateZPosition();
-	}
 }
 
 void GLC_Viewport::setBackgroundColor(QColor setColor)
 {
 	m_BackgroundColor= setColor;
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);
+}
+
+void GLC_Viewport::addClipPlane(GLenum planeGlEnum,GLC_Plane* pPlane)
+{
+	if (m_ClipPlane.contains(planeGlEnum))
+	{
+		delete m_ClipPlane.value(planeGlEnum);
+		m_ClipPlane.remove(planeGlEnum);
+	}
+	m_ClipPlane.insert(planeGlEnum, pPlane);
+}
+
+void GLC_Viewport::useClipPlane(bool flag)
+{
+	m_UseClipPlane= flag;
+	if (m_UseClipPlane)
+	{
+		QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlane.begin();
+		while (m_ClipPlane.constEnd() != iClip)
+		{
+			GLenum planeKey= iClip.key();
+			GLC_Plane* pPlane= iClip.value();
+
+			glClipPlane (planeKey, pPlane->data());
+			glEnable (planeKey);
+			++iClip;
+		}
+	}
+	else
+	{
+		QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlane.begin();
+		while (m_ClipPlane.constEnd() != iClip)
+		{
+			glDisable(iClip.key());
+			++iClip;
+		}
+	}
+
 }

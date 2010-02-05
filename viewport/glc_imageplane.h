@@ -27,11 +27,9 @@
 #ifndef GLC_IMAGEPLANE_H_
 #define GLC_IMAGEPLANE_H_
 
-#include "../geometry/glc_geometry.h"
+#include "../shading/glc_material.h"
 
 #include "../glc_config.h"
-
-class GLC_Viewport;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ImagePlane
@@ -40,47 +38,17 @@ class GLC_Viewport;
 /*! An GLC_ImagePlane is just a plane with a image texture.*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_ImagePlane : public GLC_Geometry
+class GLC_LIB_EXPORT GLC_ImagePlane
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Construct an Image plane linked to a viewport
-	GLC_ImagePlane(GLC_Viewport* pViewport);
+	//! Construct image plane from the given image file name and QGLContext
+	GLC_ImagePlane(const QGLContext *pContext, const QString& ImageName);
 
-	//! Remove OpenGL Texture from memmory
-	virtual ~GLC_ImagePlane(void);
-//@}
-
-//////////////////////////////////////////////////////////////////////
-/*! \name Get Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-public:
-
-	//! Return a copy of the geometry
-	virtual GLC_Geometry* clone() const;
-
-	//! Return the geometry bounding box
-	virtual GLC_BoundingBox& boundingBox(void);
-
-//@}
-
-//////////////////////////////////////////////////////////////////////
-/*! \name Set Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-public:
-	//! Load image
-	void loadImageFile(const QGLContext *pContext, const QString ImageName);
-
-	//! Update image plane size
-	void updatePlaneSize(void);
-
-	//! Update Plane Z position
-	void updateZPosition(void);
+	~GLC_ImagePlane();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -88,9 +56,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Virtual interface for OpenGL Geometry set up.
-	/*! This Virtual function is implemented here.\n*/
-	virtual void glDraw(const GLC_RenderProperties&);
+	//! Render this image plane
+	void glExecute();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -99,21 +66,8 @@ public:
 
 private:
 
-	//! ViewPort
-	GLC_Viewport* m_pViewport;
-
-	//! Image with
-	double m_dLgImage;
-
-	//! Plane Position in Z direction
-	double m_dZpos;
-
-	//! Polygons display style
-	GLenum m_PolyFace;
-	GLenum m_PolyMode;
-
-	//! image plane boundingBox (not yet used)
-	GLC_BoundingBox m_BoundingBox;
+	//! The image plane material
+	GLC_Material m_Material;
 
 };
 

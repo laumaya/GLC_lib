@@ -28,10 +28,12 @@
 #define GLC_VIEWPORT_H_
 #include <QGLWidget>
 #include <QPair>
+#include <QHash>
 #include "glc_camera.h"
 #include "glc_imageplane.h"
 #include "../glc_boundingbox.h"
 #include "glc_frustum.h"
+#include "../maths/glc_plane.h"
 
 #include "../glc_config.h"
 
@@ -77,51 +79,51 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the camera associate to the viewport
+	//! Return the camera associate to this viewport
 	inline GLC_Camera* cameraHandle() const
 	{return m_pViewCam;}
 
-	//! Get The viewport Horizontal size
+	//! Get this viewport Horizontal size
 	inline int viewHSize() const
 	{ return m_nWinHSize;}
 
-	//! Get The viewport Vertical size
+	//! Get this viewport Vertical size
 	inline int viewVSize() const
 	{ return m_nWinVSize;}
 
-	//! Get the viewport ratio
+	//! Get this viewport ratio
 	inline double aspectRatio() const
 	{ return static_cast<double>(m_nWinHSize) / static_cast<double>(m_nWinVSize);}
 
-	//! Map Screen position to OpenGL position (On image Plane)
+	//! Map Screen position to OpenGL position (On image Plane) according to this viewport
 	GLC_Vector3d mapPosMouse( GLdouble Posx, GLdouble Posy) const;
 
-	//! Get camera's angle of view
+	//! Get this viewport's camera's angle of view
 	inline double viewAngle() const
 	{ return m_dFov;}
 
-	//! Get camera's tangent value of view
+	//! Get this viewport's camera's tangent value of view
 	inline double viewTangent() const
 	{ return m_ViewTangent;}
 
 
-	//! Get near clipping plane distance
+	//! Get this viewport near clipping plane distance
 	inline double nearClippingPlaneDist(void) const
 	{ return m_dCamDistMin;}
 
-	//! Get far clipping plane distance
+	//! Get this viewport far clipping plane distance
 	inline double farClippingPlaneDist(void) const
 	{ return m_dCamDistMax;}
 
-	//! Get background Color
+	//! Get this viewportbackground Color
 	inline QColor backgroundColor(void) const
 	{ return m_BackgroundColor;}
 
-	//! Return the selection square size
+	//! Return the selection square size of this viewport
 	inline GLsizei selectionSquareSize() const
 	{return m_SelectionSquareSize;}
 
-	//! Return the projection matrix
+	//! Return this viewport's the projection matrix
 	inline GLC_Matrix4x4 projectionMatrix() const
 	{return m_ProjectionMatrix;}
 
@@ -136,17 +138,13 @@ public:
 	/*! Glew initialisation is made here */
 	void initGl();
 
-	//! Load camera's transformation Matrix and if image plane exist, display it
-	inline void glExecuteCam(void)
-	{
-		m_pViewCam->glExecute();
-		glExecuteImagePlane();
-	}
+	//! Load camera's transformation Matrix and display image if necessary
+	void glExecuteCam(void);
 
-	//! Update OpenGL Projection Matrix
+	//! Update this viewport OpenGL projection matrix
 	void updateProjectionMat(void);
 
-	//! Force the aspect ratio of the window
+	//! Force the aspect ratio of this viewport
 	void forceAspectRatio(double);
 
 	//! Return the frustum associated to this viewport
@@ -171,7 +169,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! display image plane
+	//! display this viewport's image plane
 	void glExecuteImagePlane();
 
 //@}
@@ -182,7 +180,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Inform the viewport that the OpenGL Viewport has been modified
+	//! Inform the viewport that the OpenGL window size has been modified
 	void setWinGLSize(int HSize, int VSize);
 
 	//! select an object and return is UID
@@ -200,13 +198,13 @@ public:
 	//! Select objects inside specified square and return its UID in a set
 	QSet<GLC_uint> selectInsideSquare(int x1, int y1, int x2, int y2);
 
-	//! load background image
+	//! load background image of this viewport
 	void loadBackGroundImage(const QString Image);
 
-	//! delete background image
+	//! delete background image of this viewport
 	void deleteBackGroundImage();
 
-	//! Set Camera's angle of view
+	//! Set Camera's angle of view of this viewport
 	inline void setViewAngle(double TargetFov)
 	{
 		m_dFov= TargetFov;
@@ -214,34 +212,39 @@ public:
 		updateProjectionMat();
 	}
 
-	//! Set near clipping distance
+	//! Set near clipping distance of this viewport
 	bool setDistMin(double DistMin);
 
-	//! Set far clipping distance
+	//! Set far clipping distance of this viewport
 	bool setDistMax(double DistMax);
 
-	//! Set Near and Far clipping distance
+	//! Set Near and Far clipping distance of this viewport
 	/*! box shouldn't be empty*/
 	void setDistMinAndMax(const GLC_BoundingBox& bBox);
 
-	//! Set the Background color
+	//! Set the Background color of this viewport
 	void setBackgroundColor(QColor setColor);
 
-	//! Set the selection square size
+	//! Set the selection square size of this viewport
 	inline void setSelectionSquareSize(GLsizei size)
 	{m_SelectionSquareSize= size;}
 
-	//! Update the viewport frustum (frustum cullin purpose)
+	//! Update this viewport frustum (frustum cullin purpose)
 	/*! Return true if the frustum has changed*/
 	inline bool updateFrustum(GLC_Matrix4x4* pMat= NULL);
 
+	//! Add a clipping plane to this viewport
+	void addClipPlane(GLenum planeGlEnum, GLC_Plane* pPlane);
+
+	//! Set the clipping plane usage
+	void useClipPlane(bool flag);
 //@}
 
 
 /////////////////////////////////////////////////////////////////////
 //! @name zoom Functions
 //{@
-	//! reframe the current scene
+	//! Set the viewport's camera in order to reframe on the current scene
 	/*! box shouldn't be empty*/
 	void reframe(const GLC_BoundingBox& box);
 
@@ -264,7 +267,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! Viewport's Camera
+	//! Viewport's camera
 	GLC_Camera *m_pViewCam;
 
 	double m_dCamDistMax;		//!< Camera Maximum distance (far clipping plane)
@@ -294,6 +297,12 @@ private:
 
 	//! The frustum associated to the viewport
 	GLC_Frustum m_Frustum;
+
+	//! The list of additionnal clipping plane
+	QHash<GLenum, GLC_Plane*> m_ClipPlane;
+
+	//! Flag to know if clipping plane must be used
+	bool m_UseClipPlane;
 };
 
 bool GLC_Viewport::updateFrustum(GLC_Matrix4x4* pMat)
@@ -313,5 +322,4 @@ bool GLC_Viewport::updateFrustum(GLC_Matrix4x4* pMat)
 		return m_Frustum.update(*pMat);
 	}
 }
-
 #endif //GLC_VIEWPORT_H_
