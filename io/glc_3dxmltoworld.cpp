@@ -422,10 +422,10 @@ void GLC_3dxmlToWorld::loadProductStructure()
 	// Load local representation ref
 	loadLocalRepresentations();
 
-	// Load external ref
+	// Load external ref (3DXML V3)
 	loadExternalRef3D();
 
-	// Load extern representations
+	// Load extern representations (3DXML V4)
 	loadExternRepresentations();
 
 	{ // Link locals instance with reference
@@ -721,6 +721,7 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 			GLC_StructReference* pCurrentRef= new GLC_StructReference(pRep);
 			pCurrentRef->setName(QFileInfo(currentRefFileName).baseName());
 			m_ExternalReferenceHash.insert(currentRefFileName, pCurrentRef);
+
 		}
 		else if (!m_LoadStructureOnly && setStreamReaderToFile(currentRefFileName))
 		{
