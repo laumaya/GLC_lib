@@ -25,7 +25,7 @@
 //! \file glc_geomtools.cpp implementation of geometry function.
 
 #include "glc_geomtools.h"
-#include "../maths/glc_matrix4x4.h"
+#include "glc_matrix4x4.h"
 
 //////////////////////////////////////////////////////////////////////
 //Tools Functions

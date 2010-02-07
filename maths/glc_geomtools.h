@@ -29,7 +29,9 @@
 
 #include <QVector>
 #include <QList>
-#include "glc_mesh.h"
+#include "../geometry/glc_mesh.h"
+
+#include "../glc_config.h"
 
 namespace glc
 {
@@ -47,35 +49,35 @@ namespace glc
 	 *  - Empty QVector if there is no intersection
 	 *  - Qvector size 1 if there is a unique intersection
 	 *  - Qvector size 2 if the segement overlap*/
-	QVector<GLC_Point2d> findIntersection(const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&);
+	GLC_LIB_EXPORT QVector<GLC_Point2d> findIntersection(const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&);
 
-	//! return true if there is an intersection between 2 segments
-	bool isIntersected(const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&);
+	//! Return true if there is an intersection between 2 segments
+	GLC_LIB_EXPORT bool isIntersected(const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&);
 
 	//! return true if there is an intersection between a ray and a segment
-	bool isIntersectedRaySegment(const GLC_Point2d&, const GLC_Vector2d&, const GLC_Point2d&, const GLC_Point2d&);
+	GLC_LIB_EXPORT bool isIntersectedRaySegment(const GLC_Point2d&, const GLC_Vector2d&, const GLC_Point2d&, const GLC_Point2d&);
 
-	//! find intersection of two intervals [u0, u1] and [v0, v1]
+	//! Find intersection of two intervals [u0, u1] and [v0, v1]
 	/*! Return the intersection as QVector of GLC_Vector2d
 	 *  - Empty QVector if there is no intersection
 	 *  - Qvector size 1 if there is a unique intersection
 	 *  - Qvector size 2 if the segement overlap*/
-	QVector<double> findIntersection(const double&, const double&, const double&, const double&);
+	GLC_LIB_EXPORT QVector<double> findIntersection(const double&, const double&, const double&, const double&);
 
-	//! return true if the segment is in polygon cone
-	bool segmentInCone(const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&);
+	//! Return true if the segment is in polygon cone
+	GLC_LIB_EXPORT bool segmentInCone(const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&, const GLC_Point2d&);
 
 	//! Return true if the segment is a polygon diagonal
-	bool isDiagonal(const QList<GLC_Point2d>&, const int, const int);
+	GLC_LIB_EXPORT bool isDiagonal(const QList<GLC_Point2d>&, const int, const int);
 
 	//! Triangulate a polygon
-	void triangulate(QList<GLC_Point2d>&, QList<int>&, QList<int>&);
+	GLC_LIB_EXPORT void triangulate(QList<GLC_Point2d>&, QList<int>&, QList<int>&);
 
-	//! return true if the polygon is couterclockwise ordered
-	bool isCounterclockwiseOrdered(const QList<GLC_Point2d>&);
+	//! Return true if the polygon is couterclockwise ordered
+	GLC_LIB_EXPORT bool isCounterclockwiseOrdered(const QList<GLC_Point2d>&);
 
 	//! Triangulate a no convex polygon
-	void triangulatePolygon(QList<GLuint>*, const QList<float>&);
+	GLC_LIB_EXPORT void triangulatePolygon(QList<GLuint>*, const QList<float>&);
 
 
 //@}
