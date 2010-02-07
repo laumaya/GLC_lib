@@ -29,7 +29,7 @@
 #include "../sceneGraph/glc_world.h"
 #include "glc_objmtlloader.h"
 #include "../glc_fileformatexception.h"
-#include "../geometry/glc_geomtools.h"
+#include "../maths/glc_geomtools.h"
 #include "../sceneGraph/glc_structreference.h"
 #include "../sceneGraph/glc_structinstance.h"
 #include "../sceneGraph/glc_structoccurence.h"

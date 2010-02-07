@@ -25,7 +25,7 @@
 #include "glc_colladatoworld.h"
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
-#include "../geometry/glc_geomtools.h"
+#include "../maths/glc_geomtools.h"
 #include "../glc_factory.h"
 
 // Default constructor
