@@ -33,7 +33,7 @@
 //! \class GLC_Line
 /*! \brief GLC_Line : OpenGL 3D Line*/
 
-/*! An GLC_Line is just a simple 3D Line*/
+/*! An GLC_Line is just a simple renderable 3D Line*/
 //////////////////////////////////////////////////////////////////////
 
 class GLC_LIB_EXPORT GLC_Line : public GLC_Geometry
