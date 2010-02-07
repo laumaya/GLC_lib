@@ -108,6 +108,9 @@ public:
 	//!Create a GLC_Rectangle
 	GLC_3DRep createRectangle(double, double);
 
+	//! Create a GLC_Rectangle from the given 3d point, normal and the given lenght
+	GLC_3DViewInstance createRectangle(const GLC_Point3d& point, const GLC_Vector3d& normal, double l1, double l2);
+
 	//! Create a GLC_World* with a QFile
 	GLC_World* createWorld(QFile &file, QStringList* pAttachedFileName= NULL) const;
 

@@ -39,6 +39,8 @@
 #include "viewport/glc_turntablemover.h"
 #include "viewport/glc_repcrossmover.h"
 #include "viewport/glc_reptrackballmover.h"
+#include "maths/glc_line3d.h"
+#include "maths/glc_geomtools.h"
 
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
@@ -146,6 +148,19 @@ GLC_3DRep GLC_Factory::createRectangle(double l1, double l2)
 	return newRectangle;
 }
 
+GLC_3DViewInstance GLC_Factory::createRectangle(const GLC_Point3d& point, const GLC_Vector3d& normal, double l1, double l2)
+{
+	// Create the rectangle to (0,0) and  z normal
+	GLC_3DViewInstance rectangleInstance(createRectangle(l1, l2));
+
+	// Create the plane rotation matrix
+	const GLC_Matrix4x4 rotationMatrix(glc::Z_AXIS, normal);
+	qDebug() << rotationMatrix.toString();
+	// Vector from origin to the plane
+	rectangleInstance.setMatrix(GLC_Matrix4x4(point) * rotationMatrix);
+
+	return rectangleInstance;
+}
 // Create a GLC_World* with a QFile
 GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName) const
 {
