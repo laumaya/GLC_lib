@@ -65,9 +65,10 @@ public:
 	inline GLC_Point3d startingPoint() const
 	{return m_Point;}
 
-	//! Return the defining vector of this line
-	inline GLC_Vector3d definingVector() const
+	//! Return the direction vector of this line
+	inline GLC_Vector3d direction() const
 	{return m_Vector;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -79,9 +80,9 @@ public:
 	inline void setStartingPoint(const GLC_Point3d& point)
 	{m_Point= point;}
 
-	//! Set the defining vector of this line
-	inline void setDefiningVector(const GLC_Vector3d& vector)
-	{m_Vector= vector;}
+	//! Set the direction vector of this line
+	inline void setDirection(const GLC_Vector3d& direction)
+	{m_Vector= direction;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
