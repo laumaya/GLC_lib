@@ -27,6 +27,8 @@
 #include "glc_geomtools.h"
 #include "glc_matrix4x4.h"
 
+#include <QtGlobal>
+
 //////////////////////////////////////////////////////////////////////
 //Tools Functions
 //////////////////////////////////////////////////////////////////////
@@ -471,7 +473,37 @@ void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulk
 		Q_ASSERT(size == pIndexList->size());
 }
 
+bool glc::lineIntersectPlane(const GLC_Line3d& line, const GLC_Plane& plane, GLC_Point3d* pPoint)
+{
+	const GLC_Vector3d n= plane.normal();
+	const GLC_Point3d p= line.startingPoint();
+	const GLC_Vector3d d= line.direction();
 
+	const double denominator= d * n;
 
+	if (qFuzzyCompare(fabs(denominator), 0.0))
+	{
+		// The line is parallel to the plane
+		return false;
+	}
+	else
+	{
+		// The line intersect the plane by one point
+		const double t= -((n * p) + plane.coefD()) / denominator;
+		(*pPoint)= p + (t * d);
+
+		return true;
+	}
+}
+
+GLC_Point3d glc::project(const GLC_Point3d& point, const GLC_Line3d& line)
+{
+	// Create the plane from the point with normal define by the line direction
+	const GLC_Plane plane(point, line.direction().normalize());
+	GLC_Point3d intersection;
+	const bool intersect= lineIntersectPlane(line, plane, &intersection);
+	Q_ASSERT(intersect == true);
+	return intersection;
+}
 
 
