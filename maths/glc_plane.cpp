@@ -51,8 +51,17 @@ GLC_Plane::GLC_Plane(const GLC_Vector3d& normal, double d)
 	m_Eq[1]= normal.y();
 	m_Eq[2]= normal.z();
 	m_Eq[3]= d;
-
 }
+
+GLC_Plane::GLC_Plane(const GLC_Vector3d& normal, const GLC_Point3d& point)
+: m_Eq()
+{
+	m_Eq[0]= normal.x();
+	m_Eq[1]= normal.y();
+	m_Eq[2]= normal.z();
+	m_Eq[3]= -normal * point;
+}
+
 
 GLC_Plane::GLC_Plane(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3)
 : m_Eq()

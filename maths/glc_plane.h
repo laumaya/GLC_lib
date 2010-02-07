@@ -27,13 +27,16 @@
 #define GLC_PLANE_H_
 
 #include "glc_vector3d.h"
+
+#include "glc_config.h"
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Plane
 /*! \brief GLC_Plane : Math plane representation */
 
 /*! GLC_Plane is definined by its equation : Ax + By + CZ + D= 0 */
 //////////////////////////////////////////////////////////////////////
-class GLC_Plane
+class GLC_LIB_EXPORT GLC_Plane
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -44,10 +47,14 @@ public:
 	GLC_Plane();
 
 	//! Contruct a plan with specified parameter
-	GLC_Plane(double, double, double, double);
+	/*! Plane equation : Ax + By + CZ + D= 0*/
+	GLC_Plane(double A, double B, double C, double D);
 
-	//! Construct a plane with normal vector and lenght
-	GLC_Plane(const GLC_Vector3d&, double);
+	//! Construct a plane with normal vector and the minimum distance from this plane to the origin
+	GLC_Plane(const GLC_Vector3d& normal, double minimumDistance);
+
+	//! Construct a plane with normal vector and a 3d point
+	GLC_Plane(const GLC_Vector3d& normal, const GLC_Point3d& point);
 
 	//! Contruct a plane with 3 given 3d points
 	/*! first : origine, second x, third y*/
@@ -60,7 +67,7 @@ public:
 	GLC_Plane &operator=(const GLC_Plane&);
 
 	//! Destructor
-	virtual ~GLC_Plane();
+	~GLC_Plane();
 //@}
 
 //////////////////////////////////////////////////////////////////////
