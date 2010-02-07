@@ -65,12 +65,10 @@ public:
 	inline GLC_Matrix4x4(const float *);
 
 	//! Construct rotation matrix from a 3d vector and an angle in radians
-	inline GLC_Matrix4x4(const GLC_Vector3d &Vect, const double &dAngleRad)
-	{setMatRot(Vect, dAngleRad);}
+	inline GLC_Matrix4x4(const GLC_Vector3d &Vect, const double &dAngleRad);
 
 	//! Construct rotation matrix from 2 3d vectors
-	inline GLC_Matrix4x4(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2)
-	{setMatRot(Vect1, Vect2);}
+	inline GLC_Matrix4x4(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2);
 
 	//! Construct translation matrix from a 3d vector
 	inline GLC_Matrix4x4(const GLC_Vector3d &Vect)
@@ -252,10 +250,7 @@ inline double getDeterminant3x3(const double *Mat3x3)
 
 GLC_Matrix4x4::GLC_Matrix4x4()
 {
-	m_Matrix[0]= 1.0; m_Matrix[4]= 0.0; m_Matrix[8]=  0.0; m_Matrix[12]= 0.0;
-	m_Matrix[1]= 0.0; m_Matrix[5]= 1.0; m_Matrix[9]=  0.0; m_Matrix[13]= 0.0;
-	m_Matrix[2]= 0.0; m_Matrix[6]= 0.0; m_Matrix[10]= 1.0; m_Matrix[14]= 0.0;
-	m_Matrix[3]= 0.0; m_Matrix[7]= 0.0; m_Matrix[11]= 0.0; m_Matrix[15]= 1.0;
+	setToIdentity();
 }
 
 GLC_Matrix4x4::GLC_Matrix4x4(const float *Tableau)
@@ -265,6 +260,17 @@ GLC_Matrix4x4::GLC_Matrix4x4(const float *Tableau)
 	{
 		m_Matrix[i]= static_cast<double>(Tableau[i]);
 	}
+}
+GLC_Matrix4x4::GLC_Matrix4x4(const GLC_Vector3d &Vect, const double &dAngleRad)
+{
+	setToIdentity();
+	setMatRot(Vect, dAngleRad);
+}
+
+GLC_Matrix4x4::GLC_Matrix4x4(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2)
+{
+	setToIdentity();
+	setMatRot(Vect1, Vect2);
 }
 
 GLC_Matrix4x4 GLC_Matrix4x4::operator * (const GLC_Matrix4x4 &Mat) const
