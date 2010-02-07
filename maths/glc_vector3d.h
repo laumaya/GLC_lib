@@ -51,6 +51,10 @@ class GLC_LIB_EXPORT GLC_Vector3d
 	inline friend GLC_Vector3d operator - (const GLC_Vector3d &Vect)
 	{return GLC_Vector3d(-Vect.m_Vector[0], -Vect.m_Vector[1], -Vect.m_Vector[2]);}
 
+	//! Overload scalar operator
+	inline friend GLC_Vector3d operator*(double s, const GLC_Vector3d &v)
+	{return GLC_Vector3d(s * v.m_Vector[0], s * v.m_Vector[1], s * v.m_Vector[2]);}
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
