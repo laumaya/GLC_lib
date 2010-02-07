@@ -61,7 +61,9 @@ HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
 						maths/glc_matrix4x4.h \
 						maths/glc_interpolator.h \
 						maths/glc_distance.h \
-						maths/glc_plane.h
+						maths/glc_plane.h \
+						maths/glc_geomtools.h \
+						maths/glc_line3d.h
 						
 HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_objtoworld.h \
@@ -88,7 +90,6 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_cylinder.h \
 							geometry/glc_point.h \
 							geometry/glc_box.h \
-           					geometry/glc_geomtools.h \
 							geometry/glc_meshdata.h \
 							geometry/glc_primitivegroup.h \
 							geometry/glc_mesh.h \
@@ -182,7 +183,9 @@ SOURCES += lib3ds/atmosphere.c \
 SOURCES +=	maths/glc_matrix4x4.cpp \
 			maths/glc_interpolator.cpp \
 			maths/glc_distance.cpp \
-			maths/glc_plane.cpp
+			maths/glc_plane.cpp \
+			maths/glc_geomtools.cpp \
+			maths/glc_line3d.cpp
 
 SOURCES +=	io/glc_objmtlloader.cpp \
 			io/glc_objtoworld.cpp \
@@ -209,7 +212,6 @@ SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_cylinder.cpp \
 			geometry/glc_point.cpp \
 			geometry/glc_box.cpp \
-			geometry/glc_geomtools.cpp \
 			geometry/glc_meshdata.cpp \
 			geometry/glc_primitivegroup.cpp \
 			geometry/glc_mesh.cpp \
@@ -327,7 +329,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Octree \
     		   include/GLC_OctreeNode \
     		   include/GLC_Plane \
-    		   include/GLC_Frustum
+    		   include/GLC_Frustum \
+    		   include/GLC_GeomTools \
+    		   include/GLC_Line3d
     		   
     			   
 # Linux install configuration
