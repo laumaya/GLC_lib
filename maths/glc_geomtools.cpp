@@ -480,9 +480,9 @@ bool glc::lineIntersectPlane(const GLC_Line3d& line, const GLC_Plane& plane, GLC
 	const GLC_Vector3d d= line.direction();
 
 	const double denominator= d * n;
-
 	if (qFuzzyCompare(fabs(denominator), 0.0))
 	{
+		qDebug() << " glc::lineIntersectPlane : Line parallel to the plane";
 		// The line is parallel to the plane
 		return false;
 	}
@@ -499,7 +499,7 @@ bool glc::lineIntersectPlane(const GLC_Line3d& line, const GLC_Plane& plane, GLC
 GLC_Point3d glc::project(const GLC_Point3d& point, const GLC_Line3d& line)
 {
 	// Create the plane from the point with normal define by the line direction
-	const GLC_Plane plane(point, line.direction().normalize());
+	const GLC_Plane plane(line.direction().normalize(), point);
 	GLC_Point3d intersection;
 	const bool intersect= lineIntersectPlane(line, plane, &intersection);
 	Q_ASSERT(intersect == true);
