@@ -35,7 +35,7 @@
 //! \class GLC_Rectangle
 /*! \brief GLC_Rectangle : OpenGL flat 3D Rectangle*/
 
-/*! An GLC_Rectangle is just a simple 3D Rectangle which use VBO*/
+/*! An GLC_Rectangle is just a simple 3D Rectangle*/
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_Rectangle : public GLC_Mesh
 {
@@ -48,10 +48,10 @@ public:
 	//! Default constructor
 	GLC_Rectangle();
 
-	//! Complete constructor
-	GLC_Rectangle(double, double);
+	//! Construct a rectangle with the given lenght
+	GLC_Rectangle(double l1, double l2);
 
-	//! Copy constructor
+	//! Construct a restangle with the given rectangle
 	GLC_Rectangle(const GLC_Rectangle&);
 
 	//! Destructor
@@ -62,18 +62,18 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return length 1
+	//! Return length 1 of this rectangle
 	inline double length1() const
 	{ return m_L1;}
 
-	//! Return length 2
+	//! Return length 2 of this rectangle
 	inline double length2() const
 	{ return m_L2;}
 
-	//! clone the rectangle
+	//! Clone this rectangle
 	virtual GLC_Geometry* clone() const;
 
-	//! return the rectangle bounding box
+	//! Return this rectangle bounding box
 	virtual GLC_BoundingBox& boundingBox(void);
 
 //@}
@@ -82,14 +82,14 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set the rectangle
-	GLC_Rectangle& setRectangle(double, double);
+	//! Set this rectangle with the given lenght
+	GLC_Rectangle& setRectangle(double l1, double l2);
 
-	//! Set rectangle length 1
-	void setLength1(double);
+	//! Set this rectangle length 1
+	void setLength1(double l1);
 
-	//! Set rectangle length 2
-	void setLength2(double);
+	//! Set this rectangle length 2
+	void setLength2(double l2);
 
 //@}
 
@@ -111,8 +111,8 @@ private:
 //@{
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Create rectangle mesh
-	void createMesh();
+	//! Create this rectangle mesh and wire
+	void createMeshAndWire();
 //@}
 
 

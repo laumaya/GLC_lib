@@ -27,7 +27,6 @@
 #include "glc_rectangle.h"
 #include "../glc_state.h"
 
-// Default constructor
 GLC_Rectangle::GLC_Rectangle()
 :GLC_Mesh()
 , m_L1(1.0)
@@ -36,7 +35,6 @@ GLC_Rectangle::GLC_Rectangle()
 
 }
 
-// Complete constructor
 GLC_Rectangle::GLC_Rectangle(double l1, double l2)
 :GLC_Mesh()
 , m_L1(l1)
@@ -45,7 +43,6 @@ GLC_Rectangle::GLC_Rectangle(double l1, double l2)
 
 }
 
-// Copy constructor
 GLC_Rectangle::GLC_Rectangle(const GLC_Rectangle& rect)
 :GLC_Mesh(rect)
 , m_L1(rect.m_L1)
@@ -63,7 +60,6 @@ GLC_Rectangle::~GLC_Rectangle()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// clone the rectangle
 GLC_Geometry* GLC_Rectangle::clone() const
 {
 	return new GLC_Rectangle(*this);
@@ -74,7 +70,7 @@ GLC_BoundingBox& GLC_Rectangle::boundingBox()
 {
 	if (GLC_Mesh::isEmpty())
 	{
-		createMesh();
+		createMeshAndWire();
 	}
 	return GLC_Mesh::boundingBox();
 }
@@ -83,7 +79,6 @@ GLC_BoundingBox& GLC_Rectangle::boundingBox()
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Set the rectangle
 GLC_Rectangle& GLC_Rectangle::setRectangle(double l1, double l2)
 {
 	m_L1= l1;
@@ -97,7 +92,6 @@ GLC_Rectangle& GLC_Rectangle::setRectangle(double l1, double l2)
 	return *this;
 }
 
-// Set rectangle length 1
 void GLC_Rectangle::setLength1(double value)
 {
 	m_L1= value;
@@ -107,7 +101,6 @@ void GLC_Rectangle::setLength1(double value)
 	GLC_Mesh::clearOnlyMesh();
 }
 
-// Set rectangle length 2
 void GLC_Rectangle::setLength2(double value)
 {
 	m_L2= value;
@@ -121,12 +114,11 @@ void GLC_Rectangle::setLength2(double value)
 // Private OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-// Virtual interface for OpenGL Geometry set up.
 void GLC_Rectangle::glDraw(const GLC_RenderProperties& renderProperties)
 {
 	if (GLC_Mesh::isEmpty())
 	{
-		createMesh();
+		createMeshAndWire();
 	}
 
 	GLC_Mesh::glDraw(renderProperties);
@@ -136,8 +128,7 @@ void GLC_Rectangle::glDraw(const GLC_RenderProperties& renderProperties)
 // Private services Functions
 //////////////////////////////////////////////////////////////////////
 
-// Create rectangle mesh
-void GLC_Rectangle::createMesh()
+void GLC_Rectangle::createMeshAndWire()
 {
 	Q_ASSERT(GLC_Mesh::isEmpty());
 
@@ -148,7 +139,10 @@ void GLC_Rectangle::createMesh()
 	GLfloatVector normalsVector;
 	GLfloatVector texelVector;
 
-	// Face 1
+	// Wire data
+	GLfloatVector wireData;
+
+	// the unique face of this rectangle
 	verticeVector << -lgX; verticeVector << -lgY; verticeVector << 0.0f;
 	normalsVector << 0.0f; normalsVector << 0.0f; normalsVector << 1.0f;
 	texelVector << 0.0f; texelVector << 0.0f;
@@ -169,6 +163,10 @@ void GLC_Rectangle::createMesh()
 	GLC_Mesh::addVertices(verticeVector);
 	GLC_Mesh::addNormals(normalsVector);
 	GLC_Mesh::addTexels(texelVector);
+
+	// Add the first point of the rectangle for wire
+	verticeVector << -lgX; verticeVector << -lgY; verticeVector << 0.0f;
+	GLC_Geometry::addPolyline(verticeVector);
 
 	// Set the material to use
 	GLC_Material* pMaterial;
