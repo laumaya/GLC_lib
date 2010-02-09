@@ -155,11 +155,27 @@ GLC_3DViewInstance GLC_Factory::createRectangle(const GLC_Point3d& point, const 
 
 	// Create the plane rotation matrix
 	const GLC_Matrix4x4 rotationMatrix(glc::Z_AXIS, normal);
-	qDebug() << rotationMatrix.toString();
 	// Vector from origin to the plane
 	rectangleInstance.setMatrix(GLC_Matrix4x4(point) * rotationMatrix);
 
 	return rectangleInstance;
+}
+
+GLC_3DViewInstance GLC_Factory::createCuttingPlane(const GLC_Point3d& point, const GLC_Vector3d& normal, double l1, double l2, GLC_Material* pMat)
+{
+	// Create the rectangle to (0,0) and  z normal
+	GLC_Rectangle* pRectangle= new GLC_Rectangle(l1, l2);
+	pRectangle->replaceMasterMaterial(pMat);
+
+	GLC_3DViewInstance rectangleInstance(pRectangle);
+
+	// Create the plane rotation matrix
+	const GLC_Matrix4x4 rotationMatrix(glc::Z_AXIS, normal);
+	// Vector from origin to the plane
+	rectangleInstance.setMatrix(GLC_Matrix4x4(point) * rotationMatrix);
+
+	return rectangleInstance;
+
 }
 // Create a GLC_World* with a QFile
 GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName) const
