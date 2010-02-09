@@ -28,10 +28,12 @@
 #include "glc_3dviewcollection.h"
 #include "../glc_factory.h"
 
+int GLC_Octree::m_DefaultOctreeDepth= 3;
+
 GLC_Octree::GLC_Octree(GLC_3DViewCollection* pCollection)
 : GLC_SpacePartitioning(pCollection)
 , m_pRootNode(NULL)
-, m_OctreeDepth(3)
+, m_OctreeDepth(m_DefaultOctreeDepth)
 {
 
 
@@ -51,6 +53,11 @@ GLC_Octree::GLC_Octree(const GLC_Octree& octree)
 GLC_Octree::~GLC_Octree()
 {
 	delete m_pRootNode;
+}
+
+int  GLC_Octree::defaultDepth()
+{
+	return m_DefaultOctreeDepth;
 }
 
 void GLC_Octree::updateViewableInstances(const GLC_Frustum& frustum)
@@ -99,6 +106,11 @@ void GLC_Octree::createBox(GLC_Material* pMat, GLC_3DViewCollection* pCol)
 	{
 		createBoxWithMaterial(pCol, m_pRootNode, pMat);
 	}
+}
+
+void GLC_Octree::setDefaultDepth(int depth)
+{
+	m_DefaultOctreeDepth= depth;
 }
 
 void GLC_Octree::createBoxWithMaterial(GLC_3DViewCollection* pCol, GLC_OctreeNode* pNode, GLC_Material* pMat)

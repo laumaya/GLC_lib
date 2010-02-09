@@ -55,6 +55,15 @@ public:
 //@}
 
 //////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Return the default octree Depth
+	static int defaultDepth();
+
+//@}
+//////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
@@ -72,6 +81,9 @@ public:
 
 	//! Create octree box representation in the given collection with the specified material
 	void createBox(GLC_Material*, GLC_3DViewCollection* pCol= NULL);
+
+	//! Set the default octree depth
+	static void setDefaultDepth(int depth);
 
 //@}
 
@@ -93,6 +105,9 @@ private:
 
 	//! Octree depth
 	int m_OctreeDepth;
+
+	//! The default octree Depth
+	static int m_DefaultOctreeDepth;
 };
 
 #endif /* GLC_OCTREE_H_ */
