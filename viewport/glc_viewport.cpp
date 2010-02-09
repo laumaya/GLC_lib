@@ -58,6 +58,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_Frustum()
 , m_ClipPlane()
 , m_UseClipPlane(false)
+, m_3DWidget()
 {
 	// create a camera
 	m_pViewCam= new GLC_Camera;
@@ -263,6 +264,11 @@ void GLC_Viewport::glExecuteImagePlane()
 	}
 }
 
+void GLC_Viewport::render3DWidget()
+{
+	m_3DWidget.glExecute(0, glc::WireRenderFlag);
+	m_3DWidget.glExecute(0, glc::TransparentRenderFlag);
+}
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

@@ -34,6 +34,7 @@
 #include "../glc_boundingbox.h"
 #include "glc_frustum.h"
 #include "../maths/glc_plane.h"
+#include "../sceneGraph/glc_3dviewcollection.h"
 
 #include "../glc_config.h"
 
@@ -127,6 +128,10 @@ public:
 	inline GLC_Matrix4x4 projectionMatrix() const
 	{return m_ProjectionMatrix;}
 
+	//! Return an handle to the widget 3D collection
+	inline GLC_3DViewCollection* widget3dCollectionHandle()
+	{return &m_3DWidget;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -169,8 +174,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! display this viewport's image plane
+	//! Render this viewport's image plane
 	void glExecuteImagePlane();
+
+public:
+
+	//! Render viewport 3D widget
+	void render3DWidget();
 
 //@}
 
@@ -238,6 +248,10 @@ public:
 
 	//! Set the clipping plane usage
 	void useClipPlane(bool flag);
+
+	//! Add 3DWidget to this viewport
+	inline void add3DWidget(GLC_3DViewInstance& widget)
+	{m_3DWidget.add(widget);}
 //@}
 
 
@@ -303,6 +317,9 @@ private:
 
 	//! Flag to know if clipping plane must be used
 	bool m_UseClipPlane;
+
+	//! The collection wich contains 3D widget
+	GLC_3DViewCollection m_3DWidget;
 };
 
 bool GLC_Viewport::updateFrustum(GLC_Matrix4x4* pMat)
