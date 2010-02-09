@@ -25,6 +25,7 @@
 
 #include "glc_octreenode.h"
 
+bool GLC_OctreeNode::m_useBoundingSphere= true;
 
 GLC_OctreeNode::GLC_OctreeNode(const GLC_BoundingBox& boundingBox, GLC_OctreeNode* pParent)
 : m_BoundingBox(boundingBox)
@@ -63,7 +64,10 @@ GLC_OctreeNode::~GLC_OctreeNode()
 	}
 }
 
-
+bool GLC_OctreeNode::intersectionWithBoundingSphereUsed()
+{
+	return m_useBoundingSphere;
+}
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -304,6 +308,10 @@ void GLC_OctreeNode::removeEmptyChildren()
 	}
 }
 
+void GLC_OctreeNode::useBoundingSphereIntersection(bool use)
+{
+	m_useBoundingSphere= use;
+}
 
 void GLC_OctreeNode::unableViewFlag(QSet<GLC_3DViewInstance*>* pInstanceSet)
 {

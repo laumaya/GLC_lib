@@ -68,8 +68,7 @@ public:
 	{return m_BoundingBox;}
 
 	//! Return True if this octree node intersect the bounding box
-	inline bool intersect(const GLC_BoundingBox& boundingBox)
-	{return m_BoundingBox.intersectBoundingSphere(boundingBox);}
+	inline bool intersect(const GLC_BoundingBox& boundingBox);
 
 	//! Return true if this octree has child octree node
 	inline bool hasChild() const
@@ -96,6 +95,9 @@ public:
 	inline bool isEmpty() const
 	{return m_Empty;}
 
+	//! Return true if intersection are calculated with bounded sphere
+	static bool intersectionWithBoundingSphereUsed();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -116,6 +118,9 @@ public:
 
 	//! Remove empty child octree node from this octree node
 	void removeEmptyChildren();
+
+	//! Set intersection to bounding sphere
+	static void useBoundingSphereIntersection(bool);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -147,6 +152,17 @@ private:
 	//! Flag to know if the node is empty
 	bool m_Empty;
 
+	//! Flag to know if intersection is calculated with bounding sphere
+	static bool m_useBoundingSphere;
+
 };
+
+bool GLC_OctreeNode::intersect(const GLC_BoundingBox& boundingBox)
+{
+	if (m_useBoundingSphere)
+		return m_BoundingBox.intersectBoundingSphere(boundingBox);
+	else
+		return m_BoundingBox.intersect(boundingBox);
+}
 
 #endif /* GLC_OCTREENODE_H_ */
