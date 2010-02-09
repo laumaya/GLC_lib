@@ -93,6 +93,15 @@ public:
 
 	//! Return the current cache manager
 	static GLC_CacheManager& currentCacheManager();
+
+	//! Return true if space partitionning is used
+	static bool isSpacePartitionningActivated();
+
+	//! Return the default octree depth
+	static int defaultOctreeDepth();
+
+	//! Return true if frustum culling is activated
+	static bool isFrustumCullingActivated();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -132,6 +141,15 @@ public:
 
 	//! Set the current cache manager
 	static void setCurrentCacheManager(const GLC_CacheManager&);
+
+	//! Set space partionning usage
+	static void setSpacePartionningUsage(const bool);
+
+	//! Set the default octree depth
+	static void setDefaultOctreeDepth(int);
+
+	//! Set the frustum culling usage
+	static void setFrustumCullingUsage(bool);
 
 //@}
 
@@ -177,6 +195,12 @@ private:
 
 	//! The current cache manager
 	static GLC_CacheManager m_CacheManager;
+
+	//! Space partitionning activation
+	static bool m_IsSpacePartitionningActivated;
+
+	//! Frustum culling activated
+	static bool m_IsFrustumCullingActivated;
 
 };
 
