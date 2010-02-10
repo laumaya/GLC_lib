@@ -22,6 +22,7 @@
 
  *****************************************************************************/
 //! \file glc_plane.cpp Implementation of the GLC_Plane class.
+
 #include <QtDebug>
 #include "glc_plane.h"
 
