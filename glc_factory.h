@@ -63,11 +63,7 @@ class GLC_LIB_EXPORT GLC_Factory : public QObject
 
 public:
 	//! Get unique instance of the factory
-	static GLC_Factory* instance(const QGLContext *);
-
-	//! Get unique instance of the factory
-	inline static GLC_Factory* instance()
-	{return m_pFactory;}
+	static GLC_Factory* instance(const QGLContext * pContext= NULL);
 
 protected:
 	//! Constructor
@@ -87,6 +83,7 @@ public:
 
 	//! Create a GLC_Point
 	GLC_3DRep createPoint(const GLC_Point3d &coord) const;
+
 	GLC_3DRep createPoint(double x, double y, double z) const;
 
 	//! Create a GLC_PointSprite
@@ -100,6 +97,7 @@ public:
 
 	//! Create a GLC_Box
 	GLC_3DRep createBox(double lx, double ly, double lz) const;
+
 	GLC_3DViewInstance createBox(const GLC_BoundingBox& boundingBox) const;
 
 	//! Create a GLC_Cylinder
@@ -125,29 +123,34 @@ public:
 
 	//! Create default material
 	GLC_Material* createMaterial() const;
+
 	//! create a material with an ambient color
 	GLC_Material* createMaterial(const GLfloat *pAmbiantColor) const;
+
 	//! create a material with an ambient color
 	GLC_Material* createMaterial(const QColor &color) const;
+
 	//! create a material textured with a texture
 	GLC_Material* createMaterial(GLC_Texture* pTexture) const;
+
 	//! create a material textured with a image file name
 	GLC_Material* createMaterial(const QString &textureFullFileName) const;
+
 	//! create a material textured with a QImage
 	GLC_Material* createMaterial(const QImage &) const;
 
 	//! Create a GLC_Texture
 	GLC_Texture* createTexture(const QString &textureFullFileName) const;
+
 	//! Create a GLC_Texture with a QImage
 	GLC_Texture* createTexture(const QImage &) const;
-
 
 	//! Create the default mover controller
 	GLC_MoverController createDefaultMoverController(const QColor&, GLC_Viewport*);
 
 //@}
 
-	signals:
+signals:
 	//! For progress bar management
 	void currentQuantum(int) const;
 
@@ -160,7 +163,7 @@ private:
 	static GLC_Factory* m_pFactory;
 
 	//! The QGLContext attached to the factory (rendering context)
-	QGLContext* m_pQGLContext;
+	static QGLContext* m_pQGLContext;
 
 };
 

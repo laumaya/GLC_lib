@@ -44,6 +44,7 @@
 
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
+QGLContext* GLC_Factory::m_pQGLContext= NULL;
 
 //////////////////////////////////////////////////////////////////////
 // static method
@@ -55,6 +56,10 @@ GLC_Factory* GLC_Factory::instance(const QGLContext *pContext)
 	{
 		m_pFactory= new GLC_Factory(pContext);
 	}
+	else if ((NULL != pContext) && (m_pQGLContext != pContext))
+	{
+		m_pQGLContext= const_cast<QGLContext*>(pContext);
+	}
 	return m_pFactory;
 }
 
@@ -64,15 +69,14 @@ GLC_Factory* GLC_Factory::instance(const QGLContext *pContext)
 
 // Protected constructor
 GLC_Factory::GLC_Factory(const QGLContext *pContext)
-: m_pQGLContext(const_cast<QGLContext*>(pContext))
 {
-
+	m_pQGLContext= (const_cast<QGLContext*>(pContext));
 }
 
 // Destructor
 GLC_Factory::~GLC_Factory()
 {
-	m_pFactory= NULL;
+	delete m_pFactory;
 }
 
 //////////////////////////////////////////////////////////////////////
