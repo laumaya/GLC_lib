@@ -34,7 +34,7 @@
 #include <QList>
 #include <QSet>
 
-class GLC_OctreeNode;
+class GLC_LIB_EXPORT GLC_OctreeNode;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_OctreeNode
