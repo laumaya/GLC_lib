@@ -126,7 +126,7 @@ public:
 	{return (m_pBoundingBox != NULL) && m_IsBoundingBoxValid && m_3DRep.boundingBoxIsValid();}
 
 	//! Return transfomation 4x4Matrix
-	inline const GLC_Matrix4x4 matrix() const
+	inline const GLC_Matrix4x4& matrix() const
 	{return m_MatPos;}
 
 	//! Make a deep copy of the instance
