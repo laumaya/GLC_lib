@@ -28,8 +28,9 @@
 
 #include "../maths/glc_plane.h"
 #include "../glc_boundingbox.h"
+#include "../glc_config.h"
 
-class GLC_Viewport;
+class GLC_LIB_EXPORT GLC_Viewport;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Frustum
@@ -37,7 +38,7 @@ class GLC_Viewport;
 
 /*! GLC_Frustum by 6 planes */
 //////////////////////////////////////////////////////////////////////
-class GLC_Frustum
+class GLC_LIB_EXPORT GLC_Frustum
 {
 private:
 	enum planeId
@@ -68,7 +69,7 @@ public:
 	GLC_Frustum(const GLC_Frustum&);
 
 	//! Destructor
-	virtual ~GLC_Frustum();
+	~GLC_Frustum();
 //@}
 
 //////////////////////////////////////////////////////////////////////
