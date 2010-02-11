@@ -62,6 +62,9 @@ namespace glc
 	//! Simple User ID generation
 	GLC_LIB_EXPORT GLC_uint GLC_GenUserID(void);
 
+	//! Simple 3D widget ID generation
+	GLC_LIB_EXPORT GLC_uint GLC_Gen3DWidgetID(void);
+
 	//! Return the GLC_uint decoded ID from RGB encoded ID
 	inline GLC_uint decodeRgbId(const GLubyte*);
 
@@ -74,6 +77,7 @@ namespace glc
 	extern QMutex iDMutex;
 	extern QMutex geomIdMutex;
 	extern QMutex userIdMutex;
+	extern QMutex widget3dIdMutex;
 };
 
 // Return the GLC_uint decoded ID from RGBA encoded ID

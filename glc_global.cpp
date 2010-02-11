@@ -29,6 +29,7 @@
 QMutex glc::iDMutex;
 QMutex glc::geomIdMutex;
 QMutex glc::userIdMutex;
+QMutex glc::widget3dIdMutex;
 
 GLC_uint glc::GLC_GenID(void)
 {
@@ -54,5 +55,14 @@ GLC_uint glc::GLC_GenUserID(void)
 	glc::userIdMutex.lock();
 	Id++;
 	glc::userIdMutex.unlock();
+	return Id;
+}
+
+GLC_uint glc::GLC_Gen3DWidgetID(void)
+{
+	static GLC_uint Id= 0;
+	glc::widget3dIdMutex.lock();
+	Id++;
+	glc::widget3dIdMutex.unlock();
 	return Id;
 }

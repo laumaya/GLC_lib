@@ -137,6 +137,12 @@ HEADERS_GLC += glc_global.h \
            glc_config.h \
            glc_cachemanager.h
            
+HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
+						3DWidget/glc_cuttingplane.h \
+						3DWidget/glc_3dwidgetmanager.h \
+						3DWidget/glc_3dwidgetmanagerhandle.h
+
+
 HEADERS_PQP +=		PQP/PQP_Compile.h \
 					PQP/TriDist.h \
 					PQP/Tri.h \
@@ -257,7 +263,12 @@ SOURCES +=	glc_global.cpp \
 			glc_ext.cpp \
 			glc_state.cpp \
 			glc_cachemanager.cpp
-           
+
+SOURCES +=	3DWidget/glc_3dwidget.cpp \
+			3DWidget/glc_cuttingplane.cpp \
+ 			3DWidget/glc_3dwidgetmanager.cpp \
+			3DWidget/glc_3dwidgetmanagerhandle.cpp
+         
 SOURCES += PQP/TriDist.cpp \
 		   PQP/PQP.cpp \
 		   PQP/BV.cpp \
@@ -331,7 +342,11 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Plane \
     		   include/GLC_Frustum \
     		   include/GLC_GeomTools \
-    		   include/GLC_Line3d
+    		   include/GLC_Line3d \
+    		   include/GLC_3DWidget \
+    		   include/GLC_CuttingPlane \
+    		   include/GLC_3DWidgetManager \
+    		   include/GLC_3DWidgetManagerHandle
     		   
     			   
 # Linux install configuration
@@ -353,6 +368,7 @@ unix {
 	include_glc_geometry.path = $${INCLUDE_DIR}/GLC_lib/geometry
 	include_glc_shading.path = $${INCLUDE_DIR}/GLC_lib/shading
 	include_glc_viewport.path = $${INCLUDE_DIR}/GLC_lib/viewport
+	include_glc_3dwidget.path = $${INCLUDE_DIR}/GLC_lib/3DWidget
 }
 
 # Windows Install configuration
@@ -371,6 +387,7 @@ win32 {
     include_glc_geometry.path = $${INCLUDE_DIR}/geometry
     include_glc_shading.path = $${INCLUDE_DIR}/shading
     include_glc_viewport.path = $${INCLUDE_DIR}/viewport
+    include_glc_3dwidget.path = $${INCLUDE_DIR}/3DWidget
 }    
 
 include.files = $${HEADERS_GLC} $${HEADERS_INST}
@@ -384,6 +401,7 @@ include_glc_scengraph.files= $${HEADERS_GLC_SCENEGRAPH}
 include_glc_geometry.files= $${HEADERS_GLC_GEOMETRY}
 include_glc_shading.files = $${HEADERS_GLC_SHADING}
 include_glc_viewport.files = $${HEADERS_GLC_VIEWPORT}
+include_glc_3dwidget.files = $${HEADERS_GLC_3DWIDGET}
 
 # install library
 target.path = $${LIB_DIR}
@@ -391,7 +409,7 @@ target.path = $${LIB_DIR}
 # "make install" configuration options
 INSTALLS += include_lib3ds include_glext include_quazip include_glc_maths include_glc_io
 INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport
-INSTALLS += include_pqp
+INSTALLS += include_glc_3dwidget include_pqp
 
 INSTALLS += target
 INSTALLS +=include
