@@ -177,7 +177,7 @@ public:
 	//! Add a GLC_3DViewInstance in the collection
 	/*! return true if success false otherwise
 	 * If shading group is specified, add instance in desire shading group*/
-	bool add(GLC_3DViewInstance& ,GLuint shaderID=0);
+	bool add(const GLC_3DViewInstance& ,GLuint shaderID=0);
 
 	//! Change instance shading group
 	/* Move the specified instances into

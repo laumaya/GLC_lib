@@ -133,7 +133,7 @@ bool GLC_3DViewCollection::unBindAllShader()
 }
 
 // Add GLC_3DViewInstance in the collection
-bool GLC_3DViewCollection::add(GLC_3DViewInstance& node, GLuint shaderID)
+bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLuint shaderID)
 {
 	bool result= false;
 	const GLC_uint key= node.id();
