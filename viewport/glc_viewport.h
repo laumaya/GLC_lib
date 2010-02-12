@@ -193,9 +193,12 @@ public:
 	//! Inform the viewport that the OpenGL window size has been modified
 	void setWinGLSize(int HSize, int VSize);
 
-	//! select an object and return is UID
+	//! Call the attached QGLWidgetSelect  updateGL function and return the picking id
 	/*! Return UID of the nearest picked object */
-	GLC_uint select(int x, int y);
+	GLC_uint renderAndSelect(int x, int y);
+
+	//! Return the picking id from the already render window
+	GLC_uint selectOnPreviousRender(int x, int y);
 
 	//! Select a body inside a 3DViewInstance and return its UID
 	/*! Return UID of the nearest picked body */
@@ -252,6 +255,10 @@ public:
 	//! Add 3DWidget to this viewport
 	inline void add3DWidget(GLC_3DViewInstance& widget)
 	{m_3DWidget.add(widget);}
+
+	//! Clear the background color with the specified color
+	inline void clearBackground(const QColor& c) const
+	{m_pQGLWidget->qglClearColor(c);}
 //@}
 
 

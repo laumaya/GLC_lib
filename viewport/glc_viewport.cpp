@@ -290,7 +290,7 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 
 }
 
-GLC_uint GLC_Viewport::select(int x, int y)
+GLC_uint GLC_Viewport::renderAndSelect(int x, int y)
 {
 	m_pQGLWidget->qglClearColor(Qt::black);
 	GLC_State::setSelectionMode(true);
@@ -298,6 +298,11 @@ GLC_uint GLC_Viewport::select(int x, int y)
 	m_pQGLWidget->updateGL();
 	GLC_State::setSelectionMode(false);
 
+	return selectOnPreviousRender(x, y);
+}
+
+GLC_uint GLC_Viewport::selectOnPreviousRender(int x, int y)
+{
 	GLsizei width= m_SelectionSquareSize;
 	GLsizei height= width;
 	GLint newX= x - width / 2;
@@ -307,7 +312,6 @@ GLC_uint GLC_Viewport::select(int x, int y)
 
 	return meaningfulIdInsideSquare(newX, newY, width, height);
 }
-
 GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y)
 {
 	m_pQGLWidget->qglClearColor(Qt::black);
@@ -420,6 +424,9 @@ GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width,
 	// Get the array of pixels
 	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId.data());
 
+	//Restore reading buffer
+	glReadBuffer(GL_FRONT);
+
 	// Restore Background color
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);
 
@@ -469,6 +476,9 @@ QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei widt
 
 	// Get the array of pixels
 	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId.data());
+
+	//Restore reading buffer
+	glReadBuffer(GL_FRONT);
 
 	// Restore Background color
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);
