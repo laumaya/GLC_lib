@@ -24,20 +24,19 @@
 //! \file glc_cuttingplane.cpp Implementation of the GLC_CuttingPlane class.
 
 #include "glc_cuttingplane.h"
-#include "../geometry/glc_rectangle.h"
-#include "../shading/glc_material.h"
+#include "../glc_factory.h"
 
 GLC_CuttingPlane::GLC_CuttingPlane(const GLC_Point3d& center, const GLC_Vector3d& normal, double l1, double l2, GLC_3DWidgetManagerHandle*  pWidgetManagerHandle)
 : GLC_3DWidget(pWidgetManagerHandle)
-, m_pMaterial(new GLC_Material(Qt::darkYellow))
-, m_pRectangle(new GLC_Rectangle(l1, l2))
+, m_Center(center)
+, m_Normal(normal)
+, m_L1(l1)
+, m_L2(l2)
 {
-	m_pMaterial->setOpacity(0.3);
-	m_pRectangle->replaceMasterMaterial(m_pMaterial);
-
-	// Create the rectangle to (0,0) and  z normal
-	GLC_3DRep rectangleRep(m_pRectangle);
-
+	if (NULL != pWidgetManagerHandle)
+	{
+		create3DviewInstance();
+	}
 }
 
 GLC_CuttingPlane::~GLC_CuttingPlane()
@@ -47,6 +46,35 @@ GLC_CuttingPlane::~GLC_CuttingPlane()
 
 void GLC_CuttingPlane::updateLenght(double l1, double l2)
 {
-	m_pRectangle->setLength1(l1);
-	m_pRectangle->setLength2(l2);
+	m_L1= l1;
+	m_L2= l2;
 }
+
+void GLC_CuttingPlane::select(const GLC_Point3d&)
+{
+	GLC_3DViewInstance* pInstance= GLC_3DWidget::instanceHandle(0);
+	GLC_Geometry* pGeom= pInstance->geomAt(0);
+	pGeom->firstMaterial()->setDiffuseColor(Qt::darkGreen);
+
+}
+
+void GLC_CuttingPlane::unselect(const GLC_Point3d&)
+{
+	GLC_3DViewInstance* pInstance= GLC_3DWidget::instanceHandle(0);
+	GLC_Geometry* pGeom= pInstance->geomAt(0);
+	pGeom->firstMaterial()->setDiffuseColor(Qt::darkYellow);
+}
+
+
+void GLC_CuttingPlane::create3DviewInstance()
+{
+	Q_ASSERT(GLC_3DWidget::isEmpty());
+	GLC_Material* pMaterial= new GLC_Material(Qt::darkYellow);
+	pMaterial->setOpacity(0.3);
+	GLC_3DViewInstance cuttingPlaneInstance= GLC_Factory::instance()->createCuttingPlane(m_Center, m_Normal, m_L1, m_L2, pMaterial);
+
+	GLC_3DWidget::add3DViewInstance(cuttingPlaneInstance);
+}
+
+
+

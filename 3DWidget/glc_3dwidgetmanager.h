@@ -29,6 +29,8 @@
 
 #include "../glc_config.h"
 
+class QMouseEvent;
+
 class GLC_LIB_EXPORT GLC_3DWidgetManager
 {
 //////////////////////////////////////////////////////////////////////
@@ -67,19 +69,34 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Recieve Mouse double click event with the given instance id
-	void mouseDoubleClickEvent(QMouseEvent * pEvent, GLC_uint instanceId= 0);
+	//! Recieve Mouse double click event with the given instance id Return true if the event is catch
+	inline bool mouseDoubleClickEvent(QMouseEvent * pEvent)
+	{return m_pWidgetManagerHandle->mouseDoubleClickEvent(pEvent);}
 
-	//! Recieve Mouse move event with the given instance id
-	void mouseMoveEvent(QMouseEvent * pEvent, GLC_uint instanceId= 0);
+	//! Recieve Mouse move event with the given instance id Return true if the event is catch
+	inline bool mouseMoveEvent(QMouseEvent * pEvent)
+	{return m_pWidgetManagerHandle->mouseMoveEvent(pEvent);}
 
-	//! Recieve Mouse press event with the given instance id
-	void mousePressEvent(QMouseEvent * pEvent, GLC_uint instanceId= 0);
+	//! Recieve Mouse press event with the given instance id Return true if the event is catch
+	inline bool mousePressEvent(QMouseEvent * pEvent)
+	{return m_pWidgetManagerHandle->mousePressEvent(pEvent);}
 
-	//! Recieve Mouse release event with the given instance id
-	void mouseReleaseEvent(QMouseEvent * pEvent, GLC_uint instanceId= 0);
+	//! Recieve Mouse release event with the given instance id Return true if the event is catch
+	inline bool mouseReleaseEvent(QMouseEvent * pEvent)
+	{return m_pWidgetManagerHandle->mouseReleaseEvent(pEvent);}
 
 //@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name OpenGL Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Render the 3DWidget of this manager
+	inline void render()
+	{m_pWidgetManagerHandle->render();}
+//@}
+
 //////////////////////////////////////////////////////////////////////
 // Private Member
 //////////////////////////////////////////////////////////////////////

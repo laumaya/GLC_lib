@@ -34,6 +34,7 @@ class GLC_3DWidget;
 
 class GLC_LIB_EXPORT GLC_3DWidgetManagerHandle
 {
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -53,11 +54,15 @@ public:
 public:
 	//! Return true if there is only one widget manager associated to this handle
 	inline bool isOrphan() const
-	{return m_Count == 0;}
+	{return  0 == m_Count;}
 
 	//! Return the 3DView instance of the given id
 	inline GLC_3DViewInstance* instanceHandle(GLC_uint id)
 	{return m_Collection.instanceHandle(id);}
+
+	//! Return true if this 3DWidget manager has active widget
+	inline bool hasAnActiveWidget() const
+	{return 0 != m_Active3DWidgetId;}
 
 //@}
 
@@ -92,6 +97,41 @@ public:
 	void remove3DViewInstance(GLC_uint id);
 
 //@}
+//////////////////////////////////////////////////////////////////////
+/*! \name Interaction Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Recieve Mouse double click event with the given instance id Return true if the event is catch
+	bool mouseDoubleClickEvent(QMouseEvent * pEvent);
+
+	//! Recieve Mouse move event with the given instance id Return true if the event is catch
+	bool mouseMoveEvent(QMouseEvent * pEvent);
+
+	//! Recieve Mouse press event with the given instance id Return true if the event is catch
+	bool mousePressEvent(QMouseEvent * pEvent);
+
+	//! Recieve Mouse release event with the given instance id Return true if the event is catch
+	bool mouseReleaseEvent(QMouseEvent * pEvent);
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name OpenGL Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+	//! Render the 3DWidget of this manager
+	void render();
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+// Private services function
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Make selection according to the given mouse event
+	QPair<GLC_uint, GLC_Point3d> select(QMouseEvent* event);
 
 //////////////////////////////////////////////////////////////////////
 // Private Member
@@ -111,6 +151,9 @@ private:
 
 	//! The viewport of this 3d widget manager handle
 	GLC_Viewport* m_pViewport;
+
+	//! The active 3Dwidget id
+	GLC_uint m_Active3DWidgetId;
 
 };
 

@@ -27,7 +27,7 @@
 #include "../viewport/glc_viewport.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 #include "glc_3dwidget.h"
-
+#include <QMouseEvent>
 
 GLC_3DWidgetManagerHandle::GLC_3DWidgetManagerHandle(GLC_Viewport* pViewport)
 : m_Collection()
@@ -35,6 +35,7 @@ GLC_3DWidgetManagerHandle::GLC_3DWidgetManagerHandle(GLC_Viewport* pViewport)
 , m_3DWidgetHash()
 , m_MapBetweenInstanceWidget()
 , m_pViewport(pViewport)
+, m_Active3DWidgetId(0)
 {
 
 }
@@ -53,6 +54,7 @@ void GLC_3DWidgetManagerHandle::add3DWidget(GLC_3DWidget* p3DWidget)
 {
 	Q_ASSERT(!m_MapBetweenInstanceWidget.contains(p3DWidget->id()));
 	m_3DWidgetHash.insert(p3DWidget->id(), p3DWidget);
+	p3DWidget->setWidgetManager(this);
 }
 
 void GLC_3DWidgetManagerHandle::remove3DWidget(GLC_uint id)
@@ -83,4 +85,137 @@ void GLC_3DWidgetManagerHandle::remove3DViewInstance(GLC_uint id)
 	Q_ASSERT(m_Collection.contains(id));
 	m_Collection.remove(id);
 	m_MapBetweenInstanceWidget.remove(id);
+}
+
+bool GLC_3DWidgetManagerHandle::mouseDoubleClickEvent(QMouseEvent * pEvent)
+{
+
+	if (hasAnActiveWidget())
+	{
+
+	}
+	return false;
+}
+
+bool GLC_3DWidgetManagerHandle::mouseMoveEvent(QMouseEvent * pEvent)
+{
+	if (hasAnActiveWidget())
+	{
+
+	}
+	return false;
+}
+
+bool GLC_3DWidgetManagerHandle::mousePressEvent(QMouseEvent * pEvent)
+{
+	bool blockEvent= false;
+
+	if (pEvent->button() == Qt::LeftButton)
+	{
+		// Get the 3D cursor position and the id under
+		QPair<GLC_uint, GLC_Point3d> cursorInfo= select(pEvent);
+		const GLC_uint selectedId= cursorInfo.first;
+		const GLC_Point3d pos(cursorInfo.second);
+
+		if (hasAnActiveWidget())
+		{
+			GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+			const bool activeWidgetUnderMouse= pActiveWidget->instanceBelongTo(selectedId);
+
+			if (activeWidgetUnderMouse)
+			{
+				pActiveWidget->mousePressed(pos, pEvent->button());
+				blockEvent= true;
+			}
+			else
+			{
+				pActiveWidget->unselect(pos);
+				if (m_MapBetweenInstanceWidget.contains(selectedId))
+				{
+					m_Active3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
+					pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+					pActiveWidget->select(pos);
+				}
+				else
+				{
+					m_Active3DWidgetId= 0;
+				}
+				blockEvent= true;
+			}
+
+		}
+		else
+		{
+			if (m_MapBetweenInstanceWidget.contains(selectedId))
+			{
+				m_Active3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
+				GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+				pActiveWidget->select(pos);
+				blockEvent= true;
+			}
+		}
+	}
+
+	return blockEvent;
+}
+
+bool GLC_3DWidgetManagerHandle::mouseReleaseEvent(QMouseEvent * pEvent)
+{
+	if (hasAnActiveWidget())
+	{
+
+	}
+	return false;
+}
+
+void GLC_3DWidgetManagerHandle::render()
+{
+	m_Collection.glExecute(0, glc::WireRenderFlag);
+	m_Collection.glExecute(0, glc::TransparentRenderFlag);
+	m_Collection.glExecute(1, glc::WireRenderFlag);
+	if (GLC_State::glslUsed())
+	{
+		m_Collection.glExecuteShaderGroup(glc::WireRenderFlag);
+		m_Collection.glExecuteShaderGroup(glc::TransparentRenderFlag);
+	}
+}
+
+QPair<GLC_uint, GLC_Point3d> GLC_3DWidgetManagerHandle::select(QMouseEvent* event)
+{
+
+	/*
+	// Render the 3d widget of this manager in selection mode
+	m_pViewport->clearBackground(Qt::black);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	m_pViewport->glExecuteCam();
+
+	// Draw the scene
+	glDisable(GL_BLEND);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_2D);
+
+
+	GLC_State::setSelectionMode(true);
+	m_Collection.glExecute(0, glc::WireRenderFlag);
+	m_Collection.glExecute(1, glc::WireRenderFlag);
+	if (GLC_State::glslUsed())
+	{
+		m_Collection.glExecuteShaderGroup(glc::WireRenderFlag);
+	}
+
+	GLC_State::setSelectionMode(false);
+*/
+	GLC_uint selectionId= m_pViewport->selectOnPreviousRender(event->x(), event->y());
+	glReadBuffer(GL_BACK);
+	const GLC_Point3d selectedPoint(m_pViewport->unProject(event->x(), event->y()));
+	glReadBuffer(GL_FRONT);
+
+	QPair<GLC_uint, GLC_Point3d> selection;
+	selection.first= selectionId;
+	selection.second= selectedPoint;
+
+	return selection;
 }

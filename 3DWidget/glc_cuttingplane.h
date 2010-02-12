@@ -31,9 +31,6 @@
 #include "../maths/glc_vector3d.h"
 #include "../maths/glc_plane.h"
 
-class GLC_Material;
-class GLC_Rectangle;
-
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_CuttingPlane
 /*! \brief GLC_CuttingPlane :  3d cutting plane widget*/
@@ -72,16 +69,39 @@ public:
 	void updateLenght(double l1, double l2);
 //@}
 
+//////////////////////////////////////////////////////////////////////
+/*! \name Interaction Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+
+	//! This widget as been selected
+	virtual void select(const GLC_Point3d&);
+
+	//! This widget as been unselected
+	virtual void unselect(const GLC_Point3d&);
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+// Protected services function
+//////////////////////////////////////////////////////////////////////
+protected:
+	//! Create the 3DView instance of this 3d widget
+	virtual void create3DviewInstance();
 
 //////////////////////////////////////////////////////////////////////
 // Private Member
 //////////////////////////////////////////////////////////////////////
 private:
-	//! The cutting plane material
-	GLC_Material* m_pMaterial;
+	//! The cutting plane center
+	GLC_Point3d m_Center;
 
-	//! The cutting plane rectangle
-	GLC_Rectangle* m_pRectangle;
+	//! The cutting plane Normal
+	GLC_Vector3d m_Normal;
+
+	//! The cutting plane size
+	double m_L1, m_L2;
 
 };
 

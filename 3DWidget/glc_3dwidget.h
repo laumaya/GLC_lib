@@ -71,6 +71,10 @@ public:
 	//! Return true if this 3d widget is equal to the given 3d widget
 	bool operator==(const GLC_3DWidget& widget) const;
 
+	//! Return true if the given instance id belongs to this widget
+	inline bool instanceBelongTo(GLC_uint id) const
+	{return m_InstanceIdList.contains(id);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -86,19 +90,48 @@ public:
 //@}
 
 //////////////////////////////////////////////////////////////////////
+/*! \name Interaction Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+
+	//! This widget as been selected
+	virtual void select(const GLC_Point3d&){};
+
+	//! This widget as been unselected
+	virtual void unselect(const GLC_Point3d&){};
+
+	//! The mouse is over this widget
+	virtual void mouseOver(const GLC_Point3d&){};
+
+	//! The mouse is over this widget and a mousse button is pressed
+	virtual void mousePressed(const GLC_Point3d&, Qt::MouseButton){};
+
+	//! The mouse is over this widget and a mousse button is released
+	virtual void mouseReleased(const GLC_Point3d&, Qt::MouseButton){};
+
+	//! This widget is selected and the mousse move with a pressed buttons
+	virtual void mouseMove(const GLC_Point3d&, Qt::MouseButtons){};
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
 // Protected services function
 //////////////////////////////////////////////////////////////////////
-
 protected:
 	//! Create the 3DView instance of this 3d widget
 	virtual void create3DviewInstance()= 0;
 
+	//! Return true if this 3DWidget hasen't 3d instance
+	inline bool isEmpty() const
+	{return m_InstanceIdList.isEmpty();}
+
 	//! Add 3D view instance in the widget manager handle
 	void add3DViewInstance(const GLC_3DViewInstance& instance);
 
-	//! Return the 3D view instance handle from the given id
-	inline GLC_3DViewInstance* instanceHandle(GLC_uint id)
-	{return m_pWidgetManagerHandle->instanceHandle(id);}
+	//! Return the 3D view instance handle from the given index
+	inline GLC_3DViewInstance* instanceHandle(int index)
+	{return m_pWidgetManagerHandle->instanceHandle(m_InstanceIdList.at(index));}
 
 
 
