@@ -36,6 +36,7 @@ GLC_3DWidgetManagerHandle::GLC_3DWidgetManagerHandle(GLC_Viewport* pViewport)
 , m_MapBetweenInstanceWidget()
 , m_pViewport(pViewport)
 , m_Active3DWidgetId(0)
+, m_Preselected3DWidgetId(0)
 {
 
 }
@@ -87,28 +88,66 @@ void GLC_3DWidgetManagerHandle::remove3DViewInstance(GLC_uint id)
 	m_MapBetweenInstanceWidget.remove(id);
 }
 
-bool GLC_3DWidgetManagerHandle::mouseDoubleClickEvent(QMouseEvent * pEvent)
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseDoubleClickEvent(QMouseEvent * pEvent)
 {
 
 	if (hasAnActiveWidget())
 	{
 
 	}
-	return false;
+	return glc::IgnoreEvent;
 }
 
-bool GLC_3DWidgetManagerHandle::mouseMoveEvent(QMouseEvent * pEvent)
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseMoveEvent(QMouseEvent * pEvent)
 {
+	glc::WidgetEventFlag eventFlag= glc::IgnoreEvent;
+	// Get the 3D cursor position and the id under
+	QPair<GLC_uint, GLC_Point3d> cursorInfo= select(pEvent);
+	const GLC_uint selectedId= cursorInfo.first;
+	const GLC_Point3d pos(cursorInfo.second);
+
+	bool activeWidgetUnderMouse= false;
+	GLC_3DWidget* pActiveWidget= NULL;
 	if (hasAnActiveWidget())
 	{
-
+		pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+		activeWidgetUnderMouse= pActiveWidget->instanceBelongTo(selectedId);
 	}
-	return false;
+
+	if (activeWidgetUnderMouse)
+	{
+		eventFlag= pActiveWidget->mouseMove(pos, pEvent->button());
+	}
+	else if (! hasAnActiveWidget())
+	{
+		if (m_MapBetweenInstanceWidget.contains(selectedId))
+		{
+			const GLC_uint select3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
+
+			if (m_Preselected3DWidgetId != select3DWidgetId)
+			{
+				m_Preselected3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
+				GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Preselected3DWidgetId);
+				eventFlag= pActiveWidget->mouseOver(pos);
+			}
+			else if (0 != m_Preselected3DWidgetId && (m_Preselected3DWidgetId != select3DWidgetId))
+			{
+				eventFlag= m_3DWidgetHash.value(m_Preselected3DWidgetId)->unselect(pos);
+			}
+
+		}
+		else if (0 != m_Preselected3DWidgetId)
+		{
+			eventFlag= m_3DWidgetHash.value(m_Preselected3DWidgetId)->unselect(pos);
+			m_Preselected3DWidgetId= 0;
+		}
+	}
+	return eventFlag;
 }
 
-bool GLC_3DWidgetManagerHandle::mousePressEvent(QMouseEvent * pEvent)
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mousePressEvent(QMouseEvent * pEvent)
 {
-	bool blockEvent= false;
+	glc::WidgetEventFlag eventFlag= glc::IgnoreEvent;
 
 	if (pEvent->button() == Qt::LeftButton)
 	{
@@ -124,23 +163,21 @@ bool GLC_3DWidgetManagerHandle::mousePressEvent(QMouseEvent * pEvent)
 
 			if (activeWidgetUnderMouse)
 			{
-				pActiveWidget->mousePressed(pos, pEvent->button());
-				blockEvent= true;
+				eventFlag= pActiveWidget->mousePressed(pos, pEvent->button());
 			}
 			else
 			{
-				pActiveWidget->unselect(pos);
+				eventFlag= pActiveWidget->unselect(pos);
 				if (m_MapBetweenInstanceWidget.contains(selectedId))
 				{
 					m_Active3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
 					pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
-					pActiveWidget->select(pos);
+					eventFlag= pActiveWidget->select(pos);
 				}
 				else
 				{
 					m_Active3DWidgetId= 0;
 				}
-				blockEvent= true;
 			}
 
 		}
@@ -150,22 +187,21 @@ bool GLC_3DWidgetManagerHandle::mousePressEvent(QMouseEvent * pEvent)
 			{
 				m_Active3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
 				GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
-				pActiveWidget->select(pos);
-				blockEvent= true;
+				eventFlag= pActiveWidget->select(pos);
 			}
 		}
 	}
 
-	return blockEvent;
+	return eventFlag;
 }
 
-bool GLC_3DWidgetManagerHandle::mouseReleaseEvent(QMouseEvent * pEvent)
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseReleaseEvent(QMouseEvent * pEvent)
 {
 	if (hasAnActiveWidget())
 	{
 
 	}
-	return false;
+	return glc::IgnoreEvent;
 }
 
 void GLC_3DWidgetManagerHandle::render()
@@ -180,25 +216,26 @@ void GLC_3DWidgetManagerHandle::render()
 	}
 }
 
-QPair<GLC_uint, GLC_Point3d> GLC_3DWidgetManagerHandle::select(QMouseEvent* event)
+void GLC_3DWidgetManagerHandle::renderInSelectionMode()
 {
-
-	/*
-	// Render the 3d widget of this manager in selection mode
+	//qDebug() << "GLC_3DWidgetManagerHandle::renderInSelectionMode";
 	m_pViewport->clearBackground(Qt::black);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
+	GLC_State::setSelectionMode(true);
+
 	m_pViewport->glExecuteCam();
 
+	glPushAttrib(GL_ENABLE_BIT);
 	// Draw the scene
 	glDisable(GL_BLEND);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 
 
-	GLC_State::setSelectionMode(true);
+
 	m_Collection.glExecute(0, glc::WireRenderFlag);
 	m_Collection.glExecute(1, glc::WireRenderFlag);
 	if (GLC_State::glslUsed())
@@ -206,8 +243,14 @@ QPair<GLC_uint, GLC_Point3d> GLC_3DWidgetManagerHandle::select(QMouseEvent* even
 		m_Collection.glExecuteShaderGroup(glc::WireRenderFlag);
 	}
 
+	// Restore attributtes
+	glPopAttrib();
 	GLC_State::setSelectionMode(false);
-*/
+
+}
+QPair<GLC_uint, GLC_Point3d> GLC_3DWidgetManagerHandle::select(QMouseEvent* event)
+{
+
 	GLC_uint selectionId= m_pViewport->selectOnPreviousRender(event->x(), event->y());
 	glReadBuffer(GL_BACK);
 	const GLC_Point3d selectedPoint(m_pViewport->unProject(event->x(), event->y()));

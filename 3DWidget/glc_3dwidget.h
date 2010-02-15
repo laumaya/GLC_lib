@@ -43,7 +43,7 @@ class GLC_3DViewInstance;
 class GLC_LIB_EXPORT GLC_3DWidget : public QObject
 {
 	//Q_OBJECT
-public:
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -75,6 +75,10 @@ public:
 	inline bool instanceBelongTo(GLC_uint id) const
 	{return m_InstanceIdList.contains(id);}
 
+	//! Return the widget manager of this 3d widget
+	inline const GLC_3DWidgetManagerHandle* widgetManagerHandle() const
+	{return m_pWidgetManagerHandle;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -96,22 +100,22 @@ public:
 public:
 
 	//! This widget as been selected
-	virtual void select(const GLC_Point3d&){};
+	virtual glc::WidgetEventFlag select(const GLC_Point3d&);
 
 	//! This widget as been unselected
-	virtual void unselect(const GLC_Point3d&){};
+	virtual glc::WidgetEventFlag unselect(const GLC_Point3d&);
 
 	//! The mouse is over this widget
-	virtual void mouseOver(const GLC_Point3d&){};
+	virtual glc::WidgetEventFlag mouseOver(const GLC_Point3d&);
 
 	//! The mouse is over this widget and a mousse button is pressed
-	virtual void mousePressed(const GLC_Point3d&, Qt::MouseButton){};
+	virtual glc::WidgetEventFlag mousePressed(const GLC_Point3d&, Qt::MouseButton);
 
 	//! The mouse is over this widget and a mousse button is released
-	virtual void mouseReleased(const GLC_Point3d&, Qt::MouseButton){};
+	virtual glc::WidgetEventFlag mouseReleased(const GLC_Point3d&, Qt::MouseButton);
 
 	//! This widget is selected and the mousse move with a pressed buttons
-	virtual void mouseMove(const GLC_Point3d&, Qt::MouseButtons){};
+	virtual glc::WidgetEventFlag mouseMove(const GLC_Point3d&, Qt::MouseButtons);
 
 //@}
 

@@ -78,6 +78,14 @@ namespace glc
 	extern QMutex geomIdMutex;
 	extern QMutex userIdMutex;
 	extern QMutex widget3dIdMutex;
+
+	//! 3D widget event flag
+	enum WidgetEventFlag
+	{
+		AcceptEvent,
+		IgnoreEvent,
+		BlockedEvent
+	};
 };
 
 // Return the GLC_uint decoded ID from RGBA encoded ID

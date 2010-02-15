@@ -27,8 +27,8 @@
 
 #include "../glc_config.h"
 #include "../sceneGraph/glc_3dviewcollection.h"
+#include "../viewport/glc_viewport.h"
 
-class GLC_Viewport;
 class GLC_3DVIewInstance;
 class GLC_3DWidget;
 
@@ -63,6 +63,10 @@ public:
 	//! Return true if this 3DWidget manager has active widget
 	inline bool hasAnActiveWidget() const
 	{return 0 != m_Active3DWidgetId;}
+
+	//! Return an handle to the camera of the viewport of this manager
+	inline const GLC_Camera* cameraHandle() const
+	{return m_pViewport->cameraHandle();}
 
 //@}
 
@@ -103,16 +107,16 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Recieve Mouse double click event with the given instance id Return true if the event is catch
-	bool mouseDoubleClickEvent(QMouseEvent * pEvent);
+	glc::WidgetEventFlag mouseDoubleClickEvent(QMouseEvent * pEvent);
 
 	//! Recieve Mouse move event with the given instance id Return true if the event is catch
-	bool mouseMoveEvent(QMouseEvent * pEvent);
+	glc::WidgetEventFlag mouseMoveEvent(QMouseEvent * pEvent);
 
 	//! Recieve Mouse press event with the given instance id Return true if the event is catch
-	bool mousePressEvent(QMouseEvent * pEvent);
+	glc::WidgetEventFlag mousePressEvent(QMouseEvent * pEvent);
 
 	//! Recieve Mouse release event with the given instance id Return true if the event is catch
-	bool mouseReleaseEvent(QMouseEvent * pEvent);
+	glc::WidgetEventFlag mouseReleaseEvent(QMouseEvent * pEvent);
 
 //@}
 
@@ -123,6 +127,9 @@ public:
 public:
 	//! Render the 3DWidget of this manager
 	void render();
+
+	//! Render the 3DWidget of this manager in selection mode
+	void renderInSelectionMode();
 
 //@}
 
@@ -154,6 +161,9 @@ private:
 
 	//! The active 3Dwidget id
 	GLC_uint m_Active3DWidgetId;
+
+	//! The preselected 3DWidget
+	GLC_uint m_Preselected3DWidgetId;
 
 };
 

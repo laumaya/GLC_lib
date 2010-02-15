@@ -70,19 +70,19 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Recieve Mouse double click event with the given instance id Return true if the event is catch
-	inline bool mouseDoubleClickEvent(QMouseEvent * pEvent)
+	inline glc::WidgetEventFlag mouseDoubleClickEvent(QMouseEvent * pEvent)
 	{return m_pWidgetManagerHandle->mouseDoubleClickEvent(pEvent);}
 
 	//! Recieve Mouse move event with the given instance id Return true if the event is catch
-	inline bool mouseMoveEvent(QMouseEvent * pEvent)
+	inline glc::WidgetEventFlag mouseMoveEvent(QMouseEvent * pEvent)
 	{return m_pWidgetManagerHandle->mouseMoveEvent(pEvent);}
 
 	//! Recieve Mouse press event with the given instance id Return true if the event is catch
-	inline bool mousePressEvent(QMouseEvent * pEvent)
+	inline glc::WidgetEventFlag mousePressEvent(QMouseEvent * pEvent)
 	{return m_pWidgetManagerHandle->mousePressEvent(pEvent);}
 
 	//! Recieve Mouse release event with the given instance id Return true if the event is catch
-	inline bool mouseReleaseEvent(QMouseEvent * pEvent)
+	inline glc::WidgetEventFlag mouseReleaseEvent(QMouseEvent * pEvent)
 	{return m_pWidgetManagerHandle->mouseReleaseEvent(pEvent);}
 
 //@}
@@ -95,6 +95,11 @@ public:
 	//! Render the 3DWidget of this manager
 	inline void render()
 	{m_pWidgetManagerHandle->render();}
+
+	//! Render the 3DWidget of this manager in selection mode
+	inline void renderInSelectionMode()
+	{m_pWidgetManagerHandle->renderInSelectionMode();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

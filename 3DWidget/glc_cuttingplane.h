@@ -76,10 +76,16 @@ public:
 public:
 
 	//! This widget as been selected
-	virtual void select(const GLC_Point3d&);
+	virtual glc::WidgetEventFlag select(const GLC_Point3d&);
 
 	//! This widget as been unselected
-	virtual void unselect(const GLC_Point3d&);
+	virtual glc::WidgetEventFlag unselect(const GLC_Point3d&);
+
+	//! The mouse is over this widget
+	virtual glc::WidgetEventFlag mouseOver(const GLC_Point3d&);
+
+	//! This widget is selected and the mousse move with a pressed buttons
+	virtual glc::WidgetEventFlag mouseMove(const GLC_Point3d&, Qt::MouseButtons);
 
 //@}
 
@@ -89,6 +95,15 @@ public:
 protected:
 	//! Create the 3DView instance of this 3d widget
 	virtual void create3DviewInstance();
+
+
+//////////////////////////////////////////////////////////////////////
+// Private services function
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Create sliding plane
+	void prepareToSlide();
+
 
 //////////////////////////////////////////////////////////////////////
 // Private Member
@@ -102,6 +117,12 @@ private:
 
 	//! The cutting plane size
 	double m_L1, m_L2;
+
+	//! The previous selected point
+	GLC_Point3d m_Previous;
+
+	//! The current sliding plane
+	GLC_Plane m_SlidingPlane;
 
 };
 

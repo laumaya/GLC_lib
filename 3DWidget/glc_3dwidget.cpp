@@ -91,6 +91,40 @@ void GLC_3DWidget::setWidgetManager(GLC_3DWidgetManagerHandle* pWidgetManagerHan
 }
 
 //////////////////////////////////////////////////////////////////////
+// Interaction Functions
+//////////////////////////////////////////////////////////////////////
+glc::WidgetEventFlag GLC_3DWidget::select(const GLC_Point3d&)
+{
+	return glc::IgnoreEvent;
+}
+
+glc::WidgetEventFlag GLC_3DWidget::unselect(const GLC_Point3d&)
+{
+	return glc::IgnoreEvent;
+}
+
+glc::WidgetEventFlag GLC_3DWidget::mouseOver(const GLC_Point3d&)
+{
+	return glc::IgnoreEvent;
+}
+
+glc::WidgetEventFlag GLC_3DWidget::mousePressed(const GLC_Point3d&, Qt::MouseButton)
+{
+	return glc::IgnoreEvent;
+}
+
+glc::WidgetEventFlag GLC_3DWidget::mouseReleased(const GLC_Point3d&, Qt::MouseButton)
+{
+	return glc::IgnoreEvent;
+}
+
+glc::WidgetEventFlag GLC_3DWidget::mouseMove(const GLC_Point3d&, Qt::MouseButtons)
+{
+	return glc::IgnoreEvent;
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Protected services functions
 //////////////////////////////////////////////////////////////////////
 void GLC_3DWidget::add3DViewInstance(const GLC_3DViewInstance& instance)
