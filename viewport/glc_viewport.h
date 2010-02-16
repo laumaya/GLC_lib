@@ -249,6 +249,9 @@ public:
 	//! Add a clipping plane to this viewport
 	void addClipPlane(GLenum planeGlEnum, GLC_Plane* pPlane);
 
+	//! Remove the clipp plane cresponding to the given id
+	void removeClipPlane(GLenum planeGlEnum);
+
 	//! Set the clipping plane usage
 	void useClipPlane(bool flag);
 

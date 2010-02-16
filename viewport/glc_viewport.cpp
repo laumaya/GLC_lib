@@ -628,6 +628,19 @@ void GLC_Viewport::addClipPlane(GLenum planeGlEnum,GLC_Plane* pPlane)
 	m_ClipPlane.insert(planeGlEnum, pPlane);
 }
 
+void GLC_Viewport::removeClipPlane(GLenum planeGlEnum)
+{
+	if (m_ClipPlane.contains(planeGlEnum))
+	{
+		delete m_ClipPlane.value(planeGlEnum);
+		m_ClipPlane.remove(planeGlEnum);
+	}
+	else
+	{
+		qDebug() << "GLC_Viewport::removeClipPlane Clipp plane " << planeGlEnum << " Not found";
+	}
+}
+
 void GLC_Viewport::useClipPlane(bool flag)
 {
 	m_UseClipPlane= flag;
