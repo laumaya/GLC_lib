@@ -68,6 +68,10 @@ public:
 	inline const GLC_Camera* cameraHandle() const
 	{return m_pViewport->cameraHandle();}
 
+	//! Return the boundingBox of 3dwidget
+	inline GLC_BoundingBox boundingBox()
+	{return m_Collection.boundingBox();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

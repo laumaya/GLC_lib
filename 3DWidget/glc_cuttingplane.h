@@ -39,7 +39,7 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_CuttingPlane : public GLC_3DWidget
 {
-	//Q_OBJECT
+	Q_OBJECT
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -57,7 +57,13 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return this cutting plane center
+	inline GLC_Point3d center() const
+	{return m_Center;}
 
+	//! Return this cutting plane normal
+	inline GLC_Vector3d normal() const
+	{return m_Normal;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -80,6 +86,9 @@ public:
 
 	//! This widget as been unselected
 	virtual glc::WidgetEventFlag unselect(const GLC_Point3d&);
+
+	//! The mouse is over this widget and a mousse button is pressed
+	virtual glc::WidgetEventFlag mousePressed(const GLC_Point3d&, Qt::MouseButton);
 
 	//! The mouse is over this widget
 	virtual glc::WidgetEventFlag mouseOver(const GLC_Point3d&);

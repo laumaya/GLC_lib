@@ -42,8 +42,7 @@ class GLC_3DViewInstance;
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_3DWidget : public QObject
 {
-	//Q_OBJECT
-
+	Q_OBJECT
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -118,6 +117,10 @@ public:
 	virtual glc::WidgetEventFlag mouseMove(const GLC_Point3d&, Qt::MouseButtons);
 
 //@}
+
+signals:
+	//! Sub class must emit this signal if they changed
+	void asChanged();
 
 //////////////////////////////////////////////////////////////////////
 // Protected services function

@@ -106,19 +106,12 @@ glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseMoveEvent(QMouseEvent * pEv
 	const GLC_uint selectedId= cursorInfo.first;
 	const GLC_Point3d pos(cursorInfo.second);
 
-	bool activeWidgetUnderMouse= false;
-	GLC_3DWidget* pActiveWidget= NULL;
 	if (hasAnActiveWidget())
 	{
-		pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
-		activeWidgetUnderMouse= pActiveWidget->instanceBelongTo(selectedId);
-	}
-
-	if (activeWidgetUnderMouse)
-	{
+		GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
 		eventFlag= pActiveWidget->mouseMove(pos, pEvent->button());
 	}
-	else if (! hasAnActiveWidget())
+	else
 	{
 		if (m_MapBetweenInstanceWidget.contains(selectedId))
 		{
