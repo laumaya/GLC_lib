@@ -117,7 +117,10 @@ bool GLC_Plane::operator==(GLC_Plane p2) const
 	return areEqual;
 }
 
-
+QString GLC_Plane::toString() const
+{
+	return QString::number(m_Eq[0]) + "x + " + QString::number(m_Eq[1]) + "y + " + QString::number(m_Eq[2]) + "z + " + QString::number(m_Eq[3]);
+}
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -131,4 +134,14 @@ void GLC_Plane::normalize()
 	m_Eq[1]= m_Eq[1] * invMag;
 	m_Eq[2]= m_Eq[2] * invMag;
 	m_Eq[3]= m_Eq[3] * invMag;
+}
+
+GLC_Plane& GLC_Plane::setPlane(const GLC_Vector3d& normal, const GLC_Point3d& point)
+{
+	m_Eq[0]= normal.x();
+	m_Eq[1]= normal.y();
+	m_Eq[2]= normal.z();
+	m_Eq[3]= -normal * point;
+
+	return *this;
 }

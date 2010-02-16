@@ -115,6 +115,8 @@ public:
 	const double* data() const
 	{return m_Eq;}
 
+	//! Return the plane data to string
+	QString toString() const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -140,6 +142,9 @@ public:
 
 	//! Normalize the plane
 	void normalize();
+
+	//! Set the plane from the given normal and point and return a reference to this plane
+	GLC_Plane& setPlane(const GLC_Vector3d& normal, const GLC_Point3d& point);
 
 
 //@}
