@@ -76,7 +76,7 @@ GLC_Factory::GLC_Factory(const QGLContext *pContext)
 // Destructor
 GLC_Factory::~GLC_Factory()
 {
-	delete m_pFactory;
+
 }
 
 //////////////////////////////////////////////////////////////////////
