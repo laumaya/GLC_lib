@@ -78,6 +78,10 @@ public:
 	inline const GLC_3DWidgetManagerHandle* widgetManagerHandle() const
 	{return m_pWidgetManagerHandle;}
 
+	//! Return true if this widget has a 3DWidgetManager
+	inline bool has3DWidgetManager() const
+	{return (NULL == m_pWidgetManagerHandle);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -90,6 +94,9 @@ public:
 
 	//! Set the given widgetManager to this widget
 	void setWidgetManager(GLC_3DWidgetManagerHandle* pWidgetManagerHandle);
+
+	//! Indicate to this widget that the viewport as change
+	virtual void viewportAsChanged(){};
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -140,14 +147,13 @@ protected:
 	inline GLC_3DViewInstance* instanceHandle(int index)
 	{return m_pWidgetManagerHandle->instanceHandle(m_InstanceIdList.at(index));}
 
-
+	//! Remove instance of this 3d widget from the 3D widget manager handle
+	void remove3DViewInstance();
 
 //////////////////////////////////////////////////////////////////////
 // Private services function
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Remove instance of this 3d widget from the 3D widget manager handle
-	void remove3DViewInstance();
 
 //////////////////////////////////////////////////////////////////////
 // Private Member
@@ -157,7 +163,7 @@ private:
 	/*! Generated on GLC_3DWidget construction*/
 	GLC_uint m_Uid;
 
-	//! pointer to this widget manager handle
+	//! Pointer to this widget manager handle
 	GLC_3DWidgetManagerHandle* m_pWidgetManagerHandle;
 
 	//! The List of this widget instance id
