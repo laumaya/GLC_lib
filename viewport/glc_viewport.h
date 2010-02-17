@@ -128,6 +128,9 @@ public:
 	inline GLC_Matrix4x4 projectionMatrix() const
 	{return m_ProjectionMatrix;}
 
+	//! Return the composition matrix between projection matrix and view matrix
+	inline GLC_Matrix4x4 compositionMatrix() const;
+
 	//! Return an handle to the widget 3D collection
 	inline GLC_3DViewCollection* widget3dCollectionHandle()
 	{return &m_3DWidget;}
@@ -332,17 +335,23 @@ private:
 	GLC_3DViewCollection m_3DWidget;
 };
 
+GLC_Matrix4x4 GLC_Viewport::compositionMatrix() const
+{
+	// Get the viewport projection matrix
+	GLC_Matrix4x4 projectionMatrix= m_ProjectionMatrix;
+	// Get the camera modelView matrix
+	GLC_Matrix4x4 modelViewMatrix= m_pViewCam->modelViewMatrix();
+	// Composition matrix
+	GLC_Matrix4x4 compMatrix= projectionMatrix * modelViewMatrix;
+
+	return compMatrix;
+}
+
 bool GLC_Viewport::updateFrustum(GLC_Matrix4x4* pMat)
 {
 	if (NULL == pMat)
 	{
-		// Get the viewport projection matrix
-		GLC_Matrix4x4 projectionMatrix= m_ProjectionMatrix;
-		// Get the camera modelView matrix
-		GLC_Matrix4x4 modelViewMatrix= m_pViewCam->modelViewMatrix();
-		// Composition matrix
-		GLC_Matrix4x4 compMatrix= projectionMatrix * modelViewMatrix;
-		return m_Frustum.update(compMatrix);
+		return m_Frustum.update(compositionMatrix());
 	}
 	else
 	{
