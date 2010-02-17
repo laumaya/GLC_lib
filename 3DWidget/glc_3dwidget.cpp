@@ -135,9 +135,6 @@ void GLC_3DWidget::add3DViewInstance(const GLC_3DViewInstance& instance)
 	m_InstanceVisibility.append(true);
 }
 
-//////////////////////////////////////////////////////////////////////
-// Private services functions
-//////////////////////////////////////////////////////////////////////
 void GLC_3DWidget::remove3DViewInstance()
 {
 	if (NULL != m_pWidgetManagerHandle)
