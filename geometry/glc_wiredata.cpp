@@ -145,8 +145,8 @@ GLC_BoundingBox& GLC_WireData::boundingBox()
 			const int max= m_Positions.size();
 			for (int i= 0; i < max; i= i + 3)
 			{
-				GLC_Vector3d vector(m_Positions[i], m_Positions[i + 1], m_Positions[i + 2]);
-				m_pBoundingBox->combine(vector);
+				GLC_Point3d point(m_Positions[i], m_Positions[i + 1], m_Positions[i + 2]);
+				m_pBoundingBox->combine(point);
 			}
 		}
 
