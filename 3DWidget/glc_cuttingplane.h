@@ -48,6 +48,9 @@ public:
 	//! Construct a 3d cutting plane widget with the given viewport
 	GLC_CuttingPlane(const GLC_Point3d& center, const GLC_Vector3d& normal, double l1, double l2, GLC_3DWidgetManagerHandle*  pWidgetManagerHandle= NULL);
 
+	//! Construct a 3d cutting plane with the given cutting plane
+	GLC_CuttingPlane(const GLC_CuttingPlane& cuttingPlane);
+
 	//! Destructor
 	virtual ~GLC_CuttingPlane();
 //@}
@@ -64,6 +67,15 @@ public:
 	//! Return this cutting plane normal
 	inline GLC_Vector3d normal() const
 	{return m_Normal;}
+
+	//! Return this plane color
+	inline QColor color() const
+	{return m_Color;}
+
+	//! Return this plane opacity
+	inline double opacity() const
+	{return m_Opacity;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -71,8 +83,20 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Copy the given cutting plane in this cutting plane and return a reference on this cutting plane
+	virtual GLC_CuttingPlane& operator=(const GLC_CuttingPlane& cuttingPlane);
+
 	//! Update the lenght of this cutting plane
 	void updateLenght(double l1, double l2);
+
+	//! Set this plane color
+	inline void setColor(const QColor& color)
+	{m_Color= color;}
+
+	//! Set this plane opacity
+	inline void setOpacity(double opacity)
+	{m_Opacity= opacity;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -132,6 +156,12 @@ private:
 
 	//! The current sliding plane
 	GLC_Plane m_SlidingPlane;
+
+	//! The cutting plane color
+	QColor m_Color;
+
+	//! The cutting plane opacity
+	double m_Opacity;
 
 };
 

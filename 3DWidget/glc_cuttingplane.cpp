@@ -36,6 +36,8 @@ GLC_CuttingPlane::GLC_CuttingPlane(const GLC_Point3d& center, const GLC_Vector3d
 , m_L2(l2)
 , m_Previous()
 , m_SlidingPlane()
+, m_Color(Qt::darkGreen)
+, m_Opacity(0.3)
 {
 	if (NULL != pWidgetManagerHandle)
 	{
@@ -43,15 +45,49 @@ GLC_CuttingPlane::GLC_CuttingPlane(const GLC_Point3d& center, const GLC_Vector3d
 	}
 }
 
+GLC_CuttingPlane::GLC_CuttingPlane(const GLC_CuttingPlane& cuttingPlane)
+: GLC_3DWidget(cuttingPlane)
+, m_Center(cuttingPlane.m_Center)
+, m_Normal(cuttingPlane.m_Normal)
+, m_L1(cuttingPlane.m_L1)
+, m_L2(cuttingPlane.m_L2)
+, m_Previous()
+, m_SlidingPlane()
+, m_Color(cuttingPlane.m_Color)
+, m_Opacity(cuttingPlane.m_Opacity)
+{
+
+}
+
 GLC_CuttingPlane::~GLC_CuttingPlane()
 {
 
+}
+
+GLC_CuttingPlane& GLC_CuttingPlane::operator=(const GLC_CuttingPlane& cuttingPlane)
+{
+	GLC_3DWidget::operator=(cuttingPlane);
+
+	m_Center= cuttingPlane.m_Center;
+	m_Normal= cuttingPlane.m_Normal;
+	m_L1= cuttingPlane.m_L1;
+	m_L2= cuttingPlane.m_L2;
+	m_Color= cuttingPlane.m_Color;
+	m_Opacity= cuttingPlane.m_Opacity;
+
+	return *this;
 }
 
 void GLC_CuttingPlane::updateLenght(double l1, double l2)
 {
 	m_L1= l1;
 	m_L2= l2;
+
+	if (GLC_3DWidget::has3DWidgetManager())
+	{
+		GLC_3DWidget::remove3DViewInstance();
+		create3DviewInstance();
+	}
 }
 
 glc::WidgetEventFlag GLC_CuttingPlane::select(const GLC_Point3d& pos)
@@ -77,19 +113,11 @@ glc::WidgetEventFlag GLC_CuttingPlane::mousePressed(const GLC_Point3d& pos, Qt::
 
 glc::WidgetEventFlag GLC_CuttingPlane::unselect(const GLC_Point3d&)
 {
-	qDebug() << "GLC_CuttingPlane::unselect";
-	GLC_3DViewInstance* pInstance= GLC_3DWidget::instanceHandle(0);
-	GLC_Geometry* pGeom= pInstance->geomAt(0);
-	pGeom->firstMaterial()->setDiffuseColor(Qt::darkGreen);
 	return glc::AcceptEvent;
 }
 
 glc::WidgetEventFlag GLC_CuttingPlane::mouseOver(const GLC_Point3d&)
 {
-	qDebug() << "GLC_CuttingPlane::mouseOver";
-	GLC_3DViewInstance* pInstance= GLC_3DWidget::instanceHandle(0);
-	GLC_Geometry* pGeom= pInstance->geomAt(0);
-	pGeom->firstMaterial()->setDiffuseColor(Qt::green);
 	return glc::AcceptEvent;
 }
 
@@ -115,14 +143,17 @@ glc::WidgetEventFlag GLC_CuttingPlane::mouseMove(const GLC_Point3d& pos, Qt::Mou
 	m_Previous= sliddingPoint;
 
 	emit asChanged();
+
 	return glc::AcceptEvent;
 }
 
 void GLC_CuttingPlane::create3DviewInstance()
 {
 	Q_ASSERT(GLC_3DWidget::isEmpty());
-	GLC_Material* pMaterial= new GLC_Material(Qt::darkGreen);
-	pMaterial->setOpacity(0.3);
+	// The cutting plane material
+	GLC_Material* pMaterial= new GLC_Material(m_Color);
+	pMaterial->setOpacity(m_Opacity);
+
 	GLC_3DViewInstance cuttingPlaneInstance= GLC_Factory::instance()->createCuttingPlane(m_Center, m_Normal, m_L1, m_L2, pMaterial);
 
 	GLC_3DWidget::add3DViewInstance(cuttingPlaneInstance);
@@ -133,7 +164,6 @@ void GLC_CuttingPlane::prepareToSlide()
 	// Plane throw intersection and plane normal and camera up vector
 	GLC_Plane sliddingPlane(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward(), m_Previous);
 	m_SlidingPlane= sliddingPlane;
-	qDebug() << "Sliding plane normal : " << m_SlidingPlane.normal().toString();
 
 	// Projection of intersection point on slidding plane
 	const GLC_Point3d eye(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->eye());
@@ -143,7 +173,6 @@ void GLC_CuttingPlane::prepareToSlide()
 	glc::lineIntersectPlane(projectionLine, m_SlidingPlane, &m_Previous);
 
 	m_Previous= glc::project(m_Previous, GLC_Line3d(GLC_Point3d(), m_Normal));
-
 }
 
 
