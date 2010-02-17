@@ -37,6 +37,7 @@ GLC_3DWidgetManagerHandle::GLC_3DWidgetManagerHandle(GLC_Viewport* pViewport)
 , m_pViewport(pViewport)
 , m_Active3DWidgetId(0)
 , m_Preselected3DWidgetId(0)
+, m_PreviousViewMatrix(pViewport->compositionMatrix())
 {
 
 }
@@ -199,6 +200,19 @@ glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseReleaseEvent(QMouseEvent * 
 
 void GLC_3DWidgetManagerHandle::render()
 {
+	//! Test if the view as changed
+	if (m_pViewport->compositionMatrix() != m_PreviousViewMatrix)
+	{
+		// Signal 3DWidget that the view as changed
+		QHash<GLC_uint, GLC_3DWidget*>::iterator iWidget= m_3DWidgetHash.begin();
+		while (m_3DWidgetHash.constEnd() != iWidget)
+		{
+			iWidget.value()->viewportAsChanged();
+			++iWidget;
+		}
+	}
+
+	// Render the 3D widget
 	m_Collection.glExecute(0, glc::WireRenderFlag);
 	m_Collection.glExecute(0, glc::TransparentRenderFlag);
 	m_Collection.glExecute(1, glc::WireRenderFlag);
