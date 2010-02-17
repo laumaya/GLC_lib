@@ -66,6 +66,7 @@ GLC_BoundingBox& GLC_Circle::boundingBox(void)
 	{
 		//qDebug() << "GLC_Mesh2::boundingBox create boundingBox";
 		m_pBoundingBox= new GLC_BoundingBox();
+		if (m_WireData.isEmpty()) createWire();
 		m_pBoundingBox->combine(m_WireData.boundingBox());
 		m_pBoundingBox->combine(GLC_Vector3d(0.0, 0.0, -2 * glc::EPSILON));
 	}
