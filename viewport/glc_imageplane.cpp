@@ -40,6 +40,13 @@ GLC_ImagePlane::GLC_ImagePlane(const QGLContext *pContext, const QString& ImageN
 	m_Material.setTexture(pImgTexture);
 }
 
+GLC_ImagePlane::GLC_ImagePlane(const QGLContext *pContext, const QImage& image)
+: m_Material()
+{
+	GLC_Texture* pImgTexture= GLC_Factory::instance(pContext)->createTexture(image);
+	m_Material.setTexture(pImgTexture);
+}
+
 GLC_ImagePlane::~GLC_ImagePlane()
 {
 

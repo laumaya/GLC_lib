@@ -523,10 +523,16 @@ QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei widt
 	return idSet;
 }
 
-void GLC_Viewport::loadBackGroundImage(const QString Image)
+void GLC_Viewport::loadBackGroundImage(const QString& ImageFile)
 {
 	delete m_pImagePlane;
-	m_pImagePlane= new GLC_ImagePlane(m_pQGLWidget->context(), Image);
+	m_pImagePlane= new GLC_ImagePlane(m_pQGLWidget->context(), ImageFile);
+}
+
+void GLC_Viewport::loadBackGroundImage(const QImage& image)
+{
+	delete m_pImagePlane;
+	m_pImagePlane= new GLC_ImagePlane(m_pQGLWidget->context(), image);
 }
 
 void GLC_Viewport::deleteBackGroundImage()

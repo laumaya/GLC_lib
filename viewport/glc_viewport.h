@@ -217,8 +217,11 @@ public:
 	//! Select objects inside specified square and return its UID in a set
 	QSet<GLC_uint> selectInsideSquare(int x1, int y1, int x2, int y2);
 
-	//! load background image of this viewport
-	void loadBackGroundImage(const QString Image);
+	//! load background image from file in this viewport
+	void loadBackGroundImage(const QString& imageFile);
+
+	//! load background image in this viewport
+	void loadBackGroundImage(const QImage& image);
 
 	//! delete background image of this viewport
 	void deleteBackGroundImage();
