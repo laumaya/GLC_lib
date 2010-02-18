@@ -169,6 +169,9 @@ public:
 	/*! The size of the given list must be a multiple of 2*/
 	QList<GLC_Point3d> unproject(const QList<int>&)const;
 
+	//! Return true if this viewport use orthographic projection
+	inline bool useOrtho()const
+	{return m_UseOrtho;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -265,6 +268,9 @@ public:
 	//! Clear the background color with the specified color
 	inline void clearBackground(const QColor& c) const
 	{m_pQGLWidget->qglClearColor(c);}
+
+	//! Set othographic usage to the given flag
+	void setToOrtho(bool useOrtho);
 //@}
 
 
@@ -333,6 +339,9 @@ private:
 
 	//! The collection wich contains 3D widget
 	GLC_3DViewCollection m_3DWidget;
+
+	//! Flag to know if the viewport use orthographic projection
+	bool m_UseOrtho;
 };
 
 GLC_Matrix4x4 GLC_Viewport::compositionMatrix() const

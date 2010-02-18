@@ -41,7 +41,7 @@ using namespace glc;
 
 GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // Camera definition
-: m_pViewCam(NULL)				// Camera
+: m_pViewCam(new GLC_Camera())				// Camera
 , m_dCamDistMax(500.0)			// Camera Maximum distance
 , m_dCamDistMin(0.01)			// Camera Minimum distance
 , m_dFov(35)					// Camera angle of view
@@ -59,9 +59,9 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_ClipPlane()
 , m_UseClipPlane(false)
 , m_3DWidget()
+, m_UseOrtho(false)
 {
-	// create a camera
-	m_pViewCam= new GLC_Camera;
+
 }
 
 GLC_Viewport::~GLC_Viewport()
@@ -93,7 +93,7 @@ GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 	GLC_Vector3d VectMouse(Posx, Posy,0);
 
 	// Compute the length of camera's field of view
-	const double ChampsVision = 2.0 * m_pViewCam->distEyeTarget() *  tan((m_dFov * PI / 180.0) / 2.0);
+	const double ChampsVision = m_pViewCam->distEyeTarget() *  m_ViewTangent;
 
 	// the side of camera's square is mapped on Vertical length of window
 	// Ratio OpenGL/Pixel = dimend GL / dimens Pixel
@@ -140,7 +140,21 @@ void GLC_Viewport::updateProjectionMat(void)
 	// Calculate The Aspect Ratio Of The Window
 	double AspectRatio;
 	AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
-	gluPerspective(m_dFov, AspectRatio, m_dCamDistMin, m_dCamDistMax);
+	if (m_UseOrtho)
+	{
+		const double ChampsVision = m_pViewCam->distEyeTarget() * m_ViewTangent;
+		const double height= ChampsVision;
+		const double with= ChampsVision * AspectRatio;
+		const double left= -with * 0.5;
+		const double right=  -left;
+		const double bottom= - height * 0.5;
+		const double top= -bottom;
+		glOrtho(left, right, bottom, top, m_dCamDistMin, m_dCamDistMax);
+	}
+	else
+	{
+		gluPerspective(m_dFov, AspectRatio, m_dCamDistMin, m_dCamDistMax);
+	}
 
 	// Save the projection matrix
 	glGetDoublev(GL_PROJECTION_MATRIX, m_ProjectionMatrix.data());
@@ -157,7 +171,21 @@ void GLC_Viewport::forceAspectRatio(double ratio)
 	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
 
-	gluPerspective(m_dFov, ratio, m_dCamDistMin, m_dCamDistMax);
+	if (m_UseOrtho)
+	{
+		const double ChampsVision = m_pViewCam->distEyeTarget() * m_ViewTangent;
+		const double height= ChampsVision;
+		const double with= ChampsVision * ratio;
+		const double left= -with * 0.5;
+		const double right=  -left;
+		const double bottom= - height * 0.5;
+		const double top= -bottom;
+		glOrtho(left, right, bottom, top, m_dCamDistMin, m_dCamDistMax);
+	}
+	else
+	{
+		gluPerspective(m_dFov, ratio, m_dCamDistMin, m_dCamDistMax);
+	}
 
 	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
@@ -505,6 +533,16 @@ void GLC_Viewport::deleteBackGroundImage()
 {
 	delete m_pImagePlane;
 	m_pImagePlane= NULL;
+}
+
+void GLC_Viewport::setToOrtho(bool useOrtho)
+{
+	if (m_UseOrtho != useOrtho)
+	{
+		m_UseOrtho= useOrtho;
+		updateProjectionMat();
+	}
+
 }
 
 void GLC_Viewport::reframe(const GLC_BoundingBox& box)
