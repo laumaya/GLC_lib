@@ -154,41 +154,29 @@ void GLC_RepTrackBallMover::glDraw()
 {
 	computeRadius();
 
+	const double aspectRatio= static_cast<double>(m_pViewport->viewHSize())/static_cast<double>(m_pViewport->viewVSize());
 	// orbit circle must be shown
 	glDisable(GL_DEPTH_TEST);
 
+	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
-
 	glLoadIdentity();
-
-
-	const double depth= m_pViewport->nearClippingPlaneDist() + (m_pViewport->farClippingPlaneDist() - m_pViewport->nearClippingPlaneDist()) / 2.0;
-	// Put circle at the middle of camera range of depth
-	glTranslated(0, 0, - (depth) );
-
-	// Save Positionning matrix of arcs
-	const GLC_Matrix4x4 MatSavArc1(m_Arc1.matrix());
-	const GLC_Matrix4x4 MatSavArc2(m_Arc2.matrix());
-
-	// Scale Z to 0. Project arcs in the main circle plane
-	// Avoid perspective problems
-	GLC_Matrix4x4 MatScaling;
-	MatScaling.setMatScaling(1,1,0);
-	m_Arc1.multMatrix(MatScaling);
-	m_Arc2.multMatrix(MatScaling);
+	glOrtho(aspectRatio * -1.0 ,aspectRatio * 1.0 ,-1.0 ,1.0 ,-1.0 ,1.0);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
 
 	// Display arcs
 	m_Arc1.glExecute();
 	m_Arc2.glExecute();
 
-	// Restore positionning matrix of arcs
-	m_Arc1.setMatrix(MatSavArc1);
-	m_Arc2.setMatrix(MatSavArc2);
-
 	// Display base class (Main circle)
 	m_MainCircle.glExecute(m_RenderProperties);
 
 	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
 
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 
@@ -215,7 +203,7 @@ void GLC_RepTrackBallMover::computeRadius()
 	}
 
 	// Compute the length of camera's field of view
-	const double ChampsVision = 2.0 * ( m_pViewport->nearClippingPlaneDist() + (m_pViewport->farClippingPlaneDist() - m_pViewport->nearClippingPlaneDist()) / 2.0) *  tan((m_pViewport->viewAngle() * PI / 180.0) / 2.0);
+	const double ChampsVision = 2.0;
 
 	// the side of camera's square is mapped on Vertical length of window
 	// Circle radius in OpenGL unit = Radius(Pixel) * (dimend GL / dimens Pixel)
