@@ -72,6 +72,10 @@ public:
 	inline GLC_BoundingBox boundingBox()
 	{return m_Collection.boundingBox();}
 
+	//! Return true if the viewport use orthographic projection
+	inline bool useOrtho() const
+	{return m_pViewport->useOrtho();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

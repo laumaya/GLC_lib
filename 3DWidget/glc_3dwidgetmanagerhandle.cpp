@@ -154,9 +154,10 @@ glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mousePressEvent(QMouseEvent * pE
 		{
 			GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
 			const bool activeWidgetUnderMouse= pActiveWidget->instanceBelongTo(selectedId);
-
+			qDebug() << "Select ID= " << selectedId;
 			if (activeWidgetUnderMouse)
 			{
+				qDebug() << "Active widget under mouse";
 				eventFlag= pActiveWidget->mousePressed(pos, pEvent->button());
 			}
 			else
