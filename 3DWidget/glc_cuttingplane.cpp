@@ -95,6 +95,13 @@ glc::WidgetEventFlag GLC_CuttingPlane::select(const GLC_Point3d& pos)
 	// Update previous point
 	m_Previous= pos;
 	prepareToSlide();
+
+	GLC_Matrix4x4 normalMatrix(pos);
+	GLC_Matrix4x4 scaleMatrix;
+	scaleMatrix.setMatScaling(1000.0, 1000.0, 1000.0);
+
+	GLC_3DWidget::instanceHandle(1)->setMatrix(normalMatrix * scaleMatrix);
+
 	return glc::BlockedEvent;
 }
 
@@ -106,6 +113,13 @@ glc::WidgetEventFlag GLC_CuttingPlane::mousePressed(const GLC_Point3d& pos, Qt::
 		m_Previous= pos;
 		prepareToSlide();
 		returnFlag= glc::BlockedEvent;
+
+		GLC_Matrix4x4 normalMatrix(pos);
+		GLC_Matrix4x4 scaleMatrix;
+		scaleMatrix.setMatScaling(1000.0, 1000.0, 1000.0);
+
+		GLC_3DWidget::instanceHandle(1)->setMatrix(normalMatrix * scaleMatrix);
+
 	}
 
 	return returnFlag;
@@ -125,22 +139,52 @@ glc::WidgetEventFlag GLC_CuttingPlane::mouseMove(const GLC_Point3d& pos, Qt::Mou
 {
 	// Projection of intersection point on slidding plane
 	const GLC_Point3d eye(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->eye());
-	const GLC_Vector3d direction((pos - eye).normalize());
+	GLC_Vector3d direction;
+	if (GLC_3DWidget::useOrtho())
+	{
+		direction= GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize();
+	}
+	else
+	{
+		direction= (pos - eye);
+	}
 
 	GLC_Point3d sliddingPoint;
 	GLC_Line3d projectionLine(pos, direction);
 	glc::lineIntersectPlane(projectionLine, m_SlidingPlane, &sliddingPoint);
 
+	GLC_Vector3d projNormal= (GLC_3DWidget::widgetManagerHandle()->cameraHandle()->sideVector() ^ m_Normal).normalize();
+	GLC_Plane projPlane(projNormal, m_Previous);
+	glc::lineIntersectPlane(projectionLine, projPlane, &sliddingPoint);
+
 	// Projection of the slidding point on cutting plane normal
-	sliddingPoint= glc::project(sliddingPoint, GLC_Line3d(GLC_Point3d(), m_Normal));
+	sliddingPoint= glc::project(sliddingPoint, GLC_Line3d(m_Previous, m_Normal));
+
+	GLC_Matrix4x4 translationMatrix(sliddingPoint - m_Previous);
 
 	// Update the instance
-	GLC_3DWidget::instanceHandle(0)->translate(sliddingPoint - m_Previous);
+	GLC_3DWidget::instanceHandle(0)->multMatrix(translationMatrix);
+	GLC_3DWidget::set3DViewInstanceVisibility(1, true);
+	GLC_3DWidget::instanceHandle(1)->multMatrix(translationMatrix);
 
 	// Update plane center
-	m_Center= GLC_Matrix4x4(sliddingPoint - m_Previous) * m_Center;
+	m_Center= translationMatrix * m_Center;
 
 	m_Previous= sliddingPoint;
+
+	// Plane throw intersection and plane normal and camera up vector
+	GLC_Plane sliddingPlane(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize(), m_Previous);
+	m_SlidingPlane= sliddingPlane;
+
+/*
+	// Display plane normal
+	GLC_3DWidget::set3DViewInstanceVisibility(1, true);
+	GLC_Matrix4x4 normalMatrix(pos);
+	GLC_Matrix4x4 scaleMatrix;
+	scaleMatrix.setMatScaling(1000.0, 1000.0, 1000.0);
+
+	GLC_3DWidget::instanceHandle(1)->setMatrix(normalMatrix * scaleMatrix);
+*/
 
 	emit asChanged();
 
@@ -154,15 +198,23 @@ void GLC_CuttingPlane::create3DviewInstance()
 	GLC_Material* pMaterial= new GLC_Material(m_Color);
 	pMaterial->setOpacity(m_Opacity);
 
+	// Cutting plane 3Dview instance
 	GLC_3DViewInstance cuttingPlaneInstance= GLC_Factory::instance()->createCuttingPlane(m_Center, m_Normal, m_L1, m_L2, pMaterial);
-
 	GLC_3DWidget::add3DViewInstance(cuttingPlaneInstance);
+
+	// Normal line 3DWiewInstance
+	GLC_Line* pLine= new GLC_Line(GLC_Point3d(), m_Normal);
+	pLine->setLineWidth(2.0);
+
+	GLC_3DViewInstance normalLine(pLine);
+	GLC_3DWidget::add3DViewInstance(normalLine);
+	GLC_3DWidget::set3DViewInstanceVisibility(1, false);
 }
 
 void GLC_CuttingPlane::prepareToSlide()
 {
 	// Plane throw intersection and plane normal and camera up vector
-	GLC_Plane sliddingPlane(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward(), m_Previous);
+	GLC_Plane sliddingPlane(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize(), m_Previous);
 	m_SlidingPlane= sliddingPlane;
 
 	// Projection of intersection point on slidding plane
@@ -172,7 +224,7 @@ void GLC_CuttingPlane::prepareToSlide()
 	GLC_Line3d projectionLine(m_Previous, direction);
 	glc::lineIntersectPlane(projectionLine, m_SlidingPlane, &m_Previous);
 
-	m_Previous= glc::project(m_Previous, GLC_Line3d(GLC_Point3d(), m_Normal));
+	//m_Previous= glc::project(m_Previous, GLC_Line3d(m_Previous, m_Normal));
 }
 
 
