@@ -135,6 +135,10 @@ public:
 	inline GLC_3DViewCollection* widget3dCollectionHandle()
 	{return &m_3DWidget;}
 
+	//! Return true if this viewport use orthographic projection
+	inline bool useOrtho()const
+	{return m_UseOrtho;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -169,9 +173,6 @@ public:
 	/*! The size of the given list must be a multiple of 2*/
 	QList<GLC_Point3d> unproject(const QList<int>&)const;
 
-	//! Return true if this viewport use orthographic projection
-	inline bool useOrtho()const
-	{return m_UseOrtho;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
