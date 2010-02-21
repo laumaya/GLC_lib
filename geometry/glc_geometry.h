@@ -294,6 +294,9 @@ protected:
 	//! Wire Data
 	GLC_WireData m_WireData;
 
+	//! The wire color
+	QColor m_WireColor;
+
 	//! The line width
 	GLfloat m_LineWidth;
 

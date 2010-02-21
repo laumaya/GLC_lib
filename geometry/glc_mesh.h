@@ -386,9 +386,6 @@ private:
 	//! The current LOD index
 	int m_CurrentLod;
 
-	//! The wire color
-	QColor m_WireColor;
-
 	//! Class chunk id
 	static quint32 m_ChunkId;
 

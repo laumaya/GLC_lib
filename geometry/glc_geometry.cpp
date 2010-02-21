@@ -40,6 +40,7 @@ GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 , m_UseColorPerVertex(false)
 , m_IsSelected(false)
 , m_WireData()
+, m_WireColor(Qt::black)
 , m_LineWidth(1.0f)
 , m_IsWire(typeIsWire)		// the geometry type
 , m_TransparentMaterialNumber(0)
@@ -56,6 +57,7 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_UseColorPerVertex(sourceGeom.m_UseColorPerVertex)
 , m_IsSelected(false)
 , m_WireData(sourceGeom.m_WireData)
+, m_WireColor(sourceGeom.m_WireColor)
 , m_LineWidth(sourceGeom.m_LineWidth)
 , m_IsWire(sourceGeom.m_IsWire)
 , m_TransparentMaterialNumber(sourceGeom.m_TransparentMaterialNumber)
@@ -89,6 +91,7 @@ GLC_Geometry& GLC_Geometry::operator=(const GLC_Geometry& sourceGeom)
 		m_UseColorPerVertex= sourceGeom.m_UseColorPerVertex;
 		m_IsSelected= false;
 		m_WireData= sourceGeom.m_WireData;
+		m_WireColor= sourceGeom.m_WireColor;
 		m_LineWidth= sourceGeom.m_LineWidth;
 		m_IsWire= sourceGeom.m_IsWire;
 		m_TransparentMaterialNumber= sourceGeom.m_TransparentMaterialNumber;
@@ -225,6 +228,10 @@ void GLC_Geometry::glExecute(const GLC_RenderProperties& renderProperties)
 	if (m_MaterialHash.isEmpty())
 	{
 		GLC_Material* pMaterial= new GLC_Material();
+		if (m_IsWire)
+		{
+			pMaterial->setDiffuseColor(m_WireColor);
+		}
 		pMaterial->setName(name());
 		addMaterial(pMaterial);
 	}

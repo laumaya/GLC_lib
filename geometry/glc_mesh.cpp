@@ -40,7 +40,6 @@ GLC_Mesh::GLC_Mesh()
 , m_ColorPearVertex(false)
 , m_MeshData()
 , m_CurrentLod(0)
-, m_WireColor(Qt::black)
 {
 
 }
@@ -56,7 +55,6 @@ GLC_Mesh::GLC_Mesh(const GLC_Mesh& mesh)
 , m_ColorPearVertex(mesh.m_ColorPearVertex)
 , m_MeshData(mesh.m_MeshData)
 , m_CurrentLod(0)
-, m_WireColor(mesh.m_WireColor)
 {
 	// Make a copy of m_PrimitiveGroups with new material id
 	PrimitiveGroupsHash::const_iterator iPrimitiveGroups= mesh.m_PrimitiveGroups.constBegin();
@@ -100,7 +98,6 @@ GLC_Mesh& GLC_Mesh::operator=(const GLC_Mesh& mesh)
 		m_ColorPearVertex= mesh.m_ColorPearVertex;
 		m_MeshData= mesh.m_MeshData;
 		m_CurrentLod= 0;
-		m_WireColor= mesh.m_WireColor;
 
 		// Make a copy of m_PrimitiveGroups with new material id
 		PrimitiveGroupsHash::const_iterator iPrimitiveGroups= mesh.m_PrimitiveGroups.constBegin();
