@@ -82,6 +82,10 @@ public:
 	inline bool has3DWidgetManager() const
 	{return (NULL == m_pWidgetManagerHandle);}
 
+	//! Return true if otho is used
+	inline bool useOrtho() const
+	{return m_pWidgetManagerHandle->useOrtho();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -149,6 +153,10 @@ protected:
 
 	//! Remove instance of this 3d widget from the 3D widget manager handle
 	void remove3DViewInstance();
+
+	//! Set the specified 3D view instance visibility
+	inline void set3DViewInstanceVisibility(int index, bool visibility)
+	{m_InstanceVisibility[index]= visibility;}
 
 //////////////////////////////////////////////////////////////////////
 // Private services function
