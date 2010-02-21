@@ -84,6 +84,10 @@ public:
 	//! Set Line coordinate by 4D point
 	void setCoordinate(const GLC_Point3d &, const GLC_Point3d &);
 
+	//! Set this line color
+	inline void setColor(const QColor& color);
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

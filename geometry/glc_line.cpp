@@ -29,7 +29,6 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 
-// Construct an GLC_Line by to point
 GLC_Line::GLC_Line(const GLC_Point3d & point1, const GLC_Point3d & point2)
 : GLC_Geometry("Line", true)
 , m_Point1(point1)
@@ -38,7 +37,6 @@ GLC_Line::GLC_Line(const GLC_Point3d & point1, const GLC_Point3d & point2)
 
 }
 
-// Copy constructor
 GLC_Line::GLC_Line(const GLC_Line& line)
 : GLC_Geometry(line)
 , m_Point1(line.m_Point1)
@@ -47,7 +45,6 @@ GLC_Line::GLC_Line(const GLC_Line& line)
 
 }
 
-//! Default destructor
 GLC_Line::~GLC_Line()
 {
 
@@ -57,7 +54,6 @@ GLC_Line::~GLC_Line()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// return the line bounding box
 GLC_BoundingBox& GLC_Line::boundingBox(void)
 {
 
@@ -71,12 +67,23 @@ GLC_BoundingBox& GLC_Line::boundingBox(void)
 	return *m_pBoundingBox;
 }
 
-// Return a copy of the current geometry
 GLC_Geometry* GLC_Line::clone() const
 {
 	return new GLC_Line(*this);
 }
 
+
+//////////////////////////////////////////////////////////////////////
+// Set Functions
+//////////////////////////////////////////////////////////////////////
+void GLC_Line::setColor(const QColor& color)
+{
+	m_WireColor= color;
+	if (GLC_Geometry::hasMaterial())
+	{
+		GLC_Geometry::firstMaterial()->setDiffuseColor(color);
+	}
+}
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
