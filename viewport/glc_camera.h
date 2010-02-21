@@ -89,6 +89,10 @@ public:
 	inline GLC_Vector3d forward(void) const
 	{return m_Target - m_Eye;}
 
+	//! Side camera vector
+	inline GLC_Vector3d sideVector() const
+	{return ((m_Target - m_Eye).normalize() ^ m_VectUp).normalize();}
+
 	//! Get camera's orbit composition matrix
 	inline GLC_Matrix4x4 viewMatrix(void) const
 	{return m_MatCompOrbit;}
