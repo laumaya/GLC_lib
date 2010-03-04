@@ -39,6 +39,10 @@ namespace glc
 	/*! \def PI
 	 * \brief Define the magic number PI */
 	const double PI= acos(-1.0);
+
+	//! Convert the given degre angle in radian
+	inline double toRadian(double angle)
+	{return PI * angle / 180.0;}
 };
 
 #endif /*GLC_UTILS_MATHS_H_*/
