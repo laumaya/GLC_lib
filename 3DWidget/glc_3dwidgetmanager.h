@@ -21,6 +21,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
+//! \file glc_3dwidgetmanager.h Interface for the GLC_3DWidgetManager class.
 
 #ifndef GLC_3DWIDGETMANAGER_H_
 #define GLC_3DWIDGETMANAGER_H_

@@ -21,6 +21,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
+//! \file glc_3dwidgetmanagerhandle.cpp Implementation of the GLC_3DWidgetManagerHandle class.
 
 #include "glc_3dwidgetmanagerhandle.h"
 
