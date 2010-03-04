@@ -130,8 +130,6 @@ private:
 	//! Create the wire of the mesh
 	void createWire();
 
-	//! Clear mesh and wire
-	void clearMeshAndWireData();
 //@}
 
 //////////////////////////////////////////////////////////////////////

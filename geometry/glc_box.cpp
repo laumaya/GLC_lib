@@ -85,7 +85,7 @@ void GLC_Box::setLgX(double LgX)
 	Q_ASSERT(LgX > 0);
 	m_dLgX= LgX;
 
-	clearMeshAndWireData();
+	GLC_Mesh::clearMeshWireAndBoundingBox();
 }
 
 // Set Y length
@@ -94,7 +94,7 @@ void GLC_Box::setLgY(double LgY)
 	Q_ASSERT(LgY > 0);
 	m_dLgY= LgY;
 
-	clearMeshAndWireData();
+	GLC_Mesh::clearMeshWireAndBoundingBox();
 }
 
 // Set Z length
@@ -103,7 +103,7 @@ void GLC_Box::setLgZ(double LgZ)
 	Q_ASSERT(LgZ > 0);
 	m_dLgZ= LgZ;
 
-	clearMeshAndWireData();
+	GLC_Mesh::clearMeshWireAndBoundingBox();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -327,15 +327,5 @@ void GLC_Box::createWire()
 	floatVector << -lgX << -lgY << lgZ;
 	GLC_Geometry::addPolyline(floatVector);
 	floatVector.clear();
-}
-
-// Clear mesh and wire
-void GLC_Box::clearMeshAndWireData()
-{
-	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
-
-	GLC_Mesh::clearOnlyMesh();
-	m_WireData.clear();
 }
 
