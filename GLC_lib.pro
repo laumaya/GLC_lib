@@ -57,6 +57,7 @@ HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
 						maths/glc_vector2d.h \
 						maths/glc_vector2df.h \
 						maths/glc_vector3d.h \
+						maths/glc_vector4d.h \
 						maths/glc_vector3df.h \
 						maths/glc_matrix4x4.h \
 						maths/glc_interpolator.h \
@@ -100,7 +101,8 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_3drep.h \
 							geometry/glc_pointsprite.h \
 							geometry/glc_bsrep.h \
-							geometry/glc_wiredata.h
+							geometry/glc_wiredata.h \
+							geometry/glc_arrow.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -187,6 +189,7 @@ SOURCES += lib3ds/atmosphere.c \
            lib3ds/viewport.c
    
 SOURCES +=	maths/glc_matrix4x4.cpp \
+			maths/glc_vector4d.cpp \
 			maths/glc_interpolator.cpp \
 			maths/glc_distance.cpp \
 			maths/glc_plane.cpp \
@@ -228,7 +231,8 @@ SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_3drep.cpp \
 			geometry/glc_pointsprite.cpp \
 			geometry/glc_bsrep.cpp \
-			geometry/glc_wiredata.cpp
+			geometry/glc_wiredata.cpp \
+			geometry/glc_arrow.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -307,6 +311,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Vector2df \
     		   include/GLC_Vector3d \
     		   include/GLC_Vector3df \
+    		   include/GLC_Vector4d \
     		   include/GLC_Viewport \
     		   include/GLC_World \
     		   include/GLC_Shader \
