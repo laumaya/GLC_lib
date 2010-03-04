@@ -129,15 +129,15 @@ public:
 
 	//! Return the x Scaling of this matrix
 	inline double scalingX() const
-	{return GLC_Vector3d(m_Matrix[0], m_Matrix[1], m_Matrix[2]).lenght();}
+	{return GLC_Vector3d(m_Matrix[0], m_Matrix[1], m_Matrix[2]).length();}
 
 	//! Return the y Scaling of this matrix
 	inline double scalingY() const
-	{return GLC_Vector3d(m_Matrix[4], m_Matrix[5], m_Matrix[6]).lenght();}
+	{return GLC_Vector3d(m_Matrix[4], m_Matrix[5], m_Matrix[6]).length();}
 
 	//! Return the z Scaling of this matrix
 	inline double scalingZ() const
-	{return GLC_Vector3d(m_Matrix[8], m_Matrix[9], m_Matrix[10]).lenght();}
+	{return GLC_Vector3d(m_Matrix[8], m_Matrix[9], m_Matrix[10]).length();}
 
 	//! Return the inverse of this matrix
 	inline GLC_Matrix4x4 inverted() const
@@ -177,6 +177,8 @@ public:
 	//! Set this matrix with Euler angle and return a reference to this matrix
 	GLC_Matrix4x4& fromEuler(const double, const double, const double);
 
+	//! Set this matrix column from the given 3d vector
+	GLC_Matrix4x4& setColumn(int index, const GLC_Vector3d& vector);
 
 //@}
 

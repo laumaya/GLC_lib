@@ -59,6 +59,16 @@ GLC_Matrix4x4& GLC_Matrix4x4::fromEuler(const double angle_x, const double angle
 	return *this;
 }
 
+GLC_Matrix4x4& GLC_Matrix4x4::setColumn(int index, const GLC_Vector3d& vector)
+{
+	Q_ASSERT(index < 4);
+	index= index * 4;
+	m_Matrix[index]= vector.x();
+	m_Matrix[index + 1]= vector.y();
+	m_Matrix[index + 2]= vector.z();
+
+	return *this;
+}
 //////////////////////////////////////////////////////////////////////
 // Private services function
 //////////////////////////////////////////////////////////////////////
