@@ -60,7 +60,7 @@ GLC_Circle::~GLC_Circle()
 //////////////////////////////////////////////////////////////////////
 
 // return the circle bounding box
-GLC_BoundingBox& GLC_Circle::boundingBox(void)
+const GLC_BoundingBox& GLC_Circle::boundingBox(void)
 {
 	if (NULL == m_pBoundingBox)
 	{

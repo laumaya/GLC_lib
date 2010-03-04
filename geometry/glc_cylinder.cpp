@@ -79,7 +79,7 @@ GLC_Geometry* GLC_Cylinder::clone() const
 }
 
 // return the cylinder bounding box
-GLC_BoundingBox& GLC_Cylinder::boundingBox()
+const GLC_BoundingBox& GLC_Cylinder::boundingBox()
 {
 	if (GLC_Mesh::isEmpty())
 	{

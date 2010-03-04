@@ -59,7 +59,7 @@ GLC_Box::~GLC_Box()
 //////////////////////////////////////////////////////////////////////
 
 // return the box bounding box
-GLC_BoundingBox& GLC_Box::boundingBox(void)
+const GLC_BoundingBox& GLC_Box::boundingBox(void)
 {
 	if (GLC_Mesh::isEmpty())
 	{

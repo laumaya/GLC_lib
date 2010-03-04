@@ -79,7 +79,7 @@ public:
 	{return m_dLgZ;}
 
 	//! return the box bounding box
-	virtual GLC_BoundingBox& boundingBox(void);
+	virtual const GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the geometry
 	virtual GLC_Geometry* clone() const;

@@ -91,7 +91,7 @@ public:
 	bool EndedIsCaped() const {return m_EndedIsCaped;}
 
 	//! return the cylinder bounding box
-	virtual GLC_BoundingBox& boundingBox(void);
+	virtual const GLC_BoundingBox& boundingBox(void);
 
 //@}
 

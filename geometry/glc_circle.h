@@ -78,7 +78,7 @@ public:
 	{return m_Radius * 2.0;}
 
 	//! return the circle bounding box
-	virtual GLC_BoundingBox& boundingBox();
+	virtual const GLC_BoundingBox& boundingBox();
 
 	//! Return a copy of the geometry
 	virtual GLC_Geometry* clone() const;
