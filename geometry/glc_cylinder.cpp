@@ -97,7 +97,7 @@ void GLC_Cylinder::setLength(double Length)
 	Q_ASSERT(Length > 0.0);
 	m_Length= Length;
 
-	clearMeshAndWireData();
+	GLC_Mesh::clearMeshWireAndBoundingBox();
 }
 
 // Set Cylinder radius
@@ -106,7 +106,7 @@ void GLC_Cylinder::setRadius(double Radius)
 	Q_ASSERT(Radius > 0.0);
 	m_Radius= Radius;
 
-	clearMeshAndWireData();
+	GLC_Mesh::clearMeshWireAndBoundingBox();
 }
 
 // Set Discretion
@@ -118,7 +118,7 @@ void GLC_Cylinder::setDiscretion(int TargetDiscret)
 		m_Discret= TargetDiscret;
 		if (m_Discret < 6) m_Discret= 6;
 
-		clearMeshAndWireData();
+		GLC_Mesh::clearMeshWireAndBoundingBox();
 	}
 }
 
@@ -129,7 +129,7 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 	{
 		m_EndedIsCaped= CapsEnded;
 
-		clearMeshAndWireData();
+		GLC_Mesh::clearMeshWireAndBoundingBox();
 	}
 }
 
@@ -317,14 +317,4 @@ void GLC_Cylinder::createMeshAndWire()
 	}
 
 	finish();
-}
-
-// Clear mesh and wire
-void GLC_Cylinder::clearMeshAndWireData()
-{
-	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
-
-	GLC_Mesh::clearOnlyMesh();
-	m_WireData.clear();
 }

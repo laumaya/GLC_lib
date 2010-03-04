@@ -100,8 +100,6 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-// Functions impacting Display List
-
 	//! Set Cylinder length
 	/*! Length must be > 0*/
 	void setLength(double Length);
@@ -116,8 +114,6 @@ public:
 
 	//! End Caps
 	void setEndedCaps(bool CapsEnded);
-
-// End of functions impacting display list
 
 //@}
 
@@ -139,9 +135,6 @@ private:
 private:
 	//! Create the cylinder mesh and wire
 	void createMeshAndWire();
-
-	//! Clear mesh and wire
-	void clearMeshAndWireData();
 
 //@}
 
