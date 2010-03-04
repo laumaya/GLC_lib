@@ -137,6 +137,9 @@ private:
 	//! Create sliding plane
 	void prepareToSlide();
 
+	//! Update cutting plane arrow
+	void updateArrow();
+
 
 //////////////////////////////////////////////////////////////////////
 // Private Member

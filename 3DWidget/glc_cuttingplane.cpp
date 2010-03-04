@@ -27,6 +27,7 @@
 #include "../glc_factory.h"
 #include "../maths/glc_line3d.h"
 #include "../maths/glc_geomtools.h"
+#include "../geometry/glc_arrow.h"
 
 GLC_CuttingPlane::GLC_CuttingPlane(const GLC_Point3d& center, const GLC_Vector3d& normal, double l1, double l2, GLC_3DWidgetManagerHandle*  pWidgetManagerHandle)
 : GLC_3DWidget(pWidgetManagerHandle)
@@ -98,8 +99,9 @@ glc::WidgetEventFlag GLC_CuttingPlane::select(const GLC_Point3d& pos)
 
 	GLC_Matrix4x4 normalMatrix(pos);
 	GLC_Matrix4x4 scaleMatrix;
-	scaleMatrix.setMatScaling(1000.0, 1000.0, 1000.0);
+	scaleMatrix.setMatScaling(m_L1, m_L1, m_L1);
 
+	updateArrow();
 	GLC_3DWidget::instanceHandle(1)->setMatrix(normalMatrix * scaleMatrix);
 
 	return glc::BlockedEvent;
@@ -116,8 +118,9 @@ glc::WidgetEventFlag GLC_CuttingPlane::mousePressed(const GLC_Point3d& pos, Qt::
 
 		GLC_Matrix4x4 normalMatrix(pos);
 		GLC_Matrix4x4 scaleMatrix;
-		scaleMatrix.setMatScaling(1000.0, 1000.0, 1000.0);
+		scaleMatrix.setMatScaling(m_L1, m_L1, m_L1);
 
+		updateArrow();
 		GLC_3DWidget::instanceHandle(1)->setMatrix(normalMatrix * scaleMatrix);
 
 	}
@@ -202,11 +205,10 @@ void GLC_CuttingPlane::create3DviewInstance()
 	GLC_3DViewInstance cuttingPlaneInstance= GLC_Factory::instance()->createCuttingPlane(m_Center, m_Normal, m_L1, m_L2, pMaterial);
 	GLC_3DWidget::add3DViewInstance(cuttingPlaneInstance);
 
-	// Normal line 3DWiewInstance
-	GLC_Line* pLine= new GLC_Line(GLC_Point3d(), m_Normal);
-	pLine->setLineWidth(2.0);
+	// Normal arrow 3DWiewInstance
+	GLC_Arrow* pArrow= new GLC_Arrow(GLC_Point3d(), m_Normal * 0.5, GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize());
 
-	GLC_3DViewInstance normalLine(pLine);
+	GLC_3DViewInstance normalLine(pArrow);
 	GLC_3DWidget::add3DViewInstance(normalLine);
 	GLC_3DWidget::set3DViewInstanceVisibility(1, false);
 }
@@ -227,4 +229,9 @@ void GLC_CuttingPlane::prepareToSlide()
 	//m_Previous= glc::project(m_Previous, GLC_Line3d(m_Previous, m_Normal));
 }
 
-
+void GLC_CuttingPlane::updateArrow()
+{
+	GLC_Arrow* pArrow= dynamic_cast<GLC_Arrow*>(GLC_3DWidget::instanceHandle(1)->geomAt(0));
+	Q_ASSERT(NULL != pArrow);
+	pArrow->setViewDir(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize());
+}
