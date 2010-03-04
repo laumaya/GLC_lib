@@ -467,7 +467,7 @@ int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewpor
 	const double diameter= boundingBox.boundingSphereRadius() * 2.0 * m_MatPos.scalingX();
 	GLC_Vector3d center(m_MatPos * boundingBox.center());
 
-	const double dist= (center - pView->cameraHandle()->eye()).lenght();
+	const double dist= (center - pView->cameraHandle()->eye()).length();
 	const double cameraCover= dist * pView->viewTangent();
 	double ratio= diameter / cameraCover * 150.0;
 
