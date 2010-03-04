@@ -117,7 +117,7 @@ GLC_Vector3d GLC_TrackBallMover::mapForTracking( double x, double y) const
 
 	// Distance between pick point and origine can't be over then 1 (1 is radius of orbit circle)
 	GLC_Vector3d mousePos(x, y, 0.0);
-	if (mousePos.lenght() > 1.0)
+	if (mousePos.length() > 1.0)
 	{
 		mousePos.setLenght(1.0);
 	}

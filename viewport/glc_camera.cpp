@@ -129,7 +129,7 @@ GLC_Camera& GLC_Camera::zoom(double factor)
 	GLC_Vector3d VectCam(m_Eye - m_Target);
 
 	// Compute new vector length
-	const double Norme= VectCam.lenght() * 1 / factor;
+	const double Norme= VectCam.length() * 1 / factor;
 	VectCam.setLenght(Norme);
 
 	m_Eye= VectCam + m_Target;
@@ -323,12 +323,12 @@ bool GLC_Camera::isAlmostEqualTo(const GLC_Camera& cam, const double distanceAcc
       GLC_Vector3d incident1 = m_Target - m_Eye;
       GLC_Vector3d incident2 = cam.m_Target - cam.m_Eye;
 
-      double allowedGap =  incident1.lenght() * distanceAccuracy;
+      double allowedGap =  incident1.length() * distanceAccuracy;
       GLC_Point3d left1 = incident1 ^ m_VectUp;
       GLC_Point3d left2 = incident2 ^ cam.m_VectUp;
 
-      return ((m_Eye - cam.m_Eye).lenght() < allowedGap ) && ( (m_Target - cam.m_Target).lenght() < allowedGap)
-                  && ((left1 - left2).lenght() < allowedGap) ;
+      return ((m_Eye - cam.m_Eye).length() < allowedGap ) && ( (m_Target - cam.m_Target).length() < allowedGap)
+                  && ((left1 - left2).length() < allowedGap) ;
 }
 
 // Return the standard front view form this camera
