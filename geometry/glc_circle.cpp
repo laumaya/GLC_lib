@@ -97,11 +97,8 @@ void GLC_Circle::setRadius(double R)
 	if (!qFuzzyCompare(R - m_Radius, 0.0))
 	{	// Radius is changing
 		m_Radius= R;
-		m_GeometryIsValid= false;
 
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-		m_WireData.clear();
+		GLC_Geometry::clearWireAndBoundingBox();
 	}
 }
 
@@ -113,11 +110,8 @@ void GLC_Circle::setDiscretion(int TargetDiscret)
 	{
 		m_nDiscret= TargetDiscret;
 		if (m_nDiscret < 6) m_nDiscret= 6;
-		m_GeometryIsValid= false;
 
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-		m_WireData.clear();
+		GLC_Geometry::clearWireAndBoundingBox();
 	}
 }
 
@@ -128,11 +122,8 @@ void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 	if (!qFuzzyCompare(AngleRadians - m_dAngle, 0.0))
 	{	// Angle is changing
 			m_dAngle= AngleRadians;
-			m_GeometryIsValid= false;
 
-			delete m_pBoundingBox;
-			m_pBoundingBox= NULL;
-			m_WireData.clear();
+			GLC_Geometry::clearWireAndBoundingBox();
 	}
 }
 
