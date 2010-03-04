@@ -84,10 +84,7 @@ GLC_Rectangle& GLC_Rectangle::setRectangle(double l1, double l2)
 	m_L1= l1;
 	m_L2= l2;
 
-	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
-
-	GLC_Mesh::clearOnlyMesh();
+	GLC_Mesh::clearMeshWireAndBoundingBox();
 
 	return *this;
 }
@@ -95,19 +92,15 @@ GLC_Rectangle& GLC_Rectangle::setRectangle(double l1, double l2)
 void GLC_Rectangle::setLength1(double value)
 {
 	m_L1= value;
-	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
 
-	GLC_Mesh::clearOnlyMesh();
+	GLC_Mesh::clearMeshWireAndBoundingBox();
 }
 
 void GLC_Rectangle::setLength2(double value)
 {
 	m_L2= value;
-	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
 
-	GLC_Mesh::clearOnlyMesh();
+	GLC_Mesh::clearMeshWireAndBoundingBox();
 }
 
 //////////////////////////////////////////////////////////////////////
