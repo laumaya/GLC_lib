@@ -99,7 +99,7 @@ public:
 
 	//! Return the radius of this bounding sphere of bounding box
 	inline double boundingSphereRadius() const
-	{return GLC_Vector3d(m_Lower - m_Upper).lenght() / 2.0;}
+	{return GLC_Vector3d(m_Lower - m_Upper).length() / 2.0;}
 
 	//! Return true if this bounding box is equal of the given bounding box
 	inline bool operator == (const GLC_BoundingBox& boundingBox);

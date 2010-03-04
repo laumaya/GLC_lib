@@ -83,13 +83,13 @@ bool GLC_BoundingBox::intersect(const GLC_Point3d& point) const
 
 bool GLC_BoundingBox::intersectBoundingSphere(const GLC_Point3d& point) const
 {
-	const double distance= (center() - point).lenght();
+	const double distance= (center() - point).length();
 	return distance < boundingSphereRadius();
 }
 
 bool GLC_BoundingBox::intersectBoundingSphere(const GLC_BoundingBox& boundingSphere) const
 {
-	const double distance= (center() - boundingSphere.center()).lenght();
+	const double distance= (center() - boundingSphere.center()).length();
 	return distance < (boundingSphereRadius() + boundingSphere.boundingSphereRadius());
 }
 
