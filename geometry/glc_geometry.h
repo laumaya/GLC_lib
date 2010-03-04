@@ -259,6 +259,15 @@ protected:
 	//! Remove the specified material from the geometry
 	void removeMaterial(GLC_uint);
 
+	//! Clear the wire data and the bounding box of this geometry
+	inline void clearWireAndBoundingBox()
+	{
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+		m_WireData.clear();
+		m_GeometryIsValid= false;
+	}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
