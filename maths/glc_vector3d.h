@@ -105,8 +105,8 @@ public:
 	inline bool isNull() const
 	{return (m_Vector[0] == 0.0f) && (m_Vector[1] == 0.0f) && (m_Vector[2] == 0.0f);}
 
-	//! Return the lenght of this vector
-	inline double lenght() const
+	//! Return the length of this vector
+	inline double length() const
 	{return sqrt(m_Vector[0] * m_Vector[0] + m_Vector[1] * m_Vector[1] + m_Vector[2] * m_Vector[2]);}
 
 	//! Return the 2D vector specified by the given mask vector
