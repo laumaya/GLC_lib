@@ -191,7 +191,7 @@ public:
 	virtual void clear();
 
 	//! Clear only the content off the mesh and makes it empty
-	void clearOnlyMesh();
+	void clearMeshWireAndBoundingBox();
 
 	//! Add vertices coordinate
 	inline void addVertices(const GLfloatVector& vertices)

@@ -86,7 +86,7 @@ GLC_Mesh& GLC_Mesh::operator=(const GLC_Mesh& mesh)
 		GLC_Geometry::operator=(mesh);
 
 		// Clear the mesh
-		clearOnlyMesh();
+		clearMeshWireAndBoundingBox();
 
 		// Copy members
 		m_NextPrimitiveLocalId= mesh.m_NextPrimitiveLocalId;
@@ -375,16 +375,16 @@ QList<QVector<GLuint> > GLC_Mesh::getFansIndex(int lod, GLC_uint materialId) con
 // Clear the content of the mesh and super class GLC_Geometry
 void GLC_Mesh::clear()
 {
+	// Clear the mesh content
+	clearMeshWireAndBoundingBox();
+
 	// Clear the super class GLC_Geometry
 	GLC_Geometry::clear();
-
-	// Clear the mesh content
-	clearOnlyMesh();
 }
 
 
 // Clear the content off the mesh and makes it empty
-void GLC_Mesh::clearOnlyMesh()
+void GLC_Mesh::clearMeshWireAndBoundingBox()
 {
 	// Reset primitive local id
 	m_NextPrimitiveLocalId= 1;
@@ -415,8 +415,7 @@ void GLC_Mesh::clearOnlyMesh()
 	m_MeshData.clear();
 	m_CurrentLod= 0;
 
-	// Invalidate the geometry
-	m_GeometryIsValid= false;
+	GLC_Geometry::clearWireAndBoundingBox();
 }
 
 // Add triangles
