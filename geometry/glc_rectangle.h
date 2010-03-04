@@ -74,7 +74,7 @@ public:
 	virtual GLC_Geometry* clone() const;
 
 	//! Return this rectangle bounding box
-	virtual GLC_BoundingBox& boundingBox(void);
+	virtual const GLC_BoundingBox& boundingBox(void);
 
 //@}
 //////////////////////////////////////////////////////////////////////

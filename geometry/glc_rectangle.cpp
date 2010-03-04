@@ -66,7 +66,7 @@ GLC_Geometry* GLC_Rectangle::clone() const
 }
 
 // return the rectangle bounding box
-GLC_BoundingBox& GLC_Rectangle::boundingBox()
+const GLC_BoundingBox& GLC_Rectangle::boundingBox()
 {
 	if (GLC_Mesh::isEmpty())
 	{

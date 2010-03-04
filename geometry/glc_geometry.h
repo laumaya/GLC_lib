@@ -140,7 +140,7 @@ public:
 	{return m_MaterialHash.contains(key);}
 
 	//! Return the geometry bounding box
-	virtual GLC_BoundingBox& boundingBox(void) = 0;
+	virtual const GLC_BoundingBox& boundingBox(void) = 0;
 
 	//! Return true if the bounding box is valid
 	inline bool boundingBoxIsValid() const

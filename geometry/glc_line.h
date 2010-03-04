@@ -69,7 +69,7 @@ public:
 	{return m_Point2;}
 
 	//! Return the point bounding box
-	virtual GLC_BoundingBox& boundingBox(void);
+	virtual const GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the geometry
 	virtual GLC_Geometry* clone() const;

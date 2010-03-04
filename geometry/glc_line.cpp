@@ -54,7 +54,7 @@ GLC_Line::~GLC_Line()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-GLC_BoundingBox& GLC_Line::boundingBox(void)
+const GLC_BoundingBox& GLC_Line::boundingBox(void)
 {
 
 	if (NULL == m_pBoundingBox)

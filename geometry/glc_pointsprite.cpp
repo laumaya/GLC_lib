@@ -55,7 +55,7 @@ GLC_PointSprite::~GLC_PointSprite()
 }
 
 // return the point bounding box
-GLC_BoundingBox& GLC_PointSprite::boundingBox(void)
+const GLC_BoundingBox& GLC_PointSprite::boundingBox(void)
 {
 
 	if (NULL == m_pBoundingBox)

@@ -162,7 +162,7 @@ unsigned int GLC_Mesh::numberOfVertex() const
 }
 
 // return the mesh bounding box
-GLC_BoundingBox& GLC_Mesh::boundingBox()
+const GLC_BoundingBox& GLC_Mesh::boundingBox()
 {
 	if (NULL == m_pBoundingBox)
 	{

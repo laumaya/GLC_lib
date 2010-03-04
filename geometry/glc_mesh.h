@@ -93,7 +93,7 @@ public:
 	{ return m_NumberOfNormals;}
 
 	//! return the mesh bounding box
-	virtual GLC_BoundingBox& boundingBox(void);
+	virtual const GLC_BoundingBox& boundingBox(void);
 
 	//! Return a copy of the Mesh as GLC_Geometry pointer
 	virtual GLC_Geometry* clone() const;

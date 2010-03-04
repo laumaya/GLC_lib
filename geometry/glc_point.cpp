@@ -55,7 +55,7 @@ GLC_Point3d GLC_Point::coordinate(void) const
 }
 
 // return the point bounding box
-GLC_BoundingBox& GLC_Point::boundingBox(void)
+const GLC_BoundingBox& GLC_Point::boundingBox(void)
 {
 
 	if (NULL == m_pBoundingBox)
