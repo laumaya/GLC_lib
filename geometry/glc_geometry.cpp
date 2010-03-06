@@ -148,7 +148,7 @@ void GLC_Geometry::clear()
 // Replace the Master material
 void GLC_Geometry::replaceMasterMaterial(GLC_Material* pMaterial)
 {
-
+	Q_ASSERT(!m_IsWire);
 	if (!m_MaterialHash.isEmpty())
 	{
 		if (pMaterial != firstMaterial())
@@ -179,11 +179,18 @@ void GLC_Geometry::updateTransparentMaterialNumber()
 		}
 		++iMat;
 	}
+	if (m_WireColor.alpha() != 255)
+	{
+		qDebug() << "GLC_Geometry::updateTransparentMaterialNumber()";
+		++m_TransparentMaterialNumber;
+	}
 }
 
 // Add material to mesh
 void GLC_Geometry::addMaterial(GLC_Material* pMaterial)
 {
+	Q_ASSERT(!m_IsWire);
+
 	if (pMaterial != NULL)
 	{
 		const GLC_uint materialID= pMaterial->id();
@@ -205,6 +212,19 @@ void GLC_Geometry::addMaterial(GLC_Material* pMaterial)
 	}
 }
 
+void GLC_Geometry::setWireColor(const QColor& color)
+{
+	bool previousColorIsTransparent= (m_WireColor.alpha() != 255);
+	bool newColorIsTransparent= (color.alpha() != 255);
+
+	if (previousColorIsTransparent != newColorIsTransparent)
+	{
+		if (newColorIsTransparent) ++m_TransparentMaterialNumber;
+		else if (previousColorIsTransparent) --m_TransparentMaterialNumber;
+	}
+
+	m_WireColor= color;
+}
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
@@ -225,52 +245,64 @@ void GLC_Geometry::glLoadTexture(void)
 // Geometry display
 void GLC_Geometry::glExecute(const GLC_RenderProperties& renderProperties)
 {
-	if (m_MaterialHash.isEmpty())
+	Q_ASSERT(!m_IsWire || (m_IsWire && m_MaterialHash.isEmpty()));
+	bool renderWire= (renderProperties.renderingFlag() == glc::TransparentRenderFlag) && isTransparent();
+	renderWire= renderWire || ((renderProperties.renderingFlag() != glc::TransparentRenderFlag) && !isTransparent());
+	if (!m_IsWire || renderWire)
 	{
-		GLC_Material* pMaterial= new GLC_Material();
-		if (m_IsWire)
+		if (m_MaterialHash.isEmpty() && !m_IsWire)
 		{
-			pMaterial->setDiffuseColor(m_WireColor);
+			GLC_Material* pMaterial= new GLC_Material();
+			pMaterial->setName(name());
+			addMaterial(pMaterial);
 		}
-		pMaterial->setName(name());
-		addMaterial(pMaterial);
-	}
-	m_IsSelected= renderProperties.isSelected();
 
-	// Define Geometry's property
-	if(!GLC_State::isInSelectionMode())
-	{
-		glPropGeom(renderProperties);
-	}
+		m_IsSelected= renderProperties.isSelected();
 
-	glDraw(renderProperties);
+		// Define Geometry's property
+		if(!GLC_State::isInSelectionMode())
+		{
+			glPropGeom(renderProperties);
+		}
 
-	m_IsSelected= false;
-	m_GeometryIsValid= true;
+		glDraw(renderProperties);
 
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Geometry::glExecute " + name(), error);
-		throw(OpenGlException);
+		m_IsSelected= false;
+		m_GeometryIsValid= true;
+
+		// OpenGL error handler
+		GLenum error= glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			GLC_OpenGlException OpenGlException("GLC_Geometry::glExecute " + name(), error);
+			throw(OpenGlException);
+		}
 	}
 }
 
 // Virtual interface for OpenGL Geometry properties.
 void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 {
-	Q_ASSERT(!m_MaterialHash.isEmpty());
+	glLineWidth(lineWidth());
 
 	if(m_IsWire)
 	{
 		glLineWidth(m_LineWidth);
-		Q_ASSERT(m_MaterialHash.size() == 1);
-		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
 		glDisable(GL_LIGHTING);
-		pCurrentMaterial->glExecute();
+		if (!renderProperties.isSelected())
+		{
+			// Set polyline colors
+			GLfloat color[4]= {static_cast<float>(m_WireColor.redF()),
+									static_cast<float>(m_WireColor.greenF()),
+									static_cast<float>(m_WireColor.blueF()),
+									static_cast<float>(m_WireColor.alphaF())};
 
-		if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
+			glColor4fv(color);
+		}
+		else
+		{
+			GLC_SelectionMaterial::glExecute();
+		}
 	}
 	else if (m_MaterialHash.size() == 1)
 	{

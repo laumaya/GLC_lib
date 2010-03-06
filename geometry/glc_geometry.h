@@ -151,7 +151,7 @@ public:
 
 	//! Get the geometry transparency
 	inline bool isTransparent() const
-	{return (m_TransparentMaterialNumber == m_MaterialHash.size()) && hasTransparentMaterials();}
+	{return (m_TransparentMaterialNumber >= m_MaterialHash.size()) && hasTransparentMaterials();}
 
 	//! Return true if the geometry contains transparent materials
 	inline bool hasTransparentMaterials() const
@@ -174,6 +174,10 @@ public:
 	//! Return the line width
 	GLfloat lineWidth() const
 	{return m_LineWidth;}
+
+	//! Rteurn this geometry wire color
+	inline QColor wireColor() const
+	{return m_WireColor;}
 
 //@}
 
@@ -227,6 +231,9 @@ public:
 	//! Set Line width
 	inline void setLineWidth(GLfloat lineWidth)
 	{m_LineWidth= lineWidth;}
+
+	//! Set this geometry wire color
+	void setWireColor(const QColor& color);
 
 
 //@}
