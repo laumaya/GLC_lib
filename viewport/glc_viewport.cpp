@@ -45,7 +45,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_dCamDistMax(500.0)			// Camera Maximum distance
 , m_dCamDistMin(0.01)			// Camera Minimum distance
 , m_dFov(35)					// Camera angle of view
-, m_ViewTangent(tan((m_dFov * glc::PI / 180.0)))
+, m_ViewTangent(tan(glc::toRadian(m_dFov)))
 , m_pImagePlane(NULL)			// Background image
 // OpenGL Window size
 , m_nWinHSize(0)				// Horizontal OpenGL viewport size

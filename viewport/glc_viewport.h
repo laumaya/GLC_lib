@@ -231,7 +231,7 @@ public:
 	inline void setViewAngle(double TargetFov)
 	{
 		m_dFov= TargetFov;
-		m_ViewTangent= tan(m_dFov * glc::PI / 180.0);
+		m_ViewTangent= tan(glc::toRadian(m_dFov));
 		updateProjectionMat();
 	}
 
