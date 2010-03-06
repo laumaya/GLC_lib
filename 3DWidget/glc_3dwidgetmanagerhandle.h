@@ -77,6 +77,10 @@ public:
 	inline bool useOrtho() const
 	{return m_pViewport->useOrtho();}
 
+	//! Return the tangent value of the viewport
+	double viewportTangent() const
+	{return m_pViewport->viewTangent();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
