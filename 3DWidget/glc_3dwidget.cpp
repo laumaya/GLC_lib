@@ -31,7 +31,6 @@ GLC_3DWidget::GLC_3DWidget(GLC_3DWidgetManagerHandle*  pWidgetManagerHandle)
 , m_Uid(glc::GLC_Gen3DWidgetID())
 , m_pWidgetManagerHandle(pWidgetManagerHandle)
 , m_InstanceIdList()
-, m_InstanceVisibility()
 {
 
 }
@@ -41,7 +40,6 @@ GLC_3DWidget::GLC_3DWidget(const GLC_3DWidget& widget)
 , m_Uid(glc::GLC_Gen3DWidgetID())
 , m_pWidgetManagerHandle(widget.m_pWidgetManagerHandle)
 , m_InstanceIdList()
-, m_InstanceVisibility(widget.m_InstanceVisibility)
 {
 	// Copy the 3Dview instance of the widget
 	const int size= widget.m_InstanceIdList.size();
@@ -50,7 +48,6 @@ GLC_3DWidget::GLC_3DWidget(const GLC_3DWidget& widget)
 		GLC_3DViewInstance newInstance(widget.m_pWidgetManagerHandle->instanceHandle(widget.m_InstanceIdList.at(i))->deepCopy());
 		GLC_uint newId= newInstance.id();
 		m_InstanceIdList.append(newId);
-		newInstance.setVisibility(m_InstanceVisibility.at(i));
 		m_pWidgetManagerHandle->add3DViewInstance(newInstance, m_Uid);
 	}
 }
@@ -69,11 +66,21 @@ GLC_3DWidget& GLC_3DWidget::operator=(const GLC_3DWidget& widget)
 {
 	if (this != &widget)
 	{
+		remove3DViewInstance();
+
 		m_Uid= widget.m_Uid;
 		m_pWidgetManagerHandle= widget.m_pWidgetManagerHandle;
 		m_InstanceIdList= widget.m_InstanceIdList;
 
-		m_InstanceVisibility= widget.m_InstanceVisibility;
+		// Copy the 3Dview instance of the widget
+		const int size= widget.m_InstanceIdList.size();
+		for (int i= 0; i < size; ++i)
+		{
+			GLC_3DViewInstance newInstance(widget.m_pWidgetManagerHandle->instanceHandle(widget.m_InstanceIdList.at(i))->deepCopy());
+			GLC_uint newId= newInstance.id();
+			m_InstanceIdList.append(newId);
+			m_pWidgetManagerHandle->add3DViewInstance(newInstance, m_Uid);
+		}
 	}
 	return *this;
 }
@@ -132,7 +139,6 @@ void GLC_3DWidget::add3DViewInstance(const GLC_3DViewInstance& instance)
 	m_pWidgetManagerHandle->add3DViewInstance(instance, m_Uid);
 	const GLC_uint instanceId= instance.id();
 	m_InstanceIdList.append(instanceId);
-	m_InstanceVisibility.append(true);
 }
 
 void GLC_3DWidget::remove3DViewInstance()
@@ -146,3 +152,10 @@ void GLC_3DWidget::remove3DViewInstance()
 		}
 	}
 }
+
+void GLC_3DWidget::set3DViewInstanceVisibility(int index, bool visibility)
+{
+	m_pWidgetManagerHandle->instanceHandle(m_InstanceIdList[index])->setVisibility(visibility);
+}
+
+

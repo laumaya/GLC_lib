@@ -155,8 +155,7 @@ protected:
 	void remove3DViewInstance();
 
 	//! Set the specified 3D view instance visibility
-	inline void set3DViewInstanceVisibility(int index, bool visibility)
-	{m_InstanceVisibility[index]= visibility;}
+	void set3DViewInstanceVisibility(int index, bool visibility);
 
 //////////////////////////////////////////////////////////////////////
 // Private services function
@@ -176,9 +175,6 @@ private:
 
 	//! The List of this widget instance id
 	QList<GLC_uint> m_InstanceIdList;
-
-	//! The list of representation visibility information
-	QList<bool> m_InstanceVisibility;
 
 };
 
