@@ -42,12 +42,9 @@ GLC_RepTrackBallMover::GLC_RepTrackBallMover(GLC_Viewport* pViewport)
 , m_MatArc2()
 , m_Ratio(0.95)
 {
-
-	GLC_Material* pMat= new GLC_Material(m_MainColor);
-
-	m_MainCircle.addMaterial(pMat);
-	m_Arc1.geomAt(0)->addMaterial(pMat);
-	m_Arc2.geomAt(0)->addMaterial(pMat);
+	m_MainCircle.setWireColor(GLC_RepMover::m_MainColor);
+	m_Arc1.geomAt(0)->setWireColor(GLC_RepMover::m_MainColor);
+	m_Arc2.geomAt(0)->setWireColor(GLC_RepMover::m_MainColor);
 
 	// 2 circle arcs position
 	GLC_Matrix4x4 MatRot(Z_AXIS, -ARCANGLE / 2);
@@ -75,11 +72,7 @@ GLC_RepTrackBallMover::GLC_RepTrackBallMover(const GLC_RepTrackBallMover& repMov
 , m_MatArc2(repMover.m_MatArc2)
 , m_Ratio(repMover.m_Ratio)
 {
-	// Don't share material
-	GLC_Material* pMat= new GLC_Material(m_MainColor);
-	m_MainCircle.replaceMasterMaterial(pMat);
-	m_Arc1.geomAt(0)->replaceMasterMaterial(pMat);
-	m_Arc2.geomAt(0)->replaceMasterMaterial(pMat);
+
 }
 
 GLC_RepTrackBallMover::~GLC_RepTrackBallMover()
@@ -141,8 +134,10 @@ void GLC_RepTrackBallMover::update(const GLC_Matrix4x4 &Matrice)
 // overload function setColor(color);
 void GLC_RepTrackBallMover::setMainColor(const QColor& color)
 {
-	m_MainCircle.firstMaterial()->setDiffuseColor(color);
 	GLC_RepMover::setMainColor(color);
+	m_MainCircle.setWireColor(GLC_RepMover::m_MainColor);
+	m_Arc1.geomAt(0)->setWireColor(GLC_RepMover::m_MainColor);
+	m_Arc2.geomAt(0)->setWireColor(GLC_RepMover::m_MainColor);
 }
 
 //////////////////////////////////////////////////////////////////////
