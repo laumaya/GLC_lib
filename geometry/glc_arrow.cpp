@@ -164,8 +164,7 @@ void GLC_Arrow::createWire()
 	// Arrow Head
 	GLC_Point3d headPoint1(-m_HeadLenght, m_HeadLenght * tan(m_HeadAngle / 2.0), 0.0);
 	GLC_Point3d headPoint2(headPoint1.x(), -(headPoint1.y()), headPoint1.z());
-	qDebug() << "headPoint1 " << headPoint1.toString();
-	qDebug() << "headPoint2 " << headPoint2.toString();
+
 	// Arrow frame
 	GLC_Vector3d xArrow= (m_EndPoint - m_StartPoint).normalize();
 	GLC_Vector3d yArrow= ((-m_ViewDir) ^ xArrow).normalize();
