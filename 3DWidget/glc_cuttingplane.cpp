@@ -28,6 +28,7 @@
 #include "../maths/glc_line3d.h"
 #include "../maths/glc_geomtools.h"
 #include "../geometry/glc_arrow.h"
+#include "../geometry/glc_disc.h"
 
 GLC_CuttingPlane::GLC_CuttingPlane(const GLC_Point3d& center, const GLC_Vector3d& normal, double l1, double l2, GLC_3DWidgetManagerHandle*  pWidgetManagerHandle)
 : GLC_3DWidget(pWidgetManagerHandle)
@@ -79,7 +80,7 @@ GLC_CuttingPlane& GLC_CuttingPlane::operator=(const GLC_CuttingPlane& cuttingPla
 	return *this;
 }
 
-void GLC_CuttingPlane::updateLenght(double l1, double l2)
+void GLC_CuttingPlane::updateLength(double l1, double l2)
 {
 	m_L1= l1;
 	m_L2= l2;
@@ -91,18 +92,27 @@ void GLC_CuttingPlane::updateLenght(double l1, double l2)
 	}
 }
 
+void GLC_CuttingPlane::viewportAsChanged()
+{
+	const double viewTangent= GLC_3DWidget::widgetManagerHandle()->viewportTangent();
+	const GLC_Point3d eye(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->eye());
+	const double distanceToNormal= (m_Previous - eye).length();
+	const double viewWidth= distanceToNormal * viewTangent;
+	updateArrow(viewWidth * 0.1);
+}
+
 glc::WidgetEventFlag GLC_CuttingPlane::select(const GLC_Point3d& pos)
 {
 	// Update previous point
 	m_Previous= pos;
 	prepareToSlide();
 
-	GLC_Matrix4x4 normalMatrix(pos);
-	GLC_Matrix4x4 scaleMatrix;
-	scaleMatrix.setMatScaling(m_L1, m_L1, m_L1);
+	GLC_3DWidget::set3DViewInstanceVisibility(1, true);
+	GLC_3DWidget::set3DViewInstanceVisibility(2, true);
 
-	updateArrow();
-	GLC_3DWidget::instanceHandle(1)->setMatrix(normalMatrix * scaleMatrix);
+	GLC_Matrix4x4 translationMatrix(pos);
+	GLC_3DWidget::instanceHandle(1)->setMatrix(translationMatrix);
+	GLC_3DWidget::instanceHandle(2)->setMatrix(translationMatrix);
 
 	return glc::BlockedEvent;
 }
@@ -116,13 +126,12 @@ glc::WidgetEventFlag GLC_CuttingPlane::mousePressed(const GLC_Point3d& pos, Qt::
 		prepareToSlide();
 		returnFlag= glc::BlockedEvent;
 
-		GLC_Matrix4x4 normalMatrix(pos);
-		GLC_Matrix4x4 scaleMatrix;
-		scaleMatrix.setMatScaling(m_L1, m_L1, m_L1);
+		GLC_3DWidget::set3DViewInstanceVisibility(1, true);
+		GLC_3DWidget::set3DViewInstanceVisibility(2, true);
 
-		updateArrow();
-		GLC_3DWidget::instanceHandle(1)->setMatrix(normalMatrix * scaleMatrix);
-
+		GLC_Matrix4x4 translationMatrix(pos);
+		GLC_3DWidget::instanceHandle(1)->setMatrix(translationMatrix);
+		GLC_3DWidget::instanceHandle(2)->setMatrix(translationMatrix);
 	}
 
 	return returnFlag;
@@ -130,6 +139,9 @@ glc::WidgetEventFlag GLC_CuttingPlane::mousePressed(const GLC_Point3d& pos, Qt::
 
 glc::WidgetEventFlag GLC_CuttingPlane::unselect(const GLC_Point3d&)
 {
+	GLC_3DWidget::set3DViewInstanceVisibility(1, false);
+	GLC_3DWidget::set3DViewInstanceVisibility(2, false);
+
 	return glc::AcceptEvent;
 }
 
@@ -167,8 +179,8 @@ glc::WidgetEventFlag GLC_CuttingPlane::mouseMove(const GLC_Point3d& pos, Qt::Mou
 
 	// Update the instance
 	GLC_3DWidget::instanceHandle(0)->multMatrix(translationMatrix);
-	GLC_3DWidget::set3DViewInstanceVisibility(1, true);
 	GLC_3DWidget::instanceHandle(1)->multMatrix(translationMatrix);
+	GLC_3DWidget::instanceHandle(2)->multMatrix(translationMatrix);
 
 	// Update plane center
 	m_Center= translationMatrix * m_Center;
@@ -178,16 +190,6 @@ glc::WidgetEventFlag GLC_CuttingPlane::mouseMove(const GLC_Point3d& pos, Qt::Mou
 	// Plane throw intersection and plane normal and camera up vector
 	GLC_Plane sliddingPlane(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize(), m_Previous);
 	m_SlidingPlane= sliddingPlane;
-
-/*
-	// Display plane normal
-	GLC_3DWidget::set3DViewInstanceVisibility(1, true);
-	GLC_Matrix4x4 normalMatrix(pos);
-	GLC_Matrix4x4 scaleMatrix;
-	scaleMatrix.setMatScaling(1000.0, 1000.0, 1000.0);
-
-	GLC_3DWidget::instanceHandle(1)->setMatrix(normalMatrix * scaleMatrix);
-*/
 
 	emit asChanged();
 
@@ -205,12 +207,28 @@ void GLC_CuttingPlane::create3DviewInstance()
 	GLC_3DViewInstance cuttingPlaneInstance= GLC_Factory::instance()->createCuttingPlane(m_Center, m_Normal, m_L1, m_L2, pMaterial);
 	GLC_3DWidget::add3DViewInstance(cuttingPlaneInstance);
 
-	// Normal arrow 3DWiewInstance
-	GLC_Arrow* pArrow= new GLC_Arrow(GLC_Point3d(), m_Normal * 0.5, GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize());
+	// Normal arrow geometry
+	GLC_Arrow* pArrow= new GLC_Arrow(GLC_Point3d(), -m_Normal, GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize());
+	pArrow->setLineWidth(2.5);
+	QColor arrowColor(Qt::red);
+	arrowColor.setAlphaF(0.4);
+	pArrow->setWireColor(arrowColor);
 
+	//Base arrow disc
+	pMaterial= new GLC_Material(Qt::red);
+	pMaterial->setOpacity(m_Opacity);
+	GLC_Disc* pDisc= new GLC_Disc(1.0);
+	pDisc->replaceMasterMaterial(pMaterial);
+
+	// Normal arrow + base instance
 	GLC_3DViewInstance normalLine(pArrow);
 	GLC_3DWidget::add3DViewInstance(normalLine);
 	GLC_3DWidget::set3DViewInstanceVisibility(1, false);
+
+	GLC_3DViewInstance normalBase(pDisc);
+	GLC_3DWidget::add3DViewInstance(normalBase);
+	GLC_3DWidget::set3DViewInstanceVisibility(2, false);
+
 }
 
 void GLC_CuttingPlane::prepareToSlide()
@@ -229,9 +247,16 @@ void GLC_CuttingPlane::prepareToSlide()
 	//m_Previous= glc::project(m_Previous, GLC_Line3d(m_Previous, m_Normal));
 }
 
-void GLC_CuttingPlane::updateArrow()
+void GLC_CuttingPlane::updateArrow(double length)
 {
 	GLC_Arrow* pArrow= dynamic_cast<GLC_Arrow*>(GLC_3DWidget::instanceHandle(1)->geomAt(0));
 	Q_ASSERT(NULL != pArrow);
+
+	pArrow->setEndPoint(-m_Normal * length);
+	pArrow->setHeadLength(length * 0.15);
 	pArrow->setViewDir(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize());
+
+	GLC_Disc* pDisc= dynamic_cast<GLC_Disc*>(GLC_3DWidget::instanceHandle(2)->geomAt(0));
+	Q_ASSERT(NULL != pDisc);
+	pDisc->setRadius(pArrow->headLenght());
 }

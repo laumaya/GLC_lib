@@ -87,7 +87,7 @@ public:
 	virtual GLC_CuttingPlane& operator=(const GLC_CuttingPlane& cuttingPlane);
 
 	//! Update the lenght of this cutting plane
-	void updateLenght(double l1, double l2);
+	void updateLength(double l1, double l2);
 
 	//! Set this plane color
 	inline void setColor(const QColor& color)
@@ -96,6 +96,9 @@ public:
 	//! Set this plane opacity
 	inline void setOpacity(double opacity)
 	{m_Opacity= opacity;}
+
+	//! Indicate to this widget that the viewport as change
+	virtual void viewportAsChanged();
 
 //@}
 
@@ -138,7 +141,7 @@ private:
 	void prepareToSlide();
 
 	//! Update cutting plane arrow
-	void updateArrow();
+	void updateArrow(double length);
 
 
 //////////////////////////////////////////////////////////////////////
