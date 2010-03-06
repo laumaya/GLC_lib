@@ -102,7 +102,9 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_pointsprite.h \
 							geometry/glc_bsrep.h \
 							geometry/glc_wiredata.h \
-							geometry/glc_arrow.h
+							geometry/glc_arrow.h \
+							geometry/glc_polylines.h \
+							geometry/glc_disc.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -232,7 +234,9 @@ SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_pointsprite.cpp \
 			geometry/glc_bsrep.cpp \
 			geometry/glc_wiredata.cpp \
-			geometry/glc_arrow.cpp
+			geometry/glc_arrow.cpp \
+			geometry/glc_polylines.cpp \
+			geometry/glc_disc.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -351,7 +355,10 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_3DWidget \
     		   include/GLC_CuttingPlane \
     		   include/GLC_3DWidgetManager \
-    		   include/GLC_3DWidgetManagerHandle
+    		   include/GLC_3DWidgetManagerHandle \
+    		   include/GLC_Arrow \
+    		   include/GLC_Polylines \
+    		   include/GLC_Disc
     		   
     			   
 # Linux install configuration
