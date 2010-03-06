@@ -840,13 +840,12 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 									static_cast<float>(m_WireColor.alphaF())};
 
 			glColor4fv(color);
-		}
-		glLineWidth(GLC_Geometry::lineWidth());
-		m_WireData.glDraw(renderProperties);
-
-		if (!GLC_State::isInSelectionMode())
-		{
+			m_WireData.glDraw(renderProperties);
 			glEnable(GL_LIGHTING);
+		}
+		else
+		{
+			m_WireData.glDraw(renderProperties);
 		}
 	}
 }
