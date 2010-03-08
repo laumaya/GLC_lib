@@ -934,7 +934,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 				verticeStream >> buff;
 				verticeValues.append(buff.toFloat());
 			}
-			pMesh->addVertices(verticeValues.toVector());
+			pMesh->addVertice(verticeValues.toVector());
 
 		}
 
@@ -1661,7 +1661,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 				verticeStream >> buff;
 				verticeValues.append(buff.toFloat());
 			}
-			pMesh->addVertices(verticeValues.toVector());
+			pMesh->addVertice(verticeValues.toVector());
 
 		}
 
