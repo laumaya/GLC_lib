@@ -56,7 +56,7 @@ GLC_ImagePlane::~GLC_ImagePlane()
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_ImagePlane::glExecute()
+void GLC_ImagePlane::render()
 {
 	m_Material.glExecute();
 	// Display info area

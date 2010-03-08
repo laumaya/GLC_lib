@@ -287,15 +287,15 @@ void GLC_Viewport::glExecuteImagePlane()
 	{
 		if (m_pImagePlane != NULL)
 		{
-			m_pImagePlane->glExecute();
+			m_pImagePlane->render();
 		}
 	}
 }
 
 void GLC_Viewport::render3DWidget()
 {
-	m_3DWidget.glExecute(0, glc::WireRenderFlag);
-	m_3DWidget.glExecute(0, glc::TransparentRenderFlag);
+	m_3DWidget.render(0, glc::WireRenderFlag);
+	m_3DWidget.render(0, glc::TransparentRenderFlag);
 }
 //////////////////////////////////////////////////////////////////////
 // Set Functions
@@ -354,7 +354,7 @@ GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y)
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 
-	pInstance->glExecuteForBodySelection();
+	pInstance->renderForBodySelection();
 	GLC_State::setSelectionMode(false);
 
 	GLsizei width= 6;
@@ -383,7 +383,7 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 
-	pInstance->glExecuteForBodySelection();
+	pInstance->renderForBodySelection();
 
 
 	GLsizei width= 6;
@@ -403,7 +403,7 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		result.first= pInstance->glExecuteForPrimitiveSelection(bodyId);
+		result.first= pInstance->renderForPrimitiveSelection(bodyId);
 		result.second= meaningfulIdInsideSquare(newX, newY, width, height);
 	}
 	GLC_State::setSelectionMode(false);

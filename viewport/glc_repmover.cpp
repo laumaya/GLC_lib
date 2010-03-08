@@ -30,7 +30,7 @@
 
 GLC_RepMover::GLC_RepMover(GLC_Viewport* pViewport)
 : m_pViewport(pViewport)
-, m_MainColor()
+, m_MainColor(Qt::black)
 , m_RenderProperties()
 {
 

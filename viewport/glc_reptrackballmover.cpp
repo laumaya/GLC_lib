@@ -148,7 +148,6 @@ void GLC_RepTrackBallMover::setMainColor(const QColor& color)
 void GLC_RepTrackBallMover::glDraw()
 {
 	computeRadius();
-
 	const double aspectRatio= static_cast<double>(m_pViewport->viewHSize())/static_cast<double>(m_pViewport->viewVSize());
 	// orbit circle must be shown
 	glDisable(GL_DEPTH_TEST);
@@ -162,12 +161,11 @@ void GLC_RepTrackBallMover::glDraw()
 	glLoadIdentity();
 
 	// Display arcs
-	m_Arc1.glExecute();
-	m_Arc2.glExecute();
+	m_Arc1.render();
+	m_Arc2.render();
 
 	// Display base class (Main circle)
-	m_MainCircle.glExecute(m_RenderProperties);
-
+	m_MainCircle.render(m_RenderProperties);
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
