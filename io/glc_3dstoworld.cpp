@@ -342,7 +342,7 @@ GLC_3DRep GLC_3dsToWorld::create3DRep(Lib3dsMesh* p3dsMesh)
 		}
 		pMesh->addTriangles(pCurMaterial, triangleIndex);
 	}
-	pMesh->addVertices(position);
+	pMesh->addVertice(position);
 	pMesh->addNormals(normal);
 	if (p3dsMesh->texels > 0)
 	{
