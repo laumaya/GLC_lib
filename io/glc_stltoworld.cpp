@@ -123,7 +123,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		LoadBinariStl(file);
 		m_pCurrentMesh->addTriangles(NULL, m_CurrentFace);
 		m_CurrentFace.clear();
-		m_pCurrentMesh->addVertices(m_VertexBulk.toVector());
+		m_pCurrentMesh->addVertice(m_VertexBulk.toVector());
 		m_VertexBulk.clear();
 		m_pCurrentMesh->addNormals(m_NormalBulk.toVector());
 		m_NormalBulk.clear();
@@ -188,7 +188,7 @@ void GLC_StlToWorld::scanFacet()
 	{
 		m_pCurrentMesh->addTriangles(NULL, m_CurrentFace);
 		m_CurrentFace.clear();
-		m_pCurrentMesh->addVertices(m_VertexBulk.toVector());
+		m_pCurrentMesh->addVertice(m_VertexBulk.toVector());
 		m_VertexBulk.clear();
 		m_pCurrentMesh->addNormals(m_NormalBulk.toVector());
 		m_NormalBulk.clear();

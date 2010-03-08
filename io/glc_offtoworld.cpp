@@ -217,7 +217,7 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	// Compute mesh normals
 	computeNormal();
 
-	m_pCurrentMesh->addVertices(m_PositionBulk.toVector());
+	m_pCurrentMesh->addVertice(m_PositionBulk.toVector());
 	m_pCurrentMesh->addNormals(m_NormalBulk.toVector());
 	if (!m_ColorBulk.isEmpty())
 	{

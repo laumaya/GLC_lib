@@ -839,7 +839,7 @@ void GLC_ObjToWorld::addCurrentObjMeshToWorld()
 	{
 		if (!m_pCurrentObjMesh->m_Positions.isEmpty())
 		{
-			m_pCurrentObjMesh->m_pMesh->addVertices(m_pCurrentObjMesh->m_Positions.toVector());
+			m_pCurrentObjMesh->m_pMesh->addVertice(m_pCurrentObjMesh->m_Positions.toVector());
 			m_pCurrentObjMesh->m_Positions.clear();
 			m_pCurrentObjMesh->m_pMesh->addNormals(m_pCurrentObjMesh->m_Normals.toVector());
 			m_pCurrentObjMesh->m_Normals.clear();

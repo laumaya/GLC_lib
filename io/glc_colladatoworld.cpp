@@ -1746,7 +1746,7 @@ void GLC_ColladaToWorld::createMesh()
 		MeshInfo* pCurrentMeshInfo= iMeshInfo.value();
 		// Add Bulk Data to the mesh
 		// Add vertice
-		pCurrentMeshInfo->m_pMesh->addVertices(pCurrentMeshInfo->m_Datas.at(VERTEX).toVector());
+		pCurrentMeshInfo->m_pMesh->addVertice(pCurrentMeshInfo->m_Datas.at(VERTEX).toVector());
 		//qDebug() << "Add " << pCurrentMeshInfo->m_Datas[VERTEX].size() << " Vertice";
 		pCurrentMeshInfo->m_Datas[VERTEX].clear();
 
