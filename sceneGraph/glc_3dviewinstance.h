@@ -127,7 +127,7 @@ public:
 
 	//! Return transfomation 4x4Matrix
 	inline const GLC_Matrix4x4& matrix() const
-	{return m_MatPos;}
+	{return m_AbsoluteMatrix;}
 
 	//! Make a deep copy of the instance
 	GLC_3DViewInstance deepCopy() const;
@@ -280,13 +280,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the instance
-	void glExecute(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLoad= false, GLC_Viewport* pView= NULL);
+	void render(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLoad= false, GLC_Viewport* pView= NULL);
 
 	//! Display the instance in Body selection mode
-	void glExecuteForBodySelection();
+	void renderForBodySelection();
 
 	//! Display the instance in Primitive selection mode of the specified body id and return the body index
-	int glExecuteForPrimitiveSelection(GLC_uint);
+	int renderForPrimitiveSelection(GLC_uint);
 
 
 private:
@@ -296,7 +296,7 @@ private:
 		// Polygons display mode
 		glPolygonMode(m_RenderProperties.polyFaceMode(), m_RenderProperties.polygonMode());
 		// Change the current matrix
-		glMultMatrixd(m_MatPos.data());
+		glMultMatrixd(m_AbsoluteMatrix.data());
 	}
 
 
@@ -327,7 +327,7 @@ private:
 	GLC_BoundingBox* m_pBoundingBox;
 
 	//! Geometry matrix
-	GLC_Matrix4x4 m_MatPos;
+	GLC_Matrix4x4 m_AbsoluteMatrix;
 
 	//! Bounding box validity
 	bool m_IsBoundingBoxValid;

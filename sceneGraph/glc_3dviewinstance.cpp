@@ -46,7 +46,7 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 : GLC_Object()
 , m_3DRep()
 , m_pBoundingBox(NULL)
-, m_MatPos()
+, m_AbsoluteMatrix()
 , m_IsBoundingBoxValid(false)
 , m_RenderProperties()
 , m_IsVisible(true)
@@ -67,7 +67,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom)
 : GLC_Object()
 , m_3DRep(pGeom)
 , m_pBoundingBox(NULL)
-, m_MatPos()
+, m_AbsoluteMatrix()
 , m_IsBoundingBoxValid(false)
 , m_RenderProperties()
 , m_IsVisible(true)
@@ -90,7 +90,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
 : GLC_Object()
 , m_3DRep(rep)
 , m_pBoundingBox(NULL)
-, m_MatPos()
+, m_AbsoluteMatrix()
 , m_IsBoundingBoxValid(false)
 , m_RenderProperties()
 , m_IsVisible(true)
@@ -113,7 +113,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
 : GLC_Object(inputNode)
 , m_3DRep(inputNode.m_3DRep)
 , m_pBoundingBox(NULL)
-, m_MatPos(inputNode.m_MatPos)
+, m_AbsoluteMatrix(inputNode.m_AbsoluteMatrix)
 , m_IsBoundingBoxValid(inputNode.m_IsBoundingBoxValid)
 , m_RenderProperties(inputNode.m_RenderProperties)
 , m_IsVisible(inputNode.m_IsVisible)
@@ -148,7 +148,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 		{
 			m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
 		}
-		m_MatPos= inputNode.m_MatPos;
+		m_AbsoluteMatrix= inputNode.m_AbsoluteMatrix;
 		m_IsBoundingBoxValid= inputNode.m_IsBoundingBoxValid;
 		m_RenderProperties= inputNode.m_RenderProperties;
 		m_IsVisible= inputNode.m_IsVisible;
@@ -212,7 +212,7 @@ GLC_3DViewInstance GLC_3DViewInstance::deepCopy() const
 		cloneInstance.m_pBoundingBox= new GLC_BoundingBox(*m_pBoundingBox);
 	}
 
-	cloneInstance.m_MatPos= m_MatPos;
+	cloneInstance.m_AbsoluteMatrix= m_AbsoluteMatrix;
 	cloneInstance.m_IsBoundingBoxValid= m_IsBoundingBoxValid;
 	cloneInstance.m_RenderProperties= m_RenderProperties;
 	cloneInstance.m_IsVisible= m_IsVisible;
@@ -262,7 +262,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::translate(double Tx, double Ty, double T
 // Move instance with a 4x4Matrix
 GLC_3DViewInstance& GLC_3DViewInstance::multMatrix(const GLC_Matrix4x4 &MultMat)
 {
-	m_MatPos= MultMat * m_MatPos;
+	m_AbsoluteMatrix= MultMat * m_AbsoluteMatrix;
 	m_IsBoundingBoxValid= false;
 
 	return *this;
@@ -271,7 +271,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::multMatrix(const GLC_Matrix4x4 &MultMat)
 // Replace the instance Matrix
 GLC_3DViewInstance& GLC_3DViewInstance::setMatrix(const GLC_Matrix4x4 &SetMat)
 {
-	m_MatPos= SetMat;
+	m_AbsoluteMatrix= SetMat;
 	m_IsBoundingBoxValid= false;
 
 	return *this;
@@ -280,7 +280,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::setMatrix(const GLC_Matrix4x4 &SetMat)
 // Reset the instance Matrix
 GLC_3DViewInstance& GLC_3DViewInstance::resetMatrix(void)
 {
-	m_MatPos.setToIdentity();
+	m_AbsoluteMatrix.setToIdentity();
 	m_IsBoundingBoxValid= false;
 
 	return *this;
@@ -291,7 +291,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::resetMatrix(void)
 //////////////////////////////////////////////////////////////////////
 
 // Display the instance
-void GLC_3DViewInstance::glExecute(glc::RenderFlag renderFlag, bool useLod, GLC_Viewport* pView)
+void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Viewport* pView)
 {
 	if (m_3DRep.isEmpty()) return;
 	const int bodyCount= m_3DRep.numberOfBody();
@@ -322,7 +322,7 @@ void GLC_3DViewInstance::glExecute(glc::RenderFlag renderFlag, bool useLod, GLC_
 				{
 					m_3DRep.geomAt(i)->setCurrentLod(lodValue);
 					m_RenderProperties.setCurrentBodyIndex(i);
-					m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
+					m_3DRep.geomAt(i)->render(m_RenderProperties);
 				}
 			}
 		}
@@ -343,7 +343,7 @@ void GLC_3DViewInstance::glExecute(glc::RenderFlag renderFlag, bool useLod, GLC_
 				{
 					m_3DRep.geomAt(i)->setCurrentLod(m_DefaultLOD);
 					m_RenderProperties.setCurrentBodyIndex(i);
-					m_3DRep.geomAt(i)->glExecute(m_RenderProperties);
+					m_3DRep.geomAt(i)->render(m_RenderProperties);
 				}
 			}
 		}
@@ -353,7 +353,7 @@ void GLC_3DViewInstance::glExecute(glc::RenderFlag renderFlag, bool useLod, GLC_
 }
 
 // Display the instance in Body selection mode
-void GLC_3DViewInstance::glExecuteForBodySelection()
+void GLC_3DViewInstance::renderForBodySelection()
 {
 	Q_ASSERT(GLC_State::isInSelectionMode());
 	if (m_3DRep.isEmpty()) return;
@@ -375,7 +375,7 @@ void GLC_3DViewInstance::glExecuteForBodySelection()
 		glColor3ubv(colorId);
 		pGeom->setCurrentLod(m_DefaultLOD);
 		m_RenderProperties.setCurrentBodyIndex(i);
-		pGeom->glExecute(m_RenderProperties);
+		pGeom->render(m_RenderProperties);
 	}
 
 	// Restore rendering mode
@@ -385,7 +385,7 @@ void GLC_3DViewInstance::glExecuteForBodySelection()
 }
 
 // Display the instance in Primitive selection mode and return the body index
-int GLC_3DViewInstance::glExecuteForPrimitiveSelection(GLC_uint bodyId)
+int GLC_3DViewInstance::renderForPrimitiveSelection(GLC_uint bodyId)
 {
 	Q_ASSERT(GLC_State::isInSelectionMode());
 	if (m_3DRep.isEmpty()) return -1;
@@ -406,7 +406,7 @@ int GLC_3DViewInstance::glExecuteForPrimitiveSelection(GLC_uint bodyId)
 		if (pGeom->id() == bodyId)
 		{
 			pGeom->setCurrentLod(0);
-			pGeom->glExecute(m_RenderProperties);
+			pGeom->render(m_RenderProperties);
 			continu= false;
 		}
 		else ++i;
@@ -445,7 +445,7 @@ void GLC_3DViewInstance::computeBoundingBox(void)
 		m_pBoundingBox->combine(m_3DRep.geomAt(i)->boundingBox());
 	}
 
-	m_pBoundingBox->transform(m_MatPos);
+	m_pBoundingBox->transform(m_AbsoluteMatrix);
 }
 
 // Clear current instance
@@ -464,8 +464,8 @@ void GLC_3DViewInstance::clear()
 int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewport* pView)
 {
 	if (NULL == pView) return 0;
-	const double diameter= boundingBox.boundingSphereRadius() * 2.0 * m_MatPos.scalingX();
-	GLC_Vector3d center(m_MatPos * boundingBox.center());
+	const double diameter= boundingBox.boundingSphereRadius() * 2.0 * m_AbsoluteMatrix.scalingX();
+	GLC_Vector3d center(m_AbsoluteMatrix * boundingBox.center());
 
 	const double dist= (center - pView->cameraHandle()->eye()).length();
 	const double cameraCover= dist * pView->viewTangent();

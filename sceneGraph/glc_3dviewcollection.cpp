@@ -690,7 +690,7 @@ int GLC_3DViewCollection::numberOfUsedShadingGroup() const
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_3DViewCollection::glExecute(GLuint groupId, glc::RenderFlag renderFlag)
+void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 {
 	if (!isEmpty())
 	{
@@ -719,7 +719,7 @@ void GLC_3DViewCollection::glExecute(GLuint groupId, glc::RenderFlag renderFlag)
 	}
 }
 // Display all shader group
-void GLC_3DViewCollection::glExecuteShaderGroup(glc::RenderFlag renderFlag)
+void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 {
 	if (!isEmpty())
 	{

@@ -200,12 +200,12 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the world
-	inline void glExecute(GLuint groupId, glc::RenderFlag renderFlag= glc::ShadingFlag)
-	{m_pWorldHandle->collection()->glExecute(groupId, renderFlag);}
+	inline void render(GLuint groupId, glc::RenderFlag renderFlag= glc::ShadingFlag)
+	{m_pWorldHandle->collection()->render(groupId, renderFlag);}
 
 	//! Display the world's shader group
-	inline void glExecuteShaderGroup(glc::RenderFlag renderFlag= glc::ShadingFlag)
-	{m_pWorldHandle->collection()->glExecuteShaderGroup(renderFlag);}
+	inline void renderShaderGroup(glc::RenderFlag renderFlag= glc::ShadingFlag)
+	{m_pWorldHandle->collection()->renderShaderGroup(renderFlag);}
 
 //@}
 //////////////////////////////////////////////////////////////////////

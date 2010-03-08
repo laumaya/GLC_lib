@@ -272,10 +272,10 @@ public:
 	 * The selection group is 1
 	 * User group are identified by user id
 	 */
-	void glExecute(GLuint, glc::RenderFlag);
+	void render(GLuint, glc::RenderFlag);
 
 	//! Display all shader group
-	void glExecuteShaderGroup(glc::RenderFlag);
+	void renderShaderGroup(glc::RenderFlag);
 
 //@}
 
@@ -363,7 +363,7 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 			pCurInstance= iEntry.value();
 			if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
 			{
-				pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
+				pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
 			}
 			++iEntry;
 		}
@@ -379,7 +379,7 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 				{
 					if (!pCurInstance->isTransparent() || pCurInstance->renderPropertiesHandle()->isSelected() || (renderFlag == glc::WireRenderFlag))
 					{
-						pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
+						pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
 
@@ -396,7 +396,7 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 				{
 					if (pCurInstance->hasTransparentMaterials())
 					{
-						pCurInstance->glExecute(renderFlag, m_UseLod, m_pViewport);
+						pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
 
