@@ -38,7 +38,7 @@
 
 class GLC_Geometry;
 
-typedef QHash< GLC_uint, GLC_Geometry*> CWhereUsed;
+typedef QHash< GLC_uint, GLC_Geometry*> WhereUsed;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Material
@@ -258,7 +258,7 @@ private:
 	GLfloat m_fShininess;
 
 	//! Hash table of geomtries which used this material
-	CWhereUsed m_WhereUsed;
+	WhereUsed m_WhereUsed;
 
 	//! Set of id of other objects that uses this material
 	QSet<GLC_uint> m_OtherUsage;

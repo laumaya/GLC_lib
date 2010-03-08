@@ -302,7 +302,7 @@ uint GLC_Material::hashCode() const
  	// Transparency
  	m_Opacity= pMat->m_Opacity;
 	// Update geometry which use this material
-	CWhereUsed::const_iterator iGeom= m_WhereUsed.constBegin();
+	WhereUsed::const_iterator iGeom= m_WhereUsed.constBegin();
 	while (iGeom != m_WhereUsed.constEnd())
 	{
 		iGeom.value()->updateTransparentMaterialNumber();
@@ -374,7 +374,7 @@ bool GLC_Material::addGLC_Geom(GLC_Geometry* pGeom)
 {
 	QMutexLocker mutexLocker(&m_Mutex);
 	//qDebug() << "GLC_Material::addGLC_Geom" << pGeom->id();
-	CWhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->id());
+	WhereUsed::iterator iGeom= m_WhereUsed.find(pGeom->id());
 
 	if (iGeom == m_WhereUsed.end())
 	{	// Ok, ID doesn't exist
@@ -449,7 +449,7 @@ void GLC_Material::setOpacity(const qreal alpha)
 	m_SpecularColor.setAlphaF(m_Opacity);
 	m_LightEmission.setAlphaF(m_Opacity);
 	// Update geometry which use this material
-	CWhereUsed::const_iterator iGeom= m_WhereUsed.constBegin();
+	WhereUsed::const_iterator iGeom= m_WhereUsed.constBegin();
 	while (iGeom != m_WhereUsed.constEnd())
 	{
 		iGeom.value()->updateTransparentMaterialNumber();
