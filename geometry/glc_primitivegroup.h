@@ -80,7 +80,7 @@ public:
 
 	//! Return the group id
 	inline GLC_uint id() const
-	{return m_ID;}
+	{return m_Id;}
 
 	//! Return true if the group contains triangles
 	inline bool containsTriangles() const
@@ -204,7 +204,7 @@ public:
 public:
 	//! Set the group id
 	inline void setId(GLC_uint id)
-	{m_ID= id;}
+	{m_Id= id;}
 
 	//! Add triangles to the group
 	void addTriangles(const IndexList& input, GLC_uint id= 0);
@@ -255,7 +255,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Grouped material id
-	GLC_uint m_ID;
+	GLC_uint m_Id;
 
 	//! Triangles index list
 	IndexList m_TrianglesIndex;

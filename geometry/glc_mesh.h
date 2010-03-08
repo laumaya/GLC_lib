@@ -54,8 +54,8 @@ class GLC_LIB_EXPORT GLC_Mesh : public GLC_Geometry
 	friend QDataStream &operator>>(QDataStream &, GLC_Mesh &);
 
 public:
-	typedef QHash<GLC_uint, GLC_PrimitiveGroup*> PrimitiveGroups;
-	typedef QHash<const int, PrimitiveGroups*> PrimitiveGroupsHash;
+	typedef QHash<GLC_uint, GLC_PrimitiveGroup*> LodPrimitiveGroups;
+	typedef QHash<const int, LodPrimitiveGroups*> PrimitiveGroupsHash;
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -194,7 +194,7 @@ public:
 	void clearMeshWireAndBoundingBox();
 
 	//! Add vertices coordinate
-	inline void addVertices(const GLfloatVector& vertices)
+	inline void addVertice(const GLfloatVector& vertices)
 	{
 		*(m_MeshData.positionVectorHandle())+= vertices;
 		m_NumberOfVertice+= vertices.size() / 3;

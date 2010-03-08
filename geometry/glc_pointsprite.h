@@ -105,7 +105,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Specific glExecute method
-	virtual void glExecute(const GLC_RenderProperties&);
+	virtual void render(const GLC_RenderProperties&);
 
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.\n*/

@@ -36,8 +36,8 @@ using namespace glc;
 GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
 :GLC_Geometry("Circle", true)
 , m_Radius(dRadius)
-, m_nDiscret(GLC_DISCRET)
-, m_dAngle(Angle)
+, m_Discret(GLC_DISCRET)
+, m_Angle(Angle)
 , m_Step(0)
 {
 
@@ -46,8 +46,9 @@ GLC_Circle::GLC_Circle(const double &dRadius, double Angle)
 GLC_Circle::GLC_Circle(const GLC_Circle& sourceCircle)
 :GLC_Geometry(sourceCircle)
 , m_Radius(sourceCircle.m_Radius)
-, m_nDiscret(sourceCircle.m_nDiscret)
-, m_dAngle(sourceCircle.m_dAngle)
+, m_Discret(sourceCircle.m_Discret)
+, m_Angle(sourceCircle.m_Angle)
+, m_Step(sourceCircle.m_Step)
 {
 
 }
@@ -106,10 +107,10 @@ void GLC_Circle::setRadius(double R)
 void GLC_Circle::setDiscretion(int TargetDiscret)
 {
 	Q_ASSERT(TargetDiscret > 0);
-	if (TargetDiscret != m_nDiscret)
+	if (TargetDiscret != m_Discret)
 	{
-		m_nDiscret= TargetDiscret;
-		if (m_nDiscret < 6) m_nDiscret= 6;
+		m_Discret= TargetDiscret;
+		if (m_Discret < 6) m_Discret= 6;
 
 		GLC_Geometry::clearWireAndBoundingBox();
 	}
@@ -119,9 +120,9 @@ void GLC_Circle::setDiscretion(int TargetDiscret)
 void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 {
 	Q_ASSERT((!qFuzzyCompare(AngleRadians, 0.0)) && (AngleRadians < 2 * PI));
-	if (!qFuzzyCompare(AngleRadians - m_dAngle, 0.0))
+	if (!qFuzzyCompare(AngleRadians - m_Angle, 0.0))
 	{	// Angle is changing
-			m_dAngle= AngleRadians;
+			m_Angle= AngleRadians;
 
 			GLC_Geometry::clearWireAndBoundingBox();
 	}
@@ -147,7 +148,7 @@ void GLC_Circle::createWire()
 {
 	Q_ASSERT(m_WireData.isEmpty());
 
-	m_Step= static_cast<GLuint>(static_cast<double>(m_nDiscret) * (m_dAngle / (2 * glc::PI)));
+	m_Step= static_cast<GLuint>(static_cast<double>(m_Discret) * (m_Angle / (2 * glc::PI)));
 	if (m_Step < 2) m_Step= 2;
 
 	// Float vector
@@ -157,7 +158,7 @@ void GLC_Circle::createWire()
 	const int size= (m_Step + 1) * 3;
 	floatVector.resize(size);
 	// Fill Vertex Vector
-	const double angleOnStep= m_dAngle / static_cast<double>(m_Step);
+	const double angleOnStep= m_Angle / static_cast<double>(m_Step);
 	for (GLuint i= 0; i <= m_Step; ++i)
 	{
 		floatVector[(i * 3)]= static_cast<float>(m_Radius * cos(static_cast<double>(i) * angleOnStep));

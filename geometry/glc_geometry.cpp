@@ -44,7 +44,7 @@ GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 , m_LineWidth(1.0f)
 , m_IsWire(typeIsWire)		// the geometry type
 , m_TransparentMaterialNumber(0)
-, m_Uid(glc::GLC_GenGeomID())
+, m_Id(glc::GLC_GenGeomID())
 , m_Name(name)
 {
 
@@ -61,7 +61,7 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_LineWidth(sourceGeom.m_LineWidth)
 , m_IsWire(sourceGeom.m_IsWire)
 , m_TransparentMaterialNumber(sourceGeom.m_TransparentMaterialNumber)
-, m_Uid(glc::GLC_GenGeomID())
+, m_Id(glc::GLC_GenGeomID())
 , m_Name(sourceGeom.m_Name)
 {
 	// Add this mesh to inner material
@@ -95,7 +95,7 @@ GLC_Geometry& GLC_Geometry::operator=(const GLC_Geometry& sourceGeom)
 		m_LineWidth= sourceGeom.m_LineWidth;
 		m_IsWire= sourceGeom.m_IsWire;
 		m_TransparentMaterialNumber= sourceGeom.m_TransparentMaterialNumber;
-		m_Uid= glc::GLC_GenGeomID();
+		m_Id= glc::GLC_GenGeomID();
 		m_Name= sourceGeom.m_Name;
 	}
 	return *this;
@@ -243,7 +243,7 @@ void GLC_Geometry::glLoadTexture(void)
 }
 
 // Geometry display
-void GLC_Geometry::glExecute(const GLC_RenderProperties& renderProperties)
+void GLC_Geometry::render(const GLC_RenderProperties& renderProperties)
 {
 	Q_ASSERT(!m_IsWire || (m_IsWire && m_MaterialHash.isEmpty()));
 	bool renderWire= (renderProperties.renderingFlag() == glc::TransparentRenderFlag) && isTransparent();

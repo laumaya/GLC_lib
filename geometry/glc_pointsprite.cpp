@@ -103,7 +103,7 @@ void GLC_PointSprite::setPointDistanceAttenuation(QVector<float> parameters)
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 // Specific glExecute method
-void GLC_PointSprite::glExecute(const GLC_RenderProperties& renderProperties)
+void GLC_PointSprite::render(const GLC_RenderProperties& renderProperties)
 {
 	// Check if extension GL_ARB_point_parameters is present
 	if (!GLC_State::pointSpriteSupported()) return;

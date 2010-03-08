@@ -32,7 +32,7 @@ quint32 GLC_PrimitiveGroup::m_ChunkId= 0xA700;
 
 // Default constructor
 GLC_PrimitiveGroup::GLC_PrimitiveGroup(GLC_uint materialId)
-: m_ID(materialId)
+: m_Id(materialId)
 , m_TrianglesIndex()
 , m_TrianglesGroupsSizes()
 , m_TrianglesGroupOffset()
@@ -58,7 +58,7 @@ GLC_PrimitiveGroup::GLC_PrimitiveGroup(GLC_uint materialId)
 }
 //! Copy constructor
 GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group)
-: m_ID(group.m_ID)
+: m_Id(group.m_Id)
 , m_TrianglesIndex(group.m_TrianglesIndex)
 , m_TrianglesGroupsSizes(group.m_TrianglesGroupsSizes)
 , m_TrianglesGroupOffset(group.m_TrianglesGroupOffset)
@@ -85,7 +85,7 @@ GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group)
 
 //! Copy constructor
 GLC_PrimitiveGroup::GLC_PrimitiveGroup(const GLC_PrimitiveGroup& group, GLC_uint id)
-: m_ID(id)
+: m_Id(id)
 , m_TrianglesIndex(group.m_TrianglesIndex)
 , m_TrianglesGroupsSizes(group.m_TrianglesGroupsSizes)
 , m_TrianglesGroupOffset(group.m_TrianglesGroupOffset)
@@ -115,7 +115,7 @@ GLC_PrimitiveGroup& GLC_PrimitiveGroup::operator=(const GLC_PrimitiveGroup& grou
 {
 	if (this != &group)
 	{
-		m_ID= group.m_ID;
+		m_Id= group.m_Id;
 		m_TrianglesIndex= group.m_TrianglesIndex;
 		m_TrianglesGroupsSizes= group.m_TrianglesGroupsSizes;
 		m_TrianglesGroupOffset= group.m_TrianglesGroupOffset;
@@ -339,7 +339,7 @@ QDataStream &operator<<(QDataStream &stream, const GLC_PrimitiveGroup &primitive
 	stream << chunckId;
 
 	// Primitive group id
-	stream << primitiveGroup.m_ID;
+	stream << primitiveGroup.m_Id;
 
 	// Triangles, strips and fan offset index
 	OffsetVectori trianglesGroupOffseti;
@@ -401,7 +401,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_PrimitiveGroup &primitiveGroup)
 	quint32 chunckId;
 	stream >> chunckId;
 	Q_ASSERT(chunckId == GLC_PrimitiveGroup::m_ChunkId);
-	stream >> primitiveGroup.m_ID;
+	stream >> primitiveGroup.m_Id;
 
 	// Triangles index
 	stream >> primitiveGroup.m_TrianglesIndexSize;

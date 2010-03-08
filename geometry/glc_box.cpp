@@ -237,7 +237,7 @@ void GLC_Box::createMeshAndWire()
 	texelVector << 0.0f; texelVector << 1.0f;
 
 	// Add bulk data in to the mesh
-	GLC_Mesh::addVertices(verticeVector);
+	GLC_Mesh::addVertice(verticeVector);
 	GLC_Mesh::addNormals(normalsVector);
 	GLC_Mesh::addTexels(texelVector);
 

@@ -95,7 +95,7 @@ public:
 public:
 	//! Get Object ID
 	inline GLC_uint id() const
-	{return m_Uid;}
+	{return m_Id;}
 
 	//! Get Object Name
 	inline QString name() const
@@ -218,7 +218,7 @@ public:
 
 	//! Set Geometry Id
 	inline void setId(const GLC_uint id)
-	{m_Uid= id;}
+	{m_Id= id;}
 
 	//! Set geometry name
 	inline void setName(const QString name)
@@ -246,7 +246,7 @@ public:
 	virtual void glLoadTexture(void);
 
 	//! Virtual interface for OpenGL execution.
-	virtual void glExecute(const GLC_RenderProperties&);
+	virtual void render(const GLC_RenderProperties&);
 
 
 protected:
@@ -330,7 +330,7 @@ private:
 
 	//! The Unique id of an Geometry
 	/*! Generated on creation*/
-	GLC_uint m_Uid;
+	GLC_uint m_Id;
 
 	//! Name of geometry
 	QString m_Name;

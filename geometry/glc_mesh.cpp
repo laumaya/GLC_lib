@@ -60,10 +60,10 @@ GLC_Mesh::GLC_Mesh(const GLC_Mesh& mesh)
 	PrimitiveGroupsHash::const_iterator iPrimitiveGroups= mesh.m_PrimitiveGroups.constBegin();
 	while (mesh.m_PrimitiveGroups.constEnd() != iPrimitiveGroups)
 	{
-		PrimitiveGroups* pPrimitiveGroups= new PrimitiveGroups();
+		LodPrimitiveGroups* pPrimitiveGroups= new LodPrimitiveGroups();
 		m_PrimitiveGroups.insert(iPrimitiveGroups.key(), pPrimitiveGroups);
 
-		PrimitiveGroups::const_iterator iPrimitiveGroup= iPrimitiveGroups.value()->constBegin();
+		LodPrimitiveGroups::const_iterator iPrimitiveGroup= iPrimitiveGroups.value()->constBegin();
 		while (iPrimitiveGroups.value()->constEnd() != iPrimitiveGroup)
 		{
 			GLC_PrimitiveGroup* pPrimitiveGroup= new GLC_PrimitiveGroup(*(iPrimitiveGroup.value()), iPrimitiveGroup.key());
@@ -103,10 +103,10 @@ GLC_Mesh& GLC_Mesh::operator=(const GLC_Mesh& mesh)
 		PrimitiveGroupsHash::const_iterator iPrimitiveGroups= mesh.m_PrimitiveGroups.constBegin();
 		while (mesh.m_PrimitiveGroups.constEnd() != iPrimitiveGroups)
 		{
-			PrimitiveGroups* pPrimitiveGroups= new PrimitiveGroups();
+			LodPrimitiveGroups* pPrimitiveGroups= new LodPrimitiveGroups();
 			m_PrimitiveGroups.insert(iPrimitiveGroups.key(), pPrimitiveGroups);
 
-			PrimitiveGroups::const_iterator iPrimitiveGroup= iPrimitiveGroups.value()->constBegin();
+			LodPrimitiveGroups::const_iterator iPrimitiveGroup= iPrimitiveGroups.value()->constBegin();
 			while (iPrimitiveGroups.value()->constEnd() != iPrimitiveGroup)
 			{
 				GLC_PrimitiveGroup* pPrimitiveGroup= new GLC_PrimitiveGroup(*(iPrimitiveGroup.value()), iPrimitiveGroup.key());
@@ -128,7 +128,7 @@ GLC_Mesh::~GLC_Mesh()
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
 	while (iGroups != m_PrimitiveGroups.constEnd())
 	{
-		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+		LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
 		while (iGroup != iGroups.value()->constEnd())
 		{
 			delete iGroup.value();
@@ -393,7 +393,7 @@ void GLC_Mesh::clearMeshWireAndBoundingBox()
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
 	while (iGroups != m_PrimitiveGroups.constEnd())
 	{
-		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+		LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
 		while (iGroup != iGroups.value()->constEnd())
 		{
 			delete iGroup.value();
@@ -558,9 +558,9 @@ void GLC_Mesh::replaceMaterial(const GLC_uint oldId, GLC_Material* pMat)
 		PrimitiveGroupsHash::const_iterator iGroups= m_PrimitiveGroups.constBegin();
 		while (m_PrimitiveGroups.constEnd() != iGroups)
 		{
-			PrimitiveGroups* pPrimitiveGroups= iGroups.value();
+			LodPrimitiveGroups* pPrimitiveGroups= iGroups.value();
 			// Iterate over material group
-			PrimitiveGroups::iterator iGroup= pPrimitiveGroups->begin();
+			LodPrimitiveGroups::iterator iGroup= pPrimitiveGroups->begin();
 			while (pPrimitiveGroups->constEnd() != iGroup)
 			{
 				if (iGroup.key() == oldId)
@@ -628,7 +628,7 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& mater
 	const int lodCount= primitiveGroupLodList.size();
 	for (int i= 0; i < lodCount; ++i)
 	{
-		GLC_Mesh::PrimitiveGroups* pCurrentPrimitiveGroup= new GLC_Mesh::PrimitiveGroups();
+		GLC_Mesh::LodPrimitiveGroups* pCurrentPrimitiveGroup= new GLC_Mesh::LodPrimitiveGroups();
 		m_PrimitiveGroups.insert(primitiveGroupLodList.at(i), pCurrentPrimitiveGroup);
 		const int groupCount= primitiveListOfGroupList.at(i).size();
 		for (int iGroup= 0; iGroup < groupCount; ++iGroup)
@@ -682,7 +682,7 @@ void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 	{
 		primitiveGroupLodList.append(iGroupsHash.key());
 		QList<GLC_PrimitiveGroup> primitiveGroupList;
-		GLC_Mesh::PrimitiveGroups::const_iterator iGroups= iGroupsHash.value()->constBegin();
+		GLC_Mesh::LodPrimitiveGroups::const_iterator iGroups= iGroupsHash.value()->constBegin();
 		while (iGroupsHash.value()->constEnd() != iGroups)
 		{
 			primitiveGroupList.append(*(iGroups.value()));
@@ -861,7 +861,7 @@ GLC_uint GLC_Mesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, double a
 	// Test if a primitive group hash exists for the specified lod
 	if (!m_PrimitiveGroups.contains(lod))
 	{
-		m_PrimitiveGroups.insert(lod, new PrimitiveGroups());
+		m_PrimitiveGroups.insert(lod, new LodPrimitiveGroups());
 
 		m_MeshData.appendLod(accuracy);
 	}
@@ -974,7 +974,7 @@ void GLC_Mesh::finishSerialized()
 		PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
 		while (iGroups != m_PrimitiveGroups.constEnd())
 		{
-			PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+			LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
 			while (iGroup != iGroups.value()->constEnd())
 			{
 				iGroup.value()->changeToVboMode();
@@ -992,7 +992,7 @@ void GLC_Mesh::finishVbo()
 	while (iGroups != m_PrimitiveGroups.constEnd())
 	{
 		int currentLod= iGroups.key();
-		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+		LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
 		while (iGroup != iGroups.value()->constEnd())
 		{
 			// Add group triangles index to mesh Data LOD triangles index vector
@@ -1032,7 +1032,7 @@ void GLC_Mesh::finishNonVbo()
 	while (iGroups != m_PrimitiveGroups.constEnd())
 	{
 		int currentLod= iGroups.key();
-		PrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+		LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
 		while (iGroup != iGroups.value()->constEnd())
 		{
 			// Add group triangles index to mesh Data LOD triangles index vector
@@ -1069,7 +1069,7 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
 	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
 	if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
 	{
-		PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+		LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 		{
 			GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
@@ -1111,7 +1111,7 @@ void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderPro
 	pOverwriteMaterial->glExecute();
 	if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 	{
 		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
@@ -1144,7 +1144,7 @@ void GLC_Mesh::OverwriteTransparencyRenderLoop(const GLC_RenderProperties& rende
 
 	if (materialIsrenderable || m_IsSelected)
 	{
-		PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+		LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 		{
 			GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
@@ -1174,7 +1174,7 @@ void GLC_Mesh::bodySelectionRenderLoop(bool vboIsUsed)
 {
 	Q_ASSERT(GLC_State::isInSelectionMode());
 
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 	{
 		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
@@ -1193,7 +1193,7 @@ void GLC_Mesh::primitiveSelectionRenderLoop(bool vboIsUsed)
 {
 	Q_ASSERT(GLC_State::isInSelectionMode());
 
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 	{
@@ -1212,7 +1212,7 @@ void GLC_Mesh::primitiveSelectionRenderLoop(bool vboIsUsed)
 void GLC_Mesh::primitiveRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
 	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 	{
 		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
@@ -1238,7 +1238,7 @@ void GLC_Mesh::primitiveRenderLoop(const GLC_RenderProperties& renderProperties,
 void GLC_Mesh::primitiveSelectedRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
 	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
-	PrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 	{
 		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();

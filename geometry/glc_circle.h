@@ -49,7 +49,7 @@ public:
 
 	//! Construct an GLC_Circle
 	/*! By default, discretion is set to #GLC_DISCRET*/
-	GLC_Circle(const double &dRadius, double Angle= 2 * glc::PI);
+	GLC_Circle(const double &dRadius, double Angle= 2.0 * glc::PI);
 
 	//! Copy constructor
 	GLC_Circle(const GLC_Circle& sourceCircle);
@@ -67,7 +67,7 @@ public:
 
 	//! Return Circle Discretion
 	inline int discretion() const
-	{ return m_nDiscret;}
+	{ return m_Discret;}
 
 	//! Return Circle radius
 	inline double radius() const
@@ -118,8 +118,6 @@ private:
 	/*! This Virtual function is implemented here.\n
 	 *  Throw GLC_OpenGlException*/
 	virtual void glDraw(const GLC_RenderProperties&);
-
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -140,10 +138,10 @@ private:
 	double m_Radius;
 
 	//! Circle Discretion
-	int m_nDiscret;
+	int m_Discret;
 
 	//! Angle of circle in radians
-	double m_dAngle;
+	double m_Angle;
 
 	//! Circle Step
 	GLuint m_Step;
