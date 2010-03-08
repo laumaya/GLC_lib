@@ -98,7 +98,7 @@ void GLC_CuttingPlane::viewportAsChanged()
 	const GLC_Point3d eye(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->eye());
 	const double distanceToNormal= (m_Previous - eye).length();
 	const double viewWidth= distanceToNormal * viewTangent;
-	updateArrow(viewWidth * 0.1);
+	updateArrow(viewWidth * 0.06);
 }
 
 glc::WidgetEventFlag GLC_CuttingPlane::select(const GLC_Point3d& pos)
@@ -214,6 +214,14 @@ void GLC_CuttingPlane::create3DviewInstance()
 	arrowColor.setAlphaF(0.4);
 	pArrow->setWireColor(arrowColor);
 
+	if (pArrow->isTransparent())
+	{
+		qDebug() << "Arrow is transparent";
+	}
+	else
+	{
+		qDebug() << "Arrow is NOT transparent";
+	}
 	//Base arrow disc
 	pMaterial= new GLC_Material(Qt::red);
 	pMaterial->setOpacity(m_Opacity);
@@ -258,5 +266,5 @@ void GLC_CuttingPlane::updateArrow(double length)
 
 	GLC_Disc* pDisc= dynamic_cast<GLC_Disc*>(GLC_3DWidget::instanceHandle(2)->geomAt(0));
 	Q_ASSERT(NULL != pDisc);
-	pDisc->setRadius(pArrow->headLenght());
+	pDisc->setRadius(length * 0.3);
 }
