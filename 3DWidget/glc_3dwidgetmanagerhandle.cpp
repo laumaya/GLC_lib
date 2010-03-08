@@ -215,13 +215,13 @@ void GLC_3DWidgetManagerHandle::render()
 	}
 
 	// Render the 3D widget
-	m_Collection.glExecute(0, glc::WireRenderFlag);
-	m_Collection.glExecute(0, glc::TransparentRenderFlag);
-	m_Collection.glExecute(1, glc::WireRenderFlag);
+	m_Collection.render(0, glc::WireRenderFlag);
+	m_Collection.render(0, glc::TransparentRenderFlag);
+	m_Collection.render(1, glc::WireRenderFlag);
 	if (GLC_State::glslUsed())
 	{
-		m_Collection.glExecuteShaderGroup(glc::WireRenderFlag);
-		m_Collection.glExecuteShaderGroup(glc::TransparentRenderFlag);
+		m_Collection.renderShaderGroup(glc::WireRenderFlag);
+		m_Collection.renderShaderGroup(glc::TransparentRenderFlag);
 	}
 }
 
@@ -245,11 +245,11 @@ void GLC_3DWidgetManagerHandle::renderInSelectionMode()
 
 
 
-	m_Collection.glExecute(0, glc::WireRenderFlag);
-	m_Collection.glExecute(1, glc::WireRenderFlag);
+	m_Collection.render(0, glc::WireRenderFlag);
+	m_Collection.render(1, glc::WireRenderFlag);
 	if (GLC_State::glslUsed())
 	{
-		m_Collection.glExecuteShaderGroup(glc::WireRenderFlag);
+		m_Collection.renderShaderGroup(glc::WireRenderFlag);
 	}
 
 	// Restore attributtes
