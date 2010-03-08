@@ -25,10 +25,12 @@
 
 #include "glc_disc.h"
 
-GLC_Disc::GLC_Disc(double radius)
+GLC_Disc::GLC_Disc(double radius, double angle)
 : GLC_Mesh()
 , m_Radius(radius)
 , m_Discret(glc::GLC_POLYDISCRET)
+, m_Angle(angle)
+, m_Step(0)
 {
 
 }
@@ -37,6 +39,8 @@ GLC_Disc::GLC_Disc(const GLC_Disc& disc)
 : GLC_Mesh(disc)
 , m_Radius(disc.m_Radius)
 , m_Discret(disc.m_Discret)
+, m_Angle(disc.m_Angle)
+, m_Step(disc.m_Step)
 {
 
 }
@@ -76,6 +80,8 @@ GLC_Disc& GLC_Disc::operator=(const GLC_Disc& disc)
 
 		m_Radius= disc.m_Radius;
 		m_Discret= disc.m_Discret;
+		m_Angle= disc.m_Angle;
+		m_Step= disc.m_Step;
 	}
 	return *this;
 }
@@ -100,6 +106,13 @@ void GLC_Disc::setDiscretion(int targetDiscret)
 	}
 }
 
+void GLC_Disc::setAngle(double angle)
+{
+	Q_ASSERT(angle > 0.0);
+	m_Angle= angle;
+
+	GLC_Mesh::clearMeshWireAndBoundingBox();
+}
 //////////////////////////////////////////////////////////////////////
 // Private Opengl functions
 //////////////////////////////////////////////////////////////////////
@@ -119,14 +132,16 @@ void GLC_Disc::createMeshAndWire()
 	Q_ASSERT(GLC_Mesh::isEmpty());
 	Q_ASSERT(m_WireData.isEmpty());
 
+	m_Step= static_cast<GLuint>(static_cast<double>(m_Discret) * (m_Angle / (2 * glc::PI)));
+	if (m_Step < 2) m_Step= 2;
+
 	// Create cosinus and sinus array according to the discretion and radius
-	const int vertexNumber= m_Discret + 1;
+	const int vertexNumber= m_Step + 1;
 
 	QVector<float> cosArray(vertexNumber);
 	QVector<float> sinArray(vertexNumber);
 
-	const double angle= (2.0 * glc::PI) / static_cast<double>(m_Discret);
-
+	const double angle= m_Angle / static_cast<double>(m_Step);
 	for (int i= 0; i < vertexNumber; ++i)
 	{
 		const double cosValue= cos(static_cast<double>(i) * angle);
@@ -161,9 +176,19 @@ void GLC_Disc::createMeshAndWire()
 		wireData[3 * i + 1]= sinArray[i];
 		wireData[3 * i + 2]= 0.0f;
 	}
+	// Center Point
+	verticeVector << 0.0f << 0.0f << 0.0f;
+	normalsVector << 0.0f << 0.0f << 1.0f;
+	texelVector << 0.5f << 0.5f;
+
+	if (!qFuzzyCompare(m_Angle, (2.0 * glc::PI)))
+	{
+		wireData << 0.0f << 0.0f << 0.0f;
+		wireData << wireData[0] << wireData[1] << wireData[2];
+	}
 
 	// Add bulk data in to the mesh
-	GLC_Mesh::addVertices(verticeVector);
+	GLC_Mesh::addVertice(verticeVector);
 	GLC_Mesh::addNormals(normalsVector);
 	GLC_Mesh::addTexels(texelVector);
 
@@ -182,19 +207,13 @@ void GLC_Disc::createMeshAndWire()
 	}
 
 	IndexList discIndex;
-	int id1= 0;
-	int id2= m_Discret - 1;
-	const int size= m_Discret / 2 + (m_Discret % 2);
-	for (int i= 0; i < size; ++i)
+	discIndex << vertexNumber;
+	for (int i= 0; i < vertexNumber; ++i)
 	{
-		discIndex.append(id2);
-		discIndex.append(id1);
-
-		id1+= 1;
-		id2-= 1;
+		discIndex << i;
 	}
 
-	addTrianglesStrip(pDiscMaterial, discIndex);
+	addTrianglesFan(pDiscMaterial, discIndex);
 
 	finish();
 }

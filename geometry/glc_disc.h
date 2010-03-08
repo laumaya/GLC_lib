@@ -43,7 +43,7 @@ class GLC_LIB_EXPORT GLC_Disc : public GLC_Mesh
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct a disc with the given radius
-	GLC_Disc(double radius);
+	GLC_Disc(double radius, double angle= 2.0 * glc::PI);
 
 	//! Copy constructor
 	GLC_Disc(const GLC_Disc& disc);
@@ -71,6 +71,10 @@ public:
 	inline int discretion() const
 	{return m_Discret;}
 
+	//! Return the angle of this disc
+	inline double angle() const
+	{return m_Angle;}
+
 
 //@}
 
@@ -87,6 +91,9 @@ public:
 
 	//! Set this disc discretion to the given discretion
 	void setDiscretion(int targetDiscret);
+
+	//! Set this disc angle in radians
+	void setAngle(double angle);
 
 //@}
 
@@ -120,6 +127,12 @@ private:
 
 	//! Disc polygon discretisation
 	int m_Discret;
+
+	//! Angle of disc in radians
+	double m_Angle;
+
+	//! Disc Step
+	GLuint m_Step;
 
 };
 
