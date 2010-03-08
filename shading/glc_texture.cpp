@@ -211,9 +211,9 @@ void GLC_Texture::glLoadTexture(void)
 			{
 				rescaledImage= m_textureImage.scaledToWidth(m_MaxTextureSize.width(), Qt::SmoothTransformation);
 			}
-			m_TextureSize= rescaledImage.size();
-			m_GlTextureID= m_pQGLContext->bindTexture(rescaledImage);
-
+			m_textureImage= rescaledImage;
+			m_TextureSize= m_textureImage.size();
+			m_GlTextureID= m_pQGLContext->bindTexture(m_textureImage);
 		}
 		else
 		{
