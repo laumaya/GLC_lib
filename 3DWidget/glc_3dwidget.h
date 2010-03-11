@@ -43,12 +43,15 @@ class GLC_3DViewInstance;
 class GLC_LIB_EXPORT GLC_3DWidget : public QObject
 {
 	Q_OBJECT
+
+	typedef QList<GLC_uint> InstanceIdList;
+
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Construct a 3d widget with the given viewport
+	//! Construct a 3d widget with the given 3DWidget manager handle
 	GLC_3DWidget(GLC_3DWidgetManagerHandle*  pWidgetManagerHandle= NULL);
 
 	//! Construct a 3d widget form the given 3d widget
@@ -99,8 +102,8 @@ public:
 	//! Set the given widgetManager to this widget
 	void setWidgetManager(GLC_3DWidgetManagerHandle* pWidgetManagerHandle);
 
-	//! Indicate to this widget that the viewport as change
-	virtual void viewportAsChanged(){};
+	//! Update widget representation
+	virtual void updateWidgetRep(){};
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -110,22 +113,22 @@ public:
 public:
 
 	//! This widget as been selected
-	virtual glc::WidgetEventFlag select(const GLC_Point3d&);
+	virtual glc::WidgetEventFlag select(const GLC_Point3d&, GLC_uint id);
 
 	//! This widget as been unselected
-	virtual glc::WidgetEventFlag unselect(const GLC_Point3d&);
+	virtual glc::WidgetEventFlag unselect(const GLC_Point3d&, GLC_uint id);
 
 	//! The mouse is over this widget
-	virtual glc::WidgetEventFlag mouseOver(const GLC_Point3d&);
+	virtual glc::WidgetEventFlag mouseOver(const GLC_Point3d&, GLC_uint id);
 
 	//! The mouse is over this widget and a mousse button is pressed
-	virtual glc::WidgetEventFlag mousePressed(const GLC_Point3d&, Qt::MouseButton);
+	virtual glc::WidgetEventFlag mousePressed(const GLC_Point3d&, Qt::MouseButton, GLC_uint id);
 
 	//! The mouse is over this widget and a mousse button is released
-	virtual glc::WidgetEventFlag mouseReleased(const GLC_Point3d&, Qt::MouseButton);
+	virtual glc::WidgetEventFlag mouseReleased(Qt::MouseButton);
 
 	//! This widget is selected and the mousse move with a pressed buttons
-	virtual glc::WidgetEventFlag mouseMove(const GLC_Point3d&, Qt::MouseButtons);
+	virtual glc::WidgetEventFlag mouseMove(const GLC_Point3d&, Qt::MouseButtons, GLC_uint id);
 
 //@}
 
@@ -156,6 +159,10 @@ protected:
 
 	//! Set the specified 3D view instance visibility
 	void set3DViewInstanceVisibility(int index, bool visibility);
+
+	//! Return the index of the given instance id
+	inline int indexOfIntsanceId(GLC_uint id)
+	{return m_InstanceIdList.indexOf(id);}
 
 //////////////////////////////////////////////////////////////////////
 // Private services function

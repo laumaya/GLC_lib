@@ -100,32 +100,32 @@ void GLC_3DWidget::setWidgetManager(GLC_3DWidgetManagerHandle* pWidgetManagerHan
 //////////////////////////////////////////////////////////////////////
 // Interaction Functions
 //////////////////////////////////////////////////////////////////////
-glc::WidgetEventFlag GLC_3DWidget::select(const GLC_Point3d&)
+glc::WidgetEventFlag GLC_3DWidget::select(const GLC_Point3d&, GLC_uint)
 {
 	return glc::IgnoreEvent;
 }
 
-glc::WidgetEventFlag GLC_3DWidget::unselect(const GLC_Point3d&)
+glc::WidgetEventFlag GLC_3DWidget::unselect(const GLC_Point3d&, GLC_uint)
 {
 	return glc::IgnoreEvent;
 }
 
-glc::WidgetEventFlag GLC_3DWidget::mouseOver(const GLC_Point3d&)
+glc::WidgetEventFlag GLC_3DWidget::mouseOver(const GLC_Point3d&, GLC_uint)
 {
 	return glc::IgnoreEvent;
 }
 
-glc::WidgetEventFlag GLC_3DWidget::mousePressed(const GLC_Point3d&, Qt::MouseButton)
+glc::WidgetEventFlag GLC_3DWidget::mousePressed(const GLC_Point3d&, Qt::MouseButton, GLC_uint)
 {
 	return glc::IgnoreEvent;
 }
 
-glc::WidgetEventFlag GLC_3DWidget::mouseReleased(const GLC_Point3d&, Qt::MouseButton)
+glc::WidgetEventFlag GLC_3DWidget::mouseReleased(Qt::MouseButton)
 {
 	return glc::IgnoreEvent;
 }
 
-glc::WidgetEventFlag GLC_3DWidget::mouseMove(const GLC_Point3d&, Qt::MouseButtons)
+glc::WidgetEventFlag GLC_3DWidget::mouseMove(const GLC_Point3d&, Qt::MouseButtons, GLC_uint)
 {
 	return glc::IgnoreEvent;
 }

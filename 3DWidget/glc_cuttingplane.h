@@ -28,8 +28,8 @@
 
 #include "glc_3dwidget.h"
 #include "../glc_config.h"
-#include "../maths/glc_vector3d.h"
-#include "../maths/glc_plane.h"
+
+class GLC_AbstractManipulator;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_CuttingPlane
@@ -39,6 +39,11 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_CuttingPlane : public GLC_3DWidget
 {
+	enum Manipulator
+	{
+		TranslationManipulator,
+		RotationManipulator
+	};
 	Q_OBJECT
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -97,8 +102,8 @@ public:
 	inline void setOpacity(double opacity)
 	{m_Opacity= opacity;}
 
-	//! Indicate to this widget that the viewport as change
-	virtual void viewportAsChanged();
+	//! Update widget representation
+	virtual void updateWidgetRep();
 
 //@}
 
@@ -109,19 +114,19 @@ public:
 public:
 
 	//! This widget as been selected
-	virtual glc::WidgetEventFlag select(const GLC_Point3d&);
+	virtual glc::WidgetEventFlag select(const GLC_Point3d&, GLC_uint id);
 
 	//! This widget as been unselected
-	virtual glc::WidgetEventFlag unselect(const GLC_Point3d&);
+	virtual glc::WidgetEventFlag unselect(const GLC_Point3d&, GLC_uint id);
 
 	//! The mouse is over this widget and a mousse button is pressed
-	virtual glc::WidgetEventFlag mousePressed(const GLC_Point3d&, Qt::MouseButton);
+	virtual glc::WidgetEventFlag mousePressed(const GLC_Point3d&, Qt::MouseButton, GLC_uint id);
 
-	//! The mouse is over this widget
-	virtual glc::WidgetEventFlag mouseOver(const GLC_Point3d&);
+	//! The mouse is over this widget and a mousse button is released
+	virtual glc::WidgetEventFlag mouseReleased(Qt::MouseButton);
 
 	//! This widget is selected and the mousse move with a pressed buttons
-	virtual glc::WidgetEventFlag mouseMove(const GLC_Point3d&, Qt::MouseButtons);
+	virtual glc::WidgetEventFlag mouseMove(const GLC_Point3d&, Qt::MouseButtons, GLC_uint id);
 
 //@}
 
@@ -137,12 +142,11 @@ protected:
 // Private services function
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Create sliding plane
-	void prepareToSlide();
+	//! Move the manipulator 3D representation
+	void moveManipulatorRep(const GLC_Point3d& pos);
 
-	//! Update cutting plane arrow
-	void updateArrow(double length);
-
+	//! Create the rotation navigator of the given instance index
+	GLC_AbstractManipulator* rotationNavigator(int index);
 
 //////////////////////////////////////////////////////////////////////
 // Private Member
@@ -154,20 +158,36 @@ private:
 	//! The cutting plane Normal
 	GLC_Vector3d m_Normal;
 
+	//! The cutting plane compostion matrix
+	GLC_Matrix4x4 m_CompMatrix;
+
 	//! The cutting plane size
 	double m_L1, m_L2;
-
-	//! The previous selected point
-	GLC_Point3d m_Previous;
-
-	//! The current sliding plane
-	GLC_Plane m_SlidingPlane;
 
 	//! The cutting plane color
 	QColor m_Color;
 
 	//! The cutting plane opacity
 	double m_Opacity;
+
+	//! The manipulator offset
+	double m_ManipulatorOffsetFactor;
+
+	//! The manipulator scale factor
+	double m_ScaleFactor;
+
+	//! Index of the instance in selection
+	int m_SelectionIndex;
+
+	//! current manipulator enum
+	Manipulator m_CurrentManipulator;
+
+	//! The current manipulator of this cutting plane
+	GLC_AbstractManipulator* m_pCurrentManipulator;
+
+	//! The current manipulator position
+	GLC_Point3d m_CurrentNavigatorPosition;
+
 
 };
 

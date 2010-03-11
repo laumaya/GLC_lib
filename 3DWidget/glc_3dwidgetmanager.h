@@ -109,10 +109,6 @@ public:
 	inline void render()
 	{m_pWidgetManagerHandle->render();}
 
-	//! Render the 3DWidget of this manager in selection mode
-	inline void renderInSelectionMode()
-	{m_pWidgetManagerHandle->renderInSelectionMode();}
-
 //@}
 
 //////////////////////////////////////////////////////////////////////

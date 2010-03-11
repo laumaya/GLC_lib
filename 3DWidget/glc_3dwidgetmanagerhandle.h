@@ -81,6 +81,10 @@ public:
 	double viewportTangent() const
 	{return m_pViewport->viewTangent();}
 
+	//! Return the viewport of this manager
+	inline GLC_Viewport* viewport() const
+	{return m_pViewport;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -140,9 +144,6 @@ public:
 public:
 	//! Render the 3DWidget of this manager
 	void render();
-
-	//! Render the 3DWidget of this manager in selection mode
-	void renderInSelectionMode();
 
 //@}
 

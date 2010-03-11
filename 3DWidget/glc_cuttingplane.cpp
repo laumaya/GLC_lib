@@ -29,41 +29,69 @@
 #include "../maths/glc_geomtools.h"
 #include "../geometry/glc_arrow.h"
 #include "../geometry/glc_disc.h"
+#include "glc_pullmanipulator.h"
+#include "glc_rotationmanipulator.h"
 
 GLC_CuttingPlane::GLC_CuttingPlane(const GLC_Point3d& center, const GLC_Vector3d& normal, double l1, double l2, GLC_3DWidgetManagerHandle*  pWidgetManagerHandle)
 : GLC_3DWidget(pWidgetManagerHandle)
 , m_Center(center)
 , m_Normal(normal)
+, m_CompMatrix()
 , m_L1(l1)
 , m_L2(l2)
-, m_Previous()
-, m_SlidingPlane()
 , m_Color(Qt::darkGreen)
 , m_Opacity(0.3)
+, m_ManipulatorOffsetFactor(1.0)
+, m_ScaleFactor(1.0)
+, m_SelectionIndex(-1)
+, m_CurrentManipulator(TranslationManipulator)
+, m_pCurrentManipulator(NULL)
+, m_CurrentNavigatorPosition()
 {
 	if (NULL != pWidgetManagerHandle)
 	{
 		create3DviewInstance();
 	}
+
+	if (glc::Z_AXIS != m_Normal)
+	{
+		if (m_Normal != -glc::Z_AXIS)
+		{
+			m_CompMatrix.setMatRot(glc::Z_AXIS, m_Normal);
+		}
+		else
+		{
+			m_CompMatrix.setMatRot(glc::X_AXIS, glc::PI);
+		}
+	}
+
 }
 
 GLC_CuttingPlane::GLC_CuttingPlane(const GLC_CuttingPlane& cuttingPlane)
 : GLC_3DWidget(cuttingPlane)
 , m_Center(cuttingPlane.m_Center)
 , m_Normal(cuttingPlane.m_Normal)
+, m_CompMatrix(cuttingPlane.m_CompMatrix)
 , m_L1(cuttingPlane.m_L1)
 , m_L2(cuttingPlane.m_L2)
-, m_Previous()
-, m_SlidingPlane()
 , m_Color(cuttingPlane.m_Color)
 , m_Opacity(cuttingPlane.m_Opacity)
+, m_ManipulatorOffsetFactor(cuttingPlane.m_ManipulatorOffsetFactor)
+, m_ScaleFactor(cuttingPlane.m_ScaleFactor)
+, m_SelectionIndex(cuttingPlane.m_SelectionIndex)
+, m_CurrentManipulator(cuttingPlane.m_CurrentManipulator)
+, m_pCurrentManipulator(NULL)
+, m_CurrentNavigatorPosition(cuttingPlane.m_CurrentNavigatorPosition)
 {
-
+	if (NULL != cuttingPlane.m_pCurrentManipulator)
+	{
+		m_pCurrentManipulator= cuttingPlane.m_pCurrentManipulator->clone();
+	}
 }
 
 GLC_CuttingPlane::~GLC_CuttingPlane()
 {
-
+	delete m_pCurrentManipulator;
 }
 
 GLC_CuttingPlane& GLC_CuttingPlane::operator=(const GLC_CuttingPlane& cuttingPlane)
@@ -72,10 +100,17 @@ GLC_CuttingPlane& GLC_CuttingPlane::operator=(const GLC_CuttingPlane& cuttingPla
 
 	m_Center= cuttingPlane.m_Center;
 	m_Normal= cuttingPlane.m_Normal;
+	m_CompMatrix= cuttingPlane.m_CompMatrix;
 	m_L1= cuttingPlane.m_L1;
 	m_L2= cuttingPlane.m_L2;
 	m_Color= cuttingPlane.m_Color;
 	m_Opacity= cuttingPlane.m_Opacity;
+	m_CurrentNavigatorPosition= cuttingPlane.m_CurrentNavigatorPosition;
+	delete m_pCurrentManipulator;
+	if (NULL != cuttingPlane.m_pCurrentManipulator)
+	{
+		m_pCurrentManipulator= cuttingPlane.m_pCurrentManipulator->clone();
+	}
 
 	return *this;
 }
@@ -92,108 +127,177 @@ void GLC_CuttingPlane::updateLength(double l1, double l2)
 	}
 }
 
-void GLC_CuttingPlane::viewportAsChanged()
+void GLC_CuttingPlane::updateWidgetRep()
 {
 	const double viewTangent= GLC_3DWidget::widgetManagerHandle()->viewportTangent();
 	const GLC_Point3d eye(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->eye());
-	const double distanceToNormal= (m_Previous - eye).length();
+	const double distanceToNormal= (m_CurrentNavigatorPosition - eye).length();
 	const double viewWidth= distanceToNormal * viewTangent;
-	updateArrow(viewWidth * 0.06);
+
+	m_ScaleFactor= viewWidth * 0.1;
+	m_ManipulatorOffsetFactor= m_ScaleFactor * (-0.01);
+
+	moveManipulatorRep(m_CurrentNavigatorPosition);
 }
 
-glc::WidgetEventFlag GLC_CuttingPlane::select(const GLC_Point3d& pos)
+glc::WidgetEventFlag GLC_CuttingPlane::select(const GLC_Point3d& pos, GLC_uint)
 {
-	// Update previous point
-	m_Previous= pos;
-	prepareToSlide();
+	Q_ASSERT(NULL == m_pCurrentManipulator);
+	Q_ASSERT(TranslationManipulator == m_CurrentManipulator);
+
+	//! Create the default manipulator
+	GLC_Viewport* pViewport= GLC_3DWidget::widgetManagerHandle()->viewport();
+	m_pCurrentManipulator= new GLC_PullManipulator(pViewport, m_Normal);
+
+	m_pCurrentManipulator->enterManipulateState(pos);
+	m_CurrentNavigatorPosition= pos;
 
 	GLC_3DWidget::set3DViewInstanceVisibility(1, true);
-	GLC_3DWidget::set3DViewInstanceVisibility(2, true);
 
-	GLC_Matrix4x4 translationMatrix(pos);
-	GLC_3DWidget::instanceHandle(1)->setMatrix(translationMatrix);
-	GLC_3DWidget::instanceHandle(2)->setMatrix(translationMatrix);
+	updateWidgetRep();
 
 	return glc::BlockedEvent;
 }
 
-glc::WidgetEventFlag GLC_CuttingPlane::mousePressed(const GLC_Point3d& pos, Qt::MouseButton button)
+glc::WidgetEventFlag GLC_CuttingPlane::mousePressed(const GLC_Point3d& pos, Qt::MouseButton button, GLC_uint id)
 {
 	glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
 	if (button == Qt::LeftButton)
 	{
-		m_Previous= pos;
-		prepareToSlide();
+		const int selectedInstanceIndex= GLC_3DWidget::indexOfIntsanceId(id);
+		if (selectedInstanceIndex > 0)
+		{
+			m_SelectionIndex= selectedInstanceIndex;
+			if (m_CurrentManipulator == RotationManipulator)
+			{
+				delete m_pCurrentManipulator;
+				m_pCurrentManipulator= rotationNavigator(selectedInstanceIndex);
+			}
+			m_pCurrentManipulator->enterManipulateState(pos);
+		}
+		else
+		{
+			if (NULL != m_pCurrentManipulator)
+			{
+				if (m_CurrentManipulator == RotationManipulator)
+				{
+					delete m_pCurrentManipulator;
+					m_pCurrentManipulator= NULL;
+				}
+				else
+				{
+					m_pCurrentManipulator->enterManipulateState(pos);
+				}
+
+			}
+			m_CurrentNavigatorPosition= pos;
+			updateWidgetRep();
+		}
+
 		returnFlag= glc::BlockedEvent;
-
-		GLC_3DWidget::set3DViewInstanceVisibility(1, true);
-		GLC_3DWidget::set3DViewInstanceVisibility(2, true);
-
-		GLC_Matrix4x4 translationMatrix(pos);
-		GLC_3DWidget::instanceHandle(1)->setMatrix(translationMatrix);
-		GLC_3DWidget::instanceHandle(2)->setMatrix(translationMatrix);
 	}
 
 	return returnFlag;
 }
 
-glc::WidgetEventFlag GLC_CuttingPlane::unselect(const GLC_Point3d&)
+glc::WidgetEventFlag GLC_CuttingPlane::mouseReleased(Qt::MouseButton button)
 {
-	GLC_3DWidget::set3DViewInstanceVisibility(1, false);
-	GLC_3DWidget::set3DViewInstanceVisibility(2, false);
+	glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
+	if ((button == Qt::LeftButton) && (m_SelectionIndex != -1))
+	{
+
+		// get selected instance index
+
+		if (m_CurrentManipulator == TranslationManipulator)
+		{
+			GLC_3DWidget::set3DViewInstanceVisibility(1, false);
+			GLC_3DWidget::set3DViewInstanceVisibility(2, true);
+			GLC_3DWidget::set3DViewInstanceVisibility(3, true);
+			GLC_3DWidget::set3DViewInstanceVisibility(4, true);
+
+			returnFlag= glc::BlockedEvent;
+			m_CurrentManipulator= RotationManipulator;
+			delete m_pCurrentManipulator;
+			m_pCurrentManipulator= NULL;
+
+			moveManipulatorRep(m_CurrentNavigatorPosition);
+		}
+		else if (m_CurrentManipulator == RotationManipulator)
+		{
+			GLC_3DWidget::set3DViewInstanceVisibility(1, true);
+			GLC_3DWidget::set3DViewInstanceVisibility(2, false);
+			GLC_3DWidget::set3DViewInstanceVisibility(3, false);
+			GLC_3DWidget::set3DViewInstanceVisibility(4, false);
+
+			returnFlag= glc::BlockedEvent;
+			m_CurrentManipulator= TranslationManipulator;
+
+			delete m_pCurrentManipulator;
+
+			GLC_Viewport* pViewport= GLC_3DWidget::widgetManagerHandle()->viewport();
+			m_pCurrentManipulator= new GLC_PullManipulator(pViewport, m_Normal);
+			m_pCurrentManipulator->enterManipulateState(m_CurrentNavigatorPosition);
+
+			moveManipulatorRep(m_CurrentNavigatorPosition);
+		}
+		m_SelectionIndex= -1;
+	}
+	return returnFlag;
+}
+
+glc::WidgetEventFlag GLC_CuttingPlane::unselect(const GLC_Point3d&, GLC_uint)
+{
+	Q_ASSERT(m_SelectionIndex == -1);
+	for (int i= 0; i < 4; ++i)
+	{
+		GLC_3DWidget::set3DViewInstanceVisibility(1 + i, false);
+	}
+	delete m_pCurrentManipulator;
+	m_pCurrentManipulator= NULL;
+
+	m_CurrentManipulator= TranslationManipulator;
 
 	return glc::AcceptEvent;
 }
 
-glc::WidgetEventFlag GLC_CuttingPlane::mouseOver(const GLC_Point3d&)
+glc::WidgetEventFlag GLC_CuttingPlane::mouseMove(const GLC_Point3d& pos, Qt::MouseButtons button, GLC_uint)
 {
-	return glc::AcceptEvent;
-}
-
-glc::WidgetEventFlag GLC_CuttingPlane::mouseMove(const GLC_Point3d& pos, Qt::MouseButtons)
-{
-	// Projection of intersection point on slidding plane
-	const GLC_Point3d eye(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->eye());
-	GLC_Vector3d direction;
-	if (GLC_3DWidget::useOrtho())
+	glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
+	if (button & Qt::LeftButton)
 	{
-		direction= GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize();
+		if (NULL != m_pCurrentManipulator)
+		{
+			if (m_SelectionIndex != -1)
+			{
+				moveManipulatorRep(m_CurrentNavigatorPosition);
+				m_SelectionIndex= -1;
+			}
+			GLC_Matrix4x4 moveMatrix(m_pCurrentManipulator->manipulate(pos));
+
+			// Update plane normal
+			if (m_CurrentManipulator == RotationManipulator)
+			{
+				m_Normal= moveMatrix.rotationMatrix() * m_Normal;
+			}
+			m_CompMatrix= moveMatrix * m_CompMatrix;
+			m_Center= moveMatrix * m_Center;
+			m_CurrentNavigatorPosition= moveMatrix * m_CurrentNavigatorPosition;
+
+			// Update the instance
+			for (int i= 0; i < 5; ++i)
+			{
+				GLC_3DWidget::instanceHandle(i)->multMatrix(moveMatrix);
+			}
+
+			// Plane throw intersection and plane normal and camera up vector
+			m_pCurrentManipulator->enterManipulateState(m_pCurrentManipulator->previousPosition());
+
+			emit asChanged();
+			returnFlag= glc::AcceptEvent;
+		}
 	}
-	else
-	{
-		direction= (pos - eye);
-	}
 
-	GLC_Point3d sliddingPoint;
-	GLC_Line3d projectionLine(pos, direction);
-	glc::lineIntersectPlane(projectionLine, m_SlidingPlane, &sliddingPoint);
-
-	GLC_Vector3d projNormal= (GLC_3DWidget::widgetManagerHandle()->cameraHandle()->sideVector() ^ m_Normal).normalize();
-	GLC_Plane projPlane(projNormal, m_Previous);
-	glc::lineIntersectPlane(projectionLine, projPlane, &sliddingPoint);
-
-	// Projection of the slidding point on cutting plane normal
-	sliddingPoint= glc::project(sliddingPoint, GLC_Line3d(m_Previous, m_Normal));
-
-	GLC_Matrix4x4 translationMatrix(sliddingPoint - m_Previous);
-
-	// Update the instance
-	GLC_3DWidget::instanceHandle(0)->multMatrix(translationMatrix);
-	GLC_3DWidget::instanceHandle(1)->multMatrix(translationMatrix);
-	GLC_3DWidget::instanceHandle(2)->multMatrix(translationMatrix);
-
-	// Update plane center
-	m_Center= translationMatrix * m_Center;
-
-	m_Previous= sliddingPoint;
-
-	// Plane throw intersection and plane normal and camera up vector
-	GLC_Plane sliddingPlane(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize(), m_Previous);
-	m_SlidingPlane= sliddingPlane;
-
-	emit asChanged();
-
-	return glc::AcceptEvent;
+	return returnFlag;
 }
 
 void GLC_CuttingPlane::create3DviewInstance()
@@ -208,63 +312,102 @@ void GLC_CuttingPlane::create3DviewInstance()
 	GLC_3DWidget::add3DViewInstance(cuttingPlaneInstance);
 
 	// Normal arrow geometry
-	GLC_Arrow* pArrow= new GLC_Arrow(GLC_Point3d(), -m_Normal, GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize());
-	pArrow->setLineWidth(2.5);
+	GLC_Arrow* pArrow= new GLC_Arrow(GLC_Point3d(), -glc::Z_AXIS, GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize());
+	pArrow->setLineWidth(4.5);
+	pArrow->setHeadLength(0.15);
 	QColor arrowColor(Qt::red);
 	arrowColor.setAlphaF(0.4);
 	pArrow->setWireColor(arrowColor);
 
-	if (pArrow->isTransparent())
-	{
-		qDebug() << "Arrow is transparent";
-	}
-	else
-	{
-		qDebug() << "Arrow is NOT transparent";
-	}
 	//Base arrow disc
 	pMaterial= new GLC_Material(Qt::red);
 	pMaterial->setOpacity(m_Opacity);
-	GLC_Disc* pDisc= new GLC_Disc(1.0);
+	GLC_Disc* pDisc= new GLC_Disc(0.3);
 	pDisc->replaceMasterMaterial(pMaterial);
 
 	// Normal arrow + base instance
-	GLC_3DViewInstance normalLine(pArrow);
-	GLC_3DWidget::add3DViewInstance(normalLine);
+	GLC_3DRep normalLine(pArrow);
+	normalLine.addGeom(pDisc);
+	GLC_3DWidget::add3DViewInstance(GLC_3DViewInstance(normalLine));
 	GLC_3DWidget::set3DViewInstanceVisibility(1, false);
 
-	GLC_3DViewInstance normalBase(pDisc);
-	GLC_3DWidget::add3DViewInstance(normalBase);
+	// Rotation manipulator
+	const double initRadius= 1;
+	// Arrond X axis
+	pDisc= new GLC_Disc(initRadius);
+	pMaterial= new GLC_Material(Qt::red);
+	pMaterial->setOpacity(m_Opacity);
+	pDisc->replaceMasterMaterial(pMaterial);
+	pDisc->setAngle(glc::PI);
+	GLC_3DWidget::add3DViewInstance(GLC_3DViewInstance(pDisc));
 	GLC_3DWidget::set3DViewInstanceVisibility(2, false);
-
+	// Arround Y axis
+	pDisc= new GLC_Disc(initRadius);
+	pMaterial= new GLC_Material(Qt::green);
+	pMaterial->setOpacity(m_Opacity);
+	pDisc->replaceMasterMaterial(pMaterial);
+	pDisc->setAngle(glc::PI);
+	GLC_3DWidget::add3DViewInstance(GLC_3DViewInstance(pDisc));
+	GLC_3DWidget::set3DViewInstanceVisibility(3, false);
+	// Arround Z axis
+	pDisc= new GLC_Disc(initRadius);
+	pMaterial= new GLC_Material(Qt::blue);
+	pMaterial->setOpacity(m_Opacity);
+	pDisc->replaceMasterMaterial(pMaterial);
+	//pDisc->setAngle(glc::PI / 2.0);
+	GLC_3DWidget::add3DViewInstance(GLC_3DViewInstance(pDisc));
+	GLC_3DWidget::set3DViewInstanceVisibility(4, false);
 }
 
-void GLC_CuttingPlane::prepareToSlide()
+void GLC_CuttingPlane::moveManipulatorRep(const GLC_Point3d& pos)
 {
-	// Plane throw intersection and plane normal and camera up vector
-	GLC_Plane sliddingPlane(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize(), m_Previous);
-	m_SlidingPlane= sliddingPlane;
+	// Create the widget rotation matrix
+	const GLC_Matrix4x4 rotationMatrix(m_CompMatrix.rotationMatrix());
 
-	// Projection of intersection point on slidding plane
-	const GLC_Point3d eye(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->eye());
-	const GLC_Vector3d direction((m_Previous - eye).normalize());
+	const GLC_Matrix4x4 translationMatrix(pos);
+	const GLC_Matrix4x4 offsetMatrix(m_Normal * m_ManipulatorOffsetFactor);
+	GLC_Matrix4x4 scaleMatrix;
+	scaleMatrix.setMatScaling(m_ScaleFactor, m_ScaleFactor, m_ScaleFactor);
+	GLC_3DWidget::instanceHandle(1)->setMatrix(offsetMatrix * translationMatrix * rotationMatrix *scaleMatrix);
 
-	GLC_Line3d projectionLine(m_Previous, direction);
-	glc::lineIntersectPlane(projectionLine, m_SlidingPlane, &m_Previous);
+	// Rotation manipulator
+	QVector<GLC_Matrix4x4> rotations(3);
+	rotations[0].setMatRot(glc::Y_AXIS, glc::PI / 2.0); // X
+	rotations[0]= GLC_Matrix4x4(glc::X_AXIS, -glc::PI / 2.0) * rotations[0];
+	rotations[1].setMatRot(glc::X_AXIS, -glc::PI / 2.0); // Y
+	// Z
+	for (int i= 0; i < 3; ++i)
+	{
+		GLC_3DWidget::instanceHandle(2 + i)->setMatrix(offsetMatrix * translationMatrix * rotationMatrix * rotations.at(i) * scaleMatrix);
+	}
 
-	//m_Previous= glc::project(m_Previous, GLC_Line3d(m_Previous, m_Normal));
-}
-
-void GLC_CuttingPlane::updateArrow(double length)
-{
 	GLC_Arrow* pArrow= dynamic_cast<GLC_Arrow*>(GLC_3DWidget::instanceHandle(1)->geomAt(0));
 	Q_ASSERT(NULL != pArrow);
 
-	pArrow->setEndPoint(-m_Normal * length);
-	pArrow->setHeadLength(length * 0.15);
 	pArrow->setViewDir(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize());
-
-	GLC_Disc* pDisc= dynamic_cast<GLC_Disc*>(GLC_3DWidget::instanceHandle(2)->geomAt(0));
-	Q_ASSERT(NULL != pDisc);
-	pDisc->setRadius(length * 0.3);
 }
+
+GLC_AbstractManipulator* GLC_CuttingPlane::rotationNavigator(int index)
+{
+	index= index - 2;
+	Q_ASSERT((index > -1) && (index < 3));
+
+	const GLC_Matrix4x4 rotationMatrix(m_CompMatrix.rotationMatrix());
+	GLC_Vector3d axis;
+	if (index == 0)
+	{
+		axis= rotationMatrix * glc::X_AXIS;
+	}
+	else if (index == 1)
+	{
+		axis= rotationMatrix * glc::Y_AXIS;
+	}
+	else
+	{
+		axis= rotationMatrix * glc::Z_AXIS;
+	}
+	GLC_AbstractManipulator* pManipulator= new GLC_RotationManipulator(GLC_3DWidget::widgetManagerHandle()->viewport(), GLC_Line3d(m_CurrentNavigatorPosition, axis));
+
+	return pManipulator;
+}
+
