@@ -339,7 +339,7 @@ bool GLC_Matrix4x4::operator==(const GLC_Matrix4x4& mat) const
 	int i= 0;
 	while (result && (i < TAILLEMAT4X4))
 	{
-		result= (m_Matrix[i] == mat.m_Matrix[i]);
+		result= (qFuzzyCompare(m_Matrix[i], mat.m_Matrix[i]));
 		++i;
 	}
 	return result;
