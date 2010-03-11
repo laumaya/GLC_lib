@@ -144,7 +144,10 @@ HEADERS_GLC += glc_global.h \
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_cuttingplane.h \
 						3DWidget/glc_3dwidgetmanager.h \
-						3DWidget/glc_3dwidgetmanagerhandle.h
+						3DWidget/glc_3dwidgetmanagerhandle.h \
+						3DWidget/glc_abstractmanipulator.h \
+						3DWidget/glc_pullmanipulator.h \
+						3DWidget/glc_rotationmanipulator.h
 
 
 HEADERS_PQP +=		PQP/PQP_Compile.h \
@@ -275,7 +278,11 @@ SOURCES +=	glc_global.cpp \
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_cuttingplane.cpp \
  			3DWidget/glc_3dwidgetmanager.cpp \
-			3DWidget/glc_3dwidgetmanagerhandle.cpp
+			3DWidget/glc_3dwidgetmanagerhandle.cpp \
+			3DWidget/glc_abstractmanipulator.cpp \
+			3DWidget/glc_pullmanipulator.cpp \
+			3DWidget/glc_rotationmanipulator.cpp
+			
          
 SOURCES += PQP/TriDist.cpp \
 		   PQP/PQP.cpp \
@@ -358,7 +365,10 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_3DWidgetManagerHandle \
     		   include/GLC_Arrow \
     		   include/GLC_Polylines \
-    		   include/GLC_Disc
+    		   include/GLC_Disc \
+    		   include/GLC_AbstractManipulator \
+    		   include/GLC_PullManipulator \
+    		   include/GLC_RotationManipulator
     		   
     			   
 # Linux install configuration
