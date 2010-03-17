@@ -21,6 +21,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
+//! \file glc_trackballmover.cpp Implementation of the GLC_TrackBallMover class.
 
 #include "glc_trackballmover.h"
 #include "glc_viewport.h"
@@ -63,15 +64,15 @@ GLC_Mover* GLC_TrackBallMover::clone() const
 // Initialized the mover
 void GLC_TrackBallMover::init(int x, int y)
 {
-	m_PreviousVector.setVect(mapForTracking(static_cast<double>(x), static_cast<double>(y)));
+	GLC_Mover::m_PreviousVector.setVect(mapForTracking(static_cast<double>(x), static_cast<double>(y)));
 
-	const double Angle= acos(glc::Z_AXIS * m_PreviousVector);
-	const GLC_Vector3d AxeRot(glc::Z_AXIS ^ m_PreviousVector);
+	const double Angle= acos(glc::Z_AXIS * GLC_Mover::m_PreviousVector);
+	const GLC_Vector3d AxeRot(glc::Z_AXIS ^ GLC_Mover::m_PreviousVector);
 
 	GLC_Matrix4x4 Matrice(AxeRot, Angle);
 
 	// Update trackball representations
-	initRepresentation(m_PreviousVector, Matrice);
+	initRepresentation(GLC_Mover::m_PreviousVector, Matrice);
 }
 
 // Move the camera
@@ -80,14 +81,14 @@ void GLC_TrackBallMover::move(int x, int y)
 	const GLC_Vector3d VectCurOrbit(mapForTracking(static_cast<double>(x), static_cast<double>(y)));
 
 	// Update camera position (orbit)
-	m_pViewport->cameraHandle()->orbit(m_PreviousVector, VectCurOrbit);
+	GLC_Mover::m_pViewport->cameraHandle()->orbit(GLC_Mover::m_PreviousVector, VectCurOrbit);
 
 	// Update arcs of circle's positionning matrix
-	const GLC_Matrix4x4 MatRot(m_PreviousVector, VectCurOrbit);
+	const GLC_Matrix4x4 MatRot(GLC_Mover::m_PreviousVector, VectCurOrbit);
 	updateRepresentation(MatRot);
 
 	// Previous vector become current vector
-	m_PreviousVector = VectCurOrbit;
+	GLC_Mover::m_PreviousVector = VectCurOrbit;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -98,8 +99,8 @@ void GLC_TrackBallMover::move(int x, int y)
 GLC_Vector3d GLC_TrackBallMover::mapForTracking( double x, double y) const
 {
 	double AspectRatio;
-	const double winHSize= static_cast<double>(m_pViewport->viewHSize());
-	const double winVSize= static_cast<double>(m_pViewport->viewVSize());
+	const double winHSize= static_cast<double>(GLC_Mover::m_pViewport->viewHSize());
+	const double winVSize= static_cast<double>(GLC_Mover::m_pViewport->viewVSize());
 
 	// Change origine and cover
 	if (winHSize < winVSize)

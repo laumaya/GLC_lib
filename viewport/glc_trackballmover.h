@@ -21,6 +21,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
+//! \file glc_trackballmover.h Interface for the GLC_TrackBallMover class.
 
 #ifndef GLC_TRACKBALLMOVER_H_
 #define GLC_TRACKBALLMOVER_H_
@@ -35,6 +36,10 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_TrackBallMover : public GLC_Mover
 {
+//////////////////////////////////////////////////////////////////////
+/*! @name Constructor / Destructor */
+//@{
+//////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
 	GLC_TrackBallMover(GLC_Viewport*, const QList<GLC_RepMover*>& repsList= QList<GLC_RepMover*>());
@@ -44,6 +49,7 @@ public:
 
 	//! Destructor
 	virtual ~GLC_TrackBallMover();
+//@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
