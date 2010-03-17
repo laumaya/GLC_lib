@@ -30,6 +30,7 @@
 #include "glc_repmover.h"
 #include "../maths/glc_vector3d.h"
 
+#include <QObject>
 #include <QList>
 
 #include "../glc_config.h"
@@ -40,8 +41,9 @@ class GLC_Viewport;
 //! \class GLC_Mover
 /*! \brief GLC_Mover : Base class for all interactive manipulation */
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_Mover
+class GLC_LIB_EXPORT GLC_Mover : public QObject
 {
+	Q_OBJECT
 public:
 	//! Default constructor
 	GLC_Mover(GLC_Viewport*, const QList<GLC_RepMover*>&);
