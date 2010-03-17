@@ -142,14 +142,7 @@ GLC_Camera& GLC_Camera::move(const GLC_Matrix4x4 &MatMove)
 {
 	m_Eye= MatMove * m_Eye;
 	m_Target= MatMove * m_Target;
-
-	// Up vector computation
-	// In case of translation in matrix
-	const GLC_Vector3d VectOrigine(0,0,0);
-	// Backup m_VectUp
-	const GLC_Vector3d VectUpOld(m_VectUp);
-	m_VectUp= (MatMove * VectUpOld) - (MatMove * VectOrigine); // Up Vector Origin must be equal to 0,0,0
-	m_VectUp.normalize();
+	m_VectUp= MatMove.rotationMatrix() * m_VectUp;
 	createMatComp();
 
 	return *this;
