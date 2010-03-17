@@ -44,13 +44,14 @@ public:
 	typedef QHash<const int, GLC_Mover*> MoverHash;
 
 	//! Standard mover Id
-	enum
+	enum MoverType
 	{
 		Pan= 1,
 		Zoom= 2,
 		TrackBall= 3,
 		Target= 4,
-		TurnTable= 5
+		TurnTable= 5,
+		Fly= 6
 	};
 
 public:
