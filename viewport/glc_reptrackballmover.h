@@ -98,8 +98,6 @@ private:
 private:
 	//! trackball radius
 	double m_Radius;
-	//! Factory
-	GLC_Factory* m_pFactory;
 	//! Main Circle
 	GLC_Circle m_MainCircle;
 	//! Arc 1 showing orbit sphere orientation

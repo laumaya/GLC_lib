@@ -34,11 +34,10 @@ using namespace glc;
 GLC_RepTrackBallMover::GLC_RepTrackBallMover(GLC_Viewport* pViewport)
 : GLC_RepMover(pViewport)
 , m_Radius(1.0)
-, m_pFactory(GLC_Factory::instance(QGLContext::currentContext()))
 , m_MainCircle(m_Radius)
-, m_Arc1(m_pFactory->createCircle(m_Radius, ARCANGLE))
+, m_Arc1(GLC_Factory::instance()->createCircle(m_Radius, ARCANGLE))
 , m_MatArc1()
-, m_Arc2(m_pFactory->createCircle(m_Radius, ARCANGLE))
+, m_Arc2(GLC_Factory::instance()->createCircle(m_Radius, ARCANGLE))
 , m_MatArc2()
 , m_Ratio(0.95)
 {
@@ -64,7 +63,6 @@ GLC_RepTrackBallMover::GLC_RepTrackBallMover(GLC_Viewport* pViewport)
 GLC_RepTrackBallMover::GLC_RepTrackBallMover(const GLC_RepTrackBallMover& repMover)
 : GLC_RepMover(repMover)
 , m_Radius(repMover.m_Radius)
-, m_pFactory(repMover.m_pFactory)
 , m_MainCircle(repMover.m_MainCircle)
 , m_Arc1(repMover.m_Arc1.deepCopy())
 , m_MatArc1(repMover.m_MatArc1)
@@ -160,12 +158,22 @@ void GLC_RepTrackBallMover::glDraw()
 	glPushMatrix();
 	glLoadIdentity();
 
+	m_RenderProperties.setRenderingFlag(glc::WireRenderFlag);
 	// Display arcs
-	m_Arc1.render();
-	m_Arc2.render();
-
+	m_Arc1.render(glc::WireRenderFlag);
+	m_Arc2.render(glc::WireRenderFlag);
 	// Display base class (Main circle)
 	m_MainCircle.render(m_RenderProperties);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	m_RenderProperties.setRenderingFlag(glc::TransparentRenderFlag);
+	// Display arcs
+	m_Arc1.render(glc::TransparentRenderFlag);
+	m_Arc2.render(glc::TransparentRenderFlag);
+	// Display base class (Main circle)
+	m_MainCircle.render(m_RenderProperties);
+
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
