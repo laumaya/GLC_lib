@@ -126,7 +126,8 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_reptrackballmover.h \
 						viewport/glc_settargetmover.h \
 						viewport/glc_turntablemover.h \
-						viewport/glc_frustum.h
+						viewport/glc_frustum.h \
+						viewport/glc_flymover.h
 
 
 HEADERS_GLC += glc_global.h \
@@ -262,7 +263,8 @@ SOURCES +=	viewport/glc_camera.cpp \
 			viewport/glc_reptrackballmover.cpp \
 			viewport/glc_settargetmover.cpp \
 			viewport/glc_turntablemover.cpp \
-			viewport/glc_frustum.cpp
+			viewport/glc_frustum.cpp \
+			viewport/glc_flymover.cpp
 		
 SOURCES +=	glc_global.cpp \
 			glc_object.cpp \			
@@ -368,7 +370,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Disc \
     		   include/GLC_AbstractManipulator \
     		   include/GLC_PullManipulator \
-    		   include/GLC_RotationManipulator
+    		   include/GLC_RotationManipulator \
+    		   include/GLC_FlyMover
     		   
     			   
 # Linux install configuration
