@@ -76,7 +76,7 @@ void GLC_TrackBallMover::init(int x, int y)
 }
 
 // Move the camera
-void GLC_TrackBallMover::move(int x, int y)
+bool GLC_TrackBallMover::move(int x, int y)
 {
 	const GLC_Vector3d VectCurOrbit(mapForTracking(static_cast<double>(x), static_cast<double>(y)));
 
@@ -89,6 +89,8 @@ void GLC_TrackBallMover::move(int x, int y)
 
 	// Previous vector become current vector
 	GLC_Mover::m_PreviousVector = VectCurOrbit;
+
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////

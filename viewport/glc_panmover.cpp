@@ -69,7 +69,7 @@ void GLC_PanMover::init(int x, int y)
 }
 
 // Move the camera
-void GLC_PanMover::move(int x, int y)
+bool GLC_PanMover::move(int x, int y)
 {
 	const GLC_Vector3d VectCur(m_pViewport->mapPosMouse(static_cast<double>(x), static_cast<double>(y)));
 	const GLC_Vector3d VectPan= VectCur - m_PreviousVector;	// moving Vector
@@ -77,5 +77,6 @@ void GLC_PanMover::move(int x, int y)
 	// Pan the camera
 	m_pViewport->cameraHandle()->pan(-VectPan);
 	m_PreviousVector= VectCur;
+	return true;
 }
 

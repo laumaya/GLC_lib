@@ -69,7 +69,7 @@ public:
 	virtual void init(int, int);
 
 	//! Move the camera
-	virtual void move(int, int);
+	virtual bool move(int, int);
 
 	//! Set the maximum zoom factor
 	inline void setMaxZoomFactor(const double factor)

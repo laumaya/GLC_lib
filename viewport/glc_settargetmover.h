@@ -63,7 +63,7 @@ public:
 	virtual void init(int, int);
 
 	//! Move the camera
-	virtual void move(int, int){}
+	virtual bool move(int, int){return true;}
 //@}
 
 };

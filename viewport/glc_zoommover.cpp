@@ -70,7 +70,7 @@ void GLC_ZoomMover::init(int, int y)
 }
 
 // Move the camera
-void GLC_ZoomMover::move(int, int y)
+bool GLC_ZoomMover::move(int, int y)
 {
 	// Change origine (View Center) and cover (from -1 to 1)
 	const double vSize= static_cast<double>(m_pViewport->viewVSize());
@@ -91,4 +91,6 @@ void GLC_ZoomMover::move(int, int y)
 	m_pViewport->cameraHandle()->zoom(ZoomFactor);
 
 	m_PreviousVector.setY(Posy);
+
+	return true;
 }

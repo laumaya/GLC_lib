@@ -83,7 +83,7 @@ void GLC_TurnTableMover::init(int x, int y)
 }
 
 
-void GLC_TurnTableMover::move(int x, int y)
+bool GLC_TurnTableMover::move(int x, int y)
 {
 	GLC_Camera* pCamera= GLC_Mover::m_pViewport->cameraHandle();
 	// Turn table rotation
@@ -107,4 +107,5 @@ void GLC_TurnTableMover::move(int x, int y)
 
 	m_PreviousVector.setVect(static_cast<double>(x), static_cast<double>(y), 0.0);
 
+	return true;
 }
