@@ -29,14 +29,20 @@
 
 GLC_FlyMover::GLC_FlyMover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>& repsList)
 : GLC_Mover(pViewport, repsList)
-, m_MaxAngle(glc::toRadian(2.0))
+, m_TurnRate(glc::toRadian(6))
+, m_TimerId(0)
+, m_TimerInterval(66)
+, m_Velocity(1.0)
 {
 
 }
 
 GLC_FlyMover::GLC_FlyMover(const GLC_FlyMover& flyMover)
 : GLC_Mover(flyMover)
-, m_MaxAngle(flyMover.m_MaxAngle)
+, m_TurnRate(flyMover.m_TurnRate)
+, m_TimerId(0)
+, m_TimerInterval(flyMover.m_TimerInterval)
+, m_Velocity(flyMover.m_Velocity)
 {
 
 }
@@ -63,11 +69,76 @@ GLC_Mover* GLC_FlyMover::clone() const
 void GLC_FlyMover::init(int x, int y)
 {
 	m_PreviousVector= mapForFlying(static_cast<double>(x), static_cast<double>(y));
+	GLC_Point3d point= m_pViewport->unProject(x, y);
+	const double distance= (point - m_pViewport->cameraHandle()->eye()).length();
+	qDebug() << "Distance = " << distance;
+	// 5 secondes to travel
+	m_Velocity= distance / 5000;
+	// Start the timer
+	m_TimerId= QObject::startTimer(m_TimerInterval);
 }
 
-void GLC_FlyMover::move(int x, int y)
+bool GLC_FlyMover::move(int x, int y)
 {
 	m_PreviousVector= mapForFlying(static_cast<double>(x), static_cast<double>(y));
+	//fly();
+	return false;
+}
+void GLC_FlyMover::ends()
+{
+	qDebug() << "GLC_FlyMover::ends";
+	QObject::killTimer(m_TimerId);
+	m_TimerId= 0;
+}
+
+void GLC_FlyMover::timerEvent(QTimerEvent*)
+{
+	//qDebug() << "GLC_FlyMover::timerEvent";
+	fly();
+	GLC_Vector3d direction(m_pViewport->cameraHandle()->forward());
+	direction.normalize();
+	direction= direction * m_Velocity * m_TimerInterval;
+	const GLC_Matrix4x4 translation(direction);
+	m_pViewport->cameraHandle()->move(translation);
+
+	emit updated();
+}
+
+GLC_Vector3d GLC_FlyMover::mapForFlying(double x, double y)
+{
+	double AspectRatio;
+	const double winHSize= static_cast<double>(GLC_Mover::m_pViewport->viewHSize());
+	const double winVSize= static_cast<double>(GLC_Mover::m_pViewport->viewVSize());
+
+
+	// Change origin and cover
+	if (winHSize < winVSize)
+	{
+		AspectRatio= winVSize / winHSize;
+		x= ( (x - winHSize  / 2.0 ) / ( winHSize / 2.0) ) / AspectRatio;
+		y= ( ( winVSize / 2.0 - y) / ( winVSize / 2.0 ) );
+	}
+	else
+	{
+		AspectRatio= winHSize / winVSize;
+		x= ( (x - winHSize  / 2.0 ) / ( winHSize / 2.0) );
+		y= ( (winVSize / 2.0 - y) / (winVSize / 2.0 ) ) / AspectRatio;
+	}
+
+	GLC_Vector3d pos(x, y, 0.0);
+
+	if (pos.length() > 1.0)
+	{
+		pos.normalize();
+	}
+
+	double z= -cos(m_TurnRate) / sin(m_TurnRate);
+	pos.setZ(z);
+	pos.normalize();
+	return pos;
+}
+void GLC_FlyMover::fly()
+{
 	const GLC_Matrix4x4 viewMatrix(m_pViewport->cameraHandle()->viewMatrix());
 	const GLC_Vector3d newPos= viewMatrix.inverted() * m_PreviousVector;
 	const GLC_Vector3d forward(GLC_Vector3d(m_pViewport->cameraHandle()->forward()).normalize());
@@ -84,38 +155,3 @@ void GLC_FlyMover::move(int x, int y)
 		m_pViewport->cameraHandle()->move(composition);
 	}
 }
-
-GLC_Vector3d GLC_FlyMover::mapForFlying(double x, double y)
-{
-	double AspectRatio;
-	const double winHSize= static_cast<double>(GLC_Mover::m_pViewport->viewHSize());
-	const double winVSize= static_cast<double>(GLC_Mover::m_pViewport->viewVSize());
-
-
-	// Change origine and cover
-	if (winHSize < winVSize)
-	{
-		AspectRatio= winVSize / winHSize;
-		x= ( (x - winHSize  / 2.0 ) / ( winHSize / 2.0) );
-		y= AspectRatio * ( ( winVSize / 2.0 - y) / ( winVSize / 2.0 ) );
-	}
-	else
-	{
-		AspectRatio= winHSize / winVSize;
-		x= AspectRatio * ( (x - winHSize  / 2.0 ) / ( winHSize / 2.0) );
-		y= ( (winVSize / 2.0 - y) / (winVSize / 2.0 ) );
-	}
-
-	GLC_Vector3d pos(x, y, 0.0);
-	if (pos.length() > 1.0)
-	{
-		pos.normalize();
-	}
-
-	double z= -cos(m_MaxAngle) / sin(m_MaxAngle);
-	pos.setZ(z);
-	pos.normalize();
-
-	return pos;
-}
-

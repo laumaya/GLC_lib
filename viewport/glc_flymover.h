@@ -57,6 +57,14 @@ public:
 public:
 	//! Return a clone of the mover
 	virtual GLC_Mover* clone() const;
+
+	//! Return the turning rate in degres
+	inline double turningRate() const
+	{return m_TurnRate / glc::PI * 180.0;}
+
+	//! Return the flying velocity
+	inline double flyingVelocity() const
+	{return m_Velocity;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -68,9 +76,27 @@ public:
 	virtual void init(int, int);
 
 	//! Move the camera
-	virtual void move(int, int);
+	virtual bool move(int, int);
+
+	//! Ends this mover
+	virtual void ends();
+
+	//! Set the maximum turning rate in degre
+	inline void setMaximumTurnRate(double turnRate)
+	{m_TurnRate= turnRate;}
+
+	//! Set the flying velocity
+	inline void setFlyingVelocity(double velocity)
+	{m_Velocity= velocity;}
+
+	//! increase the flying velocity
+	inline void increaseVelocity(double factor)
+	{m_Velocity*= factor;}
 
 //@}
+
+protected:
+    void timerEvent(QTimerEvent*);
 
 /////////////////////////////////////////////////////////////////////
 // Private services Functions
@@ -79,12 +105,25 @@ private:
 	//! Map the position of mouse for the fly mode
 	GLC_Vector3d mapForFlying(double x, double y);
 
+	//! Fly
+	void fly();
+
 //////////////////////////////////////////////////////////////////////
 // Private Members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Maximum angle
-	double m_MaxAngle;
+	//! THe turning rate
+	double m_TurnRate;
+
+	//! The timer id
+	int m_TimerId;
+
+	//! the timer interval
+	int m_TimerInterval;
+
+	//! fly velocity
+	double m_Velocity;
+
 };
 
 #endif /* GLC_FLYMOVER_H_ */
