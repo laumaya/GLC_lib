@@ -78,7 +78,6 @@ void GLC_RepFlyMover::setMainColor(const QColor& color)
 
 void GLC_RepFlyMover::glDraw()
 {
-	qDebug() << "GLC_RepFlyMover::glDraw()";
 	const double aspectRatio= static_cast<double>(m_pViewport->viewHSize())/static_cast<double>(m_pViewport->viewVSize());
 
 	glDisable(GL_DEPTH_TEST);
