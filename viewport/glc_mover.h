@@ -73,7 +73,10 @@ public:
 	virtual void init(int, int)= 0;
 
 	//! Move the camera
-	virtual void move(int, int)= 0;
+	virtual bool move(int, int)= 0;
+
+	//! Ends this mover
+	virtual void ends(){};
 
 	//! Set the mover representation list
 	void setRepresentationsList(const QList<GLC_RepMover*>&);
@@ -96,6 +99,10 @@ public:
 	void glExecute();
 
 //@}
+
+signals:
+	//! Signal sent if the view as been updated
+	void updated();
 
 //////////////////////////////////////////////////////////////////////
 // Private services Functions
