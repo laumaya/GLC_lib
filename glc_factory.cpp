@@ -40,6 +40,7 @@
 #include "viewport/glc_repcrossmover.h"
 #include "viewport/glc_reptrackballmover.h"
 #include "viewport/glc_flymover.h"
+#include "viewport/glc_repflymover.h"
 #include "maths/glc_line3d.h"
 #include "maths/glc_geomtools.h"
 
@@ -386,8 +387,13 @@ GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& colo
 	//////////////////////////////////////////////////////////////////////
 	// Fly Mover
 	//////////////////////////////////////////////////////////////////////
+	// Copy the track ball Mover representation
+	listOfRep.clear();
+	pRepMover= new GLC_RepFlyMover(pViewport);
+	pRepMover->setMainColor(color);
+	listOfRep.append(pRepMover);
 	// Create the fly mover
-	pMover= new GLC_FlyMover(pViewport);
+	pMover= new GLC_FlyMover(pViewport, listOfRep);
 	// Add the fly mover to the controller
 	defaultController.addMover(pMover, GLC_MoverController::Fly);
 
