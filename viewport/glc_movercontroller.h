@@ -28,6 +28,7 @@
 #define GLC_MOVERCONTROLLER_H_
 
 #include "glc_mover.h"
+#include <QObject>
 #include <QHash>
 #include <QtDebug>
 
@@ -37,8 +38,9 @@
 //! \class GLC_MoverController
 /*! \brief GLC_MoverController : Control activation of interactive manipulation mover */
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_MoverController
+class GLC_LIB_EXPORT GLC_MoverController : public QObject
 {
+	Q_OBJECT
 public:
 	//! The mover hash table
 	typedef QHash<const int, GLC_Mover*> MoverHash;
@@ -95,22 +97,16 @@ public:
 	void removeMover(const int);
 
 	//! Set the specified mover as active
-	inline void setActiveMover(const int id, int x, int y)
-	{
-		Q_ASSERT(m_MoverHash.contains(id));
-		m_ActiveMoverId= id;
-		m_MoverHash.value(m_ActiveMoverId)->init(x, y);
-	}
+	void setActiveMover(const int id, int x, int y);
 
 	//! Set no mover as active
-	inline void setNoMover()
-	{ m_ActiveMoverId= 0;}
+	void setNoMover();
 
 	//! Move with the active mover
-	inline void move(int x, int y)
+	inline bool move(int x, int y)
 	{
 		Q_ASSERT(0 != m_ActiveMoverId);
-		m_MoverHash.value(m_ActiveMoverId)->move(x, y);
+		return m_MoverHash.value(m_ActiveMoverId)->move(x, y);
 	}
 
 //@}
@@ -130,6 +126,9 @@ public:
 	}
 
 //@}
+signals:
+	//! Signal emitted if the view as to be repaint
+	void repaintNeeded();
 
 //////////////////////////////////////////////////////////////////////
 // Private Members
