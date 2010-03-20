@@ -76,7 +76,7 @@ public:
 	//! Init the representation
 	virtual void init(const GLC_Vector3d&, const GLC_Matrix4x4&){}
 
-	//! Init the representation
+	//! Update the representation
 	virtual void update(const GLC_Matrix4x4&){}
 
 //@}
