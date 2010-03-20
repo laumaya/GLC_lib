@@ -22,6 +22,8 @@
 
  *****************************************************************************/
 
+//! \file glc_reptrackballmover.cpp Implementation of the GLC_RepTrackBallMover class.
+
 #include "glc_reptrackballmover.h"
 #include "glc_viewport.h"
 #include "../glc_factory.h"

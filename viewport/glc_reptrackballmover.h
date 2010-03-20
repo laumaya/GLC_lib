@@ -21,6 +21,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
+//! \file glc_reptrackballmover.h Interface for the GLC_RepTrackBallMover class.
 
 #ifndef GLC_REPTRACKBALLMOVER_H_
 #define GLC_REPTRACKBALLMOVER_H_
@@ -30,8 +31,6 @@
 #include "../sceneGraph/glc_3dviewinstance.h"
 
 #include "../glc_config.h"
-
-class GLC_Factory;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_RepTrackBallMover
