@@ -159,6 +159,9 @@ public:
 	//! Force the aspect ratio of this viewport
 	void forceAspectRatio(double);
 
+	//! Update the aspect ratio of this viewport
+	void updateAspectRatio();
+
 	//! Return the frustum associated to this viewport
 	const GLC_Frustum& frustum() const
 	{return m_Frustum;}
@@ -319,6 +322,9 @@ private:
 	// OpenGL View Definition
 	int m_nWinHSize;			//!< Horizontal OpenGL viewport size
 	int m_nWinVSize;			//!< Vertical OpenGL viewport size
+
+	//! View AspectRatio
+	double m_AspectRatio;
 
 	//! The QGLWidget attached to the viewport (rendering context)
 	QGLWidget* m_pQGLWidget;

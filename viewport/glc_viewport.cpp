@@ -50,6 +50,7 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // OpenGL Window size
 , m_nWinHSize(0)				// Horizontal OpenGL viewport size
 , m_nWinVSize(0)				// Vertical OpenGL viewport size
+, m_AspectRatio(1.0)
 , m_pQGLWidget(GLWidget)		// Attached QGLWidget
 // the default backgroundColor
 , m_BackgroundColor(Qt::black)
@@ -137,14 +138,11 @@ void GLC_Viewport::updateProjectionMat(void)
 	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
 
-	// Calculate The Aspect Ratio Of The Window
-	double AspectRatio;
-	AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
 	if (m_UseOrtho)
 	{
 		const double ChampsVision = m_pViewCam->distEyeTarget() * m_ViewTangent;
 		const double height= ChampsVision;
-		const double with= ChampsVision * AspectRatio;
+		const double with= ChampsVision * m_AspectRatio;
 		const double left= -with * 0.5;
 		const double right=  -left;
 		const double bottom= - height * 0.5;
@@ -153,7 +151,7 @@ void GLC_Viewport::updateProjectionMat(void)
 	}
 	else
 	{
-		gluPerspective(m_dFov, AspectRatio, m_dCamDistMin, m_dCamDistMax);
+		gluPerspective(m_dFov, m_AspectRatio, m_dCamDistMin, m_dCamDistMax);
 	}
 
 	// Save the projection matrix
@@ -165,32 +163,15 @@ void GLC_Viewport::updateProjectionMat(void)
 
 void GLC_Viewport::forceAspectRatio(double ratio)
 {
-	// Make opengl context attached the current One
-	m_pQGLWidget->makeCurrent();
-
-	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
-
-	if (m_UseOrtho)
-	{
-		const double ChampsVision = m_pViewCam->distEyeTarget() * m_ViewTangent;
-		const double height= ChampsVision;
-		const double with= ChampsVision * ratio;
-		const double left= -with * 0.5;
-		const double right=  -left;
-		const double bottom= - height * 0.5;
-		const double top= -bottom;
-		glOrtho(left, right, bottom, top, m_dCamDistMin, m_dCamDistMax);
-	}
-	else
-	{
-		gluPerspective(m_dFov, ratio, m_dCamDistMin, m_dCamDistMax);
-	}
-
-	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
-	glLoadIdentity();									// Reset The Modelview Matrix
+	m_AspectRatio= ratio;
+	updateProjectionMat();
 }
 
+void GLC_Viewport::updateAspectRatio()
+{
+	// Update The Aspect Ratio Of The Window
+	m_AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
+}
 GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
 {
 	const int halfSize= m_SelectionSquareSize / 2;
@@ -313,6 +294,8 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 	}
 
 	glViewport(0,0,m_nWinHSize,m_nWinVSize);			// Reset The Current Viewport
+
+	updateAspectRatio();
 
 	updateProjectionMat();
 
