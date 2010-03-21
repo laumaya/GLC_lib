@@ -37,6 +37,7 @@ GLC_ImagePlane::GLC_ImagePlane(const QGLContext *pContext, const QString& ImageN
 : m_Material()
 {
 	GLC_Texture* pImgTexture= GLC_Factory::instance(pContext)->createTexture(ImageName);
+	pImgTexture->setMaxTextureSize(pImgTexture->imageOfTexture().size());
 	m_Material.setTexture(pImgTexture);
 }
 
@@ -44,6 +45,7 @@ GLC_ImagePlane::GLC_ImagePlane(const QGLContext *pContext, const QImage& image)
 : m_Material()
 {
 	GLC_Texture* pImgTexture= GLC_Factory::instance(pContext)->createTexture(image);
+	pImgTexture->setMaxTextureSize(image.size());
 	m_Material.setTexture(pImgTexture);
 }
 
