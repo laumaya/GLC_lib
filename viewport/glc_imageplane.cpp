@@ -68,6 +68,7 @@ void GLC_ImagePlane::render()
 	glPushMatrix();
 	glLoadIdentity();
 
+	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
