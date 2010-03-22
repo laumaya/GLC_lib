@@ -545,7 +545,7 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	double cameraCover= box.boundingSphereRadius() * 2.0;
 
 	// Compute Camera distance
-	const double distance = cameraCover / (2.0 * tan((m_dFov * PI / 180.0) / 2.0));
+	const double distance = cameraCover / m_ViewTangent;
 
 	// Update Camera position
 	m_pViewCam->setDistEyeTarget(distance);
