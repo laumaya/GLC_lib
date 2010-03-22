@@ -80,6 +80,10 @@ public:
 	inline int activeMoverId() const
 	{return m_ActiveMoverId;}
 
+	//! Return a handle on the current mover
+	inline GLC_Mover* activeMover() const
+	{return m_MoverHash.value(m_ActiveMoverId);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
