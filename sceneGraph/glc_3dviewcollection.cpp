@@ -637,7 +637,6 @@ GLC_BoundingBox GLC_3DViewCollection::boundingBox(void)
 	else if (NULL == m_pBoundingBox)
 	{
 		// The collection is empty and m_pBoundingBox == NULL
-		delete m_pBoundingBox;
 		m_pBoundingBox= new GLC_BoundingBox();
 	}
 
