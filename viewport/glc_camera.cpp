@@ -298,6 +298,15 @@ GLC_Camera& GLC_Camera::setDistEyeTarget(double Longueur)
 
     return *this;
 }
+GLC_Camera& GLC_Camera::setDistTargetEye(double Longueur)
+{
+    GLC_Vector3d VectCam(forward());
+    VectCam.setLenght(Longueur);
+    m_Target= m_Eye + VectCam;
+
+    return *this;
+}
+
 // Assignment operator
 GLC_Camera &GLC_Camera::operator=(const GLC_Camera& cam)
 {

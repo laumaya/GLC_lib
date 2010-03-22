@@ -187,6 +187,9 @@ public:
 	//! Set the distance between eye and target (move eye)
 	GLC_Camera& setDistEyeTarget(double Longueur);
 
+	//! Set the distance between target and eye (move target)
+	GLC_Camera& setDistTargetEye(double Longueur);
+
 	//! Assignement operator
 	GLC_Camera& operator=(const GLC_Camera&);
 
