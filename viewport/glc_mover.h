@@ -76,7 +76,7 @@ public:
 	virtual bool move(int, int)= 0;
 
 	//! Ends this mover
-	virtual void ends(){};
+	virtual void ends(){}
 
 	//! Set the mover representation list
 	void setRepresentationsList(const QList<GLC_RepMover*>&);
