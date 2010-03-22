@@ -26,17 +26,21 @@
 
 #include "glc_repflymover.h"
 #include "glc_viewport.h"
+#include "../geometry/glc_polylines.h"
 
 GLC_RepFlyMover::GLC_RepFlyMover(GLC_Viewport* pViewport)
 : GLC_RepMover(pViewport)
-, m_Radius(0.05)
+, m_Radius(0.06)
 , m_CenterCircle(m_Radius)
-, m_Opacity(100)
+, m_Opacity(220)
+, m_Plane()
 {
 	m_MainColor.setAlpha(m_Opacity);
 
-	m_CenterCircle.setLineWidth(1.5);
+	//m_CenterCircle.setLineWidth(1.5);
 	m_CenterCircle.setWireColor(m_MainColor);
+
+	createPlaneRepresentation();
 }
 
 GLC_RepFlyMover::GLC_RepFlyMover(const GLC_RepFlyMover& repFlyMover)
@@ -44,7 +48,7 @@ GLC_RepFlyMover::GLC_RepFlyMover(const GLC_RepFlyMover& repFlyMover)
 , m_Radius(repFlyMover.m_Radius)
 , m_CenterCircle(repFlyMover.m_CenterCircle)
 , m_Opacity(repFlyMover.m_Opacity)
-
+, m_Plane(repFlyMover.m_Plane)
 {
 
 }
@@ -59,26 +63,32 @@ GLC_RepMover* GLC_RepFlyMover::clone() const
 	return new GLC_RepFlyMover(*this);
 }
 
-void GLC_RepFlyMover::init(const GLC_Vector3d& vector, const GLC_Matrix4x4& matrix)
-{
-
-}
-
 void GLC_RepFlyMover::update(const GLC_Matrix4x4& matrix)
 {
+	// Rotation
+	double deltaX= matrix.data()[12];
+	double angle= - deltaX;
+	GLC_Matrix4x4 rotation(glc::Z_AXIS, angle);
 
+	// Translation
+	GLC_Matrix4x4 translation(matrix);
+	translation.data()[12]*= m_Radius * 4.0;
+	translation.data()[13]*= m_Radius * 4.0;
+
+	m_Plane.setMatrix(translation * rotation);
 }
 void GLC_RepFlyMover::setMainColor(const QColor& color)
 {
 	GLC_RepMover::setMainColor(color);
 	m_MainColor.setAlpha(m_Opacity);
 	m_CenterCircle.setWireColor(GLC_RepMover::m_MainColor);
+	m_Plane.geomAt(0)->setWireColor(GLC_RepMover::m_MainColor);
 
 }
 
 void GLC_RepFlyMover::glDraw()
 {
-	const double aspectRatio= static_cast<double>(m_pViewport->viewHSize())/static_cast<double>(m_pViewport->viewVSize());
+	const double aspectRatio= m_pViewport->aspectRatio();
 
 	glDisable(GL_DEPTH_TEST);
 
@@ -94,12 +104,28 @@ void GLC_RepFlyMover::glDraw()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	m_RenderProperties.setRenderingFlag(glc::TransparentRenderFlag);
 	m_CenterCircle.render(m_RenderProperties);
-
+	m_Plane.render(glc::TransparentRenderFlag);
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 
 	glEnable(GL_DEPTH_TEST);
+}
 
+void GLC_RepFlyMover::createPlaneRepresentation()
+{
+	GLC_Polylines* pPolylines= new GLC_Polylines();
+	GLfloatVector points;
+	const double l1= m_Radius * 1.5;
+	points << (-m_Radius - l1) << -m_Radius << 0.0;
+	points << -m_Radius << -m_Radius << 0.0;
+	points << 0.0 << 0.0 << 0.0;
+	points << m_Radius << -m_Radius << 0.0;
+	points << (m_Radius + l1) << -m_Radius << 0.0;
+	pPolylines->addPolyline(points);
+	pPolylines->setWireColor(GLC_RepMover::m_MainColor);
+	//pPolylines->setLineWidth(1.5);
+
+	m_Plane.setGeometry(pPolylines);
 }

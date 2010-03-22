@@ -67,9 +67,6 @@ public:
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-	//! Init the representation
-	virtual void init(const GLC_Vector3d&, const GLC_Matrix4x4&);
-
 	//! Update the representation
 	virtual void update(const GLC_Matrix4x4&);
 
@@ -93,7 +90,8 @@ public:
 // Private services Functions
 //////////////////////////////////////////////////////////////////////
 private:
-
+	//! Create the plane representation
+	void createPlaneRepresentation();
 
 //////////////////////////////////////////////////////////////////////
 // Private Members
@@ -107,6 +105,9 @@ private:
 
 	//! Opacity
 	double m_Opacity;
+
+	//! Plane
+	GLC_3DViewInstance m_Plane;
 };
 
 #endif /* GLC_REPFLYMOVER_H_ */
