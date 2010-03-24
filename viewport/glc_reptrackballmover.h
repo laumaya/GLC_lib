@@ -64,10 +64,10 @@ public:
 public:
 
 	//! Set Arcs orientation and position in concordance with mouse position
-	virtual void init(const GLC_Vector3d& VectAngle, const GLC_Matrix4x4 &Matrice);
+	virtual void init();
 
 	//! Set Arcs position in concordance with mouse position
-	virtual void update(const GLC_Matrix4x4 &Matrice);
+	virtual void update();
 
 	//! Set representation main color
 	virtual void setMainColor(const QColor& color);

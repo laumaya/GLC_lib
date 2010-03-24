@@ -34,6 +34,9 @@
 
 #include "../glc_config.h"
 
+class QGLWidget;
+class QMouseEvent;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_MoverController
 /*! \brief GLC_MoverController : Control activation of interactive manipulation mover */
@@ -101,16 +104,16 @@ public:
 	void removeMover(const int);
 
 	//! Set the specified mover as active
-	void setActiveMover(const int id, int x, int y);
+	void setActiveMover(const int id, QMouseEvent * e);
 
 	//! Set no mover as active
 	void setNoMover();
 
 	//! Move with the active mover
-	inline bool move(int x, int y)
+	inline bool move(QMouseEvent * e)
 	{
 		Q_ASSERT(0 != m_ActiveMoverId);
-		return m_MoverHash.value(m_ActiveMoverId)->move(x, y);
+		return m_MoverHash.value(m_ActiveMoverId)->move(e);
 	}
 
 //@}

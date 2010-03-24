@@ -32,6 +32,7 @@ GLC_RepMover::GLC_RepMover(GLC_Viewport* pViewport)
 : m_pViewport(pViewport)
 , m_MainColor(Qt::black)
 , m_RenderProperties()
+, m_pRepMoverInfo(NULL)
 {
 
 }
@@ -40,6 +41,7 @@ GLC_RepMover::GLC_RepMover(const GLC_RepMover& repMover)
 : m_pViewport(repMover.m_pViewport)
 , m_MainColor(repMover.m_MainColor)
 , m_RenderProperties(repMover.m_RenderProperties)
+, m_pRepMoverInfo(repMover.m_pRepMoverInfo)
 {
 
 }
@@ -48,6 +50,12 @@ GLC_RepMover::GLC_RepMover(const GLC_RepMover& repMover)
 GLC_RepMover::~GLC_RepMover()
 {
 
+}
+
+void GLC_RepMover::setRepMoverInfo(RepMoverInfo* pRepMoverInfo)
+{
+	qDebug() << "GLC_RepMover::setRepMoverInfo";
+	m_pRepMoverInfo= pRepMoverInfo;
 }
 
 //////////////////////////////////////////////////////////////////////

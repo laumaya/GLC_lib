@@ -68,7 +68,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 	//! Update the representation
-	virtual void update(const GLC_Matrix4x4&);
+	virtual void update();
 
 	//! Set representation main color
 	virtual void setMainColor(const QColor& color);
@@ -91,7 +91,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Create the plane representation
-	void createPlaneRepresentation();
+	void createRepresentation();
 
 //////////////////////////////////////////////////////////////////////
 // Private Members
@@ -108,6 +108,12 @@ private:
 
 	//! Plane
 	GLC_3DViewInstance m_Plane;
+
+	//! HUD
+	GLC_3DViewInstance m_Hud;
+
+	//! HUD offset
+	GLC_Vector2d m_HudOffset;
 };
 
 #endif /* GLC_REPFLYMOVER_H_ */

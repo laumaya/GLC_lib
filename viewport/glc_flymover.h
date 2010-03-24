@@ -73,10 +73,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Initialized the mover
-	virtual void init(int, int);
+	virtual void init(QMouseEvent * e);
 
 	//! Move the camera
-	virtual bool move(int, int);
+	virtual bool move(QMouseEvent * e);
 
 	//! Ends this mover
 	virtual void ends();
@@ -86,12 +86,10 @@ public:
 	{m_TurnRate= turnRate;}
 
 	//! Set the flying velocity
-	inline void setFlyingVelocity(double velocity)
-	{m_Velocity= velocity;}
+	void setFlyingVelocity(double velocity);
 
 	//! increase the flying velocity
-	inline void increaseVelocity(double factor)
-	{m_Velocity*= factor;}
+	void increaseVelocity(double factor);
 
 //@}
 

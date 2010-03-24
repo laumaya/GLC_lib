@@ -31,7 +31,8 @@ GLC_TrackBallMover::GLC_TrackBallMover(GLC_Viewport* pViewport, const QList<GLC_
 : GLC_Mover(pViewport, repsList)
 , m_Ratio(0.95)
 {
-
+	GLC_Mover::m_MoverInfo.m_MatrixInfo.append(GLC_Matrix4x4());
+	GLC_Mover::m_MoverInfo.m_VectorInfo.append(GLC_Vector3d());
 }
 
 // Copy constructor
@@ -62,30 +63,34 @@ GLC_Mover* GLC_TrackBallMover::clone() const
 //////////////////////////////////////////////////////////////////////
 
 // Initialized the mover
-void GLC_TrackBallMover::init(int x, int y)
+void GLC_TrackBallMover::init(QMouseEvent * e)
 {
-	GLC_Mover::m_PreviousVector.setVect(mapForTracking(static_cast<double>(x), static_cast<double>(y)));
+	GLC_Mover::m_PreviousVector.setVect(mapForTracking(static_cast<double>(e->x()), static_cast<double>(e->y())));
 
 	const double Angle= acos(glc::Z_AXIS * GLC_Mover::m_PreviousVector);
 	const GLC_Vector3d AxeRot(glc::Z_AXIS ^ GLC_Mover::m_PreviousVector);
 
 	GLC_Matrix4x4 Matrice(AxeRot, Angle);
 
+	GLC_Mover::m_MoverInfo.m_MatrixInfo.first()= Matrice;
+	GLC_Mover::m_MoverInfo.m_VectorInfo.first()= GLC_Mover::m_PreviousVector;
 	// Update trackball representations
-	initRepresentation(GLC_Mover::m_PreviousVector, Matrice);
+	initRepresentation();
 }
 
 // Move the camera
-bool GLC_TrackBallMover::move(int x, int y)
+bool GLC_TrackBallMover::move(QMouseEvent * e)
 {
-	const GLC_Vector3d VectCurOrbit(mapForTracking(static_cast<double>(x), static_cast<double>(y)));
+	const GLC_Vector3d VectCurOrbit(mapForTracking(static_cast<double>(e->x()), static_cast<double>(e->y())));
 
 	// Update camera position (orbit)
 	GLC_Mover::m_pViewport->cameraHandle()->orbit(GLC_Mover::m_PreviousVector, VectCurOrbit);
 
 	// Update arcs of circle's positionning matrix
 	const GLC_Matrix4x4 MatRot(GLC_Mover::m_PreviousVector, VectCurOrbit);
-	updateRepresentation(MatRot);
+
+	GLC_Mover::m_MoverInfo.m_MatrixInfo.first()= MatRot;
+	updateRepresentation();
 
 	// Previous vector become current vector
 	GLC_Mover::m_PreviousVector = VectCurOrbit;

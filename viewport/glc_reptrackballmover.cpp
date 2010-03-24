@@ -96,9 +96,13 @@ GLC_RepMover* GLC_RepTrackBallMover::clone() const
 //////////////////////////////////////////////////////////////////////
 
 // Set Arcs orientation and position in concordance with mouse position
-void GLC_RepTrackBallMover::init(const GLC_Vector3d& vect, const GLC_Matrix4x4 &Matrice)
+void GLC_RepTrackBallMover::init()
 {
-	GLC_Vector3d VectAngle(vect);
+	Q_ASSERT(NULL != m_pRepMoverInfo);
+	Q_ASSERT(!m_pRepMoverInfo->m_VectorInfo.isEmpty());
+	Q_ASSERT(!m_pRepMoverInfo->m_MatrixInfo.isEmpty());
+
+	GLC_Vector3d VectAngle(m_pRepMoverInfo->m_VectorInfo.first());
 	VectAngle.setZ(0);
 	VectAngle.setLenght(1);
 
@@ -118,17 +122,20 @@ void GLC_RepTrackBallMover::init(const GLC_Vector3d& vect, const GLC_Matrix4x4 &
 	}
 
 	// Composition of orientation matrix and mapping matrix
-	MatRot= Matrice * MatRot;
+	MatRot= m_pRepMoverInfo->m_MatrixInfo.first() * MatRot;
 
 	m_Arc1.setMatrix(MatRot * m_MatArc1);
 	m_Arc2.setMatrix(MatRot * m_MatArc2);
 }
 
 // Set Arcs position in concordance with mouse position
-void GLC_RepTrackBallMover::update(const GLC_Matrix4x4 &Matrice)
+void GLC_RepTrackBallMover::update()
 {
-	m_Arc1.multMatrix(Matrice);
-	m_Arc2.multMatrix(Matrice);
+	Q_ASSERT(NULL != m_pRepMoverInfo);
+	Q_ASSERT(!m_pRepMoverInfo->m_MatrixInfo.isEmpty());
+	const GLC_Matrix4x4 matrix(m_pRepMoverInfo->m_MatrixInfo.first());
+	m_Arc1.multMatrix(matrix);
+	m_Arc2.multMatrix(matrix);
 }
 
 // overload function setColor(color);

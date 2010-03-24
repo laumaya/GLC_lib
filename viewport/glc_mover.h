@@ -35,6 +35,7 @@
 
 #include "../glc_config.h"
 
+class QMouseEvent;
 class GLC_Viewport;
 
 //////////////////////////////////////////////////////////////////////
@@ -44,6 +45,7 @@ class GLC_Viewport;
 class GLC_LIB_EXPORT GLC_Mover : public QObject
 {
 	Q_OBJECT
+
 public:
 	//! Default constructor
 	GLC_Mover(GLC_Viewport*, const QList<GLC_RepMover*>&);
@@ -70,10 +72,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Initialized the mover
-	virtual void init(int, int)= 0;
+	virtual void init(QMouseEvent * e)= 0;
 
 	//! Move the camera
-	virtual bool move(int, int)= 0;
+	virtual bool move(QMouseEvent * e)= 0;
 
 	//! Ends this mover
 	virtual void ends(){}
@@ -82,10 +84,10 @@ public:
 	void setRepresentationsList(const QList<GLC_RepMover*>&);
 
 	//! Init representation
-	void initRepresentation(const GLC_Vector3d&, const GLC_Matrix4x4&);
+	void initRepresentation();
 
 	//! Update representation
-	void updateRepresentation(const GLC_Matrix4x4&);
+	void updateRepresentation();
 
 
 //@}
@@ -128,6 +130,9 @@ protected:
 
 	//! The Viewport
 	GLC_Viewport* m_pViewport;
+
+	//! The mover info (passed to the rep)
+	GLC_RepMover::RepMoverInfo m_MoverInfo;
 };
 
 #endif /* GLC_MOVER_H_ */

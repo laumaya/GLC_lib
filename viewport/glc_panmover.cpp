@@ -26,6 +26,7 @@
 
 #include "glc_panmover.h"
 #include "glc_viewport.h"
+#include "QMouseEvent"
 
 // Default constructor
 GLC_PanMover::GLC_PanMover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>& repsList)
@@ -63,15 +64,15 @@ GLC_Mover* GLC_PanMover::clone() const
 //////////////////////////////////////////////////////////////////////
 
 // Initialized the mover
-void GLC_PanMover::init(int x, int y)
+void GLC_PanMover::init(QMouseEvent * e)
 {
-	m_PreviousVector= m_pViewport->mapPosMouse(static_cast<double>(x), static_cast<double>(y));
+	m_PreviousVector= m_pViewport->mapPosMouse(static_cast<double>(e->x()), static_cast<double>(e->y()));
 }
 
 // Move the camera
-bool GLC_PanMover::move(int x, int y)
+bool GLC_PanMover::move(QMouseEvent * e)
 {
-	const GLC_Vector3d VectCur(m_pViewport->mapPosMouse(static_cast<double>(x), static_cast<double>(y)));
+	const GLC_Vector3d VectCur(m_pViewport->mapPosMouse(static_cast<double>(e->x()), static_cast<double>(e->y())));
 	const GLC_Vector3d VectPan= VectCur - m_PreviousVector;	// moving Vector
 
 	// Pan the camera

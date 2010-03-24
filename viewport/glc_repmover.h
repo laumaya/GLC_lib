@@ -42,6 +42,16 @@ class GLC_Viewport;
 class GLC_LIB_EXPORT GLC_RepMover
 {
 public:
+	struct RepMoverInfo
+	{
+		QVector<GLC_Matrix4x4> m_MatrixInfo;
+		QVector<GLC_Vector3d> m_VectorInfo;
+		QVector<double> m_DoubleInfo;
+		QVector<int> m_IntInfo;
+		QVector<QString> m_StringInfo;
+	};
+
+public:
 	//! Default constructor
 	GLC_RepMover(GLC_Viewport*);
 
@@ -74,10 +84,13 @@ public:
 	{m_MainColor= color;}
 
 	//! Init the representation
-	virtual void init(const GLC_Vector3d&, const GLC_Matrix4x4&){}
+	virtual void init(){}
 
 	//! Update the representation
-	virtual void update(const GLC_Matrix4x4&){}
+	virtual void update(){}
+
+	//! Set the repMoverInfo of this rep
+	void setRepMoverInfo(RepMoverInfo* pRepMoverInfo);
 
 //@}
 
@@ -106,6 +119,9 @@ protected:
 
 	//! The rep rendering properties
 	GLC_RenderProperties m_RenderProperties;
+
+	//! The repmover info of this rep
+	RepMoverInfo* m_pRepMoverInfo;
 };
 
 #endif /* GLC_REPMOVER_H_ */

@@ -28,24 +28,32 @@
 #include "glc_viewport.h"
 
 GLC_Mover::GLC_Mover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>& repsList)
-: m_RepMoverList(repsList)
+: QObject()
+, m_RepMoverList(repsList)
 , m_PreviousVector()
 , m_pViewport(pViewport)
+, m_MoverInfo()
 {
-
-
+	const int size= m_RepMoverList.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_RepMoverList[i]->setRepMoverInfo(&m_MoverInfo);
+	}
 }
 
 // Copy constructor
 GLC_Mover::GLC_Mover(const GLC_Mover& mover)
-: m_RepMoverList()
+: QObject()
+, m_RepMoverList()
 , m_PreviousVector(mover.m_PreviousVector)
 , m_pViewport(mover.m_pViewport)
+, m_MoverInfo(mover.m_MoverInfo)
 {
 	const int size= mover.m_RepMoverList.size();
 	for (int i= 0; i < size; ++i)
 	{
 		m_RepMoverList.append(mover.m_RepMoverList.at(i)->clone());
+		m_RepMoverList.last()->setRepMoverInfo(&m_MoverInfo);
 	}
 }
 
@@ -61,27 +69,33 @@ GLC_Mover::~GLC_Mover()
 // Set the mover representation list
 void GLC_Mover::setRepresentationsList(const QList<GLC_RepMover*>& listOfRep)
 {
+	qDebug() << "GLC_Mover::setRepresentationsList";
 	clearMoverRepresentation();
 	m_RepMoverList= listOfRep;
-}
-
-// Update representation
-void GLC_Mover::initRepresentation(const GLC_Vector3d& vector, const GLC_Matrix4x4& matrix)
-{
 	const int size= m_RepMoverList.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_RepMoverList[i]->init(vector, matrix);
+		m_RepMoverList[i]->setRepMoverInfo(&m_MoverInfo);
 	}
 }
 
 // Update representation
-void GLC_Mover::updateRepresentation(const GLC_Matrix4x4& matrix)
+void GLC_Mover::initRepresentation()
 {
 	const int size= m_RepMoverList.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_RepMoverList[i]->update(matrix);
+		m_RepMoverList[i]->init();
+	}
+}
+
+// Update representation
+void GLC_Mover::updateRepresentation()
+{
+	const int size= m_RepMoverList.size();
+	for (int i= 0; i < size; ++i)
+	{
+		m_RepMoverList[i]->update();
 	}
 
 }

@@ -60,10 +60,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Initialized the mover
-	virtual void init(int, int);
+	virtual void init(QMouseEvent * e);
 
 	//! Move the camera
-	virtual bool move(int, int){return true;}
+	virtual bool move(QMouseEvent *){return true;}
 //@}
 
 };

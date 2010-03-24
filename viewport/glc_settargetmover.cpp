@@ -62,23 +62,23 @@ GLC_Mover* GLC_SetTargetMover::clone() const
 //////////////////////////////////////////////////////////////////////
 
 // Initialized the mover
-void GLC_SetTargetMover::init(int x, int y)
+void GLC_SetTargetMover::init(QMouseEvent * e)
 {
 	// Z Buffer component of selected point between 0 and 1
 	GLfloat Depth;
 	// read selected point
-	glReadPixels(x, m_pViewport->viewVSize() - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
+	glReadPixels(e->x(), m_pViewport->viewVSize() - e->y() , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
 	// Test if there is geometry under picking point
 	if (!qFuzzyCompare(Depth, 1.0f))
 	{	// Geometry find -> Update camera's target position
-		const GLC_Point3d target(m_pViewport->unProject(x, y));
+		const GLC_Point3d target(m_pViewport->unProject(e->x(), e->y()));
 		m_pViewport->cameraHandle()->setTargetCam(target);
 	}
 	else
 	{	// Geometrie not find -> panning
 
-		const GLC_Point3d curPos(m_pViewport->mapPosMouse(x, y));
+		const GLC_Point3d curPos(m_pViewport->mapPosMouse(e->x(), e->y()));
 		const GLC_Point3d prevPos(m_pViewport->mapPosMouse(m_pViewport->viewHSize() / 2, m_pViewport->viewVSize() / 2));
 		const GLC_Vector3d VectPan(curPos - prevPos);	// panning vector
 		// pan camera
