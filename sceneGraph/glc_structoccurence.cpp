@@ -39,6 +39,8 @@ GLC_StructOccurence::GLC_StructOccurence()
 , m_Childs()
 , m_AbsoluteMatrix()
 , m_HasRepresentation(m_pStructInstance->structReference()->hasRepresentation())
+, m_OccurenceNumber(0)
+, m_IsVisible(true)
 {
 	// Update instance
 	m_pStructInstance->structOccurenceCreated(this);
@@ -55,6 +57,8 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_StructInstance* pStructInstance, GL
 , m_Childs()
 , m_AbsoluteMatrix()
 , m_HasRepresentation(pStructInstance->structReference()->hasRepresentation())
+, m_OccurenceNumber(0)
+, m_IsVisible(true)
 {
 	// Update the number of occurences
 	if (pStructInstance->hasStructOccurence())
@@ -98,6 +102,8 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_3DRep* pRep)
 , m_Childs()
 , m_AbsoluteMatrix()
 , m_HasRepresentation()
+, m_OccurenceNumber(0)
+, m_IsVisible(true)
 {
 	m_pStructInstance= new GLC_StructInstance(pRep);
 	m_HasRepresentation= m_pStructInstance->structReference()->hasRepresentation();
@@ -117,6 +123,8 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GL
 , m_Childs()
 , m_AbsoluteMatrix(structOccurence.m_AbsoluteMatrix)
 , m_HasRepresentation(structOccurence.m_HasRepresentation)
+, m_OccurenceNumber(0)
+, m_IsVisible(structOccurence.m_IsVisible)
 {
 	if (shareInstance)
 	{
@@ -304,7 +312,7 @@ bool GLC_StructOccurence::isVisible() const
 	}
 	else
 	{
-		qDebug() << "Leaf occurence " << id() << " " << name() << " without rep";
+		isHidden= !m_IsVisible;
 	}
 	return !isHidden;
 }
@@ -490,6 +498,8 @@ void GLC_StructOccurence::setWorldHandle(GLC_WorldHandle* pWorldHandle)
 	if (NULL != m_pWorldHandle)
 	{
 		m_pWorldHandle->addOccurence(this);
+		m_pWorldHandle->collection()->setVisibility(m_Uid, m_IsVisible);
+
 		const int size= m_Childs.size();
 		for (int i= 0; i < size; ++i)
 		{
@@ -501,11 +511,18 @@ void GLC_StructOccurence::setWorldHandle(GLC_WorldHandle* pWorldHandle)
 // Load the representation and return true if success
 bool GLC_StructOccurence::loadRepresentation()
 {
+	bool loadSucces= false;
 	if (m_HasRepresentation)
 	{
-		return m_pStructInstance->structReference()->representationHandle()->load();
+		loadSucces=  m_pStructInstance->structReference()->representationHandle()->load();
+		if (NULL != m_pWorldHandle)
+		{
+			m_pWorldHandle->addOccurence(this);
+			m_pWorldHandle->collection()->setVisibility(m_Uid, m_IsVisible);
+		}
+
 	}
-	else return false;
+	return loadSucces;
 }
 
 // UnLoad the representation and return true if success
@@ -516,4 +533,30 @@ bool GLC_StructOccurence::unloadRepresentation()
 		return m_pStructInstance->structReference()->representationHandle()->unload();
 	}
 	else return false;
+}
+
+unsigned int GLC_StructOccurence::updateOccurenceNumber(unsigned int n)
+{
+	m_OccurenceNumber= n++;
+	const int childCount= m_Childs.size();
+	for (int i= 0; i < childCount; ++i)
+	{
+		n= m_Childs[i]->updateOccurenceNumber(n);
+	}
+	return n;
+}
+
+void GLC_StructOccurence::setVisibility(bool visibility)
+{
+	m_IsVisible= visibility;
+	if (m_HasRepresentation && (NULL != m_pWorldHandle))
+	{
+		m_pWorldHandle->collection()->setVisibility(m_Uid, m_IsVisible);
+	}
+	const int childCount= m_Childs.size();
+	for (int i= 0; i < childCount; ++i)
+	{
+		m_Childs[i]->setVisibility(m_IsVisible);
+	}
+
 }

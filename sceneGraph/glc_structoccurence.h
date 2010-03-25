@@ -142,6 +142,10 @@ public:
 	//! Return the occurence Bounding Box
 	GLC_BoundingBox boundingBox() const;
 
+	//! Return the occurence number of this occurence
+	inline unsigned int occurenceNumber() const
+	{return m_OccurenceNumber;}
+
 
 
 //@}
@@ -189,6 +193,16 @@ public:
 	//! UnLoad the representation and return true if success
 	bool unloadRepresentation();
 
+	//! Set the occurence number of this occurence
+	inline void setOccurenceNumber(unsigned int n)
+	{m_OccurenceNumber= n;}
+
+	//! Update the occurence number of this occurence branch
+	unsigned int updateOccurenceNumber(unsigned int n);
+
+	//! Set this occurence visibility
+	void setVisibility(bool visibility);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -225,6 +239,12 @@ private:
 
 	//! true if occurence has a representation
 	bool m_HasRepresentation;
+
+	//! The occurence number
+	unsigned int m_OccurenceNumber;
+
+	//! Flag to know if a occurence without instance is visible
+	bool m_IsVisible;
 
 };
 
