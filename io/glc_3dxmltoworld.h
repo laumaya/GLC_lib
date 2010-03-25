@@ -60,6 +60,9 @@ class GLC_LIB_EXPORT GLC_3dxmlToWorld : public QObject
 	{
 		unsigned int m_ParentRefId;
 		GLC_StructInstance* m_pChildInstance;
+		unsigned int m_InstanceId;
+		inline bool operator < (const AssyLink& l) const
+		{return m_InstanceId < l.m_InstanceId;}
 	};
 	//! \class RepLink
 	/*! \brief RepLink : Representation link between reference id and representation id */
@@ -204,6 +207,12 @@ private:
 	//! Set the stream reader to the specified file
 	bool setStreamReaderToFile(QString, bool test= false);
 
+	//! Load graphics properties
+	void loadGraphicsProperties();
+
+	//! Load default view property
+	void loadDefaultViewProperty();
+
 	//! Load the local representation
 	void loadLocalRepresentations();
 
@@ -311,6 +320,9 @@ private:
 
 	//! The current file time and date
 	QDateTime m_CurrentDateTime;
+
+	//! the set containing not visible occurence number
+	QSet<unsigned int> m_NotVisibleOccurence;
 
 };
 
