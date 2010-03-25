@@ -54,7 +54,6 @@ GLC_RepMover::~GLC_RepMover()
 
 void GLC_RepMover::setRepMoverInfo(RepMoverInfo* pRepMoverInfo)
 {
-	qDebug() << "GLC_RepMover::setRepMoverInfo";
 	m_pRepMoverInfo= pRepMoverInfo;
 }
 
