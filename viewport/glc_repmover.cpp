@@ -31,6 +31,7 @@
 GLC_RepMover::GLC_RepMover(GLC_Viewport* pViewport)
 : m_pViewport(pViewport)
 , m_MainColor(Qt::black)
+, m_Thickness(1.0)
 , m_RenderProperties()
 , m_pRepMoverInfo(NULL)
 {
@@ -40,6 +41,7 @@ GLC_RepMover::GLC_RepMover(GLC_Viewport* pViewport)
 GLC_RepMover::GLC_RepMover(const GLC_RepMover& repMover)
 : m_pViewport(repMover.m_pViewport)
 , m_MainColor(repMover.m_MainColor)
+, m_Thickness(repMover.m_Thickness)
 , m_RenderProperties(repMover.m_RenderProperties)
 , m_pRepMoverInfo(repMover.m_pRepMoverInfo)
 {
@@ -55,6 +57,16 @@ GLC_RepMover::~GLC_RepMover()
 void GLC_RepMover::setRepMoverInfo(RepMoverInfo* pRepMoverInfo)
 {
 	m_pRepMoverInfo= pRepMoverInfo;
+}
+
+void GLC_RepMover::setMainColor(const QColor& color)
+{
+	m_MainColor= color;
+}
+
+void GLC_RepMover::setThickness(double thickness)
+{
+	m_Thickness= thickness;
 }
 
 //////////////////////////////////////////////////////////////////////

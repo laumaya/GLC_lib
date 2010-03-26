@@ -80,8 +80,10 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 	//! Set representation main color
-	virtual void setMainColor(const QColor& color)
-	{m_MainColor= color;}
+	virtual void setMainColor(const QColor& color);
+
+	//! Set representation wire thickness
+	virtual void setThickness(double thickness);
 
 	//! Init the representation
 	virtual void init(){}
@@ -116,6 +118,9 @@ protected:
 
 	//! The rep main color
 	QColor m_MainColor;
+
+	//! The rep wire thickness
+	double m_Thickness;
 
 	//! The rep rendering properties
 	GLC_RenderProperties m_RenderProperties;
