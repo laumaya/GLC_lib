@@ -387,7 +387,6 @@ GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& colo
 	//////////////////////////////////////////////////////////////////////
 	// Fly Mover
 	//////////////////////////////////////////////////////////////////////
-	// Copy the track ball Mover representation
 	listOfRep.clear();
 	pRepMover= new GLC_RepFlyMover(pViewport);
 	pRepMover->setMainColor(color);
