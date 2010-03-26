@@ -28,7 +28,7 @@
 #define GLC_REPMOVER_H_
 
 #include <QColor>
-#include "../maths/GLC_Vector3d.h"
+#include "../maths/glc_vector3d.h"
 #include "../maths/glc_matrix4x4.h"
 #include "../shading/glc_renderproperties.h"
 #include "../glc_config.h"
