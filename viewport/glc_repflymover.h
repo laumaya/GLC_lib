@@ -73,6 +73,9 @@ public:
 	//! Set representation main color
 	virtual void setMainColor(const QColor& color);
 
+	//! Set representation wire thickness
+	virtual void setThickness(double thickness);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -101,10 +104,7 @@ private:
 	double m_Radius;
 
 	//! Center Circle
-	GLC_Circle m_CenterCircle;
-
-	//! Opacity
-	double m_Opacity;
+	GLC_3DViewInstance m_CenterCircle;
 
 	//! Plane
 	GLC_3DViewInstance m_Plane;

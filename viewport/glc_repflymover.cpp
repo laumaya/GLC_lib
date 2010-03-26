@@ -32,16 +32,11 @@
 GLC_RepFlyMover::GLC_RepFlyMover(GLC_Viewport* pViewport)
 : GLC_RepMover(pViewport)
 , m_Radius(0.06)
-, m_CenterCircle(m_Radius)
-, m_Opacity(220)
+, m_CenterCircle()
 , m_Plane()
 , m_Hud()
 , m_HudOffset(m_Radius * 5.0, m_Radius * 5.3)
 {
-	m_MainColor.setAlpha(m_Opacity);
-
-	//m_CenterCircle.setLineWidth(1.5);
-	m_CenterCircle.setWireColor(m_MainColor);
 
 	createRepresentation();
 }
@@ -50,7 +45,6 @@ GLC_RepFlyMover::GLC_RepFlyMover(const GLC_RepFlyMover& repFlyMover)
 : GLC_RepMover(repFlyMover)
 , m_Radius(repFlyMover.m_Radius)
 , m_CenterCircle(repFlyMover.m_CenterCircle)
-, m_Opacity(repFlyMover.m_Opacity)
 , m_Plane(repFlyMover.m_Plane)
 , m_Hud(repFlyMover.m_Hud)
 , m_HudOffset(repFlyMover.m_HudOffset)
@@ -91,11 +85,17 @@ void GLC_RepFlyMover::update()
 void GLC_RepFlyMover::setMainColor(const QColor& color)
 {
 	GLC_RepMover::setMainColor(color);
-	m_MainColor.setAlpha(m_Opacity);
-	m_CenterCircle.setWireColor(GLC_RepMover::m_MainColor);
-	m_Plane.geomAt(0)->setWireColor(GLC_RepMover::m_MainColor);
-	m_Hud.geomAt(0)->setWireColor(GLC_RepMover::m_MainColor);
+	m_CenterCircle.geomAt(0)->setWireColor(color);
+	m_Plane.geomAt(0)->setWireColor(color);
+	m_Hud.geomAt(0)->setWireColor(color);
+}
 
+void GLC_RepFlyMover::setThickness(double thickness)
+{
+	GLC_RepMover::setThickness(thickness);
+	m_CenterCircle.geomAt(0)->setLineWidth(thickness);
+	m_Plane.geomAt(0)->setLineWidth(thickness);
+	m_Hud.geomAt(0)->setLineWidth(thickness);
 }
 
 void GLC_RepFlyMover::glDraw()
@@ -108,6 +108,8 @@ void GLC_RepFlyMover::glDraw()
 	const double hRatio= static_cast<double>(m_pViewport->viewHSize()) / calibre;
 	const double vRatio= static_cast<double>(m_pViewport->viewVSize()) / calibre;
 
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 
 	glMatrixMode(GL_PROJECTION);
@@ -118,11 +120,14 @@ void GLC_RepFlyMover::glDraw()
 	glPushMatrix();
 	glLoadIdentity();
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	m_RenderProperties.setRenderingFlag(glc::TransparentRenderFlag);
-	m_CenterCircle.render(m_RenderProperties);
+	m_CenterCircle.render(glc::WireRenderFlag);
+	m_Hud.render(glc::WireRenderFlag);
+	m_Plane.render(glc::WireRenderFlag);
 
+	glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	m_CenterCircle.render(glc::TransparentRenderFlag);
 	m_Hud.render(glc::TransparentRenderFlag);
 	m_Plane.render(glc::TransparentRenderFlag);
 
@@ -146,6 +151,11 @@ void GLC_RepFlyMover::glDraw()
 void GLC_RepFlyMover::createRepresentation()
 {
 	// HUD creation
+	GLC_Circle* pCircle= new GLC_Circle(m_Radius);
+	pCircle->setWireColor(GLC_RepMover::m_MainColor);
+	pCircle->setLineWidth(GLC_RepMover::m_Thickness);
+	m_CenterCircle.setGeometry(pCircle);
+
 	GLC_Polylines* pPolylines= new GLC_Polylines();
 	GLfloatVector  points;
 	const double hudx= m_HudOffset.getX();
@@ -158,6 +168,7 @@ void GLC_RepFlyMover::createRepresentation()
 	points << hudx << hudy << 0.0;
 	pPolylines->addPolyline(points);
 	pPolylines->setWireColor(GLC_RepMover::m_MainColor);
+	pPolylines->setLineWidth(GLC_RepMover::m_Thickness);
 	m_Hud.setGeometry(pPolylines);
 
 	// Plane creation
@@ -171,5 +182,6 @@ void GLC_RepFlyMover::createRepresentation()
 	points << (m_Radius + l1) << -m_Radius << 0.0;
 	pPolylines->addPolyline(points);
 	pPolylines->setWireColor(GLC_RepMover::m_MainColor);
+	pPolylines->setLineWidth(GLC_RepMover::m_Thickness);
 	m_Plane.setGeometry(pPolylines);
 }
