@@ -159,6 +159,9 @@ public:
 	inline int currentBodyIndex() const
 	{return m_CurrentBody;}
 
+	//! Return true if this rendering properties has defaut value
+	bool isDefault() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

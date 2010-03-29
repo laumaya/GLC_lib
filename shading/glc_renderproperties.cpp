@@ -210,6 +210,13 @@ bool GLC_RenderProperties::needToRenderWithTransparency() const
 	return renderWithTransparency;
 }
 
+bool GLC_RenderProperties::isDefault() const
+{
+	bool isDefault= (NULL == m_pOverwriteMaterial);
+	isDefault= isDefault && (m_OverwriteTransparency == -1.0f);
+	return isDefault;
+}
+
 // Clear the content of the render properties and update materials usage
 void GLC_RenderProperties::clear()
 {
