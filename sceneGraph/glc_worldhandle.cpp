@@ -113,7 +113,6 @@ void GLC_WorldHandle::removeOccurence(GLC_StructOccurence* pOccurence)
 	// Remove instance representation from the collection
 	if (pOccurence->hasRepresentation())
 	{
-		//qDebug() << "Remove " << pOccurence->name();
 		m_Collection.remove(pOccurence->id());
 	}
 }
