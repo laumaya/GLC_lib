@@ -293,6 +293,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::resetMatrix(void)
 // Display the instance
 void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Viewport* pView)
 {
+	//qDebug() << "GLC_3DViewInstance::render render properties= " << m_RenderProperties.renderingMode();
 	if (m_3DRep.isEmpty()) return;
 	const int bodyCount= m_3DRep.numberOfBody();
 
