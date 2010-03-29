@@ -41,6 +41,7 @@ GLC_StructOccurence::GLC_StructOccurence()
 , m_HasRepresentation(m_pStructInstance->structReference()->hasRepresentation())
 , m_OccurenceNumber(0)
 , m_IsVisible(true)
+, m_pRenderProperties(NULL)
 {
 	// Update instance
 	m_pStructInstance->structOccurenceCreated(this);
@@ -59,13 +60,15 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_StructInstance* pStructInstance, GL
 , m_HasRepresentation(pStructInstance->structReference()->hasRepresentation())
 , m_OccurenceNumber(0)
 , m_IsVisible(true)
+, m_pRenderProperties(NULL)
 {
 	// Update the number of occurences
 	if (pStructInstance->hasStructOccurence())
 	{
-		m_pNumberOfOccurence= pStructInstance->firstOccurenceHandle()->m_pNumberOfOccurence;
+		GLC_StructOccurence* pFirstOccurence= pStructInstance->firstOccurenceHandle();
+		m_pNumberOfOccurence= pFirstOccurence->m_pNumberOfOccurence;
 		++(*m_pNumberOfOccurence);
-		QList<GLC_StructOccurence*> childs= pStructInstance->firstOccurenceHandle()->m_Childs;
+		QList<GLC_StructOccurence*> childs= pFirstOccurence->m_Childs;
 		const int size= childs.size();
 		for (int i= 0; i < size; ++i)
 		{
@@ -104,6 +107,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_3DRep* pRep)
 , m_HasRepresentation()
 , m_OccurenceNumber(0)
 , m_IsVisible(true)
+, m_pRenderProperties(NULL)
 {
 	m_pStructInstance= new GLC_StructInstance(pRep);
 	m_HasRepresentation= m_pStructInstance->structReference()->hasRepresentation();
@@ -125,6 +129,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GL
 , m_HasRepresentation(structOccurence.m_HasRepresentation)
 , m_OccurenceNumber(0)
 , m_IsVisible(structOccurence.m_IsVisible)
+, m_pRenderProperties(NULL)
 {
 	if (shareInstance)
 	{
@@ -136,25 +141,40 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GL
 	}
 
 	++(*m_pNumberOfOccurence);
-	//qDebug() << "Occurence Copy constructor";
 	// Test if structOccurence has representation and has a shader
 	GLuint shaderId= 0;
 	bool instanceIsSelected= false;
 	if ((m_HasRepresentation) && (NULL != m_pWorldHandle) && (NULL != structOccurence.m_pWorldHandle))
 	{
+		GLC_3DViewInstance* p3DViewInstance= structOccurence.m_pWorldHandle->collection()->instanceHandle(structOccurence.id());
 
 		if(structOccurence.m_pWorldHandle->collection()->isInAShadingGroup(structOccurence.id()))
 		{
 			shaderId= structOccurence.m_pWorldHandle->collection()->shadingGroup(structOccurence.id());
 		}
 
-		instanceIsSelected= structOccurence.m_pWorldHandle->collection()->instanceHandle(structOccurence.id())->isSelected();
+		instanceIsSelected= p3DViewInstance->isSelected();
+		// Test the rendering properties
+		if (! p3DViewInstance->renderPropertiesHandle()->isDefault())
+		{
+			m_pRenderProperties= new GLC_RenderProperties(*(p3DViewInstance->renderPropertiesHandle()));
+		}
+	}
+	else if (NULL != structOccurence.m_pRenderProperties)
+	{
+		m_pRenderProperties= new GLC_RenderProperties(*(structOccurence.m_pRenderProperties));
 	}
 
 	// Inform the world Handle
 	if (NULL != m_pWorldHandle)
 	{
 		m_pWorldHandle->addOccurence(this, instanceIsSelected, shaderId);
+		if (NULL != m_pRenderProperties)
+		{
+			m_pWorldHandle->collection()->instanceHandle(id())->setRenderProperties(*m_pRenderProperties);
+			delete m_pRenderProperties;
+			m_pRenderProperties= NULL;
+		}
 	}
 
 	// Update Absolute matrix
@@ -202,6 +222,8 @@ GLC_StructOccurence::~GLC_StructOccurence()
 	{
 		m_pStructInstance->structOccurenceDeleted(this);
 	}
+
+	delete m_pRenderProperties;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -438,6 +460,16 @@ void GLC_StructOccurence::detach()
 	//qDebug() << "GLC_StructOccurence::detach() " << id();
 	if (NULL != m_pWorldHandle)
 	{
+		// retrieve renderProperties if needed
+		if (m_HasRepresentation)
+		{
+			GLC_3DViewInstance* pInstance= m_pWorldHandle->collection()->instanceHandle(m_Uid);
+			if (!pInstance->renderPropertiesHandle()->isDefault())
+			{
+				Q_ASSERT(NULL == m_pRenderProperties);
+				m_pRenderProperties= new GLC_RenderProperties(*(pInstance->renderPropertiesHandle()));
+			}
+		}
 		m_pWorldHandle->removeOccurence(this);
 		m_pWorldHandle= NULL;
 		if (!m_Childs.isEmpty())
@@ -558,5 +590,25 @@ void GLC_StructOccurence::setVisibility(bool visibility)
 	{
 		m_Childs[i]->setVisibility(m_IsVisible);
 	}
+}
 
+void GLC_StructOccurence::setRenderProperties(const GLC_RenderProperties& renderProperties)
+{
+	delete m_pRenderProperties;
+	if (m_HasRepresentation && (NULL != m_pWorldHandle))
+	{
+		m_pWorldHandle->collection()->instanceHandle(m_Uid)->setRenderProperties(renderProperties);
+	}
+	else if (hasChild())
+	{
+		const int childCount= m_Childs.size();
+		for (int i= 0; i < childCount; ++i)
+		{
+			m_Childs[i]->setRenderProperties(renderProperties);
+		}
+	}
+	else
+	{
+		m_pRenderProperties= new GLC_RenderProperties(renderProperties);
+	}
 }

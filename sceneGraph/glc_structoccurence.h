@@ -36,6 +36,7 @@
 
 class GLC_WorldHandle;
 class GLC_Material;
+class GLC_RenderProperties;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_StructOccurence
@@ -146,6 +147,9 @@ public:
 	inline unsigned int occurenceNumber() const
 	{return m_OccurenceNumber;}
 
+	//! return an handle of the renderProperties of this occurence
+	GLC_RenderProperties* renderPropertiesHandle() const
+	{return m_pRenderProperties;}
 
 
 //@}
@@ -203,6 +207,9 @@ public:
 	//! Set this occurence visibility
 	void setVisibility(bool visibility);
 
+	//! set the renderProperties of this occurence
+	void setRenderProperties(const GLC_RenderProperties& renderProperties);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -245,6 +252,9 @@ private:
 
 	//! Flag to know if a occurence without instance is visible
 	bool m_IsVisible;
+
+	//! The occurence rendering properties
+	GLC_RenderProperties* m_pRenderProperties;
 
 };
 
