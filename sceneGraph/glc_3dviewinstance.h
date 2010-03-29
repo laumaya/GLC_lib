@@ -272,6 +272,10 @@ public:
 	//! Set the global default LOD value
 	static void setGlobalDefaultLod(int);
 
+	//! Set the renderProperties of this 3DView instance
+	inline void setRenderProperties(const GLC_RenderProperties& renderProperties)
+	{m_RenderProperties= renderProperties;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
