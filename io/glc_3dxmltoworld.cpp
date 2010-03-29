@@ -65,7 +65,7 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 , m_ListOfAttachedFileName()
 , m_CurrentFileName()
 , m_CurrentDateTime()
-, m_NotVisibleOccurence()
+, m_OccurenceAttrib()
 {
 
 }
@@ -99,6 +99,15 @@ GLC_3dxmlToWorld::~GLC_3dxmlToWorld()
 		m_p3dxmlArchive= NULL;
 	}
 	clearMaterialHash();
+
+	// Clear specific attributes hash table
+	QHash<unsigned int, OccurenceAttrib*>::iterator iAttrib= m_OccurenceAttrib.begin();
+	while (m_OccurenceAttrib.constEnd() != iAttrib)
+	{
+		delete iAttrib.value();
+		++iAttrib;
+	}
+	m_OccurenceAttrib.clear();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -501,17 +510,22 @@ void GLC_3dxmlToWorld::loadProductStructure()
 	// Update occurence number
 	m_pWorld->rootOccurence()->updateOccurenceNumber(1);
 
-	// Change occurence visibility
-	if (! m_NotVisibleOccurence.isEmpty())
+	// Change occurence attributes
+	if (! m_OccurenceAttrib.isEmpty())
 	{
-		qDebug() << "Not visible occurence= " << m_NotVisibleOccurence.size();
+		qDebug() << "Not visible occurence= " << m_OccurenceAttrib.size();
 		QList<GLC_StructOccurence*> occurenceList= m_pWorld->listOfOccurence();
 		const int size= occurenceList.size();
 		for (int i= 0; i < size; ++i)
 		{
-			if (m_NotVisibleOccurence.contains(occurenceList.at(i)->occurenceNumber()))
+			if (m_OccurenceAttrib.contains(occurenceList.at(i)->occurenceNumber()))
 			{
-				occurenceList.at(i)->setVisibility(false);
+				OccurenceAttrib* pOccurenceAttrib= m_OccurenceAttrib.value(occurenceList.at(i)->occurenceNumber());
+				occurenceList.at(i)->setVisibility(pOccurenceAttrib->m_IsVisible);
+				if (NULL != pOccurenceAttrib->m_pRenderProperties)
+				{
+					occurenceList.at(i)->setRenderProperties(*(pOccurenceAttrib->m_pRenderProperties));
+				}
 			}
 		}
 	}
@@ -1536,11 +1550,50 @@ void GLC_3dxmlToWorld::loadDefaultViewProperty()
 			{
 				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "GeneralAttributes"))
 				{
-					QString visiblerString= readAttribute("visible", true);
-					if (visiblerString != "true")
+					QString visibleString= readAttribute("visible", true);
+					if (visibleString != "true")
 					{
-						m_NotVisibleOccurence << occurenceId;
+						if (!m_OccurenceAttrib.contains(occurenceId))
+						{
+							OccurenceAttrib* pOccurenceAttrib= new OccurenceAttrib();
+							pOccurenceAttrib->m_IsVisible= false;
+							m_OccurenceAttrib.insert(occurenceId, pOccurenceAttrib);
+						}
+						else m_OccurenceAttrib.value(occurenceId)->m_IsVisible= false;
 					}
+				}
+				else if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "SurfaceAttributes"))
+				{
+					goToElement("Color");
+					const double red= readAttribute("red", true).toDouble();
+					const double green= readAttribute("green", true).toDouble();
+					const double blue= readAttribute("blue", true).toDouble();
+					double alpha= 1.0;
+					QString alphaString= readAttribute("alpha", false);
+					if (!alphaString.isEmpty()) alpha= alphaString.toDouble();
+
+					GLC_RenderProperties* pRenderProperties= new GLC_RenderProperties();
+					if (red != -1.0f)
+					{
+						QColor diffuseColor;
+						diffuseColor.setRgbF(red, green, blue, alpha);
+						GLC_Material* pMaterial= new GLC_Material();
+						pMaterial->setDiffuseColor(diffuseColor);
+						pRenderProperties->setOverwriteMaterial(pMaterial);
+						pRenderProperties->setRenderingMode(glc::OverwriteMaterial);
+					}
+					else if (alpha < 1.0f)
+					{
+						pRenderProperties->setOverwriteTransparency(static_cast<float>(alpha));
+						pRenderProperties->setRenderingMode(glc::OverwriteTransparency);
+					}
+					if (!m_OccurenceAttrib.contains(occurenceId))
+					{
+						OccurenceAttrib* pOccurenceAttrib= new OccurenceAttrib();
+						pOccurenceAttrib->m_pRenderProperties= pRenderProperties;
+						m_OccurenceAttrib.insert(occurenceId, pOccurenceAttrib);
+					}
+					else m_OccurenceAttrib.value(occurenceId)->m_pRenderProperties= pRenderProperties;
 				}
 
 				m_pStreamReader->readNext();

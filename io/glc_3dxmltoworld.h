@@ -80,6 +80,23 @@ class GLC_LIB_EXPORT GLC_3dxmlToWorld : public QObject
 		QString m_AssociatedFile;
 	};
 
+	//! \class OccurenceAttrib
+	/*! \brief OccurenceAttrib : Specifique occurence attribute */
+	struct OccurenceAttrib
+	{
+		inline OccurenceAttrib()
+		: m_IsVisible(true)
+		, m_pRenderProperties(NULL)
+		{}
+		inline ~OccurenceAttrib()
+		{delete m_pRenderProperties;}
+
+		//! Visibility attribute
+		bool m_IsVisible;
+		//! Render properties attribute
+		GLC_RenderProperties* m_pRenderProperties;
+	};
+
 	typedef QHash<unsigned int, GLC_StructReference*> ReferenceHash;
 	typedef QHash<GLC_StructInstance*, unsigned int> InstanceOfHash;
 	typedef QHash<GLC_StructInstance*, QString> InstanceOfExtRefHash;
@@ -321,8 +338,9 @@ private:
 	//! The current file time and date
 	QDateTime m_CurrentDateTime;
 
-	//! the set containing not visible occurence number
-	QSet<unsigned int> m_NotVisibleOccurence;
+	//! Hash table of occurence specific attrubutes
+	QHash<unsigned int, OccurenceAttrib*> m_OccurenceAttrib;
+
 
 };
 
