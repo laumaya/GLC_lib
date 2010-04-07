@@ -93,24 +93,6 @@ bool GLC_BoundingBox::intersectBoundingSphere(const GLC_BoundingBox& boundingSph
 	return distance < (boundingSphereRadius() + boundingSphere.boundingSphereRadius());
 }
 
-GLC_Point3d GLC_BoundingBox::lowerCorner() const
-{
-	return m_Lower;
-}
-
-GLC_Point3d GLC_BoundingBox::upperCorner() const
-{
-	return m_Upper;
-}
-
-GLC_Point3d GLC_BoundingBox::center(void) const
-{
-	GLC_Vector3d vectResult = (m_Lower + m_Upper) * 0.5;
-	return vectResult;
-
-}
-
-
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

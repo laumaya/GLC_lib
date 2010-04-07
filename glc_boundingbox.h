@@ -89,13 +89,15 @@ public:
 	bool intersectBoundingSphere(const GLC_BoundingBox&) const;
 
 	//! Return the lower corner of this bounding box
-	GLC_Point3d lowerCorner() const;
+	inline const GLC_Point3d& lowerCorner() const
+	{return m_Lower;}
 
 	//! Return the upper corner of this bounding box
-	GLC_Point3d upperCorner() const;
+	inline const GLC_Point3d& upperCorner() const
+	{return m_Upper;}
 
 	//! Return the center of this bounding box
-	GLC_Point3d center() const;
+	inline GLC_Point3d center() const;
 
 	//! Return the radius of this bounding sphere of bounding box
 	inline double boundingSphereRadius() const
@@ -108,16 +110,16 @@ public:
 	inline bool operator != (const GLC_BoundingBox& boundingBox)
 	{return !(*this == boundingBox);}
 
-	//! Return the lenght off this bounding box on x axis
-	inline double xLenght() const
+	//! Return the length off this bounding box on x axis
+	inline double xLength() const
 	{return fabs(m_Upper.x() - m_Lower.x());}
 
-	//! Return the lenght off this bounding box on y axis
-	inline double yLenght() const
+	//! Return the length off this bounding box on y axis
+	inline double yLength() const
 	{return fabs(m_Upper.y() - m_Lower.y());}
 
-	//! Return the lenght off this bounding box on z axis
-	inline double zLenght() const
+	//! Return the length off this bounding box on z axis
+	inline double zLength() const
 	{return fabs(m_Upper.z() - m_Lower.z());}
 
 
@@ -173,15 +175,21 @@ bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox) const
 	const double distanceY= fabs(thisCenter.y() - otherCenter.y());
 	const double distanceZ= fabs(thisCenter.z() - otherCenter.z());
 
-	bool intersect= distanceX < ((xLenght() + boundingBox.xLenght()) * 0.5);
-	intersect= intersect && (distanceY < ((yLenght() + boundingBox.yLenght()) * 0.5));
-	intersect= intersect && (distanceZ < ((zLenght() + boundingBox.zLenght()) * 0.5));
+	bool intersect= distanceX < ((xLength() + boundingBox.xLength()) * 0.5);
+	intersect= intersect && (distanceY < ((yLength() + boundingBox.yLength()) * 0.5));
+	intersect= intersect && (distanceZ < ((zLength() + boundingBox.zLength()) * 0.5));
 	return intersect;
 }
 
 bool GLC_BoundingBox::operator == (const GLC_BoundingBox& box)
 {
 	return (m_Lower == box.m_Lower) && (m_Upper == box.m_Upper);
+}
+
+GLC_Point3d GLC_BoundingBox::center(void) const
+{
+	GLC_Vector3d vectResult = (m_Lower + m_Upper) * 0.5;
+	return vectResult;
 }
 
 #endif /*GLC_BOUNDINGBOX_*/
