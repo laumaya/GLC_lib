@@ -57,7 +57,7 @@ public:
 	//! Clone the representation
 	virtual GLC_Rep* clone() const = 0;
 
-	//! return a deep copy of the representation
+	//! Return a deep copy of the representation
 	virtual GLC_Rep* deepCopy() const = 0;
 
 	//! Destructor
