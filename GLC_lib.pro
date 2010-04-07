@@ -72,7 +72,8 @@ HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_offtoworld.h \
 						io/glc_3dstoworld.h \
 						io/glc_3dxmltoworld.h \
-						io/glc_colladatoworld.h
+						io/glc_colladatoworld.h \
+						io/glc_worldto3dxml.h
 
 HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_3dviewinstance.h \
@@ -209,7 +210,8 @@ SOURCES +=	io/glc_objmtlloader.cpp \
 			io/glc_offtoworld.cpp \
 			io/glc_3dstoworld.cpp \
 			io/glc_3dxmltoworld.cpp \
-			io/glc_colladatoworld.cpp
+			io/glc_colladatoworld.cpp \
+			io/glc_worldto3dxml.cpp
 
 SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
 			sceneGraph/glc_3dviewinstance.cpp \
@@ -374,7 +376,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_PullManipulator \
     		   include/GLC_RotationManipulator \
     		   include/GLC_FlyMover \
-    		   include/GLC_RepFlyMover
+    		   include/GLC_RepFlyMover \
+    		   include/GLC_WorldTo3dxml
     		   
     			   
 # Linux install configuration
