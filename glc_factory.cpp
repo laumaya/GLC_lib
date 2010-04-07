@@ -44,6 +44,8 @@
 #include "maths/glc_line3d.h"
 #include "maths/glc_geomtools.h"
 
+#include "glc_fileformatexception.h"
+
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
 QGLContext* GLC_Factory::m_pQGLContext= NULL;
@@ -85,40 +87,37 @@ GLC_Factory::~GLC_Factory()
 // Create functions
 //////////////////////////////////////////////////////////////////////
 
-// Create a GLC_Point
 GLC_3DRep GLC_Factory::createPoint(const GLC_Point3d &coord) const
 {
 	GLC_3DRep newPoint(new GLC_Point(coord));
 	return newPoint;
 }
-// Create a GLC_Point
+
 GLC_3DRep GLC_Factory::createPoint(double x, double y, double z) const
 {
 	GLC_3DRep newPoint(new GLC_Point(x, y, z));
 	return newPoint;
 }
 
-// Create a GLC_PointSprite
+
 GLC_3DRep GLC_Factory::createPointSprite(float size, GLC_Material* pMaterial) const
 {
 	GLC_3DRep newPoint(new GLC_PointSprite(size, pMaterial));
 	return newPoint;
 }
 
-// Create a GLC_Line
 GLC_3DRep GLC_Factory::createLine(const GLC_Point3d& point1, const GLC_Point3d& point2) const
 {
 	GLC_3DRep newPoint(new GLC_Line(point1, point2));
 	return newPoint;
 }
 
-//  Create a GLC_Circle
 GLC_3DRep GLC_Factory::createCircle(double radius, double angle) const
 {
 	GLC_3DRep newCircle(new GLC_Circle(radius, angle));
 	return newCircle;
 }
-// Create a GLC_Box
+
 GLC_3DRep GLC_Factory::createBox(double lx, double ly, double lz) const
 {
 
@@ -126,7 +125,6 @@ GLC_3DRep GLC_Factory::createBox(double lx, double ly, double lz) const
 	return newBox;
 }
 
-// Create a GLC_Box
 GLC_3DViewInstance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) const
 {
 	const double lx= boundingBox.upperCorner().x() - boundingBox.lowerCorner().x();
@@ -139,7 +137,6 @@ GLC_3DViewInstance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) co
 	return newBox;
 }
 
-// Create a GLC_Cylinder
 GLC_3DRep GLC_Factory::createCylinder(double radius, double length) const
 {
 
@@ -147,7 +144,6 @@ GLC_3DRep GLC_Factory::createCylinder(double radius, double length) const
 	return newCylinder;
 }
 
-// Create a GLC_Rectangle
 GLC_3DRep GLC_Factory::createRectangle(double l1, double l2)
 {
 	GLC_3DRep newRectangle(new GLC_Rectangle(l1, l2));
@@ -183,8 +179,8 @@ GLC_3DViewInstance GLC_Factory::createCuttingPlane(const GLC_Point3d& point, con
 	return rectangleInstance;
 
 }
-// Create a GLC_World* with a QFile
-GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName) const
+
+GLC_World GLC_Factory::createWorldFromFile(QFile &file, QStringList* pAttachedFileName) const
 {
 	GLC_World* pWorld= NULL;
 	if (QFileInfo(file).suffix().toLower() == "obj")
@@ -240,12 +236,20 @@ GLC_World* GLC_Factory::createWorld(QFile &file, QStringList* pAttachedFileName)
 		}
 	}
 
+	if (NULL == pWorld)
+	{
+		// File extension not recognize or file not loaded
+		QString message(QString("GLC_Factory::createWorldFromFile File ") + file.fileName() + QString(" not loaded"));
+		GLC_FileFormatException fileFormatException(message, file.fileName(), GLC_FileFormatException::FileNotSupported);
+		throw(fileFormatException);
+	}
+	GLC_World resulWorld(*pWorld);
+	delete pWorld;
 
-	return pWorld;
+	return resulWorld;
 }
 
-// Create a GLC_World containing only the 3dxml structure
-GLC_World* GLC_Factory::createWorldStructureFrom3dxml(QFile &file) const
+GLC_World GLC_Factory::createWorldStructureFrom3dxml(QFile &file) const
 {
 	GLC_World* pWorld= NULL;
 
@@ -256,11 +260,20 @@ GLC_World* GLC_Factory::createWorldStructureFrom3dxml(QFile &file) const
 		pWorld= d3dxmlToWorld.createWorldFrom3dxml(file, true);
 	}
 
-	return pWorld;
+	if (NULL == pWorld)
+	{
+		// File extension not recognize or file not loaded
+		QString message(QString("GLC_Factory::createWorldStructureFrom3dxml File ") + file.fileName() + QString(" not loaded"));
+		GLC_FileFormatException fileFormatException(message, file.fileName(), GLC_FileFormatException::FileNotSupported);
+		throw(fileFormatException);
+	}
+	GLC_World resulWorld(*pWorld);
+	delete pWorld;
+
+	return resulWorld;
 }
 
-// Create 3DRep from 3dxml or 3DRep file
-GLC_3DRep GLC_Factory::create3DrepFromFile(const QString& fileName) const
+GLC_3DRep GLC_Factory::create3DRepFromFile(const QString& fileName) const
 {
 	GLC_3DRep rep;
 
@@ -275,18 +288,16 @@ GLC_3DRep GLC_Factory::create3DrepFromFile(const QString& fileName) const
 
 }
 
-// Create a GLC_Material
 GLC_Material* GLC_Factory::createMaterial() const
 {
 	return new GLC_Material();
 }
 
-// Create a GLC_Material
 GLC_Material* GLC_Factory::createMaterial(const GLfloat *pAmbiantColor) const
 {
 	return new GLC_Material("Material", pAmbiantColor);
 }
-// Create a GLC_Material
+
 GLC_Material* GLC_Factory::createMaterial(const QColor &color) const
 {
 	return new GLC_Material(color);
@@ -296,34 +307,29 @@ GLC_Material* GLC_Factory::createMaterial(GLC_Texture* pTexture) const
 {
 	return new GLC_Material(pTexture, "TextureMaterial");
 }
-// create a material textured with a image file name
+
 GLC_Material* GLC_Factory::createMaterial(const QString &textureFullFileName) const
 {
 	GLC_Texture* pTexture= createTexture(textureFullFileName);
 	return createMaterial(pTexture);
 }
 
-// create a material textured with a QImage
 GLC_Material* GLC_Factory::createMaterial(const QImage &image) const
 {
 	GLC_Texture* pTexture= createTexture(image);
 	return createMaterial(pTexture);
 }
 
-// Create a GLC_Texture
-
 GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName) const
 {
 	return new GLC_Texture(m_pQGLContext, textureFullFileName);
 }
 
-// Create a GLC_Texture with a QImage
 GLC_Texture* GLC_Factory::createTexture(const QImage & image) const
 {
 	return new GLC_Texture(m_pQGLContext, image);
 }
 
-// Create the default mover controller
 GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& color, GLC_Viewport* pViewport)
 {
 	GLC_MoverController defaultController;
