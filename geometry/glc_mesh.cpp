@@ -150,13 +150,13 @@ quint32 GLC_Mesh::chunckID()
 }
 
 // Get number of faces
-unsigned int GLC_Mesh::numberOfFaces() const
+unsigned int GLC_Mesh::faceCount() const
 {
 	return m_NumberOfFaces;
 }
 
 // Get number of vertex
-unsigned int GLC_Mesh::numberOfVertex() const
+unsigned int GLC_Mesh::VertexCount() const
 {
 	return m_NumberOfVertice;
 }

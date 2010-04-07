@@ -83,10 +83,10 @@ public:
 	static quint32 chunckID();
 
 	//! Get number of faces
-	virtual unsigned int numberOfFaces() const;
+	virtual unsigned int faceCount() const;
 
 	//! Get number of vertex
-	virtual unsigned int numberOfVertex() const;
+	virtual unsigned int VertexCount() const;
 
 	//! Get number of normals
 	inline unsigned int numberOfNormals() const
@@ -103,7 +103,7 @@ public:
 	{return m_ColorPearVertex;}
 
 	//! Return the number of lod
-	inline int lodCount()
+	inline int lodCount() const
 	{return m_MeshData.lodCount();}
 
 	//! Return the Position Vector
