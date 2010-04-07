@@ -209,7 +209,7 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 		    {
 		    	GLC_3DRep representation(create3DRep(pMesh));
 		    	// Test if there is vertex in the mesh
-		    	if (0 != representation.numberOfVertex())
+		    	if (0 != representation.vertexCount())
 		    	{
 		    		m_LoadedMeshes.insert(representation.name());
 			    	// Load node matrix
