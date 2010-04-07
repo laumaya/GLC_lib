@@ -142,7 +142,7 @@ GLC_BoundingBox GLC_3DRep::boundingBox() const
 }
 
 // Get number of faces
-unsigned int GLC_3DRep::numberOfFaces() const
+unsigned int GLC_3DRep::faceCount() const
 {
 	unsigned int result= 0;
 	if (!m_pGeomList->isEmpty())
@@ -150,7 +150,7 @@ unsigned int GLC_3DRep::numberOfFaces() const
 		const int size= m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
 		{
-			result+= m_pGeomList->at(i)->numberOfFaces();
+			result+= m_pGeomList->at(i)->faceCount();
 		}
 	}
 
@@ -158,7 +158,7 @@ unsigned int GLC_3DRep::numberOfFaces() const
 }
 
 // Get number of vertex
-unsigned int GLC_3DRep::numberOfVertex() const
+unsigned int GLC_3DRep::vertexCount() const
 {
 	unsigned int result= 0;
 	if (!m_pGeomList->isEmpty())
@@ -166,7 +166,7 @@ unsigned int GLC_3DRep::numberOfVertex() const
 		const int size= m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
 		{
-			result+= m_pGeomList->at(i)->numberOfVertex();
+			result+= m_pGeomList->at(i)->VertexCount();
 		}
 	}
 
@@ -174,7 +174,7 @@ unsigned int GLC_3DRep::numberOfVertex() const
 }
 
 // Get number of materials
-unsigned int GLC_3DRep::numberOfMaterials() const
+unsigned int GLC_3DRep::materialCount() const
 {
 	unsigned int result= 0;
 	if (!m_pGeomList->isEmpty())
@@ -182,7 +182,7 @@ unsigned int GLC_3DRep::numberOfMaterials() const
 		const int size= m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
 		{
-			result+= m_pGeomList->at(i)->numberOfMaterials();
+			result+= m_pGeomList->at(i)->materialCount();
 		}
 	}
 
@@ -211,7 +211,7 @@ void GLC_3DRep::clean()
 	QList<GLC_Geometry*>::iterator iGeomList= m_pGeomList->begin();
 	while(iGeomList != m_pGeomList->constEnd())
 	{
-		if ((*iGeomList)->numberOfVertex() == 0)
+		if ((*iGeomList)->VertexCount() == 0)
 		{
 			qDebug() << "Delete empty geom--------------------";
 			delete (*iGeomList);
@@ -243,7 +243,7 @@ bool GLC_3DRep::load()
 		qDebug() << "GLC_3DRep::load() Allready loaded or empty fileName";
 		return false;
 	}
-	GLC_3DRep newRep= GLC_Factory::instance()->create3DrepFromFile(fileName());
+	GLC_3DRep newRep= GLC_Factory::instance()->create3DRepFromFile(fileName());
 	if (!newRep.isEmpty())
 	{
 		const int size= newRep.m_pGeomList->size();

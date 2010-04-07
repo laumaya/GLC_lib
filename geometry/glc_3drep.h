@@ -111,16 +111,16 @@ public:
 	inline bool contains(GLC_Geometry* pGeom)
 	{return m_pGeomList->contains(pGeom);}
 
-	//! Get number of faces
-	unsigned int numberOfFaces() const;
+	//! Return the number of faces of this 3DRep
+	unsigned int faceCount() const;
 
-	//! Get number of vertex
-	unsigned int numberOfVertex() const;
+	//! Return number of vertex of this 3DRep
+	unsigned int vertexCount() const;
 
-	//! Get number of materials
-	unsigned int numberOfMaterials() const;
+	//! Return number of materials of this 3DRep
+	unsigned int materialCount() const;
 
-	//! Get materials List
+	//! Return materials Set of this 3DRep
 	QSet<GLC_Material*> materialSet() const;
 
 //@}
