@@ -308,7 +308,7 @@ void GLC_Distance::addMeshTrianglesToPQP(PQP_Model* pPQP_Model, const QList<GLC_
 	{
 		pMesh= listOfMeshes.at(i);
 		positionVector= pMesh->positionVector();
-		size2= pMesh->numberOfMaterials();
+		size2= pMesh->materialCount();
 		for(j=0; j< size2;++j){
 
 			materialId= pMesh->material(pMesh->materialIds().at(j))->id();
