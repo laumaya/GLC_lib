@@ -112,14 +112,14 @@ public:
 	//! Create the representation of a cutting from the given 3d point, normal, lenght and material
 	GLC_3DViewInstance createCuttingPlane(const GLC_Point3d& point, const GLC_Vector3d& normal, double l1, double l2, GLC_Material* pMat);
 
-	//! Create a GLC_World* with a QFile
-	GLC_World* createWorld(QFile &file, QStringList* pAttachedFileName= NULL) const;
+	//! Create a GLC_World from a QFile
+	GLC_World createWorldFromFile(QFile &file, QStringList* pAttachedFileName= NULL) const;
 
 	//! Create a GLC_World containing only the 3dxml structure
-	GLC_World* createWorldStructureFrom3dxml(QFile &file) const;
+	GLC_World createWorldStructureFrom3dxml(QFile &file) const;
 
 	//! Create 3DRep from 3dxml or 3DRep file
-	GLC_3DRep create3DrepFromFile(const QString&) const;
+	GLC_3DRep create3DRepFromFile(const QString&) const;
 
 	//! Create default material
 	GLC_Material* createMaterial() const;
