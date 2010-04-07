@@ -120,11 +120,11 @@ public:
 	}
 
 	//! Return the number of materials
-	inline int numberOfMaterials() const
+	inline int materialCount() const
 	{return m_MaterialHash.size();}
 
 	//! Return the specified mesh sub material
-	inline GLC_Material* material(const GLC_uint key)
+	inline GLC_Material* material(const GLC_uint key) const
 	{return m_MaterialHash[key];}
 
 	//! Get materials Set
@@ -166,10 +166,10 @@ public:
 	{return m_IsWire;}
 
 	//! Get the number of faces
-	virtual unsigned int numberOfFaces() const;
+	virtual unsigned int faceCount() const;
 
 	//! Get the number of vertex
-	virtual unsigned int numberOfVertex() const;
+	virtual unsigned int VertexCount() const;
 
 	//! Return the line width
 	GLfloat lineWidth() const
