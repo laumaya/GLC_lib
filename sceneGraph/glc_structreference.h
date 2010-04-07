@@ -102,7 +102,7 @@ public:
 	{
 		Q_ASSERT(NULL != m_pRepresentation);
 		GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_pRepresentation);
-		if (NULL != pRep) return pRep->numberOfFaces();
+		if (NULL != pRep) return pRep->faceCount();
 		else return 0;
 	}
 
@@ -111,7 +111,7 @@ public:
 	{
 		Q_ASSERT(NULL != m_pRepresentation);
 		GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_pRepresentation);
-		if (NULL != pRep) return pRep->numberOfVertex();
+		if (NULL != pRep) return pRep->vertexCount();
 		else return 0;
 	}
 
@@ -120,7 +120,7 @@ public:
 	{
 		Q_ASSERT(NULL != m_pRepresentation);
 		GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_pRepresentation);
-		if (NULL != pRep) return pRep->numberOfMaterials();
+		if (NULL != pRep) return pRep->materialCount();
 		else return 0;
 	}
 

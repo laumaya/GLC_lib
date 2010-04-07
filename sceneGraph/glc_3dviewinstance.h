@@ -158,15 +158,15 @@ public:
 
 	//! Get number of faces
 	inline unsigned int numberOfFaces() const
-	{return m_3DRep.numberOfFaces();}
+	{return m_3DRep.faceCount();}
 
 	//! Get number of vertex
 	inline unsigned int numberOfVertex() const
-	{return m_3DRep.numberOfVertex();}
+	{return m_3DRep.vertexCount();}
 
 	//! Get number of materials
 	inline unsigned int numberOfMaterials() const
-	{return m_3DRep.numberOfMaterials();}
+	{return m_3DRep.materialCount();}
 
 	//! Get materials List
 	inline QSet<GLC_Material*> materialSet() const
