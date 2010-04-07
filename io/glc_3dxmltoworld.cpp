@@ -1618,6 +1618,7 @@ void GLC_3dxmlToWorld::loadDefaultViewProperty()
 // Load the extern representation
 void GLC_3dxmlToWorld::loadExternRepresentations()
 {
+
 	if (m_ExternRepLinkList.isEmpty()) return;
 
 	QHash<const unsigned int, GLC_3DRep> repHash;
