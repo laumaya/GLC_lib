@@ -122,6 +122,13 @@ private:
 
 	//! Write surface attributes
 	void writeSurfaceAttributes(const GLC_Material* pMaterial);
+
+	//! Write edges
+	void writeEdges(const GLC_Mesh* pMesh);
+
+	//! Write lines attributes
+	void writeSurfaceAttributes(const QColor& color);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -169,6 +176,9 @@ private:
 
 	//! Map reference rep to 3dxml id
 	QHash<const GLC_3DRep*, unsigned int> m_ReferenceRepToIdHash;
+
+	//! InstanceRep SET
+	QSet<unsigned int> m_InstanceRep;
 
 };
 

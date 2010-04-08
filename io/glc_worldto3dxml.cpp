@@ -46,6 +46,7 @@ GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world)
 , m_ReferenceToIdHash()
 , m_InstanceToIdHash()
 , m_ReferenceRepToIdHash()
+, m_InstanceRep()
 {
 	m_World.rootOccurence()->updateOccurenceNumber(1);
 }
@@ -82,17 +83,33 @@ bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::E
 		// Export the assembly structure from the list of structure reference
 		exportAssemblyStructure();
 
+		int previousQuantumValue= 0;
+		int currentQuantumValue= 0;
+		emit currentQuantum(currentQuantumValue);
+
+		int currentRepIndex= 0;
+		const int size= m_ReferenceRepToIdHash.size();
 		// Export the representation
 		QHash<const GLC_3DRep*, unsigned int>::const_iterator iRep= m_ReferenceRepToIdHash.constBegin();
 		while (m_ReferenceRepToIdHash.constEnd() != iRep)
 		{
 			write3DRep(iRep.key());
 			++iRep;
+
+			// Progrees bar indicator
+			++currentRepIndex;
+			currentQuantumValue = static_cast<int>((static_cast<double>(currentRepIndex) / size) * 100);
+			if (currentQuantumValue > previousQuantumValue)
+			{
+				emit currentQuantum(currentQuantumValue);
+			}
+			previousQuantumValue= currentQuantumValue;
+
 		}
 
 	}
 
-
+	emit currentQuantum(100);
 	return isExported;
 }
 
@@ -101,7 +118,7 @@ void GLC_WorldTo3dxml::writeHeader()
 	const QString title(QFileInfo(m_FileName).fileName());
 
 	m_pOutStream->writeStartElement("Header");
-		m_pOutStream->writeTextElement("ShemaVersion", "4.0");
+		m_pOutStream->writeTextElement("SchemaVersion", "4.0");
 		m_pOutStream->writeTextElement("Title", title);
 		m_pOutStream->writeTextElement("Generator", m_Generator);
 		m_pOutStream->writeTextElement("Created", QDate::currentDate().toString("YYYY-MM-DD"));
@@ -129,9 +146,13 @@ void GLC_WorldTo3dxml::writeReferenceRep(const GLC_3DRep* p3DRep)
 		m_pOutStream->writeAttribute("xsi:type", "ReferenceRepType");
 		m_pOutStream->writeAttribute("id", id);
 		m_pOutStream->writeAttribute("name", p3DRep->name());
-		m_pOutStream->writeAttribute("format", "TESSELATED");
-		m_pOutStream->writeAttribute("associatedFile", associateFile);
+		m_pOutStream->writeAttribute("format", "TESSELLATED");
 		m_pOutStream->writeAttribute("version", "1.2");
+		m_pOutStream->writeAttribute("associatedFile", associateFile);
+		m_pOutStream->writeTextElement("PLM_ExternalID", p3DRep->name());
+		m_pOutStream->writeTextElement("V_discipline", "Design");
+		m_pOutStream->writeTextElement("V_usage", "3DShape");
+		m_pOutStream->writeTextElement("V_nature", "1");
 	m_pOutStream->writeEndElement();
 
 
@@ -164,6 +185,8 @@ void  GLC_WorldTo3dxml::writeInstanceRep(const GLC_3DRep* p3DRep, unsigned int p
 		m_pOutStream->writeTextElement("IsAggregatedBy", QString::number(parentId));
 		m_pOutStream->writeTextElement("IsInstanceOf", QString::number(referenceId));
 	m_pOutStream->writeEndElement();
+
+	m_InstanceRep.insert(parentId);
 
 }
 void GLC_WorldTo3dxml::setStreamWriterToFile(const QString& fileName)
@@ -231,14 +254,15 @@ void GLC_WorldTo3dxml::exportAssemblyStructure()
 	m_ReferenceToIdHash.clear();
 	m_InstanceToIdHash.clear();
 	m_ReferenceRepToIdHash.clear();
+	m_InstanceRep.clear();
 
 	// Create the assembly file
 	setStreamWriterToFile(QFileInfo(m_FileName).fileName());
 	m_pOutStream->writeStartDocument();
 	m_pOutStream->writeStartElement("Model_3dxml");
+	m_pOutStream->writeAttribute("xmlns", "http://www.3ds.com/xsd/3DXML");
 	m_pOutStream->writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 	m_pOutStream->writeAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-	m_pOutStream->writeAttribute("xsi:schemaLocation", "http://www.3ds.com/xsd/3DXML ./3DXML.xsd");
 
 	writeHeader();
 
@@ -280,18 +304,20 @@ void GLC_WorldTo3dxml::exportAssemblyFromOccurence(const GLC_StructOccurence* pO
 		GLC_StructInstance* pCurrentInstance= pOccurence->structInstance();
 		if (!m_InstanceToIdHash.contains(pCurrentInstance))
 		{
+			// Instance 3D
+			const unsigned int parentId= m_ReferenceToIdHash.value(pOccurence->parent()->structReference());
+			writeInstance3D(pCurrentInstance, parentId);
+
 			// Instance Rep
 			if (pCurrentRef->hasRepresentation())
 			{
 				GLC_3DRep* pCurrentRep= dynamic_cast<GLC_3DRep*>(pCurrentRef->representationHandle());
-				if (NULL != pCurrentRep)
+				const unsigned int parentId= m_ReferenceToIdHash.value(pCurrentRef);
+				if (NULL != pCurrentRep && !m_InstanceRep.contains(parentId))
 				{
-					writeInstanceRep(pCurrentRep, m_ReferenceToIdHash.value(pCurrentRef));
+					writeInstanceRep(pCurrentRep, parentId);
 				}
 			}
-			// Instance 3D
-			const unsigned int parentId= m_ReferenceToIdHash.value(pOccurence->parent()->structReference());
-			writeInstance3D(pCurrentInstance, parentId);
 		}
 	}
 	// Process children
@@ -339,27 +365,20 @@ void GLC_WorldTo3dxml::write3DRep(const GLC_3DRep* pRep)
 	m_pOutStream->writeAttribute("xmlns", "http://www.3ds.com/xsd/3DXML");
 	m_pOutStream->writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 	m_pOutStream->writeAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+	m_pOutStream->writeAttribute("xsi:schemaLocation", "http://www.3ds.com/xsd/3DXML ./3DXMLMesh.xsd");
 
 	m_pOutStream->writeStartElement("Root"); // Root
 	m_pOutStream->writeAttribute("xsi:type", "BagRepType");
-	m_pOutStream->writeStartElement("Rep"); // BagRep
-	m_pOutStream->writeAttribute("xsi:type", "BagRepType");
+	m_pOutStream->writeAttribute("id", QString::number(++m_CurrentId));
 	const int bodyCount= pRep->numberOfBody();
 	for (int i= 0; i < bodyCount; ++i)
 	{
 		GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(pRep->geomAt(i));
 		if (NULL != pMesh)
 		{
-			m_pOutStream->writeStartElement("Rep"); // BagRep
-			m_pOutStream->writeAttribute("xsi:type", "BagRepType");
-			m_pOutStream->writeStartElement("Rep"); // BagRep
-			m_pOutStream->writeAttribute("xsi:type", "BagRepType");
 			writeGeometry(pMesh);
-			m_pOutStream->writeEndElement(); // BagRep
-			m_pOutStream->writeEndElement(); // BagRep
 		}
 	}
-	m_pOutStream->writeEndElement(); // BagRep
 	m_pOutStream->writeEndElement(); // Root
 
 	m_pOutStream->writeEndElement(); // XMLRepresentation
@@ -383,8 +402,10 @@ void GLC_WorldTo3dxml::writeGeometry(const GLC_Mesh* pMesh)
 
 	m_pOutStream->writeStartElement("Rep");
 	m_pOutStream->writeAttribute("xsi:type", "PolygonalRepType");
+	m_pOutStream->writeAttribute("id", QString::number(++m_CurrentId));
 	const double masterAccuracy= pMesh->getLodAccuracy(0);
 	m_pOutStream->writeAttribute("accuracy", QString::number(masterAccuracy));
+	m_pOutStream->writeAttribute("solid", "1");
 	const int lodCount= pMesh->lodCount();
 	if (lodCount > 1)
 	{
@@ -419,6 +440,10 @@ void GLC_WorldTo3dxml::writeGeometry(const GLC_Mesh* pMesh)
 		}
 	}
 	m_pOutStream->writeEndElement(); // Faces
+	if (!pMesh->wireDataIsEmpty())
+	{
+		writeEdges(pMesh);
+	}
 
 	// Save Bulk data
 	m_pOutStream->writeStartElement("VertexBuffer");
@@ -564,4 +589,49 @@ void GLC_WorldTo3dxml::writeSurfaceAttributes(const GLC_Material* pMaterial)
 			m_pOutStream->writeAttribute("alpha", QString::number(diffuseColor.alphaF()));
 		m_pOutStream->writeEndElement(); // Color
 	m_pOutStream->writeEndElement(); // SurfaceAttributes
+}
+
+void GLC_WorldTo3dxml::writeEdges(const GLC_Mesh* pMesh)
+{
+	m_pOutStream->writeStartElement("Edges");
+	writeSurfaceAttributes(pMesh->wireColor());
+
+	GLfloatVector positionVector= pMesh->wirePositionVector();
+	const int polylineCount= pMesh->wirePolylineCount();
+	for (int i= 0; i < polylineCount; ++i)
+	{
+		m_pOutStream->writeStartElement("Polyline");
+		QString polylinePosition;
+		const GLuint offset= pMesh->wirePolylineOffset(i);
+		const GLsizei size= pMesh->wirePolylineSize(i);
+		for (GLsizei index= 0; index < size; ++index)
+		{
+			const int startIndex= 3 * (offset + index);
+			polylinePosition.append(QString::number(positionVector.at(startIndex)));
+			polylinePosition.append(' ');
+			polylinePosition.append(QString::number(positionVector.at(startIndex + 1)));
+			polylinePosition.append(' ');
+			polylinePosition.append(QString::number(positionVector.at(startIndex + 2)));
+			polylinePosition.append(',');
+		}
+		polylinePosition.remove(polylinePosition.size() - 1, 1);
+		m_pOutStream->writeAttribute("vertices", polylinePosition);
+		m_pOutStream->writeEndElement(); // Polyline
+	}
+	m_pOutStream->writeEndElement(); // Edges
+}
+
+void GLC_WorldTo3dxml::writeSurfaceAttributes(const QColor& color)
+{
+	m_pOutStream->writeStartElement("LineAttributes");
+	m_pOutStream->writeAttribute("lineType", "SOLID");
+	m_pOutStream->writeAttribute("thickness", "1");
+		m_pOutStream->writeStartElement("Color");
+			m_pOutStream->writeAttribute("xsi:type", "RGBAColorType");
+			m_pOutStream->writeAttribute("red", QString::number(color.redF()));
+			m_pOutStream->writeAttribute("green", QString::number(color.greenF()));
+			m_pOutStream->writeAttribute("blue", QString::number(color.blueF()));
+			m_pOutStream->writeAttribute("alpha", QString::number(color.alphaF()));
+		m_pOutStream->writeEndElement(); // Color
+	m_pOutStream->writeEndElement(); // LineAttributes
 }
