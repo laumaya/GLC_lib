@@ -78,6 +78,18 @@ public:
 	//! Return this wire data bounding box
 	GLC_BoundingBox& boundingBox();
 
+	//! Return the number of polylines
+	inline int polylineCount() const
+	{return m_PolylinesCount;}
+
+	//! Return the polyline offset from the given index
+	inline GLuint polylineOffset(int index) const
+	{return m_PolylinesOffset.at(index);}
+
+	//! Return the polyline size from the given index
+	inline GLsizei polylineSize(int index) const
+	{return m_PolylinesSizes.at(index);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

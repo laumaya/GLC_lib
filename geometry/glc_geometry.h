@@ -175,9 +175,29 @@ public:
 	GLfloat lineWidth() const
 	{return m_LineWidth;}
 
-	//! Rteurn this geometry wire color
+	//! Return this geometry wire color
 	inline QColor wireColor() const
 	{return m_WireColor;}
+
+	//! Return true if wire data is empty
+	inline bool wireDataIsEmpty() const
+	{return m_WireData.isEmpty();}
+
+	//! Return the wire position vector
+	inline GLfloatVector wirePositionVector() const
+	{return m_WireData.positionVector();}
+
+	//! Return the number of wire polylines
+	inline int wirePolylineCount() const
+	{return m_WireData.polylineCount();}
+
+	//! Return the polyline offset from the given index
+	inline GLuint wirePolylineOffset(int index) const
+	{return m_WireData.polylineOffset(index);}
+
+	//! Return the polyline size from the given index
+	inline GLsizei wirePolylineSize(int index) const
+	{return m_WireData.polylineSize(index);}
 
 //@}
 
