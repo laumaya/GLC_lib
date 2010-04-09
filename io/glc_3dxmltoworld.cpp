@@ -1201,17 +1201,7 @@ void GLC_3dxmlToWorld::loadLOD(GLC_Mesh* pMesh)
 		m_pStreamReader->readNext();
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "SurfaceAttributes"))
 		{
-			while (endElementNotReached("SurfaceAttributes"))
-			{
-				m_pStreamReader->readNext();
-				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "MaterialId"))
-				{
-					//qDebug() << m_p3dxmlFile->getActualFileName();
-					checkForXmlError("Material ID not found");
-					QString materialId= readAttribute("id", true).remove("urn:3DXML:CATMaterialRef.3dxml#");
-					m_pCurrentMaterial= m_MaterialHash.value(materialId);
-				}
-			}
+			m_pCurrentMaterial= loadSurfaceAttributes();
 		}
 		else if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "PolygonalLOD"))
 		{
@@ -1249,9 +1239,9 @@ void GLC_3dxmlToWorld::loadFace(GLC_Mesh* pMesh, const int lod, double accuracy)
 
 	while(endElementNotReached("Face"))
 	{
-		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Color"))
+		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "SurfaceAttributes"))
 		{
-			pCurrentMaterial= getMaterial();
+			pCurrentMaterial= loadSurfaceAttributes();
 		}
 		m_pStreamReader->readNext();
 	}
@@ -1352,7 +1342,36 @@ void GLC_3dxmlToWorld::clearMaterialHash()
 	m_MaterialHash.clear();
 }
 
-// get material
+GLC_Material* GLC_3dxmlToWorld::loadSurfaceAttributes()
+{
+	GLC_Material* pMaterial= NULL;
+	while(endElementNotReached("SurfaceAttributes"))
+	{
+		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Color"))
+		{
+			pMaterial= getMaterial();
+		}
+		else if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "MaterialApplication"))
+		{
+			while (endElementNotReached("MaterialApplication"))
+			{
+				m_pStreamReader->readNext();
+				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "MaterialId"))
+				{
+					//qDebug() << m_p3dxmlFile->getActualFileName();
+					checkForXmlError("Material ID not found");
+					QString materialId= readAttribute("id", true).remove("urn:3DXML:CATMaterialRef.3dxml#");
+					pMaterial= m_MaterialHash.value(materialId);
+				}
+			}
+
+		}
+		m_pStreamReader->readNext();
+	}
+
+	return pMaterial;
+}
+
 GLC_Material* GLC_3dxmlToWorld::getMaterial()
 {
 	GLC_Material* pMaterial= NULL;
@@ -1947,7 +1966,8 @@ void GLC_3dxmlToWorld::loadMaterialDef(const MaterialRef& materialRef)
 			}
 			else if (currentName == "SpecularExponent")
 			{
-
+				double SpecularExponent= readAttribute("Value", true).toDouble() * 128.0;
+				pMaterial->setShininess(SpecularExponent);
 			}
 			else if (currentName == "TextureImage")
 			{

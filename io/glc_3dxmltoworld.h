@@ -218,6 +218,9 @@ private:
 	//! Clear material hash
 	void clearMaterialHash();
 
+	//! Load surface attributes
+	GLC_Material* loadSurfaceAttributes();
+
 	//! get material
 	GLC_Material* getMaterial();
 
