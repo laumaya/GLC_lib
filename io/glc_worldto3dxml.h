@@ -65,7 +65,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Save the world to the specified file name
-	bool exportToFile(const QString& filename, GLC_WorldTo3dxml::ExportType exportType);
+	bool exportToFile(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial= true);
 
 	//! Set the name of the 3dxml generator default is GLC_LIB
 	inline void setGeneratorName(const QString& generator)
@@ -127,7 +127,37 @@ private:
 	void writeEdges(const GLC_Mesh* pMesh);
 
 	//! Write lines attributes
-	void writeSurfaceAttributes(const QColor& color);
+	void writeLineAttributes(const QColor& color);
+
+	//! Write Material
+	void writeMaterial(const GLC_Material* pMaterial);
+
+	//! Write material attributes
+	void writeMaterialAttributtes(const QString& name, const QString& type, const QString& value);
+
+	//! Return a QString of a color
+	QString colorToString(const QColor& color);
+
+	//! Write the CATRepImage.3dxml file
+	void writeCatRepImageFile(const QList<GLC_Material*>& materialList);
+
+	//! Write CATRepresentationImage of the given material and id
+	void writeCATRepresentationImage(const GLC_Material* pMat, unsigned int id);
+
+	//! Write all material related files in the 3dxml
+	void writeAllMaterialRelatedFilesIn3dxml();
+
+	//! Write image file in 3DXML archive or folder
+	void writeImageFileIn3dxml(const QList<GLC_Material*>& materialList);
+
+	//! Write de CATMaterialRef
+	void writeCatMaterialRef(const QList<GLC_Material*>& materialList);
+
+	//! Write a material in the CATMaterialRef
+	void writeMaterialToCatMaterialRef(const GLC_Material* pMat, unsigned int* id);
+
+	//! Add the given texture to 3DXML with the given name
+	void addImageTextureTo3dxml(const QImage& image, const QString& fileName);
 
 //@}
 
@@ -179,6 +209,21 @@ private:
 
 	//! InstanceRep SET
 	QSet<unsigned int> m_InstanceRep;
+
+	//! Map between material id and 3DRep name
+	QHash<GLC_uint, QString> m_MaterialIdToMaterialName;
+
+	//! Map between material id and 3dxml image id
+	QHash<GLC_uint, unsigned int> m_MaterialIdToMaterialId;
+
+	//! Map between material id and 3DXML texture name
+	QHash<GLC_uint, QString> m_MaterialIdToTexture3dxmlName;
+
+	//! Map between material id and 3dxml image id
+	QHash<GLC_uint, unsigned int> m_MaterialIdTo3dxmlImageId;
+
+	//! Flag to know if material must be exported
+	bool m_ExportMaterial;
 
 };
 

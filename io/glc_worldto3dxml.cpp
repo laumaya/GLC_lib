@@ -47,6 +47,11 @@ GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world)
 , m_InstanceToIdHash()
 , m_ReferenceRepToIdHash()
 , m_InstanceRep()
+, m_MaterialIdToMaterialName()
+, m_MaterialIdToMaterialId()
+, m_MaterialIdToTexture3dxmlName()
+, m_MaterialIdTo3dxmlImageId()
+, m_ExportMaterial(true)
 {
 	m_World.rootOccurence()->updateOccurenceNumber(1);
 }
@@ -58,8 +63,9 @@ GLC_WorldTo3dxml::~GLC_WorldTo3dxml()
 	delete m_pCurrentFile;
 }
 
-bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::ExportType exportType)
+bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial)
 {
+	m_ExportMaterial= exportMaterial;
 	m_FileName= filename;
 	bool isExported= false;
 	if (exportType == Compressed3dxml)
@@ -79,6 +85,10 @@ bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::E
 	}
 	if (isExported)
 	{
+		if (m_ExportMaterial)
+		{
+			writeAllMaterialRelatedFilesIn3dxml();
+		}
 
 		// Export the assembly structure from the list of structure reference
 		exportAssemblyStructure();
@@ -104,9 +114,7 @@ bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::E
 				emit currentQuantum(currentQuantumValue);
 			}
 			previousQuantumValue= currentQuantumValue;
-
 		}
-
 	}
 
 	emit currentQuantum(100);
@@ -497,7 +505,7 @@ void GLC_WorldTo3dxml::writeGeometry(const GLC_Mesh* pMesh)
 			}
 			texels.remove(texels.size() - 2, 2);
 
-			m_pOutStream->writeStartElement("TexturesCoordinates");
+			m_pOutStream->writeStartElement("TextureCoordinates");
 			m_pOutStream->writeAttribute("dimension", "2D");
 			m_pOutStream->writeAttribute("channel", "0");
 			m_pOutStream->writeCharacters(texels);
@@ -581,6 +589,19 @@ void GLC_WorldTo3dxml::writeSurfaceAttributes(const GLC_Material* pMaterial)
 {
 	QColor diffuseColor= pMaterial->diffuseColor();
 	m_pOutStream->writeStartElement("SurfaceAttributes");
+	if (m_ExportMaterial)
+	{
+		const QString material3dxmlId=(QString::number(m_MaterialIdToMaterialId.value(pMaterial->id())));
+		m_pOutStream->writeStartElement("MaterialApplication");
+			m_pOutStream->writeAttribute("xsi:type", "MaterialApplicationType");
+			m_pOutStream->writeAttribute("mappingChannel", "0");
+			m_pOutStream->writeStartElement("MaterialId");
+				m_pOutStream->writeAttribute("id", "urn:3DXML:CATMaterialRef.3dxml#" + material3dxmlId);
+			m_pOutStream->writeEndElement(); // MaterialId
+		m_pOutStream->writeEndElement(); // MaterialApplication
+	}
+	else
+	{
 		m_pOutStream->writeStartElement("Color");
 			m_pOutStream->writeAttribute("xsi:type", "RGBAColorType");
 			m_pOutStream->writeAttribute("red", QString::number(diffuseColor.redF()));
@@ -588,13 +609,14 @@ void GLC_WorldTo3dxml::writeSurfaceAttributes(const GLC_Material* pMaterial)
 			m_pOutStream->writeAttribute("blue", QString::number(diffuseColor.blueF()));
 			m_pOutStream->writeAttribute("alpha", QString::number(diffuseColor.alphaF()));
 		m_pOutStream->writeEndElement(); // Color
+	}
 	m_pOutStream->writeEndElement(); // SurfaceAttributes
 }
 
 void GLC_WorldTo3dxml::writeEdges(const GLC_Mesh* pMesh)
 {
 	m_pOutStream->writeStartElement("Edges");
-	writeSurfaceAttributes(pMesh->wireColor());
+	writeLineAttributes(pMesh->wireColor());
 
 	GLfloatVector positionVector= pMesh->wirePositionVector();
 	const int polylineCount= pMesh->wirePolylineCount();
@@ -621,7 +643,7 @@ void GLC_WorldTo3dxml::writeEdges(const GLC_Mesh* pMesh)
 	m_pOutStream->writeEndElement(); // Edges
 }
 
-void GLC_WorldTo3dxml::writeSurfaceAttributes(const QColor& color)
+void GLC_WorldTo3dxml::writeLineAttributes(const QColor& color)
 {
 	m_pOutStream->writeStartElement("LineAttributes");
 	m_pOutStream->writeAttribute("lineType", "SOLID");
@@ -634,4 +656,340 @@ void GLC_WorldTo3dxml::writeSurfaceAttributes(const QColor& color)
 			m_pOutStream->writeAttribute("alpha", QString::number(color.alphaF()));
 		m_pOutStream->writeEndElement(); // Color
 	m_pOutStream->writeEndElement(); // LineAttributes
+}
+
+void GLC_WorldTo3dxml::writeMaterial(const GLC_Material* pMaterial)
+{
+	const GLC_uint materialId= pMaterial->id();
+	QString materialName;
+	if (pMaterial->name().isEmpty())
+	{
+		materialName= "Material_" + QString::number(materialId);
+	}
+	else
+	{
+		materialName= pMaterial->name() + '_' + QString::number(materialId);
+	}
+
+
+	m_MaterialIdToMaterialName.insert(materialId, materialName);
+
+	const QString fileName= materialName + "_Rendering.3DRep";
+	setStreamWriterToFile(fileName);
+
+	// Begin to write the material file
+	m_pOutStream->writeStartDocument();
+	m_pOutStream->writeStartElement("Osm");
+		m_pOutStream->writeAttribute("xmlns", "http://www.3ds.com/xsd/osm.xsd");
+		m_pOutStream->writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		m_pOutStream->writeAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+		m_pOutStream->writeAttribute("xsi:schemaLocation", "http://www.3ds.com/xsd/3DXML ./osm.xsd");
+		m_pOutStream->writeStartElement("Feature");
+			m_pOutStream->writeAttribute("Alias", "RenderingRootFeature");
+			m_pOutStream->writeAttribute("Id", "1");
+			m_pOutStream->writeAttribute("StartUp", "RenderingRootFeature");
+		m_pOutStream->writeEndElement(); // Feature
+		m_pOutStream->writeStartElement("Feature");
+			m_pOutStream->writeAttribute("Alias", "RenderingFeature");
+			m_pOutStream->writeAttribute("Id", "2");
+			m_pOutStream->writeAttribute("StartUp", "RenderingFeature");
+			m_pOutStream->writeAttribute("Aggregating", "1");
+
+			writeMaterialAttributtes("Filtering", "int", "1");
+			writeMaterialAttributtes("Rotation", "double", "0");
+			writeMaterialAttributtes("PreviewType", "int", "1");
+			writeMaterialAttributtes("AmbientCoef", "double", "1");
+			writeMaterialAttributtes("DiffuseCoef", "double", "1");
+			writeMaterialAttributtes("SpecularCoef", "double", "1");
+			writeMaterialAttributtes("EmissiveCoef", "double", "0");
+			writeMaterialAttributtes("AlphaTest", "boolean", "false");
+			writeMaterialAttributtes("TextureFunction", "int", "0");
+			writeMaterialAttributtes("MappingType", "int", "2");
+			writeMaterialAttributtes("Refraction", "double", "1");
+			writeMaterialAttributtes("TextureDimension", "int", "2");
+			writeMaterialAttributtes("TranslationU", "double", "0");
+			writeMaterialAttributtes("TranslationV", "double", "0");
+			writeMaterialAttributtes("FlipU", "boolean", "false");
+			writeMaterialAttributtes("FlipV", "boolean", "false");
+			writeMaterialAttributtes("WrappingModeU", "int", "1");
+			writeMaterialAttributtes("WrappingModeV", "int", "1");
+			writeMaterialAttributtes("ScaleU", "double", "1");
+			writeMaterialAttributtes("ScaleV", "double", "1");
+			writeMaterialAttributtes("Reflectivity", "double", "0.1");
+			writeMaterialAttributtes("BlendColor", "double", "[1,1,1]");
+
+			writeMaterialAttributtes("Transparency", "double", QString::number(1.0 - pMaterial->opacity()));
+			double specularExponent= pMaterial->shininess() / 128.0;
+			writeMaterialAttributtes("SpecularExponent", "double", QString::number(specularExponent));
+			writeMaterialAttributtes("DiffuseColor", "double", colorToString(pMaterial->diffuseColor()));
+			writeMaterialAttributtes("SpecularColor", "double", colorToString(pMaterial->specularColor()));
+			writeMaterialAttributtes("AmbientColor", "double", colorToString(pMaterial->ambientColor()));
+			writeMaterialAttributtes("EmissiveColor", "double", colorToString(pMaterial->emissiveColor()));
+			if (pMaterial->hasTexture())
+			{
+				Q_ASSERT(m_MaterialIdTo3dxmlImageId.contains(pMaterial->id()));
+				const QString imageId(QString::number(m_MaterialIdTo3dxmlImageId.value(pMaterial->id())));
+
+				writeMaterialAttributtes("TextureImage", "external", "urn:3DXML:CATRepImage.3dxml#" + imageId);
+			}
+		m_pOutStream->writeEndElement(); // Feature
+	m_pOutStream->writeEndElement(); // Osm
+	m_pOutStream->writeEndDocument();
+}
+
+void GLC_WorldTo3dxml::writeMaterialAttributtes(const QString& name, const QString& type, const QString& value)
+{
+	m_pOutStream->writeStartElement("Attr");
+		m_pOutStream->writeAttribute("Name", name);
+		m_pOutStream->writeAttribute("Type", type);
+		m_pOutStream->writeAttribute("Value", value);
+	m_pOutStream->writeEndElement(); // Attr
+}
+
+QString GLC_WorldTo3dxml::colorToString(const QColor& color)
+{
+	return QString('[' + QString::number(color.redF()) + ',' + QString::number(color.greenF()) + ',' + QString::number(color.blueF()) + ']');
+}
+
+void GLC_WorldTo3dxml::writeCatRepImageFile(const QList<GLC_Material*>& materialList)
+{
+	unsigned int currentId= 0;
+	const QString fileName("CATRepImage.3dxml");
+	setStreamWriterToFile(fileName);
+
+	// Begin to write the rep image file
+	m_pOutStream->writeStartDocument();
+	m_pOutStream->writeStartElement("Model_3dxml");
+		m_pOutStream->writeAttribute("xmlns", "http://www.3ds.com/xsd/3DXML");
+		m_pOutStream->writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		m_pOutStream->writeAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+		m_pOutStream->writeAttribute("xsi:schemaLocation", "http://www.3ds.com/xsd/3DXML ./3DXML.xsd");
+		writeHeader();
+		m_pOutStream->writeStartElement("CATRepImage");
+			m_pOutStream->writeAttribute("root", QString::number(currentId));
+			const int size= materialList.size();
+			for (int i= 0; i < size; ++i)
+			{
+				writeCATRepresentationImage(materialList.at(i), ++currentId);
+			}
+		m_pOutStream->writeEndElement(); // CATRepImage
+	m_pOutStream->writeEndElement(); // Model_3dxml
+	m_pOutStream->writeEndDocument();
+}
+
+void GLC_WorldTo3dxml::writeCATRepresentationImage(const GLC_Material* pMat, unsigned int id)
+{
+	Q_ASSERT(pMat->hasTexture());
+	m_MaterialIdTo3dxmlImageId.insert(pMat->id(), id);
+
+	const QString imageName= pMat->name();
+	QString imageFileName;
+	QString imageFormat;
+	const QString textureFileName= pMat->textureHandle()->fileName();
+	if (textureFileName.isEmpty())
+	{
+		imageFormat= "jpg";
+		imageFileName= imageName + '_' + QString::number(id) + '.' + imageFormat;
+	}
+	else
+	{
+		imageFormat= QFileInfo(textureFileName).suffix();
+		imageFileName= QFileInfo(textureFileName).completeBaseName() + '_' + QString::number(id) + '.' + imageFormat;
+	}
+	m_MaterialIdToTexture3dxmlName.insert(pMat->id(), imageFileName);
+
+	m_pOutStream->writeStartElement("CATRepresentationImage");
+		m_pOutStream->writeAttribute("xsi:type", "CATRepresentationImageType");
+		m_pOutStream->writeAttribute("id", QString::number(id));
+		m_pOutStream->writeAttribute("name", imageName);
+		m_pOutStream->writeAttribute("format", imageFormat);
+		m_pOutStream->writeAttribute("associatedFile", QString("urn:3DXML:" + imageFileName));
+
+		m_pOutStream->writeTextElement("PLM_ExternalID", imageName);
+		m_pOutStream->writeTextElement("V_PrimaryMimeType", imageFormat);
+		m_pOutStream->writeTextElement("V_PrimaryFileName", imageFileName);
+	m_pOutStream->writeEndElement(); // CATRepresentationImage
+}
+
+void GLC_WorldTo3dxml::writeAllMaterialRelatedFilesIn3dxml()
+{
+	m_MaterialIdToMaterialName.clear();
+	m_MaterialIdToMaterialId.clear();
+	m_MaterialIdToTexture3dxmlName.clear();
+	m_MaterialIdTo3dxmlImageId.clear();
+
+	// Get the list of material
+	QList<GLC_Material*> materialList= m_World.listOfMaterials();
+
+	// Create the list of textured material and modified material list
+	QList<GLC_Material*> texturedMaterial;
+	const int size= materialList.size();
+	for (int i= 0; i < size; ++i)
+	{
+		if (materialList.at(i)->hasTexture())
+		{
+			texturedMaterial.append(materialList.at(i));
+		}
+	}
+
+	if (!texturedMaterial.isEmpty())
+	{
+		writeCatRepImageFile(texturedMaterial);
+		writeImageFileIn3dxml(texturedMaterial);
+	}
+
+
+	// Write material 3DRep in the 3DXML
+	for (int i= 0; i < size; ++i)
+	{
+		writeMaterial(materialList.at(i));
+	}
+
+	writeCatMaterialRef(materialList);
+
+
+
+}
+void GLC_WorldTo3dxml::writeImageFileIn3dxml(const QList<GLC_Material*>& materialList)
+{
+	const int size= materialList.size();
+	Q_ASSERT(size == m_MaterialIdToTexture3dxmlName.size());
+	for (int i= 0; i < size; ++i)
+	{
+		const GLC_Material* pCurrentMaterial= materialList.at(i);
+		const GLC_Texture* pTexture= pCurrentMaterial->textureHandle();
+		const QString imageName(m_MaterialIdToTexture3dxmlName.value(pCurrentMaterial->id()));
+		// Get the texture image
+		if (!pTexture->fileName().isEmpty())
+		{
+			// Try to load the texture
+			QImage textureImage(pTexture->fileName());
+			if (! textureImage.isNull())
+			{
+				addImageTextureTo3dxml(textureImage, imageName);
+			}
+			else
+			{
+				addImageTextureTo3dxml(pTexture->imageOfTexture(), imageName);
+			}
+		}
+		else
+		{
+			addImageTextureTo3dxml(pTexture->imageOfTexture(), imageName);
+		}
+	}
+
+}
+
+void GLC_WorldTo3dxml::writeCatMaterialRef(const QList<GLC_Material*>& materialList)
+{
+	const QString fileName("CATMaterialRef.3dxml");
+
+	setStreamWriterToFile(fileName);
+
+	unsigned int currentId= 0;
+
+	// Begin to write the rep image file
+	m_pOutStream->writeStartDocument();
+	m_pOutStream->writeStartElement("Model_3dxml");
+		m_pOutStream->writeAttribute("xmlns", "http://www.3ds.com/xsd/3DXML");
+		m_pOutStream->writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		m_pOutStream->writeAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+		m_pOutStream->writeAttribute("xsi:schemaLocation", "http://www.3ds.com/xsd/3DXML ./3DXML.xsd");
+		writeHeader();
+		m_pOutStream->writeStartElement("CATMaterialRef");
+			m_pOutStream->writeAttribute("root", QString::number(currentId));
+			const int size= materialList.size();
+			for (int i= 0; i < size; ++i)
+			{
+				writeMaterialToCatMaterialRef(materialList.at(i), &(++currentId));
+			}
+		m_pOutStream->writeEndElement(); // CATMaterialRef
+	m_pOutStream->writeEndElement(); // Model_3dxml
+	m_pOutStream->writeEndDocument();
+}
+
+void GLC_WorldTo3dxml::writeMaterialToCatMaterialRef(const GLC_Material* pMat, unsigned int* id)
+{
+	const QString materialName= m_MaterialIdToMaterialName.value(pMat->id());
+	m_MaterialIdToMaterialId.insert(pMat->id(), *id);
+
+	m_pOutStream->writeStartElement("CATMatReference");
+		m_pOutStream->writeAttribute("xsi:type", "CATMatReferenceType");
+		m_pOutStream->writeAttribute("id", QString::number(*id));
+		m_pOutStream->writeAttribute("name", materialName);
+		m_pOutStream->writeTextElement("PLM_ExternalID", materialName);
+	m_pOutStream->writeEndElement(); // CATMatReference
+
+	const QString domainName= materialName + "_Rendering";
+	m_pOutStream->writeStartElement("MaterialDomain");
+		m_pOutStream->writeAttribute("xsi:type", "MaterialDomainType");
+		m_pOutStream->writeAttribute("id", QString::number(++(*id)));
+		m_pOutStream->writeAttribute("name", domainName);
+		m_pOutStream->writeAttribute("format", "TECHREP");
+		const QString associatedFileName("urn:3DXML:" + domainName + ".3DRep");
+		m_pOutStream->writeAttribute("associatedFile", associatedFileName);
+		m_pOutStream->writeAttribute("version", "1.0");
+		m_pOutStream->writeTextElement("PLM_ExternalID", domainName);
+		if (pMat->hasTexture())
+		{
+			m_pOutStream->writeStartElement("PLMRelation");
+				m_pOutStream->writeTextElement("C_Semantics", "Reference");
+				m_pOutStream->writeTextElement("C_Role", "CATMaterialReferenceToTextureLink");
+				m_pOutStream->writeStartElement("Ids");
+					const QString imageId(QString::number(m_MaterialIdTo3dxmlImageId.value(pMat->id())));
+					m_pOutStream->writeTextElement("id", "urn:3DXML:CATRepImage.3dxml#" + imageId);
+				m_pOutStream->writeEndElement(); // Ids
+			m_pOutStream->writeEndElement(); // PLMRelation
+		}
+		m_pOutStream->writeTextElement("V_MatDomain", "Rendering");
+	m_pOutStream->writeEndElement(); // MaterialDomain
+
+	m_pOutStream->writeStartElement("MaterialDomainInstance");
+		m_pOutStream->writeAttribute("xsi:type", "MaterialDomainInstanceType");
+		m_pOutStream->writeAttribute("id", QString::number(++(*id)));
+		m_pOutStream->writeAttribute("name", materialName + ".1");
+		m_pOutStream->writeTextElement("PLM_ExternalID", materialName + ".1");
+		m_pOutStream->writeTextElement("IsAggregatedBy", QString::number((*id) - 2));
+		m_pOutStream->writeTextElement("IsInstanceOf", QString::number((*id) - 1));
+	m_pOutStream->writeEndElement(); // MaterialDomainInstance
+}
+
+void GLC_WorldTo3dxml::addImageTextureTo3dxml(const QImage& image, const QString& fileName)
+{
+	delete m_pOutStream;
+	m_pOutStream= NULL;
+
+	bool success= false;
+	if (NULL != m_p3dxmlArchive)
+	{
+		if (NULL != m_pCurrentZipFile)
+		{
+			m_pCurrentZipFile->close();
+			delete m_pOutStream;
+			delete m_pCurrentZipFile;
+		}
+		QuaZipNewInfo quazipNewInfo(fileName);
+		m_pCurrentZipFile= new QuaZipFile(m_p3dxmlArchive);
+		success= m_pCurrentZipFile->open(QIODevice::WriteOnly, quazipNewInfo);
+		if (success)
+		{
+			image.save(m_pCurrentZipFile, QFileInfo(fileName).suffix().toAscii().constData());
+			m_pCurrentZipFile->close();
+			delete m_pCurrentZipFile;
+			m_pCurrentZipFile= NULL;
+		}
+	}
+	else
+	{
+		delete m_pCurrentFile;
+		m_pCurrentFile= new QFile(m_AbsolutePath + fileName);
+		success= m_pCurrentFile->open(QIODevice::WriteOnly);
+		if (success)
+		{
+			image.save(m_pCurrentFile, QFileInfo(fileName).suffix().toAscii().constData());
+			delete m_pCurrentFile;
+			m_pCurrentFile= NULL;
+		}
+	}
 }
