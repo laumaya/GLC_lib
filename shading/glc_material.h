@@ -107,7 +107,7 @@ public:
 	QColor specularColor() const;
 
 	//! Get the emissive color
-	QColor lightEmission() const;
+	QColor emissiveColor() const;
 
 	//! Get Shininess
 	inline GLfloat shininess() const

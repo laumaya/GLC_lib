@@ -183,7 +183,7 @@ QColor GLC_Material::specularColor() const
 }
 
 // Get the emissive color
-QColor GLC_Material::lightEmission() const
+QColor GLC_Material::emissiveColor() const
 {
 	return m_LightEmission;
 }
@@ -488,10 +488,10 @@ void GLC_Material::glExecute()
 								specularColor().blueF(),
 								specularColor().alphaF()};
 
-	GLfloat pLightEmission[4]= {lightEmission().redF(),
-								lightEmission().greenF(),
-								lightEmission().blueF(),
-								lightEmission().alphaF()};
+	GLfloat pLightEmission[4]= {emissiveColor().redF(),
+								emissiveColor().greenF(),
+								emissiveColor().blueF(),
+								emissiveColor().alphaF()};
 
 	if (m_pTexture != NULL)
 	{
@@ -539,9 +539,9 @@ void GLC_Material::glExecute(float overwriteTransparency)
 								specularColor().blueF(),
 								overwriteTransparency};
 
-	GLfloat pLightEmission[4]= {lightEmission().redF(),
-								lightEmission().greenF(),
-								lightEmission().blueF(),
+	GLfloat pLightEmission[4]= {emissiveColor().redF(),
+								emissiveColor().greenF(),
+								emissiveColor().blueF(),
 								overwriteTransparency};
 
 	if (m_pTexture != NULL)
@@ -607,7 +607,7 @@ QDataStream &operator<<(QDataStream &stream, const GLC_Material &material)
 
 	// Store GLC_Material class members
 	stream << material.ambientColor() << material.diffuseColor() << material.specularColor();
-	stream << material.lightEmission() << material.shininess() << material.opacity();
+	stream << material.emissiveColor() << material.shininess() << material.opacity();
 
 	// Test if the material has texture
 	bool hasTexture= material.hasTexture();
