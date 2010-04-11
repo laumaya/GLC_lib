@@ -45,6 +45,7 @@ GLC_BSRep::GLC_BSRep(const QString& fileName, bool useCompression)
 , m_CompressionLevel(-1)
 {
 	setAbsoluteFileName(fileName);
+	m_DataStream.setVersion(QDataStream::Qt_4_6);
 	m_DataStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
 }
 
@@ -56,6 +57,7 @@ GLC_BSRep::GLC_BSRep(const GLC_BSRep& binaryRep)
 , m_UseCompression(binaryRep.m_UseCompression)
 , m_CompressionLevel(binaryRep.m_CompressionLevel)
 {
+	m_DataStream.setVersion(QDataStream::Qt_4_6);
 	m_DataStream.setFloatingPointPrecision(binaryRep.m_DataStream.floatingPointPrecision());
 }
 
