@@ -357,6 +357,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 	int previousQuantumValue= 0;
 
 	QDataStream stlBinFile(&file);
+	stlBinFile.setVersion(QDataStream::Qt_4_6);
 	stlBinFile.setFloatingPointPrecision(QDataStream::SinglePrecision);
 	stlBinFile.setByteOrder(QDataStream::LittleEndian);
 
