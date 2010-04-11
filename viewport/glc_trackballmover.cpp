@@ -127,7 +127,7 @@ GLC_Vector3d GLC_TrackBallMover::mapForTracking( double x, double y) const
 	GLC_Vector3d mousePos(x, y, 0.0);
 	if (mousePos.length() > 1.0)
 	{
-		mousePos.setLenght(1.0);
+		mousePos.setLength(1.0);
 	}
 	else
 	{
