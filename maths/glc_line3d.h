@@ -92,7 +92,7 @@ private:
 	//! Starting point of the 3d line
 	GLC_Point3d m_Point;
 
-	//! Vectot of the line
+	//! Vector of the line
 	GLC_Vector3d m_Vector;
 
 };
