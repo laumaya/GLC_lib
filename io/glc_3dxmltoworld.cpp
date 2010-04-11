@@ -1388,9 +1388,9 @@ GLC_Material* GLC_3dxmlToWorld::getMaterial()
 	diffuse.setRgbF(redReal, greenReal, blueReal);
 	pMaterial= new GLC_Material(diffuse);
 	pMaterial->setName("Material_" + QString::number(m_MaterialHash.size()));
-	pMaterial->setAmbientColor(Qt::black);
-	pMaterial->setSpecularColor(Qt::white);
-	pMaterial->setShininess(25.0);
+	pMaterial->setAmbientColor(QColor(50, 50, 50));
+	pMaterial->setSpecularColor(QColor(70, 70, 70));
+	pMaterial->setShininess(35.0);
 	pMaterial->setOpacity(alphaReal);
 
 	const QString matKey= QString::number(pMaterial->hashCode());
