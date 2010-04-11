@@ -104,7 +104,7 @@ void GLC_RepTrackBallMover::init()
 
 	GLC_Vector3d VectAngle(m_pRepMoverInfo->m_VectorInfo.first());
 	VectAngle.setZ(0);
-	VectAngle.setLenght(1);
+	VectAngle.setLength(1);
 
 	GLC_Matrix4x4 MatRot;
 	double Angle;
