@@ -130,7 +130,7 @@ GLC_Camera& GLC_Camera::zoom(double factor)
 
 	// Compute new vector length
 	const double Norme= VectCam.length() * 1 / factor;
-	VectCam.setLenght(Norme);
+	VectCam.setLength(Norme);
 
 	m_Eye= VectCam + m_Target;
 
@@ -184,8 +184,8 @@ GLC_Camera& GLC_Camera::setEyeCam(const GLC_Point3d &Eye)
 	GLC_Vector3d VectCam(Eye - m_Target);
 	if ( !(VectOldCam - VectCam).isNull() )
 	{
-		VectOldCam.setLenght(1);
-		VectCam.setLenght(1);
+		VectOldCam.setLength(1);
+		VectCam.setLength(1);
 		const double Angle= acos(VectOldCam * VectCam);
 		if ( !qFuzzyCompare(Angle, 0.0) && !qFuzzyCompare(PI - Angle, 0.0))
 		{
@@ -215,8 +215,8 @@ GLC_Camera& GLC_Camera::setTargetCam(const GLC_Point3d &Target)
 	GLC_Vector3d VectCam(m_Eye - Target);
 	if ( !(VectOldCam - VectCam).isNull() )
 	{
-		VectOldCam.setLenght(1);
-		VectCam.setLenght(1);
+		VectOldCam.setLength(1);
+		VectCam.setLength(1);
 		const double Angle= acos(VectOldCam * VectCam);
 		if ( !qFuzzyCompare(Angle, 0.0) && !qFuzzyCompare(PI - Angle, 0.0))
 		{
@@ -253,9 +253,9 @@ GLC_Camera& GLC_Camera::setUpCam(const GLC_Vector3d &Up)
 
 GLC_Camera& GLC_Camera::setCam(GLC_Point3d Eye, GLC_Point3d Target, GLC_Vector3d Up)
 {
-	Up.setLenght(1);
+	Up.setLength(1);
 
-	const GLC_Vector3d VectCam((Eye - Target).setLenght(1));
+	const GLC_Vector3d VectCam((Eye - Target).setLength(1));
 	const double Angle= acos(VectCam * Up);
 
 	/* m_VectUp and VectCam could not be parallel
@@ -293,7 +293,7 @@ GLC_Camera& GLC_Camera::setCam(const GLC_Camera& cam)
 GLC_Camera& GLC_Camera::setDistEyeTarget(double Longueur)
 {
     GLC_Vector3d VectCam(forward());
-    VectCam.setLenght(Longueur);
+    VectCam.setLength(Longueur);
     m_Eye= m_Target - VectCam;
 
     return *this;
@@ -301,7 +301,7 @@ GLC_Camera& GLC_Camera::setDistEyeTarget(double Longueur)
 GLC_Camera& GLC_Camera::setDistTargetEye(double Longueur)
 {
     GLC_Vector3d VectCam(forward());
-    VectCam.setLenght(Longueur);
+    VectCam.setLength(Longueur);
     m_Target= m_Eye + VectCam;
 
     return *this;
