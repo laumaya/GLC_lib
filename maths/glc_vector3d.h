@@ -230,11 +230,11 @@ public:
 	}
 
 	//! Set vector lenght from the given scalar and return a reference of this vector
-	inline GLC_Vector3d& setLenght(double);
+	inline GLC_Vector3d& setLength(double);
 
 	//! Normalize this vector and return a reference to it
 	inline GLC_Vector3d& normalize()
-	{return setLenght(1.0);}
+	{return setLength(1.0);}
 
 	//! Invert this vector and return a reference to it
 	inline GLC_Vector3d& invert();
@@ -369,7 +369,7 @@ GLC_Vector3d& GLC_Vector3d::setVect(double x, double y, double z)
 	return *this;
 }
 
-inline GLC_Vector3d& GLC_Vector3d::setLenght(double norme)
+inline GLC_Vector3d& GLC_Vector3d::setLength(double norme)
 {
 	const double normCur= sqrt( m_Vector[0] * m_Vector[0] + m_Vector[1] * m_Vector[1] + m_Vector[2] * m_Vector[2]);
 
