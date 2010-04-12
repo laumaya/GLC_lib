@@ -31,6 +31,7 @@
 #include "../viewport/glc_frustum.h"
 
 class GLC_3DViewCollection;
+class GLC_3DViewInstance;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_SpacePartitioning
@@ -61,6 +62,10 @@ public:
 	//! Return the 3DViewCollection of the space partitioning
 	inline GLC_3DViewCollection* collectionHandle()
 	{return m_pCollection;}
+
+	//! Return the list off instances inside or intersect the given bounding box
+	virtual QList<GLC_3DViewInstance*> listOfIntersectedInstances(const GLC_BoundingBox&)= 0;
+
 
 //@}
 //////////////////////////////////////////////////////////////////////

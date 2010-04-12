@@ -64,7 +64,7 @@ public:
 	static int defaultDepth();
 
 	//! Return the list off instances inside or intersect the given bounding box
-	QList<GLC_3DViewInstance*> listOfIntersectedInstances(const GLC_BoundingBox& bBox);
+	virtual QList<GLC_3DViewInstance*> listOfIntersectedInstances(const GLC_BoundingBox& bBox);
 
 //@}
 //////////////////////////////////////////////////////////////////////
