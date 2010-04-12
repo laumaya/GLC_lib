@@ -109,7 +109,7 @@ private:
 	QString matrixString(const GLC_Matrix4x4& matrix);
 
 	//! Write the given 3DRep to 3DXML 3DRep
-	void write3DRep(const GLC_3DRep* pRep);
+	void write3DRep(const GLC_3DRep* pRep, const QString& fileName);
 
 	//! Return the file name of the given 3DRep
 	QString representationFileName(const GLC_3DRep* pRep);
@@ -159,6 +159,12 @@ private:
 	//! Add the given texture to 3DXML with the given name
 	void addImageTextureTo3dxml(const QImage& image, const QString& fileName);
 
+	//! Transform the given name to the 3DXML name (no double)
+	QString xmlFileName(const QString& fileName);
+
+	//! Write extension attributes to 3DXML
+	void writeExtensionAttributes(GLC_Attributes* pAttributes);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -207,6 +213,9 @@ private:
 	//! Map reference rep to 3dxml id
 	QHash<const GLC_3DRep*, unsigned int> m_ReferenceRepToIdHash;
 
+	//! Map Reference rep to 3dxml fileName
+	QHash<const GLC_3DRep*, QString> m_ReferenceRepTo3dxmlFileName;
+
 	//! InstanceRep SET
 	QSet<unsigned int> m_InstanceRep;
 
@@ -224,6 +233,12 @@ private:
 
 	//! Flag to know if material must be exported
 	bool m_ExportMaterial;
+
+	//! Set of files in the 3dxml
+	QSet<QString> m_3dxmlFileSet;
+
+	//! file name increment
+	unsigned int m_FileNameIncrement;
 
 };
 
