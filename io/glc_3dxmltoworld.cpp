@@ -1496,10 +1496,13 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 			QString id= readAttribute("id", true);
 
 			GLC_StructReference* pRef= createReferenceRep("Local");
-			GLC_3DRep representation(*(dynamic_cast<GLC_3DRep*>(pRef->representationHandle())));
-
+			GLC_Rep* pRep= pRef->representationHandle();
+			if (pRep != NULL)
+			{
+				GLC_3DRep representation(*(dynamic_cast<GLC_3DRep*>(pRep)));
+				repHash.insert(id, representation);
+			}
 			delete pRef;
-			repHash.insert(id, representation);
 		}
 		m_pStreamReader->readNext();
 	}
