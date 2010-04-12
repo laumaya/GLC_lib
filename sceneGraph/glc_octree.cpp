@@ -60,6 +60,15 @@ int  GLC_Octree::defaultDepth()
 	return m_DefaultOctreeDepth;
 }
 
+QList<GLC_3DViewInstance*> GLC_Octree::listOfIntersectedInstances(const GLC_BoundingBox& bBox)
+{
+	if (NULL == m_pRootNode)
+	{
+		updateSpacePartitioning();
+	}
+	return m_pRootNode->setOfIntersectedInstances(bBox).toList();
+}
+
 void GLC_Octree::updateViewableInstances(const GLC_Frustum& frustum)
 {
 	if (NULL == m_pRootNode)

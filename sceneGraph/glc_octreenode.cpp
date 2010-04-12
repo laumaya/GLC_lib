@@ -68,6 +68,30 @@ bool GLC_OctreeNode::intersectionWithBoundingSphereUsed()
 {
 	return m_useBoundingSphere;
 }
+
+QSet<GLC_3DViewInstance*> GLC_OctreeNode::setOfIntersectedInstances(const GLC_BoundingBox& bBox)
+{
+	QSet<GLC_3DViewInstance*> instanceSet;
+	if (intersect(bBox))
+	{
+		QSet<GLC_3DViewInstance*>::iterator iInstance= m_3DViewInstanceSet.begin();
+		while (m_3DViewInstanceSet.constEnd() != iInstance)
+		{
+			if ((*iInstance)->boundingBox().intersect(bBox))
+			{
+				instanceSet << *(iInstance);
+			}
+			++iInstance;
+		}
+		const int childCount= m_Children.size();
+		for (int i= 0; i < childCount; ++i)
+		{
+			instanceSet.unite(m_Children[i]->setOfIntersectedInstances(bBox));
+		}
+	}
+
+	return instanceSet;
+}
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

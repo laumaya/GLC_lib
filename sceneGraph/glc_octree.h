@@ -31,6 +31,7 @@
 
 class GLC_OctreeNode;
 class GLC_Material;
+class GLC_3DViewInstance;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Octree
@@ -61,6 +62,9 @@ public:
 public:
 	//! Return the default octree Depth
 	static int defaultDepth();
+
+	//! Return the list off instances inside or intersect the given bounding box
+	QList<GLC_3DViewInstance*> listOfIntersectedInstances(const GLC_BoundingBox& bBox);
 
 //@}
 //////////////////////////////////////////////////////////////////////

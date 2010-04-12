@@ -98,6 +98,10 @@ public:
 	//! Return true if intersection are calculated with bounded sphere
 	static bool intersectionWithBoundingSphereUsed();
 
+	//! Return the list off instances inside or intersect the given bounding box
+	QSet<GLC_3DViewInstance*> setOfIntersectedInstances(const GLC_BoundingBox& bBox);
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
