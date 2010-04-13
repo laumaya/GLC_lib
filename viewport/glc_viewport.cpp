@@ -426,7 +426,6 @@ QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2)
 
 GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height)
 {
-
 	const int squareSize= width * height;
 	const GLsizei arraySize= squareSize * 4; // 4 -> R G B A
 	QVector<GLubyte> colorId(arraySize);
@@ -474,18 +473,12 @@ GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width,
 
 QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height)
 {
-	// Read the back buffer
-	glReadBuffer(GL_BACK);
-
 	const int squareSize= width * height;
 	const GLsizei arraySize= squareSize * 4; // 4 -> R G B A
 	QVector<GLubyte> colorId(arraySize);
 
 	// Get the array of pixels
 	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId.data());
-
-	//Restore reading buffer
-	glReadBuffer(GL_FRONT);
 
 	// Restore Background color
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);
