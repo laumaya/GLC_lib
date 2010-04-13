@@ -165,6 +165,9 @@ private:
 	//! Write extension attributes to 3DXML
 	void writeExtensionAttributes(GLC_Attributes* pAttributes);
 
+	//! Write the default view property of the given occurence
+	void writeOccurenceDefaultViewProperty(const GLC_StructOccurence* pOccurence);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -239,6 +242,9 @@ private:
 
 	//! file name increment
 	unsigned int m_FileNameIncrement;
+
+	//! List of structOccurence with overload properties
+	QList<const GLC_StructOccurence*> m_ListOfOverLoadedOccurence;
 
 };
 

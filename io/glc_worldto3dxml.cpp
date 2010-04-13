@@ -55,6 +55,7 @@ GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world)
 , m_ExportMaterial(true)
 , m_3dxmlFileSet()
 , m_FileNameIncrement(0)
+, m_ListOfOverLoadedOccurence()
 {
 	m_World.rootOccurence()->updateOccurenceNumber(1);
 }
@@ -69,6 +70,7 @@ GLC_WorldTo3dxml::~GLC_WorldTo3dxml()
 bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial)
 {
 	m_3dxmlFileSet.clear();
+	m_ListOfOverLoadedOccurence.clear();
 	m_FileNameIncrement= 0;
 	m_ExportMaterial= exportMaterial;
 	m_FileName= filename;
@@ -300,6 +302,17 @@ void GLC_WorldTo3dxml::exportAssemblyStructure()
 	exportAssemblyFromOccurence(m_World.rootOccurence());
 	m_pOutStream->writeEndElement(); // ProductStructure
 
+	if (!m_ListOfOverLoadedOccurence.isEmpty())
+	{
+		m_pOutStream->writeStartElement("DefaultView");
+			const int size= m_ListOfOverLoadedOccurence.size();
+			for (int i= 0; i < size; ++i)
+			{
+				writeOccurenceDefaultViewProperty(m_ListOfOverLoadedOccurence.at(i));
+			}
+		m_pOutStream->writeEndElement(); // DefaultView
+	}
+
 	m_pOutStream->writeEndElement(); // Model_3dxml
 
 	m_pOutStream->writeEndDocument();
@@ -348,11 +361,25 @@ void GLC_WorldTo3dxml::exportAssemblyFromOccurence(const GLC_StructOccurence* pO
 			}
 		}
 	}
+
 	// Process children
 	const int childCount= pOccurence->childCount();
 	for (int i= 0; i < childCount; ++i)
 	{
 		exportAssemblyFromOccurence(pOccurence->child(i));
+	}
+
+	// Add occurence with Overload properties to a list
+	if (m_World.collection()->contains(pOccurence->id()))
+	{
+		GLC_3DViewInstance* pInstance= m_World.collection()->instanceHandle(pOccurence->id());
+		Q_ASSERT(NULL != pInstance);
+		const bool isVisible= pInstance->isVisible();
+		const bool isOverload= !isVisible || !pInstance->renderPropertiesHandle()->isDefault();
+		if (isOverload)
+		{
+			m_ListOfOverLoadedOccurence.append(pOccurence);
+		}
 	}
 
 }
@@ -1056,4 +1083,43 @@ void GLC_WorldTo3dxml::writeExtensionAttributes(GLC_Attributes* pAttributes)
 			m_pOutStream->writeAttribute("value", value);
 		m_pOutStream->writeEndElement(); // Attribute
 	}
+}
+
+void GLC_WorldTo3dxml::writeOccurenceDefaultViewProperty(const GLC_StructOccurence* pOccurence)
+{
+	GLC_3DViewInstance* pInstance= m_World.collection()->instanceHandle(pOccurence->id());
+	Q_ASSERT(NULL != pInstance);
+	const bool isVisible= pOccurence->isVisible();
+	const unsigned int occurrenceId= pOccurence->occurenceNumber();
+	m_pOutStream->writeStartElement("DefaultViewProperty");
+	m_pOutStream->writeTextElement("OccurenceId", QString::number(occurrenceId));
+	m_pOutStream->writeStartElement("GraphicProperties");
+	m_pOutStream->writeAttribute("xsi:type", "GraphicPropertiesType");
+	if (! isVisible)
+	{
+		m_pOutStream->writeStartElement("GeneralAttributes");
+			m_pOutStream->writeAttribute("xsi:type", "GeneralAttributesType");
+			m_pOutStream->writeAttribute("visible", "false");
+			m_pOutStream->writeAttribute("selectable", "true");
+		m_pOutStream->writeEndElement(); // GeneralAttributes
+	}
+	if (!pInstance->renderPropertiesHandle()->isDefault())
+	{
+		const GLC_RenderProperties* pProperties= pInstance->renderPropertiesHandle();
+		if (pProperties->overwriteTransparency() != -1.0f)
+		{
+			m_pOutStream->writeStartElement("SurfaceAttributes");
+			m_pOutStream->writeAttribute("xsi:type", "SurfaceAttributesType");
+				m_pOutStream->writeStartElement("Color");
+					m_pOutStream->writeAttribute("xsi:type", "RGBAColorType");
+					m_pOutStream->writeAttribute("red", "-1");
+					m_pOutStream->writeAttribute("green", "-1");
+					m_pOutStream->writeAttribute("blue", "-1");
+					m_pOutStream->writeAttribute("alpha", QString::number(pProperties->overwriteTransparency()));
+				m_pOutStream->writeEndElement(); // Color
+			m_pOutStream->writeEndElement(); // SurfaceAttributes
+		}
+	}
+	m_pOutStream->writeEndElement(); // GraphicProperties
+	m_pOutStream->writeEndElement(); // DefaultViewProperty
 }
