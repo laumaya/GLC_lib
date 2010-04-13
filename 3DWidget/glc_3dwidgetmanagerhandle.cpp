@@ -232,9 +232,7 @@ QPair<GLC_uint, GLC_Point3d> GLC_3DWidgetManagerHandle::select(QMouseEvent* even
 {
 
 	GLC_uint selectionId= m_pViewport->selectOnPreviousRender(event->x(), event->y());
-	glReadBuffer(GL_BACK);
 	const GLC_Point3d selectedPoint(m_pViewport->unProject(event->x(), event->y()));
-	glReadBuffer(GL_FRONT);
 
 	QPair<GLC_uint, GLC_Point3d> selection;
 	selection.first= selectionId;
