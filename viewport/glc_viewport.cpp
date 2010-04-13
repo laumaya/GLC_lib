@@ -303,6 +303,7 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 
 GLC_uint GLC_Viewport::renderAndSelect(int x, int y)
 {
+
 	m_pQGLWidget->qglClearColor(Qt::black);
 	GLC_State::setSelectionMode(true);
 	// Draw the scene
@@ -425,8 +426,6 @@ QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2)
 
 GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height)
 {
-	// Read the back buffer
-	glReadBuffer(GL_BACK);
 
 	const int squareSize= width * height;
 	const GLsizei arraySize= squareSize * 4; // 4 -> R G B A
@@ -434,9 +433,6 @@ GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width,
 
 	// Get the array of pixels
 	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId.data());
-
-	//Restore reading buffer
-	glReadBuffer(GL_FRONT);
 
 	// Restore Background color
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);
