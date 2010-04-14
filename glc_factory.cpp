@@ -325,9 +325,9 @@ GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName) cons
 	return new GLC_Texture(m_pQGLContext, textureFullFileName);
 }
 
-GLC_Texture* GLC_Factory::createTexture(const QImage & image) const
+GLC_Texture* GLC_Factory::createTexture(const QImage & image, const QString& imageFileName) const
 {
-	return new GLC_Texture(m_pQGLContext, image);
+	return new GLC_Texture(m_pQGLContext, image, imageFileName);
 }
 
 GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& color, GLC_Viewport* pViewport)

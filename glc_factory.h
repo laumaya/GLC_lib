@@ -143,7 +143,7 @@ public:
 	GLC_Texture* createTexture(const QString &textureFullFileName) const;
 
 	//! Create a GLC_Texture with a QImage
-	GLC_Texture* createTexture(const QImage &) const;
+	GLC_Texture* createTexture(const QImage &, const QString& imageFileName= QString()) const;
 
 	//! Create the default mover controller
 	GLC_MoverController createDefaultMoverController(const QColor&, GLC_Viewport*);
