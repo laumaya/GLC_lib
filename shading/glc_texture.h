@@ -58,7 +58,7 @@ public:
 	GLC_Texture(const QGLContext*, const QFile&);
 
 	//! Constructor with QImage
-	GLC_Texture(const QGLContext*, const QImage&, const QString& fileName= QString());
+	GLC_Texture(const QGLContext*, const QImage&, const QString& fileName);
 
 	//! Copy constructor
 	GLC_Texture(const GLC_Texture& TextureToCopy);
@@ -131,6 +131,16 @@ public:
 	void glLoadTexture(void);
 	//! Bind texture in 2D mode
 	void glcBindTexture(void);
+
+
+//////////////////////////////////////////////////////////////////////
+/*! @name Private services functions */
+//@{
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Load the image of this texture from the given fileName and return resutling image
+	QImage loadFromFile(const QString& fileName);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

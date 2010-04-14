@@ -27,6 +27,11 @@
 
 #include "glc_texture.h"
 #include "../glc_exception.h"
+#include "../glc_global.h"
+
+// Quazip library
+#include "../quazip/quazip.h"
+#include "../quazip/quazipfile.h"
 
 #include <QtDebug>
 
@@ -56,7 +61,7 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
 : m_pQGLContext(const_cast<QGLContext*>(pContext))
 , m_FileName(Filename)
 , m_GlTextureID(0)
-, m_textureImage(m_FileName)
+, m_textureImage(loadFromFile(m_FileName))
 , m_TextureSize()
 , m_HasAlphaChannel(m_textureImage.hasAlphaChannel())
 {
@@ -74,10 +79,11 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QFile &file)
 : m_pQGLContext(const_cast<QGLContext*>(pContext))
 , m_FileName(file.fileName())
 , m_GlTextureID(0)
-, m_textureImage(m_FileName)
+, m_textureImage()
 , m_TextureSize()
 , m_HasAlphaChannel(m_textureImage.hasAlphaChannel())
 {
+	m_textureImage.load(const_cast<QFile*>(&file), QFileInfo(m_FileName).suffix().toLocal8Bit());
 	if (m_textureImage.isNull())
 	{
 		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
@@ -237,21 +243,70 @@ void GLC_Texture::glcBindTexture(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 }
 
+QImage GLC_Texture::loadFromFile(const QString& fileName)
+{
+	QImage resultImage;
+	if (glc::isArchiveString(fileName))
+	{
+
+		// Load the image from a zip archive
+		QuaZip* p3dxmlArchive= new QuaZip(glc::archiveFileName(fileName));
+		// Trying to load archive
+		if(!p3dxmlArchive->open(QuaZip::mdUnzip))
+		{
+		  delete p3dxmlArchive;
+		  return QImage();
+		}
+		else
+		{
+			// Set the file Name Codec
+			p3dxmlArchive->setFileNameCodec("IBM866");
+		}
+		QString imageFileName= glc::archiveEntryFileName(fileName);
+
+		// Create QuaZip File
+		QuaZipFile* p3dxmlFile= new QuaZipFile(p3dxmlArchive);
+
+		// Get the file of the 3dxml
+		if (!p3dxmlArchive->setCurrentFile(imageFileName, QuaZip::csInsensitive))
+		{
+			delete p3dxmlFile;
+			delete p3dxmlArchive;
+			return QImage();
+		}
+
+		// Open the file of the 3dxml
+		if(!p3dxmlFile->open(QIODevice::ReadOnly))
+	    {
+			delete p3dxmlFile;
+			delete p3dxmlArchive;
+			return QImage();
+	    }
+		resultImage.load(p3dxmlFile, QFileInfo(imageFileName).suffix().toLocal8Bit());
+		p3dxmlFile->close();
+		delete p3dxmlFile;
+		delete p3dxmlArchive;
+	}
+	else
+	{
+		resultImage.load(fileName);
+	}
+
+	return resultImage;
+}
+
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_Texture &texture)
 {
 	stream << texture.fileName();
-
-	stream << texture.imageOfTexture();
 
 	return stream;
 }
 QDataStream &operator>>(QDataStream &stream, GLC_Texture &texture)
 {
 	QString fileName;
-	QImage image;
-	stream >> fileName >> image;
-	texture= GLC_Texture(texture.context(), image, fileName);
+	stream >> fileName;
+	texture= GLC_Texture(texture.context(), fileName);
 
 	return stream;
 }
