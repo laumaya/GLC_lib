@@ -165,11 +165,9 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 {
 	GLC_3DRep resultRep;
 	QString entryFileName;
-	if (fileName.left(5) == QString("Zip::"))
+	if (glc::isArchiveString(fileName))
 	{
-		m_FileName= fileName;
-		m_FileName.remove("Zip::");
-		m_FileName= m_FileName.left(m_FileName.indexOf("::"));
+		m_FileName= glc::archiveFileName(fileName);
 
 		// Create the 3dxml Zip archive
 		m_p3dxmlArchive= new QuaZip(m_FileName);
@@ -185,8 +183,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 			// Set the file Name Codec
 			m_p3dxmlArchive->setFileNameCodec("IBM866");
 		}
-		entryFileName= fileName;
-		entryFileName.remove(QString("Zip::") + m_FileName + "::");
+		entryFileName= glc::archiveEntryFileName(fileName);
 
 		// Get the 3DXML time stamp
 		m_CurrentDateTime= QFileInfo(QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(fileName).fileName()).lastModified();
@@ -1693,7 +1690,7 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 			GLC_3DRep representation;
 			if (m_IsInArchive)
 			{
-				representation.setFileName("Zip::" + m_FileName + "::" + currentRefFileName);
+				representation.setFileName(glc::builtArchiveString(m_FileName, currentRefFileName));
 			}
 			else
 			{
@@ -1979,10 +1976,10 @@ void GLC_3dxmlToWorld::loadMaterialDef(const MaterialRef& materialRef)
 				if (m_TextureImagesHash.contains(imageId))
 				{
 					QString imageName= m_TextureImagesHash.value(imageId);
-					QImage textureImage= loadImage(imageName);
-					if (!textureImage.isNull())
+					GLC_Texture* pTexture= loadTexture(imageName);
+					if (NULL != pTexture)
 					{
-						pMaterial->setTexture(new GLC_Texture(m_pQGLContext, textureImage));
+						pMaterial->setTexture(pTexture);
 					}
 				}
 			}
@@ -2049,10 +2046,11 @@ void GLC_3dxmlToWorld::loadCatRepImage()
 }
 
 // try to load the specified image
-QImage GLC_3dxmlToWorld::loadImage(QString fileName)
+GLC_Texture* GLC_3dxmlToWorld::loadTexture(QString fileName)
 {
 	QString format= QFileInfo(fileName).suffix().toUpper();
 	QImage resultImage;
+	QString resultImageFileName;
 	if (m_IsInArchive)
 	{
 		// Create QuaZip File
@@ -2061,7 +2059,7 @@ QImage GLC_3dxmlToWorld::loadImage(QString fileName)
 		// Get the file of the 3dxml
 		if (!m_p3dxmlArchive->setCurrentFile(fileName, QuaZip::csInsensitive))
 		{
-			return QImage();
+			return NULL;
 		}
 
 		// Open the file of the 3dxml
@@ -2077,32 +2075,33 @@ QImage GLC_3dxmlToWorld::loadImage(QString fileName)
 		resultImage.load(p3dxmlFile, format.toLocal8Bit());
 		p3dxmlFile->close();
 		delete p3dxmlFile;
+		resultImageFileName= glc::builtArchiveString(m_FileName, fileName);
 	}
 	else
 	{
 		// Create the file to load
 		if (fileName != m_FileName)
 		{
-			fileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + fileName;
+			resultImageFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + fileName;
 		}
-		QFile* pCurrentFile= new QFile(fileName);
+		QFile* pCurrentFile= new QFile(resultImageFileName);
 		if (!pCurrentFile->open(QIODevice::ReadOnly))
 		{
 			delete pCurrentFile;
-			QString message(QString("GLC_3dxmlToWorld::loadImage File ") + fileName + QString(" not found"));
+			QString message(QString("GLC_3dxmlToWorld::loadImage File ") + resultImageFileName + QString(" not found"));
 			qDebug() << message;
-			return QImage();
+			return NULL;
 		}
 		else
 		{
-			m_ListOfAttachedFileName << fileName;
+			m_ListOfAttachedFileName << resultImageFileName;
 		}
 		resultImage.load(pCurrentFile, format.toLocal8Bit());
 		pCurrentFile->close();
 		delete pCurrentFile;
 	}
 
-	return resultImage;
+	return new GLC_Texture(m_pQGLContext, resultImage, resultImageFileName);
 }
 
 // Factorize material use

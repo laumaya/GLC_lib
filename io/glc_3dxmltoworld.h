@@ -251,8 +251,8 @@ private:
 	//! Load CATRepIage if present
 	void loadCatRepImage();
 
-	//! try to load the specified image
-	QImage loadImage(QString);
+	//! Try to construct a texture with the specified fileName
+	GLC_Texture* loadTexture(QString);
 
 	//! Factorize material use
 	void factorizeMaterial(GLC_3DRep*);
