@@ -66,3 +66,44 @@ GLC_uint glc::GLC_Gen3DWidgetID(void)
 	glc::widget3dIdMutex.unlock();
 	return Id;
 }
+
+const QString glc::archivePrefix()
+{
+	return "glc_Zip::";
+}
+
+const QString glc::archiveInfix()
+{
+	return "::glc_Zip::";
+}
+
+bool glc::isArchiveString(const QString& fileName)
+{
+	bool inArchive= fileName.startsWith(archivePrefix());
+	inArchive= inArchive && fileName.contains(archiveInfix());
+	return inArchive;
+}
+
+QString glc::builtArchiveString(const QString& Archive, const QString& entry)
+{
+	return QString(archivePrefix() + Archive + archiveInfix() + entry);
+}
+
+QString glc::archiveFileName(const QString& archiveString)
+{
+	Q_ASSERT(isArchiveString(archiveString));
+	const int indexOfInfix= archiveString.indexOf(archiveInfix());
+	const int prefixLength= archivePrefix().length();
+	const int length= indexOfInfix - prefixLength;
+	return archiveString.mid(prefixLength, length);
+}
+
+QString glc::archiveEntryFileName(const QString& archiveString)
+{
+	Q_ASSERT(isArchiveString(archiveString));
+	const int indexOfInfix= archiveString.indexOf(archiveInfix());
+	const int infixLength= archiveInfix().length();
+	const int length= archiveString.length() - (indexOfInfix + infixLength);
+	return archiveString.right(length);
+}
+

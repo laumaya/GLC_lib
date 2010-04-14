@@ -86,6 +86,25 @@ namespace glc
 		IgnoreEvent,
 		BlockedEvent
 	};
+
+	//! Return GLC_lib Archive prefix string
+	GLC_LIB_EXPORT const QString archivePrefix();
+
+	//! Return GLC_lib Archive infix string
+	GLC_LIB_EXPORT const QString archiveInfix();
+
+	//! Return true if the given file name is in a archive string
+	GLC_LIB_EXPORT bool isArchiveString(const QString& fileName);
+
+	//! Return archive string form the given archive fileName and fileName entry
+	GLC_LIB_EXPORT QString builtArchiveString(const QString& Archive, const QString& entry);
+
+	//! Return Archive filename from the given archive string
+	GLC_LIB_EXPORT QString archiveFileName(const QString& archiveString);
+
+	//! Return Archive entry filname from the given archive string
+	GLC_LIB_EXPORT QString archiveEntryFileName(const QString& archiveString);
+
 };
 
 // Return the GLC_uint decoded ID from RGBA encoded ID
