@@ -266,7 +266,7 @@ uint GLC_Material::hashCode() const
 	stringKey+= QString::number(m_Opacity);
 	if (NULL != m_pTexture)
 	{
-		stringKey+= QString::number((size_t)m_pTexture);
+		stringKey+= m_pTexture->fileName();
 	}
 
 	return qHash(stringKey);
