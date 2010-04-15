@@ -416,7 +416,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 		m_pStreamReader->readNext();
 	}
 
-
+	// Load Default view properties
 	while(endElementNotReached("Model_3dxml"))
 	{
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
