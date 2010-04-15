@@ -68,7 +68,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Create and return an GLC_World* from an input OBJ File
+	//! Create and return an GLC_World* from an input STL File
 	GLC_World* CreateWorldFromStl(QFile &file);
 //@}
 

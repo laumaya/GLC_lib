@@ -31,6 +31,7 @@
 #include "io/glc_3dstoworld.h"
 #include "io/glc_3dxmltoworld.h"
 #include "io/glc_colladatoworld.h"
+#include "io/glc_bsreptoworld.h"
 
 #include "viewport/glc_panmover.h"
 #include "viewport/glc_zoommover.h"
@@ -234,6 +235,12 @@ GLC_World GLC_Factory::createWorldFromFile(QFile &file, QStringList* pAttachedFi
 		{
 			(*pAttachedFileName)= colladaToWorld.listOfAttachedFileName();
 		}
+	}
+	else if (QFileInfo(file).suffix().toLower() == "bsrep")
+	{
+		GLC_BSRepToWorld bsRepToWorld;
+		pWorld= bsRepToWorld.CreateWorldFromBSRep(file);
+		emit currentQuantum(100);
 	}
 
 	if (NULL == pWorld)

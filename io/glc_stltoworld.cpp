@@ -37,7 +37,8 @@
 #include <QDataStream>
 
 GLC_StlToWorld::GLC_StlToWorld()
-: m_pWorld(NULL)
+: QObject()
+, m_pWorld(NULL)
 , m_FileName()
 , m_CurrentLineNumber(0)
 , m_StlStream()
