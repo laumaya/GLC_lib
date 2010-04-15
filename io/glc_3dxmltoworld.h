@@ -341,7 +341,7 @@ private:
 	//! The current file time and date
 	QDateTime m_CurrentDateTime;
 
-	//! Hash table of occurence specific attrubutes
+	//! Hash table of occurence specific attributes
 	QHash<unsigned int, OccurenceAttrib*> m_OccurenceAttrib;
 
 
