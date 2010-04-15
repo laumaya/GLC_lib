@@ -56,6 +56,8 @@ GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world)
 , m_3dxmlFileSet()
 , m_FileNameIncrement(0)
 , m_ListOfOverLoadedOccurence()
+, m_pReadWriteLock(NULL)
+, m_pIsInterupted(NULL)
 {
 	m_World.rootOccurence()->updateOccurenceNumber(1);
 }
@@ -108,7 +110,7 @@ bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::E
 		const int size= m_ReferenceRepTo3dxmlFileName.size();
 		// Export the representation
 		QHash<const GLC_3DRep*, QString>::const_iterator iRep= m_ReferenceRepTo3dxmlFileName.constBegin();
-		while (m_ReferenceRepTo3dxmlFileName.constEnd() != iRep)
+		while ((m_ReferenceRepTo3dxmlFileName.constEnd() != iRep) && continu())
 		{
 			write3DRep(iRep.key(), iRep.value());
 			++iRep;
@@ -126,6 +128,12 @@ bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::E
 
 	emit currentQuantum(100);
 	return isExported;
+}
+
+void GLC_WorldTo3dxml::setInterupt(QReadWriteLock* pReadWriteLock, bool* pInterupt)
+{
+	m_pReadWriteLock= pReadWriteLock;
+	m_pIsInterupted= pInterupt;
 }
 
 void GLC_WorldTo3dxml::writeHeader()
@@ -1122,4 +1130,17 @@ void GLC_WorldTo3dxml::writeOccurenceDefaultViewProperty(const GLC_StructOccuren
 	}
 	m_pOutStream->writeEndElement(); // GraphicProperties
 	m_pOutStream->writeEndElement(); // DefaultViewProperty
+}
+
+bool GLC_WorldTo3dxml::continu()
+{
+	bool continuValue= true;
+	if (NULL != m_pReadWriteLock)
+	{
+		Q_ASSERT(NULL != m_pIsInterupted);
+		m_pReadWriteLock->lockForRead();
+		continuValue= !(*m_pIsInterupted);
+		m_pReadWriteLock->unlock();
+	}
+	return continuValue;
 }

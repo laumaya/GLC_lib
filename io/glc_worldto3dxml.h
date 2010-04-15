@@ -30,6 +30,7 @@
 
 #include "../sceneGraph/glc_world.h"
 #include "../glc_config.h"
+#include <QReadWriteLock>
 
 class QuaZip;
 class QuaZipFile;
@@ -70,6 +71,9 @@ public:
 	//! Set the name of the 3dxml generator default is GLC_LIB
 	inline void setGeneratorName(const QString& generator)
 	{m_Generator= generator;}
+
+	//! set interrupt flag adress
+	void setInterupt(QReadWriteLock* pReadWriteLock, bool* pInterupt);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -168,6 +172,9 @@ private:
 	//! Write the default view property of the given occurence
 	void writeOccurenceDefaultViewProperty(const GLC_StructOccurence* pOccurence);
 
+	//! return true if export must continu
+	bool continu();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -245,6 +252,12 @@ private:
 
 	//! List of structOccurence with overload properties
 	QList<const GLC_StructOccurence*> m_ListOfOverLoadedOccurence;
+
+	//! Mutex
+	QReadWriteLock* m_pReadWriteLock;
+
+	//! Flag to know if export must be interupted
+	bool* m_pIsInterupted;
 
 };
 
