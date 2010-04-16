@@ -33,44 +33,51 @@
 //Tools Functions
 //////////////////////////////////////////////////////////////////////
 
-// test if a polygon of mesh is convex
-/*
-bool glc::polygonIsConvex(const VertexList* pVertexList)
+// Test if a polygon is convex
+bool glc::polygon2DIsConvex(const QList<GLC_Point2d>& vertices)
 {
-	const int max= pVertexList->size();
-	if (max < 4) return true;
-
-	GLC_Vector3d vertex1((*pVertexList)[0].x, (*pVertexList)[0].y, (*pVertexList)[0].z);
-	GLC_Vector3d vertex2((*pVertexList)[1].x, (*pVertexList)[1].y, (*pVertexList)[1].z);
-	GLC_Vector3d edge1(vertex2 - vertex1);
-
-	vertex1= vertex2;
-	vertex2= GLC_Vector3d((*pVertexList)[2].x, (*pVertexList)[2].y, (*pVertexList)[2].z);
-	GLC_Vector3d edge2(vertex2 - vertex1);
-
-	const bool direction= (edge1 ^ edge2).Z() >= 0.0;
-
-	for (int i= 3; i < max; ++i)
+	bool isConvex= true;
+	const int size= vertices.size();
+	if (vertices.size() > 3)
 	{
-		edge1= edge2;
-		vertex1= vertex2;
-		vertex2= GLC_Vector3d((*pVertexList)[i].x, (*pVertexList)[i].y, (*pVertexList)[i].z);
-		edge2= vertex2 - vertex1;
-		if (((edge1 ^ edge2).Z() >= 0.0) != direction)
-			return false;
-	}
-	// The last edge with the first
-	edge1= edge2;
-	vertex1= vertex2;
-	vertex2= GLC_Vector3d((*pVertexList)[0].x, (*pVertexList)[0].y, (*pVertexList)[0].z);
-	edge2= vertex2 - vertex1;
-	if (((edge1 ^ edge2).Z() >= 0.0) != direction)
-		return false;
+		GLC_Point2d s0(vertices.at(0));
+		GLC_Point2d s1(vertices.at(1));
+		GLC_Point2d s2(vertices.at(2));
+		const bool openAngle= ((s1.getX() - s0.getX()) * (s2.getY() - s0.getY()) - (s2.getX() - s0.getX()) * (s1.getY() - s0.getY())) < 0.0;
 
-	// Ok, the polygon is convexe
-	return true;
+		int i= 3;
+		while ((i < size) && isConvex)
+		{
+			s0= s1;
+			s1= s2;
+			s2= vertices.at(i);
+			isConvex= openAngle == (((s1.getX() - s0.getX()) * (s2.getY() - s0.getY()) - (s2.getX() - s0.getX()) * (s1.getY() - s0.getY())) < 0.0);
+			++i;
+		}
+	}
+
+	return isConvex;
 }
-*/
+
+bool glc::polygonIsConvex(QList<GLuint>* pIndexList, const QList<float>& bulkList)
+{
+	bool isConvex= true;
+	const int size= pIndexList->size();
+	GLuint currentIndex;
+	GLC_Vector3d v0;
+	GLC_Vector3d v1;
+	int i= 0;
+	while ((i < size) && isConvex)
+	{
+		currentIndex= pIndexList->at(i);
+		v0.setVect(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
+		currentIndex= pIndexList->at((i + 1) % size);
+		v1.setVect(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
+		isConvex= (v0.angleWithVect(v1) < glc::PI);
+		++i;
+	}
+	return isConvex;
+}
 // find intersection between two 2D segments
 QVector<GLC_Point2d> glc::findIntersection(const GLC_Point2d& s1p1, const GLC_Point2d& s1p2, const GLC_Point2d& s2p1, const GLC_Point2d& s2p2)
 {
@@ -372,105 +379,122 @@ bool glc::isCounterclockwiseOrdered(const QList<GLC_Point2d>& polygon)
 // Triangulate a no convex polygon
 void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulkList)
 {
-	// Get the polygon vertice
-	QList<GLC_Point3d> originPoints;
-	QHash<int, int> indexMap;
 	int size= pIndexList->size();
-	QList<int> face;
-	GLC_Point3d currentPoint;
-	int delta= 0;
-	for (int i= 0; i < size; ++i)
+	if (polygonIsConvex(pIndexList, bulkList))
 	{
-		const int currentIndex= pIndexList->at(i);
-		currentPoint= GLC_Point3d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
-		if (!originPoints.contains(currentPoint))
+		QList<GLuint> indexList(*pIndexList);
+		pIndexList->clear();
+		for (int i= 0; i < size - 2; ++i)
 		{
-			originPoints.append(GLC_Point3d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2)));
-			indexMap.insert(i - delta, currentIndex);
-			face.append(i - delta);
-		}
-		else
-		{
-			qDebug() << "Multi points";
-			++delta;
+			pIndexList->append(indexList.at(0));
+			pIndexList->append(indexList.at(i + 1));
+			pIndexList->append(indexList.at(i + 2));
 		}
 	}
-	// Values of PindexList must be reset
-	pIndexList->clear();
+	else
+	{
+		// Get the polygon vertice
+		QList<GLC_Point3d> originPoints;
+		QHash<int, int> indexMap;
 
-	// Update size
-	size= size - delta;
-
-	// Check new size
-	if (size < 3) return;
-
-	//-------------- Change frame to mach polygon plane
-		// Compute face normal
-		const GLC_Point3d point1(originPoints[0]);
-		const GLC_Point3d point2(originPoints[1]);
-		const GLC_Point3d point3(originPoints[2]);
-
-		const GLC_Vector3d edge1(point2 - point1);
-		const GLC_Vector3d edge2(point3 - point2);
-
-		GLC_Vector3d polygonPlaneNormal(edge1 ^ edge2);
-		polygonPlaneNormal.normalize();
-
-		// Create the transformation matrix
-		GLC_Matrix4x4 transformation;
-
-		GLC_Vector3d rotationAxis(polygonPlaneNormal ^ Z_AXIS);
-		if (!rotationAxis.isNull())
+		QList<int> face;
+		GLC_Point3d currentPoint;
+		int delta= 0;
+		for (int i= 0; i < size; ++i)
 		{
-			const double angle= acos(polygonPlaneNormal * Z_AXIS);
-			transformation.setMatRot(rotationAxis, angle);
-		}
-
-		QList<GLC_Point2d> polygon;
-		// Transform polygon vertexs
-		for (int i=0; i < size; ++i)
-		{
-			originPoints[i]= transformation * originPoints[i];
-			// Create 2d vector
-			polygon << originPoints[i].toVector2d(Z_AXIS);
-		}
-		// Create the index
-		QList<int> index= face;
-
-		QList<int> tList;
-		const bool faceIsCounterclockwise= isCounterclockwiseOrdered(polygon);
-
-		if(!faceIsCounterclockwise)
-		{
-			//qDebug() << "face Is Not Counterclockwise";
-			const int max= size / 2;
-			for (int i= 0; i < max; ++i)
+			const int currentIndex= pIndexList->at(i);
+			currentPoint= GLC_Point3d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
+			if (!originPoints.contains(currentPoint))
 			{
-				polygon.swap(i, size - 1 -i);
-				int temp= face[i];
-				face[i]= face[size - 1 - i];
-				face[size - 1 - i]= temp;
-			}
-		}
-		triangulate(polygon, index, tList);
-		size= tList.size();
-		for (int i= 0; i < size; i+= 3)
-		{
-			// Avoid normal problem
-			if (faceIsCounterclockwise)
-			{
-				pIndexList->append(indexMap.value(face[tList[i]]));
-				pIndexList->append(indexMap.value(face[tList[i + 1]]));
-				pIndexList->append(indexMap.value(face[tList[i + 2]]));
+				originPoints.append(GLC_Point3d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2)));
+				indexMap.insert(i - delta, currentIndex);
+				face.append(i - delta);
 			}
 			else
 			{
-				pIndexList->append(indexMap.value(face[tList[i + 2]]));
-				pIndexList->append(indexMap.value(face[tList[i + 1]]));
-				pIndexList->append(indexMap.value(face[tList[i]]));
+				qDebug() << "Multi points";
+				++delta;
 			}
 		}
-		Q_ASSERT(size == pIndexList->size());
+		// Values of PindexList must be reset
+		pIndexList->clear();
+
+		// Update size
+		size= size - delta;
+
+		// Check new size
+		if (size < 3) return;
+
+		//-------------- Change frame to mach polygon plane
+			// Compute face normal
+			const GLC_Point3d point1(originPoints[0]);
+			const GLC_Point3d point2(originPoints[1]);
+			const GLC_Point3d point3(originPoints[2]);
+
+			const GLC_Vector3d edge1(point2 - point1);
+			const GLC_Vector3d edge2(point3 - point2);
+
+			GLC_Vector3d polygonPlaneNormal(edge1 ^ edge2);
+			polygonPlaneNormal.normalize();
+
+			// Create the transformation matrix
+			GLC_Matrix4x4 transformation;
+
+			GLC_Vector3d rotationAxis(polygonPlaneNormal ^ Z_AXIS);
+			if (!rotationAxis.isNull())
+			{
+				const double angle= acos(polygonPlaneNormal * Z_AXIS);
+				transformation.setMatRot(rotationAxis, angle);
+			}
+
+			QList<GLC_Point2d> polygon;
+			// Transform polygon vertexs
+			for (int i=0; i < size; ++i)
+			{
+				originPoints[i]= transformation * originPoints[i];
+				// Create 2d vector
+				polygon << originPoints[i].toVector2d(Z_AXIS);
+			}
+			// Create the index
+			QList<int> index= face;
+
+			QList<int> tList;
+			const bool faceIsCounterclockwise= isCounterclockwiseOrdered(polygon);
+
+			if(!faceIsCounterclockwise)
+			{
+				//qDebug() << "face Is Not Counterclockwise";
+				const int max= size / 2;
+				for (int i= 0; i < max; ++i)
+				{
+					polygon.swap(i, size - 1 -i);
+					int temp= face[i];
+					face[i]= face[size - 1 - i];
+					face[size - 1 - i]= temp;
+				}
+			}
+
+			triangulate(polygon, index, tList);
+			size= tList.size();
+			for (int i= 0; i < size; i+= 3)
+			{
+				// Avoid normal problem
+				if (faceIsCounterclockwise)
+				{
+					pIndexList->append(indexMap.value(face[tList[i]]));
+					pIndexList->append(indexMap.value(face[tList[i + 1]]));
+					pIndexList->append(indexMap.value(face[tList[i + 2]]));
+				}
+				else
+				{
+					pIndexList->append(indexMap.value(face[tList[i + 2]]));
+					pIndexList->append(indexMap.value(face[tList[i + 1]]));
+					pIndexList->append(indexMap.value(face[tList[i]]));
+				}
+			}
+			Q_ASSERT(size == pIndexList->size());
+	}
+
 }
 
 bool glc::lineIntersectPlane(const GLC_Line3d& line, const GLC_Plane& plane, GLC_Point3d* pPoint)

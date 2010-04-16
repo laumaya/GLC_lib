@@ -44,9 +44,11 @@ namespace glc
 /*! \name Tools Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-	//! test if a polygon is convex
-	/*! The polygon must have mare than 3 vertexs */
-	//bool polygonIsConvex(const VertexList*);
+	//! test if the given 2D polygon is convex
+	bool polygon2DIsConvex(const QList<GLC_Point2d>& vertices);
+
+	//! Test if the given 3d polygon is convex
+	bool polygonIsConvex(QList<GLuint>* pIndexList, const QList<float>& bulkList);
 
 	//! find intersection between two 2D segments
 	/*! Return the intersection as QVector of GLC_Point2d
@@ -80,7 +82,8 @@ namespace glc
 	//! Return true if the polygon is couterclockwise ordered
 	GLC_LIB_EXPORT bool isCounterclockwiseOrdered(const QList<GLC_Point2d>&);
 
-	//! Triangulate a no convex polygon
+	//! Triangulate a polygon return true if the polygon is convex
+	/*! If the polygon is convex the returned index is a fan*/
 	GLC_LIB_EXPORT void triangulatePolygon(QList<GLuint>*, const QList<float>&);
 
 	//! Return true if the given 3d line intersect the given plane
