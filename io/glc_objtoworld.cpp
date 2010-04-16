@@ -572,18 +572,18 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 
 }
 // Extract a vertex from a string
-void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Normal, int &TextureCoordinate)
+void GLC_ObjToWorld::extractVertexIndex(QString line, int &Coordinate, int &Normal, int &TextureCoordinate)
 {
  	if (m_FaceType == notSet)
  	{
- 		setObjType(ligne);
+ 		setObjType(line);
  	}
 
  	if (m_FaceType == coordinateAndTextureAndNormal)
  	{
 		// Replace "/" with " "
-		ligne.replace('/', ' ');
-		QTextStream streamVertex(&ligne);
+		line.replace('/', ' ');
+		QTextStream streamVertex(&line);
 		QString coordinateString, textureCoordinateString, normalString;
 	 	if ((streamVertex >> coordinateString >> textureCoordinateString >> normalString).status() == QTextStream::Ok)
 		{
@@ -620,8 +620,8 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
  	else if (m_FaceType == coordinateAndTexture)
  	{
 		// Replace "/" with " "
-		ligne.replace('/', ' ');
-		QTextStream streamVertex(&ligne);
+		line.replace('/', ' ');
+		QTextStream streamVertex(&line);
 		QString coordinateString, textureCoordinateString;
 	 	if ((streamVertex >> coordinateString >> textureCoordinateString).status() == QTextStream::Ok)
 		{
@@ -656,8 +656,8 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
  	else if (m_FaceType == coordinateAndNormal)
  	{
 		// Replace "/" with " "
-		ligne.replace('/', ' ');
-		QTextStream streamVertex(&ligne);
+		line.replace('/', ' ');
+		QTextStream streamVertex(&line);
 		QString coordinateString, normalString;
 	 	if ((streamVertex >> coordinateString >> normalString).status() == QTextStream::Ok)
 		{
@@ -691,7 +691,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString ligne, int &Coordinate, int &Nor
  	}
   	else if (m_FaceType == coordinate)
  	{
- 		QTextStream streamVertex(&ligne);
+ 		QTextStream streamVertex(&line);
  		QString coordinateString;
 	 	if ((streamVertex >> coordinateString).status() == QTextStream::Ok)
 		{
