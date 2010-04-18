@@ -210,6 +210,9 @@ public:
 	//! set the renderProperties of this occurence
 	void setRenderProperties(const GLC_RenderProperties& renderProperties);
 
+	//! Remove empty children
+	void removeEmptyChildren();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

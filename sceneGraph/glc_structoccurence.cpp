@@ -612,3 +612,21 @@ void GLC_StructOccurence::setRenderProperties(const GLC_RenderProperties& render
 		m_pRenderProperties= new GLC_RenderProperties(renderProperties);
 	}
 }
+
+void GLC_StructOccurence::removeEmptyChildren()
+{
+	QList<GLC_StructOccurence*>::iterator iChild= m_Childs.begin();
+	while (m_Childs.constEnd() != iChild)
+	{
+		if (!((*iChild)->hasChild()) && !((*iChild)->hasRepresentation()))
+		{
+			delete *iChild;
+			iChild= m_Childs.erase(iChild);
+		}
+		else
+		{
+			(*iChild)->removeEmptyChildren();
+			++iChild;
+		}
+	}
+}
