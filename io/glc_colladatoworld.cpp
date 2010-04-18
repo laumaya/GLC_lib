@@ -1833,6 +1833,7 @@ void GLC_ColladaToWorld::createSceneGraph()
 	}
 
 	// Update position
+	m_pWorld->rootOccurence()->removeEmptyChildren();
 	m_pWorld->rootOccurence()->updateChildrenAbsoluteMatrix();
 
 }
@@ -1871,15 +1872,25 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 			}
 			if (NULL != pRep)
 			{
-				GLC_StructReference* pStructRef= new GLC_StructReference(pRep);
-				pInstance= new GLC_StructInstance(pStructRef);
+				GLC_StructReference* pStructRef= NULL;
+				if (pRep->isEmpty())
+				{
+					qDebug() << "Empty rep : " << pRep->name();
+					delete pRep;
+					pRep= NULL;
+				}
+				else
+				{
+					pStructRef= new GLC_StructReference(pRep);
+					pInstance= new GLC_StructInstance(pStructRef);
 
-				// Save instance in instance hash Table
-				m_StructInstanceHash.insert(pNode->m_Id, pInstance);
+					// Save instance in instance hash Table
+					m_StructInstanceHash.insert(pNode->m_Id, pInstance);
 
-				pInstance->move(pNode->m_Matrix);
-				//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
-				pOccurence= new GLC_StructOccurence(pInstance);
+					pInstance->move(pNode->m_Matrix);
+					//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
+					pOccurence= new GLC_StructOccurence(pInstance);
+				}
 
 			}
 			else qDebug() << "Geometry Id Not found";
