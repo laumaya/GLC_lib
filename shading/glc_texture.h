@@ -58,7 +58,7 @@ public:
 	GLC_Texture(const QGLContext*, const QFile&);
 
 	//! Constructor with QImage
-	GLC_Texture(const QGLContext*, const QImage&, const QString& fileName);
+	GLC_Texture(const QGLContext*, const QImage&, const QString& fileName= QString());
 
 	//! Copy constructor
 	GLC_Texture(const GLC_Texture& TextureToCopy);
