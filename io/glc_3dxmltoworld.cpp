@@ -163,6 +163,7 @@ GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnl
 // Create 3DRep from an 3DXML rep
 GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 {
+	//qDebug() << "GLC_3dxmlToWorld::create3DrepFrom3dxmlRep " << fileName;
 	GLC_3DRep resultRep;
 	QString entryFileName;
 	if (glc::isArchiveString(fileName))
@@ -341,7 +342,7 @@ void GLC_3dxmlToWorld::goToRepId(const QString& id)
 // Go to Polygonal Rep Type
 void GLC_3dxmlToWorld::gotToPolygonalRepType()
 {
-	while(!m_pStreamReader->atEnd() && !((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Rep")
+	while(endElementNotReached("Representation") && !m_pStreamReader->atEnd() && !((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Rep")
 			&& (m_pStreamReader->attributes().value("xsi:type").toString() == "PolygonalRepType")))
 	{
 		//qDebug() << m_pStreamReader->name();
@@ -451,6 +452,15 @@ void GLC_3dxmlToWorld::loadProductStructure()
 		{
 			GLC_StructInstance* pInstance= iInstance.key();
 			GLC_StructReference* pRef= m_ReferenceHash.value(iInstance.value());
+			if (NULL == pRef)
+			{
+				qDebug() << "Instance name " << pInstance->name();
+				QString message(QString("GLC_3dxmlToWorld::loadProductStructure a instance reference a non existing reference"));
+				qDebug() << message;
+				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
+				clear();
+				throw(fileFormatException);
+			}
 			pInstance->setReference(pRef);
 
 			++iInstance;
@@ -781,7 +791,7 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 			GLC_3DRep* pRep= new GLC_3DRep();
 			if (m_IsInArchive)
 			{
-				pRep->setFileName("Zip::" + m_FileName + "::" + currentRefFileName);
+				pRep->setFileName(glc::builtArchiveString(m_FileName, currentRefFileName));
 			}
 			else
 			{
@@ -873,16 +883,24 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 	pMesh->setName(refName);
 	GLC_3DRep currentMesh3DRep(pMesh);
 	// Add time Stamp and file name to the 3D rep
-	currentMesh3DRep.setFileName(m_CurrentFileName);
+	if (repId.contains("3DXML_Local_"))
+	{
+		currentMesh3DRep.setFileName(repId);
+	}
+	else
+	{
+		currentMesh3DRep.setFileName(m_CurrentFileName);
+	}
+
 	currentMesh3DRep.setLastModified(m_CurrentDateTime);
 
 	int numberOfMesh= 1;
 	while (endElementNotReached("Representation"))
 	{
 		gotToPolygonalRepType();
-		if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
+		if (!endElementNotReached("Representation") || m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 		{
-			if (m_pStreamReader->hasError())
+			if (m_pStreamReader->hasError() || m_pStreamReader->atEnd())
 			{
 				QString message(QString("An element have not been found in file ") + m_FileName);
 				qDebug() << m_pStreamReader->errorString();
@@ -998,6 +1016,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		// Try to find texture coordinate
 		while (endElementNotReached("VertexBuffer"))
 		{
+			//qDebug() << "Try to find texture coordinate " << m_pStreamReader->name() << " " << m_pStreamReader->lineNumber();
 			if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "TextureCoordinates"))
 			{
 				QString texels= getContent("TextureCoordinates").replace(',', ' ');
@@ -1488,11 +1507,13 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 	goToElement("GeometricRepresentationSet");
 	while (endElementNotReached("GeometricRepresentationSet"))
 	{
+		qDebug() << m_pStreamReader->name();
 		if (m_pStreamReader->name() == "Representation")
 		{
 			QString id= readAttribute("id", true);
+			qDebug() << "Load rep : " << id;
 
-			GLC_StructReference* pRef= createReferenceRep("Local");
+			GLC_StructReference* pRef= createReferenceRep("3DXML_Local_" + id);
 			GLC_Rep* pRep= pRef->representationHandle();
 			if (pRep != NULL)
 			{
