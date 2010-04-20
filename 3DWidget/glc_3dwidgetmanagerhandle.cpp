@@ -88,6 +88,21 @@ void GLC_3DWidgetManagerHandle::remove3DViewInstance(GLC_uint id)
 	Q_ASSERT(m_Collection.contains(id));
 	m_Collection.remove(id);
 	m_MapBetweenInstanceWidget.remove(id);
+	if (m_Active3DWidgetId == id) m_Active3DWidgetId= 0;
+}
+
+void GLC_3DWidgetManagerHandle::clear()
+{
+	m_Active3DWidgetId= 0;
+	QHash<GLC_uint, GLC_3DWidget*>::iterator iWidget= m_3DWidgetHash.begin();
+	while (m_3DWidgetHash.constEnd() != iWidget)
+	{
+		delete iWidget.value();
+		++iWidget;
+	}
+	m_3DWidgetHash.clear();
+	m_Collection.clear();
+	m_MapBetweenInstanceWidget.clear();
 }
 
 glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseDoubleClickEvent(QMouseEvent * pEvent)

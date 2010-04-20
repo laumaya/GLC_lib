@@ -76,6 +76,10 @@ public:
 	inline void remove3DWidget(GLC_uint id)
 	{m_pWidgetManagerHandle->remove3DWidget(id);}
 
+	//! Clear all widget from this manager
+	inline void clear()
+	{m_pWidgetManagerHandle->clear();}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Interaction Functions*/

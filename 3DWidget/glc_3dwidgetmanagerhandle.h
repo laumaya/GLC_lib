@@ -117,6 +117,9 @@ public:
 	//! Remove the 3D view instance with the given id from this manager collection
 	void remove3DViewInstance(GLC_uint id);
 
+	//! Remove all 3D view instance from this manager
+	void clear();
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Interaction Functions*/
