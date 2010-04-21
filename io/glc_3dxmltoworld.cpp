@@ -188,7 +188,6 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 
 		// Get the 3DXML time stamp
 		m_CurrentDateTime= QFileInfo(QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(fileName).fileName()).lastModified();
-
 	}
 	else if (fileName.left(6) == QString("File::"))
 	{
@@ -200,7 +199,6 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 
 		// Get the rep time stamp
 		m_CurrentDateTime= QFileInfo(entryFileName).lastModified();
-
 	}
 	else
 	{
@@ -222,22 +220,22 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 		}
 		else
 		{
-			setStreamReaderToFile(entryFileName);
-			GLC_StructReference* pStructRef = createReferenceRep(QString());
-			GLC_3DRep* pRep = NULL;
-			if ((NULL != pStructRef) && pStructRef->hasRepresentation())
+			if (setStreamReaderToFile(entryFileName, true))
 			{
-				pRep= dynamic_cast<GLC_3DRep*> (pStructRef->representationHandle());
+				GLC_StructReference* pStructRef = createReferenceRep(QString());
+				GLC_3DRep* pRep = NULL;
+				if ((NULL != pStructRef) && pStructRef->hasRepresentation())
+				{
+					pRep= dynamic_cast<GLC_3DRep*> (pStructRef->representationHandle());
+				}
+				if (NULL != pRep)
+				{
+					resultRep = GLC_3DRep(*pRep);
+					resultRep.setName(pStructRef->name());
+				}
+				delete pStructRef;
 			}
-			if (NULL != pRep)
-			{
-				resultRep = GLC_3DRep(*pRep);
-				resultRep.setName(pStructRef->name());
-			}
-			delete pStructRef;
-
 		}
-
 	}
 	else if (QFileInfo(entryFileName).suffix().toLower() == "3drep")
 	{
@@ -249,10 +247,11 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 		}
 		else
 		{
-			setStreamReaderToFile(entryFileName);
-			resultRep = loadCurrentExtRep();
+			if (setStreamReaderToFile(entryFileName, true))
+			{
+				resultRep = loadCurrentExtRep();
+			}
 		}
-
 	}
 	resultRep.clean();
 
@@ -1437,10 +1436,11 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		// Get the file of the 3dxml
 		if (!m_p3dxmlArchive->setCurrentFile(fileName, QuaZip::csInsensitive))
 		{
+			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + m_FileName + " doesn't contains " + fileName);
+			qDebug() << message;
+
 			if (!test)
 			{
-				QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + m_FileName + " doesn't contains " + fileName);
-				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
