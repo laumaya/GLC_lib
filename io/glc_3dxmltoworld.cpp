@@ -839,7 +839,12 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		refName= readAttribute("name", true);
 
 		goToElement("ReferenceRep");
-		checkForXmlError("Element ReferenceRep not found");
+		if (m_pStreamReader->atEnd())
+		{
+			qDebug() << "Element ReferenceRep not found in  file " << m_CurrentFileName;
+			return NULL;
+		}
+		checkForXmlError("Element ReferenceRep contains error");
 
 		const QString format(readAttribute("format", true));
 		if (format != "TESSELLATED")
@@ -1200,7 +1205,7 @@ void GLC_3dxmlToWorld::checkForXmlError(const QString& info)
 {
 	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
-		QString message(QString("An element have not been found in file ") + m_FileName);
+		QString message(QString("An element have not been found in file ") + m_CurrentFileName);
 		qDebug() << info << " " << m_pStreamReader->errorString() << "  " << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
@@ -1507,12 +1512,9 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 	goToElement("GeometricRepresentationSet");
 	while (endElementNotReached("GeometricRepresentationSet"))
 	{
-		qDebug() << m_pStreamReader->name();
 		if (m_pStreamReader->name() == "Representation")
 		{
 			QString id= readAttribute("id", true);
-			qDebug() << "Load rep : " << id;
-
 			GLC_StructReference* pRef= createReferenceRep("3DXML_Local_" + id);
 			GLC_Rep* pRep= pRef->representationHandle();
 			if (pRep != NULL)
@@ -1536,6 +1538,7 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 		GLC_StructReference* pReference= m_ReferenceHash.value(referenceId);
 		const QString representationID= m_ReferenceRepHash.value(refId);
 		pReference->setRepresentation(repHash.value(representationID));
+		pReference->representationHandle()->setName(pReference->name());
 
 		++iLocalRep;
 	}
