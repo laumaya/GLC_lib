@@ -289,8 +289,8 @@ void GLC_Cylinder::createMeshAndWire()
 	// Create the index
 	for (int i= 0; i < vertexNumber; ++i)
 	{
-		circumferenceStrips.append(i);
 		circumferenceStrips.append(i + vertexNumber);
+		circumferenceStrips.append(i);
 	}
 	addTrianglesStrip(pCylinderMaterial, circumferenceStrips);
 
@@ -304,10 +304,10 @@ void GLC_Cylinder::createMeshAndWire()
 		for (int i= 0; i < size; ++i)
 		{
 			bottomCap.append(id1 + 2 * vertexNumber);
-			topCap.append(id1 + 3 * vertexNumber);
+			topCap.append(id2 + 3 * vertexNumber);
 
 			bottomCap.append(id2 + 2 * vertexNumber);
-			topCap.append(id2 + 3 * vertexNumber);
+			topCap.append(id1 + 3 * vertexNumber);
 
 			id1+= 1;
 			id2-= 1;
