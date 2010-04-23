@@ -382,9 +382,12 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_WorldTo3dxml
     		   
     			   
-# Linux install configuration
+# Linux and macx specific configuration
+macx {
+	LIBS += -lz.1.2.3
+}
+# Linux and macx install configuration
 unix {
-   	LIBS += -lz.1.2.3
     # Location of HEADERS and library
     LIB_DIR = /usr/lib
     INCLUDE_DIR = /usr/include
