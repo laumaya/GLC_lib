@@ -154,8 +154,16 @@ bool GLC_CacheManager::addToCache(const QString& context, const GLC_3DRep& rep)
 		}
 		if (addedToCache)
 		{
-
-			const QString binaryFileName= contextCacheInfo.filePath() + QDir::separator() + rep.fileName();
+			QString repFileName= rep.fileName();
+			if (glc::isArchiveString(repFileName))
+			{
+				repFileName= glc::archiveEntryFileName(repFileName);
+			}
+			else
+			{
+				repFileName= QFileInfo(repFileName).fileName();
+			}
+			const QString binaryFileName= contextCacheInfo.filePath() + QDir::separator() + repFileName;
 			GLC_BSRep binariRep(binaryFileName, m_UseCompression);
 			binariRep.setCompressionLevel(m_CompressionLevel);
 			addedToCache= binariRep.save(rep);
