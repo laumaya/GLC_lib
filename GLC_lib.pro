@@ -5,10 +5,10 @@ QT += opengl \
 
 
 CONFIG += exceptions \
-    release \
+    debug \
     warn_on
 TARGET = GLC_lib
-VERSION = 2.0.0 Alpha 1
+VERSION = 2.0.0
 
 DEFINES += CREATE_GLC_LIB_DLL
 
