@@ -95,7 +95,7 @@ public:
 
 	//! Get camera's orbit composition matrix
 	inline GLC_Matrix4x4 viewMatrix(void) const
-	{return m_MatCompOrbit;}
+	{return m_ModelViewMatrix;}
 
 	//! equality operator
 	bool operator==(const GLC_Camera&) const;
@@ -133,7 +133,7 @@ public:
 	inline GLC_Matrix4x4 modelViewMatrix() const
 	{
 		GLC_Matrix4x4 translate(-m_Eye);
-		GLC_Matrix4x4 modelView= GLC_Matrix4x4(m_MatCompOrbit * translate);
+		GLC_Matrix4x4 modelView= GLC_Matrix4x4(m_ModelViewMatrix * translate);
 		return modelView;
 	}
 
@@ -264,8 +264,8 @@ private:
 	//! Camera's Up vector
 	GLC_Vector3d m_VectUp;
 
-	//! Camera orbit composition matrix
-	GLC_Matrix4x4 m_MatCompOrbit;
+	//! Camera model view matrix
+	GLC_Matrix4x4 m_ModelViewMatrix;
 
 	//! The default Up axis
 	GLC_Vector3d m_DefaultVectUp;

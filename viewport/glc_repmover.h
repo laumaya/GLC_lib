@@ -102,8 +102,9 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Representation OpenGL Execution
-	void glExecute();
+	void render();
 
+protected:
 	//! Virtual interface for OpenGL Geometry set up.
 	virtual void glDraw()= 0;
 

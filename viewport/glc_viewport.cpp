@@ -42,14 +42,14 @@ using namespace glc;
 GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 // Camera definition
 : m_pViewCam(new GLC_Camera())				// Camera
-, m_dCamDistMax(500.0)			// Camera Maximum distance
-, m_dCamDistMin(0.01)			// Camera Minimum distance
-, m_dFov(35)					// Camera angle of view
-, m_ViewTangent(tan(glc::toRadian(m_dFov)))
+, m_DistanceMax(500.0)			// Camera Maximum distance
+, m_dDistanceMini(0.01)			// Camera Minimum distance
+, m_ViewAngle(35)					// Camera angle of view
+, m_ViewTangent(tan(glc::toRadian(m_ViewAngle)))
 , m_pImagePlane(NULL)			// Background image
 // OpenGL Window size
-, m_nWinHSize(0)				// Horizontal OpenGL viewport size
-, m_nWinVSize(0)				// Vertical OpenGL viewport size
+, m_WindowHSize(0)				// Horizontal OpenGL viewport size
+, m_WindowVSize(0)				// Vertical OpenGL viewport size
 , m_AspectRatio(1.0)
 , m_pQGLWidget(GLWidget)		// Attached QGLWidget
 // the default backgroundColor
@@ -57,10 +57,10 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_SelectionSquareSize(4)
 , m_ProjectionMatrix()
 , m_Frustum()
-, m_ClipPlane()
+, m_ClipPlanesHash()
 , m_UseClipPlane(false)
-, m_3DWidget()
-, m_UseOrtho(false)
+, m_3DWidgetCollection()
+, m_UseParallelProjection(false)
 {
 
 }
@@ -73,8 +73,8 @@ GLC_Viewport::~GLC_Viewport()
 	deleteBackGroundImage();
 
 	// Delete clip planes
-	QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlane.begin();
-	while (m_ClipPlane.constEnd() != iClip)
+	QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlanesHash.begin();
+	while (m_ClipPlanesHash.constEnd() != iClip)
 	{
 		delete iClip.value();
 		++iClip;
@@ -88,8 +88,8 @@ GLC_Viewport::~GLC_Viewport()
 GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 {
 	// Change the window origin (Up Left -> centred)
-	Posx= Posx - static_cast<double>(m_nWinHSize)  / 2.0;
-	Posy= static_cast<double>(m_nWinVSize) / 2.0 - Posy;
+	Posx= Posx - static_cast<double>(m_WindowHSize)  / 2.0;
+	Posy= static_cast<double>(m_WindowVSize) / 2.0 - Posy;
 
 	GLC_Vector3d VectMouse(Posx, Posy,0);
 
@@ -98,7 +98,7 @@ GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 
 	// the side of camera's square is mapped on Vertical length of window
 	// Ratio OpenGL/Pixel = dimend GL / dimens Pixel
-	const double Ratio= ChampsVision / static_cast<double>(m_nWinVSize);
+	const double Ratio= ChampsVision / static_cast<double>(m_WindowVSize);
 
 	VectMouse= VectMouse * Ratio;
 
@@ -127,7 +127,7 @@ void GLC_Viewport::initGl()
 void GLC_Viewport::glExecuteCam(void)
 {
 	m_pViewCam->glExecute();
-	glExecuteImagePlane();
+	renderImagePlane();
 }
 
 void GLC_Viewport::updateProjectionMat(void)
@@ -138,7 +138,7 @@ void GLC_Viewport::updateProjectionMat(void)
 	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
 
-	if (m_UseOrtho)
+	if (m_UseParallelProjection)
 	{
 		const double ChampsVision = m_pViewCam->distEyeTarget() * m_ViewTangent;
 		const double height= ChampsVision;
@@ -147,11 +147,11 @@ void GLC_Viewport::updateProjectionMat(void)
 		const double right=  -left;
 		const double bottom= - height * 0.5;
 		const double top= -bottom;
-		glOrtho(left, right, bottom, top, m_dCamDistMin, m_dCamDistMax);
+		glOrtho(left, right, bottom, top, m_dDistanceMini, m_DistanceMax);
 	}
 	else
 	{
-		gluPerspective(m_dFov, m_AspectRatio, m_dCamDistMin, m_dCamDistMax);
+		gluPerspective(m_ViewAngle, m_AspectRatio, m_dDistanceMini, m_DistanceMax);
 	}
 
 	// Save the projection matrix
@@ -170,7 +170,7 @@ void GLC_Viewport::forceAspectRatio(double ratio)
 void GLC_Viewport::updateAspectRatio()
 {
 	// Update The Aspect Ratio Of The Window
-	m_AspectRatio= static_cast<double>(m_nWinHSize)/static_cast<double>(m_nWinVSize);
+	m_AspectRatio= static_cast<double>(m_WindowHSize)/static_cast<double>(m_WindowVSize);
 }
 GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
 {
@@ -214,7 +214,7 @@ GLC_Point3d GLC_Viewport::unProject(int x, int y) const
 	// Z Buffer component of the given coordinate is between 0 and 1
 	GLfloat Depth;
 	// read selected point
-	glReadPixels(x, m_nWinVSize - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
+	glReadPixels(x, m_WindowVSize - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
 	// The current viewport opengl definition
 	GLint Viewport[4];
@@ -222,7 +222,7 @@ GLC_Point3d GLC_Viewport::unProject(int x, int y) const
 
 	// OpenGL ccordinate of selected point
 	GLdouble pX, pY, pZ;
-	gluUnProject((GLdouble) x, (GLdouble) (m_nWinVSize - y) , Depth
+	gluUnProject((GLdouble) x, (GLdouble) (m_WindowVSize - y) , Depth
 		, m_pViewCam->modelViewMatrix().data(), m_ProjectionMatrix.data(), Viewport, &pX, &pY, &pZ);
 
 	return GLC_Point3d(pX, pY, pZ);
@@ -246,7 +246,7 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list)const
 	for (int i= 0; i < size; i+= 2)
 	{
 		const int x= list.at(i);
-		const int y= m_nWinVSize - list.at(i + 1);
+		const int y= m_WindowVSize - list.at(i + 1);
 		glReadPixels(x, y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
 		gluUnProject(static_cast<GLdouble>(x), static_cast<GLdouble>(y) , Depth , m_pViewCam->modelViewMatrix().data()
@@ -261,7 +261,7 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list)const
 // Private OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Viewport::glExecuteImagePlane()
+void GLC_Viewport::renderImagePlane()
 {
 
 	if(!GLC_State::isInSelectionMode())
@@ -275,8 +275,8 @@ void GLC_Viewport::glExecuteImagePlane()
 
 void GLC_Viewport::render3DWidget()
 {
-	m_3DWidget.render(0, glc::WireRenderFlag);
-	m_3DWidget.render(0, glc::TransparentRenderFlag);
+	m_3DWidgetCollection.render(0, glc::WireRenderFlag);
+	m_3DWidgetCollection.render(0, glc::TransparentRenderFlag);
 }
 //////////////////////////////////////////////////////////////////////
 // Set Functions
@@ -284,16 +284,16 @@ void GLC_Viewport::render3DWidget()
 
 void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 {
-	m_nWinHSize= HSize;
-	m_nWinVSize= VSize;
+	m_WindowHSize= HSize;
+	m_WindowVSize= VSize;
 
 	// from NeHe's Tutorial 3
-	if (m_nWinVSize == 0)								// Prevent A Divide By Zero By
+	if (m_WindowVSize == 0)								// Prevent A Divide By Zero By
 	{
-		m_nWinVSize= 1;									// Making Height Equal One
+		m_WindowVSize= 1;									// Making Height Equal One
 	}
 
-	glViewport(0,0,m_nWinHSize,m_nWinVSize);			// Reset The Current Viewport
+	glViewport(0,0,m_WindowHSize,m_WindowVSize);			// Reset The Current Viewport
 
 	updateAspectRatio();
 
@@ -515,9 +515,9 @@ void GLC_Viewport::deleteBackGroundImage()
 
 void GLC_Viewport::setToOrtho(bool useOrtho)
 {
-	if (m_UseOrtho != useOrtho)
+	if (m_UseParallelProjection != useOrtho)
 	{
-		m_UseOrtho= useOrtho;
+		m_UseParallelProjection= useOrtho;
 		updateProjectionMat();
 	}
 
@@ -543,9 +543,9 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 bool GLC_Viewport::setDistMin(double DistMin)
 {
 	DistMin= fabs(DistMin);
-	if (DistMin < m_dCamDistMax)
+	if (DistMin < m_DistanceMax)
 	{
-		m_dCamDistMin= DistMin;
+		m_dDistanceMini= DistMin;
 
 		updateProjectionMat();	// Update OpenGL projection matrix
 
@@ -562,9 +562,9 @@ bool GLC_Viewport::setDistMin(double DistMin)
 bool GLC_Viewport::setDistMax(double DistMax)
 {
 	DistMax= fabs(DistMax);
-	if (DistMax > m_dCamDistMin)
+	if (DistMax > m_dDistanceMini)
 	{
-		m_dCamDistMax= DistMax;
+		m_DistanceMax= DistMax;
 
 		// Update OpenGL projection matrix
 		updateProjectionMat();
@@ -603,16 +603,16 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		if (min > 0.0)
 		{
 			// Outside bounding Sphere
-			m_dCamDistMin= min;
-			m_dCamDistMax= max;
+			m_dDistanceMini= min;
+			m_DistanceMax= max;
 			//qDebug() << "distmin" << m_dCamDistMin;
 			//qDebug() << "distmax" << m_dCamDistMax;
 		}
 		else
 		{
 			// Inside bounding Sphere
-			m_dCamDistMin= qMin(0.01 * radius, m_pViewCam->distEyeTarget() / 4.0);
-			m_dCamDistMax= max;
+			m_dDistanceMini= qMin(0.01 * radius, m_pViewCam->distEyeTarget() / 4.0);
+			m_DistanceMax= max;
 			//qDebug() << "inside distmin" << m_dCamDistMin;
 			//qDebug() << "inside distmax" << m_dCamDistMax;
 		}
@@ -620,8 +620,8 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 	else
 	{
 		// The scene is empty
-		m_dCamDistMin= m_pViewCam->distEyeTarget() / 2.0;
-		m_dCamDistMax= m_pViewCam->distEyeTarget();
+		m_dDistanceMini= m_pViewCam->distEyeTarget() / 2.0;
+		m_DistanceMax= m_pViewCam->distEyeTarget();
 	}
 
 	// Update OpenGL projection matrix
@@ -636,24 +636,35 @@ void GLC_Viewport::setBackgroundColor(QColor setColor)
 
 void GLC_Viewport::addClipPlane(GLenum planeGlEnum,GLC_Plane* pPlane)
 {
-	if (m_ClipPlane.contains(planeGlEnum))
+	if (m_ClipPlanesHash.contains(planeGlEnum))
 	{
-		delete m_ClipPlane.value(planeGlEnum);
-		m_ClipPlane.remove(planeGlEnum);
+		delete m_ClipPlanesHash.value(planeGlEnum);
+		m_ClipPlanesHash.remove(planeGlEnum);
 	}
-	m_ClipPlane.insert(planeGlEnum, pPlane);
+	m_ClipPlanesHash.insert(planeGlEnum, pPlane);
 }
 
 void GLC_Viewport::removeClipPlane(GLenum planeGlEnum)
 {
-	if (m_ClipPlane.contains(planeGlEnum))
+	if (m_ClipPlanesHash.contains(planeGlEnum))
 	{
-		delete m_ClipPlane.value(planeGlEnum);
-		m_ClipPlane.remove(planeGlEnum);
+		delete m_ClipPlanesHash.value(planeGlEnum);
+		m_ClipPlanesHash.remove(planeGlEnum);
 	}
 	else
 	{
 		qDebug() << "GLC_Viewport::removeClipPlane Clipp plane " << planeGlEnum << " Not found";
+	}
+}
+
+void GLC_Viewport::removeAllClipPlane()
+{
+	// Delete clip planes
+	QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlanesHash.begin();
+	while (m_ClipPlanesHash.constEnd() != iClip)
+	{
+		delete iClip.value();
+		++iClip;
 	}
 }
 
@@ -662,8 +673,8 @@ void GLC_Viewport::useClipPlane(bool flag)
 	m_UseClipPlane= flag;
 	if (m_UseClipPlane)
 	{
-		QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlane.begin();
-		while (m_ClipPlane.constEnd() != iClip)
+		QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlanesHash.begin();
+		while (m_ClipPlanesHash.constEnd() != iClip)
 		{
 			GLenum planeKey= iClip.key();
 			GLC_Plane* pPlane= iClip.value();
@@ -675,8 +686,8 @@ void GLC_Viewport::useClipPlane(bool flag)
 	}
 	else
 	{
-		QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlane.begin();
-		while (m_ClipPlane.constEnd() != iClip)
+		QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlanesHash.begin();
+		while (m_ClipPlanesHash.constEnd() != iClip)
 		{
 			glDisable(iClip.key());
 			++iClip;

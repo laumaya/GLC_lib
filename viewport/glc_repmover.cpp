@@ -74,7 +74,7 @@ void GLC_RepMover::setThickness(double thickness)
 //////////////////////////////////////////////////////////////////////
 
 // Representation OpenGL Execution
-void GLC_RepMover::glExecute()
+void GLC_RepMover::render()
 {
 	// Call virtual draw function
 	glDraw();

@@ -105,12 +105,12 @@ void GLC_Mover::updateRepresentation()
 //////////////////////////////////////////////////////////////////////
 
 // Mover representations list display
-void GLC_Mover::glExecute()
+void GLC_Mover::renderRepresentation()
 {
 	const int size= m_RepMoverList.size();
 	for (int i= 0; i < size; ++i)
 	{
-		m_RepMoverList[i]->glExecute();
+		m_RepMoverList[i]->render();
 	}
 }
 

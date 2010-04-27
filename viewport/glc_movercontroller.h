@@ -128,7 +128,7 @@ public:
 	{
 		if(0 != m_ActiveMoverId)
 		{
-			m_MoverHash.value(m_ActiveMoverId)->glExecute();
+			m_MoverHash.value(m_ActiveMoverId)->renderRepresentation();
 		}
 	}
 

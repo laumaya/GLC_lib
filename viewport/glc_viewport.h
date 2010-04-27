@@ -86,22 +86,22 @@ public:
 
 	//! Get this viewport Horizontal size
 	inline int viewHSize() const
-	{ return m_nWinHSize;}
+	{ return m_WindowHSize;}
 
 	//! Get this viewport Vertical size
 	inline int viewVSize() const
-	{ return m_nWinVSize;}
+	{ return m_WindowVSize;}
 
 	//! Get this viewport ratio
 	inline double aspectRatio() const
-	{ return static_cast<double>(m_nWinHSize) / static_cast<double>(m_nWinVSize);}
+	{ return static_cast<double>(m_WindowHSize) / static_cast<double>(m_WindowVSize);}
 
 	//! Map Screen position to OpenGL position (On image Plane) according to this viewport
 	GLC_Vector3d mapPosMouse( GLdouble Posx, GLdouble Posy) const;
 
 	//! Get this viewport's camera's angle of view
 	inline double viewAngle() const
-	{ return m_dFov;}
+	{ return m_ViewAngle;}
 
 	//! Get this viewport's camera's tangent value of view
 	inline double viewTangent() const
@@ -110,11 +110,11 @@ public:
 
 	//! Get this viewport near clipping plane distance
 	inline double nearClippingPlaneDist(void) const
-	{ return m_dCamDistMin;}
+	{ return m_dDistanceMini;}
 
 	//! Get this viewport far clipping plane distance
 	inline double farClippingPlaneDist(void) const
-	{ return m_dCamDistMax;}
+	{ return m_DistanceMax;}
 
 	//! Get this viewportbackground Color
 	inline QColor backgroundColor(void) const
@@ -133,11 +133,11 @@ public:
 
 	//! Return an handle to the widget 3D collection
 	inline GLC_3DViewCollection* widget3dCollectionHandle()
-	{return &m_3DWidget;}
+	{return &m_3DWidgetCollection;}
 
 	//! Return true if this viewport use orthographic projection
 	inline bool useOrtho()const
-	{return m_UseOrtho;}
+	{return m_UseParallelProjection;}
 
 //@}
 
@@ -189,7 +189,7 @@ public:
 private:
 
 	//! Render this viewport's image plane
-	void glExecuteImagePlane();
+	void renderImagePlane();
 
 public:
 
@@ -237,8 +237,8 @@ public:
 	//! Set Camera's angle of view of this viewport
 	inline void setViewAngle(double TargetFov)
 	{
-		m_dFov= TargetFov;
-		m_ViewTangent= tan(glc::toRadian(m_dFov));
+		m_ViewAngle= TargetFov;
+		m_ViewTangent= tan(glc::toRadian(m_ViewAngle));
 		updateProjectionMat();
 	}
 
@@ -266,15 +266,18 @@ public:
 	//! Add a clipping plane to this viewport
 	void addClipPlane(GLenum planeGlEnum, GLC_Plane* pPlane);
 
-	//! Remove the clipp plane cresponding to the given id
+	//! Remove the clip plane coresponding to the given id
 	void removeClipPlane(GLenum planeGlEnum);
+
+	//! Remove all clip plane
+	void removeAllClipPlane();
 
 	//! Set the clipping plane usage
 	void useClipPlane(bool flag);
 
 	//! Add 3DWidget to this viewport
 	inline void add3DWidget(GLC_3DViewInstance& widget)
-	{m_3DWidget.add(widget);}
+	{m_3DWidgetCollection.add(widget);}
 
 	//! Clear the background color with the specified color
 	inline void clearBackground(const QColor& c) const
@@ -314,9 +317,9 @@ private:
 	//! Viewport's camera
 	GLC_Camera *m_pViewCam;
 
-	double m_dCamDistMax;		//!< Camera Maximum distance (far clipping plane)
-	double m_dCamDistMin;		//!< Camera Minimum distance (near clipping plane)
-	double m_dFov;				//!< Camera angle of view
+	double m_DistanceMax;		//!< Camera Maximum distance (far clipping plane)
+	double m_dDistanceMini;		//!< Camera Minimum distance (near clipping plane)
+	double m_ViewAngle;		//!< Camera angle of view
 	double m_ViewTangent;		//!< Camera angle tangent
 
 
@@ -324,8 +327,8 @@ private:
 	GLC_ImagePlane* m_pImagePlane;
 
 	// OpenGL View Definition
-	int m_nWinHSize;			//!< Horizontal OpenGL viewport size
-	int m_nWinVSize;			//!< Vertical OpenGL viewport size
+	int m_WindowHSize;			//!< Horizontal OpenGL viewport size
+	int m_WindowVSize;			//!< Vertical OpenGL viewport size
 
 	//! View AspectRatio
 	double m_AspectRatio;
@@ -346,16 +349,16 @@ private:
 	GLC_Frustum m_Frustum;
 
 	//! The list of additionnal clipping plane
-	QHash<GLenum, GLC_Plane*> m_ClipPlane;
+	QHash<GLenum, GLC_Plane*> m_ClipPlanesHash;
 
 	//! Flag to know if clipping plane must be used
 	bool m_UseClipPlane;
 
 	//! The collection wich contains 3D widget
-	GLC_3DViewCollection m_3DWidget;
+	GLC_3DViewCollection m_3DWidgetCollection;
 
 	//! Flag to know if the viewport use orthographic projection
-	bool m_UseOrtho;
+	bool m_UseParallelProjection;
 };
 
 GLC_Matrix4x4 GLC_Viewport::compositionMatrix() const

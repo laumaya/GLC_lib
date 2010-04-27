@@ -98,7 +98,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Mover representations list display
-	void glExecute();
+	void renderRepresentation();
 
 //@}
 
