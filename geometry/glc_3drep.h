@@ -155,6 +155,12 @@ public:
 	//! Merge this 3Drep with another 3DRep
 	void merge(GLC_3DRep*);
 
+	//! Copy VBO to the Client Side
+	void copyVboToClientSide();
+
+	//! Release client VBO
+	void releaseVboClientSide(bool update= false);
+
 
 //@}
 

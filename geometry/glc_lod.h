@@ -96,6 +96,12 @@ public:
 	inline int indexVectorSize() const
 	{return m_IndexVector.size();}
 
+	//! Copy IBO to the Client Side
+	void copyIboToClientSide();
+
+	//! Release client IBO
+	void releaseIboClientSide(bool update= false);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -130,7 +136,7 @@ public:
 	}
 
 	//! Ibo Usage
-	inline void useIBO()
+	inline void useIBO() const
 	{glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);}
 
 //@}

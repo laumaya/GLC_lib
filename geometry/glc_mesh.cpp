@@ -593,6 +593,18 @@ void GLC_Mesh::replaceMaterial(const GLC_uint oldId, GLC_Material* pMat)
 
 }
 
+void GLC_Mesh::copyVboToClientSide()
+{
+	m_MeshData.copyVboToClientSide();
+	GLC_Geometry::copyVboToClientSide();
+}
+
+void GLC_Mesh::releaseVboClientSide(bool update)
+{
+	m_MeshData.releaseVboClientSide(update);
+	GLC_Geometry::releaseVboClientSide(update);
+}
+
 // Load the mesh from binary data stream
 void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& materialHash, const QHash<GLC_uint, GLC_uint>& materialIdMap)
 {
@@ -912,42 +924,16 @@ GLC_uint GLC_Mesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, double a
 void GLC_Mesh::fillVbosAndIbos()
 {
 	// Create VBO of vertices
-	{
-		m_MeshData.useVBO(true, GLC_MeshData::GLC_Vertex);
-
-		GLfloatVector* pPositionVector= m_MeshData.positionVectorHandle();
-		const GLsizei dataNbr= static_cast<GLsizei>(pPositionVector->size());
-		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
-		glBufferData(GL_ARRAY_BUFFER, dataSize, pPositionVector->data(), GL_STATIC_DRAW);
-	}
+	m_MeshData.fillVbo(GLC_MeshData::GLC_Vertex);
 
 	// Create VBO of normals
-	{
-		m_MeshData.useVBO(true, GLC_MeshData::GLC_Normal);
-
-		GLfloatVector* pNormalVector= m_MeshData.normalVectorHandle();
-		const GLsizei dataNbr= static_cast<GLsizei>(pNormalVector->size());
-		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
-		glBufferData(GL_ARRAY_BUFFER, dataSize, pNormalVector->data(), GL_STATIC_DRAW);
-	}
+	m_MeshData.fillVbo(GLC_MeshData::GLC_Normal);
 
 	// Create VBO of texel if needed
-	if (m_MeshData.useVBO(true, GLC_MeshData::GLC_Texel))
-	{
-		GLfloatVector* pTexelVector= m_MeshData.texelVectorHandle();
-		const GLsizei dataNbr= static_cast<GLsizei>(pTexelVector->size());
-		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
-		glBufferData(GL_ARRAY_BUFFER, dataSize, pTexelVector->data(), GL_STATIC_DRAW);
-	}
+	m_MeshData.fillVbo(GLC_MeshData::GLC_Texel);
 
 	// Create VBO of color if needed
-	if (m_MeshData.useVBO(true, GLC_MeshData::GLC_Color))
-	{
-		GLfloatVector* pColorVector= m_MeshData.colorVectorHandle();
-		const GLsizei dataNbr= static_cast<GLsizei>(pColorVector->size());
-		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
-		glBufferData(GL_ARRAY_BUFFER, dataSize, pColorVector->data(), GL_STATIC_DRAW);
-	}
+	m_MeshData.fillVbo(GLC_MeshData::GLC_Color);
 
 	const int lodNumber= m_MeshData.lodCount();
 	for (int i= 0; i < lodNumber; ++i)

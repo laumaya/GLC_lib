@@ -194,6 +194,22 @@ void GLC_WireData::clear()
 	m_PolylinesCount= 0;
 }
 
+void GLC_WireData::copyVboToClientSide()
+{
+	if ((0 != m_VboId) && m_Positions.isEmpty())
+	{
+		m_Positions= positionVector();
+	}
+}
+
+void GLC_WireData::releaseVboClientSide(bool update)
+{
+	if ((0 != m_VboId) && !m_Positions.isEmpty())
+	{
+		if (update) finishVbo();
+	}
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions

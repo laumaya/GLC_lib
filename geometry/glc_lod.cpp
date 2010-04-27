@@ -30,7 +30,7 @@
 // Class chunk id
 quint32 GLC_Lod::m_ChunkId= 0xA708;
 
-// Default Constructor
+
 GLC_Lod::GLC_Lod()
 : m_Accuracy(0.0)
 , m_IboId(0)
@@ -40,7 +40,7 @@ GLC_Lod::GLC_Lod()
 
 }
 
-// Construct an engine Lod with the specified accuracy
+
 GLC_Lod::GLC_Lod(double accuracy)
 : m_Accuracy(accuracy)
 , m_IboId(0)
@@ -50,7 +50,7 @@ GLC_Lod::GLC_Lod(double accuracy)
 
 }
 
-// Copy Constructor
+
 GLC_Lod::GLC_Lod(const GLC_Lod& lod)
 : m_Accuracy(lod.m_Accuracy)
 , m_IboId(0)
@@ -61,7 +61,7 @@ GLC_Lod::GLC_Lod(const GLC_Lod& lod)
 
 }
 
-// Overload "=" operator
+
 GLC_Lod& GLC_Lod::operator=(const GLC_Lod& lod)
 {
 	if (this != &lod)
@@ -87,13 +87,13 @@ GLC_Lod::~GLC_Lod()
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
-// Return the class Chunk ID
+
 quint32 GLC_Lod::chunckID()
 {
 	return m_ChunkId;
 }
 
-// Return The unique index Vector
+
 QVector<GLuint> GLC_Lod::indexVector() const
 {
 	if (0 != m_IboId)
@@ -103,7 +103,7 @@ QVector<GLuint> GLC_Lod::indexVector() const
 		const GLsizeiptr dataSize= sizeOfIbo * sizeof(GLuint);
 		QVector<GLuint> indexVector(sizeOfIbo);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);
+		useIBO();
 		GLvoid* pIbo = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY);
 		memcpy(indexVector.data(), pIbo, dataSize);
 		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
@@ -116,7 +116,35 @@ QVector<GLuint> GLC_Lod::indexVector() const
 	}
 }
 
-// Non-member stream operator
+
+void GLC_Lod::copyIboToClientSide()
+{
+	if ((0 != m_IboId) && (m_IndexVector.isEmpty()))
+	{
+		m_IndexVector= indexVector();
+	}
+}
+
+
+void GLC_Lod::releaseIboClientSide(bool update)
+{
+	if((0 != m_IboId) && !m_IndexVector.isEmpty())
+	{
+		if (update)
+		{
+			// Copy index from client side to serveur
+			useIBO();
+
+			const GLsizei indexNbr= static_cast<GLsizei>(m_IndexVector.size());
+			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, m_IndexVector.data(), GL_STATIC_DRAW);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		}
+		m_IndexVector.clear();
+	}
+}
+
+
 QDataStream &operator<<(QDataStream &stream, const GLC_Lod &lod)
 {
 	quint32 chunckId= GLC_Lod::m_ChunkId;

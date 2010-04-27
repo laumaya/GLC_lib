@@ -255,6 +255,11 @@ public:
 	//! Set this geometry wire color
 	void setWireColor(const QColor& color);
 
+	//! Copy VBO to the Client Side
+	virtual void copyVboToClientSide();
+
+	//! Release client VBO
+	virtual void releaseVboClientSide(bool update= false);
 
 //@}
 //////////////////////////////////////////////////////////////////////

@@ -225,6 +225,17 @@ void GLC_Geometry::setWireColor(const QColor& color)
 
 	m_WireColor= color;
 }
+
+void GLC_Geometry::copyVboToClientSide()
+{
+	m_WireData.copyVboToClientSide();
+}
+
+void GLC_Geometry::releaseVboClientSide(bool update)
+{
+	m_WireData.releaseVboClientSide(update);
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////

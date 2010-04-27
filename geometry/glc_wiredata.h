@@ -103,6 +103,12 @@ public:
 	//! Clear the content of this wire Data and makes it empty
 	void clear();
 
+	//! Copy VBO to the Client Side
+	void copyVboToClientSide();
+
+	//! Release client VBO
+	void releaseVboClientSide(bool update= false);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

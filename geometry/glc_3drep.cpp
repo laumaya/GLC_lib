@@ -312,6 +312,26 @@ void GLC_3DRep::merge(GLC_3DRep* pRep)
 	}
 }
 
+void GLC_3DRep::copyVboToClientSide()
+{
+	// Get the number of geometry of pRep
+	const int pRepSize= m_pGeomList->size();
+	for (int i= 0; i < pRepSize; ++i)
+	{
+		geomAt(i)->copyVboToClientSide();
+	}
+}
+
+void GLC_3DRep::releaseVboClientSide(bool update)
+{
+	// Get the number of geometry of pRep
+	const int pRepSize= m_pGeomList->size();
+	for (int i= 0; i < pRepSize; ++i)
+	{
+		geomAt(i)->releaseVboClientSide(update);
+	}
+}
+
 // UnLoad the representation
 bool GLC_3DRep::unload()
 {

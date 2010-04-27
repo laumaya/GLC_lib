@@ -245,8 +245,10 @@ void GLC_MeshData::clear()
 	m_Positions.clear();
 	m_Normals.clear();
 	m_Texels.clear();
+	m_Colors.clear();
 	m_PositionSize= 0;
 	m_TexelsSize= 0;
+	m_ColorSize= 0;
 
 	// Delete Main Vbo ID
 	if (0 != m_VboId)
@@ -268,6 +270,12 @@ void GLC_MeshData::clear()
 		glDeleteBuffers(1, &m_TexelVboId);
 		m_TexelVboId= 0;
 	}
+	// Delete color index
+	if (0 != m_ColorVboId)
+	{
+		glDeleteBuffers(1, &m_ColorVboId);
+		m_ColorVboId= 0;
+	}
 
 	const int size= m_LodList.size();
 	for (int i= 0; i < size; ++i)
@@ -275,6 +283,47 @@ void GLC_MeshData::clear()
 		delete m_LodList.at(i);
 	}
 	m_LodList.clear();
+}
+
+void GLC_MeshData::copyVboToClientSide()
+{
+
+	if ((0 != m_VboId) && m_Positions.isEmpty())
+	{
+		Q_ASSERT(0 != m_NormalVboId);
+		m_Positions= positionVector();
+		m_Normals= normalVector();
+		if (0 != m_TexelVboId)
+		{
+			m_Texels= texelVector();
+		}
+		if (0 != m_ColorVboId)
+		{
+			m_Colors= colorVector();
+		}
+	}
+}
+
+void GLC_MeshData::releaseVboClientSide(bool update)
+{
+	if ((0 != m_VboId) && !m_Positions.isEmpty())
+	{
+		if (update)
+		{
+			fillVbo(GLC_MeshData::GLC_Vertex);
+			fillVbo(GLC_MeshData::GLC_Normal);
+			fillVbo(GLC_MeshData::GLC_Texel);
+			fillVbo(GLC_MeshData::GLC_Color);
+			useVBO(false, GLC_MeshData::GLC_Color);
+		}
+		m_PositionSize= m_Positions.size();
+		m_Positions.clear();
+		m_Normals.clear();
+		m_TexelsSize= m_Texels.size();
+		m_Texels.clear();
+		m_ColorSize= m_Colors.size();
+		m_Colors.clear();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -310,7 +359,7 @@ void GLC_MeshData::createVBOs()
 }
 
 // Ibo Usage
-bool GLC_MeshData::useVBO(bool use, GLC_MeshData::VboType type)
+bool GLC_MeshData::useVBO(bool use, GLC_MeshData::VboType type) const
 {
 	bool result= true;
 	if (use)
@@ -341,7 +390,39 @@ bool GLC_MeshData::useVBO(bool use, GLC_MeshData::VboType type)
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	return result;
+}
 
+void GLC_MeshData::fillVbo(GLC_MeshData::VboType type)
+{
+	// Chose the right VBO
+	if (type == GLC_MeshData::GLC_Vertex)
+	{
+		useVBO(true, type);
+		const GLsizei dataNbr= static_cast<GLsizei>(m_Positions.size());
+		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
+		glBufferData(GL_ARRAY_BUFFER, dataSize, m_Positions.data(), GL_STATIC_DRAW);
+	}
+	else if (type == GLC_MeshData::GLC_Normal)
+	{
+		useVBO(true, type);
+		const GLsizei dataNbr= static_cast<GLsizei>(m_Normals.size());
+		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
+		glBufferData(GL_ARRAY_BUFFER, dataSize, m_Normals.data(), GL_STATIC_DRAW);
+	}
+	else if ((type == GLC_MeshData::GLC_Texel) && (0 != m_TexelVboId))
+	{
+		useVBO(true, type);
+		const GLsizei dataNbr= static_cast<GLsizei>(m_Texels.size());
+		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
+		glBufferData(GL_ARRAY_BUFFER, dataSize, m_Texels.data(), GL_STATIC_DRAW);
+	}
+	else if ((type == GLC_MeshData::GLC_Color) && (0 != m_ColorVboId))
+	{
+		useVBO(true, type);
+		const GLsizei dataNbr= static_cast<GLsizei>(m_Colors.size());
+		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
+		glBufferData(GL_ARRAY_BUFFER, dataSize, m_Colors.data(), GL_STATIC_DRAW);
+	}
 }
 // Non Member methods
 // Non-member stream operator

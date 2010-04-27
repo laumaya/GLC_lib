@@ -165,6 +165,12 @@ public:
 	//! Clear the content of the meshData and makes it empty
 	void clear();
 
+	//! Copy VBO to the Client Side
+	void copyVboToClientSide();
+
+	//! Release client VBO
+	void releaseVboClientSide(bool update= false);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -176,7 +182,7 @@ public:
 	void createVBOs();
 
 	//! Ibo Usage
-	bool useVBO(bool, GLC_MeshData::VboType);
+	bool useVBO(bool, GLC_MeshData::VboType) const;
 
 	//! Ibo Usage
 	inline void useIBO(bool use, const int currentLod= 0)
@@ -184,6 +190,9 @@ public:
 		if (use) m_LodList.at(currentLod)->useIBO();
 		else glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
+
+	//! Fill the VBO of the given type
+	void fillVbo(GLC_MeshData::VboType vboType);
 
 //@}
 
