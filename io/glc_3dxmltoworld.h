@@ -257,6 +257,9 @@ private:
 	//! Factorize material use
 	void factorizeMaterial(GLC_3DRep*);
 
+	//! Set fileName of the given 3DRep
+	void setRepresentationFileName(GLC_3DRep* pRep);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
