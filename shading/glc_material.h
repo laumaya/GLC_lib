@@ -111,7 +111,7 @@ public:
 
 	//! Get Shininess
 	inline GLfloat shininess() const
-	{return m_fShininess;}
+	{return m_Shininess;}
 
 	//! Get the texture File Name
 	QString textureFileName() const;
@@ -177,11 +177,11 @@ public:
 	void setSpecularColor(const QColor& specularColor);
 
 	//! Set Emissive
-	void setLightEmission(const QColor& lightEmission);
+	void setEmissiveColor(const QColor& lightEmission);
 
 	//! Set Shininess
 	inline void setShininess(GLfloat Shininess)
-	{ m_fShininess= Shininess;}
+	{ m_Shininess= Shininess;}
 
 	//! Set Texture
 	void setTexture(GLC_Texture* pTexture);
@@ -252,10 +252,10 @@ private:
 	QColor m_SpecularColor;
 
 	//! emmisive lighting
-	QColor m_LightEmission;
+	QColor m_EmissiveColor;
 
 	//! Shiness
-	GLfloat m_fShininess;
+	GLfloat m_Shininess;
 
 	//! Hash table of geomtries which used this material
 	WhereUsed m_WhereUsed;
