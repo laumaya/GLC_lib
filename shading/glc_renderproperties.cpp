@@ -34,7 +34,7 @@ GLC_RenderProperties::GLC_RenderProperties()
 , m_RenderMode(glc::NormalRenderMode)
 , m_SavedRenderMode(m_RenderMode)
 , m_pOverwriteMaterial(NULL)
-, m_OverwriteTransparency(-1.0f)
+, m_OverwriteOpacity(-1.0f)
 , m_pBodySelectedPrimitvesId(NULL)
 , m_pOverwritePrimitiveMaterialMaps(NULL)
 , m_RenderingFlag(glc::ShadingFlag)
@@ -53,7 +53,7 @@ GLC_RenderProperties::GLC_RenderProperties(const GLC_RenderProperties& renderPro
 , m_RenderMode(renderProperties.m_RenderMode)
 , m_SavedRenderMode(renderProperties.m_SavedRenderMode)
 , m_pOverwriteMaterial(renderProperties.m_pOverwriteMaterial)
-, m_OverwriteTransparency(renderProperties.m_OverwriteTransparency)
+, m_OverwriteOpacity(renderProperties.m_OverwriteOpacity)
 , m_pBodySelectedPrimitvesId(NULL)
 , m_pOverwritePrimitiveMaterialMaps(NULL)
 , m_RenderingFlag(renderProperties.m_RenderingFlag)
@@ -114,7 +114,7 @@ GLC_RenderProperties& GLC_RenderProperties::operator=(const GLC_RenderProperties
 		m_RenderMode= renderProperties.m_RenderMode;
 		m_SavedRenderMode= renderProperties.m_SavedRenderMode;
 		m_pOverwriteMaterial= renderProperties.m_pOverwriteMaterial;
-		m_OverwriteTransparency= renderProperties.m_OverwriteTransparency;
+		m_OverwriteOpacity= renderProperties.m_OverwriteOpacity;
 		m_pBodySelectedPrimitvesId= NULL;
 		m_pOverwritePrimitiveMaterialMaps= NULL;
 		m_RenderingFlag= renderProperties.m_RenderingFlag;
@@ -182,8 +182,8 @@ bool GLC_RenderProperties::needToRenderWithTransparency() const
 	}
 	else if (m_RenderMode == glc::OverwriteTransparency)
 	{
-		Q_ASSERT(-1.0f != m_OverwriteTransparency);
-		renderWithTransparency= (m_OverwriteTransparency < 1.0f);
+		Q_ASSERT(-1.0f != m_OverwriteOpacity);
+		renderWithTransparency= (m_OverwriteOpacity < 1.0f);
 	}
 	else if ((m_RenderMode == glc::OverwritePrimitiveMaterial)
 			|| ((m_RenderMode == glc::PrimitiveSelected) && (NULL != m_pOverwritePrimitiveMaterialMaps) && (!m_pOverwritePrimitiveMaterialMaps->isEmpty())))
@@ -213,7 +213,7 @@ bool GLC_RenderProperties::needToRenderWithTransparency() const
 bool GLC_RenderProperties::isDefault() const
 {
 	bool isDefault= (NULL == m_pOverwriteMaterial);
-	isDefault= isDefault && (m_OverwriteTransparency == -1.0f);
+	isDefault= isDefault && (m_OverwriteOpacity == -1.0f);
 	return isDefault;
 }
 

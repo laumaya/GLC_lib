@@ -107,7 +107,7 @@ public:
 
 	//! Return the overwrite transparency
 	inline float overwriteTransparency() const
-	{return m_OverwriteTransparency;}
+	{return m_OverwriteOpacity;}
 
 	//! Return an handle to the set of selected primitives id of the current body
 	inline QSet<GLC_uint>* setOfSelectedPrimitivesId() const
@@ -193,7 +193,7 @@ public:
 
 	//! Set the overwrite transparency
 	inline void setOverwriteTransparency(float alpha)
-	{m_OverwriteTransparency= alpha;}
+	{m_OverwriteOpacity= alpha;}
 
 	//! Add the set of selected primitives id of the specified body
 	void addSetOfSelectedPrimitivesId(const QSet<GLC_uint>&, int body= 0);
@@ -259,8 +259,8 @@ private:
 	//! The overwrite material
 	GLC_Material* m_pOverwriteMaterial;
 
-	//! The overwrite transparency
-	float m_OverwriteTransparency;
+	//! The overwrite opacity
+	float m_OverwriteOpacity;
 
 	//! The selected primitive id regrouped by body
 	QHash<int, QSet<GLC_uint>* >* m_pBodySelectedPrimitvesId;
