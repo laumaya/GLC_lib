@@ -35,6 +35,7 @@
 GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world)
 : QObject()
 , m_World(world)
+, m_ExportType(Compressed3dxml)
 , m_FileName()
 , m_pOutStream(NULL)
 , m_Generator("GLC_LIB")
@@ -69,15 +70,16 @@ GLC_WorldTo3dxml::~GLC_WorldTo3dxml()
 	delete m_pCurrentFile;
 }
 
-bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial)
+bool GLC_WorldTo3dxml::exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial)
 {
 	m_3dxmlFileSet.clear();
 	m_ListOfOverLoadedOccurence.clear();
 	m_FileNameIncrement= 0;
 	m_ExportMaterial= exportMaterial;
 	m_FileName= filename;
+	m_ExportType= exportType;
 	bool isExported= false;
-	if (exportType == Compressed3dxml)
+	if (m_ExportType == Compressed3dxml)
 	{
 		m_p3dxmlArchive= new QuaZip(m_FileName);
 		isExported= m_p3dxmlArchive->open(QuaZip::mdCreate);
@@ -94,7 +96,7 @@ bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::E
 	}
 	if (isExported)
 	{
-		if (m_ExportMaterial)
+		if (m_ExportMaterial && (m_ExportType != StructureOnly))
 		{
 			writeAllMaterialRelatedFilesIn3dxml();
 		}
@@ -102,27 +104,30 @@ bool GLC_WorldTo3dxml::exportToFile(const QString& filename, GLC_WorldTo3dxml::E
 		// Export the assembly structure from the list of structure reference
 		exportAssemblyStructure();
 
-		int previousQuantumValue= 0;
-		int currentQuantumValue= 0;
-		emit currentQuantum(currentQuantumValue);
-
-		int currentRepIndex= 0;
-		const int size= m_ReferenceRepTo3dxmlFileName.size();
-		// Export the representation
-		QHash<const GLC_3DRep*, QString>::const_iterator iRep= m_ReferenceRepTo3dxmlFileName.constBegin();
-		while ((m_ReferenceRepTo3dxmlFileName.constEnd() != iRep) && continu())
+		if (m_ExportType != StructureOnly)
 		{
-			write3DRep(iRep.key(), iRep.value());
-			++iRep;
+			int previousQuantumValue= 0;
+			int currentQuantumValue= 0;
+			emit currentQuantum(currentQuantumValue);
 
-			// Progrees bar indicator
-			++currentRepIndex;
-			currentQuantumValue = static_cast<int>((static_cast<double>(currentRepIndex) / size) * 100);
-			if (currentQuantumValue > previousQuantumValue)
+			int currentRepIndex= 0;
+			const int size= m_ReferenceRepTo3dxmlFileName.size();
+			// Export the representation
+			QHash<const GLC_3DRep*, QString>::const_iterator iRep= m_ReferenceRepTo3dxmlFileName.constBegin();
+			while ((m_ReferenceRepTo3dxmlFileName.constEnd() != iRep) && continu())
 			{
-				emit currentQuantum(currentQuantumValue);
+				write3DRep(iRep.key(), iRep.value());
+				++iRep;
+
+				// Progrees bar indicator
+				++currentRepIndex;
+				currentQuantumValue = static_cast<int>((static_cast<double>(currentRepIndex) / size) * 100);
+				if (currentQuantumValue > previousQuantumValue)
+				{
+					emit currentQuantum(currentQuantumValue);
+				}
+				previousQuantumValue= currentQuantumValue;
 			}
-			previousQuantumValue= currentQuantumValue;
 		}
 	}
 
@@ -453,7 +458,24 @@ QString GLC_WorldTo3dxml::representationFileName(const GLC_3DRep* pRep)
 	Q_ASSERT(m_ReferenceRepToIdHash.contains(pRep));
 	QString repName= pRep->name();
 	QString fileName;
-	if (repName.isEmpty())
+	if (m_ExportType == StructureOnly)
+	{
+		QString newFileName= pRep->fileName();
+		if (newFileName.isEmpty() || (glc::isArchiveString(newFileName)))
+		{
+			fileName= "urn:3DXML:NoFile_0.3DRep";
+		}
+		else
+		{
+			qDebug() << m_FileName;
+			// Compute the relative fileName from the structure
+			QDir structureDir(m_AbsolutePath);
+			QString relativeFilePath= structureDir.relativeFilePath(newFileName);
+			fileName= "urn:3DXML:" + relativeFilePath;
+			qDebug() << relativeFilePath;
+		}
+	}
+	else if (repName.isEmpty())
 	{
 		fileName= "urn:3DXML:Representation_0.3DRep";
 	}
@@ -1085,9 +1107,14 @@ void GLC_WorldTo3dxml::writeExtensionAttributes(GLC_Attributes* pAttributes)
 	for (int i= 0; i < size; ++i)
 	{
 		const QString name= attributesNames.at(i);
-		const QString value= pAttributes->value(name);
+		QString value= pAttributes->value(name);
 		m_pOutStream->writeStartElement("Attribute");
 			m_pOutStream->writeAttribute("name", name);
+			if (name == "FILEPATH")
+			{
+				QDir thisPath(m_AbsolutePath);
+				value= thisPath.relativeFilePath(value);
+			}
 			m_pOutStream->writeAttribute("value", value);
 		m_pOutStream->writeEndElement(); // Attribute
 	}
