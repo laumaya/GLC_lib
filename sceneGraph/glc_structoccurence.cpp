@@ -121,7 +121,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_3DRep* pRep)
 GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GLC_StructOccurence& structOccurence, bool shareInstance)
 : m_Uid(glc::GLC_GenID())
 , m_pWorldHandle(pWorldHandle)
-, m_pNumberOfOccurence(structOccurence.m_pNumberOfOccurence)
+, m_pNumberOfOccurence(NULL)
 , m_pStructInstance(NULL)
 , m_pParent(NULL)
 , m_Childs()
@@ -134,13 +134,16 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GL
 	if (shareInstance)
 	{
 		m_pStructInstance= structOccurence.m_pStructInstance;
+		m_pNumberOfOccurence= structOccurence.m_pNumberOfOccurence;
+		++(*m_pNumberOfOccurence);
 	}
 	else
 	{
+		m_pNumberOfOccurence= new int(1);
 		m_pStructInstance= new GLC_StructInstance(structOccurence.m_pStructInstance);
 	}
 
-	++(*m_pNumberOfOccurence);
+
 	// Test if structOccurence has representation and has a shader
 	GLuint shaderId= 0;
 	bool instanceIsSelected= false;
