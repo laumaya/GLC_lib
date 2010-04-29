@@ -580,7 +580,7 @@ void GLC_ColladaToWorld::loadCommonColorOrTexture(const QString& name)
 			const QStringRef currentElementName= m_pStreamReader->name();
 			if (currentElementName == "color")
 			{
-				if (name == "emission") m_pCurrentMaterial->setLightEmission(readXmlColor());
+				if (name == "emission") m_pCurrentMaterial->setEmissiveColor(readXmlColor());
 				else if (name == "ambient") m_pCurrentMaterial->setAmbientColor(readXmlColor());
 				else if (name == "diffuse") m_pCurrentMaterial->setDiffuseColor(readXmlColor());
 				else if (name == "specular") m_pCurrentMaterial->setSpecularColor(readXmlColor());
