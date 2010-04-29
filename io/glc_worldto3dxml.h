@@ -49,7 +49,8 @@ public:
 	enum ExportType
 	{
 		Compressed3dxml,
-		Exploded3dxml
+		Exploded3dxml,
+		StructureOnly
 	};
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -66,7 +67,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Save the world to the specified file name
-	bool exportToFile(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial= true);
+	bool exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial= true);
 
 	//! Set the name of the 3dxml generator default is GLC_LIB
 	inline void setGeneratorName(const QString& generator)
@@ -189,6 +190,9 @@ private:
 private:
 	//! The world to export
 	GLC_World m_World;
+
+	//! The export type
+	ExportType m_ExportType;
 
 	//! The file name in which the world is exported
 	QString m_FileName;
