@@ -141,6 +141,12 @@ private:
 	//! Load the image of this texture from the given fileName and return resutling image
 	QImage loadFromFile(const QString& fileName);
 
+	//! Remove this Opengl texture id
+	void removeThisOpenGLTextureId();
+
+	//! Add this Opengl texture id
+	void addThisOpenGLTextureId();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -169,6 +175,9 @@ private:
 	//! Static member used to check texture size
 	static QSize m_MaxTextureSize;
 	static const QSize m_MinTextureSize;
+
+	//! Static hash table to manage OpenGL testure ID
+	static QHash<GLuint, int> m_TextureIdUsage;
 };
 
 //! Non-member stream operator
