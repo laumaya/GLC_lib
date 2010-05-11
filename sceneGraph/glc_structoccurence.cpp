@@ -371,6 +371,16 @@ GLC_BoundingBox GLC_StructOccurence::boundingBox() const
 	return boundingBox;
 }
 
+unsigned int GLC_StructOccurence::nodeCount() const
+{
+	unsigned int result= 1;
+	const int size= m_Childs.size();
+	for (int i= 0; i < size; ++i)
+	{
+		result+= m_Childs.at(i)->nodeCount();
+	}
+	return result;
+}
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
