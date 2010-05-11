@@ -689,8 +689,9 @@ int GLC_3DViewCollection::numberOfUsedShadingGroup() const
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
+int GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 {
+	int geomCount= 0;
 	if (!isEmpty())
 	{
 		if (renderFlag == glc::WireRenderFlag)
@@ -708,18 +709,19 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 		{
 			glEnable(GL_LIGHTING);
 		}
-		glDraw(groupId, renderFlag);
+		geomCount= glDraw(groupId, renderFlag);
 
 		if (renderFlag == glc::WireRenderFlag)
 		{
 	        glDisable(GL_POLYGON_OFFSET_FILL);
 		}
-
 	}
+	return geomCount;
 }
 // Display all shader group
-void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
+int GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 {
+	int geomCount= 0;
 	if (!isEmpty())
 	{
 		if (GLC_State::isInSelectionMode())
@@ -732,15 +734,17 @@ void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 		HashList::iterator iEntry= m_ShadedPointerViewInstanceHash.begin();
 	    while (iEntry != m_ShadedPointerViewInstanceHash.constEnd())
 	    {
-	    	glDraw(iEntry.key(), renderFlag);
+	    	geomCount+= glDraw(iEntry.key(), renderFlag);
 	    	++iEntry;
 	    }
 	}
+	return geomCount;
 }
 
 // Display the specified collection group
-void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
+int GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 {
+	int geomCount= 0;
 	// Set render Mode and OpenGL state
 	if (!GLC_State::isInSelectionMode() && (groupId == 0))
 	{
@@ -762,7 +766,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 	// Normal GLC_3DViewInstance
 	if ((groupId == 0) && !m_MainInstances.isEmpty())
 	{
-	    glDrawInstancesOf(&m_MainInstances, renderFlag);
+		geomCount= glDrawInstancesOf(&m_MainInstances, renderFlag);
 
 	}
 	// Selected GLC_3DVIewInstance
@@ -770,7 +774,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 	{
 		if (GLC_State::selectionShaderUsed()) GLC_SelectionMaterial::useShader();
 
-		glDrawInstancesOf(&m_SelectedInstances, renderFlag);
+		geomCount= glDrawInstancesOf(&m_SelectedInstances, renderFlag);
 
 		if (GLC_State::selectionShaderUsed()) GLC_SelectionMaterial::unUseShader();
 	}
@@ -782,7 +786,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 	    	PointerViewInstanceHash* pNodeHash= m_ShadedPointerViewInstanceHash.value(groupId);
 
 	    	GLC_Shader::use(groupId);
-	    	glDrawInstancesOf(pNodeHash, renderFlag);
+	    	geomCount= glDrawInstancesOf(pNodeHash, renderFlag);
 	    	GLC_Shader::unuse();
 	    }
 	}
@@ -794,7 +798,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 		glDepthMask(GL_TRUE);
 		glEnable(GL_DEPTH_TEST);
 	}
-
+	return geomCount;
 }
 
 // Set the Bounding box validity
