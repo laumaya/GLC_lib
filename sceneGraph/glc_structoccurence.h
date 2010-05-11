@@ -147,9 +147,12 @@ public:
 	inline unsigned int occurenceNumber() const
 	{return m_OccurenceNumber;}
 
-	//! return an handle of the renderProperties of this occurence
+	//! Return an handle of the renderProperties of this occurence
 	GLC_RenderProperties* renderPropertiesHandle() const
 	{return m_pRenderProperties;}
+
+	//! Return the number of node of this branch
+	unsigned int nodeCount() const;
 
 
 //@}
