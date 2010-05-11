@@ -291,10 +291,11 @@ GLC_3DViewInstance& GLC_3DViewInstance::resetMatrix(void)
 //////////////////////////////////////////////////////////////////////
 
 // Display the instance
-void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Viewport* pView)
+int GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Viewport* pView)
 {
+	int geomCount= 0;
 	//qDebug() << "GLC_3DViewInstance::render render properties= " << m_RenderProperties.renderingMode();
-	if (m_3DRep.isEmpty()) return;
+	if (m_3DRep.isEmpty()) return geomCount;
 	const int bodyCount= m_3DRep.numberOfBody();
 
 	if (bodyCount != m_ViewableGeomFlag.size())
@@ -324,6 +325,7 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 					m_3DRep.geomAt(i)->setCurrentLod(lodValue);
 					m_RenderProperties.setCurrentBodyIndex(i);
 					m_3DRep.geomAt(i)->render(m_RenderProperties);
+					++geomCount;
 				}
 			}
 		}
@@ -345,12 +347,14 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 					m_3DRep.geomAt(i)->setCurrentLod(m_DefaultLOD);
 					m_RenderProperties.setCurrentBodyIndex(i);
 					m_3DRep.geomAt(i)->render(m_RenderProperties);
+					++geomCount;
 				}
 			}
 		}
 	}
 	// Restore OpenGL Matrix
 	glPopMatrix();
+	return geomCount;
 }
 
 // Display the instance in Body selection mode

@@ -283,8 +283,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Display the instance
-	void render(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLoad= false, GLC_Viewport* pView= NULL);
+	//! Display the instance and return the number of GLC_Geometry which as been render
+	int render(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLoad= false, GLC_Viewport* pView= NULL);
 
 	//! Display the instance in Body selection mode
 	void renderForBodySelection();
