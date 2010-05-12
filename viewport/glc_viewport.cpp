@@ -61,8 +61,10 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_UseClipPlane(false)
 , m_3DWidgetCollection()
 , m_UseParallelProjection(false)
+, m_MinimumPixelSize(20)
+, m_MinimumRatioSize(0.0)
 {
-
+	qDebug() << "GLC_Viewport::GLC_Viewport";
 }
 
 GLC_Viewport::~GLC_Viewport()
@@ -299,6 +301,7 @@ void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 
 	updateProjectionMat();
 
+	updateMinimumRatioSize();
 }
 
 GLC_uint GLC_Viewport::renderAndSelect(int x, int y)
@@ -493,6 +496,13 @@ QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei widt
 	}
 
 	return idSet;
+}
+
+void GLC_Viewport::updateMinimumRatioSize()
+{
+	int size= qMax(m_WindowHSize, m_WindowVSize);
+	m_MinimumRatioSize=  static_cast<double>(m_MinimumPixelSize) / static_cast<double>(size) * 100.0;
+	qDebug() << "GLC_Viewport::updateMinimumRatioSize() m_MinimumRatioSize " << m_MinimumRatioSize;
 }
 
 void GLC_Viewport::loadBackGroundImage(const QString& ImageFile)

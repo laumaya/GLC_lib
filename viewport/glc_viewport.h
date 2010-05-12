@@ -139,6 +139,14 @@ public:
 	inline bool useOrtho()const
 	{return m_UseParallelProjection;}
 
+	//! Return the minimum pixel culling size
+	inline int minimumPixelCullingSize() const
+	{return m_MinimumPixelSize;}
+
+	//! Return the minimum pixel culling ratio
+	inline double minimumPixelCullingRatio() const
+	{return m_MinimumRatioSize;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -285,6 +293,13 @@ public:
 
 	//! Set othographic usage to the given flag
 	void setToOrtho(bool useOrtho);
+
+	//! Set minimum pixel culling size
+	inline void setMinimumPixelCullingSize(int size)
+	{
+		m_MinimumPixelSize= size;
+		updateMinimumRatioSize();
+	}
 //@}
 
 
@@ -307,6 +322,9 @@ private:
 
 	//! Return the Set of ID inside a square in screen coordinate
 	QSet<GLC_uint> listOfIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height);
+
+	//! Update minimum ratio size for pixel culling
+	void updateMinimumRatioSize();
 
 
 //////////////////////////////////////////////////////////////////////
@@ -359,6 +377,12 @@ private:
 
 	//! Flag to know if the viewport use orthographic projection
 	bool m_UseParallelProjection;
+
+	//! The minimum pixel culling size
+	int m_MinimumPixelSize;
+
+	//! The minimum size ratio
+	double m_MinimumRatioSize;
 };
 
 GLC_Matrix4x4 GLC_Viewport::compositionMatrix() const

@@ -474,13 +474,13 @@ int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewpor
 
 	const double dist= (center - pView->cameraHandle()->eye()).length();
 	const double cameraCover= dist * pView->viewTangent();
-	double ratio= diameter / cameraCover * 150.0;
 
+	double ratio= diameter / cameraCover * 100.0;
 	if (ratio > 100.0) ratio= 100.0;
 	ratio= 100.0 - ratio;
-	if ((ratio > 98.0) && GLC_State::isPixelCullingActivated()) ratio= 110.0;
-	if (ratio < static_cast<double>(m_DefaultLOD)) ratio= static_cast<double>(m_DefaultLOD);
-	//qDebug() << "RATIO = " << static_cast<int>(ratio);
+
+	if ((ratio > (100.0 - pView->minimumPixelCullingRatio())) && GLC_State::isPixelCullingActivated()) ratio= 110.0;
+	else if (ratio < static_cast<double>(m_DefaultLOD)) ratio= static_cast<double>(m_DefaultLOD);
 
 	return static_cast<int>(ratio);
 }
