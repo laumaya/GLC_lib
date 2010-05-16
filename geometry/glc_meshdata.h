@@ -144,6 +144,12 @@ public:
 	inline bool isEmpty() const
 	{return (0 == m_PositionSize) && (0 == m_Positions.size());}
 
+	//! Return the number of triangle from the given lod index
+	inline unsigned int trianglesCount(int lod) const
+	{
+		Q_ASSERT(lod < m_LodList.size());
+		return m_LodList.at(lod)->trianglesCount();
+	}
 
 //@}
 
@@ -170,6 +176,14 @@ public:
 
 	//! Release client VBO
 	void releaseVboClientSide(bool update= false);
+
+	//! Given number of triangles added to the given lod index
+	inline void trianglesAdded(int lod, int number)
+	{
+		if (lod != 0) lod-= 1;
+		else lod= m_LodList.size() - 1;
+		m_LodList.at(lod)->trianglesAdded(number);
+	}
 
 //@}
 
