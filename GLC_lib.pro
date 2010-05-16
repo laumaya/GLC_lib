@@ -143,7 +143,8 @@ HEADERS_GLC += glc_global.h \
            glc_ext.h \
            glc_state.h \
            glc_config.h \
-           glc_cachemanager.h
+           glc_cachemanager.h \
+           glc_renderstatistics.h
            
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_cuttingplane.h \
@@ -281,7 +282,8 @@ SOURCES +=	glc_global.cpp \
 			glc_fileformatexception.cpp \
 			glc_ext.cpp \
 			glc_state.cpp \
-			glc_cachemanager.cpp
+			glc_cachemanager.cpp \
+			glc_renderstatistics.cpp
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_cuttingplane.cpp \
@@ -379,7 +381,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_RotationManipulator \
     		   include/GLC_FlyMover \
     		   include/GLC_RepFlyMover \
-    		   include/GLC_WorldTo3dxml
+    		   include/GLC_WorldTo3dxml \
+    		   include/GLC_RenderStatistics
     		   
     			   
 # Linux and macx specific configuration
