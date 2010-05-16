@@ -291,11 +291,10 @@ GLC_3DViewInstance& GLC_3DViewInstance::resetMatrix(void)
 //////////////////////////////////////////////////////////////////////
 
 // Display the instance
-int GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Viewport* pView)
+void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Viewport* pView)
 {
-	int geomCount= 0;
 	//qDebug() << "GLC_3DViewInstance::render render properties= " << m_RenderProperties.renderingMode();
-	if (m_3DRep.isEmpty()) return geomCount;
+	if (m_3DRep.isEmpty()) return;
 	const int bodyCount= m_3DRep.numberOfBody();
 
 	if (bodyCount != m_ViewableGeomFlag.size())
@@ -325,7 +324,6 @@ int GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_View
 					m_3DRep.geomAt(i)->setCurrentLod(lodValue);
 					m_RenderProperties.setCurrentBodyIndex(i);
 					m_3DRep.geomAt(i)->render(m_RenderProperties);
-					++geomCount;
 				}
 			}
 		}
@@ -347,14 +345,12 @@ int GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_View
 					m_3DRep.geomAt(i)->setCurrentLod(m_DefaultLOD);
 					m_RenderProperties.setCurrentBodyIndex(i);
 					m_3DRep.geomAt(i)->render(m_RenderProperties);
-					++geomCount;
 				}
 			}
 		}
 	}
 	// Restore OpenGL Matrix
 	glPopMatrix();
-	return geomCount;
 }
 
 // Display the instance in Body selection mode
@@ -480,7 +476,15 @@ int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewpor
 	ratio= 100.0 - ratio;
 
 	if ((ratio > (100.0 - pView->minimumPixelCullingRatio())) && GLC_State::isPixelCullingActivated()) ratio= 110.0;
-	else if (ratio < static_cast<double>(m_DefaultLOD)) ratio= static_cast<double>(m_DefaultLOD);
+	else if(ratio > 50.0)
+	{
+		ratio= (ratio - 50.0) / 50.0 * 100.0;
+		if (ratio < static_cast<double>(m_DefaultLOD)) ratio= static_cast<double>(m_DefaultLOD);
+	}
+	else
+	{
+		ratio= static_cast<double>(m_DefaultLOD);
+	}
 
 	return static_cast<int>(ratio);
 }

@@ -272,10 +272,10 @@ public:
 	 * The selection group is 1
 	 * User group are identified by user id
 	 */
-	int render(GLuint, glc::RenderFlag);
+	void render(GLuint, glc::RenderFlag);
 
 	//! Display all shader group
-	int renderShaderGroup(glc::RenderFlag);
+	void renderShaderGroup(glc::RenderFlag);
 
 //@}
 
@@ -286,10 +286,10 @@ public:
 
 private:
 	//! Display collection's member
-	int glDraw(GLuint, glc::RenderFlag);
+	void glDraw(GLuint, glc::RenderFlag);
 
 	//! Draw instances of a PointerViewInstanceHash
-	inline int glDrawInstancesOf(PointerViewInstanceHash*, glc::RenderFlag);
+	inline void glDrawInstancesOf(PointerViewInstanceHash*, glc::RenderFlag);
 
 //@}
 
@@ -345,10 +345,8 @@ private:
 };
 
 // Draw instances of a PointerViewInstanceHash
-int GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc::RenderFlag renderFlag)
+void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc::RenderFlag renderFlag)
 {
-	int geomCount= 0;
-
 	bool forceDisplay= false;
 	if (GLC_State::isInSelectionMode())
 	{
@@ -365,7 +363,7 @@ int GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc:
 			pCurInstance= iEntry.value();
 			if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
 			{
-				geomCount+= pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
+				pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
 			}
 			++iEntry;
 		}
@@ -381,7 +379,7 @@ int GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc:
 				{
 					if (!pCurInstance->isTransparent() || pCurInstance->renderPropertiesHandle()->isSelected() || (renderFlag == glc::WireRenderFlag))
 					{
-						geomCount+= pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
+						pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
 
@@ -398,7 +396,7 @@ int GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc:
 				{
 					if (pCurInstance->hasTransparentMaterials())
 					{
-						geomCount+= pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
+						pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
 
@@ -407,7 +405,6 @@ int GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc:
 	   }
 
 	}
-	return geomCount;
 }
 
 #endif //GLC_3DVIEWCOLLECTION_H_

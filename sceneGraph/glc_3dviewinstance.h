@@ -283,8 +283,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Display the instance and return the number of GLC_Geometry which as been render
-	int render(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLoad= false, GLC_Viewport* pView= NULL);
+	//! Display the instance
+	void render(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLoad= false, GLC_Viewport* pView= NULL);
 
 	//! Display the instance in Body selection mode
 	void renderForBodySelection();
@@ -348,17 +348,18 @@ private:
 	//! The Default LOD
 	int m_DefaultLOD;
 
+	//! Flag to know if the instance is viewable
+	Viewable m_ViewableFlag;
+
+	//! vector of Flag to know if geometies of this instance are viewable
+	QVector<bool> m_ViewableGeomFlag;
+
 	//! A Mutex
 	static QMutex m_Mutex;
 
 	//! The global default LOD
 	static int m_GlobalDefaultLOD;
 
-	//! Flag to know if the instance is viewable
-	Viewable m_ViewableFlag;
-
-	//! vector of Flag to know if geometies of this instance are viewable
-	QVector<bool> m_ViewableGeomFlag;
 
 };
 
