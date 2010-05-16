@@ -166,7 +166,7 @@ public:
 	{return m_IsWire;}
 
 	//! Get the number of faces
-	virtual unsigned int faceCount() const;
+	virtual unsigned int faceCount(int lod=0) const;
 
 	//! Get the number of vertex
 	virtual unsigned int VertexCount() const;
