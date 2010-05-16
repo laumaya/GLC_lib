@@ -25,6 +25,7 @@
 //! \file glc_mesh.cpp Implementation for the GLC_Mesh class.
 
 #include "glc_mesh.h"
+#include "../glc_renderstatistics.h"
 
 // Class chunk id
 quint32 GLC_Mesh::m_ChunkId= 0xA701;
@@ -34,7 +35,6 @@ GLC_Mesh::GLC_Mesh()
 , m_NextPrimitiveLocalId(1)
 , m_PrimitiveGroups()
 , m_DefaultMaterialId(0)
-, m_NumberOfFaces(0)
 , m_NumberOfVertice(0)
 , m_NumberOfNormals(0)
 , m_ColorPearVertex(false)
@@ -49,7 +49,6 @@ GLC_Mesh::GLC_Mesh(const GLC_Mesh& mesh)
 , m_NextPrimitiveLocalId(mesh.m_NextPrimitiveLocalId)
 , m_PrimitiveGroups(mesh.m_PrimitiveGroups)
 , m_DefaultMaterialId(mesh.m_DefaultMaterialId)
-, m_NumberOfFaces(mesh.m_NumberOfFaces)
 , m_NumberOfVertice(mesh.m_NumberOfVertice)
 , m_NumberOfNormals(mesh.m_NumberOfNormals)
 , m_ColorPearVertex(mesh.m_ColorPearVertex)
@@ -92,7 +91,6 @@ GLC_Mesh& GLC_Mesh::operator=(const GLC_Mesh& mesh)
 		m_NextPrimitiveLocalId= mesh.m_NextPrimitiveLocalId;
 		m_PrimitiveGroups= mesh.m_PrimitiveGroups;
 		m_DefaultMaterialId= mesh.m_DefaultMaterialId;
-		m_NumberOfFaces= mesh.m_NumberOfFaces;
 		m_NumberOfVertice= mesh.m_NumberOfVertice;
 		m_NumberOfNormals= mesh.m_NumberOfNormals;
 		m_ColorPearVertex= mesh.m_ColorPearVertex;
@@ -150,9 +148,9 @@ quint32 GLC_Mesh::chunckID()
 }
 
 // Get number of faces
-unsigned int GLC_Mesh::faceCount() const
+unsigned int GLC_Mesh::faceCount(int lod) const
 {
-	return m_NumberOfFaces;
+	return m_MeshData.trianglesCount(lod);
 }
 
 // Get number of vertex
@@ -406,7 +404,6 @@ void GLC_Mesh::clearMeshWireAndBoundingBox()
 	m_PrimitiveGroups.clear();
 
 	m_DefaultMaterialId= 0;
-	m_NumberOfFaces= 0;
 	m_NumberOfVertice= 0;
 	m_NumberOfNormals= 0;
 	m_IsSelected= false;
@@ -429,8 +426,8 @@ GLC_uint GLC_Mesh::addTriangles(GLC_Material* pMaterial, const IndexList& indexL
 	if (0 == lod)
 	{
 		id= m_NextPrimitiveLocalId++;
-		m_NumberOfFaces+= indexList.size() / 3;
 	}
+	m_MeshData.trianglesAdded(lod, indexList.size() / 3);
 
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTriangles(indexList, id);
 
@@ -451,8 +448,9 @@ GLC_uint GLC_Mesh::addTrianglesStrip(GLC_Material* pMaterial, const IndexList& i
 	if (0 == lod)
 	{
 		id= m_NextPrimitiveLocalId++;
-		m_NumberOfFaces+= indexList.size() - 2;
 	}
+	m_MeshData.trianglesAdded(lod, indexList.size() - 2);
+
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesStrip(indexList, id);
 
 	// Invalid the geometry
@@ -471,8 +469,8 @@ GLC_uint GLC_Mesh::addTrianglesFan(GLC_Material* pMaterial, const IndexList& ind
 	if (0 == lod)
 	{
 		id= m_NextPrimitiveLocalId++;
-		m_NumberOfFaces+= indexList.size() - 2;
 	}
+	m_MeshData.trianglesAdded(lod, indexList.size() - 2);
 	m_PrimitiveGroups.value(lod)->value(groupId)->addTrianglesFan(indexList, id);
 
 	// Invalid the geometry
@@ -658,8 +656,6 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& mater
 			m_PrimitiveGroups.value(primitiveGroupLodList.at(i))->insert(newId, pGroup);
 		}
 	}
-
-	stream >> m_NumberOfFaces;
 	stream >> m_NumberOfVertice;
 	stream >> m_NumberOfNormals;
 
@@ -706,7 +702,6 @@ void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 	stream << primitiveGroupLodList;
 	stream << primitiveListOfGroupList;
 
-	stream << m_NumberOfFaces;
 	stream << m_NumberOfVertice;
 	stream << m_NumberOfNormals;
 }
@@ -860,6 +855,10 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 			m_WireData.glDraw(renderProperties);
 		}
 	}
+
+	// Update statistics
+	GLC_RenderStatistics::addBodies(1);
+	GLC_RenderStatistics::addTriangles(m_MeshData.trianglesCount(m_CurrentLod));
 }
 
 //////////////////////////////////////////////////////////////////////

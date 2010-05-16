@@ -83,7 +83,7 @@ public:
 	static quint32 chunckID();
 
 	//! Get number of faces
-	virtual unsigned int faceCount() const;
+	virtual unsigned int faceCount(int lod) const;
 
 	//! Get number of vertex
 	virtual unsigned int VertexCount() const;
@@ -178,7 +178,6 @@ public:
 	//! Return the mesh wire color
 	inline QColor wireColor() const
 	{return m_WireColor;}
-
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -373,9 +372,6 @@ private:
 
 	//! The default material Id
 	GLC_uint m_DefaultMaterialId;
-
-	//! Mesh number of faces
-	unsigned int m_NumberOfFaces;
 
 	//! Mesh number of vertice
 	unsigned int m_NumberOfVertice;
