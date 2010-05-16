@@ -877,7 +877,7 @@ void GLC_ObjToWorld::addCurrentObjMeshToWorld()
 
 				++iMat;
 			}
-			if (m_pCurrentObjMesh->m_pMesh->faceCount() > 0)
+			if (m_pCurrentObjMesh->m_pMesh->faceCount(0) > 0)
 			{
 				m_pCurrentObjMesh->m_pMesh->finish();
 				GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentObjMesh->m_pMesh);
