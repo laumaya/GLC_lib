@@ -36,6 +36,7 @@ GLC_Lod::GLC_Lod()
 , m_IboId(0)
 , m_IndexVector()
 , m_IndexSize(0)
+, m_TrianglesCount(0)
 {
 
 }
@@ -46,6 +47,7 @@ GLC_Lod::GLC_Lod(double accuracy)
 , m_IboId(0)
 , m_IndexVector()
 , m_IndexSize(0)
+, m_TrianglesCount(0)
 {
 
 }
@@ -56,6 +58,7 @@ GLC_Lod::GLC_Lod(const GLC_Lod& lod)
 , m_IboId(0)
 , m_IndexVector(lod.indexVector())
 , m_IndexSize(lod.m_IndexSize)
+, m_TrianglesCount(lod.m_TrianglesCount)
 {
 
 
@@ -70,6 +73,7 @@ GLC_Lod& GLC_Lod::operator=(const GLC_Lod& lod)
 		m_IboId= 0;
 		m_IndexVector= lod.indexVector();
 		m_IndexSize= lod.m_IndexSize;
+		m_TrianglesCount= lod.m_TrianglesCount;
 	}
 
 	return *this;
@@ -152,6 +156,7 @@ QDataStream &operator<<(QDataStream &stream, const GLC_Lod &lod)
 
 	stream << lod.m_Accuracy;
 	stream << lod.indexVector();
+	stream << lod.m_TrianglesCount;
 
 	return stream;
 }
@@ -164,9 +169,9 @@ QDataStream &operator>>(QDataStream &stream, GLC_Lod &lod)
 	stream >> lod.m_Accuracy;
 
 	QVector<GLuint> indexVector;
-	stream >> indexVector;
+	stream >> lod.m_IndexVector;
+	stream >> lod.m_TrianglesCount;
 
-	*(lod.indexVectorHandle())= indexVector;
 	return stream;
 }
 

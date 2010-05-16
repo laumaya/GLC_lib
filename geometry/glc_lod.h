@@ -96,11 +96,9 @@ public:
 	inline int indexVectorSize() const
 	{return m_IndexVector.size();}
 
-	//! Copy IBO to the Client Side
-	void copyIboToClientSide();
-
-	//! Release client IBO
-	void releaseIboClientSide(bool update= false);
+	//! Return this lod triangle count
+	inline unsigned int trianglesCount() const
+	{return m_TrianglesCount;}
 
 //@}
 
@@ -109,6 +107,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Copy IBO to the Client Side
+	void copyIboToClientSide();
+
+	//! Release client IBO
+	void releaseIboClientSide(bool update= false);
+
 	//! The mesh wich use this lod is finished
 	inline void finishVbo()
 	{
@@ -118,6 +122,13 @@ public:
 	//! Set accuracy of the LOD
 	inline void setAccuracy(const double& accuracy)
 	{m_Accuracy= accuracy;}
+
+	//! Given number of triangles added
+	inline void trianglesAdded(unsigned int count)
+	{
+		m_TrianglesCount+= count;
+	}
+
 
 //@}
 
@@ -157,6 +168,9 @@ private:
 
 	//! The Index vector size
 	int m_IndexSize;
+
+	//! Lod number of faces
+	unsigned int m_TrianglesCount;
 
 	//! Class chunk id
 	static quint32 m_ChunkId;
