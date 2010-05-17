@@ -259,7 +259,9 @@ public:
 	//! Update the instance viewable state with the specified frustum
 	void updateInstanceViewableState(const GLC_Frustum&);
 
-
+	//! Set the attached viewport of this collection
+	inline void setAttachedViewport(GLC_Viewport* pViewport)
+	{m_pViewport= pViewport;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
