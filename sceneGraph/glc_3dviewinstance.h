@@ -317,7 +317,7 @@ private:
 	void clear();
 
 	//! Compute LOD
-	int choseLod(const GLC_BoundingBox&, GLC_Viewport*);
+	int choseLod(const GLC_BoundingBox&, GLC_Viewport*, bool);
 
 //////////////////////////////////////////////////////////////////////
 // Private members

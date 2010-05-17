@@ -318,7 +318,7 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 		{
 			if (m_ViewableGeomFlag.at(i))
 			{
-				const int lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
+				const int lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView, useLod);
 				if (lodValue <= 100)
 				{
 					m_3DRep.geomAt(i)->setCurrentLod(lodValue);
@@ -337,7 +337,7 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 				int lodValue= 0;
 				if (GLC_State::isPixelCullingActivated() && (NULL != pView))
 				{
-					lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView);
+					lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView, useLod);
 				}
 
 				if (lodValue <= 100)
@@ -462,9 +462,19 @@ void GLC_3DViewInstance::clear()
 }
 
 // Compute LOD
-int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewport* pView)
+int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewport* pView, bool useLod)
 {
 	if (NULL == pView) return 0;
+	double pixelCullingRatio= 0.0;
+	if (useLod)
+	{
+		pixelCullingRatio= pView->minimumDynamicPixelCullingRatio();
+	}
+	else
+	{
+		pixelCullingRatio= pView->minimumStaticPixelCullingRatio();
+	}
+
 	const double diameter= boundingBox.boundingSphereRadius() * 2.0 * m_AbsoluteMatrix.scalingX();
 	GLC_Vector3d center(m_AbsoluteMatrix * boundingBox.center());
 
@@ -475,8 +485,8 @@ int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewpor
 	if (ratio > 100.0) ratio= 100.0;
 	ratio= 100.0 - ratio;
 
-	if ((ratio > (100.0 - pView->minimumPixelCullingRatio())) && GLC_State::isPixelCullingActivated()) ratio= 110.0;
-	else if(ratio > 50.0)
+	if ((ratio > (100.0 - pixelCullingRatio)) && GLC_State::isPixelCullingActivated()) ratio= 110.0;
+	else if(useLod && (ratio > 50.0))
 	{
 		ratio= (ratio - 50.0) / 50.0 * 100.0;
 		if (ratio < static_cast<double>(m_DefaultLOD)) ratio= static_cast<double>(m_DefaultLOD);
