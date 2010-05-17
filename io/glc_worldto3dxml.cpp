@@ -205,10 +205,10 @@ void GLC_WorldTo3dxml::writeInstance3D(const GLC_StructInstance* pInstance, unsi
 		m_pOutStream->writeTextElement("IsAggregatedBy", QString::number(parentId));
 		m_pOutStream->writeTextElement("IsInstanceOf", QString::number(referenceId));
 		m_pOutStream->writeTextElement("RelativeMatrix", instanceMatrix);
-		if (pRef->containsAttributes())
+		if (pInstance->containsAttributes())
 		{
 			m_pOutStream->writeStartElement("Instance3DExtensionType");
-			writeExtensionAttributes(pRef->attributesHandle());
+			writeExtensionAttributes(pInstance->attributesHandle());
 			m_pOutStream->writeEndElement(); // Instance3DExtensionType
 		}
 
