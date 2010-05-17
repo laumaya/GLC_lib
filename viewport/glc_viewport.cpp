@@ -61,8 +61,9 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_UseClipPlane(false)
 , m_3DWidgetCollection()
 , m_UseParallelProjection(false)
-, m_MinimumPixelSize(20)
-, m_MinimumRatioSize(0.0)
+, m_MinimumStaticPixelSize(20)
+, m_MinimumStaticRatioSize(0.0)
+, m_MinimumDynamicRatioSize(0.0)
 {
 	qDebug() << "GLC_Viewport::GLC_Viewport";
 }
@@ -501,8 +502,9 @@ QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei widt
 void GLC_Viewport::updateMinimumRatioSize()
 {
 	int size= qMax(m_WindowHSize, m_WindowVSize);
-	m_MinimumRatioSize=  static_cast<double>(m_MinimumPixelSize) / static_cast<double>(size) * 100.0;
-	qDebug() << "GLC_Viewport::updateMinimumRatioSize() m_MinimumRatioSize " << m_MinimumRatioSize;
+	m_MinimumStaticRatioSize=  static_cast<double>(m_MinimumStaticPixelSize) / static_cast<double>(size) * 100.0;
+	m_MinimumDynamicRatioSize= m_MinimumStaticRatioSize * 2.0;
+	//qDebug() << "GLC_Viewport::updateMinimumRatioSize() m_MinimumRatioSize " << m_MinimumStaticRatioSize;
 }
 
 void GLC_Viewport::loadBackGroundImage(const QString& ImageFile)
