@@ -617,10 +617,6 @@ GLC_BoundingBox GLC_3DViewCollection::boundingBox(void)
 	if ((m_pBoundingBox == NULL) && !m_3DViewInstanceHash.isEmpty())
 	{
 		// There is objects in the collection and the collection or bounding box is not valid
-		if (m_pBoundingBox != NULL)
-		{
-			delete m_pBoundingBox;
-		}
 		m_pBoundingBox= new GLC_BoundingBox();
 
 		ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
