@@ -131,6 +131,10 @@ public:
 	inline void setUpVector(const GLC_Vector3d& vect)
 	{m_UpVector= vect;}
 
+	//! Set the attached viewport of this world handle
+	inline void setAttachedViewport(GLC_Viewport* pViewport)
+	{m_Collection.setAttachedViewport(pViewport);}
+
 
 //@}
 
