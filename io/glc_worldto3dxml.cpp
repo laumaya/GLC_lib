@@ -149,7 +149,7 @@ void GLC_WorldTo3dxml::writeHeader()
 		m_pOutStream->writeTextElement("SchemaVersion", "4.0");
 		m_pOutStream->writeTextElement("Title", title);
 		m_pOutStream->writeTextElement("Generator", m_Generator);
-		m_pOutStream->writeTextElement("Created", QDate::currentDate().toString("YYYY-MM-DD"));
+		m_pOutStream->writeTextElement("Created", QDate::currentDate().toString(Qt::ISODate));
 	m_pOutStream->writeEndElement();
 }
 
