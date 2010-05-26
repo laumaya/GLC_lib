@@ -43,6 +43,7 @@ GLC_BSRep::GLC_BSRep(const QString& fileName, bool useCompression)
 , m_DataStream()
 , m_UseCompression(useCompression)
 , m_CompressionLevel(-1)
+, m_VersionIsCompatible(false)
 {
 	setAbsoluteFileName(fileName);
 	m_DataStream.setVersion(QDataStream::Qt_4_6);
@@ -75,7 +76,7 @@ bool GLC_BSRep::repIsUpToDate(const QDateTime& timeStamp)
 	{
 		if (headerIsOk())
 		{
-			isUpToDate= timeStampOk(timeStamp);
+			isUpToDate= m_VersionIsCompatible && timeStampOk(timeStamp);
 			isUpToDate= isUpToDate && close();
 		}
 		else
@@ -308,7 +309,7 @@ bool GLC_BSRep::headerIsOk()
 	m_DataStream.setVersion(QDataStream::Qt_4_6);
 
 	bool headerOk= (uuid == m_Uuid);
-	headerOk= headerOk && (version == m_Version);
+	m_VersionIsCompatible= (version == m_Version);
 
 	return headerOk;
 }

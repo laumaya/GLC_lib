@@ -147,6 +147,9 @@ private:
 	//! The compression level
 	int m_CompressionLevel;
 
+	//! Flag to know if the version is compatible
+	bool m_VersionIsCompatible;
+
 };
 
 #endif /* GLC_BSREP_H_ */
