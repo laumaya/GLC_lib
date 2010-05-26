@@ -1083,7 +1083,7 @@ void GLC_Mesh::activateVertexArray()
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 
-	// Activate Color VBO if needed
+	// Activate Color array if needed
 	if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && !m_MeshData.colorVectorHandle()->isEmpty())
 	{
 		glEnable(GL_COLOR_MATERIAL);
