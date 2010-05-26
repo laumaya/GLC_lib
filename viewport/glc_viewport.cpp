@@ -61,11 +61,11 @@ GLC_Viewport::GLC_Viewport(QGLWidget *GLWidget)
 , m_UseClipPlane(false)
 , m_3DWidgetCollection()
 , m_UseParallelProjection(false)
-, m_MinimumStaticPixelSize(20)
+, m_MinimumStaticPixelSize(10)
 , m_MinimumStaticRatioSize(0.0)
 , m_MinimumDynamicRatioSize(0.0)
 {
-	qDebug() << "GLC_Viewport::GLC_Viewport";
+	updateMinimumRatioSize();
 }
 
 GLC_Viewport::~GLC_Viewport()
