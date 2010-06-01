@@ -28,6 +28,8 @@
 #include "glc_ext.h"
 #include "../sceneGraph/glc_octree.h"
 
+#include <QGLFramebufferObject>
+
 bool GLC_State::m_VboSupported= false;
 bool GLC_State::m_UseVbo= true;
 bool GLC_State::m_GlslSupported= false;
@@ -36,6 +38,7 @@ bool GLC_State::m_UseShader= true;
 bool GLC_State::m_UseSelectionShader= false;
 bool GLC_State::m_IsInSelectionMode= false;
 bool GLC_State::m_IsPixelCullingActivated= true;
+bool GLC_State::m_IsFrameBufferSupported= false;
 
 QString GLC_State::m_Version;
 QString GLC_State::m_Vendor;
@@ -65,6 +68,11 @@ bool GLC_State::vboUsed()
 bool GLC_State::glslSupported()
 {
 	return m_GlslSupported;
+}
+
+bool GLC_State::frameBufferSupported()
+{
+	return m_IsFrameBufferSupported;
 }
 
 bool GLC_State::glslUsed()
@@ -142,6 +150,7 @@ void GLC_State::init()
 	setVboSupport();
 	setGlslSupport();
 	setPointSpriteSupport();
+	setFrameBufferSupport();
 	m_Version= (char *) glGetString(GL_VERSION);
 	m_Vendor= (char *) glGetString(GL_VENDOR);
 	m_Renderer= (char *) glGetString(GL_RENDERER);
@@ -165,6 +174,11 @@ void GLC_State::setGlslSupport()
 void GLC_State::setPointSpriteSupport()
 {
 	m_PointSpriteSupported= glc::extensionIsSupported("GL_ARB_point_parameters") && glc::loadPointSpriteExtension();
+}
+
+void GLC_State::setFrameBufferSupport()
+{
+	m_IsFrameBufferSupported= QGLFramebufferObject::hasOpenGLFramebufferObjects();
 }
 
 void GLC_State::setGlslUsage(const bool glslUsage)

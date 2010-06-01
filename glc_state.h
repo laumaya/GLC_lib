@@ -61,6 +61,9 @@ public:
 	//! Return true if GLSL is supported
 	static bool glslSupported();
 
+	//! Return true if frameBuffer is supported
+	static bool frameBufferSupported();
+
 	//! Return true if GLSL is used
 	static bool glslUsed();
 
@@ -123,6 +126,9 @@ public:
 
 	//! Set Point Sprite support
 	static void setPointSpriteSupport();
+
+	//! Set the frame buffer support
+	static void setFrameBufferSupport();
 
 	//! Set GLSL usage
 	static void setGlslUsage(const bool);
@@ -201,6 +207,9 @@ private:
 
 	//! Frustum culling activated
 	static bool m_IsFrustumCullingActivated;
+
+	//! Frame buffer supported
+	static bool m_IsFrameBufferSupported;
 
 };
 
