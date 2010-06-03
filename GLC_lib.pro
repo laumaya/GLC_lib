@@ -382,7 +382,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_FlyMover \
     		   include/GLC_RepFlyMover \
     		   include/GLC_WorldTo3dxml \
-    		   include/GLC_RenderStatistics
+    		   include/GLC_RenderStatistics \
+    		   include/GLC_Ext
     		   
     			   
 # Linux and macx specific configuration
