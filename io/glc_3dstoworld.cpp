@@ -7,16 +7,16 @@
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
  (at your option) any later version.
 
  GLC-lib is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+ GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU General Public License
+ You should have received a copy of the GNU Lesser General Public License
  along with GLC-lib; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
@@ -38,11 +38,11 @@
 #include "../sceneGraph/glc_structoccurence.h"
 
 // Lib3ds Header
-#include "lib3ds/file.h"
-#include "lib3ds/mesh.h"
-#include "lib3ds/node.h"
-#include "lib3ds/matrix.h"
-#include "lib3ds/material.h"
+#include "3rdparty/lib3ds/file.h"
+#include "3rdparty/lib3ds/mesh.h"
+#include "3rdparty/lib3ds/node.h"
+#include "3rdparty/lib3ds/matrix.h"
+#include "3rdparty/lib3ds/material.h"
 
 #include <QFileInfo>
 #include <QGLContext>
