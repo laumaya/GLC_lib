@@ -21,37 +21,37 @@ INCLUDEPATH += .
 INCLUDEPATH += ./zlib
 
 # Input					
-HEADERS_QUAZIP +=	quazip/crypt.h \
-					quazip/ioapi.h \
-					quazip/quazip.h \
-					quazip/quazipfile.h \
-					quazip/quazipfileinfo.h \
-					quazip/quazipnewinfo.h \
-					quazip/unzip.h \
-					quazip/zip.h
+HEADERS_QUAZIP +=	3rdparty/quazip/crypt.h \
+					3rdparty/quazip/ioapi.h \
+					3rdparty/quazip/quazip.h \
+					3rdparty/quazip/quazipfile.h \
+					3rdparty/quazip/quazipfileinfo.h \
+					3rdparty/quazip/quazipnewinfo.h \
+					3rdparty/quazip/unzip.h \
+					3rdparty/quazip/zip.h
 
-HEADERS_LIB3DS += lib3ds/atmosphere.h \
-           lib3ds/background.h \
-           lib3ds/camera.h \
-           lib3ds/chunk.h \
-           lib3ds/chunktable.h \
-           lib3ds/ease.h \
-           lib3ds/file.h \
-           lib3ds/io.h \
-           lib3ds/light.h \
-           lib3ds/material.h \
-           lib3ds/matrix.h \
-           lib3ds/mesh.h \
-           lib3ds/node.h \
-           lib3ds/quat.h \
-           lib3ds/shadow.h \
-           lib3ds/tcb.h \
-           lib3ds/tracks.h \
-           lib3ds/types.h \
-           lib3ds/vector.h \
-           lib3ds/viewport.h
+HEADERS_LIB3DS += 3rdparty/lib3ds/atmosphere.h \
+           3rdparty/lib3ds/background.h \
+           3rdparty/lib3ds/camera.h \
+           3rdparty/lib3ds/chunk.h \
+           3rdparty/lib3ds/chunktable.h \
+           3rdparty/lib3ds/ease.h \
+           3rdparty/lib3ds/file.h \
+           3rdparty/lib3ds/io.h \
+           3rdparty/lib3ds/light.h \
+           3rdparty/lib3ds/material.h \
+           3rdparty/lib3ds/matrix.h \
+           3rdparty/lib3ds/mesh.h \
+           3rdparty/lib3ds/node.h \
+           3rdparty/lib3ds/quat.h \
+           3rdparty/lib3ds/shadow.h \
+           3rdparty/lib3ds/tcb.h \
+           3rdparty/lib3ds/tracks.h \
+           3rdparty/lib3ds/types.h \
+           3rdparty/lib3ds/vector.h \
+           3rdparty/lib3ds/viewport.h
            
-HEADERS_GLEXT += glext/glext.h
+HEADERS_GLEXT += 3rdparty/glext/glext.h
 
 HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
 						maths/glc_vector2d.h \
@@ -61,7 +61,6 @@ HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
 						maths/glc_vector3df.h \
 						maths/glc_matrix4x4.h \
 						maths/glc_interpolator.h \
-						maths/glc_distance.h \
 						maths/glc_plane.h \
 						maths/glc_geomtools.h \
 						maths/glc_line3d.h
@@ -106,7 +105,8 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_wiredata.h \
 							geometry/glc_arrow.h \
 							geometry/glc_polylines.h \
-							geometry/glc_disc.h
+							geometry/glc_disc.h \
+							geometry/glc_cone.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -155,53 +155,39 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_rotationmanipulator.h
 
 
-HEADERS_PQP +=		PQP/PQP_Compile.h \
-					PQP/TriDist.h \
-					PQP/Tri.h \
-					PQP/RectDist.h \
-					PQP/PQP.h \
-					PQP/PQP_Internal.h \
-					PQP/OBB_Disjoint.h \
-					PQP/MatVec.h \
-					PQP/GetTime.h \
-					PQP/BVTQ.h \
-					PQP/BV.h \
-					PQP/build.h
-
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
-HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_PQP}
+HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET}
 		   
-SOURCES += quazip/ioapi.c \
-           quazip/quazip.cpp \
-           quazip/quazipfile.cpp \
-           quazip/quazipnewinfo.cpp \
-           quazip/unzip.c \
-           quazip/zip.c
+SOURCES += 3rdparty/quazip/ioapi.c \
+           3rdparty/quazip/quazip.cpp \
+           3rdparty/quazip/quazipfile.cpp \
+           3rdparty/quazip/quazipnewinfo.cpp \
+           3rdparty/quazip/unzip.c \
+           3rdparty/quazip/zip.c
 
-SOURCES += lib3ds/atmosphere.c \
-           lib3ds/background.c \
-           lib3ds/camera.c \
-           lib3ds/chunk.c \
-           lib3ds/ease.c \
-           lib3ds/file.c \
-           lib3ds/io.c \
-           lib3ds/light.c \
-           lib3ds/material.c \
-           lib3ds/matrix.c \
-           lib3ds/mesh.c \
-           lib3ds/node.c \
-           lib3ds/quat.c \
-           lib3ds/shadow.c \
-           lib3ds/tcb.c \
-           lib3ds/tracks.c \
-           lib3ds/vector.c \
-           lib3ds/viewport.c
+SOURCES += 3rdparty/lib3ds/atmosphere.c \
+           3rdparty/lib3ds/background.c \
+           3rdparty/lib3ds/camera.c \
+           3rdparty/lib3ds/chunk.c \
+           3rdparty/lib3ds/ease.c \
+           3rdparty/lib3ds/file.c \
+           3rdparty/lib3ds/io.c \
+           3rdparty/lib3ds/light.c \
+           3rdparty/lib3ds/material.c \
+           3rdparty/lib3ds/matrix.c \
+           3rdparty/lib3ds/mesh.c \
+           3rdparty/lib3ds/node.c \
+           3rdparty/lib3ds/quat.c \
+           3rdparty/lib3ds/shadow.c \
+           3rdparty/lib3ds/tcb.c \
+           3rdparty/lib3ds/tracks.c \
+           3rdparty/lib3ds/vector.c \
+           3rdparty/lib3ds/viewport.c
    
 SOURCES +=	maths/glc_matrix4x4.cpp \
 			maths/glc_vector4d.cpp \
 			maths/glc_interpolator.cpp \
-			maths/glc_distance.cpp \
 			maths/glc_plane.cpp \
 			maths/glc_geomtools.cpp \
 			maths/glc_line3d.cpp
@@ -246,7 +232,8 @@ SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_wiredata.cpp \
 			geometry/glc_arrow.cpp \
 			geometry/glc_polylines.cpp \
-			geometry/glc_disc.cpp
+			geometry/glc_disc.cpp \
+			geometry/glc_cone.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -294,11 +281,6 @@ SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_rotationmanipulator.cpp
 			
          
-SOURCES += PQP/TriDist.cpp \
-		   PQP/PQP.cpp \
-		   PQP/BV.cpp \
-		   PQP/Build.cpp
-
 # Windows compilation configuration
 win32:CONFIG *= dll
 
@@ -353,7 +335,6 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_StructOccurence \
     		   include/GLC_StructInstance \
     		   include/GLC_StructReference \
-    		   include/GLC_Distance \
     		   include/GLC_Line \
     		   include/GLC_Rep \
     		   include/GLC_3DRep \
@@ -383,7 +364,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_RepFlyMover \
     		   include/GLC_WorldTo3dxml \
     		   include/GLC_RenderStatistics \
-    		   include/GLC_Ext
+    		   include/GLC_Ext \
+    		   include/GLC_Cone
     		   
     			   
 # Linux and macx specific configuration
@@ -398,10 +380,9 @@ unix {
     # Adds a -P to preserve link
 	QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
 	include.path = $${INCLUDE_DIR}/GLC_lib
-	include_lib3ds.path = $${INCLUDE_DIR}/GLC_lib/lib3ds
-	include_glext.path = $${INCLUDE_DIR}/GLC_lib/glext
-	include_quazip.path = $${INCLUDE_DIR}/GLC_lib/quazip
-	include_pqp.path = $${INCLUDE_DIR}/GLC_lib/PQP
+	include_lib3ds.path = $${INCLUDE_DIR}/GLC_lib/3rdparty/lib3ds
+	include_glext.path = $${INCLUDE_DIR}/GLC_lib/3rdparty/glext
+	include_quazip.path = $${INCLUDE_DIR}/GLC_lib/3rdparty/quazip
 	include_glc_maths.path = $${INCLUDE_DIR}/GLC_lib/maths
 	include_glc_io.path = $${INCLUDE_DIR}/GLC_lib/io
 	include_glc_scengraph.path = $${INCLUDE_DIR}/GLC_lib/sceneGraph
@@ -417,10 +398,9 @@ win32 {
     LIB_DIR = C:\GLC_lib\lib
     INCLUDE_DIR = C:\GLC_lib\include
     include.path = $${INCLUDE_DIR}
-    include_lib3ds.path = $${INCLUDE_DIR}/lib3ds
-    include_glext.path = $${INCLUDE_DIR}/glext
-    include_quazip.path = $${INCLUDE_DIR}/quazip
-    include_pqp.path = $${INCLUDE_DIR}/PQP
+    include_lib3ds.path = $${INCLUDE_DIR}/3rdparty/lib3ds
+    include_glext.path = $${INCLUDE_DIR}/3rdparty/glext
+    include_quazip.path = $${INCLUDE_DIR}/3rdparty/quazip
     include_glc_maths.path = $${INCLUDE_DIR}/maths
     include_glc_io.path = $${INCLUDE_DIR}/io
     include_glc_scengraph.path = $${INCLUDE_DIR}/sceneGraph
@@ -434,7 +414,6 @@ include.files = $${HEADERS_GLC} $${HEADERS_INST}
 include_lib3ds.files = $${HEADERS_LIB3DS}
 include_glext.files =$${HEADERS_GLEXT}
 include_quazip.files = $${HEADERS_QUAZIP}
-include_pqp.files = $${HEADERS_PQP}
 include_glc_maths.files= $${HEADERS_GLC_MATHS}
 include_glc_io.files= $${HEADERS_GLC_IO}
 include_glc_scengraph.files= $${HEADERS_GLC_SCENEGRAPH}
@@ -449,7 +428,7 @@ target.path = $${LIB_DIR}
 # "make install" configuration options
 INSTALLS += include_lib3ds include_glext include_quazip include_glc_maths include_glc_io
 INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport
-INSTALLS += include_glc_3dwidget include_pqp
+INSTALLS += include_glc_3dwidget
 
 INSTALLS += target
 INSTALLS +=include
