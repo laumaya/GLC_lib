@@ -7,16 +7,16 @@
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
  (at your option) any later version.
 
  GLC-lib is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+ GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU General Public License
+ You should have received a copy of the GNU Lesser General Public License
  along with GLC-lib; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
@@ -66,19 +66,19 @@ GLC_Cylinder::~GLC_Cylinder()
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
-// Return the class Chunk ID
+
 quint32 GLC_Cylinder::chunckID()
 {
 	return m_ChunkId;
 }
 
-// Return a copy of the current geometry
+
 GLC_Geometry* GLC_Cylinder::clone() const
 {
 	return new GLC_Cylinder(*this);
 }
 
-// return the cylinder bounding box
+
 const GLC_BoundingBox& GLC_Cylinder::boundingBox()
 {
 	if (GLC_Mesh::isEmpty())
@@ -91,7 +91,7 @@ const GLC_BoundingBox& GLC_Cylinder::boundingBox()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-// Set Cylinder length
+
 void GLC_Cylinder::setLength(double Length)
 {
 	Q_ASSERT(Length > 0.0);
@@ -100,7 +100,7 @@ void GLC_Cylinder::setLength(double Length)
 	GLC_Mesh::clearMeshWireAndBoundingBox();
 }
 
-// Set Cylinder radius
+
 void GLC_Cylinder::setRadius(double Radius)
 {
 	Q_ASSERT(Radius > 0.0);
@@ -109,7 +109,7 @@ void GLC_Cylinder::setRadius(double Radius)
 	GLC_Mesh::clearMeshWireAndBoundingBox();
 }
 
-// Set Discretion
+
 void GLC_Cylinder::setDiscretion(int TargetDiscret)
 {
 	Q_ASSERT(TargetDiscret > 0);
@@ -122,7 +122,7 @@ void GLC_Cylinder::setDiscretion(int TargetDiscret)
 	}
 }
 
-// End Caps
+
 void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 {
 	if (m_EndedIsCaped != CapsEnded)
@@ -137,7 +137,7 @@ void GLC_Cylinder::setEndedCaps(bool CapsEnded)
 // Private Opengl functions
 //////////////////////////////////////////////////////////////////////
 
-// Dessin du GLC_Cylinder
+
 void GLC_Cylinder::glDraw(const GLC_RenderProperties& renderProperties)
 {
 
@@ -149,7 +149,7 @@ void GLC_Cylinder::glDraw(const GLC_RenderProperties& renderProperties)
 	GLC_Mesh::glDraw(renderProperties);
 }
 
-// Create the cylinder mesh
+
 void GLC_Cylinder::createMeshAndWire()
 {
 	Q_ASSERT(GLC_Mesh::isEmpty());
