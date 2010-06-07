@@ -77,7 +77,7 @@ bool GLC_State::frameBufferSupported()
 
 bool GLC_State::glslUsed()
 {
-	return m_UseShader;
+	return m_UseShader && m_GlslSupported;
 }
 
 bool GLC_State::pointSpriteSupported()
