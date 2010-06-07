@@ -18,7 +18,7 @@ unix:UI_DIR = ./Build
 
 DEPENDPATH += .
 INCLUDEPATH += .
-INCLUDEPATH += ./zlib
+INCLUDEPATH += ./3rdparty/zlib
 
 # Input					
 HEADERS_QUAZIP +=	3rdparty/quazip/crypt.h \
