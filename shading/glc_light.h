@@ -28,6 +28,7 @@
 #define GLC_LIGHT_H_
 
 #include <QColor>
+#include <QSet>
 #include "../glc_object.h"
 #include "../maths/glc_vector3d.h"
 
@@ -41,9 +42,16 @@
  * Point light is omnidirectional and have color*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_Light :
-	public GLC_Object
+class GLC_LIB_EXPORT GLC_Light : public GLC_Object
 {
+public:
+	//! Light Type enum
+	enum LightType
+	{
+		LightPosition= 0,
+		LightDirection= 1,
+		LightSpot= 2
+	};
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -51,9 +59,14 @@ class GLC_LIB_EXPORT GLC_Light :
 public:
 	//! Construct a default GLC_Light
 	/*! By default, ambient color is black, diffuse Color is white and specular color is white*/
-	GLC_Light();
-	//* Construct GLC_Light with specified diffuse color
-	GLC_Light(const QColor& );
+	GLC_Light(const QColor& color= Qt::white);
+
+	//! Construct a default GLC_Light
+	/*! By default, ambient color is black, diffuse Color is white and specular color is white*/
+	GLC_Light(LightType lightType, const QColor& color= Qt::white);
+
+	//! Copy constructor
+	GLC_Light(const GLC_Light& light);
 
 	//! Delete OpenGL list
 	virtual ~GLC_Light(void);
@@ -64,20 +77,63 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return a 4D GLC_Point3d representing light position
-	inline GLC_Point3d position(void) const {return m_Position;}
+	//! Return the maximum number light
+	static int maxLightCount();
+
+	//! Return the number of builtable light
+	static int builtAbleLightCount();
+
+	//! Return a GLC_Point3d representing light position
+	inline GLC_Point3d position(void) const
+	{return m_Position;}
 
 	//! Return the QColor of the light's ambient color
-	inline QColor ambientColor() {return m_AmbientColor;}
+	inline QColor ambientColor() const
+	{return m_AmbientColor;}
 
 	//! Return the QColor of the light's Diffuse color
-	inline QColor diffuseColor() { return m_DiffuseColor;}
+	inline QColor diffuseColor() const
+	{ return m_DiffuseColor;}
 
 	//! Return the QColor of the light's Specular color
-	inline QColor specularColor() {return m_SpecularColor;}
+	inline QColor specularColor() const
+	{return m_SpecularColor;}
 
 	//! Return true if the light used two sided ilumination
-	inline bool isTwoSided() const {return m_TwoSided;}
+	inline bool isTwoSided() const
+	{return m_TwoSided;}
+
+	//! Return the type of this light
+	inline LightType type() const
+	{return m_LightType;}
+
+	//! Return the OpenGL ID of this light
+	inline GLenum openglID() const
+	{return m_LightID;}
+
+	//! Return this light const attenuation
+	inline GLfloat constantAttenuation() const
+	{return m_ConstantAttenuation;}
+
+	//! Return this light linear attenuation
+	inline GLfloat linearAttenuation() const
+	{return m_LinearAttenuation;}
+
+	//! Return this light quadratic attenuation
+	inline GLfloat quadraticAttenuation() const
+	{return m_QuadraticAttenuation;}
+
+	//! Return this light spot direction
+	inline GLC_Vector3d spotDirection() const
+	{return m_SpotDirection;}
+
+	//! Return this light spot cutoff angle
+	inline GLfloat spotCutoffAngle() const
+	{return m_SpotCutoffAngle;}
+
+	//! Return this light spot exponent
+	inline GLfloat spotEponent() const
+	{return m_SpotExponent;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -85,27 +141,45 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set lihgt's position by a 4D point
-	void setPosition(const GLC_Point3d &);
+	//! Init Max number of light
+	static void init();
+
+	//! Set lihgt's position by a point
+	void setPosition(const GLC_Point3d &pos);
 
 	//! Set lihgt's position by a 3 GLfloat
-	void setPosition(GLfloat, GLfloat, GLfloat);
+	void setPosition(GLfloat x, GLfloat y, GLfloat z);
 
 	//! Set light's ambiant color by a QColor
-	void setAmbientColor(const QColor &);
+	void setAmbientColor(const QColor &color);
 
 	//! Set light's diffuse color by a QColor
-	void setDiffuseColor(const QColor &);
+	void setDiffuseColor(const QColor &color);
 
 	//! Set light's specular color by a QColor
-	void setSpecularColor(const QColor &);
+	void setSpecularColor(const QColor &color);
 
 	//! Set Mode
-	inline void setTwoSided(const bool mode)
-	{
-		m_TwoSided= mode;
-		m_ListIsValid = false;
-	}
+	void setTwoSided(const bool mode);
+
+	//! Set this light constant attenuation
+	void setConstantAttenuation(GLfloat constantAttenuation);
+
+	//! Set this light linear attenuation
+	void setLinearAttenuation(GLfloat linearAttenuation);
+
+	//! Set this light quadratic attenuation
+	void setQuadraticAttenuation(GLfloat quadraticAttenuation);
+
+	//! Set this light spot direction
+	void setSpotDirection(const GLC_Vector3d& direction);
+
+	//! Set this light spot cutoff angle
+	void setSpotCutoffAngle(GLfloat cutoffAngle);
+
+	//! Set this light spot exponent
+	void setSpotEponent(GLfloat exponent);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -114,11 +188,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Enable the light
-	inline void enable(void)
+	inline void enable() const
 	{glEnable(m_LightID);}
 
 	// Disable the light
-	inline void disable(void)
+	inline void disable() const
 	{glDisable(m_LightID);}
 
 	//! Execute OpenGL light
@@ -132,15 +206,13 @@ public:
 
 private:
 	//! OpenGL light set up
-	void glDraw(void);
+	void glDraw();
 
 	//! Display List creation
 	void creationList(GLenum Mode);
 
-private:
-
 	//! Delete OpenGL Display list
-	void deleteList(void);
+	void deleteList();
 
 //@}
 
@@ -151,6 +223,9 @@ private:
 private:
 	//! OpenGL light ID
 	GLenum m_LightID;
+
+	//! The Light type
+	LightType m_LightType;
 
 	//! OpenGL Display list ID
 	GLuint m_ListID;
@@ -168,8 +243,32 @@ private:
 	//! Light position
 	GLC_Point3d m_Position;
 
+	//! The spot light direction
+	GLC_Vector3d m_SpotDirection;
+
+	//! The spot exponent
+	GLfloat m_SpotExponent;
+
+	//! The spot cutoff angle
+	GLfloat m_SpotCutoffAngle;
+
+	//! Constant attenation
+	GLfloat m_ConstantAttenuation;
+
+	//! Linear attenuation
+	GLfloat m_LinearAttenuation;
+
+	//! Quadratic attenuation
+	GLfloat m_QuadraticAttenuation;
+
 	//! Lighting mode
 	bool m_TwoSided;
 
+	// Static member
+	//! Maximum number of light
+	static GLint m_MaxLight;
+
+	//! Free light set
+	static QSet<GLenum> m_FreeLightSet;
 };
 #endif //GLC_LIGHT_H_
