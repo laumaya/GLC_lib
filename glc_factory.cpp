@@ -149,8 +149,14 @@ GLC_3DRep GLC_Factory::createCone(double radius, double length) const
 {
 	GLC_3DRep newCone(new GLC_Cone(radius, length));
 	return newCone;
-
 }
+
+GLC_3DRep GLC_Factory::createSphere(double radius) const
+{
+	GLC_3DRep newSphere(new GLC_Sphere(radius));
+	return newSphere;
+}
+
 GLC_3DRep GLC_Factory::createRectangle(double l1, double l2)
 {
 	GLC_3DRep newRectangle(new GLC_Rectangle(l1, l2));

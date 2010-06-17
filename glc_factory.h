@@ -39,6 +39,7 @@
 #include "geometry/glc_box.h"
 #include "geometry/glc_cylinder.h"
 #include "geometry/glc_cone.h"
+#include "geometry/glc_sphere.h"
 #include "geometry/glc_rectangle.h"
 #include "geometry/glc_3drep.h"
 #include "shading/glc_material.h"
@@ -104,8 +105,11 @@ public:
 	//! Create a GLC_Cylinder
 	GLC_3DRep createCylinder(double radius, double length) const;
 
-	//! Create a GLC_cone
+	//! Create a GLC_Cone
 	GLC_3DRep createCone(double radius, double length) const;
+
+	//! Create a GLC_Sphere
+	GLC_3DRep createSphere(double radius) const;
 
 	//!Create a GLC_Rectangle
 	GLC_3DRep createRectangle(double, double);
