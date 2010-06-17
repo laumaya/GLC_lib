@@ -106,7 +106,8 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_arrow.h \
 							geometry/glc_polylines.h \
 							geometry/glc_disc.h \
-							geometry/glc_cone.h
+							geometry/glc_cone.h \
+							geometry/glc_sphere.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -233,7 +234,8 @@ SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_arrow.cpp \
 			geometry/glc_polylines.cpp \
 			geometry/glc_disc.cpp \
-			geometry/glc_cone.cpp
+			geometry/glc_cone.cpp \
+			geometry/glc_sphere.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -365,7 +367,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_WorldTo3dxml \
     		   include/GLC_RenderStatistics \
     		   include/GLC_Ext \
-    		   include/GLC_Cone
+    		   include/GLC_Cone \
+    		   include/GLC_Sphere
     		   
     			   
 # Linux and macx specific configuration
