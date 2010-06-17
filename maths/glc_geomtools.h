@@ -94,6 +94,12 @@ namespace glc
 	//! Return the projected point on the given line form the given point
 	GLC_LIB_EXPORT GLC_Point3d project(const GLC_Point3d& point, const GLC_Line3d& line);
 
+	//! Return the midpoint of the two given points
+	inline GLC_Point3d midPoint(const GLC_Point3d& point1, const GLC_Point3d point2)
+	{
+		return point1 + (point2 - point1) * 0.5;
+	}
+
 
 //@}
 
