@@ -60,6 +60,14 @@ public:
 	inline GLC_BoundingBox boundingBox()
 	{return m_pWidgetManagerHandle->boundingBox();}
 
+	//! Return true if this manager contains the given widget id
+	inline bool contains3DWidget(GLC_uint id) const
+	{return m_pWidgetManagerHandle->contains3DWidget(id);}
+
+	//! Return the 3DWidget of the given widget id
+	inline GLC_3DWidget* widget(GLC_uint id) const
+	{return m_pWidgetManagerHandle->widget(id);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

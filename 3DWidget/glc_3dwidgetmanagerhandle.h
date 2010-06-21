@@ -85,6 +85,14 @@ public:
 	inline GLC_Viewport* viewport() const
 	{return m_pViewport;}
 
+	//! Return true if this manager contains the given widget id
+	inline bool contains3DWidget(GLC_uint id) const
+	{return m_3DWidgetHash.contains(id);}
+
+	//! Return the 3DWidget of the given widget id
+	inline GLC_3DWidget* widget(GLC_uint id) const
+	{return m_3DWidgetHash.value(id);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
