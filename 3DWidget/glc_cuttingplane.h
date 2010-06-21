@@ -44,13 +44,12 @@ class GLC_LIB_EXPORT GLC_CuttingPlane : public GLC_3DWidget
 		TranslationManipulator,
 		RotationManipulator
 	};
-	Q_OBJECT
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Construct a 3d cutting plane widget with the given viewport
+	//! Construct a 3d cutting plane widget
 	GLC_CuttingPlane(const GLC_Point3d& center, const GLC_Vector3d& normal, double l1, double l2, GLC_3DWidgetManagerHandle*  pWidgetManagerHandle= NULL);
 
 	//! Construct a 3d cutting plane with the given cutting plane
