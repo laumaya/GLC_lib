@@ -73,6 +73,27 @@ const GLC_BoundingBox& GLC_Sphere::boundingBox()
 	return GLC_Mesh::boundingBox();
 }
 
+void GLC_Sphere::setRadius(double Radius)
+{
+	Q_ASSERT(Radius > 0.0);
+	m_Radius= Radius;
+
+	GLC_Mesh::clearMeshWireAndBoundingBox();
+}
+
+
+void GLC_Sphere::setDiscretion(int TargetDiscret)
+{
+	Q_ASSERT(TargetDiscret > 0);
+	if (TargetDiscret != m_Discret)
+	{
+		m_Discret= TargetDiscret;
+		if (m_Discret < 6) m_Discret= 6;
+
+		GLC_Mesh::clearMeshWireAndBoundingBox();
+	}
+}
+
 void GLC_Sphere::createMesh()
 {
 	Q_ASSERT(GLC_Mesh::isEmpty());
