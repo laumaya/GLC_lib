@@ -153,7 +153,8 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_3dwidgetmanagerhandle.h \
 						3DWidget/glc_abstractmanipulator.h \
 						3DWidget/glc_pullmanipulator.h \
-						3DWidget/glc_rotationmanipulator.h
+						3DWidget/glc_rotationmanipulator.h \
+						3DWidget/glc_axis.h
 
 
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
@@ -280,7 +281,8 @@ SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_3dwidgetmanagerhandle.cpp \
 			3DWidget/glc_abstractmanipulator.cpp \
 			3DWidget/glc_pullmanipulator.cpp \
-			3DWidget/glc_rotationmanipulator.cpp
+			3DWidget/glc_rotationmanipulator.cpp \
+			3DWidget/glc_axis.cpp
 			
          
 # Windows compilation configuration
@@ -368,7 +370,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_RenderStatistics \
     		   include/GLC_Ext \
     		   include/GLC_Cone \
-    		   include/GLC_Sphere
+    		   include/GLC_Sphere \
+    		   include/GLC_Axis
     		   
     			   
 # Linux and macx specific configuration
