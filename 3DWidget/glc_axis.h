@@ -33,7 +33,7 @@ class GLC_AbstractManipulator;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Axis
-/*! \brief GLC_Axis :  3d axis*/
+/*! \brief GLC_Axis :  3d Widget axis use to translate objects*/
 
 /*! GLC_Axis */
 //////////////////////////////////////////////////////////////////////
@@ -67,11 +67,11 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return this cutting plane center
+	//! Return this axis center
 	inline GLC_Point3d center() const
 	{return m_Center;}
 
-	//! Return axis length
+	//! Return this axis length
 	inline double axisLength() const
 	{return m_AxisLength;}
 //@}
