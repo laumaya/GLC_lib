@@ -106,7 +106,7 @@ void GLC_Axis::setCenter(const GLC_Point3d& newCenter)
 
 glc::WidgetEventFlag GLC_Axis::select(const GLC_Point3d& pos, GLC_uint id)
 {
-	qDebug() << "GLC_Axis::select";
+	//qDebug() << "GLC_Axis::select";
 	Q_ASSERT(NULL == m_pCurrentManipulator);
 	Q_ASSERT(NoneManipulator == m_CurrentManipulator);
 
@@ -142,7 +142,7 @@ glc::WidgetEventFlag GLC_Axis::select(const GLC_Point3d& pos, GLC_uint id)
 
 glc::WidgetEventFlag GLC_Axis::mousePressed(const GLC_Point3d& pos, Qt::MouseButton button, GLC_uint id)
 {
-	qDebug() << "GLC_Axis::mousePressed";
+	//qDebug() << "GLC_Axis::mousePressed";
 	glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
 	if (button == Qt::LeftButton)
 	{
@@ -154,7 +154,7 @@ glc::WidgetEventFlag GLC_Axis::mousePressed(const GLC_Point3d& pos, Qt::MouseBut
 
 glc::WidgetEventFlag GLC_Axis::mouseReleased(Qt::MouseButton button)
 {
-	qDebug() << "GLC_Axis::mouseReleased";
+	//qDebug() << "GLC_Axis::mouseReleased";
 	glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
 	if (button == Qt::LeftButton)
 	{
@@ -185,7 +185,7 @@ glc::WidgetEventFlag GLC_Axis::mouseReleased(Qt::MouseButton button)
 
 glc::WidgetEventFlag GLC_Axis::unselect(const GLC_Point3d&, GLC_uint)
 {
-	qDebug() << "GLC_Axis::unselect";
+	//qDebug() << "GLC_Axis::unselect";
 	delete m_pCurrentManipulator;
 	m_pCurrentManipulator= NULL;
 
