@@ -189,10 +189,6 @@ private:
 
 	//! The preselected 3DWidget
 	GLC_uint m_Preselected3DWidgetId;
-
-	//! The previous view matrix
-	GLC_Matrix4x4 m_PreviousViewMatrix;
-
 };
 
 #endif /* GLC_3DWIDGETMANAGERHANDLE_H_ */
