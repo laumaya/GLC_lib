@@ -368,6 +368,7 @@ void GLC_Light::deleteList(void)
 	// if the list is valid, the list is deleted
 	if (glIsList(m_ListID))
 	{
+		disable();
 		glDeleteLists(m_ListID, 1);
 	}
 }
