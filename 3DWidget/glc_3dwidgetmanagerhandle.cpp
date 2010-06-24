@@ -64,6 +64,8 @@ void GLC_3DWidgetManagerHandle::remove3DWidget(GLC_uint id)
 {
 	Q_ASSERT(m_3DWidgetHash.contains(id));
 	delete m_3DWidgetHash.take(id);
+	if (m_Active3DWidgetId == id) m_Active3DWidgetId= 0;
+
 }
 
 GLC_3DWidget* GLC_3DWidgetManagerHandle::take(GLC_uint id)
@@ -88,7 +90,6 @@ void GLC_3DWidgetManagerHandle::remove3DViewInstance(GLC_uint id)
 	Q_ASSERT(m_Collection.contains(id));
 	m_Collection.remove(id);
 	m_MapBetweenInstanceWidget.remove(id);
-	if (m_Active3DWidgetId == id) m_Active3DWidgetId= 0;
 }
 
 void GLC_3DWidgetManagerHandle::clear()
