@@ -57,7 +57,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	GLC_WorldTo3dxml(const GLC_World& world);
+	GLC_WorldTo3dxml(const GLC_World& world, bool threaded= true);
 	virtual ~GLC_WorldTo3dxml();
 //@}
 
@@ -262,6 +262,9 @@ private:
 
 	//! Flag to know if export must be interupted
 	bool* m_pIsInterupted;
+
+	//! Flag to know if export is threaded (the default)
+	bool m_IsThreaded;
 
 };
 

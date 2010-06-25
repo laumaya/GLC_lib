@@ -32,7 +32,7 @@
 
 #include <QFileInfo>
 
-GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world)
+GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world, bool threaded)
 : QObject()
 , m_World(world)
 , m_ExportType(Compressed3dxml)
@@ -59,6 +59,7 @@ GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world)
 , m_ListOfOverLoadedOccurence()
 , m_pReadWriteLock(NULL)
 , m_pIsInterupted(NULL)
+, m_IsThreaded(threaded)
 {
 	m_World.rootOccurence()->updateOccurenceNumber(1);
 }
@@ -127,6 +128,10 @@ bool GLC_WorldTo3dxml::exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::
 					emit currentQuantum(currentQuantumValue);
 				}
 				previousQuantumValue= currentQuantumValue;
+				if (!m_IsThreaded)
+				{
+					QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+				}
 			}
 		}
 	}
