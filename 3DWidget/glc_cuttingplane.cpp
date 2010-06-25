@@ -384,7 +384,7 @@ void GLC_CuttingPlane::moveManipulatorRep(const GLC_Point3d& pos)
 	GLC_Arrow* pArrow= dynamic_cast<GLC_Arrow*>(GLC_3DWidget::instanceHandle(1)->geomAt(0));
 	Q_ASSERT(NULL != pArrow);
 
-	pArrow->setViewDir(GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize());
+	pArrow->setViewDir(rotationMatrix * GLC_3DWidget::widgetManagerHandle()->cameraHandle()->forward().normalize());
 }
 
 GLC_AbstractManipulator* GLC_CuttingPlane::rotationNavigator(int index)
