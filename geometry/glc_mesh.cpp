@@ -214,7 +214,7 @@ QVector<GLuint> GLC_Mesh::getTrianglesIndex(int lod, GLC_uint materialId) const
 	int offset= 0;
 	if (GLC_State::vboUsed())
 	{
-		offset= reinterpret_cast<GLsizeiptr>(pPrimitiveGroup->trianglesIndexOffset()) / sizeof(GLvoid*);
+		offset= static_cast<int>(reinterpret_cast<GLsizeiptr>(pPrimitiveGroup->trianglesIndexOffset()) / sizeof(GLuint));
 	}
 	else
 	{
@@ -265,7 +265,7 @@ QList<QVector<GLuint> > GLC_Mesh::getStripsIndex(int lod, GLC_uint materialId) c
 		stripsCount= pPrimitiveGroup->stripsOffset().size();
 		for (int i= 0; i < stripsCount; ++i)
 		{
-			offsets.append(reinterpret_cast<GLsizeiptr>(pPrimitiveGroup->stripsOffset().at(i)) / sizeof(GLvoid*));
+			offsets.append(reinterpret_cast<GLsizeiptr>(pPrimitiveGroup->stripsOffset().at(i)) / sizeof(GLuint));
 			sizes.append(static_cast<int>(pPrimitiveGroup->stripsSizes().at(i)));
 		}
 	}
@@ -338,7 +338,7 @@ QList<QVector<GLuint> > GLC_Mesh::getFansIndex(int lod, GLC_uint materialId) con
 		fansCount= pPrimitiveGroup->fansOffset().size();
 		for (int i= 0; i < fansCount; ++i)
 		{
-			offsets.append(reinterpret_cast<GLsizeiptr>(pPrimitiveGroup->fansOffset().at(i)) / sizeof(GLvoid*));
+			offsets.append(reinterpret_cast<GLsizeiptr>(pPrimitiveGroup->fansOffset().at(i)) / sizeof(GLuint));
 			sizes.append(static_cast<int>(pPrimitiveGroup->fansSizes().at(i)));
 		}
 	}
