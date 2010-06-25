@@ -128,6 +128,7 @@ void GLC_Arrow::setHeadAngle(double headAngle)
 
 void GLC_Arrow::setViewDir(const GLC_Vector3d& viewDir)
 {
+
 	if (viewDir != m_ViewDir)
 	{
 		m_ViewDir= GLC_Vector3d(viewDir).normalize();
