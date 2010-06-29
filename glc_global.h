@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0 Beta 1, packaged on April 2010.
+ Version 2.0.0, packaged on July 2010.
 
  http://glc-lib.sourceforge.net
 
@@ -131,7 +131,7 @@ void glc::encodeRgbId(GLC_uint id, GLubyte* colorId)
 
 // GLC_Lib version
 
-#define GLC_VERSION "2.0.0 Beta 1"
+#define GLC_VERSION "2.0.0"
 #define GLC_DESCRIPTION "GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4."
 
 
