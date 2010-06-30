@@ -27,7 +27,6 @@
 #include "glc_plane.h"
 
 GLC_Plane::GLC_Plane()
-: m_Eq()
 {
 	m_Eq[0]= 0.0;
 	m_Eq[1]= 0.0;
@@ -36,7 +35,6 @@ GLC_Plane::GLC_Plane()
 }
 
 GLC_Plane::GLC_Plane(double a, double b, double c, double d)
-: m_Eq()
 {
 	m_Eq[0]= a;
 	m_Eq[1]= b;
@@ -46,7 +44,6 @@ GLC_Plane::GLC_Plane(double a, double b, double c, double d)
 }
 
 GLC_Plane::GLC_Plane(const GLC_Vector3d& normal, double d)
-: m_Eq()
 {
 	m_Eq[0]= normal.x();
 	m_Eq[1]= normal.y();
@@ -55,7 +52,6 @@ GLC_Plane::GLC_Plane(const GLC_Vector3d& normal, double d)
 }
 
 GLC_Plane::GLC_Plane(const GLC_Vector3d& normal, const GLC_Point3d& point)
-: m_Eq()
 {
 	m_Eq[0]= normal.x();
 	m_Eq[1]= normal.y();
@@ -65,7 +61,6 @@ GLC_Plane::GLC_Plane(const GLC_Vector3d& normal, const GLC_Point3d& point)
 
 
 GLC_Plane::GLC_Plane(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3)
-: m_Eq()
 {
 	const GLC_Vector3d v1(p2 - p1);
 	const GLC_Vector3d v2(p3 - p1);
@@ -78,7 +73,6 @@ GLC_Plane::GLC_Plane(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Poi
 
 
 GLC_Plane::GLC_Plane(const GLC_Plane& plane)
-: m_Eq()
 {
 	memcpy(m_Eq, plane.m_Eq, sizeof(double) * 4);
 }
