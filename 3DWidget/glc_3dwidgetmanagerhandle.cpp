@@ -105,7 +105,7 @@ void GLC_3DWidgetManagerHandle::clear()
 	m_MapBetweenInstanceWidget.clear();
 }
 
-glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseDoubleClickEvent(QMouseEvent * pEvent)
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseDoubleClickEvent(QMouseEvent *)
 {
 
 	if (hasAnActiveWidget())
