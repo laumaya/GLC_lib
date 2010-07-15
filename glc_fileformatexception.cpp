@@ -31,6 +31,7 @@ GLC_FileFormatException::GLC_FileFormatException(const QString &message, const Q
 , m_FileName(fileName)
 , m_ExceptionType(exceptionType)
 {
+
 }
 
 GLC_FileFormatException::~GLC_FileFormatException() throw()

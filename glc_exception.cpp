@@ -33,7 +33,7 @@
 GLC_Exception::GLC_Exception(const QString &message)
 : m_ErrorDescription(message)
 {
-	
+	GLC_ErrorLog::addError(QStringList(m_ErrorDescription));
 }
 GLC_Exception::~GLC_Exception() throw()
 {
