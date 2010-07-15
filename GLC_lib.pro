@@ -5,7 +5,7 @@ QT += opengl \
 
 
 CONFIG += exceptions \
-    release \
+    debug \
     warn_on
 TARGET = GLC_lib
 VERSION = 2.0.0
@@ -148,7 +148,9 @@ HEADERS_GLC += glc_global.h \
            glc_state.h \
            glc_config.h \
            glc_cachemanager.h \
-           glc_renderstatistics.h
+           glc_renderstatistics.h \
+           glc_log.h \
+           glc_errorlog.h
            
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_cuttingplane.h \
@@ -288,7 +290,9 @@ SOURCES +=	glc_global.cpp \
 			glc_ext.cpp \
 			glc_state.cpp \
 			glc_cachemanager.cpp \
-			glc_renderstatistics.cpp
+			glc_renderstatistics.cpp \
+			glc_log.cpp \
+			glc_errorlog.cpp
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_cuttingplane.cpp \
@@ -386,7 +390,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Ext \
     		   include/GLC_Cone \
     		   include/GLC_Sphere \
-    		   include/GLC_Axis
+    		   include/GLC_Axis \
+    		   include/GLC_Log \
+    		   include/GLC_ErrorLog
     		   
     			   
 # Linux and macx install configuration
