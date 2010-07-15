@@ -105,6 +105,10 @@ namespace glc
 	//! Return Archive entry filname from the given archive string
 	GLC_LIB_EXPORT QString archiveEntryFileName(const QString& archiveString);
 
+	// GLC_Lib version
+	const QString version("2.0.0");
+	const QString description("GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4.");
+
 };
 
 // Return the GLC_uint decoded ID from RGBA encoded ID
@@ -128,11 +132,6 @@ void glc::encodeRgbId(GLC_uint id, GLubyte* colorId)
 	colorId[2]= static_cast<GLubyte>((id >> (2 * 8)) & 0xFF);
 	colorId[3]= static_cast<GLubyte>((id >> (3 * 8)) & 0xFF);
 }
-
-// GLC_Lib version
-
-#define GLC_VERSION "2.0.0"
-#define GLC_DESCRIPTION "GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4."
 
 
 #endif //GLC_GLOBAL_H_
