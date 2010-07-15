@@ -74,7 +74,6 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	if (!file.open(QIODevice::ReadOnly))
 	{
 		QString message(QString("GLC_OffToWorld::CreateWorldFromOff File ") + m_FileName + QString(" doesn't exist"));
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotFound);
 		throw(fileFormatException);
 	}
@@ -104,7 +103,6 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 	if(offStream.atEnd() || (!lineBuff.startsWith("OFF") && !lineBuff.startsWith("COFF") && !lineBuff.startsWith("4OFF")))
 	{
 		QString message= "GLC_OffToWorld::CreateWorldFromOff : OFF or COFF header not found";
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 		clear();
 		throw(fileFormatException);
@@ -149,7 +147,6 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 			QString message= "GLC_OffToWorld::CreateWorldFromOff : This file seems to be incomplete";
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 			clear();
 			throw(fileFormatException);
@@ -186,7 +183,6 @@ GLC_World* GLC_OffToWorld::CreateWorldFromOff(QFile &file)
 			QString message= "GLC_OffToWorld::CreateWorldFromOff : This file seems to be incomplete";
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 			clear();
 			throw(fileFormatException);
@@ -278,7 +274,6 @@ void GLC_OffToWorld::extractVertex(QString &line)
 			QString message= "GLC_OffToWorld::extractVertex : failed to convert vertex component to float";
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			clear();
 			throw(fileFormatException);
@@ -296,7 +291,6 @@ void GLC_OffToWorld::extractVertex(QString &line)
 					QString message= "GLC_OffToWorld::extractVertex : failed to convert vertex fourth component to float";
 					message.append("\nAt ligne : ");
 					message.append(QString::number(m_CurrentLineNumber));
-					qDebug() << message;
 					GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 					clear();
 					throw(fileFormatException);
@@ -311,7 +305,6 @@ void GLC_OffToWorld::extractVertex(QString &line)
 				QString message= "GLC_OffToWorld::extractVertex : failed to read vector fourth component";
 				message.append("\nAt ligne : ");
 				message.append(QString::number(m_CurrentLineNumber));
-				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
@@ -335,7 +328,6 @@ void GLC_OffToWorld::extractVertex(QString &line)
 					QString message= "GLC_OffToWorld::extractVertex : failed to convert color component to float";
 					message.append("\nAt ligne : ");
 					message.append(QString::number(m_CurrentLineNumber));
-					qDebug() << message;
 					GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 					clear();
 					throw(fileFormatException);
@@ -346,7 +338,6 @@ void GLC_OffToWorld::extractVertex(QString &line)
 				QString message= "GLC_OffToWorld::extractVertex : failed to read vertex color";
 				message.append("\nAt ligne : ");
 				message.append(QString::number(m_CurrentLineNumber));
-				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
@@ -359,7 +350,6 @@ void GLC_OffToWorld::extractVertex(QString &line)
 		QString message= "GLC_OffToWorld::extractVertex : failed to read vector component";
 		message.append("\nAt ligne : ");
 		message.append(QString::number(m_CurrentLineNumber));
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -384,7 +374,6 @@ void GLC_OffToWorld::extractNbrVertexsAndNbrFaces(QString &line)
 			QString message= "GLC_OffToWorld::extractNbrVertexsAndNbrFaces : failed to convert text to int";
 			message.append("\nAt ligne : ");
 			message.append(QString::number(m_CurrentLineNumber));
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			clear();
 			throw(fileFormatException);
@@ -395,7 +384,6 @@ void GLC_OffToWorld::extractNbrVertexsAndNbrFaces(QString &line)
 		QString message= "GLC_OffToWorld::extractNbrVertexsAndNbrFaces : failed to extract nbr of vertexs/faces";
 		message.append("\nAt ligne : ");
 		message.append(QString::number(m_CurrentLineNumber));
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -421,7 +409,6 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		message.append(QString("\n") + line);
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -434,7 +421,6 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 		QString message= "GLC_OffToWorld::extractFaceIndex failed to convert String to int";
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -448,7 +434,6 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 			QString message= "GLC_OffToWorld::extractFaceIndex failed to extract vertex index";
 			message.append("\nAt line : ");
 			message.append(QString::number(m_CurrentLineNumber));
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			clear();
 			throw(fileFormatException);
@@ -464,7 +449,6 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 			QString message= "GLC_ObjToWorld::extractFaceIndex failed to convert String to int";
 			message.append("\nAt line : ");
 			message.append(QString::number(m_CurrentLineNumber));
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			clear();
 			throw(fileFormatException);
@@ -494,7 +478,6 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 			QString message= "GLC_ObjToWorld::extractFaceIndex failed to convert String to float";
 			message.append("\nAt line : ");
 			message.append(QString::number(m_CurrentLineNumber));
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			clear();
 			throw(fileFormatException);
@@ -515,9 +498,9 @@ void GLC_OffToWorld::extractFaceIndex(QString &line)
 // compute face normal
 void GLC_OffToWorld::computeNormal()
 {
-	qDebug() << "GLC_OffToWorld::computeNormal";
-	qDebug() << "Position size= " << m_PositionBulk.size();
-	qDebug() << "Normal size= " << m_NormalBulk.size();
+	//qDebug() << "GLC_OffToWorld::computeNormal";
+	//qDebug() << "Position size= " << m_PositionBulk.size();
+	//qDebug() << "Normal size= " << m_NormalBulk.size();
 	const QList<float>* pData= &m_PositionBulk;
 	// Fill the list of normal
 	QList<float>* pNormal= &m_NormalBulk;

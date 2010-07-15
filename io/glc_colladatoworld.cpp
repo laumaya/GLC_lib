@@ -193,7 +193,6 @@ QString GLC_ColladaToWorld::readAttribute(const QString& name, bool required)
 	if (required && !m_pStreamReader->attributes().hasAttribute(name))
 	{
 		QString message(QString("required attribute ") + name + QString(" Not found"));
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -210,7 +209,6 @@ void GLC_ColladaToWorld::checkForXmlError(const QString& info)
 {
 	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
-		qDebug() << info << " " << m_FileName;
 		GLC_FileFormatException fileFormatException(info, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -219,7 +217,6 @@ void GLC_ColladaToWorld::checkForXmlError(const QString& info)
 // Throw an exception with the specified text
 void GLC_ColladaToWorld::throwException(const QString& message)
 {
-	qDebug() << message;
 	GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 	clear();
 	throw(fileFormatException);
@@ -655,7 +652,12 @@ void GLC_ColladaToWorld::loadShininess(const QString& name)
 				bool stringToFloatOk= false;
 				const QString shininessString= getContent("float");
 				const float shininess= shininessString.toFloat(&stringToFloatOk);
-				if (!stringToFloatOk) qDebug() << QString("Error while trying to convert :" + shininessString + " to float");
+				if (!stringToFloatOk)
+				{
+					QStringList stringList(m_FileName);
+					stringList.append("Error while trying to convert :" + shininessString + " to float");
+					GLC_ErrorLog::addError(stringList);
+				}
 				else m_pCurrentMaterial->setShininess(shininess);
 			}
 		}
@@ -1095,8 +1097,9 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 		}
 		else
 		{
-			qDebug() << QString("Unable to triangulate a polygon of " + m_pMeshInfo->m_pMesh->name());
-			//throwException("Unable to triangulate a polygon of " + m_pMeshInfo->m_pMesh->name());
+			QStringList stringList(m_FileName);
+			stringList.append("Unable to triangulate a polygon of " + m_pMeshInfo->m_pMesh->name());
+			GLC_ErrorLog::addError(stringList);
 		}
 		onePolygonIndex.clear();
 	}
@@ -1720,18 +1723,24 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 				}
 				else
 				{
-					qDebug() << imageFileName << " Not found";
+					QStringList stringList(m_FileName);
+					stringList.append(imageFileName + " Not found");
+					GLC_ErrorLog::addError(stringList);
 				}
 			}
 			else
 			{
-				qDebug() << imageFileName << " Not found";
+				QStringList stringList(m_FileName);
+				stringList.append(imageFileName + " Not found");
+				GLC_ErrorLog::addError(stringList);
 			}
 
 		}
 		else
 		{
-			qDebug() << "Texture : " << textureId << " Not found";
+			QStringList stringList(m_FileName);
+			stringList.append("Texture : " + textureId + " Not found");
+			GLC_ErrorLog::addError(stringList);
 		}
 		++iMat;
 	}
@@ -1787,7 +1796,12 @@ void GLC_ColladaToWorld::createMesh()
 				pCurrentMaterial= m_MaterialEffectHash.value(materialId);
 				Q_ASSERT(NULL != pCurrentMaterial);
 			}
-			else qDebug() << "Material " << materialId << " Not found";
+			else
+			{
+				QStringList stringList(m_FileName);
+				stringList.append("Material " + materialId + " Not found");
+				GLC_ErrorLog::addError(stringList);
+			}
 
 			// Create the list of triangles to add to the mesh
 			const int offset= iMatInfo.value().m_Offset;
@@ -1875,7 +1889,9 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 				GLC_StructReference* pStructRef= NULL;
 				if (pRep->isEmpty())
 				{
-					qDebug() << "Empty rep : " << pRep->name();
+					QStringList stringList(m_FileName);
+					stringList.append("Empty rep : " + pRep->name());
+					GLC_ErrorLog::addError(stringList);
 					delete pRep;
 					pRep= NULL;
 				}
@@ -1893,7 +1909,12 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 				}
 
 			}
-			else qDebug() << "Geometry Id Not found";
+			else
+			{
+				QStringList stringList(m_FileName);
+				stringList.append("Geometry Id Not found");
+				GLC_ErrorLog::addError(stringList);
+			}
 		}
 	}
 	if (!pNode->m_ChildNodes.isEmpty())
@@ -1957,7 +1978,6 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 	}
 	if (NULL == pOccurence)
 	{
-		qDebug() << "Empty Node";
 		if (m_StructInstanceHash.contains(pNode->m_Id))
 		{
 			pInstance= new GLC_StructInstance(m_StructInstanceHash.value(pNode->m_Id));

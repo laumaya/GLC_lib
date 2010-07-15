@@ -37,6 +37,7 @@
 #include <QGLContext>
 #include <QFileInfo>
 #include <QSet>
+
 GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 : QObject()
 , m_pQGLContext(pContext)
@@ -118,7 +119,7 @@ GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnl
 
 		m_IsInArchive= true;
 		// Set the file Name Codec
-		m_p3dxmlArchive->setFileNameCodec("IBM866");
+		//m_p3dxmlArchive->setFileNameCodec("IBM866");
 
 		// Load the manifest
 		loadManifest();
@@ -162,7 +163,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 		{
 			m_IsInArchive= true;
 			// Set the file Name Codec
-			m_p3dxmlArchive->setFileNameCodec("IBM866");
+			//m_p3dxmlArchive->setFileNameCodec("IBM866");
 		}
 		m_CurrentFileName= glc::archiveEntryFileName(fileName);
 
@@ -254,7 +255,6 @@ void GLC_3dxmlToWorld::loadManifest()
 	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
 		QString message(QString("GLC_3dxmlToWorld::loadManifest Manifest file ") + m_FileName + " doesn't contains Root Element");
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -358,7 +358,6 @@ QString GLC_3dxmlToWorld::readAttribute(const QString& name, bool required)
 	if (required && !m_pStreamReader->attributes().hasAttribute(name))
 	{
 		QString message(QString("required attribute ") + name + QString(" Not found"));
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -378,7 +377,6 @@ void GLC_3dxmlToWorld::loadProductStructure()
 	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
 		QString message(QString("GLC_3dxmlToWorld::loadProductStructure Element ProctStructure Not found in ") + m_FileName);
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -417,7 +415,6 @@ void GLC_3dxmlToWorld::loadProductStructure()
 	if (m_pStreamReader->hasError())
 	{
 		QString message(QString("GLC_3dxmlToWorld::loadProductStructure An error occur in ") + m_FileName);
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -437,9 +434,8 @@ void GLC_3dxmlToWorld::loadProductStructure()
 			GLC_StructReference* pRef= m_ReferenceHash.value(iInstance.value());
 			if (NULL == pRef)
 			{
-				qDebug() << "Instance name " << pInstance->name();
 				QString message(QString("GLC_3dxmlToWorld::loadProductStructure a instance reference a non existing reference"));
-				qDebug() << message;
+				message.append(" Instance name " + pInstance->name());
 				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
@@ -468,7 +464,9 @@ void GLC_3dxmlToWorld::loadProductStructure()
 			{
 				QString referenceName= pInstance->name();
 				referenceName= referenceName.left(pInstance->name().lastIndexOf('.'));
-				qDebug() << " Reference not found : " << referenceName;
+				QStringList stringList(m_FileName);
+				stringList.append("Reference not found : " + referenceName);
+				GLC_ErrorLog::addError(stringList);
 				pRef= new GLC_StructReference(referenceName);
 			}
 
@@ -484,7 +482,9 @@ void GLC_3dxmlToWorld::loadProductStructure()
 			GLC_StructReference* pRef= iRef.value();
 			if (! pRef->hasStructInstance())
 			{
-				qDebug() << "Orphan reference : " << pRef->name();
+				QStringList stringList(m_FileName);
+				stringList.append("Orphan reference : " + pRef->name());
+				GLC_ErrorLog::addError(stringList);
 				delete pRef;
 			}
 			++iRef;
@@ -503,7 +503,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 	// Change occurence attributes
 	if (! m_OccurenceAttrib.isEmpty())
 	{
-		qDebug() << "Not visible occurence= " << m_OccurenceAttrib.size();
+		//qDebug() << "Not visible occurence= " << m_OccurenceAttrib.size();
 		QList<GLC_StructOccurence*> occurenceList= m_pWorld->listOfOccurence();
 		const int size= occurenceList.size();
 		for (int i= 0; i < size; ++i)
@@ -526,7 +526,9 @@ void GLC_3dxmlToWorld::loadProductStructure()
 		GLC_StructInstance* pInstance= iInstance.key();
 		if (!pInstance->hasStructOccurence())
 		{
-			qDebug() << "Orphan Instance : " << pInstance->name();
+			QStringList stringList(m_FileName);
+			stringList.append("Orphan Instance : " + pInstance->name());
+			GLC_ErrorLog::addError(stringList);
 			delete pInstance;
 		}
 		else
@@ -538,7 +540,9 @@ void GLC_3dxmlToWorld::loadProductStructure()
 				const GLC_StructOccurence* pOccurence= occurences.at(i);
 				if (pOccurence->isOrphan())
 				{
-					qDebug() << "Orphan occurence :" << pOccurence->name();
+					QStringList stringList(m_FileName);
+					stringList.append("Orphan occurence : " + pOccurence->name());
+					GLC_ErrorLog::addError(stringList);
 					delete pOccurence;
 				}
 			}
@@ -830,7 +834,9 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		goToElement("ReferenceRep");
 		if (m_pStreamReader->atEnd())
 		{
-			qDebug() << "Element ReferenceRep not found in  file " << m_CurrentFileName;
+			QStringList stringList(m_FileName);
+			stringList.append("Element ReferenceRep not found in  file " + m_CurrentFileName);
+			GLC_ErrorLog::addError(stringList);
 			return NULL;
 		}
 		checkForXmlError("Element ReferenceRep contains error");
@@ -839,7 +845,6 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		if (format != "TESSELLATED")
 		{
 			QString message(QString("GLC_3dxmlToWorld::addExtenalRef 3D rep format ") + format + " Not Supported");
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
 			clear();
 			throw(fileFormatException);
@@ -899,7 +904,6 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 			if (m_pStreamReader->hasError() || m_pStreamReader->atEnd())
 			{
 				QString message(QString("An element have not been found in file ") + m_FileName);
-				qDebug() << m_pStreamReader->errorString();
 				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
@@ -915,7 +919,9 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 						GLC_CacheManager currentManager= GLC_State::currentCacheManager();
 						if (!currentManager.addToCache(QFileInfo(m_FileName).baseName(), currentMesh3DRep))
 						{
-							qDebug() << "File " << currentMesh3DRep.fileName() << " Not Added to cache";
+							QStringList stringList(m_FileName);
+							stringList.append("File " + currentMesh3DRep.fileName() + " Not Added to cache");
+							GLC_ErrorLog::addError(stringList);
 						}
 					}
 
@@ -941,7 +947,10 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		loadLOD(pMesh);
 		if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 		{
-			qDebug() << " Master LOD not found";
+			QStringList stringList(m_FileName);
+			stringList.append(m_CurrentFileName);
+			stringList.append("Master LOD not found");
+			GLC_ErrorLog::addError(stringList);
 			return new GLC_StructReference("Empty Rep");
 		}
 
@@ -1096,7 +1105,9 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 		GLC_StructInstance* pChildInstance= (*iLink).m_pChildInstance;
 		if (pChildInstance->structReference() == NULL)
 		{
-			qDebug() << "Instance without reference";
+			QStringList stringList(m_FileName);
+			stringList.append("Instance without reference");
+			GLC_ErrorLog::addError(stringList);
 			pChildInstance->setReference(new GLC_StructReference("Part"));
 		}
 		Q_ASSERT(m_ReferenceHash.contains((*iLink).m_ParentRefId));
@@ -1152,7 +1163,9 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 			GLC_StructReference* pReference= iRef.value();
 			if (!pReference->hasStructInstance())
 			{
-				qDebug() << "GLC_3dxmlToWorld::createUnfoldedTree() : Orphan reference: " << pReference->name();
+				QStringList stringList(m_FileName);
+				stringList.append("GLC_3dxmlToWorld::createUnfoldedTree() : Orphan reference: " + pReference->name());
+				GLC_ErrorLog::addError(stringList);
 				delete pReference;
 			}
 			else
@@ -1164,7 +1177,9 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 					GLC_StructInstance* pInstance= instances.at(i);
 					if (!pInstance->hasStructOccurence())
 					{
-						qDebug() << "GLC_3dxmlToWorld::createUnfoldedTree() : Orphan Instance: " << pInstance->name();
+						QStringList stringList(m_FileName);
+						stringList.append("GLC_3dxmlToWorld::createUnfoldedTree() : Orphan Instance: " + pInstance->name());
+						GLC_ErrorLog::addError(stringList);
 						delete pInstance;
 					}
 					else
@@ -1176,7 +1191,9 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 							GLC_StructOccurence* pOcc= occurences.at(j);
 							if (pOcc->isOrphan())
 							{
-								qDebug() << "GLC_3dxmlToWorld::createUnfoldedTree(): Orphan occurence: " << pOcc->name();
+								QStringList stringList(m_FileName);
+								stringList.append("GLC_3dxmlToWorld::createUnfoldedTree(): Orphan occurence: " + pOcc->name());
+								GLC_ErrorLog::addError(stringList);
 								delete pOcc;
 							}
 						}
@@ -1198,7 +1215,11 @@ void GLC_3dxmlToWorld::checkForXmlError(const QString& info)
 	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
 		QString message(QString("An element have not been found in file ") + m_CurrentFileName);
-		qDebug() << info << " " << m_pStreamReader->errorString() << "  " << message;
+
+		QStringList stringList(info + " " + m_pStreamReader->errorString());
+		stringList.append(message);
+		GLC_ErrorLog::addError(stringList);
+
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -1243,7 +1264,9 @@ void GLC_3dxmlToWorld::loadFace(GLC_Mesh* pMesh, const int lod, double accuracy)
 
 	if (triangles.isEmpty() && strips.isEmpty() && fans.isEmpty())
 	{
-		qDebug() << "GLC_3dxmlToWorld::loadFace : Empty face found";
+		QStringList stringList(m_CurrentFileName);
+		stringList.append("GLC_3dxmlToWorld::loadFace : Empty face found");
+		GLC_ErrorLog::addError(stringList);
 		return;
 	}
 
@@ -1433,11 +1456,9 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		// Get the file of the 3dxml
 		if (!m_p3dxmlArchive->setCurrentFile(fileName, QuaZip::csInsensitive))
 		{
-			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + m_FileName + " doesn't contains " + fileName);
-			qDebug() << message;
-
 			if (!test)
 			{
+				QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + m_FileName + " doesn't contains " + fileName);
 				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
@@ -1449,7 +1470,6 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		if(!m_p3dxmlFile->open(QIODevice::ReadOnly))
 	    {
 			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile Unable to Open ") + fileName);
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotSupported);
 			clear();
 			throw(fileFormatException);
@@ -1474,11 +1494,9 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		if (!m_pCurrentFile->open(QIODevice::ReadOnly))
 		{
 			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile File ") + fileName + QString(" not found"));
-			qDebug() << message;
-			//GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotFound);
-			//clear();
+			QStringList stringList(message);
+			GLC_ErrorLog::addError(stringList);
 			return false;
-			//throw(fileFormatException);
 		}
 		else if (m_FileName != fileName)
 		{
@@ -1541,7 +1559,6 @@ void GLC_3dxmlToWorld::loadGraphicsProperties()
 	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
 		QString message(QString("GLC_3dxmlToWorld::loadGraphicsProperties Element DefaultView Not found in ") + m_FileName);
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -1562,7 +1579,6 @@ void GLC_3dxmlToWorld::loadGraphicsProperties()
 	if (m_pStreamReader->hasError())
 	{
 		QString message(QString("GLC_3dxmlToWorld::loadGraphicsProperties An error occur in ") + m_FileName);
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -1642,7 +1658,6 @@ void GLC_3dxmlToWorld::loadDefaultViewProperty()
 	if (m_pStreamReader->hasError())
 	{
 		QString message(QString("GLC_3dxmlToWorld::loadDefaultViewProperty An error occur in ") + m_FileName);
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -1770,7 +1785,6 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 			if (m_pStreamReader->hasError())
 			{
 				QString message(QString("An element have not been found in file ") + m_FileName);
-				qDebug() << m_pStreamReader->errorString();
 				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
@@ -1802,7 +1816,11 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		loadLOD(pMesh);
 		if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 		{
-			qDebug() << " Master LOD not found";
+			QStringList stringList(m_FileName);
+			stringList.append(m_CurrentFileName);
+			stringList.append("Master LOD not found");
+			GLC_ErrorLog::addError(stringList);
+
 			pMesh->finish();
 			currentMeshRep.clean();
 
@@ -1920,7 +1938,7 @@ void GLC_3dxmlToWorld::loadCatMaterialRef()
 	if (setStreamReaderToFile("CATMaterialRef.3dxml", true))
 	{
 		// Load the material file
-		qDebug() << "CATMaterialRef.3dxml found and current";
+		//qDebug() << "CATMaterialRef.3dxml found and current";
 		goToElement("CATMaterialRef");
 		checkForXmlError("Element CATMaterialRef not found in CATMaterialRef.3dxml");
 		while (endElementNotReached("CATMaterialRef"))
@@ -2045,7 +2063,7 @@ void GLC_3dxmlToWorld::loadCatRepImage()
 	// Load texture image name
 	if (setStreamReaderToFile("CATRepImage.3dxml", true))
 	{
-		qDebug() << "CATRepImage.3dxml Found";
+		//qDebug() << "CATRepImage.3dxml Found";
 		goToElement("CATRepImage");
 		checkForXmlError("Element CATRepImage not found in CATRepImage.3dxml");
 		while (endElementNotReached("CATRepImage"))
@@ -2062,7 +2080,7 @@ void GLC_3dxmlToWorld::loadCatRepImage()
 			}
 			m_pStreamReader->readNext();
 		}
-		qDebug() << "CATRepImage.3dxml Load";
+		//qDebug() << "CATRepImage.3dxml Load";
 	}
 }
 
@@ -2088,7 +2106,6 @@ GLC_Texture* GLC_3dxmlToWorld::loadTexture(QString fileName)
 	    {
 			delete p3dxmlFile;
 			QString message(QString("GLC_3dxmlToWorld::loadImage Unable to Open ") + fileName);
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotSupported);
 			clear();
 			throw(fileFormatException);
@@ -2110,7 +2127,9 @@ GLC_Texture* GLC_3dxmlToWorld::loadTexture(QString fileName)
 		{
 			delete pCurrentFile;
 			QString message(QString("GLC_3dxmlToWorld::loadImage File ") + resultImageFileName + QString(" not found"));
-			qDebug() << message;
+			QStringList stringList(m_CurrentFileName);
+			stringList.append(message);
+			GLC_ErrorLog::addError(stringList);
 			return NULL;
 		}
 		else
@@ -2122,7 +2141,19 @@ GLC_Texture* GLC_3dxmlToWorld::loadTexture(QString fileName)
 		delete pCurrentFile;
 	}
 
-	return new GLC_Texture(m_pQGLContext, resultImage, resultImageFileName);
+	GLC_Texture* pTexture= NULL;
+	if (!resultImage.isNull())
+	{
+		pTexture= new GLC_Texture(m_pQGLContext, resultImage, resultImageFileName);
+	}
+	else
+	{
+		QStringList stringList(m_CurrentFileName);
+		stringList.append("Unable to load " + resultImageFileName);
+		GLC_ErrorLog::addError(stringList);
+	}
+
+	return pTexture;
 }
 
 // Factorize material use

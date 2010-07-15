@@ -46,7 +46,6 @@ GLC_World* GLC_BSRepToWorld::CreateWorldFromBSRep(QFile &file)
 	{
 		QString fileName(file.fileName());
 		QString message(QString("GLC_BSRepToWorld::CreateWorldFromBSRep File ") + fileName + QString(" doesn't exist"));
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotFound);
 		throw(fileFormatException);
 	}
