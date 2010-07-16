@@ -150,7 +150,8 @@ HEADERS_GLC += glc_global.h \
            glc_cachemanager.h \
            glc_renderstatistics.h \
            glc_log.h \
-           glc_errorlog.h
+           glc_errorlog.h \
+           glc_tracelog.h
            
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_cuttingplane.h \
@@ -292,7 +293,8 @@ SOURCES +=	glc_global.cpp \
 			glc_cachemanager.cpp \
 			glc_renderstatistics.cpp \
 			glc_log.cpp \
-			glc_errorlog.cpp
+			glc_errorlog.cpp \
+			glc_tracelog.cpp
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_cuttingplane.cpp \
@@ -392,7 +394,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Sphere \
     		   include/GLC_Axis \
     		   include/GLC_Log \
-    		   include/GLC_ErrorLog
+    		   include/GLC_ErrorLog \
+    		   include/GLC_TraceLog
     		   
     			   
 # Linux and macx install configuration
