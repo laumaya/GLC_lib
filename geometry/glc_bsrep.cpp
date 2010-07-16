@@ -136,7 +136,6 @@ GLC_3DRep GLC_BSRep::loadRep()
 			if (!close())
 			{
 				QString message(QString("GLC_BSRep::loadRep An error occur when loading file ") + m_FileInfo.fileName());
-				qDebug() << message;
 				GLC_FileFormatException fileFormatException(message, m_FileInfo.fileName(), GLC_FileFormatException::WrongFileFormat);
 				throw(fileFormatException);
 			}
@@ -144,7 +143,6 @@ GLC_3DRep GLC_BSRep::loadRep()
 		else
 		{
 			QString message(QString("GLC_BSRep::loadRep File not supported ") + m_FileInfo.fileName());
-			qDebug() << message;
 			GLC_FileFormatException fileFormatException(message, m_FileInfo.fileName(), GLC_FileFormatException::FileNotSupported);
 			close();
 			throw(fileFormatException);
@@ -153,7 +151,6 @@ GLC_3DRep GLC_BSRep::loadRep()
 	else
 	{
 		QString message(QString("GLC_BSRep::loadRep Enable to open the file ") + m_FileInfo.fileName());
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileInfo.fileName(), GLC_FileFormatException::FileNotFound);
 		close();
 		throw(fileFormatException);
