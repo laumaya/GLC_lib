@@ -54,9 +54,9 @@ GLC_ErrorLog* GLC_ErrorLog::instance()
 	return m_pErrorLog;
 }
 
-bool GLC_ErrorLog::containsError()
+bool GLC_ErrorLog::isEmpty()
 {
-	return (NULL != m_pErrorLog);
+	return (NULL == m_pErrorLog);
 }
 
 void GLC_ErrorLog::addError(const QStringList& errorDescription)
@@ -74,6 +74,7 @@ void GLC_ErrorLog::close()
 {
 	QMutexLocker locker(&m_Mutex);
 	delete m_pErrorLog;
+	m_pErrorLog= NULL;
 }
 
 void GLC_ErrorLog::writeHeader()

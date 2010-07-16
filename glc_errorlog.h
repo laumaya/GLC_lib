@@ -56,8 +56,8 @@ public:
 	//! Return the unique instance of error log file
 	static GLC_ErrorLog* instance();
 
-	//! Return true if the log contains error
-	static bool containsError();
+	//! Return true if the log is empty
+	static bool isEmpty();
 
 //@}
 //////////////////////////////////////////////////////////////////////
