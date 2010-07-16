@@ -742,8 +742,6 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 	{
 
 		m_CurrentFileName= (*iExtRef);
-		//qDebug() << "Current File name : " << currentRefFileName;
-		// Get the refFile of the 3dxml
 
 		if (! m_IsInArchive)
 		{
@@ -775,7 +773,10 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 			}
 			else
 			{
-				qDebug() << "GLC_3dxmlToWorld::loadExternalRef3D No File Found";
+				QStringList stringList(m_FileName);
+				stringList.append("GLC_3dxmlToWorld::loadExternalRef3D");
+				stringList.append("Failed to load " + m_CurrentFileName);
+				GLC_ErrorLog::addError(stringList);
 			}
 		}
 		else if(m_LoadStructureOnly)
