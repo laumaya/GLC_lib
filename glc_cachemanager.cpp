@@ -117,16 +117,7 @@ bool GLC_CacheManager::isUsable(const QDateTime& timeStamp, const QString& conte
 			binaryRep.setAbsoluteFileName(cacheFileInfo.absoluteFilePath());
 			result= result && binaryRep.repIsUpToDate(timeStamp);
 		}
-		else
-		{
-			qDebug() << "file " << fileName << " not usable";
-		}
 	}
-	else
-	{
-		QFileInfo cacheFileInfo(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName+ '.' + GLC_BSRep::suffix());
-	}
-	if (! result) qDebug() << "NOT USABLE";
 
 	return result;
 }
@@ -134,7 +125,7 @@ bool GLC_CacheManager::isUsable(const QDateTime& timeStamp, const QString& conte
 // Return the binary serialized representation of the specified file
 GLC_BSRep GLC_CacheManager::binary3DRep(const QString& context, const QString& fileName) const
 {
-	const QString absoluteFileName(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName+ '.' + GLC_BSRep::suffix());
+	const QString absoluteFileName(m_Dir.absolutePath() + QDir::separator() + context + QDir::separator() + fileName + '.' + GLC_BSRep::suffix());
 	GLC_BSRep binaryRep(absoluteFileName);
 
 	return binaryRep;
