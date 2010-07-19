@@ -31,6 +31,7 @@
 #include <QDataStream>
 #include <QUuid>
 #include <QDateTime>
+#include <QMutex>
 
 #include "../glc_config.h"
 #include "glc_3drep.h"
@@ -149,6 +150,9 @@ private:
 
 	//! Flag to know if the version is compatible
 	bool m_VersionIsCompatible;
+
+	//! Compression Mutex
+	static QMutex m_CompressionMutex;
 
 };
 

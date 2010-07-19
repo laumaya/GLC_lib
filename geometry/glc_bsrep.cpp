@@ -35,6 +35,8 @@ const QUuid GLC_BSRep::m_Uuid("{d6f97789-36a9-4c2e-b667-0e66c27f839f}");
 // The binary rep version
 const quint32 GLC_BSRep::m_Version= 101;
 
+// Mutex used by compression
+QMutex GLC_BSRep::m_CompressionMutex;
 
 // Default constructor
 GLC_BSRep::GLC_BSRep(const QString& fileName, bool useCompression)
@@ -200,7 +202,6 @@ void GLC_BSRep::setAbsoluteFileName(const QString& fileName)
 // Save the GLC_3DRep in serialised binary
 bool GLC_BSRep::save(const GLC_3DRep& rep)
 {
-	qDebug() << "GLC_BSRep::save";
 	//! Check if the currentFileInfo is valid and writable
 	bool saveOk= open(QIODevice::WriteOnly);
 	if (saveOk)
@@ -215,9 +216,16 @@ bool GLC_BSRep::save(const GLC_3DRep& rep)
 		if (m_UseCompression)
 		{
 			QByteArray uncompressedBuffer;
-			QDataStream bufferStream(&uncompressedBuffer, QIODevice::WriteOnly);
-			bufferStream << rep;
+			{
+				QBuffer buffer(&uncompressedBuffer);
+				buffer.open(QIODevice::WriteOnly);
+				QDataStream bufferStream(&buffer);
+				bufferStream << rep;
+			}
+			// Don't know why, but it's work better !
+			m_CompressionMutex.lock();
 			m_DataStream << qCompress(uncompressedBuffer, m_CompressionLevel);
+			m_CompressionMutex.unlock();
 		}
 		else
 		{
