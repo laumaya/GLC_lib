@@ -233,6 +233,17 @@ GLC_StructOccurence::~GLC_StructOccurence()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
+bool GLC_StructOccurence::has3DViewInstance() const
+{
+	bool returnValue= false;
+	if (m_HasRepresentation && (NULL != m_pWorldHandle))
+	{
+		Q_ASSERT(m_pWorldHandle->collection()->contains(m_Uid));
+		returnValue= true;
+	}
+	return returnValue;
+}
+
 // Get number of faces
 unsigned int GLC_StructOccurence::numberOfFaces() const
 {
@@ -321,7 +332,7 @@ GLC_StructOccurence* GLC_StructOccurence::clone(GLC_WorldHandle* pWorldHandle, b
 bool GLC_StructOccurence::isVisible() const
 {
 	bool isHidden= true;
-	if (m_HasRepresentation)
+	if (m_HasRepresentation && (NULL != m_pWorldHandle))
 	{
 		isHidden= !m_pWorldHandle->collection()->instanceHandle(id())->isVisible();
 	}
