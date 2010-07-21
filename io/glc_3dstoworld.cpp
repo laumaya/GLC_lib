@@ -223,6 +223,7 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 					GLC_Matrix4x4 trans(-pObjectData->pivot[0], -pObjectData->pivot[1], -pObjectData->pivot[2]);
 					// Compute the part matrix
 					nodeMat= nodeMat * trans * matInv; // I don't know why...
+					nodeMat.optimise();
 					// move the part by the matrix
 					pProduct->addChild((new GLC_StructInstance(new GLC_3DRep(representation)))->move(nodeMat));
 		    	}
