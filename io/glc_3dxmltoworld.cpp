@@ -1090,7 +1090,10 @@ GLC_Matrix4x4 GLC_3dxmlToWorld::loadMatrix(const QString& stringMatrix)
 	values[14]= stringValues[11].toDouble();
 	values[15]= 1.0;
 
-	return GLC_Matrix4x4(values.data());
+	GLC_Matrix4x4 resultMatrix(values.data());
+	resultMatrix.optimise();
+
+	return resultMatrix;
 }
 
 // Create the unfolded  tree
