@@ -448,26 +448,26 @@ void GLC_Camera::createMatComp(void)
 	const GLC_Vector3d side((forward ^ m_VectUp).normalize());
 
 	// Update camera matrix
-	m_ModelViewMatrix.data()[0]= side.x();
-	m_ModelViewMatrix.data()[4]= side.y();
-	m_ModelViewMatrix.data()[8]= side.z();
-	m_ModelViewMatrix.data()[12]= 0.0;
+	m_ModelViewMatrix.setData()[0]= side.x();
+	m_ModelViewMatrix.setData()[4]= side.y();
+	m_ModelViewMatrix.setData()[8]= side.z();
+	m_ModelViewMatrix.setData()[12]= 0.0;
 
 	// Vector Up is Y Axis
-	m_ModelViewMatrix.data()[1]= m_VectUp.x();
-	m_ModelViewMatrix.data()[5]= m_VectUp.y();
-	m_ModelViewMatrix.data()[9]= m_VectUp.z();
-	m_ModelViewMatrix.data()[13]= 0.0;
+	m_ModelViewMatrix.setData()[1]= m_VectUp.x();
+	m_ModelViewMatrix.setData()[5]= m_VectUp.y();
+	m_ModelViewMatrix.setData()[9]= m_VectUp.z();
+	m_ModelViewMatrix.setData()[13]= 0.0;
 
 	// Vector Cam is Z axis
-	m_ModelViewMatrix.data()[2]= - forward.x();
-	m_ModelViewMatrix.data()[6]= - forward.y();
-	m_ModelViewMatrix.data()[10]= - forward.z();
-	m_ModelViewMatrix.data()[14]= 0.0;
+	m_ModelViewMatrix.setData()[2]= - forward.x();
+	m_ModelViewMatrix.setData()[6]= - forward.y();
+	m_ModelViewMatrix.setData()[10]= - forward.z();
+	m_ModelViewMatrix.setData()[14]= 0.0;
 
-	m_ModelViewMatrix.data()[3]= 0.0;
-	m_ModelViewMatrix.data()[7]= 0.0;
-	m_ModelViewMatrix.data()[11]= 0.0;
-	m_ModelViewMatrix.data()[15]= 1.0;
+	m_ModelViewMatrix.setData()[3]= 0.0;
+	m_ModelViewMatrix.setData()[7]= 0.0;
+	m_ModelViewMatrix.setData()[11]= 0.0;
+	m_ModelViewMatrix.setData()[15]= 1.0;
 
 }
