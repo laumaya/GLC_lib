@@ -407,22 +407,22 @@ QString GLC_WorldTo3dxml::matrixString(const GLC_Matrix4x4& matrix)
 	QString resultMatrix;
 	const QChar spaceChar(' ');
 	// Rotation
-	resultMatrix+= QString::number(matrix.data()[0]) + spaceChar;
-	resultMatrix+= QString::number(matrix.data()[1]) + spaceChar;
-	resultMatrix+= QString::number(matrix.data()[2]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[0]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[1]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[2]) + spaceChar;
 
-	resultMatrix+= QString::number(matrix.data()[4]) + spaceChar;
-	resultMatrix+= QString::number(matrix.data()[5]) + spaceChar;
-	resultMatrix+= QString::number(matrix.data()[6]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[4]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[5]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[6]) + spaceChar;
 
-	resultMatrix+= QString::number(matrix.data()[8]) + spaceChar;
-	resultMatrix+= QString::number(matrix.data()[9]) + spaceChar;
-	resultMatrix+= QString::number(matrix.data()[10]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[8]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[9]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[10]) + spaceChar;
 
 	// Translation
-	resultMatrix+= QString::number(matrix.data()[12]) + spaceChar;
-	resultMatrix+= QString::number(matrix.data()[13]) + spaceChar;
-	resultMatrix+= QString::number(matrix.data()[14]);
+	resultMatrix+= QString::number(matrix.getData()[12]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[13]) + spaceChar;
+	resultMatrix+= QString::number(matrix.getData()[14]);
 
 	return resultMatrix;
 }
