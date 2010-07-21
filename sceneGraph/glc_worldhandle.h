@@ -68,7 +68,7 @@ public:
 	{return m_NumberOfWorld == 0;}
 
 	//! Return true if the specified occurence id is in this world
-	inline bool contains(GLC_uint id) const
+	inline bool containsOccurence(GLC_uint id) const
 	{return m_OccurenceHash.contains(id);}
 
 	//! Return the occurence specified by an id

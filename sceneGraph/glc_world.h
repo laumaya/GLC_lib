@@ -137,8 +137,8 @@ public:
 	{return m_pWorldHandle->numberOfOccurence();}
 
 	//! Return true if the world contians specified id
-	inline int contains(GLC_uint id) const
-	{return m_pWorldHandle->contains(id);}
+	inline int containsOccurence(GLC_uint id) const
+	{return m_pWorldHandle->containsOccurence(id);}
 
 	//! Return the list of instance
 	inline QList<GLC_StructInstance*> instances() const
