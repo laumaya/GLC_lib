@@ -300,7 +300,7 @@ private:
 		// Polygons display mode
 		glPolygonMode(m_RenderProperties.polyFaceMode(), m_RenderProperties.polygonMode());
 		// Change the current matrix
-		glMultMatrixd(m_AbsoluteMatrix.data());
+		glMultMatrixd(m_AbsoluteMatrix.getData());
 	}
 
 
