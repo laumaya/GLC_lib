@@ -145,7 +145,6 @@ GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnl
 // Create 3DRep from an 3DXML rep
 GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 {
-	//qDebug() << "GLC_3dxmlToWorld::create3DrepFrom3dxmlRep " << fileName;
 	GLC_3DRep resultRep;
 	if (glc::isArchiveString(fileName))
 	{
@@ -920,7 +919,8 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 						GLC_CacheManager currentManager= GLC_State::currentCacheManager();
 						if (!currentManager.addToCache(QFileInfo(m_FileName).baseName(), currentMesh3DRep))
 						{
-							QStringList stringList(m_FileName);
+							QStringList stringList("GLC_3dxmlToWorld::createReferenceRep");
+							stringList.append(m_FileName);
 							stringList.append("File " + currentMesh3DRep.fileName() + " Not Added to cache");
 							GLC_ErrorLog::addError(stringList);
 						}
@@ -1449,7 +1449,6 @@ GLC_Material* GLC_3dxmlToWorld::getMaterial()
 // Set the stream reader to the specified file
 bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 {
-	//qDebug() << "GLC_3dxmlToWorld::setStreamReaderToFile" << fileName;
 	m_CurrentFileName= fileName;
 	if (m_IsInArchive)
 	{
@@ -1559,7 +1558,6 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 
 void GLC_3dxmlToWorld::loadGraphicsProperties()
 {
-	qDebug() << "GLC_3dxmlToWorld::loadGraphicsProperties";
 	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
 		QString message(QString("GLC_3dxmlToWorld::loadGraphicsProperties Element DefaultView Not found in ") + m_FileName);
