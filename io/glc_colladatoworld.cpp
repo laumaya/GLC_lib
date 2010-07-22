@@ -1606,6 +1606,7 @@ void GLC_ColladaToWorld::scaleNode(ColladaNode* pNode)
 	// Built the translation matrix
 	GLC_Matrix4x4 scaleMatrix;
 	scaleMatrix.setMatScaling(scale[0], scale[1], scale[2]);
+	scaleMatrix.optimise();
 	// Update the node matrix
 	pNode->m_Matrix= pNode->m_Matrix * scaleMatrix;
 }
@@ -1666,6 +1667,8 @@ void GLC_ColladaToWorld::composeMatrixNode(ColladaNode* pNode)
 	}
 	// Built the matrix
 	GLC_Matrix4x4 currentMatrix(matrix);
+	currentMatrix.optimise();
+
 	// Update the node matrix
 	pNode->m_Matrix= pNode->m_Matrix * currentMatrix;
 }
