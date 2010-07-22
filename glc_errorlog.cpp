@@ -79,9 +79,8 @@ void GLC_ErrorLog::close()
 
 void GLC_ErrorLog::writeHeader()
 {
-	qDebug() << "GLC_ErrorLog::writeHeader()";
 	QString currentLine;
-	currentLine= "GLC_Lib " + glc::version + " ERROR Log file";
+	currentLine= "Error Log file";
 	GLC_Log::m_TextStream << currentLine << '\n';
 	currentLine= "Application " + QCoreApplication::applicationName();
 	GLC_Log::m_TextStream << currentLine << '\n';

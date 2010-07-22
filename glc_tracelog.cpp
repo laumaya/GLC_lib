@@ -96,9 +96,8 @@ void GLC_TraceLog::setEnabled(bool enable)
 
 void GLC_TraceLog::writeHeader()
 {
-	qDebug() << "GLC_TraceLog::writeHeader()";
 	QString currentLine;
-	currentLine= "GLC_Lib " + glc::version + " Trace Log file";
+	currentLine= "Trace Log file";
 	GLC_Log::m_TextStream << currentLine << '\n';
 	currentLine= "Application " + QCoreApplication::applicationName();
 	GLC_Log::m_TextStream << currentLine << '\n';
