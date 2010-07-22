@@ -303,10 +303,10 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 	// Save current OpenGL Matrix
 	glPushMatrix();
 	OpenglVisProperties();
-	qDebug() << "GLC_3DViewInstance::render : Matrix Type= " << m_AbsoluteMatrix.type();
+
+	// Change front face orientation if this instance absolute matrix is indirect
 	if (m_AbsoluteMatrix.type() == GLC_Matrix4x4::Indirect)
 	{
-		qDebug() << "Indirect matrix found";
 		glFrontFace(GL_CW);
 	}
 	if(GLC_State::isInSelectionMode())
@@ -354,6 +354,7 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 	// Restore OpenGL Matrix
 	glPopMatrix();
 
+	// Restore front face orientation if this instance absolute matrix is indirect
 	if (m_AbsoluteMatrix.type() == GLC_Matrix4x4::Indirect)
 	{
 		glFrontFace(GL_CCW);
