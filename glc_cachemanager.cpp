@@ -115,7 +115,7 @@ bool GLC_CacheManager::isUsable(const QDateTime& timeStamp, const QString& conte
 		{
 			GLC_BSRep binaryRep;
 			binaryRep.setAbsoluteFileName(cacheFileInfo.absoluteFilePath());
-			result= result && binaryRep.repIsUpToDate(timeStamp);
+			result= result && binaryRep.isUsable(timeStamp);
 		}
 	}
 
