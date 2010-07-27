@@ -47,7 +47,16 @@ GLC_ErrorLog* GLC_ErrorLog::instance()
 {
 	if (NULL == m_pErrorLog)
 	{
-		QString logFileName(QDir::tempPath() + QDir::separator() + "GLC_lib_ErrLog");
+		QString fileName(QApplication::applicationName());
+		if (fileName.isEmpty())
+		{
+			fileName= "GLC_lib_ErrLog";
+		}
+		else
+		{
+			fileName= fileName + "_ErrLog";
+		}
+		QString logFileName(QDir::tempPath() + QDir::separator() + fileName);
 		m_pErrorLog= new GLC_ErrorLog(logFileName);
 		m_pErrorLog->writeHeader();
 	}

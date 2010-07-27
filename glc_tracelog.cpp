@@ -49,7 +49,15 @@ GLC_TraceLog* GLC_TraceLog::instance(QString baseName)
 	{
 		if (baseName.isEmpty())
 		{
-			baseName= "GLC_lib_TraceLog";
+			QString fileName(QApplication::applicationName());
+			if (fileName.isEmpty())
+			{
+				baseName= "GLC_lib_TraceLog";
+			}
+			else
+			{
+				baseName= fileName + "_TraceLog";
+			}
 		}
 		QString logFileName(QDir::tempPath() + QDir::separator() + baseName);
 		m_pTraceLog= new GLC_TraceLog(logFileName);
