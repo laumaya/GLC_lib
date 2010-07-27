@@ -196,8 +196,9 @@ void GLC_BSRep::setAbsoluteFileName(const QString& fileName)
 // Save the GLC_3DRep in serialised binary
 bool GLC_BSRep::save(const GLC_3DRep& rep)
 {
+
 	//! Check if the currentFileInfo is valid and writable
-	bool saveOk= open(QIODevice::ReadWrite);
+	bool saveOk= open(QIODevice::WriteOnly);
 	if (saveOk)
 	{
 		writeHeader(rep.lastModified());
@@ -206,9 +207,10 @@ bool GLC_BSRep::save(const GLC_3DRep& rep)
 		m_DataStream << rep.boundingBox();
 
 		// Compression usage
-		m_DataStream << m_UseCompression;
-		if (m_UseCompression)
+
+		if (m_UseCompression && (rep.faceCount() < 1000000))
 		{
+			m_DataStream << true;
 			QByteArray uncompressedBuffer;
 			{
 				QBuffer buffer(&uncompressedBuffer);
@@ -216,13 +218,11 @@ bool GLC_BSRep::save(const GLC_3DRep& rep)
 				QDataStream bufferStream(&buffer);
 				bufferStream << rep;
 			}
-			// Don't know why, but it's work better !
-			m_CompressionMutex.lock();
 			m_DataStream << qCompress(uncompressedBuffer, m_CompressionLevel);
-			m_CompressionMutex.unlock();
 		}
 		else
 		{
+			m_DataStream << false;
 			// Binary representation geometry
 			// Add the rep
 			m_DataStream << rep;
@@ -246,7 +246,7 @@ bool GLC_BSRep::save(const GLC_3DRep& rep)
 bool GLC_BSRep::open(QIODevice::OpenMode mode)
 {
 	bool openOk= m_FileInfo.exists();
-	if (openOk || (mode == QIODevice::ReadWrite))
+	if (openOk || (mode == QIODevice::WriteOnly))
 	{
 		m_DataStream.setDevice(NULL);
 		delete m_pFile;
