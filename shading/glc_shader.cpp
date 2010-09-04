@@ -46,7 +46,7 @@ GLC_Shader::GLC_Shader()
 , m_ProgramShader(0)
 , m_Name("Empty Shader")
 {
-	qDebug() << "Create Shader";
+
 }
 
 // Construct shader with specifie vertex and fragment
@@ -80,7 +80,6 @@ GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 
 GLC_Shader::~GLC_Shader()
 {
-	qDebug() << "GLC_Shader::~GLC_Shader";
 	deleteShader();
 }
 
