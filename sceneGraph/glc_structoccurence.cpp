@@ -57,11 +57,16 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_StructInstance* pStructInstance, GL
 , m_pParent(NULL)
 , m_Childs()
 , m_AbsoluteMatrix()
-, m_HasRepresentation(pStructInstance->structReference()->hasRepresentation())
+, m_HasRepresentation(false)
 , m_OccurenceNumber(0)
 , m_IsVisible(true)
 , m_pRenderProperties(NULL)
 {
+	if (NULL != pStructInstance->structReference())
+	{
+		m_HasRepresentation= pStructInstance->structReference()->hasRepresentation();
+	}
+
 	// Update the number of occurences
 	if (pStructInstance->hasStructOccurence())
 	{
