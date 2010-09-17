@@ -100,7 +100,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_StructInstance* pStructInstance, GL
 	// Update instance
 	m_pStructInstance->structOccurenceCreated(this);
 }
-// Construct Occurence withe the specified GLC_3DRep
+// Construct Occurence with the specified GLC_3DRep
 GLC_StructOccurence::GLC_StructOccurence(GLC_3DRep* pRep)
 : m_Uid(glc::GLC_GenID())
 , m_pWorldHandle(NULL)
@@ -658,4 +658,33 @@ void GLC_StructOccurence::removeEmptyChildren()
 			++iChild;
 		}
 	}
+}
+
+void GLC_StructOccurence::setReference(GLC_StructReference* pRef)
+{
+	Q_ASSERT(m_pStructInstance->structReference() == NULL);
+	Q_ASSERT((*m_pNumberOfOccurence) == 1);
+
+	m_HasRepresentation= pRef->hasRepresentation();
+
+	if (pRef->hasStructInstance())
+	{
+		GLC_StructInstance* pExistingInstance= pRef->firstInstanceHandle();
+		if (pExistingInstance->hasStructOccurence())
+		{
+			GLC_StructOccurence* pFirstOccurence= pExistingInstance->firstOccurenceHandle();
+			delete m_pNumberOfOccurence;
+			m_pNumberOfOccurence= pFirstOccurence->m_pNumberOfOccurence;
+			++(*m_pNumberOfOccurence);
+			QList<GLC_StructOccurence*> childs= pFirstOccurence->m_Childs;
+			const int size= childs.size();
+			for (int i= 0; i < size; ++i)
+			{
+				GLC_StructOccurence* pChild= childs.at(i)->clone(m_pWorldHandle, true);
+				addChild(pChild);
+			}
+		}
+	}
+
+	m_pStructInstance->setReference(pRef);
 }
