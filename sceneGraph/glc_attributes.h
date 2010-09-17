@@ -86,7 +86,7 @@ public:
 
 	//! Return the value of the specified attributes index
 	/*! Return empty String if attribute doesn't exist*/
-	inline QString value(int at) const
+	inline QString name(int at) const
 	{return m_AttributesList.value(at);}
 
 //@}
@@ -108,6 +108,13 @@ public:
 	{
 		m_AttributesHash.remove(name);
 		m_AttributesList.removeOne(name);
+	}
+
+	//! Clear the content of this attribute
+	inline void clear()
+	{
+		m_AttributesHash.clear();
+		m_AttributesList.clear();
 	}
 
 //@}
