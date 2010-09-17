@@ -141,6 +141,7 @@ GLC_StructInstance::GLC_StructInstance(const QString& name)
 void GLC_StructInstance::setReference(GLC_StructReference* pStructReference)
 {
 	Q_ASSERT(NULL == m_pStructReference);
+	Q_ASSERT(NULL == m_pNumberOfInstance);
 	m_pStructReference= pStructReference;
 	if (m_pStructReference->hasStructInstance())
 	{
