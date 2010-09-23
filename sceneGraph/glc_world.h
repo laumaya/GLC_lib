@@ -152,10 +152,13 @@ public:
 	inline int numberOfBody() const
 	{return m_pWorldHandle->numberOfBody();}
 
+	//! Return the number of representation
+	inline int representationCount() const
+	{return m_pWorldHandle->representationCount();}
+
 	//! Return the world Up vector
 	inline GLC_Vector3d upVector() const
 	{return m_pWorldHandle->upVector();}
-
 
 //@}
 
