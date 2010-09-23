@@ -84,7 +84,7 @@ public:
 	inline QString value(const QString& name) const
 	{return m_AttributesHash.value(name);}
 
-	//! Return the value of the specified attributes index
+	//! Return the name of the specified attributes index
 	/*! Return empty String if attribute doesn't exist*/
 	inline QString name(int at) const
 	{return m_AttributesList.value(at);}
