@@ -69,6 +69,9 @@ public:
 	//! Save the world to the specified file name
 	bool exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial= true);
 
+	//! Save the given 3DRep into the given path name
+	bool exportReferenceTo3DRep(const GLC_3DRep* p3DRep, const QString& fullFileName);
+
 	//! Set the name of the 3dxml generator default is GLC_LIB
 	inline void setGeneratorName(const QString& generator)
 	{m_Generator= generator;}

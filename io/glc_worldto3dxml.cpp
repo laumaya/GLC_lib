@@ -140,6 +140,20 @@ bool GLC_WorldTo3dxml::exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::
 	return isExported;
 }
 
+bool GLC_WorldTo3dxml::exportReferenceTo3DRep(const GLC_3DRep* p3DRep, const QString& fullFileName)
+{
+	m_3dxmlFileSet.clear();
+	m_ListOfOverLoadedOccurence.clear();
+	m_FileNameIncrement= 0;
+	m_ExportMaterial= false;
+
+	m_AbsolutePath= QFileInfo(fullFileName).absolutePath() + QDir::separator();
+
+	write3DRep(p3DRep, QFileInfo(fullFileName).fileName());
+
+	return true;
+}
+
 void GLC_WorldTo3dxml::setInterupt(QReadWriteLock* pReadWriteLock, bool* pInterupt)
 {
 	m_pReadWriteLock= pReadWriteLock;
