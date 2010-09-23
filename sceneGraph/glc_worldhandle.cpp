@@ -79,6 +79,18 @@ int GLC_WorldHandle::numberOfBody() const
 	return numberOfBody;
 }
 
+int GLC_WorldHandle::representationCount() const
+{
+	QList<GLC_StructReference*> referenceList(references());
+	const int size= referenceList.size();
+	int count= 0;
+	for (int i= 0; i < size; ++i)
+	{
+		if (referenceList.at(i)->hasRepresentation()) ++count;
+	}
+	return count;
+
+}
 
 // An Occurence has been added
 void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelected, GLuint shaderId)

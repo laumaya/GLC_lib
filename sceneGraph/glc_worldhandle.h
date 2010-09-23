@@ -96,6 +96,9 @@ public:
 	//! Return the number of body
 	int numberOfBody() const;
 
+	//! Return the number of representation
+	int representationCount() const;
+
 	//! Return the world Up vector
 	inline GLC_Vector3d upVector() const
 	{return m_UpVector;}
