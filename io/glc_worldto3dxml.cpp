@@ -486,12 +486,10 @@ QString GLC_WorldTo3dxml::representationFileName(const GLC_3DRep* pRep)
 		}
 		else
 		{
-			qDebug() << m_FileName;
 			// Compute the relative fileName from the structure
 			QDir structureDir(m_AbsolutePath);
 			QString relativeFilePath= structureDir.relativeFilePath(newFileName);
 			fileName= "urn:3DXML:" + relativeFilePath;
-			qDebug() << relativeFilePath;
 		}
 	}
 	else if (repName.isEmpty())
