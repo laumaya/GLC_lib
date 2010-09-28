@@ -124,7 +124,7 @@ public:
 	GLC_World createWorldFromFile(QFile &file, QStringList* pAttachedFileName= NULL) const;
 
 	//! Create a GLC_World containing only the 3dxml structure
-	GLC_World createWorldStructureFrom3dxml(QFile &file) const;
+	GLC_World createWorldStructureFrom3dxml(QFile &file, bool GetExtRefName= false) const;
 
 	//! Create 3DRep from 3dxml or 3DRep file
 	GLC_3DRep create3DRepFromFile(const QString&) const;

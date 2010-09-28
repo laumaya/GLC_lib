@@ -268,7 +268,7 @@ GLC_World GLC_Factory::createWorldFromFile(QFile &file, QStringList* pAttachedFi
 	return resulWorld;
 }
 
-GLC_World GLC_Factory::createWorldStructureFrom3dxml(QFile &file) const
+GLC_World GLC_Factory::createWorldStructureFrom3dxml(QFile &file, bool GetExtRefName) const
 {
 	GLC_World* pWorld= NULL;
 
@@ -276,7 +276,7 @@ GLC_World GLC_Factory::createWorldStructureFrom3dxml(QFile &file) const
 	{
 		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		pWorld= d3dxmlToWorld.createWorldFrom3dxml(file, true);
+		pWorld= d3dxmlToWorld.createWorldFrom3dxml(file, true, GetExtRefName);
 	}
 
 	if (NULL == pWorld)
