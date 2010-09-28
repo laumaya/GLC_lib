@@ -157,6 +157,10 @@ public:
 	//! Return the number of node of this branch
 	unsigned int nodeCount() const;
 
+	//! Return the world handle of this occurence
+	inline GLC_WorldHandle* worldHandle() const
+	{return m_pWorldHandle;}
+
 
 //@}
 //////////////////////////////////////////////////////////////////////
