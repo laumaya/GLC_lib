@@ -123,7 +123,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Create an GLC_World from an input 3DXML File
-	GLC_World* createWorldFrom3dxml(QFile &, bool StructureOnly);
+	GLC_World* createWorldFrom3dxml(QFile &, bool StructureOnly, bool getExternalRef= false);
 
 	//! Create 3DRep from an 3DXML rep
 	GLC_3DRep create3DrepFrom3dxmlRep(const QString&);
@@ -186,7 +186,7 @@ private:
 	void loadExternalRef3D();
 
 	//! Add a reference from 3dxml to m_ExternalReferenceHash
-	GLC_StructReference* createReferenceRep(QString id= QString());
+	GLC_StructReference* createReferenceRep(QString id, GLC_3DRep* pRep);
 
 	//! Load Matrix
 	GLC_Matrix4x4 loadMatrix(const QString&);
@@ -346,6 +346,9 @@ private:
 
 	//! Hash table of occurence specific attributes
 	QHash<unsigned int, OccurenceAttrib*> m_OccurenceAttrib;
+
+	//! bool get external ref 3D name
+	bool m_GetExternalRef3DName;
 
 
 };

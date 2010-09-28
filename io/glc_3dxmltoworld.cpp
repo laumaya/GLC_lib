@@ -67,6 +67,7 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 , m_CurrentFileName()
 , m_CurrentDateTime()
 , m_OccurenceAttrib()
+, m_GetExternalRef3DName(false)
 {
 
 }
@@ -97,8 +98,9 @@ GLC_3dxmlToWorld::~GLC_3dxmlToWorld()
 //////////////////////////////////////////////////////////////////////
 
 // Create an GLC_World from an input 3DXML File
-GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnly)
+GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnly, bool getExternalRef)
 {
+	m_GetExternalRef3DName= getExternalRef;
 	m_LoadStructureOnly= structureOnly;
 	m_FileName= file.fileName();
 
@@ -206,7 +208,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 		{
 			if (setStreamReaderToFile(m_CurrentFileName, true))
 			{
-				GLC_StructReference* pStructRef = createReferenceRep(QString());
+				GLC_StructReference* pStructRef = createReferenceRep(QString(), NULL);
 				GLC_3DRep* pRep = NULL;
 				if ((NULL != pStructRef) && pStructRef->hasRepresentation())
 				{
@@ -765,7 +767,7 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		}
 		else if (!m_LoadStructureOnly && setStreamReaderToFile(m_CurrentFileName))
 		{
-			GLC_StructReference* pCurrentRef= createReferenceRep();
+			GLC_StructReference* pCurrentRef= createReferenceRep(QString(), NULL);
 			if (NULL != pCurrentRef)
 			{
 				m_ExternalReferenceHash.insert(m_CurrentFileName, pCurrentRef);
@@ -791,9 +793,17 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 				pRep->setFileName("File::" + m_FileName + "::" + repFileName);
 				m_ListOfAttachedFileName << repFileName;
 			}
-			GLC_StructReference* pCurrentRef= new GLC_StructReference(pRep);
-			pCurrentRef->setName(QFileInfo(m_CurrentFileName).baseName());
-			m_ExternalReferenceHash.insert(m_CurrentFileName, pCurrentRef);
+			if (m_GetExternalRef3DName && setStreamReaderToFile(m_CurrentFileName))
+			{
+				GLC_StructReference* pCurrentRef= createReferenceRep(QString(), pRep);
+				m_ExternalReferenceHash.insert(m_CurrentFileName, pCurrentRef);
+			}
+			else
+			{
+				GLC_StructReference* pCurrentRef= new GLC_StructReference(pRep);
+				pCurrentRef->setName(QFileInfo(m_CurrentFileName).baseName());
+				m_ExternalReferenceHash.insert(m_CurrentFileName, pCurrentRef);
+			}
 		}
 		else
 		{
@@ -816,7 +826,7 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 }
 
 // Create Instance from 3DXML Rep
-GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
+GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DRep* pRep)
 {
 	//qDebug() << "GLC_3dxmlToWorld::createReferenceRep :" << repId;
 
@@ -860,7 +870,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 			repId.resize(repId.size() - 2);
 			if (setStreamReaderToFile(repId))
 			{
-				return createReferenceRep();
+				return createReferenceRep(QString(), NULL);
 			}
 			else
 			{
@@ -875,6 +885,12 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId)
 		checkForXmlError("attribute associatedFile not found");
 		goToRepId(repId);
 		checkForXmlError("repId not found");
+
+		if (pRep != NULL)
+		{
+			pRep->setName(refName);
+			return new GLC_StructReference(pRep);
+		}
 	}
 
 	GLC_Mesh* pMesh= new GLC_Mesh();
@@ -1527,7 +1543,7 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 		if (m_pStreamReader->name() == "Representation")
 		{
 			QString id= readAttribute("id", true);
-			GLC_StructReference* pRef= createReferenceRep("3DXML_Local_" + id);
+			GLC_StructReference* pRef= createReferenceRep("3DXML_Local_" + id, NULL);
 			GLC_Rep* pRep= pRef->representationHandle();
 			if (pRep != NULL)
 			{
