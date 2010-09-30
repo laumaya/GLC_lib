@@ -480,6 +480,11 @@ QString GLC_WorldTo3dxml::representationFileName(const GLC_3DRep* pRep)
 	if (m_ExportType == StructureOnly)
 	{
 		QString newFileName= pRep->fileName();
+		// Test if the file name is encoded by GLC_Lib (Structure only loaded)
+		if (glc::isFileString(newFileName))
+		{
+			newFileName= glc::archiveEntryFileName(newFileName);
+		}
 		if (newFileName.isEmpty() || (glc::isArchiveString(newFileName)))
 		{
 			fileName= "urn:3DXML:NoFile_0.3DRep";

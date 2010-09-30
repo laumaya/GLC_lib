@@ -171,13 +171,10 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 		// Get the 3DXML time stamp
 		m_CurrentDateTime= QFileInfo(QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(fileName).fileName()).lastModified();
 	}
-	else if (fileName.left(6) == QString("File::"))
+	else if (glc::isFileString(fileName))
 	{
-		m_FileName= fileName;
-		m_FileName.remove("File::");
-		m_FileName= m_FileName.left(m_FileName.indexOf("::"));
-		m_CurrentFileName= fileName;
-		m_CurrentFileName.remove(QString("File::") + m_FileName + "::");
+		m_FileName= glc::archiveFileName(fileName);
+		m_CurrentFileName= glc::archiveEntryFileName(fileName);
 
 		// Get the rep time stamp
 		m_CurrentDateTime= QFileInfo(m_CurrentFileName).lastModified();
@@ -789,9 +786,9 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 			}
 			else
 			{
-				const QString repFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + m_CurrentFileName;
-				pRep->setFileName("File::" + m_FileName + "::" + repFileName);
-				m_ListOfAttachedFileName << repFileName;
+				const QString repFileName= glc::builtFileString(m_FileName, m_CurrentFileName);
+				pRep->setFileName(repFileName);
+				m_ListOfAttachedFileName << glc::archiveEntryFileName(repFileName);
 			}
 			if (m_GetExternalRef3DName && setStreamReaderToFile(m_CurrentFileName))
 			{
@@ -1741,9 +1738,9 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 			}
 			else
 			{
-				const QString repFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + m_CurrentFileName;
-				representation.setFileName("File::" + m_FileName + "::" + repFileName);
-				m_ListOfAttachedFileName << repFileName;
+				const QString repFileName= glc::builtFileString(m_FileName, m_CurrentFileName);
+				representation.setFileName(repFileName);
+				m_ListOfAttachedFileName << glc::archiveEntryFileName(repFileName);
 			}
 
 			repHash.insert(id, representation);
