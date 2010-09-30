@@ -96,16 +96,17 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Insert an attribute
+	//! Insert an attribute (if the attribute exists, it's updated)
 	inline void insert(const QString& name, const QString& value)
 	{
+		if ((!m_AttributesHash.contains(name))) m_AttributesList.append(name);
 		m_AttributesHash.insert(name, value);
-		m_AttributesList.append(name);
 	}
 
 	//! Remove an attribute
 	inline void remove(const QString& name)
 	{
+		Q_ASSERT(m_AttributesHash.contains(name));
 		m_AttributesHash.remove(name);
 		m_AttributesList.removeOne(name);
 	}
