@@ -93,11 +93,23 @@ namespace glc
 	//! Return GLC_lib Archive infix string
 	GLC_LIB_EXPORT const QString archiveInfix();
 
+	//! Return GLC_lib File prefix string
+	GLC_LIB_EXPORT const QString filePrefix();
+
+	//! Return GLC_lib File infix string
+	GLC_LIB_EXPORT const QString fileInfix();
+
 	//! Return true if the given file name is in a archive string
 	GLC_LIB_EXPORT bool isArchiveString(const QString& fileName);
 
+	//! Return true if the given file name is in a File string
+	GLC_LIB_EXPORT bool isFileString(const QString& fileName);
+
 	//! Return archive string form the given archive fileName and fileName entry
 	GLC_LIB_EXPORT QString builtArchiveString(const QString& Archive, const QString& entry);
+
+	//! Return archive string form the given archive fileName and fileName entry
+	GLC_LIB_EXPORT QString builtFileString(const QString& File, const QString& entry);
 
 	//! Return Archive filename from the given archive string
 	GLC_LIB_EXPORT QString archiveFileName(const QString& archiveString);
