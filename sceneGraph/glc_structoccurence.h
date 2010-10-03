@@ -112,6 +112,9 @@ public:
 	inline bool hasChild() const
 	{return childCount() > 0;}
 
+	//! Return true if the given occurence can be added to this occurence children
+	bool canBeAddedToChildren(GLC_StructOccurence* pOccurence) const;
+
 	//! Return The parent of this occurence
 	inline GLC_StructOccurence* parent() const
 	{return m_pParent;}
@@ -160,6 +163,12 @@ public:
 	//! Return the world handle of this occurence
 	inline GLC_WorldHandle* worldHandle() const
 	{return m_pWorldHandle;}
+
+	//! Return the Set of children references of this occurence
+	QSet<GLC_StructReference*> childrenReferences() const;
+
+	//! Return the set of parents references of the given occurence
+	static QSet<GLC_StructReference*> parentsReferences(const GLC_StructOccurence* pOccurence);
 
 
 //@}

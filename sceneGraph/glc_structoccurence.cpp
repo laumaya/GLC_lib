@@ -249,7 +249,27 @@ bool GLC_StructOccurence::has3DViewInstance() const
 	return returnValue;
 }
 
-// Get number of faces
+bool GLC_StructOccurence::canBeAddedToChildren(GLC_StructOccurence* pOccurence) const
+{
+	bool canBeAdded= false;
+	if ((NULL != m_pStructInstance) && (NULL != this->structReference()) && (NULL != pOccurence->m_pStructInstance) && (NULL != pOccurence->structReference()))
+	{
+		if (this->structReference() != pOccurence->structReference())
+		{
+			QSet<GLC_StructReference*> thisRefSet= GLC_StructOccurence::parentsReferences(this);
+			thisRefSet << this->structReference();
+			QSet<GLC_StructReference*> childRefSet= pOccurence->childrenReferences();
+
+			canBeAdded= thisRefSet == (thisRefSet - childRefSet);
+		}
+	}
+	else
+	{
+		canBeAdded= true;
+	}
+	return canBeAdded;
+}
+
 unsigned int GLC_StructOccurence::numberOfFaces() const
 {
 	unsigned int result= 0;
@@ -268,7 +288,6 @@ unsigned int GLC_StructOccurence::numberOfFaces() const
 	return result;
 }
 
-// Get number of vertex
 unsigned int GLC_StructOccurence::numberOfVertex() const
 {
 	unsigned int result= 0;
@@ -396,6 +415,38 @@ unsigned int GLC_StructOccurence::nodeCount() const
 		result+= m_Childs.at(i)->nodeCount();
 	}
 	return result;
+}
+
+QSet<GLC_StructReference*> GLC_StructOccurence::childrenReferences() const
+{
+	QSet<GLC_StructReference*> refChildrenSet;
+	const int childCount= m_Childs.size();
+	for (int i= 0; i < childCount; ++i)
+	{
+		GLC_StructOccurence* pCurrentChild= m_Childs.at(i);
+		if ((NULL != pCurrentChild->structInstance()) && (NULL != pCurrentChild->structReference()))
+		{
+			refChildrenSet << pCurrentChild->structReference();
+		}
+	}
+
+	return refChildrenSet;
+}
+
+QSet<GLC_StructReference*> GLC_StructOccurence::parentsReferences(const GLC_StructOccurence* pOccurence)
+{
+	QSet<GLC_StructReference*> parentSet;
+	GLC_StructOccurence* pParent= pOccurence->parent();
+	if (NULL != pParent)
+	{
+		if ((NULL != pParent->structInstance()) && (NULL != pParent->structReference()))
+		{
+			parentSet << pParent->structReference();
+			parentSet.unite(GLC_StructOccurence::parentsReferences(pParent));
+		}
+	}
+
+	return parentSet;
 }
 
 //////////////////////////////////////////////////////////////////////
