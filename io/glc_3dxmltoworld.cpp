@@ -585,7 +585,7 @@ void GLC_3dxmlToWorld::loadReference3D()
 				{
 					QString name= readAttribute("name", true);
 					QString value= readAttribute("value", true);
-					if (name == "FILEPATH")
+					if (name == "FILEPATH" && QDir(value).isRelative())
 					{
 						value= QFileInfo(m_FileName).absolutePath() + QDir::separator() + value;
 					}
@@ -644,9 +644,9 @@ void GLC_3dxmlToWorld::loadInstance3D()
 	{
 		pStructInstance->setAttributes(userAttributes);
 	}
-
 	if (instanceOf.contains(externRef))
 	{
+
 		const QString extRefId= instanceOf.remove(externRef).remove("#1");
 		m_SetOfExtRef << extRefId;
 		m_InstanceOfExtRefHash.insert(pStructInstance, extRefId);
@@ -764,10 +764,14 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 		}
 		else if (!m_LoadStructureOnly && setStreamReaderToFile(m_CurrentFileName))
 		{
+
+			// Avoid recursive call off createReferenceRep
+			const QString localFileName= m_CurrentFileName;
+
 			GLC_StructReference* pCurrentRef= createReferenceRep(QString(), NULL);
 			if (NULL != pCurrentRef)
 			{
-				m_ExternalReferenceHash.insert(m_CurrentFileName, pCurrentRef);
+				m_ExternalReferenceHash.insert(localFileName, pCurrentRef);
 			}
 			else
 			{
@@ -792,8 +796,9 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 			}
 			if (m_GetExternalRef3DName && setStreamReaderToFile(m_CurrentFileName))
 			{
+				const QString localFileName= m_CurrentFileName;
 				GLC_StructReference* pCurrentRef= createReferenceRep(QString(), pRep);
-				m_ExternalReferenceHash.insert(m_CurrentFileName, pCurrentRef);
+				m_ExternalReferenceHash.insert(localFileName, pCurrentRef);
 			}
 			else
 			{
@@ -867,7 +872,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 			repId.resize(repId.size() - 2);
 			if (setStreamReaderToFile(repId))
 			{
-				return createReferenceRep(QString(), NULL);
+				return createReferenceRep(QString(), pRep);
 			}
 			else
 			{
@@ -894,6 +899,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 	pMesh->setName(refName);
 	GLC_3DRep currentMesh3DRep(pMesh);
 	// Add time Stamp and file name to the 3D rep
+
 	if (repId.contains("3DXML_Local_"))
 	{
 		QString saveCurrentFileName= m_CurrentFileName;
