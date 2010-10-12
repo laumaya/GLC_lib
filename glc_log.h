@@ -43,8 +43,8 @@ class GLC_LIB_EXPORT GLC_Log
 //@{
 //////////////////////////////////////////////////////////////////////
 protected:
-	//! Construct a log of the given full fileName
-	GLC_Log(const QString& fullLogFileName);
+	//! Construct a log of the given base fileName
+	GLC_Log(const QString& baseLogFileName);
 public:
 	//! Destructor
 	virtual ~GLC_Log();
@@ -67,6 +67,10 @@ public:
 protected:
 	//! Add the given string to this log
 	void add(const QString& line);
+
+	//! Add blank line to this log
+	inline void addBlankLine()
+	{add(QString());}
 
 	//! Add a separator in the log
 	void addSeparator();

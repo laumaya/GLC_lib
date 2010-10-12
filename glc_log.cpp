@@ -62,6 +62,7 @@ void GLC_Log::addSeparator()
 {
 	Q_ASSERT(NULL != m_pFile);
 	const QString separator("---------------------------------------------------------------------");
+	qWarning() << separator;
 	m_TextStream << separator << '\n';
 	m_TextStream.flush();
 }
