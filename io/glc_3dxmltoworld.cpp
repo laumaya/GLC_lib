@@ -843,6 +843,12 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 		checkForXmlError("Element Reference3D not found");
 		refName= readAttribute("name", true);
 
+		if (pRep != NULL)
+		{
+			pRep->setName(refName);
+			return new GLC_StructReference(pRep);
+		}
+
 		goToElement("ReferenceRep");
 		if (m_pStreamReader->atEnd())
 		{
@@ -872,7 +878,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 			repId.resize(repId.size() - 2);
 			if (setStreamReaderToFile(repId))
 			{
-				return createReferenceRep(QString(), pRep);
+				return createReferenceRep(QString(), NULL);
 			}
 			else
 			{
@@ -887,12 +893,6 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 		checkForXmlError("attribute associatedFile not found");
 		goToRepId(repId);
 		checkForXmlError("repId not found");
-
-		if (pRep != NULL)
-		{
-			pRep->setName(refName);
-			return new GLC_StructReference(pRep);
-		}
 	}
 
 	GLC_Mesh* pMesh= new GLC_Mesh();
