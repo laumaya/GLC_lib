@@ -232,7 +232,7 @@ public:
 	//! Remove empty children
 	void removeEmptyChildren();
 
-	//! Set the reference to the given instance of this occurence
+	//! Set the given reference to this occurence
 	void setReference(GLC_StructReference* pRef);
 
 //@}
