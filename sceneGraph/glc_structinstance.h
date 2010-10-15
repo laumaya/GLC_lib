@@ -107,6 +107,10 @@ public:
 	inline GLC_Attributes* attributesHandle() const
 	{return m_pAttributes;}
 
+	//! Return the number of usage of this instance
+	inline int usageCount() const
+	{return *m_pNumberOfInstance;}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -121,7 +125,9 @@ public:
 	}
 
 	inline void structOccurenceDeleted(GLC_StructOccurence *pOccurence)
-	{m_ListOfOccurences.removeOne(pOccurence);}
+	{
+		m_ListOfOccurences.removeOne(pOccurence);
+	}
 
 	//! Move the instance by specified matrix
 	inline GLC_StructInstance* move(const GLC_Matrix4x4& matrix)
