@@ -28,6 +28,7 @@
 #include "glc_3dviewcollection.h"
 #include "glc_structreference.h"
 #include "glc_worldhandle.h"
+#include "../glc_errorlog.h"
 
 // Default constructor
 GLC_StructOccurence::GLC_StructOccurence()
@@ -229,6 +230,17 @@ GLC_StructOccurence::~GLC_StructOccurence()
 	else
 	{
 		m_pStructInstance->structOccurenceDeleted(this);
+		if (!m_pStructInstance->hasStructOccurence())
+		{
+			/*
+			QStringList errorList;
+			errorList << "StructOccurence count error";
+			errorList << ("ref name = " + m_pStructInstance->structReference()->name());
+			GLC_ErrorLog::addError(errorList);
+			*/
+			delete m_pStructInstance;
+			//delete m_pNumberOfOccurence;
+		}
 	}
 
 	delete m_pRenderProperties;
