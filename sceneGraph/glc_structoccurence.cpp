@@ -232,12 +232,12 @@ GLC_StructOccurence::~GLC_StructOccurence()
 		m_pStructInstance->structOccurenceDeleted(this);
 		if (!m_pStructInstance->hasStructOccurence())
 		{
-			/*
+
 			QStringList errorList;
 			errorList << "StructOccurence count error";
 			errorList << ("ref name = " + m_pStructInstance->structReference()->name());
 			GLC_ErrorLog::addError(errorList);
-			*/
+
 			delete m_pStructInstance;
 			//delete m_pNumberOfOccurence;
 		}
@@ -736,15 +736,31 @@ void GLC_StructOccurence::setReference(GLC_StructReference* pRef)
 		if (pExistingInstance->hasStructOccurence())
 		{
 			GLC_StructOccurence* pFirstOccurence= pExistingInstance->firstOccurenceHandle();
-			delete m_pNumberOfOccurence;
-			m_pNumberOfOccurence= pFirstOccurence->m_pNumberOfOccurence;
-			++(*m_pNumberOfOccurence);
+			//delete m_pNumberOfOccurence;
+			//m_pNumberOfOccurence= pFirstOccurence->m_pNumberOfOccurence;
+			//++(*m_pNumberOfOccurence);
 			QList<GLC_StructOccurence*> childs= pFirstOccurence->m_Childs;
 			const int size= childs.size();
 			for (int i= 0; i < size; ++i)
 			{
 				GLC_StructOccurence* pChild= childs.at(i)->clone(m_pWorldHandle, true);
 				addChild(pChild);
+			}
+
+			QList<GLC_StructInstance*> instances= pRef->listOfStructInstances();
+			const int instanceCount= instances.size();
+			int i= 0;
+			bool continu= true;
+			while (continu && (i < instanceCount))
+			{
+				if (m_pStructInstance == instances.at(i))
+				{
+					continu= false;
+					delete m_pNumberOfOccurence;
+					m_pNumberOfOccurence= instances.at(i)->firstOccurenceHandle()->m_pNumberOfOccurence;
+					++(*m_pNumberOfOccurence);
+				}
+				++i;
 			}
 		}
 	}
