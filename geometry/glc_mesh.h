@@ -152,7 +152,7 @@ public:
 	inline bool containsLod(int lod) const
 	{return (NULL != m_MeshData.getLod(lod));}
 
-	//! Return true if the specified LOD conatins the specified material
+	//! Return true if the specified LOD contains the specified material
 	inline bool lodContainsMaterial(int lod, GLC_uint materialId) const
 	{
 		if (!m_PrimitiveGroups.contains(lod))return false;
