@@ -43,6 +43,7 @@ GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
 , m_pCurrentMaterial(NULL)
 , m_TextureToMaterialHash()
 , m_BulkDataHash()
+, m_DataAccessorHash()
 , m_VerticesSourceHash()
 , m_pMeshInfo(NULL)
 , m_GeometryHash()
@@ -253,6 +254,7 @@ void GLC_ColladaToWorld::clear()
 	m_TextureToMaterialHash.clear();
 
 	m_BulkDataHash.clear();
+	m_DataAccessorHash.clear();
 
 	m_VerticesSourceHash.clear();
 
@@ -815,10 +817,7 @@ void GLC_ColladaToWorld::loadVertexBulkData()
 					vertices.append(list.at(i).toFloat());
 				}
 			}
-			else if (currentElementName == "technique_common")
-			{
-
-			}
+			else if (currentElementName == "technique_common") loadTechniqueCommon();
 		}
 
 		m_pStreamReader->readNext();
@@ -827,6 +826,54 @@ void GLC_ColladaToWorld::loadVertexBulkData()
 	m_BulkDataHash.insert(m_CurrentId, vertices);
 
 	updateProgressBar();
+}
+
+void GLC_ColladaToWorld::loadTechniqueCommon()
+{
+	//qDebug() << "GLC_ColladaToWorld::loadTechniqueCommon()";
+
+	while (endElementNotReached("technique_common"))
+	{
+		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+		{
+			const QStringRef currentElementName= m_pStreamReader->name();
+			if ((currentElementName == "accessor")) loadAccessor();
+		}
+
+		m_pStreamReader->readNext();
+	}
+	checkForXmlError("Error occur while loading element : technique_common");
+
+}
+
+void GLC_ColladaToWorld::loadAccessor()
+{
+	//qDebug() << "GLC_ColladaToWorld::loadAccessor()";
+	Accessor accessor;
+	const QString count= readAttribute("count", true);
+	const QString offset= readAttribute("offset", false);
+	const QString stride= readAttribute("stride", false);
+	bool conversionOk;
+	accessor.m_Count= count.toUInt(&conversionOk);
+	if (conversionOk)
+	{
+		if (!offset.isEmpty())
+		{
+			accessor.m_Offset= offset.toUInt(&conversionOk);
+		}
+		if (!stride.isEmpty())
+		{
+			accessor.m_Stride= stride.toUInt(&conversionOk);
+		}
+	}
+
+	while (endElementNotReached("accessor"))
+	{
+		m_pStreamReader->readNext();
+	}
+	checkForXmlError("Error occur while loading element : technique_common");
+
+	m_DataAccessorHash.insert(m_CurrentId, accessor);
 }
 
 // Load attributes and identity of mesh vertices
@@ -1057,7 +1104,11 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 				// QHash iterator on the right QList<float>
 				BulkDataHash::const_iterator iBulkHash= m_BulkDataHash.find(currentInputData.m_Source);
 				int stride;
-				if (currentInputData.m_Semantic != TEXCOORD) stride= 3; else stride= 2;
+				if (m_DataAccessorHash.contains(currentInputData.m_Source))
+				{
+					stride= m_DataAccessorHash.value(currentInputData.m_Source).m_Stride;
+				}
+				else if (currentInputData.m_Semantic != TEXCOORD) stride= 3; else stride= 2;
 				// Firts value
 				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset) * stride));
 				// Second value
@@ -1301,7 +1352,11 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 				// QHash iterator on the right QList<float>
 				BulkDataHash::const_iterator iBulkHash= m_BulkDataHash.find(currentInputData.m_Source);
 				int stride;
-				if (currentInputData.m_Semantic != TEXCOORD) stride= 3; else stride= 2;
+				if (m_DataAccessorHash.contains(currentInputData.m_Source))
+				{
+					stride= m_DataAccessorHash.value(currentInputData.m_Source).m_Stride;
+				}
+				else if (currentInputData.m_Semantic != TEXCOORD) stride= 3; else stride= 2;
 				// Firts value
 				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(trianglesIndexList.at(i + currentInputData.m_Offset) * stride));
 				// Second value
