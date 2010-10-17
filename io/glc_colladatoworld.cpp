@@ -1049,7 +1049,7 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 
 	// Flag to know if the polylist has normal
 	bool hasNormals= false;
-
+	bool hasTexture= false;
 	// Check the existance of data source
 	for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
 	{
@@ -1059,6 +1059,7 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 			throwException(" Source : " + source + " Not found");
 		}
 		if (inputDataList.at(dataIndex).m_Semantic == NORMAL) hasNormals= true;
+		if (inputDataList.at(dataIndex).m_Semantic == TEXCOORD) hasTexture= true;
 	}
 
 	int maxOffset= 0;
@@ -1119,6 +1120,12 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 					m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset) * stride + 2));
 				}
 			}
+			// Avoid problem wich occur with mesh containing materials with and without texture
+			if (!hasTexture)
+			{
+				m_pMeshInfo->m_Datas[TEXCOORD].append(0.0);
+			}
+
 		}
 	}
 
@@ -1297,6 +1304,7 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 
 	// Flag to know if the polylist has normal
 	bool hasNormals= false;
+	bool hasTexture= false;
 
 	// Check the existance of data source
 	for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
@@ -1307,6 +1315,7 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 			throwException(" Source : " + source + " Not found");
 		}
 		if (inputDataList.at(dataIndex).m_Semantic == NORMAL) hasNormals= true;
+		if (inputDataList.at(dataIndex).m_Semantic == TEXCOORD) hasTexture= true;
 	}
 
 	int maxOffset= 0;
@@ -1365,6 +1374,11 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 				if (currentInputData.m_Semantic != TEXCOORD)
 				{
 					m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(trianglesIndexList.at(i + currentInputData.m_Offset) * stride + 2));
+				}
+				// Avoid problem wich occur with mesh containing materials with and without texture
+				if (!hasTexture)
+				{
+					m_pMeshInfo->m_Datas[TEXCOORD].append(0.0);
 				}
 			}
 		}
