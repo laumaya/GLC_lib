@@ -229,7 +229,7 @@ void GLC_Cylinder::createMeshAndWire()
 		normalsVector[3 * i + 1 + 3 * vertexNumber]= sinNormalArray[i];
 		normalsVector[3 * i + 2 + 3 * vertexNumber]= 0.0f;
 
-		texelVector[2 * i + 2 * vertexNumber]= texelVector[i];
+		texelVector[2 * i + 2 * vertexNumber]= texelVector[2 * i];
 		texelVector[2 * i + 1 + 2 * vertexNumber]= 1.0f;
 
 		// Top Wire
@@ -248,7 +248,7 @@ void GLC_Cylinder::createMeshAndWire()
 			normalsVector[3 * i + 1 + 2 * 3 * vertexNumber]= 0.0f;
 			normalsVector[3 * i + 2 + 2 * 3 * vertexNumber]= -1.0f;
 
-			texelVector[2 * i + 2 * 2 * vertexNumber]= texelVector[i];
+			texelVector[2 * i + 2 * 2 * vertexNumber]= texelVector[2 * i];
 			texelVector[2 * i + 1 + 2 * 2 * vertexNumber]= 0.0f;
 
 			// Top Cap ends
@@ -260,8 +260,8 @@ void GLC_Cylinder::createMeshAndWire()
 			normalsVector[3 * i + 1 + 3 * 3 * vertexNumber]= 0.0f;
 			normalsVector[3 * i + 2 + 3 * 3 * vertexNumber]= 1.0f;
 
-			texelVector[2 * i + 3 * 2 * vertexNumber]= texelVector[i];
-			texelVector[2 * i + 1 + 3 * 2 * vertexNumber]= 0.0f;
+			texelVector[2 * i + 3 * 2 * vertexNumber]= texelVector[2 * i];
+			texelVector[2 * i + 1 + 3 * 2 * vertexNumber]= 1.0f;
 		}
 	}
 
