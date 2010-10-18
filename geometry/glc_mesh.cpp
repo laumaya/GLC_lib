@@ -366,6 +366,159 @@ QList<QVector<GLuint> > GLC_Mesh::getFansIndex(int lod, GLC_uint materialId) con
 	return result;
 }
 
+GLC_Mesh* GLC_Mesh::createMeshOfGivenLod(int lodIndex)
+{
+	Q_ASSERT(m_MeshData.lodCount() > lodIndex);
+
+	copyVboToClientSide();
+	GLC_Mesh* pLodMesh= new GLC_Mesh;
+	QHash<GLuint, GLuint> sourceToTargetIndexMap;
+	QHash<GLuint, GLuint> tagetToSourceIndexMap;
+	int maxIndex= -1;
+
+	//! The list of LOD material ID
+	QList<GLuint> materialId= m_PrimitiveGroups.value(lodIndex)->keys();
+
+	const int materialCount= materialId.size();
+	for (int i= 0; i < materialCount; ++i)
+	{
+		GLuint currentMaterialId= materialId.at(i);
+		GLC_Material* pCurrentMaterial= GLC_Geometry::material(currentMaterialId);
+
+		// Triangles
+		if (containsTriangles(lodIndex, currentMaterialId))
+		{
+			QVector<GLuint> sourceTriangleIndex= getTrianglesIndex(lodIndex, currentMaterialId);
+			QList<GLuint> targetTriangleIndex;
+			const int triangleIndexCount= sourceTriangleIndex.size();
+			for (int i= 0; i < triangleIndexCount; ++i)
+			{
+				const GLuint currentIndex= sourceTriangleIndex.at(i);
+				if (!sourceToTargetIndexMap.contains(currentIndex))
+				{
+					sourceToTargetIndexMap.insert(currentIndex, ++maxIndex);
+					tagetToSourceIndexMap.insert(maxIndex, currentIndex);
+					targetTriangleIndex.append(maxIndex);
+				}
+				else
+				{
+					targetTriangleIndex.append(sourceToTargetIndexMap.value(currentIndex));
+				}
+			}
+			pLodMesh->addTriangles(pCurrentMaterial, targetTriangleIndex, 0, m_MeshData.getLod(lodIndex)->accuracy());
+		}
+
+		//Triangles strips
+		if (containsStrips(lodIndex, currentMaterialId))
+		{
+			QList<QVector<GLuint> > sourceStripIndex= getStripsIndex(lodIndex, currentMaterialId);
+			const int stripCount= sourceStripIndex.size();
+			for (int stripIndex= 0; stripIndex < stripCount; ++stripIndex)
+			{
+
+				QVector<GLuint> sourceTriangleStripIndex= sourceStripIndex.at(stripIndex);
+				QList<GLuint> targetTriangleStripIndex;
+				const int triangleStripIndexCount= sourceTriangleStripIndex.size();
+				for (int i= 0; i < triangleStripIndexCount; ++i)
+				{
+					const GLuint currentIndex= sourceTriangleStripIndex.at(i);
+					if (!sourceToTargetIndexMap.contains(currentIndex))
+					{
+						sourceToTargetIndexMap.insert(currentIndex, ++maxIndex);
+						tagetToSourceIndexMap.insert(maxIndex, currentIndex);
+						targetTriangleStripIndex.append(maxIndex);
+					}
+					else
+					{
+						targetTriangleStripIndex.append(sourceToTargetIndexMap.value(currentIndex));
+					}
+				}
+				pLodMesh->addTrianglesStrip(pCurrentMaterial, targetTriangleStripIndex, 0, m_MeshData.getLod(lodIndex)->accuracy());
+			}
+		}
+		//Triangles fans
+		if (containsFans(lodIndex, currentMaterialId))
+		{
+			QList<QVector<GLuint> > sourceFanIndex= getFansIndex(lodIndex, currentMaterialId);
+			const int fanCount= sourceFanIndex.size();
+			for (int fanIndex= 0; fanIndex < fanCount; ++fanIndex)
+			{
+
+				QVector<GLuint> sourceTriangleFanIndex= sourceFanIndex.at(fanIndex);
+				QList<GLuint> targetTriangleFanIndex;
+				const int triangleFanIndexCount= sourceTriangleFanIndex.size();
+				for (int i= 0; i < triangleFanIndexCount; ++i)
+				{
+					const GLuint currentIndex= sourceTriangleFanIndex.at(i);
+					if (!sourceToTargetIndexMap.contains(currentIndex))
+					{
+						sourceToTargetIndexMap.insert(currentIndex, ++maxIndex);
+						tagetToSourceIndexMap.insert(maxIndex, currentIndex);
+						targetTriangleFanIndex.append(maxIndex);
+					}
+					else
+					{
+						targetTriangleFanIndex.append(sourceToTargetIndexMap.value(currentIndex));
+					}
+				}
+				pLodMesh->addTrianglesFan(pCurrentMaterial, targetTriangleFanIndex, 0, m_MeshData.getLod(lodIndex)->accuracy());
+			}
+		}
+
+
+	}
+
+	GLfloatVector tempFloatVector;
+	int stride= 3;
+	// Extract position bulk data
+	Q_ASSERT(!m_MeshData.positionVectorHandle()->isEmpty());
+	tempFloatVector.resize(stride * (maxIndex + 1));
+	for (int i= 0; i < maxIndex + 1; ++i)
+	{
+		GLfloat* pTarget= &(tempFloatVector.data()[i * stride]);
+		GLfloat* pSource= &(m_MeshData.positionVectorHandle()->data()[tagetToSourceIndexMap.value(i) * stride]);
+
+		memcpy(pTarget, pSource, sizeof(GLfloat) * stride);
+	}
+	pLodMesh->addVertice(tempFloatVector);
+	tempFloatVector.clear();
+
+	// Extract normal bulk data
+	Q_ASSERT(!m_MeshData.normalVectorHandle()->isEmpty());
+	tempFloatVector.resize(stride * (maxIndex + 1));
+	for (int i= 0; i < maxIndex + 1; ++i)
+	{
+		GLfloat* pTarget= &(tempFloatVector.data()[i * stride]);
+		GLfloat* pSource= &(m_MeshData.normalVectorHandle()->data()[tagetToSourceIndexMap.value(i) * stride]);
+
+		memcpy(pTarget, pSource, sizeof(GLfloat) * stride);
+	}
+	pLodMesh->addNormals(tempFloatVector);
+	tempFloatVector.clear();
+
+	if (!m_MeshData.texelVectorHandle()->isEmpty())
+	{
+		// Extract texel bulk data
+		stride= 2;
+		tempFloatVector.resize(stride * (maxIndex + 1));
+
+		for (int i= 0; i < maxIndex + 1; ++i)
+		{
+			GLfloat* pTarget= &(tempFloatVector.data()[i * stride]);
+			GLfloat* pSource= &(m_MeshData.texelVectorHandle()->data()[tagetToSourceIndexMap.value(i) * stride]);
+
+			memcpy(pTarget, pSource, sizeof(GLfloat) * stride);
+		}
+		pLodMesh->addTexels(tempFloatVector);
+		tempFloatVector.clear();
+	}
+
+	pLodMesh->finish();
+
+	releaseVboClientSide(false);
+
+	return pLodMesh;
+}
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

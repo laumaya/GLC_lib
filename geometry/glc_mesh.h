@@ -179,6 +179,9 @@ public:
 	inline QColor wireColor() const
 	{return m_WireColor;}
 
+	//! Create a mesh from the given LOD index
+	GLC_Mesh* createMeshOfGivenLod(int index);
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
