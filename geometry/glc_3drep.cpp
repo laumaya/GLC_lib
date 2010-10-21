@@ -312,7 +312,7 @@ void GLC_3DRep::replaceMaterial(GLC_uint oldId, GLC_Material* pNewMaterial)
 }
 
 // Merge this 3Drep with another 3DRep
-void GLC_3DRep::merge(GLC_3DRep* pRep)
+void GLC_3DRep::merge(const GLC_3DRep* pRep)
 {
 	// Get the number of geometry of pRep
 	const int pRepSize= pRep->m_pGeomList->size();
@@ -320,6 +320,17 @@ void GLC_3DRep::merge(GLC_3DRep* pRep)
 	{
 		addGeom(pRep->geomAt(i)->clone());
 	}
+}
+
+void GLC_3DRep::take(GLC_3DRep* pSource)
+{
+	// Get the number of geometry of pRep
+	const int pRepSize= pSource->m_pGeomList->size();
+	for (int i= 0; i < pRepSize; ++i)
+	{
+		addGeom(pSource->geomAt(i));
+	}
+	pSource->m_pGeomList->clear();
 }
 
 void GLC_3DRep::copyVboToClientSide()
@@ -339,6 +350,21 @@ void GLC_3DRep::releaseVboClientSide(bool update)
 	for (int i= 0; i < pRepSize; ++i)
 	{
 		geomAt(i)->releaseVboClientSide(update);
+	}
+}
+
+void GLC_3DRep::transformSubGeometries(const GLC_Matrix4x4& matrix)
+{
+	// Get the number of geometry of pRep
+	const int repCount= m_pGeomList->size();
+	qDebug() << "repCount " << repCount;
+	for (int i= 0; i < repCount; ++i)
+	{
+		GLC_Mesh* pCurrentMesh= dynamic_cast<GLC_Mesh*>(geomAt(i));
+		if (NULL != pCurrentMesh)
+		{
+			pCurrentMesh->transformVertice(matrix);
+		}
 	}
 }
 
