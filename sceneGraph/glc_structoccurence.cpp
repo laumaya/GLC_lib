@@ -394,7 +394,7 @@ GLC_BoundingBox GLC_StructOccurence::boundingBox() const
 {
 	GLC_BoundingBox boundingBox;
 
-	if (!isOrphan() && (NULL != m_pWorldHandle))
+	if (NULL != m_pWorldHandle)
 	{
 		if (m_HasRepresentation)
 		{
@@ -415,6 +415,7 @@ GLC_BoundingBox GLC_StructOccurence::boundingBox() const
 			}
 		}
 	}
+
 	return boundingBox;
 }
 
