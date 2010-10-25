@@ -28,6 +28,9 @@
 #include "../maths/glc_geomtools.h"
 #include "../glc_factory.h"
 
+static QString prefixNodeId= "GLC_LIB_COLLADA_ID_";
+static int currentNodeId= 0;
+
 // Default constructor
 GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
 : QObject()
@@ -58,7 +61,7 @@ GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
 , m_ListOfAttachedFileName()
 , m_TransparentIsRgbZero(false)
 {
-
+	currentNodeId= 0;
 }
 
 // Destructor
@@ -1565,11 +1568,19 @@ void GLC_ColladaToWorld::loadController()
 GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pParent)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadNode";
+
+
 	QString id= readAttribute("id", false);
 	if (id.isEmpty())
 	{
-		id= readAttribute("name", true);
+		id= readAttribute("name", false);
 	}
+	if (id.isEmpty())
+	{
+		id= prefixNodeId + QString::number(++currentNodeId);
+	}
+
+	qint64 currentOffset= m_pStreamReader->characterOffset();
 	//qDebug() << "Load Node " << id;
 	m_CurrentId= id;
 	// The node
@@ -1592,14 +1603,14 @@ GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pPare
 			else if ((currentElementName == "instance_controller")) loadInstanceController(pNode);
 			else if ((currentElementName == "node"))
 			{
-				QString newId= readAttribute("id", false);
-				if (newId.isEmpty())
+				if (currentOffset != m_pStreamReader->characterOffset())
 				{
-					//qDebug() << "Child ReadAttribute name";
-					newId= readAttribute("name", true);
-				}
-				if (newId != id)
-				{
+					QString newId= readAttribute("id", false);
+					if (newId.isEmpty())
+					{
+						//qDebug() << "Child ReadAttribute name";
+						newId= readAttribute("name", false);
+					}
 					//qDebug() << "New ID = " << newId;
 					GLC_ColladaToWorld::ColladaNode* pChildNode= loadNode(pNode);
 					if (NULL != pNode)

@@ -456,7 +456,6 @@ private:
 	//! The transparent mode is RGB_ZERO
 	bool m_TransparentIsRgbZero;
 
-
 };
 
 // To use ColladaVertice as a QHash key
