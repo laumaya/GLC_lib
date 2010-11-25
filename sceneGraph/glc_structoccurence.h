@@ -86,6 +86,10 @@ public:
 	inline bool isOrphan() const
 	{ return NULL == m_pParent;}
 
+	//! Return true if this occurence has parent
+	inline bool hasParent() const
+	{ return NULL != m_pParent;}
+
 	//! Return true if this occurence has a representation
 	inline bool hasRepresentation() const
 	{ return m_HasRepresentation;}
