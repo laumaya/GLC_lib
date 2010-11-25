@@ -46,6 +46,7 @@ GLC_3DRep::GLC_3DRep(GLC_Geometry* pGeom)
 , m_pType(new int(GLC_Rep::GLC_VBOGEOM))
 {
 	m_pGeomList->append(pGeom);
+	*m_pIsLoaded= true;
 	setName(pGeom->name());
 }
 
@@ -372,7 +373,7 @@ void GLC_3DRep::transformSubGeometries(const GLC_Matrix4x4& matrix)
 bool GLC_3DRep::unload()
 {
 	bool unloadSucess= false;
-	if (*m_pIsLoaded)
+	if ((NULL != m_pGeomList) && !m_pGeomList->isEmpty())
 	{
 		if (fileName().isEmpty())
 		{
