@@ -122,15 +122,20 @@ void GLC_StructReference::setRepresentation(const GLC_3DRep& rep)
 	// Update all occurence of this reference if exist
 	if (hasStructInstance())
 	{
-		GLC_StructInstance* pInstance= firstInstanceHandle();
-		if (pInstance->hasStructOccurence())
+		QSet<GLC_StructInstance*>::iterator iInstance= m_SetOfInstance.begin();
+		while (m_SetOfInstance.constEnd() != iInstance)
 		{
-			QList<GLC_StructOccurence*> occurenceList= pInstance->listOfStructOccurences();
-			const int size= occurenceList.size();
-			for (int i= 0; i < size; ++i)
+			GLC_StructInstance* pInstance= *iInstance;
+			if (pInstance->hasStructOccurence())
 			{
-				occurenceList[i]->checkForRepresentation();
+				QList<GLC_StructOccurence*> occurenceList= pInstance->listOfStructOccurences();
+				const int size= occurenceList.size();
+				for (int i= 0; i < size; ++i)
+				{
+					occurenceList[i]->checkForRepresentation();
+				}
 			}
+			++iInstance;
 		}
 	}
 }
