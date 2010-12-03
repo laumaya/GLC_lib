@@ -76,7 +76,8 @@ HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_3dxmltoworld.h \
 						io/glc_colladatoworld.h \
 						io/glc_worldto3dxml.h \
-						io/glc_bsreptoworld.h
+						io/glc_bsreptoworld.h \
+						io/glc_xmlutil.h
 
 HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_3dviewinstance.h \
@@ -151,7 +152,8 @@ HEADERS_GLC += glc_global.h \
            glc_renderstatistics.h \
            glc_log.h \
            glc_errorlog.h \
-           glc_tracelog.h
+           glc_tracelog.h \
+           glc_openglstate.h
            
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_cuttingplane.h \
@@ -294,7 +296,8 @@ SOURCES +=	glc_global.cpp \
 			glc_renderstatistics.cpp \
 			glc_log.cpp \
 			glc_errorlog.cpp \
-			glc_tracelog.cpp
+			glc_tracelog.cpp \
+			glc_openglstate.cpp
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_cuttingplane.cpp \
@@ -395,7 +398,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Axis \
     		   include/GLC_Log \
     		   include/GLC_ErrorLog \
-    		   include/GLC_TraceLog
+    		   include/GLC_TraceLog \
+    		   include/glcXmlUtil \
+    		   include/GLC_OpenGLState
     		   
     			   
 # Linux and macx install configuration
