@@ -213,14 +213,6 @@ private:
 	//! Throw an exception with the specified text
 	void throwException(const QString&);
 
-	//! Return true if the end of specified element is not reached
-	inline bool endElementNotReached(const QString& element)
-	{return !m_pStreamReader->atEnd() && !(m_pStreamReader->isEndElement() && (m_pStreamReader->name() == element));}
-
-	//! Return true if the start of specified element is not reached
-	inline bool startElementNotReached(const QString& element)
-	{return !m_pStreamReader->atEnd() && !(m_pStreamReader->isStartElement() && (m_pStreamReader->name() == element));}
-
 	//! Clear memmory
 	void clear();
 

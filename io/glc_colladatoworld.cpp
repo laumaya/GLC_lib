@@ -27,9 +27,12 @@
 #include "../glc_fileformatexception.h"
 #include "../maths/glc_geomtools.h"
 #include "../glc_factory.h"
+#include "glc_xmlutil.h"
 
 static QString prefixNodeId= "GLC_LIB_COLLADA_ID_";
 static int currentNodeId= 0;
+
+using namespace glcXmlUtil;
 
 // Default constructor
 GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
@@ -104,7 +107,7 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 
 	// Go to the asset Element to get the Up vector
 	goToElement("asset");
-	while (endElementNotReached("asset"))
+	while (endElementNotReached(m_pStreamReader, "asset"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -120,7 +123,7 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 		m_pStreamReader->readNext();
 	}
 
-	while (endElementNotReached("COLLADA"))
+	while (endElementNotReached(m_pStreamReader, "COLLADA"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -157,7 +160,7 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 // Go to Element
 void GLC_ColladaToWorld::goToElement(const QString& elementName)
 {
-	while(startElementNotReached(elementName))
+	while(startElementNotReached(m_pStreamReader, elementName))
 	{
 		m_pStreamReader->readNext();
 	}
@@ -167,7 +170,7 @@ void GLC_ColladaToWorld::goToElement(const QString& elementName)
 // Go to the end Element of a xml
 void GLC_ColladaToWorld::goToEndElement(const QString& elementName)
 {
-	while(endElementNotReached(elementName))
+	while(endElementNotReached(m_pStreamReader, elementName))
 	{
 		m_pStreamReader->readNext();
 	}
@@ -178,7 +181,7 @@ void GLC_ColladaToWorld::goToEndElement(const QString& elementName)
 QString GLC_ColladaToWorld::getContent(const QString& element)
 {
 	QString Content;
-	while(endElementNotReached(element))
+	while(endElementNotReached(m_pStreamReader, element))
 	{
 		m_pStreamReader->readNext();
 		if (m_pStreamReader->isCharacters() && !m_pStreamReader->text().isEmpty())
@@ -308,7 +311,7 @@ void GLC_ColladaToWorld::clear()
 // Load library_images element
 void GLC_ColladaToWorld::loadLibraryImage()
 {
-	while (endElementNotReached("library_images"))
+	while (endElementNotReached(m_pStreamReader, "library_images"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -330,7 +333,7 @@ void GLC_ColladaToWorld::loadImage()
 	m_CurrentId= readAttribute("id", true);
 	QString fileName;
 	// Trying to find external image fileName
-	while (endElementNotReached("image"))
+	while (endElementNotReached(m_pStreamReader, "image"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -355,7 +358,7 @@ void GLC_ColladaToWorld::loadImage()
 // Load library_materials element
 void GLC_ColladaToWorld::loadLibraryMaterials()
 {
-	while (endElementNotReached("library_materials"))
+	while (endElementNotReached(m_pStreamReader, "library_materials"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -383,7 +386,7 @@ void GLC_ColladaToWorld::loadMaterial()
 	//qDebug() << "instance effect URL : " << url;
 
 	// Read instance effect parameters
-	while (endElementNotReached("instance_effect"))
+	while (endElementNotReached(m_pStreamReader, "instance_effect"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -410,7 +413,7 @@ void GLC_ColladaToWorld::loadMaterial()
 // Load library_effects element
 void GLC_ColladaToWorld::loadLibraryEffects()
 {
-	while (endElementNotReached("library_effects"))
+	while (endElementNotReached(m_pStreamReader, "library_effects"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -434,7 +437,7 @@ void GLC_ColladaToWorld::loadEffect()
 	m_pCurrentMaterial= new GLC_Material();
 	m_pCurrentMaterial->setName(id);
 
-	while (endElementNotReached("effect"))
+	while (endElementNotReached(m_pStreamReader, "effect"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -455,7 +458,7 @@ void GLC_ColladaToWorld::loadEffect()
 void GLC_ColladaToWorld::loadProfileCommon()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadProfileCommon";
-	while (endElementNotReached("profile_COMMON"))
+	while (endElementNotReached(m_pStreamReader, "profile_COMMON"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -475,7 +478,7 @@ void GLC_ColladaToWorld::loadNewParam()
 	//qDebug() << "GLC_ColladaToWorld::loadNewParam";
 	// load param sid
 	const QString sid= m_CurrentId + "::" + readAttribute("sid", true);
-	while (endElementNotReached("newparam"))
+	while (endElementNotReached(m_pStreamReader, "newparam"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -492,7 +495,7 @@ void GLC_ColladaToWorld::loadNewParam()
 void GLC_ColladaToWorld::loadSurface(const QString& sid)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadSurface sid=" << sid ;
-	while (endElementNotReached("surface"))
+	while (endElementNotReached(m_pStreamReader, "surface"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -512,7 +515,7 @@ void GLC_ColladaToWorld::loadSurface(const QString& sid)
 void GLC_ColladaToWorld::loadSampler2D(const QString& sid)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadSampler2D sid= " << sid;
-	while (endElementNotReached("sampler2D"))
+	while (endElementNotReached(m_pStreamReader, "sampler2D"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -532,7 +535,7 @@ void GLC_ColladaToWorld::loadSampler2D(const QString& sid)
 void GLC_ColladaToWorld::loadTechnique()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadTechnique";
-	while (endElementNotReached("technique"))
+	while (endElementNotReached(m_pStreamReader, "technique"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -550,7 +553,7 @@ void GLC_ColladaToWorld::loadTechnique()
 void GLC_ColladaToWorld::loadMaterialTechnique(const QString& elementName)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadMaterialTechnique";
-	while (endElementNotReached(elementName))
+	while (endElementNotReached(m_pStreamReader, elementName))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -575,7 +578,7 @@ void GLC_ColladaToWorld::loadCommonColorOrTexture(const QString& name)
 	//qDebug() << "GLC_ColladaToWorld::loadCommonColorOrTexture " << name;
 	Q_ASSERT(NULL != m_pCurrentMaterial);
 
-	while (endElementNotReached(name))
+	while (endElementNotReached(m_pStreamReader, name))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -612,7 +615,7 @@ void GLC_ColladaToWorld::loadTransparency(const QString& name)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadTransparency";
 	Q_ASSERT(NULL != m_pCurrentMaterial);
-	while (endElementNotReached(name))
+	while (endElementNotReached(m_pStreamReader, name))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -647,7 +650,7 @@ void GLC_ColladaToWorld::loadShininess(const QString& name)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadShininess";
 	Q_ASSERT(NULL != m_pCurrentMaterial);
-	while (endElementNotReached(name))
+	while (endElementNotReached(m_pStreamReader, name))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -717,7 +720,7 @@ QColor GLC_ColladaToWorld::readXmlColor()
 // Load library_geometries element
 void GLC_ColladaToWorld::loadLibraryGeometries()
 {
-	while (endElementNotReached("library_geometries"))
+	while (endElementNotReached(m_pStreamReader, "library_geometries"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -751,7 +754,7 @@ void GLC_ColladaToWorld::loadGeometry()
 		qDebug() << "Geometry without id found !!";
 	}
 
-	while (endElementNotReached("geometry"))
+	while (endElementNotReached(m_pStreamReader, "geometry"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -774,7 +777,7 @@ void GLC_ColladaToWorld::loadGeometry()
 // Load a mesh
 void GLC_ColladaToWorld::loadMesh()
 {
-	while (endElementNotReached("mesh"))
+	while (endElementNotReached(m_pStreamReader, "mesh"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -802,7 +805,7 @@ void GLC_ColladaToWorld::loadVertexBulkData()
 	//qDebug() << "id=" << m_CurrentId;
 	QList<float> vertices;
 
-	while (endElementNotReached("source"))
+	while (endElementNotReached(m_pStreamReader, "source"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -835,7 +838,7 @@ void GLC_ColladaToWorld::loadTechniqueCommon()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadTechniqueCommon()";
 
-	while (endElementNotReached("technique_common"))
+	while (endElementNotReached(m_pStreamReader, "technique_common"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -870,7 +873,7 @@ void GLC_ColladaToWorld::loadAccessor()
 		}
 	}
 
-	while (endElementNotReached("accessor"))
+	while (endElementNotReached(m_pStreamReader, "accessor"))
 	{
 		m_pStreamReader->readNext();
 	}
@@ -911,7 +914,7 @@ void GLC_ColladaToWorld::loadPolylist()
 	// Polygon index list
 	QList<int> polyIndexList;
 
-	while (endElementNotReached("polylist"))
+	while (endElementNotReached(m_pStreamReader, "polylist"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -989,7 +992,7 @@ void GLC_ColladaToWorld::loadPolygons()
 	int inputCount= 0;
 	// Polygon index list
 	QList<int> polyIndexList;
-	while (endElementNotReached("polygons"))
+	while (endElementNotReached(m_pStreamReader, "polygons"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1245,7 +1248,7 @@ void  GLC_ColladaToWorld::loadTriangles()
 	// triangle index list
 	QList<int> trianglesIndexList;
 
-	while (endElementNotReached("triangles"))
+	while (endElementNotReached(m_pStreamReader, "triangles"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1412,7 +1415,7 @@ void GLC_ColladaToWorld::loadLibraryNodes()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadLibraryNodes";
 
-	while (endElementNotReached("library_nodes"))
+	while (endElementNotReached(m_pStreamReader, "library_nodes"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1439,7 +1442,7 @@ void GLC_ColladaToWorld::loadLibraryContollers()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadLibraryContollers";
 
-	while (endElementNotReached("library_controllers"))
+	while (endElementNotReached(m_pStreamReader, "library_controllers"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1461,7 +1464,7 @@ void GLC_ColladaToWorld::loadVisualScenes()
 	// The element library visual scene must contains a visual scene element
 	goToElement("visual_scene");
 
-	while (endElementNotReached("visual_scene"))
+	while (endElementNotReached(m_pStreamReader, "visual_scene"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1491,7 +1494,7 @@ void GLC_ColladaToWorld::loadInstanceGeometry(ColladaNode* pNode)
 	const QString url= readAttribute("url", true).remove('#');
 	pNode->m_InstanceGeometryIDs.append(url);
 
-	while (endElementNotReached("instance_geometry"))
+	while (endElementNotReached(m_pStreamReader, "instance_geometry"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1523,7 +1526,7 @@ void GLC_ColladaToWorld::loadInstanceController(ColladaNode* pNode)
 	const QString url= readAttribute("url", true).remove('#');
 	pNode->m_InstanceOffNodeIds.append(url);
 
-	while (endElementNotReached("instance_controller"))
+	while (endElementNotReached(m_pStreamReader, "instance_controller"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1545,7 +1548,7 @@ void GLC_ColladaToWorld::loadController()
 {
 
 	m_CurrentId= readAttribute("id", true);
-	while (endElementNotReached("controller"))
+	while (endElementNotReached(m_pStreamReader, "controller"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1588,7 +1591,7 @@ GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pPare
 	// To avoid infinite call
 	//m_pStreamReader->readNext();
 
-	while (endElementNotReached("node"))
+	while (endElementNotReached(m_pStreamReader, "node"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1757,7 +1760,7 @@ void GLC_ColladaToWorld::composeMatrixNode(ColladaNode* pNode)
 void GLC_ColladaToWorld::loadScene()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadScene";
-	while (endElementNotReached("scene"))
+	while (endElementNotReached(m_pStreamReader, "scene"))
 	{
 		// Nothing to do
 		m_pStreamReader->readNext();
