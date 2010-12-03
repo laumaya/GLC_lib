@@ -28,6 +28,7 @@
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
 #include "../geometry/glc_mesh.h"
+#include "glc_xmlutil.h"
 
 // Quazip library
 #include "../3rdparty/quazip/quazip.h"
@@ -37,6 +38,8 @@
 #include <QGLContext>
 #include <QFileInfo>
 #include <QSet>
+
+using namespace glcXmlUtil;
 
 GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 : QObject()
@@ -248,7 +251,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 void GLC_3dxmlToWorld::loadManifest()
 {
 	setStreamReaderToFile("Manifest.xml");
-	m_RootName= getContent("Root");
+	m_RootName= getContent(m_pStreamReader, "Root");
 
 	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
@@ -300,15 +303,6 @@ void GLC_3dxmlToWorld::clear()
 	clearMaterialHash();
 }
 
-// Go to Element
-void GLC_3dxmlToWorld::goToElement(const QString& elementName)
-{
-	while(startElementNotReached(elementName))
-	{
-		m_pStreamReader->readNext();
-	}
-}
-
 // Go to a Rep of a xml
 void GLC_3dxmlToWorld::goToRepId(const QString& id)
 {
@@ -323,7 +317,8 @@ void GLC_3dxmlToWorld::goToRepId(const QString& id)
 // Go to Polygonal Rep Type
 void GLC_3dxmlToWorld::gotToPolygonalRepType()
 {
-	while(endElementNotReached("Representation") && !m_pStreamReader->atEnd() && !((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Rep")
+	while(endElementNotReached(m_pStreamReader, "Representation") && !m_pStreamReader->atEnd() && !((QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+			&& ((m_pStreamReader->name() == "Rep") || (m_pStreamReader->name() == "Root"))
 			&& (m_pStreamReader->attributes().value("xsi:type").toString() == "PolygonalRepType")))
 	{
 		//qDebug() << m_pStreamReader->name();
@@ -331,22 +326,6 @@ void GLC_3dxmlToWorld::gotToPolygonalRepType()
 		m_pStreamReader->readNext();
 	}
 
-}
-
-// Return the content of an element
-QString GLC_3dxmlToWorld::getContent(const QString& element)
-{
-	QString Content;
-	while(endElementNotReached(element))
-	{
-		m_pStreamReader->readNext();
-		if (m_pStreamReader->isCharacters() && !m_pStreamReader->text().isEmpty())
-		{
-			Content+= m_pStreamReader->text().toString();
-		}
-	}
-
-	return Content.trimmed();
 }
 
 // Read the specified attribute
@@ -371,7 +350,7 @@ QString GLC_3dxmlToWorld::readAttribute(const QString& name, bool required)
 void GLC_3dxmlToWorld::loadProductStructure()
 {
 	setStreamReaderToFile(m_RootName);
-	goToElement("ProductStructure");
+	goToElement(m_pStreamReader, "ProductStructure");
 	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
 		QString message(QString("GLC_3dxmlToWorld::loadProductStructure Element ProctStructure Not found in ") + m_FileName);
@@ -381,7 +360,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 	}
 
 	// Load the structure
-	while(endElementNotReached("ProductStructure"))
+	while(endElementNotReached(m_pStreamReader, "ProductStructure"))
 	{
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 				&& ((m_pStreamReader->name() == "Reference3D") || (m_pStreamReader->name() == "Instance3D")
@@ -397,7 +376,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 	}
 
 	// Load Default view properties
-	while(endElementNotReached("Model_3dxml"))
+	while(endElementNotReached(m_pStreamReader, "Model_3dxml"))
 	{
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 				&& ((m_pStreamReader->name() == "DefaultView") || (m_pStreamReader->name() == "GeometricRepresentationSet")))
@@ -575,11 +554,11 @@ void GLC_3dxmlToWorld::loadReference3D()
 	}
 	// Try to find extension
 	GLC_Attributes userAttributes;
-	while (endElementNotReached("Reference3D"))
+	while (endElementNotReached(m_pStreamReader, "Reference3D"))
 	{
 		if (m_pStreamReader->isStartElement() && (m_pStreamReader->name() == "Reference3DExtensionType"))
 		{
-			while (endElementNotReached("Reference3DExtensionType"))
+			while (endElementNotReached(m_pStreamReader, "Reference3DExtensionType"))
 			{
 				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Attribute"))
 				{
@@ -612,9 +591,9 @@ void GLC_3dxmlToWorld::loadInstance3D()
 
 	const unsigned int instanceId= readAttribute("id", true).toUInt();
 	const QString instName(readAttribute("name", false));
-	const unsigned int aggregatedById= getContent("IsAggregatedBy").toUInt();
-	QString instanceOf= getContent("IsInstanceOf");
-	const QString matrixString= getContent("RelativeMatrix");
+	const unsigned int aggregatedById= getContent(m_pStreamReader, "IsAggregatedBy").toUInt();
+	QString instanceOf= getContent(m_pStreamReader, "IsInstanceOf");
+	const QString matrixString= getContent(m_pStreamReader, "RelativeMatrix");
 	GLC_Matrix4x4 instanceMatrix= loadMatrix(matrixString);
 
 
@@ -623,11 +602,11 @@ void GLC_3dxmlToWorld::loadInstance3D()
 
 	// Try to find extension
 	GLC_Attributes userAttributes;
-	while (endElementNotReached("Instance3D"))
+	while (endElementNotReached(m_pStreamReader, "Instance3D"))
 	{
 		if (m_pStreamReader->isStartElement() && (m_pStreamReader->name() == "Instance3DExtensionType"))
 		{
-			while (endElementNotReached("Instance3DExtensionType"))
+			while (endElementNotReached(m_pStreamReader, "Instance3DExtensionType"))
 			{
 				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Attribute"))
 				{
@@ -677,7 +656,7 @@ void GLC_3dxmlToWorld::loadReferenceRep()
 	const QString externName= "urn:3DXML:";
 
 	const unsigned int id= readAttribute("id", true).toUInt();
-	const QString refName(readAttribute("name", true));
+	//const QString refName(readAttribute("name", true));
 	QString associatedFile(readAttribute("associatedFile", true));
 
 	if (associatedFile.contains(local))
@@ -697,9 +676,9 @@ void GLC_3dxmlToWorld::loadInstanceRep()
 {
 	const QString local= "urn:3DXML:Reference:loc:";
 
-	const QString instName(readAttribute("name", true));
-	const unsigned int aggregatedById= getContent("IsAggregatedBy").toUInt();
-	QString instanceOf= getContent("IsInstanceOf");
+	//const QString instName(readAttribute("name", true));
+	const unsigned int aggregatedById= getContent(m_pStreamReader, "IsAggregatedBy").toUInt();
+	QString instanceOf= getContent(m_pStreamReader, "IsInstanceOf");
 
 	if (instanceOf.contains(local))
 	{
@@ -836,10 +815,10 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 
 	if (repId.isEmpty())
 	{
-		goToElement("ProductStructure");
+		goToElement(m_pStreamReader, "ProductStructure");
 		checkForXmlError("Element ProductStructure not found");
 
-		goToElement("Reference3D");
+		goToElement(m_pStreamReader, "Reference3D");
 		checkForXmlError("Element Reference3D not found");
 		refName= readAttribute("name", true);
 
@@ -849,7 +828,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 			return new GLC_StructReference(pRep);
 		}
 
-		goToElement("ReferenceRep");
+		goToElement(m_pStreamReader, "ReferenceRep");
 		if (m_pStreamReader->atEnd())
 		{
 			QStringList stringList(m_FileName);
@@ -915,10 +894,10 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 	currentMesh3DRep.setLastModified(m_CurrentDateTime);
 
 	int numberOfMesh= 1;
-	while (endElementNotReached("Representation"))
+	while (endElementNotReached(m_pStreamReader, "Representation"))
 	{
 		gotToPolygonalRepType();
-		if (!endElementNotReached("Representation") || m_pStreamReader->atEnd() || m_pStreamReader->hasError())
+		if (!endElementNotReached(m_pStreamReader, "Representation") || m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 		{
 			if (m_pStreamReader->hasError() || m_pStreamReader->atEnd())
 			{
@@ -975,7 +954,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 		}
 
 		// Load Faces index data
-		while (endElementNotReached("Faces"))
+		while (endElementNotReached(m_pStreamReader, "Faces"))
 		{
 			m_pStreamReader->readNext();
 			if ( m_pStreamReader->name() == "Face")
@@ -985,7 +964,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 		}
 		checkForXmlError("End of Faces not found");
 
-		while (startElementNotReached("Edges") && startElementNotReached("VertexBuffer"))
+		while (startElementNotReached(m_pStreamReader, "Edges") && startElementNotReached(m_pStreamReader, "VertexBuffer"))
 		{
 			m_pStreamReader->readNext();
 		}
@@ -993,7 +972,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 		checkForXmlError("Element VertexBuffer not found");
 		if (m_pStreamReader->name() == "Edges")
 		{
-			while (endElementNotReached("Edges"))
+			while (endElementNotReached(m_pStreamReader, "Edges"))
 			{
 				m_pStreamReader->readNext();
 				if ( m_pStreamReader->name() == "Polyline")
@@ -1006,7 +985,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 
 
 		{
-			QString verticePosition= getContent("Positions").replace(',', ' ');
+			QString verticePosition= getContent(m_pStreamReader, "Positions").replace(',', ' ');
 			//qDebug() << "Position " << verticePosition;
 			checkForXmlError("Error while retrieving Position ContentVertexBuffer");
 			// Load Vertice position
@@ -1023,7 +1002,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 		}
 
 		{
-			QString normals= getContent("Normals").replace(',', ' ');
+			QString normals= getContent(m_pStreamReader, "Normals").replace(',', ' ');
 			//qDebug() << "Normals " << normals;
 			checkForXmlError("Error while retrieving Normals values");
 			// Load Vertice Normals
@@ -1039,12 +1018,12 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 		}
 
 		// Try to find texture coordinate
-		while (endElementNotReached("VertexBuffer"))
+		while (endElementNotReached(m_pStreamReader, "VertexBuffer"))
 		{
 			//qDebug() << "Try to find texture coordinate " << m_pStreamReader->name() << " " << m_pStreamReader->lineNumber();
 			if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "TextureCoordinates"))
 			{
-				QString texels= getContent("TextureCoordinates").replace(',', ' ');
+				QString texels= getContent(m_pStreamReader, "TextureCoordinates").replace(',', ' ');
 				checkForXmlError("Error while retrieving Texture coordinates");
 				QTextStream texelStream(&texels);
 				QList<GLfloat> texelValues;
@@ -1263,7 +1242,7 @@ void GLC_3dxmlToWorld::loadLOD(GLC_Mesh* pMesh)
 		{
 			double accuracy= readAttribute("accuracy", true).toDouble();
 			// Load Faces index data
-			while (endElementNotReached("Faces"))
+			while (endElementNotReached(m_pStreamReader, "Faces"))
 			{
 				m_pStreamReader->readNext();
 				if ( m_pStreamReader->name() == "Face")
@@ -1295,7 +1274,7 @@ void GLC_3dxmlToWorld::loadFace(GLC_Mesh* pMesh, const int lod, double accuracy)
 
 	GLC_Material* pCurrentMaterial= NULL;
 
-	while(endElementNotReached("Face"))
+	while(endElementNotReached(m_pStreamReader, "Face"))
 	{
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "SurfaceAttributes"))
 		{
@@ -1403,7 +1382,7 @@ void GLC_3dxmlToWorld::clearMaterialHash()
 GLC_Material* GLC_3dxmlToWorld::loadSurfaceAttributes()
 {
 	GLC_Material* pMaterial= NULL;
-	while(endElementNotReached("SurfaceAttributes"))
+	while(endElementNotReached(m_pStreamReader, "SurfaceAttributes"))
 	{
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Color"))
 		{
@@ -1411,7 +1390,7 @@ GLC_Material* GLC_3dxmlToWorld::loadSurfaceAttributes()
 		}
 		else if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "MaterialApplication"))
 		{
-			while (endElementNotReached("MaterialApplication"))
+			while (endElementNotReached(m_pStreamReader, "MaterialApplication"))
 			{
 				m_pStreamReader->readNext();
 				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "MaterialId"))
@@ -1540,8 +1519,8 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 	QHash<const QString, GLC_3DRep> repHash;
 
 	// Load all local ref
-	goToElement("GeometricRepresentationSet");
-	while (endElementNotReached("GeometricRepresentationSet"))
+	goToElement(m_pStreamReader, "GeometricRepresentationSet");
+	while (endElementNotReached(m_pStreamReader, "GeometricRepresentationSet"))
 	{
 		if (m_pStreamReader->name() == "Representation")
 		{
@@ -1586,7 +1565,7 @@ void GLC_3dxmlToWorld::loadGraphicsProperties()
 	}
 
 	// Load the graphics properties
-	while(endElementNotReached("DefaultView"))
+	while(endElementNotReached(m_pStreamReader, "DefaultView"))
 	{
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "DefaultViewProperty"))
 		{
@@ -1609,15 +1588,15 @@ void GLC_3dxmlToWorld::loadGraphicsProperties()
 
 void GLC_3dxmlToWorld::loadDefaultViewProperty()
 {
-	goToElement("OccurenceId");
-	unsigned int occurenceId= getContent("OccurenceId").toUInt();
+	goToElement(m_pStreamReader, "OccurenceId");
+	unsigned int occurenceId= getContent(m_pStreamReader, "OccurenceId").toUInt();
 
 	// Load the graphics properties
-	while(endElementNotReached("DefaultViewProperty"))
+	while(endElementNotReached(m_pStreamReader, "DefaultViewProperty"))
 	{
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "GraphicProperties"))
 		{
-			while(endElementNotReached("GraphicProperties"))
+			while(endElementNotReached(m_pStreamReader, "GraphicProperties"))
 			{
 				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "GeneralAttributes"))
 				{
@@ -1635,7 +1614,7 @@ void GLC_3dxmlToWorld::loadDefaultViewProperty()
 				}
 				else if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "SurfaceAttributes"))
 				{
-					goToElement("Color");
+					goToElement(m_pStreamReader, "Color");
 					const double red= readAttribute("red", true).toDouble();
 					const double green= readAttribute("green", true).toDouble();
 					const double blue= readAttribute("blue", true).toDouble();
@@ -1855,7 +1834,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		}
 
 		// Load Faces index data
-		while (endElementNotReached("Faces"))
+		while (endElementNotReached(m_pStreamReader, "Faces"))
 		{
 			m_pStreamReader->readNext();
 			if ( m_pStreamReader->name() == "Face")
@@ -1865,7 +1844,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		}
 		checkForXmlError("End of Faces not found");
 
-		while (startElementNotReached("Edges") && startElementNotReached("VertexBuffer"))
+		while (startElementNotReached(m_pStreamReader, "Edges") && startElementNotReached(m_pStreamReader, "VertexBuffer"))
 		{
 			m_pStreamReader->readNext();
 		}
@@ -1873,7 +1852,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		checkForXmlError("Element VertexBuffer not found");
 		if (m_pStreamReader->name() == "Edges")
 		{
-			while (endElementNotReached("Edges"))
+			while (endElementNotReached(m_pStreamReader, "Edges"))
 			{
 				m_pStreamReader->readNext();
 				if ( m_pStreamReader->name() == "Polyline")
@@ -1885,7 +1864,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		}
 
 		{
-			QString verticePosition= getContent("Positions").replace(',', ' ');
+			QString verticePosition= getContent(m_pStreamReader, "Positions").replace(',', ' ');
 			//qDebug() << "Position " << verticePosition;
 			checkForXmlError("Error while retrieving Position ContentVertexBuffer");
 			// Load Vertice position
@@ -1902,7 +1881,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		}
 
 		{
-			QString normals= getContent("Normals").replace(',', ' ');
+			QString normals= getContent(m_pStreamReader, "Normals").replace(',', ' ');
 			//qDebug() << "Normals " << normals;
 			checkForXmlError("Error while retrieving Normals values");
 			// Load Vertice Normals
@@ -1917,11 +1896,11 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 			pMesh->addNormals(normalValues.toVector());
 		}
 		// Try to find texture coordinate
-		while (endElementNotReached("VertexBuffer"))
+		while (endElementNotReached(m_pStreamReader, "VertexBuffer"))
 		{
 			if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "TextureCoordinates"))
 			{
-				QString texels= getContent("TextureCoordinates").replace(',', ' ');
+				QString texels= getContent(m_pStreamReader, "TextureCoordinates").replace(',', ' ');
 				checkForXmlError("Error while retrieving Texture coordinates");
 				QTextStream texelStream(&texels);
 				QList<GLfloat> texelValues;
@@ -1960,9 +1939,9 @@ void GLC_3dxmlToWorld::loadCatMaterialRef()
 	{
 		// Load the material file
 		//qDebug() << "CATMaterialRef.3dxml found and current";
-		goToElement("CATMaterialRef");
+		goToElement(m_pStreamReader, "CATMaterialRef");
 		checkForXmlError("Element CATMaterialRef not found in CATMaterialRef.3dxml");
-		while (endElementNotReached("CATMaterialRef"))
+		while (endElementNotReached(m_pStreamReader, "CATMaterialRef"))
 		{
 			if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 			{
@@ -1972,7 +1951,7 @@ void GLC_3dxmlToWorld::loadCatMaterialRef()
 					MaterialRef currentMaterial;
 					currentMaterial.m_Id= readAttribute("id", true);
 					currentMaterial.m_Name= readAttribute("name", true);
-					goToElement("MaterialDomain");
+					goToElement(m_pStreamReader, "MaterialDomain");
 					checkForXmlError("Element MaterialDomain not found after CATMatReference Element");
 					currentMaterial.m_AssociatedFile= readAttribute("associatedFile", true).remove("urn:3DXML:");
 					materialRefList.append(currentMaterial);
@@ -1998,9 +1977,9 @@ void GLC_3dxmlToWorld::loadCatMaterialRef()
 void GLC_3dxmlToWorld::loadMaterialDef(const MaterialRef& materialRef)
 {
 	GLC_Material* pMaterial= new GLC_Material();
-	goToElement("Osm");
+	goToElement(m_pStreamReader, "Osm");
 	checkForXmlError(QString("Element Osm not found in file : ") + materialRef.m_AssociatedFile);
-	while (endElementNotReached("Osm"))
+	while (endElementNotReached(m_pStreamReader, "Osm"))
 	{
 		m_pStreamReader->readNext();
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && m_pStreamReader->name() == "Attr")
@@ -2085,9 +2064,9 @@ void GLC_3dxmlToWorld::loadCatRepImage()
 	if (setStreamReaderToFile("CATRepImage.3dxml", true))
 	{
 		//qDebug() << "CATRepImage.3dxml Found";
-		goToElement("CATRepImage");
+		goToElement(m_pStreamReader, "CATRepImage");
 		checkForXmlError("Element CATRepImage not found in CATRepImage.3dxml");
-		while (endElementNotReached("CATRepImage"))
+		while (endElementNotReached(m_pStreamReader, "CATRepImage"))
 		{
 			if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 			{

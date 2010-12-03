@@ -152,17 +152,11 @@ private:
 	//! Close all files and clear memmory
 	void clear();
 
-	//! Go to an Element of a xml
-	void goToElement(const QString&);
-
 	//! Go to a Rep of a xml
 	void goToRepId(const QString&);
 
 	//! Go to Polygonal Rep Type
 	void gotToPolygonalRepType();
-
-	// Return the content of an element
-	QString getContent(const QString&);
 
 	//! Read the specified attribute
 	QString readAttribute(const QString&, bool required= false);
@@ -200,14 +194,6 @@ private:
 
 	//! Load Level of detail
 	void loadLOD(GLC_Mesh*);
-
-	//! Return true if the end of specified element is not reached
-	inline bool endElementNotReached(const QString& element)
-	{return !m_pStreamReader->atEnd() && !(m_pStreamReader->isEndElement() && (m_pStreamReader->name() == element));}
-
-	//! Return true if the start of specified element is not reached
-	inline bool startElementNotReached(const QString& element)
-	{return !m_pStreamReader->atEnd() && !(m_pStreamReader->isStartElement() && (m_pStreamReader->name() == element));}
 
 	//! Load a face
 	void loadFace(GLC_Mesh*, const int lod, double accuracy);
