@@ -429,7 +429,8 @@ GLC_Mesh& GLC_Mesh::transformVertice(const GLC_Matrix4x4& matrix)
 {
 	if (matrix.type() != GLC_Matrix4x4::Identity)
 	{
-
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
 		copyVboToClientSide();
 		const int stride= 3;
 		GLfloatVector* pVectPos= m_MeshData.positionVectorHandle();
