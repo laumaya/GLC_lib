@@ -182,7 +182,7 @@ void GLC_OctreeNode::addInstance(GLC_3DViewInstance* pInstance, int depth)
 	m_Empty= false;
 	const GLC_BoundingBox instanceBox= pInstance->boundingBox();
 	// Check if the instance's bounding box intersect this node bounding box
-	if (intersect(instanceBox))
+	if (!instanceBox.isEmpty() && intersect(instanceBox))
 	{
 		if (0 == depth)
 		{
