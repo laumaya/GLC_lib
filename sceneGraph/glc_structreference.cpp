@@ -92,8 +92,7 @@ GLC_StructReference::~GLC_StructReference()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Return the list of occurence of this reference
-QList<GLC_StructOccurence*> GLC_StructReference::listOfStructOccurence() const
+QSet<GLC_StructOccurence*> GLC_StructReference::setOfStructOccurence() const
 {
 	QList<GLC_StructInstance*> instanceList= listOfStructInstances();
 	QSet<GLC_StructOccurence*> occurenceSet;
@@ -107,7 +106,7 @@ QList<GLC_StructOccurence*> GLC_StructReference::listOfStructOccurence() const
 			occurenceSet.insert(occurenceList.at(occIndex));
 		}
 	}
-	return occurenceSet.toList();
+	return occurenceSet;
 }
 
 //////////////////////////////////////////////////////////////////////
