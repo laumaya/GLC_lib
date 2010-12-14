@@ -191,8 +191,8 @@ QDataStream &operator<<(QDataStream &stream, const GLC_BoundingBox &bBox)
 	stream << chunckId;
 
 	stream << bBox.m_IsEmpty;
-	stream << bBox.lowerCorner();
-	stream << bBox.upperCorner();
+	stream << bBox.m_Lower;
+	stream << bBox.m_Upper;
 
 	return stream;
 }
