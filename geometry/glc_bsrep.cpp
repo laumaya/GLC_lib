@@ -128,6 +128,7 @@ GLC_3DRep GLC_BSRep::loadRep()
 			{
 				m_DataStream >> loadedRep;
 			}
+			loadedRep.setFileName(m_FileInfo.filePath());
 
 			if (!close())
 			{
@@ -169,6 +170,7 @@ GLC_BoundingBox GLC_BSRep::boundingBox()
 
 			m_DataStream >> boundingBox;
 		}
+		close();
 	}
 	return boundingBox;
 }
