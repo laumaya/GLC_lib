@@ -107,7 +107,8 @@ public:
 	GLC_3DViewInstance* instanceHandle(GLC_uint Key);
 
 	//! Return the entire collection Bounding Box
-	GLC_BoundingBox boundingBox(void);
+	/*! If all object is set to true, visible and non visible object are used*/
+	GLC_BoundingBox boundingBox(bool allObject= false);
 
 	//! Return the number of Node in the selection Hash
 	inline int selectionSize(void) const
