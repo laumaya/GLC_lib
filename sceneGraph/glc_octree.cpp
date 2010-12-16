@@ -80,9 +80,8 @@ void GLC_Octree::updateViewableInstances(const GLC_Frustum& frustum)
 
 void GLC_Octree::updateSpacePartitioning()
 {
-	qDebug() << "Update space partitioning";
 	delete m_pRootNode;
-	m_pRootNode= new GLC_OctreeNode(m_pCollection->boundingBox());
+	m_pRootNode= new GLC_OctreeNode(m_pCollection->boundingBox(true));
 	// fill the octree
 	QList<GLC_3DViewInstance*> instanceList(m_pCollection->instancesHandle());
 	const int size= instanceList.size();
@@ -91,7 +90,6 @@ void GLC_Octree::updateSpacePartitioning()
 		m_pRootNode->addInstance(instanceList.at(i), m_OctreeDepth);
 	}
 	m_pRootNode->removeEmptyChildren();
-	qDebug() << "Update space partitioning DONE";
 }
 
 void GLC_Octree::setDepth(int depth)
