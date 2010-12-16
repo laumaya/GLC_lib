@@ -167,8 +167,6 @@ QDataStream &operator>>(QDataStream &stream, GLC_Lod &lod)
 	Q_ASSERT(chunckId == GLC_Lod::m_ChunkId);
 
 	stream >> lod.m_Accuracy;
-
-	QVector<GLuint> indexVector;
 	stream >> lod.m_IndexVector;
 	stream >> lod.m_TrianglesCount;
 
