@@ -282,6 +282,26 @@ bool GLC_StructOccurence::canBeAddedToChildren(GLC_StructOccurence* pOccurence) 
 	return canBeAdded;
 }
 
+QList<GLC_StructOccurence*> GLC_StructOccurence::subOccurenceList() const
+{
+	QList<GLC_StructOccurence*> subOccurence;
+	const int childCount= m_Childs.size();
+	for (int i= 0; i < childCount; ++i)
+	{
+		GLC_StructOccurence* pCurrentChild= m_Childs.at(i);
+		if (pCurrentChild->hasChild())
+		{
+			subOccurence.append(pCurrentChild->subOccurenceList());
+		}
+		else
+		{
+			subOccurence.append(pCurrentChild);
+		}
+	}
+
+	return subOccurence;
+}
+
 unsigned int GLC_StructOccurence::numberOfFaces() const
 {
 	unsigned int result= 0;
@@ -601,6 +621,7 @@ void GLC_StructOccurence::checkForRepresentation()
 				// Force instance representation id
 				instance.setId(id());
 				m_pWorldHandle->collection()->add(instance);
+				m_pWorldHandle->collection()->setVisibility(m_Uid, m_IsVisible);
 			}
 			m_HasRepresentation= true;
 		}

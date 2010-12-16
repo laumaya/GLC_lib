@@ -130,7 +130,10 @@ public:
 
 	//! Return the list of children of this occurence
 	inline QList<GLC_StructOccurence*> children() const
-	{ return m_Childs;}
+	{return m_Childs;}
+
+	//! Return the list of all accurence under this occurence
+	QList<GLC_StructOccurence*> subOccurenceList() const;
 
 	//! Return the number of faces of the representation of this occurence
 	unsigned int numberOfFaces() const;
