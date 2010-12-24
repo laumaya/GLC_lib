@@ -30,6 +30,7 @@ QMutex glc::iDMutex;
 QMutex glc::geomIdMutex;
 QMutex glc::userIdMutex;
 QMutex glc::widget3dIdMutex;
+QMutex glc::shadingGroupIdMutex;
 
 GLC_uint glc::GLC_GenID(void)
 {
@@ -64,6 +65,15 @@ GLC_uint glc::GLC_Gen3DWidgetID(void)
 	glc::widget3dIdMutex.lock();
 	Id++;
 	glc::widget3dIdMutex.unlock();
+	return Id;
+}
+
+GLC_uint glc::GLC_GenShaderGroupID()
+{
+	static GLC_uint Id= 1;
+	glc::shadingGroupIdMutex.lock();
+	Id++;
+	glc::shadingGroupIdMutex.unlock();
 	return Id;
 }
 

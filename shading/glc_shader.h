@@ -27,7 +27,9 @@
 #ifndef GLC_SHADER_H_
 #define GLC_SHADER_H_
 
-#include "../glc_ext.h"
+#include "../glc_global.h"
+#include <QGLShader>
+#include <QGLShaderProgram>
 #include <QStack>
 #include <QFile>
 #include <QMutex>
@@ -72,11 +74,11 @@ public:
 public:
 	//! Return the program shader id
 	inline GLuint id() const
-	{return m_ProgramShader;}
+	{return m_ProgramShaderId;}
 
 	//! Return true if the shader is usable
 	inline bool isUsable() const
-	{return m_ProgramShader != 0;}
+	{return m_ProgramShader.isLinked();}
 
 	//! Return true if the shader can be deleted
 	bool canBeDeleted() const;
@@ -133,64 +135,32 @@ public:
 
 	//!Delete the shader
 	void deleteShader();
-
-private:
-	//! Create and compile vertex shader
-	void createAndLinkVertexShader();
-
-	//! Create and compile fragment shader
-	void createAndLinkFragmentShader();
-//@}
-
-//////////////////////////////////////////////////////////////////////
-/*! \name private services Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-	//! Load Vertex shader
-	void loadVertexShader();
-
-	//! Load fragment shaders
-	void loadFragmentShader();
-
-	//! Set Vertex shader
-	void setVertexShader(QFile&);
-
-	//! Set fragment shaders
-	void setFragmentShader(QFile&);
-
-	//! Return char* of an Ascii file
-	QByteArray readShaderFile(QFile&);
-
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
 // private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! The programm ID Stack
-	static QStack<GLuint> m_ProgrammStack;
+	//! The shading group Stack
+	static QStack<GLC_uint> m_ShadingGroupStack;
 
-	//! The current programm ID
-	static GLuint m_CurrentProgramm;
+	//! The current shading goup ID
+	static GLC_uint m_CurrentShadingGroupId;
 
-	//! A Mutex
-	static QMutex m_Mutex;
+	//! Map between shading group id and program shader
+	static QHash<GLC_uint, QGLShaderProgram*> m_ShaderProgramHash;
 
-	//! Vertex shader file
-	QByteArray m_VertexByteArray;
+	//! Vertex shader
+	QGLShader m_VertexShader;
 
-	//! Vertex shader ID
-	GLuint m_VertexShader;
+	//! Fragment shader
+	QGLShader m_FragmentShader;
 
-	//! Fragment shader file
-	QByteArray m_FragmentByteArray;
-
-	//! Fragment shader ID
-	GLuint m_FragmentShader;
+	//! The programShader
+	QGLShaderProgram m_ProgramShader;
 
 	//! Programm shader ID
-	GLuint m_ProgramShader;
+	GLC_uint m_ProgramShaderId;
 
 	//! The Shader's name
 	QString m_Name;

@@ -25,7 +25,7 @@
 
 #include "glc_selectionmaterial.h"
 
-GLC_Shader GLC_SelectionMaterial::m_SelectionShader;
+GLC_Shader* GLC_SelectionMaterial::m_pSelectionShader= NULL;
 
 GLC_SelectionMaterial::GLC_SelectionMaterial()
 {
@@ -34,6 +34,11 @@ GLC_SelectionMaterial::GLC_SelectionMaterial()
 // Execute OpenGL Material
 void GLC_SelectionMaterial::glExecute()
 {
+	if (m_pSelectionShader == NULL)
+	{
+		m_pSelectionShader= new GLC_Shader;
+	}
+
 	static GLfloat pAmbientColor[4]= {1.0f, 0.376f, 0.223f, 1.0f};
 								
 	static GLfloat pDiffuseColor[4]= {1.0f, 0.376f, 0.223f, 1.0f};
@@ -53,9 +58,29 @@ void GLC_SelectionMaterial::glExecute()
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &shininess);
 }
 
+void GLC_SelectionMaterial::initShader()
+{
+	if (m_pSelectionShader == NULL)
+	{
+		m_pSelectionShader= new GLC_Shader;
+	}
+	m_pSelectionShader->createAndCompileProgrammShader();
+}
+
+void GLC_SelectionMaterial::setShaders(QFile& vertex, QFile& fragment)
+{
+	if (m_pSelectionShader == NULL)
+	{
+		m_pSelectionShader= new GLC_Shader;
+	}
+
+	m_pSelectionShader->setVertexAndFragmentShader(vertex, fragment);
+}
 
 //! delete shader
 void GLC_SelectionMaterial::deleteShader()
 {
-	m_SelectionShader.deleteShader();
+	m_pSelectionShader->deleteShader();
+	delete m_pSelectionShader;
+	m_pSelectionShader= NULL;
 }
