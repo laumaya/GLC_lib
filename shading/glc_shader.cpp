@@ -33,7 +33,7 @@
 // Static member initialization
 QStack<GLC_uint> GLC_Shader::m_ShadingGroupStack;
 GLuint GLC_Shader::m_CurrentShadingGroupId= 0;
-QHash<GLC_uint, QGLShaderProgram*> GLC_Shader::m_ShaderProgramHash;
+QHash<GLC_uint, GLC_Shader*> GLC_Shader::m_ShaderProgramHash;
 
 GLC_Shader::GLC_Shader()
 : m_VertexShader(QGLShader::Vertex)
@@ -42,10 +42,9 @@ GLC_Shader::GLC_Shader()
 , m_ProgramShaderId(glc::GLC_GenShaderGroupID())
 , m_Name("Empty Shader")
 {
-	m_ShaderProgramHash.insert(m_ProgramShaderId, &m_ProgramShader);
+	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 }
 
-// Construct shader with specifie vertex and fragment
 GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 : m_VertexShader(QGLShader::Vertex)
 , m_FragmentShader(QGLShader::Fragment)
@@ -53,11 +52,10 @@ GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 , m_ProgramShaderId(glc::GLC_GenShaderGroupID())
 , m_Name("Empty Shader")
 {
-	m_ShaderProgramHash.insert(m_ProgramShaderId, &m_ProgramShader);
+	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 	setVertexAndFragmentShader(vertex, fragment);
 }
 
-// Copy constructor
 GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 : m_VertexShader(QGLShader::Vertex)
 , m_FragmentShader(QGLShader::Fragment)
@@ -65,7 +63,7 @@ GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 , m_ProgramShaderId(glc::GLC_GenShaderGroupID())
 , m_Name(shader.m_Name)
 {
-	m_ShaderProgramHash.insert(m_ProgramShaderId, &m_ProgramShader);
+	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 
 	if (shader.m_VertexShader.isCompiled())
 	{
@@ -88,17 +86,40 @@ GLC_Shader::~GLC_Shader()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Return true if the shader can be deleted
 bool GLC_Shader::canBeDeleted() const
 {
 	return m_CurrentShadingGroupId != m_ProgramShaderId;
+}
+
+int GLC_Shader::shaderCount()
+{
+	return m_ShaderProgramHash.size();
+}
+
+bool GLC_Shader::asShader(GLC_uint shadingGroupId)
+{
+	return m_ShaderProgramHash.contains(shadingGroupId);
+}
+
+GLC_Shader* GLC_Shader::shaderHandle(GLC_uint shadingGroupId)
+{
+	return m_ShaderProgramHash.value(shadingGroupId);
+}
+
+bool GLC_Shader::hasActiveShader()
+{
+	return 0 != m_CurrentShadingGroupId;
+}
+
+GLC_Shader* GLC_Shader::currentShaderHandle()
+{
+	return m_ShaderProgramHash.value(m_CurrentShadingGroupId);
 }
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-// Use this shader programm
 void GLC_Shader::use()
 {
 	if (GLC_State::isInSelectionMode()) return;
@@ -113,30 +134,32 @@ void GLC_Shader::use()
 			m_ShadingGroupStack.push(m_CurrentShadingGroupId);
 		}
 		m_CurrentShadingGroupId= m_ProgramShaderId;
-		m_ShaderProgramHash.value(m_CurrentShadingGroupId)->bind();
+		m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.bind();
 	}
 
 }
 
-// Use specified program shader
-void GLC_Shader::use(GLuint shaderId)
+bool GLC_Shader::use(GLuint shaderId)
 {
-	if (GLC_State::isInSelectionMode()) return;
+	if (GLC_State::isInSelectionMode()) return false;
 	//qDebug() << "GLC_Shader::use(GLuint shaderId)";
 	// Test if the program shader is not already the current one
-	if (m_CurrentShadingGroupId != shaderId)
+	if (m_ShaderProgramHash.contains(shaderId))
 	{
-		if (m_CurrentShadingGroupId != 0)
+		if (m_CurrentShadingGroupId != shaderId)
 		{
-			m_ShadingGroupStack.push(shaderId);
+			if (m_CurrentShadingGroupId != 0)
+			{
+				m_ShadingGroupStack.push(shaderId);
+			}
+			m_CurrentShadingGroupId= shaderId;
+			m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.bind();
 		}
-		m_CurrentShadingGroupId= shaderId;
-		m_ShaderProgramHash.value(m_CurrentShadingGroupId)->bind();
+		return true;
 	}
+	else return false;
 }
 
-
-// Use previous program shader
 void GLC_Shader::unuse()
 {
 	if (GLC_State::isInSelectionMode()) return;
@@ -149,9 +172,9 @@ void GLC_Shader::unuse()
 	{
 		m_CurrentShadingGroupId= m_ShadingGroupStack.pop();
 	}
-	m_ShaderProgramHash.value(m_CurrentShadingGroupId)->release();
+	m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.release();
 }
-// Compile and attach shader to a program shader
+
 void GLC_Shader::createAndCompileProgrammShader()
 {
 	m_ProgramShader.addShader(&m_VertexShader);
@@ -165,7 +188,6 @@ void GLC_Shader::createAndCompileProgrammShader()
 	}
 }
 
-//Delete the shader
 void GLC_Shader::deleteShader()
 {
 	if (m_ProgramShaderId != 0)
@@ -194,7 +216,7 @@ void GLC_Shader::deleteShader()
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Set Vertex and fragment shader
+
 void GLC_Shader::setVertexAndFragmentShader(QFile& vertexFile, QFile& fragmentFile)
 {
 	m_Name= QFileInfo(vertexFile).baseName();
@@ -207,7 +229,7 @@ void GLC_Shader::setVertexAndFragmentShader(QFile& vertexFile, QFile& fragmentFi
 	fragmentFile.close();
 }
 
-// Replace this shader by a copy of another shader
+
 void GLC_Shader::replaceShader(const GLC_Shader& sourceShader)
 {
 	Q_ASSERT(isUsable() == sourceShader.isUsable());

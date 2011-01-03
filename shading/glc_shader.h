@@ -86,6 +86,27 @@ public:
 	//! Return the shader's name
 	inline QString name() const
 	{return m_Name;}
+
+	//! Return an handle to the QGLProgramShader of this shader
+	inline QGLShaderProgram* programShaderHandle()
+	{return &m_ProgramShader;}
+
+	//! Return the number of shader
+	static int shaderCount();
+
+	//! Return true if the given shading group id as a shader
+	static bool asShader(GLC_uint shadingGroupId);
+
+	//! Return handle to the shader associated to the given group id
+	/*! Return NULL if the given shading group as no associated shader*/
+	static GLC_Shader* shaderHandle(GLC_uint shadingGroupId);
+
+	//! Return true if there is an active shader
+	static bool hasActiveShader();
+
+	//! Return handle to the current active shader
+	/*! Return NULL if there is no current active shader*/
+	static GLC_Shader* currentShaderHandle();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -122,9 +143,9 @@ public:
 	/*! Throw GLC_Exception if the program is not usable*/
 	void use();
 
-	//! use specified program shader
-	/*! Throw GLC_Exception if the program is not usable*/
-	static void use(GLuint);
+	//! Use specified program shader
+	/*! Return true if the given shading group id is usable*/
+	static bool use(GLuint ShadingGroupId);
 
 	//! unuse programm shader
 	static void unuse();
@@ -148,7 +169,7 @@ private:
 	static GLC_uint m_CurrentShadingGroupId;
 
 	//! Map between shading group id and program shader
-	static QHash<GLC_uint, QGLShaderProgram*> m_ShaderProgramHash;
+	static QHash<GLC_uint, GLC_Shader*> m_ShaderProgramHash;
 
 	//! Vertex shader
 	QGLShader m_VertexShader;
