@@ -49,23 +49,6 @@ extern PFNGLGETBUFFERPOINTERVARBPROC	glGetBufferPointerv;
 //extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
 // glMultiDrawElement
 extern PFNGLMULTIDRAWELEMENTSPROC		glMultiDrawElements;
-// GL_ARB_shader_objects
-extern PFNGLCREATEPROGRAMOBJECTARBPROC	glCreateProgram;
-extern PFNGLDELETEPROGRAMPROC		  	glDeleteProgram;
-extern PFNGLUSEPROGRAMOBJECTARBPROC		glUseProgram;
-extern PFNGLCREATESHADEROBJECTARBPROC	glCreateShader;
-extern PFNGLDELETESHADERPROC			glDeleteShader;
-extern PFNGLSHADERSOURCEARBPROC         glShaderSource;
-extern PFNGLCOMPILESHADERARBPROC        glCompileShader;
-extern PFNGLATTACHOBJECTARBPROC			glAttachShader;
-extern PFNGLDETACHOBJECTARBPROC			glDetachShader;
-extern PFNGLLINKPROGRAMARBPROC          glLinkProgram;
-extern PFNGLGETUNIFORMLOCATIONARBPROC   glGetUniformLocation;
-extern PFNGLUNIFORM4FARBPROC            glUniform4f;
-extern PFNGLUNIFORM1IARBPROC            glUniform1i;
-extern PFNGLGETSHADERIVPROC				glGetShaderiv;
-extern PFNGLGETPROGRAMIVARBPROC			glGetProgramiv;
-extern PFNGLISPROGRAMARBPROC			glIsProgram;
 
 // GL_point_parameters Point Sprite
 extern PFNGLPOINTPARAMETERFARBPROC  glPointParameterf;
