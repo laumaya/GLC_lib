@@ -162,8 +162,8 @@ private:
 };
 
 //! Non-member stream operator
-QDataStream &operator<<(QDataStream &, const GLC_BoundingBox &);
-QDataStream &operator>>(QDataStream &, GLC_BoundingBox &);
+GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_BoundingBox &);
+GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_BoundingBox &);
 
 // Return true if the given bounding box intersect this bounding box
 bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox) const
