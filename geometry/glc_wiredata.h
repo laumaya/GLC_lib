@@ -169,7 +169,7 @@ private:
 };
 
 //! Non-member stream operator
-QDataStream &operator<<(QDataStream &, const GLC_WireData &);
-QDataStream &operator>>(QDataStream &, GLC_WireData &);
+GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_WireData &);
+GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_WireData &);
 
 #endif /* GLC_WIREDATA_H_ */
