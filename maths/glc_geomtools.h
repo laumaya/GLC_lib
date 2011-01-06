@@ -45,10 +45,10 @@ namespace glc
 //@{
 //////////////////////////////////////////////////////////////////////
 	//! test if the given 2D polygon is convex
-	bool polygon2DIsConvex(const QList<GLC_Point2d>& vertices);
+	GLC_LIB_EXPORT bool polygon2DIsConvex(const QList<GLC_Point2d>& vertices);
 
 	//! Test if the given 3d polygon is convex
-	bool polygonIsConvex(QList<GLuint>* pIndexList, const QList<float>& bulkList);
+	GLC_LIB_EXPORT bool polygonIsConvex(QList<GLuint>* pIndexList, const QList<float>& bulkList);
 
 	//! find intersection between two 2D segments
 	/*! Return the intersection as QVector of GLC_Point2d
