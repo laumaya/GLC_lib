@@ -256,7 +256,7 @@ private:
 };
 
 //! Non-member stream operator
-QDataStream &operator<<(QDataStream &, const GLC_MeshData &);
-QDataStream &operator>>(QDataStream &, GLC_MeshData &);
+GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_MeshData &);
+GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_MeshData &);
 
 #endif /* GLC_MESHDATA_H_ */

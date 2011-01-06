@@ -314,7 +314,7 @@ private:
 };
 
 //! Non-member stream operator
-QDataStream &operator<<(QDataStream &, const GLC_PrimitiveGroup &);
-QDataStream &operator>>(QDataStream &, GLC_PrimitiveGroup &);
+GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_PrimitiveGroup &);
+GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_PrimitiveGroup &);
 
 #endif /* GLC_PRIMITIVEGROUP_H_ */

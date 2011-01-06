@@ -196,7 +196,7 @@ private:
 };
 
 //! Non-member stream operator
-QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
-QDataStream &operator>>(QDataStream &, GLC_3DRep &);
+GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
+GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_3DRep &);
 
 #endif /* GLC_3DREP_H_ */

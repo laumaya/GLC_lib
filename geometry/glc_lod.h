@@ -178,7 +178,7 @@ private:
 };
 
 //! Non-member stream operator
-QDataStream &operator<<(QDataStream &, const GLC_Lod &);
-QDataStream &operator>>(QDataStream &, GLC_Lod &);
+GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_Lod &);
+GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_Lod &);
 
 #endif /* GLC_LOD_H_ */
