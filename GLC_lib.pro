@@ -77,7 +77,8 @@ HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_colladatoworld.h \
 						io/glc_worldto3dxml.h \
 						io/glc_bsreptoworld.h \
-						io/glc_xmlutil.h
+						io/glc_xmlutil.h \
+						io/glc_fileloader.h
 
 HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_3dviewinstance.h \
@@ -222,7 +223,8 @@ SOURCES +=	io/glc_objmtlloader.cpp \
 			io/glc_3dxmltoworld.cpp \
 			io/glc_colladatoworld.cpp \
 			io/glc_worldto3dxml.cpp \
-			io/glc_bsreptoworld.cpp
+			io/glc_bsreptoworld.cpp \
+			io/glc_fileloader.cpp
 
 SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
 			sceneGraph/glc_3dviewinstance.cpp \
@@ -400,8 +402,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_ErrorLog \
     		   include/GLC_TraceLog \
     		   include/glcXmlUtil \
-    		   include/GLC_OpenGLState
-    		   
+    		   include/GLC_OpenGLState \
+    		   include/GLC_FileLoader
+
     			   
 # Linux and macx install configuration
 unix {
