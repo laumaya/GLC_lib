@@ -41,8 +41,8 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_PrimitiveGroup
 {
-	friend QDataStream &operator<<(QDataStream &, const GLC_PrimitiveGroup &);
-	friend QDataStream &operator>>(QDataStream &, GLC_PrimitiveGroup &);
+	friend GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_PrimitiveGroup &);
+	friend GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_PrimitiveGroup &);
 
 public:
 //////////////////////////////////////////////////////////////////////

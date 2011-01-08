@@ -39,8 +39,8 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_WireData
 {
-	friend QDataStream &operator<<(QDataStream &, const GLC_WireData &);
-	friend QDataStream &operator>>(QDataStream &, GLC_WireData &);
+	friend GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_WireData &);
+	friend GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_WireData &);
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

@@ -38,8 +38,8 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_Lod
 {
-	friend QDataStream &operator<<(QDataStream &, const GLC_Lod &);
-	friend QDataStream &operator>>(QDataStream &, GLC_Lod &);
+	friend GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_Lod &);
+	friend GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_Lod &);
 
 public:
 //////////////////////////////////////////////////////////////////////

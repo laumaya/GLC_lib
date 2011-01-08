@@ -37,8 +37,8 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_3DRep : public GLC_Rep
 {
-	friend QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
-	friend QDataStream &operator>>(QDataStream &, GLC_3DRep &);
+	friend GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
+	friend GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_3DRep &);
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

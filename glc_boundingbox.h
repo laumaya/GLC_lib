@@ -44,8 +44,8 @@
 
 class GLC_LIB_EXPORT GLC_BoundingBox
 {
-	friend QDataStream &operator<<(QDataStream &, const GLC_BoundingBox &);
-	friend QDataStream &operator>>(QDataStream &, GLC_BoundingBox &);
+	friend GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_BoundingBox &);
+	friend GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_BoundingBox &);
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor */
