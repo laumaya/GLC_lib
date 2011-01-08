@@ -236,8 +236,6 @@ void GLC_Texture::glcBindTexture(void)
 		glLoadTexture();
 	}
 	glBindTexture(GL_TEXTURE_2D, m_GlTextureID);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 }
 
 QImage GLC_Texture::loadFromFile(const QString& fileName)
