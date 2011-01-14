@@ -23,6 +23,7 @@
  *****************************************************************************/
 
 #include "glc_rep.h"
+#include "QtDebug"
 
 // Default constructor
 GLC_Rep::GLC_Rep()
