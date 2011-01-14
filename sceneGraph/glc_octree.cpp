@@ -92,6 +92,12 @@ void GLC_Octree::updateSpacePartitioning()
 	m_pRootNode->removeEmptyChildren();
 }
 
+void GLC_Octree::clear()
+{
+	delete m_pRootNode;
+	m_pRootNode= NULL;
+}
+
 void GLC_Octree::setDepth(int depth)
 {
 	m_OctreeDepth= depth;
