@@ -73,13 +73,13 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 		const int size= childs.size();
 		for (int i= 0; i < size; ++i)
 		{
-			m_pRoot->addChild(childs.at(i)->clone(m_pWorldHandle, true));
+			m_pRoot->addChild(childs.at(i)->clone(m_pWorldHandle, false));
 		}
 		m_pRoot->updateChildrenAbsoluteMatrix();
 	}
 	else
 	{
-		m_pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pWorldHandle, true));
+		m_pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pWorldHandle, false));
 	}
 }
 

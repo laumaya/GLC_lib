@@ -115,27 +115,133 @@ QSet<GLC_StructOccurence*> GLC_StructReference::setOfStructOccurence() const
 // Set the reference representation
 void GLC_StructReference::setRepresentation(const GLC_3DRep& rep)
 {
-	Q_ASSERT(NULL == m_pRepresentation);
-	m_pRepresentation= new GLC_3DRep(rep);
-
-	// Update all occurence of this reference if exist
-	if (hasStructInstance())
+	// Unload occurence representation
 	{
-		QSet<GLC_StructInstance*>::iterator iInstance= m_SetOfInstance.begin();
-		while (m_SetOfInstance.constEnd() != iInstance)
+		QSet<GLC_StructOccurence*> structOccurenceSet= this->setOfStructOccurence();
+		QSet<GLC_StructOccurence*>::iterator iOcc= structOccurenceSet.begin();
+		while (structOccurenceSet.constEnd() != iOcc)
 		{
-			GLC_StructInstance* pInstance= *iInstance;
-			if (pInstance->hasStructOccurence())
+			(*iOcc)->remove3DViewInstance();
+			++iOcc;
+		}
+	}
+
+	if(NULL == m_pRepresentation)
+	{
+		m_pRepresentation= new GLC_3DRep(rep);
+	}
+	else
+	{
+		*(m_pRepresentation)= rep;
+	}
+
+	if (m_pRepresentation->isLoaded())
+	{
+		QSet<GLC_StructOccurence*> structOccurenceSet= this->setOfStructOccurence();
+		QSet<GLC_StructOccurence*>::iterator iOcc= structOccurenceSet.begin();
+		while (structOccurenceSet.constEnd() != iOcc)
+		{
+			GLC_StructOccurence* pOccurence= *iOcc;
+			Q_ASSERT(!pOccurence->has3DViewInstance());
+			if (pOccurence->useAutomatic3DViewInstanceCreation())
 			{
-				QList<GLC_StructOccurence*> occurenceList= pInstance->listOfStructOccurences();
-				const int size= occurenceList.size();
-				for (int i= 0; i < size; ++i)
-				{
-					occurenceList[i]->checkForRepresentation();
-				}
+				pOccurence->create3DViewInstance();
 			}
-			++iInstance;
+			++iOcc;
 		}
 	}
 }
+
+GLC_Rep* GLC_StructReference::representationHandle() const
+{
+	Q_ASSERT(NULL != m_pRepresentation);
+	return m_pRepresentation;
+}
+
+QString GLC_StructReference::representationName() const
+{
+	if (NULL != m_pRepresentation)
+	{
+		return m_pRepresentation->name();
+	}
+	else return QString();
+}
+
+bool GLC_StructReference::representationIsLoaded() const
+{
+	if (NULL != m_pRepresentation)
+	{
+		return m_pRepresentation->isLoaded();
+	}
+	else return false;
+
+}
+
+QString GLC_StructReference::representationFileName() const
+{
+	if (NULL != m_pRepresentation)
+	{
+		return m_pRepresentation->fileName();
+	}
+	else return QString();
+}
+
+bool GLC_StructReference::representationIsEmpty() const
+{
+	if (NULL != m_pRepresentation)
+	{
+		return m_pRepresentation->isEmpty();
+	}
+	else return true;
+
+}
+
+void GLC_StructReference::setRepresentationName(const QString& representationName)
+{
+	if (NULL != m_pRepresentation)
+	{
+		m_pRepresentation->setName(representationName);
+	}
+}
+
+bool GLC_StructReference::loadRepresentation()
+{
+	Q_ASSERT(NULL != m_pRepresentation);
+	if (m_pRepresentation->load())
+	{
+		QSet<GLC_StructOccurence*> structOccurenceSet= this->setOfStructOccurence();
+		QSet<GLC_StructOccurence*>::iterator iOcc= structOccurenceSet.begin();
+		while (structOccurenceSet.constEnd() != iOcc)
+		{
+			GLC_StructOccurence* pOccurence= *iOcc;
+			Q_ASSERT(!pOccurence->has3DViewInstance());
+			if (pOccurence->useAutomatic3DViewInstanceCreation())
+			{
+				pOccurence->create3DViewInstance();
+			}
+			++iOcc;
+		}
+		return true;
+	}
+	else return false;
+}
+
+bool GLC_StructReference::unloadRepresentation()
+{
+	Q_ASSERT(NULL != m_pRepresentation);
+	if (m_pRepresentation->unload())
+	{
+		QSet<GLC_StructOccurence*> structOccurenceSet= this->setOfStructOccurence();
+		QSet<GLC_StructOccurence*>::iterator iOcc= structOccurenceSet.begin();
+		while (structOccurenceSet.constEnd() != iOcc)
+		{
+			(*iOcc)->remove3DViewInstance();
+			++iOcc;
+		}
+		return true;
+	}
+	else return false;
+}
+
+
 
