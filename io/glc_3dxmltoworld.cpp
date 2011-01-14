@@ -103,6 +103,8 @@ GLC_3dxmlToWorld::~GLC_3dxmlToWorld()
 // Create an GLC_World from an input 3DXML File
 GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnly, bool getExternalRef)
 {
+	clear();
+	m_pWorld= new GLC_World();
 	m_GetExternalRef3DName= getExternalRef;
 	m_LoadStructureOnly= structureOnly;
 	m_FileName= file.fileName();
@@ -144,6 +146,7 @@ GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnl
 
 
 	emit currentQuantum(100);
+	qDebug() << "GLC_3dxmlToWorld::createWorldFrom3dxml : load world with 3DVIEWInstance : " <<  m_pWorld->collection()->size();
 	return m_pWorld;
 }
 
@@ -213,11 +216,12 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 				if ((NULL != pStructRef) && pStructRef->hasRepresentation())
 				{
 					pRep= dynamic_cast<GLC_3DRep*> (pStructRef->representationHandle());
-				}
-				if (NULL != pRep)
-				{
-					resultRep = GLC_3DRep(*pRep);
-					resultRep.setName(pStructRef->name());
+
+					if (NULL != pRep)
+					{
+						resultRep = GLC_3DRep(*pRep);
+						resultRep.setName(pStructRef->name());
+					}
 				}
 				delete pStructRef;
 			}
@@ -543,7 +547,6 @@ void GLC_3dxmlToWorld::loadReference3D()
 
 	if (id == 1) // This is the root reference.
 	{
-		m_pWorld= new GLC_World();
 		m_pWorld->setRootName(refName);
 		pStructReference= m_pWorld->rootOccurence()->structInstance()->structReference();
 		pStructReference->setName(refName);
@@ -1526,10 +1529,9 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 		{
 			QString id= readAttribute("id", true);
 			GLC_StructReference* pRef= createReferenceRep("3DXML_Local_" + id, NULL);
-			GLC_Rep* pRep= pRef->representationHandle();
-			if (pRep != NULL)
+			if (pRef->hasRepresentation())
 			{
-				GLC_3DRep representation(*(dynamic_cast<GLC_3DRep*>(pRep)));
+				GLC_3DRep representation(*(dynamic_cast<GLC_3DRep*>(pRef->representationHandle())));
 				repHash.insert(id, representation);
 			}
 			delete pRef;
@@ -1548,7 +1550,7 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 		GLC_StructReference* pReference= m_ReferenceHash.value(referenceId);
 		const QString representationID= m_ReferenceRepHash.value(refId);
 		pReference->setRepresentation(repHash.value(representationID));
-		pReference->representationHandle()->setName(pReference->name());
+		pReference->setRepresentationName(pReference->name());
 
 		++iLocalRep;
 	}
@@ -1754,9 +1756,9 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 		pReference->setRepresentation(repHash.value(refId));
 
 		// If representation hasn't a name. Set his name to reference name
-		if (pReference->representationHandle()->name().isEmpty())
+		if (pReference->representationName().isEmpty())
 		{
-			pReference->representationHandle()->setName(pReference->name());
+			pReference->setRepresentationName(pReference->name());
 		}
 
 		++iExtRep;
