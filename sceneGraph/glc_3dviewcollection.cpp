@@ -139,9 +139,9 @@ bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLuint shaderID)
 	const GLC_uint key= node.id();
 	if (m_3DViewInstanceHash.contains(key))
 	{
-		qDebug() << "Instance already in collection";
 		return false;
 	}
+
 	m_3DViewInstanceHash.insert(key, node);
 	// Create an GLC_3DViewInstance pointer of the inserted instance
 	ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.find(key);
@@ -275,7 +275,6 @@ bool GLC_3DViewCollection::remove(GLC_uint Key)
 	}
 	else
 	{	// KO, key doesn't exist
-		qDebug("GLC_Collection::removeNode : Element not deleted");
 		return false;
 	}
 
@@ -604,6 +603,7 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::viewableInstancesHandle()
 // Return a GLC_3DViewInstance pointer from the collection
 GLC_3DViewInstance* GLC_3DViewCollection::instanceHandle(GLC_uint Key)
 {
+	Q_ASSERT(m_3DViewInstanceHash.contains(Key));
 	return &(m_3DViewInstanceHash[Key]);
 }
 
