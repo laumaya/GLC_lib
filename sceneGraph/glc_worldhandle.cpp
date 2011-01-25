@@ -103,7 +103,7 @@ void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelec
 	// Add instance representation in the collection
 	if (pOccurence->useAutomatic3DViewInstanceCreation() && pRef->representationIsLoaded())
 	{
-		qDebug() << "GLC_WorldHandle::addOccurence with rep";
+		//qDebug() << "GLC_WorldHandle::addOccurence with rep";
 		GLC_3DRep* p3DRep= dynamic_cast<GLC_3DRep*>(pRef->representationHandle());
 		GLC_3DViewInstance representation(*p3DRep);
 		// Force instance representation id
@@ -114,7 +114,7 @@ void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelec
 		m_Collection.add(representation, shaderId);
 		if (isSelected)
 		{
-			qDebug() << pOccurence->name() << "selected";
+			//qDebug() << pOccurence->name() << "selected";
 			m_Collection.select(pOccurence->id());
 		}
 	}
