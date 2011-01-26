@@ -60,12 +60,17 @@ GLC_3DRep::GLC_3DRep(const GLC_3DRep& rep)
 }
 
 // Assignement operator
-GLC_3DRep& GLC_3DRep::operator=(const GLC_3DRep& rep)
+GLC_3DRep& GLC_3DRep::operator=(const GLC_Rep& rep)
 {
-	clear();
-	GLC_Rep::operator=(rep);
-	m_pGeomList= rep.m_pGeomList;
-	m_pType= rep.m_pType;
+	const GLC_3DRep* p3DRep= dynamic_cast<const GLC_3DRep*>(&rep);
+	Q_ASSERT(NULL != p3DRep);
+	if (this != &rep)
+	{
+		clear();
+		GLC_Rep::operator=(rep);
+		m_pGeomList= p3DRep->m_pGeomList;
+		m_pType= p3DRep->m_pType;
+	}
 
 	return *this;
 }

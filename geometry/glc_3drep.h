@@ -55,7 +55,7 @@ public:
 	GLC_3DRep(const GLC_3DRep&);
 
 	//! Assignement operator
-	virtual GLC_3DRep &operator=(const GLC_3DRep&);
+	virtual GLC_3DRep &operator=(const GLC_Rep&);
 
 	//! Clone the representation
 	virtual GLC_Rep* clone() const;

@@ -79,6 +79,9 @@ public:
 	//! Update this octree space partionning
 	virtual void updateSpacePartitioning();
 
+	//! Clear the space partionning
+	virtual void clear();
+
 	//! Set this octree depth
 	/*! If space partitionning is already done, update it*/
 	void setDepth(int);

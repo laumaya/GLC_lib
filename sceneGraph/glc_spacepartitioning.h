@@ -80,6 +80,9 @@ public:
 	//! Update the space partionning
 	virtual void updateSpacePartitioning()= 0;
 
+	//! Clear the space partionning
+	virtual void clear()= 0;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

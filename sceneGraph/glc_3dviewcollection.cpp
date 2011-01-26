@@ -139,9 +139,9 @@ bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLuint shaderID)
 	const GLC_uint key= node.id();
 	if (m_3DViewInstanceHash.contains(key))
 	{
-		qDebug() << "Instance already in collection";
 		return false;
 	}
+
 	m_3DViewInstanceHash.insert(key, node);
 	// Create an GLC_3DViewInstance pointer of the inserted instance
 	ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.find(key);
@@ -246,7 +246,6 @@ void GLC_3DViewCollection::changeShadingGroup(GLC_uint instanceId, GLuint shader
 // Delete geometry from the collection
 bool GLC_3DViewCollection::remove(GLC_uint Key)
 {
-
 	ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.find(Key);
 
 	if (iNode != m_3DViewInstanceHash.end())
@@ -275,7 +274,6 @@ bool GLC_3DViewCollection::remove(GLC_uint Key)
 	}
 	else
 	{	// KO, key doesn't exist
-		qDebug("GLC_Collection::removeNode : Element not deleted");
 		return false;
 	}
 
@@ -386,9 +384,8 @@ bool GLC_3DViewCollection::unselect(GLC_uint key)
 	{	// Ok, the key exist and the node is selected
 		iSelectedNode.value()->unselect();
 
-		m_SelectedInstances.remove(key);
-
 		pSelectedNode= iSelectedNode.value();
+		m_SelectedInstances.remove(key);
 
 		// Insert Selected Node to the right collection
 		if (isInAShadingGroup(key))
@@ -604,6 +601,7 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::viewableInstancesHandle()
 // Return a GLC_3DViewInstance pointer from the collection
 GLC_3DViewInstance* GLC_3DViewCollection::instanceHandle(GLC_uint Key)
 {
+	Q_ASSERT(m_3DViewInstanceHash.contains(Key));
 	return &(m_3DViewInstanceHash[Key]);
 }
 
