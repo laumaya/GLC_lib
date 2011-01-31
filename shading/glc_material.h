@@ -90,7 +90,7 @@ public:
 	static quint32 chunckID();
 
 	//! Return true if the material is used
-	bool isUnused() const
+	inline bool isUnused() const
 	{return m_WhereUsed.isEmpty() && m_OtherUsage.isEmpty();}
 
 	//! Return true is material has attached texture
