@@ -28,6 +28,7 @@
 #include "../glc_openglexception.h"
 #include "../glc_state.h"
 #include "../glc_ext.h"
+#include "../shading/glc_selectionmaterial.h"
 
 // The maximum point size
 float GLC_PointSprite::m_MaxSize= -1.0f;
@@ -120,14 +121,23 @@ void GLC_PointSprite::render(const GLC_RenderProperties& renderProperties)
 
 	    if(m_MaterialHash.size() == 1)
 	    {
-	    	GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
-	    	const GLfloat red= pCurrentMaterial->diffuseColor().redF();
-	    	const GLfloat green= pCurrentMaterial->diffuseColor().greenF();
-	    	const GLfloat blue= pCurrentMaterial->diffuseColor().blueF();
-	    	const GLfloat alpha= pCurrentMaterial->diffuseColor().alphaF();
 
-	    	glColor4f(red, green, blue, alpha);
-	    	pCurrentMaterial->glExecute();
+	    	if (renderProperties.isSelected())
+	    	{
+	    		GLC_SelectionMaterial::glExecute();
+	    	}
+	    	else
+	    	{
+	    		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
+		    	const GLfloat red= pCurrentMaterial->diffuseColor().redF();
+		    	const GLfloat green= pCurrentMaterial->diffuseColor().greenF();
+		    	const GLfloat blue= pCurrentMaterial->diffuseColor().blueF();
+		    	const GLfloat alpha= pCurrentMaterial->diffuseColor().alphaF();
+
+		    	glColor4f(red, green, blue, alpha);
+		    	pCurrentMaterial->glExecute();
+
+	    	}
 	    }
 	}
 	else
