@@ -28,6 +28,7 @@
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
 #include "../geometry/glc_mesh.h"
+#include "../geometry/glc_3drep.h"
 #include "glc_xmlutil.h"
 
 // Quazip library
@@ -1753,8 +1754,19 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 		unsigned int refId= (*iExtRep).m_RepId;
 
 		GLC_StructReference* pReference= m_ReferenceHash.value(referenceId);
-		pReference->setRepresentation(repHash.value(refId));
-
+		if (pReference->hasRepresentation())
+		{
+			GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pReference->representationHandle());
+			if (NULL != pRep)
+			{
+				GLC_3DRep newRep(repHash.value(refId));
+				pRep->take(&newRep);
+			}
+		}
+		else
+		{
+			pReference->setRepresentation(repHash.value(refId));
+		}
 		// If representation hasn't a name. Set his name to reference name
 		if (pReference->representationName().isEmpty())
 		{
