@@ -310,14 +310,13 @@ unsigned int GLC_StructOccurence::numberOfFaces() const
 	{
 		result= structInstance()->structReference()->numberOfFaces();
 	}
-	else
+
+	const int size= m_Childs.size();
+	for (int i= 0; i < size; ++i)
 	{
-		const int size= m_Childs.size();
-		for (int i= 0; i < size; ++i)
-		{
-			result+= m_Childs.at(i)->numberOfFaces();
-		}
+		result+= m_Childs.at(i)->numberOfFaces();
 	}
+
 	return result;
 }
 
@@ -328,14 +327,12 @@ unsigned int GLC_StructOccurence::numberOfVertex() const
 	{
 		result= structInstance()->structReference()->numberOfVertex();
 	}
-	else
+	const int size= m_Childs.size();
+	for (int i= 0; i < size; ++i)
 	{
-		const int size= m_Childs.size();
-		for (int i= 0; i < size; ++i)
-		{
-			result+= m_Childs.at(i)->numberOfVertex();
-		}
+		result+= m_Childs.at(i)->numberOfVertex();
 	}
+
 	return result;
 }
 
@@ -348,15 +345,14 @@ unsigned int GLC_StructOccurence::numberOfMaterials() const
 	{
 		result= structInstance()->structReference()->numberOfMaterials();
 	}
-	else
+
+	const int size= m_Childs.size();
+	for (int i= 0; i < size; ++i)
 	{
-		const int size= m_Childs.size();
-		for (int i= 0; i < size; ++i)
-		{
-			materialSet.unite(m_Childs.at(i)->materialSet());
-		}
-		result= static_cast<unsigned int>(materialSet.size());
+		materialSet.unite(m_Childs.at(i)->materialSet());
 	}
+	result= static_cast<unsigned int>(materialSet.size());
+
 	return result;
 }
 
@@ -368,14 +364,13 @@ QSet<GLC_Material*> GLC_StructOccurence::materialSet() const
 	{
 		materialSet= structInstance()->structReference()->materialSet();
 	}
-	else
+
+	const int size= m_Childs.size();
+	for (int i= 0; i < size; ++i)
 	{
-		const int size= m_Childs.size();
-		for (int i= 0; i < size; ++i)
-		{
-			materialSet.unite(m_Childs.at(i)->materialSet());
-		}
+		materialSet.unite(m_Childs.at(i)->materialSet());
 	}
+
 	return materialSet;
 }
 
