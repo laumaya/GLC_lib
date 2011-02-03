@@ -68,6 +68,10 @@ public:
 	//! Return a copy of the geometry
 	virtual GLC_Geometry* clone() const;
 
+	//! Return the size of this point
+	inline GLfloat size() const
+	{return m_Size;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -80,6 +84,11 @@ public:
 
 	//! Set Point coordinate by 3 double
 	void setCoordinate(double x, double y, double z);
+
+	//! Set the size of this point
+	void setSize(GLfloat size)
+	{m_Size= size;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -99,8 +108,11 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 private:
-	//! 4d point for point coordinate
+	//! Point for point coordinate
 	GLC_Point3d m_Coordinate;
+
+	//! Size of the point
+	GLfloat m_Size;
 
 };
 #endif //GLC_POINT_H_

@@ -34,13 +34,17 @@ using namespace glc;
 
 
 GLC_Point::GLC_Point(const GLC_Point3d &setCoord)
-:GLC_Geometry("Point", true), m_Coordinate(setCoord)
+:GLC_Geometry("Point", true)
+, m_Coordinate(setCoord)
+, m_Size(1.0f)
 {
 
 }
 //! Construct an GLC_Point
 GLC_Point::GLC_Point(double x, double y, double z)
-:GLC_Geometry("Point", true), m_Coordinate(x, y, z)
+:GLC_Geometry("Point", true)
+, m_Coordinate(x, y, z)
+, m_Size(1.0f)
 {
 }
 
@@ -101,10 +105,12 @@ void GLC_Point::setCoordinate(double x, double y, double z)
 
 void GLC_Point::glDraw(const GLC_RenderProperties&)
 {
+	glPointSize(m_Size);
 	// Point Display
 	glBegin(GL_POINTS);
 		glVertex3dv(m_Coordinate.data());
 	glEnd();
+	glPointSize(1.0f);
 
 	// OpenGL error handler
 	GLenum error= glGetError();
