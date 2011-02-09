@@ -120,7 +120,10 @@ void GLC_SelectionMaterial::setShaders(QFile& vertex, QFile& fragment)
 //! delete shader
 void GLC_SelectionMaterial::deleteShader()
 {
-	m_pSelectionShader->deleteShader();
-	delete m_pSelectionShader;
-	m_pSelectionShader= NULL;
+	if (NULL != m_pSelectionShader)
+	{
+		m_pSelectionShader->deleteShader();
+		delete m_pSelectionShader;
+		m_pSelectionShader= NULL;
+	}
 }
