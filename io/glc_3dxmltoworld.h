@@ -264,9 +264,6 @@ private:
 	//! The Quazip archive
 	QuaZip* m_p3dxmlArchive;
 
-	//! The Quazip file (Entry or archive)
-	QuaZipFile* m_p3dxmlFile;
-
 	//! The current file (if there is no archive)
 	QFile* m_pCurrentFile;
 
@@ -335,6 +332,10 @@ private:
 
 	//! bool get external ref 3D name
 	bool m_GetExternalRef3DName;
+
+	static QMutex m_ZipMutex;
+
+	QByteArray m_ByteArray;
 
 
 };

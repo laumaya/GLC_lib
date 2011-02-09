@@ -39,8 +39,11 @@
 #include <QGLContext>
 #include <QFileInfo>
 #include <QSet>
+#include <QMutexLocker>
 
 using namespace glcXmlUtil;
+
+QMutex GLC_3dxmlToWorld::m_ZipMutex;
 
 GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 : QObject()
@@ -48,7 +51,6 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 , m_pStreamReader(NULL)
 , m_FileName()
 , m_p3dxmlArchive(NULL)
-, m_p3dxmlFile(NULL)
 , m_pCurrentFile(NULL)
 , m_RootName()
 , m_pWorld(NULL)
@@ -72,6 +74,7 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 , m_CurrentDateTime()
 , m_OccurenceAttrib()
 , m_GetExternalRef3DName(false)
+, m_ByteArray()
 {
 
 }
@@ -82,7 +85,6 @@ GLC_3dxmlToWorld::~GLC_3dxmlToWorld()
 	m_pStreamReader= NULL;
 
 	delete m_pCurrentFile;
-	delete m_p3dxmlFile;
 	delete m_p3dxmlArchive;
 
 	clearMaterialHash();
@@ -160,6 +162,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 		m_FileName= glc::archiveFileName(fileName);
 
 		// Create the 3dxml Zip archive
+		m_ZipMutex.lock();
 		m_p3dxmlArchive= new QuaZip(m_FileName);
 		// Trying to load archive
 		if(!m_p3dxmlArchive->open(QuaZip::mdUnzip))
@@ -173,6 +176,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 			// Set the file Name Codec
 			//m_p3dxmlArchive->setFileNameCodec("IBM866");
 		}
+		m_ZipMutex.unlock();
 		m_CurrentFileName= glc::archiveEntryFileName(fileName);
 
 		// Get the 3DXML time stamp
@@ -268,8 +272,6 @@ void GLC_3dxmlToWorld::loadManifest()
 
 	delete m_pStreamReader;
 	m_pStreamReader= NULL;
-
-	m_p3dxmlFile->close();
 }
 
 //! Close all files and clear memmory
@@ -281,20 +283,13 @@ void GLC_3dxmlToWorld::clear()
 	delete m_pStreamReader;
 	m_pStreamReader= NULL;
 
+	m_ByteArray.clear();
 	// Clear current file
 	if (NULL != m_pCurrentFile)
 	{
 		m_pCurrentFile->close();
 		delete m_pCurrentFile;
 		m_pCurrentFile= NULL;
-	}
-
-	// Clear the 3dxml file
-	if (NULL != m_p3dxmlFile)
-	{
-		m_p3dxmlFile->close();
-		delete m_p3dxmlFile;
-		m_p3dxmlFile= NULL;
 	}
 
 	// Clear the 3dxml archive
@@ -1399,7 +1394,6 @@ GLC_Material* GLC_3dxmlToWorld::loadSurfaceAttributes()
 				m_pStreamReader->readNext();
 				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "MaterialId"))
 				{
-					//qDebug() << m_p3dxmlFile->getActualFileName();
 					checkForXmlError("Material ID not found");
 					QString materialId= readAttribute("id", true).remove("urn:3DXML:CATMaterialRef.3dxml#");
 					pMaterial= m_MaterialHash.value(materialId);
@@ -1454,9 +1448,10 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 	m_CurrentFileName= fileName;
 	if (m_IsInArchive)
 	{
-		delete m_p3dxmlFile;
+		QMutexLocker locker(&m_ZipMutex);
+		m_ByteArray.clear();
 		// Create QuaZip File
-		m_p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
+		QuaZipFile* p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
 
 		// Get the file of the 3dxml
 		if (!m_p3dxmlArchive->setCurrentFile(fileName, QuaZip::csInsensitive))
@@ -1472,7 +1467,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		}
 
 		// Open the file of the 3dxml
-		if(!m_p3dxmlFile->open(QIODevice::ReadOnly))
+		if(!p3dxmlFile->open(QIODevice::ReadOnly))
 	    {
 			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile Unable to Open ") + fileName);
 			GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotSupported);
@@ -1482,7 +1477,10 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 
 		// Set the stream reader
 		delete m_pStreamReader;
-		m_pStreamReader= new QXmlStreamReader(m_p3dxmlFile);
+		m_ByteArray= p3dxmlFile->readAll();
+		m_ByteArray.squeeze();
+		m_pStreamReader= new QXmlStreamReader(m_ByteArray);
+		delete p3dxmlFile;
 	}
 	else
 	{
