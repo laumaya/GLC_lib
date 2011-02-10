@@ -120,7 +120,9 @@ GLC_3DRep GLC_BSRep::loadRep()
 				QByteArray CompresseBuffer;
 				m_DataStream >> CompresseBuffer;
 				QByteArray uncompressedBuffer= qUncompress(CompresseBuffer);
+				uncompressedBuffer.squeeze();
 				CompresseBuffer.clear();
+				CompresseBuffer.squeeze();
 				QDataStream bufferStream(uncompressedBuffer);
 				bufferStream >> loadedRep;
 			}
