@@ -37,6 +37,8 @@
 
 #include "../glc_config.h"
 
+class GLC_StructOccurence;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_StructReference
 /*! \brief GLC_StructReference : A scene graph reference node */
@@ -209,6 +211,10 @@ public:
 	//! Unload the representation
 	/*! The representation must exists*/
 	bool unloadRepresentation();
+
+	//! Add the given occurence as a child
+	/*! Return true on success*/
+	bool addChild(GLC_StructOccurence* pOccurence);
 
 
 //@}

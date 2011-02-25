@@ -243,5 +243,37 @@ bool GLC_StructReference::unloadRepresentation()
 	else return false;
 }
 
+bool GLC_StructReference::addChild(GLC_StructOccurence* pOccurence)
+{
+	if (hasStructInstance() && firstInstanceHandle()->hasStructOccurence())
+	{
+		GLC_StructOccurence* pCurrentChildOccurence= pOccurence;
 
+		QSet<GLC_StructInstance*>::iterator iInstance= m_SetOfInstance.begin();
+		while (m_SetOfInstance.constEnd() != iInstance)
+		{
+			GLC_StructInstance* pCurrentInstance= *iInstance;
+			QList<GLC_StructOccurence*> occurenceList= pCurrentInstance->listOfStructOccurences();
+			const int occurenceCount= occurenceList.count();
+			for (int i= 0; i < occurenceCount; ++i)
+			{
+				GLC_StructOccurence* pCurrentOccurence= occurenceList.at(i);
+
+				if ((i != 0) || (NULL == pCurrentChildOccurence))
+				{
+					pCurrentChildOccurence= pOccurence->clone(pCurrentOccurence->worldHandle(), true);
+				}
+
+				pCurrentOccurence->addChild(pCurrentChildOccurence);
+			}
+			pCurrentChildOccurence= NULL;
+			++iInstance;
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 
