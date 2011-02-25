@@ -659,17 +659,20 @@ void GLC_3dxmlToWorld::loadReferenceRep()
 
 	const unsigned int id= readAttribute("id", true).toUInt();
 	//const QString refName(readAttribute("name", true));
+	const QString format= readAttribute("format", false);
 	QString associatedFile(readAttribute("associatedFile", true));
-
-	if (associatedFile.contains(local))
+	if (format == "TESSELLATED")
 	{
-		const QString repId= associatedFile.remove(local);
-		m_ReferenceRepHash.insert(id, repId);
-	}
-	else if (associatedFile.contains(externName))
-	{
-		const QString repId= associatedFile.remove(externName);
-		m_ReferenceRepHash.insert(id, repId);
+		if (associatedFile.contains(local))
+		{
+			const QString repId= associatedFile.remove(local);
+			m_ReferenceRepHash.insert(id, repId);
+		}
+		else if (associatedFile.contains(externName))
+		{
+			const QString repId= associatedFile.remove(externName);
+			m_ReferenceRepHash.insert(id, repId);
+		}
 	}
 }
 
@@ -1694,6 +1697,7 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 	while (iRefRep != m_ReferenceRepHash.constEnd())
 	{
 		m_CurrentFileName= iRefRep.value();
+		qDebug() << m_CurrentFileName;
 		const unsigned int id= iRefRep.key();
 
 		if (!m_IsInArchive)
