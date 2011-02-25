@@ -637,20 +637,14 @@ GLC_BoundingBox GLC_3DViewCollection::boundingBox(bool allObject)
 	    }
 	}
 
+	if (NULL == m_pBoundingBox) m_pBoundingBox= new GLC_BoundingBox;
+
 	if (allObject)
 	{
-		qDebug() << "allObject";
 		GLC_BoundingBox allBoundingBox(*m_pBoundingBox);
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
 		return allBoundingBox;
-	}
-	else if (NULL == m_pBoundingBox)
-	{
-		// The collection is empty and m_pBoundingBox == NULL
-		// OR all object are used
-		m_pBoundingBox= new GLC_BoundingBox;
-		return *m_pBoundingBox;
 	}
 	else
 	{
