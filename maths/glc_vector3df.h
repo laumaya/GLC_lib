@@ -143,17 +143,17 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return X Compound
-	inline float X(void) const
+	inline float x(void) const
 	{
 		return m_Vector[0];
 	}
 	//! Return Y Compound
-	inline float Y(void) const
+	inline float y(void) const
 	{
 		return m_Vector[1];
 	}
 	//! Return Z Compound
-	inline float Z(void) const
+	inline float z(void) const
 	{
 		return m_Vector[2];
 	}
