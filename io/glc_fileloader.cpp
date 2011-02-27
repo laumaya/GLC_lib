@@ -38,6 +38,8 @@
 
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
+#include "../glc_factory.h"
+#include "glc_worldreaderplugin.h"
 
 //////////////////////////////////////////////////////////////////////
 // Constructor
@@ -66,6 +68,26 @@ GLC_World GLC_FileLoader::createWorldFromFile(QFile &file, QStringList* pAttache
         connect(snd, sig, rcv, memb, Qt::DirectConnection)
 #endif
 
+	const QString suffix= QFileInfo(file).suffix();
+	if (GLC_Factory::canBeLoaded(suffix))
+	{
+		GLC_WorldReaderHandler* pReaderHandler= GLC_Factory::loadingHandler(file.fileName());
+		if (NULL != pReaderHandler)
+		{
+			qDebug() << "Use STL plugin";
+			QObject* pObject= dynamic_cast<QObject*>(pReaderHandler);
+			Q_ASSERT(NULL != pObject);
+			connect(pObject, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
+			GLC_World resultWorld= pReaderHandler->read(&file);
+			if (NULL != pAttachedFileName)
+			{
+				(*pAttachedFileName)= pReaderHandler->listOfAttachedFileName();
+			}
+
+			delete pReaderHandler;
+			return resultWorld;
+		}
+	}
 	GLC_World* pWorld= NULL;
 	if (QFileInfo(file).suffix().toLower() == "obj")
 	{
