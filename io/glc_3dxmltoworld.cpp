@@ -674,6 +674,14 @@ void GLC_3dxmlToWorld::loadReferenceRep()
 			m_ReferenceRepHash.insert(id, repId);
 		}
 	}
+	else if (format == "UVR")
+	{
+		QString message(QString("GLC_3dxmlToWorld::loadReferenceRep in file ") + m_CurrentFileName + " format " + format + " not supported");
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
+		clear();
+		throw(fileFormatException);
+
+	}
 }
 
 // Load a Instance representation
@@ -1366,7 +1374,7 @@ void GLC_3dxmlToWorld::loadPolyline(GLC_Mesh* pMesh)
 		dataStream >> buff;
 		dataVector.append(buff.toFloat());
 	}
-	pMesh->addPolyline(dataVector);
+	pMesh->addVerticeGroup(dataVector);
 }
 
 // Clear material hash
@@ -1482,6 +1490,15 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 			throw(fileFormatException);
 	    }
 
+		// Test if the file is a binary
+		checkFileValidity(p3dxmlFile);
+		{
+			delete p3dxmlFile;
+			p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
+			m_p3dxmlArchive->setCurrentFile(fileName, QuaZip::csInsensitive);
+			p3dxmlFile->open(QIODevice::ReadOnly);
+		}
+
 		// Set the stream reader
 		delete m_pStreamReader;
 
@@ -1517,6 +1534,10 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		{
 			m_SetOfAttachedFileName << fileName;
 		}
+
+		// Test if the file is a binary
+		checkFileValidity(m_pCurrentFile);
+
 		// Set the stream reader
 		delete m_pStreamReader;
 		m_pStreamReader= new QXmlStreamReader(m_pCurrentFile);
@@ -1697,7 +1718,6 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 	while (iRefRep != m_ReferenceRepHash.constEnd())
 	{
 		m_CurrentFileName= iRefRep.value();
-		qDebug() << m_CurrentFileName;
 		const unsigned int id= iRefRep.key();
 
 		if (!m_IsInArchive)
@@ -2231,5 +2251,21 @@ void GLC_3dxmlToWorld::setRepresentationFileName(GLC_3DRep* pRep)
 	else
 	{
 		pRep->setFileName(QFileInfo(m_FileName).absolutePath() + QDir::separator() + m_CurrentFileName);
+	}
+}
+
+void GLC_3dxmlToWorld::checkFileValidity(QIODevice* pIODevice)
+{
+	QByteArray begining= pIODevice->read(2);
+	if (begining == "V5")
+	{
+		QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile : File ") + m_CurrentFileName + " is binary");
+		GLC_FileFormatException fileFormatException(message, m_CurrentFileName, GLC_FileFormatException::FileNotSupported);
+		clear();
+		throw(fileFormatException);
+	}
+	else
+	{
+		pIODevice->seek(0);
 	}
 }

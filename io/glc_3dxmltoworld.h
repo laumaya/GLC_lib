@@ -267,6 +267,9 @@ private:
 	//! Go to the end Element of a xml
 	inline void goToEndElement(QXmlStreamReader* pReader, const QString& element);
 
+	//! Check if the given file is binary
+	void checkFileValidity(QIODevice* pIODevice);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
