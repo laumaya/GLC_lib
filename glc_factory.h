@@ -31,6 +31,7 @@
 #include <QObject>
 #include <QtOpenGL>
 #include <QString>
+#include <QSet>
 
 //class to built
 #include "geometry/glc_point.h"
@@ -43,6 +44,7 @@
 #include "geometry/glc_sphere.h"
 #include "geometry/glc_rectangle.h"
 #include "geometry/glc_3drep.h"
+#include "geometry/glc_pointcloud.h"
 #include "shading/glc_material.h"
 #include "shading/glc_texture.h"
 #include "sceneGraph/glc_world.h"
@@ -53,6 +55,9 @@
 #include "io/glc_fileloader.h"
 
 // end of class to built
+
+class GLC_WorldReaderHandler;
+class GLC_WorldReaderPlugin;
 
 #include "glc_config.h"
 //////////////////////////////////////////////////////////////////////
@@ -89,6 +94,13 @@ public:
 	GLC_3DRep createPoint(const GLC_Point3d &coord) const;
 
 	GLC_3DRep createPoint(double x, double y, double z) const;
+
+	//! Create a cloud of points
+	GLC_3DRep createPointCloud(const GLfloatVector& data, const QColor& color);
+
+	GLC_3DRep createPointCloud(const QList<GLC_Point3d>& pointList, const QColor& color);
+
+	GLC_3DRep createPointCloud(const QList<GLC_Point3df>& pointList, const QColor& color);
 
 	//! Create a GLC_PointSprite
 	GLC_3DRep createPointSprite(float, GLC_Material*) const;
@@ -161,11 +173,27 @@ public:
 	//! Create the default mover controller
 	GLC_MoverController createDefaultMoverController(const QColor&, GLC_Viewport*);
 
+	//! Return the list of world reader plugin
+	static QList<GLC_WorldReaderPlugin*> worldReaderPlugins();
+
+	//! Return true if the given file extension can be loaded
+	static bool canBeLoaded(const QString& extension);
+
+	//! Return an handle to the plugin tu use for the given file
+	static GLC_WorldReaderHandler* loadingHandler(const QString& fileName);
+
 //@}
 
 signals:
 	//! For progress bar management
 	void currentQuantum(int) const;
+
+//////////////////////////////////////////////////////////////////////
+// Private services functions
+//////////////////////////////////////////////////////////////////////
+private:
+	//! Load GLC_lib plugins
+	void loadPlugins();
 
 //////////////////////////////////////////////////////////////////////
 // Private members
@@ -177,6 +205,12 @@ private:
 
 	//! The QGLContext attached to the factory (rendering context)
 	static QGLContext* m_pQGLContext;
+
+	//! The list off worldReader plugins
+	static QList<GLC_WorldReaderPlugin*> m_WorldReaderPluginList;
+
+	//! The supported extension set
+	static QSet<QString> m_SupportedExtensionSet;
 
 };
 
