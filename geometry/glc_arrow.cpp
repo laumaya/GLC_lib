@@ -146,7 +146,7 @@ void GLC_Arrow::glDraw(const GLC_RenderProperties& renderProperties)
 		createWire();
 	}
 
-	m_WireData.glDraw(renderProperties);
+	m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
 }
 
 void GLC_Arrow::createWire()
@@ -160,7 +160,7 @@ void GLC_Arrow::createWire()
 	floatVector.append(static_cast<float>(m_EndPoint.y()));
 	floatVector.append(static_cast<float>(m_EndPoint.z()));
 
-	GLC_Geometry::addPolyline(floatVector);
+	GLC_Geometry::addVerticeGroup(floatVector);
 
 	// Arrow Head
 	GLC_Point3d headPoint1(-m_HeadLenght, m_HeadLenght * tan(m_HeadAngle / 2.0), 0.0);
@@ -193,6 +193,6 @@ void GLC_Arrow::createWire()
 	floatVector.append(static_cast<float>(headPoint2.y()));
 	floatVector.append(static_cast<float>(headPoint2.z()));
 
-	GLC_Geometry::addPolyline(floatVector);
+	GLC_Geometry::addVerticeGroup(floatVector);
 
 }

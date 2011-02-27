@@ -193,7 +193,7 @@ void GLC_Disc::createMeshAndWire()
 	GLC_Mesh::addTexels(texelVector);
 
 	// Add polyline to wire data
-	GLC_Geometry::addPolyline(wireData);
+	GLC_Geometry::addVerticeGroup(wireData);
 
 	// Set the material to use
 	GLC_Material* pDiscMaterial;

@@ -271,8 +271,8 @@ void GLC_Cylinder::createMeshAndWire()
 	GLC_Mesh::addTexels(texelVector);
 
 	// Add polyline to wire data
-	GLC_Geometry::addPolyline(bottomWireData);
-	GLC_Geometry::addPolyline(topWireData);
+	GLC_Geometry::addVerticeGroup(bottomWireData);
+	GLC_Geometry::addVerticeGroup(topWireData);
 
 	// Set the material to use
 	GLC_Material* pCylinderMaterial;

@@ -938,12 +938,12 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 									static_cast<float>(m_WireColor.alphaF())};
 
 			glColor4fv(color);
-			m_WireData.glDraw(renderProperties);
+			m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
 			glEnable(GL_LIGHTING);
 		}
 		else
 		{
-			m_WireData.glDraw(renderProperties);
+			m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
 		}
 	}
 

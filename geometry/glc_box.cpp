@@ -297,7 +297,7 @@ void GLC_Box::createWire()
 	floatVector << -lgX << lgY << -lgZ;
 	floatVector << -lgX << lgY << lgZ;
 	floatVector << lgX << lgY << lgZ;
-	GLC_Geometry::addPolyline(floatVector);
+	GLC_Geometry::addVerticeGroup(floatVector);
 	floatVector.clear();
 
 	floatVector << lgX << -lgY << lgZ;
@@ -305,27 +305,27 @@ void GLC_Box::createWire()
 	floatVector << -lgX << -lgY << -lgZ;
 	floatVector << -lgX << -lgY << lgZ;
 	floatVector << lgX << -lgY << lgZ;
-	GLC_Geometry::addPolyline(floatVector);
+	GLC_Geometry::addVerticeGroup(floatVector);
 	floatVector.clear();
 
 	floatVector << lgX << lgY << lgZ;
 	floatVector << lgX << -lgY << lgZ;
-	GLC_Geometry::addPolyline(floatVector);
+	GLC_Geometry::addVerticeGroup(floatVector);
 	floatVector.clear();
 
 	floatVector << lgX << lgY << -lgZ;
 	floatVector << lgX << -lgY << -lgZ;
-	GLC_Geometry::addPolyline(floatVector);
+	GLC_Geometry::addVerticeGroup(floatVector);
 	floatVector.clear();
 
 	floatVector << -lgX << lgY << -lgZ;
 	floatVector << -lgX << -lgY << -lgZ;
-	GLC_Geometry::addPolyline(floatVector);
+	GLC_Geometry::addVerticeGroup(floatVector);
 	floatVector.clear();
 
 	floatVector << -lgX << lgY << lgZ;
 	floatVector << -lgX << -lgY << lgZ;
-	GLC_Geometry::addPolyline(floatVector);
+	GLC_Geometry::addVerticeGroup(floatVector);
 	floatVector.clear();
 }
 
