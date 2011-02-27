@@ -78,7 +78,9 @@ HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_worldto3dxml.h \
 						io/glc_bsreptoworld.h \
 						io/glc_xmlutil.h \
-						io/glc_fileloader.h
+						io/glc_fileloader.h \
+						io/glc_worldreaderplugin.h \
+						io/glc_worldreaderhandler.h
 
 HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_3dviewinstance.h \
@@ -112,7 +114,8 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_polylines.h \
 							geometry/glc_disc.h \
 							geometry/glc_cone.h \
-							geometry/glc_sphere.h
+							geometry/glc_sphere.h \
+							geometry/glc_pointcloud.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -258,7 +261,8 @@ SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_polylines.cpp \
 			geometry/glc_disc.cpp \
 			geometry/glc_cone.cpp \
-			geometry/glc_sphere.cpp
+			geometry/glc_sphere.cpp \
+			geometry/glc_pointcloud.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -403,7 +407,10 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_TraceLog \
     		   include/glcXmlUtil \
     		   include/GLC_OpenGLState \
-    		   include/GLC_FileLoader
+    		   include/GLC_FileLoader \
+    		   include/GLC_WorldReaderPlugin \
+    		   include/GLC_WorldReaderHandler \
+    		   include/GLC_PointCloud
 
     			   
 # Linux and macx install configuration
