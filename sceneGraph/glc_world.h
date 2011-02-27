@@ -85,7 +85,7 @@ public:
 
 	//! Return true if the world is empty
 	inline bool isEmpty() const
-	{return  m_pWorldHandle->collection()->isEmpty();}
+	{return  m_pWorldHandle->collection()->isEmpty() && !m_pRoot->hasChild();}
 
 	//! Return number of faces
 	inline int numberOfFaces() const
