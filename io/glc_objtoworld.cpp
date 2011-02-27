@@ -501,9 +501,9 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		QSet<GLuint>::iterator iIndexSet= indexSet.begin();
 		while (indexSet.constEnd() != iIndexSet)
 		{
-			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3]= normal.X();
-			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3 + 1]= normal.Y();
-			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3 + 2]= normal.Z();
+			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3]= normal.x();
+			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3 + 1]= normal.y();
+			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3 + 2]= normal.z();
 
 			++iIndexSet;
 		}

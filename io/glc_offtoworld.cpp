@@ -543,9 +543,9 @@ void GLC_OffToWorld::computeNormal()
 		GLC_Vector3df curNormal= normal.toVector3df();
 		for (int curVertex= 0; curVertex < 3; ++curVertex)
 		{
-			(*pNormal)[m_IndexList.at(i + curVertex) * 3]= curNormal.X();
-			(*pNormal)[m_IndexList.at(i + curVertex) * 3 + 1]= curNormal.Y();
-			(*pNormal)[m_IndexList.at(i + curVertex) * 3 + 2]= curNormal.Z();
+			(*pNormal)[m_IndexList.at(i + curVertex) * 3]= curNormal.x();
+			(*pNormal)[m_IndexList.at(i + curVertex) * 3 + 1]= curNormal.y();
+			(*pNormal)[m_IndexList.at(i + curVertex) * 3 + 2]= curNormal.z();
 		}
 	}
 
