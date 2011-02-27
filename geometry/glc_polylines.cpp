@@ -82,7 +82,7 @@ void GLC_Polylines::glDraw(const GLC_RenderProperties& renderProperties)
 {
 	if (!GLC_Geometry::m_WireData.isEmpty())
 	{
-		GLC_Geometry::m_WireData.glDraw(renderProperties);
+		GLC_Geometry::m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
 	}
 }
 

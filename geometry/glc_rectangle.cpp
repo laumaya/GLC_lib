@@ -159,7 +159,7 @@ void GLC_Rectangle::createMeshAndWire()
 
 	// Add the first point of the rectangle for wire
 	verticeVector << -lgX; verticeVector << -lgY; verticeVector << 0.0f;
-	GLC_Geometry::addPolyline(verticeVector);
+	GLC_Geometry::addVerticeGroup(verticeVector);
 
 	// Set the material to use
 	GLC_Material* pMaterial;

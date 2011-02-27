@@ -78,7 +78,7 @@ public:
 public:
 	//! Add a Polyline to this wire and returns its id if id are managed
 	inline GLC_uint addPolyline(const GLfloatVector& data)
-	{return GLC_Geometry::m_WireData.addPolyline(data);}
+	{return GLC_Geometry::m_WireData.addVerticeGroup(data);}
 
 	//! Set this polylines from the given polylines and return a reference of this polylines
 	GLC_Polylines& operator=(const GLC_Polylines& polyline);
