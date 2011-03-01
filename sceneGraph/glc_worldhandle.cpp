@@ -191,3 +191,26 @@ void GLC_WorldHandle::unselectAll()
 	m_SelectionSet.clear();
 	m_Collection.unselectAll();
 }
+
+void GLC_WorldHandle::showHideSelected3DViewInstance()
+{
+	QList<GLC_3DViewInstance*> selected3dviewInstance= m_Collection.selection()->values();
+	const int instanceCount= selected3dviewInstance.count();
+	for(int i= 0; i < instanceCount; ++i)
+	{
+		GLC_3DViewInstance* pCurrentInstance= selected3dviewInstance.at(i);
+		pCurrentInstance->setVisibility(!pCurrentInstance->isVisible());
+	}
+}
+
+void GLC_WorldHandle::setSelected3DViewInstanceVisibility(bool isVisible)
+{
+	QList<GLC_3DViewInstance*> selected3dviewInstance= m_Collection.selection()->values();
+	const int instanceCount= selected3dviewInstance.count();
+	for(int i= 0; i < instanceCount; ++i)
+	{
+		GLC_3DViewInstance* pCurrentInstance= selected3dviewInstance.at(i);
+		pCurrentInstance->setVisibility(isVisible);
+	}
+}
+

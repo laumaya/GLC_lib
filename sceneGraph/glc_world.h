@@ -235,6 +235,18 @@ public:
 	inline void unselectAll()
 	{m_pWorldHandle->unselectAll();}
 
+	//! Show / Hide selected 3DViewInstance
+	inline void showHideSelected3DViewInstance()
+	{m_pWorldHandle->showHideSelected3DViewInstance();}
+
+	//! Show selected 3DViewInstance
+	inline void showSelected3DViewInstance()
+	{m_pWorldHandle->setSelected3DViewInstanceVisibility(true);}
+
+	//! Hide selected 3DViewInstance
+	inline void hideSelected3DViewInstance()
+	{m_pWorldHandle->setSelected3DViewInstanceVisibility(false);}
+
 
 //@}
 
