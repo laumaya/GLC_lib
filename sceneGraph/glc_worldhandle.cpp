@@ -31,6 +31,7 @@ GLC_WorldHandle::GLC_WorldHandle()
 , m_NumberOfWorld(1)
 , m_OccurenceHash()
 , m_UpVector(glc::Z_AXIS)
+, m_SelectionSet(this)
 {
 
 }
@@ -124,10 +125,69 @@ void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelec
 void GLC_WorldHandle::removeOccurence(GLC_StructOccurence* pOccurence)
 {
 	Q_ASSERT(m_OccurenceHash.contains(pOccurence->id()));
+	// Remove the occurence from the selection set
+	m_SelectionSet.remove(pOccurence);
+	// Remove the occurence from the main occurence hash table
 	m_OccurenceHash.remove(pOccurence->id());
 	// Remove instance representation from the collection
-	if (pOccurence->hasRepresentation())
+	m_Collection.remove(pOccurence->id());
+}
+
+void GLC_WorldHandle::select(GLC_uint occurenceId, bool propagate)
+{
+	Q_ASSERT(m_OccurenceHash.contains(occurenceId));
+	m_SelectionSet.insert(occurenceId);
+	m_Collection.select(occurenceId);
+
+	const GLC_StructOccurence* pSelectedOccurence= m_OccurenceHash.value(occurenceId);
+	if (propagate && pSelectedOccurence->hasChild())
 	{
-		m_Collection.remove(pOccurence->id());
+		QList<GLC_StructOccurence*> subOccurenceList= pSelectedOccurence->subOccurenceList();
+		const int subOccurenceCount= subOccurenceList.size();
+		for (int i= 0; i < subOccurenceCount; ++i)
+		{
+			const GLC_uint currentOccurenceId= subOccurenceList.at(i)->id();
+			if (m_Collection.contains(currentOccurenceId))
+			{
+				GLC_3DViewInstance* pInstance= m_Collection.instanceHandle(currentOccurenceId);
+				m_Collection.select(currentOccurenceId);			}
+		}
 	}
+}
+
+void GLC_WorldHandle::unselect(GLC_uint occurenceId, bool propagate)
+{
+	Q_ASSERT(m_OccurenceHash.contains(occurenceId));
+	m_SelectionSet.remove(occurenceId);
+	m_Collection.unselect(occurenceId);
+
+	const GLC_StructOccurence* pSelectedOccurence= m_OccurenceHash.value(occurenceId);
+	if (propagate && pSelectedOccurence->hasChild())
+	{
+		QList<GLC_StructOccurence*> subOccurenceList= pSelectedOccurence->subOccurenceList();
+		const int subOccurenceCount= subOccurenceList.size();
+		for (int i= 0; i < subOccurenceCount; ++i)
+		{
+			const GLC_uint currentOccurenceId= subOccurenceList.at(i)->id();
+			m_Collection.unselect(currentOccurenceId);
+		}
+	}
+}
+
+void GLC_WorldHandle::selectAllWith3DViewInstance(bool allShowState)
+{
+	m_Collection.selectAll(allShowState);
+	QList<GLC_uint> selectedId= m_Collection.selection()->keys();
+	m_SelectionSet.clear();
+	const int selectionCount= selectedId.count();
+	for (int i= 0; i < selectionCount; ++i)
+	{
+		m_SelectionSet.insert(selectedId.at(i));
+	}
+}
+
+void GLC_WorldHandle::unselectAll()
+{
+	m_SelectionSet.clear();
+	m_Collection.unselectAll();
 }
