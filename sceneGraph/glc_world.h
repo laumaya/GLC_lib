@@ -160,6 +160,26 @@ public:
 	inline GLC_Vector3d upVector() const
 	{return m_pWorldHandle->upVector();}
 
+	//! Return the number of selected occurence
+	int selectionSize() const
+	{return m_pWorldHandle->selectionSetHandle()->size();}
+
+	//! Return true if the given occurence is selected
+	inline bool isSelected(const GLC_StructOccurence* pOccurence) const
+	{return m_pWorldHandle->selectionSetHandle()->contains(pOccurence);}
+
+	//! Return true if the given occurence id is selected
+	inline bool isSelected(GLC_uint selectionId) const
+	{return m_pWorldHandle->selectionSetHandle()->contains(selectionId);}
+
+	//! Return the list of selected occurences
+	inline QList<GLC_StructOccurence*> selectedOccurenceList() const
+	{return m_pWorldHandle->selectionSetHandle()->occurencesList();}
+
+	//! Return the list of selected occurences
+	inline QList<GLC_StructOccurence*> selectedPrimitiveOccurenceList() const
+	{return m_pWorldHandle->selectionSetHandle()->occurencesListWithSelectedPrimitive();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -178,9 +198,7 @@ public:
 
 	//! Set the World root Name
 	inline void setRootName(const QString& name)
-	{
-		m_pRoot->setName(name);
-	}
+	{m_pRoot->setName(name);}
 
 	//! Set the world Up Vector
 	inline void setUpVector(const GLC_Vector3d& vect)
@@ -189,6 +207,33 @@ public:
 	//! Set the attached viewport of this world
 	inline void setAttachedViewport(GLC_Viewport* pViewport)
 	{m_pWorldHandle->setAttachedViewport(pViewport);}
+
+	//! Select the given occurence
+	/*! The given occurence must belong to the world handle of this world*/
+	inline void select(const GLC_StructOccurence* pOccurence)
+	{m_pWorldHandle->select(pOccurence->id());}
+
+	//! Select the given occurence id
+	/*! The given occurence id must belong to the world handle of this world*/
+	inline void select(GLC_uint occurenceId)
+	{m_pWorldHandle->select(occurenceId);}
+
+	//! Unselect the given occurence id
+	/*! The given occurence id must belong to the world handle of this world*/
+	inline void unselect(GLC_uint occurenceId)
+	{m_pWorldHandle->unselect(occurenceId);}
+
+	//! Select all occurence of this world with a 3DViewInstance
+	inline void selectAllWith3DViewInstance()
+	{m_pWorldHandle->selectAllWith3DViewInstance(true);}
+
+	//! Select all occurence of this world with a 3DViewInstance in the current show state
+	inline void selectAllWith3DViewInstanceInCurrentShowState()
+	{m_pWorldHandle->selectAllWith3DViewInstance(false);}
+
+	//! Unselect all occurence of this world
+	inline void unselectAll()
+	{m_pWorldHandle->unselectAll();}
 
 
 //@}
