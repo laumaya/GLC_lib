@@ -92,7 +92,8 @@ HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_worldhandle.h \
 							sceneGraph/glc_spacepartitioning.h \
 							sceneGraph/glc_octree.h \
-							sceneGraph/glc_octreenode.h
+							sceneGraph/glc_octreenode.h \
+							sceneGraph/glc_selectionset.h
 							
 HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_circle.h \
@@ -239,7 +240,8 @@ SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
 			sceneGraph/glc_worldhandle.cpp \
 			sceneGraph/glc_spacepartitioning.cpp \
 			sceneGraph/glc_octree.cpp \
-			sceneGraph/glc_octreenode.cpp
+			sceneGraph/glc_octreenode.cpp \
+			sceneGraph/glc_selectionset.cpp
 
 SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_circle.cpp \
@@ -410,7 +412,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_FileLoader \
     		   include/GLC_WorldReaderPlugin \
     		   include/GLC_WorldReaderHandler \
-    		   include/GLC_PointCloud
+    		   include/GLC_PointCloud \
+    		   include/GLC_SelectionSet
 
     			   
 # Linux and macx install configuration
