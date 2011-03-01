@@ -64,7 +64,6 @@ GLC_3DViewCollection::~GLC_3DViewCollection()
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// Add the specified shader to the collection
 bool GLC_3DViewCollection::bindShader(GLuint shaderId)
 {
 	if (m_ShadedPointerViewInstanceHash.contains(shaderId))
@@ -79,7 +78,6 @@ bool GLC_3DViewCollection::bindShader(GLuint shaderId)
 	}
 }
 
-// Unbind the specified shader from the collection
 bool GLC_3DViewCollection::unBindShader(GLuint shaderId)
 {
 	bool result= false;
@@ -113,7 +111,6 @@ bool GLC_3DViewCollection::unBindShader(GLuint shaderId)
 	return result;
 }
 
-// Unbind All shader
 bool GLC_3DViewCollection::unBindAllShader()
 {
 	bool result= true;
@@ -132,7 +129,6 @@ bool GLC_3DViewCollection::unBindAllShader()
     return result;
 }
 
-// Add GLC_3DViewInstance in the collection
 bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLuint shaderID)
 {
 	bool result= false;
@@ -187,7 +183,7 @@ bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLuint shaderID)
 	}
 	return result;
 }
-// Change instance shading group
+
 void GLC_3DViewCollection::changeShadingGroup(GLC_uint instanceId, GLuint shaderId)
 {
 	// Test if the specified instance exist
@@ -243,7 +239,6 @@ void GLC_3DViewCollection::changeShadingGroup(GLC_uint instanceId, GLuint shader
 	}
 }
 
-// Delete geometry from the collection
 bool GLC_3DViewCollection::remove(GLC_uint Key)
 {
 	ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.find(Key);
@@ -279,7 +274,6 @@ bool GLC_3DViewCollection::remove(GLC_uint Key)
 
 }
 
-// Clear the collection
 void GLC_3DViewCollection::clear(void)
 {
 	// Clear Selected node Hash Table
@@ -312,20 +306,19 @@ void GLC_3DViewCollection::clear(void)
 	delete m_pSpacePartitioning;
 }
 
-// Select a node
 bool GLC_3DViewCollection::select(GLC_uint key, bool primitive)
 {
 	if (!m_3DViewInstanceHash.contains(key)) return false;
 	//qDebug() << "GLC_Collection::select " << key;
 
-	GLC_3DViewInstance* pSelectedNode;
+	GLC_3DViewInstance* pSelectedInstance;
 	ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.find(key);
 	PointerViewInstanceHash::iterator iSelectedNode= m_SelectedInstances.find(key);
 
 	if ((iNode != m_3DViewInstanceHash.end()) && (iSelectedNode == m_SelectedInstances.end()))
 	{	// Ok, the key exist and the node is not selected
-		pSelectedNode= &(iNode.value());
-		m_SelectedInstances.insert(pSelectedNode->id(), pSelectedNode);
+		pSelectedInstance= &(iNode.value());
+		m_SelectedInstances.insert(pSelectedInstance->id(), pSelectedInstance);
 
 		// Remove Selected Node from is previous collection
 		if (isInAShadingGroup(key))
@@ -337,20 +330,18 @@ bool GLC_3DViewCollection::select(GLC_uint key, bool primitive)
 		{
 			m_MainInstances.remove(key);
 		}
-		pSelectedNode->select(primitive);
+		pSelectedInstance->select(primitive);
 
 		//qDebug("GLC_3DViewCollection::selectNode : Element succesfuly selected");
 		return true;
 	}
 	else
-	{	// KO, key doesn't exist or node allready selected
-		qDebug("GLC_Collection::selectNode : Element not selected");
+	{	// KO, instance allready selected
 		return false;
 	}
 }
 
-// Select all instances in current show state
-void GLC_3DViewCollection::selectAll()
+void GLC_3DViewCollection::selectAll(bool allShowState)
 {
 	unselectAll();
 	ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.begin();
@@ -359,7 +350,7 @@ void GLC_3DViewCollection::selectAll()
 		GLC_3DViewInstance *pCurrentInstance= &(iNode.value());
 		const GLC_uint instanceId= pCurrentInstance->id();
 
-		if (pCurrentInstance->isVisible() == m_IsInShowSate)
+		if (allShowState || (pCurrentInstance->isVisible() == m_IsInShowSate))
 		{
 			pCurrentInstance->select(false);
 			m_SelectedInstances.insert(instanceId, pCurrentInstance);
@@ -373,7 +364,6 @@ void GLC_3DViewCollection::selectAll()
 	}
 }
 
-// unselect a node
 bool GLC_3DViewCollection::unselect(GLC_uint key)
 {
 	GLC_3DViewInstance* pSelectedNode;
@@ -408,7 +398,6 @@ bool GLC_3DViewCollection::unselect(GLC_uint key)
 	}
 }
 
-// Unselect all Node
 void GLC_3DViewCollection::unselectAll()
 {
 	PointerViewInstanceHash::iterator iSelectedNode= m_SelectedInstances.begin();
@@ -432,7 +421,6 @@ void GLC_3DViewCollection::unselectAll()
     m_SelectedInstances.clear();
 }
 
-// Set the polygon mode for all Instance
 void GLC_3DViewCollection::setPolygonModeForAll(GLenum face, GLenum mode)
 {
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
@@ -446,7 +434,6 @@ void GLC_3DViewCollection::setPolygonModeForAll(GLenum face, GLenum mode)
 
 }
 
-// Set Instance visibility
 void GLC_3DViewCollection::setVisibility(const GLC_uint key, const bool visibility)
 {
 	ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.find(key);
@@ -462,7 +449,6 @@ void GLC_3DViewCollection::setVisibility(const GLC_uint key, const bool visibili
 	}
 }
 
-// Show all instance of the collection
 void GLC_3DViewCollection::showAll()
 {
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
@@ -483,7 +469,6 @@ void GLC_3DViewCollection::showAll()
 
 }
 
-// Hide all instance of the collection
 void GLC_3DViewCollection::hideAll()
 {
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
@@ -504,7 +489,6 @@ void GLC_3DViewCollection::hideAll()
 
 }
 
-// Bind the space partitioning
 void GLC_3DViewCollection::bindSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning)
 {
 	Q_ASSERT(NULL != pSpacePartitioning);
@@ -514,7 +498,6 @@ void GLC_3DViewCollection::bindSpacePartitioning(GLC_SpacePartitioning* pSpacePa
 	m_pSpacePartitioning= pSpacePartitioning;
 }
 
-// Unbind the space partitioning
 void GLC_3DViewCollection::unbindSpacePartitioning()
 {
 	delete m_pSpacePartitioning;
@@ -531,7 +514,6 @@ void GLC_3DViewCollection::unbindSpacePartitioning()
 
 }
 
-// Update the instance viewble state using frustrum culling
 void GLC_3DViewCollection::updateInstanceViewableState(GLC_Matrix4x4* pMatrix)
 {
 	if ((NULL != m_pViewport) && m_UseSpacePartitioning && (NULL != m_pSpacePartitioning))
@@ -540,13 +522,12 @@ void GLC_3DViewCollection::updateInstanceViewableState(GLC_Matrix4x4* pMatrix)
 			m_pSpacePartitioning->updateViewableInstances(m_pViewport->frustum());
 	}
 }
-// Update the instance viewable state with the specified frustum
+
 void GLC_3DViewCollection::updateInstanceViewableState(const GLC_Frustum& frustum)
 {
 	m_pSpacePartitioning->updateViewableInstances(frustum);
 }
 
-// Return all GLC_3DViewInstance from collection
 QList<GLC_3DViewInstance*> GLC_3DViewCollection::instancesHandle()
 {
 	QList<GLC_3DViewInstance*> instancesList;
@@ -561,7 +542,6 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::instancesHandle()
 	return instancesList;
 }
 
-// Return all visible GLC_3DViewInstance from the collection
 QList<GLC_3DViewInstance*> GLC_3DViewCollection::visibleInstancesHandle()
 {
 	QList<GLC_3DViewInstance*> instancesList;
@@ -580,7 +560,6 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::visibleInstancesHandle()
 
 }
 
-//! Return all viewable GLC_3DViewInstance from the collection
 QList<GLC_3DViewInstance*> GLC_3DViewCollection::viewableInstancesHandle()
 {
 	QList<GLC_3DViewInstance*> instancesList;
@@ -598,14 +577,12 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::viewableInstancesHandle()
 	return instancesList;
 }
 
-// Return a GLC_3DViewInstance pointer from the collection
 GLC_3DViewInstance* GLC_3DViewCollection::instanceHandle(GLC_uint Key)
 {
 	Q_ASSERT(m_3DViewInstanceHash.contains(Key));
 	return &(m_3DViewInstanceHash[Key]);
 }
 
-// return the entire collection Bounding Box
 GLC_BoundingBox GLC_3DViewCollection::boundingBox(bool allObject)
 {
 	// If the bounding box is not valid delete it
@@ -652,7 +629,6 @@ GLC_BoundingBox GLC_3DViewCollection::boundingBox(bool allObject)
 	}
 }
 
-// Return the number of drawable objects
 int GLC_3DViewCollection::drawableObjectsSize() const
 {
 	// The number of object to drw
@@ -672,7 +648,6 @@ int GLC_3DViewCollection::drawableObjectsSize() const
 	return numberOffDrawnHit;
 }
 
-// Return instances name from the specified shading group
 QList<QString> GLC_3DViewCollection::instanceNamesFromShadingGroup(GLuint shaderId) const
 {
 	QList<QString> listOfInstanceName;
@@ -688,7 +663,6 @@ QList<QString> GLC_3DViewCollection::instanceNamesFromShadingGroup(GLuint shader
 	return listOfInstanceName;
 }
 
-// Return the number of used shading group
 int GLC_3DViewCollection::numberOfUsedShadingGroup() const
 {
 	return m_ShaderGroup.values().toSet().size();
@@ -725,7 +699,6 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 		}
 	}
 }
-// Display all shader group
 void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 {
 	if (!isEmpty())
@@ -746,7 +719,6 @@ void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 	}
 }
 
-// Display the specified collection group
 void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 {
 	// Set render Mode and OpenGL state
@@ -804,7 +776,6 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 	}
 }
 
-// Set the Bounding box validity
 void GLC_3DViewCollection::setBoundingBoxValidity(void)
 {
 	if (NULL != m_pBoundingBox)

@@ -202,8 +202,8 @@ public:
 	//! Select a Instance
 	bool select(GLC_uint, bool primitive= false);
 
-	//! Select all instances in current show state
-	void selectAll();
+	//! Select all instances in current show state or in all show state
+	void selectAll(bool allShowState= false);
 
 	//! unselect a Instance
 	bool unselect(GLC_uint);
