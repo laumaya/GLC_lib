@@ -275,6 +275,11 @@ void GLC_Axis::create3DviewInstance()
 	}
 }
 
+void GLC_Axis::resetViewState()
+{
+
+}
+
 void GLC_Axis::moveManipulatorRep(const GLC_Point3d& pos)
 {
 

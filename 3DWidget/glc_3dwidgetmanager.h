@@ -88,6 +88,10 @@ public:
 	inline void clear()
 	{m_pWidgetManagerHandle->clear();}
 
+	//! Set the visibility of the given 3D widget id
+	inline void setWidgetVisible(GLC_uint id, bool visible)
+	{m_pWidgetManagerHandle->setWidgetVisible(id, visible);}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Interaction Functions*/

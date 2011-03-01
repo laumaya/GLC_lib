@@ -105,6 +105,13 @@ void GLC_3DWidgetManagerHandle::clear()
 	m_MapBetweenInstanceWidget.clear();
 }
 
+void GLC_3DWidgetManagerHandle::setWidgetVisible(GLC_uint id, bool visible)
+{
+	if (id == m_Active3DWidgetId) m_Active3DWidgetId= 0;
+	Q_ASSERT(m_3DWidgetHash.contains(id));
+	m_3DWidgetHash.value(id)->setVisible(visible);
+}
+
 glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseDoubleClickEvent(QMouseEvent *)
 {
 

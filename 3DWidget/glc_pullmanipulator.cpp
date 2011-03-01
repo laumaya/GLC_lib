@@ -67,13 +67,6 @@ GLC_Matrix4x4 GLC_PullManipulator::doManipulate(const GLC_Point3d& newPoint, con
 	GLC_Line3d projectionLine(newPoint, projectionDirection);
 	glc::lineIntersectPlane(projectionLine, GLC_AbstractManipulator::m_SliddingPlane, &projectedPoint);
 
-	// Construct the plane throw previous position and pull direction oriented with camera side vector
-	GLC_Vector3d projNormal= (GLC_AbstractManipulator::m_pViewport->cameraHandle()->sideVector() ^ m_PullDirection).normalize();
-	GLC_Plane projPlane(projNormal, GLC_AbstractManipulator::m_PreviousPosition);
-
-	// Project the point on the previous computed plane
-	glc::lineIntersectPlane(projectionLine, projPlane, &projectedPoint);
-
 	// Project the point on the pulling direction
 	projectedPoint= glc::project(projectedPoint, GLC_Line3d(GLC_AbstractManipulator::previousPosition(), m_PullDirection));
 

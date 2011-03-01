@@ -128,6 +128,9 @@ public:
 	//! Remove all 3D view instance from this manager
 	void clear();
 
+	//! Set the visibility of the given 3D widget id
+	void setWidgetVisible(GLC_uint id, bool visible);
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Interaction Functions*/

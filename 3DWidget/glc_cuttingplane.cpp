@@ -247,16 +247,7 @@ glc::WidgetEventFlag GLC_CuttingPlane::mouseReleased(Qt::MouseButton button)
 
 glc::WidgetEventFlag GLC_CuttingPlane::unselect(const GLC_Point3d&, GLC_uint)
 {
-	Q_ASSERT(m_SelectionIndex == -1);
-	for (int i= 0; i < 4; ++i)
-	{
-		GLC_3DWidget::set3DViewInstanceVisibility(1 + i, false);
-	}
-	delete m_pCurrentManipulator;
-	m_pCurrentManipulator= NULL;
-
-	m_CurrentManipulator= TranslationManipulator;
-
+	resetViewState();
 	return glc::AcceptEvent;
 }
 
@@ -357,6 +348,18 @@ void GLC_CuttingPlane::create3DviewInstance()
 	//pDisc->setAngle(glc::PI / 2.0);
 	GLC_3DWidget::add3DViewInstance(GLC_3DViewInstance(pDisc));
 	GLC_3DWidget::set3DViewInstanceVisibility(4, false);
+}
+
+void GLC_CuttingPlane::resetViewState()
+{
+	Q_ASSERT(m_SelectionIndex == -1);
+	for (int i= 0; i < 4; ++i)
+	{
+		GLC_3DWidget::set3DViewInstanceVisibility(1 + i, false);
+	}
+	m_pCurrentManipulator= NULL;
+
+	m_CurrentManipulator= TranslationManipulator;
 }
 
 void GLC_CuttingPlane::moveManipulatorRep(const GLC_Point3d& pos)

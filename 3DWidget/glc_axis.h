@@ -125,6 +125,9 @@ protected:
 	//! Create the 3DView instance of this 3d widget
 	virtual void create3DviewInstance();
 
+	//! Reset the view state of this 3DWidget
+	virtual void resetViewState();
+
 //////////////////////////////////////////////////////////////////////
 // Private services function
 //////////////////////////////////////////////////////////////////////
