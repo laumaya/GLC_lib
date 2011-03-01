@@ -97,6 +97,18 @@ void GLC_3DWidget::setWidgetManager(GLC_3DWidgetManagerHandle* pWidgetManagerHan
 	create3DviewInstance();
 }
 
+void GLC_3DWidget::setVisible(bool visible)
+{
+	if (NULL != m_pWidgetManagerHandle)
+	{
+		const int instanceCount= m_InstanceIdList.size();
+		for (int i= 0; i < instanceCount; ++i)
+		{
+			m_pWidgetManagerHandle->instanceHandle(m_InstanceIdList.at(i))->setVisibility(visible);
+		}
+		resetViewState();
+	}
+}
 //////////////////////////////////////////////////////////////////////
 // Interaction Functions
 //////////////////////////////////////////////////////////////////////

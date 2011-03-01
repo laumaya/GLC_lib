@@ -104,6 +104,9 @@ public:
 
 	//! Update widget representation
 	virtual void updateWidgetRep(){};
+
+	//! Set the visibility of 3DView Instance of this widget
+	void setVisible(bool visible);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -163,6 +166,9 @@ protected:
 	//! Return the index of the given instance id
 	inline int indexOfIntsanceId(GLC_uint id)
 	{return m_InstanceIdList.indexOf(id);}
+
+	//! Reset the view state of this 3DWidget
+	virtual void resetViewState()= 0;
 
 //////////////////////////////////////////////////////////////////////
 // Private services function
