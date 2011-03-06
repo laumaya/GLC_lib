@@ -27,7 +27,7 @@
 #ifndef GLC_WORLDREADERPLUGIN_H_
 #define GLC_WORLDREADERPLUGIN_H_
 
-#include <QObject>
+#include <QtPlugin>
 #include <QStringList>
 
 #include "glc_worldreaderhandler.h"
