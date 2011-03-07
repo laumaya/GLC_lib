@@ -28,7 +28,7 @@
 #include <QList>
 #include <QSet>
 
-#include "glc_structOccurence.h"
+#include "glc_structoccurence.h"
 #include "../glc_global.h"
 
 #include "../glc_config.h"
