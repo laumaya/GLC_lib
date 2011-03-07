@@ -8,7 +8,7 @@ CONFIG += exceptions \
     debug \
     warn_on
 TARGET = GLC_lib
-VERSION = 2.0.5
+VERSION = 2.1.0
 
 DEFINES += CREATE_GLC_LIB_DLL
 DEFINES += LIB3DS_EXPORTS
@@ -419,8 +419,8 @@ HEADERS_INST = include/GLC_BoundingBox \
 # Linux and macx install configuration
 unix {
     # Location of HEADERS and library
-    LIB_DIR = /usr/lib
-    INCLUDE_DIR = /usr/include
+    LIB_DIR = /usr/local/lib
+    INCLUDE_DIR = /usr/local/include
     # Adds a -P to preserve link
 	QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
 	include.path = $${INCLUDE_DIR}/GLC_lib
