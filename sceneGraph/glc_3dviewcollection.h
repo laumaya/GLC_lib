@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -202,8 +200,8 @@ public:
 	//! Select a Instance
 	bool select(GLC_uint, bool primitive= false);
 
-	//! Select all instances in current show state
-	void selectAll();
+	//! Select all instances in current show state or in all show state
+	void selectAll(bool allShowState= false);
 
 	//! unselect a Instance
 	bool unselect(GLC_uint);

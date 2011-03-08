@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -227,9 +225,9 @@ void GLC_StlToWorld::scanFacet()
 	GLC_Vector3df cur3dVect= extract3dVect(lineBuff);
 	for (int i= 0; i < 3; ++i)
 	{
-		m_NormalBulk.append(cur3dVect.X());
-		m_NormalBulk.append(cur3dVect.Y());
-		m_NormalBulk.append(cur3dVect.Z());
+		m_NormalBulk.append(cur3dVect.x());
+		m_NormalBulk.append(cur3dVect.y());
+		m_NormalBulk.append(cur3dVect.z());
 	}
 
 ////////////////////////////////////////////// Outer Loop////////////////////////////////
@@ -268,9 +266,9 @@ void GLC_StlToWorld::scanFacet()
 		lineBuff= lineBuff.trimmed();
 
 		cur3dVect= extract3dVect(lineBuff);
-		m_VertexBulk.append(cur3dVect.X());
-		m_VertexBulk.append(cur3dVect.Y());
-		m_VertexBulk.append(cur3dVect.Z());
+		m_VertexBulk.append(cur3dVect.x());
+		m_VertexBulk.append(cur3dVect.y());
+		m_VertexBulk.append(cur3dVect.z());
 
 		m_CurrentFace.append(m_CurrentIndex);
 		++m_CurrentIndex;

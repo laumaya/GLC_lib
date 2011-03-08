@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -130,7 +128,7 @@ public:
 
 	//! Get the list of attached files
 	inline QStringList listOfAttachedFileName() const
-	{return m_ListOfAttachedFileName.toList();}
+	{return m_SetOfAttachedFileName.toList();}
 
 
 //@}
@@ -246,6 +244,30 @@ private:
 	//! Set fileName of the given 3DRep
 	void setRepresentationFileName(GLC_3DRep* pRep);
 
+	//! Read next element from the stream
+	inline QXmlStreamReader::TokenType readNext();
+
+	//! Go to the given xml Element, return true on succes
+	inline bool goToElement(QXmlStreamReader* pReader, const QString& element);
+
+	// Return the content of an element
+	inline QString getContent(QXmlStreamReader* pReader, const QString& element);
+
+	//! Read the specified attribute
+	inline QString readAttribute(QXmlStreamReader* pReader, const QString& attribute);
+
+	//! Return true if the end of specified element is not reached
+	inline bool endElementNotReached(QXmlStreamReader* pReader, const QString& element);
+
+	//! Return true if the start of specified element is not reached
+	inline bool startElementNotReached(QXmlStreamReader* pReader, const QString& element);
+
+	//! Go to the end Element of a xml
+	inline void goToEndElement(QXmlStreamReader* pReader, const QString& element);
+
+	//! Check if the given file is binary
+	void checkFileValidity(QIODevice* pIODevice);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -263,9 +285,6 @@ private:
 
 	//! The Quazip archive
 	QuaZip* m_p3dxmlArchive;
-
-	//! The Quazip file (Entry or archive)
-	QuaZipFile* m_p3dxmlFile;
 
 	//! The current file (if there is no archive)
 	QFile* m_pCurrentFile;
@@ -321,8 +340,8 @@ private:
 	//! Flag indicate the loading method
 	bool m_LoadStructureOnly;
 
-	//! The list of attached file name
-	QSet<QString> m_ListOfAttachedFileName;
+	//! The Set of attached file name
+	QSet<QString> m_SetOfAttachedFileName;
 
 	//! The current file name
 	QString m_CurrentFileName;
@@ -336,7 +355,73 @@ private:
 	//! bool get external ref 3D name
 	bool m_GetExternalRef3DName;
 
+	static QMutex m_ZipMutex;
+
+	QList<QByteArray> m_ByteArrayList;
 
 };
+
+QXmlStreamReader::TokenType GLC_3dxmlToWorld::readNext()
+{
+	QXmlStreamReader::TokenType token= m_pStreamReader->readNext();
+	if (QXmlStreamReader::PrematureEndOfDocumentError == m_pStreamReader->error())
+	{
+		//qDebug() << "QXmlStreamReader::PrematureEndOfDocumentError == m_pStreamReader->error()";
+		if (!m_ByteArrayList.isEmpty())
+		{
+			m_pStreamReader->addData(m_ByteArrayList.takeFirst());
+			return readNext();
+		}
+	}
+	return token;
+}
+
+bool GLC_3dxmlToWorld::goToElement(QXmlStreamReader* pReader, const QString& element)
+{
+	while(!pReader->atEnd() && !pReader->hasError() && !(pReader->isStartElement() && (pReader->name() == element)))
+	{
+		readNext();
+	}
+	return !pReader->atEnd() && !pReader->hasError();
+}
+
+QString GLC_3dxmlToWorld::getContent(QXmlStreamReader* pReader, const QString& element)
+{
+	QString content;
+	while(endElementNotReached(pReader, element))
+	{
+		readNext();
+		if (pReader->isCharacters() && !pReader->text().isEmpty())
+		{
+			content+= pReader->text().toString();
+		}
+	}
+
+	return content.trimmed();
+}
+
+QString GLC_3dxmlToWorld::readAttribute(QXmlStreamReader* pReader, const QString& attribute)
+{
+	return pReader->attributes().value(attribute).toString();
+}
+
+bool GLC_3dxmlToWorld::endElementNotReached(QXmlStreamReader* pReader, const QString& element)
+{
+	return !pReader->atEnd() && !pReader->hasError() && !(pReader->isEndElement() && (pReader->name() == element));
+}
+
+bool GLC_3dxmlToWorld::startElementNotReached(QXmlStreamReader* pReader, const QString& element)
+{
+	return !pReader->atEnd() && !pReader->hasError() && !(pReader->isStartElement() && (pReader->name() == element));
+}
+
+void GLC_3dxmlToWorld::goToEndElement(QXmlStreamReader* pReader, const QString& element)
+{
+	while(endElementNotReached(pReader, element))
+	{
+		readNext();
+	}
+}
+
 
 #endif /* GLC_3DXMLTOWORLD_H_ */

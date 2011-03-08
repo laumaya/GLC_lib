@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -91,8 +89,7 @@ public:
 	{ return NULL != m_pParent;}
 
 	//! Return true if this occurence has a representation
-	inline bool hasRepresentation() const
-	{ return m_HasRepresentation;}
+	bool hasRepresentation() const;
 
 	//! Return true if this occurence has 3DViewInstance
 	bool has3DViewInstance() const;
@@ -177,6 +174,10 @@ public:
 	//! Return the set of parents references of the given occurence
 	static QSet<GLC_StructReference*> parentsReferences(const GLC_StructOccurence* pOccurence);
 
+	//! Return true if the automatic creation of 3DViewInstance is used
+	inline bool useAutomatic3DViewInstanceCreation() const
+	{return m_AutomaticCreationOf3DViewInstance;}
+
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -211,8 +212,11 @@ public:
 	//! Reverse Normals of this Occurence and childs
 	void reverseNormals();
 
-	//! Check the presence of representation
-	void checkForRepresentation();
+	//! Create the 3DViewInstance of this occurence if there is a valid 3DRep
+	bool create3DViewInstance();
+
+	//! Remove the 3DViewInstance of this occurence
+	bool remove3DViewInstance();
 
 	//! Set this occurence world Handle
 	void setWorldHandle(GLC_WorldHandle*);
@@ -241,6 +245,11 @@ public:
 
 	//! Set the given reference to this occurence
 	void setReference(GLC_StructReference* pRef);
+
+	//! Set the automatic creation of 3DViewInstance usage
+	inline void setAutomatic3DViewInstanceCreationUsage(bool usage)
+	{m_AutomaticCreationOf3DViewInstance= usage;}
+
 
 //@}
 
@@ -276,9 +285,6 @@ private:
 	//! The absolute matrix of the occurence
 	GLC_Matrix4x4 m_AbsoluteMatrix;
 
-	//! true if occurence has a representation
-	bool m_HasRepresentation;
-
 	//! The occurence number
 	unsigned int m_OccurenceNumber;
 
@@ -287,6 +293,9 @@ private:
 
 	//! The occurence rendering properties
 	GLC_RenderProperties* m_pRenderProperties;
+
+	//! Automatique création of 3DViewInstance
+	bool m_AutomaticCreationOf3DViewInstance;
 
 };
 

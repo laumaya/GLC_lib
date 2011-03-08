@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -122,7 +120,7 @@ namespace glc
 	GLC_LIB_EXPORT QString archiveEntryFileName(const QString& archiveString);
 
 	// GLC_Lib version
-	const QString version("2.0.0");
+	const QString version("2.1.0");
 	const QString description("GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4.");
 
 };

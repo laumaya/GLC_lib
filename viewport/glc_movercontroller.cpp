@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -28,7 +26,8 @@
 
 // Default constructor
 GLC_MoverController::GLC_MoverController()
-: m_ActiveMoverId(0)
+: QObject()
+, m_ActiveMoverId(0)
 , m_MoverHash()
 {
 
@@ -37,7 +36,8 @@ GLC_MoverController::GLC_MoverController()
 
 // Copy constructor
 GLC_MoverController::GLC_MoverController(const GLC_MoverController& controller)
-: m_ActiveMoverId(controller.m_ActiveMoverId)
+: QObject()
+, m_ActiveMoverId(controller.m_ActiveMoverId)
 , m_MoverHash()
 {
 	MoverHash::const_iterator iMover= controller.m_MoverHash.constBegin();
