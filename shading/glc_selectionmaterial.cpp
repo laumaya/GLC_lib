@@ -21,10 +21,13 @@
 *****************************************************************************/
 //! \file glc_selectionmaterial.cpp implementation of the GLC_SelectionMaterial class.
 
+#include <QGLContext>
+
 #include "glc_selectionmaterial.h"
 #include "glc_material.h"
 
-GLC_Shader* GLC_SelectionMaterial::m_pSelectionShader= NULL;
+
+QHash<const QGLContext*, GLC_Shader*> GLC_SelectionMaterial::m_SelectionShaderHash;
 GLC_uint GLC_SelectionMaterial::m_SelectionMaterialId= 0;
 GLC_Material* GLC_SelectionMaterial::m_pMaterial= NULL;
 
@@ -96,32 +99,48 @@ void GLC_SelectionMaterial::glExecute()
 	}
 }
 
-void GLC_SelectionMaterial::initShader()
+void GLC_SelectionMaterial::initShader(const QGLContext* pContext)
 {
-	if (m_pSelectionShader == NULL)
-	{
-		m_pSelectionShader= new GLC_Shader;
-	}
-	m_pSelectionShader->createAndCompileProgrammShader();
+	Q_ASSERT(m_SelectionShaderHash.contains(pContext));
+	m_SelectionShaderHash.value(pContext)->createAndCompileProgrammShader();
 }
 
-void GLC_SelectionMaterial::setShaders(QFile& vertex, QFile& fragment)
+void GLC_SelectionMaterial::setShaders(QFile& vertex, QFile& fragment, const QGLContext* pContext)
 {
-	if (m_pSelectionShader == NULL)
+	if (m_SelectionShaderHash.contains(pContext))
 	{
-		m_pSelectionShader= new GLC_Shader;
+		deleteShader(pContext);
 	}
+	GLC_Shader* pShader= new GLC_Shader;
 
-	m_pSelectionShader->setVertexAndFragmentShader(vertex, fragment);
+	pShader->setVertexAndFragmentShader(vertex, fragment);
+	m_SelectionShaderHash.insert(pContext, pShader);
+}
+
+
+void GLC_SelectionMaterial::useShader()
+{
+	const QGLContext* pContext= QGLContext::currentContext();
+	Q_ASSERT(NULL != pContext);
+	Q_ASSERT(m_SelectionShaderHash.contains(pContext));
+	m_SelectionShaderHash.value(pContext)->use();
+}
+
+void GLC_SelectionMaterial::unUseShader()
+{
+	const QGLContext* pContext= QGLContext::currentContext();
+	Q_ASSERT(NULL != pContext);
+	Q_ASSERT(m_SelectionShaderHash.contains(pContext));
+
+	m_SelectionShaderHash.value(pContext)->unuse();
 }
 
 //! delete shader
-void GLC_SelectionMaterial::deleteShader()
+void GLC_SelectionMaterial::deleteShader(const QGLContext* pContext)
 {
-	if (NULL != m_pSelectionShader)
-	{
-		m_pSelectionShader->deleteShader();
-		delete m_pSelectionShader;
-		m_pSelectionShader= NULL;
-	}
+	Q_ASSERT(m_SelectionShaderHash.contains(pContext));
+	GLC_Shader* pShader= m_SelectionShaderHash.value(pContext);
+	pShader->deleteShader();
+	delete pShader;
+	m_SelectionShaderHash.remove(pContext);
 }

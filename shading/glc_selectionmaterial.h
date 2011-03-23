@@ -26,11 +26,14 @@
 
 #include <QColor>
 #include <QtOpenGL>
+#include <QHash>
+
 #include "../glc_ext.h"
 #include "glc_shader.h"
 
 #include "../glc_config.h"
 
+class QGLContext;
 class GLC_Material;
 
 //////////////////////////////////////////////////////////////////////
@@ -67,15 +70,15 @@ public:
 	//! Execute OpenGL Material
 	static void glExecute();
 	//! Init shader
-	static void initShader();
+	static void initShader(const QGLContext* pContext);
 	//! delete shader
-	static void deleteShader();
+	static void deleteShader(const QGLContext* pContext);
 	//! Set shader
-	static void setShaders(QFile& vertex, QFile& fragment);
+	static void setShaders(QFile& vertex, QFile& fragment, const QGLContext* pContext);
 	//! Use shader
-	inline static void useShader() {m_pSelectionShader->use();}
+	static void useShader();
 	//! Unused shader
-	inline static void unUseShader() {m_pSelectionShader->unuse();}
+	static void unUseShader();
 
 //@}
 
@@ -85,7 +88,7 @@ public:
 
 private:
 		//! Selection Shader
-		static GLC_Shader* m_pSelectionShader;
+		static QHash<const QGLContext*, GLC_Shader*> m_SelectionShaderHash;
 
 		//! Selection material id
 		static GLC_uint m_SelectionMaterialId;
