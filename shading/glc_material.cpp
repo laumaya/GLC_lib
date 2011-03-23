@@ -687,7 +687,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 	stream >> hasTexture;
 	if (hasTexture)
 	{
-		GLC_Texture texture(GLC_Factory::instance()->context());
+		GLC_Texture texture;
 		stream >> texture;
 		material.setTexture(new GLC_Texture(texture));
 	}
