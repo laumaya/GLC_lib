@@ -40,7 +40,6 @@
 
 GLC_3DViewCollection::GLC_3DViewCollection()
 : m_3DViewInstanceHash()
-, m_pBoundingBox(NULL)
 , m_SelectedInstances()
 , m_ShadedPointerViewInstanceHash()
 , m_ShaderGroup()
@@ -170,15 +169,6 @@ bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLuint shaderID)
 		result=true;
 	}
 
-	if(result)
-	{
-		// Bounding box validity
-		if (NULL != m_pBoundingBox)
-		{
-			delete m_pBoundingBox;
-			m_pBoundingBox= NULL;
-		}
-	}
 	return result;
 }
 
@@ -254,13 +244,6 @@ bool GLC_3DViewCollection::remove(GLC_uint Key)
 
 		m_3DViewInstanceHash.remove(Key);		// Delete the conteneur
 
-		// Bounding box validity
-		if (NULL != m_pBoundingBox)
-		{
-			delete m_pBoundingBox;
-			m_pBoundingBox= NULL;
-		}
-
 		//qDebug("GLC_3DViewCollection::removeNode : Element succesfuly deleted");
 		return true;
 
@@ -292,13 +275,6 @@ void GLC_3DViewCollection::clear(void)
 
 	// Clear main Hash table
     m_3DViewInstanceHash.clear();
-
-	// delete the boundingBox
-	if (m_pBoundingBox != NULL)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
 
 	// delete the space partitioning
 	delete m_pSpacePartitioning;
@@ -438,12 +414,6 @@ void GLC_3DViewCollection::setVisibility(const GLC_uint key, const bool visibili
 	if (iNode != m_3DViewInstanceHash.end())
 	{	// Ok, the key exist
 		iNode.value().setVisibility(visibility);
-		// Bounding box validity
-		if (NULL != m_pBoundingBox)
-		{
-			delete m_pBoundingBox;
-			m_pBoundingBox= NULL;
-		}
 	}
 }
 
@@ -457,14 +427,6 @@ void GLC_3DViewCollection::showAll()
     	iEntry.value().setVisibility(true);
     	iEntry++;
     }
-
-    // Bounding box validity
-	if (NULL != m_pBoundingBox)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
-
 }
 
 void GLC_3DViewCollection::hideAll()
@@ -477,13 +439,6 @@ void GLC_3DViewCollection::hideAll()
     	iEntry.value().setVisibility(false);
     	iEntry++;
     }
-
-	// Bounding box validity
-	if (NULL != m_pBoundingBox)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
 
 }
 
@@ -583,48 +538,22 @@ GLC_3DViewInstance* GLC_3DViewCollection::instanceHandle(GLC_uint Key)
 
 GLC_BoundingBox GLC_3DViewCollection::boundingBox(bool allObject)
 {
-	// If the bounding box is not valid delete it
-	if (allObject)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
-	else
-	{
-		setBoundingBoxValidity();
-	}
-
+	GLC_BoundingBox boundingBox;
 	// Check if the bounding box have to be updated
-	if ((m_pBoundingBox == NULL) && !m_3DViewInstanceHash.isEmpty())
+	if (!m_3DViewInstanceHash.isEmpty())
 	{
-		// There is objects in the collection and the collection or bounding box is not valid
-		m_pBoundingBox= new GLC_BoundingBox();
-
 		ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 	    while (iEntry != m_3DViewInstanceHash.constEnd())
 	    {
 	        if(allObject || iEntry.value().isVisible() == m_IsInShowSate)
 	        {
 	        	// Combine Collection BoundingBox with element Bounding Box
-	        	m_pBoundingBox->combine(iEntry.value().boundingBox());
+	        	boundingBox.combine(iEntry.value().boundingBox());
 	        }
 	        ++iEntry;
 	    }
 	}
-
-	if (NULL == m_pBoundingBox) m_pBoundingBox= new GLC_BoundingBox;
-
-	if (allObject)
-	{
-		GLC_BoundingBox allBoundingBox(*m_pBoundingBox);
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-		return allBoundingBox;
-	}
-	else
-	{
-		return *m_pBoundingBox;
-	}
+	return boundingBox;
 }
 
 int GLC_3DViewCollection::drawableObjectsSize() const
@@ -771,32 +700,5 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 		glDisable(GL_BLEND);
 		glDepthMask(GL_TRUE);
 		glEnable(GL_DEPTH_TEST);
-	}
-}
-
-void GLC_3DViewCollection::setBoundingBoxValidity(void)
-{
-	if (NULL != m_pBoundingBox)
-	{
-		if (!m_3DViewInstanceHash.isEmpty())
-		{
-			// Check instance bounding box validity
-			ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
-		    while (iEntry != m_3DViewInstanceHash.constEnd())
-		    {
-		    	if (!iEntry.value().boundingBoxValidity())
-		    	{
-					delete m_pBoundingBox;
-					m_pBoundingBox= NULL;
-					return;
-		    	}
-		    	iEntry++;
-		    }
-		}
-		else if (!m_pBoundingBox->isEmpty())
-		{
-			delete m_pBoundingBox;
-			m_pBoundingBox= NULL;
-		}
 	}
 }
