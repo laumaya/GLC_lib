@@ -111,7 +111,7 @@ class GLC_LIB_EXPORT GLC_3dxmlToWorld : public QObject
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_3dxmlToWorld(const QGLContext*);
+	GLC_3dxmlToWorld();
 
 	virtual ~GLC_3dxmlToWorld();
 //@}
@@ -274,9 +274,6 @@ private:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! OpenGL Context
-	const QGLContext* m_pQGLContext;
-
 	//! Xml Reader
 	QXmlStreamReader* m_pStreamReader;
 

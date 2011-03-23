@@ -33,10 +33,9 @@ static int currentNodeId= 0;
 using namespace glcXmlUtil;
 
 // Default constructor
-GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
+GLC_ColladaToWorld::GLC_ColladaToWorld()
 : QObject()
 , m_pWorld(NULL)
-, m_pQGLContext(pContext)
 , m_pStreamReader(NULL)
 , m_FileName()
 , m_pFile()
@@ -1792,7 +1791,7 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 			if (QFileInfo(fullImageFileName).exists())
 			{
 				m_ListOfAttachedFileName << fullImageFileName;
-				GLC_Texture* pTexture= new GLC_Texture(m_pQGLContext, fullImageFileName);
+				GLC_Texture* pTexture= new GLC_Texture(fullImageFileName);
 				pCurrentMaterial->setTexture(pTexture);
 			}
 			else if (QFileInfo(m_FileName).absolutePath() != QFileInfo(fullImageFileName).absolutePath())
@@ -1802,7 +1801,7 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 				if (QFileInfo(fullImageFileName).exists())
 				{
 					m_ListOfAttachedFileName << fullImageFileName;
-					GLC_Texture* pTexture= new GLC_Texture(m_pQGLContext, fullImageFileName);
+					GLC_Texture* pTexture= new GLC_Texture(fullImageFileName);
 					pCurrentMaterial->setTexture(pTexture);
 				}
 				else
