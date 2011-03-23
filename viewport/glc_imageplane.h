@@ -44,10 +44,10 @@ class GLC_LIB_EXPORT GLC_ImagePlane
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct image plane from the given image file name and QGLContext
-	GLC_ImagePlane(const QGLContext *pContext, const QString& ImageName);
+	GLC_ImagePlane(const QString& ImageName);
 
 	//! Construct image plane from the given image and QGLContext
-	GLC_ImagePlane(const QGLContext *pContext, const QImage& image);
+	GLC_ImagePlane(const QImage& image);
 
 	~GLC_ImagePlane();
 //@}

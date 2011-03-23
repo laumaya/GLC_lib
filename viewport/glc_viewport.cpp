@@ -508,13 +508,13 @@ void GLC_Viewport::updateMinimumRatioSize()
 void GLC_Viewport::loadBackGroundImage(const QString& ImageFile)
 {
 	delete m_pImagePlane;
-	m_pImagePlane= new GLC_ImagePlane(m_pQGLWidget->context(), ImageFile);
+	m_pImagePlane= new GLC_ImagePlane(ImageFile);
 }
 
 void GLC_Viewport::loadBackGroundImage(const QImage& image)
 {
 	delete m_pImagePlane;
-	m_pImagePlane= new GLC_ImagePlane(m_pQGLWidget->context(), image);
+	m_pImagePlane= new GLC_ImagePlane(image);
 }
 
 void GLC_Viewport::deleteBackGroundImage()
