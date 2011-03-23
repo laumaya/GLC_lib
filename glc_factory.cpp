@@ -44,7 +44,6 @@
 
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
-QGLContext* GLC_Factory::m_pQGLContext= NULL;
 QList<GLC_WorldReaderPlugin*> GLC_Factory::m_WorldReaderPluginList;
 QSet<QString> GLC_Factory::m_SupportedExtensionSet;
 
@@ -52,15 +51,11 @@ QSet<QString> GLC_Factory::m_SupportedExtensionSet;
 // static method
 //////////////////////////////////////////////////////////////////////
 // Return the unique instance of the factory
-GLC_Factory* GLC_Factory::instance(const QGLContext *pContext)
+GLC_Factory* GLC_Factory::instance()
 {
 	if(m_pFactory == NULL)
 	{
-		m_pFactory= new GLC_Factory(pContext);
-	}
-	else if ((NULL != pContext) && (m_pQGLContext != pContext))
-	{
-		m_pQGLContext= const_cast<QGLContext*>(pContext);
+		m_pFactory= new GLC_Factory();
 	}
 	return m_pFactory;
 }
@@ -70,9 +65,8 @@ GLC_Factory* GLC_Factory::instance(const QGLContext *pContext)
 //////////////////////////////////////////////////////////////////////
 
 // Protected constructor
-GLC_Factory::GLC_Factory(const QGLContext *pContext)
+GLC_Factory::GLC_Factory()
 {
-	m_pQGLContext= (const_cast<QGLContext*>(pContext));
 	loadPlugins();
 }
 
@@ -231,7 +225,7 @@ GLC_World GLC_Factory::createWorldStructureFrom3dxml(QFile &file, bool GetExtRef
 
 	if (QFileInfo(file).suffix().toLower() == "3dxml")
 	{
-		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
+		GLC_3dxmlToWorld d3dxmlToWorld;
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= d3dxmlToWorld.createWorldFrom3dxml(file, true, GetExtRefName);
 	}
@@ -255,7 +249,7 @@ GLC_3DRep GLC_Factory::create3DRepFromFile(const QString& fileName) const
 
 	if ((QFileInfo(fileName).suffix().toLower() == "3dxml") || (QFileInfo(fileName).suffix().toLower() == "3drep"))
 	{
-		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
+		GLC_3dxmlToWorld d3dxmlToWorld;
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		rep= d3dxmlToWorld.create3DrepFrom3dxmlRep(fileName);
 	}
@@ -266,7 +260,7 @@ GLC_3DRep GLC_Factory::create3DRepFromFile(const QString& fileName) const
 
 GLC_FileLoader* GLC_Factory::createFileLoader() const
 {
-    return new GLC_FileLoader(m_pQGLContext);
+    return new GLC_FileLoader;
 }
 
 GLC_Material* GLC_Factory::createMaterial() const
@@ -303,12 +297,12 @@ GLC_Material* GLC_Factory::createMaterial(const QImage &image) const
 
 GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName) const
 {
-	return new GLC_Texture(m_pQGLContext, textureFullFileName);
+	return new GLC_Texture(textureFullFileName);
 }
 
 GLC_Texture* GLC_Factory::createTexture(const QImage & image, const QString& imageFileName) const
 {
-	return new GLC_Texture(m_pQGLContext, image, imageFileName);
+	return new GLC_Texture(image, imageFileName);
 }
 
 GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& color, GLC_Viewport* pViewport)
