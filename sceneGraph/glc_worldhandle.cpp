@@ -147,8 +147,8 @@ void GLC_WorldHandle::select(GLC_uint occurenceId, bool propagate)
 			const GLC_uint currentOccurenceId= subOccurenceList.at(i)->id();
 			if (m_Collection.contains(currentOccurenceId))
 			{
-				GLC_3DViewInstance* pInstance= m_Collection.instanceHandle(currentOccurenceId);
-				m_Collection.select(currentOccurenceId);			}
+				m_Collection.select(currentOccurenceId);
+			}
 		}
 	}
 }
