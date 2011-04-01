@@ -68,7 +68,7 @@ public:
 	GLC_Material(const QString& name, const GLfloat *);
 
 	//! Construct textured GLC_Material
-	GLC_Material(GLC_Texture* pTexture, const char *pName);
+	GLC_Material(GLC_Texture* pTexture, const QString& name= QString());
 
 	//! Copy constructor
 	/*! Hast usage table are not copying

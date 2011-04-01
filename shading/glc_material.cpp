@@ -100,8 +100,8 @@ GLC_Material::GLC_Material(const QString& name ,const GLfloat *pDiffuseColor)
 	// Others
 	initOtherColor();
 }
-GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
-:GLC_Object(pName)
+GLC_Material::GLC_Material(GLC_Texture* pTexture, const QString& name)
+:GLC_Object(name)
 , m_AmbientColor()
 , m_DiffuseColor()
 , m_SpecularColor()
