@@ -61,9 +61,9 @@ GLC_Mover* GLC_TrackBallMover::clone() const
 //////////////////////////////////////////////////////////////////////
 
 // Initialized the mover
-void GLC_TrackBallMover::init(QMouseEvent * e)
+void GLC_TrackBallMover::init(const GLC_UserInput& userInput)
 {
-	GLC_Mover::m_PreviousVector.setVect(mapForTracking(static_cast<double>(e->x()), static_cast<double>(e->y())));
+	GLC_Mover::m_PreviousVector.setVect(mapForTracking(static_cast<double>(userInput.x()), static_cast<double>(userInput.y())));
 
 	const double Angle= acos(glc::Z_AXIS * GLC_Mover::m_PreviousVector);
 	const GLC_Vector3d AxeRot(glc::Z_AXIS ^ GLC_Mover::m_PreviousVector);
@@ -77,9 +77,9 @@ void GLC_TrackBallMover::init(QMouseEvent * e)
 }
 
 // Move the camera
-bool GLC_TrackBallMover::move(QMouseEvent * e)
+bool GLC_TrackBallMover::move(const GLC_UserInput& userInput)
 {
-	const GLC_Vector3d VectCurOrbit(mapForTracking(static_cast<double>(e->x()), static_cast<double>(e->y())));
+	const GLC_Vector3d VectCurOrbit(mapForTracking(static_cast<double>(userInput.x()), static_cast<double>(userInput.y())));
 
 	// Update camera position (orbit)
 	GLC_Mover::m_pViewport->cameraHandle()->orbit(GLC_Mover::m_PreviousVector, VectCurOrbit);
