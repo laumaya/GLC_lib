@@ -37,6 +37,7 @@
 #include "viewport/glc_reptrackballmover.h"
 #include "viewport/glc_flymover.h"
 #include "viewport/glc_repflymover.h"
+#include "viewport/glc_tsrmover.h"
 #include "maths/glc_line3d.h"
 #include "maths/glc_geomtools.h"
 
@@ -365,6 +366,7 @@ GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& colo
 	pMover= new GLC_TurnTableMover(pViewport);
 	// Add the Turn Table Mover to the controller
 	defaultController.addMover(pMover, GLC_MoverController::TurnTable);
+
 	//////////////////////////////////////////////////////////////////////
 	// Fly Mover
 	//////////////////////////////////////////////////////////////////////
@@ -376,6 +378,14 @@ GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& colo
 	pMover= new GLC_FlyMover(pViewport, listOfRep);
 	// Add the fly mover to the controller
 	defaultController.addMover(pMover, GLC_MoverController::Fly);
+
+	//////////////////////////////////////////////////////////////////////
+	// Translation, rotation and scaling Mover
+	//////////////////////////////////////////////////////////////////////
+	// Create the Turn Table Mover
+	pMover= new GLC_TsrMover(pViewport);
+	// Add the Turn Table Mover to the controller
+	defaultController.addMover(pMover, GLC_MoverController::TSR);
 
 	return defaultController;
 }
