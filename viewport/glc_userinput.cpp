@@ -27,6 +27,8 @@
 GLC_UserInput::GLC_UserInput(int x, int y)
 : m_X(x)
 , m_Y(y)
+, m_NormalyzeX(0.0)
+, m_NormalyzeY(0.0)
 , m_Translation()
 , m_Rotation(0.0)
 , m_ScaleFactor(1.0)
@@ -47,6 +49,12 @@ void GLC_UserInput::setPosition(int x, int y)
 {
 	m_X= x;
 	m_Y= y;
+}
+
+void GLC_UserInput::setNormalyzeTouchCenterPosition(double x, double y)
+{
+	m_NormalyzeX= x;
+	m_NormalyzeY= y;
 }
 
 void GLC_UserInput::setTransformation(const GLC_Vector2d& translation, double rotation, double scaleFactor)

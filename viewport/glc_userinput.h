@@ -27,7 +27,9 @@
 
 #include "../maths/glc_vector2d.h"
 
-class GLC_UserInput
+#include "../glc_config.h"
+
+class GLC_LIB_EXPORT GLC_UserInput
 {
 public:
 	GLC_UserInput(int x= 0, int y= 0);
@@ -46,6 +48,14 @@ public:
 	//! Return the y position
 	inline int y() const
 	{return m_Y;}
+
+	//! Return normalyze x touch center
+	inline double normalyzeXTouchCenter() const
+	{return m_NormalyzeX;}
+
+	//! Return normalyze x touch center
+	inline double normalyzeYTouchCenter() const
+	{return m_NormalyzeX;}
 
 	//! Return the translation
 	inline GLC_Vector2d translation() const
@@ -72,20 +82,38 @@ public:
 	//! Set the position
 	void setPosition(int x, int y);
 
+	//! Set the normalyze position of the center of touch
+	void setNormalyzeTouchCenterPosition(double x, double y);
+
 	//! Set the transformation
 	void setTransformation(const GLC_Vector2d& translation, double rotation= 0.0, double scaleFactor= 1.0);
+
+	//! Set translation
+	inline void setTranslation(const GLC_Vector2d& translation)
+	{m_Translation= translation;}
+
+	//! Set rotation
+	inline void setRotation(double rotation)
+	{m_Rotation= rotation;}
+
+	//! Set scaling
+	inline void setScaleFactor(double scaleFactor)
+	{m_ScaleFactor= scaleFactor;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
 // Private Members
 //////////////////////////////////////////////////////////////////////
 private:
-	// Position data or center of transformation
 	//! the x position of the user input
 	int m_X;
 
 	//! The y position of the user input
 	int m_Y;
+
+	//Normalize position of center of touchs
+	double m_NormalyzeX;
+	double m_NormalyzeY;
 
 	// Transformation data
 	//! Translation vector
