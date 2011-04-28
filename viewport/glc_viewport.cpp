@@ -106,6 +106,13 @@ GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 	return VectMouse;
 }
 
+GLC_Vector3d GLC_Viewport::mapNormalyzePosMouse(double Posx, double Posy) const
+{
+	double screenX= Posx * static_cast<double>(m_WindowHSize);
+	double screenY= Posy * static_cast<double>(m_WindowVSize);
+	return mapPosMouse(screenX, screenY);
+}
+
 //////////////////////////////////////////////////////////////////////
 // Public OpenGL Functions
 //////////////////////////////////////////////////////////////////////

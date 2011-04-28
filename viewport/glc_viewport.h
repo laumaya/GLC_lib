@@ -97,6 +97,9 @@ public:
 	//! Map Screen position to OpenGL position (On image Plane) according to this viewport
 	GLC_Vector3d mapPosMouse( GLdouble Posx, GLdouble Posy) const;
 
+	//! Map normalyse Screen position to OpenGL position (On image Plane) according to this viewport
+	GLC_Vector3d mapNormalyzePosMouse(double Posx, double Posy) const;
+
 	//! Get this viewport's camera's angle of view
 	inline double viewAngle() const
 	{ return m_ViewAngle;}
