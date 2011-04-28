@@ -63,13 +63,14 @@ GLC_Mover* GLC_TsrMover::clone() const
 // Initialized the mover
 void GLC_TsrMover::init(const GLC_UserInput& userInput)
 {
-	m_PreviousVector= m_pViewport->mapPosMouse(static_cast<double>(userInput.x()), static_cast<double>(userInput.y()));
+	m_PreviousVector= m_pViewport->mapNormalyzePosMouse(static_cast<double>(userInput.normalyzeXTouchCenter()), static_cast<double>(userInput.normalyzeYTouchCenter()));
 }
 
 // Move the camera
 bool GLC_TsrMover::move(const GLC_UserInput& userInput)
 {
-	m_PreviousVector= m_pViewport->mapPosMouse(static_cast<double>(userInput.x()), static_cast<double>(userInput.y()));
+
+	m_PreviousVector= m_pViewport->mapNormalyzePosMouse(static_cast<double>(userInput.normalyzeXTouchCenter()), static_cast<double>(userInput.normalyzeYTouchCenter()));
 
 	if (!qFuzzyCompare(userInput.rotationAngle(), 0))
 	{
@@ -84,7 +85,18 @@ bool GLC_TsrMover::move(const GLC_UserInput& userInput)
 
 	if (!userInput.translation().isNull())
 	{
-		GLC_Vector3d mappedTranslation= m_pViewport->mapPosMouse(userInput.translation().getX(), userInput.translation().getY());
+		double transX= userInput.translation().getX() * m_pViewport->viewHSize();
+		double transY= userInput.translation().getY() * m_pViewport->viewVSize();
+
+		GLC_Vector3d mappedTranslation(-transX, -transY, 0.0);
+		// Compute the length of camera's field of view
+		const double ChampsVision = m_pViewport->cameraHandle()->distEyeTarget() *  m_pViewport->viewTangent();
+
+		// the side of camera's square is mapped on Vertical length of window
+		// Ratio OpenGL/Pixel = dimend GL / dimens Pixel
+		const double Ratio= ChampsVision / static_cast<double>(m_pViewport->viewVSize());
+
+		mappedTranslation= mappedTranslation * Ratio;
 		m_pViewport->cameraHandle()->pan(mappedTranslation);
 	}
 
