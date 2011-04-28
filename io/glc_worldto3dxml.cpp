@@ -1105,8 +1105,25 @@ void GLC_WorldTo3dxml::addImageTextureTo3dxml(const QImage& image, const QString
 	}
 }
 
-QString GLC_WorldTo3dxml::xmlFileName(const QString& fileName)
+QString GLC_WorldTo3dxml::xmlFileName(QString fileName)
 {
+	QString prefix;
+	if (fileName.contains("urn:3DXML:"))
+	{
+		prefix= "urn:3DXML:";
+		fileName.remove(prefix);
+	}
+
+	const int fileNameSize= fileName.size();
+	for (int i= 0; i < fileNameSize; ++i)
+	{
+		if (!fileName.at(i).isLetterOrNumber() && (fileName.at(i) != '.'))
+		{
+			fileName.replace(i, 1, '_');
+		}
+	}
+	fileName.prepend(prefix);
+
 	QString newName;
 	if (!m_3dxmlFileSet.contains(fileName))
 	{
