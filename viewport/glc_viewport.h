@@ -94,6 +94,15 @@ public:
 	inline double aspectRatio() const
 	{ return static_cast<double>(m_WindowHSize) / static_cast<double>(m_WindowVSize);}
 
+	//! Return the normalyse mouse position from screen coordinate
+	GLC_Point2d normalyseMousePosition(int x, int y);
+
+	//! Map screen position to OpenGL screen position
+	GLC_Point2d mapToOpenGLScreen(int x, int y);
+
+	//! Map normalyze screen position to OpenGL screen position
+	GLC_Point2d mapNormalyzeToOpenGLScreen(double x, double y);
+
 	//! Map Screen position to OpenGL position (On image Plane) according to this viewport
 	GLC_Vector3d mapPosMouse( GLdouble Posx, GLdouble Posy) const;
 
