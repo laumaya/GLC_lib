@@ -23,6 +23,7 @@
 
 #include "glc_trackballmover.h"
 #include "glc_viewport.h"
+#include "glc_reptrackballmover.h"
 
 // Default constructor
 GLC_TrackBallMover::GLC_TrackBallMover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>& repsList)
@@ -96,6 +97,19 @@ bool GLC_TrackBallMover::move(const GLC_UserInput& userInput)
 	return true;
 }
 
+void GLC_TrackBallMover::setRatio(double ratio)
+{
+	m_Ratio= ratio;
+	const int repCount= m_RepMoverList.count();
+	for (int i= 0; i < repCount; ++i)
+	{
+		GLC_RepTrackBallMover* pRep= dynamic_cast<GLC_RepTrackBallMover*>(m_RepMoverList.at(i));
+		if (NULL != pRep)
+		{
+			pRep->setRatio(ratio);
+		}
+	}
+}
 /////////////////////////////////////////////////////////////////////
 // Private services Functions
 //////////////////////////////////////////////////////////////////////
