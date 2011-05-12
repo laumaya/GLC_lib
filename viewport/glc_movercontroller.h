@@ -86,6 +86,10 @@ public:
 	inline GLC_Mover* activeMover() const
 	{return m_MoverHash.value(m_ActiveMoverId);}
 
+	//! Return the mover of the given id
+	inline GLC_Mover* getMover(const int id) const
+	{return m_MoverHash.value(id);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
