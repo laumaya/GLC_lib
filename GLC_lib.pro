@@ -5,7 +5,7 @@ QT += opengl \
 
 
 CONFIG += exceptions \
-    debug \
+    release \
     warn_on
 TARGET = GLC_lib
 VERSION = 2.1.0
