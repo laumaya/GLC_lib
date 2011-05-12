@@ -69,6 +69,9 @@ public:
 	//! Move the camera
 	virtual bool move(const GLC_UserInput& userInput);
 
+	//! Set this mover screen ratio
+	void setRatio(double ratio);
+
 //@}
 
 /////////////////////////////////////////////////////////////////////
