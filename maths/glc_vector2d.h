@@ -29,7 +29,7 @@
 #include "glc_utils_maths.h"
 #include "glc_vector2df.h"
 
-#include "glc_config.h"
+#include "../glc_config.h"
 
 //////////////////////////////////////////////////////////////////////
 // definition global
