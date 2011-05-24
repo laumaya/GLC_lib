@@ -35,7 +35,7 @@
 
 #include <QMutex>
 
-#include "glc_config.h"
+#include "../glc_config.h"
 
 class GLC_Viewport;
 
