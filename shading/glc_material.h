@@ -215,7 +215,7 @@ public:
 public:
 
 	//! Load the texture
-	void glLoadTexture(void);
+	void glLoadTexture(QGLContext* pContext= NULL);
 
 	//! Execute OpenGL Material
 	virtual void glExecute();

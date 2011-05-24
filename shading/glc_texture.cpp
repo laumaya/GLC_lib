@@ -191,11 +191,19 @@ void GLC_Texture::setMaxTextureSize(const QSize& size)
 // Private OpenGL functions
 //////////////////////////////////////////////////////////////////////
 // Load the texture
-void GLC_Texture::glLoadTexture(void)
+void GLC_Texture::glLoadTexture(QGLContext* pContext)
 {
 	if (m_GlTextureID == 0)
 	{
-		m_pQGLContext= const_cast<QGLContext*>(QGLContext::currentContext());
+		if (NULL == pContext)
+		{
+			m_pQGLContext= const_cast<QGLContext*>(QGLContext::currentContext());
+		}
+		else
+		{
+			m_pQGLContext= pContext;
+		}
+
 		// Test image size
 		if ((m_textureImage.height() > m_MaxTextureSize.height())
 				|| (m_textureImage.width() > m_MaxTextureSize.width()))

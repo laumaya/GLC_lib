@@ -126,7 +126,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Load the texture
-	void glLoadTexture(void);
+	void glLoadTexture(QGLContext* pContext= NULL);
 	//! Bind texture in 2D mode
 	void glcBindTexture(void);
 

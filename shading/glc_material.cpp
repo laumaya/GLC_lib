@@ -460,11 +460,15 @@ void GLC_Material::setOpacity(const qreal alpha)
 //////////////////////////////////////////////////////////////////////
 
 // Load the texture
-void GLC_Material::glLoadTexture(void)
+void GLC_Material::glLoadTexture(QGLContext* pContext)
 {
 	if (m_pTexture != NULL)
 	{
-		m_pTexture->glLoadTexture();
+		m_pTexture->glLoadTexture(pContext);
+	}
+	else
+	{
+		qDebug() << "GLC_Material::glLoadTexture : Material without texture !";
 	}
 }
 
