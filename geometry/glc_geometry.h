@@ -29,7 +29,7 @@
 #include "glc_wiredata.h"
 #include "../glc_boundingbox.h"
 
-#include "glc_config.h"
+#include "../glc_config.h"
 
 typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
 typedef QHash<GLC_uint, GLC_uint> MaterialHashMap;

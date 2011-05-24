@@ -28,7 +28,7 @@
 #include "../glc_ext.h"
 #include "../glc_global.h"
 
-#include "glc_config.h"
+#include "../glc_config.h"
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_PrimitiveGroup
