@@ -34,7 +34,7 @@
 #include "../maths/glc_matrix4x4.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 
-#include "glc_config.h"
+#include "../glc_config.h"
 
 class GLC_World;
 class QGLContext;
