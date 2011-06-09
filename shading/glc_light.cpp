@@ -22,18 +22,19 @@
 
 //! \file glc_light.cpp implementation of the GLC_Light class.
 
+#include <QGlContext>
+#include <QtDebug>
+
 #include "glc_light.h"
 #include "../glc_openglexception.h"
 
-#include <QtDebug>
-
-GLint GLC_Light::m_MaxLight= 0;
-QSet<GLenum> GLC_Light::m_FreeLightSet;
+GLint GLC_Light::m_MaxLight= 8;
+QHash<const QGLContext*, QSet<GLenum> > GLC_Light::m_ContextToFreeLightSet;
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
-GLC_Light::GLC_Light(const QColor& color)
+GLC_Light::GLC_Light(const QGLContext* pContext, const QColor& color)
 :GLC_Object("Light")
 , m_LightID(-1)
 , m_LightType(LightPosition)
@@ -50,14 +51,12 @@ GLC_Light::GLC_Light(const QColor& color)
 , m_LinearAttenuation(0.0f)
 , m_QuadraticAttenuation(0.0f)
 , m_TwoSided(false)
+, m_pContext(const_cast<QGLContext*>(pContext))
 {
-	if (0 == m_MaxLight) init();
-	Q_ASSERT(!m_FreeLightSet.isEmpty());
-	m_LightID= *(m_FreeLightSet.constBegin());
-	m_FreeLightSet.remove(m_LightID);
+	addNewLight();
 }
 
-GLC_Light::GLC_Light(LightType lightType, const QColor& color)
+GLC_Light::GLC_Light(LightType lightType, const QGLContext* pContext, const QColor& color)
 :GLC_Object("Light")
 , m_LightID(-1)
 , m_LightType(lightType)
@@ -74,11 +73,9 @@ GLC_Light::GLC_Light(LightType lightType, const QColor& color)
 , m_LinearAttenuation(0.0f)
 , m_QuadraticAttenuation(0.0f)
 , m_TwoSided(false)
+, m_pContext(const_cast<QGLContext*>(pContext))
 {
-	if (0 == m_MaxLight) init();
-	Q_ASSERT(!m_FreeLightSet.isEmpty());
-	m_LightID= *(m_FreeLightSet.constBegin());
-	m_FreeLightSet.remove(m_LightID);
+	addNewLight();
 }
 
 GLC_Light::GLC_Light(const GLC_Light& light)
@@ -98,17 +95,15 @@ GLC_Light::GLC_Light(const GLC_Light& light)
 , m_LinearAttenuation(light.m_LinearAttenuation)
 , m_QuadraticAttenuation(light.m_QuadraticAttenuation)
 , m_TwoSided(light.m_TwoSided)
+, m_pContext(light.m_pContext)
 {
-	if (0 == m_MaxLight) init();
-	Q_ASSERT(!m_FreeLightSet.isEmpty());
-	m_LightID= *(m_FreeLightSet.constBegin());
-	m_FreeLightSet.remove(m_LightID);
+	addNewLight();
 }
 
 GLC_Light::~GLC_Light(void)
 {
 	deleteList();
-	m_FreeLightSet << m_LightID;
+	removeThisLight();
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -120,20 +115,23 @@ int GLC_Light::maxLightCount()
 	return m_MaxLight;
 }
 
-int GLC_Light::builtAbleLightCount()
+int GLC_Light::builtAbleLightCount(QGLContext* pContext)
 {
-	return m_FreeLightSet.size();
+	if (m_ContextToFreeLightSet.contains(pContext))
+	{
+		return m_ContextToFreeLightSet.value(pContext).size();
+	}
+	else return m_MaxLight;
 }
 
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-void GLC_Light::init()
+void GLC_Light::initForThisContext()
 {
-	m_MaxLight= 8;
 	for (int i= 0; i < m_MaxLight; ++i)
 	{
-		m_FreeLightSet.insert(GL_LIGHT0 + i);
+		m_ContextToFreeLightSet[m_pContext].insert(GL_LIGHT0 + i);
 	}
 }
 
@@ -249,10 +247,29 @@ void GLC_Light::creationList(GLenum Mode)
 		throw(OpenGlException);
 	}
 }
+void GLC_Light::enable()
+{
+	if (NULL == m_pContext)
+	{
+		m_pContext= const_cast<QGLContext*>(QGLContext::currentContext());
+		Q_ASSERT(NULL != m_pContext);
+		addNewLight();
+	}
+
+	glEnable(m_LightID);
+}
+
+void GLC_Light::disable()
+{
+	if (NULL != m_pContext)
+	{
+		glDisable(m_LightID);
+	}
+}
+
 
 void GLC_Light::glExecute(GLenum Mode)
 {
-
 	if (!m_ListIsValid)
 	{
 		// OpenGL list is not valid
@@ -284,6 +301,7 @@ void GLC_Light::glExecute(GLenum Mode)
 
 void GLC_Light::glDraw(void)
 {
+	//qDebug() << "GLC_Light::GlDraw id= " << m_LightID;
 	// Set the lighting model
 	if (m_TwoSided)
 	{
@@ -351,6 +369,7 @@ void GLC_Light::glDraw(void)
 	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
+		qDebug() << "GLC_Light::GlDraw Exception, id= " << m_LightID;
 		GLC_OpenGlException OpenGlException("GLC_Light::GlDraw ", error);
 		throw(OpenGlException);
 	}
@@ -368,5 +387,36 @@ void GLC_Light::deleteList(void)
 	{
 		disable();
 		glDeleteLists(m_ListID, 1);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+// Private services fonction
+//////////////////////////////////////////////////////////////////////
+void GLC_Light::addNewLight()
+{
+	if (NULL != m_pContext)
+	{
+		if (!m_ContextToFreeLightSet.contains(m_pContext))
+		{
+			m_ContextToFreeLightSet.insert(m_pContext, QSet<GLenum>());
+			initForThisContext();
+		}
+		m_LightID= *(m_ContextToFreeLightSet[m_pContext].constBegin());
+		m_ContextToFreeLightSet[m_pContext].remove(m_LightID);
+	}
+}
+
+void GLC_Light::removeThisLight()
+{
+	if (NULL != m_pContext)
+	{
+		Q_ASSERT(m_ContextToFreeLightSet.contains(m_pContext));
+		Q_ASSERT(!m_ContextToFreeLightSet[m_pContext].contains(m_LightID));
+		m_ContextToFreeLightSet[m_pContext].insert(m_LightID);
+		if (m_ContextToFreeLightSet[m_pContext].size() == m_MaxLight)
+		{
+			m_ContextToFreeLightSet.remove(m_pContext);
+		}
 	}
 }
