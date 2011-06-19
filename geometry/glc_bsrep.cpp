@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -120,7 +118,9 @@ GLC_3DRep GLC_BSRep::loadRep()
 				QByteArray CompresseBuffer;
 				m_DataStream >> CompresseBuffer;
 				QByteArray uncompressedBuffer= qUncompress(CompresseBuffer);
+				uncompressedBuffer.squeeze();
 				CompresseBuffer.clear();
+				CompresseBuffer.squeeze();
 				QDataStream bufferStream(uncompressedBuffer);
 				bufferStream >> loadedRep;
 			}

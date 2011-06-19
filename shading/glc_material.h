@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -70,7 +68,7 @@ public:
 	GLC_Material(const QString& name, const GLfloat *);
 
 	//! Construct textured GLC_Material
-	GLC_Material(GLC_Texture* pTexture, const char *pName);
+	GLC_Material(GLC_Texture* pTexture, const QString& name= QString());
 
 	//! Copy constructor
 	/*! Hast usage table are not copying
@@ -90,7 +88,7 @@ public:
 	static quint32 chunckID();
 
 	//! Return true if the material is used
-	bool isUnused() const
+	inline bool isUnused() const
 	{return m_WhereUsed.isEmpty() && m_OtherUsage.isEmpty();}
 
 	//! Return true is material has attached texture
@@ -217,7 +215,7 @@ public:
 public:
 
 	//! Load the texture
-	void glLoadTexture(void);
+	void glLoadTexture(QGLContext* pContext= NULL);
 
 	//! Execute OpenGL Material
 	virtual void glExecute();

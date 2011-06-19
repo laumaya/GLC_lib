@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -87,6 +85,38 @@ GLC_Viewport::~GLC_Viewport()
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
+GLC_Point2d  GLC_Viewport::normalyseMousePosition(int x, int y)
+{
+	double nX= 0.0;
+	double nY= 0.0;
+	if (m_WindowHSize != 0)
+	{
+		nX= static_cast<double>(x) / static_cast<double>(m_WindowHSize);
+	}
+
+	if (m_WindowVSize != 0)
+	{
+		nY= static_cast<double>(y) / static_cast<double>(m_WindowVSize);
+	}
+
+	return GLC_Point2d(nX, nY);
+}
+
+GLC_Point2d GLC_Viewport::mapToOpenGLScreen(int x, int y)
+{
+	GLC_Point2d nPos= normalyseMousePosition(x, y);
+
+	return mapNormalyzeToOpenGLScreen(nPos.getX(), nPos.getY());
+}
+
+GLC_Point2d GLC_Viewport::mapNormalyzeToOpenGLScreen(double x, double y)
+{
+	GLC_Point2d pos(x, y);
+	pos= pos * 2.0;
+	pos.setY(pos.getY() * -1.0);
+	pos= pos + GLC_Point2d(-1.0, 1.0);
+	return pos;
+}
 
 GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 {
@@ -106,6 +136,13 @@ GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 	VectMouse= VectMouse * Ratio;
 
 	return VectMouse;
+}
+
+GLC_Vector3d GLC_Viewport::mapNormalyzePosMouse(double Posx, double Posy) const
+{
+	double screenX= Posx * static_cast<double>(m_WindowHSize);
+	double screenY= Posy * static_cast<double>(m_WindowVSize);
+	return mapPosMouse(screenX, screenY);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -510,13 +547,13 @@ void GLC_Viewport::updateMinimumRatioSize()
 void GLC_Viewport::loadBackGroundImage(const QString& ImageFile)
 {
 	delete m_pImagePlane;
-	m_pImagePlane= new GLC_ImagePlane(m_pQGLWidget->context(), ImageFile);
+	m_pImagePlane= new GLC_ImagePlane(ImageFile);
 }
 
 void GLC_Viewport::loadBackGroundImage(const QImage& image)
 {
 	delete m_pImagePlane;
-	m_pImagePlane= new GLC_ImagePlane(m_pQGLWidget->context(), image);
+	m_pImagePlane= new GLC_ImagePlane(image);
 }
 
 void GLC_Viewport::deleteBackGroundImage()

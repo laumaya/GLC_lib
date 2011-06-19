@@ -3,8 +3,6 @@
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
  Copyright (C) 2011 JŽr™me Forrissier
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -28,6 +26,7 @@
 #include "glc_factory.h"
 #include "io/glc_fileloader.h"
 #include "io/glc_3dxmltoworld.h"
+#include "io/glc_worldreaderplugin.h"
 
 #include "viewport/glc_panmover.h"
 #include "viewport/glc_zoommover.h"
@@ -38,6 +37,7 @@
 #include "viewport/glc_reptrackballmover.h"
 #include "viewport/glc_flymover.h"
 #include "viewport/glc_repflymover.h"
+#include "viewport/glc_tsrmover.h"
 #include "maths/glc_line3d.h"
 #include "maths/glc_geomtools.h"
 
@@ -45,21 +45,18 @@
 
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
-QGLContext* GLC_Factory::m_pQGLContext= NULL;
+QList<GLC_WorldReaderPlugin*> GLC_Factory::m_WorldReaderPluginList;
+QSet<QString> GLC_Factory::m_SupportedExtensionSet;
 
 //////////////////////////////////////////////////////////////////////
 // static method
 //////////////////////////////////////////////////////////////////////
 // Return the unique instance of the factory
-GLC_Factory* GLC_Factory::instance(const QGLContext *pContext)
+GLC_Factory* GLC_Factory::instance()
 {
 	if(m_pFactory == NULL)
 	{
-		m_pFactory= new GLC_Factory(pContext);
-	}
-	else if ((NULL != pContext) && (m_pQGLContext != pContext))
-	{
-		m_pQGLContext= const_cast<QGLContext*>(pContext);
+		m_pFactory= new GLC_Factory();
 	}
 	return m_pFactory;
 }
@@ -69,9 +66,9 @@ GLC_Factory* GLC_Factory::instance(const QGLContext *pContext)
 //////////////////////////////////////////////////////////////////////
 
 // Protected constructor
-GLC_Factory::GLC_Factory(const QGLContext *pContext)
+GLC_Factory::GLC_Factory()
 {
-	m_pQGLContext= (const_cast<QGLContext*>(pContext));
+	loadPlugins();
 }
 
 // Destructor
@@ -94,6 +91,30 @@ GLC_3DRep GLC_Factory::createPoint(double x, double y, double z) const
 {
 	GLC_3DRep newPoint(new GLC_Point(x, y, z));
 	return newPoint;
+}
+
+GLC_3DRep GLC_Factory::createPointCloud(const GLfloatVector& data, const QColor& color)
+{
+	GLC_PointCloud* pPointCloud= new GLC_PointCloud();
+	pPointCloud->addPoint(data);
+	pPointCloud->setWireColor(color);
+	return GLC_3DRep(pPointCloud);
+}
+
+GLC_3DRep GLC_Factory::createPointCloud(const QList<GLC_Point3d>& pointList, const QColor& color)
+{
+	GLC_PointCloud* pPointCloud= new GLC_PointCloud();
+	pPointCloud->addPoint(pointList);
+	pPointCloud->setWireColor(color);
+	return GLC_3DRep(pPointCloud);
+}
+
+GLC_3DRep GLC_Factory::createPointCloud(const QList<GLC_Point3df>& pointList, const QColor& color)
+{
+	GLC_PointCloud* pPointCloud= new GLC_PointCloud();
+	pPointCloud->addPoint(pointList);
+	pPointCloud->setWireColor(color);
+	return GLC_3DRep(pPointCloud);
 }
 
 
@@ -205,7 +226,7 @@ GLC_World GLC_Factory::createWorldStructureFrom3dxml(QFile &file, bool GetExtRef
 
 	if (QFileInfo(file).suffix().toLower() == "3dxml")
 	{
-		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
+		GLC_3dxmlToWorld d3dxmlToWorld;
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= d3dxmlToWorld.createWorldFrom3dxml(file, true, GetExtRefName);
 	}
@@ -229,7 +250,7 @@ GLC_3DRep GLC_Factory::create3DRepFromFile(const QString& fileName) const
 
 	if ((QFileInfo(fileName).suffix().toLower() == "3dxml") || (QFileInfo(fileName).suffix().toLower() == "3drep"))
 	{
-		GLC_3dxmlToWorld d3dxmlToWorld(m_pQGLContext);
+		GLC_3dxmlToWorld d3dxmlToWorld;
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		rep= d3dxmlToWorld.create3DrepFrom3dxmlRep(fileName);
 	}
@@ -240,7 +261,7 @@ GLC_3DRep GLC_Factory::create3DRepFromFile(const QString& fileName) const
 
 GLC_FileLoader* GLC_Factory::createFileLoader() const
 {
-    return new GLC_FileLoader(m_pQGLContext);
+    return new GLC_FileLoader;
 }
 
 GLC_Material* GLC_Factory::createMaterial() const
@@ -277,12 +298,12 @@ GLC_Material* GLC_Factory::createMaterial(const QImage &image) const
 
 GLC_Texture* GLC_Factory::createTexture(const QString &textureFullFileName) const
 {
-	return new GLC_Texture(m_pQGLContext, textureFullFileName);
+	return new GLC_Texture(textureFullFileName);
 }
 
 GLC_Texture* GLC_Factory::createTexture(const QImage & image, const QString& imageFileName) const
 {
-	return new GLC_Texture(m_pQGLContext, image, imageFileName);
+	return new GLC_Texture(image, imageFileName);
 }
 
 GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& color, GLC_Viewport* pViewport)
@@ -345,6 +366,7 @@ GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& colo
 	pMover= new GLC_TurnTableMover(pViewport);
 	// Add the Turn Table Mover to the controller
 	defaultController.addMover(pMover, GLC_MoverController::TurnTable);
+
 	//////////////////////////////////////////////////////////////////////
 	// Fly Mover
 	//////////////////////////////////////////////////////////////////////
@@ -357,5 +379,80 @@ GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& colo
 	// Add the fly mover to the controller
 	defaultController.addMover(pMover, GLC_MoverController::Fly);
 
+	//////////////////////////////////////////////////////////////////////
+	// Translation, rotation and scaling Mover
+	//////////////////////////////////////////////////////////////////////
+	// Create the Turn Table Mover
+	pMover= new GLC_TsrMover(pViewport);
+	// Add the Turn Table Mover to the controller
+	defaultController.addMover(pMover, GLC_MoverController::TSR);
+
 	return defaultController;
 }
+
+
+void GLC_Factory::loadPlugins()
+{
+	Q_ASSERT(NULL != QCoreApplication::instance());
+	const QStringList libraryPath= QCoreApplication::libraryPaths();
+	foreach(QString path, libraryPath)
+	{
+		const QDir pluginsDir= QDir(path);
+		const QStringList pluginNames= pluginsDir.entryList(QDir::Files);
+		foreach (QString fileName, pluginNames)
+		{
+	         QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
+	         QObject* pPlugin= loader.instance();
+	         GLC_WorldReaderPlugin* pWorldReader = qobject_cast<GLC_WorldReaderPlugin *>(pPlugin);
+	         if (pWorldReader)
+	         {
+	        	 m_WorldReaderPluginList.append(pWorldReader);
+	        	 m_SupportedExtensionSet.unite(QSet<QString>::fromList(pWorldReader->keys()));
+	         }
+		}
+	}
+
+	//qDebug() << m_WorldReaderPluginList.size() << " Loaded plugins.";
+}
+
+QList<GLC_WorldReaderPlugin*> GLC_Factory::worldReaderPlugins()
+{
+	if (NULL == m_pFactory)
+	{
+		instance();
+	}
+	return m_WorldReaderPluginList;
+}
+
+bool GLC_Factory::canBeLoaded(const QString& extension)
+{
+	if (NULL == m_pFactory)
+	{
+		instance();
+	}
+
+	return m_SupportedExtensionSet.contains(extension.toLower());
+}
+
+GLC_WorldReaderHandler* GLC_Factory::loadingHandler(const QString& fileName)
+{
+	if (NULL == m_pFactory)
+	{
+		instance();
+	}
+
+	const QString extension= QFileInfo(fileName).suffix();
+	if (canBeLoaded(extension))
+	{
+		foreach(GLC_WorldReaderPlugin* pPlugin, m_WorldReaderPluginList)
+		{
+			if (pPlugin->keys().contains(extension.toLower()))
+			{
+				return pPlugin->readerHandler();
+			}
+		}
+	}
+	return NULL;
+}
+
+

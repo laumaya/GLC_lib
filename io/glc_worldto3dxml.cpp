@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -1107,8 +1105,25 @@ void GLC_WorldTo3dxml::addImageTextureTo3dxml(const QImage& image, const QString
 	}
 }
 
-QString GLC_WorldTo3dxml::xmlFileName(const QString& fileName)
+QString GLC_WorldTo3dxml::xmlFileName(QString fileName)
 {
+	QString prefix;
+	if (fileName.contains("urn:3DXML:"))
+	{
+		prefix= "urn:3DXML:";
+		fileName.remove(prefix);
+	}
+
+	const int fileNameSize= fileName.size();
+	for (int i= 0; i < fileNameSize; ++i)
+	{
+		if (!fileName.at(i).isLetterOrNumber() && (fileName.at(i) != '.'))
+		{
+			fileName.replace(i, 1, '_');
+		}
+	}
+	fileName.prepend(prefix);
+
 	QString newName;
 	if (!m_3dxmlFileSet.contains(fileName))
 	{

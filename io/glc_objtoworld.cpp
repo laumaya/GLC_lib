@@ -40,10 +40,9 @@
 //////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////
-GLC_ObjToWorld::GLC_ObjToWorld(const QGLContext *pContext)
+GLC_ObjToWorld::GLC_ObjToWorld()
 : m_pWorld(NULL)
 , m_FileName()
-, m_pQGLContext(pContext)
 , m_pMtlLoader(NULL)
 , m_CurrentLineNumber(0)
 , m_pCurrentObjMesh(NULL)
@@ -131,7 +130,7 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	QString mtlLibFileName(getMtlLibFileName(mtlLibLine));
 	if (!mtlLibFileName.isEmpty())
 	{
-		m_pMtlLoader= new GLC_ObjMtlLoader(m_pQGLContext, mtlLibFileName);
+		m_pMtlLoader= new GLC_ObjMtlLoader(mtlLibFileName);
 		if (!m_pMtlLoader->loadMaterials())
 		{
 			delete m_pMtlLoader;
@@ -501,9 +500,9 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		QSet<GLuint>::iterator iIndexSet= indexSet.begin();
 		while (indexSet.constEnd() != iIndexSet)
 		{
-			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3]= normal.X();
-			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3 + 1]= normal.Y();
-			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3 + 2]= normal.Z();
+			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3]= normal.x();
+			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3 + 1]= normal.y();
+			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3 + 2]= normal.z();
 
 			++iIndexSet;
 		}

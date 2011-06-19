@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -48,8 +46,8 @@ QHash<GLuint, int> GLC_Texture::m_TextureIdUsage;
 //////////////////////////////////////////////////////////////////////
 
 //! Default constructor
-GLC_Texture::GLC_Texture(const QGLContext *pContext)
-: m_pQGLContext(const_cast<QGLContext*>(pContext))
+GLC_Texture::GLC_Texture()
+: m_pQGLContext(NULL)
 , m_FileName()
 , m_GlTextureID(0)
 , m_textureImage()
@@ -60,8 +58,8 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext)
 }
 
 // Constructor with fileName
-GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
-: m_pQGLContext(const_cast<QGLContext*>(pContext))
+GLC_Texture::GLC_Texture(const QString &Filename)
+: m_pQGLContext(NULL)
 , m_FileName(Filename)
 , m_GlTextureID(0)
 , m_textureImage(loadFromFile(m_FileName))
@@ -78,8 +76,8 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QString &Filename)
 	}
 }
 // Constructor with QFile
-GLC_Texture::GLC_Texture(const QGLContext *pContext, const QFile &file)
-: m_pQGLContext(const_cast<QGLContext*>(pContext))
+GLC_Texture::GLC_Texture(const QFile &file)
+: m_pQGLContext(NULL)
 , m_FileName(file.fileName())
 , m_GlTextureID(0)
 , m_textureImage()
@@ -98,8 +96,8 @@ GLC_Texture::GLC_Texture(const QGLContext *pContext, const QFile &file)
 }
 
 // Constructor with QImage
-GLC_Texture::GLC_Texture(const QGLContext* pContext, const QImage& image, const QString& fileName)
-: m_pQGLContext(const_cast<QGLContext*>(pContext))
+GLC_Texture::GLC_Texture(const QImage& image, const QString& fileName)
+: m_pQGLContext(NULL)
 , m_FileName(fileName)
 , m_GlTextureID(0)
 , m_textureImage(image)
@@ -193,14 +191,19 @@ void GLC_Texture::setMaxTextureSize(const QSize& size)
 // Private OpenGL functions
 //////////////////////////////////////////////////////////////////////
 // Load the texture
-void GLC_Texture::glLoadTexture(void)
+void GLC_Texture::glLoadTexture(QGLContext* pContext)
 {
 	if (m_GlTextureID == 0)
 	{
-		if (NULL == m_pQGLContext)
+		if (NULL == pContext)
 		{
 			m_pQGLContext= const_cast<QGLContext*>(QGLContext::currentContext());
 		}
+		else
+		{
+			m_pQGLContext= pContext;
+		}
+
 		// Test image size
 		if ((m_textureImage.height() > m_MaxTextureSize.height())
 				|| (m_textureImage.width() > m_MaxTextureSize.width()))
@@ -331,7 +334,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_Texture &texture)
 {
 	QString fileName;
 	stream >> fileName;
-	texture= GLC_Texture(texture.context(), fileName);
+	texture= GLC_Texture(fileName);
 
 	return stream;
 }

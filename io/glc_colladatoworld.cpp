@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -35,10 +33,9 @@ static int currentNodeId= 0;
 using namespace glcXmlUtil;
 
 // Default constructor
-GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
+GLC_ColladaToWorld::GLC_ColladaToWorld()
 : QObject()
 , m_pWorld(NULL)
-, m_pQGLContext(pContext)
 , m_pStreamReader(NULL)
 , m_FileName()
 , m_pFile()
@@ -1228,9 +1225,9 @@ void GLC_ColladaToWorld::computeNormalOfCurrentPrimitiveOfCurrentMesh(int indexO
 		GLC_Vector3df curNormal= normal.toVector3df();
 		for (int curVertex= 0; curVertex < 3; ++curVertex)
 		{
-			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) * 3]= curNormal.X();
-			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) * 3 + 1]= curNormal.Y();
-			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) * 3 + 2]= curNormal.Z();
+			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) * 3]= curNormal.x();
+			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) * 3 + 1]= curNormal.y();
+			(*pNormal)[m_pMeshInfo->m_Index.at(i + curVertex) * 3 + 2]= curNormal.z();
 		}
 	}
 }
@@ -1794,7 +1791,7 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 			if (QFileInfo(fullImageFileName).exists())
 			{
 				m_ListOfAttachedFileName << fullImageFileName;
-				GLC_Texture* pTexture= new GLC_Texture(m_pQGLContext, fullImageFileName);
+				GLC_Texture* pTexture= new GLC_Texture(fullImageFileName);
 				pCurrentMaterial->setTexture(pTexture);
 			}
 			else if (QFileInfo(m_FileName).absolutePath() != QFileInfo(fullImageFileName).absolutePath())
@@ -1804,7 +1801,7 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 				if (QFileInfo(fullImageFileName).exists())
 				{
 					m_ListOfAttachedFileName << fullImageFileName;
-					GLC_Texture* pTexture= new GLC_Texture(m_pQGLContext, fullImageFileName);
+					GLC_Texture* pTexture= new GLC_Texture(fullImageFileName);
 					pCurrentMaterial->setTexture(pTexture);
 				}
 				else

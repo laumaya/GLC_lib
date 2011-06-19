@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -46,10 +44,10 @@ class GLC_LIB_EXPORT GLC_ImagePlane
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct image plane from the given image file name and QGLContext
-	GLC_ImagePlane(const QGLContext *pContext, const QString& ImageName);
+	GLC_ImagePlane(const QString& ImageName);
 
 	//! Construct image plane from the given image and QGLContext
-	GLC_ImagePlane(const QGLContext *pContext, const QImage& image);
+	GLC_ImagePlane(const QImage& image);
 
 	~GLC_ImagePlane();
 //@}

@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -112,8 +110,8 @@ public:
 	//! Copy from an GLC_Vector3d
 	inline GLC_Vector4d(const GLC_Vector2d &Vect)
 	{
-		vector[0]= Vect.dVecteur[0];
-		vector[1]= Vect.dVecteur[1];
+		vector[0]= Vect.m_Vector[0];
+		vector[1]= Vect.m_Vector[1];
 		vector[2]= 0.0;
 		vector[3]= 1.0;
 	}
@@ -170,8 +168,8 @@ public:
 	//! Overload "=" operator
 	inline GLC_Vector4d& operator = (const GLC_Vector2d &Vect)
 	{
-		vector[0]= Vect.dVecteur[0];
-		vector[1]= Vect.dVecteur[1];
+		vector[0]= Vect.m_Vector[0];
+		vector[1]= Vect.m_Vector[1];
 		vector[2]= 0.0;
 		vector[3]= 1.0;
 

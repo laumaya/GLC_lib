@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -27,6 +25,7 @@
 
 #include "glc_3dviewcollection.h"
 #include "glc_structoccurence.h"
+#include "glc_selectionset.h"
 
 #include <QHash>
 
@@ -103,6 +102,10 @@ public:
 	inline GLC_Vector3d upVector() const
 	{return m_UpVector;}
 
+	//! Return an handle to the selection set
+	inline GLC_SelectionSet* selectionSetHandle()
+	{return &m_SelectionSet;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -138,6 +141,26 @@ public:
 	inline void setAttachedViewport(GLC_Viewport* pViewport)
 	{m_Collection.setAttachedViewport(pViewport);}
 
+	//! Select the given occurence id
+	/*! The given occurence id must belong to this worldhandle*/
+	void select(GLC_uint occurenceId, bool propagate= true);
+
+	//! Unselect the given occurence id
+	/*! The given occurence id must belong to this worldhandle*/
+	void unselect(GLC_uint occurenceId, bool propagate= true);
+
+	//! Select all occurence of this world handle
+	void selectAllWith3DViewInstance(bool allShowState);
+
+	//! Unselecte all occurence of this world handle
+	void unselectAll();
+
+	//! Show / Hide selected 3DViewInstance
+	void showHideSelected3DViewInstance();
+
+	//! Set selected 3DViewInstance visibility
+	void setSelected3DViewInstanceVisibility(bool isVisible);
+
 
 //@}
 
@@ -154,8 +177,11 @@ private:
 	//! The hash table containing struct occurence
 	QHash<GLC_uint, GLC_StructOccurence*> m_OccurenceHash;
 
-	//! The world Up Vector
+	//! This world Up Vector
 	GLC_Vector3d m_UpVector;
+
+	//! This world selectionSet
+	GLC_SelectionSet m_SelectionSet;
 };
 
 #endif /* GLC_WORLDHANDLE_H_ */

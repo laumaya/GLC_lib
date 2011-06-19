@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -126,13 +124,10 @@ void GLC_Shader::use()
 	// Program shader must be valid
 	Q_ASSERT(m_ProgramShader.isLinked());
 
+	m_ShadingGroupStack.push(m_ProgramShaderId);
 	// Test if the program shader is not already the current one
 	if (m_CurrentShadingGroupId != m_ProgramShaderId)
 	{
-		if (m_CurrentShadingGroupId != 0)
-		{
-			m_ShadingGroupStack.push(m_CurrentShadingGroupId);
-		}
 		m_CurrentShadingGroupId= m_ProgramShaderId;
 		m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.bind();
 	}
@@ -141,38 +136,44 @@ void GLC_Shader::use()
 
 bool GLC_Shader::use(GLuint shaderId)
 {
+	Q_ASSERT(0 != shaderId);
 	if (GLC_State::isInSelectionMode()) return false;
-	//qDebug() << "GLC_Shader::use(GLuint shaderId)";
-	// Test if the program shader is not already the current one
+
 	if (m_ShaderProgramHash.contains(shaderId))
 	{
+		m_ShadingGroupStack.push(shaderId);
+		// Test if the program shader is not already the current one
 		if (m_CurrentShadingGroupId != shaderId)
 		{
-			if (m_CurrentShadingGroupId != 0)
-			{
-				m_ShadingGroupStack.push(shaderId);
-			}
 			m_CurrentShadingGroupId= shaderId;
 			m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.bind();
 		}
 		return true;
 	}
-	else return false;
+	else
+	{
+		return false;
+	}
 }
 
 void GLC_Shader::unuse()
 {
+
 	if (GLC_State::isInSelectionMode()) return;
 
+	Q_ASSERT(!m_ShadingGroupStack.isEmpty());
+
+	const GLC_uint stackShadingGroupId= m_ShadingGroupStack.pop();
 	if (m_ShadingGroupStack.isEmpty())
 	{
 		m_CurrentShadingGroupId= 0;
+		m_ShaderProgramHash.value(stackShadingGroupId)->m_ProgramShader.release();
 	}
 	else
 	{
-		m_CurrentShadingGroupId= m_ShadingGroupStack.pop();
+		m_CurrentShadingGroupId= m_ShadingGroupStack.top();
+		m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.bind();
 	}
-	m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.release();
 }
 
 void GLC_Shader::createAndCompileProgrammShader()

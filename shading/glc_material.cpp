@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -102,8 +100,8 @@ GLC_Material::GLC_Material(const QString& name ,const GLfloat *pDiffuseColor)
 	// Others
 	initOtherColor();
 }
-GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
-:GLC_Object(pName)
+GLC_Material::GLC_Material(GLC_Texture* pTexture, const QString& name)
+:GLC_Object(name)
 , m_AmbientColor()
 , m_DiffuseColor()
 , m_SpecularColor()
@@ -462,17 +460,22 @@ void GLC_Material::setOpacity(const qreal alpha)
 //////////////////////////////////////////////////////////////////////
 
 // Load the texture
-void GLC_Material::glLoadTexture(void)
+void GLC_Material::glLoadTexture(QGLContext* pContext)
 {
 	if (m_pTexture != NULL)
 	{
-		m_pTexture->glLoadTexture();
+		m_pTexture->glLoadTexture(pContext);
+	}
+	else
+	{
+		qDebug() << "GLC_Material::glLoadTexture : Material without texture !";
 	}
 }
 
 // Execute OpenGL Material
 void GLC_Material::glExecute()
 {
+
 	GLfloat pAmbientColor[4]= {ambientColor().redF(),
 								ambientColor().greenF(),
 								ambientColor().blueF(),
@@ -497,10 +500,30 @@ void GLC_Material::glExecute()
 	{
 		glEnable(GL_TEXTURE_2D);
 		m_pTexture->glcBindTexture();
+		if (GLC_State::glslUsed())
+		{
+			if (GLC_Shader::hasActiveShader())
+			{
+				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("tex", GLint(0));
+				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("useTexture", true);
+			}
+		}
+
 	}
 	else
 	{
-		glDisable(GL_TEXTURE_2D);
+
+		if (GLC_State::glslUsed() && GLC_Shader::hasActiveShader())
+		{
+				glEnable(GL_TEXTURE_2D);
+				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("tex", GLint(0));
+				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("useTexture", false);
+		}
+		else
+		{
+			glDisable(GL_TEXTURE_2D);
+		}
+
 	}
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, pAmbientColor);
@@ -548,10 +571,26 @@ void GLC_Material::glExecute(float overwriteTransparency)
 	{
 		glEnable(GL_TEXTURE_2D);
 		m_pTexture->glcBindTexture();
+		if (GLC_State::glslUsed())
+		{
+			if (GLC_Shader::hasActiveShader())
+			{
+				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("tex", GLint(0));
+				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("useTexture", true);
+			}
+		}
 	}
 	else
 	{
 		glDisable(GL_TEXTURE_2D);
+		if (GLC_State::glslUsed())
+		{
+			if (GLC_Shader::hasActiveShader())
+			{
+				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("tex", GLint(0));
+				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("useTexture", false);
+			}
+		}
 	}
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, pAmbientColor);
@@ -568,7 +607,7 @@ void GLC_Material::glExecute(float overwriteTransparency)
 	{
 		const GLubyte* errString;
 		errString = gluErrorString(errCode);
-		qDebug("GLC_Material::GlExecute OpenGL Error %s", errString);
+		qDebug("GLC_Material::glExecute(float) OpenGL Error %s", errString);
 	}
 }
 
@@ -652,7 +691,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 	stream >> hasTexture;
 	if (hasTexture)
 	{
-		GLC_Texture texture(GLC_Factory::instance()->context());
+		GLC_Texture texture;
 		stream >> texture;
 		material.setTexture(new GLC_Texture(texture));
 	}

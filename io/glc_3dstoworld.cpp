@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -47,10 +45,9 @@
 #include <QFileInfo>
 #include <QGLContext>
 
-GLC_3dsToWorld::GLC_3dsToWorld(const QGLContext *pContext)
+GLC_3dsToWorld::GLC_3dsToWorld()
 : m_pWorld(NULL)
 , m_FileName()
-, m_pQGLContext(pContext)
 , m_pCurrentMesh(NULL)
 , m_pLib3dsFile(NULL)
 , m_Materials()
@@ -389,7 +386,7 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 			if (textureFile.open(QIODevice::ReadOnly))
 			{
 				// Create the texture and assign it to the material
-				GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
+				GLC_Texture *pTexture = new GLC_Texture(textureFile);
 				pMaterial->setTexture(pTexture);
 				m_ListOfAttachedFileName << textureFileName;
 				textureFile.close();

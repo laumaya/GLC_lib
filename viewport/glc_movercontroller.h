@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -33,9 +31,9 @@
 #include <QtDebug>
 
 #include "../glc_config.h"
+#include "glc_userinput.h"
 
 class QGLWidget;
-class QMouseEvent;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_MoverController
@@ -56,7 +54,8 @@ public:
 		TrackBall= 3,
 		Target= 4,
 		TurnTable= 5,
-		Fly= 6
+		Fly= 6,
+		TSR= 7
 	};
 
 public:
@@ -87,6 +86,10 @@ public:
 	inline GLC_Mover* activeMover() const
 	{return m_MoverHash.value(m_ActiveMoverId);}
 
+	//! Return the mover of the given id
+	inline GLC_Mover* getMover(const int id) const
+	{return m_MoverHash.value(id);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -104,16 +107,16 @@ public:
 	void removeMover(const int);
 
 	//! Set the specified mover as active
-	void setActiveMover(const int id, QMouseEvent * e);
+	void setActiveMover(const int id, const GLC_UserInput& userInput);
 
 	//! Set no mover as active
 	void setNoMover();
 
 	//! Move with the active mover
-	inline bool move(QMouseEvent * e)
+	inline bool move(const GLC_UserInput& userInput)
 	{
 		Q_ASSERT(0 != m_ActiveMoverId);
-		return m_MoverHash.value(m_ActiveMoverId)->move(e);
+		return m_MoverHash.value(m_ActiveMoverId)->move(userInput);
 	}
 
 //@}

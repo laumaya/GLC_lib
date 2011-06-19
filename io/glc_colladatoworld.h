@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -163,7 +161,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_ColladaToWorld(const QGLContext*);
+	GLC_ColladaToWorld();
 
 	//! Destructor
 	virtual ~GLC_ColladaToWorld();
@@ -369,9 +367,6 @@ private:
 private:
 	//! The world to built
 	GLC_World* m_pWorld;
-
-	//! OpenGL Context
-	const QGLContext* m_pQGLContext;
 
 	//! Xml Reader
 	QXmlStreamReader* m_pStreamReader;

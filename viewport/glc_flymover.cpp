@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -70,10 +68,10 @@ GLC_Mover* GLC_FlyMover::clone() const
 //Set Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_FlyMover::init(QMouseEvent * e)
+void GLC_FlyMover::init(const GLC_UserInput& userInput)
 {
-	m_PreviousVector= mapForFlying(static_cast<double>(e->x()), static_cast<double>(e->y()));
-	GLC_Point3d point= m_pViewport->unProject(e->x(), e->y());
+	m_PreviousVector= mapForFlying(static_cast<double>(userInput.x()), static_cast<double>(userInput.y()));
+	GLC_Point3d point= m_pViewport->unProject(userInput.x(), userInput.y());
 	const double distance= (point - m_pViewport->cameraHandle()->eye()).length();
 	m_pViewport->cameraHandle()->setDistTargetEye(distance);
 	// 5 secondes to travel
@@ -85,10 +83,10 @@ void GLC_FlyMover::init(QMouseEvent * e)
 	m_TimerId= QObject::startTimer(m_TimerInterval);
 }
 
-bool GLC_FlyMover::move(QMouseEvent * e)
+bool GLC_FlyMover::move(const GLC_UserInput& userInput)
 {
-	m_PreviousVector= mapForFlying(static_cast<double>(e->x()), static_cast<double>(e->y()));
-	GLC_Point3d point= m_pViewport->unProject(e->x(), e->y());
+	m_PreviousVector= mapForFlying(static_cast<double>(userInput.x()), static_cast<double>(userInput.y()));
+	GLC_Point3d point= m_pViewport->unProject(userInput.x(), userInput.y());
 	const double distance= (point - m_pViewport->cameraHandle()->eye()).length();
 	m_pViewport->cameraHandle()->setDistTargetEye(distance);
 

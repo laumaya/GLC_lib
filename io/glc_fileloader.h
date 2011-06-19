@@ -3,8 +3,6 @@
  This file is part of the GLC-lib library.
  Copyright (C) 2011 JŽr™me Forrissier
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -58,7 +56,7 @@ class GLC_LIB_EXPORT GLC_FileLoader : public QObject
 //////////////////////////////////////////////////////////////////////
 
 public:
-	GLC_FileLoader(const QGLContext*);
+	GLC_FileLoader();
 	virtual ~GLC_FileLoader();
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -81,8 +79,6 @@ public:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
-	//! OpenGL Context
-	const QGLContext* m_pQGLContext;
 };
 
 #endif /*GLC_FILELOADER_H_*/

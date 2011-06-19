@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -96,9 +94,11 @@ namespace glc
 
 	//! Return the midpoint of the two given points
 	inline GLC_Point3d midPoint(const GLC_Point3d& point1, const GLC_Point3d point2)
-	{
-		return point1 + (point2 - point1) * 0.5;
-	}
+	{return point1 + (point2 - point1) * 0.5;}
+
+	//! Return the perpendicular 2D vector of the given 2D vector
+	inline GLC_Vector2d perpVector(const GLC_Vector2d& vect)
+	{return GLC_Vector2d(-vect.getY(), vect.getX());}
 
 
 //@}

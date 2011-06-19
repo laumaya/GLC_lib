@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -96,8 +94,20 @@ public:
 	inline double aspectRatio() const
 	{ return static_cast<double>(m_WindowHSize) / static_cast<double>(m_WindowVSize);}
 
+	//! Return the normalyse mouse position from screen coordinate
+	GLC_Point2d normalyseMousePosition(int x, int y);
+
+	//! Map screen position to OpenGL screen position
+	GLC_Point2d mapToOpenGLScreen(int x, int y);
+
+	//! Map normalyze screen position to OpenGL screen position
+	GLC_Point2d mapNormalyzeToOpenGLScreen(double x, double y);
+
 	//! Map Screen position to OpenGL position (On image Plane) according to this viewport
 	GLC_Vector3d mapPosMouse( GLdouble Posx, GLdouble Posy) const;
+
+	//! Map normalyse Screen position to OpenGL position (On image Plane) according to this viewport
+	GLC_Vector3d mapNormalyzePosMouse(double Posx, double Posy) const;
 
 	//! Get this viewport's camera's angle of view
 	inline double viewAngle() const
