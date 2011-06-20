@@ -744,7 +744,6 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 			GLC_3DRep* pRep= new GLC_3DRep(binaryRep.loadRep());
 
 			setRepresentationFileName(pRep);
-			factorizeMaterial(pRep);
 
 			GLC_StructReference* pCurrentRef= new GLC_StructReference(pRep);
 			pCurrentRef->setName(QFileInfo(m_CurrentFileName).baseName());
@@ -1733,7 +1732,6 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 				GLC_BSRep binaryRep= cacheManager.binary3DRep(QFileInfo(m_FileName).baseName(), m_CurrentFileName);
 				representation= binaryRep.loadRep();
 				setRepresentationFileName(&representation);
-				factorizeMaterial(&representation);
 			}
 			else
 			{
@@ -2196,47 +2194,6 @@ GLC_Texture* GLC_3dxmlToWorld::loadTexture(QString fileName)
 	}
 
 	return pTexture;
-}
-
-// Factorize material use
-void GLC_3dxmlToWorld::factorizeMaterial(GLC_3DRep* pRep)
-{
-	//qDebug() << "GLC_3dxmlToWorld::factorizeMaterial";
-	// Get the Set of materials of the rep
-	QSet<GLC_Material*> repMaterialSet= pRep->materialSet();
-	//! The hash table of rep material
-	QHash<GLC_uint, GLC_Material*> repMaterialHash;
-	// Construct the map of material String Hash and Id
-	QHash<QString, GLC_uint> materialMap;
-
-	{ // Fill the map of material
-		QSet<GLC_Material*>::const_iterator iMat= repMaterialSet.constBegin();
-		while(repMaterialSet.constEnd() != iMat)
-		{
-			GLC_Material* pCurrentMat= *iMat;
-			materialMap.insert(QString::number(pCurrentMat->hashCode()), pCurrentMat->id());
-			repMaterialHash.insert(pCurrentMat->id(), pCurrentMat);
-			++iMat;
-		}
-	}
-
-	// Make the factorization
-	QHash<QString, GLC_uint>::iterator iMat= materialMap.begin();
-	while (materialMap.constEnd() != iMat)
-	{
-		if (m_MaterialHash.contains(iMat.key()))
-		{
-			//qDebug() << "Replace Mat :" << iMat.key() << " " << iMat.value();
-			pRep->replaceMaterial(iMat.value(), m_MaterialHash.value(iMat.key()));
-		}
-		else
-		{
-			//qDebug() << "Indert mat " << iMat.key() << " " << iMat.value();
-			m_MaterialHash.insert(iMat.key(), repMaterialHash.value(iMat.value()));
-		}
-		++iMat;
-	}
-
 }
 
 void GLC_3dxmlToWorld::setRepresentationFileName(GLC_3DRep* pRep)
