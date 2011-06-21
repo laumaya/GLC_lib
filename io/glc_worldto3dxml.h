@@ -177,6 +177,9 @@ private:
 	//! return true if export must continu
 	bool continu();
 
+	//! Return the simplified name of the given name
+	QString symplifyName(QString name);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

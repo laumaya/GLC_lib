@@ -772,7 +772,7 @@ void GLC_WorldTo3dxml::writeMaterial(const GLC_Material* pMaterial)
 	}
 	else
 	{
-		materialName= pMaterial->name();
+		materialName= symplifyName(pMaterial->name());
 	}
 
 
@@ -1114,14 +1114,8 @@ QString GLC_WorldTo3dxml::xmlFileName(QString fileName)
 		fileName.remove(prefix);
 	}
 
-	const int fileNameSize= fileName.size();
-	for (int i= 0; i < fileNameSize; ++i)
-	{
-		if (!fileName.at(i).isLetterOrNumber() && (fileName.at(i) != '.'))
-		{
-			fileName.replace(i, 1, '_');
-		}
-	}
+	fileName= symplifyName(fileName);
+
 	fileName.prepend(prefix);
 
 	QString newName;
@@ -1207,4 +1201,18 @@ bool GLC_WorldTo3dxml::continu()
 		m_pReadWriteLock->unlock();
 	}
 	return continuValue;
+}
+
+QString GLC_WorldTo3dxml::symplifyName(QString name)
+{
+	const int nameSize= name.size();
+	for (int i= 0; i < nameSize; ++i)
+	{
+		if (!name.at(i).isLetterOrNumber() && (name.at(i) != '.'))
+		{
+			name.replace(i, 1, '_');
+		}
+	}
+
+	return name;
 }
