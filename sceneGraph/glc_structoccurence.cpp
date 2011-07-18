@@ -288,13 +288,10 @@ QList<GLC_StructOccurence*> GLC_StructOccurence::subOccurenceList() const
 	for (int i= 0; i < childCount; ++i)
 	{
 		GLC_StructOccurence* pCurrentChild= m_Childs.at(i);
+		subOccurence.append(pCurrentChild);
 		if (pCurrentChild->hasChild())
 		{
 			subOccurence.append(pCurrentChild->subOccurenceList());
-		}
-		else
-		{
-			subOccurence.append(pCurrentChild);
 		}
 	}
 
@@ -615,6 +612,10 @@ bool GLC_StructOccurence::create3DViewInstance()
 			instance.setId(id());
 			creationSuccess= m_pWorldHandle->collection()->add(instance);
 			m_pWorldHandle->collection()->setVisibility(m_Uid, m_IsVisible);
+			if (m_pWorldHandle->selectionSetHandle()->contains(m_Uid))
+			{
+				m_pWorldHandle->collection()->select(m_Uid);
+			}
 		}
 	}
 	return creationSuccess;

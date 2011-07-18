@@ -131,14 +131,14 @@ void GLC_WorldHandle::removeOccurence(GLC_StructOccurence* pOccurence)
 	m_Collection.remove(pOccurence->id());
 }
 
-void GLC_WorldHandle::select(GLC_uint occurenceId, bool propagate)
+void GLC_WorldHandle::select(GLC_uint occurenceId)
 {
 	Q_ASSERT(m_OccurenceHash.contains(occurenceId));
 	m_SelectionSet.insert(occurenceId);
 	m_Collection.select(occurenceId);
 
 	const GLC_StructOccurence* pSelectedOccurence= m_OccurenceHash.value(occurenceId);
-	if (propagate && pSelectedOccurence->hasChild())
+	if (pSelectedOccurence->hasChild())
 	{
 		QList<GLC_StructOccurence*> subOccurenceList= pSelectedOccurence->subOccurenceList();
 		const int subOccurenceCount= subOccurenceList.size();
