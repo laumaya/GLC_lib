@@ -431,9 +431,7 @@ GLC_Camera GLC_Camera::isoView() const
 //////////////////////////////////////////////////////////////////////
 void GLC_Camera::glExecute()
 {
-	gluLookAt(m_Eye.x(), m_Eye.y(), m_Eye.z(),
-		m_Target.x(), m_Target.y(), m_Target.z(),
-		m_VectUp.x(), m_VectUp.y(), m_VectUp.z());
+	glMultMatrixd(modelViewMatrix().getData());
 }
 
 //////////////////////////////////////////////////////////////////////
