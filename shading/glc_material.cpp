@@ -25,6 +25,7 @@
 #include "glc_material.h"
 #include "../geometry/glc_geometry.h"
 #include "../glc_factory.h"
+#include "../glc_openglException.h"
 
 #include <QtDebug>
 
@@ -535,13 +536,13 @@ void GLC_Material::glExecute()
 	glColor4fv(pDiffuseColor);
 
 	// OpenGL Error handler
-	GLenum errCode;
-	if ((errCode= glGetError()) != GL_NO_ERROR)
+	GLenum error= glGetError();
+	if (error != GL_NO_ERROR)
 	{
-		const GLubyte* errString;
-		errString = gluErrorString(errCode);
-		qDebug("GLC_Material::GlExecute OpenGL Error %s", errString);
+		GLC_OpenGlException OpenGlException("GLC_Material::glExecute() ", error);
+		throw(OpenGlException);
 	}
+
 }
 
 // Execute OpenGL Material
@@ -602,12 +603,11 @@ void GLC_Material::glExecute(float overwriteTransparency)
 	glColor4fv(pDiffuseColor);
 
 	// OpenGL Error handler
-	GLenum errCode;
-	if ((errCode= glGetError()) != GL_NO_ERROR)
+	GLenum error= glGetError();
+	if (error != GL_NO_ERROR)
 	{
-		const GLubyte* errString;
-		errString = gluErrorString(errCode);
-		qDebug("GLC_Material::glExecute(float) OpenGL Error %s", errString);
+		GLC_OpenGlException OpenGlException("GLC_Material::glExecute() ", error);
+		throw(OpenGlException);
 	}
 }
 
