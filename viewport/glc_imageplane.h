@@ -26,6 +26,7 @@
 #define GLC_IMAGEPLANE_H_
 
 #include "../shading/glc_material.h"
+#include "../sceneGraph/glc_3dviewinstance.h"
 
 #include "../glc_config.h"
 
@@ -67,8 +68,8 @@ public:
 
 private:
 
-	//! The image plane material
-	GLC_Material m_Material;
+	//! The image representation
+	GLC_3DViewInstance m_Representation;
 
 };
 
