@@ -26,6 +26,7 @@
 #define GLC_MESHDATA_H_
 
 #include <QVector>
+#include <QGLBuffer>
 
 #include "glc_lod.h"
 #include "../glc_global.h"
@@ -194,7 +195,7 @@ public:
 	void createVBOs();
 
 	//! Ibo Usage
-	bool useVBO(bool, GLC_MeshData::VboType) const;
+	bool useVBO(bool, GLC_MeshData::VboType);
 
 	//! Ibo Usage
 	inline void useIBO(bool use, const int currentLod= 0)
@@ -213,8 +214,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! Main VBO ID
-	GLuint m_VboId;
+	//! The vertex Buffer
+	QGLBuffer m_VertexBuffer;
 
 	//! Vertex Position Vector
 	GLfloatVector m_Positions;
@@ -228,14 +229,14 @@ private:
 	//! Color index
 	GLfloatVector m_Colors;
 
-	//! Normals VBO ID
-	GLuint m_NormalVboId;
+	//! Normals Buffer
+	QGLBuffer m_NormalBuffer;
 
-	//! Texture VBO ID
-	GLuint m_TexelVboId;
+	//! Texture Buffer
+	QGLBuffer m_TexelBuffer;
 
-	//! Color VBO ID
-	GLuint m_ColorVboId;
+	//! Color Buffer
+	QGLBuffer m_ColorBuffer;
 
 	//! The list of LOD
 	QList<GLC_Lod*> m_LodList;

@@ -26,6 +26,8 @@
 #define GLC_LOD_H_
 
 #include <QVector>
+#include <QGLBuffer>
+
 #include "../glc_ext.h"
 
 #include "../glc_config.h"
@@ -138,15 +140,15 @@ public:
 	//! IBO creation
 	inline void createIBO()
 	{
-		if (0 == m_IboId && !m_IndexVector.isEmpty())
+		if (!m_IndexBuffer.isCreated() && !m_IndexVector.isEmpty())
 		{
-			glGenBuffers(1, &m_IboId);
+			m_IndexBuffer.create();
 		}
 	}
 
 	//! Ibo Usage
 	inline void useIBO() const
-	{glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboId);}
+	{const_cast<QGLBuffer&>(m_IndexBuffer).bind();}
 
 //@}
 
@@ -158,8 +160,8 @@ private:
 	//! The accuracy of the LOD
 	double m_Accuracy;
 
-	//! The IBO ID
-	GLuint m_IboId;
+	//! The Index Buffer
+	QGLBuffer m_IndexBuffer;
 
 	//! The Index Vector
 	QVector<GLuint> m_IndexVector;

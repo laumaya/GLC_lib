@@ -31,7 +31,7 @@ quint32 GLC_Lod::m_ChunkId= 0xA708;
 
 GLC_Lod::GLC_Lod()
 : m_Accuracy(0.0)
-, m_IboId(0)
+, m_IndexBuffer(QGLBuffer::IndexBuffer)
 , m_IndexVector()
 , m_IndexSize(0)
 , m_TrianglesCount(0)
@@ -42,7 +42,7 @@ GLC_Lod::GLC_Lod()
 
 GLC_Lod::GLC_Lod(double accuracy)
 : m_Accuracy(accuracy)
-, m_IboId(0)
+, m_IndexBuffer(QGLBuffer::IndexBuffer)
 , m_IndexVector()
 , m_IndexSize(0)
 , m_TrianglesCount(0)
@@ -53,7 +53,7 @@ GLC_Lod::GLC_Lod(double accuracy)
 
 GLC_Lod::GLC_Lod(const GLC_Lod& lod)
 : m_Accuracy(lod.m_Accuracy)
-, m_IboId(0)
+, m_IndexBuffer(QGLBuffer::IndexBuffer)
 , m_IndexVector(lod.indexVector())
 , m_IndexSize(lod.m_IndexSize)
 , m_TrianglesCount(lod.m_TrianglesCount)
@@ -68,7 +68,7 @@ GLC_Lod& GLC_Lod::operator=(const GLC_Lod& lod)
 	if (this != &lod)
 	{
 		m_Accuracy= lod.m_Accuracy;
-		m_IboId= 0;
+		m_IndexBuffer.destroy();
 		m_IndexVector= lod.indexVector();
 		m_IndexSize= lod.m_IndexSize;
 		m_TrianglesCount= lod.m_TrianglesCount;
@@ -79,11 +79,7 @@ GLC_Lod& GLC_Lod::operator=(const GLC_Lod& lod)
 
 GLC_Lod::~GLC_Lod()
 {
-	// Delete IBO
-	if (0 != m_IboId)
-	{
-		glDeleteBuffers(1, &m_IboId);
-	}
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -98,18 +94,18 @@ quint32 GLC_Lod::chunckID()
 
 QVector<GLuint> GLC_Lod::indexVector() const
 {
-	if (0 != m_IboId)
+	if (m_IndexBuffer.isCreated())
 	{
 		// VBO created get data from VBO
 		const int sizeOfIbo= m_IndexSize;
 		const GLsizeiptr dataSize= sizeOfIbo * sizeof(GLuint);
 		QVector<GLuint> indexVector(sizeOfIbo);
 
-		useIBO();
-		GLvoid* pIbo = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY);
+		const_cast<QGLBuffer&>(m_IndexBuffer).bind();
+		GLvoid* pIbo = const_cast<QGLBuffer&>(m_IndexBuffer).map(QGLBuffer::ReadOnly);
 		memcpy(indexVector.data(), pIbo, dataSize);
-		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		const_cast<QGLBuffer&>(m_IndexBuffer).unmap();
+		const_cast<QGLBuffer&>(m_IndexBuffer).release();
 		return indexVector;
 	}
 	else
@@ -121,7 +117,7 @@ QVector<GLuint> GLC_Lod::indexVector() const
 
 void GLC_Lod::copyIboToClientSide()
 {
-	if ((0 != m_IboId) && (m_IndexVector.isEmpty()))
+	if (m_IndexBuffer.isCreated() && (m_IndexVector.isEmpty()))
 	{
 		m_IndexVector= indexVector();
 	}
@@ -130,17 +126,17 @@ void GLC_Lod::copyIboToClientSide()
 
 void GLC_Lod::releaseIboClientSide(bool update)
 {
-	if((0 != m_IboId) && !m_IndexVector.isEmpty())
+	if(m_IndexBuffer.isCreated() && !m_IndexVector.isEmpty())
 	{
 		if (update)
 		{
 			// Copy index from client side to serveur
-			useIBO();
+			m_IndexBuffer.bind();
 
 			const GLsizei indexNbr= static_cast<GLsizei>(m_IndexVector.size());
 			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, m_IndexVector.data(), GL_STATIC_DRAW);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			m_IndexBuffer.allocate(m_IndexVector.data(), indexSize);
+			m_IndexBuffer.release();
 		}
 		m_IndexVector.clear();
 	}

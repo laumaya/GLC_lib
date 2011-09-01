@@ -25,6 +25,8 @@
 #define GLC_WIREDATA_H_
 
 #include <QColor>
+#include <QGLBuffer>
+
 #include "../glc_global.h"
 #include "../glc_boundingbox.h"
 #include "../shading/glc_renderproperties.h"
@@ -137,7 +139,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! VBO ID
-	GLuint m_VboId;
+	QGLBuffer m_VerticeBuffer;
 
 	//! The next primitive local id
 	GLC_uint m_NextPrimitiveLocalId;
