@@ -230,7 +230,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 			}
 		}
 	}
-	else if (QFileInfo(m_CurrentFileName).suffix().toLower() == "3drep")
+	else if ((QFileInfo(m_CurrentFileName).suffix().toLower() == "3drep") || (QFileInfo(m_CurrentFileName).suffix().toLower() == "xml"))
 	{
         if (GLC_State::cacheIsUsed() && GLC_State::currentCacheManager().isUsable(m_CurrentDateTime, QFileInfo(m_FileName).baseName(), QFileInfo(m_CurrentFileName).fileName()))
 		{
@@ -590,6 +590,7 @@ void GLC_3dxmlToWorld::loadInstance3D()
 
 	const unsigned int instanceId= readAttribute("id", true).toUInt();
 	const QString instName(readAttribute("name", false));
+	goToElement(m_pStreamReader, "IsAggregatedBy");
 	const unsigned int aggregatedById= getContent(m_pStreamReader, "IsAggregatedBy").toUInt();
 	QString instanceOf= getContent(m_pStreamReader, "IsInstanceOf");
 	const QString matrixString= getContent(m_pStreamReader, "RelativeMatrix");
@@ -686,7 +687,7 @@ void GLC_3dxmlToWorld::loadInstanceRep()
 {
 	const QString local= "urn:3DXML:Reference:loc:";
 
-	//const QString instName(readAttribute("name", true));
+	goToElement(m_pStreamReader, "IsAggregatedBy");
 	const unsigned int aggregatedById= getContent(m_pStreamReader, "IsAggregatedBy").toUInt();
 	QString instanceOf= getContent(m_pStreamReader, "IsInstanceOf");
 
