@@ -248,7 +248,7 @@ GLC_3DRep GLC_Factory::create3DRepFromFile(const QString& fileName) const
 {
 	GLC_3DRep rep;
 
-	if ((QFileInfo(fileName).suffix().toLower() == "3dxml") || (QFileInfo(fileName).suffix().toLower() == "3drep"))
+	if ((QFileInfo(fileName).suffix().toLower() == "3dxml") || (QFileInfo(fileName).suffix().toLower() == "3drep") || (QFileInfo(fileName).suffix().toLower() == "xml"))
 	{
 		GLC_3dxmlToWorld d3dxmlToWorld;
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
