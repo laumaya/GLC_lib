@@ -22,7 +22,7 @@
 
 //! \file glc_viewport.cpp implementation of the GLC_Viewport class.
 
-
+#include <glu.h>
 #include "glc_viewport.h"
 #include "../glc_openglexception.h"
 #include "../glc_ext.h"
@@ -166,8 +166,8 @@ void GLC_Viewport::initGl()
 
 void GLC_Viewport::glExecuteCam(void)
 {
-	m_pViewCam->glExecute();
 	renderImagePlane();
+	m_pViewCam->glExecute();
 }
 
 void GLC_Viewport::updateProjectionMat(void)
