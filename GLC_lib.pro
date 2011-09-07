@@ -159,7 +159,7 @@ HEADERS_GLC += glc_global.h \
            glc_log.h \
            glc_errorlog.h \
            glc_tracelog.h \
-           glc_openglstate.h
+           glc_renderstate.h
            
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_cuttingplane.h \
@@ -308,7 +308,7 @@ SOURCES +=	glc_global.cpp \
 			glc_log.cpp \
 			glc_errorlog.cpp \
 			glc_tracelog.cpp \
-			glc_openglstate.cpp
+			glc_renderstate.cpp
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_cuttingplane.cpp \
@@ -411,7 +411,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_ErrorLog \
     		   include/GLC_TraceLog \
     		   include/glcXmlUtil \
-    		   include/GLC_OpenGLState \
+    		   include/GLC_RenderState \
     		   include/GLC_FileLoader \
     		   include/GLC_WorldReaderPlugin \
     		   include/GLC_WorldReaderHandler \
@@ -482,3 +482,10 @@ INSTALLS += include_glc_3dwidget
 INSTALLS += target
 INSTALLS +=include
 
+OTHER_FILES += \
+    qtc_packaging/debian_harmattan/rules \
+    qtc_packaging/debian_harmattan/README \
+    qtc_packaging/debian_harmattan/copyright \
+    qtc_packaging/debian_harmattan/control \
+    qtc_packaging/debian_harmattan/compat \
+    qtc_packaging/debian_harmattan/changelog
