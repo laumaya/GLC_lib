@@ -143,7 +143,7 @@ public:
 
 	//! Use specified program shader
 	/*! Return true if the given shading group id is usable*/
-	static bool use(GLuint ShadingGroupId);
+	static bool use(GLC_uint ShadingGroupId);
 
 	//! unuse programm shader
 	static void unuse();

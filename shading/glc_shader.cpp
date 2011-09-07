@@ -134,7 +134,7 @@ void GLC_Shader::use()
 
 }
 
-bool GLC_Shader::use(GLuint shaderId)
+bool GLC_Shader::use(GLC_uint shaderId)
 {
 	Q_ASSERT(0 != shaderId);
 	if (GLC_State::isInSelectionMode()) return false;
