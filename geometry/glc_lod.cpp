@@ -138,10 +138,10 @@ void GLC_Lod::releaseIboClientSide(bool update)
 			m_IndexBuffer.allocate(m_IndexVector.data(), indexSize);
 			m_IndexBuffer.release();
 		}
+		m_IndexSize= m_IndexVector.size();
 		m_IndexVector.clear();
 	}
 }
-
 
 QDataStream &operator<<(QDataStream &stream, const GLC_Lod &lod)
 {
