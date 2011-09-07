@@ -19,16 +19,18 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
-//! \file glc_openglstate.h interface for the GLC_OpenGLState class.
+//! \file glc_renderstate.h interface for the GLC_RenderState class.
 
-#ifndef GLC_OPENGLSTATE_H_
-#define GLC_OPENGLSTATE_H_
+class QGLContext;
+
+#ifndef GLC_RENDERSTATE_H_
+#define GLC_RENDERSTATE_H_
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_OpenGLState
-/*! \brief GLC_OpenGLState is use to store and retrieve differential opengl state*/
+//! \class GLC_RenderState
+/*! \brief GLC_RenderState is use to set, store and retrieve differential opengl state*/
 //////////////////////////////////////////////////////////////////////
-class GLC_OpenGLState
+class GLC_RenderState
 {
 public:
 //////////////////////////////////////////////////////////////////////
@@ -36,8 +38,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 
-	GLC_OpenGLState();
-	virtual ~GLC_OpenGLState();
+	explicit GLC_RenderState(QGLContext* pContext);
+	virtual ~GLC_RenderState();
 
 //@}
 
@@ -62,7 +64,9 @@ public:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
+	//! Attached rendering context
+	QGLContext* m_pContext;
 
 };
 
-#endif /* GLC_OPENGLSTATE_H_ */
+#endif /* GLC_RENDERSTATE_H_ */

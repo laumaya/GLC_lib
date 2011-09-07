@@ -19,16 +19,19 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
-//! \file glc_openglstate.cpp implementation of the GLC_OpenGLState class.
+//! \file glc_renderstate.cpp implementation of the GLC_OpenGLState class.
 
-#include "glc_openglstate.h"
+#include <QGLContext>
 
-GLC_OpenGLState::GLC_OpenGLState()
+#include "glc_renderstate.h"
+
+GLC_RenderState::GLC_RenderState(QGLContext* pContext)
+: m_pContext(pContext)
 {
 
 }
 
-GLC_OpenGLState::~GLC_OpenGLState()
+GLC_RenderState::~GLC_RenderState()
 {
 
 }
