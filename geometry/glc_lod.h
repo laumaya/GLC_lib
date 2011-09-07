@@ -113,12 +113,6 @@ public:
 	//! Release client IBO
 	void releaseIboClientSide(bool update= false);
 
-	//! The mesh wich use this lod is finished
-	inline void finishVbo()
-	{
-		m_IndexSize= m_IndexVector.size();
-		m_IndexVector.clear();
-	}
 	//! Set accuracy of the LOD
 	inline void setAccuracy(const double& accuracy)
 	{m_Accuracy= accuracy;}
@@ -149,6 +143,10 @@ public:
 	//! Ibo Usage
 	inline void useIBO() const
 	{const_cast<QGLBuffer&>(m_IndexBuffer).bind();}
+
+	//! Fill IBO
+	inline void fillIbo()
+	{releaseIboClientSide(true);}
 
 //@}
 
