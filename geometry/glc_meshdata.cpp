@@ -205,25 +205,6 @@ GLfloatVector GLC_MeshData::colorVector() const
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-// The mesh wich use the data is finished
-void GLC_MeshData::finishVbo()
-{
-	m_PositionSize= m_Positions.size();
-	m_Positions.clear();
-	m_Normals.clear();
-	m_TexelsSize= m_Texels.size();
-	m_Texels.clear();
-	m_ColorSize= m_Colors.size();
-	m_Colors.clear();
-
-	// Finish the LOD
-	const int size= m_LodList.size();
-	for (int i= 0; i < size; ++i)
-	{
-		m_LodList[i]->finishVbo();
-	}
-}
-
 // If the there is more than 2 LOD Swap the first and last
 void GLC_MeshData::finishLod()
 {
@@ -395,6 +376,9 @@ void GLC_MeshData::fillVbo(GLC_MeshData::VboType type)
 		const GLsizei dataNbr= static_cast<GLsizei>(m_Positions.size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		m_VertexBuffer.allocate(m_Positions.data(), dataSize);
+
+		m_PositionSize= m_Positions.size();
+		m_Positions.clear();
 	}
 	else if (type == GLC_MeshData::GLC_Normal)
 	{
@@ -402,6 +386,8 @@ void GLC_MeshData::fillVbo(GLC_MeshData::VboType type)
 		const GLsizei dataNbr= static_cast<GLsizei>(m_Normals.size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		m_NormalBuffer.allocate(m_Normals.data(), dataSize);
+
+		m_Normals.clear();
 	}
 	else if ((type == GLC_MeshData::GLC_Texel) && m_TexelBuffer.isCreated())
 	{
@@ -409,6 +395,9 @@ void GLC_MeshData::fillVbo(GLC_MeshData::VboType type)
 		const GLsizei dataNbr= static_cast<GLsizei>(m_Texels.size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		m_TexelBuffer.allocate(m_Texels.data(), dataSize);
+
+		m_TexelsSize= m_Texels.size();
+		m_Texels.clear();
 	}
 	else if ((type == GLC_MeshData::GLC_Color) && m_ColorBuffer.isCreated())
 	{
@@ -416,6 +405,18 @@ void GLC_MeshData::fillVbo(GLC_MeshData::VboType type)
 		const GLsizei dataNbr= static_cast<GLsizei>(m_Colors.size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		m_ColorBuffer.allocate(m_Colors.data(), dataSize);
+
+		m_ColorSize= m_Colors.size();
+		m_Colors.clear();
+	}
+}
+
+void GLC_MeshData::fillLodIbo()
+{
+	const int lodCount= m_LodList.count();
+	for (int i= 0; i < lodCount; ++i)
+	{
+		m_LodList.at(i)->fillIbo();
 	}
 }
 // Non Member methods

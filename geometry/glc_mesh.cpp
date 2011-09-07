@@ -581,8 +581,10 @@ void GLC_Mesh::reverseNormals()
 	{
 		(*pNormalVector)[i]= - pNormalVector->at(i);
 	}
-	// Invalid the geometry
-	m_GeometryIsValid = false;
+	if (GLC_State::vboUsed())
+	{
+		m_MeshData.fillVbo(GLC_MeshData::GLC_Normal);
+	}
 }
 
 // Copy index list in a vector for Vertex Array Use
@@ -821,17 +823,6 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		{
 			fillVbosAndIbos();
 		}
-		else if (!m_GeometryIsValid && !m_MeshData.normalVectorHandle()->isEmpty())
-		{
-			// Normals has been inversed update normal vbo
-			m_MeshData.useVBO(true, GLC_MeshData::GLC_Normal);
-
-			GLfloatVector* pNormalVector= m_MeshData.normalVectorHandle();
-			const GLsizei dataNbr= static_cast<GLsizei>(pNormalVector->size());
-			const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
-			glBufferData(GL_ARRAY_BUFFER, dataSize, pNormalVector->data(), GL_STATIC_DRAW);
-			m_MeshData.normalVectorHandle()->clear();
-		}
 
 		// Activate mesh VBOs and IBO of the current LOD
 		activateVboAndIbo();
@@ -1011,33 +1002,20 @@ GLC_uint GLC_Mesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, double a
 // Fill VBOs and IBOs
 void GLC_Mesh::fillVbosAndIbos()
 {
-	// Create VBO of vertices
+	// Fill VBO of vertices
 	m_MeshData.fillVbo(GLC_MeshData::GLC_Vertex);
 
-	// Create VBO of normals
+	// Fill VBO of normals
 	m_MeshData.fillVbo(GLC_MeshData::GLC_Normal);
 
-	// Create VBO of texel if needed
+	// Fill VBO of texel if needed
 	m_MeshData.fillVbo(GLC_MeshData::GLC_Texel);
 
-	// Create VBO of color if needed
+	// Fill VBO of color if needed
 	m_MeshData.fillVbo(GLC_MeshData::GLC_Color);
 
-	const int lodNumber= m_MeshData.lodCount();
-	for (int i= 0; i < lodNumber; ++i)
-	{
-		//Create LOD IBO
-		if (!m_MeshData.indexVectorHandle(i)->isEmpty())
-		{
-			QVector<GLuint>* pIndexVector= m_MeshData.indexVectorHandle(i);
-			m_MeshData.useIBO(true, i);
-			const GLsizei indexNbr= static_cast<GLsizei>(pIndexVector->size());
-			const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, pIndexVector->data(), GL_STATIC_DRAW);
-		}
-	}
-	// Remove client side data
-	m_MeshData.finishVbo();
+	// Fill a lod IBO
+	m_MeshData.fillLodIbo();
 
 }
 // set primitive group offset

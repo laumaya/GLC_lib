@@ -161,9 +161,6 @@ public:
 	inline void appendLod(double accuracy= 0.0)
 	{m_LodList.append(new GLC_Lod(accuracy));}
 
-	//! The mesh wich use the data is finished and VBO is used
-	void finishVbo();
-
 	//! If the there is more than 2 LOD Swap the first and last
 	void finishLod();
 
@@ -201,8 +198,11 @@ public:
 	inline void useIBO(bool use, const int currentLod= 0)
 	{
 		if (use) m_LodList.at(currentLod)->useIBO();
-		else glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		else QGLBuffer::release(QGLBuffer::IndexBuffer);
 	}
+
+	//! Fill all LOD IBO
+	void fillLodIbo();
 
 	//! Fill the VBO of the given type
 	void fillVbo(GLC_MeshData::VboType vboType);
