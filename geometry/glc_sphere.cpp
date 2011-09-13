@@ -92,8 +92,19 @@ void GLC_Sphere::setDiscretion(int TargetDiscret)
 	}
 }
 
+void GLC_Sphere::glDraw(const GLC_RenderProperties& renderProperties)
+{
+	if (GLC_Mesh::isEmpty())
+	{
+		createMesh();
+	}
+
+	GLC_Mesh::glDraw(renderProperties);
+}
+
 void GLC_Sphere::createMesh()
 {
+
 	Q_ASSERT(GLC_Mesh::isEmpty());
 
 	GLfloatVector verticeFloat;
