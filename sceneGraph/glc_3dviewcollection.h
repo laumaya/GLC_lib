@@ -45,10 +45,10 @@ typedef QHash< GLC_uint, GLC_3DViewInstance> ViewInstancesHash;
 typedef QHash<GLC_uint, GLC_3DViewInstance*> PointerViewInstanceHash;
 
 //! Hash table of GLC_3DViewInstance Hash table which use a shader
-typedef QHash<GLuint, PointerViewInstanceHash*> HashList;
+typedef QHash<GLC_uint, PointerViewInstanceHash*> HashList;
 
 //! Map Shader id to instances id (instances which use the shader)
-typedef QHash<GLC_uint, GLuint> ShaderIdToInstancesId;
+typedef QHash<GLC_uint, GLC_uint> ShaderIdToInstancesId;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_3DViewCollection
@@ -132,7 +132,7 @@ public:
 	int drawableObjectsSize() const;
 
 	//! Return the element shading group
-	inline GLuint shadingGroup(GLC_uint key) const
+	inline GLC_uint shadingGroup(GLC_uint key) const
 	{ return m_ShaderGroup.value(key);}
 
 	//! Return true if the element is in a shading group
@@ -153,6 +153,9 @@ public:
 	inline GLC_SpacePartitioning* spacePartitioningHandle()
 	{return m_pSpacePartitioning;}
 
+	//! Return true if the collection is viewable
+	inline bool isViewable() const
+	{return m_IsViewable;}
 
 //@}
 
@@ -164,11 +167,11 @@ public:
 
 	//! Bind the specified shader to the collection
 	 /* return true if success false if shader is already bind*/
-	bool bindShader(GLuint);
+	bool bindShader(GLC_uint shaderId);
 
 	//! Unbind the specified shader from the collection
 	/* return true if success false otherwise*/
-	bool unBindShader(GLuint);
+	bool unBindShader(GLC_uint shaderId);
 
 	//! Unbind All shader
 	bool unBindAllShader();
@@ -176,13 +179,13 @@ public:
 	//! Add a GLC_3DViewInstance in the collection
 	/*! return true if success false otherwise
 	 * If shading group is specified, add instance in desire shading group*/
-	bool add(const GLC_3DViewInstance& ,GLuint shaderID=0);
+	bool add(const GLC_3DViewInstance& ,GLC_uint shaderID=0);
 
 	//! Change instance shading group
 	/* Move the specified instances into
 	 * the specified shading group
 	 * Return true if success false otherwise*/
-	void changeShadingGroup(GLC_uint, GLuint);
+	void changeShadingGroup(GLC_uint instanceId, GLC_uint shaderId);
 
 	//! Remove a GLC_Geometry from the collection and delete it
 	/*! 	- Find the GLC_Geometry in the collection
@@ -192,28 +195,28 @@ public:
 	 * 		- Remove the Display list container from collection
 	 * 		- Invalidate the collection
 	 * return true if success false otherwise*/
-	bool remove(GLC_uint Key);
+	bool remove(GLC_uint instanceId);
 
 	//! Remove and delete all GLC_Geometry from the collection
 	void clear(void);
 
 	//! Select a Instance
-	bool select(GLC_uint, bool primitive= false);
+	bool select(GLC_uint instanceId, bool primitive= false);
 
 	//! Select all instances in current show state or in all show state
 	void selectAll(bool allShowState= false);
 
 	//! unselect a Instance
-	bool unselect(GLC_uint);
+	bool unselect(GLC_uint instanceId);
 
 	//! unselect all Instance
 	void unselectAll();
 
 	//! Set the polygon mode for all Instance
-	void setPolygonModeForAll(GLenum, GLenum);
+	void setPolygonModeForAll(GLenum face, GLenum mode);
 
 	//! Set Instance visibility
-	void setVisibility(const GLC_uint, const bool);
+	void setVisibility(const GLC_uint instanceId, const bool visible);
 
 	//! Show all instances of the collection
 	void showAll();
@@ -253,6 +256,10 @@ public:
 	//! Set the attached viewport of this collection
 	inline void setAttachedViewport(GLC_Viewport* pViewport)
 	{m_pViewport= pViewport;}
+
+	//! Set the collection viewable state
+	inline void setViewable(bool viewable)
+	{m_IsViewable= viewable;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -279,7 +286,7 @@ public:
 
 private:
 	//! Display collection's member
-	void glDraw(GLuint, glc::RenderFlag);
+	void glDraw(GLC_uint groupID, glc::RenderFlag renderFlag);
 
 	//! Draw instances of a PointerViewInstanceHash
 	inline void glDrawInstancesOf(PointerViewInstanceHash*, glc::RenderFlag);
@@ -319,6 +326,9 @@ private:
 
 	//! The space partition usage
 	bool m_UseSpacePartitioning;
+
+	//! Viewable state
+	bool m_IsViewable;
 
 
 };

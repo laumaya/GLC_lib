@@ -49,6 +49,7 @@ GLC_3DViewCollection::GLC_3DViewCollection()
 , m_pViewport(NULL)
 , m_pSpacePartitioning(NULL)
 , m_UseSpacePartitioning(false)
+, m_IsViewable(true)
 {
 }
 
@@ -61,7 +62,7 @@ GLC_3DViewCollection::~GLC_3DViewCollection()
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-bool GLC_3DViewCollection::bindShader(GLuint shaderId)
+bool GLC_3DViewCollection::bindShader(GLC_uint shaderId)
 {
 	if (m_ShadedPointerViewInstanceHash.contains(shaderId))
 	{
@@ -75,7 +76,7 @@ bool GLC_3DViewCollection::bindShader(GLuint shaderId)
 	}
 }
 
-bool GLC_3DViewCollection::unBindShader(GLuint shaderId)
+bool GLC_3DViewCollection::unBindShader(GLC_uint shaderId)
 {
 	bool result= false;
 	if (m_ShadedPointerViewInstanceHash.contains(shaderId))
@@ -126,7 +127,7 @@ bool GLC_3DViewCollection::unBindAllShader()
     return result;
 }
 
-bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLuint shaderID)
+bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLC_uint shaderID)
 {
 	bool result= false;
 	const GLC_uint key= node.id();
@@ -172,7 +173,7 @@ bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLuint shaderID)
 	return result;
 }
 
-void GLC_3DViewCollection::changeShadingGroup(GLC_uint instanceId, GLuint shaderId)
+void GLC_3DViewCollection::changeShadingGroup(GLC_uint instanceId, GLC_uint shaderId)
 {
 	// Test if the specified instance exist
 	Q_ASSERT(m_3DViewInstanceHash.contains(instanceId));
@@ -601,7 +602,7 @@ int GLC_3DViewCollection::numberOfUsedShadingGroup() const
 
 void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 {
-	if (!isEmpty())
+	if (!isEmpty() && m_IsViewable)
 	{
 		if (renderFlag == glc::WireRenderFlag)
 		{
@@ -628,7 +629,7 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 }
 void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 {
-	if (!isEmpty())
+	if (!isEmpty() && m_IsViewable)
 	{
 		if (GLC_State::isInSelectionMode())
 		{
@@ -646,7 +647,7 @@ void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 	}
 }
 
-void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
+void GLC_3DViewCollection::glDraw(GLC_uint groupId, glc::RenderFlag renderFlag)
 {
 	// Set render Mode and OpenGL state
 	if (!GLC_State::isInSelectionMode() && (groupId == 0))
