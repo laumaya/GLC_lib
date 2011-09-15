@@ -167,7 +167,7 @@ const GLC_BoundingBox& GLC_Mesh::boundingBox()
 
 		if (m_MeshData.positionVectorHandle()->isEmpty())
 		{
-			qDebug() << "GLC_ExtendedMesh::getBoundingBox empty m_Positions";
+			qDebug() << "GLC_Mesh::boundingBox empty m_Positions";
 		}
 		else
 		{
