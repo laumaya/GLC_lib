@@ -164,8 +164,8 @@ void GLC_Sphere::createMesh()
 			xf= m_Radius * cost * cospp;
 			yf= m_Radius * sint * cospp;
 
-			verticeFloat << xi << yi << zi << xf << yf << zf;
- 			normalsFloat << cost * cosp << sint * cosp << sinp << cost * cospp << sint * cospp << sinpp ;
+			verticeFloat << xf << yf << zf << xi << yi << zi;
+			normalsFloat << cost * cospp << sint * cospp << sinpp << cost * cosp << sint * cosp << sinp;
  			texelVector << static_cast<double>(t) * 1.0 / static_cast<double>(nbThetaSteps)
 						<< static_cast<double>(p) * 1.0 / static_cast<double>(nbPhiSteps)
 						<< static_cast<double>(t) * 1.0 / static_cast<double>(nbThetaSteps)
