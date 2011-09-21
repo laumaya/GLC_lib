@@ -884,6 +884,9 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		case glc::OverwriteTransparency:
 			OverwriteTransparencyRenderLoop(renderProperties, vboIsUsed);
 			break;
+		case glc::OverwriteTransparencyAndMaterial:
+			OverwriteTransparencyAndMaterialRenderLoop(renderProperties, vboIsUsed);
+			break;
 		case glc::OverwritePrimitiveMaterial:
 			if ((m_CurrentLod == 0) && !renderProperties.hashOfOverwritePrimitiveMaterialsIsEmpty())
 				primitiveRenderLoop(renderProperties, vboIsUsed);
@@ -1218,6 +1221,40 @@ void GLC_Mesh::OverwriteTransparencyRenderLoop(const GLC_RenderProperties& rende
 			}
 			++iGroup;
 		}
+	}
+}
+
+void GLC_Mesh::OverwriteTransparencyAndMaterialRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	// Get transparency value
+	const float alpha= renderProperties.overwriteTransparency();
+	Q_ASSERT(-1.0f != alpha);
+
+	// Get the overwrite material
+	GLC_Material* pOverwriteMaterial= renderProperties.overwriteMaterial();
+	Q_ASSERT(NULL != pOverwriteMaterial);
+	pOverwriteMaterial->glExecute(alpha);
+	if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+
+	LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+
+		// Test if the current material is renderable
+		bool materialIsrenderable = (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
+
+   		// Choose the primitives to render
+		if (m_IsSelected || materialIsrenderable)
+		{
+
+			if (vboIsUsed)
+				vboDrawPrimitivesOf(pCurrentGroup);
+			else
+				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+		}
+
+		++iGroup;
 	}
 }
 

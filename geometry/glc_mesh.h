@@ -353,6 +353,9 @@ private:
 	//! The overwrite transparency render loop
 	void OverwriteTransparencyRenderLoop(const GLC_RenderProperties&, bool);
 
+	//! The overwrite transparency and material render loop
+	void OverwriteTransparencyAndMaterialRenderLoop(const GLC_RenderProperties&, bool);
+
 	//! The body selection render loop
 	void bodySelectionRenderLoop(bool);
 
