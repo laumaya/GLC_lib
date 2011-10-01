@@ -1005,103 +1005,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 			currentMesh3DRep.addGeom(pMesh);
 		}
 
-		// Get the master lod accuracy
-		double masterLodAccuracy= readAttribute("accuracy", false).toDouble();
-
-		loadLOD(pMesh);
-		if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
-		{
-			QStringList stringList(m_FileName);
-			stringList.append(m_CurrentFileName);
-			stringList.append("Master LOD not found");
-			GLC_ErrorLog::addError(stringList);
-			return new GLC_StructReference("Empty Rep");
-		}
-
-		// Load Faces index data
-		while (endElementNotReached(m_pStreamReader, "Faces"))
-		{
-			readNext();
-			if ( m_pStreamReader->name() == "Face")
-			{
-				loadFace(pMesh, 0, masterLodAccuracy);
-			}
-		}
-		checkForXmlError("End of Faces not found");
-
-		while (startElementNotReached(m_pStreamReader, "Edges") && startElementNotReached(m_pStreamReader, "VertexBuffer"))
-		{
-			readNext();
-		}
-
-		checkForXmlError("Element VertexBuffer not found");
-		if (m_pStreamReader->name() == "Edges")
-		{
-			while (endElementNotReached(m_pStreamReader, "Edges"))
-			{
-				readNext();
-				if ( m_pStreamReader->name() == "Polyline")
-				{
-					loadPolyline(pMesh);
-					readNext();
-				}
-			}
-		}
-
-
-		{
-			QString verticePosition= getContent(m_pStreamReader, "Positions").replace(',', ' ');
-			//qDebug() << "Position " << verticePosition;
-			checkForXmlError("Error while retrieving Position ContentVertexBuffer");
-			// Load Vertice position
-			QTextStream verticeStream(&verticePosition);
-			QList<GLfloat> verticeValues;
-			QString buff;
-			while ((!verticeStream.atEnd()))
-			{
-				verticeStream >> buff;
-				verticeValues.append(buff.toFloat());
-			}
-			pMesh->addVertice(verticeValues.toVector());
-
-		}
-
-		{
-			QString normals= getContent(m_pStreamReader, "Normals").replace(',', ' ');
-			//qDebug() << "Normals " << normals;
-			checkForXmlError("Error while retrieving Normals values");
-			// Load Vertice Normals
-			QTextStream normalsStream(&normals);
-			QList<GLfloat> normalValues;
-			QString buff;
-			while ((!normalsStream.atEnd()))
-			{
-				normalsStream >> buff;
-				normalValues.append(buff.toFloat());
-			}
-			pMesh->addNormals(normalValues.toVector());
-		}
-
-		// Try to find texture coordinate
-		while (endElementNotReached(m_pStreamReader, "VertexBuffer"))
-		{
-			//qDebug() << "Try to find texture coordinate " << m_pStreamReader->name() << " " << m_pStreamReader->lineNumber();
-			if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "TextureCoordinates"))
-			{
-				QString texels= getContent(m_pStreamReader, "TextureCoordinates").replace(',', ' ');
-				checkForXmlError("Error while retrieving Texture coordinates");
-				QTextStream texelStream(&texels);
-				QList<GLfloat> texelValues;
-				QString buff;
-				while ((!texelStream.atEnd()))
-				{
-					texelStream >> buff;
-					texelValues.append(buff.toFloat());
-				}
-				pMesh->addTexels(texelValues.toVector());
-			}
-			readNext();
-		}
+		loadRep(pMesh);
 
 		++numberOfMesh;
 	}
@@ -1290,34 +1194,7 @@ void GLC_3dxmlToWorld::checkForXmlError(const QString& info)
 		throw(fileFormatException);
 	}
 }
-// Go to the master LOD
-void GLC_3dxmlToWorld::loadLOD(GLC_Mesh* pMesh)
-{
-	int lodIndex= 1;
-	while(!m_pStreamReader->atEnd() && !((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Faces")))
-	{
-		readNext();
-		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "SurfaceAttributes"))
-		{
-			m_pCurrentMaterial= loadSurfaceAttributes();
-		}
-		else if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "PolygonalLOD"))
-		{
-			double accuracy= readAttribute("accuracy", true).toDouble();
-			// Load Faces index data
-			while (endElementNotReached(m_pStreamReader, "Faces"))
-			{
-				readNext();
-				if ( m_pStreamReader->name() == "Face")
-				{
-					loadFace(pMesh, lodIndex, accuracy);
-				}
-			}
-			checkForXmlError("End of Faces not found");
-			++lodIndex;
-		}
-	}
-}
+
 // Load a face
 void GLC_3dxmlToWorld::loadFace(GLC_Mesh* pMesh, const int lod, double accuracy)
 {
@@ -2018,110 +1895,8 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 			currentMeshRep.addGeom(pMesh);
 		}
 
-		// Get the master lod accuracy
-		double masteLodAccuracy= readAttribute("accuracy", false).toDouble();
+		loadRep(pMesh);
 
-		loadLOD(pMesh);
-		if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
-		{
-			QStringList stringList(m_FileName);
-			stringList.append(m_CurrentFileName);
-			stringList.append("Master LOD not found");
-			GLC_ErrorLog::addError(stringList);
-
-			pMesh->finish();
-			currentMeshRep.clean();
-
-			if (GLC_State::cacheIsUsed())
-			{
-				GLC_CacheManager currentManager= GLC_State::currentCacheManager();
-				currentManager.addToCache(QFileInfo(m_FileName).baseName(), currentMeshRep);
-			}
-
-			return currentMeshRep;
-		}
-
-		// Load Faces index data
-		while (endElementNotReached(m_pStreamReader, "Faces"))
-		{
-			readNext();
-			if ( m_pStreamReader->name() == "Face")
-			{
-				loadFace(pMesh, 0, masteLodAccuracy);
-			}
-		}
-		checkForXmlError("End of Faces not found");
-
-		while (startElementNotReached(m_pStreamReader, "Edges") && startElementNotReached(m_pStreamReader, "VertexBuffer"))
-		{
-			readNext();
-		}
-
-		checkForXmlError("Element VertexBuffer not found");
-		if (m_pStreamReader->name() == "Edges")
-		{
-			while (endElementNotReached(m_pStreamReader, "Edges"))
-			{
-				readNext();
-				if ( m_pStreamReader->name() == "Polyline")
-				{
-					loadPolyline(pMesh);
-					readNext();
-				}
-			}
-		}
-
-		{
-			QString verticePosition= getContent(m_pStreamReader, "Positions").replace(',', ' ');
-			//qDebug() << "Position " << verticePosition;
-			checkForXmlError("Error while retrieving Position ContentVertexBuffer");
-			// Load Vertice position
-			QTextStream verticeStream(&verticePosition);
-			QList<GLfloat> verticeValues;
-			QString buff;
-			while ((!verticeStream.atEnd()))
-			{
-				verticeStream >> buff;
-				verticeValues.append(buff.toFloat());
-			}
-			pMesh->addVertice(verticeValues.toVector());
-
-		}
-
-		{
-			QString normals= getContent(m_pStreamReader, "Normals").replace(',', ' ');
-			//qDebug() << "Normals " << normals;
-			checkForXmlError("Error while retrieving Normals values");
-			// Load Vertice Normals
-			QTextStream normalsStream(&normals);
-			QList<GLfloat> normalValues;
-			QString buff;
-			while ((!normalsStream.atEnd()))
-			{
-				normalsStream >> buff;
-				normalValues.append(buff.toFloat());
-			}
-			pMesh->addNormals(normalValues.toVector());
-		}
-		// Try to find texture coordinate
-		while (endElementNotReached(m_pStreamReader, "VertexBuffer"))
-		{
-			if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "TextureCoordinates"))
-			{
-				QString texels= getContent(m_pStreamReader, "TextureCoordinates").replace(',', ' ');
-				checkForXmlError("Error while retrieving Texture coordinates");
-				QTextStream texelStream(&texels);
-				QList<GLfloat> texelValues;
-				QString buff;
-				while ((!texelStream.atEnd()))
-				{
-					texelStream >> buff;
-					texelValues.append(buff.toFloat());
-				}
-				pMesh->addTexels(texelValues.toVector());
-			}
-			readNext();
-		}
 		++numberOfMesh;
 	}
 
@@ -2397,8 +2172,6 @@ void GLC_3dxmlToWorld::applyV4Attribute(GLC_StructOccurence* pOccurence, V4Occur
 	Q_ASSERT(pOccurence->hasChild() && !pV4OccurenceAttrib->m_Path.isEmpty());
 	unsigned int id= pV4OccurenceAttrib->m_Path.takeFirst();
 
-	qDebug() << "Instance ID= " << id;
-
 	const int childCount= pOccurence->childCount();
 	bool occurenceFound= false;
 	int i= 0;
@@ -2434,12 +2207,150 @@ void GLC_3dxmlToWorld::applyV4Attribute(GLC_StructOccurence* pOccurence, V4Occur
 	}
 	if (!occurenceFound)
 	{
-		QString message(QString("GLC_3dxmlToWorld::applyV4Attribute : File ") + m_CurrentFileName + " Error Occur");
-		GLC_FileFormatException fileFormatException(message, m_CurrentFileName, GLC_FileFormatException::WrongFileFormat);
-		clear();
-		throw(fileFormatException);
+		qDebug() << "GLC_3dxmlToWorld::applyV4Attribute Occurrence not found" << id;
 	}
 
 }
 
+void GLC_3dxmlToWorld::loadRep(GLC_Mesh* pMesh)
+{
+	double masteLodAccuracy= readAttribute("accuracy", false).toDouble();
+	int lodIndex= 1;
 
+	bool masterLodFound= false;
+	bool vertexBufferFound= false;
+
+	while (endElementNotReached(m_pStreamReader, "Rep") && endElementNotReached(m_pStreamReader, "Root"))
+	{
+		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()))
+		{
+			if (m_pStreamReader->name() == "SurfaceAttributes")
+			{
+				m_pCurrentMaterial= loadSurfaceAttributes();
+			}
+			else if (m_pStreamReader->name() == "PolygonalLOD")
+			{
+				double accuracy= readAttribute("accuracy", true).toDouble();
+				while (endElementNotReached(m_pStreamReader, "Faces"))
+				{
+					readNext();
+					if ( m_pStreamReader->name() == "Face")
+					{
+						loadFace(pMesh, lodIndex, accuracy);
+					}
+				}
+				checkForXmlError("End of Faces not found");
+				++lodIndex;
+			}
+			else if (m_pStreamReader->name() == "Faces")
+			{
+				masterLodFound= true;
+				while (endElementNotReached(m_pStreamReader, "Faces"))
+				{
+					readNext();
+					if ( m_pStreamReader->name() == "Face")
+					{
+						loadFace(pMesh, 0, masteLodAccuracy);
+					}
+				}
+				checkForXmlError("End of Faces not found");
+			}
+			else if (m_pStreamReader->name() == "Edges")
+			{
+				while (endElementNotReached(m_pStreamReader, "Edges"))
+				{
+					readNext();
+					if ( m_pStreamReader->name() == "Polyline")
+					{
+						loadPolyline(pMesh);
+						readNext();
+					}
+				}
+			}
+			else if (m_pStreamReader->name() == "VertexBuffer")
+			{
+				vertexBufferFound= true;
+				loadVertexBuffer(pMesh);
+			}
+			else readNext();
+		}
+		else
+		{
+			readNext();
+		}
+	}
+	checkForXmlError("End of Rep or Root not found");
+
+	if (!masterLodFound || !vertexBufferFound)
+	{
+		QString message;
+		if (!masterLodFound)
+		{
+			message= QString("Master LOD not found in file ") + m_FileName;
+		}
+		else
+		{
+			message= QString("Vertex Buffer not found in file ") + m_FileName;
+		}
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
+		clear();
+		throw(fileFormatException);
+	}
+
+
+}
+
+void GLC_3dxmlToWorld::loadVertexBuffer(GLC_Mesh* pMesh)
+{
+	{
+		QString verticePosition= getContent(m_pStreamReader, "Positions").replace(',', ' ');
+		//qDebug() << "Position " << verticePosition;
+		checkForXmlError("Error while retrieving Position ContentVertexBuffer");
+		// Load Vertice position
+		QTextStream verticeStream(&verticePosition);
+		QList<GLfloat> verticeValues;
+		QString buff;
+		while ((!verticeStream.atEnd()))
+		{
+			verticeStream >> buff;
+			verticeValues.append(buff.toFloat());
+		}
+		pMesh->addVertice(verticeValues.toVector());
+	}
+
+	{
+		QString normals= getContent(m_pStreamReader, "Normals").replace(',', ' ');
+		//qDebug() << "Normals " << normals;
+		checkForXmlError("Error while retrieving Normals values");
+		// Load Vertice Normals
+		QTextStream normalsStream(&normals);
+		QList<GLfloat> normalValues;
+		QString buff;
+		while ((!normalsStream.atEnd()))
+		{
+			normalsStream >> buff;
+			normalValues.append(buff.toFloat());
+		}
+		pMesh->addNormals(normalValues.toVector());
+	}
+	// Try to find texture coordinate
+	while (endElementNotReached(m_pStreamReader, "VertexBuffer"))
+	{
+		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "TextureCoordinates"))
+		{
+			QString texels= getContent(m_pStreamReader, "TextureCoordinates").replace(',', ' ');
+			checkForXmlError("Error while retrieving Texture coordinates");
+			QTextStream texelStream(&texels);
+			QList<GLfloat> texelValues;
+			QString buff;
+			while ((!texelStream.atEnd()))
+			{
+				texelStream >> buff;
+				texelValues.append(buff.toFloat());
+			}
+			pMesh->addTexels(texelValues.toVector());
+		}
+		readNext();
+	}
+	checkForXmlError("VertexBuffer not found");
+}

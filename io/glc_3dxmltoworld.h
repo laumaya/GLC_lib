@@ -217,9 +217,6 @@ private:
 	//! Throw ecxeption if error occur
 	void checkForXmlError(const QString&);
 
-	//! Load Level of detail
-	void loadLOD(GLC_Mesh*);
-
 	//! Load a face
 	void loadFace(GLC_Mesh*, const int lod, double accuracy);
 
@@ -303,6 +300,12 @@ private:
 
 	//! Apply the given attribute to the right occurence from the given occurence
 	void applyV4Attribute(GLC_StructOccurence* pOccurence, V4OccurenceAttrib* pV4OccurenceAttrib, QHash<GLC_StructInstance*, unsigned int>& InstanceToIdHash);
+
+	//! Load representation from 3DRep file
+	void loadRep(GLC_Mesh* pMesh);
+
+	//! Load The 3DXML vertex buffer
+	void loadVertexBuffer(GLC_Mesh* pMesh);
 
 //@}
 
