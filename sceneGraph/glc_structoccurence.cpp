@@ -174,7 +174,7 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GL
 	if (NULL != m_pWorldHandle)
 	{
 		m_pWorldHandle->addOccurence(this, instanceIsSelected, shaderId);
-		if (NULL != m_pRenderProperties)
+		if (NULL != m_pRenderProperties && this->has3DViewInstance())
 		{
 			m_pWorldHandle->collection()->instanceHandle(id())->setRenderProperties(*m_pRenderProperties);
 			delete m_pRenderProperties;
@@ -602,8 +602,17 @@ bool GLC_StructOccurence::create3DViewInstance()
 		{
 			GLC_3DViewInstance instance(*p3DRep);
 			instance.setName(name());
+
 			// Force instance representation id
 			instance.setId(id());
+
+			if (NULL != m_pRenderProperties)
+			{
+				instance.setRenderProperties(*m_pRenderProperties);
+				delete m_pRenderProperties;
+				m_pRenderProperties= NULL;
+			}
+
 			creationSuccess= m_pWorldHandle->collection()->add(instance);
 			m_pWorldHandle->collection()->setVisibility(m_Uid, m_IsVisible);
 			if (m_pWorldHandle->selectionSetHandle()->contains(m_Uid))
