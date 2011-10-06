@@ -22,7 +22,14 @@
 
 //! \file glc_viewport.cpp implementation of the GLC_Viewport class.
 
+#include <QtOpenGL>
+
+#if !defined(Q_OS_MAC)
+#include <GL/glu.h>
+#else
 #include <glu.h>
+#endif
+
 #include "glc_viewport.h"
 #include "../glc_openglexception.h"
 #include "../glc_ext.h"
