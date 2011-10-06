@@ -143,7 +143,7 @@ GLfloatVector GLC_MeshData::normalVector() const
 		GLfloatVector normalVector(sizeOfVbo);
 
 		const_cast<QGLBuffer&>(m_NormalBuffer).bind();
-		GLvoid* pVbo = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		GLvoid* pVbo = const_cast<QGLBuffer&>(m_NormalBuffer).map(QGLBuffer::ReadOnly);
 		memcpy(normalVector.data(), pVbo, dataSize);
 		const_cast<QGLBuffer&>(m_NormalBuffer).unmap();
 		const_cast<QGLBuffer&>(m_NormalBuffer).release();
@@ -166,7 +166,7 @@ GLfloatVector GLC_MeshData::texelVector() const
 		GLfloatVector texelVector(sizeOfVbo);
 
 		const_cast<QGLBuffer&>(m_TexelBuffer).bind();
-		GLvoid* pVbo = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		GLvoid* pVbo = const_cast<QGLBuffer&>(m_TexelBuffer).map(QGLBuffer::ReadOnly);
 		memcpy(texelVector.data(), pVbo, dataSize);
 		const_cast<QGLBuffer&>(m_TexelBuffer).unmap();
 		const_cast<QGLBuffer&>(m_TexelBuffer).release();
@@ -189,7 +189,7 @@ GLfloatVector GLC_MeshData::colorVector() const
 		GLfloatVector normalVector(sizeOfVbo);
 
 		const_cast<QGLBuffer&>(m_ColorBuffer).bind();
-		GLvoid* pVbo = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+		GLvoid* pVbo = const_cast<QGLBuffer&>(m_ColorBuffer).map(QGLBuffer::ReadOnly);
 		memcpy(normalVector.data(), pVbo, dataSize);
 		const_cast<QGLBuffer&>(m_ColorBuffer).unmap();
 		const_cast<QGLBuffer&>(m_ColorBuffer).release();
