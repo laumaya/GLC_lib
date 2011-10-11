@@ -23,8 +23,8 @@
 
 #include "glc_worldto3dxml.h"
 // Quazip library
-#include "../quazip/quazip.h"
-#include "../quazip/quazipfile.h"
+#include "../3rdparty/quazip/quazip.h"
+#include "../3rdparty/quazip/quazipfile.h"
 #include "../glc_exception.h"
 #include "../geometry/glc_mesh.h"
 
