@@ -103,18 +103,21 @@ class GLC_LIB_EXPORT GLC_3dxmlToWorld : public QObject
 		inline V4OccurenceAttrib()
 		: m_IsVisible(true)
 		, m_pRenderProperties(NULL)
-		, m_Matrix()
+		, m_pMatrix(NULL)
 		, m_Path()
 		{}
 		inline ~V4OccurenceAttrib()
-		{delete m_pRenderProperties;}
+		{
+			delete m_pRenderProperties;
+			delete m_pMatrix;
+		}
 
 		//! Visibility attribute
 		bool m_IsVisible;
 		//! Render properties attribute
 		GLC_RenderProperties* m_pRenderProperties;
 		//! Relative matrix
-		GLC_Matrix4x4 m_Matrix;
+		GLC_Matrix4x4* m_pMatrix;
 		//! The path of this attrib
 		QList<unsigned int> m_Path;
 	};

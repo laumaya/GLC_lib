@@ -546,6 +546,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 		for (int i= 0; i < attribCount; ++i)
 		{
 			V4OccurenceAttrib* pCurrentV4OccurenceAttrib= m_V4OccurenceAttribList.at(i);
+			//qDebug() << pCurrentV4OccurenceAttrib->m_Path;
 			applyV4Attribute(m_pWorld->rootOccurence(), pCurrentV4OccurenceAttrib, instanceToIdHash);
 		}
 	}
@@ -1639,7 +1640,7 @@ void GLC_3dxmlToWorld::loadV4DefaultViewProperty()
 		else if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "RelativePosition"))
 		{
 			const QString matrix= getContent(m_pStreamReader, "RelativePosition");
-			pV4OccurenceAttrib->m_Matrix= loadMatrix(matrix);
+			pV4OccurenceAttrib->m_pMatrix= new GLC_Matrix4x4(loadMatrix(matrix));
 		}
 		else if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "GraphicProperties"))
 		{
@@ -2190,9 +2191,9 @@ void GLC_3dxmlToWorld::applyV4Attribute(GLC_StructOccurence* pOccurence, V4Occur
 				{
 					pChildOccurence->setRenderProperties(*(pV4OccurenceAttrib->m_pRenderProperties));
 				}
-				if (pV4OccurenceAttrib->m_Matrix.type() != GLC_Matrix4x4::Identity)
+				if (pV4OccurenceAttrib->m_pMatrix != NULL)
 				{
-					pChildOccurence->makeFlexible(pV4OccurenceAttrib->m_Matrix);
+					pChildOccurence->makeFlexible(*(pV4OccurenceAttrib->m_pMatrix));
 				}
 			}
 			else
