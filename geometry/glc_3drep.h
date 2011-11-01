@@ -121,6 +121,9 @@ public:
 	//! Return materials Set of this 3DRep
 	QSet<GLC_Material*> materialSet() const;
 
+	//! Return the volume of this 3DRep
+	double volume() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
