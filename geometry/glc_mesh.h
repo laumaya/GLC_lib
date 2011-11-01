@@ -183,9 +183,11 @@ public:
 	//! Create a mesh from the given LOD index
 	GLC_Mesh* createMeshFromGivenLod(int lodIndex);
 
-
 	//! Transform mesh vertice by the given matrix
 	GLC_Mesh& transformVertice(const GLC_Matrix4x4& matrix);
+
+	//! Return the volume of this mesh
+	virtual double volume();
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -373,6 +375,13 @@ private:
 
 	//! Copy Bulk data
 	void copyBulkData(GLC_Mesh* pLodMesh, const QHash<GLuint, GLuint>& tagetToSourceIndexMap, int maxIndex);
+
+	//! Return the equivalent triangles index of the strips index of given LOD and material ID
+	IndexList equivalentTrianglesIndexOfstripsIndex(int lodIndex, GLC_uint materialId);
+
+	//! Return the equivalent triangles index of the fan index of given LOD and material ID
+	IndexList equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint materialId);
+
 
 //@}
 

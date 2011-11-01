@@ -455,6 +455,59 @@ GLC_Mesh& GLC_Mesh::transformVertice(const GLC_Matrix4x4& matrix)
 	return *this;
 }
 
+double GLC_Mesh::volume()
+{
+	double resultVolume= 0.0;
+
+	if (!m_MeshData.isEmpty())
+	{
+		IndexList triangleIndex;
+		QList<GLC_Material*> materials= materialSet().toList();
+		const int materialsCount= materials.count();
+		for (int i= 0; i < materialsCount; ++i)
+		{
+			GLC_uint materialId= materials.at(i)->id();
+			if (containsTriangles(0, materialId))
+			{
+				triangleIndex.append(getTrianglesIndex(0, materialId).toList());
+			}
+			if (containsStrips(0, materialId))
+			{
+				triangleIndex.append(equivalentTrianglesIndexOfstripsIndex(0, materialId));
+			}
+			if (containsFans(0, materialId))
+			{
+				triangleIndex.append(equivalentTrianglesIndexOfFansIndex(0, materialId));
+			}
+		}
+
+		GLfloatVector vertices= m_MeshData.positionVector();
+		Q_ASSERT((triangleIndex.count() % 3) == 0);
+		const int triangleCount= triangleIndex.count() / 3;
+		for (int i= 0; i < triangleCount; ++i)
+		{
+			const int index= i * 3;
+			const double v1x= vertices.at(triangleIndex.at(index) * 3);
+			const double v1y= vertices.at(triangleIndex.at(index) * 3 + 1);
+			const double v1z= vertices.at(triangleIndex.at(index) * 3 + 2);
+
+			const double v2x= vertices.at(triangleIndex.at(index + 1) * 3);
+			const double v2y= vertices.at(triangleIndex.at(index + 1) * 3 + 1);
+			const double v2z= vertices.at(triangleIndex.at(index + 1) * 3 + 2);
+
+			const double v3x= vertices.at(triangleIndex.at(index + 2) * 3);
+			const double v3y= vertices.at(triangleIndex.at(index + 2) * 3 + 1);
+			const double v3z= vertices.at(triangleIndex.at(index + 2) * 3 + 2);
+
+			resultVolume+= ((v2y - v1y) * (v3z - v1z) - (v2z - v1z) * (v3y - v1y)) * (v1x + v2x + v3x);
+		}
+
+		resultVolume= resultVolume / 6.0;
+	}
+
+	return resultVolume;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -1490,3 +1543,61 @@ void GLC_Mesh::copyBulkData(GLC_Mesh* pLodMesh, const QHash<GLuint, GLuint>& tag
 		tempFloatVector.clear();
 	}
 }
+
+IndexList GLC_Mesh::equivalentTrianglesIndexOfstripsIndex(int lodIndex, GLC_uint materialId)
+{
+	IndexList trianglesIndex;
+	if (containsStrips(lodIndex, materialId))
+	{
+		const QList<QVector<GLuint> > stripsIndex= getStripsIndex(lodIndex, materialId);
+		const int stripCount= stripsIndex.count();
+		for (int i= 0; i < stripCount; ++i)
+		{
+			const QVector<GLuint> currentStripIndex= stripsIndex.at(i);
+
+			trianglesIndex.append(currentStripIndex.at(0));
+			trianglesIndex.append(currentStripIndex.at(1));
+			trianglesIndex.append(currentStripIndex.at(2));
+			const int stripSize= currentStripIndex.size();
+			for (int j= 3; j < stripSize; ++j)
+			{
+				if ((j % 2) != 0)
+				{
+					trianglesIndex.append(currentStripIndex.at(j));
+					trianglesIndex.append(currentStripIndex.at(j - 1));
+					trianglesIndex.append(currentStripIndex.at(j - 2));
+				}
+				else
+				{
+					trianglesIndex.append(currentStripIndex.at(j));
+					trianglesIndex.append(currentStripIndex.at(j - 2));
+					trianglesIndex.append(currentStripIndex.at(j - 1));
+				}
+			}
+		}
+	}
+	return trianglesIndex;
+}
+
+IndexList GLC_Mesh::equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint materialId)
+{
+	IndexList trianglesIndex;
+	if (containsFans(lodIndex, materialId))
+	{
+		const QList<QVector<GLuint> > fanIndex= getFansIndex(lodIndex, materialId);
+		const int fanCount= fanIndex.count();
+		for (int i= 0; i < fanCount; ++i)
+		{
+			const QVector<GLuint> currentFanIndex= fanIndex.at(i);
+			const int size= currentFanIndex.size();
+			for (int j= 1; j < size - 1; ++j)
+			{
+				trianglesIndex.append(currentFanIndex.first());
+				trianglesIndex.append(currentFanIndex.at(j));
+				trianglesIndex.append(currentFanIndex.at(j + 1));
+			}
+		}
+	}
+	return trianglesIndex;
+}
+
