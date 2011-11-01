@@ -197,6 +197,9 @@ public:
 	inline GLsizei wirePolylineSize(int index) const
 	{return m_WireData.verticeGroupSize(index);}
 
+	//! Return the volume of this geometry
+	virtual double volume();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
