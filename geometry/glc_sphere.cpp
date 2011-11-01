@@ -36,7 +36,7 @@ GLC_Sphere::GLC_Sphere(double radius)
 , m_PhiMin(-glc::PI / 2.0)
 , m_PhiMax(glc::PI / 2.0)
 {
-
+	createMesh();
 }
 
 
@@ -49,7 +49,7 @@ GLC_Sphere::GLC_Sphere(const GLC_Sphere & sphere)
 , m_PhiMin(sphere.m_PhiMin)
 , m_PhiMax(sphere.m_PhiMax)
 {
-
+	createMesh();
 }
 
 GLC_Sphere::~GLC_Sphere()
