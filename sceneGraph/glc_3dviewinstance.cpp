@@ -192,11 +192,17 @@ void GLC_3DViewInstance::setGlobalDefaultLod(int lod)
 	m_GlobalDefaultLOD= lod;
 }
 
+void GLC_3DViewInstance::setVboUsage(bool usage)
+{
+	m_3DRep.setVboUsage(usage);
+}
+
 // Clone the instance
 GLC_3DViewInstance GLC_3DViewInstance::deepCopy() const
 {
 
 	GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_3DRep.deepCopy());
+	Q_ASSERT(NULL != pRep);
 	GLC_3DRep newRep(*pRep);
 	delete pRep;
 	GLC_3DViewInstance cloneInstance(newRep);

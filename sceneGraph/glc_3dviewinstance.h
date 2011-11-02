@@ -274,6 +274,9 @@ public:
 	inline void setRenderProperties(const GLC_RenderProperties& renderProperties)
 	{m_RenderProperties= renderProperties;}
 
+	//! Set VBO usage
+	void setVboUsage(bool usage);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
