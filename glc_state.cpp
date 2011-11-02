@@ -145,6 +145,7 @@ bool GLC_State::isFrustumCullingActivated()
 
 void GLC_State::init()
 {
+	Q_ASSERT((NULL != QGLContext::currentContext()) &&  QGLContext::currentContext()->isValid());
 	setVboSupport();
 	setGlslSupport();
 	setPointSpriteSupport();
