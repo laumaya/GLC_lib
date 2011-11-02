@@ -482,6 +482,17 @@ void GLC_3DViewCollection::updateInstanceViewableState(const GLC_Frustum& frustu
 	m_pSpacePartitioning->updateViewableInstances(frustum);
 }
 
+void GLC_3DViewCollection::setVboUsage(bool usage)
+{
+	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
+
+    while (iEntry != m_3DViewInstanceHash.constEnd())
+    {
+    	iEntry.value().setVboUsage(usage);
+    	iEntry++;
+    }
+}
+
 QList<GLC_3DViewInstance*> GLC_3DViewCollection::instancesHandle()
 {
 	QList<GLC_3DViewInstance*> instancesList;

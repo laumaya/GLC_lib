@@ -260,6 +260,10 @@ public:
 	//! Set the collection viewable state
 	inline void setViewable(bool viewable)
 	{m_IsViewable= viewable;}
+
+	//! Set VBO usage
+	void setVboUsage(bool usage);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
