@@ -40,6 +40,7 @@ GLC_WireData::GLC_WireData()
 , m_VerticeGroupOffset()
 , m_VerticeGroupId()
 , m_VerticeGroupCount(0)
+, m_UseVbo(false)
 {
 
 }
@@ -55,6 +56,7 @@ GLC_WireData::GLC_WireData(const GLC_WireData& data)
 , m_VerticeGroupOffset(data.m_VerticeGroupOffset)
 , m_VerticeGroupId(data.m_VerticeGroupId)
 , m_VerticeGroupCount(data.m_VerticeGroupCount)
+, m_UseVbo(data.m_UseVbo)
 {
 	if (NULL != data.m_pBoundingBox)
 	{
@@ -79,6 +81,7 @@ GLC_WireData& GLC_WireData::operator=(const GLC_WireData& data)
 		m_VerticeGroupOffset= data.m_VerticeGroupOffset;
 		m_VerticeGroupId= data.m_VerticeGroupId;
 		m_VerticeGroupCount= data.m_VerticeGroupCount;
+		m_UseVbo= data.m_UseVbo;
 	}
 	return *this;
 }
@@ -102,6 +105,7 @@ GLfloatVector GLC_WireData::positionVector() const
 {
 	if (m_VerticeBuffer.isCreated())
 	{
+		Q_ASSERT((NULL != QGLContext::currentContext()) &&  QGLContext::currentContext()->isValid());
 		// VBO created get data from VBO
 		const int sizeOfVbo= m_PositionSize;
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
@@ -202,6 +206,22 @@ void GLC_WireData::releaseVboClientSide(bool update)
 	}
 }
 
+void GLC_WireData::setVboUsage(bool usage)
+{
+	m_UseVbo= usage;
+	if (!isEmpty())
+	{
+		if (m_UseVbo && (m_PositionSize != 0) && (!m_Positions.isEmpty())&& (!m_VerticeBuffer.isCreated()))
+		{
+			finishVbo();
+		}
+		else if (!m_UseVbo && m_VerticeBuffer.isCreated())
+		{
+			m_Positions= positionVector();
+			m_VerticeBuffer.destroy();
+		}
+	}
+}
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
@@ -209,7 +229,11 @@ void GLC_WireData::releaseVboClientSide(bool update)
 
 void GLC_WireData::finishVbo()
 {
-	createVBOs();
+	Q_ASSERT((NULL != QGLContext::currentContext()) &&  QGLContext::currentContext()->isValid());
+	if (!m_VerticeBuffer.isCreated())
+	{
+		m_VerticeBuffer.create();
+	}
 	useVBO(true);
 	fillVBOs();
 	useVBO(false);
@@ -220,6 +244,8 @@ void GLC_WireData::finishVbo()
 
 void GLC_WireData::useVBO(bool use)
 {
+	Q_ASSERT((NULL != QGLContext::currentContext()) &&  QGLContext::currentContext()->isValid());
+	Q_ASSERT(m_VerticeBuffer.isCreated() && (m_UseVbo == true));
 	if (use)
 	{
 		m_VerticeBuffer.bind();
@@ -232,20 +258,22 @@ void GLC_WireData::useVBO(bool use)
 
 void GLC_WireData::glDraw(const GLC_RenderProperties&, GLenum mode)
 {
+	Q_ASSERT((NULL != QGLContext::currentContext()) &&  QGLContext::currentContext()->isValid());
 	Q_ASSERT(!isEmpty());
-	const bool vboIsUsed= GLC_State::vboUsed();
+
+	const bool vboIsUsed= m_UseVbo  && GLC_State::vboSupported();
 
 	if (vboIsUsed && ((m_PositionSize == 0) || !m_VerticeBuffer.isCreated()))
 	{
 		finishVbo();
 	}
-	else if (m_PositionSize == 0)
+	else if (!vboIsUsed && (m_PositionSize == 0))
 	{
 		m_PositionSize= m_Positions.size();
 	}
 
 	// Activate VBO or Vertex Array
-	if (vboIsUsed)
+	if (m_VerticeBuffer.isCreated())
 	{
 		useVBO(true);
 		glVertexPointer(3, GL_FLOAT, 0, 0);
@@ -263,7 +291,7 @@ void GLC_WireData::glDraw(const GLC_RenderProperties&, GLenum mode)
 	}
 
 	// Desactivate VBO or Vertex Array
-	if (vboIsUsed)
+	if (m_VerticeBuffer.isCreated())
 	{
 		useVBO(false);
 	}
@@ -271,17 +299,10 @@ void GLC_WireData::glDraw(const GLC_RenderProperties&, GLenum mode)
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void GLC_WireData::createVBOs()
-{
-	// Create position VBO
-	if (!m_VerticeBuffer.isCreated())
-	{
-		m_VerticeBuffer.create();
-	}
-}
 
 void GLC_WireData::fillVBOs()
 {
+	Q_ASSERT(m_VerticeBuffer.isCreated());
 	const GLsizei dataNbr= static_cast<GLsizei>(m_Positions.size());
 	const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 	m_VerticeBuffer.allocate(m_Positions.data(), dataSize);

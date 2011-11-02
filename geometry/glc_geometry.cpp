@@ -44,6 +44,7 @@ GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 , m_TransparentMaterialNumber(0)
 , m_Id(glc::GLC_GenGeomID())
 , m_Name(name)
+, m_UseVbo(false)
 {
 
 }
@@ -61,6 +62,7 @@ GLC_Geometry::GLC_Geometry(const GLC_Geometry& sourceGeom)
 , m_TransparentMaterialNumber(sourceGeom.m_TransparentMaterialNumber)
 , m_Id(glc::GLC_GenGeomID())
 , m_Name(sourceGeom.m_Name)
+, m_UseVbo(sourceGeom.m_UseVbo)
 {
 	// Add this mesh to inner material
 	MaterialHash::const_iterator i= sourceGeom.m_MaterialHash.constBegin();
@@ -95,6 +97,7 @@ GLC_Geometry& GLC_Geometry::operator=(const GLC_Geometry& sourceGeom)
 		m_TransparentMaterialNumber= sourceGeom.m_TransparentMaterialNumber;
 		m_Id= glc::GLC_GenGeomID();
 		m_Name= sourceGeom.m_Name;
+		m_UseVbo= sourceGeom.m_UseVbo;
 	}
 	return *this;
 }
@@ -184,7 +187,6 @@ void GLC_Geometry::updateTransparentMaterialNumber()
 	}
 	if (m_WireColor.alpha() != 255)
 	{
-		qDebug() << "GLC_Geometry::updateTransparentMaterialNumber()";
 		++m_TransparentMaterialNumber;
 	}
 }
@@ -239,6 +241,15 @@ void GLC_Geometry::releaseVboClientSide(bool update)
 	m_WireData.releaseVboClientSide(update);
 }
 
+void GLC_Geometry::setVboUsage(bool usage)
+{
+	m_UseVbo= usage;
+	if (!usage || (usage && GLC_State::vboSupported()))
+	{
+		m_WireData.setVboUsage(m_UseVbo);
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
@@ -288,7 +299,7 @@ void GLC_Geometry::render(const GLC_RenderProperties& renderProperties)
 		GLenum error= glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			GLC_OpenGlException OpenGlException("GLC_Geometry::glExecute " + name(), error);
+			GLC_OpenGlException OpenGlException("GLC_Geometry::render " + name(), error);
 			throw(OpenGlException);
 		}
 	}

@@ -231,8 +231,8 @@ public:
 	//! Set base triangle fan offset
 	void setBaseTrianglesFanOffseti(int);
 
-	//! Change index to VBO mode
-	void changeToVboMode();
+	//! Compute VBO offset
+	void computeVboOffset();
 
 	//! The mesh wich use this group is finished
 	inline void finish()

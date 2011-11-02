@@ -90,7 +90,7 @@ public:
 	 * - Triangles Fans index
 	 */
 	inline QVector<GLuint>* indexVectorHandle()
-	{ return &m_IndexVector;}
+	{return &m_IndexVector;}
 
 	//! Return the size of the index Vector
 	inline int indexVectorSize() const
@@ -123,6 +123,9 @@ public:
 		m_TrianglesCount+= count;
 	}
 
+	//! Set IBO usage
+	void setIboUsage(bool usage);
+
 
 //@}
 
@@ -141,8 +144,7 @@ public:
 	}
 
 	//! Ibo Usage
-	inline void useIBO() const
-	{const_cast<QGLBuffer&>(m_IndexBuffer).bind();}
+	void useIBO() const;
 
 	//! Fill IBO
 	inline void fillIbo()

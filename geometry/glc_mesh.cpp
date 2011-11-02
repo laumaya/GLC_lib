@@ -210,7 +210,7 @@ QVector<GLuint> GLC_Mesh::getTrianglesIndex(int lod, GLC_uint materialId) const
 	GLC_PrimitiveGroup* pPrimitiveGroup= m_PrimitiveGroups.value(lod)->value(materialId);
 
 	int offset= 0;
-	if (GLC_State::vboUsed())
+	if (vboIsUsed())
 	{
 		offset= static_cast<int>(reinterpret_cast<GLsizeiptr>(pPrimitiveGroup->trianglesIndexOffset()) / sizeof(GLuint));
 	}
@@ -258,7 +258,7 @@ QList<QVector<GLuint> > GLC_Mesh::getStripsIndex(int lod, GLC_uint materialId) c
 	QList<int> sizes;
 	int stripsCount;
 
-	if (GLC_State::vboUsed())
+	if (vboIsUsed())
 	{
 		stripsCount= pPrimitiveGroup->stripsOffset().size();
 		for (int i= 0; i < stripsCount; ++i)
@@ -331,7 +331,7 @@ QList<QVector<GLuint> > GLC_Mesh::getFansIndex(int lod, GLC_uint materialId) con
 	QList<int> sizes;
 	int fansCount;
 
-	if (GLC_State::vboUsed())
+	if (vboIsUsed())
 	{
 		fansCount= pPrimitiveGroup->fansOffset().size();
 		for (int i= 0; i < fansCount; ++i)
@@ -634,7 +634,7 @@ void GLC_Mesh::reverseNormals()
 	{
 		(*pNormalVector)[i]= - pNormalVector->at(i);
 	}
-	if (GLC_State::vboUsed())
+	if (vboIsUsed())
 	{
 		m_MeshData.fillVbo(GLC_MeshData::GLC_Normal);
 	}
@@ -647,14 +647,7 @@ void GLC_Mesh::finish()
 
 	m_MeshData.finishLod();
 
-	if (GLC_State::vboUsed())
-	{
-		finishVbo();
-	}
-	else
-	{
-		finishNonVbo();
-	}
+	moveIndexToMeshDataLod();
 
 	//qDebug() << "Mesh mem size= " << memmorySize();
 }
@@ -747,6 +740,15 @@ void GLC_Mesh::releaseVboClientSide(bool update)
 	GLC_Geometry::releaseVboClientSide(update);
 }
 
+void GLC_Mesh::setVboUsage(bool usage)
+{
+	if (!isEmpty())
+	{
+		GLC_Geometry::setVboUsage(usage);
+		m_MeshData.setVboUsage(usage);
+	}
+}
+
 // Load the mesh from binary data stream
 void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& materialHash, const QHash<GLC_uint, GLC_uint>& materialIdMap)
 {
@@ -804,7 +806,6 @@ void GLC_Mesh::loadFromDataStream(QDataStream& stream, const MaterialHash& mater
 	stream >> m_NumberOfNormals;
 
 	finishSerialized();
-	//qDebug() << "Mesh mem size= " << memmorySize();
 }
 
 // Save the mesh to binary data stream
@@ -857,9 +858,10 @@ void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 {
-	Q_ASSERT(m_GeometryIsValid || !m_MeshData.normalVectorHandle()->isEmpty());
 
-	const bool vboIsUsed= GLC_State::vboUsed();
+	Q_ASSERT(m_GeometryIsValid || !m_MeshData.positionSizeIsSet());
+
+	const bool vboIsUsed= GLC_Geometry::vboIsUsed()  && GLC_State::vboSupported();
 
 	if (m_IsSelected && (renderProperties.renderingMode() == glc::PrimitiveSelected) && !GLC_State::isInSelectionMode()
 	&& !renderProperties.setOfSelectedPrimitiveIdIsEmpty())
@@ -872,7 +874,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		m_MeshData.createVBOs();
 
 		// Create VBO and IBO
-		if (!m_GeometryIsValid && !m_MeshData.positionVectorHandle()->isEmpty())
+		if (!m_GeometryIsValid && !m_MeshData.positionSizeIsSet())
 		{
 			fillVbosAndIbos();
 		}
@@ -882,6 +884,10 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	}
 	else
 	{
+		if (!m_GeometryIsValid)
+		{
+			m_MeshData.initPositionSize();
+		}
 		activateVertexArray();
 	}
 
@@ -1077,22 +1083,19 @@ void GLC_Mesh::fillVbosAndIbos()
 // set primitive group offset
 void GLC_Mesh::finishSerialized()
 {
-	if (GLC_State::vboUsed())
+	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
+	while (iGroups != m_PrimitiveGroups.constEnd())
 	{
-		PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
-		while (iGroups != m_PrimitiveGroups.constEnd())
+		LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+		while (iGroup != iGroups.value()->constEnd())
 		{
-			LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
-			while (iGroup != iGroups.value()->constEnd())
-			{
-				iGroup.value()->changeToVboMode();
-				++iGroup;
-			}
-			++iGroups;
+			iGroup.value()->computeVboOffset();
+			++iGroup;
 		}
+		++iGroups;
 	}
 }
-
+/*
 // Move Indexs from the primitive groups to the mesh Data LOD and Set IBOs offsets
 void GLC_Mesh::finishVbo()
 {
@@ -1131,11 +1134,12 @@ void GLC_Mesh::finishVbo()
 
 	}
 }
+*/
 
 // Move Indexs from the primitive groups to the mesh Data LOD and Set Index offsets
-void GLC_Mesh::finishNonVbo()
+void GLC_Mesh::moveIndexToMeshDataLod()
 {
-	//qDebug() << "GLC_Mesh::finishNonVbo()";
+	//qDebug() << "GLC_Mesh::moveIndexToMeshDataLod()";
 	PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
 	while (iGroups != m_PrimitiveGroups.constEnd())
 	{
@@ -1164,6 +1168,7 @@ void GLC_Mesh::finishNonVbo()
 				(*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
 			}
 
+			iGroup.value()->computeVboOffset();
 			iGroup.value()->finish();
 			++iGroup;
 		}
@@ -1200,9 +1205,13 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
 			{
 
 				if (vboIsUsed)
+				{
 					vboDrawPrimitivesOf(pCurrentGroup);
+				}
 				else
+				{
 					vertexArrayDrawPrimitivesOf(pCurrentGroup);
+				}
 			}
 
 			++iGroup;

@@ -109,6 +109,9 @@ public:
 	//! Release client VBO
 	void releaseVboClientSide(bool update= false);
 
+	//! Set VBO usage
+	void setVboUsage(bool usage);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -127,8 +130,6 @@ public:
 	void glDraw(const GLC_RenderProperties&, GLenum mode);
 
 private:
-	//! Create this wire data VBO id
-	void createVBOs();
 
 	//! Fill this wire data VBO from memmory
 	void fillVBOs();
@@ -164,6 +165,9 @@ private:
 
 	//! The number of vertice group
 	int m_VerticeGroupCount;
+
+	//! VBO usage
+	bool m_UseVbo;
 
 	//! Class chunk id
 	static quint32 m_ChunkId;

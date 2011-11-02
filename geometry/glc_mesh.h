@@ -266,6 +266,9 @@ public:
 	//! Release client VBO
 	virtual void releaseVboClientSide(bool update);
 
+	//! Set VBO usage
+	virtual void setVboUsage(bool usage);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -311,10 +314,10 @@ private:
 	void finishSerialized();
 
 	//! Move Indexs from the primitive groups to the mesh Data LOD and Set IBOs offsets
-	void finishVbo();
+	//void finishVbo();
 
 	//! Move Indexs from the primitive groups to the mesh Data LOD and Set Index offsets
-	void finishNonVbo();
+	void moveIndexToMeshDataLod();
 
 	//! Use VBO to Draw primitives from the specified GLC_PrimitiveGroup
 	inline void vboDrawPrimitivesOf(GLC_PrimitiveGroup*);

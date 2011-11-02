@@ -22,7 +22,7 @@
 
 //! \file glc_lod.cpp implementation of the GLC_Lod class.
 
-
+#include "../glc_exception.h"
 #include "glc_lod.h"
 
 // Class chunk id
@@ -142,6 +142,41 @@ void GLC_Lod::releaseIboClientSide(bool update)
 		m_IndexVector.clear();
 	}
 }
+
+void GLC_Lod::setIboUsage(bool usage)
+{
+	if (usage && !m_IndexVector.isEmpty())
+	{
+		createIBO();
+		// Copy index from client side to serveur
+		m_IndexBuffer.bind();
+
+		const GLsizei indexNbr= static_cast<GLsizei>(m_IndexVector.size());
+		const GLsizeiptr indexSize = indexNbr * sizeof(GLuint);
+		m_IndexBuffer.allocate(m_IndexVector.data(), indexSize);
+		m_IndexBuffer.release();
+
+		m_IndexSize= m_IndexVector.size();
+		m_IndexVector.clear();
+
+	}
+	else if (!usage && m_IndexBuffer.isCreated())
+	{
+		m_IndexVector= indexVector();
+		m_IndexBuffer.destroy();
+	}
+}
+
+void GLC_Lod::useIBO() const
+{
+	Q_ASSERT(m_IndexBuffer.isCreated());
+	if (!const_cast<QGLBuffer&>(m_IndexBuffer).bind())
+	{
+		GLC_Exception exception("GLC_Lod::useIBO  Failed to bind index buffer");
+		throw(exception);
+	}
+}
+
 
 QDataStream &operator<<(QDataStream &stream, const GLC_Lod &lod)
 {

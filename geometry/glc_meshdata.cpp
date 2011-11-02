@@ -22,6 +22,7 @@
 
 //! \file glc_meshdata.cpp Implementation for the GLC_MeshData class.
 
+#include "../glc_exception.h"
 #include "glc_meshdata.h"
 #include "../glc_state.h"
 
@@ -39,9 +40,10 @@ GLC_MeshData::GLC_MeshData()
 , m_TexelBuffer()
 , m_ColorBuffer()
 , m_LodList()
-, m_PositionSize(0)
-, m_TexelsSize(0)
-, m_ColorSize(0)
+, m_PositionSize(-1)
+, m_TexelsSize(-1)
+, m_ColorSize(-1)
+, m_UseVbo(false)
 {
 
 }
@@ -60,6 +62,7 @@ GLC_MeshData::GLC_MeshData(const GLC_MeshData& meshData)
 , m_PositionSize(meshData.m_PositionSize)
 , m_TexelsSize(meshData.m_TexelsSize)
 , m_ColorSize(meshData.m_ColorSize)
+, m_UseVbo(meshData.m_UseVbo)
 {
 	// Copy meshData LOD list
 	const int size= meshData.m_LodList.size();
@@ -85,6 +88,7 @@ GLC_MeshData& GLC_MeshData::operator=(const GLC_MeshData& meshData)
 		m_PositionSize= meshData.m_PositionSize;
 		m_TexelsSize= meshData.m_TexelsSize;
 		m_ColorSize= meshData.m_ColorSize;
+		m_UseVbo= meshData.m_UseVbo;
 
 		// Copy meshData LOD list
 		const int size= meshData.m_LodList.size();
@@ -119,7 +123,11 @@ GLfloatVector GLC_MeshData::positionVector() const
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
 		GLfloatVector positionVector(sizeOfVbo);
 
-		const_cast<QGLBuffer&>(m_VertexBuffer).bind();
+		if (!const_cast<QGLBuffer&>(m_VertexBuffer).bind())
+		{
+			GLC_Exception exception("GLC_MeshData::positionVector()  Failed to bind vertex buffer");
+			throw(exception);
+		}
 		GLvoid* pVbo = const_cast<QGLBuffer&>(m_VertexBuffer).map(QGLBuffer::ReadOnly);
 		memcpy(positionVector.data(), pVbo, dataSize);
 		const_cast<QGLBuffer&>(m_VertexBuffer).unmap();
@@ -225,9 +233,9 @@ void GLC_MeshData::clear()
 	m_Normals.clear();
 	m_Texels.clear();
 	m_Colors.clear();
-	m_PositionSize= 0;
-	m_TexelsSize= 0;
-	m_ColorSize= 0;
+	m_PositionSize= -1;
+	m_TexelsSize= -1;
+	m_ColorSize= -1;
 
 	// Delete Main Vbo ID
 	if (m_VertexBuffer.isCreated())
@@ -301,15 +309,69 @@ void GLC_MeshData::releaseVboClientSide(bool update)
 	}
 }
 
+void GLC_MeshData::setVboUsage(bool usage)
+{
+	if (usage && (m_PositionSize != -1) && (!m_Positions.isEmpty()) && (!m_VertexBuffer.isCreated()))
+	{
+		createVBOs();
+
+		fillVbo(GLC_MeshData::GLC_Vertex);
+		fillVbo(GLC_MeshData::GLC_Normal);
+		fillVbo(GLC_MeshData::GLC_Texel);
+		fillVbo(GLC_MeshData::GLC_Color);
+		useVBO(false, GLC_MeshData::GLC_Color);
+
+		const int lodCount= m_LodList.count();
+		for (int i= 0; i < lodCount; ++i)
+		{
+			m_LodList.at(i)->setIboUsage(usage);
+		}
+
+	}
+	else if (!usage && m_VertexBuffer.isCreated())
+	{
+		m_Positions= positionVector();
+		m_PositionSize= m_Positions.size();
+		m_VertexBuffer.destroy();
+
+		m_Normals= normalVector();
+		m_NormalBuffer.destroy();
+
+		if (m_TexelBuffer.isCreated())
+		{
+			m_Texels= texelVector();
+			m_TexelsSize= m_Texels.size();
+			m_TexelBuffer.destroy();
+		}
+		if (m_ColorBuffer.isCreated())
+		{
+			m_Colors= colorVector();
+			m_ColorSize= m_Colors.size();
+			m_ColorBuffer.destroy();
+		}
+
+		const int lodCount= m_LodList.count();
+		for (int i= 0; i < lodCount; ++i)
+		{
+			m_LodList.at(i)->setIboUsage(usage);
+		}
+	}
+	m_UseVbo= usage;
+
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 // Vbo creation
 void GLC_MeshData::createVBOs()
 {
+
 	// Create position VBO
 	if (!m_VertexBuffer.isCreated())
 	{
+		Q_ASSERT((NULL != QGLContext::currentContext()) &&  QGLContext::currentContext()->isValid());
+
 		m_VertexBuffer.create();
 		m_NormalBuffer.create();
 
@@ -342,19 +404,35 @@ bool GLC_MeshData::useVBO(bool use, GLC_MeshData::VboType type)
 		// Chose the right VBO
 		if (type == GLC_MeshData::GLC_Vertex)
 		{
-			m_VertexBuffer.bind();
+			if (!m_VertexBuffer.bind())
+			{
+				GLC_Exception exception("GLC_MeshData::useVBO  Failed to bind vertex buffer");
+				throw(exception);
+			}
 		}
 		else if (type == GLC_MeshData::GLC_Normal)
 		{
-			m_NormalBuffer.bind();
+			if (!m_NormalBuffer.bind())
+			{
+				GLC_Exception exception("GLC_MeshData::useVBO  Failed to bind normal buffer");
+				throw(exception);
+			}
 		}
 		else if ((type == GLC_MeshData::GLC_Texel) && m_TexelBuffer.isCreated())
 		{
-			m_TexelBuffer.bind();
+			if (!m_TexelBuffer.bind())
+			{
+				GLC_Exception exception("GLC_MeshData::useVBO  Failed to bind texel buffer");
+				throw(exception);
+			}
 		}
 		else if ((type == GLC_MeshData::GLC_Color) && m_ColorBuffer.isCreated())
 		{
-			m_ColorBuffer.bind();
+			if (!m_ColorBuffer.bind())
+			{
+				GLC_Exception exception("GLC_MeshData::useVBO  Failed to bind color buffer");
+				throw(exception);
+			}
 		}
 
 		else result= false;

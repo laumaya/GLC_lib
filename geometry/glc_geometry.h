@@ -200,6 +200,10 @@ public:
 	//! Return the volume of this geometry
 	virtual double volume();
 
+	//! Return true if this geometry will try to use VBO
+	inline bool vboIsUsed() const
+	{return m_UseVbo;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -261,6 +265,9 @@ public:
 
 	//! Release client VBO
 	virtual void releaseVboClientSide(bool update= false);
+
+	//! Set VBO usage
+	virtual void setVboUsage(bool usage);
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -360,6 +367,9 @@ private:
 
 	//! Name of geometry
 	QString m_Name;
+
+	//! VBO usage flag
+	bool m_UseVbo;
 };
 
 #endif /*GLC_GEOMETRY_H_*/

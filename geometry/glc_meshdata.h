@@ -141,7 +141,7 @@ public:
 
 	//! Return true if the mesh data doesn't contains vertice
 	inline bool isEmpty() const
-	{return (0 == m_PositionSize) && (0 == m_Positions.size());}
+	{return (1 > m_PositionSize) && (0 == m_Positions.size());}
 
 	//! Return the number of triangle from the given lod index
 	inline unsigned int trianglesCount(int lod) const
@@ -149,6 +149,10 @@ public:
 		Q_ASSERT(lod < m_LodList.size());
 		return m_LodList.at(lod)->trianglesCount();
 	}
+
+	//! Return true if the position size is set
+	inline bool positionSizeIsSet() const
+	{return m_PositionSize != -1;}
 
 //@}
 
@@ -180,6 +184,13 @@ public:
 		else lod= m_LodList.size() - 1;
 		m_LodList.at(lod)->trianglesAdded(number);
 	}
+
+	//! Set VBO usage
+	void setVboUsage(bool usage);
+
+	//! Init the position size
+	inline void initPositionSize()
+	{m_PositionSize= m_Positions.size();}
 
 //@}
 
@@ -249,6 +260,9 @@ private:
 
 	//! The size of Color VBO
 	int m_ColorSize;
+
+	//! Use VBO
+	bool m_UseVbo;
 
 	//! Class chunk id
 	static quint32 m_ChunkId;
