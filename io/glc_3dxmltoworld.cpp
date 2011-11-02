@@ -1294,14 +1294,30 @@ void GLC_3dxmlToWorld::loadPolyline(GLC_Mesh* pMesh)
 
 	data.replace(',', ' ');
 	QTextStream dataStream(&data);
-	GLfloatVector dataVector;
+	QList<GLfloat> values;
 	QString buff;
 	while ((!dataStream.atEnd()))
 	{
 		dataStream >> buff;
-		dataVector.append(buff.toFloat());
+		values.append(buff.toFloat());
 	}
-	pMesh->addVerticeGroup(dataVector);
+	if ((values.size() % 3) == 0)
+	{
+		pMesh->addVerticeGroup(values.toVector());
+	}
+	else
+	{
+		QString message(QString("polyline buffer is not a multiple of 3 ") + m_CurrentFileName);
+
+		QStringList stringList(message);
+		GLC_ErrorLog::addError(stringList);
+
+		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
+		clear();
+		throw(fileFormatException);
+	}
+
+
 }
 
 // Clear material hash
@@ -2316,7 +2332,21 @@ void GLC_3dxmlToWorld::loadVertexBuffer(GLC_Mesh* pMesh)
 			verticeStream >> buff;
 			verticeValues.append(buff.toFloat());
 		}
-		pMesh->addVertice(verticeValues.toVector());
+		if ((verticeValues.size() % 3) == 0)
+		{
+			pMesh->addVertice(verticeValues.toVector());
+		}
+		else
+		{
+			QString message(QString("Vertice buffer is not a multiple of 3 ") + m_CurrentFileName);
+
+			QStringList stringList(message);
+			GLC_ErrorLog::addError(stringList);
+
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
+			clear();
+			throw(fileFormatException);
+		}
 	}
 
 	{
@@ -2332,7 +2362,22 @@ void GLC_3dxmlToWorld::loadVertexBuffer(GLC_Mesh* pMesh)
 			normalsStream >> buff;
 			normalValues.append(buff.toFloat());
 		}
-		pMesh->addNormals(normalValues.toVector());
+		if ((normalValues.size() % 3) == 0)
+		{
+			pMesh->addNormals(normalValues.toVector());
+		}
+		else
+		{
+			QString message(QString("Normal buffer is not a multiple of 3 ") + m_CurrentFileName);
+
+			QStringList stringList(message);
+			GLC_ErrorLog::addError(stringList);
+
+			GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
+			clear();
+			throw(fileFormatException);
+		}
+
 	}
 	// Try to find texture coordinate
 	while (endElementNotReached(m_pStreamReader, "VertexBuffer"))
@@ -2349,7 +2394,22 @@ void GLC_3dxmlToWorld::loadVertexBuffer(GLC_Mesh* pMesh)
 				texelStream >> buff;
 				texelValues.append(buff.toFloat());
 			}
-			pMesh->addTexels(texelValues.toVector());
+
+			if ((texelValues.size() % 2) == 0)
+			{
+				pMesh->addTexels(texelValues.toVector());
+			}
+			else
+			{
+				QString message(QString("Texel buffer is not a multiple of 2 ") + m_CurrentFileName);
+
+				QStringList stringList(message);
+				GLC_ErrorLog::addError(stringList);
+
+				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
+				clear();
+				throw(fileFormatException);
+			}
 		}
 		readNext();
 	}
