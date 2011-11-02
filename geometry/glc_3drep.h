@@ -171,6 +171,8 @@ public:
 	//! Transform 3DRep sub mesh vertice with the given matrix
 	void transformSubGeometries(const GLC_Matrix4x4& matrix);
 
+	//! Set VBO usage
+	void setVboUsage(bool usage);
 
 //@}
 

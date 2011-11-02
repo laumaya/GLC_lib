@@ -353,7 +353,6 @@ void GLC_3DRep::transformSubGeometries(const GLC_Matrix4x4& matrix)
 {
 	// Get the number of geometry of pRep
 	const int repCount= m_pGeomList->size();
-	qDebug() << "repCount " << repCount;
 	for (int i= 0; i < repCount; ++i)
 	{
 		GLC_Mesh* pCurrentMesh= dynamic_cast<GLC_Mesh*>(geomAt(i));
@@ -361,6 +360,16 @@ void GLC_3DRep::transformSubGeometries(const GLC_Matrix4x4& matrix)
 		{
 			pCurrentMesh->transformVertice(matrix);
 		}
+	}
+}
+
+void GLC_3DRep::setVboUsage(bool usage)
+{
+	// Get the number of geometry of pRep
+	const int repCount= m_pGeomList->size();
+	for (int i= 0; i < repCount; ++i)
+	{
+		m_pGeomList->at(i)->setVboUsage(usage);
 	}
 }
 
