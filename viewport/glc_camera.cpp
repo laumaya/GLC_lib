@@ -262,7 +262,7 @@ GLC_Camera& GLC_Camera::setCam(GLC_Point3d Eye, GLC_Point3d Target, GLC_Vector3d
 	//Q_ASSERT((Angle > EPSILON) && ((PI - Angle) > EPSILON));
 
 	if ( !qFuzzyCompare(Angle - (PI / 2), 0.0))
-	{	// Angle not equal to 90¡
+	{	// Angle not equal to 90
 		const GLC_Vector3d AxeRot(VectCam ^ Up);
 		GLC_Matrix4x4 MatRot(AxeRot, PI / 2);
 		Up= MatRot * VectCam;
