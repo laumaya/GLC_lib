@@ -198,7 +198,11 @@ void GLC_Viewport::updateProjectionMat(void)
 	}
 	else
 	{
-		gluPerspective(m_ViewAngle, m_AspectRatio, m_dDistanceMini, m_DistanceMax);
+	    const double yMax= m_dDistanceMini * tan(m_ViewAngle * glc::PI / 360.0);
+	    const double yMin= -yMax;
+	    const double xMax= yMax * m_AspectRatio;
+	    const double xMin= -xMax;
+	    glFrustum(xMin, xMax, yMin, yMax, m_dDistanceMini, m_DistanceMax);
 	}
 
 	// Save the projection matrix
