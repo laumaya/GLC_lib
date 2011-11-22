@@ -80,6 +80,9 @@ public:
 	inline GLC_Matrix4x4 absoluteMatrix() const
 	{ return m_AbsoluteMatrix;}
 
+	//! Return the surcharged relative matrix
+	GLC_Matrix4x4 occurrenceRelativeMatrix() const;
+
 	//! Return true if this occurence is orphan
 	inline bool isOrphan() const
 	{ return NULL == m_pParent;}

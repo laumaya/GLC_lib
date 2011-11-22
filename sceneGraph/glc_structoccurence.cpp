@@ -253,6 +253,16 @@ GLC_StructOccurence::~GLC_StructOccurence()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
+GLC_Matrix4x4 GLC_StructOccurence::occurrenceRelativeMatrix() const
+{
+	GLC_Matrix4x4 matrix;
+	if (NULL != m_pRelativeMatrix)
+	{
+		matrix= *m_pRelativeMatrix;
+	}
+	return matrix;
+}
+
 bool GLC_StructOccurence::hasRepresentation() const
 {
 	if ((NULL != m_pStructInstance) && (m_pStructInstance->hasStructOccurence()))
