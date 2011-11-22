@@ -180,6 +180,9 @@ private:
 	//! Return the simplified name of the given name
 	QString symplifyName(QString name);
 
+	//! Return the path of the given occurence
+	QList<unsigned int> instancePath(const GLC_StructOccurence* pOccurence);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
