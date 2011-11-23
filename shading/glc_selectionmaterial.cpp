@@ -120,19 +120,53 @@ void GLC_SelectionMaterial::setShaders(QFile& vertex, QFile& fragment, const QGL
 
 void GLC_SelectionMaterial::useShader()
 {
-	const QGLContext* pContext= QGLContext::currentContext();
+	QGLContext* pContext= const_cast<QGLContext*>(QGLContext::currentContext());
 	Q_ASSERT(NULL != pContext);
-	Q_ASSERT(m_SelectionShaderHash.contains(pContext));
+	Q_ASSERT(pContext->isValid());
+	if(!m_SelectionShaderHash.contains(pContext))
+	{
+		Q_ASSERT(pContext->isSharing());
+		pContext= sharingContext(pContext);
+		Q_ASSERT(NULL != pContext);
+	}
+
 	m_SelectionShaderHash.value(pContext)->use();
 }
 
 void GLC_SelectionMaterial::unUseShader()
 {
-	const QGLContext* pContext= QGLContext::currentContext();
+	QGLContext* pContext= const_cast<QGLContext*>(QGLContext::currentContext());
 	Q_ASSERT(NULL != pContext);
-	Q_ASSERT(m_SelectionShaderHash.contains(pContext));
+	Q_ASSERT(pContext->isValid());
+	if(!m_SelectionShaderHash.contains(pContext))
+	{
+		Q_ASSERT(pContext->isSharing());
+		pContext= sharingContext(pContext);
+		Q_ASSERT(NULL != pContext);
+	}
 
 	m_SelectionShaderHash.value(pContext)->unuse();
+}
+
+//////////////////////////////////////////////////////////////////////
+// Private services fonction
+//////////////////////////////////////////////////////////////////////
+QGLContext* GLC_SelectionMaterial::sharingContext(const QGLContext* pContext)
+{
+	QGLContext* pSharingContext= NULL;
+	QHash<const QGLContext*, GLC_Shader*>::const_iterator iContext= m_SelectionShaderHash.constBegin();
+
+	while ((NULL == pSharingContext) && (iContext != m_SelectionShaderHash.constEnd()))
+	{
+		const QGLContext* pCurrentContext= iContext.key();
+		if (QGLContext::areSharing(pContext, pCurrentContext))
+		{
+			pSharingContext= const_cast<QGLContext*>(pCurrentContext);
+		}
+		++iContext;
+	}
+
+	return pSharingContext;
 }
 
 //! delete shader
