@@ -68,19 +68,13 @@ class GLC_LIB_EXPORT GLC_Geometry
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	/*!
-	 * QString Name
-	 * const bool typeIsWire
-	 */
-	GLC_Geometry(const QString &, const bool);
+	GLC_Geometry(const QString &name, const bool type);
+
 	//! Copy constructor
-	/*!
-	 * const GLC_VboGeom geometry to copy
-	 */
-	GLC_Geometry(const GLC_Geometry&);
+	GLC_Geometry(const GLC_Geometry& sourceGeom);
 
 	//! Overload "=" operator
-	GLC_Geometry& operator=(const GLC_Geometry&);
+	GLC_Geometry& operator=(const GLC_Geometry& sourceGeom);
 
 	//! Destructor
 	virtual ~GLC_Geometry();
