@@ -38,8 +38,6 @@ GLC_Light::GLC_Light(const QGLContext* pContext, const QColor& color)
 :GLC_Object("Light")
 , m_LightID(-1)
 , m_LightType(LightPosition)
-, m_ListID(0)
-, m_ListIsValid(false)
 , m_AmbientColor(Qt::black)
 , m_DiffuseColor(color)
 , m_SpecularColor(Qt::white)
@@ -52,6 +50,7 @@ GLC_Light::GLC_Light(const QGLContext* pContext, const QColor& color)
 , m_QuadraticAttenuation(0.0f)
 , m_TwoSided(false)
 , m_pContext(const_cast<QGLContext*>(pContext))
+, m_IsValid(false)
 {
 	addNewLight();
 }
@@ -60,8 +59,6 @@ GLC_Light::GLC_Light(LightType lightType, const QGLContext* pContext, const QCol
 :GLC_Object("Light")
 , m_LightID(-1)
 , m_LightType(lightType)
-, m_ListID(0)
-, m_ListIsValid(false)
 , m_AmbientColor(Qt::black)
 , m_DiffuseColor(color)
 , m_SpecularColor(Qt::white)
@@ -74,6 +71,7 @@ GLC_Light::GLC_Light(LightType lightType, const QGLContext* pContext, const QCol
 , m_QuadraticAttenuation(0.0f)
 , m_TwoSided(false)
 , m_pContext(const_cast<QGLContext*>(pContext))
+, m_IsValid(false)
 {
 	addNewLight();
 }
@@ -82,8 +80,6 @@ GLC_Light::GLC_Light(const GLC_Light& light)
 :GLC_Object(light)
 , m_LightID(-1)
 , m_LightType(light.m_LightType)
-, m_ListID(0)
-, m_ListIsValid(false)
 , m_AmbientColor(light.m_AmbientColor)
 , m_DiffuseColor(light.m_DiffuseColor)
 , m_SpecularColor(light.m_SpecularColor)
@@ -96,13 +92,13 @@ GLC_Light::GLC_Light(const GLC_Light& light)
 , m_QuadraticAttenuation(light.m_QuadraticAttenuation)
 , m_TwoSided(light.m_TwoSided)
 , m_pContext(light.m_pContext)
+, m_IsValid(false)
 {
 	addNewLight();
 }
 
 GLC_Light::~GLC_Light(void)
 {
-	deleteList();
 	removeThisLight();
 }
 
@@ -138,126 +134,79 @@ void GLC_Light::initForThisContext()
 void GLC_Light::setPosition(const GLC_Point3d &pos)
 {
 	m_Position= pos;
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 void GLC_Light::setPosition(GLfloat x, GLfloat y, GLfloat z)
 {
 	m_Position.setVect(static_cast<double>(x), static_cast<double>(y), static_cast<double>(z));
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 void GLC_Light::setAmbientColor(const QColor& color)
 {
 	m_AmbientColor= color;
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 void GLC_Light::setDiffuseColor(const QColor& color)
 {
 	m_DiffuseColor= color;
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 void GLC_Light::setSpecularColor(const QColor& color)
 {
 	m_SpecularColor= color;
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 void GLC_Light::setTwoSided(const bool mode)
 {
-	if (m_TwoSided != mode)
-	{
-		m_TwoSided= mode;
-		m_ListIsValid = false;
-	}
+	m_TwoSided= mode;
+	m_IsValid= false;
 }
 
 void GLC_Light::setConstantAttenuation(GLfloat constantAttenuation)
 {
 	m_ConstantAttenuation= constantAttenuation;
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 void GLC_Light::setLinearAttenuation(GLfloat linearAttenuation)
 {
 	m_LinearAttenuation= linearAttenuation;
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 void GLC_Light::setQuadraticAttenuation(GLfloat quadraticAttenuation)
 {
 	m_QuadraticAttenuation= quadraticAttenuation;
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 void GLC_Light::setSpotDirection(const GLC_Vector3d& direction)
 {
 	m_SpotDirection= direction;
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 void GLC_Light::setSpotCutoffAngle(GLfloat cutoffAngle)
 {
 	m_SpotCutoffAngle= cutoffAngle;
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 void GLC_Light::setSpotEponent(GLfloat exponent)
 {
 	m_SpotExponent= exponent;
-	m_ListIsValid = false;
+	m_IsValid= false;
 }
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Light::creationList(GLenum Mode)
-{
-	if(0 == m_ListID)		// OpenGL list not created
-	{
-		m_ListID= glGenLists(1);
-
-		if (0 == m_ListID)	// OpenGL List Id not get
-		{
-			glDraw();
-			qDebug("GLC_Light::CreationListe Display list not create");
-		}
-	}
-	if (0 != m_ListID)
-	{
-		// OpenGL list creation and execution
-		glNewList(m_ListID, Mode);
-
-		// Light execution
-		glDraw();
-
-		glEndList();
-
-		m_ListIsValid= true;
-	}
-
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		GLC_OpenGlException OpenGlException("GLC_Light::CreationList ", error);
-		throw(OpenGlException);
-	}
-}
-void GLC_Light::enable()
-{
-	if (NULL == m_pContext)
-	{
-		m_pContext= const_cast<QGLContext*>(QGLContext::currentContext());
-		Q_ASSERT(NULL != m_pContext);
-		addNewLight();
-	}
-
-	glEnable(m_LightID);
-}
 
 void GLC_Light::disable()
 {
@@ -268,109 +217,103 @@ void GLC_Light::disable()
 }
 
 
-void GLC_Light::glExecute(GLenum Mode)
+void GLC_Light::glExecute()
 {
-	if (!m_ListIsValid)
+	if (NULL == m_pContext)
 	{
-		// OpenGL list is not valid
-		/*
-		GLfloat value;
-		glGetFloatv(GL_CONSTANT_ATTENUATION, &value);
-		qDebug() << "GL_CONSTANT_ATTENUATION " << value;
-		glGetFloatv(GL_LINEAR_ATTENUATION, &value);
-		qDebug() << "GL_LINEAR_ATTENUATION " << value;
-		glGetFloatv(GL_QUADRATIC_ATTENUATION, &value);
-		qDebug() << "GL_QUADRATIC_ATTENUATION " << value;
-		*/
-		creationList(Mode);
+		m_pContext= const_cast<QGLContext*>(QGLContext::currentContext());
+		Q_ASSERT(NULL != m_pContext);
+		addNewLight();
 	}
-	else
+
+	if (!glIsEnabled(GL_LIGHTING))
 	{
-		glCallList(m_ListID);
+		glEnable(GL_LIGHTING);
+	}
+	if (!glIsEnabled(m_LightID))
+	{
+		glEnable(m_LightID);
+	}
+	if (m_pContext != QGLContext::currentContext())
+	{
+		Q_ASSERT(QGLContext::areSharing(m_pContext, QGLContext::currentContext()));
+		m_IsValid= false;
+	}
+	Q_ASSERT(m_pContext->isValid());
+
+	if (!m_IsValid)
+	{
+		// Set the lighting model
+		if (m_TwoSided)
+		{
+			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+		}
+		else
+		{
+			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+		}
+
+		// Color
+		GLfloat setArray[4]= {static_cast<GLfloat>(m_AmbientColor.redF()),
+										static_cast<GLfloat>(m_AmbientColor.greenF()),
+										static_cast<GLfloat>(m_AmbientColor.blueF()),
+										static_cast<GLfloat>(m_AmbientColor.alphaF())};
+		glLightfv(m_LightID, GL_AMBIENT, setArray);		// Setup The Ambient Light
+
+		setArray[0]= static_cast<GLfloat>(m_DiffuseColor.redF());
+		setArray[1]= static_cast<GLfloat>(m_DiffuseColor.greenF());
+		setArray[2]= static_cast<GLfloat>(m_DiffuseColor.blueF());
+		setArray[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());
+		glLightfv(m_LightID, GL_DIFFUSE, setArray);		// Setup The Diffuse Light
+
+
+		setArray[0]= static_cast<GLfloat>(m_SpecularColor.redF());
+		setArray[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
+		setArray[2]= static_cast<GLfloat>(m_SpecularColor.blueF());
+		setArray[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());
+		glLightfv(m_LightID, GL_SPECULAR, setArray);	// Setup The specular Light
+
+		// Position
+		setArray[0]= static_cast<GLfloat>(m_Position.x());
+		setArray[1]= static_cast<GLfloat>(m_Position.y());
+		setArray[2]= static_cast<GLfloat>(m_Position.z());
+
+		if (LightDirection == m_LightType)
+		{
+			setArray[3]= 0.0f;
+			glLightfv(m_LightID, GL_POSITION, setArray);	// Direction of the Light
+		}
+		else
+		{
+			setArray[3]= 1.0f;
+			glLightfv(m_LightID, GL_POSITION, setArray);	// Position of the Light
+			glLightf(m_LightID, GL_CONSTANT_ATTENUATION, m_ConstantAttenuation);
+			glLightf(m_LightID, GL_LINEAR_ATTENUATION, m_LinearAttenuation);
+			glLightf(m_LightID, GL_QUADRATIC_ATTENUATION, m_QuadraticAttenuation);
+
+		}
+
+		// Spot light parameters
+		if (LightSpot == m_LightType)
+		{
+			// Spot Direction
+			setArray[0]= static_cast<GLfloat>(m_SpotDirection.x());
+			setArray[1]= static_cast<GLfloat>(m_SpotDirection.y());
+			setArray[2]= static_cast<GLfloat>(m_SpotDirection.z());
+			glLightfv(m_LightID, GL_SPOT_DIRECTION, setArray);
+			glLightf(m_LightID, GL_SPOT_EXPONENT, m_SpotExponent);
+			glLightf(m_LightID, GL_SPOT_CUTOFF, m_SpotCutoffAngle);
+		}
+
+		m_IsValid= true;
 	}
 
 	// OpenGL error handler
 	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
-		GLC_OpenGlException OpenGlException("GLC_Light::GlExecute ", error);
-		throw(OpenGlException);
-	}
-
-}
-
-void GLC_Light::glDraw(void)
-{
-	//qDebug() << "GLC_Light::GlDraw id= " << m_LightID;
-	// Set the lighting model
-	if (m_TwoSided)
-	{
-		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-	}
-	else
-	{
-		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
-	}
-
-	// Color
-	GLfloat setArray[4]= {static_cast<GLfloat>(m_AmbientColor.redF()),
-									static_cast<GLfloat>(m_AmbientColor.greenF()),
-									static_cast<GLfloat>(m_AmbientColor.blueF()),
-									static_cast<GLfloat>(m_AmbientColor.alphaF())};
-	glLightfv(m_LightID, GL_AMBIENT, setArray);		// Setup The Ambient Light
-
-	setArray[0]= static_cast<GLfloat>(m_DiffuseColor.redF());
-	setArray[1]= static_cast<GLfloat>(m_DiffuseColor.greenF());
-	setArray[2]= static_cast<GLfloat>(m_DiffuseColor.blueF());
-	setArray[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());
-	glLightfv(m_LightID, GL_DIFFUSE, setArray);		// Setup The Diffuse Light
-
-
-	setArray[0]= static_cast<GLfloat>(m_SpecularColor.redF());
-	setArray[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
-	setArray[2]= static_cast<GLfloat>(m_SpecularColor.blueF());
-	setArray[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());
-	glLightfv(m_LightID, GL_SPECULAR, setArray);	// Setup The specular Light
-
-	// Position
-	setArray[0]= static_cast<GLfloat>(m_Position.x());
-	setArray[1]= static_cast<GLfloat>(m_Position.y());
-	setArray[2]= static_cast<GLfloat>(m_Position.z());
-
-	if (LightDirection == m_LightType)
-	{
-		setArray[3]= 0.0f;
-		glLightfv(m_LightID, GL_POSITION, setArray);	// Direction of the Light
-	}
-	else
-	{
-		setArray[3]= 1.0f;
-		glLightfv(m_LightID, GL_POSITION, setArray);	// Position of the Light
-		glLightf(m_LightID, GL_CONSTANT_ATTENUATION, m_ConstantAttenuation);
-		glLightf(m_LightID, GL_LINEAR_ATTENUATION, m_LinearAttenuation);
-		glLightf(m_LightID, GL_QUADRATIC_ATTENUATION, m_QuadraticAttenuation);
-
-	}
-
-	// Spot light parameters
-	if (LightSpot == m_LightType)
-	{
-		// Spot Direction
-		setArray[0]= static_cast<GLfloat>(m_SpotDirection.x());
-		setArray[1]= static_cast<GLfloat>(m_SpotDirection.y());
-		setArray[2]= static_cast<GLfloat>(m_SpotDirection.z());
-		glLightfv(m_LightID, GL_SPOT_DIRECTION, setArray);
-		glLightf(m_LightID, GL_SPOT_EXPONENT, m_SpotExponent);
-		glLightf(m_LightID, GL_SPOT_CUTOFF, m_SpotCutoffAngle);
-	}
-
-
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		qDebug() << "GLC_Light::GlDraw Exception, id= " << m_LightID;
-		GLC_OpenGlException OpenGlException("GLC_Light::GlDraw ", error);
+		qDebug() << "GLC_Light::glExecute Exception, id= " << m_LightID;
+		GLC_OpenGlException OpenGlException("GLC_Light::glExecute ", error);
 		throw(OpenGlException);
 	}
 
@@ -380,15 +323,6 @@ void GLC_Light::glDraw(void)
 // Private services Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Light::deleteList(void)
-{
-	// if the list is valid, the list is deleted
-	if (glIsList(m_ListID))
-	{
-		disable();
-		glDeleteLists(m_ListID, 1);
-	}
-}
 
 //////////////////////////////////////////////////////////////////////
 // Private services fonction

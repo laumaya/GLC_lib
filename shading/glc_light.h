@@ -189,14 +189,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Enable the light
-	void enable();
 
 	// Disable the light
 	void disable();
 
 	//! Execute OpenGL light
-	virtual void glExecute(GLenum Mode= GL_COMPILE_AND_EXECUTE);
+	virtual void glExecute();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -205,14 +203,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 private:
-	//! OpenGL light set up
-	void glDraw();
 
-	//! Display List creation
-	void creationList(GLenum Mode);
-
-	//! Delete OpenGL Display list
-	void deleteList();
 
 //@}
 
@@ -235,12 +226,6 @@ private:
 
 	//! The Light type
 	LightType m_LightType;
-
-	//! OpenGL Display list ID
-	GLuint m_ListID;
-
-	//! OpenGL list validity
-	bool m_ListIsValid;
 
 	//! Light ambiant color
 	QColor m_AmbientColor;
@@ -279,6 +264,9 @@ private:
 
 	//! The context of this light
 	QGLContext* m_pContext;
+
+	//! Flag to know if this light is valid
+	bool m_IsValid;
 
 	//! Mapping between context and light set
 	static QHash<const QGLContext*, QSet<GLenum> > m_ContextToFreeLightSet;
