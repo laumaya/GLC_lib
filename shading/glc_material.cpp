@@ -497,9 +497,10 @@ void GLC_Material::glExecute()
 								emissiveColor().blueF(),
 								emissiveColor().alphaF()};
 
+	const bool textureIsEnable= glIsEnabled(GL_TEXTURE_2D);
 	if (m_pTexture != NULL)
 	{
-		glEnable(GL_TEXTURE_2D);
+		if (!textureIsEnable) glEnable(GL_TEXTURE_2D);
 		m_pTexture->glcBindTexture();
 		if (GLC_State::glslUsed())
 		{
@@ -516,13 +517,13 @@ void GLC_Material::glExecute()
 
 		if (GLC_State::glslUsed() && GLC_Shader::hasActiveShader())
 		{
-				glEnable(GL_TEXTURE_2D);
+				if (!textureIsEnable) glEnable(GL_TEXTURE_2D);
 				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("tex", GLint(0));
 				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("useTexture", false);
 		}
 		else
 		{
-			glDisable(GL_TEXTURE_2D);
+			if (textureIsEnable) glDisable(GL_TEXTURE_2D);
 		}
 
 	}
@@ -534,6 +535,7 @@ void GLC_Material::glExecute()
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &m_Shininess);
 
 	glColor4fv(pDiffuseColor);
+
 
 	// OpenGL Error handler
 	GLenum error= glGetError();
@@ -568,9 +570,11 @@ void GLC_Material::glExecute(float overwriteTransparency)
 								emissiveColor().blueF(),
 								overwriteTransparency};
 
+	const bool textureIsEnable= glIsEnabled(GL_TEXTURE_2D);
+
 	if (m_pTexture != NULL)
 	{
-		glEnable(GL_TEXTURE_2D);
+		if (!textureIsEnable) glEnable(GL_TEXTURE_2D);
 		m_pTexture->glcBindTexture();
 		if (GLC_State::glslUsed())
 		{
@@ -583,7 +587,7 @@ void GLC_Material::glExecute(float overwriteTransparency)
 	}
 	else
 	{
-		glDisable(GL_TEXTURE_2D);
+		if (textureIsEnable) glDisable(GL_TEXTURE_2D);
 		if (GLC_State::glslUsed())
 		{
 			if (GLC_Shader::hasActiveShader())
@@ -606,7 +610,7 @@ void GLC_Material::glExecute(float overwriteTransparency)
 	GLenum error= glGetError();
 	if (error != GL_NO_ERROR)
 	{
-		GLC_OpenGlException OpenGlException("GLC_Material::glExecute() ", error);
+		GLC_OpenGlException OpenGlException("GLC_Material::glExecute(float overwriteTransparency) ", error);
 		throw(OpenGlException);
 	}
 }
