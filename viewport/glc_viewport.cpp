@@ -158,7 +158,6 @@ GLC_Vector3d GLC_Viewport::mapNormalyzePosMouse(double Posx, double Posy) const
 
 void GLC_Viewport::initGl()
 {
-	// OpenGL initialisation from NEHE production
 	m_pQGLWidget->qglClearColor(m_BackgroundColor);       // Background
 	glClearDepth(1.0f);                                   // Depth Buffer Setup
 	glShadeModel(GL_SMOOTH);                              // Enable Smooth Shading
@@ -166,6 +165,8 @@ void GLC_Viewport::initGl()
 	glDepthFunc(GL_LEQUAL);                               // The Type Of Depth Testing To Do
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glPolygonOffset (1.0f, 1.0f);
 
 	// Init GLC_State
 	GLC_State::init();
