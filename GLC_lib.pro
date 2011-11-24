@@ -143,7 +143,6 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_userinput.h \
 						viewport/glc_tsrmover.h
 
-
 HEADERS_GLC += glc_global.h \
            glc_object.h \
            glc_factory.h \
@@ -170,10 +169,11 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_rotationmanipulator.h \
 						3DWidget/glc_axis.h
 
+HEADERS_GLC_GLU +=	glu/glc_glu.h
 
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
-HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET}
+HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
 		   
 SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/compress.c \
@@ -319,7 +319,8 @@ SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_rotationmanipulator.cpp \
 			3DWidget/glc_axis.cpp
 			
-         
+SOURCES +=	glu/glc_project.cpp
+
 # Windows compilation configuration
 win32:CONFIG *= dll
 
@@ -418,7 +419,8 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_PointCloud \
     		   include/GLC_SelectionSet \
     		   include/GLC_UserInput \
-    		   include/GLC_TsrMover
+    		   include/GLC_TsrMover \
+    		   include/GLC_Glu
 
     			   
 # Linux and macx install configuration
@@ -439,6 +441,7 @@ unix {
 	include_glc_shading.path = $${INCLUDE_DIR}/GLC_lib/shading
 	include_glc_viewport.path = $${INCLUDE_DIR}/GLC_lib/viewport
 	include_glc_3dwidget.path = $${INCLUDE_DIR}/GLC_lib/3DWidget
+	include_glc_glu.path = $${INCLUDE_DIR}/GLC_lib/glu
 }
 
 # Windows Install configuration
@@ -457,6 +460,7 @@ win32 {
     include_glc_shading.path = $${INCLUDE_DIR}/shading
     include_glc_viewport.path = $${INCLUDE_DIR}/viewport
     include_glc_3dwidget.path = $${INCLUDE_DIR}/3DWidget
+    include_glc_glu.path = $${INCLUDE_DIR}/glu
 }    
 
 include.files = $${HEADERS_GLC} $${HEADERS_INST}
@@ -470,6 +474,7 @@ include_glc_geometry.files= $${HEADERS_GLC_GEOMETRY}
 include_glc_shading.files = $${HEADERS_GLC_SHADING}
 include_glc_viewport.files = $${HEADERS_GLC_VIEWPORT}
 include_glc_3dwidget.files = $${HEADERS_GLC_3DWIDGET}
+include_glc_glu.files = $${HEADERS_GLC_GLU}
 
 # install library
 target.path = $${LIB_DIR}
@@ -477,7 +482,7 @@ target.path = $${LIB_DIR}
 # "make install" configuration options
 INSTALLS += include_lib3ds include_glext include_quazip include_glc_maths include_glc_io
 INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport
-INSTALLS += include_glc_3dwidget
+INSTALLS += include_glc_3dwidget include_glc_glu
 
 INSTALLS += target
 INSTALLS +=include
