@@ -24,12 +24,7 @@
 
 #include <QtOpenGL>
 
-#if !defined(Q_OS_MAC)
-#include <GL/glu.h>
-#else
-#include <glu.h>
-#endif
-
+#include "../glu/glc_glu.h"
 #include "glc_viewport.h"
 #include "../glc_openglexception.h"
 #include "../glc_ext.h"
@@ -180,9 +175,6 @@ void GLC_Viewport::glExecuteCam(void)
 
 void GLC_Viewport::updateProjectionMat(void)
 {
-	// Make opengl context attached the current One
-	m_pQGLWidget->makeCurrent();
-
 	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
 
@@ -210,7 +202,6 @@ void GLC_Viewport::updateProjectionMat(void)
 	glGetDoublev(GL_PROJECTION_MATRIX, m_ProjectionMatrix.setData());
 
 	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
-	glLoadIdentity();									// Reset The Modelview Matrix
 }
 
 void GLC_Viewport::forceAspectRatio(double ratio)
@@ -274,7 +265,7 @@ GLC_Point3d GLC_Viewport::unProject(int x, int y) const
 
 	// OpenGL ccordinate of selected point
 	GLdouble pX, pY, pZ;
-	gluUnProject((GLdouble) x, (GLdouble) (m_WindowVSize - y) , Depth
+	glc::gluUnProject((GLdouble) x, (GLdouble) (m_WindowVSize - y) , Depth
 		, m_pViewCam->modelViewMatrix().getData(), m_ProjectionMatrix.getData(), Viewport, &pX, &pY, &pZ);
 
 	return GLC_Point3d(pX, pY, pZ);
@@ -301,7 +292,7 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list)const
 		const int y= m_WindowVSize - list.at(i + 1);
 		glReadPixels(x, y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
-		gluUnProject(static_cast<GLdouble>(x), static_cast<GLdouble>(y) , Depth , m_pViewCam->modelViewMatrix().getData()
+		glc::gluUnProject(static_cast<GLdouble>(x), static_cast<GLdouble>(y) , Depth , m_pViewCam->modelViewMatrix().getData()
 				, m_ProjectionMatrix.getData(), Viewport, &pX, &pY, &pZ);
 		unprojectedPoints.append(GLC_Point3d(pX, pY, pZ));
 	}
