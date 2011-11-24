@@ -134,13 +134,11 @@ void GLC_Light::initForThisContext()
 void GLC_Light::setPosition(const GLC_Point3d &pos)
 {
 	m_Position= pos;
-	m_IsValid= false;
 }
 
 void GLC_Light::setPosition(GLfloat x, GLfloat y, GLfloat z)
 {
 	m_Position.setVect(static_cast<double>(x), static_cast<double>(y), static_cast<double>(z));
-	m_IsValid= false;
 }
 
 void GLC_Light::setAmbientColor(const QColor& color)
@@ -241,6 +239,25 @@ void GLC_Light::glExecute()
 	}
 	Q_ASSERT(m_pContext->isValid());
 
+	GLfloat setArray[4];
+
+	// Position
+	setArray[0]= static_cast<GLfloat>(m_Position.x());
+	setArray[1]= static_cast<GLfloat>(m_Position.y());
+	setArray[2]= static_cast<GLfloat>(m_Position.z());
+
+	if (LightDirection == m_LightType)
+	{
+		setArray[3]= 0.0f;
+		glLightfv(m_LightID, GL_POSITION, setArray);	// Direction of the Light
+	}
+	else
+	{
+		setArray[3]= 1.0f;
+		glLightfv(m_LightID, GL_POSITION, setArray);	// Position of the Light
+	}
+
+
 	if (!m_IsValid)
 	{
 		// Set the lighting model
@@ -254,10 +271,10 @@ void GLC_Light::glExecute()
 		}
 
 		// Color
-		GLfloat setArray[4]= {static_cast<GLfloat>(m_AmbientColor.redF()),
-										static_cast<GLfloat>(m_AmbientColor.greenF()),
-										static_cast<GLfloat>(m_AmbientColor.blueF()),
-										static_cast<GLfloat>(m_AmbientColor.alphaF())};
+		setArray[0]= static_cast<GLfloat>(m_AmbientColor.redF());
+		setArray[1]= static_cast<GLfloat>(m_AmbientColor.greenF());
+		setArray[2]= static_cast<GLfloat>(m_AmbientColor.blueF());
+		setArray[3]= static_cast<GLfloat>(m_AmbientColor.alphaF());
 		glLightfv(m_LightID, GL_AMBIENT, setArray);		// Setup The Ambient Light
 
 		setArray[0]= static_cast<GLfloat>(m_DiffuseColor.redF());
@@ -273,25 +290,10 @@ void GLC_Light::glExecute()
 		setArray[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());
 		glLightfv(m_LightID, GL_SPECULAR, setArray);	// Setup The specular Light
 
-		// Position
-		setArray[0]= static_cast<GLfloat>(m_Position.x());
-		setArray[1]= static_cast<GLfloat>(m_Position.y());
-		setArray[2]= static_cast<GLfloat>(m_Position.z());
-
-		if (LightDirection == m_LightType)
-		{
-			setArray[3]= 0.0f;
-			glLightfv(m_LightID, GL_POSITION, setArray);	// Direction of the Light
-		}
-		else
-		{
-			setArray[3]= 1.0f;
-			glLightfv(m_LightID, GL_POSITION, setArray);	// Position of the Light
+		if (LightDirection != m_LightType)
 			glLightf(m_LightID, GL_CONSTANT_ATTENUATION, m_ConstantAttenuation);
 			glLightf(m_LightID, GL_LINEAR_ATTENUATION, m_LinearAttenuation);
 			glLightf(m_LightID, GL_QUADRATIC_ATTENUATION, m_QuadraticAttenuation);
-
-		}
 
 		// Spot light parameters
 		if (LightSpot == m_LightType)
