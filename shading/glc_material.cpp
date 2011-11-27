@@ -25,7 +25,7 @@
 #include "glc_material.h"
 #include "../geometry/glc_geometry.h"
 #include "../glc_factory.h"
-#include "../glc_openglException.h"
+#include "../glc_openglexception.h"
 
 #include <QtDebug>
 
