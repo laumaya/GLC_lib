@@ -961,11 +961,6 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 
 
 	// Restore client state
-	if (vboIsUsed)
-	{
-		m_MeshData.useIBO(false);
-		m_MeshData.useVBO(false, GLC_MeshData::GLC_Normal);
-	}
 
 	if (m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode())
 	{
@@ -976,6 +971,12 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if (vboIsUsed)
+	{
+		QGLBuffer::release(QGLBuffer::IndexBuffer);
+		QGLBuffer::release(QGLBuffer::VertexBuffer);
+	}
 
 	// Draw mesh's wire if necessary
 	if ((renderProperties.renderingFlag() == glc::WireRenderFlag) && !m_WireData.isEmpty() && !GLC_Geometry::typeIsWire())
