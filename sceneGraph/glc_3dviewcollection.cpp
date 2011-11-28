@@ -616,13 +616,24 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 	if (!isEmpty() && m_IsViewable)
 	{
 		const bool polygonOffsetIsEnable= glIsEnabled(GL_POLYGON_OFFSET_FILL);
+
 		const bool blendIsEnable= glIsEnabled(GL_BLEND);
+		GLint source;
+		glGetIntegerv(GL_BLEND_SRC, &source);
+		GLint dest;
+		glGetIntegerv(GL_BLEND_DST, &dest);
+
 		const bool lightningIsEnable= glIsEnabled(GL_LIGHTING);
 		const bool textureIsEnable= glIsEnabled(GL_TEXTURE_2D);
 		GLfloat factor;
 		glGetFloatv(GL_POLYGON_OFFSET_FACTOR, &factor);
 		GLfloat units;
 		glGetFloatv(GL_POLYGON_OFFSET_UNITS, &units);
+
+
+		const bool depthTestIsEnable= glIsEnabled(GL_DEPTH_TEST);
+		GLboolean depthIsWritable;
+		glGetBooleanv(GL_DEPTH_WRITEMASK, &depthIsWritable);
 
 		if (renderFlag == glc::WireRenderFlag)
 		{
@@ -675,12 +686,37 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 			if (lightningIsEnable) glEnable(GL_LIGHTING);
 			else glDisable(GL_LIGHTING);
 		}
+		// Blend test
+		GLint newSource;
+		glGetIntegerv(GL_BLEND_SRC, &newSource);
+		GLint newDest;
+		glGetIntegerv(GL_BLEND_DST, &newDest);
+	    if ((source != newSource) || (dest != newDest))
+	    {
+	    	glBlendFunc(source, dest);
+	    }
 
 		// Texturing
 		if (textureIsEnable != glIsEnabled(GL_TEXTURE_2D))
 		{
 			if (textureIsEnable) glEnable(GL_TEXTURE_2D);
 			else glDisable(GL_TEXTURE_2D);
+		}
+
+		// Depth testing
+		if (depthTestIsEnable != glIsEnabled(GL_DEPTH_TEST))
+		{
+			if (depthTestIsEnable) glEnable(GL_DEPTH_TEST);
+			else glDisable(GL_DEPTH_TEST);
+		}
+		// Depth writable
+		GLboolean newDepthIsWritable;
+		glGetBooleanv(GL_DEPTH_WRITEMASK, &newDepthIsWritable);
+
+		if (depthIsWritable != newDepthIsWritable)
+		{
+			if (depthIsWritable) glDepthMask(GL_TRUE);
+			else glDepthMask(GL_FALSE);
 		}
 
 	}
@@ -792,38 +828,4 @@ void GLC_3DViewCollection::glDraw(GLC_uint groupId, glc::RenderFlag renderFlag)
 	    	GLC_Shader::unuse();
 	    }
 	}
-
-	// Restore OpenGL state
-	// Blending
-	if (blendIsEnable != glIsEnabled(GL_BLEND))
-	{
-		if (blendIsEnable) glEnable(GL_BLEND);
-		else glDisable(GL_BLEND);
-	}
-	// Blend test
-	GLint newSource;
-	glGetIntegerv(GL_BLEND_SRC, &newSource);
-	GLint newDest;
-	glGetIntegerv(GL_BLEND_DST, &newDest);
-    if ((source != newSource) || (dest != newDest))
-    {
-    	glBlendFunc(source, dest);
-    }
-
-	// Depth testing
-	if (depthTestIsEnable != glIsEnabled(GL_DEPTH_TEST))
-	{
-		if (depthTestIsEnable) glEnable(GL_DEPTH_TEST);
-		else glDisable(GL_DEPTH_TEST);
-	}
-	// Depth writable
-	GLboolean newDepthIsWritable;
-	glGetBooleanv(GL_DEPTH_WRITEMASK, &newDepthIsWritable);
-
-	if (depthIsWritable != newDepthIsWritable)
-	{
-		if (depthIsWritable) glDepthMask(GL_TRUE);
-		else glDepthMask(GL_FALSE);
-	}
-
 }
