@@ -338,7 +338,17 @@ void GLC_Light::addNewLight()
 			m_ContextToFreeLightSet.insert(m_pContext, QSet<GLenum>());
 			initForThisContext();
 		}
-		m_LightID= *(m_ContextToFreeLightSet[m_pContext].constBegin());
+
+		// Some OpenGL driver support only Light0 ???
+		if (m_ContextToFreeLightSet.value(m_pContext).size() == m_MaxLight)
+		{
+			m_LightID= GL_LIGHT0;
+		}
+		else
+		{
+			m_LightID= *(m_ContextToFreeLightSet[m_pContext].constBegin());
+		}
+
 		m_ContextToFreeLightSet[m_pContext].remove(m_LightID);
 	}
 }
