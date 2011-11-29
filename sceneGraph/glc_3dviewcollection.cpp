@@ -615,125 +615,38 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 {
 	if (!isEmpty() && m_IsViewable)
 	{
-		const bool polygonOffsetIsEnable= glIsEnabled(GL_POLYGON_OFFSET_FILL);
-
-		const bool blendIsEnable= glIsEnabled(GL_BLEND);
-		GLint source;
-		glGetIntegerv(GL_BLEND_SRC, &source);
-		GLint dest;
-		glGetIntegerv(GL_BLEND_DST, &dest);
-
-		const bool lightningIsEnable= glIsEnabled(GL_LIGHTING);
-		const bool textureIsEnable= glIsEnabled(GL_TEXTURE_2D);
-		GLfloat factor;
-		glGetFloatv(GL_POLYGON_OFFSET_FACTOR, &factor);
-		GLfloat units;
-		glGetFloatv(GL_POLYGON_OFFSET_UNITS, &units);
-
-
-		const bool depthTestIsEnable= glIsEnabled(GL_DEPTH_TEST);
-		GLboolean depthIsWritable;
-		glGetBooleanv(GL_DEPTH_WRITEMASK, &depthIsWritable);
-
 		if (renderFlag == glc::WireRenderFlag)
 		{
-	        if (!polygonOffsetIsEnable) glEnable(GL_POLYGON_OFFSET_FILL);
-	        if ((factor != 1.0f) || (units != 1.0f))
-	        {
-	        	 glPolygonOffset (1.0f, 1.0f);
-	        }
+	        glEnable(GL_POLYGON_OFFSET_FILL);
+	        glPolygonOffset (1.0, 1.0);
 		}
 		if (GLC_State::isInSelectionMode())
 		{
-			if (blendIsEnable) glDisable(GL_BLEND);
-			if (lightningIsEnable) glDisable(GL_LIGHTING);
-			if (textureIsEnable) glDisable(GL_TEXTURE_2D);
+			glDisable(GL_BLEND);
+			glDisable(GL_LIGHTING);
+			glDisable(GL_TEXTURE_2D);
 		}
 		else
 		{
-			if (!lightningIsEnable) glEnable(GL_LIGHTING);
+			glEnable(GL_LIGHTING);
 		}
 		glDraw(groupId, renderFlag);
 
-		// Restore OpenGL state
-		// Polygon offset
-		if (polygonOffsetIsEnable != glIsEnabled(GL_POLYGON_OFFSET_FILL))
+		if (renderFlag == glc::WireRenderFlag)
 		{
-			if (polygonOffsetIsEnable) glEnable(GL_POLYGON_OFFSET_FILL);
-			else glDisable(GL_POLYGON_OFFSET_FILL);
+	        glDisable(GL_POLYGON_OFFSET_FILL);
 		}
-
-		// Offset values
-		GLfloat newFactor;
-		glGetFloatv(GL_POLYGON_OFFSET_FACTOR, &newFactor);
-		GLfloat newUnits;
-		glGetFloatv(GL_POLYGON_OFFSET_UNITS, &newUnits);
-        if ((factor != newFactor) || (units != newUnits))
-        {
-        	 glPolygonOffset (factor, units);
-        }
-
-		// Blending
-		if (blendIsEnable != glIsEnabled(GL_BLEND))
-		{
-			if (blendIsEnable) glEnable(GL_BLEND);
-			else glDisable(GL_BLEND);
-		}
-
-		// Lighting
-		if (lightningIsEnable != glIsEnabled(GL_LIGHTING))
-		{
-			if (lightningIsEnable) glEnable(GL_LIGHTING);
-			else glDisable(GL_LIGHTING);
-		}
-		// Blend test
-		GLint newSource;
-		glGetIntegerv(GL_BLEND_SRC, &newSource);
-		GLint newDest;
-		glGetIntegerv(GL_BLEND_DST, &newDest);
-	    if ((source != newSource) || (dest != newDest))
-	    {
-	    	glBlendFunc(source, dest);
-	    }
-
-		// Texturing
-		if (textureIsEnable != glIsEnabled(GL_TEXTURE_2D))
-		{
-			if (textureIsEnable) glEnable(GL_TEXTURE_2D);
-			else glDisable(GL_TEXTURE_2D);
-		}
-
-		// Depth testing
-		if (depthTestIsEnable != glIsEnabled(GL_DEPTH_TEST))
-		{
-			if (depthTestIsEnable) glEnable(GL_DEPTH_TEST);
-			else glDisable(GL_DEPTH_TEST);
-		}
-		// Depth writable
-		GLboolean newDepthIsWritable;
-		glGetBooleanv(GL_DEPTH_WRITEMASK, &newDepthIsWritable);
-
-		if (depthIsWritable != newDepthIsWritable)
-		{
-			if (depthIsWritable) glDepthMask(GL_TRUE);
-			else glDepthMask(GL_FALSE);
-		}
-
 	}
 }
 void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 {
 	if (!isEmpty() && m_IsViewable)
 	{
-		const bool blendIsEnable= glIsEnabled(GL_BLEND);
-		const bool lightningIsEnable= glIsEnabled(GL_LIGHTING);
-		const bool textureIsEnable= glIsEnabled(GL_TEXTURE_2D);
-
 		if (GLC_State::isInSelectionMode())
 		{
-			if (blendIsEnable) glDisable(GL_BLEND);
-			if (lightningIsEnable) glDisable(GL_LIGHTING);
-			if (textureIsEnable) glDisable(GL_TEXTURE_2D);
+			glDisable(GL_BLEND);
+			glDisable(GL_LIGHTING);
+			glDisable(GL_TEXTURE_2D);
 		}
 
 		HashList::iterator iEntry= m_ShadedPointerViewInstanceHash.begin();
@@ -742,62 +655,26 @@ void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 	    	glDraw(iEntry.key(), renderFlag);
 	    	++iEntry;
 	    }
-
-		// Blending
-		if (blendIsEnable != glIsEnabled(GL_BLEND))
-		{
-			if (blendIsEnable) glEnable(GL_BLEND);
-			else glDisable(GL_BLEND);
-		}
-
-		// Lighting
-		if (lightningIsEnable != glIsEnabled(GL_LIGHTING))
-		{
-			if (lightningIsEnable) glEnable(GL_LIGHTING);
-			else glDisable(GL_LIGHTING);
-		}
-
-		// Texturing
-		if (textureIsEnable != glIsEnabled(GL_TEXTURE_2D))
-		{
-			if (textureIsEnable) glEnable(GL_TEXTURE_2D);
-			else glDisable(GL_TEXTURE_2D);
-		}
-
 	}
 }
 
 void GLC_3DViewCollection::glDraw(GLC_uint groupId, glc::RenderFlag renderFlag)
 {
-	const bool blendIsEnable= glIsEnabled(GL_BLEND);
-	const bool depthTestIsEnable= glIsEnabled(GL_DEPTH_TEST);
-	GLboolean depthIsWritable;
-	glGetBooleanv(GL_DEPTH_WRITEMASK, &depthIsWritable);
-
-	GLint source;
-	glGetIntegerv(GL_BLEND_SRC, &source);
-	GLint dest;
-	glGetIntegerv(GL_BLEND_DST, &dest);
-
 	// Set render Mode and OpenGL state
 	if (!GLC_State::isInSelectionMode() && (groupId == 0))
 	{
 		if (renderFlag == glc::TransparentRenderFlag)
 		{
-	        if (!blendIsEnable) glEnable(GL_BLEND);
-	        if ((source != GL_SRC_ALPHA) || (dest != GL_ONE_MINUS_SRC_ALPHA))
-	        {
-	        	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	        }
-	        if (!depthTestIsEnable) glEnable(GL_DEPTH_TEST);
-	        if (depthIsWritable) glDepthMask(GL_FALSE);
+	        glEnable(GL_BLEND);
+	        glDepthMask(GL_FALSE);
+	        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		}
 		else
 		{
-		    if (blendIsEnable) glDisable(GL_BLEND);
-		    if (!depthIsWritable) glDepthMask(GL_TRUE);
-		    if (!depthTestIsEnable) glEnable(GL_DEPTH_TEST);
+		    glDisable(GL_BLEND);
+		    glDepthMask(GL_TRUE);
+		    glEnable(GL_DEPTH_TEST);
 		}
 	}
 
@@ -827,5 +704,13 @@ void GLC_3DViewCollection::glDraw(GLC_uint groupId, glc::RenderFlag renderFlag)
 	    	glDrawInstancesOf(pNodeHash, renderFlag);
 	    	GLC_Shader::unuse();
 	    }
+	}
+
+	// Restore OpenGL state
+	if (renderFlag && !GLC_State::isInSelectionMode() && (groupId == 0))
+	{
+		glDisable(GL_BLEND);
+		glDepthMask(GL_TRUE);
+		glEnable(GL_DEPTH_TEST);
 	}
 }
