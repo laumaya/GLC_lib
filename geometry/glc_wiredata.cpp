@@ -23,12 +23,14 @@
 //! \file glc_wiredata.cpp Implementation for the GLC_WireData class.
 
 #include "glc_wiredata.h"
+#include "glc_bsrep.h"
 #include "../glc_ext.h"
 #include "../glc_state.h"
 #include "../glc_exception.h"
 
 // Class chunk id
-quint32 GLC_WireData::m_ChunkId= 0xA706;
+// Old chunkId = 0xA706
+quint32 GLC_WireData::m_ChunkId= 0xA711;
 
 
 GLC_WireData::GLC_WireData()
@@ -535,7 +537,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_WireData &wireData)
 {
 	quint32 chunckId;
 	stream >> chunckId;
-	Q_ASSERT(chunckId == GLC_WireData::m_ChunkId);
+	Q_ASSERT((chunckId == GLC_WireData::m_ChunkId) || chunckId == 0xA706);
 
 	wireData.clear();
 	stream >> wireData.m_NextPrimitiveLocalId;
@@ -547,9 +549,12 @@ QDataStream &operator>>(QDataStream &stream, GLC_WireData &wireData)
 	stream >> wireData.m_VerticeGroupId;
 	stream >> wireData.m_VerticeGroupCount;
 
-	// New version Data
-	stream >> wireData.m_Colors;
-	stream >> wireData.m_ColorSize;
+	if (chunckId == GLC_WireData::m_ChunkId)
+	{
+		// New version Data
+		stream >> wireData.m_Colors;
+		stream >> wireData.m_ColorSize;
+	}
 
 	return stream;
 }
