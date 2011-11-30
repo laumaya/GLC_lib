@@ -152,7 +152,7 @@ void GLC_RepFlyMover::createRepresentation()
 	GLC_Circle* pCircle= new GLC_Circle(m_Radius);
 	pCircle->setWireColor(GLC_RepMover::m_MainColor);
 	pCircle->setLineWidth(GLC_RepMover::m_Thickness);
-	m_CenterCircle.setGeometry(pCircle);
+	m_CenterCircle.addGeometry(pCircle);
 
 	GLC_Polylines* pPolylines= new GLC_Polylines();
 	GLfloatVector  points;
@@ -167,7 +167,7 @@ void GLC_RepFlyMover::createRepresentation()
 	pPolylines->addPolyline(points);
 	pPolylines->setWireColor(GLC_RepMover::m_MainColor);
 	pPolylines->setLineWidth(GLC_RepMover::m_Thickness);
-	m_Hud.setGeometry(pPolylines);
+	m_Hud.addGeometry(pPolylines);
 
 	// Plane creation
 	pPolylines= new GLC_Polylines();
@@ -181,5 +181,5 @@ void GLC_RepFlyMover::createRepresentation()
 	pPolylines->addPolyline(points);
 	pPolylines->setWireColor(GLC_RepMover::m_MainColor);
 	pPolylines->setLineWidth(GLC_RepMover::m_Thickness);
-	m_Plane.setGeometry(pPolylines);
+	m_Plane.addGeometry(pPolylines);
 }
