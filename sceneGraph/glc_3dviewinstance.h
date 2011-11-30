@@ -197,10 +197,7 @@ public:
 public:
 
 	//! Set the instance Geometry
-	/*!
-	 *  instance must be null
-	 */
-	bool setGeometry(GLC_Geometry* pGeom);
+	bool addGeometry(GLC_Geometry* pGeom);
 
 	//! Remove empty geometries
 	inline void removeEmptyGeometry()

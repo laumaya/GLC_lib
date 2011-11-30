@@ -237,7 +237,7 @@ GLC_3DViewInstance GLC_3DViewInstance::instanciate()
 
 
 // Set the instance Geometry
-bool GLC_3DViewInstance::setGeometry(GLC_Geometry* pGeom)
+bool GLC_3DViewInstance::addGeometry(GLC_Geometry* pGeom)
 {
 	if (m_3DRep.contains(pGeom))
 	{
