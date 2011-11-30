@@ -155,13 +155,8 @@ void GLC_RepTrackBallMover::glDraw()
 	computeRadius();
 	const double aspectRatio= static_cast<double>(m_pViewport->viewHSize())/static_cast<double>(m_pViewport->viewVSize());
 
-	// Save current state
-	GLboolean depthTest, blend;
-	glGetBooleanv(GL_DEPTH_TEST, &depthTest);
-	glGetBooleanv(GL_BLEND, &blend);
-
 	// orbit circle must be shown
-	if (depthTest) glDisable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -171,7 +166,7 @@ void GLC_RepTrackBallMover::glDraw()
 	glPushMatrix();
 	glLoadIdentity();
 
-	if (blend) glDisable(GL_BLEND);
+	glDisable(GL_BLEND);
 	m_RenderProperties.setRenderingFlag(glc::WireRenderFlag);
 	// Display arcs
 	m_Arc1.render(glc::WireRenderFlag);
@@ -192,9 +187,6 @@ void GLC_RepTrackBallMover::glDraw()
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
-
-	if (depthTest) glEnable(GL_DEPTH_TEST);
-	if (!blend)  glEnable(GL_BLEND);
 
 }
 
