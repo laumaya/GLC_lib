@@ -194,8 +194,6 @@ void GLC_Geometry::updateTransparentMaterialNumber()
 // Add material to mesh
 void GLC_Geometry::addMaterial(GLC_Material* pMaterial)
 {
-	Q_ASSERT(!m_IsWire);
-
 	if (pMaterial != NULL)
 	{
 		const GLC_uint materialID= pMaterial->id();
