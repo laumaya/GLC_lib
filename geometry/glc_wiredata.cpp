@@ -202,10 +202,26 @@ GLC_BoundingBox& GLC_WireData::boundingBox()
 		else
 		{
 			const int max= m_Positions.size();
-			for (int i= 0; i < max; i= i + 3)
+			if (max == 3) // Only One point
 			{
-				GLC_Point3d point(m_Positions[i], m_Positions[i + 1], m_Positions[i + 2]);
-				m_pBoundingBox->combine(point);
+				const double delta= 1e-2;
+				GLC_Point3d lower(m_Positions[0] - delta,
+						m_Positions[1] - delta,
+						m_Positions[2] - delta);
+				GLC_Point3d upper(m_Positions[0] + delta,
+						m_Positions[1] + delta,
+						m_Positions[2] + delta);
+				m_pBoundingBox->combine(lower);
+				m_pBoundingBox->combine(upper);
+
+			}
+			else
+			{
+				for (int i= 0; i < max; i= i + 3)
+				{
+					GLC_Point3d point(m_Positions[i], m_Positions[i + 1], m_Positions[i + 2]);
+					m_pBoundingBox->combine(point);
+				}
 			}
 		}
 
