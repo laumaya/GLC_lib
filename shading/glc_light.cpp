@@ -224,14 +224,9 @@ void GLC_Light::glExecute()
 		addNewLight();
 	}
 
-	if (!glIsEnabled(GL_LIGHTING))
-	{
-		glEnable(GL_LIGHTING);
-	}
-	if (!glIsEnabled(m_LightID))
-	{
-		glEnable(m_LightID);
-	}
+	glEnable(GL_LIGHTING);
+	glEnable(m_LightID);
+
 	if (m_pContext != QGLContext::currentContext())
 	{
 		Q_ASSERT(QGLContext::areSharing(m_pContext, QGLContext::currentContext()));
