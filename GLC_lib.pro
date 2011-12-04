@@ -22,6 +22,8 @@ DEPENDPATH += .
 INCLUDEPATH += .
 INCLUDEPATH += ./3rdparty/zlib
 
+RESOURCES += glc_lib.qrc
+
 # Input					
 HEADERS_QUAZIP +=	3rdparty/quazip/crypt.h \
 					3rdparty/quazip/ioapi.h \
@@ -158,7 +160,10 @@ HEADERS_GLC += glc_global.h \
            glc_log.h \
            glc_errorlog.h \
            glc_tracelog.h \
-           glc_renderstate.h
+           glc_context.h \
+           glc_contextmanager.h \
+           glc_contextshareddata.h \
+           glc_uniformshaderdata.h
            
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_cuttingplane.h \
@@ -308,7 +313,10 @@ SOURCES +=	glc_global.cpp \
 			glc_log.cpp \
 			glc_errorlog.cpp \
 			glc_tracelog.cpp \
-			glc_renderstate.cpp
+			glc_context.cpp \
+			glc_contextmanager.cpp \
+			glc_contextshareddata.cpp \
+			glc_uniformshaderdata.cpp
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_cuttingplane.cpp \
@@ -420,7 +428,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_SelectionSet \
     		   include/GLC_UserInput \
     		   include/GLC_TsrMover \
-    		   include/GLC_Glu
+    		   include/GLC_Glu \
+    		   include/GLC_Context \
+    		   include/GLC_ContextManager
 
     			   
 # Linux and macx install configuration
