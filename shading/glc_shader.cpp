@@ -27,6 +27,7 @@
 #include <QMutexLocker>
 #include "../glc_exception.h"
 #include "../glc_state.h"
+#include "../glc_context.h"
 
 // Static member initialization
 QStack<GLC_uint> GLC_Shader::m_ShadingGroupStack;
@@ -39,6 +40,13 @@ GLC_Shader::GLC_Shader()
 , m_ProgramShader()
 , m_ProgramShaderId(glc::GLC_GenShaderGroupID())
 , m_Name("Empty Shader")
+, m_PositionAttributeId(-1)
+, m_TextcoordAttributeId(-1)
+, m_ColorAttributeId(-1)
+, m_NormalAttributeId(-1)
+, m_ModelViewLocationId(-1)
+, m_MvpLocationId(-1)
+, m_InvModelViewLocationId(-1)
 {
 	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 }
@@ -49,6 +57,13 @@ GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 , m_ProgramShader()
 , m_ProgramShaderId(glc::GLC_GenShaderGroupID())
 , m_Name("Empty Shader")
+, m_PositionAttributeId(-1)
+, m_TextcoordAttributeId(-1)
+, m_ColorAttributeId(-1)
+, m_NormalAttributeId(-1)
+, m_ModelViewLocationId(-1)
+, m_MvpLocationId(-1)
+, m_InvModelViewLocationId(-1)
 {
 	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 	setVertexAndFragmentShader(vertex, fragment);
@@ -60,6 +75,14 @@ GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 , m_ProgramShader()
 , m_ProgramShaderId(glc::GLC_GenShaderGroupID())
 , m_Name(shader.m_Name)
+, m_PositionAttributeId(-1)
+, m_TextcoordAttributeId(-1)
+, m_ColorAttributeId(-1)
+, m_NormalAttributeId(-1)
+, m_ModelViewLocationId(-1)
+, m_MvpLocationId(-1)
+, m_InvModelViewLocationId(-1)
+
 {
 	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 
@@ -130,6 +153,7 @@ void GLC_Shader::use()
 	{
 		m_CurrentShadingGroupId= m_ProgramShaderId;
 		m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.bind();
+		GLC_Context::current()->updateUniformVariables();
 	}
 
 }
@@ -147,7 +171,9 @@ bool GLC_Shader::use(GLC_uint shaderId)
 		{
 			m_CurrentShadingGroupId= shaderId;
 			m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.bind();
+			GLC_Context::current()->updateUniformVariables();
 		}
+
 		return true;
 	}
 	else
@@ -186,6 +212,17 @@ void GLC_Shader::createAndCompileProgrammShader()
 		QString message("GLC_Shader::setVertexAndFragmentShader Failed to link program ");
 		GLC_Exception exception(message);
 		throw(exception);
+	}
+	else
+	{
+		m_PositionAttributeId= m_ProgramShader.attributeLocation("a_position");
+		m_TextcoordAttributeId= m_ProgramShader.attributeLocation("a_textcoord0");
+		m_ColorAttributeId= m_ProgramShader.attributeLocation("a_color");
+		m_NormalAttributeId= m_ProgramShader.attributeLocation("a_normal");
+
+		m_ModelViewLocationId= m_ProgramShader.uniformLocation("modelview_matrix");
+		m_MvpLocationId= m_ProgramShader.uniformLocation("mvp_matrix");
+		m_InvModelViewLocationId= m_ProgramShader.uniformLocation("inv_modelview_matrix");
 	}
 }
 

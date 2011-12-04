@@ -89,6 +89,22 @@ public:
 	inline QGLShaderProgram* programShaderHandle()
 	{return &m_ProgramShader;}
 
+	//! Return the position attribute id
+	inline int positionAttributeId() const
+	{return m_PositionAttributeId;}
+
+	//! Return the texture coordinate attribute id
+	inline int textureAttributeId() const
+	{return m_TextcoordAttributeId;}
+
+	//! Return the color attribute id
+	inline int colorAttributeId() const
+	{return m_ColorAttributeId;}
+
+	//! Return the normal attribute id
+	inline int normalAttributeId() const
+	{return m_NormalAttributeId;}
+
 	//! Return the number of shader
 	static int shaderCount();
 
@@ -130,6 +146,17 @@ public:
 	inline void setName(const QString& name)
 	{m_Name= name;}
 
+	//! Return the modelView location id
+	inline int modelViewLocationId() const
+	{return m_ModelViewLocationId;}
+
+	//! Return the modelView Projection matrix id
+	inline int mvpLocationId() const
+	{return m_MvpLocationId;}
+
+	//! Return the inverse modelView location id
+	inline int invModelViewLocationId() const
+	{return m_InvModelViewLocationId;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -183,6 +210,27 @@ private:
 
 	//! The Shader's name
 	QString m_Name;
+
+	//! The position attribute id
+	int m_PositionAttributeId;
+
+	//! The Texture coordinate attribute id
+	int m_TextcoordAttributeId;
+
+	//! The color attribute id
+	int m_ColorAttributeId;
+
+	//! The Normal attribute id
+	int m_NormalAttributeId;
+
+	//! The modelView location matrix id
+	int m_ModelViewLocationId;
+
+	//! The modelView Projection matrix id
+	int m_MvpLocationId;
+
+	//! The inverse modelView location id
+	int m_InvModelViewLocationId;
 
 };
 
