@@ -53,6 +53,7 @@
  * Silicon Graphics, Inc.
  */
 
+#include "../glc_context.h"
 #include "glc_glu.h"
 
 /*
@@ -76,7 +77,7 @@ static void __gluMakeIdentityf(GLfloat m[16])
 
 void glc::gluOrtho2D(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top)
 {
-    glOrtho(left, right, bottom, top, -1, 1);
+    GLC_Context::current()->glcOrtho(left, right, bottom, top, -1, 1);
 }
 
 #define __glPi 3.14159265358979323846
@@ -101,7 +102,7 @@ void glc::gluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdoubl
     m[2][3] = -1;
     m[3][2] = -2 * zNear * zFar / deltaZ;
     m[3][3] = 0;
-    glMultMatrixd(&m[0][0]);
+    GLC_Context::current()->glcMultMatrix(GLC_Matrix4x4(&m[0][0]));
 }
 
 static void normalize(float v[3])
@@ -160,8 +161,10 @@ void glc::gluLookAt(GLdouble eyex, GLdouble eyey, GLdouble eyez, GLdouble center
     m[1][2] = -forward[1];
     m[2][2] = -forward[2];
 
-    glMultMatrixf(&m[0][0]);
-    glTranslated(-eyex, -eyey, -eyez);
+    GLC_Matrix4x4 translate;
+    translate.setMatTranslate(-eyex, -eyey, -eyez);
+    GLC_Matrix4x4 result= GLC_Matrix4x4(&m[0][0]) * translate;
+    GLC_Context::current()->glcMultMatrix(result);
 }
 
 static void __gluMultMatrixVecd(const GLdouble matrix[16], const GLdouble in[4],
@@ -367,7 +370,10 @@ void glc::gluPickMatrix(GLdouble x, GLdouble y, GLdouble deltax, GLdouble deltay
     }
 
     /* Translate and scale the picked region to the entire window */
-    glTranslatef((viewport[2] - 2 * (x - viewport[0])) / deltax,
-	    (viewport[3] - 2 * (y - viewport[1])) / deltay, 0);
-    glScalef(viewport[2] / deltax, viewport[3] / deltay, 1.0);
+    GLC_Matrix4x4 translate;
+    translate.setMatTranslate((viewport[2] - 2 * (x - viewport[0])) / deltax, (viewport[3] - 2 * (y - viewport[1])) / deltay, 0.0);
+
+    GLC_Matrix4x4 scaling;
+    scaling.setMatScaling(viewport[2] / deltax, viewport[3] / deltay, 0.0);
+    GLC_Context::current()->glcMultMatrix(translate * scaling);
 }
