@@ -162,9 +162,6 @@ void GLC_Viewport::initGl()
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glPolygonOffset (1.0f, 1.0f);
-
-	// Init GLC_State
-	GLC_State::init();
 }
 
 void GLC_Viewport::glExecuteCam(void)
@@ -175,8 +172,8 @@ void GLC_Viewport::glExecuteCam(void)
 
 void GLC_Viewport::updateProjectionMat(void)
 {
-	glMatrixMode(GL_PROJECTION);						// select The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
+	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);						// select The Projection Matrix
+	GLC_Context::current()->glcLoadIdentity();									// Reset The Projection Matrix
 
 	if (m_UseParallelProjection)
 	{
@@ -187,7 +184,7 @@ void GLC_Viewport::updateProjectionMat(void)
 		const double right=  -left;
 		const double bottom= - height * 0.5;
 		const double top= -bottom;
-		glOrtho(left, right, bottom, top, m_dDistanceMini, m_DistanceMax);
+		GLC_Context::current()->glcOrtho(left, right, bottom, top, m_dDistanceMini, m_DistanceMax);
 	}
 	else
 	{
@@ -195,13 +192,13 @@ void GLC_Viewport::updateProjectionMat(void)
 	    const double yMin= -yMax;
 	    const double xMax= yMax * m_AspectRatio;
 	    const double xMin= -xMax;
-	    glFrustum(xMin, xMax, yMin, yMax, m_dDistanceMini, m_DistanceMax);
+	    GLC_Context::current()->glcFrustum(xMin, xMax, yMin, yMax, m_dDistanceMini, m_DistanceMax);
 	}
 
 	// Save the projection matrix
-	glGetDoublev(GL_PROJECTION_MATRIX, m_ProjectionMatrix.setData());
+	m_ProjectionMatrix= GLC_Context::current()->projectionMatrix();
 
-	glMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
+	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
 }
 
 void GLC_Viewport::forceAspectRatio(double ratio)
@@ -373,7 +370,7 @@ GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y)
 	m_pQGLWidget->qglClearColor(Qt::black);
 	GLC_State::setSelectionMode(true);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+	GLC_Context::current()->glcLoadIdentity();
 
 	glExecuteCam();
 
@@ -402,7 +399,7 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance
 	m_pQGLWidget->qglClearColor(Qt::black);
 	GLC_State::setSelectionMode(true);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+	GLC_Context::current()->glcLoadIdentity();
 
 	glExecuteCam();
 

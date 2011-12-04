@@ -25,6 +25,7 @@
 #include "glc_viewport.h"
 #include "../glc_openglexception.h"
 #include "../glc_factory.h"
+#include "../glc_context.h"
 #include <QtDebug>
 
 //////////////////////////////////////////////////////////////////////
@@ -58,11 +59,11 @@ GLC_ImagePlane::~GLC_ImagePlane()
 
 void GLC_ImagePlane::render()
 {
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glOrtho(-1,1,-1,1,-1,1);
-	glMatrixMode(GL_MODELVIEW);
+	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
+	GLC_Context::current()->glcPushMatrix();
+	GLC_Context::current()->glcLoadIdentity();
+	GLC_Context::current()->glcOrtho(-1,1,-1,1,-1,1);
+	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
 
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
@@ -73,7 +74,7 @@ void GLC_ImagePlane::render()
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glEnable(GL_DEPTH_TEST);
 
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
+	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
+	GLC_Context::current()->glcPopMatrix();
+	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
 }

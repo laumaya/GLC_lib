@@ -24,6 +24,7 @@
 //! \file glc_camera.cpp Implementation of the GLC_Camera class.
 
 #include "glc_camera.h"
+#include "../glc_context.h"
 
 #include <QtDebug>
 
@@ -431,7 +432,7 @@ GLC_Camera GLC_Camera::isoView() const
 //////////////////////////////////////////////////////////////////////
 void GLC_Camera::glExecute()
 {
-	glMultMatrixd(modelViewMatrix().getData());
+	GLC_Context::current()->glcMultMatrix(modelViewMatrix());
 }
 
 //////////////////////////////////////////////////////////////////////

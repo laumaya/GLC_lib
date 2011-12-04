@@ -25,6 +25,7 @@
 #include "glc_reptrackballmover.h"
 #include "glc_viewport.h"
 #include "../glc_factory.h"
+#include "../glc_context.h"
 #include <QGLContext>
 
 using namespace glc;
@@ -158,13 +159,13 @@ void GLC_RepTrackBallMover::glDraw()
 	// orbit circle must be shown
 	glDisable(GL_DEPTH_TEST);
 
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glOrtho(aspectRatio * -1.0 ,aspectRatio * 1.0 ,-1.0 ,1.0 ,-1.0 ,1.0);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
+	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
+	GLC_Context::current()->glcPushMatrix();
+	GLC_Context::current()->glcLoadIdentity();
+	GLC_Context::current()->glcOrtho(aspectRatio * -1.0 ,aspectRatio * 1.0 ,-1.0 ,1.0 ,-1.0 ,1.0);
+	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+	GLC_Context::current()->glcPushMatrix();
+	GLC_Context::current()->glcLoadIdentity();
 
 	glDisable(GL_BLEND);
 	m_RenderProperties.setRenderingFlag(glc::WireRenderFlag);
@@ -183,10 +184,10 @@ void GLC_RepTrackBallMover::glDraw()
 	// Display base class (Main circle)
 	m_MainCircle.render(m_RenderProperties);
 
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
+	GLC_Context::current()->glcPopMatrix();
+	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
+	GLC_Context::current()->glcPopMatrix();
+	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
 
 }
 

@@ -25,6 +25,8 @@
 #include "glc_repflymover.h"
 #include "glc_viewport.h"
 #include "../geometry/glc_polylines.h"
+#include "../glc_context.h"
+
 #include <QFontMetrics>
 
 GLC_RepFlyMover::GLC_RepFlyMover(GLC_Viewport* pViewport)
@@ -110,13 +112,13 @@ void GLC_RepFlyMover::glDraw()
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glOrtho(hRatio * -1.0 ,hRatio * 1.0 ,vRatio * -1.0 ,vRatio * 1.0 ,-1.0 ,1.0);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
+	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
+	GLC_Context::current()->glcPushMatrix();
+	GLC_Context::current()->glcLoadIdentity();
+	GLC_Context::current()->glcOrtho(hRatio * -1.0 ,hRatio * 1.0 ,vRatio * -1.0 ,vRatio * 1.0 ,-1.0 ,1.0);
+	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+	GLC_Context::current()->glcPushMatrix();
+	GLC_Context::current()->glcLoadIdentity();
 
 	m_CenterCircle.render(glc::WireRenderFlag);
 	m_Hud.render(glc::WireRenderFlag);
@@ -138,10 +140,10 @@ void GLC_RepFlyMover::glDraw()
 	double posy= 2.0 * static_cast<double>(txtHeight) / calibre;
 	m_pViewport->qGLWidgetHandle()->renderText(- m_HudOffset.getX(), m_HudOffset.getY() - posy, 0.0, velocity, myFont);
 
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
+	GLC_Context::current()->glcPopMatrix();
+	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
+	GLC_Context::current()->glcPopMatrix();
+	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
 
 	glEnable(GL_DEPTH_TEST);
 }
