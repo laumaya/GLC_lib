@@ -51,9 +51,6 @@ GLC_OpenGlException::GLC_OpenGlException(const QString& message, GLenum glError)
 		case GL_OUT_OF_MEMORY :
 			m_GlErrorDescription= "Not enough memmory left to execute command";
 			break;
-		case GL_TABLE_TOO_LARGE :
-			m_GlErrorDescription= "The specified table exceeds the implementation's maximum supported table size";
-			break;
 		default :
 			m_GlErrorDescription= "VERY BAD : UNKNOWN ERROR";
 			break;
