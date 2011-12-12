@@ -27,6 +27,7 @@
 
 #include "glc_light.h"
 #include "../glc_openglexception.h"
+#include "../glc_context.h"
 
 GLint GLC_Light::m_MaxLight= 8;
 QHash<const QGLContext*, QSet<GLenum> > GLC_Light::m_ContextToFreeLightSet;
@@ -224,7 +225,7 @@ void GLC_Light::glExecute()
 		addNewLight();
 	}
 
-	glEnable(GL_LIGHTING);
+	GLC_Context::current()->glcEnableLighting(true);
 	glEnable(m_LightID);
 
 	if (m_pContext != QGLContext::currentContext())
