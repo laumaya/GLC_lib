@@ -623,12 +623,12 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 		if (GLC_State::isInSelectionMode())
 		{
 			glDisable(GL_BLEND);
-			glDisable(GL_LIGHTING);
+			GLC_Context::current()->glcEnableLighting(false);
 			glDisable(GL_TEXTURE_2D);
 		}
 		else
 		{
-			glEnable(GL_LIGHTING);
+			GLC_Context::current()->glcEnableLighting(true);
 		}
 		glDraw(groupId, renderFlag);
 
@@ -645,7 +645,7 @@ void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 		if (GLC_State::isInSelectionMode())
 		{
 			glDisable(GL_BLEND);
-			glDisable(GL_LIGHTING);
+			GLC_Context::current()->glcEnableLighting(false);
 			glDisable(GL_TEXTURE_2D);
 		}
 
