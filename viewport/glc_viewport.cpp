@@ -376,7 +376,7 @@ GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y)
 
 	// Draw the scene
 	glDisable(GL_BLEND);
-	glDisable(GL_LIGHTING);
+	GLC_Context::current()->glcEnableLighting(false);
 	glDisable(GL_TEXTURE_2D);
 
 	pInstance->renderForBodySelection();
@@ -405,7 +405,7 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance
 
 	// Draw the scene
 	glDisable(GL_BLEND);
-	glDisable(GL_LIGHTING);
+	GLC_Context::current()->glcEnableLighting(false);
 	glDisable(GL_TEXTURE_2D);
 
 	pInstance->renderForBodySelection();

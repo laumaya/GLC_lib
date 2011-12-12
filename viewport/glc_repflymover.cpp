@@ -109,7 +109,7 @@ void GLC_RepFlyMover::glDraw()
 	const double vRatio= static_cast<double>(m_pViewport->viewVSize()) / calibre;
 
 	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_LIGHTING);
+	GLC_Context::current()->glcEnableLighting(false);
 	glDisable(GL_DEPTH_TEST);
 
 	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
