@@ -47,7 +47,19 @@ GLC_Shader::GLC_Shader()
 , m_ModelViewLocationId(-1)
 , m_MvpLocationId(-1)
 , m_InvModelViewLocationId(-1)
+, m_EnableLightingId(-1)
+, m_LightsEnableStateId(-1)
+, m_LightsPositionId()
+, m_LightsAmbientColorId()
+, m_LightsDiffuseColorId()
+, m_LightsSpecularColorId()
+, m_LightsSpotDirectionId()
+, m_LightsAttenuationFactorsId()
+, m_LightsSpotExponentId()
+, m_LightsSpotCutoffAngleId()
+, m_LightsComputeDistanceAttenuationId()
 {
+	initLightsUniformId();
 	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 }
 
@@ -64,7 +76,19 @@ GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 , m_ModelViewLocationId(-1)
 , m_MvpLocationId(-1)
 , m_InvModelViewLocationId(-1)
+, m_EnableLightingId(-1)
+, m_LightsEnableStateId(-1)
+, m_LightsPositionId()
+, m_LightsAmbientColorId()
+, m_LightsDiffuseColorId()
+, m_LightsSpecularColorId()
+, m_LightsSpotDirectionId()
+, m_LightsAttenuationFactorsId()
+, m_LightsSpotExponentId()
+, m_LightsSpotCutoffAngleId()
+, m_LightsComputeDistanceAttenuationId()
 {
+	initLightsUniformId();
 	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 	setVertexAndFragmentShader(vertex, fragment);
 }
@@ -82,8 +106,19 @@ GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 , m_ModelViewLocationId(-1)
 , m_MvpLocationId(-1)
 , m_InvModelViewLocationId(-1)
-
+, m_EnableLightingId(-1)
+, m_LightsEnableStateId(-1)
+, m_LightsPositionId()
+, m_LightsAmbientColorId()
+, m_LightsDiffuseColorId()
+, m_LightsSpecularColorId()
+, m_LightsSpotDirectionId()
+, m_LightsAttenuationFactorsId()
+, m_LightsSpotExponentId()
+, m_LightsSpotCutoffAngleId()
+, m_LightsComputeDistanceAttenuationId()
 {
+	initLightsUniformId();
 	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 
 	if (shader.m_VertexShader.isCompiled())
@@ -204,6 +239,7 @@ void GLC_Shader::unuse()
 
 void GLC_Shader::createAndCompileProgrammShader()
 {
+	qDebug() << "GLC_Shader::createAndCompileProgrammShader()";
 	m_ProgramShader.addShader(&m_VertexShader);
 	m_ProgramShader.addShader(&m_FragmentShader);
 
@@ -216,13 +252,48 @@ void GLC_Shader::createAndCompileProgrammShader()
 	else
 	{
 		m_PositionAttributeId= m_ProgramShader.attributeLocation("a_position");
+		qDebug() << "m_PositionAttributeId " << m_PositionAttributeId;
 		m_TextcoordAttributeId= m_ProgramShader.attributeLocation("a_textcoord0");
+		qDebug() << "m_TextcoordAttributeId " << m_TextcoordAttributeId;
 		m_ColorAttributeId= m_ProgramShader.attributeLocation("a_color");
+		qDebug() << "m_ColorAttributeId " << m_ColorAttributeId;
 		m_NormalAttributeId= m_ProgramShader.attributeLocation("a_normal");
+		qDebug() << "m_NormalAttributeId " << m_NormalAttributeId;
 
 		m_ModelViewLocationId= m_ProgramShader.uniformLocation("modelview_matrix");
+		qDebug() << "m_ModelViewLocationId " << m_ModelViewLocationId;
 		m_MvpLocationId= m_ProgramShader.uniformLocation("mvp_matrix");
+		qDebug() << "m_MvpLocationId " << m_MvpLocationId;
 		m_InvModelViewLocationId= m_ProgramShader.uniformLocation("inv_modelview_matrix");
+		qDebug() << "m_InvModelViewLocationId " << m_InvModelViewLocationId;
+		m_EnableLightingId= m_ProgramShader.uniformLocation("enable_lighting");
+		qDebug() << "m_EnableLightingId " << m_EnableLightingId;
+		m_LightsEnableStateId= m_ProgramShader.uniformLocation("light_enable_state");
+		qDebug() << "m_LightsEnableStateId " << m_LightsEnableStateId;
+		const int size= GLC_Light::maxLightCount();
+		for (int i= (GL_LIGHT0); i < (size + GL_LIGHT0); ++i)
+		{
+			m_LightsPositionId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].position");
+			qDebug() << "Position id " << m_LightsPositionId.value(i);
+			m_LightsAmbientColorId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].ambient_color");
+			qDebug() << "m_LightsAmbientColorId " << m_LightsAmbientColorId.value(i);
+			m_LightsDiffuseColorId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].diffuse_color");
+			qDebug() << "m_LightsDiffuseColorId " << m_LightsDiffuseColorId.value(i);
+			m_LightsSpecularColorId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].specular_color");
+			qDebug() << "m_LightsSpecularColorId " << m_LightsSpecularColorId.value(i);
+			m_LightsSpotDirectionId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].spot_direction");
+			qDebug() << "m_LightsSpotDirectionId " << m_LightsSpotDirectionId.value(i);
+			m_LightsAttenuationFactorsId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].attenuation_factors");
+			qDebug() << "m_LightsAttenuationFactorsId " << m_LightsAttenuationFactorsId.value(i);
+			m_LightsSpotExponentId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].spot_exponent");
+			qDebug() << "m_LightsSpotExponentId " << m_LightsSpotExponentId.value(i);
+			m_LightsSpotCutoffAngleId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].spot_cutoff_angle");
+			qDebug() << "m_LightsSpotCutoffAngleId " << m_LightsSpotCutoffAngleId.value(i);
+			m_LightsComputeDistanceAttenuationId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].compute_distance_attenuation");
+			qDebug() << "m_LightsComputeDistanceAttenuationId " << m_LightsComputeDistanceAttenuationId.value(i);
+
+
+		}
 	}
 }
 
@@ -290,5 +361,31 @@ void GLC_Shader::replaceShader(const GLC_Shader& sourceShader)
 
 	m_ProgramShader.link();
 
+}
+
+void GLC_Shader::initLightsUniformId()
+{
+	m_LightsPositionId.clear();
+	m_LightsAmbientColorId.clear();
+	m_LightsDiffuseColorId.clear();
+	m_LightsSpecularColorId.clear();
+	m_LightsSpotDirectionId.clear();
+	m_LightsAttenuationFactorsId.clear();
+	m_LightsSpotExponentId.clear();
+	m_LightsSpotCutoffAngleId.clear();
+	m_LightsComputeDistanceAttenuationId.clear();
+
+	for (int i= 0; i < GLC_Light::maxLightCount(); ++i)
+	{
+		m_LightsPositionId.insert(GL_LIGHT0 + i, -1);
+		m_LightsAmbientColorId.insert(GL_LIGHT0 + i, -1);
+		m_LightsDiffuseColorId.insert(GL_LIGHT0 + i, -1);
+		m_LightsSpecularColorId.insert(GL_LIGHT0 + i, -1);
+		m_LightsSpotDirectionId.insert(GL_LIGHT0 + i, -1);
+		m_LightsAttenuationFactorsId.insert(GL_LIGHT0 + i, -1);
+		m_LightsSpotExponentId.insert(GL_LIGHT0 + i, -1);
+		m_LightsSpotCutoffAngleId.insert(GL_LIGHT0 + i, -1);
+		m_LightsComputeDistanceAttenuationId.insert(GL_LIGHT0 + i, -1);
+	}
 }
 
