@@ -119,6 +119,9 @@ public:
 	//! Multiply the current matrix by a perspective matrix
 	void glcFrustum(double left, double right, double bottom, double top, double nearVal, double farVal);
 
+	//! Enable lighting
+	void glcEnableLighting(bool enable);
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -178,6 +181,12 @@ private:
 
 	//! The current context
 	static GLC_Context* m_pCurrentContext;
+
+	//! Enable lighting state
+	bool m_LightingIsEnable;
+
+	//! Lights enable state
+	QHash<GLenum, bool> m_LightsEnableState;
 
 };
 

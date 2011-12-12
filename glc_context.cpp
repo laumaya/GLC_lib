@@ -35,6 +35,7 @@ GLC_Context::GLC_Context(const QGLFormat& format)
 , m_MatrixStackHash()
 , m_ContextSharedData()
 , m_UniformShaderData()
+, m_LightingIsEnable(false)
 {
 	qDebug() << "GLC_Context::GLC_Context";
 	GLC_ContextManager::instance()->addContext(this);
@@ -203,6 +204,28 @@ void GLC_Context::glcFrustum(double left, double right, double bottom, double to
 	m[15]= 0.0;
 
 	glcMultMatrix(perspMatrix);
+}
+
+void GLC_Context::glcEnableLighting(bool enable)
+{
+	if (enable != m_LightingIsEnable)
+	{
+		m_LightingIsEnable= enable;
+
+#ifdef GLC_OPENGL_ES_2
+
+		m_UniformShaderData.setModelViewProjectionMatrix(m_MatrixStackHash.value(GL_MODELVIEW)->top(), m_MatrixStackHash.value(GL_PROJECTION)->top());
+#else
+		if (GLC_Shader::hasActiveShader())
+		{
+			GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
+			pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->enableLightingId(), m_LightingIsEnable);
+		}
+		if (m_LightingIsEnable) ::glEnable(GL_LIGHTING);
+		else ::glDisable(GL_LIGHTING);
+#endif
+
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
