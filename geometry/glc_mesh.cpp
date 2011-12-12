@@ -24,6 +24,7 @@
 
 #include "glc_mesh.h"
 #include "../glc_renderstatistics.h"
+#include "../glc_context.h"
 
 // Class chunk id
 quint32 GLC_Mesh::m_ChunkId= 0xA701;
@@ -983,7 +984,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	{
 		if (!GLC_State::isInSelectionMode())
 		{
-			glDisable(GL_LIGHTING);
+			GLC_Context::current()->glcEnableLighting(false);
 			// Set polyline colors
 			GLfloat color[4]= {static_cast<float>(m_WireColor.redF()),
 									static_cast<float>(m_WireColor.greenF()),
@@ -992,7 +993,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 
 			glColor4fv(color);
 			m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
-			glEnable(GL_LIGHTING);
+			GLC_Context::current()->glcEnableLighting(true);
 		}
 		else
 		{

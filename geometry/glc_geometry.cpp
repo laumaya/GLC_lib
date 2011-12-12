@@ -25,6 +25,7 @@
 #include "../shading/glc_selectionmaterial.h"
 #include "../glc_openglexception.h"
 #include "../glc_state.h"
+#include "../glc_context.h"
 #include "glc_geometry.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -311,7 +312,7 @@ void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 	if(m_IsWire)
 	{
 		glLineWidth(m_LineWidth);
-		glDisable(GL_LIGHTING);
+		GLC_Context::current()->glcEnableLighting(false);;
 		if (!renderProperties.isSelected())
 		{
 			// Set polyline colors
@@ -332,13 +333,13 @@ void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
 		if (pCurrentMaterial->hasTexture())
 		{
-			glEnable(GL_LIGHTING);
+			GLC_Context::current()->glcEnableLighting(true);
 			pCurrentMaterial->glExecute();
 			if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 		}
 		else
 		{
-			glEnable(GL_LIGHTING);
+			GLC_Context::current()->glcEnableLighting(true);
 			if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 			else pCurrentMaterial->glExecute();
 		}
