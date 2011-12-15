@@ -28,6 +28,7 @@
 #include "../glc_exception.h"
 #include "../glc_state.h"
 #include "../glc_context.h"
+#include "glc_light.h"
 
 // Static member initialization
 QStack<GLC_uint> GLC_Shader::m_ShadingGroupStack;
