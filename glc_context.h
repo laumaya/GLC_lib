@@ -84,6 +84,9 @@ public:
 	inline GLC_Matrix4x4 projectionMatrix() const
 	{Q_ASSERT(m_MatrixStackHash.contains(GL_PROJECTION)); return m_MatrixStackHash.value(GL_PROJECTION)->top();}
 
+	//! Return lighting enable state
+	inline bool lightingIsEnable() const
+	{return m_LightingIsEnable.top();}
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
@@ -183,7 +186,7 @@ private:
 	static GLC_Context* m_pCurrentContext;
 
 	//! Enable lighting state
-	bool m_LightingIsEnable;
+	QStack<bool> m_LightingIsEnable;
 
 	//! Lights enable state
 	QHash<GLenum, bool> m_LightsEnableState;

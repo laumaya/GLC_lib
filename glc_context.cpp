@@ -35,7 +35,7 @@ GLC_Context::GLC_Context(const QGLFormat& format)
 , m_MatrixStackHash()
 , m_ContextSharedData()
 , m_UniformShaderData()
-, m_LightingIsEnable(false)
+, m_LightingIsEnable()
 {
 	qDebug() << "GLC_Context::GLC_Context";
 	GLC_ContextManager::instance()->addContext(this);
@@ -208,20 +208,19 @@ void GLC_Context::glcFrustum(double left, double right, double bottom, double to
 
 void GLC_Context::glcEnableLighting(bool enable)
 {
-	if (enable != m_LightingIsEnable)
+	if (enable != m_LightingIsEnable.top())
 	{
-		m_LightingIsEnable= enable;
+		m_LightingIsEnable.top()= enable;
 
 #ifdef GLC_OPENGL_ES_2
 
-		m_UniformShaderData.setModelViewProjectionMatrix(m_MatrixStackHash.value(GL_MODELVIEW)->top(), m_MatrixStackHash.value(GL_PROJECTION)->top());
+		m_UniformShaderData.setLightingState(m_LightingIsEnable);
 #else
 		if (GLC_Shader::hasActiveShader())
 		{
-			GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
-			pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->enableLightingId(), m_LightingIsEnable);
+			m_UniformShaderData.setLightingState(m_LightingIsEnable.top());
 		}
-		if (m_LightingIsEnable) ::glEnable(GL_LIGHTING);
+		if (m_LightingIsEnable.top()) ::glEnable(GL_LIGHTING);
 		else ::glDisable(GL_LIGHTING);
 #endif
 
@@ -284,5 +283,7 @@ void GLC_Context::init()
 	QStack<GLC_Matrix4x4>* pStack2= new QStack<GLC_Matrix4x4>();
 	pStack2->push(GLC_Matrix4x4());
 	m_MatrixStackHash.insert(GL_PROJECTION, pStack2);
+
+	m_LightingIsEnable.push(false);
 }
 
