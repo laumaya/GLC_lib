@@ -1116,17 +1116,19 @@ QString GLC_WorldTo3dxml::xmlFileName(QString fileName)
 
 	fileName= symplifyName(fileName);
 
-	fileName.prepend(prefix);
+
 
 	QString newName;
-	if (!m_3dxmlFileSet.contains(fileName))
+	if (!m_3dxmlFileSet.contains(prefix + fileName))
 	{
+		fileName.prepend(prefix);
 		m_3dxmlFileSet << fileName;
 		newName= fileName;
 	}
 	else
 	{
 		newName= QFileInfo(fileName).completeBaseName() + QString::number(++m_FileNameIncrement) + '.' + QFileInfo(fileName).suffix();
+		newName.prepend(prefix);
 	}
 	return newName;
 }
@@ -1175,6 +1177,7 @@ void GLC_WorldTo3dxml::writeOccurenceDefaultViewProperty(const GLC_StructOccuren
 
 	if (!isVisible || !pInstance->renderPropertiesHandle()->isDefault())
 	{
+		qDebug() << "(!isVisible || !pInstance->renderPropertiesHandle()->isDefault())";
 		m_pOutStream->writeStartElement("GraphicProperties");
 		m_pOutStream->writeAttribute("xsi:type", "GraphicPropertiesType");
 		if (! isVisible)
@@ -1188,7 +1191,7 @@ void GLC_WorldTo3dxml::writeOccurenceDefaultViewProperty(const GLC_StructOccuren
 		if (!pInstance->renderPropertiesHandle()->isDefault())
 		{
 			const GLC_RenderProperties* pProperties= pInstance->renderPropertiesHandle();
-			if (pProperties->overwriteTransparency() != -1.0f)
+			if ((pProperties->renderingMode() == glc::OverwriteTransparency))
 			{
 				m_pOutStream->writeStartElement("SurfaceAttributes");
 				m_pOutStream->writeAttribute("xsi:type", "SurfaceAttributesType");
@@ -1201,6 +1204,35 @@ void GLC_WorldTo3dxml::writeOccurenceDefaultViewProperty(const GLC_StructOccuren
 					m_pOutStream->writeEndElement(); // Color
 				m_pOutStream->writeEndElement(); // SurfaceAttributes
 			}
+			else if ((pProperties->renderingMode() == glc::OverwriteTransparencyAndMaterial))
+			{
+				GLC_Material* pMaterial= pProperties->overwriteMaterial();
+				m_pOutStream->writeStartElement("SurfaceAttributes");
+				m_pOutStream->writeAttribute("xsi:type", "SurfaceAttributesType");
+					m_pOutStream->writeStartElement("Color");
+						m_pOutStream->writeAttribute("xsi:type", "RGBAColorType");
+						m_pOutStream->writeAttribute("red", QString::number(pMaterial->diffuseColor().redF()));
+						m_pOutStream->writeAttribute("green", QString::number(pMaterial->diffuseColor().greenF()));
+						m_pOutStream->writeAttribute("blue", QString::number(pMaterial->diffuseColor().blueF()));
+						m_pOutStream->writeAttribute("alpha", QString::number(pProperties->overwriteTransparency()));
+					m_pOutStream->writeEndElement(); // Color
+				m_pOutStream->writeEndElement(); // SurfaceAttributes
+			}
+			else if ((pProperties->renderingMode() == glc::OverwriteMaterial))
+			{
+				GLC_Material* pMaterial= pProperties->overwriteMaterial();
+				m_pOutStream->writeStartElement("SurfaceAttributes");
+				m_pOutStream->writeAttribute("xsi:type", "SurfaceAttributesType");
+					m_pOutStream->writeStartElement("Color");
+						m_pOutStream->writeAttribute("xsi:type", "RGBAColorType");
+						m_pOutStream->writeAttribute("red", QString::number(pMaterial->diffuseColor().redF()));
+						m_pOutStream->writeAttribute("green", QString::number(pMaterial->diffuseColor().greenF()));
+						m_pOutStream->writeAttribute("blue", QString::number(pMaterial->diffuseColor().blueF()));
+						m_pOutStream->writeAttribute("alpha", QString::number(pMaterial->opacity()));
+					m_pOutStream->writeEndElement(); // Color
+				m_pOutStream->writeEndElement(); // SurfaceAttributes
+			}
+
 		}
 		m_pOutStream->writeEndElement(); // GraphicProperties
 	}
