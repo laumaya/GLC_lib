@@ -109,7 +109,8 @@ void GLC_PointSprite::render(const GLC_RenderProperties& renderProperties)
 		glDepthMask(GL_FALSE);
 		glEnable(GL_TEXTURE_2D);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		GLC_Context::current()->glcEnableLighting(false);
+		glDisable(GL_LIGHTING);
+		//GLC_Context::current()->glcEnableLighting(false);
 
 	    if(m_MaterialHash.size() == 1)
 	    {
@@ -136,7 +137,8 @@ void GLC_PointSprite::render(const GLC_RenderProperties& renderProperties)
 	{
 		glDisable(GL_BLEND);
 		glDisable(GL_TEXTURE_2D);
-		GLC_Context::current()->glcEnableLighting(false);
+		glDisable(GL_LIGHTING);
+		//GLC_Context::current()->glcEnableLighting(false);
 	}
 
 
