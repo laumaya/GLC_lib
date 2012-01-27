@@ -188,7 +188,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 		m_CurrentFileName= glc::archiveEntryFileName(fileName);
 
 		// Get the 3DXML time stamp
-		m_CurrentDateTime= QFileInfo(QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(fileName).fileName()).lastModified();
+		m_CurrentDateTime= QFileInfo(QFileInfo(m_FileName)).lastModified();
 	}
 	else if (glc::isFileString(fileName))
 	{
