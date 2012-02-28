@@ -38,7 +38,7 @@ GLC_ColladaToWorld::GLC_ColladaToWorld()
 , m_pWorld(NULL)
 , m_pStreamReader(NULL)
 , m_FileName()
-, m_pFile()
+, m_pFile(NULL)
 , m_ImageFileHash()
 , m_MaterialLibHash()
 , m_SurfaceImageHash()
@@ -67,7 +67,7 @@ GLC_ColladaToWorld::GLC_ColladaToWorld()
 // Destructor
 GLC_ColladaToWorld::~GLC_ColladaToWorld()
 {
-	// Normal ends, wold has not to be deleted
+	// Normal ends, world has not to be deleted
 	m_pWorld= NULL;
 	clear();
 }
@@ -137,6 +137,10 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 
 		m_pStreamReader->readNext();
 	}
+
+	m_pFile->close();
+	m_pFile= NULL;
+
 	// Link the textures to materials
 	linkTexturesToMaterials();
 
@@ -232,10 +236,11 @@ void GLC_ColladaToWorld::clear()
 	delete m_pWorld;
 	m_pWorld= NULL;
 
+
 	delete m_pStreamReader;
 	m_pStreamReader= NULL;
 
-	if (NULL != m_pFile) m_pFile->close();
+	if (m_pFile != NULL) m_pFile->close();
 	m_pFile= NULL;
 
 	m_ImageFileHash.clear();
