@@ -27,6 +27,7 @@
 #include <QtOpenGL>
 
 #include "maths/glc_matrix4x4.h"
+#include "shading/glc_light.h"
 
 #include "glc_config.h"
 
@@ -43,6 +44,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Set Light values from the given light
+	void setLightValues(const GLC_Light& light);
+
+	//! Set lighting enbale state
+	void setLightingState(bool enable);
+
 	//! Set the model view matrix
 	void setModelViewProjectionMatrix(const GLC_Matrix4x4& modelView, const GLC_Matrix4x4& projection);
 

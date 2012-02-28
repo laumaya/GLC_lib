@@ -42,6 +42,17 @@ GLC_UniformShaderData::~GLC_UniformShaderData()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+void GLC_UniformShaderData::setLightValues(const GLC_Light& light)
+{
+
+}
+
+void GLC_UniformShaderData::setLightingState(bool enable)
+{
+	GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
+	pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->enableLightingId(), enable);
+}
+
 void GLC_UniformShaderData::setModelViewProjectionMatrix(const GLC_Matrix4x4& modelView, const GLC_Matrix4x4& projection)
 {
 	// Set model view matrix
@@ -86,4 +97,5 @@ void GLC_UniformShaderData::setModelViewProjectionMatrix(const GLC_Matrix4x4& mo
 void GLC_UniformShaderData::updateAll(const GLC_Context* pContext)
 {
 	setModelViewProjectionMatrix(pContext->modelViewMatrix(), pContext->projectionMatrix());
+	setLightingState(pContext->lightingIsEnable());
 }
