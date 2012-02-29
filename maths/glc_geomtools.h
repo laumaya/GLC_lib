@@ -27,6 +27,8 @@
 
 #include <QVector>
 #include <QList>
+#include <QPointF>
+
 #include "glc_vector3d.h"
 #include "glc_line3d.h"
 #include "glc_plane.h"
@@ -38,6 +40,7 @@
 namespace glc
 {
 
+	static double compareDefaultPrecision= 0.01;
 //////////////////////////////////////////////////////////////////////
 /*! \name Tools Functions*/
 //@{
@@ -100,6 +103,26 @@ namespace glc
 	inline GLC_Vector2d perpVector(const GLC_Vector2d& vect)
 	{return GLC_Vector2d(-vect.getY(), vect.getX());}
 
+	//! Return the distance between the given point and line
+	GLC_LIB_EXPORT double pointLineDistance(const GLC_Point3d& point, const GLC_Line3d& line);
+
+	//! Return true if the given 3 points are collinear
+	GLC_LIB_EXPORT bool pointsAreCollinear(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3);
+
+	inline bool compare(double p1, double p2)
+	{return qAbs(p1 - p2) <= compareDefaultPrecision;}
+
+	GLC_LIB_EXPORT bool compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2);
+
+	GLC_LIB_EXPORT bool compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2);
+
+	GLC_LIB_EXPORT bool compare(const QPointF& v1, const QPointF& v2);
+
+	//! Return true if the given 2d point is inside the given polygon
+	GLC_LIB_EXPORT bool pointInPolygon(const GLC_Point2d& point, const QList<GLC_Point2d>& polygon);
+
+	//! Return the angle from 0 to 2PI from an given angle from -PI to PI
+	GLC_LIB_EXPORT double zeroTo2PIAngle(double angle);
 
 //@}
 
