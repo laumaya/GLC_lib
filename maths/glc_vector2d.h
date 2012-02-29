@@ -26,6 +26,8 @@
 #define GLC_VECTOR2D_H_
 
 #include <QString>
+#include <QPointF>
+
 #include "glc_utils_maths.h"
 #include "glc_vector2df.h"
 
@@ -89,6 +91,11 @@ public:
 		m_Vector[0]= Vect.m_Vector[0];
 		m_Vector[1]= Vect.m_Vector[1];
 	}
+
+	//! Return the QPointF of this GLC_Vector
+	inline QPointF toQPointF() const
+	{return QPointF(m_Vector[0], m_Vector[1]);}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! @name Operator Overload */
