@@ -27,6 +27,9 @@
 
 #include <QtGlobal>
 
+
+double glc::comparedPrecision= defaultPrecision;
+
 //////////////////////////////////////////////////////////////////////
 //Tools Functions
 //////////////////////////////////////////////////////////////////////
@@ -550,25 +553,36 @@ bool glc::pointsAreCollinear(const GLC_Point3d& p1, const GLC_Point3d& p2, const
 	return subject;
 }
 
+bool glc::compare(double p1, double p2)
+{
+	return qAbs(p1 - p2) <= comparedPrecision;
+}
+
+bool glc::compareAngle(double p1, double p2)
+{
+	const double anglePrecision= toRadian(comparedPrecision);
+	return qAbs(p1 - p2) <= anglePrecision;
+}
+
 bool glc::compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2)
 {
-	bool compareResult= (qAbs(v1.x() - v2.x()) <= compareDefaultPrecision);
-	compareResult= compareResult && (qAbs(v1.y() - v2.y()) <= compareDefaultPrecision);
-	compareResult= compareResult && (qAbs(v1.z() - v2.z()) <= compareDefaultPrecision);
+	bool compareResult= (qAbs(v1.x() - v2.x()) <= comparedPrecision);
+	compareResult= compareResult && (qAbs(v1.y() - v2.y()) <= comparedPrecision);
+	compareResult= compareResult && (qAbs(v1.z() - v2.z()) <= comparedPrecision);
 
 	return compareResult;
 }
 
 bool glc::compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2)
 {
-	bool compareResult= (qAbs(v1.getX() - v2.getX()) <= compareDefaultPrecision);
-	return compareResult && (qAbs(v1.getY() - v2.getY()) <= compareDefaultPrecision);
+	bool compareResult= (qAbs(v1.getX() - v2.getX()) <= comparedPrecision);
+	return compareResult && (qAbs(v1.getY() - v2.getY()) <= comparedPrecision);
 }
 
 bool glc::compare(const QPointF& v1, const QPointF& v2)
 {
-	bool compareResult= (qAbs(v1.x() - v2.x()) <= compareDefaultPrecision);
-	return compareResult && (qAbs(v1.y() - v2.y()) <= compareDefaultPrecision);
+	bool compareResult= (qAbs(v1.x() - v2.x()) <= comparedPrecision);
+	return compareResult && (qAbs(v1.y() - v2.y()) <= comparedPrecision);
 }
 
 bool glc::pointInPolygon(const GLC_Point2d& point, const QList<GLC_Point2d>& polygon)

@@ -39,8 +39,8 @@
 
 namespace glc
 {
-
-	static double compareDefaultPrecision= 0.01;
+	const double defaultPrecision= 0.01;
+	extern double comparedPrecision;
 //////////////////////////////////////////////////////////////////////
 /*! \name Tools Functions*/
 //@{
@@ -109,8 +109,9 @@ namespace glc
 	//! Return true if the given 3 points are collinear
 	GLC_LIB_EXPORT bool pointsAreCollinear(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3);
 
-	inline bool compare(double p1, double p2)
-	{return qAbs(p1 - p2) <= compareDefaultPrecision;}
+	GLC_LIB_EXPORT bool compare(double p1, double p2);
+
+	GLC_LIB_EXPORT bool compareAngle(double p1, double p2);
 
 	GLC_LIB_EXPORT bool compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2);
 
