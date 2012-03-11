@@ -28,7 +28,7 @@
 #include <QtGlobal>
 
 
-double glc::comparedPrecision= defaultPrecision;
+double glc::comparedPrecision= glc::defaultPrecision;
 
 //////////////////////////////////////////////////////////////////////
 //Tools Functions
