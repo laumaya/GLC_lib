@@ -40,7 +40,7 @@
 namespace glc
 {
 	const double defaultPrecision= 0.01;
-	extern double comparedPrecision;
+	GLC_LIB_EXPORT extern double comparedPrecision;
 //////////////////////////////////////////////////////////////////////
 /*! \name Tools Functions*/
 //@{
