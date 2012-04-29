@@ -87,7 +87,7 @@ namespace glc
 	/*! If the polygon is convex the returned index is a fan*/
 	GLC_LIB_EXPORT void triangulatePolygon(QList<GLuint>*, const QList<float>&);
 
-	//! Return true if the given 3d line intersect the given plane
+	//! Return true if the given 3d line is intersected with the given plane
 	/*! If there is an intersection point is set to the given 3d point
 	 *  If the line lie on the plane this method return false*/
 	GLC_LIB_EXPORT bool lineIntersectPlane(const GLC_Line3d& line, const GLC_Plane& plane, GLC_Point3d* pPoint);
