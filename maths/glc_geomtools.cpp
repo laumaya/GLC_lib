@@ -588,7 +588,7 @@ bool glc::compare(const QPointF& v1, const QPointF& v2)
 double glc::round(double value)
 {
 	value= value / comparedPrecision;
-	value= ::round(value);
+	value= (value >= 0.0 ? floor(value + 0.5) : ceil(value - 0.5));
 	value= value * comparedPrecision;
 	return value;
 }
