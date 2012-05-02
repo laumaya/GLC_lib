@@ -585,6 +585,34 @@ bool glc::compare(const QPointF& v1, const QPointF& v2)
 	return compareResult && (qAbs(v1.y() - v2.y()) <= comparedPrecision);
 }
 
+double glc::round(double value)
+{
+	value= value / comparedPrecision;
+	value= ::round(value);
+	value= value * comparedPrecision;
+	return value;
+}
+
+QPointF glc::round(const QPointF& point)
+{
+	QPointF subject(glc::round(static_cast<double>(point.x())), glc::round(static_cast<double>(point.y())));
+	return subject;
+}
+
+GLC_Vector2d round(const GLC_Vector2d& vector)
+{
+	GLC_Vector2d subject(glc::round(vector.getX()), glc::round(vector.getY()));
+
+	return subject;
+}
+
+GLC_Vector3d round(const GLC_Vector3d& vector)
+{
+	GLC_Vector3d subject(glc::round(vector.x()), glc::round(vector.y()), glc::round(vector.z()));
+
+	return subject;
+}
+
 bool glc::pointInPolygon(const GLC_Point2d& point, const QList<GLC_Point2d>& polygon)
 {
 	const int polygonSize= polygon.size();
