@@ -184,6 +184,13 @@ public:
 	//! Return true if this occurence is flexible
 	inline bool isFlexible() const
 	{return (m_pRelativeMatrix != NULL);}
+
+	//! Return the index position of the given occurrence
+	/*! Return -1 if the given occurence is not a child of this occurence*/
+	int indexOf(const GLC_StructOccurence* pOcc) const;
+
+	//! Return true if this occurence contains the given occurence has child
+	bool containsChild(const GLC_StructOccurence* pOcc) const;
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -204,8 +211,15 @@ public:
 	/*! The new child must be orphan*/
 	void addChild(GLC_StructOccurence*);
 
+	//! insert Child at the given position
+	/*! The new child must be orphan and index >= childcount*/
+	void insertChild(int index, GLC_StructOccurence* pChild);
+
 	//! Add Child instance and returns the newly created occurence
 	GLC_StructOccurence* addChild(GLC_StructInstance*);
+
+	//! Insert Child instance and returns the newly created occurence
+	GLC_StructOccurence* insertChild(int index, GLC_StructInstance* pInstance);
 
 	//! make the occurence orphan
 	void makeOrphan();
@@ -260,6 +274,10 @@ public:
 
 	//! Make this occurence rigid
 	void makeRigid();
+
+	//! Exchange the occurrence at index position i with the occurrence at index position j
+	/*!This function assumes that both i and j are at least 0 but less than childCount().*/
+	void swap(int i, int j);
 //@}
 
 //////////////////////////////////////////////////////////////////////

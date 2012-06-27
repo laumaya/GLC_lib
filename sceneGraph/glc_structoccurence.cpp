@@ -495,6 +495,28 @@ QSet<GLC_StructReference*> GLC_StructOccurence::parentsReferences(const GLC_Stru
 	return parentSet;
 }
 
+int GLC_StructOccurence::indexOf(const GLC_StructOccurence* pOcc) const
+{
+	int subject= -1;
+	const int childCount= m_Childs.count();
+	bool containsOcc= false;
+	int i= 0;
+	while (!containsOcc && (i < childCount))
+	{
+		if (m_Childs.at(i) == pOcc)
+		{
+			containsOcc= true;
+			subject= i;
+		}
+		++i;
+	}
+	return subject;
+}
+
+bool GLC_StructOccurence::containsChild(const GLC_StructOccurence* pOcc) const
+{
+	return pOcc->parent() == this;
+}
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -559,6 +581,24 @@ void GLC_StructOccurence::addChild(GLC_StructOccurence* pChild)
 	pChild->updateChildrenAbsoluteMatrix();
 }
 
+void GLC_StructOccurence::insertChild(int index, GLC_StructOccurence* pChild)
+{
+	Q_ASSERT(pChild->isOrphan());
+	Q_ASSERT((NULL == pChild->m_pWorldHandle) || (m_pWorldHandle == pChild->m_pWorldHandle));
+	Q_ASSERT(m_Childs.count() >= index);
+
+	//qDebug() << "Add Child " << pChild->name() << "id=" << pChild->id() << " to " << name() << " id=" << id();
+	// Add the child to the list of child
+	// Get occurence reference
+	m_Childs.insert(index, pChild);
+	pChild->m_pParent= this;
+	if (NULL == pChild->m_pWorldHandle)
+	{
+		pChild->setWorldHandle(m_pWorldHandle);
+	}
+	pChild->updateChildrenAbsoluteMatrix();
+}
+
 // Add Child instance and returns the newly created occurence
 GLC_StructOccurence* GLC_StructOccurence::addChild(GLC_StructInstance* pInstance)
 {
@@ -566,6 +606,16 @@ GLC_StructOccurence* GLC_StructOccurence::addChild(GLC_StructInstance* pInstance
 	pOccurence= new GLC_StructOccurence(pInstance, m_pWorldHandle);
 
 	addChild(pOccurence);
+
+	return pOccurence;
+}
+
+GLC_StructOccurence* GLC_StructOccurence::insertChild(int index, GLC_StructInstance* pInstance)
+{
+	GLC_StructOccurence* pOccurence;
+	pOccurence= new GLC_StructOccurence(pInstance, m_pWorldHandle);
+
+	insertChild(index, pOccurence);
 
 	return pOccurence;
 }
@@ -845,6 +895,22 @@ void GLC_StructOccurence::makeRigid()
 	updateChildrenAbsoluteMatrix();
 }
 
+void GLC_StructOccurence::swap(int i, int j)
+{
+	Q_ASSERT(i != j);
+
+	GLC_StructReference* pRef= this->structReference();
+	QList<GLC_StructOccurence*> occurences= pRef->listOfStructOccurence();
+	const int count= occurences.count();
+	for (int i= 0; i < count; ++i)
+	{
+		GLC_StructOccurence* pOcc= occurences.at(i);
+		Q_ASSERT(i <= pOcc->m_Childs.count());
+		Q_ASSERT(j <= pOcc->m_Childs.count());
+		pOcc->m_Childs.swap(i, j);
+	}
+
+}
 
 //////////////////////////////////////////////////////////////////////
 // Private services function
