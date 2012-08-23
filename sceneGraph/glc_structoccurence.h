@@ -232,7 +232,7 @@ public:
 	void reverseNormals();
 
 	//! Create the 3DViewInstance of this occurence if there is a valid 3DRep
-	bool create3DViewInstance();
+	bool create3DViewInstance(GLuint shaderId= 0);
 
 	//! Remove the 3DViewInstance of this occurence
 	bool remove3DViewInstance();
