@@ -79,8 +79,6 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_StructInstance* pStructInstance, GL
 		m_pNumberOfOccurence= new int(1);
 	}
 
-	setName(m_pStructInstance->name());
-
 	// Inform the world Handle
 	if (NULL != m_pWorldHandle)
 	{
@@ -109,7 +107,26 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_3DRep* pRep)
 , m_pRelativeMatrix(NULL)
 {
 	m_pStructInstance= new GLC_StructInstance(pRep);
-	setName(m_pStructInstance->name());
+
+	// Update instance
+	m_pStructInstance->structOccurenceCreated(this);
+}
+
+GLC_StructOccurence::GLC_StructOccurence(GLC_3DRep* pRep, GLC_uint id)
+: m_Uid(id)
+, m_pWorldHandle(NULL)
+, m_pNumberOfOccurence(new int(1))
+, m_pStructInstance(NULL)
+, m_pParent(NULL)
+, m_Childs()
+, m_AbsoluteMatrix()
+, m_OccurenceNumber(0)
+, m_IsVisible(true)
+, m_pRenderProperties(NULL)
+, m_AutomaticCreationOf3DViewInstance(true)
+, m_pRelativeMatrix(NULL)
+{
+	m_pStructInstance= new GLC_StructInstance(pRep);
 
 	// Update instance
 	m_pStructInstance->structOccurenceCreated(this);
