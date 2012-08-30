@@ -93,7 +93,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom, GLC_uint id)
 }
 
 GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
-: GLC_Object(m_3DRep.name())
+: GLC_Object(rep.name())
 , m_3DRep(rep)
 , m_pBoundingBox(NULL)
 , m_AbsoluteMatrix()
@@ -110,7 +110,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
 }
 
 GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep, GLC_uint id)
-: GLC_Object(id, m_3DRep.name())
+: GLC_Object(id, rep.name())
 , m_3DRep(rep)
 , m_pBoundingBox(NULL)
 , m_AbsoluteMatrix()
