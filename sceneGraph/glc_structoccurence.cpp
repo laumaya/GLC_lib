@@ -642,11 +642,8 @@ bool GLC_StructOccurence::create3DViewInstance(GLuint shaderId)
 		GLC_3DRep* p3DRep= dynamic_cast<GLC_3DRep*>(structReference()->representationHandle());
 		if (NULL != p3DRep)
 		{
-			GLC_3DViewInstance instance(*p3DRep);
+			GLC_3DViewInstance instance(*p3DRep, m_Uid);
 			instance.setName(name());
-
-			// Force instance representation id
-			instance.setId(id());
 
 			if (NULL != m_pRenderProperties)
 			{
