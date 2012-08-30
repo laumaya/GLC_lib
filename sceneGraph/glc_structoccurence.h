@@ -54,8 +54,11 @@ public:
 	//! Create Occurence of the specified instance
 	GLC_StructOccurence(GLC_StructInstance*, GLC_WorldHandle* pWorldHandle= NULL, GLuint shaderId=0);
 
-	//! Construct Occurence withe the specified GLC_3DRep
-	GLC_StructOccurence(GLC_3DRep*);
+	//! Construct Occurence with the specified GLC_3DRep
+	GLC_StructOccurence(GLC_3DRep* pRep);
+
+	//! Construct Occurence from the given GLC_3DRep and Uid
+	GLC_StructOccurence(GLC_3DRep* pRep, GLC_uint id);
 
 	//! Copy constructor
 	GLC_StructOccurence(GLC_WorldHandle*, const GLC_StructOccurence&, bool shareInstance);
