@@ -58,6 +58,14 @@ GLC_World::~GLC_World()
 	}
 }
 
+void GLC_World::replaceRootOccurence(GLC_StructOccurence* pOcc)
+{
+	Q_ASSERT(pOcc->isOrphan());
+	delete m_pRoot;
+	m_pRoot= pOcc;
+	m_pRoot->setWorldHandle(m_pWorldHandle);
+}
+
 // Merge this world with another world
 void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 {

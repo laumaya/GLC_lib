@@ -185,6 +185,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Replace the root occurrence of this world by the given occurrence
+	void replaceRootOccurence(GLC_StructOccurence* pOcc);
+
 	//! Merge this world with another world
 	void mergeWithAnotherWorld(GLC_World &);
 
