@@ -26,7 +26,6 @@
 #include "glc_structinstance.h"
 #include "glc_structreference.h"
 
-// Default constructor
 GLC_World::GLC_World()
 : m_pWorldHandle(new GLC_WorldHandle())
 , m_pRoot(new GLC_StructOccurence())
@@ -34,7 +33,13 @@ GLC_World::GLC_World()
 	m_pRoot->setWorldHandle(m_pWorldHandle);
 }
 
-// Copy constructor
+GLC_World::GLC_World(GLC_StructOccurence* pOcc)
+: m_pWorldHandle(new GLC_WorldHandle())
+, m_pRoot(pOcc)
+{
+	m_pRoot->setWorldHandle(m_pWorldHandle);
+}
+
 GLC_World::GLC_World(const GLC_World& world)
 : m_pWorldHandle(world.m_pWorldHandle)
 , m_pRoot(world.m_pRoot)
@@ -66,7 +71,6 @@ void GLC_World::replaceRootOccurence(GLC_StructOccurence* pOcc)
 	m_pRoot->setWorldHandle(m_pWorldHandle);
 }
 
-// Merge this world with another world
 void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 {
 	GLC_StructOccurence* pAnotherRoot= anotherWorld.rootOccurence();
@@ -86,7 +90,6 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 	}
 }
 
-// Assignment operator
 GLC_World& GLC_World::operator=(const GLC_World& world)
 {
 	if (this != &world)

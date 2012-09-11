@@ -53,6 +53,9 @@ public:
 	//! Default constructor
 	GLC_World();
 
+	//! Create a world and set the root occurrence to the given occurrence
+	explicit GLC_World(GLC_StructOccurence* pOcc);
+
 	//! Copy constructor
 	GLC_World(const GLC_World&);
 
