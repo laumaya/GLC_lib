@@ -77,6 +77,7 @@ HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_3dxmltoworld.h \
 						io/glc_colladatoworld.h \
 						io/glc_worldto3dxml.h \
+						io/glc_worldto3ds.h \
 						io/glc_bsreptoworld.h \
 						io/glc_xmlutil.h \
 						io/glc_fileloader.h \
@@ -233,6 +234,7 @@ SOURCES +=	io/glc_objmtlloader.cpp \
 			io/glc_3dxmltoworld.cpp \
 			io/glc_colladatoworld.cpp \
 			io/glc_worldto3dxml.cpp \
+			io/glc_worldto3ds.cpp \
 			io/glc_bsreptoworld.cpp \
 			io/glc_fileloader.cpp
 
@@ -411,6 +413,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_FlyMover \
     		   include/GLC_RepFlyMover \
     		   include/GLC_WorldTo3dxml \
+    		   include/GLC_WorldTo3ds \
     		   include/GLC_RenderStatistics \
     		   include/GLC_Ext \
     		   include/GLC_Cone \

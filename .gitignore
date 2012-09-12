@@ -1,0 +1,6 @@
+/Build
+/.cproject
+/.gitignore
+/.project
+/Makefile
+/qrc_glc_lib.cpp

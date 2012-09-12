@@ -123,6 +123,9 @@ public:
 	/*! The specified LOD must exists and uses the specified material id*/
 	QVector<GLuint> getTrianglesIndex(int lod, GLC_uint materialId) const;
 
+	//! Return the equivalent triangle index of (triangle, strip and fan)
+	IndexList getEquivalentTrianglesStripsFansIndex(int lod, GLC_uint materialId);
+
 	//! Return the number of triangles in the specified LOD
 	int numberOfTriangles(int lod, GLC_uint materialId) const;
 

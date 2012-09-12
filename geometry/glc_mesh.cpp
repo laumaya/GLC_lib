@@ -228,6 +228,29 @@ QVector<GLuint> GLC_Mesh::getTrianglesIndex(int lod, GLC_uint materialId) const
 	return resultIndex;
 }
 
+IndexList GLC_Mesh::getEquivalentTrianglesStripsFansIndex(int lod, GLC_uint materialId)
+{
+	IndexList subject;
+	if (containsTriangles(lod, materialId))
+	{
+		subject= getTrianglesIndex(lod, materialId).toList();
+	}
+
+	if (containsStrips(lod, materialId))
+	{
+		subject.append(equivalentTrianglesIndexOfstripsIndex(lod, materialId));
+	}
+
+	if (containsFans(lod, materialId))
+	{
+		subject.append(equivalentTrianglesIndexOfFansIndex(lod, materialId));
+	}
+
+	Q_ASSERT((subject.count() % 3) == 0);
+
+	return subject;
+}
+
 // Return the number of triangles
 int GLC_Mesh::numberOfTriangles(int lod, GLC_uint materialId) const
 {
