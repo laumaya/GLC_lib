@@ -181,6 +181,9 @@ public:
 	inline QList<GLC_StructOccurence*> selectedPrimitiveOccurenceList() const
 	{return m_pWorldHandle->selectionSetHandle()->occurencesListWithSelectedPrimitive();}
 
+	//! Take the root occurence of this world
+	GLC_StructOccurence* takeRootOccurrence();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -189,7 +192,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Replace the root occurrence of this world by the given occurrence
-	void replaceRootOccurence(GLC_StructOccurence* pOcc);
+	void replaceRootOccurrence(GLC_StructOccurence* pOcc);
 
 	//! Merge this world with another world
 	void mergeWithAnotherWorld(GLC_World &);

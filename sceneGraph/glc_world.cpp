@@ -63,7 +63,18 @@ GLC_World::~GLC_World()
 	}
 }
 
-void GLC_World::replaceRootOccurence(GLC_StructOccurence* pOcc)
+GLC_StructOccurence* GLC_World::takeRootOccurrence()
+{
+	GLC_StructOccurence* pSubject= m_pRoot;
+	pSubject->makeOrphan();
+
+	m_pRoot= new GLC_StructOccurence();
+	m_pRoot->setWorldHandle(m_pWorldHandle);
+
+	return pSubject;
+}
+
+void GLC_World::replaceRootOccurrence(GLC_StructOccurence* pOcc)
 {
 	Q_ASSERT(pOcc->isOrphan());
 	delete m_pRoot;
