@@ -625,11 +625,14 @@ GLC_StructOccurence* GLC_StructOccurence::insertChild(int index, GLC_StructInsta
 
 void GLC_StructOccurence::makeOrphan()
 {
-	//qDebug() << "GLC_StructOccurence::makeOrphan() " << id();
-	//qDebug() << name() << " " << id();
-	Q_ASSERT(!isOrphan());
-	m_pParent->removeChild(this);
-	//qDebug() << "GLC_StructOccurence::makeOrphan() DONE!";
+	if(!isOrphan())
+	{
+		m_pParent->removeChild(this);
+	}
+	else
+	{
+		detach();
+	}
 }
 
 bool GLC_StructOccurence::removeChild(GLC_StructOccurence* pChild)
