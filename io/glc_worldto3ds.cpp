@@ -98,7 +98,14 @@ void GLC_WorldTo3ds::saveWorld()
 {
 	qDebug() << "GLC_WorldTo3ds::saveWorld()";
 	saveMeshes();
-	saveBranch(m_World.rootOccurence());
+
+	// Save node structure
+	GLC_StructOccurence* pRoot= m_World.rootOccurence();
+	const int childCount= pRoot->childCount();
+	for (int i= 0; i < childCount; ++i)
+	{
+		saveBranch(pRoot->child(i));
+	}
 }
 
 void GLC_WorldTo3ds::saveMeshes()
@@ -134,6 +141,7 @@ void GLC_WorldTo3ds::saveMeshes()
 
 void GLC_WorldTo3ds::saveBranch(GLC_StructOccurence* pOcc)
 {
+	qDebug() << "GLC_WorldTo3ds::saveBranch";
 	createNodeFromOccurrence(pOcc);
 
 	const int childCount= pOcc->childCount();
@@ -145,11 +153,11 @@ void GLC_WorldTo3ds::saveBranch(GLC_StructOccurence* pOcc)
 
 void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurence* pOcc)
 {
+	qDebug() << "GLC_WorldTo3ds::createNodeFromOccurrence";
 	Lib3dsNode* p3dsNode = lib3ds_node_new_object();
 	m_OccIdToNodeId.insert(pOcc->id(), m_CurrentNodeId++);
 
-	// Set the parent id
-	if (!pOcc->hasParent())
+	if (pOcc->parent() == m_World.rootOccurence())
 	{
 		p3dsNode->parent_id= LIB3DS_NO_PARENT;
 	}
@@ -164,29 +172,36 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurence* pOcc)
 	if (m_ReferenceToMesh.contains(pRef))
 	{
 		strcpy(p3dsNode->name, m_ReferenceToMesh.value(pRef)->name);
+
+		// Node matrix
+		const GLC_Matrix4x4 matrix= pOcc->absoluteMatrix();
+
+		Lib3dsObjectData *pObjectData= &p3dsNode->data.object;
+		pObjectData->pivot[0]= matrix.getData()[12];
+		pObjectData->pivot[1]= matrix.getData()[13];
+		pObjectData->pivot[2]= matrix.getData()[14];
+
+		Lib3dsQuatKey* pQuatKey= lib3ds_quat_key_new();
+
+		QQuaternion quaternion= matrix.quaternion();
+		QPair<GLC_Vector3d, double> pair= matrix.rotationVectorAndAngle();
+
+		pQuatKey->angle= static_cast<float>(pair.second);
+		pQuatKey->axis[0]= static_cast<float>(pair.first.x());
+		pQuatKey->axis[1]= static_cast<float>(pair.first.y());
+		pQuatKey->axis[2]= static_cast<float>(pair.first.z());
+
+		pQuatKey->tcb.frame= 1;
+
+		pObjectData->rot_track.keyL= pQuatKey;
+
+
+		qDebug() << "Node key " << pObjectData->rot_track.keyL->q[0];
+		qDebug() << "Node key " << pObjectData->rot_track.keyL->q[1];
+		qDebug() << "Node key " << pObjectData->rot_track.keyL->q[2];
+		qDebug() << "Node key " << pObjectData->rot_track.keyL->q[3];
 	}
 
-	// Set the matrix
-	const GLC_Matrix4x4 relativeMatrix= pOcc->structInstance()->relativeMatrix();
-	p3dsNode->matrix[0][0]= relativeMatrix.getData()[0];
-	p3dsNode->matrix[1][0]= relativeMatrix.getData()[1];
-	p3dsNode->matrix[2][0]= relativeMatrix.getData()[2];
-	p3dsNode->matrix[3][0]= relativeMatrix.getData()[3];
-
-	p3dsNode->matrix[0][1]= relativeMatrix.getData()[4];
-	p3dsNode->matrix[1][1]= relativeMatrix.getData()[5];
-	p3dsNode->matrix[2][1]= relativeMatrix.getData()[6];
-	p3dsNode->matrix[3][1]= relativeMatrix.getData()[7];
-
-	p3dsNode->matrix[0][2]= relativeMatrix.getData()[8];
-	p3dsNode->matrix[1][2]= relativeMatrix.getData()[9];
-	p3dsNode->matrix[2][2]= relativeMatrix.getData()[10];
-	p3dsNode->matrix[3][2]= relativeMatrix.getData()[11];
-
-	p3dsNode->matrix[0][3]= relativeMatrix.getData()[12];
-	p3dsNode->matrix[1][3]= relativeMatrix.getData()[13];
-	p3dsNode->matrix[2][3]= relativeMatrix.getData()[14];
-	p3dsNode->matrix[3][3]= relativeMatrix.getData()[15];
 
 
 	lib3ds_file_insert_node(m_pLib3dsFile, p3dsNode);
