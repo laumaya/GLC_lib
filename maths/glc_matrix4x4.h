@@ -26,6 +26,9 @@
 #define GLC_MATRIX4X4_H_
 
 #include <QVector>
+#include <QQuaternion>
+#include <QPair>
+
 #include "glc_vector3d.h"
 
 #include "../glc_config.h"
@@ -176,6 +179,16 @@ public:
 	//! Return true if this matrix is direct
 	inline bool isDirect() const
 	{return (m_Type & Direct);}
+
+	//! Return this matrix trace
+	inline double trace() const
+	{return (m_Matrix[0] + m_Matrix[5] + m_Matrix[10] + m_Matrix[15]);}
+
+	//! Return the quaternion of this matrix
+	QQuaternion quaternion() const;
+
+	//! Return the rotation vector and angle of this matrix
+	QPair<GLC_Vector3d, double> rotationVectorAndAngle() const;
 
 //@}
 
