@@ -40,6 +40,7 @@ class GLC_StructReference;
 class GLC_3DRep;
 class GLC_Mesh;
 class GLC_StructOccurence;
+class GLC_Matrix4x4;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_WorldTo3ds
@@ -63,7 +64,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Save the world to the specified file name
-	bool exportToFile(const QString& fileName);
+	bool exportToFile(const QString& fileName, bool useAbsolutePosition= false);
 
 //@}
 
@@ -85,7 +86,7 @@ private:
 	void createNodeFromOccurrence(GLC_StructOccurence* pOcc);
 
 	//! Return the list of 3ds mesh from the given GLC_3DRep
-	QList<Lib3dsMesh*> createMeshsFrom3DRep(GLC_3DRep* pRep, const QString& name);
+	QList<Lib3dsMesh*> createMeshsFrom3DRep(GLC_3DRep* pRep, const QString& name, const GLC_Matrix4x4& matrix= GLC_Matrix4x4());
 
 	//! Return the 3ds mesh from the given GLC_Mesh
 	Lib3dsMesh* create3dsMeshFromGLC_Mesh(GLC_Mesh* pMesh, const QString& meshName);
@@ -98,6 +99,9 @@ private:
 
 	//! Return the material name of the given material
 	QString materialName(GLC_Material* pMat) const;
+
+	//! Set the object data position from the given matrix
+	void setNodePosition(Lib3dsNode* pNode, const GLC_Matrix4x4& matrix);
 
 //@}
 
@@ -134,6 +138,15 @@ private:
 
 	//! Occurence id to node id hash
 	QHash<GLC_uint, int> m_OccIdToNodeId;
+
+	//! The current mesh inde
+	int m_CurrentMeshIndex;
+
+	//! Use absolute position (meshes are duplicated)
+	bool m_UseAbsolutePosition;
+
+	//! GLC_Texture to fileName hash table
+	QHash<GLC_Texture*, QString> m_TextureToFileName;
 };
 
 #endif /* GLC_WORLDTO3DS_H_ */
