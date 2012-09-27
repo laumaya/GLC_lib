@@ -405,7 +405,19 @@ void GLC_WorldTo3dxml::exportAssemblyFromOccurence(const GLC_StructOccurence* pO
 		GLC_3DViewInstance* pInstance= m_World.collection()->instanceHandle(pOccurence->id());
 		Q_ASSERT(NULL != pInstance);
 		const bool isVisible= pInstance->isVisible();
-		const bool isOverload= !isVisible || !pInstance->renderPropertiesHandle()->isDefault() || pOccurence->isFlexible();
+
+		// Test if render properties are overloaded
+		GLC_RenderProperties* pRenderProperties= pInstance->renderPropertiesHandle();
+		bool RenderOverloaded= !pRenderProperties->isDefault();
+		if (RenderOverloaded)
+		{
+			RenderOverloaded= false;
+			RenderOverloaded= (pRenderProperties->renderingMode() == glc::OverwriteMaterial);
+			RenderOverloaded= RenderOverloaded || (pRenderProperties->renderingMode() == glc::OverwriteTransparency);
+			RenderOverloaded= RenderOverloaded || (pRenderProperties->renderingMode() == glc::OverwriteTransparencyAndMaterial);
+		}
+
+		const bool isOverload= !isVisible || RenderOverloaded || pOccurence->isFlexible();
 		if (isOverload)
 		{
 			m_ListOfOverLoadedOccurence.append(pOccurence);
@@ -773,8 +785,14 @@ void GLC_WorldTo3dxml::writeMaterial(const GLC_Material* pMaterial)
 	else
 	{
 		materialName= symplifyName(pMaterial->name());
-	}
 
+		// If the materialName is already uses append material id to the name
+		QSet<QString> materialsName= QSet<QString>::fromList(m_MaterialIdToMaterialName.values());
+		while (materialsName.contains(materialName))
+		{
+			materialName= materialName + '_' + QString::number(materialId);
+		}
+	}
 
 	m_MaterialIdToMaterialName.insert(materialId, materialName);
 
