@@ -415,7 +415,7 @@ bool GLC_Matrix4x4::operator==(const GLC_Matrix4x4& mat) const
 	int i= 0;
 	while (result && (i < TAILLEMAT4X4))
 	{
-		result= (qFuzzyCompare(m_Matrix[i], mat.m_Matrix[i]));
+		result= (qAbs(m_Matrix[i] - mat.m_Matrix[i]) <= glc::EPSILON);
 		++i;
 	}
 	return result;

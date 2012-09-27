@@ -82,7 +82,7 @@ QVector<double> GLC_Matrix4x4::toEuler(void) const
 	angle_y= -asin(m_Matrix[8]);
 	double C= cos(angle_y);
 
-	if (!qFuzzyCompare(C, 0.0)) // Gimball lock?
+	if (!(qAbs(C - 0.0) <= glc::EPSILON)) // Gimball lock?
 	{
 		tracex= m_Matrix[10] / C;
 		tracey= - m_Matrix[9] / C;
@@ -125,7 +125,7 @@ QQuaternion GLC_Matrix4x4::quaternion() const
 {
 	QQuaternion subject;
 	GLC_Matrix4x4 rotMat= rotationMatrix();
-	if ((this->type() != GLC_Matrix4x4::Identity) || (rotMat != GLC_Matrix4x4()))
+	if ((this->type() != GLC_Matrix4x4::Identity) && (rotMat != GLC_Matrix4x4()))
 	{
 		const double matrixTrace= rotMat.trace();
 		double s, w, x, y, z;
