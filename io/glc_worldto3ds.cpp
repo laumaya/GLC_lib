@@ -455,11 +455,12 @@ void GLC_WorldTo3ds::setNodePosition(Lib3dsNode* pNode, const GLC_Matrix4x4& mat
 {
 	Lib3dsObjectData *pObjectData= &pNode->data.object;
 
+	GLC_Matrix4x4 isoMatrix(matrix.isometricMatrix());
 	// Translation
 	Lib3dsLin3Key* pLin3Key= lib3ds_lin3_key_new();
-	pLin3Key->value[0]= matrix.getData()[12];
-	pLin3Key->value[1]= matrix.getData()[13];
-	pLin3Key->value[2]= matrix.getData()[14];
+	pLin3Key->value[0]= isoMatrix.getData()[12];
+	pLin3Key->value[1]= isoMatrix.getData()[13];
+	pLin3Key->value[2]= isoMatrix.getData()[14];
 
 	pLin3Key->tcb.frame= 1;
 	pObjectData->pos_track.keyL= pLin3Key;
