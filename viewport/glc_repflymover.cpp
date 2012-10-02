@@ -131,6 +131,7 @@ void GLC_RepFlyMover::glDraw()
 	m_Hud.render(glc::TransparentRenderFlag);
 	m_Plane.render(glc::TransparentRenderFlag);
 
+	/*
 	// Render velocity value + text
 	QString velocity(QChar(' ') + QString::number(static_cast<int>(100.0 * m_pRepMoverInfo->m_DoubleInfo.first())));
 	QFont myFont;
@@ -139,6 +140,7 @@ void GLC_RepFlyMover::glDraw()
 	int txtHeight= fontmetrics.boundingRect(velocity).height();
 	double posy= 2.0 * static_cast<double>(txtHeight) / calibre;
 	m_pViewport->qGLWidgetHandle()->renderText(- m_HudOffset.getX(), m_HudOffset.getY() - posy, 0.0, velocity, myFont);
+	*/
 
 	GLC_Context::current()->glcPopMatrix();
 	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
