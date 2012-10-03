@@ -323,22 +323,25 @@ void GLC_Viewport::render3DWidget()
 
 void GLC_Viewport::setWinGLSize(int HSize, int VSize)
 {
-	m_WindowHSize= HSize;
-	m_WindowVSize= VSize;
-
-	// from NeHe's Tutorial 3
-	if (m_WindowVSize == 0)								// Prevent A Divide By Zero By
+	if ((m_WindowHSize != HSize) || (m_WindowVSize != VSize))
 	{
-		m_WindowVSize= 1;									// Making Height Equal One
+		m_WindowHSize= HSize;
+		m_WindowVSize= VSize;
+
+		// from NeHe's Tutorial 3
+		if (m_WindowVSize == 0)								// Prevent A Divide By Zero By
+		{
+			m_WindowVSize= 1;									// Making Height Equal One
+		}
+
+		glViewport(0,0,m_WindowHSize,m_WindowVSize);			// Reset The Current Viewport
+
+		updateAspectRatio();
+
+		updateProjectionMat();
+
+		updateMinimumRatioSize();
 	}
-
-	glViewport(0,0,m_WindowHSize,m_WindowVSize);			// Reset The Current Viewport
-
-	updateAspectRatio();
-
-	updateProjectionMat();
-
-	updateMinimumRatioSize();
 }
 
 GLC_uint GLC_Viewport::renderAndSelect(int x, int y)
