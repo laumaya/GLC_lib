@@ -27,10 +27,10 @@
 // Class chunk id
 quint32 GLC_Sphere::m_ChunkId= 0xA710;
 
-GLC_Sphere::GLC_Sphere(double radius)
+GLC_Sphere::GLC_Sphere(double radius, int discretization)
 : GLC_Mesh()
 , m_Radius (radius)
-, m_Discret(glc::GLC_POLYDISCRET)
+, m_Discret(discretization)
 , m_ThetaMin (0.0)
 , m_ThetaMax(2 * glc::PI)
 , m_PhiMin(-glc::PI / 2.0)

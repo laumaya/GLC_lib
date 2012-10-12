@@ -43,7 +43,7 @@ class GLC_LIB_EXPORT GLC_Sphere : public GLC_Mesh
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct a sphere with the given radius
-	GLC_Sphere(double radius);
+	GLC_Sphere(double radius, int discretization= glc::GLC_POLYDISCRET);
 
 	//! Copy constructor
 	GLC_Sphere(const GLC_Sphere & sphere);
