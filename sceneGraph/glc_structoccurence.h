@@ -52,7 +52,10 @@ public:
 	GLC_StructOccurence();
 
 	//! Create Occurence of the specified instance
-	GLC_StructOccurence(GLC_StructInstance*, GLC_WorldHandle* pWorldHandle= NULL, GLuint shaderId=0);
+	GLC_StructOccurence(GLC_StructInstance* pStructInstance, GLC_WorldHandle* pWorldHandle= NULL, GLuint shaderId=0);
+
+	//! Create Occurence of the specified instance and Uid
+	GLC_StructOccurence(GLC_StructInstance* pStructInstance, GLC_uint id, GLC_WorldHandle* pWorldHandle= NULL, GLuint shaderId=0);
 
 	//! Construct Occurence with the specified GLC_3DRep
 	GLC_StructOccurence(GLC_3DRep* pRep);
@@ -289,6 +292,9 @@ public:
 private:
 	//! Detach the occurence from the GLC_World
 	void detach();
+
+	//! Create occurrence from instance and given shader id
+	void doCreateOccurrenceFromInstance(GLuint shaderId);
 
 //////////////////////////////////////////////////////////////////////
 // Private members

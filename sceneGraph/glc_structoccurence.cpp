@@ -60,36 +60,24 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_StructInstance* pStructInstance, GL
 , m_AutomaticCreationOf3DViewInstance(true)
 , m_pRelativeMatrix(NULL)
 {
-	// Update the number of occurences
-	if (pStructInstance->hasStructOccurence())
-	{
-		GLC_StructOccurence* pFirstOccurence= pStructInstance->firstOccurenceHandle();
-		m_pNumberOfOccurence= pFirstOccurence->m_pNumberOfOccurence;
-		++(*m_pNumberOfOccurence);
-		QList<GLC_StructOccurence*> childs= pFirstOccurence->m_Childs;
-		const int size= childs.size();
-		for (int i= 0; i < size; ++i)
-		{
-			GLC_StructOccurence* pChild= childs.at(i)->clone(m_pWorldHandle, true);
-			addChild(pChild);
-		}
-	}
-	else
-	{
-		m_pNumberOfOccurence= new int(1);
-	}
+	doCreateOccurrenceFromInstance(shaderId);
+}
 
-	// Inform the world Handle
-	if (NULL != m_pWorldHandle)
-	{
-		m_pWorldHandle->addOccurence(this, shaderId);
-	}
-
-	// Update Absolute matrix
-	updateAbsoluteMatrix();
-
-	// Update instance
-	m_pStructInstance->structOccurenceCreated(this);
+GLC_StructOccurence::GLC_StructOccurence(GLC_StructInstance* pStructInstance, GLC_uint id, GLC_WorldHandle* pWorldHandle, GLuint shaderId)
+: m_Uid(id)
+, m_pWorldHandle(pWorldHandle)
+, m_pNumberOfOccurence(NULL)
+, m_pStructInstance(pStructInstance)
+, m_pParent(NULL)
+, m_Childs()
+, m_AbsoluteMatrix()
+, m_OccurenceNumber(0)
+, m_IsVisible(true)
+, m_pRenderProperties(NULL)
+, m_AutomaticCreationOf3DViewInstance(true)
+, m_pRelativeMatrix(NULL)
+{
+	doCreateOccurrenceFromInstance(shaderId);
 }
 
 GLC_StructOccurence::GLC_StructOccurence(GLC_3DRep* pRep)
@@ -944,4 +932,38 @@ void GLC_StructOccurence::detach()
 			}
 		}
 	}
+}
+
+void GLC_StructOccurence::doCreateOccurrenceFromInstance(GLuint shaderId)
+{
+	// Update the number of occurences
+	if (m_pStructInstance->hasStructOccurence())
+	{
+		GLC_StructOccurence* pFirstOccurence= m_pStructInstance->firstOccurenceHandle();
+		m_pNumberOfOccurence= pFirstOccurence->m_pNumberOfOccurence;
+		++(*m_pNumberOfOccurence);
+		QList<GLC_StructOccurence*> childs= pFirstOccurence->m_Childs;
+		const int size= childs.size();
+		for (int i= 0; i < size; ++i)
+		{
+			GLC_StructOccurence* pChild= childs.at(i)->clone(m_pWorldHandle, true);
+			addChild(pChild);
+		}
+	}
+	else
+	{
+		m_pNumberOfOccurence= new int(1);
+	}
+
+	// Inform the world Handle
+	if (NULL != m_pWorldHandle)
+	{
+		m_pWorldHandle->addOccurence(this, shaderId);
+	}
+
+	// Update Absolute matrix
+	updateAbsoluteMatrix();
+
+	// Update instance
+	m_pStructInstance->structOccurenceCreated(this);
 }
