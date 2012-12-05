@@ -668,11 +668,18 @@ void GLC_Mesh::reverseNormals()
 // Copy index list in a vector for Vertex Array Use
 void GLC_Mesh::finish()
 {
-	boundingBox();
+	if (m_MeshData.lodCount() > 0)
+	{
+		boundingBox();
 
-	m_MeshData.finishLod();
+		m_MeshData.finishLod();
 
-	moveIndexToMeshDataLod();
+		moveIndexToMeshDataLod();
+	}
+	else
+	{
+		clear();
+	}
 
 	//qDebug() << "Mesh mem size= " << memmorySize();
 }
