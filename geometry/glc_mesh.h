@@ -172,6 +172,9 @@ public:
 	inline GLC_uint nextPrimitiveLocalId() const
 	{return m_NextPrimitiveLocalId;}
 
+	//! Return the set of primitives id
+	QSet<GLC_uint> setOfPrimitiveId() const;
+
 	//! Return true if the mesh position data is empty
 	inline bool isEmpty() const
 	{return m_MeshData.isEmpty();}

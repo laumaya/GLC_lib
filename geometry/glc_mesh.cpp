@@ -388,6 +388,26 @@ QList<QVector<GLuint> > GLC_Mesh::getFansIndex(int lod, GLC_uint materialId) con
 	return result;
 }
 
+QSet<GLC_uint> GLC_Mesh::setOfPrimitiveId() const
+{
+	QList<GLC_uint> subject;
+	if (!m_PrimitiveGroups.isEmpty())
+	{
+		LodPrimitiveGroups* pMasterLodPrimitiveGroup= m_PrimitiveGroups.value(0);
+		LodPrimitiveGroups::const_iterator iGroup= pMasterLodPrimitiveGroup->constBegin();
+		while (iGroup != pMasterLodPrimitiveGroup->constEnd())
+		{
+			GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+			subject.append(pCurrentGroup->triangleGroupId());
+			subject.append(pCurrentGroup->stripGroupId());
+			subject.append(pCurrentGroup->fanGroupId());
+			++iGroup;
+		}
+	}
+
+	return QSet<GLC_uint>::fromList(subject);
+}
+
 GLC_Mesh* GLC_Mesh::createMeshOfGivenLod(int lodIndex)
 {
 	Q_ASSERT(m_MeshData.lodCount() > lodIndex);
