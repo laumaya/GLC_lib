@@ -515,16 +515,31 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect, const double &
 	return *this;
 }
 
-GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2)
+GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &v1, const GLC_Vector3d &v2)
 {
 
-	// Compute rotation matrix
-	const GLC_Vector3d VectAxeRot(Vect1 ^ Vect2);
-	// Check if rotation vector axis is not null
-	if (!VectAxeRot.isNull())
-	{  // Ok, vector not null
-		const double Angle= acos(Vect1 * Vect2);
-		setMatRot(VectAxeRot, Angle);
+	if ((v1 != v2) && !v1.isNull() && !v2.isNull())
+	{
+		if (v1 != -v2)
+		{
+			const GLC_Vector3d rotationAxis(v1 ^ v2);
+			if (!rotationAxis.isNull())
+			{
+				const double Angle= acos(v1 * v2);
+				setMatRot(rotationAxis, Angle);
+			}
+		}
+		else
+		{
+			// v1 == -v2
+			GLC_Vector3d otherVector(glc::Z_AXIS);
+			if ((otherVector == v1) || (otherVector == -v2))
+			{
+				otherVector= glc::Y_AXIS;
+			}
+			const GLC_Vector3d rotationVector((v1 ^ otherVector).normalize());
+			setMatRot(rotationVector, glc::PI);
+		}
 	}
 
 	return *this;
