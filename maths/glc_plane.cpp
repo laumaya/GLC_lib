@@ -137,3 +137,12 @@ GLC_Plane& GLC_Plane::setPlane(const GLC_Vector3d& normal, const GLC_Point3d& po
 
 	return *this;
 }
+
+GLC_Plane& GLC_Plane::setNormal(const GLC_Vector3d& normal)
+{
+	m_Eq[0]= normal.x();
+	m_Eq[1]= normal.y();
+	m_Eq[2]= normal.z();
+
+	return *this;
+}

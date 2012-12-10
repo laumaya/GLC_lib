@@ -144,6 +144,9 @@ public:
 	//! Set the plane from the given normal and point and return a reference to this plane
 	GLC_Plane& setPlane(const GLC_Vector3d& normal, const GLC_Point3d& point);
 
+	//! Set this plane normal to the given normal and return a reference to this plane
+	GLC_Plane& setNormal(const GLC_Vector3d& normal);
+
 
 //@}
 
