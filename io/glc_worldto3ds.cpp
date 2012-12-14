@@ -424,7 +424,7 @@ Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* 
 			{
 				const QString type(QFileInfo(textureName).suffix());
 				QString newTextureFile= filePath + QDir::separator() + textureName;
-				textureImage.save(newTextureFile, type.toUpper().toAscii().data());
+				textureImage.save(newTextureFile, type.toUpper().toLatin1().data());
 				strcpy(pSubject->texture1_map.name, textureName.toLocal8Bit().data());
 				m_TextureToFileName.insert(pMat->textureHandle(), textureName);
 			}
