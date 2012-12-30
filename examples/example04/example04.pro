@@ -20,3 +20,5 @@ include(../../install.pri)
 
 target.path = $${GLC_LIB_DIR}/examples
 INSTALLS += target
+
+OTHER_FILES +=
