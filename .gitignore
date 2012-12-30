@@ -4,3 +4,8 @@
 /.project
 /Makefile
 /qrc_glc_lib.cpp
+
+*.dylib
+
+.DS_Store
+

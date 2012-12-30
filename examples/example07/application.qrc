@@ -1,0 +1,7 @@
+    <!DOCTYPE RCC><RCC version="1.0">
+    <qresource>
+        <file>example07.obj</file>
+        <file>exemple07.png</file>
+        <file>fond_exemple07.png</file>
+    </qresource>
+    </RCC>
