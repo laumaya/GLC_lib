@@ -1,1 +1,4 @@
+/Makefile
 /Build
+/*.app
+/.DS_Store
