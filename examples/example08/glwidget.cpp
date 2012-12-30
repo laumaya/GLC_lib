@@ -225,7 +225,7 @@ void GLWidget::select(const int x, const int y)
 	GLC_uint SelectionID= m_GlView.renderAndSelect(x, y);
 	setAutoBufferSwap(true);
 
-	if (SelectionID != 0)
+    if ((SelectionID != 0) && m_World.containsOccurence(SelectionID))
 	{
 		GLC_3DViewInstance instance(*m_World.collection()->instanceHandle(SelectionID));
 		if ((!instance.isEmpty()) && (!m_TreeId.contains(instance.id())))
