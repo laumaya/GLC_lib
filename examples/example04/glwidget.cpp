@@ -123,7 +123,7 @@ void GLWidget::CreateScene()
 	// Create a new cylinder
 	GLC_3DViewInstance instance(GLC_Factory::instance()->createCylinder(1.0, 2.0));
 	// Assign material to the cylinder
-	instance.geomAt(0)->addMaterial(new GLC_Material(matBlue));
+    instance.geomAt(0)->replaceMasterMaterial(new GLC_Material(matBlue));
 	// Add the cylinder to the collection
 	m_Collection.add(instance);
 
@@ -134,14 +134,6 @@ void GLWidget::CreateScene()
 		instance.geomAt(0)->setWireColor(Qt::white);
 		m_Collection.add(instance);
 	}
-
-	//! Create a line
-	{
-		GLC_3DViewInstance instance(GLC_Factory::instance()->createLine(GLC_Point3d(0.0, 0.0, 0.0), GLC_Point3d(0.0, 3.0, 3.0)));
-		instance.geomAt(0)->setWireColor(Qt::white);
-		m_Collection.add(instance);
-	}
-
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *e)
