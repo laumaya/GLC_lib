@@ -6,6 +6,7 @@ QT += opengl core
 CONFIG += exceptions warn_on
 
 TARGET = GLC_lib
+DESTDIR = ./
 VERSION = 2.5.0
 
 DEFINES += CREATE_GLC_LIB_DLL
