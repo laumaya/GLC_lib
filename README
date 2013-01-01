@@ -8,7 +8,7 @@ HOW TO BUILD GLC_lib
    System requirements
    ------------------
 
-    - Qt4.8 or Qt5.0
+    - Qt4.8 or Qt5.0 (Angle not supported)
 
    Linux, Mac:
    -----------
@@ -21,7 +21,7 @@ HOW TO BUILD GLC_lib
 
    Windows:
    --------
-
+     Qt5 Angle is not supported, Qt5 must use OpenGL
      Open a Windows Qt4.8 or Qt5.0 command prompt.
      <path>/glc_lib-<version>
      quake -recursive
