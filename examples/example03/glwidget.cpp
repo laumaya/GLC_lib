@@ -82,8 +82,6 @@ void GLWidget::paintGL()
 
 	// Load identity matrix
 	GLC_Context::current()->glcLoadIdentity();
-
-//////////////////////////// GLC specific///////////////////////////////////////
 	try
 	{
 		// Set the opengl clipping plane
@@ -105,14 +103,11 @@ void GLWidget::paintGL()
 	{
 		qDebug() << e.what();
 	}
-//////////////////////////End GLC specific/////////////////////////////////////
 }
 
 void GLWidget::resizeGL(int width, int height)
 {
-//////////////////////////// GLC specific///////////////////////////////////////
 	m_GlView.setWinGLSize(width, height);	// Compute window aspect ratio
-//////////////////////////End GLC specific/////////////////////////////////////
 
 }
 void GLWidget::mousePressEvent(QMouseEvent *e)
