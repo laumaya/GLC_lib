@@ -5,6 +5,9 @@ QT += opengl core
 
 CONFIG += exceptions warn_on
 
+ios: CONFIG += static
+
+
 TARGET = GLC_lib
 DESTDIR = ./
 VERSION = 2.5.0
