@@ -87,7 +87,7 @@ bool GLC_WorldTo3ds::exportToFile(const QString& fileName, bool useAbsolutePosit
 	{
 		m_pLib3dsFile= lib3ds_file_new();
 		saveWorld();
-		subject= lib3ds_file_save(m_pLib3dsFile, fileName.toLocal8Bit().data());
+        subject= lib3ds_file_save(m_pLib3dsFile, fileName.toLatin1().data());
 	}
 
 	return subject;
@@ -287,7 +287,7 @@ QList<Lib3dsMesh*> GLC_WorldTo3ds::createMeshsFrom3DRep(GLC_3DRep* pRep, const Q
 Lib3dsMesh* GLC_WorldTo3ds::create3dsMeshFromGLC_Mesh(GLC_Mesh* pMesh, const QString& meshName)
 {
 	// Create empty 3ds mesh with the given name
-	Lib3dsMesh* p3dsMesh= lib3ds_mesh_new(meshName.toLocal8Bit().data());
+    Lib3dsMesh* p3dsMesh= lib3ds_mesh_new(meshName.toLatin1().data());
 
 	const int stride= 3;
 
@@ -369,7 +369,7 @@ Lib3dsMaterial* GLC_WorldTo3ds::get3dsMaterialFromGLC_Material(GLC_Material* pMa
 Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* pMat, const QString& matName)
 {
 	Lib3dsMaterial* pSubject= lib3ds_material_new();
-	strcpy(pSubject->name, matName.toLocal8Bit().data());
+    strcpy(pSubject->name, matName.toLatin1().data());
 
 
 	// Ambient Color
@@ -425,14 +425,14 @@ Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* 
 				const QString type(QFileInfo(textureName).suffix());
 				QString newTextureFile= filePath + QDir::separator() + textureName;
 				textureImage.save(newTextureFile, type.toUpper().toLatin1().data());
-				strcpy(pSubject->texture1_map.name, textureName.toLocal8Bit().data());
+                strcpy(pSubject->texture1_map.name, textureName.toLatin1().data());
 				m_TextureToFileName.insert(pMat->textureHandle(), textureName);
 			}
 		}
 		else
 		{
 			QString textureName= m_TextureToFileName.value(pMat->textureHandle());
-			strcpy(pSubject->texture1_map.name, textureName.toLocal8Bit().data());
+            strcpy(pSubject->texture1_map.name, textureName.toLatin1().data());
 		}
 
 	}
