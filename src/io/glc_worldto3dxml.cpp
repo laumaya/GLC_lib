@@ -1132,9 +1132,10 @@ QString GLC_WorldTo3dxml::xmlFileName(QString fileName)
 		fileName.remove(prefix);
 	}
 
-	fileName= symplifyName(fileName);
-
-
+    if (m_ExportType != StructureOnly)
+    {
+        fileName= symplifyName(fileName);
+    }
 
 	QString newName;
 	if (!m_3dxmlFileSet.contains(prefix + fileName))
@@ -1275,7 +1276,10 @@ QString GLC_WorldTo3dxml::symplifyName(QString name)
 	const int nameSize= name.size();
 	for (int i= 0; i < nameSize; ++i)
 	{
-		if (!name.at(i).isLetterOrNumber() && (name.at(i) != '.'))
+        const QChar curChar= name.at(i);
+        bool simplifyCharacter= !curChar.isLetterOrNumber() && (curChar != '.');
+        simplifyCharacter= simplifyCharacter && (curChar != '/') && (curChar != '\\');
+        if (simplifyCharacter)
 		{
 			name.replace(i, 1, '_');
 		}
