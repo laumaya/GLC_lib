@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
-
+!ios{
 SUBDIRS +=  example01 \
             example02 \
             example03 \
@@ -9,3 +9,6 @@ SUBDIRS +=  example01 \
             example07 \
             example08 \
             example09
+}
+
+

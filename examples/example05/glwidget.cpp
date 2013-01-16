@@ -111,7 +111,7 @@ void GLWidget::CreateScene()
 
     // Create a box at the center of the scene
     GLC_3DRep box(GLC_Factory::instance()->createBox(0.1, 0.1, 0.1));
-    box.geomAt(0)->addMaterial(new GLC_Material(m_DefaultColor));
+    box.geomAt(0)->replaceMasterMaterial(new GLC_Material(m_DefaultColor));
     pRoot->addChild(new GLC_StructInstance(box.clone()));
 
     // create Z axis representation
@@ -121,7 +121,7 @@ void GLWidget::CreateScene()
 
     // create X axis representation
     cylinder= GLC_Factory::instance()->createCylinder(0.02, 2.0);
-    cylinder.geomAt(0)->addMaterial(new GLC_Material(Qt::red));
+    cylinder.geomAt(0)->replaceMasterMaterial(new GLC_Material(Qt::red));
     GLC_Matrix4x4 matRot(glc::Y_AXIS, glc::PI/2);			//Create a rotation matrix
     pInstance= new GLC_StructInstance(cylinder.clone());
     pInstance->move(matRot);								// move the cylinder
@@ -129,7 +129,7 @@ void GLWidget::CreateScene()
 
     // create Y axis representation
     cylinder= GLC_Factory::instance()->createCylinder(0.02, 2.0);
-    cylinder.geomAt(0)->addMaterial(new GLC_Material(Qt::green));
+    cylinder.geomAt(0)->replaceMasterMaterial(new GLC_Material(Qt::green));
     matRot.setMatRot(glc::X_AXIS, -glc::PI/2);								// Set rotation matrix
     pInstance= new GLC_StructInstance(cylinder.clone());
     pInstance->move(matRot);								// move the cylinder
