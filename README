@@ -1,0 +1,33 @@
+HOW TO BUILD GLC_lib
+====================
+
+
+ Synopsis
+ ========
+
+   System requirements
+   ------------------
+
+    - Qt4.8 or Qt5.0 (Angle not supported)
+
+   Linux, Mac:
+   -----------
+
+     cd <path>/glc_lib-<version>
+     qmake -recursive
+     make -j 4
+     To install GLC_lib into /usr/local/GLC-lib-<version>
+     sudo make install
+
+   Windows:
+   --------
+     Qt5 Angle is not supported, Qt5 must use OpenGL
+     Open a Windows Qt4.8 or Qt5.0 command prompt.
+     <path>/glc_lib-<version>
+     quake -recursive
+     nmake // jom // mingw32-make
+
+     For MinGW, ensure that the compiler can
+     be found in the path.
+
+     To install GLC_lib into : C:\GLC-lib-<version>
