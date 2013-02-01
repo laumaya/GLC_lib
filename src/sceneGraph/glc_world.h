@@ -177,10 +177,6 @@ public:
 	inline QList<GLC_StructOccurence*> selectedOccurenceList() const
 	{return m_pWorldHandle->selectionSetHandle()->occurencesList();}
 
-	//! Return the list of selected occurences
-	inline QList<GLC_StructOccurence*> selectedPrimitiveOccurenceList() const
-	{return m_pWorldHandle->selectionSetHandle()->occurencesListWithSelectedPrimitive();}
-
 	//! Take the root occurence of this world
 	GLC_StructOccurence* takeRootOccurrence();
 
@@ -253,8 +249,6 @@ public:
 	//! Hide selected 3DViewInstance
 	inline void hideSelected3DViewInstance()
 	{m_pWorldHandle->setSelected3DViewInstanceVisibility(false);}
-
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
