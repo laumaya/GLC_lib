@@ -340,7 +340,39 @@ int GLC_Mesh::numberOfFans(int lod, GLC_uint materialId) const
 	// Check if the lod exist and material exists
 	if(!m_PrimitiveGroups.contains(lod))return 0;
 	else if (!m_PrimitiveGroups.value(lod)->contains(materialId)) return 0;
-	else return m_PrimitiveGroups.value(lod)->value(materialId)->fansSizes().size();
+    else return m_PrimitiveGroups.value(lod)->value(materialId)->fansSizes().size();
+}
+
+GLC_Material *GLC_Mesh::MaterialOfPrimitiveId(GLC_uint id, int lod) const
+{
+    GLC_Material* pSubject= NULL;
+
+    if (!m_PrimitiveGroups.isEmpty())
+    {
+        LodPrimitiveGroups* pMasterLodPrimitiveGroup= m_PrimitiveGroups.value(lod);
+        LodPrimitiveGroups::const_iterator iGroup= pMasterLodPrimitiveGroup->constBegin();
+        while (iGroup != pMasterLodPrimitiveGroup->constEnd())
+        {
+            GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+            QList<GLC_uint> listOfId;
+
+            listOfId.append(pCurrentGroup->triangleGroupId());
+            listOfId.append(pCurrentGroup->stripGroupId());
+            listOfId.append(pCurrentGroup->fanGroupId());
+            if (listOfId.contains(id))
+            {
+                const GLC_uint materialId= pCurrentGroup->id();
+                pSubject= this->material(materialId);
+                iGroup= pMasterLodPrimitiveGroup->constEnd();
+            }
+            else
+            {
+                ++iGroup;
+            }
+        }
+    }
+
+    return pSubject;
 }
 
 // Return the strips index
