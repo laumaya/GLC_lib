@@ -1,0 +1,139 @@
+/****************************************************************************
+
+ This file is part of the GLC-lib library.
+ Copyright (C) 2005-2013 Laurent Ribon (laumaya@users.sourceforge.net)
+ http://glc-lib.sourceforge.net
+
+ GLC-lib is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
+ GLC-lib is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with GLC-lib; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+*****************************************************************************/
+
+//! \file glc_extrudedmesh.h Interface for the GLC_ExtrudedMesh class.
+
+#ifndef GLC_EXTRUDEDMESH_H
+#define GLC_EXTRUDEDMESH_H
+
+#include <QList>
+#include "glc_mesh.h"
+#include "../maths/glc_vector3d.h"
+
+#include "../glc_config.h"
+
+//////////////////////////////////////////////////////////////////////
+//! \class GLC_ExtrudedMesh
+/*! \brief GLC_ExtrudedMesh : An Extruded mesh defined by a list of points,
+ *a direction and a distance*/
+//////////////////////////////////////////////////////////////////////
+
+class GLC_LIB_EXPORT GLC_ExtrudedMesh : public GLC_Mesh
+{
+//////////////////////////////////////////////////////////////////////
+/*! @name Constructor / Destructor */
+//@{
+//////////////////////////////////////////////////////////////////////
+
+public:
+    //! Default constructor
+    GLC_ExtrudedMesh(QList<GLC_Point3d> points, GLC_Vector3d dir, double lenght);
+
+    //! Copy constructor
+    GLC_ExtrudedMesh(const GLC_ExtrudedMesh& other);
+
+    //! Destructor
+    virtual ~GLC_ExtrudedMesh();
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+    //! Return the class Chunk ID
+    static quint32 chunckID();
+
+    //! Return the list of points which defined the face to extrude
+    inline QList<GLC_Point3d> facePoints() const
+    {return m_Points;}
+
+    //! Return the extrusion vector
+    inline GLC_Vector3d extrusionVector() const
+    {m_ExtrusionVector;}
+
+    //! Return the extrusion lenght
+    inline double extrusionLenght() const
+    {return m_ExtrusionLenght;}
+
+    //! Return a copy of the extruded mesh
+    virtual GLC_Geometry* clone() const;
+
+    //! Return the extruded mesh bounding box
+    virtual const GLC_BoundingBox& boundingBox(void);
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name OpenGL Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+protected:
+    //! Virtual interface for OpenGL Geometry set up.
+    /*! This Virtual function have to be implemented in concrete class.*/
+    virtual void glDraw(const GLC_RenderProperties& renderProperties);
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Private services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+private:
+    //! Create the extruded mesh mesh and wire
+    void createMeshAndWire();
+
+    //! Create the extruded mesh mesh
+    void createMesh();
+
+    //! Create the extruded mesh wire
+    void createWire();
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+// Private members
+//////////////////////////////////////////////////////////////////////
+private:
+    //! The list of point which define the face to extrude
+    QList<GLC_Point3d> m_Points;
+
+    //! The direction of extrusion
+    GLC_Vector3d m_ExtrusionVector;
+
+    //! The extrusion lenght
+    double m_ExtrusionLenght;
+
+    //! Class chunk id
+    static quint32 m_ChunkId;
+};
+
+#endif // GLC_EXTRUDEDMESH_H
