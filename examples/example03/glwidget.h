@@ -34,6 +34,9 @@
 #include <GLC_Viewport>
 // The Mover controller is used to change the point of view
 #include <GLC_MoverController>
+
+#include <GLC_3DViewCollection>
+
 //////////////////////////End GLC specific/////////////////////////////////////
 
 class GLWidget : public QGLWidget
@@ -53,6 +56,7 @@ private:
 private:
 //////////////////////////// GLC specific///////////////////////////////////////
 	GLC_3DViewInstance m_Cylinder;
+    GLC_3DViewCollection m_Collection;
 	GLC_Light m_light;
 	GLC_Viewport m_GlView;
 	GLC_MoverController m_MoverController;
