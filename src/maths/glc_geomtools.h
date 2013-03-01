@@ -111,21 +111,37 @@ namespace glc
 
 	GLC_LIB_EXPORT bool compare(double p1, double p2);
 
+    GLC_LIB_EXPORT bool compare(double p1, double p2, double accuracy);
+
 	GLC_LIB_EXPORT bool compareAngle(double p1, double p2);
 
 	GLC_LIB_EXPORT bool compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2);
 
+    GLC_LIB_EXPORT bool compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2, double accuracy);
+
 	GLC_LIB_EXPORT bool compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2);
+
+    GLC_LIB_EXPORT bool compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2, double accuracy);
 
 	GLC_LIB_EXPORT bool compare(const QPointF& v1, const QPointF& v2);
 
+    GLC_LIB_EXPORT bool compare(const QPointF& v1, const QPointF& v2, double accuracy);
+
 	GLC_LIB_EXPORT double round(double value);
+
+    GLC_LIB_EXPORT double round(double value, double accuracy);
 
 	GLC_LIB_EXPORT QPointF round(const QPointF& point);
 
+    GLC_LIB_EXPORT QPointF round(const QPointF& point, double accuracy);
+
 	GLC_LIB_EXPORT GLC_Vector2d round(const GLC_Vector2d& vector);
 
+    GLC_LIB_EXPORT GLC_Vector2d round(const GLC_Vector2d& vector, double accuracy);
+
 	GLC_LIB_EXPORT GLC_Vector3d round(const GLC_Vector3d& vector);
+
+    GLC_LIB_EXPORT GLC_Vector3d round(const GLC_Vector3d& vector, double accuracy);
 
 	//! Return true if the given 2d point is inside the given polygon
 	GLC_LIB_EXPORT bool pointInPolygon(const GLC_Point2d& point, const QList<GLC_Point2d>& polygon);
@@ -135,6 +151,6 @@ namespace glc
 
 //@}
 
-};
+}
 
 #endif /*GLC_GEOMTOOLS_H_*/

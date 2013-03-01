@@ -558,6 +558,11 @@ bool glc::compare(double p1, double p2)
 	return qAbs(p1 - p2) <= comparedPrecision;
 }
 
+bool glc::compare(double p1, double p2, double accuracy)
+{
+    return qAbs(p1 - p2) <= accuracy;
+}
+
 bool glc::compareAngle(double p1, double p2)
 {
 	const double anglePrecision= toRadian(comparedPrecision);
@@ -573,16 +578,37 @@ bool glc::compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2)
 	return compareResult;
 }
 
+bool glc::compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2, double accuracy)
+{
+    bool compareResult= (qAbs(v1.x() - v2.x()) <= accuracy);
+    compareResult= compareResult && (qAbs(v1.y() - v2.y()) <= accuracy);
+    compareResult= compareResult && (qAbs(v1.z() - v2.z()) <= accuracy);
+
+    return compareResult;
+}
+
 bool glc::compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2)
 {
 	bool compareResult= (qAbs(v1.getX() - v2.getX()) <= comparedPrecision);
 	return compareResult && (qAbs(v1.getY() - v2.getY()) <= comparedPrecision);
 }
 
+bool glc::compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2, double accuracy)
+{
+    bool compareResult= (qAbs(v1.getX() - v2.getX()) <= accuracy);
+    return compareResult && (qAbs(v1.getY() - v2.getY()) <= accuracy);
+}
+
 bool glc::compare(const QPointF& v1, const QPointF& v2)
 {
 	bool compareResult= (qAbs(v1.x() - v2.x()) <= comparedPrecision);
 	return compareResult && (qAbs(v1.y() - v2.y()) <= comparedPrecision);
+}
+
+bool glc::compare(const QPointF& v1, const QPointF& v2, double accuracy)
+{
+    bool compareResult= (qAbs(v1.x() - v2.x()) <= accuracy);
+    return compareResult && (qAbs(v1.y() - v2.y()) <= accuracy);
 }
 
 double glc::round(double value)
@@ -593,10 +619,24 @@ double glc::round(double value)
 	return value;
 }
 
+double glc::round(double value, double accuracy)
+{
+    value= value / accuracy;
+    value= (value >= 0.0 ? floor(value + 0.5) : ceil(value - 0.5));
+    value= value * accuracy;
+    return value;
+}
+
 QPointF glc::round(const QPointF& point)
 {
 	QPointF subject(glc::round(static_cast<double>(point.x())), glc::round(static_cast<double>(point.y())));
 	return subject;
+}
+
+QPointF glc::round(const QPointF& point, double accuracy)
+{
+    QPointF subject(glc::round(static_cast<double>(point.x()), accuracy), glc::round(static_cast<double>(point.y()), accuracy));
+    return subject;
 }
 
 GLC_Vector2d round(const GLC_Vector2d& vector)
@@ -606,11 +646,25 @@ GLC_Vector2d round(const GLC_Vector2d& vector)
 	return subject;
 }
 
+GLC_Vector2d round(const GLC_Vector2d& vector, double accuracy)
+{
+    GLC_Vector2d subject(glc::round(vector.getX(), accuracy), glc::round(vector.getY(), accuracy));
+
+    return subject;
+}
+
 GLC_Vector3d round(const GLC_Vector3d& vector)
 {
 	GLC_Vector3d subject(glc::round(vector.x()), glc::round(vector.y()), glc::round(vector.z()));
 
 	return subject;
+}
+
+GLC_Vector3d round(const GLC_Vector3d& vector, double accuracy)
+{
+    GLC_Vector3d subject(glc::round(vector.x(), accuracy), glc::round(vector.y(), accuracy), glc::round(vector.z(), accuracy));
+
+    return subject;
 }
 
 bool glc::pointInPolygon(const GLC_Point2d& point, const QList<GLC_Point2d>& polygon)

@@ -46,6 +46,7 @@ class GLC_LIB_EXPORT GLC_ExtrudedMesh : public GLC_Mesh
 
 public:
     //! Default constructor
+    /*! The points list must be in counterclockwise order*/
     GLC_ExtrudedMesh(QList<GLC_Point3d> points, GLC_Vector3d dir, double lenght);
 
     //! Copy constructor
@@ -70,7 +71,7 @@ public:
 
     //! Return the extrusion vector
     inline GLC_Vector3d extrusionVector() const
-    {m_ExtrusionVector;}
+    {return m_ExtrusionVector;}
 
     //! Return the extrusion lenght
     inline double extrusionLenght() const
@@ -89,6 +90,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+    //! Assignement operator overload
+    GLC_ExtrudedMesh& operator=(const GLC_ExtrudedMesh& other);
 
 //@}
 
@@ -117,6 +120,30 @@ private:
     //! Create the extruded mesh wire
     void createWire();
 
+    //! compute the given face normal
+    void computeGivenFaceNormal();
+
+    //! Return true if the list of points lie on a plane
+    bool pointsLieOnAPlane() const;
+
+    //! Return outline normmals
+    GLfloatVector outlineNormals() const;
+
+    //! Return given face vertices
+    GLfloatVector givenFaceVertices() const;
+
+    //! Return the given face normals
+    GLfloatVector givenFaceNormals() const;
+
+    //! Return the list of points of the created face
+    QList<GLC_Point3d> createdFacePoints() const;
+
+    //! Return the created face normals
+    GLfloatVector createdFaceNormals() const;
+
+    //! Return created face vertices
+    GLfloatVector createdFaceVertices() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -131,6 +158,9 @@ private:
 
     //! The extrusion lenght
     double m_ExtrusionLenght;
+
+    //! The normal of the given face
+    GLC_Vector3d m_GivenFaceNormal;
 
     //! Class chunk id
     static quint32 m_ChunkId;
