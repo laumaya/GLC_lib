@@ -149,6 +149,12 @@ namespace glc
 	//! Return the angle from 0 to 2PI from an given angle from -PI to PI
 	GLC_LIB_EXPORT double zeroTo2PIAngle(double angle);
 
+    //! Return the 2D polygon from the given plane 3D polygon
+    GLC_LIB_EXPORT QList<GLC_Point2d> polygonIn2d(QList<GLC_Point3d> polygon3d);
+
+    //! Return 2D polygon with normalyze coordinate
+    GLC_LIB_EXPORT QList<GLC_Point2d> normalyzePolygon(const QList<GLC_Point2d>& polygon);
+
 //@}
 
 }

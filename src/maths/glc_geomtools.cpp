@@ -459,7 +459,6 @@ void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulk
 			// Create the index
 			QList<int> index= face;
 
-			QList<int> tList;
 			const bool faceIsCounterclockwise= isCounterclockwiseOrdered(polygon);
 
 			if(!faceIsCounterclockwise)
@@ -475,6 +474,7 @@ void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulk
 				}
 			}
 
+            QList<int> tList;
 			triangulate(polygon, index, tList);
 			size= tList.size();
 			for (int i= 0; i < size; i+= 3)
@@ -713,4 +713,77 @@ double glc::zeroTo2PIAngle(double angle)
 		angle= (2.0 * glc::PI) + angle;
 	}
 	return angle;
+}
+
+QList<GLC_Point2d> glc::polygonIn2d(QList<GLC_Point3d> polygon3d)
+{
+    const int count= polygon3d.count();
+    Q_ASSERT(count > 2);
+
+    // Compute face normal
+    const GLC_Point3d point1(polygon3d[0]);
+    const GLC_Point3d point2(polygon3d[1]);
+    const GLC_Point3d point3(polygon3d[2]);
+
+    const GLC_Vector3d edge1(point2 - point1);
+    const GLC_Vector3d edge2(point3 - point2);
+
+    GLC_Vector3d polygonPlaneNormal(edge1 ^ edge2);
+    polygonPlaneNormal.normalize();
+
+    // Create the transformation matrix
+    GLC_Matrix4x4 transformation;
+
+    GLC_Vector3d rotationAxis(polygonPlaneNormal ^ Z_AXIS);
+    if (!rotationAxis.isNull())
+    {
+        const double angle= acos(polygonPlaneNormal * Z_AXIS);
+        transformation.setMatRot(rotationAxis, angle);
+    }
+
+    QList<GLC_Point2d> subject;
+    // Transform polygon vertexs
+    for (int i=0; i < count; ++i)
+    {
+        polygon3d[i]= transformation * polygon3d[i];
+        // Create 2d vector
+        subject << polygon3d[i].toVector2d(Z_AXIS);
+    }
+
+    return subject;
+}
+
+QList<GLC_Point2d> glc::normalyzePolygon(const QList<GLC_Point2d>& polygon)
+{
+    qDebug() << "normalyzePolygon ";
+    QList<GLC_Point2d> subject;
+    const int count= polygon.count();
+    Q_ASSERT(count > 2);
+
+    GLC_Point2d minPoint= polygon.first();
+    GLC_Point2d maxPoint= minPoint;
+    for (int i= 1; i < count; ++i)
+    {
+        GLC_Point2d point= polygon.at(i);
+        minPoint.setX(qMin(point.getX(), minPoint.getX()));
+        minPoint.setY(qMin(point.getY(), minPoint.getY()));
+
+        maxPoint.setX(qMax(point.getX(), maxPoint.getX()));
+        maxPoint.setY(qMax(point.getY(), maxPoint.getY()));
+    }
+    const GLC_Vector2d range= maxPoint - minPoint;
+    Q_ASSERT(range.getX() != 0.0);
+    Q_ASSERT(range.getY() != 0.0);
+
+    for (int i= 0; i < count; ++i)
+    {
+        const GLC_Point2d point= polygon.at(i);
+        const GLC_Point2d temp= (point - minPoint);
+
+        const GLC_Point2d result(temp.getX() / range.getX(), temp.getY() / range.getY());
+        qDebug() << result.toString();
+        subject.append(result);
+    }
+
+    return subject;
 }
