@@ -121,8 +121,8 @@ void GLC_ExtrudedMesh::createMesh()
 
     {
         // Given face (Face 1)
-        GLfloatVector face1Vertices= givenFaceVertices();
-        GLfloatVector face1Normals= givenFaceNormals();
+        GLfloatVector face1Vertices= baseFaceVertices();
+        GLfloatVector face1Normals= baseFaceNormals();
         IndexList face1Index;
         const GLuint count= m_Points.count();
         for (GLuint i= 0; i < (count + 1); ++i)
@@ -155,7 +155,35 @@ void GLC_ExtrudedMesh::createMesh()
     }
 
 
+    {
+        // Add outline faces
+        const GLuint count= m_Points.count();
+        GLuint offset1= vertices.size() / 3;
+        GLfloatVector facesNormals= baseOutlineNormals();
+        GLuint indexLenght= (facesNormals.size() / 3);
+        GLuint offset2= offset1 + indexLenght;
+        facesNormals= facesNormals + createdOutlineNormals();
+        GLfloatVector facesVertices= baseOutlineFacesVertices() + createdOutlineFacesVertices();
+        vertices+= facesVertices;
+        normals+= facesNormals;
 
+        for (GLuint face= 0; face < count; ++face)
+        {
+            IndexList faceIndex;
+            GLuint startIndex1= offset1 + (face * 2);
+            GLuint startIndex2= offset2 + (indexLenght -1) - (face * 2);
+            faceIndex << startIndex1 << startIndex2 << (startIndex1 + 1) << (startIndex2 - 1);
+            qDebug() << "faceIndex" << faceIndex;
+
+            qDebug() << normals.at(startIndex1 * 3) << normals.at(startIndex1 * 3 + 1) << normals.at(startIndex1 * 3 + 2);
+            qDebug() << normals.at(startIndex2 * 3) << normals.at(startIndex2 * 3 + 1) << normals.at(startIndex2 * 3 + 2);
+            qDebug() << normals.at((startIndex1 + 1) * 3) << normals.at((startIndex1 + 1) * 3 + 1) << normals.at((startIndex1 + 1) * 3 + 2);
+            qDebug() << normals.at((startIndex2 - 1) * 3) << normals.at((startIndex2 - 1) * 3 + 1) << normals.at((startIndex2 - 1) * 3 + 2);
+
+
+            addTrianglesStrip(pMaterial, faceIndex);
+        }
+    }
 
     // Add bulk data in to the mesh
     GLC_Mesh::addVertice(vertices);
@@ -199,15 +227,15 @@ bool GLC_ExtrudedMesh::pointsLieOnAPlane() const
     return subject;
 }
 
-GLfloatVector GLC_ExtrudedMesh::outlineNormals() const
+GLfloatVector GLC_ExtrudedMesh::baseOutlineNormals() const
 {
     const int count= m_Points.count();
     GLfloatVector subject(count * 6); // 2 normals by vertex and 3 components pear normal => 6
-    GLC_Vector3d faceNormal= m_ExtrusionVector.inverted();
     for (int i= 0; i < count; ++i)
     {
         GLC_Vector3d vect(m_Points.at((i + 1) % count) - m_Points.at(i));
-        GLC_Vector3d normal= faceNormal ^ vect;
+        GLC_Vector3d normal= GLC_Vector3d(m_ExtrusionVector ^ vect).normalize();
+        qDebug() << "normal " << normal.toString();
 
         // First segment point
         subject[(6 * i)]= static_cast<float>(normal.x());
@@ -223,7 +251,33 @@ GLfloatVector GLC_ExtrudedMesh::outlineNormals() const
     return subject;
 }
 
-GLfloatVector GLC_ExtrudedMesh::givenFaceVertices() const
+GLfloatVector GLC_ExtrudedMesh::createdOutlineNormals() const
+{
+    const int count= m_Points.count();
+    GLfloatVector subject(count * 6); // 2 normals by vertex and 3 components pear normal => 6
+    int index= 0.0;
+    for (int i= count; i > 0; --i)
+    {
+        GLC_Vector3d vect(m_Points.at(i % count) - m_Points.at(i - 1));
+        GLC_Vector3d normal= GLC_Vector3d(m_ExtrusionVector ^ vect).normalize();
+        qDebug() << "normal " << normal.toString();
+
+        // First segment point
+        subject[(6 * index)]= static_cast<float>(normal.x());
+        subject[(6 * index) + 1]= static_cast<float>(normal.y());
+        subject[(6 * index) + 2]= static_cast<float>(normal.z());
+
+        // Second segment point
+        subject[(6 * index) + 3]= static_cast<float>(normal.x());
+        subject[(6 * index) + 4]= static_cast<float>(normal.y());
+        subject[(6 * index) + 5]= static_cast<float>(normal.z());
+        ++index;
+    }
+
+    return subject;
+}
+
+GLfloatVector GLC_ExtrudedMesh::baseFaceVertices() const
 {
     const int count= m_Points.count();
     GLfloatVector subject(count * 3); // 3 components pear vertice
@@ -238,7 +292,27 @@ GLfloatVector GLC_ExtrudedMesh::givenFaceVertices() const
     return subject;
 }
 
-GLfloatVector GLC_ExtrudedMesh::givenFaceNormals() const
+GLfloatVector GLC_ExtrudedMesh::baseOutlineFacesVertices() const
+{
+    const int count= m_Points.count();
+    GLfloatVector subject(count * 6); // 3 components pear vertice * 2
+    for (int i= 0; i < count; ++i)
+    {
+        GLC_Point3d point1= m_Points.at(i);
+        subject[(6 * i)]= static_cast<float>(point1.x());
+        subject[(6 * i) + 1]= static_cast<float>(point1.y());
+        subject[(6 * i) + 2]= static_cast<float>(point1.z());
+
+        GLC_Point3d point2= m_Points.at((i + 1) % count);
+        subject[(6 * i) + 3]= static_cast<float>(point2.x());
+        subject[(6 * i) + 4]= static_cast<float>(point2.y());
+        subject[(6 * i) + 5]= static_cast<float>(point2.z());
+    }
+
+    return subject;
+}
+
+GLfloatVector GLC_ExtrudedMesh::baseFaceNormals() const
 {
     const int count= m_Points.count();
     GLfloatVector subject(count * 3); // 3 components pear normal
@@ -297,6 +371,28 @@ GLfloatVector GLC_ExtrudedMesh::createdFaceVertices() const
     }
 
     return subject;
+}
+
+GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesVertices() const
+{
+    QList<GLC_Point3d> points= createdFacePoints();
+    const int count= points.count();
+    GLfloatVector subject(count * 6); // 3 components pear vertice * 2
+    for (int i= 0; i < count; ++i)
+    {
+        GLC_Point3d point1= points.at(i);
+        subject[(6 * i)]= static_cast<float>(point1.x());
+        subject[(6 * i) + 1]= static_cast<float>(point1.y());
+        subject[(6 * i) + 2]= static_cast<float>(point1.z());
+
+        GLC_Point3d point2= points.at((i + 1) % count);
+        subject[(6 * i) + 3]= static_cast<float>(point2.x());
+        subject[(6 * i) + 4]= static_cast<float>(point2.y());
+        subject[(6 * i) + 5]= static_cast<float>(point2.z());
+    }
+
+    return subject;
+
 }
 
 void GLC_ExtrudedMesh::glDraw(const GLC_RenderProperties& renderProperties)

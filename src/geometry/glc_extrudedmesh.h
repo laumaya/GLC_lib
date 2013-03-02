@@ -126,14 +126,20 @@ private:
     //! Return true if the list of points lie on a plane
     bool pointsLieOnAPlane() const;
 
-    //! Return outline normmals
-    GLfloatVector outlineNormals() const;
+    //! Return base outline normmals
+    GLfloatVector baseOutlineNormals() const;
 
-    //! Return given face vertices
-    GLfloatVector givenFaceVertices() const;
+    //! Return created outline normmals
+    GLfloatVector createdOutlineNormals() const;
 
-    //! Return the given face normals
-    GLfloatVector givenFaceNormals() const;
+    //! Return base face vertices
+    GLfloatVector baseFaceVertices() const;
+
+    //! Return base outline faces vertices
+    GLfloatVector baseOutlineFacesVertices() const;
+
+    //! Return the base face normals
+    GLfloatVector baseFaceNormals() const;
 
     //! Return the list of points of the created face
     QList<GLC_Point3d> createdFacePoints() const;
@@ -143,6 +149,9 @@ private:
 
     //! Return created face vertices
     GLfloatVector createdFaceVertices() const;
+
+    //! Return created outline faces vertices
+    GLfloatVector createdOutlineFacesVertices() const;
 
 //@}
 
