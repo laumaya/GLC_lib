@@ -165,12 +165,23 @@ public:
 		return m_Vector[0] * Vect.m_Vector[0] + m_Vector[1] * Vect.m_Vector[1];
 	}
 
+    /*! Overload scalar division "/" operator between 2 vector*/
+    inline double operator / (const GLC_Vector2d &Vect) const
+    {
+        return m_Vector[0] / Vect.m_Vector[0] + m_Vector[1] / Vect.m_Vector[1];
+    }
+
 	/*! Overload scalar product "*" operator between 1 vector and one scalar*/
-	inline GLC_Vector2d operator * (double Scalaire) const
+    inline GLC_Vector2d operator * (double Scalaire) const
 	{
 		return GLC_Vector2d(m_Vector[0] * Scalaire, m_Vector[1] * Scalaire);;
 	}
 
+    /*! Overload scalar division "/" operator between 1 vector and one scalar*/
+    inline GLC_Vector2d operator / (double Scalaire) const
+    {
+        return GLC_Vector2d(m_Vector[0] / Scalaire, m_Vector[1] / Scalaire);;
+    }
 
 	/*! Overload equality "==" operator*/
 	inline bool operator == (const GLC_Vector2d &Vect) const
