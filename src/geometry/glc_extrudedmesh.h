@@ -135,8 +135,14 @@ private:
     //! Return base face vertices
     GLfloatVector baseFaceVertices() const;
 
+    //! Return base face texel
+    GLfloatVector baseFaceTexels() const;
+
     //! Return base outline faces vertices
     GLfloatVector baseOutlineFacesVertices() const;
+
+    //! Return base outline faces texels
+    GLfloatVector basedOutlineFacesTexels() const;
 
     //! Return the base face normals
     GLfloatVector baseFaceNormals() const;
@@ -150,8 +156,14 @@ private:
     //! Return created face vertices
     GLfloatVector createdFaceVertices() const;
 
+    //! Return created face texels
+    GLfloatVector createdFaceTexels() const;
+
     //! Return created outline faces vertices
     GLfloatVector createdOutlineFacesVertices() const;
+
+    //! Return created outline faces texels
+    GLfloatVector createdOutlineFacesTexels() const;
 
 //@}
 

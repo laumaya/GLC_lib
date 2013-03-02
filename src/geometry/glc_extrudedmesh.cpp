@@ -113,6 +113,8 @@ void GLC_ExtrudedMesh::createMesh()
     // Bulk data
     GLfloatVector vertices;
     GLfloatVector normals;
+    GLfloatVector texels= baseFaceTexels() + createdFaceTexels() + basedOutlineFacesTexels() + createdOutlineFacesTexels();
+    GLC_Mesh::addTexels(texels);
 
     // Set the material to use
     GLC_Material* pMaterial;
@@ -173,14 +175,6 @@ void GLC_ExtrudedMesh::createMesh()
             GLuint startIndex1= offset1 + (face * 2);
             GLuint startIndex2= offset2 + (indexLenght -1) - (face * 2);
             faceIndex << startIndex1 << startIndex2 << (startIndex1 + 1) << (startIndex2 - 1);
-            qDebug() << "faceIndex" << faceIndex;
-
-            qDebug() << normals.at(startIndex1 * 3) << normals.at(startIndex1 * 3 + 1) << normals.at(startIndex1 * 3 + 2);
-            qDebug() << normals.at(startIndex2 * 3) << normals.at(startIndex2 * 3 + 1) << normals.at(startIndex2 * 3 + 2);
-            qDebug() << normals.at((startIndex1 + 1) * 3) << normals.at((startIndex1 + 1) * 3 + 1) << normals.at((startIndex1 + 1) * 3 + 2);
-            qDebug() << normals.at((startIndex2 - 1) * 3) << normals.at((startIndex2 - 1) * 3 + 1) << normals.at((startIndex2 - 1) * 3 + 2);
-
-
             addTrianglesStrip(pMaterial, faceIndex);
         }
     }
@@ -193,7 +187,29 @@ void GLC_ExtrudedMesh::createMesh()
 
 void GLC_ExtrudedMesh::createWire()
 {
+    GLfloatVector baseFaceWire= baseFaceVertices();
+    baseFaceWire << baseFaceWire.at(0) << baseFaceWire.at(1) << baseFaceWire.at(2);
+    GLC_Geometry::addVerticeGroup(baseFaceWire);
 
+    GLfloatVector createdFaceWire= createdFaceVertices();
+    createdFaceWire << createdFaceWire.at(0) << createdFaceWire.at(1) << createdFaceWire.at(2);
+    GLC_Geometry::addVerticeGroup(createdFaceWire);
+
+    // Outline edges
+    const int count= m_Points.count();
+    for (int i= 0; i < count; ++i)
+    {
+        GLfloatVector edge(6); // the edge is a line
+        edge[0]= baseFaceWire.at(i * 3);
+        edge[1]= baseFaceWire.at(i * 3 + 1);
+        edge[2]= baseFaceWire.at(i * 3 + 2);
+
+        edge[3]= createdFaceWire.at(((count - i) % count) * 3);
+        edge[4]= createdFaceWire.at(((count - i) % count) * 3 + 1);
+        edge[5]= createdFaceWire.at(((count - i) % count) * 3 + 2);
+
+        GLC_Geometry::addVerticeGroup(edge);
+    }
 }
 
 void GLC_ExtrudedMesh::computeGivenFaceNormal()
@@ -238,14 +254,14 @@ GLfloatVector GLC_ExtrudedMesh::baseOutlineNormals() const
         qDebug() << "normal " << normal.toString();
 
         // First segment point
-        subject[(6 * i)]= static_cast<float>(normal.x());
-        subject[(6 * i) + 1]= static_cast<float>(normal.y());
-        subject[(6 * i) + 2]= static_cast<float>(normal.z());
+        subject[(6 * i)]= static_cast<GLfloat>(normal.x());
+        subject[(6 * i) + 1]= static_cast<GLfloat>(normal.y());
+        subject[(6 * i) + 2]= static_cast<GLfloat>(normal.z());
 
         // Second segment point
-        subject[(6 * i) + 3]= static_cast<float>(normal.x());
-        subject[(6 * i) + 4]= static_cast<float>(normal.y());
-        subject[(6 * i) + 5]= static_cast<float>(normal.z());
+        subject[(6 * i) + 3]= static_cast<GLfloat>(normal.x());
+        subject[(6 * i) + 4]= static_cast<GLfloat>(normal.y());
+        subject[(6 * i) + 5]= static_cast<GLfloat>(normal.z());
     }
 
     return subject;
@@ -263,14 +279,14 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineNormals() const
         qDebug() << "normal " << normal.toString();
 
         // First segment point
-        subject[(6 * index)]= static_cast<float>(normal.x());
-        subject[(6 * index) + 1]= static_cast<float>(normal.y());
-        subject[(6 * index) + 2]= static_cast<float>(normal.z());
+        subject[(6 * index)]= static_cast<GLfloat>(normal.x());
+        subject[(6 * index) + 1]= static_cast<GLfloat>(normal.y());
+        subject[(6 * index) + 2]= static_cast<GLfloat>(normal.z());
 
         // Second segment point
-        subject[(6 * index) + 3]= static_cast<float>(normal.x());
-        subject[(6 * index) + 4]= static_cast<float>(normal.y());
-        subject[(6 * index) + 5]= static_cast<float>(normal.z());
+        subject[(6 * index) + 3]= static_cast<GLfloat>(normal.x());
+        subject[(6 * index) + 4]= static_cast<GLfloat>(normal.y());
+        subject[(6 * index) + 5]= static_cast<GLfloat>(normal.z());
         ++index;
     }
 
@@ -284,9 +300,27 @@ GLfloatVector GLC_ExtrudedMesh::baseFaceVertices() const
     for (int i= 0; i < count; ++i)
     {
         GLC_Point3d point= m_Points.at(i);
-        subject[(3 * i)]= static_cast<float>(point.x());
-        subject[(3 * i) + 1]= static_cast<float>(point.y());
-        subject[(3 * i) + 2]= static_cast<float>(point.z());
+        subject[(3 * i)]= static_cast<GLfloat>(point.x());
+        subject[(3 * i) + 1]= static_cast<GLfloat>(point.y());
+        subject[(3 * i) + 2]= static_cast<GLfloat>(point.z());
+    }
+
+    return subject;
+}
+
+GLfloatVector GLC_ExtrudedMesh::baseFaceTexels() const
+{
+    const int count= m_Points.count();
+    GLfloatVector subject(count * 2);
+
+    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(m_Points);
+    QList<GLC_Point2d> normalizePolygon= glc::normalyzePolygon(baseFace2DPolygon);
+
+    for (int i= 0; i < count; ++i)
+    {
+        GLC_Point2d texel= normalizePolygon.at(i);
+        subject[i * 2]= static_cast<GLfloat>(texel.getX());
+        subject[i * 2 + 1]= static_cast<GLfloat>(texel.getY());
     }
 
     return subject;
@@ -299,14 +333,36 @@ GLfloatVector GLC_ExtrudedMesh::baseOutlineFacesVertices() const
     for (int i= 0; i < count; ++i)
     {
         GLC_Point3d point1= m_Points.at(i);
-        subject[(6 * i)]= static_cast<float>(point1.x());
-        subject[(6 * i) + 1]= static_cast<float>(point1.y());
-        subject[(6 * i) + 2]= static_cast<float>(point1.z());
+        subject[(6 * i)]= static_cast<GLfloat>(point1.x());
+        subject[(6 * i) + 1]= static_cast<GLfloat>(point1.y());
+        subject[(6 * i) + 2]= static_cast<GLfloat>(point1.z());
 
         GLC_Point3d point2= m_Points.at((i + 1) % count);
-        subject[(6 * i) + 3]= static_cast<float>(point2.x());
-        subject[(6 * i) + 4]= static_cast<float>(point2.y());
-        subject[(6 * i) + 5]= static_cast<float>(point2.z());
+        subject[(6 * i) + 3]= static_cast<GLfloat>(point2.x());
+        subject[(6 * i) + 4]= static_cast<GLfloat>(point2.y());
+        subject[(6 * i) + 5]= static_cast<GLfloat>(point2.z());
+    }
+
+    return subject;
+}
+
+GLfloatVector GLC_ExtrudedMesh::basedOutlineFacesTexels() const
+{
+    const int count= m_Points.count();
+    GLfloatVector subject(count * 4);
+
+    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(m_Points);
+    QList<GLC_Point2d> normalizePolygon= glc::normalyzePolygon(baseFace2DPolygon);
+
+    for (int i= 0; i < count; ++i)
+    {
+        GLC_Point2d texel1= normalizePolygon.at(i);
+        subject[i * 4]= static_cast<GLfloat>(texel1.getX());
+        subject[i * 4 + 1]= static_cast<GLfloat>(texel1.getY());
+
+        GLC_Point2d texel2= normalizePolygon.at((i + 1) % count);
+        subject[i * 4 + 2]= static_cast<GLfloat>(texel2.getX());
+        subject[i * 4 + 3]= static_cast<GLfloat>(texel2.getY());
     }
 
     return subject;
@@ -318,9 +374,9 @@ GLfloatVector GLC_ExtrudedMesh::baseFaceNormals() const
     GLfloatVector subject(count * 3); // 3 components pear normal
     for (int i= 0; i < count; ++i)
     {
-        subject[(3 * i)]= static_cast<float>(m_GivenFaceNormal.x());
-        subject[(3 * i) + 1]= static_cast<float>(m_GivenFaceNormal.y());
-        subject[(3 * i) + 2]= static_cast<float>(m_GivenFaceNormal.z());
+        subject[(3 * i)]= static_cast<GLfloat>(m_GivenFaceNormal.x());
+        subject[(3 * i) + 1]= static_cast<GLfloat>(m_GivenFaceNormal.y());
+        subject[(3 * i) + 2]= static_cast<GLfloat>(m_GivenFaceNormal.z());
     }
 
     return subject;
@@ -348,9 +404,9 @@ GLfloatVector GLC_ExtrudedMesh::createdFaceNormals() const
     GLfloatVector subject(count * 3); // 3 components pear normal
     for (int i= 0; i < count; ++i)
     {
-        subject[(3 * i)]= static_cast<float>(normal.x());
-        subject[(3 * i) + 1]= static_cast<float>(normal.y());
-        subject[(3 * i) + 2]= static_cast<float>(normal.z());
+        subject[(3 * i)]= static_cast<GLfloat>(normal.x());
+        subject[(3 * i) + 1]= static_cast<GLfloat>(normal.y());
+        subject[(3 * i) + 2]= static_cast<GLfloat>(normal.z());
     }
 
     return subject;
@@ -365,12 +421,31 @@ GLfloatVector GLC_ExtrudedMesh::createdFaceVertices() const
     for (int i= 0; i < count; ++i)
     {
         GLC_Point3d point= points.at(i);
-        subject[(3 * i)]= static_cast<float>(point.x());
-        subject[(3 * i) + 1]= static_cast<float>(point.y());
-        subject[(3 * i) + 2]= static_cast<float>(point.z());
+        subject[(3 * i)]= static_cast<GLfloat>(point.x());
+        subject[(3 * i) + 1]= static_cast<GLfloat>(point.y());
+        subject[(3 * i) + 2]= static_cast<GLfloat>(point.z());
     }
 
     return subject;
+}
+
+GLfloatVector GLC_ExtrudedMesh::createdFaceTexels() const
+{
+    const int count= m_Points.count();
+    GLfloatVector subject(count * 2);
+
+    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(createdFacePoints());
+    QList<GLC_Point2d> normalizePolygon= glc::normalyzePolygon(baseFace2DPolygon);
+
+    for (int i= 0; i < count; ++i)
+    {
+        GLC_Point2d texel= normalizePolygon.at(i);
+        subject[i * 2]= static_cast<GLfloat>(texel.getX());
+        subject[i * 2 + 1]= static_cast<GLfloat>(texel.getY());
+    }
+
+    return subject;
+
 }
 
 GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesVertices() const
@@ -381,18 +456,40 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesVertices() const
     for (int i= 0; i < count; ++i)
     {
         GLC_Point3d point1= points.at(i);
-        subject[(6 * i)]= static_cast<float>(point1.x());
-        subject[(6 * i) + 1]= static_cast<float>(point1.y());
-        subject[(6 * i) + 2]= static_cast<float>(point1.z());
+        subject[(6 * i)]= static_cast<GLfloat>(point1.x());
+        subject[(6 * i) + 1]= static_cast<GLfloat>(point1.y());
+        subject[(6 * i) + 2]= static_cast<GLfloat>(point1.z());
 
         GLC_Point3d point2= points.at((i + 1) % count);
-        subject[(6 * i) + 3]= static_cast<float>(point2.x());
-        subject[(6 * i) + 4]= static_cast<float>(point2.y());
-        subject[(6 * i) + 5]= static_cast<float>(point2.z());
+        subject[(6 * i) + 3]= static_cast<GLfloat>(point2.x());
+        subject[(6 * i) + 4]= static_cast<GLfloat>(point2.y());
+        subject[(6 * i) + 5]= static_cast<GLfloat>(point2.z());
     }
 
     return subject;
 
+}
+
+GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesTexels() const
+{
+    const int count= m_Points.count();
+    GLfloatVector subject(count * 4);
+
+    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(createdFacePoints());
+    QList<GLC_Point2d> normalizePolygon= glc::normalyzePolygon(baseFace2DPolygon);
+
+    for (int i= 0; i < count; ++i)
+    {
+        GLC_Point2d texel1= normalizePolygon.at(i);
+        subject[i * 4]= static_cast<GLfloat>(texel1.getX());
+        subject[i * 4 + 1]= static_cast<GLfloat>(texel1.getY());
+
+        GLC_Point2d texel2= normalizePolygon.at((i + 1) % count);
+        subject[i * 4 + 2]= static_cast<GLfloat>(texel2.getX());
+        subject[i * 4 + 3]= static_cast<GLfloat>(texel2.getY());
+    }
+
+    return subject;
 }
 
 void GLC_ExtrudedMesh::glDraw(const GLC_RenderProperties& renderProperties)
