@@ -590,7 +590,7 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	const GLC_Vector3d deltaVector(box.center() - m_pViewCam->target());
 	m_pViewCam->translate(deltaVector);
 
-	double cameraCover= box.boundingSphereRadius() * 2.0;
+    double cameraCover= box.boundingSphereRadius() * 2.2;
 
 	// Compute Camera distance
 	const double distance = cameraCover / m_ViewTangent;
