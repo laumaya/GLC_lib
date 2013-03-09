@@ -31,7 +31,7 @@
 // Class chunk id
 quint32 GLC_ExtrudedMesh::m_ChunkId= 0xA712;
 
-GLC_ExtrudedMesh::GLC_ExtrudedMesh(QList<GLC_Point3d> points, GLC_Vector3d dir, double lenght)
+GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_Vector3d &dir, double lenght)
     :GLC_Mesh()
     , m_Points(points)
     , m_ExtrusionVector(GLC_Vector3d(dir).normalize())
@@ -95,6 +95,40 @@ GLC_ExtrudedMesh &GLC_ExtrudedMesh::operator =(const GLC_ExtrudedMesh &other)
     }
 
     return *this;
+}
+
+void GLC_ExtrudedMesh::setGeometry(const QList<GLC_Point3d> &points, const GLC_Vector3d &extrudedVector, double lenght)
+{
+    m_Points= points;
+    m_ExtrusionVector= extrudedVector;
+    m_ExtrusionLenght= lenght;
+
+    GLC_Mesh::clearMeshWireAndBoundingBox();
+    createMeshAndWire();
+}
+
+void GLC_ExtrudedMesh::setPoints(const QList<GLC_Point3d> &points)
+{
+    m_Points= points;
+
+    GLC_Mesh::clearMeshWireAndBoundingBox();
+    createMeshAndWire();
+}
+
+void GLC_ExtrudedMesh::setExtrudedVector(const GLC_Vector3d &extrudedVector)
+{
+    m_ExtrusionVector= extrudedVector;
+
+    GLC_Mesh::clearMeshWireAndBoundingBox();
+    createMeshAndWire();
+}
+
+void GLC_ExtrudedMesh::setExtrudedLenght(double lenght)
+{
+    m_ExtrusionLenght= lenght;
+
+    GLC_Mesh::clearMeshWireAndBoundingBox();
+    createMeshAndWire();
 }
 
 void GLC_ExtrudedMesh::createMeshAndWire()

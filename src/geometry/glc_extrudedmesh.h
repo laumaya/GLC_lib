@@ -47,7 +47,7 @@ class GLC_LIB_EXPORT GLC_ExtrudedMesh : public GLC_Mesh
 public:
     //! Default constructor
     /*! The points list must be in counterclockwise order*/
-    GLC_ExtrudedMesh(QList<GLC_Point3d> points, GLC_Vector3d dir, double lenght);
+    GLC_ExtrudedMesh(const QList<GLC_Point3d>& points, const GLC_Vector3d& dir, double lenght);
 
     //! Copy constructor
     GLC_ExtrudedMesh(const GLC_ExtrudedMesh& other);
@@ -92,6 +92,19 @@ public:
 public:
     //! Assignement operator overload
     GLC_ExtrudedMesh& operator=(const GLC_ExtrudedMesh& other);
+
+    //! Set the mesh from the given points, vector and lenght
+    void setGeometry(const QList<GLC_Point3d>& points, const GLC_Vector3d& extrudedVector, double lenght);
+
+    //! Set the mesh points list
+    void setPoints(const QList<GLC_Point3d>& points);
+
+    //! Set the mesh extruded vector
+    void setExtrudedVector(const GLC_Vector3d& extrudedVector);
+
+    //! Set the mesh extruded lenght
+    void setExtrudedLenght(double lenght);
+
 
 //@}
 
