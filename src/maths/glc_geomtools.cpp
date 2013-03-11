@@ -755,7 +755,6 @@ QList<GLC_Point2d> glc::polygonIn2d(QList<GLC_Point3d> polygon3d)
 
 QList<GLC_Point2d> glc::normalyzePolygon(const QList<GLC_Point2d>& polygon)
 {
-    qDebug() << "normalyzePolygon ";
     QList<GLC_Point2d> subject;
     const int count= polygon.count();
     Q_ASSERT(count > 2);
@@ -781,7 +780,6 @@ QList<GLC_Point2d> glc::normalyzePolygon(const QList<GLC_Point2d>& polygon)
         const GLC_Point2d temp= (point - minPoint);
 
         const GLC_Point2d result(temp.getX() / range.getX(), temp.getY() / range.getY());
-        qDebug() << result.toString();
         subject.append(result);
     }
 

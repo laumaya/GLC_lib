@@ -285,7 +285,6 @@ GLfloatVector GLC_ExtrudedMesh::baseOutlineNormals() const
     {
         GLC_Vector3d vect(m_Points.at((i + 1) % count) - m_Points.at(i));
         GLC_Vector3d normal= GLC_Vector3d(m_ExtrusionVector ^ vect).normalize();
-        qDebug() << "normal " << normal.toString();
 
         // First segment point
         subject[(6 * i)]= static_cast<GLfloat>(normal.x());
@@ -310,7 +309,6 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineNormals() const
     {
         GLC_Vector3d vect(m_Points.at(i % count) - m_Points.at(i - 1));
         GLC_Vector3d normal= GLC_Vector3d(m_ExtrusionVector ^ vect).normalize();
-        qDebug() << "normal " << normal.toString();
 
         // First segment point
         subject[(6 * index)]= static_cast<GLfloat>(normal.x());
