@@ -107,14 +107,14 @@ GLC_Point2d GLC_Viewport::mapToOpenGLScreen(int x, int y)
 {
 	GLC_Point2d nPos= normalyseMousePosition(x, y);
 
-	return mapNormalyzeToOpenGLScreen(nPos.getX(), nPos.getY());
+	return mapNormalyzeToOpenGLScreen(nPos.x(), nPos.y());
 }
 
 GLC_Point2d GLC_Viewport::mapNormalyzeToOpenGLScreen(double x, double y)
 {
 	GLC_Point2d pos(x, y);
 	pos= pos * 2.0;
-	pos.setY(pos.getY() * -1.0);
+	pos.setY(pos.y() * -1.0);
 	pos= pos + GLC_Point2d(-1.0, 1.0);
 	return pos;
 }

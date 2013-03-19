@@ -351,8 +351,8 @@ GLfloatVector GLC_ExtrudedMesh::baseFaceTexels() const
     for (int i= 0; i < count; ++i)
     {
         GLC_Point2d texel= normalizePolygon.at(i);
-        subject[i * 2]= static_cast<GLfloat>(texel.getX());
-        subject[i * 2 + 1]= static_cast<GLfloat>(texel.getY());
+        subject[i * 2]= static_cast<GLfloat>(texel.x());
+        subject[i * 2 + 1]= static_cast<GLfloat>(texel.y());
     }
 
     return subject;
@@ -389,12 +389,12 @@ GLfloatVector GLC_ExtrudedMesh::basedOutlineFacesTexels() const
     for (int i= 0; i < count; ++i)
     {
         GLC_Point2d texel1= normalizePolygon.at(i);
-        subject[i * 4]= static_cast<GLfloat>(texel1.getX());
-        subject[i * 4 + 1]= static_cast<GLfloat>(texel1.getY());
+        subject[i * 4]= static_cast<GLfloat>(texel1.x());
+        subject[i * 4 + 1]= static_cast<GLfloat>(texel1.y());
 
         GLC_Point2d texel2= normalizePolygon.at((i + 1) % count);
-        subject[i * 4 + 2]= static_cast<GLfloat>(texel2.getX());
-        subject[i * 4 + 3]= static_cast<GLfloat>(texel2.getY());
+        subject[i * 4 + 2]= static_cast<GLfloat>(texel2.x());
+        subject[i * 4 + 3]= static_cast<GLfloat>(texel2.y());
     }
 
     return subject;
@@ -472,8 +472,8 @@ GLfloatVector GLC_ExtrudedMesh::createdFaceTexels() const
     for (int i= 0; i < count; ++i)
     {
         GLC_Point2d texel= normalizePolygon.at(i);
-        subject[i * 2]= static_cast<GLfloat>(texel.getX());
-        subject[i * 2 + 1]= static_cast<GLfloat>(texel.getY());
+        subject[i * 2]= static_cast<GLfloat>(texel.x());
+        subject[i * 2 + 1]= static_cast<GLfloat>(texel.y());
     }
 
     return subject;
@@ -513,12 +513,12 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesTexels() const
     for (int i= 0; i < count; ++i)
     {
         GLC_Point2d texel1= normalizePolygon.at(i);
-        subject[i * 4]= static_cast<GLfloat>(texel1.getX());
-        subject[i * 4 + 1]= static_cast<GLfloat>(texel1.getY());
+        subject[i * 4]= static_cast<GLfloat>(texel1.x());
+        subject[i * 4 + 1]= static_cast<GLfloat>(texel1.y());
 
         GLC_Point2d texel2= normalizePolygon.at((i + 1) % count);
-        subject[i * 4 + 2]= static_cast<GLfloat>(texel2.getX());
-        subject[i * 4 + 3]= static_cast<GLfloat>(texel2.getY());
+        subject[i * 4 + 2]= static_cast<GLfloat>(texel2.x());
+        subject[i * 4 + 3]= static_cast<GLfloat>(texel2.y());
     }
 
     return subject;

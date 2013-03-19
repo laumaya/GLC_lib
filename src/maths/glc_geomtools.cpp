@@ -44,7 +44,7 @@ bool glc::polygon2DIsConvex(const QList<GLC_Point2d>& vertices)
 		GLC_Point2d s0(vertices.at(0));
 		GLC_Point2d s1(vertices.at(1));
 		GLC_Point2d s2(vertices.at(2));
-		const bool openAngle= ((s1.getX() - s0.getX()) * (s2.getY() - s0.getY()) - (s2.getX() - s0.getX()) * (s1.getY() - s0.getY())) < 0.0;
+		const bool openAngle= ((s1.x() - s0.x()) * (s2.y() - s0.y()) - (s2.x() - s0.x()) * (s1.y() - s0.y())) < 0.0;
 
 		int i= 3;
 		while ((i < size) && isConvex)
@@ -52,7 +52,7 @@ bool glc::polygon2DIsConvex(const QList<GLC_Point2d>& vertices)
 			s0= s1;
 			s1= s2;
 			s2= vertices.at(i);
-			isConvex= openAngle == (((s1.getX() - s0.getX()) * (s2.getY() - s0.getY()) - (s2.getX() - s0.getX()) * (s1.getY() - s0.getY())) < 0.0);
+			isConvex= openAngle == (((s1.x() - s0.x()) * (s2.y() - s0.y()) - (s2.x() - s0.x()) * (s1.y() - s0.y())) < 0.0);
 			++i;
 		}
 	}
@@ -90,8 +90,8 @@ QVector<GLC_Point2d> glc::findIntersection(const GLC_Point2d& s1p1, const GLC_Po
 	const GLC_Vector2d E(s2p1 - s1p1);
 	double kross= D0 ^ D1;
 	double sqrKross= kross * kross;
-	const double sqrLen0= D0.getX() * D0.getX() + D0.getY() * D0.getY();
-	const double sqrLen1= D1.getX() * D1.getX() + D1.getY() * D1.getY();
+	const double sqrLen0= D0.x() * D0.x() + D0.y() * D0.y();
+	const double sqrLen1= D1.x() * D1.x() + D1.y() * D1.y();
 	// Test if the line are nor parallel
 	if (sqrKross > (EPSILON * sqrLen0 * sqrLen1))
 	{
@@ -115,7 +115,7 @@ QVector<GLC_Point2d> glc::findIntersection(const GLC_Point2d& s1p1, const GLC_Po
 	}
 
 	// Lines of the segments are parallel
-	const double sqrLenE= E.getX() * E.getX() + E.getY() * E.getY();
+	const double sqrLenE= E.x() * E.x() + E.y() * E.y();
 	kross= E ^ D0;
 	sqrKross= kross * kross;
 	if (sqrKross > (EPSILON * sqrLen0 * sqrLenE))
@@ -147,8 +147,8 @@ bool glc::isIntersected(const GLC_Point2d& s1p1, const GLC_Point2d& s1p2, const 
 	const GLC_Vector2d E(s2p1 - s1p1);
 	double kross= D0 ^ D1;
 	double sqrKross= kross * kross;
-	const double sqrLen0= D0.getX() * D0.getX() + D0.getY() * D0.getY();
-	const double sqrLen1= D1.getX() * D1.getX() + D1.getY() * D1.getY();
+	const double sqrLen0= D0.x() * D0.x() + D0.y() * D0.y();
+	const double sqrLen1= D1.x() * D1.x() + D1.y() * D1.y();
 	// Test if the line are nor parallel
 	if (sqrKross > (EPSILON * sqrLen0 * sqrLen1))
 	{
@@ -171,7 +171,7 @@ bool glc::isIntersected(const GLC_Point2d& s1p1, const GLC_Point2d& s1p2, const 
 	}
 
 	// Lines of the segments are parallel
-	const double sqrLenE= E.getX() * E.getX() + E.getY() * E.getY();
+	const double sqrLenE= E.x() * E.x() + E.y() * E.y();
 	kross= E ^ D0;
 	sqrKross= kross * kross;
 	if (sqrKross > (EPSILON * sqrLen0 * sqrLenE))
@@ -198,8 +198,8 @@ bool glc::isIntersectedRaySegment(const GLC_Point2d& s1p1, const GLC_Vector2d& s
 	const GLC_Vector2d E(s2p1 - s1p1);
 	double kross= D0 ^ D1;
 	double sqrKross= kross * kross;
-	const double sqrLen0= D0.getX() * D0.getX() + D0.getY() * D0.getY();
-	const double sqrLen1= D1.getX() * D1.getX() + D1.getY() * D1.getY();
+	const double sqrLen0= D0.x() * D0.x() + D0.y() * D0.y();
+	const double sqrLen1= D1.x() * D1.x() + D1.y() * D1.y();
 	// Test if the line are nor parallel
 	if (sqrKross > (EPSILON * sqrLen0 * sqrLen1))
 	{
@@ -222,7 +222,7 @@ bool glc::isIntersectedRaySegment(const GLC_Point2d& s1p1, const GLC_Vector2d& s
 	}
 
 	// Lines of the segments are parallel
-	const double sqrLenE= E.getX() * E.getX() + E.getY() * E.getY();
+	const double sqrLenE= E.x() * E.x() + E.y() * E.y();
 	kross= E ^ D0;
 	sqrKross= kross * kross;
 	if (sqrKross > (EPSILON * sqrLen0 * sqrLenE))
@@ -589,14 +589,14 @@ bool glc::compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2, double accurac
 
 bool glc::compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2)
 {
-	bool compareResult= (qAbs(v1.getX() - v2.getX()) <= comparedPrecision);
-	return compareResult && (qAbs(v1.getY() - v2.getY()) <= comparedPrecision);
+	bool compareResult= (qAbs(v1.x() - v2.x()) <= comparedPrecision);
+	return compareResult && (qAbs(v1.y() - v2.y()) <= comparedPrecision);
 }
 
 bool glc::compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2, double accuracy)
 {
-    bool compareResult= (qAbs(v1.getX() - v2.getX()) <= accuracy);
-    return compareResult && (qAbs(v1.getY() - v2.getY()) <= accuracy);
+    bool compareResult= (qAbs(v1.x() - v2.x()) <= accuracy);
+    return compareResult && (qAbs(v1.y() - v2.y()) <= accuracy);
 }
 
 bool glc::compare(const QPointF& v1, const QPointF& v2)
@@ -641,14 +641,14 @@ QPointF glc::round(const QPointF& point, double accuracy)
 
 GLC_Vector2d round(const GLC_Vector2d& vector)
 {
-	GLC_Vector2d subject(glc::round(vector.getX()), glc::round(vector.getY()));
+	GLC_Vector2d subject(glc::round(vector.x()), glc::round(vector.y()));
 
 	return subject;
 }
 
 GLC_Vector2d round(const GLC_Vector2d& vector, double accuracy)
 {
-    GLC_Vector2d subject(glc::round(vector.getX(), accuracy), glc::round(vector.getY(), accuracy));
+    GLC_Vector2d subject(glc::round(vector.x(), accuracy), glc::round(vector.y(), accuracy));
 
     return subject;
 }
@@ -678,22 +678,22 @@ bool glc::pointInPolygon(const GLC_Point2d& point, const QList<GLC_Point2d>& pol
 	{
 		const GLC_Point2d point0= polygon.at(i);
 		const GLC_Point2d point1= polygon.at(j);
-		if (point.getY() < point1.getY())
+		if (point.y() < point1.y())
 		{
 			//point1 above ray
-			if (point0.getY() <= point.getY())
+			if (point0.y() <= point.y())
 			{
 				//point2 on or below ray
-				const double val1= (point.getY() - point0.getY()) * (point1.getX() - point0.getX());
-				const double val2= (point.getX() - point0.getX()) * (point1.getY() - point0.getY());
+				const double val1= (point.y() - point0.y()) * (point1.x() - point0.x());
+				const double val2= (point.x() - point0.x()) * (point1.y() - point0.y());
 				if (val1 > val2) inside= !inside;
 			}
 		}
-		else if (point.getY() < point0.getY())
+		else if (point.y() < point0.y())
 		{
 			// point 1 on or below ray, point0 above ray
-			const double val1= (point.getY() - point0.getY()) * (point1.getX() - point0.getX());
-			const double val2= (point.getX() - point0.getX()) * (point1.getY() - point0.getY());
+			const double val1= (point.y() - point0.y()) * (point1.x() - point0.x());
+			const double val2= (point.x() - point0.x()) * (point1.y() - point0.y());
 			if (val1 < val2) inside= !inside;
 		}
 		j= i;
@@ -764,22 +764,22 @@ QList<GLC_Point2d> glc::normalyzePolygon(const QList<GLC_Point2d>& polygon)
     for (int i= 1; i < count; ++i)
     {
         GLC_Point2d point= polygon.at(i);
-        minPoint.setX(qMin(point.getX(), minPoint.getX()));
-        minPoint.setY(qMin(point.getY(), minPoint.getY()));
+        minPoint.setX(qMin(point.x(), minPoint.x()));
+        minPoint.setY(qMin(point.y(), minPoint.y()));
 
-        maxPoint.setX(qMax(point.getX(), maxPoint.getX()));
-        maxPoint.setY(qMax(point.getY(), maxPoint.getY()));
+        maxPoint.setX(qMax(point.x(), maxPoint.x()));
+        maxPoint.setY(qMax(point.y(), maxPoint.y()));
     }
     const GLC_Vector2d range= maxPoint - minPoint;
-    Q_ASSERT(range.getX() != 0.0);
-    Q_ASSERT(range.getY() != 0.0);
+    Q_ASSERT(range.x() != 0.0);
+    Q_ASSERT(range.y() != 0.0);
 
     for (int i= 0; i < count; ++i)
     {
         const GLC_Point2d point= polygon.at(i);
         const GLC_Point2d temp= (point - minPoint);
 
-        const GLC_Point2d result(temp.getX() / range.getX(), temp.getY() / range.getY());
+        const GLC_Point2d result(temp.x() / range.x(), temp.y() / range.y());
         subject.append(result);
     }
 
