@@ -24,7 +24,7 @@ HOW TO BUILD GLC_lib
      Qt5 Angle is not supported, Qt5 must use OpenGL
      Open a Windows Qt4.8 or Qt5.0 command prompt.
      <path>/glc_lib-<version>
-     quake -recursive
+     qmake -recursive
      nmake // jom // mingw32-make
 
      For MinGW, ensure that the compiler can

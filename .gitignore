@@ -14,4 +14,9 @@ src/Build
 *.o
 src/Makefile
 doc/generated
->>>>>>> next
+src/*.dll
+src/GLC_lib_resource.rc
+src/Makefile.*
+src/*.a
+src/object_script*
+src/*.user

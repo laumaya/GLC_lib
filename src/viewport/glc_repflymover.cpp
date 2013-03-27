@@ -160,8 +160,8 @@ void GLC_RepFlyMover::createRepresentation()
 
 	GLC_Polylines* pPolylines= new GLC_Polylines();
 	GLfloatVector  points;
-	const double hudx= m_HudOffset.getX();
-	const double hudy= m_HudOffset.getY();
+	const double hudx= m_HudOffset.x();
+	const double hudy= m_HudOffset.y();
 	points << -hudx << -hudy << 0.0;
 	points << -hudx << hudy << 0.0;
 	pPolylines->addPolyline(points);

@@ -73,6 +73,10 @@ public:
 	//! Return the renderProperties of the given instance id
 	const GLC_RenderProperties& renderPropertiesOfInstance(GLC_uint id) const;
 
+    //! Return true if this renderer is current
+    inline bool isCurrent() const
+    {return m_IsCurrent;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -114,6 +118,8 @@ private:
 	GLC_3DViewCollection* m_pCollection;
 
 	QHash<GLC_uint, GLC_RenderProperties> m_IdToRenderProperties;
+
+    bool m_IsCurrent;
 
 };
 

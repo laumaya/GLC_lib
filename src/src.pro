@@ -122,7 +122,8 @@ HEADERS_GLC_GEOMETRY += geometry/glc_geometry.h \
                         geometry/glc_disc.h \
                         geometry/glc_cone.h \
                         geometry/glc_sphere.h \
-                        geometry/glc_pointcloud.h
+                        geometry/glc_pointcloud.h \
+                        geometry/glc_extrudedmesh.h
 
 HEADERS_GLC_SHADING +=  shading/glc_material.h \
                         shading/glc_texture.h \
@@ -277,7 +278,8 @@ SOURCES +=	geometry/glc_geometry.cpp \
                 geometry/glc_disc.cpp \
                 geometry/glc_cone.cpp \
                 geometry/glc_sphere.cpp \
-                geometry/glc_pointcloud.cpp
+                geometry/glc_pointcloud.cpp \
+                geometry/glc_extrudedmesh.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -440,7 +442,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_Glu \
                GLC_Context \
                GLC_ContextManager \
-               GLC_Renderer
+               GLC_Renderer \
+               GLC_ExtrudedMesh
 
 include (../install.pri)
 

@@ -259,7 +259,7 @@ public:
 	//! Update the occurence number of this occurence branch
 	unsigned int updateOccurenceNumber(unsigned int n);
 
-	//! Set this occurence visibility
+    //! Set this occurence and children visibility
 	void setVisibility(bool visibility);
 
 	//! set the renderProperties of this occurence

@@ -172,6 +172,9 @@ public:
 	inline GLC_uint nextPrimitiveLocalId() const
 	{return m_NextPrimitiveLocalId;}
 
+    //! Return the GLC_Material applyed on the given primitive id of the given lod
+    GLC_Material* MaterialOfPrimitiveId(GLC_uint id, int lod= 0) const;
+
 	//! Return the set of primitives id
 	QSet<GLC_uint> setOfPrimitiveId() const;
 

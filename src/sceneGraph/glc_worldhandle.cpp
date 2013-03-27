@@ -197,6 +197,6 @@ void GLC_WorldHandle::setSelected3DViewInstanceVisibility(bool isVisible)
 	{
 		GLC_3DViewInstance* pCurrentInstance= selected3dviewInstance.at(i);
 		pCurrentInstance->setVisibility(isVisible);
-	}
+    }
 }
 

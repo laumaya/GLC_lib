@@ -37,6 +37,7 @@
 GLWidget::GLWidget(QWidget *p_parent)
 : QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers)),p_parent)
 , m_Cylinder(GLC_Factory::instance()->createCylinder(1.0, 2.0))	// Cylinder definition.
+, m_Collection()
 , m_light()
 , m_GlView()
 , m_MoverController()
@@ -46,6 +47,8 @@ GLWidget::GLWidget(QWidget *p_parent)
 	QColor matBlue;
 	matBlue.setRgbF(0.5, 0.8, 1.0, 1.0);
 	m_Cylinder.geomAt(0)->addMaterial(new GLC_Material(matBlue));
+
+    m_Collection.add(m_Cylinder);
 
 	// Set up mover controller
 	QColor repColor;
@@ -72,7 +75,7 @@ void GLWidget::initializeGL()
 	// OpenGL initialisation
 	m_GlView.initGl();
 	// Reframe to the cylinder bounding Box
-	m_GlView.reframe(m_Cylinder.boundingBox());
+    m_GlView.reframe(m_Collection.boundingBox());
 }
 
 void GLWidget::paintGL()
@@ -94,7 +97,7 @@ void GLWidget::paintGL()
 		m_GlView.glExecuteCam();
 
 		// Display the cylinder
-		m_Cylinder.render();
+        m_Collection.render(0, glc::ShadingFlag);
 
 		// Display UI Info (orbit circle)
 		m_MoverController.drawActiveMoverRep();

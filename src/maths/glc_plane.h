@@ -106,8 +106,7 @@ public:
 	{return GLC_Vector3d(m_Eq[0], m_Eq[1], m_Eq[2]);}
 
 	//! Return true if the given point is on this plane
-	inline bool lieOnThisPlane(const GLC_Point3d& p)
-	{return (m_Eq[0] * p.x() + m_Eq[1] * p.y() + m_Eq[2] * p.z() + m_Eq[3]) == 0.0f;}
+    bool lieOnThisPlane(const GLC_Point3d& p);
 
 	//! Return a pointer to this plane equation data
 	const double* data() const

@@ -411,8 +411,11 @@ Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* 
 			QImage textureImage= pMat->textureHandle()->imageOfTexture();
 			if (!pMat->textureFileName().isEmpty())
 			{
-				textureName= matName + '-' + QFileInfo(pMat->textureFileName()).fileName();
-				textureImage.load(pMat->textureFileName());
+                textureName= QFileInfo(pMat->textureFileName()).fileName();
+                if (QFileInfo(pMat->textureFileName()).exists())
+                {
+                    textureImage.load(pMat->textureFileName());
+                }
 			}
 			else
 			{
@@ -423,7 +426,7 @@ Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* 
 			if (!textureImage.isNull())
 			{
 				const QString type(QFileInfo(textureName).suffix());
-				QString newTextureFile= filePath + QDir::separator() + textureName;
+                QString newTextureFile= filePath + '/' + textureName;
 				textureImage.save(newTextureFile, type.toUpper().toLatin1().data());
                 strcpy(pSubject->texture1_map.name, textureName.toLatin1().data());
 				m_TextureToFileName.insert(pMat->textureHandle(), textureName);
