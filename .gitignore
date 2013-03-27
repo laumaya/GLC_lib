@@ -1,4 +1,4 @@
-src/Build
+src/Build/
 .cproject
 .gitignore
 .project
@@ -16,3 +16,4 @@ src/Makefile.*
 src/*.a
 src/object_script*
 src/*.user
+html/
