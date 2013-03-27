@@ -1,16 +1,12 @@
 src/Build
-/.cproject
-/.gitignore
-/.project
-/Makefile
-/qrc_glc_lib.cpp
-<<<<<<< HEAD
-
-.DS_Store
-=======
+.cproject
+.gitignore
+.project
+Makefile
+qrc_glc_lib.cpp
 *.dylib
 .DS_Store
-/glc_lib.pro.user
+glc_lib.pro.user
 *.o
 src/Makefile
 doc/generated
