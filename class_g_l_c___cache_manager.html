@@ -130,10 +130,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af3e47914ab7d0bfb73d143ab9f5e392c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___cache_manager.html#af3e47914ab7d0bfb73d143ab9f5e392c">isUsable</a> (const QDateTime &amp;, const QString &amp;, const QString &amp;) const </td></tr>
 <tr class="memdesc:af3e47914ab7d0bfb73d143ab9f5e392c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return True if the cached file is usable.  <a href="#af3e47914ab7d0bfb73d143ab9f5e392c"></a><br/></td></tr>
 <tr class="separator:af3e47914ab7d0bfb73d143ab9f5e392c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6c7d034744e6fa5b7a1f134c736e3d2"><td class="memItemLeft" align="right" valign="top">GLC_BSRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___cache_manager.html#ac6c7d034744e6fa5b7a1f134c736e3d2">binary3DRep</a> (const QString &amp;, const QString &amp;) const </td></tr>
+<tr class="memitem:ac6c7d034744e6fa5b7a1f134c736e3d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___b_s_rep.html">GLC_BSRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___cache_manager.html#ac6c7d034744e6fa5b7a1f134c736e3d2">binary3DRep</a> (const QString &amp;, const QString &amp;) const </td></tr>
 <tr class="memdesc:ac6c7d034744e6fa5b7a1f134c736e3d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the binary serialized representation of the specified file.  <a href="#ac6c7d034744e6fa5b7a1f134c736e3d2"></a><br/></td></tr>
 <tr class="separator:ac6c7d034744e6fa5b7a1f134c736e3d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d916579f9836d035116572c9f82c250"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___cache_manager.html#a7d916579f9836d035116572c9f82c250">addToCache</a> (const QString &amp;, const GLC_3DRep &amp;)</td></tr>
+<tr class="memitem:a7d916579f9836d035116572c9f82c250"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___cache_manager.html#a7d916579f9836d035116572c9f82c250">addToCache</a> (const QString &amp;, const <a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> &amp;)</td></tr>
 <tr class="memdesc:a7d916579f9836d035116572c9f82c250"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add the specified file in the cache.  <a href="#a7d916579f9836d035116572c9f82c250"></a><br/></td></tr>
 <tr class="separator:a7d916579f9836d035116572c9f82c250"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c85e0470f98dcc100b62f0f4a1a5eac"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___cache_manager.html#a0c85e0470f98dcc100b62f0f4a1a5eac">compressionIsUsed</a> () const </td></tr>
@@ -281,7 +281,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const GLC_3DRep &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> &amp;&#160;</td>
           <td class="paramname"><em>rep</em>&#160;</td>
         </tr>
         <tr>
@@ -296,7 +296,9 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__cachemanager_8cpp_source.html#l00134">134</a> of file <a class="el" href="glc__cachemanager_8cpp_source.html">glc_cachemanager.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__global_8cpp_source.html#l00147">glc::archiveEntryFileName()</a>, <a class="el" href="glc__global_8cpp_source.html#l00098">glc::isArchiveString()</a>, <a class="el" href="glc__cachemanager_8cpp_source.html#l00084">isWritable()</a>, <a class="el" href="glc__cachemanager_8h_source.html#l00133">m_CompressionLevel</a>, <a class="el" href="glc__cachemanager_8h_source.html#l00127">m_Dir</a>, and <a class="el" href="glc__cachemanager_8h_source.html#l00130">m_UseCompression</a>.</p>
+<p>References <a class="el" href="glc__global_8cpp_source.html#l00147">glc::archiveEntryFileName()</a>, <a class="el" href="glc__rep_8h_source.html#l00082">GLC_Rep::fileName()</a>, <a class="el" href="glc__global_8cpp_source.html#l00098">glc::isArchiveString()</a>, <a class="el" href="glc__cachemanager_8cpp_source.html#l00084">isWritable()</a>, <a class="el" href="glc__cachemanager_8h_source.html#l00133">m_CompressionLevel</a>, <a class="el" href="glc__cachemanager_8h_source.html#l00127">m_Dir</a>, <a class="el" href="glc__cachemanager_8h_source.html#l00130">m_UseCompression</a>, <a class="el" href="glc__bsrep_8cpp_source.html#l00204">GLC_BSRep::save()</a>, and <a class="el" href="glc__bsrep_8h_source.html#l00099">GLC_BSRep::setCompressionLevel()</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00876">GLC_3dxmlToWorld::createReferenceRep()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01870">GLC_3dxmlToWorld::loadCurrentExtRep()</a>.</p>
 
 </div>
 </div>
@@ -305,7 +307,7 @@ Private Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_BSRep GLC_CacheManager::binary3DRep </td>
+          <td class="memname"><a class="el" href="class_g_l_c___b_s_rep.html">GLC_BSRep</a> GLC_CacheManager::binary3DRep </td>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>context</em>, </td>
@@ -328,7 +330,9 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__cachemanager_8cpp_source.html#l00125">125</a> of file <a class="el" href="glc__cachemanager_8cpp_source.html">glc_cachemanager.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__cachemanager_8h_source.html#l00127">m_Dir</a>.</p>
+<p>References <a class="el" href="glc__cachemanager_8h_source.html#l00127">m_Dir</a>, and <a class="el" href="glc__bsrep_8cpp_source.html#l00179">GLC_BSRep::suffix()</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00165">GLC_3dxmlToWorld::create3DrepFrom3dxmlRep()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00773">GLC_3dxmlToWorld::loadExternalRef3D()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01760">GLC_3dxmlToWorld::loadExternRepresentations()</a>.</p>
 
 </div>
 </div>
@@ -441,7 +445,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__cachemanager_8cpp_source.html#l00095">95</a> of file <a class="el" href="glc__cachemanager_8cpp_source.html">glc_cachemanager.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__cachemanager_8cpp_source.html#l00072">isReadable()</a>, and <a class="el" href="glc__cachemanager_8h_source.html#l00127">m_Dir</a>.</p>
+<p>References <a class="el" href="glc__cachemanager_8cpp_source.html#l00072">isReadable()</a>, <a class="el" href="glc__cachemanager_8h_source.html#l00127">m_Dir</a>, and <a class="el" href="glc__bsrep_8cpp_source.html#l00179">GLC_BSRep::suffix()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__cachemanager_8cpp_source.html#l00104">isUsable()</a>.</p>
 
@@ -504,7 +508,9 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__cachemanager_8cpp_source.html#l00104">104</a> of file <a class="el" href="glc__cachemanager_8cpp_source.html">glc_cachemanager.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__cachemanager_8cpp_source.html#l00095">isCashed()</a>, and <a class="el" href="glc__cachemanager_8h_source.html#l00127">m_Dir</a>.</p>
+<p>References <a class="el" href="glc__cachemanager_8cpp_source.html#l00095">isCashed()</a>, <a class="el" href="glc__bsrep_8cpp_source.html#l00071">GLC_BSRep::isUsable()</a>, <a class="el" href="glc__cachemanager_8h_source.html#l00127">m_Dir</a>, <a class="el" href="glc__bsrep_8cpp_source.html#l00193">GLC_BSRep::setAbsoluteFileName()</a>, and <a class="el" href="glc__bsrep_8cpp_source.html#l00179">GLC_BSRep::suffix()</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00165">GLC_3dxmlToWorld::create3DrepFrom3dxmlRep()</a>.</p>
 
 </div>
 </div>
@@ -716,10 +722,6 @@ Private Attributes</h2></td></tr>
 </ul>
 </div><!-- contents -->
 
-	<p align="center">
-	  <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=153150&amp;type=2"
-	  width="125" height="37" border="0" alt="SourceForge.net Logo" /></a> 
-	  </p>
 	<p align="center" bgcolor="#ccccff" height="17" width="100%">
      <a href="mailto:laumaya@users.sourceforge.net?subject=GLC_lib">&copy;2005-2013 Laurent Ribon</a>
 	 </p>

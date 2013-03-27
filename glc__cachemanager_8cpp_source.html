@@ -81,7 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d522931ffa1371640980b621734a4381.html">Users</a></li><li class="navelem"><a class="el" href="dir_e7e624ff985462c102b105cbe5d7da96.html">laumaya</a></li><li class="navelem"><a class="el" href="dir_dcbfa5de698b4a400b13c539f08860f4.html">git</a></li><li class="navelem"><a class="el" href="dir_fb4dc37c97548debab4a4119a5884dd9.html">glc_lib</a></li><li class="navelem"><a class="el" href="dir_82e8eee952439c39626efbb10ad1f52a.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_9e51036813d6151dfecc72d5fa7c02b3.html">Users</a></li><li class="navelem"><a class="el" href="dir_c191c033cd67529bda557a261a34ba9e.html">laumaya</a></li><li class="navelem"><a class="el" href="dir_7252a5125785eb44447ec0c33fb2d0d8.html">git</a></li><li class="navelem"><a class="el" href="dir_8c8f4e1bdf218f85b0d80ad09e2ca744.html">glc_lib</a></li><li class="navelem"><a class="el" href="dir_308b1f547d363b51e9fcca528fab4b29.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -184,7 +184,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;         <span class="keywordflow">if</span> (! <a class="code" href="class_g_l_c___cache_manager.html#addfe3928255b00a0cbf901f68e8e3b57" title="Return true if the cache is is readable.">isReadable</a>()) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;         QFileInfo fileInfo(<a class="code" href="class_g_l_c___cache_manager.html#adbadecd846df82f6a5e728c565e15719" title="The cache directory.">m_Dir</a>.absolutePath() + QDir::separator() + context + QDir::separator() + fileName + <span class="charliteral">&#39;.&#39;</span> + GLC_BSRep::suffix());</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;         QFileInfo fileInfo(<a class="code" href="class_g_l_c___cache_manager.html#adbadecd846df82f6a5e728c565e15719" title="The cache directory.">m_Dir</a>.absolutePath() + QDir::separator() + context + QDir::separator() + fileName + <span class="charliteral">&#39;.&#39;</span> + <a class="code" href="class_g_l_c___b_s_rep.html#a4146efee65a2a82a7593bea22cf8b03d" title="Return bsrep suffix.">GLC_BSRep::suffix</a>());</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;         <span class="keywordflow">return</span> fileInfo.exists();</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;}</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
@@ -195,14 +195,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;         <span class="keywordflow">if</span> (result)</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;         {</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                  QFileInfo cacheFileInfo(<a class="code" href="class_g_l_c___cache_manager.html#adbadecd846df82f6a5e728c565e15719" title="The cache directory.">m_Dir</a>.absolutePath() + QDir::separator() + context + QDir::separator() + fileName+ <span class="charliteral">&#39;.&#39;</span> + GLC_BSRep::suffix());</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                  QFileInfo cacheFileInfo(<a class="code" href="class_g_l_c___cache_manager.html#adbadecd846df82f6a5e728c565e15719" title="The cache directory.">m_Dir</a>.absolutePath() + QDir::separator() + context + QDir::separator() + fileName+ <span class="charliteral">&#39;.&#39;</span> + <a class="code" href="class_g_l_c___b_s_rep.html#a4146efee65a2a82a7593bea22cf8b03d" title="Return bsrep suffix.">GLC_BSRep::suffix</a>());</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                  <span class="comment">//result= result &amp;&amp; (timeStamp == cacheFileInfo.lastModified());</span></div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                  result= result &amp;&amp; cacheFileInfo.isReadable();</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                  <span class="keywordflow">if</span> (result)</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                  {</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                           GLC_BSRep binaryRep;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                           binaryRep.setAbsoluteFileName(cacheFileInfo.absoluteFilePath());</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                           result= result &amp;&amp; binaryRep.isUsable(timeStamp);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                           <a class="code" href="class_g_l_c___b_s_rep.html" title="GLC_BSRep : The 3D Binary serialised representation.">GLC_BSRep</a> binaryRep;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                           binaryRep.<a class="code" href="class_g_l_c___b_s_rep.html#ae7cf09e408db310784006fc471d8e8ae" title="Set the binary representation file name.">setAbsoluteFileName</a>(cacheFileInfo.absoluteFilePath());</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                           result= result &amp;&amp; binaryRep.<a class="code" href="class_g_l_c___b_s_rep.html#a15e3cab93a624d393d13cbdf8cae2e5b" title="Return true if the binary rep is usable.">isUsable</a>(timeStamp);</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                  }</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;         }</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
@@ -210,18 +210,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">// Return the binary serialized representation of the specified file</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno"><a class="code" href="class_g_l_c___cache_manager.html#ac6c7d034744e6fa5b7a1f134c736e3d2">  125</a></span>&#160;GLC_BSRep <a class="code" href="class_g_l_c___cache_manager.html#ac6c7d034744e6fa5b7a1f134c736e3d2" title="Return the binary serialized representation of the specified file.">GLC_CacheManager::binary3DRep</a>(<span class="keyword">const</span> QString&amp; context, <span class="keyword">const</span> QString&amp; fileName)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="code" href="class_g_l_c___cache_manager.html#ac6c7d034744e6fa5b7a1f134c736e3d2">  125</a></span>&#160;<a class="code" href="class_g_l_c___b_s_rep.html" title="GLC_BSRep : The 3D Binary serialised representation.">GLC_BSRep</a> <a class="code" href="class_g_l_c___cache_manager.html#ac6c7d034744e6fa5b7a1f134c736e3d2" title="Return the binary serialized representation of the specified file.">GLC_CacheManager::binary3DRep</a>(<span class="keyword">const</span> QString&amp; context, <span class="keyword">const</span> QString&amp; fileName)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;         <span class="keyword">const</span> QString absoluteFileName(<a class="code" href="class_g_l_c___cache_manager.html#adbadecd846df82f6a5e728c565e15719" title="The cache directory.">m_Dir</a>.absolutePath() + QDir::separator() + context + QDir::separator() + fileName + <span class="charliteral">&#39;.&#39;</span> + GLC_BSRep::suffix());</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;         GLC_BSRep binaryRep(absoluteFileName);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;         <span class="keyword">const</span> QString absoluteFileName(<a class="code" href="class_g_l_c___cache_manager.html#adbadecd846df82f6a5e728c565e15719" title="The cache directory.">m_Dir</a>.absolutePath() + QDir::separator() + context + QDir::separator() + fileName + <span class="charliteral">&#39;.&#39;</span> + <a class="code" href="class_g_l_c___b_s_rep.html#a4146efee65a2a82a7593bea22cf8b03d" title="Return bsrep suffix.">GLC_BSRep::suffix</a>());</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html" title="GLC_BSRep : The 3D Binary serialised representation.">GLC_BSRep</a> binaryRep(absoluteFileName);</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;         <span class="keywordflow">return</span> binaryRep;</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment">// Add the specified file in the cache</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno"><a class="code" href="class_g_l_c___cache_manager.html#a7d916579f9836d035116572c9f82c250">  134</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___cache_manager.html#a7d916579f9836d035116572c9f82c250" title="Add the specified file in the cache.">GLC_CacheManager::addToCache</a>(<span class="keyword">const</span> QString&amp; context, <span class="keyword">const</span> GLC_3DRep&amp; rep)</div>
+<div class="line"><a name="l00134"></a><span class="lineno"><a class="code" href="class_g_l_c___cache_manager.html#a7d916579f9836d035116572c9f82c250">  134</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___cache_manager.html#a7d916579f9836d035116572c9f82c250" title="Add the specified file in the cache.">GLC_CacheManager::addToCache</a>(<span class="keyword">const</span> QString&amp; context, <span class="keyword">const</span> <a class="code" href="class_g_l_c__3_d_rep.html" title="GLC_3DRep : A referrence 3D Representation.">GLC_3DRep</a>&amp; rep)</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;{</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;         Q_ASSERT(!rep.fileName().isEmpty());</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;         Q_ASSERT(!rep.<a class="code" href="class_g_l_c___rep.html#a05c611f5f34a146a3d41449fb290afeb" title="Return the representation file name.">fileName</a>().isEmpty());</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;         <span class="keywordtype">bool</span> addedToCache= <a class="code" href="class_g_l_c___cache_manager.html#abbd116716f5d74c1f3edea0cfcc18f71" title="Return true if the cache is is writable.">isWritable</a>();</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;         <span class="keywordflow">if</span> (addedToCache)</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;         {</div>
@@ -232,7 +232,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                  }</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                  <span class="keywordflow">if</span> (addedToCache)</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                  {</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;                           QString repFileName= rep.fileName();</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;                           QString repFileName= rep.<a class="code" href="class_g_l_c___rep.html#a05c611f5f34a146a3d41449fb290afeb" title="Return the representation file name.">fileName</a>();</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;                           <span class="keywordflow">if</span> (<a class="code" href="namespaceglc.html#ade6439982e2a91ba40abd6045ca8abec" title="Return true if the given file name is in a archive string.">glc::isArchiveString</a>(repFileName))</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                           {</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                                    repFileName= <a class="code" href="namespaceglc.html#a3c470e760f059750602b32a4c0c7a1eb" title="Return Archive entry filname from the given archive string.">glc::archiveEntryFileName</a>(repFileName);</div>
@@ -242,9 +242,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;                                    repFileName= QFileInfo(repFileName).fileName();</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                           }</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;                           <span class="keyword">const</span> QString binaryFileName= contextCacheInfo.filePath() + QDir::separator() + repFileName;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                           GLC_BSRep binariRep(binaryFileName, <a class="code" href="class_g_l_c___cache_manager.html#a5038f31752aa288f2e17af69d15f1235" title="Compress Data.">m_UseCompression</a>);</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;                           binariRep.setCompressionLevel(<a class="code" href="class_g_l_c___cache_manager.html#a7376cb7038c3b64c9baf8eef90b7bcde" title="The compression level.">m_CompressionLevel</a>);</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;                           addedToCache= binariRep.save(rep);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                           <a class="code" href="class_g_l_c___b_s_rep.html" title="GLC_BSRep : The 3D Binary serialised representation.">GLC_BSRep</a> binariRep(binaryFileName, <a class="code" href="class_g_l_c___cache_manager.html#a5038f31752aa288f2e17af69d15f1235" title="Compress Data.">m_UseCompression</a>);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;                           binariRep.<a class="code" href="class_g_l_c___b_s_rep.html#a1a76917d63157b1c9d9e54b46f5495a8" title="Set the compression level if compression is used when saving in binary format.">setCompressionLevel</a>(<a class="code" href="class_g_l_c___cache_manager.html#a7376cb7038c3b64c9baf8eef90b7bcde" title="The compression level.">m_CompressionLevel</a>);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;                           addedToCache= binariRep.<a class="code" href="class_g_l_c___b_s_rep.html#a51d835aeaa2cf2ec179eb2f658c4a0ef" title="Save the GLC_3DRep in serialised binary.">save</a>(rep);</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                  }</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;         }</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
@@ -269,10 +269,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
 </div><!-- fragment --></div><!-- contents -->
 
-	<p align="center">
-	  <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=153150&amp;type=2"
-	  width="125" height="37" border="0" alt="SourceForge.net Logo" /></a> 
-	  </p>
 	<p align="center" bgcolor="#ccccff" height="17" width="100%">
      <a href="mailto:laumaya@users.sourceforge.net?subject=GLC_lib">&copy;2005-2013 Laurent Ribon</a>
 	 </p>

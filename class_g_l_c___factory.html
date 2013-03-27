@@ -147,7 +147,7 @@ Static Private Attributes</h2></td></tr>
 <tr class="memdesc:ada053d6ea3e9cfcfe41d71285ead734f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The unique instance of the factory.  <a href="#ada053d6ea3e9cfcfe41d71285ead734f"></a><br/></td></tr>
 <tr class="separator:ada053d6ea3e9cfcfe41d71285ead734f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaedf9a7809ca3372a2c1a0b5b4c4e678"><td class="memItemLeft" align="right" valign="top">static QList<br class="typebreak"/>
-&lt; GLC_WorldReaderPlugin * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#aaedf9a7809ca3372a2c1a0b5b4c4e678">m_WorldReaderPluginList</a></td></tr>
+&lt; <a class="el" href="class_g_l_c___world_reader_plugin.html">GLC_WorldReaderPlugin</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#aaedf9a7809ca3372a2c1a0b5b4c4e678">m_WorldReaderPluginList</a></td></tr>
 <tr class="memdesc:aaedf9a7809ca3372a2c1a0b5b4c4e678"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list off worldReader plugins.  <a href="#aaedf9a7809ca3372a2c1a0b5b4c4e678"></a><br/></td></tr>
 <tr class="separator:aaedf9a7809ca3372a2c1a0b5b4c4e678"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85106e93a72700528adb97cf3589e179"><td class="memItemLeft" align="right" valign="top">static QSet&lt; QString &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a85106e93a72700528adb97cf3589e179">m_SupportedExtensionSet</a></td></tr>
@@ -157,96 +157,96 @@ Static Private Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="member-group"></a>
 Get Functions</h2></td></tr>
 <tr class="memitem:a1b95f1d866144ad9114647ef73367d61"><td class="memItemLeft" align="right" valign="top">static QList<br class="typebreak"/>
-&lt; GLC_WorldReaderPlugin * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a1b95f1d866144ad9114647ef73367d61">worldReaderPlugins</a> ()</td></tr>
+&lt; <a class="el" href="class_g_l_c___world_reader_plugin.html">GLC_WorldReaderPlugin</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a1b95f1d866144ad9114647ef73367d61">worldReaderPlugins</a> ()</td></tr>
 <tr class="memdesc:a1b95f1d866144ad9114647ef73367d61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the list of world reader plugin.  <a href="#a1b95f1d866144ad9114647ef73367d61"></a><br/></td></tr>
 <tr class="separator:a1b95f1d866144ad9114647ef73367d61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb02ab16649e99863463c047d6e915e0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#aeb02ab16649e99863463c047d6e915e0">canBeLoaded</a> (const QString &amp;extension)</td></tr>
 <tr class="memdesc:aeb02ab16649e99863463c047d6e915e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if the given file extension can be loaded.  <a href="#aeb02ab16649e99863463c047d6e915e0"></a><br/></td></tr>
 <tr class="separator:aeb02ab16649e99863463c047d6e915e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ac4c430bba065f06789386312fe220c"><td class="memItemLeft" align="right" valign="top">static GLC_WorldReaderHandler *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a3ac4c430bba065f06789386312fe220c">loadingHandler</a> (const QString &amp;fileName)</td></tr>
+<tr class="memitem:a3ac4c430bba065f06789386312fe220c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_g_l_c___world_reader_handler.html">GLC_WorldReaderHandler</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a3ac4c430bba065f06789386312fe220c">loadingHandler</a> (const QString &amp;fileName)</td></tr>
 <tr class="memdesc:a3ac4c430bba065f06789386312fe220c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an handle to the plugin tu use for the given file.  <a href="#a3ac4c430bba065f06789386312fe220c"></a><br/></td></tr>
 <tr class="separator:a3ac4c430bba065f06789386312fe220c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50fe465446dba40780bf9a545c4b9d56"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a50fe465446dba40780bf9a545c4b9d56">createPoint</a> (const GLC_Point3d &amp;coord) const </td></tr>
-<tr class="memdesc:a50fe465446dba40780bf9a545c4b9d56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Point.  <a href="#a50fe465446dba40780bf9a545c4b9d56"></a><br/></td></tr>
+<tr class="memitem:a50fe465446dba40780bf9a545c4b9d56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a50fe465446dba40780bf9a545c4b9d56">createPoint</a> (const <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &amp;coord) const </td></tr>
+<tr class="memdesc:a50fe465446dba40780bf9a545c4b9d56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___point.html" title="GLC_Point : OpenGL 3D Point.">GLC_Point</a>.  <a href="#a50fe465446dba40780bf9a545c4b9d56"></a><br/></td></tr>
 <tr class="separator:a50fe465446dba40780bf9a545c4b9d56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5078842e903df1d9fe62773e4ffeee28"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a5078842e903df1d9fe62773e4ffeee28">createPoint</a> (double x, double y, double z) const </td></tr>
+<tr class="memitem:a5078842e903df1d9fe62773e4ffeee28"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a5078842e903df1d9fe62773e4ffeee28">createPoint</a> (double x, double y, double z) const </td></tr>
 <tr class="separator:a5078842e903df1d9fe62773e4ffeee28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdec9eb4a27e8a084d9875e3da36cd81"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#acdec9eb4a27e8a084d9875e3da36cd81">createPointCloud</a> (const <a class="el" href="glc__global_8h.html#a9f3f0b00cd127b066c9931b9c257a046">GLfloatVector</a> &amp;data, const QColor &amp;color)</td></tr>
+<tr class="memitem:acdec9eb4a27e8a084d9875e3da36cd81"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#acdec9eb4a27e8a084d9875e3da36cd81">createPointCloud</a> (const <a class="el" href="glc__global_8h.html#a9f3f0b00cd127b066c9931b9c257a046">GLfloatVector</a> &amp;data, const QColor &amp;color)</td></tr>
 <tr class="memdesc:acdec9eb4a27e8a084d9875e3da36cd81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a cloud of points.  <a href="#acdec9eb4a27e8a084d9875e3da36cd81"></a><br/></td></tr>
 <tr class="separator:acdec9eb4a27e8a084d9875e3da36cd81"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb79ec733b678ab7a4f99a4649b6fcbe"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#acb79ec733b678ab7a4f99a4649b6fcbe">createPointCloud</a> (const QList&lt; GLC_Point3d &gt; &amp;pointList, const QColor &amp;color)</td></tr>
+<tr class="memitem:acb79ec733b678ab7a4f99a4649b6fcbe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#acb79ec733b678ab7a4f99a4649b6fcbe">createPointCloud</a> (const QList&lt; <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &gt; &amp;pointList, const QColor &amp;color)</td></tr>
 <tr class="separator:acb79ec733b678ab7a4f99a4649b6fcbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8c50398df0bba36a457557924422680"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#ae8c50398df0bba36a457557924422680">createPointCloud</a> (const QList&lt; GLC_Point3df &gt; &amp;pointList, const QColor &amp;color)</td></tr>
+<tr class="memitem:ae8c50398df0bba36a457557924422680"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#ae8c50398df0bba36a457557924422680">createPointCloud</a> (const QList&lt; <a class="el" href="glc__vector3df_8h.html#a433841665e7ab0e1f29a0c68ce0d1cc7">GLC_Point3df</a> &gt; &amp;pointList, const QColor &amp;color)</td></tr>
 <tr class="separator:ae8c50398df0bba36a457557924422680"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f9f76a4f414255e4c772e71438f10ff"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a0f9f76a4f414255e4c772e71438f10ff">createPointSprite</a> (float, GLC_Material *) const </td></tr>
-<tr class="memdesc:a0f9f76a4f414255e4c772e71438f10ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_PointSprite.  <a href="#a0f9f76a4f414255e4c772e71438f10ff"></a><br/></td></tr>
+<tr class="memitem:a0f9f76a4f414255e4c772e71438f10ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a0f9f76a4f414255e4c772e71438f10ff">createPointSprite</a> (float, <a class="el" href="class_g_l_c___material.html">GLC_Material</a> *) const </td></tr>
+<tr class="memdesc:a0f9f76a4f414255e4c772e71438f10ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___point_sprite.html" title="GLC_PointSprite : OpenGL 3D Point Sprite Using extension : GL_ARB_point_parameters.">GLC_PointSprite</a>.  <a href="#a0f9f76a4f414255e4c772e71438f10ff"></a><br/></td></tr>
 <tr class="separator:a0f9f76a4f414255e4c772e71438f10ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b26a346960478290925decfdf1b1d36"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a0b26a346960478290925decfdf1b1d36">createLine</a> (const GLC_Point3d &amp;, const GLC_Point3d &amp;) const </td></tr>
-<tr class="memdesc:a0b26a346960478290925decfdf1b1d36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Line.  <a href="#a0b26a346960478290925decfdf1b1d36"></a><br/></td></tr>
+<tr class="memitem:a0b26a346960478290925decfdf1b1d36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a0b26a346960478290925decfdf1b1d36">createLine</a> (const <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &amp;, const <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &amp;) const </td></tr>
+<tr class="memdesc:a0b26a346960478290925decfdf1b1d36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___line.html" title="GLC_Line : OpenGL 3D Line.">GLC_Line</a>.  <a href="#a0b26a346960478290925decfdf1b1d36"></a><br/></td></tr>
 <tr class="separator:a0b26a346960478290925decfdf1b1d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace93470a718f80b8282987f3784ec05d"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#ace93470a718f80b8282987f3784ec05d">createCircle</a> (double radius, double angle=2 *glc::PI) const </td></tr>
-<tr class="memdesc:ace93470a718f80b8282987f3784ec05d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Circle.  <a href="#ace93470a718f80b8282987f3784ec05d"></a><br/></td></tr>
+<tr class="memitem:ace93470a718f80b8282987f3784ec05d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#ace93470a718f80b8282987f3784ec05d">createCircle</a> (double radius, double angle=2 *<a class="el" href="namespaceglc.html#ad0f268df7555a0084f6f242e599a0572">glc::PI</a>) const </td></tr>
+<tr class="memdesc:ace93470a718f80b8282987f3784ec05d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___circle.html" title="GLC_Circle : OpenGL 3D Circle.">GLC_Circle</a>.  <a href="#ace93470a718f80b8282987f3784ec05d"></a><br/></td></tr>
 <tr class="separator:ace93470a718f80b8282987f3784ec05d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a686eeae61763938454ea889f2e21ccff"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a686eeae61763938454ea889f2e21ccff">createBox</a> (double lx, double ly, double lz) const </td></tr>
-<tr class="memdesc:a686eeae61763938454ea889f2e21ccff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Box.  <a href="#a686eeae61763938454ea889f2e21ccff"></a><br/></td></tr>
+<tr class="memitem:a686eeae61763938454ea889f2e21ccff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a686eeae61763938454ea889f2e21ccff">createBox</a> (double lx, double ly, double lz) const </td></tr>
+<tr class="memdesc:a686eeae61763938454ea889f2e21ccff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___box.html" title="GLC_Box : OpenGL Box.">GLC_Box</a>.  <a href="#a686eeae61763938454ea889f2e21ccff"></a><br/></td></tr>
 <tr class="separator:a686eeae61763938454ea889f2e21ccff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18619928cb8a58b644b9c80a671f494d"><td class="memItemLeft" align="right" valign="top">GLC_3DViewInstance&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a18619928cb8a58b644b9c80a671f494d">createBox</a> (const <a class="el" href="class_g_l_c___bounding_box.html">GLC_BoundingBox</a> &amp;boundingBox) const </td></tr>
+<tr class="memitem:a18619928cb8a58b644b9c80a671f494d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_view_instance.html">GLC_3DViewInstance</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a18619928cb8a58b644b9c80a671f494d">createBox</a> (const <a class="el" href="class_g_l_c___bounding_box.html">GLC_BoundingBox</a> &amp;boundingBox) const </td></tr>
 <tr class="separator:a18619928cb8a58b644b9c80a671f494d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22a81a7c17d389dad39c4be8d2d1b595"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a22a81a7c17d389dad39c4be8d2d1b595">createCylinder</a> (double radius, double length) const </td></tr>
-<tr class="memdesc:a22a81a7c17d389dad39c4be8d2d1b595"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Cylinder.  <a href="#a22a81a7c17d389dad39c4be8d2d1b595"></a><br/></td></tr>
+<tr class="memitem:a22a81a7c17d389dad39c4be8d2d1b595"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a22a81a7c17d389dad39c4be8d2d1b595">createCylinder</a> (double radius, double length) const </td></tr>
+<tr class="memdesc:a22a81a7c17d389dad39c4be8d2d1b595"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___cylinder.html" title="GLC_Cylinder : OpenGL 3D Cylinder.">GLC_Cylinder</a>.  <a href="#a22a81a7c17d389dad39c4be8d2d1b595"></a><br/></td></tr>
 <tr class="separator:a22a81a7c17d389dad39c4be8d2d1b595"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa956622045f777b5bdb35ad5cf73ef4f"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#aa956622045f777b5bdb35ad5cf73ef4f">createCone</a> (double radius, double length) const </td></tr>
-<tr class="memdesc:aa956622045f777b5bdb35ad5cf73ef4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Cone.  <a href="#aa956622045f777b5bdb35ad5cf73ef4f"></a><br/></td></tr>
+<tr class="memitem:aa956622045f777b5bdb35ad5cf73ef4f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#aa956622045f777b5bdb35ad5cf73ef4f">createCone</a> (double radius, double length) const </td></tr>
+<tr class="memdesc:aa956622045f777b5bdb35ad5cf73ef4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___cone.html" title="GLC_Cone : OpenGL 3D Cone.">GLC_Cone</a>.  <a href="#aa956622045f777b5bdb35ad5cf73ef4f"></a><br/></td></tr>
 <tr class="separator:aa956622045f777b5bdb35ad5cf73ef4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7420f18574e2fc6f7d65b87ec5b22cf"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#ab7420f18574e2fc6f7d65b87ec5b22cf">createSphere</a> (double radius) const </td></tr>
-<tr class="memdesc:ab7420f18574e2fc6f7d65b87ec5b22cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Sphere.  <a href="#ab7420f18574e2fc6f7d65b87ec5b22cf"></a><br/></td></tr>
+<tr class="memitem:ab7420f18574e2fc6f7d65b87ec5b22cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#ab7420f18574e2fc6f7d65b87ec5b22cf">createSphere</a> (double radius) const </td></tr>
+<tr class="memdesc:ab7420f18574e2fc6f7d65b87ec5b22cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___sphere.html" title="GLC_Sphere : OpenGL 3D Sphere.">GLC_Sphere</a>.  <a href="#ab7420f18574e2fc6f7d65b87ec5b22cf"></a><br/></td></tr>
 <tr class="separator:ab7420f18574e2fc6f7d65b87ec5b22cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7dafb4abd1d0593d53981e97b7225f30"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a7dafb4abd1d0593d53981e97b7225f30">createRectangle</a> (double, double)</td></tr>
-<tr class="memdesc:a7dafb4abd1d0593d53981e97b7225f30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Rectangle.  <a href="#a7dafb4abd1d0593d53981e97b7225f30"></a><br/></td></tr>
+<tr class="memitem:a7dafb4abd1d0593d53981e97b7225f30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a7dafb4abd1d0593d53981e97b7225f30">createRectangle</a> (double, double)</td></tr>
+<tr class="memdesc:a7dafb4abd1d0593d53981e97b7225f30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___rectangle.html" title="GLC_Rectangle : OpenGL flat 3D Rectangle.">GLC_Rectangle</a>.  <a href="#a7dafb4abd1d0593d53981e97b7225f30"></a><br/></td></tr>
 <tr class="separator:a7dafb4abd1d0593d53981e97b7225f30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34e41060d7e9bd7dec6742525408fca6"><td class="memItemLeft" align="right" valign="top">GLC_3DViewInstance&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a34e41060d7e9bd7dec6742525408fca6">createRectangle</a> (const GLC_Point3d &amp;point, const GLC_Vector3d &amp;normal, double l1, double l2)</td></tr>
-<tr class="memdesc:a34e41060d7e9bd7dec6742525408fca6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Rectangle from the given 3d point, normal and the given lenght.  <a href="#a34e41060d7e9bd7dec6742525408fca6"></a><br/></td></tr>
+<tr class="memitem:a34e41060d7e9bd7dec6742525408fca6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_view_instance.html">GLC_3DViewInstance</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a34e41060d7e9bd7dec6742525408fca6">createRectangle</a> (const <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &amp;point, const <a class="el" href="class_g_l_c___vector3d.html">GLC_Vector3d</a> &amp;normal, double l1, double l2)</td></tr>
+<tr class="memdesc:a34e41060d7e9bd7dec6742525408fca6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___rectangle.html" title="GLC_Rectangle : OpenGL flat 3D Rectangle.">GLC_Rectangle</a> from the given 3d point, normal and the given lenght.  <a href="#a34e41060d7e9bd7dec6742525408fca6"></a><br/></td></tr>
 <tr class="separator:a34e41060d7e9bd7dec6742525408fca6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75949d511eb9a8ed7ee1f94ba6f4f108"><td class="memItemLeft" align="right" valign="top">GLC_3DViewInstance&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a75949d511eb9a8ed7ee1f94ba6f4f108">createCuttingPlane</a> (const GLC_Point3d &amp;point, const GLC_Vector3d &amp;normal, double l1, double l2, GLC_Material *pMat)</td></tr>
+<tr class="memitem:a75949d511eb9a8ed7ee1f94ba6f4f108"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_view_instance.html">GLC_3DViewInstance</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a75949d511eb9a8ed7ee1f94ba6f4f108">createCuttingPlane</a> (const <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &amp;point, const <a class="el" href="class_g_l_c___vector3d.html">GLC_Vector3d</a> &amp;normal, double l1, double l2, <a class="el" href="class_g_l_c___material.html">GLC_Material</a> *pMat)</td></tr>
 <tr class="memdesc:a75949d511eb9a8ed7ee1f94ba6f4f108"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the representation of a cutting from the given 3d point, normal, lenght and material.  <a href="#a75949d511eb9a8ed7ee1f94ba6f4f108"></a><br/></td></tr>
 <tr class="separator:a75949d511eb9a8ed7ee1f94ba6f4f108"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ca3d26bda97584f220eabfa43934410"><td class="memItemLeft" align="right" valign="top">GLC_World&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a0ca3d26bda97584f220eabfa43934410">createWorldFromFile</a> (QFile &amp;file, QStringList *pAttachedFileName=NULL) const </td></tr>
-<tr class="memdesc:a0ca3d26bda97584f220eabfa43934410"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_World from a QFile.  <a href="#a0ca3d26bda97584f220eabfa43934410"></a><br/></td></tr>
+<tr class="memitem:a0ca3d26bda97584f220eabfa43934410"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___world.html">GLC_World</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a0ca3d26bda97584f220eabfa43934410">createWorldFromFile</a> (QFile &amp;file, QStringList *pAttachedFileName=NULL) const </td></tr>
+<tr class="memdesc:a0ca3d26bda97584f220eabfa43934410"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___world.html" title="GLC_World : The Root of GLC_Lib Scene Graph.">GLC_World</a> from a QFile.  <a href="#a0ca3d26bda97584f220eabfa43934410"></a><br/></td></tr>
 <tr class="separator:a0ca3d26bda97584f220eabfa43934410"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f5db8b22c52b376fce45422ce1e12a4"><td class="memItemLeft" align="right" valign="top">GLC_World&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a9f5db8b22c52b376fce45422ce1e12a4">createWorldStructureFrom3dxml</a> (QFile &amp;file, bool GetExtRefName=false) const </td></tr>
-<tr class="memdesc:a9f5db8b22c52b376fce45422ce1e12a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_World containing only the 3dxml structure.  <a href="#a9f5db8b22c52b376fce45422ce1e12a4"></a><br/></td></tr>
+<tr class="memitem:a9f5db8b22c52b376fce45422ce1e12a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___world.html">GLC_World</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a9f5db8b22c52b376fce45422ce1e12a4">createWorldStructureFrom3dxml</a> (QFile &amp;file, bool GetExtRefName=false) const </td></tr>
+<tr class="memdesc:a9f5db8b22c52b376fce45422ce1e12a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___world.html" title="GLC_World : The Root of GLC_Lib Scene Graph.">GLC_World</a> containing only the 3dxml structure.  <a href="#a9f5db8b22c52b376fce45422ce1e12a4"></a><br/></td></tr>
 <tr class="separator:a9f5db8b22c52b376fce45422ce1e12a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a567113bee0a4db892c7cb6e6b2d3bdc1"><td class="memItemLeft" align="right" valign="top">GLC_3DRep&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a567113bee0a4db892c7cb6e6b2d3bdc1">create3DRepFromFile</a> (const QString &amp;) const </td></tr>
+<tr class="memitem:a567113bee0a4db892c7cb6e6b2d3bdc1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a567113bee0a4db892c7cb6e6b2d3bdc1">create3DRepFromFile</a> (const QString &amp;) const </td></tr>
 <tr class="memdesc:a567113bee0a4db892c7cb6e6b2d3bdc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create 3DRep from 3dxml or 3DRep file.  <a href="#a567113bee0a4db892c7cb6e6b2d3bdc1"></a><br/></td></tr>
 <tr class="separator:a567113bee0a4db892c7cb6e6b2d3bdc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a845ff89af102f0208412b5f47897ea77"><td class="memItemLeft" align="right" valign="top">GLC_FileLoader *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a845ff89af102f0208412b5f47897ea77">createFileLoader</a> () const </td></tr>
-<tr class="memdesc:a845ff89af102f0208412b5f47897ea77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_FileLoader.  <a href="#a845ff89af102f0208412b5f47897ea77"></a><br/></td></tr>
+<tr class="memitem:a845ff89af102f0208412b5f47897ea77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___file_loader.html">GLC_FileLoader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a845ff89af102f0208412b5f47897ea77">createFileLoader</a> () const </td></tr>
+<tr class="memdesc:a845ff89af102f0208412b5f47897ea77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___file_loader.html" title="GLC_FileLoader : Create a GLC_World from file.">GLC_FileLoader</a>.  <a href="#a845ff89af102f0208412b5f47897ea77"></a><br/></td></tr>
 <tr class="separator:a845ff89af102f0208412b5f47897ea77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc152d8b81c8ea84ed6fcb82d5ac868f"><td class="memItemLeft" align="right" valign="top">GLC_Material *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#abc152d8b81c8ea84ed6fcb82d5ac868f">createMaterial</a> () const </td></tr>
+<tr class="memitem:abc152d8b81c8ea84ed6fcb82d5ac868f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#abc152d8b81c8ea84ed6fcb82d5ac868f">createMaterial</a> () const </td></tr>
 <tr class="memdesc:abc152d8b81c8ea84ed6fcb82d5ac868f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create default material.  <a href="#abc152d8b81c8ea84ed6fcb82d5ac868f"></a><br/></td></tr>
 <tr class="separator:abc152d8b81c8ea84ed6fcb82d5ac868f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec8e0987fd15fa523c84eaae2b1b5879"><td class="memItemLeft" align="right" valign="top">GLC_Material *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#aec8e0987fd15fa523c84eaae2b1b5879">createMaterial</a> (const GLfloat *pAmbiantColor) const </td></tr>
+<tr class="memitem:aec8e0987fd15fa523c84eaae2b1b5879"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#aec8e0987fd15fa523c84eaae2b1b5879">createMaterial</a> (const GLfloat *pAmbiantColor) const </td></tr>
 <tr class="memdesc:aec8e0987fd15fa523c84eaae2b1b5879"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a material with an ambient color  <a href="#aec8e0987fd15fa523c84eaae2b1b5879"></a><br/></td></tr>
 <tr class="separator:aec8e0987fd15fa523c84eaae2b1b5879"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a222024418f436942bee3fde9d34e2cf6"><td class="memItemLeft" align="right" valign="top">GLC_Material *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a222024418f436942bee3fde9d34e2cf6">createMaterial</a> (const QColor &amp;color) const </td></tr>
+<tr class="memitem:a222024418f436942bee3fde9d34e2cf6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a222024418f436942bee3fde9d34e2cf6">createMaterial</a> (const QColor &amp;color) const </td></tr>
 <tr class="memdesc:a222024418f436942bee3fde9d34e2cf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a material with an ambient color  <a href="#a222024418f436942bee3fde9d34e2cf6"></a><br/></td></tr>
 <tr class="separator:a222024418f436942bee3fde9d34e2cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdf5be5f976ee87f149685677817486f"><td class="memItemLeft" align="right" valign="top">GLC_Material *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#abdf5be5f976ee87f149685677817486f">createMaterial</a> (GLC_Texture *pTexture) const </td></tr>
+<tr class="memitem:abdf5be5f976ee87f149685677817486f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#abdf5be5f976ee87f149685677817486f">createMaterial</a> (<a class="el" href="class_g_l_c___texture.html">GLC_Texture</a> *pTexture) const </td></tr>
 <tr class="memdesc:abdf5be5f976ee87f149685677817486f"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a material textured with a texture  <a href="#abdf5be5f976ee87f149685677817486f"></a><br/></td></tr>
 <tr class="separator:abdf5be5f976ee87f149685677817486f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a82f6800a30172efb4b4cfac599aa7e"><td class="memItemLeft" align="right" valign="top">GLC_Material *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a1a82f6800a30172efb4b4cfac599aa7e">createMaterial</a> (const QString &amp;textureFullFileName) const </td></tr>
+<tr class="memitem:a1a82f6800a30172efb4b4cfac599aa7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a1a82f6800a30172efb4b4cfac599aa7e">createMaterial</a> (const QString &amp;textureFullFileName) const </td></tr>
 <tr class="memdesc:a1a82f6800a30172efb4b4cfac599aa7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a material textured with a image file name  <a href="#a1a82f6800a30172efb4b4cfac599aa7e"></a><br/></td></tr>
 <tr class="separator:a1a82f6800a30172efb4b4cfac599aa7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8697f9f1eff70ad768bc6d41c912fb8e"><td class="memItemLeft" align="right" valign="top">GLC_Material *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a8697f9f1eff70ad768bc6d41c912fb8e">createMaterial</a> (const QImage &amp;) const </td></tr>
+<tr class="memitem:a8697f9f1eff70ad768bc6d41c912fb8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a8697f9f1eff70ad768bc6d41c912fb8e">createMaterial</a> (const QImage &amp;) const </td></tr>
 <tr class="memdesc:a8697f9f1eff70ad768bc6d41c912fb8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a material textured with a QImage  <a href="#a8697f9f1eff70ad768bc6d41c912fb8e"></a><br/></td></tr>
 <tr class="separator:a8697f9f1eff70ad768bc6d41c912fb8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b49fd511f7c3134c951498a9baabb3f"><td class="memItemLeft" align="right" valign="top">GLC_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a1b49fd511f7c3134c951498a9baabb3f">createTexture</a> (const QString &amp;textureFullFileName) const </td></tr>
-<tr class="memdesc:a1b49fd511f7c3134c951498a9baabb3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Texture.  <a href="#a1b49fd511f7c3134c951498a9baabb3f"></a><br/></td></tr>
+<tr class="memitem:a1b49fd511f7c3134c951498a9baabb3f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___texture.html">GLC_Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a1b49fd511f7c3134c951498a9baabb3f">createTexture</a> (const QString &amp;textureFullFileName) const </td></tr>
+<tr class="memdesc:a1b49fd511f7c3134c951498a9baabb3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___texture.html" title="GLC_Texture : Image texture.">GLC_Texture</a>.  <a href="#a1b49fd511f7c3134c951498a9baabb3f"></a><br/></td></tr>
 <tr class="separator:a1b49fd511f7c3134c951498a9baabb3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d02c0ab45c6e6129061709ca1af43fe"><td class="memItemLeft" align="right" valign="top">GLC_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a0d02c0ab45c6e6129061709ca1af43fe">createTexture</a> (const QImage &amp;, const QString &amp;imageFileName=QString()) const </td></tr>
-<tr class="memdesc:a0d02c0ab45c6e6129061709ca1af43fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a GLC_Texture with a QImage.  <a href="#a0d02c0ab45c6e6129061709ca1af43fe"></a><br/></td></tr>
+<tr class="memitem:a0d02c0ab45c6e6129061709ca1af43fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___texture.html">GLC_Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#a0d02c0ab45c6e6129061709ca1af43fe">createTexture</a> (const QImage &amp;, const QString &amp;imageFileName=QString()) const </td></tr>
+<tr class="memdesc:a0d02c0ab45c6e6129061709ca1af43fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="class_g_l_c___texture.html" title="GLC_Texture : Image texture.">GLC_Texture</a> with a QImage.  <a href="#a0d02c0ab45c6e6129061709ca1af43fe"></a><br/></td></tr>
 <tr class="separator:a0d02c0ab45c6e6129061709ca1af43fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd7691c8a5cd432973b11ef9f4ade3a0"><td class="memItemLeft" align="right" valign="top">GLC_MoverController&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#acd7691c8a5cd432973b11ef9f4ade3a0">createDefaultMoverController</a> (const QColor &amp;, GLC_Viewport *)</td></tr>
+<tr class="memitem:acd7691c8a5cd432973b11ef9f4ade3a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___mover_controller.html">GLC_MoverController</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___factory.html#acd7691c8a5cd432973b11ef9f4ade3a0">createDefaultMoverController</a> (const QColor &amp;, <a class="el" href="class_g_l_c___viewport.html">GLC_Viewport</a> *)</td></tr>
 <tr class="memdesc:acd7691c8a5cd432973b11ef9f4ade3a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the default mover controller.  <a href="#acd7691c8a5cd432973b11ef9f4ade3a0"></a><br/></td></tr>
 <tr class="separator:acd7691c8a5cd432973b11ef9f4ade3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -334,7 +334,7 @@ Get Functions</h2></td></tr>
 
 <p>References <a class="el" href="glc__factory_8cpp_source.html#l00055">instance()</a>, <a class="el" href="glc__factory_8h_source.html#l00199">m_pFactory</a>, and <a class="el" href="glc__factory_8h_source.html#l00205">m_SupportedExtensionSet</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__factory_8cpp_source.html#l00437">loadingHandler()</a>.</p>
+<p>Referenced by <a class="el" href="glc__fileloader_8cpp_source.html#l00058">GLC_FileLoader::createWorldFromFile()</a>, and <a class="el" href="glc__factory_8cpp_source.html#l00437">loadingHandler()</a>.</p>
 
 </div>
 </div>
@@ -343,7 +343,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::create3DRepFromFile </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::create3DRepFromFile </td>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>fileName</em></td><td>)</td>
@@ -356,7 +356,9 @@ Get Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00247">247</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
-<p>References <a class="el" href="class_g_l_c___factory.html#a474e14112c1a55eebfa28dbc0cf75dab">currentQuantum()</a>.</p>
+<p>References <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00165">GLC_3dxmlToWorld::create3DrepFrom3dxmlRep()</a>, and <a class="el" href="class_g_l_c___factory.html#a474e14112c1a55eebfa28dbc0cf75dab">currentQuantum()</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__3drep_8cpp_source.html#l00246">GLC_3DRep::load()</a>.</p>
 
 </div>
 </div>
@@ -365,7 +367,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createBox </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createBox </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>lx</em>, </td>
@@ -390,9 +392,11 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Box. </p>
+<p>Create a <a class="el" href="class_g_l_c___box.html" title="GLC_Box : OpenGL Box.">GLC_Box</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00139">139</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__octree_8cpp_source.html#l00127">GLC_Octree::createBoxWithMaterial()</a>.</p>
 
 </div>
 </div>
@@ -401,7 +405,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DViewInstance GLC_Factory::createBox </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_view_instance.html">GLC_3DViewInstance</a> GLC_Factory::createBox </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_g_l_c___bounding_box.html">GLC_BoundingBox</a> &amp;&#160;</td>
           <td class="paramname"><em>boundingBox</em></td><td>)</td>
@@ -412,7 +416,7 @@ Get Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00146">146</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__boundingbox_8h_source.html#l00187">GLC_BoundingBox::center()</a>, <a class="el" href="glc__boundingbox_8h_source.html#l00090">GLC_BoundingBox::lowerCorner()</a>, and <a class="el" href="glc__boundingbox_8h_source.html#l00094">GLC_BoundingBox::upperCorner()</a>.</p>
+<p>References <a class="el" href="glc__boundingbox_8h_source.html#l00187">GLC_BoundingBox::center()</a>, <a class="el" href="glc__boundingbox_8h_source.html#l00090">GLC_BoundingBox::lowerCorner()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00277">GLC_3DViewInstance::translate()</a>, <a class="el" href="glc__boundingbox_8h_source.html#l00094">GLC_BoundingBox::upperCorner()</a>, <a class="el" href="glc__vector3d_8h_source.html#l00090">GLC_Vector3d::x()</a>, <a class="el" href="glc__vector3d_8h_source.html#l00094">GLC_Vector3d::y()</a>, and <a class="el" href="glc__vector3d_8h_source.html#l00098">GLC_Vector3d::z()</a>.</p>
 
 </div>
 </div>
@@ -421,7 +425,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createCircle </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createCircle </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>radius</em>, </td>
@@ -430,7 +434,7 @@ Get Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>angle</em> = <code>2&#160;*&#160;glc::PI</code>&#160;</td>
+          <td class="paramname"><em>angle</em> = <code>2&#160;*&#160;<a class="el" href="namespaceglc.html#ad0f268df7555a0084f6f242e599a0572">glc::PI</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -440,7 +444,7 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Circle. </p>
+<p>Create a <a class="el" href="class_g_l_c___circle.html" title="GLC_Circle : OpenGL 3D Circle.">GLC_Circle</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00133">133</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
@@ -451,7 +455,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createCone </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createCone </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>radius</em>, </td>
@@ -470,9 +474,11 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Cone. </p>
+<p>Create a <a class="el" href="class_g_l_c___cone.html" title="GLC_Cone : OpenGL 3D Cone.">GLC_Cone</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00165">165</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__axis_8cpp_source.html#l00220">GLC_Axis::create3DviewInstance()</a>.</p>
 
 </div>
 </div>
@@ -481,15 +487,15 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DViewInstance GLC_Factory::createCuttingPlane </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_view_instance.html">GLC_3DViewInstance</a> GLC_Factory::createCuttingPlane </td>
           <td>(</td>
-          <td class="paramtype">const GLC_Point3d &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &amp;&#160;</td>
           <td class="paramname"><em>point</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const GLC_Vector3d &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_g_l_c___vector3d.html">GLC_Vector3d</a> &amp;&#160;</td>
           <td class="paramname"><em>normal</em>, </td>
         </tr>
         <tr>
@@ -507,7 +513,7 @@ Get Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">GLC_Material *&#160;</td>
+          <td class="paramtype"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> *&#160;</td>
           <td class="paramname"><em>pMat</em>&#160;</td>
         </tr>
         <tr>
@@ -522,6 +528,10 @@ Get Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00196">196</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00755">GLC_Mesh::replaceMasterMaterial()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00295">GLC_3DViewInstance::setMatrix()</a>, and <a class="el" href="namespaceglc.html#ab62ca4ac3c25a6847c6cbc7f079a1157">glc::Z_AXIS()</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__cuttingplane_8cpp_source.html#l00281">GLC_CuttingPlane::create3DviewInstance()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a22a81a7c17d389dad39c4be8d2d1b595"></a>
@@ -529,7 +539,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createCylinder </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createCylinder </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>radius</em>, </td>
@@ -548,9 +558,11 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Cylinder. </p>
+<p>Create a <a class="el" href="class_g_l_c___cylinder.html" title="GLC_Cylinder : OpenGL 3D Cylinder.">GLC_Cylinder</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00158">158</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__axis_8cpp_source.html#l00220">GLC_Axis::create3DviewInstance()</a>.</p>
 
 </div>
 </div>
@@ -559,7 +571,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_MoverController GLC_Factory::createDefaultMoverController </td>
+          <td class="memname"><a class="el" href="class_g_l_c___mover_controller.html">GLC_MoverController</a> GLC_Factory::createDefaultMoverController </td>
           <td>(</td>
           <td class="paramtype">const QColor &amp;&#160;</td>
           <td class="paramname"><em>color</em>, </td>
@@ -567,7 +579,7 @@ Get Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">GLC_Viewport *&#160;</td>
+          <td class="paramtype"><a class="el" href="class_g_l_c___viewport.html">GLC_Viewport</a> *&#160;</td>
           <td class="paramname"><em>pViewport</em>&#160;</td>
         </tr>
         <tr>
@@ -582,6 +594,8 @@ Get Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00309">309</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
+<p>References <a class="el" href="glc__movercontroller_8cpp_source.html#l00097">GLC_MoverController::addMover()</a>, <a class="el" href="class_g_l_c___rep_mover.html#a1e962ea5a705a4262290994ac20f7008">GLC_RepMover::clone()</a>, <a class="el" href="glc__movercontroller_8h_source.html#l00057">GLC_MoverController::Fly</a>, <a class="el" href="glc__movercontroller_8h_source.html#l00052">GLC_MoverController::Pan</a>, <a class="el" href="glc__repmover_8cpp_source.html#l00060">GLC_RepMover::setMainColor()</a>, <a class="el" href="glc__movercontroller_8h_source.html#l00055">GLC_MoverController::Target</a>, <a class="el" href="glc__movercontroller_8h_source.html#l00054">GLC_MoverController::TrackBall</a>, <a class="el" href="glc__movercontroller_8h_source.html#l00058">GLC_MoverController::TSR</a>, <a class="el" href="glc__movercontroller_8h_source.html#l00056">GLC_MoverController::TurnTable</a>, and <a class="el" href="glc__movercontroller_8h_source.html#l00053">GLC_MoverController::Zoom</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a845ff89af102f0208412b5f47897ea77"></a>
@@ -589,7 +603,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_FileLoader * GLC_Factory::createFileLoader </td>
+          <td class="memname"><a class="el" href="class_g_l_c___file_loader.html">GLC_FileLoader</a> * GLC_Factory::createFileLoader </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -597,7 +611,7 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_FileLoader. </p>
+<p>Create a <a class="el" href="class_g_l_c___file_loader.html" title="GLC_FileLoader : Create a GLC_World from file.">GLC_FileLoader</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00262">262</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
@@ -610,15 +624,15 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createLine </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createLine </td>
           <td>(</td>
-          <td class="paramtype">const GLC_Point3d &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &amp;&#160;</td>
           <td class="paramname"><em>point1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const GLC_Point3d &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &amp;&#160;</td>
           <td class="paramname"><em>point2</em>&#160;</td>
         </tr>
         <tr>
@@ -629,7 +643,7 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Line. </p>
+<p>Create a <a class="el" href="class_g_l_c___line.html" title="GLC_Line : OpenGL 3D Line.">GLC_Line</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00127">127</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
@@ -640,7 +654,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_Material * GLC_Factory::createMaterial </td>
+          <td class="memname"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> * GLC_Factory::createMaterial </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -661,7 +675,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_Material * GLC_Factory::createMaterial </td>
+          <td class="memname"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> * GLC_Factory::createMaterial </td>
           <td>(</td>
           <td class="paramtype">const GLfloat *&#160;</td>
           <td class="paramname"><em>pAmbiantColor</em></td><td>)</td>
@@ -681,7 +695,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_Material * GLC_Factory::createMaterial </td>
+          <td class="memname"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> * GLC_Factory::createMaterial </td>
           <td>(</td>
           <td class="paramtype">const QColor &amp;&#160;</td>
           <td class="paramname"><em>color</em></td><td>)</td>
@@ -701,9 +715,9 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_Material * GLC_Factory::createMaterial </td>
+          <td class="memname"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> * GLC_Factory::createMaterial </td>
           <td>(</td>
-          <td class="paramtype">GLC_Texture *&#160;</td>
+          <td class="paramtype"><a class="el" href="class_g_l_c___texture.html">GLC_Texture</a> *&#160;</td>
           <td class="paramname"><em>pTexture</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -721,7 +735,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_Material * GLC_Factory::createMaterial </td>
+          <td class="memname"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> * GLC_Factory::createMaterial </td>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>textureFullFileName</em></td><td>)</td>
@@ -743,7 +757,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_Material * GLC_Factory::createMaterial </td>
+          <td class="memname"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> * GLC_Factory::createMaterial </td>
           <td>(</td>
           <td class="paramtype">const QImage &amp;&#160;</td>
           <td class="paramname"><em>image</em></td><td>)</td>
@@ -765,16 +779,16 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createPoint </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createPoint </td>
           <td>(</td>
-          <td class="paramtype">const GLC_Point3d &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &amp;&#160;</td>
           <td class="paramname"><em>coord</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Point. </p>
+<p>Create a <a class="el" href="class_g_l_c___point.html" title="GLC_Point : OpenGL 3D Point.">GLC_Point</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00084">84</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
@@ -785,7 +799,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createPoint </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createPoint </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>x</em>, </td>
@@ -819,7 +833,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createPointCloud </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createPointCloud </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="glc__global_8h.html#a9f3f0b00cd127b066c9931b9c257a046">GLfloatVector</a> &amp;&#160;</td>
           <td class="paramname"><em>data</em>, </td>
@@ -842,6 +856,8 @@ Get Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00096">96</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
+<p>References <a class="el" href="glc__pointcloud_8h_source.html#l00080">GLC_PointCloud::addPoint()</a>, and <a class="el" href="glc__geometry_8cpp_source.html#l00219">GLC_Geometry::setWireColor()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="acb79ec733b678ab7a4f99a4649b6fcbe"></a>
@@ -849,9 +865,9 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createPointCloud </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createPointCloud </td>
           <td>(</td>
-          <td class="paramtype">const QList&lt; GLC_Point3d &gt; &amp;&#160;</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>pointList</em>, </td>
         </tr>
         <tr>
@@ -870,6 +886,8 @@ Get Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00104">104</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
+<p>References <a class="el" href="glc__pointcloud_8h_source.html#l00080">GLC_PointCloud::addPoint()</a>, and <a class="el" href="glc__geometry_8cpp_source.html#l00219">GLC_Geometry::setWireColor()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ae8c50398df0bba36a457557924422680"></a>
@@ -877,9 +895,9 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createPointCloud </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createPointCloud </td>
           <td>(</td>
-          <td class="paramtype">const QList&lt; GLC_Point3df &gt; &amp;&#160;</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="glc__vector3df_8h.html#a433841665e7ab0e1f29a0c68ce0d1cc7">GLC_Point3df</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>pointList</em>, </td>
         </tr>
         <tr>
@@ -898,6 +916,8 @@ Get Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00112">112</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
+<p>References <a class="el" href="glc__pointcloud_8h_source.html#l00080">GLC_PointCloud::addPoint()</a>, and <a class="el" href="glc__geometry_8cpp_source.html#l00219">GLC_Geometry::setWireColor()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a0f9f76a4f414255e4c772e71438f10ff"></a>
@@ -905,7 +925,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createPointSprite </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createPointSprite </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
           <td class="paramname"><em>size</em>, </td>
@@ -913,7 +933,7 @@ Get Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">GLC_Material *&#160;</td>
+          <td class="paramtype"><a class="el" href="class_g_l_c___material.html">GLC_Material</a> *&#160;</td>
           <td class="paramname"><em>pMaterial</em>&#160;</td>
         </tr>
         <tr>
@@ -924,7 +944,7 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_PointSprite. </p>
+<p>Create a <a class="el" href="class_g_l_c___point_sprite.html" title="GLC_PointSprite : OpenGL 3D Point Sprite Using extension : GL_ARB_point_parameters.">GLC_PointSprite</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00121">121</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
@@ -935,7 +955,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createRectangle </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createRectangle </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>l1</em>, </td>
@@ -954,7 +974,7 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Rectangle. </p>
+<p>Create a <a class="el" href="class_g_l_c___rectangle.html" title="GLC_Rectangle : OpenGL flat 3D Rectangle.">GLC_Rectangle</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00177">177</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
@@ -967,15 +987,15 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DViewInstance GLC_Factory::createRectangle </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_view_instance.html">GLC_3DViewInstance</a> GLC_Factory::createRectangle </td>
           <td>(</td>
-          <td class="paramtype">const GLC_Point3d &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &amp;&#160;</td>
           <td class="paramname"><em>point</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const GLC_Vector3d &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_g_l_c___vector3d.html">GLC_Vector3d</a> &amp;&#160;</td>
           <td class="paramname"><em>normal</em>, </td>
         </tr>
         <tr>
@@ -998,11 +1018,11 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Rectangle from the given 3d point, normal and the given lenght. </p>
+<p>Create a <a class="el" href="class_g_l_c___rectangle.html" title="GLC_Rectangle : OpenGL flat 3D Rectangle.">GLC_Rectangle</a> from the given 3d point, normal and the given lenght. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00183">183</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__factory_8cpp_source.html#l00177">createRectangle()</a>.</p>
+<p>References <a class="el" href="glc__factory_8cpp_source.html#l00177">createRectangle()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00295">GLC_3DViewInstance::setMatrix()</a>, and <a class="el" href="namespaceglc.html#ab62ca4ac3c25a6847c6cbc7f079a1157">glc::Z_AXIS()</a>.</p>
 
 </div>
 </div>
@@ -1011,7 +1031,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_3DRep GLC_Factory::createSphere </td>
+          <td class="memname"><a class="el" href="class_g_l_c__3_d_rep.html">GLC_3DRep</a> GLC_Factory::createSphere </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>radius</em></td><td>)</td>
@@ -1020,7 +1040,7 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Sphere. </p>
+<p>Create a <a class="el" href="class_g_l_c___sphere.html" title="GLC_Sphere : OpenGL 3D Sphere.">GLC_Sphere</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00171">171</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
@@ -1031,7 +1051,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_Texture * GLC_Factory::createTexture </td>
+          <td class="memname"><a class="el" href="class_g_l_c___texture.html">GLC_Texture</a> * GLC_Factory::createTexture </td>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>textureFullFileName</em></td><td>)</td>
@@ -1040,11 +1060,11 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Texture. </p>
+<p>Create a <a class="el" href="class_g_l_c___texture.html" title="GLC_Texture : Image texture.">GLC_Texture</a>. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00299">299</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__factory_8cpp_source.html#l00287">createMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__factory_8cpp_source.html#l00287">createMaterial()</a>, and <a class="el" href="glc__imageplane_8cpp_source.html#l00035">GLC_ImagePlane::GLC_ImagePlane()</a>.</p>
 
 </div>
 </div>
@@ -1053,7 +1073,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_Texture * GLC_Factory::createTexture </td>
+          <td class="memname"><a class="el" href="class_g_l_c___texture.html">GLC_Texture</a> * GLC_Factory::createTexture </td>
           <td>(</td>
           <td class="paramtype">const QImage &amp;&#160;</td>
           <td class="paramname"><em>image</em>, </td>
@@ -1072,7 +1092,7 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_Texture with a QImage. </p>
+<p>Create a <a class="el" href="class_g_l_c___texture.html" title="GLC_Texture : Image texture.">GLC_Texture</a> with a QImage. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00304">304</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
@@ -1083,7 +1103,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_World GLC_Factory::createWorldFromFile </td>
+          <td class="memname"><a class="el" href="class_g_l_c___world.html">GLC_World</a> GLC_Factory::createWorldFromFile </td>
           <td>(</td>
           <td class="paramtype">QFile &amp;&#160;</td>
           <td class="paramname"><em>file</em>, </td>
@@ -1102,11 +1122,11 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_World from a QFile. </p>
+<p>Create a <a class="el" href="class_g_l_c___world.html" title="GLC_World : The Root of GLC_Lib Scene Graph.">GLC_World</a> from a QFile. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00213">213</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__factory_8cpp_source.html#l00262">createFileLoader()</a>, and <a class="el" href="class_g_l_c___factory.html#a474e14112c1a55eebfa28dbc0cf75dab">currentQuantum()</a>.</p>
+<p>References <a class="el" href="glc__factory_8cpp_source.html#l00262">createFileLoader()</a>, <a class="el" href="glc__fileloader_8cpp_source.html#l00058">GLC_FileLoader::createWorldFromFile()</a>, and <a class="el" href="class_g_l_c___factory.html#a474e14112c1a55eebfa28dbc0cf75dab">currentQuantum()</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1135,7 @@ Get Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_World GLC_Factory::createWorldStructureFrom3dxml </td>
+          <td class="memname"><a class="el" href="class_g_l_c___world.html">GLC_World</a> GLC_Factory::createWorldStructureFrom3dxml </td>
           <td>(</td>
           <td class="paramtype">QFile &amp;&#160;</td>
           <td class="paramname"><em>file</em>, </td>
@@ -1134,11 +1154,11 @@ Get Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a GLC_World containing only the 3dxml structure. </p>
+<p>Create a <a class="el" href="class_g_l_c___world.html" title="GLC_World : The Root of GLC_Lib Scene Graph.">GLC_World</a> containing only the 3dxml structure. </p>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00223">223</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
-<p>References <a class="el" href="class_g_l_c___factory.html#a474e14112c1a55eebfa28dbc0cf75dab">currentQuantum()</a>, and <a class="el" href="glc__fileformatexception_8h_source.html#l00043">GLC_FileFormatException::FileNotSupported</a>.</p>
+<p>References <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00113">GLC_3dxmlToWorld::createWorldFrom3dxml()</a>, <a class="el" href="class_g_l_c___factory.html#a474e14112c1a55eebfa28dbc0cf75dab">currentQuantum()</a>, and <a class="el" href="glc__fileformatexception_8h_source.html#l00043">GLC_FileFormatException::FileNotSupported</a>.</p>
 
 </div>
 </div>
@@ -1197,7 +1217,7 @@ Get Functions</h2></td></tr>
 
 <p>References <a class="el" href="glc__factory_8cpp_source.html#l00069">GLC_Factory()</a>, and <a class="el" href="glc__factory_8h_source.html#l00199">m_pFactory</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__factory_8cpp_source.html#l00427">canBeLoaded()</a>, <a class="el" href="glc__factory_8cpp_source.html#l00437">loadingHandler()</a>, and <a class="el" href="glc__factory_8cpp_source.html#l00418">worldReaderPlugins()</a>.</p>
+<p>Referenced by <a class="el" href="glc__factory_8cpp_source.html#l00427">canBeLoaded()</a>, <a class="el" href="glc__axis_8cpp_source.html#l00220">GLC_Axis::create3DviewInstance()</a>, <a class="el" href="glc__cuttingplane_8cpp_source.html#l00281">GLC_CuttingPlane::create3DviewInstance()</a>, <a class="el" href="glc__octree_8cpp_source.html#l00127">GLC_Octree::createBoxWithMaterial()</a>, <a class="el" href="glc__imageplane_8cpp_source.html#l00035">GLC_ImagePlane::GLC_ImagePlane()</a>, <a class="el" href="glc__3drep_8cpp_source.html#l00246">GLC_3DRep::load()</a>, <a class="el" href="glc__factory_8cpp_source.html#l00437">loadingHandler()</a>, and <a class="el" href="glc__factory_8cpp_source.html#l00418">worldReaderPlugins()</a>.</p>
 
 </div>
 </div>
@@ -1209,7 +1229,7 @@ Get Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">GLC_WorldReaderHandler * GLC_Factory::loadingHandler </td>
+          <td class="memname"><a class="el" href="class_g_l_c___world_reader_handler.html">GLC_WorldReaderHandler</a> * GLC_Factory::loadingHandler </td>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>fileName</em></td><td>)</td>
@@ -1227,7 +1247,9 @@ Get Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00437">437</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__factory_8cpp_source.html#l00427">canBeLoaded()</a>, <a class="el" href="glc__factory_8cpp_source.html#l00055">instance()</a>, <a class="el" href="glc__factory_8h_source.html#l00199">m_pFactory</a>, and <a class="el" href="glc__factory_8h_source.html#l00202">m_WorldReaderPluginList</a>.</p>
+<p>References <a class="el" href="glc__factory_8cpp_source.html#l00427">canBeLoaded()</a>, <a class="el" href="glc__factory_8cpp_source.html#l00055">instance()</a>, <a class="el" href="class_g_l_c___world_reader_plugin.html#aea9f2bfee85895c4bab707baab190887">GLC_WorldReaderPlugin::keys()</a>, <a class="el" href="glc__factory_8h_source.html#l00199">m_pFactory</a>, <a class="el" href="glc__factory_8h_source.html#l00202">m_WorldReaderPluginList</a>, and <a class="el" href="class_g_l_c___world_reader_plugin.html#a4c794fa3245e05810d32a7edfb65ee02">GLC_WorldReaderPlugin::readerHandler()</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__fileloader_8cpp_source.html#l00058">GLC_FileLoader::createWorldFromFile()</a>.</p>
 
 </div>
 </div>
@@ -1256,7 +1278,7 @@ Get Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__factory_8cpp_source.html#l00394">394</a> of file <a class="el" href="glc__factory_8cpp_source.html">glc_factory.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__factory_8h_source.html#l00205">m_SupportedExtensionSet</a>, and <a class="el" href="glc__factory_8h_source.html#l00202">m_WorldReaderPluginList</a>.</p>
+<p>References <a class="el" href="class_g_l_c___world_reader_plugin.html#aea9f2bfee85895c4bab707baab190887">GLC_WorldReaderPlugin::keys()</a>, <a class="el" href="glc__factory_8h_source.html#l00205">m_SupportedExtensionSet</a>, and <a class="el" href="glc__factory_8h_source.html#l00202">m_WorldReaderPluginList</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__factory_8cpp_source.html#l00069">GLC_Factory()</a>.</p>
 
@@ -1270,7 +1292,7 @@ Get Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">QList&lt; GLC_WorldReaderPlugin * &gt; GLC_Factory::worldReaderPlugins </td>
+          <td class="memname">QList&lt; <a class="el" href="class_g_l_c___world_reader_plugin.html">GLC_WorldReaderPlugin</a> * &gt; GLC_Factory::worldReaderPlugins </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1352,7 +1374,7 @@ Get Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">QList&lt; GLC_WorldReaderPlugin * &gt; GLC_Factory::m_WorldReaderPluginList</td>
+          <td class="memname">QList&lt; <a class="el" href="class_g_l_c___world_reader_plugin.html">GLC_WorldReaderPlugin</a> * &gt; GLC_Factory::m_WorldReaderPluginList</td>
         </tr>
       </table>
   </td>
@@ -1376,10 +1398,6 @@ Get Functions</h2></td></tr>
 </ul>
 </div><!-- contents -->
 
-	<p align="center">
-	  <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=153150&amp;type=2"
-	  width="125" height="37" border="0" alt="SourceForge.net Logo" /></a> 
-	  </p>
 	<p align="center" bgcolor="#ccccff" height="17" width="100%">
      <a href="mailto:laumaya@users.sourceforge.net?subject=GLC_lib">&copy;2005-2013 Laurent Ribon</a>
 	 </p>

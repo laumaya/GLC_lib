@@ -100,13 +100,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aecf19d88cf2772d20377a0b93a202a60"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___uniform_shader_data.html#aecf19d88cf2772d20377a0b93a202a60">~GLC_UniformShaderData</a> ()</td></tr>
 <tr class="separator:aecf19d88cf2772d20377a0b93a202a60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Set Functions</div></td></tr>
-<tr class="memitem:aee008d2e5eb40abb4bb88357af38e00f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___uniform_shader_data.html#aee008d2e5eb40abb4bb88357af38e00f">setLightValues</a> (const GLC_Light &amp;light)</td></tr>
+<tr class="memitem:aee008d2e5eb40abb4bb88357af38e00f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___uniform_shader_data.html#aee008d2e5eb40abb4bb88357af38e00f">setLightValues</a> (const <a class="el" href="class_g_l_c___light.html">GLC_Light</a> &amp;light)</td></tr>
 <tr class="memdesc:aee008d2e5eb40abb4bb88357af38e00f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Light values from the given light.  <a href="#aee008d2e5eb40abb4bb88357af38e00f"></a><br/></td></tr>
 <tr class="separator:aee008d2e5eb40abb4bb88357af38e00f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a499dbd3bf6c213775ca2b72e1efdfb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___uniform_shader_data.html#a7a499dbd3bf6c213775ca2b72e1efdfb">setLightingState</a> (bool enable)</td></tr>
 <tr class="memdesc:a7a499dbd3bf6c213775ca2b72e1efdfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set lighting enbale state.  <a href="#a7a499dbd3bf6c213775ca2b72e1efdfb"></a><br/></td></tr>
 <tr class="separator:a7a499dbd3bf6c213775ca2b72e1efdfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a467d196ba705a6087651037d8f8d9f33"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___uniform_shader_data.html#a467d196ba705a6087651037d8f8d9f33">setModelViewProjectionMatrix</a> (const GLC_Matrix4x4 &amp;modelView, const GLC_Matrix4x4 &amp;projection)</td></tr>
+<tr class="memitem:a467d196ba705a6087651037d8f8d9f33"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___uniform_shader_data.html#a467d196ba705a6087651037d8f8d9f33">setModelViewProjectionMatrix</a> (const <a class="el" href="class_g_l_c___matrix4x4.html">GLC_Matrix4x4</a> &amp;modelView, const <a class="el" href="class_g_l_c___matrix4x4.html">GLC_Matrix4x4</a> &amp;projection)</td></tr>
 <tr class="memdesc:a467d196ba705a6087651037d8f8d9f33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the model view matrix.  <a href="#a467d196ba705a6087651037d8f8d9f33"></a><br/></td></tr>
 <tr class="separator:a467d196ba705a6087651037d8f8d9f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a298d352a0181771b74ea5245866c1b0a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___uniform_shader_data.html#a298d352a0181771b74ea5245866c1b0a">updateAll</a> (const <a class="el" href="class_g_l_c___context.html">GLC_Context</a> *pContext)</td></tr>
@@ -178,6 +178,8 @@ Public Member Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__uniformshaderdata_8cpp_source.html#l00050">50</a> of file <a class="el" href="glc__uniformshaderdata_8cpp_source.html">glc_uniformshaderdata.cpp</a>.</p>
 
+<p>References <a class="el" href="glc__shader_8cpp_source.html#l00171">GLC_Shader::currentShaderHandle()</a>, <a class="el" href="glc__shader_8h_source.html#l00163">GLC_Shader::enableLightingId()</a>, and <a class="el" href="glc__shader_8h_source.html#l00090">GLC_Shader::programShaderHandle()</a>.</p>
+
 <p>Referenced by <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, and <a class="el" href="glc__uniformshaderdata_8cpp_source.html#l00097">updateAll()</a>.</p>
 
 </div>
@@ -189,7 +191,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void GLC_UniformShaderData::setLightValues </td>
           <td>(</td>
-          <td class="paramtype">const GLC_Light &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_g_l_c___light.html">GLC_Light</a> &amp;&#160;</td>
           <td class="paramname"><em>light</em></td><td>)</td>
           <td></td>
         </tr>
@@ -209,13 +211,13 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void GLC_UniformShaderData::setModelViewProjectionMatrix </td>
           <td>(</td>
-          <td class="paramtype">const GLC_Matrix4x4 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_g_l_c___matrix4x4.html">GLC_Matrix4x4</a> &amp;&#160;</td>
           <td class="paramname"><em>modelView</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const GLC_Matrix4x4 &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_g_l_c___matrix4x4.html">GLC_Matrix4x4</a> &amp;&#160;</td>
           <td class="paramname"><em>projection</em>&#160;</td>
         </tr>
         <tr>
@@ -229,6 +231,8 @@ Public Member Functions</h2></td></tr>
 <p>Set the model view matrix. </p>
 
 <p>Definition at line <a class="el" href="glc__uniformshaderdata_8cpp_source.html#l00056">56</a> of file <a class="el" href="glc__uniformshaderdata_8cpp_source.html">glc_uniformshaderdata.cpp</a>.</p>
+
+<p>References <a class="el" href="glc__shader_8cpp_source.html#l00171">GLC_Shader::currentShaderHandle()</a>, <a class="el" href="glc__matrix4x4_8h_source.html#l00131">GLC_Matrix4x4::getData()</a>, <a class="el" href="glc__shader_8cpp_source.html#l00166">GLC_Shader::hasActiveShader()</a>, <a class="el" href="glc__matrix4x4_8h_source.html#l00170">GLC_Matrix4x4::inverted()</a>, <a class="el" href="glc__shader_8h_source.html#l00159">GLC_Shader::invModelViewLocationId()</a>, <a class="el" href="glc__shader_8h_source.html#l00151">GLC_Shader::modelViewLocationId()</a>, <a class="el" href="glc__shader_8h_source.html#l00155">GLC_Shader::mvpLocationId()</a>, <a class="el" href="glc__shader_8h_source.html#l00090">GLC_Shader::programShaderHandle()</a>, and <a class="el" href="glc__matrix4x4_8h_source.html#l00615">GLC_Matrix4x4::transpose()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__context_8cpp_source.html#l00084">GLC_Context::glcLoadIdentity()</a>, <a class="el" href="glc__context_8cpp_source.html#l00130">GLC_Context::glcLoadMatrix()</a>, <a class="el" href="glc__context_8cpp_source.html#l00146">GLC_Context::glcMultMatrix()</a>, and <a class="el" href="glc__uniformshaderdata_8cpp_source.html#l00097">updateAll()</a>.</p>
 
@@ -262,10 +266,6 @@ Public Member Functions</h2></td></tr>
 </ul>
 </div><!-- contents -->
 
-	<p align="center">
-	  <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=153150&amp;type=2"
-	  width="125" height="37" border="0" alt="SourceForge.net Logo" /></a> 
-	  </p>
 	<p align="center" bgcolor="#ccccff" height="17" width="100%">
      <a href="mailto:laumaya@users.sourceforge.net?subject=GLC_lib">&copy;2005-2013 Laurent Ribon</a>
 	 </p>

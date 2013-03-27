@@ -81,7 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d522931ffa1371640980b621734a4381.html">Users</a></li><li class="navelem"><a class="el" href="dir_e7e624ff985462c102b105cbe5d7da96.html">laumaya</a></li><li class="navelem"><a class="el" href="dir_dcbfa5de698b4a400b13c539f08860f4.html">git</a></li><li class="navelem"><a class="el" href="dir_fb4dc37c97548debab4a4119a5884dd9.html">glc_lib</a></li><li class="navelem"><a class="el" href="dir_82e8eee952439c39626efbb10ad1f52a.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_9e51036813d6151dfecc72d5fa7c02b3.html">Users</a></li><li class="navelem"><a class="el" href="dir_c191c033cd67529bda557a261a34ba9e.html">laumaya</a></li><li class="navelem"><a class="el" href="dir_7252a5125785eb44447ec0c33fb2d0d8.html">git</a></li><li class="navelem"><a class="el" href="dir_8c8f4e1bdf218f85b0d80ad09e2ca744.html">glc_lib</a></li><li class="navelem"><a class="el" href="dir_308b1f547d363b51e9fcca528fab4b29.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -113,7 +113,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;QtDebug&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;shading/glc_shader.h&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glc__shader_8h.html" title="interface for the GLC_Shader class.">shading/glc_shader.h</a>&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glc__context_8h.html" title="interface for the GLC_Context class.">glc_context.h</a>&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glc__uniformshaderdata_8h.html" title="interface for the GLC_UniformShaderData class.">glc_uniformshaderdata.h</a>&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
@@ -130,21 +130,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// Set Functions</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="code" href="class_g_l_c___uniform_shader_data.html#aee008d2e5eb40abb4bb88357af38e00f">   45</a></span>&#160;<span class="comment"></span><span class="keywordtype">void</span> <a class="code" href="class_g_l_c___uniform_shader_data.html#aee008d2e5eb40abb4bb88357af38e00f" title="Set Light values from the given light.">GLC_UniformShaderData::setLightValues</a>(<span class="keyword">const</span> GLC_Light&amp; light)</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="code" href="class_g_l_c___uniform_shader_data.html#aee008d2e5eb40abb4bb88357af38e00f">   45</a></span>&#160;<span class="comment"></span><span class="keywordtype">void</span> <a class="code" href="class_g_l_c___uniform_shader_data.html#aee008d2e5eb40abb4bb88357af38e00f" title="Set Light values from the given light.">GLC_UniformShaderData::setLightValues</a>(<span class="keyword">const</span> <a class="code" href="class_g_l_c___light.html" title="GLC_Light : OpenGL Point Light.">GLC_Light</a>&amp; light)</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
 <div class="line"><a name="l00050"></a><span class="lineno"><a class="code" href="class_g_l_c___uniform_shader_data.html#a7a499dbd3bf6c213775ca2b72e1efdfb">   50</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___uniform_shader_data.html#a7a499dbd3bf6c213775ca2b72e1efdfb" title="Set lighting enbale state.">GLC_UniformShaderData::setLightingState</a>(<span class="keywordtype">bool</span> enable)</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;         GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;         pCurrentShader-&gt;programShaderHandle()-&gt;setUniformValue(pCurrentShader-&gt;enableLightingId(), enable);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;         <a class="code" href="class_g_l_c___shader.html" title="GLC_Shader : OpenGL shader abstraction.">GLC_Shader</a>* pCurrentShader= <a class="code" href="class_g_l_c___shader.html#a6fa5aaf7116124922aae624e1dab14d0" title="Return handle to the current active shader.">GLC_Shader::currentShaderHandle</a>();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;         pCurrentShader-&gt;<a class="code" href="class_g_l_c___shader.html#ae9ae9f0c35e2526908828d1552a6d262" title="Return an handle to the QGLProgramShader of this shader.">programShaderHandle</a>()-&gt;setUniformValue(pCurrentShader-&gt;<a class="code" href="class_g_l_c___shader.html#af104e5fda8f77deb9a6c21c059b0691b" title="Return the enable lighting location id.">enableLightingId</a>(), enable);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="code" href="class_g_l_c___uniform_shader_data.html#a467d196ba705a6087651037d8f8d9f33">   56</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___uniform_shader_data.html#a467d196ba705a6087651037d8f8d9f33" title="Set the model view matrix.">GLC_UniformShaderData::setModelViewProjectionMatrix</a>(<span class="keyword">const</span> GLC_Matrix4x4&amp; modelView, <span class="keyword">const</span> GLC_Matrix4x4&amp; projection)</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="code" href="class_g_l_c___uniform_shader_data.html#a467d196ba705a6087651037d8f8d9f33">   56</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___uniform_shader_data.html#a467d196ba705a6087651037d8f8d9f33" title="Set the model view matrix.">GLC_UniformShaderData::setModelViewProjectionMatrix</a>(<span class="keyword">const</span> <a class="code" href="class_g_l_c___matrix4x4.html" title="GLC_Matrix4x4 is a 4 dimensions Matrix.">GLC_Matrix4x4</a>&amp; modelView, <span class="keyword">const</span> <a class="code" href="class_g_l_c___matrix4x4.html" title="GLC_Matrix4x4 is a 4 dimensions Matrix.">GLC_Matrix4x4</a>&amp; projection)</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;         <span class="comment">// Set model view matrix</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;         <span class="keyword">const</span> <span class="keywordtype">double</span>* pMvmatrixData= modelView.getData();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;         <span class="keyword">const</span> <span class="keywordtype">double</span>* pMvmatrixData= modelView.<a class="code" href="class_g_l_c___matrix4x4.html#aacd80a52605612bce8a6a0dd950e46b6" title="Return a pointer to the row first array of 16 elements of this matrix.">getData</a>();</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;         GLfloat mvFloatMatrix[4][4];</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;         GLfloat* pData= &amp;(mvFloatMatrix[0][0]);</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i= 0; i &lt; 16; ++i)</div>
@@ -153,8 +153,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;         }</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;         <span class="comment">// Set model view projection matrix</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;         GLC_Matrix4x4 modelViewProjectionMatrix= projection * modelView;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;         <span class="keyword">const</span> <span class="keywordtype">double</span>* pMvpmatrixData= modelViewProjectionMatrix.getData();</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;         <a class="code" href="class_g_l_c___matrix4x4.html" title="GLC_Matrix4x4 is a 4 dimensions Matrix.">GLC_Matrix4x4</a> modelViewProjectionMatrix= projection * modelView;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;         <span class="keyword">const</span> <span class="keywordtype">double</span>* pMvpmatrixData= modelViewProjectionMatrix.<a class="code" href="class_g_l_c___matrix4x4.html#aacd80a52605612bce8a6a0dd950e46b6" title="Return a pointer to the row first array of 16 elements of this matrix.">getData</a>();</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;         GLfloat mvpFloatMatrix[4][4];</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;         pData= &amp;(mvpFloatMatrix[0][0]);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i= 0; i &lt; 16; ++i)</div>
@@ -163,23 +163,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;         }</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;         <span class="comment">// Set the transpose of inv model view matrix (For normal computation)</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;         GLC_Matrix4x4 invTransposeModelView= modelView.inverted();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;         invTransposeModelView.transpose();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;         <a class="code" href="class_g_l_c___matrix4x4.html" title="GLC_Matrix4x4 is a 4 dimensions Matrix.">GLC_Matrix4x4</a> invTransposeModelView= modelView.<a class="code" href="class_g_l_c___matrix4x4.html#a4df9940e11827e52587a4fe87ff2796b" title="Return the inverse of this matrix.">inverted</a>();</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;         invTransposeModelView.<a class="code" href="class_g_l_c___matrix4x4.html#a9982eae7a2b35c9d24640f76cfbd9628" title="Transpose this matrix and return a reference to this matrix.">transpose</a>();</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;         GLfloat invTmdv[3][3];</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;         {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                  <span class="keyword">const</span> <span class="keywordtype">double</span>* data= invTransposeModelView.getData();</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                  <span class="keyword">const</span> <span class="keywordtype">double</span>* data= invTransposeModelView.<a class="code" href="class_g_l_c___matrix4x4.html#aacd80a52605612bce8a6a0dd950e46b6" title="Return a pointer to the row first array of 16 elements of this matrix.">getData</a>();</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                  invTmdv[0][0]= <span class="keyword">static_cast&lt;</span>GLfloat<span class="keyword">&gt;</span>(data[0]); invTmdv[1][0]= <span class="keyword">static_cast&lt;</span>GLfloat<span class="keyword">&gt;</span>(data[4]); invTmdv[2][0]= <span class="keyword">static_cast&lt;</span>GLfloat<span class="keyword">&gt;</span>(data[8]);</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                  invTmdv[0][1]= <span class="keyword">static_cast&lt;</span>GLfloat<span class="keyword">&gt;</span>(data[1]); invTmdv[1][1]= <span class="keyword">static_cast&lt;</span>GLfloat<span class="keyword">&gt;</span>(data[5]); invTmdv[2][1]= <span class="keyword">static_cast&lt;</span>GLfloat<span class="keyword">&gt;</span>(data[9]);</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                  invTmdv[0][2]= <span class="keyword">static_cast&lt;</span>GLfloat<span class="keyword">&gt;</span>(data[2]); invTmdv[1][2]= <span class="keyword">static_cast&lt;</span>GLfloat<span class="keyword">&gt;</span>(data[6]); invTmdv[2][2]= <span class="keyword">static_cast&lt;</span>GLfloat<span class="keyword">&gt;</span>(data[10]);</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;         }</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;         Q_ASSERT(GLC_Shader::hasActiveShader());</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___shader.html#a8ee500ac41465e5969c08711687e1aa7" title="Return true if there is an active shader.">GLC_Shader::hasActiveShader</a>());</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;         GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;         pCurrentShader-&gt;programShaderHandle()-&gt;setUniformValue(pCurrentShader-&gt;modelViewLocationId(), mvFloatMatrix);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;         pCurrentShader-&gt;programShaderHandle()-&gt;setUniformValue(pCurrentShader-&gt;mvpLocationId(), mvpFloatMatrix);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;         pCurrentShader-&gt;programShaderHandle()-&gt;setUniformValue(pCurrentShader-&gt;invModelViewLocationId(), invTmdv);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;         <a class="code" href="class_g_l_c___shader.html" title="GLC_Shader : OpenGL shader abstraction.">GLC_Shader</a>* pCurrentShader= <a class="code" href="class_g_l_c___shader.html#a6fa5aaf7116124922aae624e1dab14d0" title="Return handle to the current active shader.">GLC_Shader::currentShaderHandle</a>();</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;         pCurrentShader-&gt;<a class="code" href="class_g_l_c___shader.html#ae9ae9f0c35e2526908828d1552a6d262" title="Return an handle to the QGLProgramShader of this shader.">programShaderHandle</a>()-&gt;setUniformValue(pCurrentShader-&gt;<a class="code" href="class_g_l_c___shader.html#a31f00779d7cb7f33e4c8990a4dbf8435" title="Return the modelView location id.">modelViewLocationId</a>(), mvFloatMatrix);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;         pCurrentShader-&gt;<a class="code" href="class_g_l_c___shader.html#ae9ae9f0c35e2526908828d1552a6d262" title="Return an handle to the QGLProgramShader of this shader.">programShaderHandle</a>()-&gt;setUniformValue(pCurrentShader-&gt;<a class="code" href="class_g_l_c___shader.html#aad00d73aece3e598c276dd5199cb308f" title="Return the modelView Projection matrix id.">mvpLocationId</a>(), mvpFloatMatrix);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;         pCurrentShader-&gt;<a class="code" href="class_g_l_c___shader.html#ae9ae9f0c35e2526908828d1552a6d262" title="Return an handle to the QGLProgramShader of this shader.">programShaderHandle</a>()-&gt;setUniformValue(pCurrentShader-&gt;<a class="code" href="class_g_l_c___shader.html#a7ba67a7436da1c73a6e48b8e9355852c" title="Return the inverse modelView location id.">invModelViewLocationId</a>(), invTmdv);</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
 <div class="line"><a name="l00097"></a><span class="lineno"><a class="code" href="class_g_l_c___uniform_shader_data.html#a298d352a0181771b74ea5245866c1b0a">   97</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___uniform_shader_data.html#a298d352a0181771b74ea5245866c1b0a" title="Update all uniform variables.">GLC_UniformShaderData::updateAll</a>(<span class="keyword">const</span> <a class="code" href="class_g_l_c___context.html" title="GLC_Context : Encapsulates OpenGL rendering context.">GLC_Context</a>* pContext)</div>
@@ -189,10 +189,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 
-	<p align="center">
-	  <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=153150&amp;type=2"
-	  width="125" height="37" border="0" alt="SourceForge.net Logo" /></a> 
-	  </p>
 	<p align="center" bgcolor="#ccccff" height="17" width="100%">
      <a href="mailto:laumaya@users.sourceforge.net?subject=GLC_lib">&copy;2005-2013 Laurent Ribon</a>
 	 </p>

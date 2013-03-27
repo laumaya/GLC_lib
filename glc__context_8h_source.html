@@ -81,7 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d522931ffa1371640980b621734a4381.html">Users</a></li><li class="navelem"><a class="el" href="dir_e7e624ff985462c102b105cbe5d7da96.html">laumaya</a></li><li class="navelem"><a class="el" href="dir_dcbfa5de698b4a400b13c539f08860f4.html">git</a></li><li class="navelem"><a class="el" href="dir_fb4dc37c97548debab4a4119a5884dd9.html">glc_lib</a></li><li class="navelem"><a class="el" href="dir_82e8eee952439c39626efbb10ad1f52a.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_9e51036813d6151dfecc72d5fa7c02b3.html">Users</a></li><li class="navelem"><a class="el" href="dir_c191c033cd67529bda557a261a34ba9e.html">laumaya</a></li><li class="navelem"><a class="el" href="dir_7252a5125785eb44447ec0c33fb2d0d8.html">git</a></li><li class="navelem"><a class="el" href="dir_8c8f4e1bdf218f85b0d80ad09e2ca744.html">glc_lib</a></li><li class="navelem"><a class="el" href="dir_308b1f547d363b51e9fcca528fab4b29.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -121,7 +121,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;QtDebug&gt;</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glc__config_8h.html" title="the GLC_lib configuration file">glc_config.h</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;maths/glc_matrix4x4.h&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glc__matrix4x4_8h.html" title="interface for the GLC_Matrix4x4 class.">maths/glc_matrix4x4.h</a>&quot;</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glc__contextshareddata_8h.html" title="interface for the GLC_ContextSharedData class.">glc_contextshareddata.h</a>&quot;</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glc__uniformshaderdata_8h.html" title="interface for the GLC_UniformShaderData class.">glc_uniformshaderdata.h</a>&quot;</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
@@ -155,10 +155,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;         <span class="keyword">static</span> <a class="code" href="class_g_l_c___context.html" title="GLC_Context : Encapsulates OpenGL rendering context.">GLC_Context</a>* current();</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="code" href="class_g_l_c___context.html#a92b5c3a79026269b4de4c64957c488bc">   80</a></span>&#160;         <span class="keyword">inline</span> GLC_Matrix4x4 modelViewMatrix()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="code" href="class_g_l_c___context.html#a92b5c3a79026269b4de4c64957c488bc">   80</a></span>&#160;         <span class="keyword">inline</span> <a class="code" href="class_g_l_c___matrix4x4.html" title="GLC_Matrix4x4 is a 4 dimensions Matrix.">GLC_Matrix4x4</a> modelViewMatrix()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">         </span>{Q_ASSERT(m_MatrixStackHash.contains(GL_MODELVIEW)); <span class="keywordflow">return</span> m_MatrixStackHash.value(GL_MODELVIEW)-&gt;top();}</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="code" href="class_g_l_c___context.html#a4180b8cd13ea8d4040fb55317a855dd3">   84</a></span>&#160;         <span class="keyword">inline</span> GLC_Matrix4x4 projectionMatrix()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="code" href="class_g_l_c___context.html#a4180b8cd13ea8d4040fb55317a855dd3">   84</a></span>&#160;         <span class="keyword">inline</span> <a class="code" href="class_g_l_c___matrix4x4.html" title="GLC_Matrix4x4 is a 4 dimensions Matrix.">GLC_Matrix4x4</a> projectionMatrix()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">         </span>{Q_ASSERT(m_MatrixStackHash.contains(GL_PROJECTION)); <span class="keywordflow">return</span> m_MatrixStackHash.value(GL_PROJECTION)-&gt;top();}</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
 <div class="line"><a name="l00088"></a><span class="lineno"><a class="code" href="class_g_l_c___context.html#a5beaeaccd87dcbf1d9f3d1299fda82ce">   88</a></span>&#160;         <span class="keyword">inline</span> <span class="keywordtype">bool</span> lightingIsEnable()<span class="keyword"> const</span></div>
@@ -174,12 +174,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;         <span class="keywordtype">void</span> glcPushMatrix();</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;         <span class="keywordtype">void</span> glcPopMatrix();</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;         <span class="keywordtype">void</span> glcLoadMatrix(<span class="keyword">const</span> GLC_Matrix4x4&amp; matrix);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;         <span class="keywordtype">void</span> glcLoadMatrix(<span class="keyword">const</span> <a class="code" href="class_g_l_c___matrix4x4.html" title="GLC_Matrix4x4 is a 4 dimensions Matrix.">GLC_Matrix4x4</a>&amp; matrix);</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;         <span class="keywordtype">void</span> glcMultMatrix(<span class="keyword">const</span> GLC_Matrix4x4&amp; matrix);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;         <span class="keywordtype">void</span> glcMultMatrix(<span class="keyword">const</span> <a class="code" href="class_g_l_c___matrix4x4.html" title="GLC_Matrix4x4 is a 4 dimensions Matrix.">GLC_Matrix4x4</a>&amp; matrix);</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
 <div class="line"><a name="l00113"></a><span class="lineno"><a class="code" href="class_g_l_c___context.html#a516c2e704cd460fbcf3f4f00b0005541">  113</a></span>&#160;         <span class="keyword">inline</span> <span class="keywordtype">void</span> glcTranslated(<span class="keywordtype">double</span> x, <span class="keywordtype">double</span> y, <span class="keywordtype">double</span> z)</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;         {glcMultMatrix(GLC_Matrix4x4(x, y, z));}</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;         {glcMultMatrix(<a class="code" href="class_g_l_c___matrix4x4.html" title="GLC_Matrix4x4 is a 4 dimensions Matrix.">GLC_Matrix4x4</a>(x, y, z));}</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;         <span class="keywordtype">void</span> glcScaled(<span class="keywordtype">double</span> x, <span class="keywordtype">double</span> y, <span class="keywordtype">double</span> z);</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
@@ -237,10 +237,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* GLC_CONTEXT_H_ */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 
-	<p align="center">
-	  <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=153150&amp;type=2"
-	  width="125" height="37" border="0" alt="SourceForge.net Logo" /></a> 
-	  </p>
 	<p align="center" bgcolor="#ccccff" height="17" width="100%">
      <a href="mailto:laumaya@users.sourceforge.net?subject=GLC_lib">&copy;2005-2013 Laurent Ribon</a>
 	 </p>
