@@ -256,6 +256,18 @@ private:
 
 	//! The texture coordinate bulk data
 	QList<float> m_Texels;
+
+    int m_VerticeIndex;
+    int m_NormalIndex;
+    int m_TextureIndex;
+
+    int m_VerticeOffset;
+    int m_NormalOffset;
+    int m_TextureOffset;
+
+
+    bool m_ResetIndex;
+
 };
 
 // To use ObjVertice as a QHash key
