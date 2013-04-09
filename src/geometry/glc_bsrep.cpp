@@ -71,7 +71,7 @@ GLC_BSRep::~GLC_BSRep()
 bool GLC_BSRep::isUsable(const QDateTime& timeStamp)
 {
 	bool isUpToDate= false;
-	if (open(QIODevice::ReadOnly))
+    if (open(QIODevice::ReadOnly, NULL))
 	{
 		if (headerIsOk())
 		{
@@ -100,11 +100,11 @@ bool GLC_BSRep::isUsable(const QDateTime& timeStamp)
 // name Get Functions
 //////////////////////////////////////////////////////////////////////
 // Load the binary rep
-GLC_3DRep GLC_BSRep::loadRep()
+GLC_3DRep GLC_BSRep::loadRep(QFile *pFile)
 {
 	GLC_3DRep loadedRep;
 
-	if (open(QIODevice::ReadOnly))
+    if (open(QIODevice::ReadOnly, pFile))
 	{
 		if (headerIsOk())
 		{
@@ -162,7 +162,7 @@ GLC_BoundingBox GLC_BSRep::boundingBox()
 {
 	GLC_BoundingBox boundingBox;
 
-	if (open(QIODevice::ReadOnly))
+    if (open(QIODevice::ReadOnly, NULL))
 	{
 		if (headerIsOk())
 		{
@@ -205,7 +205,7 @@ bool GLC_BSRep::save(const GLC_3DRep& rep)
 {
 
 	//! Check if the currentFileInfo is valid and writable
-	bool saveOk= open(QIODevice::WriteOnly);
+    bool saveOk= open(QIODevice::WriteOnly, NULL);
 	if (saveOk)
 	{
 		writeHeader(rep.lastModified());
@@ -250,14 +250,21 @@ bool GLC_BSRep::save(const GLC_3DRep& rep)
 
 
 // Open the file
-bool GLC_BSRep::open(QIODevice::OpenMode mode)
+bool GLC_BSRep::open(QIODevice::OpenMode mode, QFile* pFile)
 {
-	bool openOk= m_FileInfo.exists();
+    bool openOk= m_FileInfo.exists() || ((NULL != pFile) && pFile->exists());
 	if (openOk || (mode == QIODevice::WriteOnly))
 	{
 		m_DataStream.setDevice(NULL);
-		delete m_pFile;
-		m_pFile= new QFile(m_FileInfo.filePath());
+        if (NULL != pFile)
+        {
+            m_pFile= pFile;
+        }
+        else
+        {
+            m_pFile= new QFile(m_FileInfo.filePath());
+        }
+
 		openOk= m_pFile->open(mode);
 		if (openOk)
 		{

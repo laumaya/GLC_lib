@@ -67,8 +67,8 @@ public:
 	//! Return true if the binary rep is usable
 	bool isUsable(const QDateTime&);
 
-	//! Load the binary rep
-	GLC_3DRep loadRep();
+    //! Load the binary rep, if the file is not NULL the rep take ownership of the file
+    GLC_3DRep loadRep(QFile* pFile= NULL);
 
 	//! Return the bounding box of the binary representation
 	GLC_BoundingBox boundingBox();
@@ -107,7 +107,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 	//! Open the file
-	bool open(QIODevice::OpenMode);
+    bool open(QIODevice::OpenMode, QFile *pFile);
 
 	//! Close the file
 	bool close();
@@ -138,7 +138,7 @@ private:
 	QFileInfo m_FileInfo;
 
 	//! The brep file
-	QFile* m_pFile;
+    QFile* m_pFile;
 
 	//! The Data stream
 	QDataStream m_DataStream;
