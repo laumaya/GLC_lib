@@ -129,6 +129,9 @@ public:
 	inline GLC_StructOccurence* parent() const
 	{return m_pParent;}
 
+    //! Return return all ancestor of this occurrence
+    QList<GLC_StructOccurence*> ancestorList() const;
+
 	//! Return a child of this occurence
 	/*! The index must exist*/
 	inline GLC_StructOccurence* child(const int index) const

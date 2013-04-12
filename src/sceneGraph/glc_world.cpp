@@ -60,7 +60,33 @@ GLC_World::~GLC_World()
 		//m_pWorldHandle->collection()->clear(); // Clear collection first (performance)
 		delete m_pRoot;
 		delete m_pWorldHandle;
-	}
+    }
+}
+
+QList<GLC_StructOccurence *> GLC_World::minimumSelectedOccurenceList() const
+{
+    QSet<GLC_StructOccurence *> selectedOccSet= QSet<GLC_StructOccurence *>::fromList(m_pWorldHandle->selectionSetHandle()->occurencesList());
+    QList<GLC_StructOccurence *> subject;
+    QSet<GLC_StructOccurence *>::ConstIterator iOcc= selectedOccSet.begin();
+    while (iOcc != selectedOccSet.constEnd())
+    {
+        QList<GLC_StructOccurence*> ancestorList= (*iOcc)->ancestorList();
+        const int count= ancestorList.count();
+        bool addOcc= true;
+        for (int i= 0; i < count; ++i)
+        {
+            if (selectedOccSet.contains(ancestorList.at(i)))
+            {
+                addOcc= false;
+                break;
+            }
+        }
+        if (addOcc) subject.append(*iOcc);
+
+        ++iOcc;
+    }
+
+    return subject;
 }
 
 GLC_StructOccurence* GLC_World::takeRootOccurrence()

@@ -207,6 +207,11 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GL
 
 GLC_StructOccurence::~GLC_StructOccurence()
 {
+    if (NULL != m_pParent)
+    {
+        makeOrphan();
+    }
+
 	//qDebug() << "Delete " << id();
 	Q_ASSERT(m_pNumberOfOccurence != NULL);
 	// Remove from the GLC_WorldHandle
@@ -299,7 +304,19 @@ bool GLC_StructOccurence::canBeAddedToChildren(GLC_StructOccurence* pOccurence) 
 	{
 		canBeAdded= true;
 	}
-	return canBeAdded;
+    return canBeAdded;
+}
+
+QList<GLC_StructOccurence *> GLC_StructOccurence::ancestorList() const
+{
+    QList<GLC_StructOccurence *> subject;
+    if (NULL != m_pParent)
+    {
+        subject.append(m_pParent);
+        subject.append(m_pParent->ancestorList());
+    }
+
+    return subject;
 }
 
 QList<GLC_StructOccurence*> GLC_StructOccurence::subOccurenceList() const

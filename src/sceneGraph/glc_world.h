@@ -177,6 +177,9 @@ public:
 	inline QList<GLC_StructOccurence*> selectedOccurenceList() const
 	{return m_pWorldHandle->selectionSetHandle()->occurencesList();}
 
+    //! Return the minimum selected occurences list
+    QList<GLC_StructOccurence*> minimumSelectedOccurenceList() const;
+
 	//! Take the root occurence of this world
 	GLC_StructOccurence* takeRootOccurrence();
 
