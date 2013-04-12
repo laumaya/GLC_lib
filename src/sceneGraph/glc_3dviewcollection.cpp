@@ -476,7 +476,18 @@ void GLC_3DViewCollection::updateInstanceViewableState(GLC_Matrix4x4* pMatrix)
 
 void GLC_3DViewCollection::updateInstanceViewableState(const GLC_Frustum& frustum)
 {
-	m_pSpacePartitioning->updateViewableInstances(frustum);
+    if (NULL != m_pSpacePartitioning)
+    {
+        m_pSpacePartitioning->updateViewableInstances(frustum);
+    }
+}
+
+void GLC_3DViewCollection::updateSpacePartitionning()
+{
+    if (NULL != m_pSpacePartitioning)
+    {
+        m_pSpacePartitioning->updateSpacePartitioning();
+    }
 }
 
 void GLC_3DViewCollection::setVboUsage(bool usage)
