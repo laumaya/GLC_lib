@@ -1740,8 +1740,12 @@ void GLC_3dxmlToWorld::loadGraphicProperties(V4OccurenceAttrib* pAttrib)
 				diffuseColor.setRgbF(red, green, blue, alpha);
 				GLC_Material* pMaterial= new GLC_Material();
 				pMaterial->setDiffuseColor(diffuseColor);
-				pRenderProperties->setOverwriteMaterial(pMaterial);
-				pRenderProperties->setRenderingMode(glc::OverwriteMaterial);
+                pRenderProperties->setOverwriteMaterial(pMaterial);
+                if (alpha < 1.0f)
+                {
+                    pMaterial->setOpacity(static_cast<float>(alpha));
+                }
+                pRenderProperties->setRenderingMode(glc::OverwriteMaterial);
 			}
 			else if (alpha < 1.0f)
 			{
