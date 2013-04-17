@@ -1,0 +1,6 @@
+    <!DOCTYPE RCC><RCC version="1.0">
+    <qresource>
+        <file>glc_lib.obj</file>
+        <file>background.png</file>
+    </qresource>
+    </RCC>

@@ -17,3 +17,4 @@ src/*.a
 src/object_script*
 src/*.user
 html/
+*.app
