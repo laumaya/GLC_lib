@@ -85,17 +85,20 @@ public:
 	inline GLC_Camera* cameraHandle() const
 	{return m_pViewCam;}
 
+    //! Return this viewport size
+    QSize size() const;
+
 	//! Get this viewport Horizontal size
 	inline int viewHSize() const
-	{ return m_WindowHSize;}
+    { return m_Width;}
 
 	//! Get this viewport Vertical size
 	inline int viewVSize() const
-	{ return m_WindowVSize;}
+    { return m_Height;}
 
 	//! Get this viewport ratio
 	inline double aspectRatio() const
-	{ return static_cast<double>(m_WindowHSize) / static_cast<double>(m_WindowVSize);}
+    { return static_cast<double>(m_Width) / static_cast<double>(m_Height);}
 
 	//! Return the normalyse mouse position from screen coordinate
 	GLC_Point2d normalyseMousePosition(int x, int y);
@@ -225,8 +228,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Inform the viewport that the OpenGL window size has been modified
-	void setWinGLSize(int HSize, int VSize);
+    //! Update the OpenGL view size
+    void setWinGLSize(int width, int height, bool updateOGLViewport= true);
+
+    //! Update the OpenGL view size
+    void setWinGLSize(const QSize& size, bool updateOGLViewport= true);
 
 	//! Call the attached QGLWidgetSelect  updateGL function and return the picking id
 	/*! Return UID of the nearest picked object */
@@ -368,8 +374,8 @@ private:
 	GLC_ImagePlane* m_pImagePlane;
 
 	// OpenGL View Definition
-	int m_WindowHSize;			//!< Horizontal OpenGL viewport size
-	int m_WindowVSize;			//!< Vertical OpenGL viewport size
+    int m_Width;			//!< Horizontal OpenGL viewport size
+    int m_Height;			//!< Vertical OpenGL viewport size
 
 	//! View AspectRatio
 	double m_AspectRatio;

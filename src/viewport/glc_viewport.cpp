@@ -48,8 +48,8 @@ GLC_Viewport::GLC_Viewport()
 , m_ViewTangent(tan(glc::toRadian(m_ViewAngle)))
 , m_pImagePlane(NULL)			// Background image
 // OpenGL Window size
-, m_WindowHSize(0)				// Horizontal OpenGL viewport size
-, m_WindowVSize(0)				// Vertical OpenGL viewport size
+, m_Width(0)				// Horizontal OpenGL viewport size
+, m_Height(0)				// Vertical OpenGL viewport size
 , m_AspectRatio(1.0)
 // the default backgroundColor
 , m_BackgroundColor(Qt::black)
@@ -80,7 +80,12 @@ GLC_Viewport::~GLC_Viewport()
 	{
 		delete iClip.value();
 		++iClip;
-	}
+    }
+}
+
+QSize GLC_Viewport::size() const
+{
+    return QSize(m_Width, m_Height);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -90,14 +95,14 @@ GLC_Point2d  GLC_Viewport::normalyseMousePosition(int x, int y)
 {
 	double nX= 0.0;
 	double nY= 0.0;
-	if (m_WindowHSize != 0)
+    if (m_Width != 0)
 	{
-		nX= static_cast<double>(x) / static_cast<double>(m_WindowHSize);
+        nX= static_cast<double>(x) / static_cast<double>(m_Width);
 	}
 
-	if (m_WindowVSize != 0)
+    if (m_Height != 0)
 	{
-		nY= static_cast<double>(y) / static_cast<double>(m_WindowVSize);
+        nY= static_cast<double>(y) / static_cast<double>(m_Height);
 	}
 
 	return GLC_Point2d(nX, nY);
@@ -122,8 +127,8 @@ GLC_Point2d GLC_Viewport::mapNormalyzeToOpenGLScreen(double x, double y)
 GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 {
 	// Change the window origin (Up Left -> centred)
-	Posx= Posx - static_cast<double>(m_WindowHSize)  / 2.0;
-	Posy= static_cast<double>(m_WindowVSize) / 2.0 - Posy;
+    Posx= Posx - static_cast<double>(m_Width)  / 2.0;
+    Posy= static_cast<double>(m_Height) / 2.0 - Posy;
 
 	GLC_Vector3d VectMouse(Posx, Posy,0);
 
@@ -132,7 +137,7 @@ GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 
 	// the side of camera's square is mapped on Vertical length of window
 	// Ratio OpenGL/Pixel = dimend GL / dimens Pixel
-	const double Ratio= ChampsVision / static_cast<double>(m_WindowVSize);
+    const double Ratio= ChampsVision / static_cast<double>(m_Height);
 
 	VectMouse= VectMouse * Ratio;
 
@@ -141,8 +146,8 @@ GLC_Vector3d GLC_Viewport::mapPosMouse( GLdouble Posx, GLdouble Posy) const
 
 GLC_Vector3d GLC_Viewport::mapNormalyzePosMouse(double Posx, double Posy) const
 {
-	double screenX= Posx * static_cast<double>(m_WindowHSize);
-	double screenY= Posy * static_cast<double>(m_WindowVSize);
+    double screenX= Posx * static_cast<double>(m_Width);
+    double screenY= Posy * static_cast<double>(m_Height);
 	return mapPosMouse(screenX, screenY);
 }
 
@@ -176,9 +181,8 @@ void GLC_Viewport::updateProjectionMat(void)
 
 	if (m_UseParallelProjection)
 	{
-		const double ChampsVision = m_pViewCam->distEyeTarget() * m_ViewTangent;
-		const double height= ChampsVision;
-		const double with= ChampsVision * m_AspectRatio;
+        const double height= m_pViewCam->distEyeTarget() * m_ViewTangent;
+        const double with= height * m_AspectRatio;
 		const double left= -with * 0.5;
 		const double right=  -left;
 		const double bottom= - height * 0.5;
@@ -209,7 +213,7 @@ void GLC_Viewport::forceAspectRatio(double ratio)
 void GLC_Viewport::updateAspectRatio()
 {
 	// Update The Aspect Ratio Of The Window
-	m_AspectRatio= static_cast<double>(m_WindowHSize)/static_cast<double>(m_WindowVSize);
+    m_AspectRatio= static_cast<double>(m_Width)/static_cast<double>(m_Height);
 }
 GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
 {
@@ -253,7 +257,7 @@ GLC_Point3d GLC_Viewport::unProject(int x, int y) const
 	// Z Buffer component of the given coordinate is between 0 and 1
 	GLfloat Depth;
 	// read selected point
-	glReadPixels(x, m_WindowVSize - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
+    glReadPixels(x, m_Height - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
 	// The current viewport opengl definition
 	GLint Viewport[4];
@@ -261,7 +265,7 @@ GLC_Point3d GLC_Viewport::unProject(int x, int y) const
 
 	// OpenGL ccordinate of selected point
 	GLdouble pX, pY, pZ;
-	glc::gluUnProject((GLdouble) x, (GLdouble) (m_WindowVSize - y) , Depth
+    glc::gluUnProject((GLdouble) x, (GLdouble) (m_Height - y) , Depth
 		, m_pViewCam->modelViewMatrix().getData(), m_ProjectionMatrix.getData(), Viewport, &pX, &pY, &pZ);
 
 	return GLC_Point3d(pX, pY, pZ);
@@ -285,7 +289,7 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list)const
 	for (int i= 0; i < size; i+= 2)
 	{
 		const int x= list.at(i);
-		const int y= m_WindowVSize - list.at(i + 1);
+        const int y= m_Height - list.at(i + 1);
 		glReadPixels(x, y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
 		glc::gluUnProject(static_cast<GLdouble>(x), static_cast<GLdouble>(y) , Depth , m_pViewCam->modelViewMatrix().getData()
@@ -321,27 +325,30 @@ void GLC_Viewport::render3DWidget()
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Viewport::setWinGLSize(int HSize, int VSize)
+void GLC_Viewport::setWinGLSize(int width, int height, bool updateOGLViewport)
 {
-	if ((m_WindowHSize != HSize) || (m_WindowVSize != VSize))
-	{
-		m_WindowHSize= HSize;
-		m_WindowVSize= VSize;
+    m_Width= width;
+    m_Height= height;
 
-		// from NeHe's Tutorial 3
-		if (m_WindowVSize == 0)								// Prevent A Divide By Zero By
-		{
-			m_WindowVSize= 1;									// Making Height Equal One
-		}
+    // Prevent A Divide By Zero By
+    if (m_Height == 0)
+    {
+        m_Height= 1;
+    }
 
-		glViewport(0,0,m_WindowHSize,m_WindowVSize);			// Reset The Current Viewport
+    updateAspectRatio();
+    updateMinimumRatioSize();
 
-		updateAspectRatio();
+    if (updateOGLViewport)
+    {
+        glViewport(0,0,m_Width,m_Height);
+        updateProjectionMat();
+    }
+}
 
-		updateProjectionMat();
-
-		updateMinimumRatioSize();
-	}
+void GLC_Viewport::setWinGLSize(const QSize &size, bool updateOGLViewport)
+{
+    setWinGLSize(size.width(), size.height(), updateOGLViewport);
 }
 
 GLC_uint GLC_Viewport::renderAndSelect(int x, int y)
@@ -361,7 +368,7 @@ GLC_uint GLC_Viewport::selectOnPreviousRender(int x, int y)
 	GLsizei width= m_SelectionSquareSize;
 	GLsizei height= width;
 	GLint newX= x - width / 2;
-	GLint newY= (m_WindowVSize - y) - height / 2;
+    GLint newY= (m_Height - y) - height / 2;
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
@@ -388,7 +395,7 @@ GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y)
 	GLsizei width= 6;
 	GLsizei height= width;
 	GLint newX= x - width / 2;
-	GLint newY= (m_WindowVSize - y) - height / 2;
+    GLint newY= (m_Height - y) - height / 2;
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
@@ -418,7 +425,7 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance
 	GLsizei width= 6;
 	GLsizei height= width;
 	GLint newX= x - width / 2;
-	GLint newY= (m_WindowVSize - y) - height / 2;
+    GLint newY= (m_Height - y) - height / 2;
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
@@ -463,7 +470,7 @@ QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2)
 	GLsizei width= x2 - x1;
 	GLsizei height= y1 - y2;
 	GLint newX= x1;
-	GLint newY= (m_WindowVSize - y1);
+    GLint newY= (m_Height - y1);
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
@@ -543,10 +550,9 @@ QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei widt
 
 void GLC_Viewport::updateMinimumRatioSize()
 {
-	int size= qMax(m_WindowHSize, m_WindowVSize);
+    int size= qMax(m_Width, m_Height);
 	m_MinimumStaticRatioSize=  static_cast<double>(m_MinimumStaticPixelSize) / static_cast<double>(size) * 100.0;
 	m_MinimumDynamicRatioSize= m_MinimumStaticRatioSize * 2.0;
-	//qDebug() << "GLC_Viewport::updateMinimumRatioSize() m_MinimumRatioSize " << m_MinimumStaticRatioSize;
 }
 
 void GLC_Viewport::loadBackGroundImage(const QString& ImageFile)
