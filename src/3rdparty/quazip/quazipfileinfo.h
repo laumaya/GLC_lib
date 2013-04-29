@@ -33,7 +33,7 @@ quazip/(un)zip.h files for details, basically it's zlib license.
 /// Information about a file inside archive.
 /** Call QuaZip::getCurrentFileInfo() or QuaZipFile::getFileInfo() to
  * fill this structure. */
-struct QUAZIP_EXPORT QuaZipFileInfo {
+struct QuaZipFileInfo {
   /// File name.
   QString name;
   /// Version created by.

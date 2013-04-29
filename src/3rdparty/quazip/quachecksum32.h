@@ -25,7 +25,7 @@
  * resoultB = crc32->value();
  * \endcode
  */
-class QUAZIP_EXPORT QuaChecksum32
+class QuaChecksum32
 {
 
 public:

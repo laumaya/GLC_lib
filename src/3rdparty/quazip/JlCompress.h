@@ -14,7 +14,7 @@
   This class contains a number of useful static functions to perform
   simple operations, such as mass ZIP packing or extraction.
   */
-class QUAZIP_EXPORT JlCompress {
+class JlCompress {
 private:
     /// Compress a single file.
     /**

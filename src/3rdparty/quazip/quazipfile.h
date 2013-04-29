@@ -70,7 +70,7 @@ class QuaZipFilePrivate;
  * this class.
  *
  **/
-class QUAZIP_EXPORT QuaZipFile: public QIODevice {
+class QuaZipFile: public QIODevice {
   friend class QuaZipFilePrivate;
   Q_OBJECT
   private:

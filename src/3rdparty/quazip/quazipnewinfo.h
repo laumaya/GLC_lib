@@ -35,7 +35,7 @@ quazip/(un)zip.h files for details, basically it's zlib license.
  * passing this structure to
  * QuaZipFile::open(OpenMode,const QuaZipNewInfo&,int,int,bool).
  **/
-struct QUAZIP_EXPORT QuaZipNewInfo {
+struct QuaZipNewInfo {
   /// File name.
   /** This field holds file name inside archive, including path relative
    * to archive root.
