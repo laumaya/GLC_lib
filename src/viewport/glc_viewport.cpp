@@ -252,11 +252,12 @@ GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
 	return selectionFrustum;
 }
 
-GLC_Point3d GLC_Viewport::unProject(int x, int y) const
+GLC_Point3d GLC_Viewport::unProject(int x, int y, GLenum buffer) const
 {
 	// Z Buffer component of the given coordinate is between 0 and 1
 	GLfloat Depth;
 	// read selected point
+    glReadBuffer(buffer);
     glReadPixels(x, m_Height - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
 	// The current viewport opengl definition
@@ -271,9 +272,9 @@ GLC_Point3d GLC_Viewport::unProject(int x, int y) const
 	return GLC_Point3d(pX, pY, pZ);
 }
 
-QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list)const
+QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list, GLenum buffer)const
 {
-	const int size= list.size();
+    const int size= list.size();
 	Q_ASSERT((size % 2) == 0);
 
 	// The current viewport opengl definition
@@ -288,8 +289,9 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list)const
 	QList<GLC_Point3d> unprojectedPoints;
 	for (int i= 0; i < size; i+= 2)
 	{
-		const int x= list.at(i);
+        const int x= list.at(i);
         const int y= m_Height - list.at(i + 1);
+        glReadBuffer(buffer);
 		glReadPixels(x, y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
 		glc::gluUnProject(static_cast<GLdouble>(x), static_cast<GLdouble>(y) , Depth , m_pViewCam->modelViewMatrix().getData()
@@ -351,7 +353,7 @@ void GLC_Viewport::setWinGLSize(const QSize &size, bool updateOGLViewport)
     setWinGLSize(size.width(), size.height(), updateOGLViewport);
 }
 
-GLC_uint GLC_Viewport::renderAndSelect(int x, int y)
+GLC_uint GLC_Viewport::renderAndSelect(int x, int y, GLenum buffer)
 {
 	const QColor clearColor(Qt::black);
 	glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), 1.0f);
@@ -360,10 +362,10 @@ GLC_uint GLC_Viewport::renderAndSelect(int x, int y)
 	emit updateOpenGL();
 	GLC_State::setSelectionMode(false);
 
-	return selectOnPreviousRender(x, y);
+    return selectOnPreviousRender(x, y, buffer);
 }
 
-GLC_uint GLC_Viewport::selectOnPreviousRender(int x, int y)
+GLC_uint GLC_Viewport::selectOnPreviousRender(int x, int y, GLenum buffer)
 {
 	GLsizei width= m_SelectionSquareSize;
 	GLsizei height= width;
@@ -372,9 +374,9 @@ GLC_uint GLC_Viewport::selectOnPreviousRender(int x, int y)
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
-	return meaningfulIdInsideSquare(newX, newY, width, height);
+    return meaningfulIdInsideSquare(newX, newY, width, height, buffer);
 }
-GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y)
+GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y, GLenum buffer)
 {
 	const QColor clearColor(Qt::black);
 	glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), 1.0f);
@@ -399,10 +401,10 @@ GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y)
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
-	return meaningfulIdInsideSquare(newX, newY, width, height);
+    return meaningfulIdInsideSquare(newX, newY, width, height, buffer);
 }
 
-QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance, int x, int y)
+QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance, int x, int y, GLenum buffer)
 {
 	QPair<int, GLC_uint> result;
 
@@ -429,7 +431,7 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
-	GLC_uint bodyId= meaningfulIdInsideSquare(newX, newY, width, height);
+    GLC_uint bodyId= meaningfulIdInsideSquare(newX, newY, width, height, buffer);
 	if (bodyId == 0)
 	{
 		result.first= -1;
@@ -440,13 +442,13 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		result.first= pInstance->renderForPrimitiveSelection(bodyId);
-		result.second= meaningfulIdInsideSquare(newX, newY, width, height);
+        result.second= meaningfulIdInsideSquare(newX, newY, width, height, buffer);
 	}
 	GLC_State::setSelectionMode(false);
 	return result;
 }
 
-QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2)
+QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2, GLenum buffer)
 {
 	if (x1 > x2)
 	{
@@ -474,16 +476,17 @@ QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2)
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
-	return listOfIdInsideSquare(newX, newY, width, height);
+    return listOfIdInsideSquare(newX, newY, width, height, buffer);
 }
 
-GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height)
+GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height, GLenum buffer)
 {
 	const int squareSize= width * height;
 	const GLsizei arraySize= squareSize * 4; // 4 -> R G B A
 	QVector<GLubyte> colorId(arraySize);
 
 	// Get the array of pixels
+    glReadBuffer(buffer);
 	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId.data());
 
 	// Restore Background color
@@ -524,13 +527,14 @@ GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width,
 	return returnId;
 }
 
-QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height)
+QSet<GLC_uint> GLC_Viewport::listOfIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height, GLenum buffer)
 {
 	const int squareSize= width * height;
 	const GLsizei arraySize= squareSize * 4; // 4 -> R G B A
 	QVector<GLubyte> colorId(arraySize);
 
 	// Get the array of pixels
+    glReadBuffer(buffer);
 	glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorId.data());
 
 	// Restore Background color
