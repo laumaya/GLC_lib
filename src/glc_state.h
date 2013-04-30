@@ -62,6 +62,9 @@ public:
 	//! Return true if frameBuffer is supported
 	static bool frameBufferSupported();
 
+    //! Return true if frameBuffer blit is supported
+    static bool frameBufferBlitSupported();
+
 	//! Return true if GLSL is used
 	static bool glslUsed();
 
@@ -130,6 +133,9 @@ public:
 
 	//! Set the frame buffer support
 	static void setFrameBufferSupport();
+
+    //! Set the frame buffer blit support
+    static void setFrameBufferBlitSupport();
 
 	//! Set GLSL usage
 	static void setGlslUsage(const bool);
@@ -211,6 +217,9 @@ private:
 
 	//! Frame buffer supported
 	static bool m_IsFrameBufferSupported;
+
+    //! Frame buffer supported
+    static bool m_IsFrameBufferBlitSupported;
 
 	//! State valid flag
 	static bool m_IsValid;

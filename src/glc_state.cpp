@@ -37,6 +37,7 @@ bool GLC_State::m_UseSelectionShader= false;
 bool GLC_State::m_IsInSelectionMode= false;
 bool GLC_State::m_IsPixelCullingActivated= true;
 bool GLC_State::m_IsFrameBufferSupported= false;
+bool GLC_State::m_IsFrameBufferBlitSupported= false;
 
 QString GLC_State::m_Version;
 QString GLC_State::m_Vendor;
@@ -71,7 +72,12 @@ bool GLC_State::glslSupported()
 
 bool GLC_State::frameBufferSupported()
 {
-	return m_IsFrameBufferSupported;
+    return m_IsFrameBufferSupported;
+}
+
+bool GLC_State::frameBufferBlitSupported()
+{
+    return m_IsFrameBufferBlitSupported;
 }
 
 bool GLC_State::glslUsed()
@@ -190,7 +196,12 @@ void GLC_State::setPointSpriteSupport()
 
 void GLC_State::setFrameBufferSupport()
 {
-	m_IsFrameBufferSupported= QGLFramebufferObject::hasOpenGLFramebufferObjects();
+    m_IsFrameBufferSupported= QGLFramebufferObject::hasOpenGLFramebufferObjects();
+}
+
+void GLC_State::setFrameBufferBlitSupport()
+{
+    m_IsFrameBufferBlitSupported= QGLFramebufferObject::hasOpenGLFramebufferBlit();
 }
 
 void GLC_State::setGlslUsage(const bool glslUsage)
