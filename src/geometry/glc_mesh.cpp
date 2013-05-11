@@ -746,6 +746,7 @@ void GLC_Mesh::setCurrentLod(const int value)
 		// Clamp value to number of load
 		m_CurrentLod= static_cast<int>((static_cast<double>(value) / 100.0) * numberOfLod);
 		if (m_CurrentLod >= numberOfLod) m_CurrentLod = numberOfLod - 1;
+		if (m_CurrentLod < 0) m_CurrentLod = 0;
 	}
 	else
 	{
