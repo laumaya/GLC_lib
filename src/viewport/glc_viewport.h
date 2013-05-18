@@ -326,7 +326,7 @@ public:
 //{@
 	//! Set the viewport's camera in order to reframe on the current scene
 	/*! box shouldn't be empty*/
-	void reframe(const GLC_BoundingBox& box);
+	void reframe(const GLC_BoundingBox& box, double coverFactor = 2.2);
 
 //@} End Zooming functions
 /////////////////////////////////////////////////////////////////////

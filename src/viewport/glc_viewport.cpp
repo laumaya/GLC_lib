@@ -592,7 +592,7 @@ void GLC_Viewport::setToOrtho(bool useOrtho)
 
 }
 
-void GLC_Viewport::reframe(const GLC_BoundingBox& box)
+void GLC_Viewport::reframe(const GLC_BoundingBox& box, double coverFactor)
 {
 	Q_ASSERT(!box.isEmpty());
 
@@ -600,13 +600,15 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	const GLC_Vector3d deltaVector(box.center() - m_pViewCam->target());
 	m_pViewCam->translate(deltaVector);
 
-    double cameraCover= box.boundingSphereRadius() * 2.2;
+	if (coverFactor > 0.0) {
+		double cameraCover= box.boundingSphereRadius() * coverFactor;
 
-	// Compute Camera distance
-	const double distance = cameraCover / m_ViewTangent;
+		// Compute Camera distance
+		const double distance = cameraCover / m_ViewTangent;
 
-	// Update Camera position
-	m_pViewCam->setDistEyeTarget(distance);
+		// Update Camera position
+		m_pViewCam->setDistEyeTarget(distance);
+	}
 }
 
 bool GLC_Viewport::setDistMin(double DistMin)
@@ -669,21 +671,21 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		GLC_Point3d camEye(m_pViewCam->eye());
 		camEye= matComp * camEye;
 
-		if (min > 0.0)
+		if ((min > 0.0) || (m_UseParallelProjection))
 		{
 			// Outside bounding Sphere
 			m_dDistanceMini= min;
 			m_DistanceMax= max;
-			//qDebug() << "distmin" << m_dCamDistMin;
-			//qDebug() << "distmax" << m_dCamDistMax;
+			//qDebug() << "distmin" << m_dDistanceMini;
+			//qDebug() << "distmax" << m_DistanceMax;
 		}
 		else
 		{
 			// Inside bounding Sphere
 			m_dDistanceMini= qMin(0.01 * radius, m_pViewCam->distEyeTarget() / 4.0);
 			m_DistanceMax= max;
-			//qDebug() << "inside distmin" << m_dCamDistMin;
-			//qDebug() << "inside distmax" << m_dCamDistMax;
+			//qDebug() << "inside distmin" << m_dDistanceMini;
+			//qDebug() << "inside distmax" << m_DistanceMax;
 		}
 	}
 	else
