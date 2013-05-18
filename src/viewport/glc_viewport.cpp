@@ -659,21 +659,21 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		GLC_Point3d camEye(m_pViewCam->eye());
 		camEye= matComp * camEye;
 
-		if (min > 0.0)
+		if ((min > 0.0) || (m_UseParallelProjection))
 		{
 			// Outside bounding Sphere
 			m_dDistanceMini= min;
 			m_DistanceMax= max;
-			//qDebug() << "distmin" << m_dCamDistMin;
-			//qDebug() << "distmax" << m_dCamDistMax;
+			//qDebug() << "distmin" << m_dDistanceMini;
+			//qDebug() << "distmax" << m_DistanceMax;
 		}
 		else
 		{
 			// Inside bounding Sphere
 			m_dDistanceMini= qMin(0.01 * radius, m_pViewCam->distEyeTarget() / 4.0);
 			m_DistanceMax= max;
-			//qDebug() << "inside distmin" << m_dCamDistMin;
-			//qDebug() << "inside distmax" << m_dCamDistMax;
+			//qDebug() << "inside distmin" << m_dDistanceMini;
+			//qDebug() << "inside distmax" << m_DistanceMax;
 		}
 	}
 	else
