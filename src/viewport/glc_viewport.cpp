@@ -592,7 +592,7 @@ void GLC_Viewport::setToOrtho(bool useOrtho)
 
 }
 
-void GLC_Viewport::reframe(const GLC_BoundingBox& box)
+void GLC_Viewport::reframe(const GLC_BoundingBox& box, double coverFactor)
 {
 	Q_ASSERT(!box.isEmpty());
 
@@ -600,13 +600,15 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box)
 	const GLC_Vector3d deltaVector(box.center() - m_pViewCam->target());
 	m_pViewCam->translate(deltaVector);
 
-    double cameraCover= box.boundingSphereRadius() * 2.2;
+	if (coverFactor > 0.0) {
+		double cameraCover= box.boundingSphereRadius() * coverFactor;
 
-	// Compute Camera distance
-	const double distance = cameraCover / m_ViewTangent;
+		// Compute Camera distance
+		const double distance = cameraCover / m_ViewTangent;
 
-	// Update Camera position
-	m_pViewCam->setDistEyeTarget(distance);
+		// Update Camera position
+		m_pViewCam->setDistEyeTarget(distance);
+	}
 }
 
 bool GLC_Viewport::setDistMin(double DistMin)
