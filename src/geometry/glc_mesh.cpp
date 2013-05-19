@@ -977,7 +977,11 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		activateVertexArray();
 	}
 
-	if (GLC_State::isInSelectionMode())
+	if (renderProperties.renderingFlag() == glc::OutlineSilhouetteRenderFlag) {
+		GLC_Context::current()->glcEnableLighting(false);
+		outlineSilhouetteRenderLoop(renderProperties, vboIsUsed);
+	} 
+	else if (GLC_State::isInSelectionMode())
 	{
 		if (renderProperties.renderingMode() == glc::PrimitiveSelection)
 		{
@@ -1496,6 +1500,47 @@ void GLC_Mesh::primitiveSelectedRenderLoop(const GLC_RenderProperties& renderPro
 			vertexArrayDrawSelectedPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, isTransparent, renderProperties);
 
 		++iGroup;
+	}
+}
+
+// The outline silhouette render loop (draws in special colors for edge detection, passes extra data encoded in color)
+void GLC_Mesh::outlineSilhouetteRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
+	if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
+	{
+		LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+		{
+			GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+			//GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
+
+			// Encode silhouette information in RGBA color
+			int uid = pCurrentGroup->id() + 1024*id();
+			GLfloat pSpecialColor[4]= { (1.0f/255.0f)*((uid % 256)),
+										(1.0f/255.0f)*((uid / 256) % 256),
+										(1.0f/255.0f)*((uid / 65536) % 256),
+										0.0f};
+
+			glDisable(GL_TEXTURE_2D);
+			glColor4fv(pSpecialColor);
+
+	   		// Choose the primitives to render
+			if (1) //m_IsSelected || GLC_State::isInSelectionMode()) // || materialIsrenderable
+			{
+
+				if (vboIsUsed)
+				{
+					vboDrawPrimitivesOf(pCurrentGroup);
+				}
+				else
+				{
+					vertexArrayDrawPrimitivesOf(pCurrentGroup);
+				}
+			}
+
+			++iGroup;
+		}
 	}
 }
 

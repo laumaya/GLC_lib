@@ -382,6 +382,9 @@ private:
 	//! The primitive Selected render loop
 	void primitiveSelectedRenderLoop(const GLC_RenderProperties&, bool);
 
+	//! The outline silhouette render loop (draws in special colors for edge detection, passes extra data encoded in color)
+	void outlineSilhouetteRenderLoop(const GLC_RenderProperties&, bool);
+
 	//! Copy index of this mesh from the given LOD into the given mesh
 	void copyIndex(int lod, GLC_Mesh* pLodMesh, QHash<GLuint, GLuint>& sourceToTargetIndexMap, QHash<GLuint, GLuint>& tagetToSourceIndexMap, int& maxIndex, int targetLod);
 
