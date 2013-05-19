@@ -1516,29 +1516,41 @@ void GLC_Mesh::outlineSilhouetteRenderLoop(const GLC_RenderProperties& renderPro
 			//GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
 
 			// Encode silhouette information in RGBA color
-			int uid = pCurrentGroup->id() + 1024*id();
-			GLfloat pSpecialColor[4]= { (1.0f/255.0f)*((uid % 256)),
-										(1.0f/255.0f)*((uid / 256) % 256),
-										(1.0f/255.0f)*((uid / 65536) % 256),
-										0.0f};
+			GLubyte colorId[4];
+			int uid = pCurrentGroup->id() + (id() << 16);
 
 			glDisable(GL_TEXTURE_2D);
-			glColor4fv(pSpecialColor);
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
 
-	   		// Choose the primitives to render
-			if (1) //m_IsSelected || GLC_State::isInSelectionMode()) // || materialIsrenderable
+	   		// Draw front faces
+			glc::encodeRgbId(uid,colorId);
+			glColor4ubv(colorId);
+			glFrontFace(GL_CCW);
+			if (vboIsUsed)
 			{
-
-				if (vboIsUsed)
-				{
-					vboDrawPrimitivesOf(pCurrentGroup);
-				}
-				else
-				{
-					vertexArrayDrawPrimitivesOf(pCurrentGroup);
-				}
+				vboDrawPrimitivesOf(pCurrentGroup);
+			}
+			else
+			{
+				vertexArrayDrawPrimitivesOf(pCurrentGroup);
 			}
 
+			// Draw back faces
+			glc::encodeRgbId((~uid) & 0xFFFFFF,colorId);
+			glColor4ubv(colorId);
+			glFrontFace(GL_CW);
+			if (vboIsUsed)
+			{
+				vboDrawPrimitivesOf(pCurrentGroup);
+			}
+			else
+			{
+				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+			}
+
+			glFrontFace(GL_CCW);
+			glDisable(GL_CULL_FACE);
 			++iGroup;
 		}
 	}
