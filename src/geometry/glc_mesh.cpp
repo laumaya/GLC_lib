@@ -1507,7 +1507,8 @@ void GLC_Mesh::primitiveSelectedRenderLoop(const GLC_RenderProperties& renderPro
 void GLC_Mesh::outlineSilhouetteRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
 	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
-	if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
+	//if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
+	if ((!isTransparent) || GLC_State::isInSelectionMode())
 	{
 		LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
@@ -1518,13 +1519,17 @@ void GLC_Mesh::outlineSilhouetteRenderLoop(const GLC_RenderProperties& renderPro
 			// Encode silhouette information in RGBA color
 			GLubyte colorId[4];
 			int uid = pCurrentGroup->id() + (id() << 16);
+			int uid_flags = 0;
+			if (renderProperties.isSelected()) {
+				uid_flags = uid_flags | 0x800000; //Selection flag
+			}
 
 			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 
 	   		// Draw front faces
-			glc::encodeRgbId(uid,colorId);
+			glc::encodeRgbId(((uid) & 0x7FFFFF) | uid_flags,colorId);
 			glColor4ubv(colorId);
 			glFrontFace(GL_CCW);
 			if (vboIsUsed)
@@ -1537,7 +1542,7 @@ void GLC_Mesh::outlineSilhouetteRenderLoop(const GLC_RenderProperties& renderPro
 			}
 
 			// Draw back faces
-			glc::encodeRgbId((~uid) & 0xFFFFFF,colorId);
+			glc::encodeRgbId(((~uid) & 0x7FFFFF) | uid_flags,colorId);
 			glColor4ubv(colorId);
 			glFrontFace(GL_CW);
 			if (vboIsUsed)
