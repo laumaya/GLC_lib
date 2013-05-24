@@ -289,7 +289,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the instance
-	void render(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLoad= false, GLC_Viewport* pView= NULL);
+	void render(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLod= false, GLC_Viewport* pView= NULL);
 
 	//! Display the instance in Body selection mode
 	void renderForBodySelection();
