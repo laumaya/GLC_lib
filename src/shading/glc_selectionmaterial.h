@@ -56,6 +56,9 @@ public:
 	//! Use the given material as selection material
 	static void useMaterial(GLC_Material* pMaterial);
 
+	//! Use selection material?
+	static void setUseSelectionMaterial(bool useSelectionMaterial);
+
 	//! Use the default selection color
 	/*! if a selection material is used, unused it*/
 	static void useDefautSelectionColor();
@@ -102,6 +105,9 @@ private:
 
 		//! Material of this selection material
 		static GLC_Material* m_pMaterial;
+
+		//! Don't use selection material
+		static bool m_NoSelectionMaterial;
 
 };
 

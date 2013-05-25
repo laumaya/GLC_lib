@@ -30,6 +30,7 @@
 QHash<const QGLContext*, GLC_Shader*> GLC_SelectionMaterial::m_SelectionShaderHash;
 GLC_uint GLC_SelectionMaterial::m_SelectionMaterialId= 0;
 GLC_Material* GLC_SelectionMaterial::m_pMaterial= NULL;
+bool GLC_SelectionMaterial::m_NoSelectionMaterial = false;
 
 GLC_SelectionMaterial::GLC_SelectionMaterial()
 {
@@ -68,10 +69,17 @@ void GLC_SelectionMaterial::useDefautSelectionColor()
 	}
 }
 
+// Use selection material?
+void GLC_SelectionMaterial::setUseSelectionMaterial(bool useSelectionMaterial) {
+	m_NoSelectionMaterial = !useSelectionMaterial;
+}
+
 
 // Execute OpenGL Material
 void GLC_SelectionMaterial::glExecute()
 {
+	if (m_NoSelectionMaterial) return;
+
 	if (NULL != m_pMaterial)
 	{
 		m_pMaterial->glExecute();
