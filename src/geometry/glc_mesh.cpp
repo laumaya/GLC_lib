@@ -977,7 +977,11 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		activateVertexArray();
 	}
 
-	if (GLC_State::isInSelectionMode())
+	if (renderProperties.renderingFlag() == glc::OutlineSilhouetteRenderFlag) {
+		GLC_Context::current()->glcEnableLighting(false);
+		outlineSilhouetteRenderLoop(renderProperties, vboIsUsed);
+	} 
+	else if (GLC_State::isInSelectionMode())
 	{
 		if (renderProperties.renderingMode() == glc::PrimitiveSelection)
 		{
@@ -1496,6 +1500,64 @@ void GLC_Mesh::primitiveSelectedRenderLoop(const GLC_RenderProperties& renderPro
 			vertexArrayDrawSelectedPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, isTransparent, renderProperties);
 
 		++iGroup;
+	}
+}
+
+// The outline silhouette render loop (draws in special colors for edge detection, passes extra data encoded in color)
+void GLC_Mesh::outlineSilhouetteRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
+{
+	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
+	//if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
+	if ((!isTransparent) || GLC_State::isInSelectionMode())
+	{
+		LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+		{
+			GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+			//GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
+
+			// Encode silhouette information in RGBA color
+			GLubyte colorId[4];
+			int uid = pCurrentGroup->id() + (id() << 16);
+			int uid_flags = 0;
+			if (renderProperties.isSelected()) {
+				uid_flags = uid_flags | 0x800000; //Selection flag
+			}
+
+			glDisable(GL_TEXTURE_2D);
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
+
+	   		// Draw front faces
+			glc::encodeRgbId(((uid) & 0x7FFFFF) | uid_flags,colorId);
+			glColor4ubv(colorId);
+			glFrontFace(GL_CCW);
+			if (vboIsUsed)
+			{
+				vboDrawPrimitivesOf(pCurrentGroup);
+			}
+			else
+			{
+				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+			}
+
+			// Draw back faces
+			glc::encodeRgbId(((~uid) & 0x7FFFFF) | uid_flags,colorId);
+			glColor4ubv(colorId);
+			glFrontFace(GL_CW);
+			if (vboIsUsed)
+			{
+				vboDrawPrimitivesOf(pCurrentGroup);
+			}
+			else
+			{
+				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+			}
+
+			glFrontFace(GL_CCW);
+			glDisable(GL_CULL_FACE);
+			++iGroup;
+		}
 	}
 }
 
