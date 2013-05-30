@@ -21,10 +21,10 @@
 #include "GLCGraphicsView.h"
 
 GLCGraphicsView::GLCGraphicsView()
-: QGraphicsView()
+    : QGraphicsView()
 {
-	setViewport(new QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers)), this));
-	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    setViewport(new QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers)), this));
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 
 GLCGraphicsView::~GLCGraphicsView()
@@ -36,7 +36,7 @@ void GLCGraphicsView::resizeEvent(QResizeEvent *event)
 {
     if (scene())
     {
-		scene()->setSceneRect(QRect(QPoint(0, 0), event->size()));
-		QGraphicsView::resizeEvent(event);
+        scene()->setSceneRect(QRect(QPoint(0, 0), event->size()));
+        QGraphicsView::resizeEvent(event);
     }
 }
