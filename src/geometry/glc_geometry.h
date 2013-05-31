@@ -263,6 +263,13 @@ public:
 	//! Set VBO usage
 	virtual void setVboUsage(bool usage);
 
+	//! Clear the wire data and the bounding box of this geometry
+	inline void clearBoundingBox()
+	{
+		delete m_pBoundingBox;
+		m_pBoundingBox= NULL;
+	}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
