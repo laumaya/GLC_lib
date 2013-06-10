@@ -337,7 +337,8 @@ private:
 	//! Viewable state
 	bool m_IsViewable;
 
-
+private:
+    Q_DISABLE_COPY(GLC_3DViewCollection)
 };
 
 // Draw instances of a PointerViewInstanceHash
