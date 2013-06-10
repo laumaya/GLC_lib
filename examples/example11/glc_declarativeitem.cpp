@@ -223,8 +223,6 @@ void GLC_DeclarativeItem::render(QPainter *painter)
 
 void GLC_DeclarativeItem::renderForSelection(QPainter *painter)
 {
-    qDebug() << "GLC_DeclarativeItem::renderForSelection";
-
     painter->beginNativePainting();
 
     setupFbo(this->width(), this->height());
@@ -332,7 +330,6 @@ void GLC_DeclarativeItem::popMatrix()
 
 void GLC_DeclarativeItem::select(qreal x, qreal y)
 {
-    qDebug() << "GLC_DeclarativeItem::select";
     m_IsinSelectionMode= true;
     m_CurrentPos.setVect(x, y);
     update();
