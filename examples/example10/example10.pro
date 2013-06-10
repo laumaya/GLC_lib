@@ -15,8 +15,9 @@ QT += core \
     opengl \
     xml
     
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+}
 win32 { 
     LIBS += -L"$$(GLC_LIB_DIR)/lib" \
         -lGLC_lib2

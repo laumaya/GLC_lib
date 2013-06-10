@@ -39,6 +39,10 @@
 #define GL_MULTISAMPLE  0x809D
 #endif
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+#include <QtConcurrent/QtConcurrent>
+#endif
+
 static int labelCount= 4;
 
 GLCScene::GLCScene()
