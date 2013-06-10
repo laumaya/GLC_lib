@@ -17,6 +17,7 @@
 *****************************************************************************/
 
 #include <QLabel>
+
 #include <QStringList>
 #include <QFileDialog>
 #include <QFileInfo>
