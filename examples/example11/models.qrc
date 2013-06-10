@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/model">
+        <file>Democles.dae</file>
+        <file>man.obj</file>
+    </qresource>
+</RCC>
