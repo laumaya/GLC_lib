@@ -129,9 +129,7 @@ public:
 
 	//! All Occurence has been removed
 	inline void removeAllOccurences()
-	{
-		m_OccurenceHash.clear();
-	}
+	{m_OccurenceHash.clear();}
 
 	//! Set the world Up Vector
 	inline void setUpVector(const GLC_Vector3d& vect)
@@ -181,6 +179,9 @@ private:
 
 	//! This world selectionSet
 	GLC_SelectionSet m_SelectionSet;
+
+private:
+    Q_DISABLE_COPY(GLC_WorldHandle)
 };
 
 #endif /* GLC_WORLDHANDLE_H_ */
