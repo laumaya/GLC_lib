@@ -562,239 +562,250 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;</div>
 <div class="line"><a name="l00477"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a20efeb420a876656dd1d178006e0e581">  477</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#ada30eead051fe81ec9aaef5496467345" title="Update the instance viewable state.">GLC_3DViewCollection::updateInstanceViewableState</a>(<span class="keyword">const</span> <a class="code" href="class_g_l_c___frustum.html" title="GLC_Frustum : OpenGL Frustum.">GLC_Frustum</a>&amp; frustum)</div>
 <div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;{</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;         <a class="code" href="class_g_l_c__3_d_view_collection.html#a276e1103ad66c9de05c84ad43933c986" title="The space partitioning.">m_pSpacePartitioning</a>-&gt;<a class="code" href="class_g_l_c___space_partitioning.html#aca395c76ba881cd9c96310b59dc1b51a" title="Update visible GLC_3DViewInstance.">updateViewableInstances</a>(frustum);</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;}</div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;</div>
-<div class="line"><a name="l00482"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#aba23ec5228337f17fd7cfc32481d072b">  482</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#aba23ec5228337f17fd7cfc32481d072b" title="Set VBO usage.">GLC_3DViewCollection::setVboUsage</a>(<span class="keywordtype">bool</span> usage)</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;{</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;         ViewInstancesHash::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;</div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;    <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    {</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;         iEntry.value().setVboUsage(usage);</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;         iEntry++;</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    <span class="keywordflow">if</span> (NULL != <a class="code" href="class_g_l_c__3_d_view_collection.html#a276e1103ad66c9de05c84ad43933c986" title="The space partitioning.">m_pSpacePartitioning</a>)</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;    {</div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;        <a class="code" href="class_g_l_c__3_d_view_collection.html#a276e1103ad66c9de05c84ad43933c986" title="The space partitioning.">m_pSpacePartitioning</a>-&gt;<a class="code" href="class_g_l_c___space_partitioning.html#aca395c76ba881cd9c96310b59dc1b51a" title="Update visible GLC_3DViewInstance.">updateViewableInstances</a>(frustum);</div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;    }</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;}</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;</div>
+<div class="line"><a name="l00485"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a92deac342d52a113e44aeae7b844e72b">  485</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a92deac342d52a113e44aeae7b844e72b" title="Update space partitionning.">GLC_3DViewCollection::updateSpacePartitionning</a>()</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;{</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    <span class="keywordflow">if</span> (NULL != <a class="code" href="class_g_l_c__3_d_view_collection.html#a276e1103ad66c9de05c84ad43933c986" title="The space partitioning.">m_pSpacePartitioning</a>)</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;    {</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;        <a class="code" href="class_g_l_c__3_d_view_collection.html#a276e1103ad66c9de05c84ad43933c986" title="The space partitioning.">m_pSpacePartitioning</a>-&gt;<a class="code" href="class_g_l_c___space_partitioning.html#a76c007aed6e6fd91a1d078402e39594a" title="Update the space partionning.">updateSpacePartitioning</a>();</div>
 <div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;    }</div>
 <div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;}</div>
 <div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;</div>
-<div class="line"><a name="l00493"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a5d86a2bc8b9be4ab976ca81d391c4f4a">  493</a></span>&#160;QList&lt;GLC_3DViewInstance*&gt; <a class="code" href="class_g_l_c__3_d_view_collection.html#a5d86a2bc8b9be4ab976ca81d391c4f4a" title="Return all GLC_3DViewInstance from collection.">GLC_3DViewCollection::instancesHandle</a>()</div>
+<div class="line"><a name="l00493"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#aba23ec5228337f17fd7cfc32481d072b">  493</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#aba23ec5228337f17fd7cfc32481d072b" title="Set VBO usage.">GLC_3DViewCollection::setVboUsage</a>(<span class="keywordtype">bool</span> usage)</div>
 <div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;{</div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;         QList&lt;GLC_3DViewInstance*&gt; instancesList;</div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;         ViewInstancesHash::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
 <div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;</div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;         ViewInstancesHash::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;</div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;    <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;    {</div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;         instancesList.append(&amp;(iEntry.value()));</div>
-<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;         iEntry++;</div>
-<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;    }</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;         <span class="keywordflow">return</span> instancesList;</div>
-<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;}</div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;</div>
-<div class="line"><a name="l00507"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a90c2d595eeb3f8336ee03f20779727ed">  507</a></span>&#160;QList&lt;GLC_3DViewInstance*&gt; <a class="code" href="class_g_l_c__3_d_view_collection.html#a90c2d595eeb3f8336ee03f20779727ed" title="Return all visible GLC_3DViewInstance from the collection.">GLC_3DViewCollection::visibleInstancesHandle</a>()</div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;{</div>
-<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;         QList&lt;GLC_3DViewInstance*&gt; instancesList;</div>
-<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;</div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;         ViewInstancesHash::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
-<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;</div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;    <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
-<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;    {</div>
-<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;         <span class="keywordflow">if</span> (iEntry.value().isVisible())</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;         {</div>
-<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;         instancesList.append(&amp;(iEntry.value()));</div>
-<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;         }</div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;         iEntry++;</div>
-<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;    }</div>
-<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;         <span class="keywordflow">return</span> instancesList;</div>
-<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;</div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;}</div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;</div>
-<div class="line"><a name="l00525"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a98519c6d07611b12e3b082a48f64d142">  525</a></span>&#160;QList&lt;GLC_3DViewInstance*&gt; <a class="code" href="class_g_l_c__3_d_view_collection.html#a98519c6d07611b12e3b082a48f64d142" title="Return all viewable GLC_3DViewInstance from the collection.">GLC_3DViewCollection::viewableInstancesHandle</a>()</div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;{</div>
-<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;         QList&lt;GLC_3DViewInstance*&gt; instancesList;</div>
-<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;</div>
-<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;         ViewInstancesHash::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
-<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;</div>
-<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;    <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
-<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;    {</div>
-<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;         <span class="keywordflow">if</span> (iEntry.value().isVisible() == <a class="code" href="class_g_l_c__3_d_view_collection.html#a9046135c28db112e5fdd38b17cf18a39" title="Show State.">m_IsInShowSate</a>)</div>
-<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;         {</div>
-<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;         instancesList.append(&amp;(iEntry.value()));</div>
-<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;         }</div>
-<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;         iEntry++;</div>
-<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;    }</div>
-<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;         <span class="keywordflow">return</span> instancesList;</div>
-<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;}</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;    <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;    {</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;         iEntry.value().setVboUsage(usage);</div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;         iEntry++;</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;    }</div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;}</div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;</div>
+<div class="line"><a name="l00504"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a5d86a2bc8b9be4ab976ca81d391c4f4a">  504</a></span>&#160;QList&lt;GLC_3DViewInstance*&gt; <a class="code" href="class_g_l_c__3_d_view_collection.html#a5d86a2bc8b9be4ab976ca81d391c4f4a" title="Return all GLC_3DViewInstance from collection.">GLC_3DViewCollection::instancesHandle</a>()</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;{</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;         QList&lt;GLC_3DViewInstance*&gt; instancesList;</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;         ViewInstancesHash::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;</div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;    <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    {</div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;         instancesList.append(&amp;(iEntry.value()));</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;         iEntry++;</div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;    }</div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;         <span class="keywordflow">return</span> instancesList;</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;}</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;</div>
+<div class="line"><a name="l00518"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a90c2d595eeb3f8336ee03f20779727ed">  518</a></span>&#160;QList&lt;GLC_3DViewInstance*&gt; <a class="code" href="class_g_l_c__3_d_view_collection.html#a90c2d595eeb3f8336ee03f20779727ed" title="Return all visible GLC_3DViewInstance from the collection.">GLC_3DViewCollection::visibleInstancesHandle</a>()</div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;{</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;         QList&lt;GLC_3DViewInstance*&gt; instancesList;</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;</div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;         ViewInstancesHash::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;</div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;    <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;    {</div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;         <span class="keywordflow">if</span> (iEntry.value().isVisible())</div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;         {</div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;         instancesList.append(&amp;(iEntry.value()));</div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;         }</div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;         iEntry++;</div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;    }</div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;         <span class="keywordflow">return</span> instancesList;</div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;</div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;}</div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;</div>
+<div class="line"><a name="l00536"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a98519c6d07611b12e3b082a48f64d142">  536</a></span>&#160;QList&lt;GLC_3DViewInstance*&gt; <a class="code" href="class_g_l_c__3_d_view_collection.html#a98519c6d07611b12e3b082a48f64d142" title="Return all viewable GLC_3DViewInstance from the collection.">GLC_3DViewCollection::viewableInstancesHandle</a>()</div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;{</div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;         QList&lt;GLC_3DViewInstance*&gt; instancesList;</div>
+<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;</div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;         ViewInstancesHash::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
 <div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;</div>
-<div class="line"><a name="l00542"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#ab65769287fbc984d9ecb0156f6c871e5">  542</a></span>&#160;<a class="code" href="class_g_l_c__3_d_view_instance.html" title="GLC_3DViewInstance : GLC_3DRep + bounding box.">GLC_3DViewInstance</a>* <a class="code" href="class_g_l_c__3_d_view_collection.html#ab65769287fbc984d9ecb0156f6c871e5" title="Return a GLC_3DViewInstance from collection.">GLC_3DViewCollection::instanceHandle</a>(<a class="code" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b" title="Type used for all GLC_lib ID.">GLC_uint</a> Key)</div>
-<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;{</div>
-<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.contains(Key));</div>
-<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;         <span class="keywordflow">return</span> &amp;(<a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>[Key]);</div>
-<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;}</div>
-<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;</div>
-<div class="line"><a name="l00548"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a737dc3e84ebc68bb36a80276eb66d684">  548</a></span>&#160;<a class="code" href="class_g_l_c___bounding_box.html" title="GLC_BoundingBox : Geometry bounding box.">GLC_BoundingBox</a> <a class="code" href="class_g_l_c__3_d_view_collection.html#a737dc3e84ebc68bb36a80276eb66d684" title="Return the entire collection Bounding Box.">GLC_3DViewCollection::boundingBox</a>(<span class="keywordtype">bool</span> allObject)</div>
-<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;{</div>
-<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;         <a class="code" href="class_g_l_c___bounding_box.html" title="GLC_BoundingBox : Geometry bounding box.">GLC_BoundingBox</a> <a class="code" href="class_g_l_c__3_d_view_collection.html#a737dc3e84ebc68bb36a80276eb66d684" title="Return the entire collection Bounding Box.">boundingBox</a>;</div>
-<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;         <span class="comment">// Check if the bounding box have to be updated</span></div>
-<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;         <span class="keywordflow">if</span> (!<a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.isEmpty())</div>
-<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;         {</div>
-<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;                  ViewInstancesHash::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
-<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;             <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
-<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;             {</div>
-<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;                 <span class="keywordflow">if</span>(allObject || iEntry.value().isVisible() == <a class="code" href="class_g_l_c__3_d_view_collection.html#a9046135c28db112e5fdd38b17cf18a39" title="Show State.">m_IsInShowSate</a>)</div>
-<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;                 {</div>
-<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;                  <span class="comment">// Combine Collection BoundingBox with element Bounding Box</span></div>
-<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;                  boundingBox.<a class="code" href="class_g_l_c___bounding_box.html#ac1a16af241c5f5bdac409f61b275494d" title="Combine this bounding Box with the given 3d point and return a reference of this bounding box...">combine</a>(iEntry.value().boundingBox());</div>
-<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;                 }</div>
-<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;                 ++iEntry;</div>
-<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;             }</div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;         }</div>
-<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;         <span class="keywordflow">return</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a737dc3e84ebc68bb36a80276eb66d684" title="Return the entire collection Bounding Box.">boundingBox</a>;</div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;}</div>
-<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;</div>
-<div class="line"><a name="l00568"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a703f47dc07ff1c0915e2ec758bc2eb1a">  568</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a703f47dc07ff1c0915e2ec758bc2eb1a" title="Return the number of drawable objects.">GLC_3DViewCollection::drawableObjectsSize</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;         <span class="comment">// The number of object to drw</span></div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;         <span class="keywordtype">int</span> numberOffDrawnHit= 0;</div>
-<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;</div>
-<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;         <span class="comment">// Count the number off instance to draw</span></div>
-<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;         ViewInstancesHash::const_iterator i= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
-<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;         <span class="keywordflow">while</span> (i != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;         {</div>
-<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;                  <span class="comment">//qDebug() &lt;&lt; &quot;transparent&quot;;</span></div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;                  <span class="keywordflow">if</span> (i.value().isVisible() == <a class="code" href="class_g_l_c__3_d_view_collection.html#a9046135c28db112e5fdd38b17cf18a39" title="Show State.">m_IsInShowSate</a>)</div>
-<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;                  {</div>
-<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;                           ++numberOffDrawnHit;</div>
-<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;                  }</div>
-<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;                  ++i;</div>
-<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;         }</div>
-<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;         <span class="keywordflow">return</span> numberOffDrawnHit;</div>
-<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;}</div>
-<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;</div>
-<div class="line"><a name="l00587"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a7991699f36c4cca8dca90c9a838889c1">  587</a></span>&#160;QList&lt;QString&gt; <a class="code" href="class_g_l_c__3_d_view_collection.html#a7991699f36c4cca8dca90c9a838889c1" title="Return instances name from the specified shading group.">GLC_3DViewCollection::instanceNamesFromShadingGroup</a>(GLuint shaderId)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;         QList&lt;QString&gt; listOfInstanceName;</div>
-<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;         QList&lt;GLC_uint&gt; listOfInstanceNameId= <a class="code" href="class_g_l_c__3_d_view_collection.html#aa507b0ce21d5be14323827dbe5d696d3" title="Shader groups hash.">m_ShaderGroup</a>.keys(shaderId);</div>
-<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;         <span class="keywordflow">if</span> (!listOfInstanceNameId.isEmpty())</div>
-<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;         {</div>
-<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;                  <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#af979f883e77e0fce1eb3e3a1827a1e01" title="Return the number of Node in the collection.">size</a>= listOfInstanceNameId.size();</div>
-<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;                  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i= 0; i &lt; <a class="code" href="class_g_l_c__3_d_view_collection.html#af979f883e77e0fce1eb3e3a1827a1e01" title="Return the number of Node in the collection.">size</a>; ++i)</div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;                  {</div>
-<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;                           listOfInstanceName &lt;&lt; <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.value(listOfInstanceNameId[i]).name();</div>
-<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;                  }</div>
-<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;         }</div>
-<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;         <span class="keywordflow">return</span> listOfInstanceName;</div>
-<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;}</div>
-<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;</div>
-<div class="line"><a name="l00602"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a30399b53ac353698d8e6a7055cc5ef28">  602</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a30399b53ac353698d8e6a7055cc5ef28" title="Return the number of used shading group.">GLC_3DViewCollection::numberOfUsedShadingGroup</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;         <span class="keywordflow">return</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#aa507b0ce21d5be14323827dbe5d696d3" title="Shader groups hash.">m_ShaderGroup</a>.values().toSet().size();</div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;}</div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;</div>
-<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;<span class="comment">// OpenGL Functions</span></div>
-<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00611"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a1143b3497b21f7c43f5f75c76c49d512">  611</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a1143b3497b21f7c43f5f75c76c49d512" title="Display the specified collection group.">GLC_3DViewCollection::render</a>(GLuint groupId, <a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26c" title="Geometry rendring flag enumaration.">glc::RenderFlag</a> renderFlag)</div>
-<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;{</div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;         <span class="keywordflow">if</span> (!<a class="code" href="class_g_l_c__3_d_view_collection.html#a45864e5c616a230f79569a5fa3aa0efc" title="Return true if the collection is empty.">isEmpty</a>() &amp;&amp; <a class="code" href="class_g_l_c__3_d_view_collection.html#a9df21d26257bc658fd0b90c86a9c9084" title="Viewable state.">m_IsViewable</a>)</div>
-<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;         {</div>
-<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;                  <span class="keywordflow">if</span> (renderFlag == <a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26ca2a2571eb10c27dc0fa3fad00ba1d6cb9">glc::WireRenderFlag</a>)</div>
-<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;                  {</div>
-<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;                 glEnable(GL_POLYGON_OFFSET_FILL);</div>
-<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;                 glPolygonOffset (1.0, 1.0);</div>
-<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;                  }</div>
-<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___state.html#a25c6db67d0e21b592e3ef5467b7e753e" title="Return true if is in selection mode.">GLC_State::isInSelectionMode</a>())</div>
-<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;                  {</div>
-<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;                           glDisable(GL_BLEND);</div>
-<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;                           <a class="code" href="class_g_l_c___context.html#a4534815e72d7afc95e829ec8616539fb" title="Return the current context.">GLC_Context::current</a>()-&gt;<a class="code" href="class_g_l_c___context.html#abbe9b65bf4a83e973e6d2a6836b67188" title="Enable lighting.">glcEnableLighting</a>(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;                           glDisable(GL_TEXTURE_2D);</div>
-<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;                  }</div>
-<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;                  <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;    <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
+<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;    {</div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;         <span class="keywordflow">if</span> (iEntry.value().isVisible() == <a class="code" href="class_g_l_c__3_d_view_collection.html#a9046135c28db112e5fdd38b17cf18a39" title="Show State.">m_IsInShowSate</a>)</div>
+<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;         {</div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;         instancesList.append(&amp;(iEntry.value()));</div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;         }</div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;         iEntry++;</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;    }</div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;         <span class="keywordflow">return</span> instancesList;</div>
+<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;}</div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;</div>
+<div class="line"><a name="l00553"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#ab65769287fbc984d9ecb0156f6c871e5">  553</a></span>&#160;<a class="code" href="class_g_l_c__3_d_view_instance.html" title="GLC_3DViewInstance : GLC_3DRep + bounding box.">GLC_3DViewInstance</a>* <a class="code" href="class_g_l_c__3_d_view_collection.html#ab65769287fbc984d9ecb0156f6c871e5" title="Return a GLC_3DViewInstance from collection.">GLC_3DViewCollection::instanceHandle</a>(<a class="code" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b" title="Type used for all GLC_lib ID.">GLC_uint</a> Key)</div>
+<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;{</div>
+<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.contains(Key));</div>
+<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;         <span class="keywordflow">return</span> &amp;(<a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>[Key]);</div>
+<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;}</div>
+<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;</div>
+<div class="line"><a name="l00559"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a737dc3e84ebc68bb36a80276eb66d684">  559</a></span>&#160;<a class="code" href="class_g_l_c___bounding_box.html" title="GLC_BoundingBox : Geometry bounding box.">GLC_BoundingBox</a> <a class="code" href="class_g_l_c__3_d_view_collection.html#a737dc3e84ebc68bb36a80276eb66d684" title="Return the entire collection Bounding Box.">GLC_3DViewCollection::boundingBox</a>(<span class="keywordtype">bool</span> allObject)</div>
+<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;{</div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;         <a class="code" href="class_g_l_c___bounding_box.html" title="GLC_BoundingBox : Geometry bounding box.">GLC_BoundingBox</a> <a class="code" href="class_g_l_c__3_d_view_collection.html#a737dc3e84ebc68bb36a80276eb66d684" title="Return the entire collection Bounding Box.">boundingBox</a>;</div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;         <span class="comment">// Check if the bounding box have to be updated</span></div>
+<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;         <span class="keywordflow">if</span> (!<a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.isEmpty())</div>
+<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;         {</div>
+<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;                  ViewInstancesHash::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;             <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
+<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;             {</div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;                 <span class="keywordflow">if</span>(allObject || iEntry.value().isVisible() == <a class="code" href="class_g_l_c__3_d_view_collection.html#a9046135c28db112e5fdd38b17cf18a39" title="Show State.">m_IsInShowSate</a>)</div>
+<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;                 {</div>
+<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;                  <span class="comment">// Combine Collection BoundingBox with element Bounding Box</span></div>
+<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;                  boundingBox.<a class="code" href="class_g_l_c___bounding_box.html#ac1a16af241c5f5bdac409f61b275494d" title="Combine this bounding Box with the given 3d point and return a reference of this bounding box...">combine</a>(iEntry.value().boundingBox());</div>
+<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;                 }</div>
+<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;                 ++iEntry;</div>
+<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;             }</div>
+<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;         }</div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;         <span class="keywordflow">return</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a737dc3e84ebc68bb36a80276eb66d684" title="Return the entire collection Bounding Box.">boundingBox</a>;</div>
+<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;}</div>
+<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;</div>
+<div class="line"><a name="l00579"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a703f47dc07ff1c0915e2ec758bc2eb1a">  579</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a703f47dc07ff1c0915e2ec758bc2eb1a" title="Return the number of drawable objects.">GLC_3DViewCollection::drawableObjectsSize</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;         <span class="comment">// The number of object to drw</span></div>
+<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;         <span class="keywordtype">int</span> numberOffDrawnHit= 0;</div>
+<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;</div>
+<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;         <span class="comment">// Count the number off instance to draw</span></div>
+<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;         ViewInstancesHash::const_iterator i= <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.begin();</div>
+<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;         <span class="keywordflow">while</span> (i != <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.constEnd())</div>
+<div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;         {</div>
+<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;                  <span class="comment">//qDebug() &lt;&lt; &quot;transparent&quot;;</span></div>
+<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;                  <span class="keywordflow">if</span> (i.value().isVisible() == <a class="code" href="class_g_l_c__3_d_view_collection.html#a9046135c28db112e5fdd38b17cf18a39" title="Show State.">m_IsInShowSate</a>)</div>
+<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;                  {</div>
+<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;                           ++numberOffDrawnHit;</div>
+<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;                  }</div>
+<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;                  ++i;</div>
+<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;         }</div>
+<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;         <span class="keywordflow">return</span> numberOffDrawnHit;</div>
+<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;}</div>
+<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;</div>
+<div class="line"><a name="l00598"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a7991699f36c4cca8dca90c9a838889c1">  598</a></span>&#160;QList&lt;QString&gt; <a class="code" href="class_g_l_c__3_d_view_collection.html#a7991699f36c4cca8dca90c9a838889c1" title="Return instances name from the specified shading group.">GLC_3DViewCollection::instanceNamesFromShadingGroup</a>(GLuint shaderId)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;         QList&lt;QString&gt; listOfInstanceName;</div>
+<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;         QList&lt;GLC_uint&gt; listOfInstanceNameId= <a class="code" href="class_g_l_c__3_d_view_collection.html#aa507b0ce21d5be14323827dbe5d696d3" title="Shader groups hash.">m_ShaderGroup</a>.keys(shaderId);</div>
+<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;         <span class="keywordflow">if</span> (!listOfInstanceNameId.isEmpty())</div>
+<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;         {</div>
+<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;                  <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#af979f883e77e0fce1eb3e3a1827a1e01" title="Return the number of Node in the collection.">size</a>= listOfInstanceNameId.size();</div>
+<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;                  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i= 0; i &lt; <a class="code" href="class_g_l_c__3_d_view_collection.html#af979f883e77e0fce1eb3e3a1827a1e01" title="Return the number of Node in the collection.">size</a>; ++i)</div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;                  {</div>
+<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;                           listOfInstanceName &lt;&lt; <a class="code" href="class_g_l_c__3_d_view_collection.html#a6bf96a18a86ccf7b03fbea096c5ee0db" title="GLC_3DViewInstance Hash Table.">m_3DViewInstanceHash</a>.value(listOfInstanceNameId[i]).name();</div>
+<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;                  }</div>
+<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;         }</div>
+<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;         <span class="keywordflow">return</span> listOfInstanceName;</div>
+<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;}</div>
+<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;</div>
+<div class="line"><a name="l00613"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a30399b53ac353698d8e6a7055cc5ef28">  613</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a30399b53ac353698d8e6a7055cc5ef28" title="Return the number of used shading group.">GLC_3DViewCollection::numberOfUsedShadingGroup</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;         <span class="keywordflow">return</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#aa507b0ce21d5be14323827dbe5d696d3" title="Shader groups hash.">m_ShaderGroup</a>.values().toSet().size();</div>
+<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;}</div>
+<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;</div>
+<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;<span class="comment">// OpenGL Functions</span></div>
+<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00622"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a1143b3497b21f7c43f5f75c76c49d512">  622</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a1143b3497b21f7c43f5f75c76c49d512" title="Display the specified collection group.">GLC_3DViewCollection::render</a>(GLuint groupId, <a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26c" title="Geometry rendring flag enumaration.">glc::RenderFlag</a> renderFlag)</div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;{</div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;         <span class="keywordflow">if</span> (!<a class="code" href="class_g_l_c__3_d_view_collection.html#a45864e5c616a230f79569a5fa3aa0efc" title="Return true if the collection is empty.">isEmpty</a>() &amp;&amp; <a class="code" href="class_g_l_c__3_d_view_collection.html#a9df21d26257bc658fd0b90c86a9c9084" title="Viewable state.">m_IsViewable</a>)</div>
+<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;         {</div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;                  <span class="keywordflow">if</span> (renderFlag == <a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26ca2a2571eb10c27dc0fa3fad00ba1d6cb9">glc::WireRenderFlag</a>)</div>
 <div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;                  {</div>
-<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;                           <a class="code" href="class_g_l_c___context.html#a4534815e72d7afc95e829ec8616539fb" title="Return the current context.">GLC_Context::current</a>()-&gt;<a class="code" href="class_g_l_c___context.html#abbe9b65bf4a83e973e6d2a6836b67188" title="Enable lighting.">glcEnableLighting</a>(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;                  }</div>
-<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;                  <a class="code" href="class_g_l_c__3_d_view_collection.html#ac7e99b7a2bc004b64fe7d8d51ef158ba" title="Display collection&#39;s member.">glDraw</a>(groupId, renderFlag);</div>
-<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;</div>
-<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;                  <span class="keywordflow">if</span> (renderFlag == <a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26ca2a2571eb10c27dc0fa3fad00ba1d6cb9">glc::WireRenderFlag</a>)</div>
-<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;                  {</div>
-<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;                 glDisable(GL_POLYGON_OFFSET_FILL);</div>
-<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;                  }</div>
-<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;         }</div>
-<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;}</div>
-<div class="line"><a name="l00638"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a86e0c0fbc89de1c0bce1820b71385d49">  638</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a86e0c0fbc89de1c0bce1820b71385d49" title="Display all shader group.">GLC_3DViewCollection::renderShaderGroup</a>(<a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26c" title="Geometry rendring flag enumaration.">glc::RenderFlag</a> renderFlag)</div>
-<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;{</div>
-<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;         <span class="keywordflow">if</span> (!<a class="code" href="class_g_l_c__3_d_view_collection.html#a45864e5c616a230f79569a5fa3aa0efc" title="Return true if the collection is empty.">isEmpty</a>() &amp;&amp; <a class="code" href="class_g_l_c__3_d_view_collection.html#a9df21d26257bc658fd0b90c86a9c9084" title="Viewable state.">m_IsViewable</a>)</div>
-<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;         {</div>
-<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___state.html#a25c6db67d0e21b592e3ef5467b7e753e" title="Return true if is in selection mode.">GLC_State::isInSelectionMode</a>())</div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;                  {</div>
-<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;                           glDisable(GL_BLEND);</div>
-<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;                           <a class="code" href="class_g_l_c___context.html#a4534815e72d7afc95e829ec8616539fb" title="Return the current context.">GLC_Context::current</a>()-&gt;<a class="code" href="class_g_l_c___context.html#abbe9b65bf4a83e973e6d2a6836b67188" title="Enable lighting.">glcEnableLighting</a>(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;                           glDisable(GL_TEXTURE_2D);</div>
-<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;                  }</div>
-<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;</div>
-<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;                  HashList::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.begin();</div>
-<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;             <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.constEnd())</div>
-<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;             {</div>
-<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;                  <a class="code" href="class_g_l_c__3_d_view_collection.html#ac7e99b7a2bc004b64fe7d8d51ef158ba" title="Display collection&#39;s member.">glDraw</a>(iEntry.key(), renderFlag);</div>
-<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;                  ++iEntry;</div>
-<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;             }</div>
-<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;         }</div>
-<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;}</div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;</div>
-<div class="line"><a name="l00658"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#ac7e99b7a2bc004b64fe7d8d51ef158ba">  658</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#ac7e99b7a2bc004b64fe7d8d51ef158ba" title="Display collection&#39;s member.">GLC_3DViewCollection::glDraw</a>(<a class="code" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b" title="Type used for all GLC_lib ID.">GLC_uint</a> groupId, <a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26c" title="Geometry rendring flag enumaration.">glc::RenderFlag</a> renderFlag)</div>
-<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;{</div>
-<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;         <span class="comment">// Set render Mode and OpenGL state</span></div>
-<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;         <span class="keywordflow">if</span> (!<a class="code" href="class_g_l_c___state.html#a25c6db67d0e21b592e3ef5467b7e753e" title="Return true if is in selection mode.">GLC_State::isInSelectionMode</a>() &amp;&amp; (groupId == 0))</div>
-<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;         {</div>
-<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;                  <span class="keywordflow">if</span> (renderFlag == <a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26cac40bc3e069532f1c43d45ee934c927eb">glc::TransparentRenderFlag</a>)</div>
-<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;                  {</div>
-<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;                 glEnable(GL_BLEND);</div>
-<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;                 glDepthMask(GL_FALSE);</div>
-<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);</div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;                 glEnable(GL_POLYGON_OFFSET_FILL);</div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;                 glPolygonOffset (1.0, 1.0);</div>
+<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;                  }</div>
+<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___state.html#a25c6db67d0e21b592e3ef5467b7e753e" title="Return true if is in selection mode.">GLC_State::isInSelectionMode</a>())</div>
+<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;                  {</div>
+<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;                           glDisable(GL_BLEND);</div>
+<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;                           <a class="code" href="class_g_l_c___context.html#a4534815e72d7afc95e829ec8616539fb" title="Return the current context.">GLC_Context::current</a>()-&gt;<a class="code" href="class_g_l_c___context.html#abbe9b65bf4a83e973e6d2a6836b67188" title="Enable lighting.">glcEnableLighting</a>(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;                           glDisable(GL_TEXTURE_2D);</div>
+<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;                  }</div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;                  <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;                  {</div>
+<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;                           <a class="code" href="class_g_l_c___context.html#a4534815e72d7afc95e829ec8616539fb" title="Return the current context.">GLC_Context::current</a>()-&gt;<a class="code" href="class_g_l_c___context.html#abbe9b65bf4a83e973e6d2a6836b67188" title="Enable lighting.">glcEnableLighting</a>(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;                  }</div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;                  <a class="code" href="class_g_l_c__3_d_view_collection.html#ac7e99b7a2bc004b64fe7d8d51ef158ba" title="Display collection&#39;s member.">glDraw</a>(groupId, renderFlag);</div>
+<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;                  <span class="keywordflow">if</span> (renderFlag == <a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26ca2a2571eb10c27dc0fa3fad00ba1d6cb9">glc::WireRenderFlag</a>)</div>
+<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;                  {</div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;                 glDisable(GL_POLYGON_OFFSET_FILL);</div>
+<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;                  }</div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;         }</div>
+<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;}</div>
+<div class="line"><a name="l00649"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#a86e0c0fbc89de1c0bce1820b71385d49">  649</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#a86e0c0fbc89de1c0bce1820b71385d49" title="Display all shader group.">GLC_3DViewCollection::renderShaderGroup</a>(<a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26c" title="Geometry rendring flag enumaration.">glc::RenderFlag</a> renderFlag)</div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;{</div>
+<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;         <span class="keywordflow">if</span> (!<a class="code" href="class_g_l_c__3_d_view_collection.html#a45864e5c616a230f79569a5fa3aa0efc" title="Return true if the collection is empty.">isEmpty</a>() &amp;&amp; <a class="code" href="class_g_l_c__3_d_view_collection.html#a9df21d26257bc658fd0b90c86a9c9084" title="Viewable state.">m_IsViewable</a>)</div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;         {</div>
+<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___state.html#a25c6db67d0e21b592e3ef5467b7e753e" title="Return true if is in selection mode.">GLC_State::isInSelectionMode</a>())</div>
+<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;                  {</div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;                           glDisable(GL_BLEND);</div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;                           <a class="code" href="class_g_l_c___context.html#a4534815e72d7afc95e829ec8616539fb" title="Return the current context.">GLC_Context::current</a>()-&gt;<a class="code" href="class_g_l_c___context.html#abbe9b65bf4a83e973e6d2a6836b67188" title="Enable lighting.">glcEnableLighting</a>(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;                           glDisable(GL_TEXTURE_2D);</div>
+<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;                  }</div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;</div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;                  HashList::iterator iEntry= <a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.begin();</div>
+<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;             <span class="keywordflow">while</span> (iEntry != <a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.constEnd())</div>
+<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;             {</div>
+<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;                  <a class="code" href="class_g_l_c__3_d_view_collection.html#ac7e99b7a2bc004b64fe7d8d51ef158ba" title="Display collection&#39;s member.">glDraw</a>(iEntry.key(), renderFlag);</div>
+<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;                  ++iEntry;</div>
+<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;             }</div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;         }</div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;}</div>
 <div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;</div>
-<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;                  }</div>
-<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;                  <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;                  {</div>
-<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;                      glDisable(GL_BLEND);</div>
-<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;                      glDepthMask(GL_TRUE);</div>
-<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;                      glEnable(GL_DEPTH_TEST);</div>
-<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;                  }</div>
-<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;         }</div>
-<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;</div>
-<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;         <span class="comment">// Normal GLC_3DViewInstance</span></div>
-<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;         <span class="keywordflow">if</span> ((groupId == 0) &amp;&amp; !<a class="code" href="class_g_l_c__3_d_view_collection.html#a8a246c14348fd3d5f9927ad6ad91e5ca" title="Normal Node Hash Table.">m_MainInstances</a>.isEmpty())</div>
-<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;         {</div>
-<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;                  <a class="code" href="class_g_l_c__3_d_view_collection.html#a29537cdeb9f44420f2b034daafc0c3fa" title="Draw instances of a PointerViewInstanceHash.">glDrawInstancesOf</a>(&amp;<a class="code" href="class_g_l_c__3_d_view_collection.html#a8a246c14348fd3d5f9927ad6ad91e5ca" title="Normal Node Hash Table.">m_MainInstances</a>, renderFlag);</div>
-<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;</div>
-<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;         }</div>
-<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;         <span class="comment">// Selected GLC_3DVIewInstance</span></div>
-<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;         <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((groupId == 1) &amp;&amp; !<a class="code" href="class_g_l_c__3_d_view_collection.html#ad26487858c6d3b8221485b0de6610587" title="Selected Node Hash Table.">m_SelectedInstances</a>.isEmpty())</div>
-<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;         {</div>
-<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___state.html#aaa7cd6c507a7f9837fef75fb1578a186" title="Return true if selection shader is used.">GLC_State::selectionShaderUsed</a>()) <a class="code" href="class_g_l_c___selection_material.html#a05043946e15cca955845e9346763440b" title="Use shader.">GLC_SelectionMaterial::useShader</a>();</div>
+<div class="line"><a name="l00669"></a><span class="lineno"><a class="code" href="class_g_l_c__3_d_view_collection.html#ac7e99b7a2bc004b64fe7d8d51ef158ba">  669</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c__3_d_view_collection.html#ac7e99b7a2bc004b64fe7d8d51ef158ba" title="Display collection&#39;s member.">GLC_3DViewCollection::glDraw</a>(<a class="code" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b" title="Type used for all GLC_lib ID.">GLC_uint</a> groupId, <a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26c" title="Geometry rendring flag enumaration.">glc::RenderFlag</a> renderFlag)</div>
+<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;{</div>
+<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;         <span class="comment">// Set render Mode and OpenGL state</span></div>
+<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;         <span class="keywordflow">if</span> (!<a class="code" href="class_g_l_c___state.html#a25c6db67d0e21b592e3ef5467b7e753e" title="Return true if is in selection mode.">GLC_State::isInSelectionMode</a>() &amp;&amp; (groupId == 0))</div>
+<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;         {</div>
+<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;                  <span class="keywordflow">if</span> (renderFlag == <a class="code" href="namespaceglc.html#a51a421b53283d5996142222b9baca26cac40bc3e069532f1c43d45ee934c927eb">glc::TransparentRenderFlag</a>)</div>
+<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;                  {</div>
+<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;                 glEnable(GL_BLEND);</div>
+<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;                 glDepthMask(GL_FALSE);</div>
+<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);</div>
+<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;</div>
+<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;                  }</div>
+<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;                  <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;                  {</div>
+<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;                      glDisable(GL_BLEND);</div>
+<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;                      glDepthMask(GL_TRUE);</div>
+<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;                      glEnable(GL_DEPTH_TEST);</div>
+<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;                  }</div>
+<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;         }</div>
 <div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;</div>
-<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;                  <a class="code" href="class_g_l_c__3_d_view_collection.html#a29537cdeb9f44420f2b034daafc0c3fa" title="Draw instances of a PointerViewInstanceHash.">glDrawInstancesOf</a>(&amp;<a class="code" href="class_g_l_c__3_d_view_collection.html#ad26487858c6d3b8221485b0de6610587" title="Selected Node Hash Table.">m_SelectedInstances</a>, renderFlag);</div>
-<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;</div>
-<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___state.html#aaa7cd6c507a7f9837fef75fb1578a186" title="Return true if selection shader is used.">GLC_State::selectionShaderUsed</a>()) <a class="code" href="class_g_l_c___selection_material.html#a1c303a1a73c4ff4fbf243febf3d7bf3e" title="Unused shader.">GLC_SelectionMaterial::unUseShader</a>();</div>
-<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;         }</div>
-<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;         <span class="comment">// GLC_3DViewInstance with shader</span></div>
-<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!<a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.isEmpty())</div>
-<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;         {</div>
-<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;             <span class="keywordflow">if</span>(<a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.contains(groupId) &amp;&amp; !<a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.value(groupId)-&gt;isEmpty())</div>
-<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;             {</div>
-<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;                  <a class="code" href="glc__3dviewcollection_8h.html#a10d00d5caeab00b812ce3dceba3866bb" title="GLC_3DViewInstance pointer Hash table.">PointerViewInstanceHash</a>* pNodeHash= <a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.value(groupId);</div>
+<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;         <span class="comment">// Normal GLC_3DViewInstance</span></div>
+<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;         <span class="keywordflow">if</span> ((groupId == 0) &amp;&amp; !<a class="code" href="class_g_l_c__3_d_view_collection.html#a8a246c14348fd3d5f9927ad6ad91e5ca" title="Normal Node Hash Table.">m_MainInstances</a>.isEmpty())</div>
+<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;         {</div>
+<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;                  <a class="code" href="class_g_l_c__3_d_view_collection.html#a29537cdeb9f44420f2b034daafc0c3fa" title="Draw instances of a PointerViewInstanceHash.">glDrawInstancesOf</a>(&amp;<a class="code" href="class_g_l_c__3_d_view_collection.html#a8a246c14348fd3d5f9927ad6ad91e5ca" title="Normal Node Hash Table.">m_MainInstances</a>, renderFlag);</div>
+<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;</div>
+<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;         }</div>
+<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;         <span class="comment">// Selected GLC_3DVIewInstance</span></div>
+<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;         <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((groupId == 1) &amp;&amp; !<a class="code" href="class_g_l_c__3_d_view_collection.html#ad26487858c6d3b8221485b0de6610587" title="Selected Node Hash Table.">m_SelectedInstances</a>.isEmpty())</div>
+<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;         {</div>
+<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___state.html#aaa7cd6c507a7f9837fef75fb1578a186" title="Return true if selection shader is used.">GLC_State::selectionShaderUsed</a>()) <a class="code" href="class_g_l_c___selection_material.html#a05043946e15cca955845e9346763440b" title="Use shader.">GLC_SelectionMaterial::useShader</a>();</div>
 <div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;</div>
-<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;                  <a class="code" href="class_g_l_c___shader.html#a0922aafe5f89c3590e73778e6087bdad" title="Use this shader program.">GLC_Shader::use</a>(groupId);</div>
-<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;                  <a class="code" href="class_g_l_c__3_d_view_collection.html#a29537cdeb9f44420f2b034daafc0c3fa" title="Draw instances of a PointerViewInstanceHash.">glDrawInstancesOf</a>(pNodeHash, renderFlag);</div>
-<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;                  <a class="code" href="class_g_l_c___shader.html#a91647883902c957051e5268b894643fb" title="unuse programm shader">GLC_Shader::unuse</a>();</div>
-<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;             }</div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;         }</div>
-<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;</div>
-<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;         <span class="comment">// Restore OpenGL state</span></div>
-<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;         <span class="keywordflow">if</span> (renderFlag &amp;&amp; !<a class="code" href="class_g_l_c___state.html#a25c6db67d0e21b592e3ef5467b7e753e" title="Return true if is in selection mode.">GLC_State::isInSelectionMode</a>() &amp;&amp; (groupId == 0))</div>
-<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;         {</div>
-<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;                  glDisable(GL_BLEND);</div>
-<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;                  glDepthMask(GL_TRUE);</div>
-<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;                  glEnable(GL_DEPTH_TEST);</div>
-<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;         }</div>
-<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;}</div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;                  <a class="code" href="class_g_l_c__3_d_view_collection.html#a29537cdeb9f44420f2b034daafc0c3fa" title="Draw instances of a PointerViewInstanceHash.">glDrawInstancesOf</a>(&amp;<a class="code" href="class_g_l_c__3_d_view_collection.html#ad26487858c6d3b8221485b0de6610587" title="Selected Node Hash Table.">m_SelectedInstances</a>, renderFlag);</div>
+<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;</div>
+<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___state.html#aaa7cd6c507a7f9837fef75fb1578a186" title="Return true if selection shader is used.">GLC_State::selectionShaderUsed</a>()) <a class="code" href="class_g_l_c___selection_material.html#a1c303a1a73c4ff4fbf243febf3d7bf3e" title="Unused shader.">GLC_SelectionMaterial::unUseShader</a>();</div>
+<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;         }</div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;         <span class="comment">// GLC_3DViewInstance with shader</span></div>
+<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!<a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.isEmpty())</div>
+<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;         {</div>
+<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;             <span class="keywordflow">if</span>(<a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.contains(groupId) &amp;&amp; !<a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.value(groupId)-&gt;isEmpty())</div>
+<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;             {</div>
+<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;                  <a class="code" href="glc__3dviewcollection_8h.html#a10d00d5caeab00b812ce3dceba3866bb" title="GLC_3DViewInstance pointer Hash table.">PointerViewInstanceHash</a>* pNodeHash= <a class="code" href="class_g_l_c__3_d_view_collection.html#ad27d005a27a54aa2475672ef72c8b68e" title="List of other Node Hash Table.">m_ShadedPointerViewInstanceHash</a>.value(groupId);</div>
+<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;</div>
+<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;                  <a class="code" href="class_g_l_c___shader.html#a0922aafe5f89c3590e73778e6087bdad" title="Use this shader program.">GLC_Shader::use</a>(groupId);</div>
+<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;                  <a class="code" href="class_g_l_c__3_d_view_collection.html#a29537cdeb9f44420f2b034daafc0c3fa" title="Draw instances of a PointerViewInstanceHash.">glDrawInstancesOf</a>(pNodeHash, renderFlag);</div>
+<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;                  <a class="code" href="class_g_l_c___shader.html#a91647883902c957051e5268b894643fb" title="unuse programm shader">GLC_Shader::unuse</a>();</div>
+<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;             }</div>
+<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;         }</div>
+<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;</div>
+<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;         <span class="comment">// Restore OpenGL state</span></div>
+<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;         <span class="keywordflow">if</span> (renderFlag &amp;&amp; !<a class="code" href="class_g_l_c___state.html#a25c6db67d0e21b592e3ef5467b7e753e" title="Return true if is in selection mode.">GLC_State::isInSelectionMode</a>() &amp;&amp; (groupId == 0))</div>
+<div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;         {</div>
+<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;                  glDisable(GL_BLEND);</div>
+<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;                  glDepthMask(GL_TRUE);</div>
+<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;                  glEnable(GL_DEPTH_TEST);</div>
+<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;         }</div>
+<div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 
 	<p align="center" bgcolor="#ccccff" height="17" width="100%">

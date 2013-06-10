@@ -218,6 +218,20 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a50dee5c430a01dcc7e5fb0d568f9f0ce"><td class="memItemLeft" align="right" valign="top">QList&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___obj_to_world.html#a50dee5c430a01dcc7e5fb0d568f9f0ce">m_Texels</a></td></tr>
 <tr class="memdesc:a50dee5c430a01dcc7e5fb0d568f9f0ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">The texture coordinate bulk data.  <a href="#a50dee5c430a01dcc7e5fb0d568f9f0ce"></a><br/></td></tr>
 <tr class="separator:a50dee5c430a01dcc7e5fb0d568f9f0ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34e1e4b6121bc1a38b0f52bd6bc7cd4e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___obj_to_world.html#a34e1e4b6121bc1a38b0f52bd6bc7cd4e">m_VerticeIndex</a></td></tr>
+<tr class="separator:a34e1e4b6121bc1a38b0f52bd6bc7cd4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a27aaca9d54b897439fccf4f0189b64"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___obj_to_world.html#a3a27aaca9d54b897439fccf4f0189b64">m_NormalIndex</a></td></tr>
+<tr class="separator:a3a27aaca9d54b897439fccf4f0189b64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ddd6fe2f3c3458df5cbb9c13c46ff90"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___obj_to_world.html#a6ddd6fe2f3c3458df5cbb9c13c46ff90">m_TextureIndex</a></td></tr>
+<tr class="separator:a6ddd6fe2f3c3458df5cbb9c13c46ff90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77414ad7a514d7ce761b5ec616835c7e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___obj_to_world.html#a77414ad7a514d7ce761b5ec616835c7e">m_VerticeOffset</a></td></tr>
+<tr class="separator:a77414ad7a514d7ce761b5ec616835c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae845afd0b1659c8dbbd381989afa0da9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___obj_to_world.html#ae845afd0b1659c8dbbd381989afa0da9">m_NormalOffset</a></td></tr>
+<tr class="separator:ae845afd0b1659c8dbbd381989afa0da9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1277e0d5c892210601317bd831b1b047"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___obj_to_world.html#a1277e0d5c892210601317bd831b1b047">m_TextureOffset</a></td></tr>
+<tr class="separator:a1277e0d5c892210601317bd831b1b047"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a809392a2ee1700f064bef8932b1dab85"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___obj_to_world.html#a809392a2ee1700f064bef8932b1dab85">m_ResetIndex</a></td></tr>
+<tr class="separator:a809392a2ee1700f064bef8932b1dab85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="class_g_l_c___obj_to_world.html" title="GLC_ObjToWorld : Create an GLC_World from obj file.">GLC_ObjToWorld</a> : Create an <a class="el" href="class_g_l_c___world.html" title="GLC_World : The Root of GLC_Lib Scene Graph.">GLC_World</a> from obj file. </p>
@@ -270,9 +284,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00059">59</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00066">66</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>.</p>
+<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>.</p>
 
 </div>
 </div>
@@ -300,11 +314,11 @@ Private Attributes</h2></td></tr>
 
 <p>Add the current Obj mesh to the world. </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">832</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">884</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__structoccurence_8cpp_source.html#l00559">GLC_StructOccurence::addChild()</a>, <a class="el" href="glc__mesh_8h_source.html#l00222">GLC_Mesh::addNormals()</a>, <a class="el" href="glc__mesh_8h_source.html#l00229">GLC_Mesh::addTexels()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00637">GLC_Mesh::addTriangles()</a>, <a class="el" href="glc__mesh_8h_source.html#l00215">GLC_Mesh::addVertice()</a>, <a class="el" href="glc__objmtlloader_8h_source.html#l00063">GLC_ObjMtlLoader::contains()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00150">GLC_Mesh::faceCount()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00721">GLC_Mesh::finish()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00136">GLC_ObjToWorld::CurrentObjMesh::m_Index</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00140">GLC_ObjToWorld::CurrentObjMesh::m_Materials</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00133">GLC_ObjToWorld::CurrentObjMesh::m_Normals</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00131">GLC_ObjToWorld::CurrentObjMesh::m_pMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00231">m_pMtlLoader</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00132">GLC_ObjToWorld::CurrentObjMesh::m_Positions</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00225">m_pWorld</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00134">GLC_ObjToWorld::CurrentObjMesh::m_Texels</a>, <a class="el" href="glc__objmtlloader_8cpp_source.html#l00059">GLC_ObjMtlLoader::material()</a>, and <a class="el" href="glc__world_8h_source.html#l00076">GLC_World::rootOccurence()</a>.</p>
+<p>References <a class="el" href="glc__structoccurence_8cpp_source.html#l00569">GLC_StructOccurence::addChild()</a>, <a class="el" href="glc__mesh_8h_source.html#l00222">GLC_Mesh::addNormals()</a>, <a class="el" href="glc__mesh_8h_source.html#l00229">GLC_Mesh::addTexels()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00637">GLC_Mesh::addTriangles()</a>, <a class="el" href="glc__mesh_8h_source.html#l00215">GLC_Mesh::addVertice()</a>, <a class="el" href="glc__objmtlloader_8h_source.html#l00063">GLC_ObjMtlLoader::contains()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00150">GLC_Mesh::faceCount()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00721">GLC_Mesh::finish()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00136">GLC_ObjToWorld::CurrentObjMesh::m_Index</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00140">GLC_ObjToWorld::CurrentObjMesh::m_Materials</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00133">GLC_ObjToWorld::CurrentObjMesh::m_Normals</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00131">GLC_ObjToWorld::CurrentObjMesh::m_pMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00231">m_pMtlLoader</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00132">GLC_ObjToWorld::CurrentObjMesh::m_Positions</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00225">m_pWorld</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00134">GLC_ObjToWorld::CurrentObjMesh::m_Texels</a>, <a class="el" href="glc__objmtlloader_8cpp_source.html#l00059">GLC_ObjMtlLoader::material()</a>, and <a class="el" href="glc__world_8h_source.html#l00076">GLC_World::rootOccurence()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00290">changeGroup()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00320">changeGroup()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>.</p>
 
 </div>
 </div>
@@ -332,11 +346,11 @@ Private Attributes</h2></td></tr>
 
 <p>Change current group. </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00290">290</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00320">320</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00043">GLC_FileFormatException::FileNotSupported</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00246">m_CurrentMaterialName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00131">GLC_ObjToWorld::CurrentObjMesh::m_pMesh</a>, and <a class="el" href="glc__geometry_8h_source.html#l00243">GLC_Geometry::setName()</a>.</p>
+<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00043">GLC_FileFormatException::FileNotSupported</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00246">m_CurrentMaterialName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00131">GLC_ObjToWorld::CurrentObjMesh::m_pMesh</a>, and <a class="el" href="glc__geometry_8h_source.html#l00243">GLC_Geometry::setName()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00524">setCurrentMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00554">setCurrentMaterial()</a>.</p>
 
 </div>
 </div>
@@ -363,11 +377,11 @@ Private Attributes</h2></td></tr>
 
 <p>clear objToWorld allocate memmory </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">802</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">854</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
 <p>References <a class="el" href="glc__objtoworld_8h_source.html#l00243">m_CurrentMeshMaterials</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00249">m_ListOfAttachedFileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, and <a class="el" href="glc__objtoworld_8h_source.html#l00231">m_pMtlLoader</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00290">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00372">extract2dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00581">extractVertexIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00524">setCurrentMaterial()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00735">setObjType()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00059">~GLC_ObjToWorld()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00320">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extract2dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00554">setCurrentMaterial()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00787">setObjType()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00066">~GLC_ObjToWorld()</a>.</p>
 
 </div>
 </div>
@@ -411,11 +425,11 @@ Private Attributes</h2></td></tr>
 
 <p>compute face normal </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00770">770</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00822">822</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
 <p>References <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00132">GLC_ObjToWorld::CurrentObjMesh::m_Positions</a>, <a class="el" href="glc__vector3d_8h_source.html#l00240">GLC_Vector3d::normalize()</a>, and <a class="el" href="glc__vector3d_8h_source.html#l00124">GLC_Vector3d::toVector3df()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>.</p>
 
 </div>
 </div>
@@ -436,9 +450,9 @@ Private Attributes</h2></td></tr>
 <p>Create an <a class="el" href="class_g_l_c___world.html" title="GLC_World : The Root of GLC_Lib Scene Graph.">GLC_World</a> from an input OBJ File. </p>
 <p>Test if there is meshes in the world </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">69</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">76</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__errorlog_8cpp_source.html#l00069">GLC_ErrorLog::addError()</a>, <a class="el" href="glc__structoccurence_8h_source.html#l00118">GLC_StructOccurence::childCount()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>, <a class="el" href="class_g_l_c___obj_to_world.html#aa6b63fa708408fd417207d4e5268ddfd">currentQuantum()</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00042">GLC_FileFormatException::FileNotFound</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00199">getMtlLibFileName()</a>, <a class="el" href="glc__objmtlloader_8h_source.html#l00070">GLC_ObjMtlLoader::listOfAttachedFileName()</a>, <a class="el" href="glc__objmtlloader_8cpp_source.html#l00075">GLC_ObjMtlLoader::loadMaterials()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00249">m_ListOfAttachedFileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00231">m_pMtlLoader</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00225">m_pWorld</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00820">mergeLines()</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00045">GLC_FileFormatException::NoMeshFound</a>, <a class="el" href="glc__world_8h_source.html#l00076">GLC_World::rootOccurence()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>.</p>
+<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__errorlog_8cpp_source.html#l00069">GLC_ErrorLog::addError()</a>, <a class="el" href="glc__structoccurence_8h_source.html#l00118">GLC_StructOccurence::childCount()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>, <a class="el" href="class_g_l_c___obj_to_world.html#aa6b63fa708408fd417207d4e5268ddfd">currentQuantum()</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00042">GLC_FileFormatException::FileNotFound</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00214">getMtlLibFileName()</a>, <a class="el" href="glc__objmtlloader_8h_source.html#l00070">GLC_ObjMtlLoader::listOfAttachedFileName()</a>, <a class="el" href="glc__objmtlloader_8cpp_source.html#l00075">GLC_ObjMtlLoader::loadMaterials()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00249">m_ListOfAttachedFileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00261">m_NormalIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00265">m_NormalOffset</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00231">m_pMtlLoader</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00225">m_pWorld</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00262">m_TextureIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00266">m_TextureOffset</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00260">m_VerticeIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00264">m_VerticeOffset</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00872">mergeLines()</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00045">GLC_FileFormatException::NoMeshFound</a>, <a class="el" href="glc__world_8h_source.html#l00076">GLC_World::rootOccurence()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__fileloader_8cpp_source.html#l00058">GLC_FileLoader::createWorldFromFile()</a>.</p>
 
@@ -466,7 +480,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>.</p>
 
 </div>
 </div>
@@ -494,11 +508,11 @@ Private Attributes</h2></td></tr>
 
 <p>Extract a 2D Vector from a string. </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00372">372</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">402</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, and <a class="el" href="glc__fileformatexception_8h_source.html#l00044">GLC_FileFormatException::WrongFileFormat</a>.</p>
+<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, and <a class="el" href="glc__fileformatexception_8h_source.html#l00044">GLC_FileFormatException::WrongFileFormat</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
 
 </div>
 </div>
@@ -526,11 +540,11 @@ Private Attributes</h2></td></tr>
 
 <p>Extract a 3D Vector from a string. </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00331">331</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00361">361</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
 <p>References <a class="el" href="glc__errorlog_8cpp_source.html#l00069">GLC_ErrorLog::addError()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, and <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
 
 </div>
 </div>
@@ -558,11 +572,11 @@ Private Attributes</h2></td></tr>
 
 <p>Extract a face from a string. </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">402</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">432</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__errorlog_8cpp_source.html#l00069">GLC_ErrorLog::addError()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00770">computeNormal()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00049">coordinateAndNormal</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00050">coordinateAndTextureAndNormal</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00581">extractVertexIndex()</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00043">GLC_FileFormatException::FileNotSupported</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00240">m_FaceType</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00136">GLC_ObjToWorld::CurrentObjMesh::m_Index</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00142">GLC_ObjToWorld::CurrentObjMesh::m_NextFreeIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00133">GLC_ObjToWorld::CurrentObjMesh::m_Normals</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00255">m_Normals</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00144">GLC_ObjToWorld::CurrentObjMesh::m_ObjVerticeIndexMap</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00132">GLC_ObjToWorld::CurrentObjMesh::m_Positions</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00252">m_Positions</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00134">GLC_ObjToWorld::CurrentObjMesh::m_Texels</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00258">m_Texels</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00046">notSet</a>, <a class="el" href="glc__geomtools_8cpp_source.html#l00381">glc::triangulatePolygon()</a>, <a class="el" href="glc__vector3df_8h_source.html#l00144">GLC_Vector3df::x()</a>, <a class="el" href="glc__vector3df_8h_source.html#l00149">GLC_Vector3df::y()</a>, and <a class="el" href="glc__vector3df_8h_source.html#l00154">GLC_Vector3df::z()</a>.</p>
+<p>References <a class="el" href="glc__errorlog_8cpp_source.html#l00069">GLC_ErrorLog::addError()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00822">computeNormal()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00049">coordinateAndNormal</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00050">coordinateAndTextureAndNormal</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00043">GLC_FileFormatException::FileNotSupported</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00240">m_FaceType</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00136">GLC_ObjToWorld::CurrentObjMesh::m_Index</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00142">GLC_ObjToWorld::CurrentObjMesh::m_NextFreeIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00133">GLC_ObjToWorld::CurrentObjMesh::m_Normals</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00255">m_Normals</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00144">GLC_ObjToWorld::CurrentObjMesh::m_ObjVerticeIndexMap</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00132">GLC_ObjToWorld::CurrentObjMesh::m_Positions</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00252">m_Positions</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00134">GLC_ObjToWorld::CurrentObjMesh::m_Texels</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00258">m_Texels</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00046">notSet</a>, <a class="el" href="glc__geomtools_8cpp_source.html#l00381">glc::triangulatePolygon()</a>, <a class="el" href="glc__vector3df_8h_source.html#l00144">GLC_Vector3df::x()</a>, <a class="el" href="glc__vector3df_8h_source.html#l00149">GLC_Vector3df::y()</a>, and <a class="el" href="glc__vector3df_8h_source.html#l00154">GLC_Vector3df::z()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
 
 </div>
 </div>
@@ -612,11 +626,11 @@ Private Attributes</h2></td></tr>
 
 <p>Extract a vertex from a string. </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00581">581</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">611</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00047">coordinate</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00049">coordinateAndNormal</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00048">coordinateAndTexture</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00050">coordinateAndTextureAndNormal</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00043">GLC_FileFormatException::FileNotSupported</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00240">m_FaceType</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00046">notSet</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00735">setObjType()</a>, and <a class="el" href="glc__fileformatexception_8h_source.html#l00044">GLC_FileFormatException::WrongFileFormat</a>.</p>
+<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00047">coordinate</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00049">coordinateAndNormal</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00048">coordinateAndTexture</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00050">coordinateAndTextureAndNormal</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00043">GLC_FileFormatException::FileNotSupported</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00240">m_FaceType</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00261">m_NormalIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00265">m_NormalOffset</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00262">m_TextureIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00266">m_TextureOffset</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00260">m_VerticeIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00264">m_VerticeOffset</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00046">notSet</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00787">setObjType()</a>, and <a class="el" href="glc__fileformatexception_8h_source.html#l00044">GLC_FileFormatException::WrongFileFormat</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>.</p>
 
 </div>
 </div>
@@ -644,11 +658,11 @@ Private Attributes</h2></td></tr>
 
 <p>Return the name of the mtl file. </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00199">199</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00214">214</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
 <p>References <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>.</p>
 
 </div>
 </div>
@@ -715,11 +729,11 @@ Private Attributes</h2></td></tr>
 
 <p>Merge Mutli line in one. </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00820">820</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00872">872</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
 <p>References <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>.</p>
 
 </div>
 </div>
@@ -747,11 +761,11 @@ Private Attributes</h2></td></tr>
 
 <p>Scan a line previously extracted from OBJ file. </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">231</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">246</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00290">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00372">extract2dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00331">extract3dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00240">m_FaceType</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00255">m_Normals</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00252">m_Positions</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00258">m_Texels</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00046">notSet</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00524">setCurrentMaterial()</a>.</p>
+<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00320">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extract2dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00361">extract3dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00240">m_FaceType</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00261">m_NormalIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00265">m_NormalOffset</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00255">m_Normals</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00252">m_Positions</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00269">m_ResetIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00258">m_Texels</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00262">m_TextureIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00266">m_TextureOffset</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00260">m_VerticeIndex</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00264">m_VerticeOffset</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00046">notSet</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00554">setCurrentMaterial()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>.</p>
 
 </div>
 </div>
@@ -779,11 +793,11 @@ Private Attributes</h2></td></tr>
 
 <p>Set Current material index. </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00524">524</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00554">554</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00290">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>, <a class="el" href="glc__objmtlloader_8h_source.html#l00063">GLC_ObjMtlLoader::contains()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00246">m_CurrentMaterialName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00136">GLC_ObjToWorld::CurrentObjMesh::m_Index</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00140">GLC_ObjToWorld::CurrentObjMesh::m_Materials</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00102">GLC_ObjToWorld::MatOffsetSize::m_Offset</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00138">GLC_ObjToWorld::CurrentObjMesh::m_pLastOffsetSize</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00231">m_pMtlLoader</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00103">GLC_ObjToWorld::MatOffsetSize::m_size</a>, and <a class="el" href="glc__fileformatexception_8h_source.html#l00044">GLC_FileFormatException::WrongFileFormat</a>.</p>
+<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00320">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>, <a class="el" href="glc__objmtlloader_8h_source.html#l00063">GLC_ObjMtlLoader::contains()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00246">m_CurrentMaterialName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00136">GLC_ObjToWorld::CurrentObjMesh::m_Index</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00140">GLC_ObjToWorld::CurrentObjMesh::m_Materials</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00102">GLC_ObjToWorld::MatOffsetSize::m_Offset</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00237">m_pCurrentObjMesh</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00138">GLC_ObjToWorld::CurrentObjMesh::m_pLastOffsetSize</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00231">m_pMtlLoader</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00103">GLC_ObjToWorld::MatOffsetSize::m_size</a>, and <a class="el" href="glc__fileformatexception_8h_source.html#l00044">GLC_FileFormatException::WrongFileFormat</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
 
 </div>
 </div>
@@ -811,11 +825,11 @@ Private Attributes</h2></td></tr>
 
 <p>set the OBJ File type </p>
 
-<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00735">735</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__objtoworld_8cpp_source.html#l00787">787</a> of file <a class="el" href="glc__objtoworld_8cpp_source.html">glc_objtoworld.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00047">coordinate</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00049">coordinateAndNormal</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00048">coordinateAndTexture</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00050">coordinateAndTextureAndNormal</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00043">GLC_FileFormatException::FileNotSupported</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00240">m_FaceType</a>, and <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>.</p>
+<p>References <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00047">coordinate</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00049">coordinateAndNormal</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00048">coordinateAndTexture</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00050">coordinateAndTextureAndNormal</a>, <a class="el" href="glc__fileformatexception_8h_source.html#l00043">GLC_FileFormatException::FileNotSupported</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00234">m_CurrentLineNumber</a>, <a class="el" href="glc__objtoworld_8h_source.html#l00240">m_FaceType</a>, and <a class="el" href="glc__objtoworld_8h_source.html#l00228">m_FileName</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00581">extractVertexIndex()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>.</p>
 
 </div>
 </div>
@@ -842,7 +856,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00234">234</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00290">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00372">extract2dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00331">extract3dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00581">extractVertexIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00820">mergeLines()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00524">setCurrentMaterial()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00735">setObjType()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00320">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extract2dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00361">extract3dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00872">mergeLines()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00554">setCurrentMaterial()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00787">setObjType()</a>.</p>
 
 </div>
 </div>
@@ -868,7 +882,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00246">246</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00290">changeGroup()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00524">setCurrentMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00320">changeGroup()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00554">setCurrentMaterial()</a>.</p>
 
 </div>
 </div>
@@ -894,7 +908,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00243">243</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>.</p>
 
 </div>
 </div>
@@ -920,7 +934,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00240">240</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00581">extractVertexIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00735">setObjType()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00787">setObjType()</a>.</p>
 
 </div>
 </div>
@@ -946,7 +960,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00228">228</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00290">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00372">extract2dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00331">extract3dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00581">extractVertexIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00199">getMtlLibFileName()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00524">setCurrentMaterial()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00735">setObjType()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00320">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extract2dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00361">extract3dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00214">getMtlLibFileName()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00554">setCurrentMaterial()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00787">setObjType()</a>.</p>
 
 </div>
 </div>
@@ -972,7 +986,55 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00249">249</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3a27aaca9d54b897439fccf4f0189b64"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GLC_ObjToWorld::m_NormalIndex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00261">261</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae845afd0b1659c8dbbd381989afa0da9"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GLC_ObjToWorld::m_NormalOffset</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00265">265</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
 
 </div>
 </div>
@@ -998,7 +1060,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00255">255</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
 
 </div>
 </div>
@@ -1024,7 +1086,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00237">237</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00290">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00770">computeNormal()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00524">setCurrentMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00320">changeGroup()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00822">computeNormal()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00554">setCurrentMaterial()</a>.</p>
 
 </div>
 </div>
@@ -1050,7 +1112,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00231">231</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00802">clear()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00524">setCurrentMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00854">clear()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00554">setCurrentMaterial()</a>.</p>
 
 </div>
 </div>
@@ -1076,7 +1138,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00252">252</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
 
 </div>
 </div>
@@ -1102,7 +1164,31 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00225">225</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">addCurrentObjMeshToWorld()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">CreateWorldFromObj()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">addCurrentObjMeshToWorld()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a809392a2ee1700f064bef8932b1dab85"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool GLC_ObjToWorld::m_ResetIndex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00269">269</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
 
 </div>
 </div>
@@ -1128,7 +1214,103 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00258">258</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">extractFaceIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00231">scanLigne()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">extractFaceIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6ddd6fe2f3c3458df5cbb9c13c46ff90"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GLC_ObjToWorld::m_TextureIndex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00262">262</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1277e0d5c892210601317bd831b1b047"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GLC_ObjToWorld::m_TextureOffset</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00266">266</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a34e1e4b6121bc1a38b0f52bd6bc7cd4e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GLC_ObjToWorld::m_VerticeIndex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00260">260</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a77414ad7a514d7ce761b5ec616835c7e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GLC_ObjToWorld::m_VerticeOffset</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="glc__objtoworld_8h_source.html#l00264">264</a> of file <a class="el" href="glc__objtoworld_8h_source.html">glc_objtoworld.h</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00611">extractVertexIndex()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00246">scanLigne()</a>.</p>
 
 </div>
 </div>

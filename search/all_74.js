@@ -3,7 +3,7 @@ var searchData=
   ['taillemat4x4',['TAILLEMAT4X4',['../class_g_l_c___matrix4x4.html#aeb883a3f361ebc131ef505cd15169404a644240108d0df2adf4c26162495d986c',1,'GLC_Matrix4x4']]],
   ['take',['take',['../class_g_l_c__3_d_rep.html#a3d39a18b5722448d651dfce9d6a22637',1,'GLC_3DRep::take()'],['../class_g_l_c__3_d_widget_manager_handle.html#a064b01863f76f188ef6dcf7f0ac83a4d',1,'GLC_3DWidgetManagerHandle::take()']]],
   ['takerootoccurrence',['takeRootOccurrence',['../class_g_l_c___world.html#a2b55d079107ee71a8b18eb51d096ef00',1,'GLC_World']]],
-  ['target',['target',['../class_g_l_c___camera.html#a25d20f626be27230479931f0c73a5677',1,'GLC_Camera::target()'],['../class_g_l_c___mover_controller.html#a574d11af2d0143e7e72f584fabab381fa749ead8121ec8a39a0b3a00a55d2203b',1,'GLC_MoverController::Target()']]],
+  ['target',['Target',['../class_g_l_c___mover_controller.html#a574d11af2d0143e7e72f584fabab381fa749ead8121ec8a39a0b3a00a55d2203b',1,'GLC_MoverController::Target()'],['../class_g_l_c___camera.html#a25d20f626be27230479931f0c73a5677',1,'GLC_Camera::target()']]],
   ['texcoord',['TEXCOORD',['../class_g_l_c___collada_to_world.html#a78c5c094a86f59a7a4f153bc61276a3ba67af2c9b97804392c67514fe9ead55ee',1,'GLC_ColladaToWorld']]],
   ['texelvector',['texelVector',['../class_g_l_c___mesh.html#af8622449f747c8de7038aa5cc01d9fb2',1,'GLC_Mesh::texelVector()'],['../class_g_l_c___mesh_data.html#afcc9830adf4b5ca43cd360dba7ffa055',1,'GLC_MeshData::texelVector()']]],
   ['texelvectorhandle',['texelVectorHandle',['../class_g_l_c___mesh_data.html#a2b74d1592ec40a6db41d034ec8a995f2',1,'GLC_MeshData']]],
@@ -55,6 +55,6 @@ var searchData=
   ['tsr',['TSR',['../class_g_l_c___mover_controller.html#a574d11af2d0143e7e72f584fabab381fa2e9233cf45fb6c6eca04a607b338e270',1,'GLC_MoverController']]],
   ['turningrate',['turningRate',['../class_g_l_c___fly_mover.html#adb104d10c421b5138653998ba4f74e2b',1,'GLC_FlyMover']]],
   ['turntable',['TurnTable',['../class_g_l_c___mover_controller.html#a574d11af2d0143e7e72f584fabab381fab949c13084daf119ffefd042d3307090',1,'GLC_MoverController']]],
-  ['type',['Type',['../class_g_l_c___rep.html#a7e8109c48d066fc7d4a01404a795f9ce',1,'GLC_Rep::Type()'],['../class_g_l_c__3_d_rep.html#a150ee489cfa8e446e0e7524123643ec4',1,'GLC_3DRep::type()'],['../class_g_l_c___rep.html#a2b204c7435d74f137723c7ca48227dc8',1,'GLC_Rep::type()'],['../class_g_l_c___matrix4x4.html#a56f9f83d2b202bbe56d534f6d00fc337',1,'GLC_Matrix4x4::type()'],['../class_g_l_c___light.html#a5d2df91a1b70c0e0b9f31b2f486c11a8',1,'GLC_Light::type()']]],
+  ['type',['type',['../class_g_l_c__3_d_rep.html#a150ee489cfa8e446e0e7524123643ec4',1,'GLC_3DRep::type()'],['../class_g_l_c___rep.html#a2b204c7435d74f137723c7ca48227dc8',1,'GLC_Rep::type()'],['../class_g_l_c___matrix4x4.html#a56f9f83d2b202bbe56d534f6d00fc337',1,'GLC_Matrix4x4::type()'],['../class_g_l_c___light.html#a5d2df91a1b70c0e0b9f31b2f486c11a8',1,'GLC_Light::type()'],['../class_g_l_c___rep.html#a7e8109c48d066fc7d4a01404a795f9ce',1,'GLC_Rep::Type()']]],
   ['typeiswire',['typeIsWire',['../class_g_l_c___geometry.html#a505da8adb55e18f86b6b71e6fd3e855d',1,'GLC_Geometry']]]
 ];

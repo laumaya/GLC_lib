@@ -408,6 +408,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:ad8f0854b7dfe2ccd0ffd1299787991d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___mesh.html#ad8f0854b7dfe2ccd0ffd1299787991d8">primitiveSelectedRenderLoop</a> (const <a class="el" href="class_g_l_c___render_properties.html">GLC_RenderProperties</a> &amp;, bool)</td></tr>
 <tr class="memdesc:ad8f0854b7dfe2ccd0ffd1299787991d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The primitive Selected render loop.  <a href="#ad8f0854b7dfe2ccd0ffd1299787991d8"></a><br/></td></tr>
 <tr class="separator:ad8f0854b7dfe2ccd0ffd1299787991d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a684f4f37b9e7a38d60904365ddb3fd14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___mesh.html#a684f4f37b9e7a38d60904365ddb3fd14">outlineSilhouetteRenderLoop</a> (const <a class="el" href="class_g_l_c___render_properties.html">GLC_RenderProperties</a> &amp;, bool)</td></tr>
+<tr class="memdesc:a684f4f37b9e7a38d60904365ddb3fd14"><td class="mdescLeft">&#160;</td><td class="mdescRight">The outline silhouette render loop (draws in special colors for edge detection, passes extra data encoded in color)  <a href="#a684f4f37b9e7a38d60904365ddb3fd14"></a><br/></td></tr>
+<tr class="separator:a684f4f37b9e7a38d60904365ddb3fd14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe65cecd45fc50b1aef41e3ce74028c5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___mesh.html#abe65cecd45fc50b1aef41e3ce74028c5">copyIndex</a> (int lod, <a class="el" href="class_g_l_c___mesh.html">GLC_Mesh</a> *pLodMesh, QHash&lt; GLuint, GLuint &gt; &amp;sourceToTargetIndexMap, QHash&lt; GLuint, GLuint &gt; &amp;tagetToSourceIndexMap, int &amp;maxIndex, int targetLod)</td></tr>
 <tr class="memdesc:abe65cecd45fc50b1aef41e3ce74028c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy index of this mesh from the given LOD into the given mesh.  <a href="#abe65cecd45fc50b1aef41e3ce74028c5"></a><br/></td></tr>
 <tr class="separator:abe65cecd45fc50b1aef41e3ce74028c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -665,7 +668,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00046">46</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
 </div>
 </div>
@@ -694,7 +697,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00123">123</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
 </div>
 </div>
@@ -722,11 +725,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Activate mesh VBOs and IBO of the current LOD. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l01076">1076</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l01079">1079</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>References <a class="el" href="glc__meshdata_8h_source.html#l00055">GLC_MeshData::GLC_Color</a>, <a class="el" href="glc__meshdata_8h_source.html#l00053">GLC_MeshData::GLC_Normal</a>, <a class="el" href="glc__meshdata_8h_source.html#l00054">GLC_MeshData::GLC_Texel</a>, <a class="el" href="glc__meshdata_8h_source.html#l00052">GLC_MeshData::GLC_Vertex</a>, <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__mesh_8h_source.html#l00421">m_ColorPearVertex</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__meshdata_8h_source.html#l00214">GLC_MeshData::useIBO()</a>, and <a class="el" href="glc__meshdata_8cpp_source.html#l00399">GLC_MeshData::useVBO()</a>.</p>
+<p>References <a class="el" href="glc__meshdata_8h_source.html#l00055">GLC_MeshData::GLC_Color</a>, <a class="el" href="glc__meshdata_8h_source.html#l00053">GLC_MeshData::GLC_Normal</a>, <a class="el" href="glc__meshdata_8h_source.html#l00054">GLC_MeshData::GLC_Texel</a>, <a class="el" href="glc__meshdata_8h_source.html#l00052">GLC_MeshData::GLC_Vertex</a>, <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_ColorPearVertex</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__meshdata_8h_source.html#l00214">GLC_MeshData::useIBO()</a>, and <a class="el" href="glc__meshdata_8cpp_source.html#l00399">GLC_MeshData::useVBO()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -753,11 +756,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Activate vertex Array. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l01108">1108</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l01111">1111</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>References <a class="el" href="glc__meshdata_8h_source.html#l00113">GLC_MeshData::colorVectorHandle()</a>, <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__mesh_8h_source.html#l00421">m_ColorPearVertex</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__meshdata_8h_source.html#l00105">GLC_MeshData::normalVectorHandle()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00101">GLC_MeshData::positionVectorHandle()</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00109">GLC_MeshData::texelVectorHandle()</a>.</p>
+<p>References <a class="el" href="glc__meshdata_8h_source.html#l00113">GLC_MeshData::colorVectorHandle()</a>, <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_ColorPearVertex</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__meshdata_8h_source.html#l00105">GLC_MeshData::normalVectorHandle()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00101">GLC_MeshData::positionVectorHandle()</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00109">GLC_MeshData::texelVectorHandle()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -817,7 +820,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00222">222</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01593">copyBulkData()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, <a class="el" href="glc__offtoworld_8cpp_source.html#l00065">GLC_OffToWorld::CreateWorldFromOff()</a>, <a class="el" href="glc__stltoworld_8cpp_source.html#l00062">GLC_StlToWorld::CreateWorldFromStl()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02320">GLC_3dxmlToWorld::loadVertexBuffer()</a>, and <a class="el" href="glc__stltoworld_8cpp_source.html#l00179">GLC_StlToWorld::scanFacet()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01657">copyBulkData()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, <a class="el" href="glc__offtoworld_8cpp_source.html#l00065">GLC_OffToWorld::CreateWorldFromOff()</a>, <a class="el" href="glc__stltoworld_8cpp_source.html#l00062">GLC_StlToWorld::CreateWorldFromStl()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02325">GLC_3dxmlToWorld::loadVertexBuffer()</a>, and <a class="el" href="glc__stltoworld_8cpp_source.html#l00179">GLC_StlToWorld::scanFacet()</a>.</p>
 
 </div>
 </div>
@@ -847,7 +850,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00229">229</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01593">copyBulkData()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02320">GLC_3dxmlToWorld::loadVertexBuffer()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01657">copyBulkData()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02325">GLC_3dxmlToWorld::loadVertexBuffer()</a>.</p>
 
 </div>
 </div>
@@ -891,9 +894,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00637">637</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__geometry_8h_source.html#l00089">GLC_Geometry::id()</a>, <a class="el" href="glc__geometry_8h_source.html#l00323">GLC_Geometry::m_GeometryIsValid</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00406">m_NextPrimitiveLocalId</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01096">setCurrentMaterial()</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00186">GLC_MeshData::trianglesAdded()</a>.</p>
+<p>References <a class="el" href="glc__geometry_8h_source.html#l00089">GLC_Geometry::id()</a>, <a class="el" href="glc__geometry_8h_source.html#l00323">GLC_Geometry::m_GeometryIsValid</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_NextPrimitiveLocalId</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01102">setCurrentMaterial()</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00186">GLC_MeshData::trianglesAdded()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__offtoworld_8cpp_source.html#l00065">GLC_OffToWorld::CreateWorldFromOff()</a>, <a class="el" href="glc__stltoworld_8cpp_source.html#l00062">GLC_StlToWorld::CreateWorldFromStl()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01200">GLC_3dxmlToWorld::loadFace()</a>, and <a class="el" href="glc__stltoworld_8cpp_source.html#l00179">GLC_StlToWorld::scanFacet()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__offtoworld_8cpp_source.html#l00065">GLC_OffToWorld::CreateWorldFromOff()</a>, <a class="el" href="glc__stltoworld_8cpp_source.html#l00062">GLC_StlToWorld::CreateWorldFromStl()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01200">GLC_3dxmlToWorld::loadFace()</a>, and <a class="el" href="glc__stltoworld_8cpp_source.html#l00179">GLC_StlToWorld::scanFacet()</a>.</p>
 
 </div>
 </div>
@@ -937,9 +940,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00680">680</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__geometry_8h_source.html#l00089">GLC_Geometry::id()</a>, <a class="el" href="glc__geometry_8h_source.html#l00323">GLC_Geometry::m_GeometryIsValid</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00406">m_NextPrimitiveLocalId</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01096">setCurrentMaterial()</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00186">GLC_MeshData::trianglesAdded()</a>.</p>
+<p>References <a class="el" href="glc__geometry_8h_source.html#l00089">GLC_Geometry::id()</a>, <a class="el" href="glc__geometry_8h_source.html#l00323">GLC_Geometry::m_GeometryIsValid</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_NextPrimitiveLocalId</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01102">setCurrentMaterial()</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00186">GLC_MeshData::trianglesAdded()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01200">GLC_3dxmlToWorld::loadFace()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01200">GLC_3dxmlToWorld::loadFace()</a>.</p>
 
 </div>
 </div>
@@ -983,9 +986,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00659">659</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__geometry_8h_source.html#l00089">GLC_Geometry::id()</a>, <a class="el" href="glc__geometry_8h_source.html#l00323">GLC_Geometry::m_GeometryIsValid</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00406">m_NextPrimitiveLocalId</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01096">setCurrentMaterial()</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00186">GLC_MeshData::trianglesAdded()</a>.</p>
+<p>References <a class="el" href="glc__geometry_8h_source.html#l00089">GLC_Geometry::id()</a>, <a class="el" href="glc__geometry_8h_source.html#l00323">GLC_Geometry::m_GeometryIsValid</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_NextPrimitiveLocalId</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01102">setCurrentMaterial()</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00186">GLC_MeshData::trianglesAdded()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01200">GLC_3dxmlToWorld::loadFace()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01200">GLC_3dxmlToWorld::loadFace()</a>.</p>
 
 </div>
 </div>
@@ -1015,7 +1018,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00215">215</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01593">copyBulkData()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, <a class="el" href="glc__offtoworld_8cpp_source.html#l00065">GLC_OffToWorld::CreateWorldFromOff()</a>, <a class="el" href="glc__stltoworld_8cpp_source.html#l00062">GLC_StlToWorld::CreateWorldFromStl()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02320">GLC_3dxmlToWorld::loadVertexBuffer()</a>, and <a class="el" href="glc__stltoworld_8cpp_source.html#l00179">GLC_StlToWorld::scanFacet()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01657">copyBulkData()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, <a class="el" href="glc__offtoworld_8cpp_source.html#l00065">GLC_OffToWorld::CreateWorldFromOff()</a>, <a class="el" href="glc__stltoworld_8cpp_source.html#l00062">GLC_StlToWorld::CreateWorldFromStl()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02325">GLC_3dxmlToWorld::loadVertexBuffer()</a>, and <a class="el" href="glc__stltoworld_8cpp_source.html#l00179">GLC_StlToWorld::scanFacet()</a>.</p>
 
 </div>
 </div>
@@ -1043,11 +1046,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The body selection render loop. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01409">1409</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01415">1415</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__mesh_8h_source.html#l00437">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00466">vertexArrayDrawPrimitivesOf()</a>.</p>
+<p>References <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__mesh_8h_source.html#l00440">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00469">vertexArrayDrawPrimitivesOf()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -1081,7 +1084,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00162">162</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__wiredata_8cpp_source.html#l00192">GLC_WireData::boundingBox()</a>, <a class="el" href="glc__boundingbox_8cpp_source.html#l00098">GLC_BoundingBox::combine()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00326">GLC_Geometry::m_pBoundingBox</a>, <a class="el" href="glc__geometry_8h_source.html#l00338">GLC_Geometry::m_WireData</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00101">GLC_MeshData::positionVectorHandle()</a>.</p>
+<p>References <a class="el" href="glc__wiredata_8cpp_source.html#l00192">GLC_WireData::boundingBox()</a>, <a class="el" href="glc__boundingbox_8cpp_source.html#l00098">GLC_BoundingBox::combine()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00326">GLC_Geometry::m_pBoundingBox</a>, <a class="el" href="glc__geometry_8h_source.html#l00338">GLC_Geometry::m_WireData</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00101">GLC_MeshData::positionVectorHandle()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__disc_8cpp_source.html#l00055">GLC_Disc::boundingBox()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00067">GLC_Rectangle::boundingBox()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00080">GLC_Sphere::boundingBox()</a>, <a class="el" href="glc__box_8cpp_source.html#l00060">GLC_Box::boundingBox()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00069">GLC_Cone::boundingBox()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00077">GLC_ExtrudedMesh::boundingBox()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00082">GLC_Cylinder::boundingBox()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00721">finish()</a>.</p>
 
@@ -1112,7 +1115,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00144">144</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00430">m_ChunkId</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00433">m_ChunkId</a>.</p>
 
 </div>
 </div>
@@ -1166,7 +1169,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00603">603</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__meshdata_8cpp_source.html#l00230">GLC_MeshData::clear()</a>, <a class="el" href="glc__geometry_8h_source.html#l00297">GLC_Geometry::clearWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8h_source.html#l00421">m_ColorPearVertex</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_DefaultMaterialId</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00406">m_NextPrimitiveLocalId</a>, <a class="el" href="glc__mesh_8h_source.html#l00418">m_NumberOfNormals</a>, <a class="el" href="glc__mesh_8h_source.html#l00415">m_NumberOfVertice</a>, and <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__meshdata_8cpp_source.html#l00230">GLC_MeshData::clear()</a>, <a class="el" href="glc__geometry_8h_source.html#l00297">GLC_Geometry::clearWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_ColorPearVertex</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00415">m_DefaultMaterialId</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_NextPrimitiveLocalId</a>, <a class="el" href="glc__mesh_8h_source.html#l00421">m_NumberOfNormals</a>, <a class="el" href="glc__mesh_8h_source.html#l00418">m_NumberOfVertice</a>, and <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00592">clear()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00107">GLC_Disc::setAngle()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00110">GLC_Sphere::setCenter()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00095">GLC_Disc::setDiscretion()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00098">GLC_Sphere::setDiscretion()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00100">GLC_Cone::setDiscretion()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00113">GLC_Cylinder::setDiscretion()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00126">GLC_Cylinder::setEndedCaps()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00126">GLC_ExtrudedMesh::setExtrudedLenght()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00118">GLC_ExtrudedMesh::setExtrudedVector()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00100">GLC_ExtrudedMesh::setGeometry()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00082">GLC_Cone::setLength()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00095">GLC_Cylinder::setLength()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00090">GLC_Rectangle::setLength1()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00097">GLC_Rectangle::setLength2()</a>, <a class="el" href="glc__box_8cpp_source.html#l00081">GLC_Box::setLgX()</a>, <a class="el" href="glc__box_8cpp_source.html#l00090">GLC_Box::setLgY()</a>, <a class="el" href="glc__box_8cpp_source.html#l00099">GLC_Box::setLgZ()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00110">GLC_ExtrudedMesh::setPoints()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00087">GLC_Disc::setRadius()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00089">GLC_Sphere::setRadius()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00091">GLC_Cone::setRadius()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00104">GLC_Cylinder::setRadius()</a>, and <a class="el" href="glc__rectangle_8cpp_source.html#l00080">GLC_Rectangle::setRectangle()</a>.</p>
 
@@ -1260,9 +1263,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00328">328</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01676">equivalentTrianglesIndexOfFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00231">getEquivalentTrianglesStripsFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00379">getFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00534">volume()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01740">equivalentTrianglesIndexOfFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00231">getEquivalentTrianglesStripsFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00379">getFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00534">volume()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
 
 </div>
 </div>
@@ -1322,9 +1325,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00264">264</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01641">equivalentTrianglesIndexOfstripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00231">getEquivalentTrianglesStripsFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00274">getStripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00534">volume()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01705">equivalentTrianglesIndexOfstripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00231">getEquivalentTrianglesStripsFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00274">getStripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00534">volume()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
 
 </div>
 </div>
@@ -1356,9 +1359,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00197">197</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00231">getEquivalentTrianglesStripsFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00534">volume()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00231">getEquivalentTrianglesStripsFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00534">volume()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
 
 </div>
 </div>
@@ -1402,9 +1405,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Copy Bulk data. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01593">1593</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01657">1657</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00222">addNormals()</a>, <a class="el" href="glc__mesh_8h_source.html#l00229">addTexels()</a>, <a class="el" href="glc__mesh_8h_source.html#l00215">addVertice()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__meshdata_8h_source.html#l00105">GLC_MeshData::normalVectorHandle()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00101">GLC_MeshData::positionVectorHandle()</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00109">GLC_MeshData::texelVectorHandle()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00222">addNormals()</a>, <a class="el" href="glc__mesh_8h_source.html#l00229">addTexels()</a>, <a class="el" href="glc__mesh_8h_source.html#l00215">addVertice()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__meshdata_8h_source.html#l00105">GLC_MeshData::normalVectorHandle()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00101">GLC_MeshData::positionVectorHandle()</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00109">GLC_MeshData::texelVectorHandle()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00466">createMeshFromGivenLod()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00443">createMeshOfGivenLod()</a>.</p>
 
@@ -1469,9 +1472,9 @@ Additional Inherited Members</h2></td></tr>
 <p>Copy index of this mesh from the given LOD into the given mesh. </p>
 <p>The list of LOD material ID </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01500">1500</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01564">1564</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__lod_8h_source.html#l00075">GLC_Lod::accuracy()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00637">addTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00680">addTrianglesFan()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00659">addTrianglesStrip()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00197">containsTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00379">getFansIndex()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00137">GLC_MeshData::getLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00274">getStripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__geometry_8h_source.html#l00119">GLC_Geometry::material()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00115">GLC_Geometry::materialCount()</a>.</p>
+<p>References <a class="el" href="glc__lod_8h_source.html#l00075">GLC_Lod::accuracy()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00637">addTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00680">addTrianglesFan()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00659">addTrianglesStrip()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00197">containsTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00379">getFansIndex()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00137">GLC_MeshData::getLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00274">getStripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__geometry_8h_source.html#l00119">GLC_Geometry::material()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00115">GLC_Geometry::materialCount()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00466">createMeshFromGivenLod()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00443">createMeshOfGivenLod()</a>.</p>
 
@@ -1502,9 +1505,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_g_l_c___geometry.html#a85f7c7cdfd6b9ad14f0a67a33e7b994f">GLC_Geometry</a>.</p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00815">815</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00817">817</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__meshdata_8cpp_source.html#l00271">GLC_MeshData::copyVboToClientSide()</a>, <a class="el" href="glc__geometry_8cpp_source.html#l00233">GLC_Geometry::copyVboToClientSide()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>.</p>
+<p>References <a class="el" href="glc__meshdata_8cpp_source.html#l00271">GLC_MeshData::copyVboToClientSide()</a>, <a class="el" href="glc__geometry_8cpp_source.html#l00233">GLC_Geometry::copyVboToClientSide()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00466">createMeshFromGivenLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00443">createMeshOfGivenLod()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00502">transformVertice()</a>.</p>
 
@@ -1528,7 +1531,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00466">466</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8cpp_source.html#l01593">copyBulkData()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00815">copyVboToClientSide()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00721">finish()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00032">GLC_Mesh()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00085">GLC_MeshData::lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00104">lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00093">GLC_Geometry::name()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00821">releaseVboClientSide()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00243">GLC_Geometry::setName()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l01657">copyBulkData()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00817">copyVboToClientSide()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00721">finish()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00032">GLC_Mesh()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00085">GLC_MeshData::lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00104">lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00093">GLC_Geometry::name()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00823">releaseVboClientSide()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00243">GLC_Geometry::setName()</a>.</p>
 
 </div>
 </div>
@@ -1550,7 +1553,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00443">443</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8cpp_source.html#l01593">copyBulkData()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00815">copyVboToClientSide()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00721">finish()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00032">GLC_Mesh()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00085">GLC_MeshData::lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00093">GLC_Geometry::name()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00821">releaseVboClientSide()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00243">GLC_Geometry::setName()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l01657">copyBulkData()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00817">copyVboToClientSide()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00721">finish()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00032">GLC_Mesh()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00085">GLC_MeshData::lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00093">GLC_Geometry::name()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00823">releaseVboClientSide()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00243">GLC_Geometry::setName()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__worldto3ds_8cpp_source.html#l00248">GLC_WorldTo3ds::createMeshsFrom3DRep()</a>.</p>
 
@@ -1590,7 +1593,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Return the equivalent triangles index of the fan index of given LOD and material ID. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01676">1676</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01740">1740</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
 <p>References <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00379">getFansIndex()</a>.</p>
 
@@ -1632,7 +1635,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Return the equivalent triangles index of the strips index of given LOD and material ID. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01641">1641</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01705">1705</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
 <p>References <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00274">getStripsIndex()</a>.</p>
 
@@ -1668,9 +1671,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00150">150</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00147">GLC_MeshData::trianglesCount()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, and <a class="el" href="glc__meshdata_8h_source.html#l00147">GLC_MeshData::trianglesCount()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, and <a class="el" href="glc__worldto3ds_8cpp_source.html#l00287">GLC_WorldTo3ds::create3dsMeshFromGLC_Mesh()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, and <a class="el" href="glc__worldto3ds_8cpp_source.html#l00287">GLC_WorldTo3ds::create3dsMeshFromGLC_Mesh()</a>.</p>
 
 </div>
 </div>
@@ -1697,11 +1700,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Fill VBOs and IBOs. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01150">1150</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01156">1156</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__meshdata_8cpp_source.html#l00492">GLC_MeshData::fillLodIbo()</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00448">GLC_MeshData::fillVbo()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00055">GLC_MeshData::GLC_Color</a>, <a class="el" href="glc__meshdata_8h_source.html#l00053">GLC_MeshData::GLC_Normal</a>, <a class="el" href="glc__meshdata_8h_source.html#l00054">GLC_MeshData::GLC_Texel</a>, <a class="el" href="glc__meshdata_8h_source.html#l00052">GLC_MeshData::GLC_Vertex</a>, and <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>.</p>
+<p>References <a class="el" href="glc__meshdata_8cpp_source.html#l00492">GLC_MeshData::fillLodIbo()</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00448">GLC_MeshData::fillVbo()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00055">GLC_MeshData::GLC_Color</a>, <a class="el" href="glc__meshdata_8h_source.html#l00053">GLC_MeshData::GLC_Normal</a>, <a class="el" href="glc__meshdata_8h_source.html#l00054">GLC_MeshData::GLC_Texel</a>, <a class="el" href="glc__meshdata_8h_source.html#l00052">GLC_MeshData::GLC_Vertex</a>, and <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -1722,9 +1725,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00721">721</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00162">boundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00592">clear()</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00217">GLC_MeshData::finishLod()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00085">GLC_MeshData::lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l01225">moveIndexToMeshDataLod()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00162">boundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00592">clear()</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00217">GLC_MeshData::finishLod()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00085">GLC_MeshData::lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l01231">moveIndexToMeshDataLod()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00832">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00134">GLC_ExtrudedMesh::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00466">createMeshFromGivenLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00443">createMeshOfGivenLod()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00876">GLC_3dxmlToWorld::createReferenceRep()</a>, <a class="el" href="glc__offtoworld_8cpp_source.html#l00065">GLC_OffToWorld::CreateWorldFromOff()</a>, <a class="el" href="glc__stltoworld_8cpp_source.html#l00062">GLC_StlToWorld::CreateWorldFromStl()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01870">GLC_3dxmlToWorld::loadCurrentExtRep()</a>, and <a class="el" href="glc__stltoworld_8cpp_source.html#l00179">GLC_StlToWorld::scanFacet()</a>.</p>
+<p>Referenced by <a class="el" href="glc__objtoworld_8cpp_source.html#l00884">GLC_ObjToWorld::addCurrentObjMeshToWorld()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00134">GLC_ExtrudedMesh::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00466">createMeshFromGivenLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00443">createMeshOfGivenLod()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00876">GLC_3dxmlToWorld::createReferenceRep()</a>, <a class="el" href="glc__offtoworld_8cpp_source.html#l00065">GLC_OffToWorld::CreateWorldFromOff()</a>, <a class="el" href="glc__stltoworld_8cpp_source.html#l00062">GLC_StlToWorld::CreateWorldFromStl()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01874">GLC_3dxmlToWorld::loadCurrentExtRep()</a>, and <a class="el" href="glc__stltoworld_8cpp_source.html#l00179">GLC_StlToWorld::scanFacet()</a>.</p>
 
 </div>
 </div>
@@ -1751,11 +1754,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Set primitive group offset after loading mesh from binary. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01169">1169</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01175">1175</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00837">loadFromDataStream()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00839">loadFromDataStream()</a>.</p>
 
 </div>
 </div>
@@ -1787,7 +1790,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00231">231</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00197">containsTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01676">equivalentTrianglesIndexOfFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01641">equivalentTrianglesIndexOfstripsIndex()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00197">containsTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01740">equivalentTrianglesIndexOfFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01705">equivalentTrianglesIndexOfstripsIndex()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__worldto3ds_8cpp_source.html#l00287">GLC_WorldTo3ds::create3dsMeshFromGLC_Mesh()</a>.</p>
 
@@ -1822,9 +1825,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00379">379</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00201">GLC_PrimitiveGroup::fansOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00205">GLC_PrimitiveGroup::fansOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00117">GLC_MeshData::indexVector()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, and <a class="el" href="glc__geometry_8h_source.html#l00198">GLC_Geometry::vboIsUsed()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00201">GLC_PrimitiveGroup::fansOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00205">GLC_PrimitiveGroup::fansOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00117">GLC_MeshData::indexVector()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, and <a class="el" href="glc__geometry_8h_source.html#l00198">GLC_Geometry::vboIsUsed()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01676">equivalentTrianglesIndexOfFansIndex()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01740">equivalentTrianglesIndexOfFansIndex()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
 
 </div>
 </div>
@@ -1888,9 +1891,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00274">274</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00117">GLC_MeshData::indexVector()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00162">GLC_PrimitiveGroup::stripsOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00166">GLC_PrimitiveGroup::stripsOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00198">GLC_Geometry::vboIsUsed()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00117">GLC_MeshData::indexVector()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00162">GLC_PrimitiveGroup::stripsOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00166">GLC_PrimitiveGroup::stripsOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00198">GLC_Geometry::vboIsUsed()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01641">equivalentTrianglesIndexOfstripsIndex()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01705">equivalentTrianglesIndexOfstripsIndex()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
 
 </div>
 </div>
@@ -1923,9 +1926,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00206">206</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00197">containsTriangles()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00117">GLC_MeshData::indexVector()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00115">GLC_PrimitiveGroup::trianglesIndexOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00119">GLC_PrimitiveGroup::trianglesIndexOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00100">GLC_PrimitiveGroup::trianglesIndexSize()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00198">GLC_Geometry::vboIsUsed()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00197">containsTriangles()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00117">GLC_MeshData::indexVector()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00115">GLC_PrimitiveGroup::trianglesIndexOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00119">GLC_PrimitiveGroup::trianglesIndexOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00100">GLC_PrimitiveGroup::trianglesIndexSize()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00198">GLC_Geometry::vboIsUsed()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00231">getEquivalentTrianglesStripsFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00534">volume()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00231">getEquivalentTrianglesStripsFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00534">volume()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00637">GLC_WorldTo3dxml::writeGeometryFace()</a>.</p>
 
 </div>
 </div>
@@ -1958,9 +1961,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_g_l_c___cylinder.html#a11dd2c8601aee204490ff55426e773a6">GLC_Cylinder</a>, <a class="el" href="class_g_l_c___extruded_mesh.html#ab60f8cc8461fb1e353567ca029de4612">GLC_ExtrudedMesh</a>, <a class="el" href="class_g_l_c___box.html#ad051a92414ced2de6ca70b3addc49cd6">GLC_Box</a>, <a class="el" href="class_g_l_c___cone.html#acf98621b0ee6281155c498d3e8e5f35e">GLC_Cone</a>, <a class="el" href="class_g_l_c___sphere.html#abde405f29e03f7a469d36e5fb99177b3">GLC_Sphere</a>, <a class="el" href="class_g_l_c___disc.html#a2bb278f34852de6a5c6587a3f5ba2455">GLC_Disc</a>, and <a class="el" href="class_g_l_c___rectangle.html#a53fcb566412b686ee7f85f0fa3996e35">GLC_Rectangle</a>.</p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00943">943</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00945">945</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l01076">activateVboAndIbo()</a>, <a class="el" href="glc__mesh_8h_source.html#l01108">activateVertexArray()</a>, <a class="el" href="glc__renderstatistics_8cpp_source.html#l00074">GLC_RenderStatistics::addBodies()</a>, <a class="el" href="glc__renderstatistics_8cpp_source.html#l00082">GLC_RenderStatistics::addTriangles()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00049">glc::BodySelection</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01409">bodySelectionRenderLoop()</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00367">GLC_MeshData::createVBOs()</a>, <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01150">fillVbosAndIbos()</a>, <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, <a class="el" href="glc__wiredata_8cpp_source.html#l00389">GLC_WireData::glDraw()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00137">GLC_RenderProperties::hashOfOverwritePrimitiveMaterialsIsEmpty()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00197">GLC_MeshData::initPositionSize()</a>, <a class="el" href="glc__wiredata_8h_source.html#l00089">GLC_WireData::isEmpty()</a>, <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__mesh_8h_source.html#l00421">m_ColorPearVertex</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00323">GLC_Geometry::m_GeometryIsValid</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00341">GLC_Geometry::m_WireColor</a>, <a class="el" href="glc__geometry_8h_source.html#l00338">GLC_Geometry::m_WireData</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01265">normalRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00043">glc::NormalRenderMode</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00044">glc::OverwriteMaterial</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01308">OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00048">glc::OverwritePrimitiveMaterial</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00045">glc::OverwriteTransparency</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00046">glc::OverwriteTransparencyAndMaterial</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01374">OverwriteTransparencyAndMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01338">OverwriteTransparencyRenderLoop()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00159">GLC_MeshData::positionSizeIsSet()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01448">primitiveRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00047">glc::PrimitiveSelected</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01474">primitiveSelectedRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00050">glc::PrimitiveSelection</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01428">primitiveSelectionRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00151">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00096">GLC_RenderProperties::renderingMode()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00100">GLC_RenderProperties::savedRenderingMode()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00121">GLC_RenderProperties::setOfSelectedPrimitiveIdIsEmpty()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00147">GLC_MeshData::trianglesCount()</a>, <a class="el" href="glc__geometry_8h_source.html#l00157">GLC_Geometry::typeIsWire()</a>, <a class="el" href="glc__geometry_8h_source.html#l00198">GLC_Geometry::vboIsUsed()</a>, <a class="el" href="glc__state_8cpp_source.html#l00057">GLC_State::vboSupported()</a>, and <a class="el" href="glc__renderproperties_8h_source.html#l00057">glc::WireRenderFlag</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l01079">activateVboAndIbo()</a>, <a class="el" href="glc__mesh_8h_source.html#l01111">activateVertexArray()</a>, <a class="el" href="glc__renderstatistics_8cpp_source.html#l00074">GLC_RenderStatistics::addBodies()</a>, <a class="el" href="glc__renderstatistics_8cpp_source.html#l00082">GLC_RenderStatistics::addTriangles()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00049">glc::BodySelection</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01415">bodySelectionRenderLoop()</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00367">GLC_MeshData::createVBOs()</a>, <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01156">fillVbosAndIbos()</a>, <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, <a class="el" href="glc__wiredata_8cpp_source.html#l00389">GLC_WireData::glDraw()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00138">GLC_RenderProperties::hashOfOverwritePrimitiveMaterialsIsEmpty()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00197">GLC_MeshData::initPositionSize()</a>, <a class="el" href="glc__wiredata_8h_source.html#l00089">GLC_WireData::isEmpty()</a>, <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_ColorPearVertex</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00323">GLC_Geometry::m_GeometryIsValid</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00341">GLC_Geometry::m_WireColor</a>, <a class="el" href="glc__geometry_8h_source.html#l00338">GLC_Geometry::m_WireData</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01271">normalRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00043">glc::NormalRenderMode</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00059">glc::OutlineSilhouetteRenderFlag</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01507">outlineSilhouetteRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00044">glc::OverwriteMaterial</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01314">OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00048">glc::OverwritePrimitiveMaterial</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00045">glc::OverwriteTransparency</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00046">glc::OverwriteTransparencyAndMaterial</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01380">OverwriteTransparencyAndMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01344">OverwriteTransparencyRenderLoop()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00159">GLC_MeshData::positionSizeIsSet()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01454">primitiveRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00047">glc::PrimitiveSelected</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01480">primitiveSelectedRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00050">glc::PrimitiveSelection</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01434">primitiveSelectionRenderLoop()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00152">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00097">GLC_RenderProperties::renderingMode()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00101">GLC_RenderProperties::savedRenderingMode()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00122">GLC_RenderProperties::setOfSelectedPrimitiveIdIsEmpty()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00147">GLC_MeshData::trianglesCount()</a>, <a class="el" href="glc__geometry_8h_source.html#l00157">GLC_Geometry::typeIsWire()</a>, <a class="el" href="glc__geometry_8h_source.html#l00198">GLC_Geometry::vboIsUsed()</a>, <a class="el" href="glc__state_8cpp_source.html#l00058">GLC_State::vboSupported()</a>, and <a class="el" href="glc__renderproperties_8h_source.html#l00057">glc::WireRenderFlag</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__rectangle_8cpp_source.html#l00108">GLC_Rectangle::glDraw()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00117">GLC_Disc::glDraw()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00120">GLC_Sphere::glDraw()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00116">GLC_Cone::glDraw()</a>, <a class="el" href="glc__box_8cpp_source.html#l00112">GLC_Box::glDraw()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00527">GLC_ExtrudedMesh::glDraw()</a>, and <a class="el" href="glc__cylinder_8cpp_source.html#l00141">GLC_Cylinder::glDraw()</a>.</p>
 
@@ -1992,7 +1995,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00182">182</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__disc_8cpp_source.html#l00055">GLC_Disc::boundingBox()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00067">GLC_Rectangle::boundingBox()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00080">GLC_Sphere::boundingBox()</a>, <a class="el" href="glc__box_8cpp_source.html#l00060">GLC_Box::boundingBox()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00069">GLC_Cone::boundingBox()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00077">GLC_ExtrudedMesh::boundingBox()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00082">GLC_Cylinder::boundingBox()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00134">GLC_ExtrudedMesh::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, <a class="el" href="glc__worldto3ds_8cpp_source.html#l00248">GLC_WorldTo3ds::createMeshsFrom3DRep()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00050">GLC_Cylinder::GLC_Cylinder()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00049">GLC_ExtrudedMesh::GLC_ExtrudedMesh()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00057">GLC_Sphere::GLC_Sphere()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00108">GLC_Rectangle::glDraw()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00117">GLC_Disc::glDraw()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00120">GLC_Sphere::glDraw()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00116">GLC_Cone::glDraw()</a>, <a class="el" href="glc__box_8cpp_source.html#l00112">GLC_Box::glDraw()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00527">GLC_ExtrudedMesh::glDraw()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00141">GLC_Cylinder::glDraw()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00827">setVboUsage()</a>.</p>
+<p>Referenced by <a class="el" href="glc__disc_8cpp_source.html#l00055">GLC_Disc::boundingBox()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00067">GLC_Rectangle::boundingBox()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00080">GLC_Sphere::boundingBox()</a>, <a class="el" href="glc__box_8cpp_source.html#l00060">GLC_Box::boundingBox()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00069">GLC_Cone::boundingBox()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00077">GLC_ExtrudedMesh::boundingBox()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00082">GLC_Cylinder::boundingBox()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00122">GLC_Rectangle::createMeshAndWire()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__box_8cpp_source.html#l00122">GLC_Box::createMeshAndWire()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00134">GLC_ExtrudedMesh::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, <a class="el" href="glc__worldto3ds_8cpp_source.html#l00248">GLC_WorldTo3ds::createMeshsFrom3DRep()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00050">GLC_Cylinder::GLC_Cylinder()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00049">GLC_ExtrudedMesh::GLC_ExtrudedMesh()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00057">GLC_Sphere::GLC_Sphere()</a>, <a class="el" href="glc__rectangle_8cpp_source.html#l00108">GLC_Rectangle::glDraw()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00117">GLC_Disc::glDraw()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00120">GLC_Sphere::glDraw()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00116">GLC_Cone::glDraw()</a>, <a class="el" href="glc__box_8cpp_source.html#l00112">GLC_Box::glDraw()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00527">GLC_ExtrudedMesh::glDraw()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00141">GLC_Cylinder::glDraw()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00829">setVboUsage()</a>.</p>
 
 </div>
 </div>
@@ -2029,11 +2032,11 @@ Additional Inherited Members</h2></td></tr>
 <p>Load the mesh from binary data stream. </p>
 <p>The MaterialHash contains a hash table of <a class="el" href="class_g_l_c___material.html" title="GLC_Material : OpenGL surface material properties.">GLC_Material</a> that the mesh can use The QHash&lt;GLC_uint, GLC_uint&gt; is used to map serialised material ID to the new constructed materials </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00837">837</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00839">839</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__geometry_8cpp_source.html#l00196">GLC_Geometry::addMaterial()</a>, <a class="el" href="glc__geometry_8h_source.html#l00131">GLC_Geometry::containsMaterial()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01169">finishSerialized()</a>, <a class="el" href="glc__mesh_8h_source.html#l00104">lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_ChunkId</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00418">m_NumberOfNormals</a>, <a class="el" href="glc__mesh_8h_source.html#l00415">m_NumberOfVertice</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__geometry_8h_source.html#l00338">GLC_Geometry::m_WireData</a>, <a class="el" href="glc__geometry_8h_source.html#l00243">GLC_Geometry::setName()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00265">setNextPrimitiveLocalId()</a>.</p>
+<p>References <a class="el" href="glc__geometry_8cpp_source.html#l00196">GLC_Geometry::addMaterial()</a>, <a class="el" href="glc__geometry_8h_source.html#l00131">GLC_Geometry::containsMaterial()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01175">finishSerialized()</a>, <a class="el" href="glc__mesh_8h_source.html#l00104">lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00433">m_ChunkId</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00421">m_NumberOfNormals</a>, <a class="el" href="glc__mesh_8h_source.html#l00418">m_NumberOfVertice</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__geometry_8h_source.html#l00338">GLC_Geometry::m_WireData</a>, <a class="el" href="glc__geometry_8h_source.html#l00243">GLC_Geometry::setName()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00265">setNextPrimitiveLocalId()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3drep_8cpp_source.html#l00465">operator&gt;&gt;()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3drep_8cpp_source.html#l00473">operator&gt;&gt;()</a>.</p>
 
 </div>
 </div>
@@ -2102,7 +2105,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00104">104</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00466">createMeshFromGivenLod()</a>, <a class="el" href="glc__worldto3ds_8cpp_source.html#l00248">GLC_WorldTo3ds::createMeshsFrom3DRep()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00837">loadFromDataStream()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00521">GLC_WorldTo3dxml::writeGeometry()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00466">createMeshFromGivenLod()</a>, <a class="el" href="glc__worldto3ds_8cpp_source.html#l00248">GLC_WorldTo3ds::createMeshsFrom3DRep()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00839">loadFromDataStream()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00521">GLC_WorldTo3dxml::writeGeometry()</a>.</p>
 
 </div>
 </div>
@@ -2134,7 +2137,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00346">346</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__geometry_8h_source.html#l00119">GLC_Geometry::material()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>.</p>
+<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__geometry_8h_source.html#l00119">GLC_Geometry::material()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>.</p>
 
 </div>
 </div>
@@ -2162,9 +2165,9 @@ Additional Inherited Members</h2></td></tr>
 <p>Move Indexs from the primitive groups to the mesh Data LOD and Set IBOs offsets. </p>
 <p>Move Indexs from the primitive groups to the mesh Data LOD and Set Index offsets </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01225">1225</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01231">1231</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__meshdata_8h_source.html#l00124">GLC_MeshData::indexVectorHandle()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00131">GLC_MeshData::indexVectorSize()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, and <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__meshdata_8h_source.html#l00124">GLC_MeshData::indexVectorHandle()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00131">GLC_MeshData::indexVectorSize()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, and <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00721">finish()</a>.</p>
 
@@ -2195,7 +2198,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00172">172</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00896">saveToDataStream()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00898">saveToDataStream()</a>.</p>
 
 </div>
 </div>
@@ -2233,11 +2236,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The normal display loop. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01265">1265</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01271">1271</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00073">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__geometry_8h_source.html#l00329">GLC_Geometry::m_MaterialHash</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00151">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00437">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00466">vertexArrayDrawPrimitivesOf()</a>.</p>
+<p>References <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00079">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__geometry_8h_source.html#l00329">GLC_Geometry::m_MaterialHash</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00152">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00440">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00469">vertexArrayDrawPrimitivesOf()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -2299,7 +2302,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00338">338</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
 </div>
 </div>
@@ -2358,7 +2361,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00319">319</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
 </div>
 </div>
@@ -2390,7 +2393,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00255">255</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
 </div>
 </div>
@@ -2412,9 +2415,51 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00079">79</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8h_source.html#l00421">m_ColorPearVertex</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_DefaultMaterialId</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00406">m_NextPrimitiveLocalId</a>, <a class="el" href="glc__mesh_8h_source.html#l00418">m_NumberOfNormals</a>, <a class="el" href="glc__mesh_8h_source.html#l00415">m_NumberOfVertice</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, and <a class="el" href="glc__geometry_8cpp_source.html#l00084">GLC_Geometry::operator=()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_ColorPearVertex</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00415">m_DefaultMaterialId</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_NextPrimitiveLocalId</a>, <a class="el" href="glc__mesh_8h_source.html#l00421">m_NumberOfNormals</a>, <a class="el" href="glc__mesh_8h_source.html#l00418">m_NumberOfVertice</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, and <a class="el" href="glc__geometry_8cpp_source.html#l00084">GLC_Geometry::operator=()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__disc_8cpp_source.html#l00072">GLC_Disc::operator=()</a>, and <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00086">GLC_ExtrudedMesh::operator=()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a684f4f37b9e7a38d60904365ddb3fd14"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GLC_Mesh::outlineSilhouetteRenderLoop </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_g_l_c___render_properties.html">GLC_RenderProperties</a> &amp;&#160;</td>
+          <td class="paramname"><em>renderProperties</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>vboIsUsed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The outline silhouette render loop (draws in special colors for edge detection, passes extra data encoded in color) </p>
+
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01507">1507</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+
+<p>References <a class="el" href="glc__global_8h_source.html#l00142">glc::encodeRgbId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__geometry_8h_source.html#l00089">GLC_Geometry::id()</a>, <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00093">GLC_RenderProperties::isSelected()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00152">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00440">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00469">vertexArrayDrawPrimitivesOf()</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -2452,11 +2497,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The overwrite material render loop. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01308">1308</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01314">1314</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00073">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00104">GLC_RenderProperties::overwriteMaterial()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00151">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00437">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00466">vertexArrayDrawPrimitivesOf()</a>.</p>
+<p>References <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00079">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00105">GLC_RenderProperties::overwriteMaterial()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00152">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00440">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00469">vertexArrayDrawPrimitivesOf()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -2494,11 +2539,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The overwrite transparency and material render loop. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01374">1374</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01380">1380</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00073">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00104">GLC_RenderProperties::overwriteMaterial()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00108">GLC_RenderProperties::overwriteTransparency()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00151">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00437">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00466">vertexArrayDrawPrimitivesOf()</a>.</p>
+<p>References <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00079">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00105">GLC_RenderProperties::overwriteMaterial()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00109">GLC_RenderProperties::overwriteTransparency()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00152">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00440">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00469">vertexArrayDrawPrimitivesOf()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -2536,11 +2581,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The overwrite transparency render loop. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01338">1338</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01344">1344</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00073">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__geometry_8h_source.html#l00329">GLC_Geometry::m_MaterialHash</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00108">GLC_RenderProperties::overwriteTransparency()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00151">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00437">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00466">vertexArrayDrawPrimitivesOf()</a>.</p>
+<p>References <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00079">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00335">GLC_Geometry::m_IsSelected</a>, <a class="el" href="glc__geometry_8h_source.html#l00329">GLC_Geometry::m_MaterialHash</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00109">GLC_RenderProperties::overwriteTransparency()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00152">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00440">vboDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00469">vertexArrayDrawPrimitivesOf()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -2607,11 +2652,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The primitive render loop. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01448">1448</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01454">1454</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00128">GLC_RenderProperties::hashOfOverwritePrimitiveMaterials()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00329">GLC_Geometry::m_MaterialHash</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00151">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00592">vboDrawPrimitivesGroupOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00683">vertexArrayDrawPrimitivesGroupOf()</a>.</p>
+<p>References <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00129">GLC_RenderProperties::hashOfOverwritePrimitiveMaterials()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00329">GLC_Geometry::m_MaterialHash</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00152">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00595">vboDrawPrimitivesGroupOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00686">vertexArrayDrawPrimitivesGroupOf()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -2649,11 +2694,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The primitive Selected render loop. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01474">1474</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01480">1480</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00329">GLC_Geometry::m_MaterialHash</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00151">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00777">vboDrawSelectedPrimitivesGroupOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00922">vertexArrayDrawSelectedPrimitivesGroupOf()</a>.</p>
+<p>References <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00080">GLC_PrimitiveGroup::id()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__geometry_8h_source.html#l00329">GLC_Geometry::m_MaterialHash</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00152">GLC_RenderProperties::renderingFlag()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__mesh_8h_source.html#l00780">vboDrawSelectedPrimitivesGroupOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00925">vertexArrayDrawSelectedPrimitivesGroupOf()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -2681,11 +2726,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The primitive selection render loop. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01428">1428</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01434">1434</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__mesh_8h_source.html#l00499">vboDrawInSelectionModePrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00542">vertexArrayDrawInSelectionModePrimitivesOf()</a>.</p>
+<p>References <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__mesh_8h_source.html#l00502">vboDrawInSelectionModePrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00545">vertexArrayDrawInSelectionModePrimitivesOf()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -2715,9 +2760,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_g_l_c___geometry.html#a5bea1aedcfa7b03b05b7b345d3bfb70b">GLC_Geometry</a>.</p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00821">821</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00823">823</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00290">GLC_MeshData::releaseVboClientSide()</a>, and <a class="el" href="glc__geometry_8cpp_source.html#l00238">GLC_Geometry::releaseVboClientSide()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00290">GLC_MeshData::releaseVboClientSide()</a>, and <a class="el" href="glc__geometry_8cpp_source.html#l00238">GLC_Geometry::releaseVboClientSide()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00466">createMeshFromGivenLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00443">createMeshOfGivenLod()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00502">transformVertice()</a>.</p>
 
@@ -2749,9 +2794,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_g_l_c___geometry.html#a16015c31919c47c6cdcfb4aa79de9b70">GLC_Geometry</a>.</p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00755">755</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00757">757</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__geometry_8cpp_source.html#l00196">GLC_Geometry::addMaterial()</a>, <a class="el" href="glc__geometry_8h_source.html#l00105">GLC_Geometry::firstMaterial()</a>, <a class="el" href="glc__geometry_8h_source.html#l00101">GLC_Geometry::hasMaterial()</a>, <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00769">replaceMaterial()</a>.</p>
+<p>References <a class="el" href="glc__geometry_8cpp_source.html#l00196">GLC_Geometry::addMaterial()</a>, <a class="el" href="glc__geometry_8h_source.html#l00105">GLC_Geometry::firstMaterial()</a>, <a class="el" href="glc__geometry_8h_source.html#l00101">GLC_Geometry::hasMaterial()</a>, <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00771">replaceMaterial()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__cuttingplane_8cpp_source.html#l00281">GLC_CuttingPlane::create3DviewInstance()</a>, and <a class="el" href="glc__factory_8cpp_source.html#l00196">GLC_Factory::createCuttingPlane()</a>.</p>
 
@@ -2783,11 +2828,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Replace the material specified by id with another one. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00769">769</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00771">771</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__geometry_8cpp_source.html#l00196">GLC_Geometry::addMaterial()</a>, <a class="el" href="glc__geometry_8h_source.html#l00131">GLC_Geometry::containsMaterial()</a>, <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__geometry_8h_source.html#l00329">GLC_Geometry::m_MaterialHash</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__geometry_8cpp_source.html#l00350">GLC_Geometry::removeMaterial()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00216">GLC_PrimitiveGroup::setId()</a>.</p>
+<p>References <a class="el" href="glc__geometry_8cpp_source.html#l00196">GLC_Geometry::addMaterial()</a>, <a class="el" href="glc__geometry_8h_source.html#l00131">GLC_Geometry::containsMaterial()</a>, <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__geometry_8h_source.html#l00329">GLC_Geometry::m_MaterialHash</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__geometry_8cpp_source.html#l00350">GLC_Geometry::removeMaterial()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00216">GLC_PrimitiveGroup::setId()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00755">replaceMasterMaterial()</a>, and <a class="el" href="glc__3drep_8cpp_source.html#l00304">GLC_3DRep::replaceMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00757">replaceMasterMaterial()</a>, and <a class="el" href="glc__3drep_8cpp_source.html#l00312">GLC_3DRep::replaceMaterial()</a>.</p>
 
 </div>
 </div>
@@ -2818,7 +2863,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00701">701</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__meshdata_8cpp_source.html#l00448">GLC_MeshData::fillVbo()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00053">GLC_MeshData::GLC_Normal</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00144">GLC_MeshData::normalVector()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00105">GLC_MeshData::normalVectorHandle()</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00399">GLC_MeshData::useVBO()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00198">GLC_Geometry::vboIsUsed()</a>.</p>
+<p>References <a class="el" href="glc__meshdata_8cpp_source.html#l00448">GLC_MeshData::fillVbo()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00053">GLC_MeshData::GLC_Normal</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00144">GLC_MeshData::normalVector()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00105">GLC_MeshData::normalVectorHandle()</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00399">GLC_MeshData::useVBO()</a>, and <a class="el" href="glc__geometry_8h_source.html#l00198">GLC_Geometry::vboIsUsed()</a>.</p>
 
 </div>
 </div>
@@ -2838,11 +2883,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Save the mesh to binary data stream. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00896">896</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00898">898</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00430">m_ChunkId</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00418">m_NumberOfNormals</a>, <a class="el" href="glc__mesh_8h_source.html#l00415">m_NumberOfVertice</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__geometry_8h_source.html#l00338">GLC_Geometry::m_WireData</a>, <a class="el" href="glc__geometry_8h_source.html#l00093">GLC_Geometry::name()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00172">nextPrimitiveLocalId()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00433">m_ChunkId</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__mesh_8h_source.html#l00421">m_NumberOfNormals</a>, <a class="el" href="glc__mesh_8h_source.html#l00418">m_NumberOfVertice</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__geometry_8h_source.html#l00338">GLC_Geometry::m_WireData</a>, <a class="el" href="glc__geometry_8h_source.html#l00093">GLC_Geometry::name()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00172">nextPrimitiveLocalId()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3drep_8cpp_source.html#l00430">operator&lt;&lt;()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3drep_8cpp_source.html#l00438">operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -2904,7 +2949,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00741">741</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__meshdata_8h_source.html#l00085">GLC_MeshData::lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, and <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>.</p>
+<p>References <a class="el" href="glc__meshdata_8h_source.html#l00085">GLC_MeshData::lodCount()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, and <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>.</p>
 
 </div>
 </div>
@@ -2948,9 +2993,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Set the current material. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01096">1096</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l01102">1102</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__geometry_8cpp_source.html#l00196">GLC_Geometry::addMaterial()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00170">GLC_MeshData::appendLod()</a>, <a class="el" href="glc__geometry_8h_source.html#l00131">GLC_Geometry::containsMaterial()</a>, <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_DefaultMaterialId</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, and <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>.</p>
+<p>References <a class="el" href="glc__geometry_8cpp_source.html#l00196">GLC_Geometry::addMaterial()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00170">GLC_MeshData::appendLod()</a>, <a class="el" href="glc__geometry_8h_source.html#l00131">GLC_Geometry::containsMaterial()</a>, <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__mesh_8h_source.html#l00415">m_DefaultMaterialId</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, and <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00637">addTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00680">addTrianglesFan()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00659">addTrianglesStrip()</a>.</p>
 
@@ -2984,7 +3029,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>References <a class="el" href="glc__geometry_8h_source.html#l00089">GLC_Geometry::id()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00837">loadFromDataStream()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00839">loadFromDataStream()</a>.</p>
 
 </div>
 </div>
@@ -3005,7 +3050,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00423">423</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__mesh_8h_source.html#l00409">m_PrimitiveGroups</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>.</p>
+<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__mesh_8h_source.html#l00412">m_PrimitiveGroups</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>.</p>
 
 </div>
 </div>
@@ -3035,9 +3080,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_g_l_c___geometry.html#a23e7976fd3b4a098cb0886bd72eaad33">GLC_Geometry</a>.</p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00827">827</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00829">829</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00182">isEmpty()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00312">GLC_MeshData::setVboUsage()</a>, and <a class="el" href="glc__geometry_8cpp_source.html#l00243">GLC_Geometry::setVboUsage()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00182">isEmpty()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__meshdata_8cpp_source.html#l00312">GLC_MeshData::setVboUsage()</a>, and <a class="el" href="glc__geometry_8cpp_source.html#l00243">GLC_Geometry::setVboUsage()</a>.</p>
 
 </div>
 </div>
@@ -3116,9 +3161,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00502">502</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00815">copyVboToClientSide()</a>, <a class="el" href="glc__matrix4x4_8h_source.html#l00054">GLC_Matrix4x4::Identity</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00326">GLC_Geometry::m_pBoundingBox</a>, <a class="el" href="glc__meshdata_8h_source.html#l00105">GLC_MeshData::normalVectorHandle()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00101">GLC_MeshData::positionVectorHandle()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00821">releaseVboClientSide()</a>, <a class="el" href="glc__matrix4x4_8h_source.html#l00424">GLC_Matrix4x4::rotationMatrix()</a>, and <a class="el" href="glc__matrix4x4_8h_source.html#l00174">GLC_Matrix4x4::type()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00817">copyVboToClientSide()</a>, <a class="el" href="glc__matrix4x4_8h_source.html#l00054">GLC_Matrix4x4::Identity</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00326">GLC_Geometry::m_pBoundingBox</a>, <a class="el" href="glc__meshdata_8h_source.html#l00105">GLC_MeshData::normalVectorHandle()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00101">GLC_MeshData::positionVectorHandle()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00823">releaseVboClientSide()</a>, <a class="el" href="glc__matrix4x4_8h_source.html#l00424">GLC_Matrix4x4::rotationMatrix()</a>, and <a class="el" href="glc__matrix4x4_8h_source.html#l00174">GLC_Matrix4x4::type()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__worldto3ds_8cpp_source.html#l00248">GLC_WorldTo3ds::createMeshsFrom3DRep()</a>, and <a class="el" href="glc__3drep_8cpp_source.html#l00364">GLC_3DRep::transformSubGeometries()</a>.</p>
+<p>Referenced by <a class="el" href="glc__worldto3ds_8cpp_source.html#l00248">GLC_WorldTo3ds::createMeshsFrom3DRep()</a>, and <a class="el" href="glc__3drep_8cpp_source.html#l00372">GLC_3DRep::transformSubGeometries()</a>.</p>
 
 </div>
 </div>
@@ -3146,11 +3191,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use VBO to Draw primitives in selection mode from the specified <a class="el" href="class_g_l_c___primitive_group.html" title="GLC_PrimitiveGroup : Triangles, Strip and fan index.">GLC_PrimitiveGroup</a>. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00499">499</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00502">502</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
 <p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00174">GLC_PrimitiveGroup::containsFanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00135">GLC_PrimitiveGroup::containsStripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00088">GLC_PrimitiveGroup::containsTrianglesGroupId()</a>, <a class="el" href="glc__global_8h_source.html#l00142">glc::encodeRgbId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00201">GLC_PrimitiveGroup::fansOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00162">GLC_PrimitiveGroup::stripsOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00123">GLC_PrimitiveGroup::trianglesGroupOffset()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00104">GLC_PrimitiveGroup::trianglesIndexSizes()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01428">primitiveSelectionRenderLoop()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01434">primitiveSelectionRenderLoop()</a>.</p>
 
 </div>
 </div>
@@ -3206,11 +3251,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use VBO to Draw primitives with specific materials from the specified <a class="el" href="class_g_l_c___primitive_group.html" title="GLC_PrimitiveGroup : Triangles, Strip and fan index.">GLC_PrimitiveGroup</a>. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00592">592</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00595">595</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
 <p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00170">GLC_PrimitiveGroup::containsFan()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00174">GLC_PrimitiveGroup::containsFanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00131">GLC_PrimitiveGroup::containsStrip()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00135">GLC_PrimitiveGroup::containsStripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00084">GLC_PrimitiveGroup::containsTriangles()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00088">GLC_PrimitiveGroup::containsTrianglesGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00201">GLC_PrimitiveGroup::fansOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00162">GLC_PrimitiveGroup::stripsOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00123">GLC_PrimitiveGroup::trianglesGroupOffset()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00104">GLC_PrimitiveGroup::trianglesIndexSizes()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01448">primitiveRenderLoop()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01454">primitiveRenderLoop()</a>.</p>
 
 </div>
 </div>
@@ -3238,11 +3283,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use VBO to Draw primitives from the specified <a class="el" href="class_g_l_c___primitive_group.html" title="GLC_PrimitiveGroup : Triangles, Strip and fan index.">GLC_PrimitiveGroup</a>. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00437">437</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00440">440</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
 <p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00170">GLC_PrimitiveGroup::containsFan()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00131">GLC_PrimitiveGroup::containsStrip()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00084">GLC_PrimitiveGroup::containsTriangles()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00201">GLC_PrimitiveGroup::fansOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00162">GLC_PrimitiveGroup::stripsOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00115">GLC_PrimitiveGroup::trianglesIndexOffset()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00100">GLC_PrimitiveGroup::trianglesIndexSize()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01409">bodySelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01265">normalRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01308">OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01374">OverwriteTransparencyAndMaterialRenderLoop()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l01338">OverwriteTransparencyRenderLoop()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01415">bodySelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01271">normalRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01507">outlineSilhouetteRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01314">OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01380">OverwriteTransparencyAndMaterialRenderLoop()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l01344">OverwriteTransparencyRenderLoop()</a>.</p>
 
 </div>
 </div>
@@ -3298,11 +3343,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use VBO to Draw primitives with selection materials from the specified <a class="el" href="class_g_l_c___primitive_group.html" title="GLC_PrimitiveGroup : Triangles, Strip and fan index.">GLC_PrimitiveGroup</a>. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00777">777</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00780">780</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00170">GLC_PrimitiveGroup::containsFan()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00174">GLC_PrimitiveGroup::containsFanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00131">GLC_PrimitiveGroup::containsStrip()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00135">GLC_PrimitiveGroup::containsStripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00084">GLC_PrimitiveGroup::containsTriangles()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00088">GLC_PrimitiveGroup::containsTrianglesGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00201">GLC_PrimitiveGroup::fansOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00073">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00128">GLC_RenderProperties::hashOfOverwritePrimitiveMaterials()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00137">GLC_RenderProperties::hashOfOverwritePrimitiveMaterialsIsEmpty()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00112">GLC_RenderProperties::setOfSelectedPrimitivesId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00162">GLC_PrimitiveGroup::stripsOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00123">GLC_PrimitiveGroup::trianglesGroupOffset()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00104">GLC_PrimitiveGroup::trianglesIndexSizes()</a>.</p>
+<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00170">GLC_PrimitiveGroup::containsFan()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00174">GLC_PrimitiveGroup::containsFanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00131">GLC_PrimitiveGroup::containsStrip()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00135">GLC_PrimitiveGroup::containsStripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00084">GLC_PrimitiveGroup::containsTriangles()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00088">GLC_PrimitiveGroup::containsTrianglesGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00201">GLC_PrimitiveGroup::fansOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00079">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00129">GLC_RenderProperties::hashOfOverwritePrimitiveMaterials()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00138">GLC_RenderProperties::hashOfOverwritePrimitiveMaterialsIsEmpty()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00113">GLC_RenderProperties::setOfSelectedPrimitivesId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00162">GLC_PrimitiveGroup::stripsOffset()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00123">GLC_PrimitiveGroup::trianglesGroupOffset()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00104">GLC_PrimitiveGroup::trianglesIndexSizes()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01474">primitiveSelectedRenderLoop()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01480">primitiveSelectedRenderLoop()</a>.</p>
 
 </div>
 </div>
@@ -3330,11 +3375,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use Vertex Array to Draw primitives in selection mode from the specified <a class="el" href="class_g_l_c___primitive_group.html" title="GLC_PrimitiveGroup : Triangles, Strip and fan index.">GLC_PrimitiveGroup</a>. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00542">542</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00545">545</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00174">GLC_PrimitiveGroup::containsFanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00135">GLC_PrimitiveGroup::containsStripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00088">GLC_PrimitiveGroup::containsTrianglesGroupId()</a>, <a class="el" href="glc__global_8h_source.html#l00142">glc::encodeRgbId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00205">GLC_PrimitiveGroup::fansOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00124">GLC_MeshData::indexVectorHandle()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00166">GLC_PrimitiveGroup::stripsOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00127">GLC_PrimitiveGroup::trianglesGroupOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00119">GLC_PrimitiveGroup::trianglesIndexOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00100">GLC_PrimitiveGroup::trianglesIndexSize()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00104">GLC_PrimitiveGroup::trianglesIndexSizes()</a>.</p>
+<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00174">GLC_PrimitiveGroup::containsFanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00135">GLC_PrimitiveGroup::containsStripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00088">GLC_PrimitiveGroup::containsTrianglesGroupId()</a>, <a class="el" href="glc__global_8h_source.html#l00142">glc::encodeRgbId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00205">GLC_PrimitiveGroup::fansOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00124">GLC_MeshData::indexVectorHandle()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00166">GLC_PrimitiveGroup::stripsOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00127">GLC_PrimitiveGroup::trianglesGroupOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00119">GLC_PrimitiveGroup::trianglesIndexOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00100">GLC_PrimitiveGroup::trianglesIndexSize()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00104">GLC_PrimitiveGroup::trianglesIndexSizes()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01428">primitiveSelectionRenderLoop()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01434">primitiveSelectionRenderLoop()</a>.</p>
 
 </div>
 </div>
@@ -3390,11 +3435,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use Vertex Array to Draw primitives with specific materials from the specified <a class="el" href="class_g_l_c___primitive_group.html" title="GLC_PrimitiveGroup : Triangles, Strip and fan index.">GLC_PrimitiveGroup</a>. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00683">683</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00686">686</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00170">GLC_PrimitiveGroup::containsFan()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00174">GLC_PrimitiveGroup::containsFanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00131">GLC_PrimitiveGroup::containsStrip()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00135">GLC_PrimitiveGroup::containsStripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00084">GLC_PrimitiveGroup::containsTriangles()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00088">GLC_PrimitiveGroup::containsTrianglesGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00205">GLC_PrimitiveGroup::fansOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00124">GLC_MeshData::indexVectorHandle()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00166">GLC_PrimitiveGroup::stripsOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00127">GLC_PrimitiveGroup::trianglesGroupOffseti()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00104">GLC_PrimitiveGroup::trianglesIndexSizes()</a>.</p>
+<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00170">GLC_PrimitiveGroup::containsFan()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00174">GLC_PrimitiveGroup::containsFanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00131">GLC_PrimitiveGroup::containsStrip()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00135">GLC_PrimitiveGroup::containsStripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00084">GLC_PrimitiveGroup::containsTriangles()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00088">GLC_PrimitiveGroup::containsTrianglesGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00205">GLC_PrimitiveGroup::fansOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00124">GLC_MeshData::indexVectorHandle()</a>, <a class="el" href="glc__material_8h_source.html#l00124">GLC_Material::isTransparent()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00166">GLC_PrimitiveGroup::stripsOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00127">GLC_PrimitiveGroup::trianglesGroupOffseti()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00104">GLC_PrimitiveGroup::trianglesIndexSizes()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01448">primitiveRenderLoop()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01454">primitiveRenderLoop()</a>.</p>
 
 </div>
 </div>
@@ -3422,11 +3467,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use Vertex Array to Draw primitives from the specified <a class="el" href="class_g_l_c___primitive_group.html" title="GLC_PrimitiveGroup : Triangles, Strip and fan index.">GLC_PrimitiveGroup</a>. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00466">466</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00469">469</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00170">GLC_PrimitiveGroup::containsFan()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00131">GLC_PrimitiveGroup::containsStrip()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00084">GLC_PrimitiveGroup::containsTriangles()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00205">GLC_PrimitiveGroup::fansOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00124">GLC_MeshData::indexVectorHandle()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00166">GLC_PrimitiveGroup::stripsOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00119">GLC_PrimitiveGroup::trianglesIndexOffseti()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00100">GLC_PrimitiveGroup::trianglesIndexSize()</a>.</p>
+<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00170">GLC_PrimitiveGroup::containsFan()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00131">GLC_PrimitiveGroup::containsStrip()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00084">GLC_PrimitiveGroup::containsTriangles()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00205">GLC_PrimitiveGroup::fansOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00124">GLC_MeshData::indexVectorHandle()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00166">GLC_PrimitiveGroup::stripsOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00119">GLC_PrimitiveGroup::trianglesIndexOffseti()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00100">GLC_PrimitiveGroup::trianglesIndexSize()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01409">bodySelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01265">normalRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01308">OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01374">OverwriteTransparencyAndMaterialRenderLoop()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l01338">OverwriteTransparencyRenderLoop()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01415">bodySelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01271">normalRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01507">outlineSilhouetteRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01314">OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01380">OverwriteTransparencyAndMaterialRenderLoop()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l01344">OverwriteTransparencyRenderLoop()</a>.</p>
 
 </div>
 </div>
@@ -3482,11 +3527,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use Vertex Array to Draw primitives with selection materials from the specified <a class="el" href="class_g_l_c___primitive_group.html" title="GLC_PrimitiveGroup : Triangles, Strip and fan index.">GLC_PrimitiveGroup</a>. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00922">922</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00925">925</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00170">GLC_PrimitiveGroup::containsFan()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00174">GLC_PrimitiveGroup::containsFanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00131">GLC_PrimitiveGroup::containsStrip()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00135">GLC_PrimitiveGroup::containsStripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00084">GLC_PrimitiveGroup::containsTriangles()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00088">GLC_PrimitiveGroup::containsTrianglesGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00205">GLC_PrimitiveGroup::fansOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00073">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00128">GLC_RenderProperties::hashOfOverwritePrimitiveMaterials()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00137">GLC_RenderProperties::hashOfOverwritePrimitiveMaterialsIsEmpty()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00124">GLC_MeshData::indexVectorHandle()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00112">GLC_RenderProperties::setOfSelectedPrimitivesId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00166">GLC_PrimitiveGroup::stripsOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00127">GLC_PrimitiveGroup::trianglesGroupOffseti()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00104">GLC_PrimitiveGroup::trianglesIndexSizes()</a>.</p>
+<p>References <a class="el" href="glc__primitivegroup_8h_source.html#l00170">GLC_PrimitiveGroup::containsFan()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00174">GLC_PrimitiveGroup::containsFanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00131">GLC_PrimitiveGroup::containsStrip()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00135">GLC_PrimitiveGroup::containsStripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00084">GLC_PrimitiveGroup::containsTriangles()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00088">GLC_PrimitiveGroup::containsTrianglesGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00178">GLC_PrimitiveGroup::fanGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00205">GLC_PrimitiveGroup::fansOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00197">GLC_PrimitiveGroup::fansSizes()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00079">GLC_SelectionMaterial::glExecute()</a>, <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00129">GLC_RenderProperties::hashOfOverwritePrimitiveMaterials()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00138">GLC_RenderProperties::hashOfOverwritePrimitiveMaterialsIsEmpty()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00124">GLC_MeshData::indexVectorHandle()</a>, <a class="el" href="glc__geometry_8h_source.html#l00145">GLC_Geometry::isTransparent()</a>, <a class="el" href="glc__mesh_8h_source.html#l00430">m_CurrentLod</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00113">GLC_RenderProperties::setOfSelectedPrimitivesId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00139">GLC_PrimitiveGroup::stripGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00166">GLC_PrimitiveGroup::stripsOffseti()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00158">GLC_PrimitiveGroup::stripsSizes()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00092">GLC_PrimitiveGroup::triangleGroupId()</a>, <a class="el" href="glc__primitivegroup_8h_source.html#l00127">GLC_PrimitiveGroup::trianglesGroupOffseti()</a>, and <a class="el" href="glc__primitivegroup_8h_source.html#l00104">GLC_PrimitiveGroup::trianglesIndexSizes()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01474">primitiveSelectedRenderLoop()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l01480">primitiveSelectedRenderLoop()</a>.</p>
 
 </div>
 </div>
@@ -3517,7 +3562,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00156">156</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8h_source.html#l00415">m_NumberOfVertice</a>.</p>
+<p>References <a class="el" href="glc__mesh_8h_source.html#l00418">m_NumberOfVertice</a>.</p>
 
 </div>
 </div>
@@ -3548,7 +3593,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__mesh_8cpp_source.html#l00534">534</a> of file <a class="el" href="glc__mesh_8cpp_source.html">glc_mesh.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00197">containsTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01676">equivalentTrianglesIndexOfFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01641">equivalentTrianglesIndexOfstripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00143">GLC_MeshData::isEmpty()</a>, <a class="el" href="glc__mesh_8h_source.html#l00424">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00123">GLC_Geometry::materialSet()</a>, and <a class="el" href="glc__meshdata_8cpp_source.html#l00117">GLC_MeshData::positionVector()</a>.</p>
+<p>References <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00197">containsTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01740">equivalentTrianglesIndexOfFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01705">equivalentTrianglesIndexOfstripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>, <a class="el" href="glc__meshdata_8h_source.html#l00143">GLC_MeshData::isEmpty()</a>, <a class="el" href="glc__mesh_8h_source.html#l00427">m_MeshData</a>, <a class="el" href="glc__geometry_8h_source.html#l00123">GLC_Geometry::materialSet()</a>, and <a class="el" href="glc__meshdata_8cpp_source.html#l00117">GLC_MeshData::positionVector()</a>.</p>
 
 </div>
 </div>
@@ -3673,9 +3718,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Class chunk id. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00430">430</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00433">433</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00144">chunckID()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00837">loadFromDataStream()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00896">saveToDataStream()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00144">chunckID()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00839">loadFromDataStream()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00898">saveToDataStream()</a>.</p>
 
 </div>
 </div>
@@ -3699,9 +3744,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Color pear vertex. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00421">421</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00424">424</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8h_source.html#l01076">activateVboAndIbo()</a>, <a class="el" href="glc__mesh_8h_source.html#l01108">activateVertexArray()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8h_source.html#l01079">activateVboAndIbo()</a>, <a class="el" href="glc__mesh_8h_source.html#l01111">activateVertexArray()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>.</p>
 
 </div>
 </div>
@@ -3725,9 +3770,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The current LOD index. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00427">427</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00430">430</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8h_source.html#l01076">activateVboAndIbo()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01409">bodySelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01265">normalRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01308">OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01374">OverwriteTransparencyAndMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01338">OverwriteTransparencyRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01448">primitiveRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01474">primitiveSelectedRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01428">primitiveSelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00741">setCurrentLod()</a>, <a class="el" href="glc__mesh_8h_source.html#l00542">vertexArrayDrawInSelectionModePrimitivesOf()</a>, <a class="el" href="glc__mesh_8h_source.html#l00683">vertexArrayDrawPrimitivesGroupOf()</a>, <a class="el" href="glc__mesh_8h_source.html#l00466">vertexArrayDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00922">vertexArrayDrawSelectedPrimitivesGroupOf()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8h_source.html#l01079">activateVboAndIbo()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01415">bodySelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01271">normalRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01507">outlineSilhouetteRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01314">OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01380">OverwriteTransparencyAndMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01344">OverwriteTransparencyRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01454">primitiveRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01480">primitiveSelectedRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01434">primitiveSelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00741">setCurrentLod()</a>, <a class="el" href="glc__mesh_8h_source.html#l00545">vertexArrayDrawInSelectionModePrimitivesOf()</a>, <a class="el" href="glc__mesh_8h_source.html#l00686">vertexArrayDrawPrimitivesGroupOf()</a>, <a class="el" href="glc__mesh_8h_source.html#l00469">vertexArrayDrawPrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00925">vertexArrayDrawSelectedPrimitivesGroupOf()</a>.</p>
 
 </div>
 </div>
@@ -3751,9 +3796,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The default material Id. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00412">412</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00415">415</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l01096">setCurrentMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l01102">setCurrentMaterial()</a>.</p>
 
 </div>
 </div>
@@ -3777,9 +3822,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Data of the mesh (Bulk Data + LOD with indexs) </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00424">424</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00427">427</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8h_source.html#l01076">activateVboAndIbo()</a>, <a class="el" href="glc__mesh_8h_source.html#l01108">activateVertexArray()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00637">addTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00680">addTrianglesFan()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00659">addTrianglesStrip()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00162">boundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01593">copyBulkData()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00815">copyVboToClientSide()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00466">createMeshFromGivenLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00443">createMeshOfGivenLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00150">faceCount()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01150">fillVbosAndIbos()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00721">finish()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00379">getFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00274">getStripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00943">glDraw()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00837">loadFromDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01225">moveIndexToMeshDataLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00821">releaseVboClientSide()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00701">reverseNormals()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00896">saveToDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00741">setCurrentLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01096">setCurrentMaterial()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00827">setVboUsage()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00502">transformVertice()</a>, <a class="el" href="glc__mesh_8h_source.html#l00542">vertexArrayDrawInSelectionModePrimitivesOf()</a>, <a class="el" href="glc__mesh_8h_source.html#l00683">vertexArrayDrawPrimitivesGroupOf()</a>, <a class="el" href="glc__mesh_8h_source.html#l00466">vertexArrayDrawPrimitivesOf()</a>, <a class="el" href="glc__mesh_8h_source.html#l00922">vertexArrayDrawSelectedPrimitivesGroupOf()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00534">volume()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8h_source.html#l01079">activateVboAndIbo()</a>, <a class="el" href="glc__mesh_8h_source.html#l01111">activateVertexArray()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00637">addTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00680">addTrianglesFan()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00659">addTrianglesStrip()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00162">boundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01657">copyBulkData()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00817">copyVboToClientSide()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00466">createMeshFromGivenLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00443">createMeshOfGivenLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00150">faceCount()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01156">fillVbosAndIbos()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00721">finish()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00379">getFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00274">getStripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00945">glDraw()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00839">loadFromDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01231">moveIndexToMeshDataLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00823">releaseVboClientSide()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00701">reverseNormals()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00898">saveToDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00741">setCurrentLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01102">setCurrentMaterial()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00829">setVboUsage()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00502">transformVertice()</a>, <a class="el" href="glc__mesh_8h_source.html#l00545">vertexArrayDrawInSelectionModePrimitivesOf()</a>, <a class="el" href="glc__mesh_8h_source.html#l00686">vertexArrayDrawPrimitivesGroupOf()</a>, <a class="el" href="glc__mesh_8h_source.html#l00469">vertexArrayDrawPrimitivesOf()</a>, <a class="el" href="glc__mesh_8h_source.html#l00925">vertexArrayDrawSelectedPrimitivesGroupOf()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00534">volume()</a>.</p>
 
 </div>
 </div>
@@ -3803,7 +3848,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The next primitive local id. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00406">406</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00409">409</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00637">addTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00680">addTrianglesFan()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00659">addTrianglesStrip()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>.</p>
 
@@ -3829,9 +3874,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Mesh number of normals. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00418">418</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00421">421</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00837">loadFromDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00896">saveToDataStream()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00839">loadFromDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00898">saveToDataStream()</a>.</p>
 
 </div>
 </div>
@@ -3855,9 +3900,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Mesh number of vertice. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00415">415</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00418">418</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00837">loadFromDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00896">saveToDataStream()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00156">VertexCount()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00839">loadFromDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00898">saveToDataStream()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00156">VertexCount()</a>.</p>
 
 </div>
 </div>
@@ -3881,9 +3926,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The hash table of Hash table of primitive group. </p>
 
-<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00409">409</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__mesh_8h_source.html#l00412">412</a> of file <a class="el" href="glc__mesh_8h_source.html">glc_mesh.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00637">addTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00680">addTrianglesFan()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00659">addTrianglesStrip()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01409">bodySelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00197">containsTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01500">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01169">finishSerialized()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00379">getFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00274">getStripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00046">GLC_Mesh()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00837">loadFromDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00346">MaterialOfPrimitiveId()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01225">moveIndexToMeshDataLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01265">normalRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00338">numberOfFans()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00319">numberOfStrips()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00255">numberOfTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01308">OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01374">OverwriteTransparencyAndMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01338">OverwriteTransparencyRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01448">primitiveRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01474">primitiveSelectedRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01428">primitiveSelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00769">replaceMaterial()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00896">saveToDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01096">setCurrentMaterial()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00423">setOfPrimitiveId()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00123">~GLC_Mesh()</a>.</p>
+<p>Referenced by <a class="el" href="glc__mesh_8cpp_source.html#l00637">addTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00680">addTrianglesFan()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00659">addTrianglesStrip()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01415">bodySelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00603">clearMeshWireAndBoundingBox()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00328">containsFans()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00264">containsStrips()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00197">containsTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01564">copyIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01175">finishSerialized()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00379">getFansIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00274">getStripsIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00206">getTrianglesIndex()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00046">GLC_Mesh()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00839">loadFromDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00346">MaterialOfPrimitiveId()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01231">moveIndexToMeshDataLod()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01271">normalRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00338">numberOfFans()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00319">numberOfStrips()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00255">numberOfTriangles()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00079">operator=()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01507">outlineSilhouetteRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01314">OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01380">OverwriteTransparencyAndMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01344">OverwriteTransparencyRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01454">primitiveRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01480">primitiveSelectedRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01434">primitiveSelectionRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00771">replaceMaterial()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00898">saveToDataStream()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01102">setCurrentMaterial()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l00423">setOfPrimitiveId()</a>, and <a class="el" href="glc__mesh_8cpp_source.html#l00123">~GLC_Mesh()</a>.</p>
 
 </div>
 </div>

@@ -233,6 +233,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a20efeb420a876656dd1d178006e0e581"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c__3_d_view_collection.html#a20efeb420a876656dd1d178006e0e581">updateInstanceViewableState</a> (const <a class="el" href="class_g_l_c___frustum.html">GLC_Frustum</a> &amp;)</td></tr>
 <tr class="memdesc:a20efeb420a876656dd1d178006e0e581"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the instance viewable state with the specified frustum.  <a href="#a20efeb420a876656dd1d178006e0e581"></a><br/></td></tr>
 <tr class="separator:a20efeb420a876656dd1d178006e0e581"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92deac342d52a113e44aeae7b844e72b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c__3_d_view_collection.html#a92deac342d52a113e44aeae7b844e72b">updateSpacePartitionning</a> ()</td></tr>
+<tr class="memdesc:a92deac342d52a113e44aeae7b844e72b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update space partitionning.  <a href="#a92deac342d52a113e44aeae7b844e72b"></a><br/></td></tr>
+<tr class="separator:a92deac342d52a113e44aeae7b844e72b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae80787c653c8d87baf16eab0bd6a583d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c__3_d_view_collection.html#ae80787c653c8d87baf16eab0bd6a583d">setAttachedViewport</a> (<a class="el" href="class_g_l_c___viewport.html">GLC_Viewport</a> *pViewport)</td></tr>
 <tr class="memdesc:ae80787c653c8d87baf16eab0bd6a583d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the attached viewport of this collection.  <a href="#ae80787c653c8d87baf16eab0bd6a583d"></a><br/></td></tr>
 <tr class="separator:ae80787c653c8d87baf16eab0bd6a583d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -383,9 +386,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">130</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00111">GLC_3DViewInstance::isSelected()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShaderGroup</a>.</p>
+<p>References <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00111">GLC_3DViewInstance::isSelected()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_ShaderGroup</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00074">GLC_3DWidgetManagerHandle::add3DViewInstance()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00645">GLC_StructOccurence::create3DViewInstance()</a>, and <a class="el" href="glc__octree_8cpp_source.html#l00127">GLC_Octree::createBoxWithMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00074">GLC_3DWidgetManagerHandle::add3DViewInstance()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00654">GLC_StructOccurence::create3DViewInstance()</a>, and <a class="el" href="glc__octree_8cpp_source.html#l00127">GLC_Octree::createBoxWithMaterial()</a>.</p>
 
 </div>
 </div>
@@ -407,9 +410,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00065">65</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__structoccurence_8cpp_source.html#l00645">GLC_StructOccurence::create3DViewInstance()</a>.</p>
+<p>Referenced by <a class="el" href="glc__structoccurence_8cpp_source.html#l00654">GLC_StructOccurence::create3DViewInstance()</a>.</p>
 
 </div>
 </div>
@@ -431,7 +434,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00443">443</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__spacepartitioning_8h_source.html#l00061">GLC_SpacePartitioning::collectionHandle()</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00329">m_pSpacePartitioning</a>.</p>
+<p>References <a class="el" href="glc__spacepartitioning_8h_source.html#l00061">GLC_SpacePartitioning::collectionHandle()</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00332">m_pSpacePartitioning</a>.</p>
 
 </div>
 </div>
@@ -452,9 +455,9 @@ OpenGL Functions</h2></td></tr>
 <p>Return the entire collection Bounding Box. </p>
 <p>If all object is set to true, visible and non visible object are used </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00548">548</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00559">559</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__boundingbox_8cpp_source.html#l00098">GLC_BoundingBox::combine()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_IsInShowSate</a>.</p>
+<p>References <a class="el" href="glc__boundingbox_8cpp_source.html#l00098">GLC_BoundingBox::combine()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00323">m_IsInShowSate</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dstoworld_8cpp_source.html#l00071">GLC_3dsToWorld::CreateWorldFrom3ds()</a>, and <a class="el" href="glc__octree_8cpp_source.html#l00079">GLC_Octree::updateSpacePartitioning()</a>.</p>
 
@@ -488,7 +491,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">176</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewinstance_8h_source.html#l00111">GLC_3DViewInstance::isSelected()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShaderGroup</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00135">shadingGroup()</a>.</p>
+<p>References <a class="el" href="glc__3dviewinstance_8h_source.html#l00111">GLC_3DViewInstance::isSelected()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_ShaderGroup</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00135">shadingGroup()</a>.</p>
 
 </div>
 </div>
@@ -510,7 +513,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">259</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00329">m_pSpacePartitioning</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShaderGroup</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00332">m_pSpacePartitioning</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_ShaderGroup</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00092">GLC_3DWidgetManagerHandle::clear()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00056">~GLC_3DViewCollection()</a>.</p>
 
@@ -542,7 +545,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00120">120</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00074">GLC_3DWidgetManagerHandle::add3DViewInstance()</a>, <a class="el" href="glc__renderer_8cpp_source.html#l00134">GLC_Renderer::addRenderPropertiesOfInstanceId()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00421">GLC_StructOccurence::boundingBox()</a>, <a class="el" href="glc__worldhandle_8h_source.html#l00070">GLC_WorldHandle::containsOccurence()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00910">GLC_StructOccurence::detach()</a>, <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00351">GLC_WorldTo3dxml::exportAssemblyFromOccurence()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00123">GLC_StructOccurence::GLC_StructOccurence()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00275">GLC_StructOccurence::has3DViewInstance()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00396">GLC_StructOccurence::isVisible()</a>, <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00084">GLC_3DWidgetManagerHandle::remove3DViewInstance()</a>, <a class="el" href="glc__worldhandle_8cpp_source.html#l00122">GLC_WorldHandle::select()</a>, <a class="el" href="glc__renderer_8cpp_source.html#l00098">GLC_Renderer::setCurrent()</a>, and <a class="el" href="glc__structoccurence_8cpp_source.html#l00519">GLC_StructOccurence::updateAbsoluteMatrix()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00074">GLC_3DWidgetManagerHandle::add3DViewInstance()</a>, <a class="el" href="glc__renderer_8cpp_source.html#l00134">GLC_Renderer::addRenderPropertiesOfInstanceId()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00431">GLC_StructOccurence::boundingBox()</a>, <a class="el" href="glc__worldhandle_8h_source.html#l00070">GLC_WorldHandle::containsOccurence()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00920">GLC_StructOccurence::detach()</a>, <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00351">GLC_WorldTo3dxml::exportAssemblyFromOccurence()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00123">GLC_StructOccurence::GLC_StructOccurence()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00273">GLC_StructOccurence::has3DViewInstance()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00406">GLC_StructOccurence::isVisible()</a>, <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00084">GLC_3DWidgetManagerHandle::remove3DViewInstance()</a>, <a class="el" href="glc__worldhandle_8cpp_source.html#l00122">GLC_WorldHandle::select()</a>, <a class="el" href="glc__renderer_8cpp_source.html#l00098">GLC_Renderer::setCurrent()</a>, and <a class="el" href="glc__structoccurence_8cpp_source.html#l00529">GLC_StructOccurence::updateAbsoluteMatrix()</a>.</p>
 
 </div>
 </div>
@@ -561,9 +564,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the number of drawable objects. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00568">568</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00579">579</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_IsInShowSate</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00323">m_IsInShowSate</a>.</p>
 
 </div>
 </div>
@@ -601,11 +604,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Display collection's member. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00658">658</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00669">669</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00341">glDrawInstancesOf()</a>, <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__state_8cpp_source.html#l00087">GLC_State::selectionShaderUsed()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__shader_8cpp_source.html#l00221">GLC_Shader::unuse()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00136">GLC_SelectionMaterial::unUseShader()</a>, <a class="el" href="glc__shader_8cpp_source.html#l00180">GLC_Shader::use()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00121">GLC_SelectionMaterial::useShader()</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00345">glDrawInstancesOf()</a>, <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__state_8cpp_source.html#l00093">GLC_State::selectionShaderUsed()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__shader_8cpp_source.html#l00221">GLC_Shader::unuse()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00144">GLC_SelectionMaterial::unUseShader()</a>, <a class="el" href="glc__shader_8cpp_source.html#l00180">GLC_Shader::use()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00129">GLC_SelectionMaterial::useShader()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00611">render()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00638">renderShaderGroup()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00622">render()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00649">renderShaderGroup()</a>.</p>
 
 </div>
 </div>
@@ -643,11 +646,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Draw instances of a PointerViewInstanceHash. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00341">341</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00345">345</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewinstance_8h_source.html#l00392">GLC_3DViewInstance::hasTransparentMaterials()</a>, <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00092">GLC_RenderProperties::isSelected()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00372">GLC_3DViewInstance::isTransparent()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00153">GLC_3DViewInstance::isVisible()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_IsInShowSate</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00326">m_pViewport</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00323">m_UseLod</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00062">GLC_3DViewInstance::NoViewable</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00317">GLC_3DViewInstance::render()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00149">GLC_3DViewInstance::renderPropertiesHandle()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00157">GLC_3DViewInstance::viewableFlag()</a>, and <a class="el" href="glc__renderproperties_8h_source.html#l00057">glc::WireRenderFlag</a>.</p>
+<p>References <a class="el" href="glc__3dviewinstance_8h_source.html#l00392">GLC_3DViewInstance::hasTransparentMaterials()</a>, <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00093">GLC_RenderProperties::isSelected()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00372">GLC_3DViewInstance::isTransparent()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00153">GLC_3DViewInstance::isVisible()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00323">m_IsInShowSate</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00329">m_pViewport</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00326">m_UseLod</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00062">GLC_3DViewInstance::NoViewable</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00317">GLC_3DViewInstance::render()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00149">GLC_3DViewInstance::renderPropertiesHandle()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00157">GLC_3DViewInstance::viewableFlag()</a>, and <a class="el" href="glc__renderproperties_8h_source.html#l00057">glc::WireRenderFlag</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00658">glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00669">glDraw()</a>.</p>
 
 </div>
 </div>
@@ -668,7 +671,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00431">431</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>.</p>
 
 </div>
 </div>
@@ -689,11 +692,11 @@ OpenGL Functions</h2></td></tr>
 <p>Return a <a class="el" href="class_g_l_c__3_d_view_instance.html" title="GLC_3DViewInstance : GLC_3DRep + bounding box.">GLC_3DViewInstance</a> from collection. </p>
 <p>If the element is not found in collection a empty node is return </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00542">542</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00553">553</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__renderer_8cpp_source.html#l00134">GLC_Renderer::addRenderPropertiesOfInstanceId()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00421">GLC_StructOccurence::boundingBox()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00910">GLC_StructOccurence::detach()</a>, <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00351">GLC_WorldTo3dxml::exportAssemblyFromOccurence()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00123">GLC_StructOccurence::GLC_StructOccurence()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00396">GLC_StructOccurence::isVisible()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00637">GLC_StructOccurence::reverseNormals()</a>, <a class="el" href="glc__renderer_8cpp_source.html#l00098">GLC_Renderer::setCurrent()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00791">GLC_StructOccurence::setRenderProperties()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00519">GLC_StructOccurence::updateAbsoluteMatrix()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l01175">GLC_WorldTo3dxml::writeOccurenceDefaultViewProperty()</a>.</p>
+<p>Referenced by <a class="el" href="glc__renderer_8cpp_source.html#l00134">GLC_Renderer::addRenderPropertiesOfInstanceId()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00431">GLC_StructOccurence::boundingBox()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00920">GLC_StructOccurence::detach()</a>, <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00351">GLC_WorldTo3dxml::exportAssemblyFromOccurence()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00123">GLC_StructOccurence::GLC_StructOccurence()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00406">GLC_StructOccurence::isVisible()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00646">GLC_StructOccurence::reverseNormals()</a>, <a class="el" href="glc__renderer_8cpp_source.html#l00098">GLC_Renderer::setCurrent()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00800">GLC_StructOccurence::setRenderProperties()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00529">GLC_StructOccurence::updateAbsoluteMatrix()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l01175">GLC_WorldTo3dxml::writeOccurenceDefaultViewProperty()</a>.</p>
 
 </div>
 </div>
@@ -713,9 +716,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return instances name from the specified shading group. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00587">587</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00598">598</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShaderGroup</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00091">size()</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_ShaderGroup</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00091">size()</a>.</p>
 
 </div>
 </div>
@@ -734,9 +737,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return all <a class="el" href="class_g_l_c__3_d_view_instance.html" title="GLC_3DViewInstance : GLC_3DRep + bounding box.">GLC_3DViewInstance</a> from collection. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00493">493</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00504">504</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dstoworld_8cpp_source.html#l00265">GLC_3dsToWorld::create3DRep()</a>, <a class="el" href="glc__renderer_8cpp_source.html#l00117">GLC_Renderer::unSetCurrent()</a>, and <a class="el" href="glc__octree_8cpp_source.html#l00079">GLC_Octree::updateSpacePartitioning()</a>.</p>
 
@@ -768,7 +771,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00087">87</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00611">render()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00638">renderShaderGroup()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00622">render()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00649">renderShaderGroup()</a>.</p>
 
 </div>
 </div>
@@ -872,9 +875,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the number of used shading group. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00602">602</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00613">613</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShaderGroup</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_ShaderGroup</a>.</p>
 
 </div>
 </div>
@@ -906,9 +909,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00231">231</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00112">selectionSize()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00342">unselect()</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00112">selectionSize()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00342">unselect()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00084">GLC_3DWidgetManagerHandle::remove3DViewInstance()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00675">GLC_StructOccurence::remove3DViewInstance()</a>, <a class="el" href="glc__worldhandle_8cpp_source.html#l00111">GLC_WorldHandle::removeOccurence()</a>, and <a class="el" href="glc__structoccurence_8cpp_source.html#l00737">GLC_StructOccurence::unloadRepresentation()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00084">GLC_3DWidgetManagerHandle::remove3DViewInstance()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00684">GLC_StructOccurence::remove3DViewInstance()</a>, <a class="el" href="glc__worldhandle_8cpp_source.html#l00111">GLC_WorldHandle::removeOccurence()</a>, and <a class="el" href="glc__structoccurence_8cpp_source.html#l00746">GLC_StructOccurence::unloadRepresentation()</a>.</p>
 
 </div>
 </div>
@@ -939,11 +942,11 @@ OpenGL Functions</h2></td></tr>
 <p>Display the specified collection group. </p>
 <p>The main group is 0 The selection group is 1 User group are identified by user id </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00611">611</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00622">622</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00658">glDraw()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00087">isEmpty()</a>, <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00335">m_IsViewable</a>, and <a class="el" href="glc__renderproperties_8h_source.html#l00057">glc::WireRenderFlag</a>.</p>
+<p>References <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00669">glDraw()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00087">isEmpty()</a>, <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00338">m_IsViewable</a>, and <a class="el" href="glc__renderproperties_8h_source.html#l00057">glc::WireRenderFlag</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00225">GLC_3DWidgetManagerHandle::render()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00315">GLC_Viewport::render3DWidget()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00225">GLC_3DWidgetManagerHandle::render()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00321">GLC_Viewport::render3DWidget()</a>.</p>
 
 </div>
 </div>
@@ -963,9 +966,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Display all shader group. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00638">638</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00649">649</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00658">glDraw()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00087">isEmpty()</a>, <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00335">m_IsViewable</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>.</p>
+<p>References <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00669">glDraw()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00087">isEmpty()</a>, <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00338">m_IsViewable</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00225">GLC_3DWidgetManagerHandle::render()</a>.</p>
 
@@ -999,9 +1002,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00284">284</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00139">isInAShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00242">GLC_3DViewInstance::select()</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00135">shadingGroup()</a>.</p>
+<p>References <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00139">isInAShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00242">GLC_3DViewInstance::select()</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00135">shadingGroup()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__structoccurence_8cpp_source.html#l00645">GLC_StructOccurence::create3DViewInstance()</a>, and <a class="el" href="glc__worldhandle_8cpp_source.html#l00122">GLC_WorldHandle::select()</a>.</p>
+<p>Referenced by <a class="el" href="glc__structoccurence_8cpp_source.html#l00654">GLC_StructOccurence::create3DViewInstance()</a>, and <a class="el" href="glc__worldhandle_8cpp_source.html#l00122">GLC_WorldHandle::select()</a>.</p>
 
 </div>
 </div>
@@ -1023,7 +1026,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">319</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00139">isInAShadingGroup()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00153">GLC_3DViewInstance::isVisible()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_IsInShowSate</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00242">GLC_3DViewInstance::select()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00135">shadingGroup()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00376">unselectAll()</a>.</p>
+<p>References <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00139">isInAShadingGroup()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00153">GLC_3DViewInstance::isVisible()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00323">m_IsInShowSate</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00242">GLC_3DViewInstance::select()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00135">shadingGroup()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00376">unselectAll()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__worldhandle_8cpp_source.html#l00163">GLC_WorldHandle::selectAllWith3DViewInstance()</a>.</p>
 
@@ -1112,7 +1115,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set the attached viewport of this collection. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00257">257</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00260">260</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
 </div>
 </div>
@@ -1182,7 +1185,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00399">399</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>.</p>
 
 </div>
 </div>
@@ -1230,9 +1233,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set VBO usage. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00482">482</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00493">493</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>.</p>
 
 </div>
 </div>
@@ -1260,7 +1263,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set the collection viewable state. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00261">261</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00264">264</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
 </div>
 </div>
@@ -1292,9 +1295,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00411">411</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__structoccurence_8cpp_source.html#l00645">GLC_StructOccurence::create3DViewInstance()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00777">GLC_StructOccurence::setVisibility()</a>, and <a class="el" href="glc__structoccurence_8cpp_source.html#l00685">GLC_StructOccurence::setWorldHandle()</a>.</p>
+<p>Referenced by <a class="el" href="glc__structoccurence_8cpp_source.html#l00654">GLC_StructOccurence::create3DViewInstance()</a>, <a class="el" href="glc__structoccurence_8cpp_source.html#l00786">GLC_StructOccurence::setVisibility()</a>, and <a class="el" href="glc__structoccurence_8cpp_source.html#l00694">GLC_StructOccurence::setWorldHandle()</a>.</p>
 
 </div>
 </div>
@@ -1345,7 +1348,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00420">420</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>.</p>
 
 </div>
 </div>
@@ -1402,7 +1405,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00091">91</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00587">instanceNamesFromShadingGroup()</a>, <a class="el" href="glc__world_8h_source.html#l00084">GLC_World::size()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00112">unBindAllShader()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00598">instanceNamesFromShadingGroup()</a>, <a class="el" href="glc__world_8h_source.html#l00084">GLC_World::size()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00112">unBindAllShader()</a>.</p>
 
 </div>
 </div>
@@ -1504,7 +1507,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00112">112</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00091">size()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">unBindShader()</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00091">size()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">unBindShader()</a>.</p>
 
 </div>
 </div>
@@ -1526,7 +1529,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">79</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewinstance_8h_source.html#l00111">GLC_3DViewInstance::isSelected()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShaderGroup</a>.</p>
+<p>References <a class="el" href="glc__3dviewinstance_8h_source.html#l00111">GLC_3DViewInstance::isSelected()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_ShaderGroup</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00112">unBindAllShader()</a>.</p>
 
@@ -1549,7 +1552,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00452">452</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewinstance_8h_source.html#l00060">GLC_3DViewInstance::FullViewable</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00329">m_pSpacePartitioning</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00332">m_UseSpacePartitioning</a>.</p>
+<p>References <a class="el" href="glc__3dviewinstance_8h_source.html#l00060">GLC_3DViewInstance::FullViewable</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00332">m_pSpacePartitioning</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00335">m_UseSpacePartitioning</a>.</p>
 
 </div>
 </div>
@@ -1571,7 +1574,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00342">342</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00139">isInAShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00135">shadingGroup()</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00139">isInAShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00135">shadingGroup()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00231">remove()</a>, and <a class="el" href="glc__worldhandle_8cpp_source.html#l00144">GLC_WorldHandle::unselect()</a>.</p>
 
@@ -1594,7 +1597,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00376">376</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00139">isInAShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00135">shadingGroup()</a>, and <a class="el" href="glc__3dviewinstance_8h_source.html#l00246">GLC_3DViewInstance::unselect()</a>.</p>
+<p>References <a class="el" href="glc__object_8h_source.html#l00076">GLC_Object::id()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00139">isInAShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_MainInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">m_SelectedInstances</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">m_ShadedPointerViewInstanceHash</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00135">shadingGroup()</a>, and <a class="el" href="glc__3dviewinstance_8h_source.html#l00246">GLC_3DViewInstance::unselect()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, and <a class="el" href="glc__worldhandle_8cpp_source.html#l00175">GLC_WorldHandle::unselectAll()</a>.</p>
 
@@ -1619,7 +1622,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00468">468</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00191">GLC_Viewport::frustum()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00329">m_pSpacePartitioning</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00326">m_pViewport</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00332">m_UseSpacePartitioning</a>, <a class="el" href="glc__viewport_8h_source.html#l00423">GLC_Viewport::updateFrustum()</a>, and <a class="el" href="class_g_l_c___space_partitioning.html#aca395c76ba881cd9c96310b59dc1b51a">GLC_SpacePartitioning::updateViewableInstances()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00194">GLC_Viewport::frustum()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00332">m_pSpacePartitioning</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00329">m_pViewport</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00335">m_UseSpacePartitioning</a>, <a class="el" href="glc__viewport_8h_source.html#l00429">GLC_Viewport::updateFrustum()</a>, and <a class="el" href="class_g_l_c___space_partitioning.html#aca395c76ba881cd9c96310b59dc1b51a">GLC_SpacePartitioning::updateViewableInstances()</a>.</p>
 
 </div>
 </div>
@@ -1641,7 +1644,28 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00477">477</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00329">m_pSpacePartitioning</a>, and <a class="el" href="class_g_l_c___space_partitioning.html#aca395c76ba881cd9c96310b59dc1b51a">GLC_SpacePartitioning::updateViewableInstances()</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00332">m_pSpacePartitioning</a>, and <a class="el" href="class_g_l_c___space_partitioning.html#aca395c76ba881cd9c96310b59dc1b51a">GLC_SpacePartitioning::updateViewableInstances()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a92deac342d52a113e44aeae7b844e72b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GLC_3DViewCollection::updateSpacePartitionning </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update space partitionning. </p>
+
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00485">485</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00332">m_pSpacePartitioning</a>, and <a class="el" href="class_g_l_c___space_partitioning.html#a76c007aed6e6fd91a1d078402e39594a">GLC_SpacePartitioning::updateSpacePartitioning()</a>.</p>
 
 </div>
 </div>
@@ -1660,9 +1684,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return all viewable <a class="el" href="class_g_l_c__3_d_view_instance.html" title="GLC_3DViewInstance : GLC_3DRep + bounding box.">GLC_3DViewInstance</a> from the collection. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00525">525</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00536">536</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">m_IsInShowSate</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>, and <a class="el" href="glc__3dviewcollection_8h_source.html#l00323">m_IsInShowSate</a>.</p>
 
 </div>
 </div>
@@ -1681,9 +1705,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return all visible <a class="el" href="class_g_l_c__3_d_view_instance.html" title="GLC_3DViewInstance : GLC_3DRep + bounding box.">GLC_3DViewInstance</a> from the collection. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00507">507</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00518">518</a> of file <a class="el" href="glc__3dviewcollection_8cpp_source.html">glc_3dviewcollection.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">m_3DViewInstanceHash</a>.</p>
+<p>References <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">m_3DViewInstanceHash</a>.</p>
 
 </div>
 </div>
@@ -1708,9 +1732,9 @@ OpenGL Functions</h2></td></tr>
 
 <p><a class="el" href="class_g_l_c__3_d_view_instance.html" title="GLC_3DViewInstance : GLC_3DRep + bounding box.">GLC_3DViewInstance</a> Hash Table. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00305">305</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">308</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">add()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00548">boundingBox()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">changeShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00568">drawableObjectsSize()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00431">hideAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00542">instanceHandle()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00587">instanceNamesFromShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00493">instancesHandle()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00231">remove()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00284">select()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00399">setPolygonModeForAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00482">setVboUsage()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00411">setVisibility()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00420">showAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00452">unbindSpacePartitioning()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00525">viewableInstancesHandle()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00507">visibleInstancesHandle()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">add()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00559">boundingBox()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">changeShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00579">drawableObjectsSize()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00431">hideAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00553">instanceHandle()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00598">instanceNamesFromShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00504">instancesHandle()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00231">remove()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00284">select()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00399">setPolygonModeForAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00493">setVboUsage()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00411">setVisibility()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00420">showAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00452">unbindSpacePartitioning()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00536">viewableInstancesHandle()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00518">visibleInstancesHandle()</a>.</p>
 
 </div>
 </div>
@@ -1734,9 +1758,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Show State. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">320</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00323">323</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00548">boundingBox()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00568">drawableObjectsSize()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00341">glDrawInstancesOf()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00525">viewableInstancesHandle()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00559">boundingBox()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00579">drawableObjectsSize()</a>, <a class="el" href="glc__3dviewcollection_8h_source.html#l00345">glDrawInstancesOf()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00536">viewableInstancesHandle()</a>.</p>
 
 </div>
 </div>
@@ -1760,9 +1784,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Viewable state. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00335">335</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00338">338</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00611">render()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00638">renderShaderGroup()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00622">render()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00649">renderShaderGroup()</a>.</p>
 
 </div>
 </div>
@@ -1786,9 +1810,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Normal Node Hash Table. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">317</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00320">320</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">add()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">changeShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00658">glDraw()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00231">remove()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00284">select()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">unBindShader()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00342">unselect()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00376">unselectAll()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">add()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">changeShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00669">glDraw()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00231">remove()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00284">select()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">unBindShader()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00342">unselect()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00376">unselectAll()</a>.</p>
 
 </div>
 </div>
@@ -1812,9 +1836,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>The space partitioning. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00329">329</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00332">332</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00443">bindSpacePartitioning()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00452">unbindSpacePartitioning()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00468">updateInstanceViewableState()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00443">bindSpacePartitioning()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00452">unbindSpacePartitioning()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00468">updateInstanceViewableState()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00485">updateSpacePartitionning()</a>.</p>
 
 </div>
 </div>
@@ -1838,9 +1862,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>The viewport associted to the collection for LOD Usage. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00326">326</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00329">329</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8h_source.html#l00341">glDrawInstancesOf()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00468">updateInstanceViewableState()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8h_source.html#l00345">glDrawInstancesOf()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00468">updateInstanceViewableState()</a>.</p>
 
 </div>
 </div>
@@ -1864,9 +1888,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Selected Node Hash Table. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00308">308</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">311</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">add()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">changeShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00658">glDraw()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00284">select()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">unBindShader()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00342">unselect()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00376">unselectAll()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">add()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">changeShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00669">glDraw()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00284">select()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">unBindShader()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00342">unselect()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00376">unselectAll()</a>.</p>
 
 </div>
 </div>
@@ -1890,9 +1914,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>List of other Node Hash Table. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00311">311</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">314</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">add()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00065">bindShader()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">changeShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00658">glDraw()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00638">renderShaderGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00284">select()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00112">unBindAllShader()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">unBindShader()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00342">unselect()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00376">unselectAll()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">add()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00065">bindShader()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">changeShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00669">glDraw()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00649">renderShaderGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00284">select()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00319">selectAll()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00112">unBindAllShader()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">unBindShader()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00342">unselect()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00376">unselectAll()</a>.</p>
 
 </div>
 </div>
@@ -1916,9 +1940,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Shader groups hash. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00314">314</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00317">317</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">add()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">changeShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00587">instanceNamesFromShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00602">numberOfUsedShadingGroup()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">unBindShader()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00130">add()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00176">changeShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00259">clear()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00598">instanceNamesFromShadingGroup()</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00613">numberOfUsedShadingGroup()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00079">unBindShader()</a>.</p>
 
 </div>
 </div>
@@ -1942,9 +1966,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Level of detail usage. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00323">323</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00326">326</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8h_source.html#l00341">glDrawInstancesOf()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8h_source.html#l00345">glDrawInstancesOf()</a>.</p>
 
 </div>
 </div>
@@ -1968,7 +1992,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>The space partition usage. </p>
 
-<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00332">332</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__3dviewcollection_8h_source.html#l00335">335</a> of file <a class="el" href="glc__3dviewcollection_8h_source.html">glc_3dviewcollection.h</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00452">unbindSpacePartitioning()</a>, and <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00468">updateInstanceViewableState()</a>.</p>
 

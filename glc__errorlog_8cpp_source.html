@@ -165,26 +165,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i= 0; i &lt; size; ++i)</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;         {</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                  <a class="code" href="class_g_l_c___error_log.html#a35d7719788b472f43083c412b61b1e7d" title="Return the unique instance of error log file.">GLC_ErrorLog::instance</a>()-&gt;<a class="code" href="class_g_l_c___log.html#ad39c9f31af5f63663829caf6055a1528" title="Add the given string to this log.">add</a>(errorDescription.at(i));</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;         }</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}</div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="code" href="class_g_l_c___error_log.html#ac537aeb3f639f4eaba0212424831aef1">   80</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___error_log.html#ac537aeb3f639f4eaba0212424831aef1" title="Close the log file.">GLC_ErrorLog::close</a>()</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;{</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;         QMutexLocker locker(&amp;<a class="code" href="class_g_l_c___error_log.html#a08a643518685cf51c4c6aafcd266eea2" title="The mutex of this unique log.">m_Mutex</a>);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;         <span class="keyword">delete</span> <a class="code" href="class_g_l_c___error_log.html#ae254e0bcd644f7a4b462a269a7038df4" title="The unique error log instance.">m_pErrorLog</a>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;         <a class="code" href="class_g_l_c___error_log.html#ae254e0bcd644f7a4b462a269a7038df4" title="The unique error log instance.">m_pErrorLog</a>= NULL;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="code" href="class_g_l_c___error_log.html#a842a37420974ad462ca7c4b879e78668">   81</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___error_log.html#aa3c98a2c8848e0d4ac58123c1c30d7cd" title="Add error into the log.">GLC_ErrorLog::addError</a>(<span class="keyword">const</span> QString &amp;errorDescription)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;{</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    QMutexLocker locker(&amp;<a class="code" href="class_g_l_c___error_log.html#a08a643518685cf51c4c6aafcd266eea2" title="The mutex of this unique log.">m_Mutex</a>);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="class_g_l_c___error_log.html#a35d7719788b472f43083c412b61b1e7d" title="Return the unique instance of error log file.">GLC_ErrorLog::instance</a>()-&gt;<a class="code" href="class_g_l_c___log.html#a4e83931ca0076d1fa048cd437da96068" title="Add a separator in the log.">addSeparator</a>();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <a class="code" href="class_g_l_c___error_log.html#a35d7719788b472f43083c412b61b1e7d" title="Return the unique instance of error log file.">GLC_ErrorLog::instance</a>()-&gt;<a class="code" href="class_g_l_c___log.html#af9a2939fd382433a9d01c473760f3e14" title="Add current time in log.">addCurrentTime</a>();</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="code" href="class_g_l_c___error_log.html#a4242e2a5faa792b7cf3f061ad095c0bc">   87</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___error_log.html#a4242e2a5faa792b7cf3f061ad095c0bc" title="Write error Log header.">GLC_ErrorLog::writeHeader</a>()</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;{</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;         QString currentLine;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;         currentLine= <span class="stringliteral">&quot;Error Log file&quot;</span>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;         <a class="code" href="class_g_l_c___log.html#a8fd0fa264b69ab1ee2d68fedd370834c" title="This log textStream.">GLC_Log::m_TextStream</a> &lt;&lt; currentLine &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;         currentLine= <span class="stringliteral">&quot;Application &quot;</span> + QCoreApplication::applicationName();</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;         <a class="code" href="class_g_l_c___log.html#a8fd0fa264b69ab1ee2d68fedd370834c" title="This log textStream.">GLC_Log::m_TextStream</a> &lt;&lt; currentLine &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;         currentLine= QDate::currentDate().toString(Qt::ISODate);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;         <a class="code" href="class_g_l_c___log.html#a8fd0fa264b69ab1ee2d68fedd370834c" title="This log textStream.">GLC_Log::m_TextStream</a> &lt;&lt; currentLine &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;         <a class="code" href="class_g_l_c___log.html#a8fd0fa264b69ab1ee2d68fedd370834c" title="This log textStream.">GLC_Log::m_TextStream</a>.flush();</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="class_g_l_c___error_log.html#a35d7719788b472f43083c412b61b1e7d" title="Return the unique instance of error log file.">GLC_ErrorLog::instance</a>()-&gt;<a class="code" href="class_g_l_c___log.html#ad39c9f31af5f63663829caf6055a1528" title="Add the given string to this log.">add</a>(errorDescription);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="code" href="class_g_l_c___error_log.html#ac537aeb3f639f4eaba0212424831aef1">   90</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___error_log.html#ac537aeb3f639f4eaba0212424831aef1" title="Close the log file.">GLC_ErrorLog::close</a>()</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;{</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;         QMutexLocker locker(&amp;<a class="code" href="class_g_l_c___error_log.html#a08a643518685cf51c4c6aafcd266eea2" title="The mutex of this unique log.">m_Mutex</a>);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;         <span class="keyword">delete</span> <a class="code" href="class_g_l_c___error_log.html#ae254e0bcd644f7a4b462a269a7038df4" title="The unique error log instance.">m_pErrorLog</a>;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;         <a class="code" href="class_g_l_c___error_log.html#ae254e0bcd644f7a4b462a269a7038df4" title="The unique error log instance.">m_pErrorLog</a>= NULL;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="code" href="class_g_l_c___error_log.html#a4242e2a5faa792b7cf3f061ad095c0bc">   97</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___error_log.html#a4242e2a5faa792b7cf3f061ad095c0bc" title="Write error Log header.">GLC_ErrorLog::writeHeader</a>()</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;{</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;         QString currentLine;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;         currentLine= <span class="stringliteral">&quot;Error Log file&quot;</span>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;         <a class="code" href="class_g_l_c___log.html#a8fd0fa264b69ab1ee2d68fedd370834c" title="This log textStream.">GLC_Log::m_TextStream</a> &lt;&lt; currentLine &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;         currentLine= <span class="stringliteral">&quot;Application &quot;</span> + QCoreApplication::applicationName();</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;         <a class="code" href="class_g_l_c___log.html#a8fd0fa264b69ab1ee2d68fedd370834c" title="This log textStream.">GLC_Log::m_TextStream</a> &lt;&lt; currentLine &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;         currentLine= QDate::currentDate().toString(Qt::ISODate);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;         <a class="code" href="class_g_l_c___log.html#a8fd0fa264b69ab1ee2d68fedd370834c" title="This log textStream.">GLC_Log::m_TextStream</a> &lt;&lt; currentLine &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;         <a class="code" href="class_g_l_c___log.html#a8fd0fa264b69ab1ee2d68fedd370834c" title="This log textStream.">GLC_Log::m_TextStream</a>.flush();</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 
 	<p align="center" bgcolor="#ccccff" height="17" width="100%">

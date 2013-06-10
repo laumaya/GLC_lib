@@ -17,7 +17,7 @@ var searchData=
   ['vector',['vector',['../class_g_l_c___vector2df.html#aa8d02449173247ce329730b77d5f1872',1,'GLC_Vector2df::vector()'],['../class_g_l_c___vector4d.html#a3541359302e8d102e67e18d8a04206b3',1,'GLC_Vector4d::vector()']]],
   ['vendor',['vendor',['../class_g_l_c___state.html#a24ade18c0ab1ea4929db6b9183c877e8',1,'GLC_State']]],
   ['vendorisnvidia',['vendorIsNvidia',['../class_g_l_c___state.html#ae302d8d81fd2976c6740446594b3dcc3',1,'GLC_State']]],
-  ['version',['version',['../class_g_l_c___state.html#aeb22307b643b8a66140e47f7f544dcef',1,'GLC_State::version()'],['../class_g_l_c___b_s_rep.html#a57dae5849a469d8c69fd1f7fe8d26bec',1,'GLC_BSRep::version()'],['../namespaceglc.html#a1deedbe249bdb457e337a1f3b4970113',1,'glc::version()']]],
+  ['version',['version',['../class_g_l_c___state.html#aeb22307b643b8a66140e47f7f544dcef',1,'GLC_State::version()'],['../class_g_l_c___b_s_rep.html#a57dae5849a469d8c69fd1f7fe8d26bec',1,'GLC_BSRep::version()'],['../namespaceglc.html#a8b1db28de8f48f5fcdcb3aa9231416e4',1,'glc::version()']]],
   ['vertex',['VERTEX',['../class_g_l_c___collada_to_world.html#a78c5c094a86f59a7a4f153bc61276a3ba8f3f776689eb1311f3aa5bb444638992',1,'GLC_ColladaToWorld']]],
   ['vertexarraydrawinselectionmodeprimitivesof',['vertexArrayDrawInSelectionModePrimitivesOf',['../class_g_l_c___mesh.html#acebafde48dde7c98cbee8e429e1e7a19',1,'GLC_Mesh']]],
   ['vertexarraydrawprimitivesgroupof',['vertexArrayDrawPrimitivesGroupOf',['../class_g_l_c___mesh.html#aa02b5fffbc756dba953d2f3001b522a2',1,'GLC_Mesh']]],

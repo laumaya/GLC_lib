@@ -12,7 +12,7 @@ var searchData=
   ['vboused',['vboUsed',['../class_g_l_c___state.html#a71d34149d665705f59105805b5bfc7f8',1,'GLC_State']]],
   ['vendor',['vendor',['../class_g_l_c___state.html#a24ade18c0ab1ea4929db6b9183c877e8',1,'GLC_State']]],
   ['vendorisnvidia',['vendorIsNvidia',['../class_g_l_c___state.html#ae302d8d81fd2976c6740446594b3dcc3',1,'GLC_State']]],
-  ['version',['version',['../class_g_l_c___state.html#aeb22307b643b8a66140e47f7f544dcef',1,'GLC_State::version()'],['../class_g_l_c___b_s_rep.html#a57dae5849a469d8c69fd1f7fe8d26bec',1,'GLC_BSRep::version()'],['../namespaceglc.html#a1deedbe249bdb457e337a1f3b4970113',1,'glc::version()']]],
+  ['version',['version',['../class_g_l_c___state.html#aeb22307b643b8a66140e47f7f544dcef',1,'GLC_State::version()'],['../class_g_l_c___b_s_rep.html#a57dae5849a469d8c69fd1f7fe8d26bec',1,'GLC_BSRep::version()'],['../namespaceglc.html#a8b1db28de8f48f5fcdcb3aa9231416e4',1,'glc::version()']]],
   ['vertexarraydrawinselectionmodeprimitivesof',['vertexArrayDrawInSelectionModePrimitivesOf',['../class_g_l_c___mesh.html#acebafde48dde7c98cbee8e429e1e7a19',1,'GLC_Mesh']]],
   ['vertexarraydrawprimitivesgroupof',['vertexArrayDrawPrimitivesGroupOf',['../class_g_l_c___mesh.html#aa02b5fffbc756dba953d2f3001b522a2',1,'GLC_Mesh']]],
   ['vertexarraydrawprimitivesof',['vertexArrayDrawPrimitivesOf',['../class_g_l_c___mesh.html#ad3fea2b2bf47be58c32a6d20ae4e9a82',1,'GLC_Mesh']]],

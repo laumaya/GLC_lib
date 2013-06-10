@@ -104,6 +104,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a72facd9a0c3db2d59a2724172bdd4c37"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___selection_material.html#a72facd9a0c3db2d59a2724172bdd4c37">useMaterial</a> (<a class="el" href="class_g_l_c___material.html">GLC_Material</a> *pMaterial)</td></tr>
 <tr class="memdesc:a72facd9a0c3db2d59a2724172bdd4c37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use the given material as selection material.  <a href="#a72facd9a0c3db2d59a2724172bdd4c37"></a><br/></td></tr>
 <tr class="separator:a72facd9a0c3db2d59a2724172bdd4c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3f715b9c4a1ac9400fc825d8c4d67fe"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___selection_material.html#ad3f715b9c4a1ac9400fc825d8c4d67fe">setUseSelectionMaterial</a> (bool useSelectionMaterial)</td></tr>
+<tr class="memdesc:ad3f715b9c4a1ac9400fc825d8c4d67fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use selection material?  <a href="#ad3f715b9c4a1ac9400fc825d8c4d67fe"></a><br/></td></tr>
+<tr class="separator:ad3f715b9c4a1ac9400fc825d8c4d67fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafe33900c73733a35524c57b10b83989"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___selection_material.html#aafe33900c73733a35524c57b10b83989">useDefautSelectionColor</a> ()</td></tr>
 <tr class="memdesc:aafe33900c73733a35524c57b10b83989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use the default selection color.  <a href="#aafe33900c73733a35524c57b10b83989"></a><br/></td></tr>
 <tr class="separator:aafe33900c73733a35524c57b10b83989"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,6 +153,9 @@ Static Private Attributes</h2></td></tr>
 <tr class="memitem:a50db7405cff89bedbd0a1f0b9cf2a263"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_g_l_c___material.html">GLC_Material</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___selection_material.html#a50db7405cff89bedbd0a1f0b9cf2a263">m_pMaterial</a> = NULL</td></tr>
 <tr class="memdesc:a50db7405cff89bedbd0a1f0b9cf2a263"><td class="mdescLeft">&#160;</td><td class="mdescRight">Material of this selection material.  <a href="#a50db7405cff89bedbd0a1f0b9cf2a263"></a><br/></td></tr>
 <tr class="separator:a50db7405cff89bedbd0a1f0b9cf2a263"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37cddebc3899409cfeb8bae3b84962ef"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___selection_material.html#a37cddebc3899409cfeb8bae3b84962ef">m_NoSelectionMaterial</a> = false</td></tr>
+<tr class="memdesc:a37cddebc3899409cfeb8bae3b84962ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Don't use selection material.  <a href="#a37cddebc3899409cfeb8bae3b84962ef"></a><br/></td></tr>
+<tr class="separator:a37cddebc3899409cfeb8bae3b84962ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="class_g_l_c___selection_material.html" title="GLC_SelectionMaterial : Material used for selection feedback.">GLC_SelectionMaterial</a> : Material used for selection feedback. </p>
@@ -177,7 +183,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00034">34</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00035">35</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
 
 </div>
 </div>
@@ -206,11 +212,11 @@ Static Private Attributes</h2></td></tr>
 
 <p>delete shader </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00173">173</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00181">181</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00098">m_SelectionShaderHash</a>.</p>
+<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00101">m_SelectionShaderHash</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00108">setShaders()</a>.</p>
+<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00116">setShaders()</a>.</p>
 
 </div>
 </div>
@@ -237,11 +243,11 @@ Static Private Attributes</h2></td></tr>
 
 <p>Execute OpenGL Material. </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00073">73</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00079">79</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, and <a class="el" href="glc__selectionmaterial_8h_source.html#l00104">m_pMaterial</a>.</p>
+<p>References <a class="el" href="glc__material_8cpp_source.html#l00477">GLC_Material::glExecute()</a>, <a class="el" href="glc__selectionmaterial_8h_source.html#l00110">m_NoSelectionMaterial</a>, and <a class="el" href="glc__selectionmaterial_8h_source.html#l00107">m_pMaterial</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__geometry_8cpp_source.html#l00308">GLC_Geometry::glPropGeom()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01265">GLC_Mesh::normalRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01308">GLC_Mesh::OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01374">GLC_Mesh::OverwriteTransparencyAndMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01338">GLC_Mesh::OverwriteTransparencyRenderLoop()</a>, <a class="el" href="glc__pointsprite_8cpp_source.html#l00099">GLC_PointSprite::render()</a>, <a class="el" href="glc__mesh_8h_source.html#l00777">GLC_Mesh::vboDrawSelectedPrimitivesGroupOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00922">GLC_Mesh::vertexArrayDrawSelectedPrimitivesGroupOf()</a>.</p>
+<p>Referenced by <a class="el" href="glc__geometry_8cpp_source.html#l00308">GLC_Geometry::glPropGeom()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01271">GLC_Mesh::normalRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01314">GLC_Mesh::OverwriteMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01380">GLC_Mesh::OverwriteTransparencyAndMaterialRenderLoop()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01344">GLC_Mesh::OverwriteTransparencyRenderLoop()</a>, <a class="el" href="glc__pointsprite_8cpp_source.html#l00099">GLC_PointSprite::render()</a>, <a class="el" href="glc__mesh_8h_source.html#l00780">GLC_Mesh::vboDrawSelectedPrimitivesGroupOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00925">GLC_Mesh::vertexArrayDrawSelectedPrimitivesGroupOf()</a>.</p>
 
 </div>
 </div>
@@ -269,9 +275,9 @@ Static Private Attributes</h2></td></tr>
 
 <p>Init shader. </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00102">102</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00110">110</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00098">m_SelectionShaderHash</a>.</p>
+<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00101">m_SelectionShaderHash</a>.</p>
 
 </div>
 </div>
@@ -315,9 +321,39 @@ Static Private Attributes</h2></td></tr>
 
 <p>Set shader. </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00108">108</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00116">116</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00173">deleteShader()</a>, <a class="el" href="glc__selectionmaterial_8h_source.html#l00098">m_SelectionShaderHash</a>, and <a class="el" href="glc__shader_8cpp_source.html#l00330">GLC_Shader::setVertexAndFragmentShader()</a>.</p>
+<p>References <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00181">deleteShader()</a>, <a class="el" href="glc__selectionmaterial_8h_source.html#l00101">m_SelectionShaderHash</a>, and <a class="el" href="glc__shader_8cpp_source.html#l00330">GLC_Shader::setVertexAndFragmentShader()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad3f715b9c4a1ac9400fc825d8c4d67fe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GLC_SelectionMaterial::setUseSelectionMaterial </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>useSelectionMaterial</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Use selection material? </p>
+
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00073">73</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+
+<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00110">m_NoSelectionMaterial</a>.</p>
 
 </div>
 </div>
@@ -345,11 +381,11 @@ Static Private Attributes</h2></td></tr>
 
 <p>Return the sharing context of the given context. </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00154">154</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00162">162</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00098">m_SelectionShaderHash</a>.</p>
+<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00101">m_SelectionShaderHash</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00136">unUseShader()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00121">useShader()</a>.</p>
+<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00144">unUseShader()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00129">useShader()</a>.</p>
 
 </div>
 </div>
@@ -376,11 +412,11 @@ Static Private Attributes</h2></td></tr>
 
 <p>Unused shader. </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00136">136</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00144">144</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00098">m_SelectionShaderHash</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00154">sharingContext()</a>.</p>
+<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00101">m_SelectionShaderHash</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00162">sharingContext()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00658">GLC_3DViewCollection::glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00669">GLC_3DViewCollection::glDraw()</a>.</p>
 
 </div>
 </div>
@@ -408,9 +444,9 @@ Static Private Attributes</h2></td></tr>
 <p>Use the default selection color. </p>
 <p>if a selection material is used, unused it </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00058">58</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00059">59</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__material_8cpp_source.html#l00426">GLC_Material::delUsage()</a>, <a class="el" href="glc__material_8h_source.html#l00091">GLC_Material::isUnused()</a>, <a class="el" href="glc__selectionmaterial_8h_source.html#l00104">m_pMaterial</a>, and <a class="el" href="glc__selectionmaterial_8h_source.html#l00101">m_SelectionMaterialId</a>.</p>
+<p>References <a class="el" href="glc__material_8cpp_source.html#l00426">GLC_Material::delUsage()</a>, <a class="el" href="glc__material_8h_source.html#l00091">GLC_Material::isUnused()</a>, <a class="el" href="glc__selectionmaterial_8h_source.html#l00107">m_pMaterial</a>, and <a class="el" href="glc__selectionmaterial_8h_source.html#l00104">m_SelectionMaterialId</a>.</p>
 
 </div>
 </div>
@@ -438,9 +474,9 @@ Static Private Attributes</h2></td></tr>
 
 <p>Use the given material as selection material. </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00039">39</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00040">40</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__material_8cpp_source.html#l00410">GLC_Material::addUsage()</a>, <a class="el" href="glc__material_8cpp_source.html#l00426">GLC_Material::delUsage()</a>, <a class="el" href="glc__global_8cpp_source.html#l00051">glc::GLC_GenUserID()</a>, <a class="el" href="glc__material_8h_source.html#l00091">GLC_Material::isUnused()</a>, <a class="el" href="glc__selectionmaterial_8h_source.html#l00104">m_pMaterial</a>, and <a class="el" href="glc__selectionmaterial_8h_source.html#l00101">m_SelectionMaterialId</a>.</p>
+<p>References <a class="el" href="glc__material_8cpp_source.html#l00410">GLC_Material::addUsage()</a>, <a class="el" href="glc__material_8cpp_source.html#l00426">GLC_Material::delUsage()</a>, <a class="el" href="glc__global_8cpp_source.html#l00051">glc::GLC_GenUserID()</a>, <a class="el" href="glc__material_8h_source.html#l00091">GLC_Material::isUnused()</a>, <a class="el" href="glc__selectionmaterial_8h_source.html#l00107">m_pMaterial</a>, and <a class="el" href="glc__selectionmaterial_8h_source.html#l00104">m_SelectionMaterialId</a>.</p>
 
 </div>
 </div>
@@ -467,15 +503,41 @@ Static Private Attributes</h2></td></tr>
 
 <p>Use shader. </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00121">121</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00129">129</a> of file <a class="el" href="glc__selectionmaterial_8cpp_source.html">glc_selectionmaterial.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00098">m_SelectionShaderHash</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00154">sharingContext()</a>.</p>
+<p>References <a class="el" href="glc__selectionmaterial_8h_source.html#l00101">m_SelectionShaderHash</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00162">sharingContext()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00658">GLC_3DViewCollection::glDraw()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00669">GLC_3DViewCollection::glDraw()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a37cddebc3899409cfeb8bae3b84962ef"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool GLC_SelectionMaterial::m_NoSelectionMaterial = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Don't use selection material. </p>
+
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8h_source.html#l00110">110</a> of file <a class="el" href="glc__selectionmaterial_8h_source.html">glc_selectionmaterial.h</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00079">glExecute()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00073">setUseSelectionMaterial()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a50db7405cff89bedbd0a1f0b9cf2a263"></a>
 <div class="memitem">
 <div class="memproto">
@@ -496,9 +558,9 @@ Static Private Attributes</h2></td></tr>
 
 <p>Material of this selection material. </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8h_source.html#l00104">104</a> of file <a class="el" href="glc__selectionmaterial_8h_source.html">glc_selectionmaterial.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8h_source.html#l00107">107</a> of file <a class="el" href="glc__selectionmaterial_8h_source.html">glc_selectionmaterial.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00073">glExecute()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00058">useDefautSelectionColor()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00039">useMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00079">glExecute()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00059">useDefautSelectionColor()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00040">useMaterial()</a>.</p>
 
 </div>
 </div>
@@ -522,9 +584,9 @@ Static Private Attributes</h2></td></tr>
 
 <p>Selection material id. </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8h_source.html#l00101">101</a> of file <a class="el" href="glc__selectionmaterial_8h_source.html">glc_selectionmaterial.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8h_source.html#l00104">104</a> of file <a class="el" href="glc__selectionmaterial_8h_source.html">glc_selectionmaterial.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00058">useDefautSelectionColor()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00039">useMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00059">useDefautSelectionColor()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00040">useMaterial()</a>.</p>
 
 </div>
 </div>
@@ -548,9 +610,9 @@ Static Private Attributes</h2></td></tr>
 
 <p>Selection Shader. </p>
 
-<p>Definition at line <a class="el" href="glc__selectionmaterial_8h_source.html#l00098">98</a> of file <a class="el" href="glc__selectionmaterial_8h_source.html">glc_selectionmaterial.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__selectionmaterial_8h_source.html#l00101">101</a> of file <a class="el" href="glc__selectionmaterial_8h_source.html">glc_selectionmaterial.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00173">deleteShader()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00102">initShader()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00108">setShaders()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00154">sharingContext()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00136">unUseShader()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00121">useShader()</a>.</p>
+<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00181">deleteShader()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00110">initShader()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00116">setShaders()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00162">sharingContext()</a>, <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00144">unUseShader()</a>, and <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00129">useShader()</a>.</p>
 
 </div>
 </div>

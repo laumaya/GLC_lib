@@ -134,6 +134,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aa3c98a2c8848e0d4ac58123c1c30d7cd"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___error_log.html#aa3c98a2c8848e0d4ac58123c1c30d7cd">addError</a> (const QStringList &amp;errorDescription)</td></tr>
 <tr class="memdesc:aa3c98a2c8848e0d4ac58123c1c30d7cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add error into the log.  <a href="#aa3c98a2c8848e0d4ac58123c1c30d7cd"></a><br/></td></tr>
 <tr class="separator:aa3c98a2c8848e0d4ac58123c1c30d7cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a842a37420974ad462ca7c4b879e78668"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___error_log.html#a842a37420974ad462ca7c4b879e78668">addError</a> (const QString &amp;errorDescription)</td></tr>
+<tr class="memdesc:a842a37420974ad462ca7c4b879e78668"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add error into the log.  <a href="#a842a37420974ad462ca7c4b879e78668"></a><br/></td></tr>
+<tr class="separator:a842a37420974ad462ca7c4b879e78668"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac537aeb3f639f4eaba0212424831aef1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___error_log.html#ac537aeb3f639f4eaba0212424831aef1">close</a> ()</td></tr>
 <tr class="memdesc:ac537aeb3f639f4eaba0212424831aef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the log file.  <a href="#ac537aeb3f639f4eaba0212424831aef1"></a><br/></td></tr>
 <tr class="separator:ac537aeb3f639f4eaba0212424831aef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -271,9 +274,39 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__errorlog_8cpp_source.html#l00069">69</a> of file <a class="el" href="glc__errorlog_8cpp_source.html">glc_errorlog.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__log_8cpp_source.html#l00051">GLC_Log::add()</a>, <a class="el" href="glc__log_8cpp_source.html#l00068">GLC_Log::addCurrentTime()</a>, <a class="el" href="glc__log_8cpp_source.html#l00059">GLC_Log::addSeparator()</a>, <a class="el" href="glc__errorlog_8cpp_source.html#l00044">instance()</a>, and <a class="el" href="glc__errorlog_8h_source.html#l00093">m_Mutex</a>.</p>
+<p>References <a class="el" href="glc__log_8cpp_source.html#l00051">GLC_Log::add()</a>, <a class="el" href="glc__log_8cpp_source.html#l00068">GLC_Log::addCurrentTime()</a>, <a class="el" href="glc__log_8cpp_source.html#l00059">GLC_Log::addSeparator()</a>, <a class="el" href="glc__errorlog_8cpp_source.html#l00044">instance()</a>, and <a class="el" href="glc__errorlog_8h_source.html#l00096">m_Mutex</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__colladatoworld_8cpp_source.html#l01050">GLC_ColladaToWorld::addPolylistToCurrentMesh()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01183">GLC_3dxmlToWorld::checkForXmlError()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01944">GLC_ColladaToWorld::createOccurenceFromNode()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00876">GLC_3dxmlToWorld::createReferenceRep()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01068">GLC_3dxmlToWorld::createUnfoldedTree()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00069">GLC_ObjToWorld::CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00331">GLC_ObjToWorld::extract3dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">GLC_ObjToWorld::extractFaceIndex()</a>, <a class="el" href="glc__objmtlloader_8cpp_source.html#l00184">GLC_ObjMtlLoader::extractTextureFileName()</a>, <a class="el" href="glc__exception_8cpp_source.html#l00031">GLC_Exception::GLC_Exception()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01773">GLC_ColladaToWorld::linkTexturesToMaterials()</a>, <a class="el" href="glc__3drep_8cpp_source.html#l00246">GLC_3DRep::load()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00773">GLC_3dxmlToWorld::loadExternalRef3D()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01200">GLC_3dxmlToWorld::loadFace()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00366">GLC_3dsToWorld::loadMaterial()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01291">GLC_3dxmlToWorld::loadPolyline()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00384">GLC_3dxmlToWorld::loadProductStructure()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l00651">GLC_ColladaToWorld::loadShininess()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02088">GLC_3dxmlToWorld::loadTexture()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02320">GLC_3dxmlToWorld::loadVertexBuffer()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01404">GLC_3dxmlToWorld::setStreamReaderToFile()</a>, <a class="el" href="glc__3drep_8cpp_source.html#l00388">GLC_3DRep::unload()</a>, and <a class="el" href="glc__structoccurence_8cpp_source.html#l00208">GLC_StructOccurence::~GLC_StructOccurence()</a>.</p>
+<p>Referenced by <a class="el" href="glc__colladatoworld_8cpp_source.html#l01050">GLC_ColladaToWorld::addPolylistToCurrentMesh()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01183">GLC_3dxmlToWorld::checkForXmlError()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01837">GLC_ColladaToWorld::createMesh()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01944">GLC_ColladaToWorld::createOccurenceFromNode()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00876">GLC_3dxmlToWorld::createReferenceRep()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01068">GLC_3dxmlToWorld::createUnfoldedTree()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00076">GLC_ObjToWorld::CreateWorldFromObj()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00361">GLC_ObjToWorld::extract3dVect()</a>, <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">GLC_ObjToWorld::extractFaceIndex()</a>, <a class="el" href="glc__objmtlloader_8cpp_source.html#l00184">GLC_ObjMtlLoader::extractTextureFileName()</a>, <a class="el" href="glc__exception_8cpp_source.html#l00031">GLC_Exception::GLC_Exception()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l01773">GLC_ColladaToWorld::linkTexturesToMaterials()</a>, <a class="el" href="glc__3drep_8cpp_source.html#l00254">GLC_3DRep::load()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00773">GLC_3dxmlToWorld::loadExternalRef3D()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01200">GLC_3dxmlToWorld::loadFace()</a>, <a class="el" href="glc__3dstoworld_8cpp_source.html#l00366">GLC_3dsToWorld::loadMaterial()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01291">GLC_3dxmlToWorld::loadPolyline()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00384">GLC_3dxmlToWorld::loadProductStructure()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02236">GLC_3dxmlToWorld::loadRep()</a>, <a class="el" href="glc__colladatoworld_8cpp_source.html#l00651">GLC_ColladaToWorld::loadShininess()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02092">GLC_3dxmlToWorld::loadTexture()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02325">GLC_3dxmlToWorld::loadVertexBuffer()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01404">GLC_3dxmlToWorld::setStreamReaderToFile()</a>, <a class="el" href="glc__3drep_8cpp_source.html#l00396">GLC_3DRep::unload()</a>, and <a class="el" href="glc__structoccurence_8cpp_source.html#l00208">GLC_StructOccurence::~GLC_StructOccurence()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a842a37420974ad462ca7c4b879e78668"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GLC_ErrorLog::addError </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>errorDescription</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Add error into the log. </p>
+
+<p>Definition at line <a class="el" href="glc__errorlog_8cpp_source.html#l00081">81</a> of file <a class="el" href="glc__errorlog_8cpp_source.html">glc_errorlog.cpp</a>.</p>
+
+<p>References <a class="el" href="glc__log_8cpp_source.html#l00051">GLC_Log::add()</a>, <a class="el" href="glc__log_8cpp_source.html#l00068">GLC_Log::addCurrentTime()</a>, <a class="el" href="glc__log_8cpp_source.html#l00059">GLC_Log::addSeparator()</a>, <a class="el" href="glc__errorlog_8cpp_source.html#l00044">instance()</a>, and <a class="el" href="glc__errorlog_8h_source.html#l00096">m_Mutex</a>.</p>
 
 </div>
 </div>
@@ -300,9 +333,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Close the log file. </p>
 
-<p>Definition at line <a class="el" href="glc__errorlog_8cpp_source.html#l00080">80</a> of file <a class="el" href="glc__errorlog_8cpp_source.html">glc_errorlog.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__errorlog_8cpp_source.html#l00090">90</a> of file <a class="el" href="glc__errorlog_8cpp_source.html">glc_errorlog.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__errorlog_8h_source.html#l00093">m_Mutex</a>, and <a class="el" href="glc__errorlog_8h_source.html#l00090">m_pErrorLog</a>.</p>
+<p>References <a class="el" href="glc__errorlog_8h_source.html#l00096">m_Mutex</a>, and <a class="el" href="glc__errorlog_8h_source.html#l00093">m_pErrorLog</a>.</p>
 
 </div>
 </div>
@@ -331,7 +364,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__errorlog_8cpp_source.html#l00044">44</a> of file <a class="el" href="glc__errorlog_8cpp_source.html">glc_errorlog.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__errorlog_8cpp_source.html#l00033">GLC_ErrorLog()</a>, <a class="el" href="glc__errorlog_8h_source.html#l00090">m_pErrorLog</a>, and <a class="el" href="glc__errorlog_8cpp_source.html#l00087">writeHeader()</a>.</p>
+<p>References <a class="el" href="glc__errorlog_8cpp_source.html#l00033">GLC_ErrorLog()</a>, <a class="el" href="glc__errorlog_8h_source.html#l00093">m_pErrorLog</a>, and <a class="el" href="glc__errorlog_8cpp_source.html#l00097">writeHeader()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__errorlog_8cpp_source.html#l00069">addError()</a>.</p>
 
@@ -363,7 +396,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__errorlog_8cpp_source.html#l00064">64</a> of file <a class="el" href="glc__errorlog_8cpp_source.html">glc_errorlog.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__errorlog_8h_source.html#l00090">m_pErrorLog</a>.</p>
+<p>References <a class="el" href="glc__errorlog_8h_source.html#l00093">m_pErrorLog</a>.</p>
 
 </div>
 </div>
@@ -382,7 +415,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Write error Log header. </p>
 
-<p>Definition at line <a class="el" href="glc__errorlog_8cpp_source.html#l00087">87</a> of file <a class="el" href="glc__errorlog_8cpp_source.html">glc_errorlog.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__errorlog_8cpp_source.html#l00097">97</a> of file <a class="el" href="glc__errorlog_8cpp_source.html">glc_errorlog.cpp</a>.</p>
 
 <p>References <a class="el" href="glc__log_8h_source.html#l00091">GLC_Log::m_TextStream</a>.</p>
 
@@ -411,9 +444,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The mutex of this unique log. </p>
 
-<p>Definition at line <a class="el" href="glc__errorlog_8h_source.html#l00093">93</a> of file <a class="el" href="glc__errorlog_8h_source.html">glc_errorlog.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__errorlog_8h_source.html#l00096">96</a> of file <a class="el" href="glc__errorlog_8h_source.html">glc_errorlog.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__errorlog_8cpp_source.html#l00069">addError()</a>, and <a class="el" href="glc__errorlog_8cpp_source.html#l00080">close()</a>.</p>
+<p>Referenced by <a class="el" href="glc__errorlog_8cpp_source.html#l00069">addError()</a>, and <a class="el" href="glc__errorlog_8cpp_source.html#l00090">close()</a>.</p>
 
 </div>
 </div>
@@ -437,9 +470,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>The unique error log instance. </p>
 
-<p>Definition at line <a class="el" href="glc__errorlog_8h_source.html#l00090">90</a> of file <a class="el" href="glc__errorlog_8h_source.html">glc_errorlog.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__errorlog_8h_source.html#l00093">93</a> of file <a class="el" href="glc__errorlog_8h_source.html">glc_errorlog.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__errorlog_8cpp_source.html#l00080">close()</a>, <a class="el" href="glc__errorlog_8cpp_source.html#l00044">instance()</a>, and <a class="el" href="glc__errorlog_8cpp_source.html#l00064">isEmpty()</a>.</p>
+<p>Referenced by <a class="el" href="glc__errorlog_8cpp_source.html#l00090">close()</a>, <a class="el" href="glc__errorlog_8cpp_source.html#l00044">instance()</a>, and <a class="el" href="glc__errorlog_8cpp_source.html#l00064">isEmpty()</a>.</p>
 
 </div>
 </div>

@@ -161,7 +161,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00071"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#a15e3cab93a624d393d13cbdf8cae2e5b">   71</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#a15e3cab93a624d393d13cbdf8cae2e5b" title="Return true if the binary rep is usable.">GLC_BSRep::isUsable</a>(<span class="keyword">const</span> QDateTime&amp; timeStamp)</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;{</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;         <span class="keywordtype">bool</span> isUpToDate= <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;         <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___b_s_rep.html#af5ab88550b54f3995156461e1e743af7" title="Open the file.">open</a>(QIODevice::ReadOnly))</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___b_s_rep.html#a8f7e82e3e35645ca56dfb97c25a15541" title="Open the file.">open</a>(QIODevice::ReadOnly, NULL))</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;         {</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___b_s_rep.html#a7e42ca8601c17110f1eeeb19635cdf00" title="Check the header.">headerIsOk</a>())</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                  {</div>
@@ -188,11 +188,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment">// name Get Functions</span></div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment"></span><span class="comment">// Load the binary rep</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#ac4c5d01547100d3582894fc157483b28">  103</a></span>&#160;<a class="code" href="class_g_l_c__3_d_rep.html" title="GLC_3DRep : A referrence 3D Representation.">GLC_3DRep</a> <a class="code" href="class_g_l_c___b_s_rep.html#ac4c5d01547100d3582894fc157483b28" title="Load the binary rep.">GLC_BSRep::loadRep</a>()</div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#ac4bbff9f8a4d8a1340ab981ca8e6ff45">  103</a></span>&#160;<a class="code" href="class_g_l_c__3_d_rep.html" title="GLC_3DRep : A referrence 3D Representation.">GLC_3DRep</a> <a class="code" href="class_g_l_c___b_s_rep.html#ac4bbff9f8a4d8a1340ab981ca8e6ff45" title="Load the binary rep, if the file is not NULL the rep take ownership of the file.">GLC_BSRep::loadRep</a>(QFile *pFile)</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;{</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;         <a class="code" href="class_g_l_c__3_d_rep.html" title="GLC_3DRep : A referrence 3D Representation.">GLC_3DRep</a> loadedRep;</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;         <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___b_s_rep.html#af5ab88550b54f3995156461e1e743af7" title="Open the file.">open</a>(QIODevice::ReadOnly))</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___b_s_rep.html#a8f7e82e3e35645ca56dfb97c25a15541" title="Open the file.">open</a>(QIODevice::ReadOnly, pFile))</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;         {</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___b_s_rep.html#a7e42ca8601c17110f1eeeb19635cdf00" title="Check the header.">headerIsOk</a>())</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                  {</div>
@@ -250,7 +250,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;{</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;         <a class="code" href="class_g_l_c___bounding_box.html" title="GLC_BoundingBox : Geometry bounding box.">GLC_BoundingBox</a> <a class="code" href="class_g_l_c___b_s_rep.html#ac302a97d991eefe235b939348fe8fc29" title="Return the bounding box of the binary representation.">boundingBox</a>;</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;         <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___b_s_rep.html#af5ab88550b54f3995156461e1e743af7" title="Open the file.">open</a>(QIODevice::ReadOnly))</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___b_s_rep.html#a8f7e82e3e35645ca56dfb97c25a15541" title="Open the file.">open</a>(QIODevice::ReadOnly, NULL))</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;         {</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                  <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___b_s_rep.html#a7e42ca8601c17110f1eeeb19635cdf00" title="Check the header.">headerIsOk</a>())</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;                  {</div>
@@ -290,7 +290,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00204"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#a51d835aeaa2cf2ec179eb2f658c4a0ef">  204</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#a51d835aeaa2cf2ec179eb2f658c4a0ef" title="Save the GLC_3DRep in serialised binary.">GLC_BSRep::save</a>(<span class="keyword">const</span> <a class="code" href="class_g_l_c__3_d_rep.html" title="GLC_3DRep : A referrence 3D Representation.">GLC_3DRep</a>&amp; rep)</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;{</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;         <span class="keywordtype">bool</span> saveOk= <a class="code" href="class_g_l_c___b_s_rep.html#af5ab88550b54f3995156461e1e743af7" title="Open the file.">open</a>(QIODevice::WriteOnly);</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordtype">bool</span> saveOk= <a class="code" href="class_g_l_c___b_s_rep.html#a8f7e82e3e35645ca56dfb97c25a15541" title="Open the file.">open</a>(QIODevice::WriteOnly, NULL);</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;         <span class="keywordflow">if</span> (saveOk)</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;         {</div>
 <div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;                  <a class="code" href="class_g_l_c___b_s_rep.html#a1548f48c3381903eb2509e39aae958d7" title="Write the header.">writeHeader</a>(rep.<a class="code" href="class_g_l_c___rep.html#adddea4b6a394eed14879a4a14fbbabd4" title="Return the rep file las modified date and time.">lastModified</a>());</div>
@@ -335,102 +335,109 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;</div>
 <div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;</div>
 <div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="comment">// Open the file</span></div>
-<div class="line"><a name="l00253"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#af5ab88550b54f3995156461e1e743af7">  253</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#af5ab88550b54f3995156461e1e743af7" title="Open the file.">GLC_BSRep::open</a>(QIODevice::OpenMode mode)</div>
+<div class="line"><a name="l00253"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#a8f7e82e3e35645ca56dfb97c25a15541">  253</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#a8f7e82e3e35645ca56dfb97c25a15541" title="Open the file.">GLC_BSRep::open</a>(QIODevice::OpenMode mode, QFile* pFile)</div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;{</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;         <span class="keywordtype">bool</span> openOk= <a class="code" href="class_g_l_c___b_s_rep.html#a91671c6675c9a3e3a8890cdc5439d1f7" title="the Binary representation file informations">m_FileInfo</a>.exists();</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordtype">bool</span> openOk= <a class="code" href="class_g_l_c___b_s_rep.html#a91671c6675c9a3e3a8890cdc5439d1f7" title="the Binary representation file informations">m_FileInfo</a>.exists() || ((NULL != pFile) &amp;&amp; pFile-&gt;exists());</div>
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;         <span class="keywordflow">if</span> (openOk || (mode == QIODevice::WriteOnly))</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;         {</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;                  <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.setDevice(NULL);</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                  <span class="keyword">delete</span> <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>;</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                  <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>= <span class="keyword">new</span> QFile(<a class="code" href="class_g_l_c___b_s_rep.html#a91671c6675c9a3e3a8890cdc5439d1f7" title="the Binary representation file informations">m_FileInfo</a>.filePath());</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                  openOk= <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>-&gt;open(mode);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                  <span class="keywordflow">if</span> (openOk)</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                  {</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                           <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.setDevice(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>);</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                  }</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;         }</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___trace_log.html#a6196dc401c903dba18eaa2211297afd1" title="Return true if the trace log is enable.">GLC_TraceLog::isEnable</a>())</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;         {</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                  QStringList stringList(<span class="stringliteral">&quot;GLC_BSRep::open&quot;</span>);</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                  stringList.append(<span class="stringliteral">&quot;File &quot;</span> + <a class="code" href="class_g_l_c___b_s_rep.html#a91671c6675c9a3e3a8890cdc5439d1f7" title="the Binary representation file informations">m_FileInfo</a>.filePath() + <span class="stringliteral">&quot; doesn&#39;t exists&quot;</span>);</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                  <a class="code" href="class_g_l_c___trace_log.html#af7b42cf5e61121931dbc3da4a3ce2f91" title="Add error into the log.">GLC_TraceLog::addTrace</a>(stringList);</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;         }</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;         <span class="keywordflow">return</span> openOk;</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;}</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="comment">// Close the file</span></div>
-<div class="line"><a name="l00278"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#a047ab856fb16f40ffe9a3e6d1c6fdac9">  278</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#a047ab856fb16f40ffe9a3e6d1c6fdac9" title="Close the file.">GLC_BSRep::close</a>()</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;{</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a> != NULL);</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.device() != NULL);</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;         <span class="keywordtype">bool</span> closeOk= <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.status() == QDataStream::Ok;</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.setDevice(NULL);</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>-&gt;close();</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;         <span class="keyword">delete</span> <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>;</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>= NULL;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;         <span class="keywordflow">return</span> closeOk;</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;}</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="comment">// Write the header</span></div>
-<div class="line"><a name="l00292"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#a1548f48c3381903eb2509e39aae958d7">  292</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___b_s_rep.html#a1548f48c3381903eb2509e39aae958d7" title="Write the header.">GLC_BSRep::writeHeader</a>(<span class="keyword">const</span> QDateTime&amp; dateTime)</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;{</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a> != NULL);</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.device() != NULL);</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;         <span class="comment">// Binary representation Header</span></div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;         <span class="comment">// Add the magic number</span></div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &lt;&lt; <a class="code" href="class_g_l_c___b_s_rep.html#a3f5908ed54be1f743f9fea7e7b456522" title="The binary rep magic number.">m_Uuid</a>;</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;         <span class="comment">// Add the version</span></div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &lt;&lt; <a class="code" href="class_g_l_c___b_s_rep.html#ad2277bec22849d0e5cb0d4cc843f65b6" title="The binary rep version.">m_Version</a>;</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;         <span class="keywordtype">bool</span> writeFinished= <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &lt;&lt; writeFinished;</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;         <span class="comment">// Set the version of the data stream</span></div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.setVersion(QDataStream::Qt_4_6);</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;         <span class="comment">// Add the time stamp</span></div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &lt;&lt; dateTime;</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;}</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        <span class="keywordflow">if</span> (NULL != pFile)</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        {</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;            <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>= pFile;</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        }</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        {</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;            <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>= <span class="keyword">new</span> QFile(<a class="code" href="class_g_l_c___b_s_rep.html#a91671c6675c9a3e3a8890cdc5439d1f7" title="the Binary representation file informations">m_FileInfo</a>.filePath());</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        }</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;                  openOk= <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>-&gt;open(mode);</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                  <span class="keywordflow">if</span> (openOk)</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                  {</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                           <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.setDevice(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;                  }</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;         }</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="class_g_l_c___trace_log.html#a6196dc401c903dba18eaa2211297afd1" title="Return true if the trace log is enable.">GLC_TraceLog::isEnable</a>())</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;         {</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                  QStringList stringList(<span class="stringliteral">&quot;GLC_BSRep::open&quot;</span>);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                  stringList.append(<span class="stringliteral">&quot;File &quot;</span> + <a class="code" href="class_g_l_c___b_s_rep.html#a91671c6675c9a3e3a8890cdc5439d1f7" title="the Binary representation file informations">m_FileInfo</a>.filePath() + <span class="stringliteral">&quot; doesn&#39;t exists&quot;</span>);</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;                  <a class="code" href="class_g_l_c___trace_log.html#af7b42cf5e61121931dbc3da4a3ce2f91" title="Add error into the log.">GLC_TraceLog::addTrace</a>(stringList);</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;         }</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;         <span class="keywordflow">return</span> openOk;</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;}</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="comment">// Close the file</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#a047ab856fb16f40ffe9a3e6d1c6fdac9">  285</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#a047ab856fb16f40ffe9a3e6d1c6fdac9" title="Close the file.">GLC_BSRep::close</a>()</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;{</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a> != NULL);</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.device() != NULL);</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;         <span class="keywordtype">bool</span> closeOk= <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.status() == QDataStream::Ok;</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.setDevice(NULL);</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>-&gt;close();</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;         <span class="keyword">delete</span> <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>;</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>= NULL;</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;         <span class="keywordflow">return</span> closeOk;</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;}</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="comment">// Write the header</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#a1548f48c3381903eb2509e39aae958d7">  299</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_g_l_c___b_s_rep.html#a1548f48c3381903eb2509e39aae958d7" title="Write the header.">GLC_BSRep::writeHeader</a>(<span class="keyword">const</span> QDateTime&amp; dateTime)</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;{</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a> != NULL);</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.device() != NULL);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;         <span class="comment">// Binary representation Header</span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;         <span class="comment">// Add the magic number</span></div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &lt;&lt; <a class="code" href="class_g_l_c___b_s_rep.html#a3f5908ed54be1f743f9fea7e7b456522" title="The binary rep magic number.">m_Uuid</a>;</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;         <span class="comment">// Add the version</span></div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &lt;&lt; <a class="code" href="class_g_l_c___b_s_rep.html#ad2277bec22849d0e5cb0d4cc843f65b6" title="The binary rep version.">m_Version</a>;</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;         <span class="keywordtype">bool</span> writeFinished= <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &lt;&lt; writeFinished;</div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="comment">// Check the header</span></div>
-<div class="line"><a name="l00313"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#a7e42ca8601c17110f1eeeb19635cdf00">  313</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#a7e42ca8601c17110f1eeeb19635cdf00" title="Check the header.">GLC_BSRep::headerIsOk</a>()</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;{</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a> != NULL);</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.device() != NULL);</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>-&gt;openMode() == QIODevice::ReadOnly);</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;         <span class="comment">// Set the version of the data stream</span></div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.setVersion(QDataStream::Qt_4_6);</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;         <span class="comment">// Add the time stamp</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &lt;&lt; dateTime;</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;}</div>
 <div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;         QUuid uuid;</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;         quint32 <a class="code" href="class_g_l_c___b_s_rep.html#a57dae5849a469d8c69fd1f7fe8d26bec" title="Return bsrep version.">version</a>;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;         <span class="keywordtype">bool</span> writeFinished;</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &gt;&gt; uuid;</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &gt;&gt; <a class="code" href="class_g_l_c___b_s_rep.html#a57dae5849a469d8c69fd1f7fe8d26bec" title="Return bsrep version.">version</a>;</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &gt;&gt; writeFinished;</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;         <span class="comment">// Set the version of the data stream</span></div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.setVersion(QDataStream::Qt_4_6);</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="comment">// Check the header</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#a7e42ca8601c17110f1eeeb19635cdf00">  320</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#a7e42ca8601c17110f1eeeb19635cdf00" title="Check the header.">GLC_BSRep::headerIsOk</a>()</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;{</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a> != NULL);</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.device() != NULL);</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>-&gt;openMode() == QIODevice::ReadOnly);</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;         QUuid uuid;</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;         quint32 <a class="code" href="class_g_l_c___b_s_rep.html#a57dae5849a469d8c69fd1f7fe8d26bec" title="Return bsrep version.">version</a>;</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;         <span class="keywordtype">bool</span> writeFinished;</div>
 <div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;         <span class="keywordtype">bool</span> headerOk= (uuid == <a class="code" href="class_g_l_c___b_s_rep.html#a3f5908ed54be1f743f9fea7e7b456522" title="The binary rep magic number.">m_Uuid</a>) &amp;&amp; (version &lt;= <a class="code" href="class_g_l_c___b_s_rep.html#ad2277bec22849d0e5cb0d4cc843f65b6" title="The binary rep version.">m_Version</a>) &amp;&amp; (version &gt; 101) &amp;&amp; writeFinished;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;         <span class="keywordflow">return</span> headerOk;</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;}</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="comment">// Check the time Stamp</span></div>
-<div class="line"><a name="l00336"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#aee0263ab7240a41d0dcce99c4e2661c7">  336</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#aee0263ab7240a41d0dcce99c4e2661c7" title="Check the time Stamp.">GLC_BSRep::timeStampOk</a>(<span class="keyword">const</span> QDateTime&amp; timeStamp)</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;{</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a> != NULL);</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.device() != NULL);</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>-&gt;openMode() == QIODevice::ReadOnly);</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &gt;&gt; uuid;</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &gt;&gt; <a class="code" href="class_g_l_c___b_s_rep.html#a57dae5849a469d8c69fd1f7fe8d26bec" title="Return bsrep version.">version</a>;</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &gt;&gt; writeFinished;</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;         <span class="comment">// Set the version of the data stream</span></div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.setVersion(QDataStream::Qt_4_6);</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;         <span class="keywordtype">bool</span> headerOk= (uuid == <a class="code" href="class_g_l_c___b_s_rep.html#a3f5908ed54be1f743f9fea7e7b456522" title="The binary rep magic number.">m_Uuid</a>) &amp;&amp; (version &lt;= <a class="code" href="class_g_l_c___b_s_rep.html#ad2277bec22849d0e5cb0d4cc843f65b6" title="The binary rep version.">m_Version</a>) &amp;&amp; (version &gt; 101) &amp;&amp; writeFinished;</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;         <span class="keywordflow">return</span> headerOk;</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;}</div>
 <div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;         QDateTime dateTime;</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &gt;&gt; dateTime;</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;         <span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#aee0263ab7240a41d0dcce99c4e2661c7" title="Check the time Stamp.">timeStampOk</a>= !timeStamp.isValid() || (dateTime == timeStamp);</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;         <span class="keywordflow">return</span> <a class="code" href="class_g_l_c___b_s_rep.html#aee0263ab7240a41d0dcce99c4e2661c7" title="Check the time Stamp.">timeStampOk</a>;</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;}</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="comment">// Check the time Stamp</span></div>
+<div class="line"><a name="l00343"></a><span class="lineno"><a class="code" href="class_g_l_c___b_s_rep.html#aee0263ab7240a41d0dcce99c4e2661c7">  343</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#aee0263ab7240a41d0dcce99c4e2661c7" title="Check the time Stamp.">GLC_BSRep::timeStampOk</a>(<span class="keyword">const</span> QDateTime&amp; timeStamp)</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;{</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a> != NULL);</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a>.device() != NULL);</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;         Q_ASSERT(<a class="code" href="class_g_l_c___b_s_rep.html#a6465648bd8a9eceb209b27c5cb65ca34" title="The brep file.">m_pFile</a>-&gt;openMode() == QIODevice::ReadOnly);</div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;         QDateTime dateTime;</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;         <a class="code" href="class_g_l_c___b_s_rep.html#a93183e1cc1df8496a7dcbbe55bf39727" title="The Data stream.">m_DataStream</a> &gt;&gt; dateTime;</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;         <span class="keywordtype">bool</span> <a class="code" href="class_g_l_c___b_s_rep.html#aee0263ab7240a41d0dcce99c4e2661c7" title="Check the time Stamp.">timeStampOk</a>= !timeStamp.isValid() || (dateTime == timeStamp);</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;         <span class="keywordflow">return</span> <a class="code" href="class_g_l_c___b_s_rep.html#aee0263ab7240a41d0dcce99c4e2661c7" title="Check the time Stamp.">timeStampOk</a>;</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;}</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;</div>
 </div><!-- fragment --></div><!-- contents -->
 
 	<p align="center" bgcolor="#ccccff" height="17" width="100%">

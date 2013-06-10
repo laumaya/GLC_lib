@@ -117,9 +117,9 @@ Signals</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad224244b26e75d56ff021e30cdb7f267"><td class="memItemLeft" align="right" valign="top">*name zoom Functions *void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ad224244b26e75d56ff021e30cdb7f267">reframe</a> (const <a class="el" href="class_g_l_c___bounding_box.html">GLC_BoundingBox</a> &amp;box)</td></tr>
-<tr class="memdesc:ad224244b26e75d56ff021e30cdb7f267"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the viewport's camera in order to reframe on the current scene.  <a href="#ad224244b26e75d56ff021e30cdb7f267"></a><br/></td></tr>
-<tr class="separator:ad224244b26e75d56ff021e30cdb7f267"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0c4a7e8dc2a2c04847c1c8b69503a1a"><td class="memItemLeft" align="right" valign="top">*name zoom Functions *void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ae0c4a7e8dc2a2c04847c1c8b69503a1a">reframe</a> (const <a class="el" href="class_g_l_c___bounding_box.html">GLC_BoundingBox</a> &amp;box, double coverFactor=2.2)</td></tr>
+<tr class="memdesc:ae0c4a7e8dc2a2c04847c1c8b69503a1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the viewport's camera in order to reframe on the current scene.  <a href="#ae0c4a7e8dc2a2c04847c1c8b69503a1a"></a><br/></td></tr>
+<tr class="separator:ae0c4a7e8dc2a2c04847c1c8b69503a1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Constructor / Destructor</div></td></tr>
 <tr class="memitem:aa654f85053e93b816ddd219b8750b8d7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#aa654f85053e93b816ddd219b8750b8d7">GLC_Viewport</a> ()</td></tr>
 <tr class="memdesc:aa654f85053e93b816ddd219b8750b8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <a href="#aa654f85053e93b816ddd219b8750b8d7"></a><br/></td></tr>
@@ -131,6 +131,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2356b1a70b98cb96de312a186e50b8d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___camera.html">GLC_Camera</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a2356b1a70b98cb96de312a186e50b8d8">cameraHandle</a> () const </td></tr>
 <tr class="memdesc:a2356b1a70b98cb96de312a186e50b8d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the camera associate to this viewport.  <a href="#a2356b1a70b98cb96de312a186e50b8d8"></a><br/></td></tr>
 <tr class="separator:a2356b1a70b98cb96de312a186e50b8d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a401f8c72b2c716edcc87cd0373a8d8e0"><td class="memItemLeft" align="right" valign="top">QSize&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a401f8c72b2c716edcc87cd0373a8d8e0">size</a> () const </td></tr>
+<tr class="memdesc:a401f8c72b2c716edcc87cd0373a8d8e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return this viewport size.  <a href="#a401f8c72b2c716edcc87cd0373a8d8e0"></a><br/></td></tr>
+<tr class="separator:a401f8c72b2c716edcc87cd0373a8d8e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45ffbab640ea235880d7e5af61e20832"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a45ffbab640ea235880d7e5af61e20832">viewHSize</a> () const </td></tr>
 <tr class="memdesc:a45ffbab640ea235880d7e5af61e20832"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get this viewport Horizontal size.  <a href="#a45ffbab640ea235880d7e5af61e20832"></a><br/></td></tr>
 <tr class="separator:a45ffbab640ea235880d7e5af61e20832"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -195,24 +198,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0ade21c5b4181302305ed62e5dc66955"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the minimum dynamic pixel culling ratio.  <a href="#a0ade21c5b4181302305ed62e5dc66955"></a><br/></td></tr>
 <tr class="separator:a0ade21c5b4181302305ed62e5dc66955"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Set Functions</div></td></tr>
-<tr class="memitem:a7921b0d06274dd419061733438644a12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a7921b0d06274dd419061733438644a12">setWinGLSize</a> (int HSize, int VSize)</td></tr>
-<tr class="memdesc:a7921b0d06274dd419061733438644a12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inform the viewport that the OpenGL window size has been modified.  <a href="#a7921b0d06274dd419061733438644a12"></a><br/></td></tr>
-<tr class="separator:a7921b0d06274dd419061733438644a12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00233ef1df5a937ceb25ce7cb840e743"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a00233ef1df5a937ceb25ce7cb840e743">renderAndSelect</a> (int x, int y)</td></tr>
-<tr class="memdesc:a00233ef1df5a937ceb25ce7cb840e743"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call the attached QGLWidgetSelect updateGL function and return the picking id.  <a href="#a00233ef1df5a937ceb25ce7cb840e743"></a><br/></td></tr>
-<tr class="separator:a00233ef1df5a937ceb25ce7cb840e743"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67c231c78f4ab5207b24ca1c90aad074"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a67c231c78f4ab5207b24ca1c90aad074">selectOnPreviousRender</a> (int x, int y)</td></tr>
-<tr class="memdesc:a67c231c78f4ab5207b24ca1c90aad074"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the picking id from the already render window.  <a href="#a67c231c78f4ab5207b24ca1c90aad074"></a><br/></td></tr>
-<tr class="separator:a67c231c78f4ab5207b24ca1c90aad074"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d058b4333e076161080905101c487d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a8d058b4333e076161080905101c487d1">selectBody</a> (<a class="el" href="class_g_l_c__3_d_view_instance.html">GLC_3DViewInstance</a> *, int x, int y)</td></tr>
-<tr class="memdesc:a8d058b4333e076161080905101c487d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select a body inside a 3DViewInstance and return its UID.  <a href="#a8d058b4333e076161080905101c487d1"></a><br/></td></tr>
-<tr class="separator:a8d058b4333e076161080905101c487d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adab3e4f2c42576381804d9a86be0673a"><td class="memItemLeft" align="right" valign="top">QPair&lt; int, <a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#adab3e4f2c42576381804d9a86be0673a">selectPrimitive</a> (<a class="el" href="class_g_l_c__3_d_view_instance.html">GLC_3DViewInstance</a> *, int x, int y)</td></tr>
-<tr class="memdesc:adab3e4f2c42576381804d9a86be0673a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select a primitive inside a 3DViewInstance and return its UID and its body index.  <a href="#adab3e4f2c42576381804d9a86be0673a"></a><br/></td></tr>
-<tr class="separator:adab3e4f2c42576381804d9a86be0673a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1fcea3e6e164e66d25ff91ab1181869"><td class="memItemLeft" align="right" valign="top">QSet&lt; <a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ab1fcea3e6e164e66d25ff91ab1181869">selectInsideSquare</a> (int x1, int y1, int x2, int y2)</td></tr>
-<tr class="memdesc:ab1fcea3e6e164e66d25ff91ab1181869"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select objects inside specified square and return its UID in a set.  <a href="#ab1fcea3e6e164e66d25ff91ab1181869"></a><br/></td></tr>
-<tr class="separator:ab1fcea3e6e164e66d25ff91ab1181869"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac70d10fff1a4af4010a4e3705ee25cd4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ac70d10fff1a4af4010a4e3705ee25cd4">setWinGLSize</a> (int width, int height, bool updateOGLViewport=true)</td></tr>
+<tr class="memdesc:ac70d10fff1a4af4010a4e3705ee25cd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the OpenGL view size.  <a href="#ac70d10fff1a4af4010a4e3705ee25cd4"></a><br/></td></tr>
+<tr class="separator:ac70d10fff1a4af4010a4e3705ee25cd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2067895170dacadc03b9b8cb30203f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ac2067895170dacadc03b9b8cb30203f4">setWinGLSize</a> (const QSize &amp;<a class="el" href="class_g_l_c___viewport.html#a401f8c72b2c716edcc87cd0373a8d8e0">size</a>, bool updateOGLViewport=true)</td></tr>
+<tr class="memdesc:ac2067895170dacadc03b9b8cb30203f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the OpenGL view size.  <a href="#ac2067895170dacadc03b9b8cb30203f4"></a><br/></td></tr>
+<tr class="separator:ac2067895170dacadc03b9b8cb30203f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35b23563396554e8c620daa597be7894"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a35b23563396554e8c620daa597be7894">renderAndSelect</a> (int x, int y, GLenum buffer=GL_BACK)</td></tr>
+<tr class="memdesc:a35b23563396554e8c620daa597be7894"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call the attached QGLWidgetSelect updateGL function and return the picking id.  <a href="#a35b23563396554e8c620daa597be7894"></a><br/></td></tr>
+<tr class="separator:a35b23563396554e8c620daa597be7894"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3088526fde8609a9bd1cca15c753d5f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ae3088526fde8609a9bd1cca15c753d5f">selectOnPreviousRender</a> (int x, int y, GLenum buffer=GL_BACK)</td></tr>
+<tr class="memdesc:ae3088526fde8609a9bd1cca15c753d5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the picking id from the already render window.  <a href="#ae3088526fde8609a9bd1cca15c753d5f"></a><br/></td></tr>
+<tr class="separator:ae3088526fde8609a9bd1cca15c753d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2b5a46c0aad5b316ee5b5e67d612f2c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#af2b5a46c0aad5b316ee5b5e67d612f2c">selectBody</a> (<a class="el" href="class_g_l_c__3_d_view_instance.html">GLC_3DViewInstance</a> *, int x, int y, GLenum buffer=GL_BACK)</td></tr>
+<tr class="memdesc:af2b5a46c0aad5b316ee5b5e67d612f2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select a body inside a 3DViewInstance and return its UID.  <a href="#af2b5a46c0aad5b316ee5b5e67d612f2c"></a><br/></td></tr>
+<tr class="separator:af2b5a46c0aad5b316ee5b5e67d612f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1711811418c2c71e80eda11064023f9"><td class="memItemLeft" align="right" valign="top">QPair&lt; int, <a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#aa1711811418c2c71e80eda11064023f9">selectPrimitive</a> (<a class="el" href="class_g_l_c__3_d_view_instance.html">GLC_3DViewInstance</a> *, int x, int y, GLenum buffer=GL_BACK)</td></tr>
+<tr class="memdesc:aa1711811418c2c71e80eda11064023f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select a primitive inside a 3DViewInstance and return its UID and its body index.  <a href="#aa1711811418c2c71e80eda11064023f9"></a><br/></td></tr>
+<tr class="separator:aa1711811418c2c71e80eda11064023f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac48e2271917157e343434f999b5f7bb4"><td class="memItemLeft" align="right" valign="top">QSet&lt; <a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ac48e2271917157e343434f999b5f7bb4">selectInsideSquare</a> (int x1, int y1, int x2, int y2, GLenum buffer=GL_BACK)</td></tr>
+<tr class="memdesc:ac48e2271917157e343434f999b5f7bb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select objects inside specified square and return its UID in a set.  <a href="#ac48e2271917157e343434f999b5f7bb4"></a><br/></td></tr>
+<tr class="separator:ac48e2271917157e343434f999b5f7bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1e0c6151e655d205d03c65c42e36ac0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#af1e0c6151e655d205d03c65c42e36ac0">loadBackGroundImage</a> (const QString &amp;imageFile)</td></tr>
 <tr class="memdesc:af1e0c6151e655d205d03c65c42e36ac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">load background image from file in this viewport  <a href="#af1e0c6151e655d205d03c65c42e36ac0"></a><br/></td></tr>
 <tr class="separator:af1e0c6151e655d205d03c65c42e36ac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,7 +243,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acd163c85c4df0dcdf897e01d92a26386"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#acd163c85c4df0dcdf897e01d92a26386">setBackgroundColor</a> (QColor setColor)</td></tr>
 <tr class="memdesc:acd163c85c4df0dcdf897e01d92a26386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the Background color of this viewport.  <a href="#acd163c85c4df0dcdf897e01d92a26386"></a><br/></td></tr>
 <tr class="separator:acd163c85c4df0dcdf897e01d92a26386"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad825a35b48c2f3b17f343e4580d2fb4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ad825a35b48c2f3b17f343e4580d2fb4d">setSelectionSquareSize</a> (GLsizei size)</td></tr>
+<tr class="memitem:ad825a35b48c2f3b17f343e4580d2fb4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ad825a35b48c2f3b17f343e4580d2fb4d">setSelectionSquareSize</a> (GLsizei <a class="el" href="class_g_l_c___viewport.html#a401f8c72b2c716edcc87cd0373a8d8e0">size</a>)</td></tr>
 <tr class="memdesc:ad825a35b48c2f3b17f343e4580d2fb4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the selection square size of this viewport.  <a href="#ad825a35b48c2f3b17f343e4580d2fb4d"></a><br/></td></tr>
 <tr class="separator:ad825a35b48c2f3b17f343e4580d2fb4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17f674340b9595b4aac09788944a6958"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a17f674340b9595b4aac09788944a6958">updateFrustum</a> (<a class="el" href="class_g_l_c___matrix4x4.html">GLC_Matrix4x4</a> *pMat=NULL)</td></tr>
@@ -264,18 +270,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aab6fc1073a270fc0f1230be81e6848fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#aab6fc1073a270fc0f1230be81e6848fa">setToOrtho</a> (bool <a class="el" href="class_g_l_c___viewport.html#a0dda1e477c8c17ee8bb35f57284e00e7">useOrtho</a>)</td></tr>
 <tr class="memdesc:aab6fc1073a270fc0f1230be81e6848fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set othographic usage to the given flag.  <a href="#aab6fc1073a270fc0f1230be81e6848fa"></a><br/></td></tr>
 <tr class="separator:aab6fc1073a270fc0f1230be81e6848fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a721c5c38529323b1e7f6c19c31afd779"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a721c5c38529323b1e7f6c19c31afd779">setMinimumPixelCullingSize</a> (int size)</td></tr>
+<tr class="memitem:a721c5c38529323b1e7f6c19c31afd779"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a721c5c38529323b1e7f6c19c31afd779">setMinimumPixelCullingSize</a> (int <a class="el" href="class_g_l_c___viewport.html#a401f8c72b2c716edcc87cd0373a8d8e0">size</a>)</td></tr>
 <tr class="memdesc:a721c5c38529323b1e7f6c19c31afd779"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set minimum pixel culling size.  <a href="#a721c5c38529323b1e7f6c19c31afd779"></a><br/></td></tr>
 <tr class="separator:a721c5c38529323b1e7f6c19c31afd779"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:ae090bd7a80f4371a657323a706bf5085"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ae090bd7a80f4371a657323a706bf5085">meaningfulIdInsideSquare</a> (GLint x, GLint y, GLsizei width, GLsizei height)</td></tr>
-<tr class="memdesc:ae090bd7a80f4371a657323a706bf5085"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the meaningful color ID inside a square in screen coordinates.  <a href="#ae090bd7a80f4371a657323a706bf5085"></a><br/></td></tr>
-<tr class="separator:ae090bd7a80f4371a657323a706bf5085"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6aea88dcbe6b684161156e1f4f66ad3c"><td class="memItemLeft" align="right" valign="top">QSet&lt; <a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a6aea88dcbe6b684161156e1f4f66ad3c">listOfIdInsideSquare</a> (GLint x, GLint y, GLsizei width, GLsizei height)</td></tr>
-<tr class="memdesc:a6aea88dcbe6b684161156e1f4f66ad3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the Set of ID inside a square in screen coordinate.  <a href="#a6aea88dcbe6b684161156e1f4f66ad3c"></a><br/></td></tr>
-<tr class="separator:a6aea88dcbe6b684161156e1f4f66ad3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa780cce911c7045b2fe6c82627e05b5f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#aa780cce911c7045b2fe6c82627e05b5f">meaningfulIdInsideSquare</a> (GLint x, GLint y, GLsizei width, GLsizei height, GLenum buffer)</td></tr>
+<tr class="memdesc:aa780cce911c7045b2fe6c82627e05b5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the meaningful color ID inside a square in screen coordinates.  <a href="#aa780cce911c7045b2fe6c82627e05b5f"></a><br/></td></tr>
+<tr class="separator:aa780cce911c7045b2fe6c82627e05b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7c9f40f230be8ccef60f5a7b3f539ca"><td class="memItemLeft" align="right" valign="top">QSet&lt; <a class="el" href="glc__global_8h.html#abf950976fabed69026558df8e2da6c6b">GLC_uint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ae7c9f40f230be8ccef60f5a7b3f539ca">listOfIdInsideSquare</a> (GLint x, GLint y, GLsizei width, GLsizei height, GLenum buffer)</td></tr>
+<tr class="memdesc:ae7c9f40f230be8ccef60f5a7b3f539ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the Set of ID inside a square in screen coordinate.  <a href="#ae7c9f40f230be8ccef60f5a7b3f539ca"></a><br/></td></tr>
+<tr class="separator:ae7c9f40f230be8ccef60f5a7b3f539ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1a29dad520ae3d862db11f628fa49cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ae1a29dad520ae3d862db11f628fa49cb">updateMinimumRatioSize</a> ()</td></tr>
 <tr class="memdesc:ae1a29dad520ae3d862db11f628fa49cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update minimum ratio size for pixel culling.  <a href="#ae1a29dad520ae3d862db11f628fa49cb"></a><br/></td></tr>
 <tr class="separator:ae1a29dad520ae3d862db11f628fa49cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -300,12 +306,12 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:acb4db5014a66fe7d0ac64461c064597c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___image_plane.html">GLC_ImagePlane</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#acb4db5014a66fe7d0ac64461c064597c">m_pImagePlane</a></td></tr>
 <tr class="memdesc:acb4db5014a66fe7d0ac64461c064597c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Image plane (Background image)  <a href="#acb4db5014a66fe7d0ac64461c064597c"></a><br/></td></tr>
 <tr class="separator:acb4db5014a66fe7d0ac64461c064597c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69c07d79832fa1ad23dd790ad5f106a6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a69c07d79832fa1ad23dd790ad5f106a6">m_WindowHSize</a></td></tr>
-<tr class="memdesc:a69c07d79832fa1ad23dd790ad5f106a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Horizontal OpenGL viewport size.  <a href="#a69c07d79832fa1ad23dd790ad5f106a6"></a><br/></td></tr>
-<tr class="separator:a69c07d79832fa1ad23dd790ad5f106a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72e37791d927956c7c1308f39dc6513f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a72e37791d927956c7c1308f39dc6513f">m_WindowVSize</a></td></tr>
-<tr class="memdesc:a72e37791d927956c7c1308f39dc6513f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vertical OpenGL viewport size.  <a href="#a72e37791d927956c7c1308f39dc6513f"></a><br/></td></tr>
-<tr class="separator:a72e37791d927956c7c1308f39dc6513f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7ad486eaa2c63e308d657a49c7fbba6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#af7ad486eaa2c63e308d657a49c7fbba6">m_Width</a></td></tr>
+<tr class="memdesc:af7ad486eaa2c63e308d657a49c7fbba6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Horizontal OpenGL viewport size.  <a href="#af7ad486eaa2c63e308d657a49c7fbba6"></a><br/></td></tr>
+<tr class="separator:af7ad486eaa2c63e308d657a49c7fbba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bc7d314027cf7c3d1f64df7e6facba7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a5bc7d314027cf7c3d1f64df7e6facba7">m_Height</a></td></tr>
+<tr class="memdesc:a5bc7d314027cf7c3d1f64df7e6facba7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vertical OpenGL viewport size.  <a href="#a5bc7d314027cf7c3d1f64df7e6facba7"></a><br/></td></tr>
+<tr class="separator:a5bc7d314027cf7c3d1f64df7e6facba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a094369d8c0f9724d01f63f4044859a06"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a094369d8c0f9724d01f63f4044859a06">m_AspectRatio</a></td></tr>
 <tr class="memdesc:a094369d8c0f9724d01f63f4044859a06"><td class="mdescLeft">&#160;</td><td class="mdescRight">View AspectRatio.  <a href="#a094369d8c0f9724d01f63f4044859a06"></a><br/></td></tr>
 <tr class="separator:a094369d8c0f9724d01f63f4044859a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -366,12 +372,12 @@ OpenGL Functions</h2></td></tr>
 <tr class="memitem:ab0a24a3af81ca32ab64945d95b40336f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_g_l_c___frustum.html">GLC_Frustum</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#ab0a24a3af81ca32ab64945d95b40336f">selectionFrustum</a> (int, int) const </td></tr>
 <tr class="memdesc:ab0a24a3af81ca32ab64945d95b40336f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the frustum associated to a selection coordinate.  <a href="#ab0a24a3af81ca32ab64945d95b40336f"></a><br/></td></tr>
 <tr class="separator:ab0a24a3af81ca32ab64945d95b40336f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2fb55e2669c9bef70247fefaa8791894"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a2fb55e2669c9bef70247fefaa8791894">unProject</a> (int, int) const </td></tr>
-<tr class="memdesc:a2fb55e2669c9bef70247fefaa8791894"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the world 3d point from the given screen coordinate.  <a href="#a2fb55e2669c9bef70247fefaa8791894"></a><br/></td></tr>
-<tr class="separator:a2fb55e2669c9bef70247fefaa8791894"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60071b3231d2c342b37957fb50526819"><td class="memItemLeft" align="right" valign="top">QList&lt; <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a60071b3231d2c342b37957fb50526819">unproject</a> (const QList&lt; int &gt; &amp;) const </td></tr>
-<tr class="memdesc:a60071b3231d2c342b37957fb50526819"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the list af world 3d point form the givne list af screen coordinates.  <a href="#a60071b3231d2c342b37957fb50526819"></a><br/></td></tr>
-<tr class="separator:a60071b3231d2c342b37957fb50526819"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affcd3b81eaade531ed261b829bece67c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#affcd3b81eaade531ed261b829bece67c">unProject</a> (int, int, GLenum buffer=GL_FRONT) const </td></tr>
+<tr class="memdesc:affcd3b81eaade531ed261b829bece67c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the world 3d point from the given screen coordinate.  <a href="#affcd3b81eaade531ed261b829bece67c"></a><br/></td></tr>
+<tr class="separator:affcd3b81eaade531ed261b829bece67c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64dc106ce86cf45efbb66896bdade742"><td class="memItemLeft" align="right" valign="top">QList&lt; <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a64dc106ce86cf45efbb66896bdade742">unproject</a> (const QList&lt; int &gt; &amp;list, GLenum buffer=GL_FRONT) const </td></tr>
+<tr class="memdesc:a64dc106ce86cf45efbb66896bdade742"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the list af world 3d point form the givne list af screen coordinates.  <a href="#a64dc106ce86cf45efbb66896bdade742"></a><br/></td></tr>
+<tr class="separator:a64dc106ce86cf45efbb66896bdade742"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a906369354893fa7446f3d471a8f9fbc5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_g_l_c___viewport.html#a906369354893fa7446f3d471a8f9fbc5">render3DWidget</a> ()</td></tr>
 <tr class="memdesc:a906369354893fa7446f3d471a8f9fbc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render viewport 3D widget.  <a href="#a906369354893fa7446f3d471a8f9fbc5"></a><br/></td></tr>
 <tr class="separator:a906369354893fa7446f3d471a8f9fbc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -417,7 +423,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00042">42</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00544">updateMinimumRatioSize()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00555">updateMinimumRatioSize()</a>.</p>
 
 </div>
 </div>
@@ -446,7 +452,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00070">70</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00564">deleteBackGroundImage()</a>, <a class="el" href="glc__viewport_8h_source.html#l00390">m_ClipPlanesHash</a>, and <a class="el" href="glc__viewport_8h_source.html#l00359">m_pViewCam</a>.</p>
+<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00574">deleteBackGroundImage()</a>, <a class="el" href="glc__viewport_8h_source.html#l00396">m_ClipPlanesHash</a>, and <a class="el" href="glc__viewport_8h_source.html#l00365">m_pViewCam</a>.</p>
 
 </div>
 </div>
@@ -475,7 +481,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Add 3DWidget to this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00300">300</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00306">306</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 </div>
 </div>
@@ -505,9 +511,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Add a clipping plane to this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00696">696</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00708">708</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00390">m_ClipPlanesHash</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00396">m_ClipPlanesHash</a>.</p>
 
 </div>
 </div>
@@ -534,7 +540,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Get this viewport ratio. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00097">97</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00100">100</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 </div>
 </div>
@@ -562,7 +568,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Get this viewportbackground Color. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00133">133</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00136">136</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 </div>
 </div>
@@ -611,7 +617,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Clear the background color with the specified color. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00570">570</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00580">580</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
 </div>
 </div>
@@ -638,11 +644,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the composition matrix between projection matrix and view matrix. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00411">411</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00417">417</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00384">m_ProjectionMatrix</a>, <a class="el" href="glc__viewport_8h_source.html#l00359">m_pViewCam</a>, <a class="el" href="glc__camera_8h_source.html#l00131">GLC_Camera::modelViewMatrix()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00141">projectionMatrix()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00390">m_ProjectionMatrix</a>, <a class="el" href="glc__viewport_8h_source.html#l00365">m_pViewCam</a>, <a class="el" href="glc__camera_8h_source.html#l00131">GLC_Camera::modelViewMatrix()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00144">projectionMatrix()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__tsrmover_8cpp_source.html#l00072">GLC_TsrMover::move()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00423">updateFrustum()</a>.</p>
+<p>Referenced by <a class="el" href="glc__tsrmover_8cpp_source.html#l00072">GLC_TsrMover::move()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00429">updateFrustum()</a>.</p>
 
 </div>
 </div>
@@ -661,9 +667,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>delete background image of this viewport </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00564">564</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00574">574</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00368">m_pImagePlane</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00374">m_pImagePlane</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00070">~GLC_Viewport()</a>.</p>
 
@@ -693,7 +699,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Get this viewport far clipping plane distance. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00129">129</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00132">132</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 </div>
 </div>
@@ -713,9 +719,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Force the aspect ratio of this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00203">203</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00207">207</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00375">m_AspectRatio</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00381">m_AspectRatio</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 </div>
 </div>
@@ -742,7 +748,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the frustum associated to this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00191">191</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00194">194</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00468">GLC_3DViewCollection::updateInstanceViewableState()</a>.</p>
 
@@ -764,11 +770,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Load camera's transformation Matrix and display image if necessary. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00166">166</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00171">171</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__camera_8cpp_source.html#l00433">GLC_Camera::glExecute()</a>, <a class="el" href="glc__viewport_8h_source.html#l00359">m_pViewCam</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00303">renderImagePlane()</a>.</p>
+<p>References <a class="el" href="glc__camera_8cpp_source.html#l00433">GLC_Camera::glExecute()</a>, <a class="el" href="glc__viewport_8h_source.html#l00365">m_pViewCam</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00309">renderImagePlane()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00370">selectBody()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00398">selectPrimitive()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00379">selectBody()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00407">selectPrimitive()</a>.</p>
 
 </div>
 </div>
@@ -788,13 +794,13 @@ OpenGL Functions</h2></td></tr>
 <p>Initialize OpenGL with default values. </p>
 <p>Glew initialisation is made here </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00153">153</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00158">158</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00378">m_BackgroundColor</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00384">m_BackgroundColor</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a6aea88dcbe6b684161156e1f4f66ad3c"></a>
+<a class="anchor" id="ae7c9f40f230be8ccef60f5a7b3f539ca"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -823,7 +829,13 @@ OpenGL Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">GLsizei&#160;</td>
-          <td class="paramname"><em>height</em>&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>buffer</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -840,11 +852,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the Set of ID inside a square in screen coordinate. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00520">520</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00530">530</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__global_8h_source.html#l00129">glc::decodeRgbId()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00378">m_BackgroundColor</a>.</p>
+<p>References <a class="el" href="glc__global_8h_source.html#l00129">glc::decodeRgbId()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00384">m_BackgroundColor</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00442">selectInsideSquare()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00451">selectInsideSquare()</a>.</p>
 
 </div>
 </div>
@@ -864,9 +876,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>load background image from file in this viewport </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00552">552</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00562">562</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00368">m_pImagePlane</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00374">m_pImagePlane</a>.</p>
 
 </div>
 </div>
@@ -886,9 +898,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>load background image in this viewport </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00558">558</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00568">568</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00368">m_pImagePlane</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00374">m_pImagePlane</a>.</p>
 
 </div>
 </div>
@@ -918,9 +930,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Map normalyse Screen position to OpenGL position (On image Plane) according to this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00142">142</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00147">147</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00371">m_WindowHSize</a>, <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00122">mapPosMouse()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, <a class="el" href="glc__viewport_8h_source.html#l00377">m_Width</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00127">mapPosMouse()</a>.</p>
 
 </div>
 </div>
@@ -950,11 +962,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Map normalyze screen position to OpenGL screen position. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00113">113</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00118">118</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
 <p>References <a class="el" href="glc__vector2d_8h_source.html#l00210">GLC_Vector2d::setY()</a>, and <a class="el" href="glc__vector2d_8h_source.html#l00251">GLC_Vector2d::y()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00106">mapToOpenGLScreen()</a>, and <a class="el" href="glc__tsrmover_8cpp_source.html#l00072">GLC_TsrMover::move()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00111">mapToOpenGLScreen()</a>, and <a class="el" href="glc__tsrmover_8cpp_source.html#l00072">GLC_TsrMover::move()</a>.</p>
 
 </div>
 </div>
@@ -984,11 +996,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Map Screen position to OpenGL position (On image Plane) according to this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00122">122</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00127">127</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__camera_8h_source.html#l00071">GLC_Camera::distEyeTarget()</a>, <a class="el" href="glc__viewport_8h_source.html#l00359">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00364">m_ViewTangent</a>, <a class="el" href="glc__viewport_8h_source.html#l00371">m_WindowHSize</a>, and <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>.</p>
+<p>References <a class="el" href="glc__camera_8h_source.html#l00071">GLC_Camera::distEyeTarget()</a>, <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, <a class="el" href="glc__viewport_8h_source.html#l00365">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00370">m_ViewTangent</a>, and <a class="el" href="glc__viewport_8h_source.html#l00377">m_Width</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__settargetmover_8cpp_source.html#l00063">GLC_SetTargetMover::init()</a>, <a class="el" href="glc__panmover_8cpp_source.html#l00065">GLC_PanMover::init()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00142">mapNormalyzePosMouse()</a>, and <a class="el" href="glc__panmover_8cpp_source.html#l00071">GLC_PanMover::move()</a>.</p>
+<p>Referenced by <a class="el" href="glc__settargetmover_8cpp_source.html#l00063">GLC_SetTargetMover::init()</a>, <a class="el" href="glc__panmover_8cpp_source.html#l00065">GLC_PanMover::init()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00147">mapNormalyzePosMouse()</a>, and <a class="el" href="glc__panmover_8cpp_source.html#l00071">GLC_PanMover::move()</a>.</p>
 
 </div>
 </div>
@@ -1018,13 +1030,13 @@ OpenGL Functions</h2></td></tr>
 
 <p>Map screen position to OpenGL screen position. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00106">106</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00111">111</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00113">mapNormalyzeToOpenGLScreen()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00089">normalyseMousePosition()</a>, <a class="el" href="glc__vector2d_8h_source.html#l00247">GLC_Vector2d::x()</a>, and <a class="el" href="glc__vector2d_8h_source.html#l00251">GLC_Vector2d::y()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00118">mapNormalyzeToOpenGLScreen()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00094">normalyseMousePosition()</a>, <a class="el" href="glc__vector2d_8h_source.html#l00247">GLC_Vector2d::x()</a>, and <a class="el" href="glc__vector2d_8h_source.html#l00251">GLC_Vector2d::y()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae090bd7a80f4371a657323a706bf5085"></a>
+<a class="anchor" id="aa780cce911c7045b2fe6c82627e05b5f"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1053,7 +1065,13 @@ OpenGL Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">GLsizei&#160;</td>
-          <td class="paramname"><em>height</em>&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>buffer</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1070,11 +1088,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the meaningful color ID inside a square in screen coordinates. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00473">473</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00482">482</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__global_8h_source.html#l00129">glc::decodeRgbId()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00378">m_BackgroundColor</a>.</p>
+<p>References <a class="el" href="glc__global_8h_source.html#l00129">glc::decodeRgbId()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00384">m_BackgroundColor</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00370">selectBody()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00359">selectOnPreviousRender()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00398">selectPrimitive()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00379">selectBody()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00368">selectOnPreviousRender()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00407">selectPrimitive()</a>.</p>
 
 </div>
 </div>
@@ -1101,7 +1119,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the minimum dynamic pixel culling ratio. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00164">164</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00167">167</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00501">GLC_3DViewInstance::choseLod()</a>.</p>
 
@@ -1130,7 +1148,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the minimum pixel culling size. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00156">156</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00159">159</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 </div>
 </div>
@@ -1157,7 +1175,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the minimum pixel culling ratio. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00160">160</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00163">163</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00501">GLC_3DViewInstance::choseLod()</a>.</p>
 
@@ -1187,7 +1205,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Get this viewport near clipping plane distance. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00125">125</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00128">128</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 </div>
 </div>
@@ -1217,11 +1235,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the normalyse mouse position from screen coordinate. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00089">89</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00094">94</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00371">m_WindowHSize</a>, and <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, and <a class="el" href="glc__viewport_8h_source.html#l00377">m_Width</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00106">mapToOpenGLScreen()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00111">mapToOpenGLScreen()</a>.</p>
 
 </div>
 </div>
@@ -1248,13 +1266,13 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return this viewport's the projection matrix. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00141">141</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00144">144</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8h_source.html#l00411">compositionMatrix()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8h_source.html#l00417">compositionMatrix()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad224244b26e75d56ff021e30cdb7f267"></a>
+<a class="anchor" id="ae0c4a7e8dc2a2c04847c1c8b69503a1a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1262,8 +1280,18 @@ OpenGL Functions</h2></td></tr>
           <td class="memname">void GLC_Viewport::reframe </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_g_l_c___bounding_box.html">GLC_BoundingBox</a> &amp;&#160;</td>
-          <td class="paramname"><em>box</em></td><td>)</td>
+          <td class="paramname"><em>box</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>coverFactor</em> = <code>2.2</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1271,9 +1299,9 @@ OpenGL Functions</h2></td></tr>
 <p>Set the viewport's camera in order to reframe on the current scene. </p>
 <p>box shouldn't be empty </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00585">585</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00595">595</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__boundingbox_8h_source.html#l00101">GLC_BoundingBox::boundingSphereRadius()</a>, <a class="el" href="glc__boundingbox_8h_source.html#l00187">GLC_BoundingBox::center()</a>, <a class="el" href="glc__boundingbox_8h_source.html#l00072">GLC_BoundingBox::isEmpty()</a>, <a class="el" href="glc__viewport_8h_source.html#l00359">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00364">m_ViewTangent</a>, <a class="el" href="glc__camera_8cpp_source.html#l00292">GLC_Camera::setDistEyeTarget()</a>, <a class="el" href="glc__camera_8h_source.html#l00079">GLC_Camera::target()</a>, and <a class="el" href="glc__camera_8cpp_source.html#l00170">GLC_Camera::translate()</a>.</p>
+<p>References <a class="el" href="glc__boundingbox_8h_source.html#l00101">GLC_BoundingBox::boundingSphereRadius()</a>, <a class="el" href="glc__boundingbox_8h_source.html#l00187">GLC_BoundingBox::center()</a>, <a class="el" href="glc__boundingbox_8h_source.html#l00072">GLC_BoundingBox::isEmpty()</a>, <a class="el" href="glc__viewport_8h_source.html#l00365">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00370">m_ViewTangent</a>, <a class="el" href="glc__camera_8cpp_source.html#l00292">GLC_Camera::setDistEyeTarget()</a>, <a class="el" href="glc__camera_8h_source.html#l00079">GLC_Camera::target()</a>, and <a class="el" href="glc__camera_8cpp_source.html#l00170">GLC_Camera::translate()</a>.</p>
 
 </div>
 </div>
@@ -1292,9 +1320,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Remove all clip plane. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00719">719</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00731">731</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00390">m_ClipPlanesHash</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00396">m_ClipPlanesHash</a>.</p>
 
 </div>
 </div>
@@ -1314,9 +1342,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Remove the clip plane coresponding to the given id. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00706">706</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00718">718</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00390">m_ClipPlanesHash</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00396">m_ClipPlanesHash</a>.</p>
 
 </div>
 </div>
@@ -1335,13 +1363,13 @@ OpenGL Functions</h2></td></tr>
 
 <p>Render viewport 3D widget. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00315">315</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00321">321</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00396">m_3DWidgetCollection</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00611">GLC_3DViewCollection::render()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, and <a class="el" href="glc__renderproperties_8h_source.html#l00057">glc::WireRenderFlag</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00402">m_3DWidgetCollection</a>, <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00622">GLC_3DViewCollection::render()</a>, <a class="el" href="glc__renderproperties_8h_source.html#l00058">glc::TransparentRenderFlag</a>, and <a class="el" href="glc__renderproperties_8h_source.html#l00057">glc::WireRenderFlag</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a00233ef1df5a937ceb25ce7cb840e743"></a>
+<a class="anchor" id="a35b23563396554e8c620daa597be7894"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1355,7 +1383,13 @@ OpenGL Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>buffer</em> = <code>GL_BACK</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1368,9 +1402,9 @@ OpenGL Functions</h2></td></tr>
 <p>Call the attached QGLWidgetSelect updateGL function and return the picking id. </p>
 <p>Return UID of the nearest picked object </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00347">347</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00356">356</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00359">selectOnPreviousRender()</a>, <a class="el" href="glc__state_8cpp_source.html#l00206">GLC_State::setSelectionMode()</a>, and <a class="el" href="class_g_l_c___viewport.html#a6b3bf02fd00ae2309b474693c644a64c">updateOpenGL()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00368">selectOnPreviousRender()</a>, <a class="el" href="glc__state_8cpp_source.html#l00217">GLC_State::setSelectionMode()</a>, and <a class="el" href="class_g_l_c___viewport.html#a6b3bf02fd00ae2309b474693c644a64c">updateOpenGL()</a>.</p>
 
 </div>
 </div>
@@ -1397,15 +1431,15 @@ OpenGL Functions</h2></td></tr>
 
 <p>Render this viewport's image plane. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00303">303</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00309">309</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__state_8cpp_source.html#l00092">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__viewport_8h_source.html#l00368">m_pImagePlane</a>, and <a class="el" href="glc__imageplane_8cpp_source.html#l00060">GLC_ImagePlane::render()</a>.</p>
+<p>References <a class="el" href="glc__state_8cpp_source.html#l00098">GLC_State::isInSelectionMode()</a>, <a class="el" href="glc__viewport_8h_source.html#l00374">m_pImagePlane</a>, and <a class="el" href="glc__imageplane_8cpp_source.html#l00060">GLC_ImagePlane::render()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00166">glExecuteCam()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00171">glExecuteCam()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a8d058b4333e076161080905101c487d1"></a>
+<a class="anchor" id="af2b5a46c0aad5b316ee5b5e67d612f2c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1425,7 +1459,13 @@ OpenGL Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>buffer</em> = <code>GL_BACK</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1438,13 +1478,13 @@ OpenGL Functions</h2></td></tr>
 <p>Select a body inside a 3DViewInstance and return its UID. </p>
 <p>Return UID of the nearest picked body </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00370">370</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00379">379</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, <a class="el" href="glc__context_8cpp_source.html#l00084">GLC_Context::glcLoadIdentity()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00166">glExecuteCam()</a>, <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00473">meaningfulIdInsideSquare()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00393">GLC_3DViewInstance::renderForBodySelection()</a>, and <a class="el" href="glc__state_8cpp_source.html#l00206">GLC_State::setSelectionMode()</a>.</p>
+<p>References <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, <a class="el" href="glc__context_8cpp_source.html#l00084">GLC_Context::glcLoadIdentity()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00171">glExecuteCam()</a>, <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00482">meaningfulIdInsideSquare()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00393">GLC_3DViewInstance::renderForBodySelection()</a>, and <a class="el" href="glc__state_8cpp_source.html#l00217">GLC_State::setSelectionMode()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab1fcea3e6e164e66d25ff91ab1181869"></a>
+<a class="anchor" id="ac48e2271917157e343434f999b5f7bb4"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1470,7 +1510,13 @@ OpenGL Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>y2</em>&#160;</td>
+          <td class="paramname"><em>y2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>buffer</em> = <code>GL_BACK</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1482,9 +1528,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Select objects inside specified square and return its UID in a set. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00442">442</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00451">451</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00520">listOfIdInsideSquare()</a>, <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>, <a class="el" href="glc__state_8cpp_source.html#l00206">GLC_State::setSelectionMode()</a>, and <a class="el" href="class_g_l_c___viewport.html#a6b3bf02fd00ae2309b474693c644a64c">updateOpenGL()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00530">listOfIdInsideSquare()</a>, <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, <a class="el" href="glc__state_8cpp_source.html#l00217">GLC_State::setSelectionMode()</a>, and <a class="el" href="class_g_l_c___viewport.html#a6b3bf02fd00ae2309b474693c644a64c">updateOpenGL()</a>.</p>
 
 </div>
 </div>
@@ -1514,9 +1560,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the frustum associated to a selection coordinate. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00214">214</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00218">218</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__camera_8h_source.html#l00075">GLC_Camera::eye()</a>, <a class="el" href="glc__viewport_8h_source.html#l00387">m_Frustum</a>, <a class="el" href="glc__viewport_8h_source.html#l00359">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00381">m_SelectionSquareSize</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00270">unproject()</a>.</p>
+<p>References <a class="el" href="glc__camera_8h_source.html#l00075">GLC_Camera::eye()</a>, <a class="el" href="glc__viewport_8h_source.html#l00393">m_Frustum</a>, <a class="el" href="glc__viewport_8h_source.html#l00365">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00387">m_SelectionSquareSize</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00275">unproject()</a>.</p>
 
 </div>
 </div>
@@ -1543,11 +1589,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the selection square size of this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00137">137</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00140">140</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a67c231c78f4ab5207b24ca1c90aad074"></a>
+<a class="anchor" id="ae3088526fde8609a9bd1cca15c753d5f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1561,7 +1607,13 @@ OpenGL Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>buffer</em> = <code>GL_BACK</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1573,15 +1625,15 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the picking id from the already render window. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00359">359</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00368">368</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00381">m_SelectionSquareSize</a>, <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00473">meaningfulIdInsideSquare()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, <a class="el" href="glc__viewport_8h_source.html#l00387">m_SelectionSquareSize</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00482">meaningfulIdInsideSquare()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00347">renderAndSelect()</a>, and <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00246">GLC_3DWidgetManagerHandle::select()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00356">renderAndSelect()</a>, and <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00246">GLC_3DWidgetManagerHandle::select()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="adab3e4f2c42576381804d9a86be0673a"></a>
+<a class="anchor" id="aa1711811418c2c71e80eda11064023f9"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1601,7 +1653,13 @@ OpenGL Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>buffer</em> = <code>GL_BACK</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1614,9 +1672,9 @@ OpenGL Functions</h2></td></tr>
 <p>Select a primitive inside a 3DViewInstance and return its UID and its body index. </p>
 <p>Return UID of the nearest picked primitive </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00398">398</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00407">407</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, <a class="el" href="glc__context_8cpp_source.html#l00084">GLC_Context::glcLoadIdentity()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00166">glExecuteCam()</a>, <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00473">meaningfulIdInsideSquare()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00393">GLC_3DViewInstance::renderForBodySelection()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00425">GLC_3DViewInstance::renderForPrimitiveSelection()</a>, and <a class="el" href="glc__state_8cpp_source.html#l00206">GLC_State::setSelectionMode()</a>.</p>
+<p>References <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__context_8cpp_source.html#l00209">GLC_Context::glcEnableLighting()</a>, <a class="el" href="glc__context_8cpp_source.html#l00084">GLC_Context::glcLoadIdentity()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00171">glExecuteCam()</a>, <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00482">meaningfulIdInsideSquare()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00393">GLC_3DViewInstance::renderForBodySelection()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00425">GLC_3DViewInstance::renderForPrimitiveSelection()</a>, and <a class="el" href="glc__state_8cpp_source.html#l00217">GLC_State::setSelectionMode()</a>.</p>
 
 </div>
 </div>
@@ -1636,9 +1694,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set the Background color of this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00690">690</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00702">702</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00378">m_BackgroundColor</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00384">m_BackgroundColor</a>.</p>
 
 </div>
 </div>
@@ -1658,9 +1716,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set far clipping distance of this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00621">621</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00633">633</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00362">m_dDistanceMini</a>, <a class="el" href="glc__viewport_8h_source.html#l00361">m_DistanceMax</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00368">m_dDistanceMini</a>, <a class="el" href="glc__viewport_8h_source.html#l00367">m_DistanceMax</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 </div>
 </div>
@@ -1680,9 +1738,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set near clipping distance of this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00602">602</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00614">614</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00362">m_dDistanceMini</a>, <a class="el" href="glc__viewport_8h_source.html#l00361">m_DistanceMax</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00368">m_dDistanceMini</a>, <a class="el" href="glc__viewport_8h_source.html#l00367">m_DistanceMax</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 </div>
 </div>
@@ -1703,9 +1761,9 @@ OpenGL Functions</h2></td></tr>
 <p>Set Near and Far clipping distance of this viewport. </p>
 <p>box shouldn't be empty </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00640">640</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00652">652</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__camera_8h_source.html#l00071">GLC_Camera::distEyeTarget()</a>, <a class="el" href="glc__camera_8h_source.html#l00075">GLC_Camera::eye()</a>, <a class="el" href="glc__boundingbox_8h_source.html#l00072">GLC_BoundingBox::isEmpty()</a>, <a class="el" href="glc__viewport_8h_source.html#l00362">m_dDistanceMini</a>, <a class="el" href="glc__viewport_8h_source.html#l00361">m_DistanceMax</a>, <a class="el" href="glc__viewport_8h_source.html#l00359">m_pViewCam</a>, <a class="el" href="glc__camera_8h_source.html#l00131">GLC_Camera::modelViewMatrix()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>References <a class="el" href="glc__camera_8h_source.html#l00071">GLC_Camera::distEyeTarget()</a>, <a class="el" href="glc__camera_8h_source.html#l00075">GLC_Camera::eye()</a>, <a class="el" href="glc__boundingbox_8h_source.html#l00072">GLC_BoundingBox::isEmpty()</a>, <a class="el" href="glc__viewport_8h_source.html#l00368">m_dDistanceMini</a>, <a class="el" href="glc__viewport_8h_source.html#l00367">m_DistanceMax</a>, <a class="el" href="glc__viewport_8h_source.html#l00365">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00405">m_UseParallelProjection</a>, <a class="el" href="glc__camera_8h_source.html#l00131">GLC_Camera::modelViewMatrix()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__tsrmover_8cpp_source.html#l00072">GLC_TsrMover::move()</a>.</p>
 
@@ -1735,7 +1793,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set minimum pixel culling size. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00310">310</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00316">316</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 </div>
 </div>
@@ -1763,7 +1821,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set the selection square size of this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00280">280</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00286">286</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 </div>
 </div>
@@ -1783,9 +1841,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set othographic usage to the given flag. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00575">575</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00585">585</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00399">m_UseParallelProjection</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00152">useOrtho()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00405">m_UseParallelProjection</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00155">useOrtho()</a>.</p>
 
 </div>
 </div>
@@ -1813,13 +1871,13 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set Camera's angle of view of this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00259">259</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00265">265</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 <p>References <a class="el" href="glc__utils__maths_8h_source.html#l00042">glc::toRadian()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7921b0d06274dd419061733438644a12"></a>
+<a class="anchor" id="ac70d10fff1a4af4010a4e3705ee25cd4"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1827,13 +1885,19 @@ OpenGL Functions</h2></td></tr>
           <td class="memname">void GLC_Viewport::setWinGLSize </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>HSize</em>, </td>
+          <td class="paramname"><em>width</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>VSize</em>&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>updateOGLViewport</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1843,15 +1907,73 @@ OpenGL Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Inform the viewport that the OpenGL window size has been modified. </p>
+<p>Update the OpenGL view size. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00324">324</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00330">330</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00371">m_WindowHSize</a>, <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00209">updateAspectRatio()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00544">updateMinimumRatioSize()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, <a class="el" href="glc__viewport_8h_source.html#l00377">m_Width</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00213">updateAspectRatio()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00555">updateMinimumRatioSize()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00351">setWinGLSize()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a2fb55e2669c9bef70247fefaa8791894"></a>
+<a class="anchor" id="ac2067895170dacadc03b9b8cb30203f4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GLC_Viewport::setWinGLSize </td>
+          <td>(</td>
+          <td class="paramtype">const QSize &amp;&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>updateOGLViewport</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update the OpenGL view size. </p>
+
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00351">351</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+
+<p>References <a class="el" href="glc__viewport_8cpp_source.html#l00330">setWinGLSize()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a401f8c72b2c716edcc87cd0373a8d8e0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QSize GLC_Viewport::size </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return this viewport size. </p>
+
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00086">86</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, and <a class="el" href="glc__viewport_8h_source.html#l00377">m_Width</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00275">unproject()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00555">updateMinimumRatioSize()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="affcd3b81eaade531ed261b829bece67c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1865,7 +1987,13 @@ OpenGL Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>buffer</em> = <code>GL_FRONT</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1877,15 +2005,15 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return the world 3d point from the given screen coordinate. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00251">251</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00255">255</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__matrix4x4_8h_source.html#l00131">GLC_Matrix4x4::getData()</a>, <a class="el" href="namespaceglc.html#a53bc7fb9bfafe7556ccc50e944d2ef0d">glc::gluUnProject()</a>, <a class="el" href="glc__viewport_8h_source.html#l00384">m_ProjectionMatrix</a>, <a class="el" href="glc__viewport_8h_source.html#l00359">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>, and <a class="el" href="glc__camera_8h_source.html#l00131">GLC_Camera::modelViewMatrix()</a>.</p>
+<p>References <a class="el" href="glc__matrix4x4_8h_source.html#l00131">GLC_Matrix4x4::getData()</a>, <a class="el" href="namespaceglc.html#a53bc7fb9bfafe7556ccc50e944d2ef0d">glc::gluUnProject()</a>, <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, <a class="el" href="glc__viewport_8h_source.html#l00390">m_ProjectionMatrix</a>, <a class="el" href="glc__viewport_8h_source.html#l00365">m_pViewCam</a>, and <a class="el" href="glc__camera_8h_source.html#l00131">GLC_Camera::modelViewMatrix()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__settargetmover_8cpp_source.html#l00063">GLC_SetTargetMover::init()</a>, <a class="el" href="glc__flymover_8cpp_source.html#l00071">GLC_FlyMover::init()</a>, <a class="el" href="glc__flymover_8cpp_source.html#l00086">GLC_FlyMover::move()</a>, and <a class="el" href="glc__3dwidgetmanagerhandle_8cpp_source.html#l00246">GLC_3DWidgetManagerHandle::select()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a60071b3231d2c342b37957fb50526819"></a>
+<a class="anchor" id="a64dc106ce86cf45efbb66896bdade742"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1893,8 +2021,18 @@ OpenGL Functions</h2></td></tr>
           <td class="memname">QList&lt; <a class="el" href="glc__vector3d_8h.html#a4e13a9bbc7ab3d34de7e98b41836772c">GLC_Point3d</a> &gt; GLC_Viewport::unproject </td>
           <td>(</td>
           <td class="paramtype">const QList&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>list</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramname"><em>list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>buffer</em> = <code>GL_FRONT</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1902,11 +2040,11 @@ OpenGL Functions</h2></td></tr>
 <p>Return the list af world 3d point form the givne list af screen coordinates. </p>
 <p>The size of the given list must be a multiple of 2 </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00270">270</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00275">275</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__matrix4x4_8h_source.html#l00131">GLC_Matrix4x4::getData()</a>, <a class="el" href="namespaceglc.html#a53bc7fb9bfafe7556ccc50e944d2ef0d">glc::gluUnProject()</a>, <a class="el" href="glc__viewport_8h_source.html#l00384">m_ProjectionMatrix</a>, <a class="el" href="glc__viewport_8h_source.html#l00359">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>, and <a class="el" href="glc__camera_8h_source.html#l00131">GLC_Camera::modelViewMatrix()</a>.</p>
+<p>References <a class="el" href="glc__matrix4x4_8h_source.html#l00131">GLC_Matrix4x4::getData()</a>, <a class="el" href="namespaceglc.html#a53bc7fb9bfafe7556ccc50e944d2ef0d">glc::gluUnProject()</a>, <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, <a class="el" href="glc__viewport_8h_source.html#l00390">m_ProjectionMatrix</a>, <a class="el" href="glc__viewport_8h_source.html#l00365">m_pViewCam</a>, <a class="el" href="glc__camera_8h_source.html#l00131">GLC_Camera::modelViewMatrix()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00086">size()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00214">selectionFrustum()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00218">selectionFrustum()</a>.</p>
 
 </div>
 </div>
@@ -1925,11 +2063,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Update the aspect ratio of this viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00209">209</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00213">213</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00375">m_AspectRatio</a>, <a class="el" href="glc__viewport_8h_source.html#l00371">m_WindowHSize</a>, and <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00381">m_AspectRatio</a>, <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, and <a class="el" href="glc__viewport_8h_source.html#l00377">m_Width</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00324">setWinGLSize()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00330">setWinGLSize()</a>.</p>
 
 </div>
 </div>
@@ -1958,9 +2096,9 @@ OpenGL Functions</h2></td></tr>
 <p>Update this viewport frustum (frustum cullin purpose) </p>
 <p>Return true if the frustum has changed </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00423">423</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00429">429</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00411">compositionMatrix()</a>, <a class="el" href="glc__viewport_8h_source.html#l00387">m_Frustum</a>, and <a class="el" href="glc__frustum_8cpp_source.html#l00092">GLC_Frustum::update()</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00417">compositionMatrix()</a>, <a class="el" href="glc__viewport_8h_source.html#l00393">m_Frustum</a>, and <a class="el" href="glc__frustum_8cpp_source.html#l00092">GLC_Frustum::update()</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dviewcollection_8cpp_source.html#l00468">GLC_3DViewCollection::updateInstanceViewableState()</a>.</p>
 
@@ -1989,11 +2127,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Update minimum ratio size for pixel culling. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00544">544</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00555">555</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__viewport_8h_source.html#l00408">m_MinimumDynamicRatioSize</a>, <a class="el" href="glc__viewport_8h_source.html#l00402">m_MinimumStaticPixelSize</a>, <a class="el" href="glc__viewport_8h_source.html#l00405">m_MinimumStaticRatioSize</a>, <a class="el" href="glc__viewport_8h_source.html#l00371">m_WindowHSize</a>, and <a class="el" href="glc__viewport_8h_source.html#l00372">m_WindowVSize</a>.</p>
+<p>References <a class="el" href="glc__viewport_8h_source.html#l00378">m_Height</a>, <a class="el" href="glc__viewport_8h_source.html#l00414">m_MinimumDynamicRatioSize</a>, <a class="el" href="glc__viewport_8h_source.html#l00408">m_MinimumStaticPixelSize</a>, <a class="el" href="glc__viewport_8h_source.html#l00411">m_MinimumStaticRatioSize</a>, <a class="el" href="glc__viewport_8h_source.html#l00377">m_Width</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00086">size()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00042">GLC_Viewport()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00324">setWinGLSize()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00042">GLC_Viewport()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00330">setWinGLSize()</a>.</p>
 
 </div>
 </div>
@@ -2020,7 +2158,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set the viewport's camera in order to reframe on the current scene. </p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00347">renderAndSelect()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00442">selectInsideSquare()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00356">renderAndSelect()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00451">selectInsideSquare()</a>.</p>
 
 </div>
 </div>
@@ -2040,11 +2178,11 @@ OpenGL Functions</h2></td></tr>
 
 <p>Update this viewport OpenGL projection matrix. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00172">172</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00177">177</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__camera_8h_source.html#l00071">GLC_Camera::distEyeTarget()</a>, <a class="el" href="glc__context_8cpp_source.html#l00187">GLC_Context::glcFrustum()</a>, <a class="el" href="glc__context_8cpp_source.html#l00084">GLC_Context::glcLoadIdentity()</a>, <a class="el" href="glc__context_8cpp_source.html#l00070">GLC_Context::glcMatrixMode()</a>, <a class="el" href="glc__context_8cpp_source.html#l00169">GLC_Context::glcOrtho()</a>, <a class="el" href="glc__viewport_8h_source.html#l00375">m_AspectRatio</a>, <a class="el" href="glc__viewport_8h_source.html#l00362">m_dDistanceMini</a>, <a class="el" href="glc__viewport_8h_source.html#l00361">m_DistanceMax</a>, <a class="el" href="glc__viewport_8h_source.html#l00384">m_ProjectionMatrix</a>, <a class="el" href="glc__viewport_8h_source.html#l00359">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00399">m_UseParallelProjection</a>, <a class="el" href="glc__viewport_8h_source.html#l00363">m_ViewAngle</a>, <a class="el" href="glc__viewport_8h_source.html#l00364">m_ViewTangent</a>, <a class="el" href="glc__utils__maths_8h_source.html#l00039">glc::PI</a>, and <a class="el" href="glc__context_8h_source.html#l00084">GLC_Context::projectionMatrix()</a>.</p>
+<p>References <a class="el" href="glc__context_8cpp_source.html#l00062">GLC_Context::current()</a>, <a class="el" href="glc__camera_8h_source.html#l00071">GLC_Camera::distEyeTarget()</a>, <a class="el" href="glc__context_8cpp_source.html#l00187">GLC_Context::glcFrustum()</a>, <a class="el" href="glc__context_8cpp_source.html#l00084">GLC_Context::glcLoadIdentity()</a>, <a class="el" href="glc__context_8cpp_source.html#l00070">GLC_Context::glcMatrixMode()</a>, <a class="el" href="glc__context_8cpp_source.html#l00169">GLC_Context::glcOrtho()</a>, <a class="el" href="glc__viewport_8h_source.html#l00381">m_AspectRatio</a>, <a class="el" href="glc__viewport_8h_source.html#l00368">m_dDistanceMini</a>, <a class="el" href="glc__viewport_8h_source.html#l00367">m_DistanceMax</a>, <a class="el" href="glc__viewport_8h_source.html#l00390">m_ProjectionMatrix</a>, <a class="el" href="glc__viewport_8h_source.html#l00365">m_pViewCam</a>, <a class="el" href="glc__viewport_8h_source.html#l00405">m_UseParallelProjection</a>, <a class="el" href="glc__viewport_8h_source.html#l00369">m_ViewAngle</a>, <a class="el" href="glc__viewport_8h_source.html#l00370">m_ViewTangent</a>, <a class="el" href="glc__utils__maths_8h_source.html#l00039">glc::PI</a>, and <a class="el" href="glc__context_8h_source.html#l00084">GLC_Context::projectionMatrix()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00203">forceAspectRatio()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00621">setDistMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00602">setDistMin()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00640">setDistMinAndMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00575">setToOrtho()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00324">setWinGLSize()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00207">forceAspectRatio()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00633">setDistMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00614">setDistMin()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00652">setDistMinAndMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00585">setToOrtho()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00330">setWinGLSize()</a>.</p>
 
 </div>
 </div>
@@ -2064,9 +2202,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Set the clipping plane usage. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00730">730</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8cpp_source.html#l00742">742</a> of file <a class="el" href="glc__viewport_8cpp_source.html">glc_viewport.cpp</a>.</p>
 
-<p>References <a class="el" href="glc__plane_8h_source.html#l00112">GLC_Plane::data()</a>, <a class="el" href="glc__viewport_8h_source.html#l00390">m_ClipPlanesHash</a>, and <a class="el" href="glc__viewport_8h_source.html#l00393">m_UseClipPlane</a>.</p>
+<p>References <a class="el" href="glc__plane_8h_source.html#l00112">GLC_Plane::data()</a>, <a class="el" href="glc__viewport_8h_source.html#l00396">m_ClipPlanesHash</a>, and <a class="el" href="glc__viewport_8h_source.html#l00399">m_UseClipPlane</a>.</p>
 
 </div>
 </div>
@@ -2093,9 +2231,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return true if this viewport use orthographic projection. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00152">152</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00155">155</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__abstractmanipulator_8cpp_source.html#l00059">GLC_AbstractManipulator::manipulate()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00575">setToOrtho()</a>.</p>
+<p>Referenced by <a class="el" href="glc__abstractmanipulator_8cpp_source.html#l00059">GLC_AbstractManipulator::manipulate()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00585">setToOrtho()</a>.</p>
 
 </div>
 </div>
@@ -2122,7 +2260,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Get this viewport's camera's angle of view. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00116">116</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00119">119</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__repcrossmover_8cpp_source.html#l00079">GLC_RepCrossMover::createCrossInstance()</a>.</p>
 
@@ -2151,7 +2289,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Get this viewport Horizontal size. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00089">89</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00092">92</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__reptrackballmover_8cpp_source.html#l00199">GLC_RepTrackBallMover::computeRadius()</a>, <a class="el" href="glc__repcrossmover_8cpp_source.html#l00079">GLC_RepCrossMover::createCrossInstance()</a>, <a class="el" href="glc__reptrackballmover_8cpp_source.html#l00154">GLC_RepTrackBallMover::glDraw()</a>, <a class="el" href="glc__repflymover_8cpp_source.html#l00101">GLC_RepFlyMover::glDraw()</a>, <a class="el" href="glc__settargetmover_8cpp_source.html#l00063">GLC_SetTargetMover::init()</a>, <a class="el" href="glc__flymover_8cpp_source.html#l00125">GLC_FlyMover::mapForFlying()</a>, <a class="el" href="glc__trackballmover_8cpp_source.html#l00118">GLC_TrackBallMover::mapForTracking()</a>, <a class="el" href="glc__turntablemover_8cpp_source.html#l00084">GLC_TurnTableMover::move()</a>, and <a class="el" href="glc__tsrmover_8cpp_source.html#l00072">GLC_TsrMover::move()</a>.</p>
 
@@ -2180,7 +2318,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Get this viewport's camera's tangent value of view. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00120">120</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00123">123</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00501">GLC_3DViewInstance::choseLod()</a>, and <a class="el" href="glc__tsrmover_8cpp_source.html#l00072">GLC_TsrMover::move()</a>.</p>
 
@@ -2209,7 +2347,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Get this viewport Vertical size. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00093">93</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00096">96</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 <p>Referenced by <a class="el" href="glc__reptrackballmover_8cpp_source.html#l00199">GLC_RepTrackBallMover::computeRadius()</a>, <a class="el" href="glc__repcrossmover_8cpp_source.html#l00079">GLC_RepCrossMover::createCrossInstance()</a>, <a class="el" href="glc__reptrackballmover_8cpp_source.html#l00154">GLC_RepTrackBallMover::glDraw()</a>, <a class="el" href="glc__repflymover_8cpp_source.html#l00101">GLC_RepFlyMover::glDraw()</a>, <a class="el" href="glc__settargetmover_8cpp_source.html#l00063">GLC_SetTargetMover::init()</a>, <a class="el" href="glc__zoommover_8cpp_source.html#l00063">GLC_ZoomMover::init()</a>, <a class="el" href="glc__flymover_8cpp_source.html#l00125">GLC_FlyMover::mapForFlying()</a>, <a class="el" href="glc__trackballmover_8cpp_source.html#l00118">GLC_TrackBallMover::mapForTracking()</a>, <a class="el" href="glc__turntablemover_8cpp_source.html#l00084">GLC_TurnTableMover::move()</a>, <a class="el" href="glc__tsrmover_8cpp_source.html#l00072">GLC_TsrMover::move()</a>, and <a class="el" href="glc__zoommover_8cpp_source.html#l00071">GLC_ZoomMover::move()</a>.</p>
 
@@ -2238,7 +2376,7 @@ OpenGL Functions</h2></td></tr>
 
 <p>Return an handle to the widget 3D collection. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00148">148</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00151">151</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
 </div>
 </div>
@@ -2263,9 +2401,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>The collection wich contains 3D widget. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00396">396</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00402">402</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00315">render3DWidget()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00321">render3DWidget()</a>.</p>
 
 </div>
 </div>
@@ -2289,9 +2427,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>View AspectRatio. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00375">375</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00381">381</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00203">forceAspectRatio()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00209">updateAspectRatio()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00207">forceAspectRatio()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00213">updateAspectRatio()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 </div>
 </div>
@@ -2315,9 +2453,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Viewport Background color. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00378">378</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00384">384</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00153">initGl()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00520">listOfIdInsideSquare()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00473">meaningfulIdInsideSquare()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00690">setBackgroundColor()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00158">initGl()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00530">listOfIdInsideSquare()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00482">meaningfulIdInsideSquare()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00702">setBackgroundColor()</a>.</p>
 
 </div>
 </div>
@@ -2341,9 +2479,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>The list of additionnal clipping plane. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00390">390</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00396">396</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00696">addClipPlane()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00719">removeAllClipPlane()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00706">removeClipPlane()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00730">useClipPlane()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00070">~GLC_Viewport()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00708">addClipPlane()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00731">removeAllClipPlane()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00718">removeClipPlane()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00742">useClipPlane()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00070">~GLC_Viewport()</a>.</p>
 
 </div>
 </div>
@@ -2367,9 +2505,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Camera Minimum distance (near clipping plane) </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00362">362</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00368">368</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00621">setDistMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00602">setDistMin()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00640">setDistMinAndMax()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00633">setDistMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00614">setDistMin()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00652">setDistMinAndMax()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 </div>
 </div>
@@ -2393,9 +2531,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Camera Maximum distance (far clipping plane) </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00361">361</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00367">367</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00621">setDistMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00602">setDistMin()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00640">setDistMinAndMax()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00633">setDistMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00614">setDistMin()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00652">setDistMinAndMax()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 </div>
 </div>
@@ -2419,9 +2557,35 @@ OpenGL Functions</h2></td></tr>
 
 <p>The frustum associated to the viewport. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00387">387</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00393">393</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00214">selectionFrustum()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00423">updateFrustum()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00218">selectionFrustum()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00429">updateFrustum()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5bc7d314027cf7c3d1f64df7e6facba7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GLC_Viewport::m_Height</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Vertical OpenGL viewport size. </p>
+
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00378">378</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00147">mapNormalyzePosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00127">mapPosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00094">normalyseMousePosition()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00379">selectBody()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00451">selectInsideSquare()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00368">selectOnPreviousRender()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00407">selectPrimitive()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00330">setWinGLSize()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00086">size()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00255">unProject()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00275">unproject()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00213">updateAspectRatio()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00555">updateMinimumRatioSize()</a>.</p>
 
 </div>
 </div>
@@ -2445,9 +2609,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>The minimum dynamic size ratio. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00408">408</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00414">414</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00544">updateMinimumRatioSize()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00555">updateMinimumRatioSize()</a>.</p>
 
 </div>
 </div>
@@ -2471,9 +2635,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>The minimum static pixel culling size. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00402">402</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00408">408</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00544">updateMinimumRatioSize()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00555">updateMinimumRatioSize()</a>.</p>
 
 </div>
 </div>
@@ -2497,9 +2661,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>The minimum static size ratio. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00405">405</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00411">411</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00544">updateMinimumRatioSize()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00555">updateMinimumRatioSize()</a>.</p>
 
 </div>
 </div>
@@ -2523,9 +2687,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Image plane (Background image) </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00368">368</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00374">374</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00564">deleteBackGroundImage()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00552">loadBackGroundImage()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00303">renderImagePlane()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00574">deleteBackGroundImage()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00562">loadBackGroundImage()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00309">renderImagePlane()</a>.</p>
 
 </div>
 </div>
@@ -2549,9 +2713,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>The projection matrix. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00384">384</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00390">390</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8h_source.html#l00411">compositionMatrix()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00251">unProject()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00270">unproject()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8h_source.html#l00417">compositionMatrix()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00255">unProject()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00275">unproject()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 </div>
 </div>
@@ -2575,9 +2739,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Viewport's camera. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00359">359</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00365">365</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8h_source.html#l00411">compositionMatrix()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00166">glExecuteCam()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00122">mapPosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00585">reframe()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00214">selectionFrustum()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00640">setDistMinAndMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00251">unProject()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00270">unproject()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00070">~GLC_Viewport()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8h_source.html#l00417">compositionMatrix()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00171">glExecuteCam()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00127">mapPosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00595">reframe()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00218">selectionFrustum()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00652">setDistMinAndMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00255">unProject()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00275">unproject()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00070">~GLC_Viewport()</a>.</p>
 
 </div>
 </div>
@@ -2601,9 +2765,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>The selection square size. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00381">381</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00387">387</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00214">selectionFrustum()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00359">selectOnPreviousRender()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00218">selectionFrustum()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00368">selectOnPreviousRender()</a>.</p>
 
 </div>
 </div>
@@ -2627,9 +2791,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Flag to know if clipping plane must be used. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00393">393</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00399">399</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00730">useClipPlane()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00742">useClipPlane()</a>.</p>
 
 </div>
 </div>
@@ -2653,9 +2817,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Flag to know if the viewport use orthographic projection. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00399">399</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00405">405</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00575">setToOrtho()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00652">setDistMinAndMax()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00585">setToOrtho()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 </div>
 </div>
@@ -2679,9 +2843,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Camera angle of view. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00363">363</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00369">369</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 </div>
 </div>
@@ -2705,13 +2869,13 @@ OpenGL Functions</h2></td></tr>
 
 <p>Camera angle tangent. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00364">364</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00370">370</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00122">mapPosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00585">reframe()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00172">updateProjectionMat()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00127">mapPosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00595">reframe()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00177">updateProjectionMat()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a69c07d79832fa1ad23dd790ad5f106a6"></a>
+<a class="anchor" id="af7ad486eaa2c63e308d657a49c7fbba6"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -2719,7 +2883,7 @@ OpenGL Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int GLC_Viewport::m_WindowHSize</td>
+          <td class="memname">int GLC_Viewport::m_Width</td>
         </tr>
       </table>
   </td>
@@ -2731,35 +2895,9 @@ OpenGL Functions</h2></td></tr>
 
 <p>Horizontal OpenGL viewport size. </p>
 
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00371">371</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
+<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00377">377</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00142">mapNormalyzePosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00122">mapPosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00089">normalyseMousePosition()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00324">setWinGLSize()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00209">updateAspectRatio()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00544">updateMinimumRatioSize()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a72e37791d927956c7c1308f39dc6513f"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int GLC_Viewport::m_WindowVSize</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Vertical OpenGL viewport size. </p>
-
-<p>Definition at line <a class="el" href="glc__viewport_8h_source.html#l00372">372</a> of file <a class="el" href="glc__viewport_8h_source.html">glc_viewport.h</a>.</p>
-
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00142">mapNormalyzePosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00122">mapPosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00089">normalyseMousePosition()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00370">selectBody()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00442">selectInsideSquare()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00359">selectOnPreviousRender()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00398">selectPrimitive()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00324">setWinGLSize()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00251">unProject()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00270">unproject()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00209">updateAspectRatio()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00544">updateMinimumRatioSize()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00147">mapNormalyzePosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00127">mapPosMouse()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00094">normalyseMousePosition()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00330">setWinGLSize()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00086">size()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00213">updateAspectRatio()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00555">updateMinimumRatioSize()</a>.</p>
 
 </div>
 </div>

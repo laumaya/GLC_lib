@@ -117,7 +117,8 @@ Enumerations</h2></td></tr>
 <tr class="separator:a07d65b257fe4f2b50ce733149d41c87c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51a421b53283d5996142222b9baca26c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceglc.html#a51a421b53283d5996142222b9baca26c">RenderFlag</a> { <a class="el" href="namespaceglc.html#a51a421b53283d5996142222b9baca26cad7fd33537da15e115a2d093f658d5e5f">ShadingFlag</a> = 800, 
 <a class="el" href="namespaceglc.html#a51a421b53283d5996142222b9baca26ca2a2571eb10c27dc0fa3fad00ba1d6cb9">WireRenderFlag</a>, 
-<a class="el" href="namespaceglc.html#a51a421b53283d5996142222b9baca26cac40bc3e069532f1c43d45ee934c927eb">TransparentRenderFlag</a>
+<a class="el" href="namespaceglc.html#a51a421b53283d5996142222b9baca26cac40bc3e069532f1c43d45ee934c927eb">TransparentRenderFlag</a>, 
+<a class="el" href="namespaceglc.html#a51a421b53283d5996142222b9baca26ca80bf9715837cc96c175235f1815393a4">OutlineSilhouetteRenderFlag</a>
  }</td></tr>
 <tr class="memdesc:a51a421b53283d5996142222b9baca26c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Geometry rendring flag enumaration.  <a href="namespaceglc.html#a51a421b53283d5996142222b9baca26c">More...</a><br/></td></tr>
 <tr class="separator:a51a421b53283d5996142222b9baca26c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,8 +188,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a3c470e760f059750602b32a4c0c7a1eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="glc__config_8h.html#ab9c0521e362cbf34b243854843f8b52c">GLC_LIB_EXPORT</a> QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceglc.html#a3c470e760f059750602b32a4c0c7a1eb">archiveEntryFileName</a> (const QString &amp;archiveString)</td></tr>
 <tr class="memdesc:a3c470e760f059750602b32a4c0c7a1eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return Archive entry filname from the given archive string.  <a href="#a3c470e760f059750602b32a4c0c7a1eb"></a><br/></td></tr>
 <tr class="separator:a3c470e760f059750602b32a4c0c7a1eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1deedbe249bdb457e337a1f3b4970113"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceglc.html#a1deedbe249bdb457e337a1f3b4970113">version</a> (&quot;2.5.0&quot;)</td></tr>
-<tr class="separator:a1deedbe249bdb457e337a1f3b4970113"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b1db28de8f48f5fcdcb3aa9231416e4"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceglc.html#a8b1db28de8f48f5fcdcb3aa9231416e4">version</a> (&quot;2.5.0 Alpha 2&quot;)</td></tr>
+<tr class="separator:a8b1db28de8f48f5fcdcb3aa9231416e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af67c768c9d0ed98b8fecba911f26c204"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceglc.html#af67c768c9d0ed98b8fecba911f26c204">description</a> (&quot;GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4.&quot;)</td></tr>
 <tr class="separator:af67c768c9d0ed98b8fecba911f26c204"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdf82b2a3906397d3d657a3bfc918f1b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceglc.html#abdf82b2a3906397d3d657a3bfc918f1b">toRadian</a> (double angleInDegrees)</td></tr>
@@ -364,6 +365,8 @@ Variables</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a51a421b53283d5996142222b9baca26cac40bc3e069532f1c43d45ee934c927eb"></a>TransparentRenderFlag</em>&nbsp;</td><td class="fielddoc">
 </td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="a51a421b53283d5996142222b9baca26ca80bf9715837cc96c175235f1815393a4"></a>OutlineSilhouetteRenderFlag</em>&nbsp;</td><td class="fielddoc">
+</td></tr>
 </table>
 
 <p>Definition at line <a class="el" href="glc__renderproperties_8h_source.html#l00054">54</a> of file <a class="el" href="glc__renderproperties_8h_source.html">glc_renderproperties.h</a>.</p>
@@ -449,7 +452,7 @@ Variables</h2></td></tr>
 
 <p>References <a class="el" href="glc__global_8cpp_source.html#l00083">archiveInfix()</a>, <a class="el" href="glc__global_8cpp_source.html#l00093">fileInfix()</a>, <a class="el" href="glc__global_8cpp_source.html#l00098">isArchiveString()</a>, and <a class="el" href="glc__global_8cpp_source.html#l00105">isFileString()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__cachemanager_8cpp_source.html#l00134">GLC_CacheManager::addToCache()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00165">GLC_3dxmlToWorld::create3DrepFrom3dxmlRep()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00773">GLC_3dxmlToWorld::loadExternalRef3D()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01760">GLC_3dxmlToWorld::loadExternRepresentations()</a>, <a class="el" href="glc__texture_8cpp_source.html#l00244">GLC_Texture::loadFromFile()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00485">GLC_WorldTo3dxml::representationFileName()</a>.</p>
+<p>Referenced by <a class="el" href="glc__cachemanager_8cpp_source.html#l00134">GLC_CacheManager::addToCache()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00165">GLC_3dxmlToWorld::create3DrepFrom3dxmlRep()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00773">GLC_3dxmlToWorld::loadExternalRef3D()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01764">GLC_3dxmlToWorld::loadExternRepresentations()</a>, <a class="el" href="glc__texture_8cpp_source.html#l00244">GLC_Texture::loadFromFile()</a>, and <a class="el" href="glc__worldto3dxml_8cpp_source.html#l00485">GLC_WorldTo3dxml::representationFileName()</a>.</p>
 
 </div>
 </div>
@@ -549,7 +552,7 @@ Variables</h2></td></tr>
 
 <p>References <a class="el" href="glc__global_8cpp_source.html#l00083">archiveInfix()</a>, and <a class="el" href="glc__global_8cpp_source.html#l00078">archivePrefix()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00773">GLC_3dxmlToWorld::loadExternalRef3D()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01760">GLC_3dxmlToWorld::loadExternRepresentations()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02088">GLC_3dxmlToWorld::loadTexture()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02159">GLC_3dxmlToWorld::setRepresentationFileName()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00773">GLC_3dxmlToWorld::loadExternalRef3D()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01764">GLC_3dxmlToWorld::loadExternRepresentations()</a>, <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02092">GLC_3dxmlToWorld::loadTexture()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l02163">GLC_3dxmlToWorld::setRepresentationFileName()</a>.</p>
 
 </div>
 </div>
@@ -583,7 +586,7 @@ Variables</h2></td></tr>
 
 <p>References <a class="el" href="glc__global_8cpp_source.html#l00093">fileInfix()</a>, and <a class="el" href="glc__global_8cpp_source.html#l00088">filePrefix()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00773">GLC_3dxmlToWorld::loadExternalRef3D()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01760">GLC_3dxmlToWorld::loadExternRepresentations()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l00773">GLC_3dxmlToWorld::loadExternalRef3D()</a>, and <a class="el" href="glc__3dxmltoworld_8cpp_source.html#l01764">GLC_3dxmlToWorld::loadExternRepresentations()</a>.</p>
 
 </div>
 </div>
@@ -905,7 +908,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__global_8h_source.html#l00129">129</a> of file <a class="el" href="glc__global_8h_source.html">glc_global.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00520">GLC_Viewport::listOfIdInsideSquare()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00473">GLC_Viewport::meaningfulIdInsideSquare()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00530">GLC_Viewport::listOfIdInsideSquare()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00482">GLC_Viewport::meaningfulIdInsideSquare()</a>.</p>
 
 </div>
 </div>
@@ -961,7 +964,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__global_8h_source.html#l00142">142</a> of file <a class="el" href="glc__global_8h_source.html">glc_global.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00042">GLC_3DViewInstance::GLC_3DViewInstance()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00247">GLC_3DViewInstance::instanciate()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00153">GLC_3DViewInstance::operator=()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00393">GLC_3DViewInstance::renderForBodySelection()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00254">GLC_3DViewInstance::setId()</a>, <a class="el" href="glc__mesh_8h_source.html#l00499">GLC_Mesh::vboDrawInSelectionModePrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00542">GLC_Mesh::vertexArrayDrawInSelectionModePrimitivesOf()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00042">GLC_3DViewInstance::GLC_3DViewInstance()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00247">GLC_3DViewInstance::instanciate()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00153">GLC_3DViewInstance::operator=()</a>, <a class="el" href="glc__mesh_8cpp_source.html#l01507">GLC_Mesh::outlineSilhouetteRenderLoop()</a>, <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00393">GLC_3DViewInstance::renderForBodySelection()</a>, <a class="el" href="glc__3dviewinstance_8h_source.html#l00254">GLC_3DViewInstance::setId()</a>, <a class="el" href="glc__mesh_8h_source.html#l00502">GLC_Mesh::vboDrawInSelectionModePrimitivesOf()</a>, and <a class="el" href="glc__mesh_8h_source.html#l00545">GLC_Mesh::vertexArrayDrawInSelectionModePrimitivesOf()</a>.</p>
 
 </div>
 </div>
@@ -983,7 +986,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__ext_8cpp_source.html#l00041">41</a> of file <a class="el" href="glc__ext_8cpp_source.html">glc_ext.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__state_8cpp_source.html#l00180">GLC_State::setGlslSupport()</a>, <a class="el" href="glc__state_8cpp_source.html#l00186">GLC_State::setPointSpriteSupport()</a>, and <a class="el" href="glc__state_8cpp_source.html#l00169">GLC_State::setVboSupport()</a>.</p>
+<p>Referenced by <a class="el" href="glc__state_8cpp_source.html#l00186">GLC_State::setGlslSupport()</a>, <a class="el" href="glc__state_8cpp_source.html#l00192">GLC_State::setPointSpriteSupport()</a>, and <a class="el" href="glc__state_8cpp_source.html#l00175">GLC_State::setVboSupport()</a>.</p>
 
 </div>
 </div>
@@ -1195,7 +1198,7 @@ Variables</h2></td></tr>
 
 <p>References <a class="el" href="glc__global_8cpp_source.html#l00027">iDMutex</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00247">GLC_3DViewInstance::instanciate()</a>, and <a class="el" href="glc__3drep_8cpp_source.html#l00465">operator&gt;&gt;()</a>.</p>
+<p>Referenced by <a class="el" href="glc__3dviewinstance_8cpp_source.html#l00247">GLC_3DViewInstance::instanciate()</a>, and <a class="el" href="glc__3drep_8cpp_source.html#l00473">operator&gt;&gt;()</a>.</p>
 
 </div>
 </div>
@@ -1240,7 +1243,7 @@ Variables</h2></td></tr>
 
 <p>References <a class="el" href="glc__global_8cpp_source.html#l00029">userIdMutex</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00039">GLC_SelectionMaterial::useMaterial()</a>.</p>
+<p>Referenced by <a class="el" href="glc__selectionmaterial_8cpp_source.html#l00040">GLC_SelectionMaterial::useMaterial()</a>.</p>
 
 </div>
 </div>
@@ -1578,7 +1581,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00251">GLC_Viewport::unProject()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00270">GLC_Viewport::unproject()</a>.</p>
+<p>Referenced by <a class="el" href="glc__viewport_8cpp_source.html#l00255">GLC_Viewport::unProject()</a>, and <a class="el" href="glc__viewport_8cpp_source.html#l00275">GLC_Viewport::unproject()</a>.</p>
 
 </div>
 </div>
@@ -1936,7 +1939,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__ext_8cpp_source.html#l00057">57</a> of file <a class="el" href="glc__ext_8cpp_source.html">glc_ext.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__state_8cpp_source.html#l00180">GLC_State::setGlslSupport()</a>.</p>
+<p>Referenced by <a class="el" href="glc__state_8cpp_source.html#l00186">GLC_State::setGlslSupport()</a>.</p>
 
 </div>
 </div>
@@ -1959,7 +1962,7 @@ Variables</h2></td></tr>
 
 <p>References <a class="el" href="glc__ext_8cpp_source.html#l00034">glPointParameterf</a>, and <a class="el" href="glc__ext_8cpp_source.html#l00035">glPointParameterfv</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__state_8cpp_source.html#l00186">GLC_State::setPointSpriteSupport()</a>.</p>
+<p>Referenced by <a class="el" href="glc__state_8cpp_source.html#l00192">GLC_State::setPointSpriteSupport()</a>.</p>
 
 </div>
 </div>
@@ -1980,7 +1983,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__ext_8cpp_source.html#l00048">48</a> of file <a class="el" href="glc__ext_8cpp_source.html">glc_ext.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__state_8cpp_source.html#l00169">GLC_State::setVboSupport()</a>.</p>
+<p>Referenced by <a class="el" href="glc__state_8cpp_source.html#l00175">GLC_State::setVboSupport()</a>.</p>
 
 </div>
 </div>
@@ -2592,7 +2595,7 @@ Variables</h2></td></tr>
 
 <p>References <a class="el" href="glc__utils__maths_8h_source.html#l00039">PI</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__geomtools_8cpp_source.html#l00566">compareAngle()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00259">GLC_Viewport::setViewAngle()</a>.</p>
+<p>Referenced by <a class="el" href="glc__geomtools_8cpp_source.html#l00566">compareAngle()</a>, and <a class="el" href="glc__viewport_8h_source.html#l00265">GLC_Viewport::setViewAngle()</a>.</p>
 
 </div>
 </div>
@@ -2667,18 +2670,18 @@ Variables</h2></td></tr>
 
 <p>References <a class="el" href="glc__geomtools_8cpp_source.html#l00347">isCounterclockwiseOrdered()</a>, <a class="el" href="glc__vector3d_8h_source.html#l00106">GLC_Vector3d::isNull()</a>, <a class="el" href="glc__vector3d_8h_source.html#l00240">GLC_Vector3d::normalize()</a>, <a class="el" href="glc__geomtools_8cpp_source.html#l00063">polygonIsConvex()</a>, <a class="el" href="glc__matrix4x4_8h_source.html#l00474">GLC_Matrix4x4::setMatRot()</a>, <a class="el" href="glc__geomtools_8cpp_source.html#l00316">triangulate()</a>, and <a class="el" href="namespaceglc.html#ab62ca4ac3c25a6847c6cbc7f079a1157">Z_AXIS()</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__colladatoworld_8cpp_source.html#l01050">GLC_ColladaToWorld::addPolylistToCurrentMesh()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00402">GLC_ObjToWorld::extractFaceIndex()</a>.</p>
+<p>Referenced by <a class="el" href="glc__colladatoworld_8cpp_source.html#l01050">GLC_ColladaToWorld::addPolylistToCurrentMesh()</a>, <a class="el" href="glc__extrudedmesh_8cpp_source.html#l00145">GLC_ExtrudedMesh::createMesh()</a>, and <a class="el" href="glc__objtoworld_8cpp_source.html#l00432">GLC_ObjToWorld::extractFaceIndex()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a1deedbe249bdb457e337a1f3b4970113"></a>
+<a class="anchor" id="a8b1db28de8f48f5fcdcb3aa9231416e4"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">const QString glc::version </td>
           <td>(</td>
-          <td class="paramtype">&quot;2.5.0&quot;&#160;</td>
+          <td class="paramtype">&quot;2.5.0 Alpha 2&quot;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -2932,7 +2935,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="glc__utils__maths_8h_source.html#l00039">39</a> of file <a class="el" href="glc__utils__maths_8h_source.html">glc_utils_maths.h</a>.</p>
 
-<p>Referenced by <a class="el" href="glc__camera_8cpp_source.html#l00397">GLC_Camera::bottomView()</a>, <a class="el" href="glc__axis_8cpp_source.html#l00220">GLC_Axis::create3DviewInstance()</a>, <a class="el" href="glc__cuttingplane_8cpp_source.html#l00281">GLC_CuttingPlane::create3DviewInstance()</a>, <a class="el" href="glc__repcrossmover_8cpp_source.html#l00079">GLC_RepCrossMover::createCrossInstance()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, <a class="el" href="glc__circle_8cpp_source.html#l00145">GLC_Circle::createWire()</a>, <a class="el" href="glc__reptrackballmover_8cpp_source.html#l00035">GLC_RepTrackBallMover::GLC_RepTrackBallMover()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00368">GLC_Camera::leftView()</a>, <a class="el" href="glc__axis_8cpp_source.html#l00281">GLC_Axis::moveManipulatorRep()</a>, <a class="el" href="glc__cuttingplane_8cpp_source.html#l00352">GLC_CuttingPlane::moveManipulatorRep()</a>, <a class="el" href="glc__geomtools_8cpp_source.html#l00063">polygonIsConvex()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00357">GLC_Camera::rearView()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00363">GLC_Camera::rightView()</a>, <a class="el" href="glc__circle_8cpp_source.html#l00118">GLC_Circle::setAngle()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00253">GLC_Camera::setCam()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00178">GLC_Camera::setEyeCam()</a>, <a class="el" href="glc__matrix4x4_8h_source.html#l00518">GLC_Matrix4x4::setMatRot()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00209">GLC_Camera::setTargetCam()</a>, <a class="el" href="glc__vector3d_8h_source.html#l00447">GLC_Vector3d::signedAngleWithVect()</a>, <a class="el" href="glc__utils__maths_8h_source.html#l00046">toDegrees()</a>, <a class="el" href="glc__matrix4x4_8cpp_source.html#l00076">GLC_Matrix4x4::toEuler()</a>, <a class="el" href="glc__utils__maths_8h_source.html#l00042">toRadian()</a>, <a class="el" href="glc__flymover_8h_source.html#l00060">GLC_FlyMover::turningRate()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00172">GLC_Viewport::updateProjectionMat()</a>, and <a class="el" href="glc__geomtools_8cpp_source.html#l00705">zeroTo2PIAngle()</a>.</p>
+<p>Referenced by <a class="el" href="glc__camera_8cpp_source.html#l00397">GLC_Camera::bottomView()</a>, <a class="el" href="glc__axis_8cpp_source.html#l00220">GLC_Axis::create3DviewInstance()</a>, <a class="el" href="glc__cuttingplane_8cpp_source.html#l00281">GLC_CuttingPlane::create3DviewInstance()</a>, <a class="el" href="glc__repcrossmover_8cpp_source.html#l00079">GLC_RepCrossMover::createCrossInstance()</a>, <a class="el" href="glc__sphere_8cpp_source.html#l00130">GLC_Sphere::createMesh()</a>, <a class="el" href="glc__disc_8cpp_source.html#l00128">GLC_Disc::createMeshAndWire()</a>, <a class="el" href="glc__cone_8cpp_source.html#l00128">GLC_Cone::createMeshAndWire()</a>, <a class="el" href="glc__cylinder_8cpp_source.html#l00153">GLC_Cylinder::createMeshAndWire()</a>, <a class="el" href="glc__circle_8cpp_source.html#l00145">GLC_Circle::createWire()</a>, <a class="el" href="glc__reptrackballmover_8cpp_source.html#l00035">GLC_RepTrackBallMover::GLC_RepTrackBallMover()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00368">GLC_Camera::leftView()</a>, <a class="el" href="glc__axis_8cpp_source.html#l00281">GLC_Axis::moveManipulatorRep()</a>, <a class="el" href="glc__cuttingplane_8cpp_source.html#l00352">GLC_CuttingPlane::moveManipulatorRep()</a>, <a class="el" href="glc__geomtools_8cpp_source.html#l00063">polygonIsConvex()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00357">GLC_Camera::rearView()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00363">GLC_Camera::rightView()</a>, <a class="el" href="glc__circle_8cpp_source.html#l00118">GLC_Circle::setAngle()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00253">GLC_Camera::setCam()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00178">GLC_Camera::setEyeCam()</a>, <a class="el" href="glc__matrix4x4_8h_source.html#l00518">GLC_Matrix4x4::setMatRot()</a>, <a class="el" href="glc__camera_8cpp_source.html#l00209">GLC_Camera::setTargetCam()</a>, <a class="el" href="glc__vector3d_8h_source.html#l00447">GLC_Vector3d::signedAngleWithVect()</a>, <a class="el" href="glc__utils__maths_8h_source.html#l00046">toDegrees()</a>, <a class="el" href="glc__matrix4x4_8cpp_source.html#l00076">GLC_Matrix4x4::toEuler()</a>, <a class="el" href="glc__utils__maths_8h_source.html#l00042">toRadian()</a>, <a class="el" href="glc__flymover_8h_source.html#l00060">GLC_FlyMover::turningRate()</a>, <a class="el" href="glc__viewport_8cpp_source.html#l00177">GLC_Viewport::updateProjectionMat()</a>, and <a class="el" href="glc__geomtools_8cpp_source.html#l00705">zeroTo2PIAngle()</a>.</p>
 
 </div>
 </div>
