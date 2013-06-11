@@ -14,7 +14,7 @@
 GLC_DeclarativeView::GLC_DeclarativeView(QWidget *pParent)
     : QDeclarativeView(pParent)
 {
-    QDeclarativeView::setViewport(new QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers))));
+    QDeclarativeView::setViewport(new QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers)), this));
     QDeclarativeView::setRenderHint(QPainter::SmoothPixmapTransform);
     QDeclarativeView::setRenderHint(QPainter::Antialiasing);
     QDeclarativeView::setResizeMode(QDeclarativeView::SizeViewToRootObject);
