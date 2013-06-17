@@ -11,8 +11,6 @@
 #include <GLC_Exception>
 #include <GLC_Factory>
 
-#include <OpenGL/glu.h>
-
 #include "glc_declarativeitem.h"
 
 #ifndef GL_MULTISAMPLE
