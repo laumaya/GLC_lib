@@ -175,7 +175,6 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Initialize OpenGL with default values
-	/*! Glew initialisation is made here */
 	void initGl();
 
 	//! Load camera's transformation Matrix and display image if necessary
