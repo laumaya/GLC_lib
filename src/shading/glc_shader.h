@@ -56,8 +56,8 @@ public:
 	//! Default constructor
 	GLC_Shader();
 
-	//! Construct shader with specifie vertex and fragment
-	GLC_Shader(QFile&, QFile&);
+    //! Construct shader with specify vertex and fragment
+    GLC_Shader(QFile& vertexShaderFile, QFile& fragmentShaderFile);
 
 	//! Copy constructor
 	GLC_Shader(const GLC_Shader&);
@@ -130,7 +130,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set Vertex and fragment shaders
-	void setVertexAndFragmentShader(QFile&, QFile&);
+    void setVertexAndFragmentShader(QFile& vertexShaderFile, QFile& fragmentShaderFile);
 
 	//! Replace this shader by a copy of another shader
 	/* If this shader is usable replacing shader must be usable*/

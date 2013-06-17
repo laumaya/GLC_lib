@@ -64,7 +64,7 @@ GLC_Shader::GLC_Shader()
 	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 }
 
-GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
+GLC_Shader::GLC_Shader(QFile& vertexShaderFile, QFile& fragmentShaderFile)
 : m_VertexShader(QGLShader::Vertex)
 , m_FragmentShader(QGLShader::Fragment)
 , m_ProgramShader()
@@ -91,7 +91,7 @@ GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 {
 	initLightsUniformId();
 	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
-	setVertexAndFragmentShader(vertex, fragment);
+    setVertexAndFragmentShader(vertexShaderFile, fragmentShaderFile);
 }
 
 GLC_Shader::GLC_Shader(const GLC_Shader& shader)
@@ -306,6 +306,7 @@ void GLC_Shader::deleteShader()
 		if (m_CurrentShadingGroupId == m_ProgramShaderId)
 		{
 			qDebug() << "Warning deleting current shader";
+            unuse();
 		}
 		//removing shader id from the stack
 		if (m_ShadingGroupStack.contains(m_ProgramShaderId))
@@ -327,16 +328,16 @@ void GLC_Shader::deleteShader()
 //////////////////////////////////////////////////////////////////////
 
 
-void GLC_Shader::setVertexAndFragmentShader(QFile& vertexFile, QFile& fragmentFile)
+void GLC_Shader::setVertexAndFragmentShader(QFile& vertexShaderFile, QFile& fragmentShaderFile)
 {
-	m_Name= QFileInfo(vertexFile).baseName();
-	vertexFile.open(QIODevice::ReadOnly);
-	m_VertexShader.compileSourceCode(vertexFile.readAll());
-	vertexFile.close();
+    m_Name= QFileInfo(vertexShaderFile).baseName();
+    vertexShaderFile.open(QIODevice::ReadOnly);
+    m_VertexShader.compileSourceCode(vertexShaderFile.readAll());
+    vertexShaderFile.close();
 
-	fragmentFile.open(QIODevice::ReadOnly);
-	m_FragmentShader.compileSourceCode(fragmentFile.readAll());
-	fragmentFile.close();
+    fragmentShaderFile.open(QIODevice::ReadOnly);
+    m_FragmentShader.compileSourceCode(fragmentShaderFile.readAll());
+    fragmentShaderFile.close();
 }
 
 
