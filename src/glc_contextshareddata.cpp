@@ -24,14 +24,62 @@
 #include <QtDebug>
 
 #include "glc_contextshareddata.h"
+#include "shading/glc_shader.h"
+#include "glc_state.h"
 
 GLC_ContextSharedData::GLC_ContextSharedData()
+    : m_pDefaultShader(NULL)
+    , m_IsClean(false)
 {
-	qDebug() << "GLC_ContextSharedData::GLC_ContextSharedData()";
-
+    qDebug() << "GLC_ContextSharedData::GLC_ContextSharedData()";
 }
 
 GLC_ContextSharedData::~GLC_ContextSharedData()
 {
-	qDebug() << "GLC_ContextSharedData::~GLC_ContextSharedData()";
+    qDebug() << "GLC_ContextSharedData::~GLC_ContextSharedData()";
+    delete m_pDefaultShader;
+}
+
+void GLC_ContextSharedData::init()
+{
+    if (!m_IsClean)
+    {
+        initDefaultShader();
+
+#ifdef GLC_OPENGL_ES_2
+        useDefaultShader();
+#endif
+
+        m_IsClean= true;
+    }
+}
+
+void GLC_ContextSharedData::useDefaultShader()
+{
+    Q_ASSERT(m_IsClean);
+    Q_ASSERT(NULL != m_pDefaultShader);
+    m_pDefaultShader->use();
+}
+
+void GLC_ContextSharedData::unuseDefaultShader()
+{
+    Q_ASSERT(m_IsClean);
+    Q_ASSERT(NULL != m_pDefaultShader);
+    m_pDefaultShader->unuse();
+}
+
+void GLC_ContextSharedData::initDefaultShader()
+{
+    qDebug() << "GLC_ContextSharedData::initDefaultShader()";
+    if (GLC_State::glslSupported())
+    {
+        QFile vertexShader(":/GLC_lib_Shaders/default_vert");
+        Q_ASSERT(vertexShader.exists());
+
+        QFile fragmentShader(":/GLC_lib_Shaders/default_frag");
+        Q_ASSERT(fragmentShader.exists());
+
+        m_pDefaultShader= new GLC_Shader(vertexShader, fragmentShader);
+        m_pDefaultShader->createAndCompileProgrammShader();
+    }
 }

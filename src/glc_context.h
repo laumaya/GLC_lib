@@ -142,6 +142,12 @@ public:
 	inline void updateUniformVariables()
 	{m_UniformShaderData.updateAll(this);}
 
+    //! Use the default shader
+    void useDefaultShader();
+
+    //! UnUse the default shader
+    inline void unuseDefaultShader();
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Private services Functions*/

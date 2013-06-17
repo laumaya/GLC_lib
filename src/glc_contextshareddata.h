@@ -26,11 +26,30 @@
 
 #include "glc_config.h"
 
+class GLC_Shader;
+
 class GLC_LIB_EXPORT GLC_ContextSharedData
 {
 public:
 	GLC_ContextSharedData();
 	virtual ~GLC_ContextSharedData();
+
+public:
+    //! Init context shared data, the context must be current
+    void init();
+
+    //! Use the default shader
+    void useDefaultShader();
+
+    //! UnUse the default shader
+    void unuseDefaultShader();
+
+private:
+    void initDefaultShader();
+
+private:
+    GLC_Shader* m_pDefaultShader;
+    bool m_IsClean;
 };
 
 #endif /* GLC_CONTEXTSHAREDDATA_H_ */
