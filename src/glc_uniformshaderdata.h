@@ -47,7 +47,7 @@ public:
 	//! Set Light values from the given light
 	void setLightValues(const GLC_Light& light);
 
-	//! Set lighting enbale state
+    //! Set lighting enable state
 	void setLightingState(bool enable);
 
 	//! Set the model view matrix
