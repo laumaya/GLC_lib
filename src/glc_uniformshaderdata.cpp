@@ -49,7 +49,9 @@ void GLC_UniformShaderData::setLightValues(const GLC_Light& light)
 
 void GLC_UniformShaderData::setLightingState(bool enable)
 {
+    qDebug() << "GLC_UniformShaderData::setLightingState";
 	GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
+    Q_ASSERT(NULL != pCurrentShader);
 	pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->enableLightingId(), enable);
 }
 
