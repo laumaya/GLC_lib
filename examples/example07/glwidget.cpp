@@ -108,16 +108,16 @@ void GLWidget::resizeGL(int width, int height)
 // Create GLC_Object to display
 void GLWidget::CreateScene()
 {
-	// Load Backfround image.
+    // Load Backfround image.
     m_GlView.loadBackGroundImage(QLatin1String(":fond_exemple07.png"));
 
-	// create a material with the specified texture
+    // create a material with the specified texture
     GLC_Texture* pTexture= GLC_Factory::instance()->createTexture(QString::fromLatin1(":exemple07.png"));
 
-	// Load "example07.obj"
+    // Load "example07.obj"
     QFile fileEx07(QLatin1String(":example07.obj"));
-	m_World= GLC_Factory::instance()->createWorldFromFile(fileEx07);
-	m_World.collection()->instancesHandle().first()->geomAt(0)->firstMaterial()->setTexture(pTexture);
+    m_World= GLC_Factory::instance()->createWorldFromFile(fileEx07);
+    m_World.collection()->instancesHandle().first()->geomAt(0)->firstMaterial()->setTexture(pTexture);
 
 }
 
