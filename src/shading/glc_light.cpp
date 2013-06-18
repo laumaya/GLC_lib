@@ -211,7 +211,7 @@ void GLC_Light::disable()
 {
 	if (NULL != m_pContext)
 	{
-		glDisable(m_LightID);
+        GLC_Context::current()->glcDisableLight(m_LightID);
 	}
 }
 
@@ -226,7 +226,7 @@ void GLC_Light::glExecute()
 	}
 
 	GLC_Context::current()->glcEnableLighting(true);
-	glEnable(m_LightID);
+    GLC_Context::current()->glcEnableLight(m_LightID);
 
 	if (m_pContext != QGLContext::currentContext())
 	{

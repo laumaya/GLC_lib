@@ -50,6 +50,9 @@ public:
     //! Set lighting enable state
 	void setLightingState(bool enable);
 
+    //! Set lights enable state
+    void setLightsEnableState(QVector<int> &lightsEnableState);
+
 	//! Set the model view matrix
 	void setModelViewProjectionMatrix(const GLC_Matrix4x4& modelView, const GLC_Matrix4x4& projection);
 

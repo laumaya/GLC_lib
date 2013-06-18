@@ -52,7 +52,19 @@ void GLC_UniformShaderData::setLightingState(bool enable)
     qDebug() << "GLC_UniformShaderData::setLightingState";
 	GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
     Q_ASSERT(NULL != pCurrentShader);
-	pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->enableLightingId(), enable);
+    pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->enableLightingId(), enable);
+}
+
+void GLC_UniformShaderData::setLightsEnableState(QVector<int> &lightsEnableState)
+{
+    qDebug() << "GLC_UniformShaderData::setLightsEnableState";
+    Q_ASSERT(lightsEnableState.count() == GLC_Light::maxLightCount());
+    int* enableStateArray= lightsEnableState.data();
+
+    GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
+    Q_ASSERT(NULL != pCurrentShader);
+    pCurrentShader->programShaderHandle()->setUniformValueArray(pCurrentShader->lightsEnableStateId()
+                                                                , enableStateArray, lightsEnableState.count());
 }
 
 void GLC_UniformShaderData::setModelViewProjectionMatrix(const GLC_Matrix4x4& modelView, const GLC_Matrix4x4& projection)
