@@ -1,4 +1,3 @@
-
 struct light{
     vec4    position;
     vec4    ambient_color;
@@ -30,16 +29,16 @@ uniform mat4    mvp_matrix;            // Combined model view + projection matri
 uniform mat3    inv_modelview_matrix;  // inverse model view matrix
 
 // to transform normal
-uniform mat4    tex_matrix[2];         // Texture matrix
+uniform mat2    tex_matrix[2];         // Texture matrix
 uniform bool    enable_tex[2];         // Textures enables
-uniform bool    enable_tex_matrix[2]   // texture matrix enable
+uniform bool    enable_tex_matrix[2];   // texture matrix enable
 
 // Material and lightnings
-uniform         material material_state;
-uniform vec4    ambient_scene_color;
-uniform light   light_state[8];
-uniform bool    light_enable_state[8];
-uniform int     num_lights; // number of light enabled
+uniform material    material_state;
+uniform vec4        ambient_scene_color;
+uniform light       light_state[8];
+uniform bool        light_enable_state[8];
+uniform int         num_lights; // number of light enabled
 
 uniform bool    enable_lighting;
 uniform bool    light_model_two_sided;
@@ -62,14 +61,14 @@ uniform bool    enable_ucp;
 
 // vertex attribute - not all of them may be passed in
 attribute vec4  a_position;          // this attribute is always specified
-attribute vec4  a_textcoord0;        // available if enable_tex[0] is true
-attribute vec4  a_textcoord1;        // available if enable_tex[1] is true
+attribute vec2  a_textcoord0;        // available if enable_tex[0] is true
+attribute vec2  a_textcoord1;        // available if enable_tex[1] is true
 
 attribute vec4  a_color;             // available if !enable_lighting or (enable_lightnig && enable_color_material)
 attribute vec3  a_normal;            // available if xform_normal is set (riquired for lighting)
 
 // varying variables output by the vertex shader
-varying vec4    v_textcoord[2];
+varying vec2    v_textcoord[2];
 varying vec4    v_front_color;
 varying vec4    v_back_color;
 varying float   v_fog_factor;
@@ -148,7 +147,6 @@ vec4 lighting_equation(int i)
     }
 
     return computed_color;
-
 }
 
 float compute_fog()
@@ -179,8 +177,8 @@ vec4 do_lighting()
     int i, j;
 
     vtx_color= material_state.emissive_color + (mat_ambient_color * ambient_scene_color);
-    j= (int)c_zero;
-    for (i= (int)c_zero; i < 8; ++i)
+    j= 0;
+    for (i= 0; i < 8; ++i)
     {
         if (j >= num_lights) break;
         if (light_enable_state[i])
@@ -235,7 +233,7 @@ void main()
     }
 
     // Do texture xforms
-    v_textcoord[indx_zero]= vec4(c_zero, c_zero, c_zero, c_one);
+    v_textcoord[indx_zero]= vec2(c_zero, c_zero);
     if (enable_tex[indx_zero])
     {
         if (enable_tex_matrix[indx_zero])
@@ -248,7 +246,7 @@ void main()
         }
     }
 
-    v_textcoord[indx_one]= vec4(c_zero, c_zero, c_zero, c_one);
+    v_textcoord[indx_one]= vec2(c_zero, c_zero);
     if (enable_tex[indx_one])
     {
         if (enable_tex_matrix[indx_one])
