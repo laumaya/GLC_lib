@@ -142,7 +142,7 @@ vec4 lighting_equation(int i)
         if (ndoth > c_zero)
         {
             computed_color+= (pow(ndoth, material_state.specular_exponent) * material_state.specular_color *
-                    light_state[i].specular_color);
+                              light_state[i].specular_color);
         }
         computed_color*= att_factor; // multiply color with computed attenuation factor * computed spot factor
     }
@@ -151,8 +151,121 @@ vec4 lighting_equation(int i)
 
 }
 
-void main() {
+float compute_fog()
+{
+    float f;
+    // use eye A as approximation
+    if (fog_mode == 0)
+    {
+        f= (fog_end - p_eye.z) / (fog_end - fog_start);
+    }
+    else if (fog_mode == 1)
+    {
+        f= exp(-(p_eye.z * fog_density));
+    }
+    else
+    {
+        f= (p_eye.z * fog_density);
+        f= exp(-(f * f));
+    }
 
+    f= clamp(f, c_zero, c_one);
+    return f;
 }
+
+vec4 do_lighting()
+{
+    vec4 vtx_color;
+    int i, j;
+
+    vtx_color= material_state.emissive_color + (mat_ambient_color * ambient_scene_color);
+    j= (int)c_zero;
+    for (i= (int)c_zero; i < 8; ++i)
+    {
+        if (j >= num_lights) break;
+        if (light_enable_state[i])
+        {
+            j++;
+            vtx_color= lighting_equation(i);
+        }
+    }
+
+    vtx_color.a= mat_diffuse_color.a;
+    return vtx_color;
+}
+
+void main()
+{
+    int i, j;
+
+    // do we need to transform p
+    if (xform_eye_p)
+    {
+        p_eye= modelview_matrix * a_position;
+    }
+
+    if (enable_lighting)
+    {
+        n= inv_modelview_matrix * a_normal;
+        if (rescale_normal)
+        {
+            n= rescale_normal_factor * n;
+        }
+        if (normalize_normal)
+        {
+            n= normalize(n);
+        }
+
+        mat_ambient_color= enable_color_material ? a_color : material_state.ambient_color;
+        mat_diffuse_color= enable_color_material ? a_color : material_state.diffuse_color;
+        v_front_color= do_lighting();
+        v_back_color= v_front_color;
+        // do 2-sided lighting
+        if (light_model_two_sided)
+        {
+            n= -n;
+            v_back_color= do_lighting();
+        }
+    }
+    else
+    {
+        // Set the default output color to be the per-vertex per-primitive color
+        v_front_color= a_color;
+        v_back_color= a_color;
+    }
+
+    // Do texture xforms
+    v_textcoord[indx_zero]= vec4(c_zero, c_zero, c_zero, c_one);
+    if (enable_tex[indx_zero])
+    {
+        if (enable_tex_matrix[indx_zero])
+        {
+            v_textcoord[indx_zero]= tex_matrix[indx_zero] * a_textcoord0;
+        }
+        else
+        {
+            v_textcoord[indx_zero]= a_textcoord0;
+        }
+    }
+
+    v_textcoord[indx_one]= vec4(c_zero, c_zero, c_zero, c_one);
+    if (enable_tex[indx_one])
+    {
+        if (enable_tex_matrix[indx_one])
+        {
+            v_textcoord[indx_one]= tex_matrix[indx_one] * a_textcoord1;
+        }
+        else
+        {
+            v_textcoord[indx_one]= a_textcoord1;
+        }
+    }
+
+    v_ucp_factor= enable_ucp ? dot(p_eye, ucp_eqn) : c_zero;
+    v_fog_factor= enable_fog ? compute_fog() : c_one;
+
+    gl_Position= mvp_matrix * a_position;
+}
+
 
 
