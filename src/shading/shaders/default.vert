@@ -28,10 +28,8 @@ uniform mat4    modelview_matrix;      // model view matrix
 uniform mat4    mvp_matrix;            // Combined model view + projection matrix
 uniform mat3    inv_modelview_matrix;  // inverse model view matrix
 
-// to transform normal
-uniform mat2    tex_matrix[2];         // Texture matrix
-uniform bool    enable_tex[2];         // Textures enables
-uniform bool    enable_tex_matrix[2];   // texture matrix enable
+// Texture
+uniform bool    enable_tex;         // Textures enables
 
 // Material and lightnings
 uniform material    material_state;
@@ -62,13 +60,12 @@ uniform bool    enable_ucp;
 // vertex attribute - not all of them may be passed in
 attribute vec4  a_position;          // this attribute is always specified
 attribute vec2  a_textcoord0;        // available if enable_tex[0] is true
-attribute vec2  a_textcoord1;        // available if enable_tex[1] is true
 
 attribute vec4  a_color;             // available if !enable_lighting or (enable_lightnig && enable_color_material)
 attribute vec3  a_normal;            // available if xform_normal is set (riquired for lighting)
 
 // varying variables output by the vertex shader
-varying vec2    v_textcoord[2];
+varying vec2    v_textcoord;
 varying vec4    v_front_color;
 varying vec4    v_back_color;
 varying float   v_fog_factor;
@@ -184,7 +181,7 @@ vec4 do_lighting()
         if (light_enable_state[i])
         {
             j++;
-            vtx_color= lighting_equation(i);
+            vtx_color+= lighting_equation(i);
         }
     }
 
@@ -233,30 +230,10 @@ void main()
     }
 
     // Do texture xforms
-    v_textcoord[indx_zero]= vec2(c_zero, c_zero);
-    if (enable_tex[indx_zero])
+    v_textcoord= vec2(c_zero, c_zero);
+    if (enable_tex)
     {
-        if (enable_tex_matrix[indx_zero])
-        {
-            v_textcoord[indx_zero]= tex_matrix[indx_zero] * a_textcoord0;
-        }
-        else
-        {
-            v_textcoord[indx_zero]= a_textcoord0;
-        }
-    }
-
-    v_textcoord[indx_one]= vec2(c_zero, c_zero);
-    if (enable_tex[indx_one])
-    {
-        if (enable_tex_matrix[indx_one])
-        {
-            v_textcoord[indx_one]= tex_matrix[indx_one] * a_textcoord1;
-        }
-        else
-        {
-            v_textcoord[indx_one]= a_textcoord1;
-        }
+        v_textcoord= a_textcoord0;
     }
 
     v_ucp_factor= enable_ucp ? dot(p_eye, ucp_eqn) : c_zero;
