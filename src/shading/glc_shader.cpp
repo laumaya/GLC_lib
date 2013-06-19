@@ -297,8 +297,6 @@ void GLC_Shader::createAndCompileProgrammShader()
 			//qDebug() << "m_LightsSpotCutoffAngleId " << m_LightsSpotCutoffAngleId.value(i);
 			m_LightsComputeDistanceAttenuationId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].compute_distance_attenuation");
 			//qDebug() << "m_LightsComputeDistanceAttenuationId " << m_LightsComputeDistanceAttenuationId.value(i);
-
-
 		}
 	}
 }

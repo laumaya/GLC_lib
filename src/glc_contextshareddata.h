@@ -123,7 +123,6 @@ public:
     //! Disable the given light id
     void glcDisableLight(GLenum lightId);
 
-
 //@}
 
 private:

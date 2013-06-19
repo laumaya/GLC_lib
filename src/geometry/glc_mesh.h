@@ -36,6 +36,7 @@
 #include "glc_primitivegroup.h"
 #include "../glc_state.h"
 #include "../shading/glc_selectionmaterial.h"
+#include "../glc_context.h"
 
 #include "../glc_config.h"
 
@@ -1078,15 +1079,15 @@ void GLC_Mesh::vertexArrayDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCur
 // Activate mesh VBOs and IBO of the current LOD
 void GLC_Mesh::activateVboAndIbo()
 {
+    GLC_Context* pContext= GLC_Context::current();
+
 	// Activate Vertices VBO
 	m_MeshData.useVBO(true, GLC_MeshData::GLC_Vertex);
-	glVertexPointer(3, GL_FLOAT, 0, 0);
-	glEnableClientState(GL_VERTEX_ARRAY);
+    pContext->glcUseVertexPointer(0);
 
 	// Activate Normals VBO
 	m_MeshData.useVBO(true, GLC_MeshData::GLC_Normal);
-	glNormalPointer(GL_FLOAT, 0, 0);
-	glEnableClientState(GL_NORMAL_ARRAY);
+    pContext->glcUseNormalPointer(0);
 
 	// Activate texel VBO if needed
 	if (m_MeshData.useVBO(true, GLC_MeshData::GLC_Texel))
@@ -1110,12 +1111,12 @@ void GLC_Mesh::activateVboAndIbo()
 // Activate vertex Array
 void GLC_Mesh::activateVertexArray()
 {
-	// Use Vertex Array
-	glVertexPointer(3, GL_FLOAT, 0, m_MeshData.positionVectorHandle()->data());
-	glEnableClientState(GL_VERTEX_ARRAY);
+    GLC_Context* pContext= GLC_Context::current();
 
-	glNormalPointer(GL_FLOAT, 0, m_MeshData.normalVectorHandle()->data());
-	glEnableClientState(GL_NORMAL_ARRAY);
+	// Use Vertex Array
+    pContext->glcUseVertexPointer(m_MeshData.positionVectorHandle()->data());
+
+    pContext->glcUseNormalPointer(m_MeshData.normalVectorHandle()->data());
 
 	// Activate texel if needed
 	if (!m_MeshData.texelVectorHandle()->isEmpty())

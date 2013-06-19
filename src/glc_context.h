@@ -148,6 +148,18 @@ public:
     inline void glcSetTwoSidedLight(GLint twoSided)
     {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcSetTwoSidedLight(twoSided);}
 
+    //! Use vertex array pointer and enable it
+    void glcUseVertexPointer(const GLvoid* pointer);
+
+    //! Disable the vertex client state
+    void glcDisableVertexClientState();
+
+    //! Use Normal array pointer and enable it
+    void glcUseNormalPointer(const GLvoid* pointer);
+
+    //! Disable the vertex client state
+    void glcDisableNormalClientState();
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
