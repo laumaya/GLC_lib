@@ -42,10 +42,6 @@ GLC_UniformShaderData::~GLC_UniformShaderData()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-void GLC_UniformShaderData::setLightValues(const GLC_Light& light)
-{
-
-}
 
 void GLC_UniformShaderData::setLightingState(bool enable)
 {
@@ -53,6 +49,14 @@ void GLC_UniformShaderData::setLightingState(bool enable)
 	GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
     Q_ASSERT(NULL != pCurrentShader);
     pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->enableLightingId(), enable);
+}
+
+void GLC_UniformShaderData::setTwoSidedLight(GLint twoSided)
+{
+    qDebug() << "GLC_UniformShaderData::setTwoSidedLight";
+    GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
+    Q_ASSERT(NULL != pCurrentShader);
+    pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->twoSidedLightingStateId(), twoSided);
 }
 
 void GLC_UniformShaderData::setLightsEnableState(QVector<int> &lightsEnableState)

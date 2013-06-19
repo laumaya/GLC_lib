@@ -49,6 +49,7 @@ GLC_Shader::GLC_Shader()
 , m_MvpLocationId(-1)
 , m_InvModelViewLocationId(-1)
 , m_EnableLightingId(-1)
+, m_TwosidedEnableStateId(-1)
 , m_LightsEnableStateId(-1)
 , m_LightsPositionId()
 , m_LightsAmbientColorId()
@@ -78,6 +79,7 @@ GLC_Shader::GLC_Shader(QFile& vertexShaderFile, QFile& fragmentShaderFile)
 , m_MvpLocationId(-1)
 , m_InvModelViewLocationId(-1)
 , m_EnableLightingId(-1)
+, m_TwosidedEnableStateId(-1)
 , m_LightsEnableStateId(-1)
 , m_LightsPositionId()
 , m_LightsAmbientColorId()
@@ -108,6 +110,7 @@ GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 , m_MvpLocationId(-1)
 , m_InvModelViewLocationId(-1)
 , m_EnableLightingId(-1)
+, m_TwosidedEnableStateId(-1)
 , m_LightsEnableStateId(-1)
 , m_LightsPositionId()
 , m_LightsAmbientColorId()
@@ -269,6 +272,8 @@ void GLC_Shader::createAndCompileProgrammShader()
 		//qDebug() << "m_InvModelViewLocationId " << m_InvModelViewLocationId;
 		m_EnableLightingId= m_ProgramShader.uniformLocation("enable_lighting");
 		//qDebug() << "m_EnableLightingId " << m_EnableLightingId;
+        m_TwosidedEnableStateId= m_ProgramShader.uniformLocation("light_model_two_sided");
+        //qDebug() << "m_TwosidedEnableStateId " << m_TwosidedEnableStateId;
 		m_LightsEnableStateId= m_ProgramShader.uniformLocation("light_enable_state");
 		//qDebug() << "m_LightsEnableStateId " << m_LightsEnableStateId;
 		const int size= GLC_Light::maxLightCount();

@@ -34,6 +34,7 @@ GLC_ContextSharedData::GLC_ContextSharedData()
     , m_MatrixStackHash()
     , m_UniformShaderData()
     , m_LightingIsEnable()
+    , m_TwoSidedLighting()
     , m_LightsEnableState()
 {
     qDebug() << "GLC_ContextSharedData::GLC_ContextSharedData()";
@@ -47,9 +48,9 @@ GLC_ContextSharedData::GLC_ContextSharedData()
     m_MatrixStackHash.insert(GL_PROJECTION, pStack2);
 
     m_LightingIsEnable.push(false);
+    m_TwoSidedLighting.push(false);
 
     initLightEnableState();
-
 }
 
 GLC_ContextSharedData::~GLC_ContextSharedData()
@@ -230,7 +231,7 @@ void GLC_ContextSharedData::glcEnableLighting(bool enable)
 
 #ifdef GLC_OPENGL_ES_2
 
-        m_UniformShaderData.setLightingState(m_LightingIsEnable);
+        m_UniformShaderData.setLightingState(m_LightingIsEnable.top());
 #else
         if (GLC_Shader::hasActiveShader())
         {
@@ -241,6 +242,27 @@ void GLC_ContextSharedData::glcEnableLighting(bool enable)
 #endif
 
     }
+}
+
+void GLC_ContextSharedData::glcSetTwoSidedLight(GLint twoSided)
+{
+    if (twoSided != m_TwoSidedLighting.top())
+    {
+        m_TwoSidedLighting.top()= twoSided;
+
+#ifdef GLC_OPENGL_ES_2
+
+        m_UniformShaderData.setTwoSidedLight(m_TwoSidedLighting.top());
+#else
+        if (GLC_Shader::hasActiveShader())
+        {
+            m_UniformShaderData.setTwoSidedLight(m_TwoSidedLighting.top());
+        }
+        glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, m_TwoSidedLighting.top());
+
+#endif
+    }
+
 }
 
 void GLC_ContextSharedData::glcEnableLight(GLenum lightId)

@@ -44,11 +44,11 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set Light values from the given light
-	void setLightValues(const GLC_Light& light);
-
     //! Set lighting enable state
 	void setLightingState(bool enable);
+
+    //! Set two sided lighting
+    void setTwoSidedLight(GLint twoSided);
 
     //! Set lights enable state
     void setLightsEnableState(QVector<int> &lightsEnableState);

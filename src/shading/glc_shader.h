@@ -163,6 +163,10 @@ public:
 	inline int enableLightingId() const
 	{return m_EnableLightingId;}
 
+    //! Return the two sided enable state id
+    inline int twoSidedLightingStateId() const
+    {return m_TwosidedEnableStateId;}
+
 	//! Return the lights enable state id
 	inline int lightsEnableStateId() const
 	{return m_LightsEnableStateId;}
@@ -286,6 +290,9 @@ private:
 
 	//! The enable lighting id
 	int m_EnableLightingId;
+
+    //! The two sided lighting enable state id
+    int m_TwosidedEnableStateId;
 
 	//! Lights enable states id
 	int m_LightsEnableStateId;

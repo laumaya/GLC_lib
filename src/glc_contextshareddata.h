@@ -114,11 +114,15 @@ public:
     //! Enable lighting
     void glcEnableLighting(bool enable);
 
+    //! Set two sided light parameter
+    void glcSetTwoSidedLight(GLint twoSided);
+
     //! Enable the given light id
     void glcEnableLight(GLenum lightId);
 
     //! Disable the given light id
     void glcDisableLight(GLenum lightId);
+
 
 //@}
 
@@ -141,6 +145,9 @@ private:
 
     //! Enable lighting state
     QStack<bool> m_LightingIsEnable;
+
+    //! Two sided lighting
+    QStack<bool> m_TwoSidedLighting;
 
     //! Lights enable state
     QMap<GLenum, int> m_LightsEnableState;

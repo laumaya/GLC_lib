@@ -144,6 +144,10 @@ public:
     inline void glcDisableLight(GLenum lightId)
     {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcDisableLight(lightId);}
 
+    //! Set two sided light parameter
+    inline void glcSetTwoSidedLight(GLint twoSided)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcSetTwoSidedLight(twoSided);}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
