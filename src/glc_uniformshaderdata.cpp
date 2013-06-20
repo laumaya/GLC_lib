@@ -31,7 +31,6 @@
 GLC_UniformShaderData::GLC_UniformShaderData()
 {
 
-
 }
 
 GLC_UniformShaderData::~GLC_UniformShaderData()
@@ -42,6 +41,14 @@ GLC_UniformShaderData::~GLC_UniformShaderData()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+
+void GLC_UniformShaderData::setColorMaterialState(bool enable)
+{
+    qDebug() << "GLC_UniformShaderData::setColorMaterialState";
+    GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
+    Q_ASSERT(NULL != pCurrentShader);
+    pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->colorMaterialStateId(), enable);
+}
 
 void GLC_UniformShaderData::setLightingState(bool enable)
 {
@@ -116,4 +123,9 @@ void GLC_UniformShaderData::updateAll(const GLC_Context* pContext)
 {
 	setModelViewProjectionMatrix(pContext->modelViewMatrix(), pContext->projectionMatrix());
 	setLightingState(pContext->lightingIsEnable());
+    setColorMaterialState(pContext->colorMaterialIsEnable());
+    setTwoSidedLight(pContext->twoSidedIsEnable());
+
+    QVector<int> enableLightState= pContext->enableLights();
+    setLightsEnableState(enableLightState);
 }

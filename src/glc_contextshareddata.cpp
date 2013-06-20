@@ -33,6 +33,7 @@ GLC_ContextSharedData::GLC_ContextSharedData()
     , m_CurrentMatrixMode()
     , m_MatrixStackHash()
     , m_UniformShaderData()
+    , m_ColorMaterialIsEnable()
     , m_LightingIsEnable()
     , m_TwoSidedLighting()
     , m_LightsEnableState()
@@ -47,6 +48,7 @@ GLC_ContextSharedData::GLC_ContextSharedData()
     pStack2->push(GLC_Matrix4x4());
     m_MatrixStackHash.insert(GL_PROJECTION, pStack2);
 
+    m_ColorMaterialIsEnable.push(false);
     m_LightingIsEnable.push(false);
     m_TwoSidedLighting.push(false);
 
@@ -223,6 +225,27 @@ void GLC_ContextSharedData::glcFrustum(double left, double right, double bottom,
     glcMultMatrix(perspMatrix);
 }
 
+void GLC_ContextSharedData::glcEnableColorMaterial(bool enable)
+{
+    if (enable != m_ColorMaterialIsEnable.top())
+    {
+        m_ColorMaterialIsEnable.top()= enable;
+
+#ifdef GLC_OPENGL_ES_2
+
+        m_UniformShaderData.setColorMaterialState(m_ColorMaterialIsEnable.top());
+#else
+        if (GLC_Shader::hasActiveShader())
+        {
+            m_UniformShaderData.setColorMaterialState(m_ColorMaterialIsEnable.top());
+        }
+        if (m_ColorMaterialIsEnable.top()) ::glEnable(GL_COLOR_MATERIAL);
+        else ::glDisable(GL_COLOR_MATERIAL);
+#endif
+
+    }
+}
+
 void GLC_ContextSharedData::glcEnableLighting(bool enable)
 {
     if (enable != m_LightingIsEnable.top())
@@ -275,12 +298,12 @@ void GLC_ContextSharedData::glcEnableLight(GLenum lightId)
 
 #ifdef GLC_OPENGL_ES_2
 
-        m_UniformShaderData.setLightsEnableState(m_LightsEnableState.values().toVector());
+        m_UniformShaderData.setLightsEnableState(enableLights());
 #else
         if (GLC_Shader::hasActiveShader())
         {
-            QVector<int> enableVect= m_LightsEnableState.values().toVector();
-            m_UniformShaderData.setLightsEnableState(enableVect);
+            QVector<int> enableLightState= enableLights();
+            m_UniformShaderData.setLightsEnableState(enableLightState);
         }
 
         ::glEnable(lightId);

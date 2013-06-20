@@ -87,6 +87,19 @@ public:
 	//! Return lighting enable state
 	inline bool lightingIsEnable() const
     {return m_ContextSharedData->lightingIsEnable();}
+
+    //! Return two sided lighting enable state
+    inline bool twoSidedIsEnable() const
+    {return m_ContextSharedData->twoSidedIsEnable();}
+
+    //! Return color material enable state
+    inline bool colorMaterialIsEnable() const
+    {return m_ContextSharedData->colorMaterialIsEnable();}
+
+    //! Return the vector of enable light
+    inline QVector<int> enableLights() const
+    {return m_ContextSharedData->enableLights();}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
@@ -131,6 +144,10 @@ public:
 	//! Multiply the current matrix by a perspective matrix
     inline void glcFrustum(double left, double right, double bottom, double top, double nearVal, double farVal)
     {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcFrustum(left, right, bottom, top, nearVal, farVal);}
+
+    //! Enable color material
+    inline void glcEnableColorMaterial(bool enable)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcEnableColorMaterial(enable);}
 
 	//! Enable lighting
     inline void glcEnableLighting(bool enable)

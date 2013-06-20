@@ -1053,7 +1053,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	if (m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode())
 	{
         pContext->glcDisableColorClientState();
-		glDisable(GL_COLOR_MATERIAL);
+        pContext->glcEnableColorMaterial(false);
 	}
 
     pContext->glcDisableVertexClientState();

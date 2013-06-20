@@ -27,6 +27,7 @@
 #include <QtOpenGL>
 #include <QHash>
 #include <QMap>
+#include <QVector>
 
 #include "maths/glc_matrix4x4.h"
 #include "glc_uniformshaderdata.h"
@@ -58,6 +59,18 @@ public:
     //! Return lighting enable state
     inline bool lightingIsEnable() const
     {return m_LightingIsEnable.top();}
+
+    //! Return two sided lighting enable state
+    inline bool twoSidedIsEnable() const
+    {return m_TwoSidedLighting.top();}
+
+    //! Return color material enable state
+    inline bool colorMaterialIsEnable() const
+    {return m_ColorMaterialIsEnable.top();}
+
+    //! Return the vector of enable light
+    inline QVector<int> enableLights() const
+    {return m_LightsEnableState.values().toVector();}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -111,6 +124,9 @@ public:
     //! Multiply the current matrix by a perspective matrix
     void glcFrustum(double left, double right, double bottom, double top, double nearVal, double farVal);
 
+    //! Enable color material
+    void glcEnableColorMaterial(bool enable);
+
     //! Enable lighting
     void glcEnableLighting(bool enable);
 
@@ -141,6 +157,9 @@ private:
 
     //! The uniform data of the current shader
     GLC_UniformShaderData m_UniformShaderData;
+
+    //! Enable color material state
+    QStack<bool> m_ColorMaterialIsEnable;
 
     //! Enable lighting state
     QStack<bool> m_LightingIsEnable;

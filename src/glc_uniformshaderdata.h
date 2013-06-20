@@ -44,6 +44,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+    //! Set color material state
+    void setColorMaterialState(bool enable);
+
     //! Set lighting enable state
 	void setLightingState(bool enable);
 

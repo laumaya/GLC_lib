@@ -51,6 +51,7 @@ GLC_Shader::GLC_Shader()
 , m_EnableLightingId(-1)
 , m_TwosidedEnableStateId(-1)
 , m_LightsEnableStateId(-1)
+, m_ColorMaterialStateId(-1)
 , m_LightsPositionId()
 , m_LightsAmbientColorId()
 , m_LightsDiffuseColorId()
@@ -276,6 +277,8 @@ void GLC_Shader::createAndCompileProgrammShader()
         //qDebug() << "m_TwosidedEnableStateId " << m_TwosidedEnableStateId;
 		m_LightsEnableStateId= m_ProgramShader.uniformLocation("light_enable_state");
 		//qDebug() << "m_LightsEnableStateId " << m_LightsEnableStateId;
+        m_ColorMaterialStateId= m_ProgramShader.uniformLocation("enable_color_material");
+        //qDebug() << "m_ColorMaterialStateId " << m_ColorMaterialStateId;
 		const int size= GLC_Light::maxLightCount();
 		for (int i= (GL_LIGHT0); i < (size + GL_LIGHT0); ++i)
 		{

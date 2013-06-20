@@ -122,6 +122,71 @@ public:
 	//! Return handle to the current active shader
 	/*! Return NULL if there is no current active shader*/
 	static GLC_Shader* currentShaderHandle();
+
+    //! Return the modelView location id
+    inline int modelViewLocationId() const
+    {return m_ModelViewLocationId;}
+
+    //! Return the modelView Projection matrix id
+    inline int mvpLocationId() const
+    {return m_MvpLocationId;}
+
+    //! Return the inverse modelView location id
+    inline int invModelViewLocationId() const
+    {return m_InvModelViewLocationId;}
+
+    //! Return the enable lighting location id
+    inline int enableLightingId() const
+    {return m_EnableLightingId;}
+
+    //! Return the two sided enable state id
+    inline int twoSidedLightingStateId() const
+    {return m_TwosidedEnableStateId;}
+
+    //! Return the lights enable state id
+    inline int lightsEnableStateId() const
+    {return m_LightsEnableStateId;}
+
+    //! Return the color material satte id
+    inline int colorMaterialStateId() const
+    {return m_ColorMaterialStateId;}
+
+    //! Return the light position id of the given light id
+    inline int lightPositionId(GLenum lightId) const
+    {return m_LightsPositionId.value(lightId);}
+
+    //! Return the light ambient color id of the given light id
+    inline int lightAmbientColorId(GLenum lightId) const
+    {return m_LightsAmbientColorId.value(lightId);}
+
+    //! Return the light diffuse color id of the given light id
+    inline int lightDiffuseColorId(GLenum lightId) const
+    {return m_LightsDiffuseColorId.value(lightId);}
+
+    //! Return the light specular color id of the given light id
+    inline int lightSpecularColorId(GLenum lightId) const
+    {return m_LightsSpecularColorId.value(lightId);}
+
+    //! Return the light spot direction id of the given light id
+    inline int lightSpotDirectionId(GLenum lightId) const
+    {return m_LightsSpotDirectionId.value(lightId);}
+
+    //! Return the light attenuation factors id of the given light id
+    inline int lightAttebuationFactorsId(GLenum lightId) const
+    {return m_LightsAttenuationFactorsId.value(lightId);}
+
+    //! Return the light spot exponent id of the given light id
+    inline int lightSpotExponentId(GLenum lightId) const
+    {return m_LightsSpotExponentId.value(lightId);}
+
+    //! Return the light spot cutoff id of the given light id
+    inline int lightSpotCutoffId(GLenum lightId) const
+    {return m_LightsSpotCutoffAngleId.value(lightId);}
+
+    //! Return the light compute distance attenuation id of the given light id
+    inline int lightComputeDistanceAttenuationId(GLenum lightId) const
+    {return m_LightsComputeDistanceAttenuationId.value(lightId);}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -147,65 +212,6 @@ public:
 	inline void setName(const QString& name)
 	{m_Name= name;}
 
-	//! Return the modelView location id
-	inline int modelViewLocationId() const
-	{return m_ModelViewLocationId;}
-
-	//! Return the modelView Projection matrix id
-	inline int mvpLocationId() const
-	{return m_MvpLocationId;}
-
-	//! Return the inverse modelView location id
-	inline int invModelViewLocationId() const
-	{return m_InvModelViewLocationId;}
-
-	//! Return the enable lighting location id
-	inline int enableLightingId() const
-	{return m_EnableLightingId;}
-
-    //! Return the two sided enable state id
-    inline int twoSidedLightingStateId() const
-    {return m_TwosidedEnableStateId;}
-
-	//! Return the lights enable state id
-	inline int lightsEnableStateId() const
-	{return m_LightsEnableStateId;}
-
-	//! Return the light position id of the given light id
-	inline int lightPositionId(GLenum lightId) const
-	{return m_LightsPositionId.value(lightId);}
-
-	//! Return the light ambient color id of the given light id
-	inline int lightAmbientColorId(GLenum lightId) const
-	{return m_LightsAmbientColorId.value(lightId);}
-
-	//! Return the light diffuse color id of the given light id
-	inline int lightDiffuseColorId(GLenum lightId) const
-	{return m_LightsDiffuseColorId.value(lightId);}
-
-	//! Return the light specular color id of the given light id
-	inline int lightSpecularColorId(GLenum lightId) const
-	{return m_LightsSpecularColorId.value(lightId);}
-
-	//! Return the light spot direction id of the given light id
-	inline int lightSpotDirectionId(GLenum lightId) const
-	{return m_LightsSpotDirectionId.value(lightId);}
-
-	//! Return the light attenuation factors id of the given light id
-	inline int lightAttebuationFactorsId(GLenum lightId) const
-	{return m_LightsAttenuationFactorsId.value(lightId);}
-
-	//! Return the light spot exponent id of the given light id
-	inline int lightSpotExponentId(GLenum lightId) const
-	{return m_LightsSpotExponentId.value(lightId);}
-
-	//! Return the light spot cutoff id of the given light id
-	inline int lightSpotCutoffId(GLenum lightId) const
-	{return m_LightsSpotCutoffAngleId.value(lightId);}
-
-	//! Return the light compute distance attenuation id of the given light id
-	inline int lightComputeDistanceAttenuationId(GLenum lightId) const
-	{return m_LightsComputeDistanceAttenuationId.value(lightId);}
 
 //@}
 
@@ -296,6 +302,9 @@ private:
 
 	//! Lights enable states id
 	int m_LightsEnableStateId;
+
+    //! Color material usage
+    int m_ColorMaterialStateId;
 
 	//! Lights positions id
 	QMap<GLenum, int> m_LightsPositionId;
