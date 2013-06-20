@@ -143,6 +143,97 @@ void GLC_Context::glcDisableNormalClientState()
 #endif
 }
 
+void GLC_Context::glcUseTexturePointer(const GLvoid *pointer)
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    const GLuint location= pShader->textureAttributeId();
+    glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, pointer);
+    glEnableVertexAttribArray(location);
+#else
+    if ((NULL != pShader) && (pShader->textureAttributeId() != -1))
+    {
+        const GLuint location= pShader->textureAttributeId();
+        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, pointer);
+        glEnableVertexAttribArray(location);
+    }
+    else
+    {
+        glTexCoordPointer(2, GL_FLOAT, 0, pointer);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+#endif
+}
+
+void GLC_Context::glcDisableTextureClientState()
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    glDisableVertexAttribArray(pShader->textureAttributeId());
+#else
+    if ((NULL != pShader) && (pShader->textureAttributeId() != -1))
+    {
+        glDisableVertexAttribArray(pShader->textureAttributeId());
+    }
+    else
+    {
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+#endif
+}
+
+void GLC_Context::glcUseColorPointer(const GLvoid *pointer)
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    const GLuint location= pShader->colorAttributeId();
+    glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, 0, pointer);
+    glEnableVertexAttribArray(location);
+#else
+    if ((NULL != pShader) && (pShader->colorAttributeId() != -1))
+    {
+        const GLuint location= pShader->colorAttributeId();
+        glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, 0, pointer);
+        glEnableVertexAttribArray(location);
+    }
+    else
+    {
+        glColorPointer(4, GL_FLOAT, 0, pointer);
+        glEnableClientState(GL_COLOR_ARRAY);
+    }
+#endif
+}
+
+void GLC_Context::glcDisableColorClientState()
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    glDisableVertexAttribArray(pShader->colorAttributeId());
+#else
+    if ((NULL != pShader) && (pShader->colorAttributeId() != -1))
+    {
+        glDisableVertexAttribArray(pShader->colorAttributeId());
+    }
+    else
+    {
+        glDisableClientState(GL_COLOR_ARRAY);
+    }
+#endif
+
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////

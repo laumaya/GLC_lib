@@ -157,8 +157,20 @@ public:
     //! Use Normal array pointer and enable it
     void glcUseNormalPointer(const GLvoid* pointer);
 
-    //! Disable the vertex client state
+    //! Disable the normal client state
     void glcDisableNormalClientState();
+
+    //! Use Texture array pointer and enable it
+    void glcUseTexturePointer(const GLvoid* pointer);
+
+    //! Disable the normal client state
+    void glcDisableTextureClientState();
+
+    //! Use Color array pointer and enable it
+    void glcUseColorPointer(const GLvoid* pointer);
+
+    //! Disable the color client state
+    void glcDisableColorClientState();
 
 //@}
 //////////////////////////////////////////////////////////////////////

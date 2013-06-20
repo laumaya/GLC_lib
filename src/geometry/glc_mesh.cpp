@@ -1048,18 +1048,17 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		}
 	}
 
-
 	// Restore client state
 
 	if (m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode())
 	{
-		glDisableClientState(GL_COLOR_ARRAY);
+        pContext->glcDisableColorClientState();
 		glDisable(GL_COLOR_MATERIAL);
 	}
 
     pContext->glcDisableVertexClientState();
     pContext->glcDisableNormalClientState();
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    pContext->glcDisableTextureClientState();
 
 	if (vboIsUsed)
 	{

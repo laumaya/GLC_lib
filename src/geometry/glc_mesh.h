@@ -1092,8 +1092,7 @@ void GLC_Mesh::activateVboAndIbo()
 	// Activate texel VBO if needed
 	if (m_MeshData.useVBO(true, GLC_MeshData::GLC_Texel))
 	{
-		glTexCoordPointer(2, GL_FLOAT, 0, 0);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        pContext->glcUseTexturePointer(0);
 	}
 
 	// Activate Color VBO if needed
@@ -1101,8 +1100,7 @@ void GLC_Mesh::activateVboAndIbo()
 	{
 		glEnable(GL_COLOR_MATERIAL);
 		glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-		glColorPointer(4, GL_FLOAT, 0, 0);
-		glEnableClientState(GL_COLOR_ARRAY);
+        pContext->glcUseColorPointer(0);
 	}
 
 	m_MeshData.useIBO(true, m_CurrentLod);
@@ -1121,8 +1119,7 @@ void GLC_Mesh::activateVertexArray()
 	// Activate texel if needed
 	if (!m_MeshData.texelVectorHandle()->isEmpty())
 	{
-		glTexCoordPointer(2, GL_FLOAT, 0, m_MeshData.texelVectorHandle()->data());
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        pContext->glcUseTexturePointer(m_MeshData.texelVectorHandle()->data());
 	}
 
 	// Activate Color array if needed
@@ -1130,8 +1127,7 @@ void GLC_Mesh::activateVertexArray()
 	{
 		glEnable(GL_COLOR_MATERIAL);
 		glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-		glColorPointer(4, GL_FLOAT, 0, m_MeshData.colorVectorHandle()->data());
-		glEnableClientState(GL_COLOR_ARRAY);
+        pContext->glcUseColorPointer(m_MeshData.colorVectorHandle()->data());
 	}
 }
 
