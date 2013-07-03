@@ -233,6 +233,10 @@ public:
 	//! Add Colors
 	inline void addColors(const GLfloatVector& colors)
 	{*(m_MeshData.colorVectorHandle())+= colors;}
+	
+	//! Replace colors
+	inline void setColors(const GLfloatVector& colors)
+	{*(m_MeshData.colorVectorHandle()) = colors;}
 
 	//! Add triangles
 	GLC_uint addTriangles(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
