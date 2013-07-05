@@ -613,7 +613,7 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box, double coverFactor)
 
 bool GLC_Viewport::setDistMin(double DistMin)
 {
-	DistMin= fabs(DistMin);
+	if (m_UseParallelProjection) DistMin= fabs(DistMin);
 	if (DistMin < m_DistanceMax)
 	{
 		m_dDistanceMini= DistMin;
@@ -632,7 +632,7 @@ bool GLC_Viewport::setDistMin(double DistMin)
 
 bool GLC_Viewport::setDistMax(double DistMax)
 {
-	DistMax= fabs(DistMax);
+	if (m_UseParallelProjection) DistMax= fabs(DistMax);
 	if (DistMax > m_dDistanceMini)
 	{
 		m_DistanceMax= DistMax;
