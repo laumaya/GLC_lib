@@ -87,7 +87,7 @@ public:
 	inline GLC_Matrix4x4(const GLC_Vector3d &Vect1, const GLC_Vector3d &Vect2);
 
 	//! Construct translation matrix from a 3d vector
-	inline GLC_Matrix4x4(const GLC_Vector3d &Vect)
+    inline explicit GLC_Matrix4x4(const GLC_Vector3d &Vect)
 	{setMatTranslate(Vect);}
 
 	//! Construct translation matrix from coordinates in double
