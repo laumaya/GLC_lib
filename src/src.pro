@@ -95,7 +95,8 @@ HEADERS_GLC_IO +=   io/glc_objmtlloader.h \
                     io/glc_xmlutil.h \
                     io/glc_fileloader.h \
                     io/glc_worldreaderplugin.h \
-                    io/glc_worldreaderhandler.h
+                    io/glc_worldreaderhandler.h \
+                    io/glc_worldtoobj.h
 
 HEADERS_GLC_SCENEGRAPH +=   sceneGraph/glc_3dviewcollection.h \
                             sceneGraph/glc_3dviewinstance.h \
@@ -258,7 +259,8 @@ SOURCES +=	io/glc_objmtlloader.cpp \
                 io/glc_worldto3dxml.cpp \
                 io/glc_worldto3ds.cpp \
                 io/glc_bsreptoworld.cpp \
-                io/glc_fileloader.cpp
+                io/glc_fileloader.cpp \
+                io/glc_worldtoobj.cpp
 
 SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
                 sceneGraph/glc_3dviewinstance.cpp \
