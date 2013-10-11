@@ -66,6 +66,9 @@ public:
 	//! Add error into the log
 	static void addError(const QStringList& errorDescription);
 
+    //! Add error into the log
+    static void addError(const QString& errorDescription);
+
 	//! Close the log file
 	static void close();
 

@@ -17,6 +17,7 @@
 *****************************************************************************/
 
 #include <QLabel>
+
 #include <QStringList>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -38,36 +39,40 @@
 #define GL_MULTISAMPLE  0x809D
 #endif
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+#include <QtConcurrent/QtConcurrent>
+#endif
+
 static int labelCount= 4;
 
 GLCScene::GLCScene()
-: QGraphicsScene()
-, m_Light()
-, m_World()
-, m_CurrentPath(QDir::homePath())
-, m_CurrentFilePath()
-, m_WorldLoader()
-, m_Labels()
-, m_pLoadWorldButton(NULL)
-, m_Viewport()
-, m_MoverController()
-, m_SavedMousePos()
-, m_MouseTimer()
-, m_Axis(m_Viewport.cameraHandle()->defaultUpVector())
-, m_Angle(0.05)
+    : QGraphicsScene()
+    , m_Light()
+    , m_World()
+    , m_CurrentPath(QDir::homePath())
+    , m_CurrentFilePath()
+    , m_WorldLoader()
+    , m_Labels()
+    , m_pLoadWorldButton(NULL)
+    , m_Viewport()
+    , m_MoverController()
+    , m_SavedMousePos()
+    , m_MouseTimer()
+    , m_Axis(m_Viewport.cameraHandle()->defaultUpVector())
+    , m_Angle(0.05)
 {
-	// Set up mover controller
-	QColor repColor;
-	repColor.setRgbF(1.0, 0.11372, 0.11372, 1.0);
-	m_MoverController= GLC_Factory::instance()->createDefaultMoverController(repColor, &m_Viewport);
+    // Set up mover controller
+    QColor repColor;
+    repColor.setRgbF(1.0, 0.11372, 0.11372, 1.0);
+    m_MoverController= GLC_Factory::instance()->createDefaultMoverController(repColor, &m_Viewport);
 
-	createSceneWidgets();
+    createSceneWidgets();
 
     // Set some GLC_lib state in order to render heavy scene
     GLC_State::setDefaultOctreeDepth(4);
     GLC_State::setPixelCullingUsage(true);
     GLC_State::setSpacePartionningUsage(true);
-   m_Viewport.setMinimumPixelCullingSize(6);
+    m_Viewport.setMinimumPixelCullingSize(6);
 
     m_Light.setTwoSided(true);
     m_Light.setPosition(1.0, 1.0, 1.0);
@@ -85,8 +90,8 @@ GLCScene::~GLCScene()
 
 void GLCScene::drawBackground(QPainter *painter, const QRectF &)
 {
-	bool useOpenGL= (painter->paintEngine()->type() == QPaintEngine::OpenGL);
-	useOpenGL= useOpenGL || (painter->paintEngine()->type() == QPaintEngine::OpenGL2);
+    bool useOpenGL= (painter->paintEngine()->type() == QPaintEngine::OpenGL);
+    useOpenGL= useOpenGL || (painter->paintEngine()->type() == QPaintEngine::OpenGL2);
 
     if (!useOpenGL)
     {
@@ -98,18 +103,18 @@ void GLCScene::drawBackground(QPainter *painter, const QRectF &)
     static bool firstRender= true;
     if (firstRender)
     {
-    	initGl();
-    	firstRender= false;
+        initGl();
+        firstRender= false;
     }
 
-	// Save OpenGL matrix
-	GLC_Context* pCurrentContext= GLC_Context::current();
-	pCurrentContext->glcMatrixMode(GL_PROJECTION);
-	pCurrentContext->glcPushMatrix();
-	pCurrentContext->glcMatrixMode(GL_MODELVIEW);
-	pCurrentContext->glcPushMatrix();
+    // Save OpenGL matrix
+    GLC_Context* pCurrentContext= GLC_Context::current();
+    pCurrentContext->glcMatrixMode(GL_PROJECTION);
+    pCurrentContext->glcPushMatrix();
+    pCurrentContext->glcMatrixMode(GL_MODELVIEW);
+    pCurrentContext->glcPushMatrix();
 
-	renderWorld();
+    renderWorld();
 
     // Restore OpenGL matrix
     pCurrentContext->glcMatrixMode(GL_MODELVIEW);
@@ -125,47 +130,47 @@ void GLCScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsScene::mousePressEvent(event);
     if (!event->isAccepted())
     {
- 		if (!m_MoverController.hasActiveMover())
-		{
- 			m_World.collection()->setLodUsage(true, &m_Viewport);
-			switch (event->button())
-			{
-			case (Qt::RightButton):
-				m_MouseTimer.start();
-				m_SavedMousePos.setX(event->scenePos().x()); m_SavedMousePos.setY(event->scenePos().y());
-				m_MoverController.setActiveMover(GLC_MoverController::TrackBall, GLC_UserInput(event->scenePos().x(), event->scenePos().y()));
-				break;
-			case (Qt::LeftButton):
-				m_MoverController.setActiveMover(GLC_MoverController::Pan, GLC_UserInput(event->scenePos().x(), event->scenePos().y()));
-				break;
-			case (Qt::MidButton):
-				m_MoverController.setActiveMover(GLC_MoverController::Zoom, GLC_UserInput(event->scenePos().x(), event->scenePos().y()));
-				break;
+        if (!m_MoverController.hasActiveMover())
+        {
+            m_World.collection()->setLodUsage(true, &m_Viewport);
+            switch (event->button())
+            {
+            case (Qt::RightButton):
+                m_MouseTimer.start();
+                m_SavedMousePos.setX(event->scenePos().x()); m_SavedMousePos.setY(event->scenePos().y());
+                m_MoverController.setActiveMover(GLC_MoverController::TrackBall, GLC_UserInput(event->scenePos().x(), event->scenePos().y()));
+                break;
+            case (Qt::LeftButton):
+                m_MoverController.setActiveMover(GLC_MoverController::Pan, GLC_UserInput(event->scenePos().x(), event->scenePos().y()));
+                break;
+            case (Qt::MidButton):
+                m_MoverController.setActiveMover(GLC_MoverController::Zoom, GLC_UserInput(event->scenePos().x(), event->scenePos().y()));
+                break;
 
-			default:
-				break;
-			}
-			event->accept();
-		}
+            default:
+                break;
+            }
+            event->accept();
+        }
     }
- }
+}
 
 void GLCScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene::mouseMoveEvent(event);
     if (!event->isAccepted())
     {
-    	if (m_MoverController.hasActiveMover())
-    	{
-    		if (m_MoverController.activeMoverId() == GLC_MoverController::TrackBall)
-    		{
-    			m_MouseTimer.restart();
-    			m_SavedMousePos.setX(event->scenePos().x()); m_SavedMousePos.setY(event->scenePos().y());
-    			m_SavedCamForwadVector= m_Viewport.cameraHandle()->forward();
-    		}
-    		m_MoverController.move(GLC_UserInput(event->scenePos().x(), event->scenePos().y()));
-    	}
-    	event->accept();
+        if (m_MoverController.hasActiveMover())
+        {
+            if (m_MoverController.activeMoverId() == GLC_MoverController::TrackBall)
+            {
+                m_MouseTimer.restart();
+                m_SavedMousePos.setX(event->scenePos().x()); m_SavedMousePos.setY(event->scenePos().y());
+                m_SavedCamForwadVector= m_Viewport.cameraHandle()->forward();
+            }
+            m_MoverController.move(GLC_UserInput(event->scenePos().x(), event->scenePos().y()));
+        }
+        event->accept();
     }
 }
 
@@ -174,32 +179,32 @@ void GLCScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsScene::mouseReleaseEvent(event);
     if (!event->isAccepted())
     {
-    	if (m_MoverController.hasActiveMover())
-    	{
-    		if (m_MoverController.activeMoverId() == GLC_MoverController::TrackBall)
-    		{
-    			const int elapsed= m_MouseTimer.restart();
-    			if ((elapsed < 100))
-    			{
-    				GLC_Vector3d newCamForwardVector= m_Viewport.cameraHandle()->forward();
-    				m_Axis= m_SavedCamForwadVector ^ newCamForwardVector;
-    				m_Angle= m_SavedCamForwadVector.angleWithVect(newCamForwardVector);
-    				if (m_Angle > 0.0)
-    				{
-    					QTimer::singleShot(20, this, SLOT(updateCameraPos()));
-    				}
-    			}
-    		}
-    		m_World.collection()->setLodUsage(false, &m_Viewport);
-    		m_MoverController.setNoMover();
-    		event->accept();
-    	}
+        if (m_MoverController.hasActiveMover())
+        {
+            if (m_MoverController.activeMoverId() == GLC_MoverController::TrackBall)
+            {
+                const int elapsed= m_MouseTimer.restart();
+                if ((elapsed < 100))
+                {
+                    GLC_Vector3d newCamForwardVector= m_Viewport.cameraHandle()->forward();
+                    m_Axis= m_SavedCamForwadVector ^ newCamForwardVector;
+                    m_Angle= m_SavedCamForwadVector.angleWithVect(newCamForwardVector);
+                    if (m_Angle > 0.0)
+                    {
+                        QTimer::singleShot(20, this, SLOT(updateCameraPos()));
+                    }
+                }
+            }
+            m_World.collection()->setLodUsage(false, &m_Viewport);
+            m_MoverController.setNoMover();
+            event->accept();
+        }
     }
 }
 
 QDialog* GLCScene::createDialog() const
 {
-	QDialog* pSubject = new QDialog();
+    QDialog* pSubject = new QDialog();
 
     pSubject->setWindowOpacity(0.8);
     pSubject->setLayout(new QVBoxLayout);
@@ -209,13 +214,13 @@ QDialog* GLCScene::createDialog() const
 
 void GLCScene::createSceneWidgets()
 {
-	// Model info widget
+    // Model info widget
     QWidget* pModelInfo = createDialog();
     pModelInfo->layout()->setMargin(20);
     for (int i= 0; i < labelCount; ++i)
     {
-    	m_Labels.append(new QLabel());
-    	pModelInfo->layout()->addWidget(m_Labels.last());
+        m_Labels.append(new QLabel());
+        pModelInfo->layout()->addWidget(m_Labels.last());
     }
 
     // Control widget
@@ -252,170 +257,170 @@ void GLCScene::createSceneWidgets()
 
 static GLC_World* loadWorld(const QString& filePath)
 {
-	GLC_World* pSubject= NULL;
-	try
-	{
-	 	QFile file(filePath);
-	 	pSubject= new GLC_World(GLC_Factory::instance()->createWorldFromFile(file));
-	}
-	catch (GLC_Exception &e)
-	{
-		qDebug() << e.what();
-		delete pSubject;
-		return NULL;
-	}
+    GLC_World* pSubject= NULL;
+    try
+    {
+        QFile file(filePath);
+        pSubject= new GLC_World(GLC_Factory::instance()->createWorldFromFile(file));
+    }
+    catch (GLC_Exception &e)
+    {
+        qDebug() << e.what();
+        delete pSubject;
+        return NULL;
+    }
 
- 	return pSubject;
+    return pSubject;
 }
 
 void GLCScene::loadModel(const QString &filePath)
 {
-	QApplication::setOverrideCursor(Qt::BusyCursor);
-	m_pLoadWorldButton->setEnabled(false);
-	m_WorldLoader.setFuture(QtConcurrent::run(::loadWorld, filePath));
+    QApplication::setOverrideCursor(Qt::BusyCursor);
+    m_pLoadWorldButton->setEnabled(false);
+    m_WorldLoader.setFuture(QtConcurrent::run(::loadWorld, filePath));
 }
 
 void GLCScene::updateLabels(const QString& filePath)
 {
-	QString fileName= QFileInfo(filePath).fileName();
-	if (fileName.isEmpty() && !m_World.isEmpty()) fileName= tr("Logo of GLC_lib");
-	const QString vertexCount= QString::number(m_World.numberOfVertex());
-	const QString triangleCount= QString::number(m_World.numberOfFaces());
-	const QString materialCount= QString::number(m_World.numberOfMaterials());
+    QString fileName= QFileInfo(filePath).fileName();
+    if (fileName.isEmpty() && !m_World.isEmpty()) fileName= tr("Logo of GLC_lib");
+    const QString vertexCount= QString::number(m_World.numberOfVertex());
+    const QString triangleCount= QString::number(m_World.numberOfFaces());
+    const QString materialCount= QString::number(m_World.numberOfMaterials());
 
-	m_Labels[0]->setText(tr("File name : ") + fileName);
-	m_Labels[1]->setText(tr("Vertex count : ") + vertexCount);
-	m_Labels[2]->setText(tr("Triangle count : ") + triangleCount);
-	m_Labels[3]->setText(tr("Material count : ") + materialCount);
+    m_Labels[0]->setText(tr("File name : ") + fileName);
+    m_Labels[1]->setText(tr("Vertex count : ") + vertexCount);
+    m_Labels[2]->setText(tr("Triangle count : ") + triangleCount);
+    m_Labels[3]->setText(tr("Material count : ") + materialCount);
 }
 
 void GLCScene::initGl()
 {
-	// For VSYNC problem under Mac OS X
-	#if defined(Q_OS_MAC)
-	const GLint swapInterval = 1;
-	CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &swapInterval);
-	#endif
+    // For VSYNC problem under Mac OS X
+#if defined(Q_OS_MAC)
+    const GLint swapInterval = 1;
+    CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &swapInterval);
+#endif
 
-	m_Viewport.initGl();
-	glEnable(GL_NORMALIZE);
-	try
-	{
-		m_Viewport.loadBackGroundImage(":background.png");
-	}
-	catch (GLC_Exception &e)
-	{
-		qDebug() << e.what();
-	}
+    m_Viewport.initGl();
+    glEnable(GL_NORMALIZE);
+    try
+    {
+        m_Viewport.loadBackGroundImage(":background.png");
+    }
+    catch (GLC_Exception &e)
+    {
+        qDebug() << e.what();
+    }
 }
 
 void GLCScene::renderWorld()
 {
-	try
-	{
-		m_Viewport.setWinGLSize(static_cast<int>(width()), static_cast<int>(height()));
+    try
+    {
+        m_Viewport.setWinGLSize(static_cast<int>(width()), static_cast<int>(height()));
 
-		// Clear screen
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // Clear screen
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Load identity matrix
-		GLC_Context::current()->glcLoadIdentity();
+        // Load identity matrix
+        GLC_Context::current()->glcLoadIdentity();
 
-		// Calculate camera depth of view
-		m_Viewport.setDistMinAndMax(m_World.boundingBox());
+        // Calculate camera depth of view
+        m_Viewport.setDistMinAndMax(m_World.boundingBox());
 
-		m_World.collection()->updateInstanceViewableState();
+        m_World.collection()->updateInstanceViewableState();
 
-		m_Light.glExecute();
-		m_Viewport.glExecuteCam();
+        m_Light.glExecute();
+        m_Viewport.glExecuteCam();
 
-	    glEnable(GL_MULTISAMPLE);
-		m_World.render(0, glc::ShadingFlag);
-		m_World.render(0, glc::TransparentRenderFlag);
-	    glDisable(GL_MULTISAMPLE);
+        glEnable(GL_MULTISAMPLE);
+        m_World.render(0, glc::ShadingFlag);
+        m_World.render(0, glc::TransparentRenderFlag);
+        glDisable(GL_MULTISAMPLE);
 
-	}
-	catch (GLC_Exception &e)
-	{
-		qDebug() << e.what();
-	}
+    }
+    catch (GLC_Exception &e)
+    {
+        qDebug() << e.what();
+    }
 }
 
 void GLCScene::loadModel()
 {
-	// Define File Format filter
-	QStringList filters;
-	filters.append(tr("All Known format(*.obj *.OBJ *.3ds *.3DS *.stl *.STL *.off *.OFF *.3DXML *.3dxml *.DAE *.dae *.BSRep)"));
-	filters.append(tr("Alias File Format OBJ (*.obj *.OBJ)"));
-	filters.append(tr("3D Studio File Format 3DS (*.3ds *.3DS)"));
-	filters.append(tr("STL File Format STL (*.stl *.STL)"));
-	filters.append(tr("Object File Format OFF (*.off *.OFF)"));
-	filters.append(tr("Dassault Systemes 3DXML(*.3dxml *.3DXML)"));
-	filters.append(tr("Sony Collada(*.dae *.DAE)"));
-	filters.append(tr("GLC_lib Binary Serialized Representation(*.BSRep)"));
+    // Define File Format filter
+    QStringList filters;
+    filters.append(tr("All Known format(*.obj *.OBJ *.3ds *.3DS *.stl *.STL *.off *.OFF *.3DXML *.3dxml *.DAE *.dae *.BSRep)"));
+    filters.append(tr("Alias File Format OBJ (*.obj *.OBJ)"));
+    filters.append(tr("3D Studio File Format 3DS (*.3ds *.3DS)"));
+    filters.append(tr("STL File Format STL (*.stl *.STL)"));
+    filters.append(tr("Object File Format OFF (*.off *.OFF)"));
+    filters.append(tr("Dassault Systemes 3DXML(*.3dxml *.3DXML)"));
+    filters.append(tr("Sony Collada(*.dae *.DAE)"));
+    filters.append(tr("GLC_lib Binary Serialized Representation(*.BSRep)"));
 
-	QString filePath = QFileDialog::getOpenFileName(views().first(), tr("Open model file"), m_CurrentPath, filters.join("\n"));
-	if (!filePath.isEmpty())
-	{
-		m_CurrentFilePath= filePath;
-		m_CurrentPath= QFileInfo(filePath).path();
-		loadModel(filePath);
-	}
+    QString filePath = QFileDialog::getOpenFileName(views().first(), tr("Open model file"), m_CurrentPath, filters.join("\n"));
+    if (!filePath.isEmpty())
+    {
+        m_CurrentFilePath= filePath;
+        m_CurrentPath= QFileInfo(filePath).path();
+        loadModel(filePath);
+    }
 }
 
 void GLCScene::worldLoaded()
 {
-	GLC_World* pWorld= m_WorldLoader.result();
-	if (NULL != pWorld)
-	{
-		// Set the world to the newly loaded
-		m_World= *pWorld;
-		delete pWorld;
+    GLC_World* pWorld= m_WorldLoader.result();
+    if (NULL != pWorld)
+    {
+        // Set the world to the newly loaded
+        m_World= *pWorld;
+        delete pWorld;
 
-		// Set octree space partitionning
-		GLC_Octree* pOctree= new GLC_Octree(m_World.collection());
-		pOctree->updateSpacePartitioning();
-		m_World.collection()->bindSpacePartitioning(pOctree);
+        // Set octree space partitionning
+        GLC_Octree* pOctree= new GLC_Octree(m_World.collection());
+        pOctree->updateSpacePartitioning();
+        m_World.collection()->bindSpacePartitioning(pOctree);
 
-		// Set Level of detail usage
-		m_World.collection()->setLodUsage(false, &m_Viewport);
+        // Set Level of detail usage
+        m_World.collection()->setLodUsage(false, &m_Viewport);
 
-		// Set default camera
-		m_Viewport.cameraHandle()->setIsoView();
-		m_Viewport.reframe(m_World.boundingBox());
+        // Set default camera
+        m_Viewport.cameraHandle()->setIsoView();
+        m_Viewport.reframe(m_World.boundingBox());
 
-		updateLabels(m_CurrentFilePath);
-	}
+        updateLabels(m_CurrentFilePath);
+    }
 
-	QApplication::restoreOverrideCursor();
-	m_pLoadWorldButton->setEnabled(true);
+    QApplication::restoreOverrideCursor();
+    m_pLoadWorldButton->setEnabled(true);
 }
 
 void GLCScene::reframe()
 {
-	if (!m_World.isEmpty())
-	{
-		m_Viewport.reframe(m_World.boundingBox());
-	}
+    if (!m_World.isEmpty())
+    {
+        m_Viewport.reframe(m_World.boundingBox());
+    }
 }
 
 void GLCScene::updateCameraPos()
 {
-	bool update= (m_Angle > 0);
-	if (update && m_MoverController.hasActiveMover())
-	{
-		update= (m_MoverController.activeMoverId() != GLC_MoverController::TrackBall);
-		update= update && (m_MoverController.activeMoverId() != GLC_MoverController::Pan);
-	}
+    bool update= (m_Angle > 0);
+    if (update && m_MoverController.hasActiveMover())
+    {
+        update= (m_MoverController.activeMoverId() != GLC_MoverController::TrackBall);
+        update= update && (m_MoverController.activeMoverId() != GLC_MoverController::Pan);
+    }
 
-	if (update)
-	{
-		m_Viewport.cameraHandle()->rotateAroundTarget(m_Axis, m_Angle);
-		m_World.collection()->setLodUsage(true, &m_Viewport);
-		QTimer::singleShot(20, this, SLOT(updateCameraPos()));
-	}
-	else
-	{
-		m_World.collection()->setLodUsage(true, &m_Viewport);
-	}
+    if (update)
+    {
+        m_Viewport.cameraHandle()->rotateAroundTarget(m_Axis, m_Angle);
+        m_World.collection()->setLodUsage(true, &m_Viewport);
+        QTimer::singleShot(20, this, SLOT(updateCameraPos()));
+    }
+    else
+    {
+        m_World.collection()->setLodUsage(true, &m_Viewport);
+    }
 }

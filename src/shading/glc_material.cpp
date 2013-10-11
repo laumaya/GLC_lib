@@ -341,21 +341,10 @@ void GLC_Material::setEmissiveColor(const QColor& lightEmission)
 // Set Texture
 void GLC_Material::setTexture(GLC_Texture* pTexture)
 {
-	Q_ASSERT(NULL != pTexture);
-	//qDebug() << "GLC_Material::SetTexture";
-	if (m_pTexture != NULL)
-	{
-		delete m_pTexture;
-		m_pTexture= pTexture;
-		glLoadTexture();
-	}
-	else
-	{
-		// It is not sure that there is OpenGL context
-		m_pTexture= pTexture;
-	}
+    Q_ASSERT(NULL != pTexture);
 
-	//if (m_pTexture->hasAlphaChannel()) m_Transparency= 0.99;
+    delete m_pTexture;
+    m_pTexture= pTexture;
 }
 
 // remove Material Texture

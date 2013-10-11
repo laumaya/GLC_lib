@@ -75,8 +75,18 @@ void GLC_ErrorLog::addError(const QStringList& errorDescription)
 	for (int i= 0; i < size; ++i)
 	{
 		GLC_ErrorLog::instance()->add(errorDescription.at(i));
-	}
+    }
 }
+
+void GLC_ErrorLog::addError(const QString &errorDescription)
+{
+    QMutexLocker locker(&m_Mutex);
+    GLC_ErrorLog::instance()->addSeparator();
+    GLC_ErrorLog::instance()->addCurrentTime();
+
+    GLC_ErrorLog::instance()->add(errorDescription);
+}
+
 void GLC_ErrorLog::close()
 {
 	QMutexLocker locker(&m_Mutex);

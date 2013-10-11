@@ -2284,7 +2284,10 @@ void GLC_3dxmlToWorld::loadRep(GLC_Mesh* pMesh)
 					if ( m_pStreamReader->name() == "Polyline")
 					{
 						loadPolyline(pMesh);
-						readNext();
+                        while (endElementNotReached(m_pStreamReader, "Polyline"))
+                        {
+                            readNext();
+                        }
 					}
 				}
 			}
@@ -2309,13 +2312,11 @@ void GLC_3dxmlToWorld::loadRep(GLC_Mesh* pMesh)
 		{
 			message= QString("Master LOD not found in file ") + m_FileName;
 		}
-		else
+        if (!vertexBufferFound)
 		{
 			message= QString("Vertex Buffer not found in file ") + m_FileName;
 		}
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
-		clear();
-		throw(fileFormatException);
+        GLC_ErrorLog::addError(message);
 	}
 
 

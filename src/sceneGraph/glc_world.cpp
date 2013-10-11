@@ -56,8 +56,6 @@ GLC_World::~GLC_World()
 	m_pWorldHandle->decrement();
 	if (m_pWorldHandle->isOrphan())
 	{
-		// this is the last World, delete the root product and collection
-		//m_pWorldHandle->collection()->clear(); // Clear collection first (performance)
 		delete m_pRoot;
 		delete m_pWorldHandle;
     }
@@ -129,20 +127,26 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 
 GLC_World& GLC_World::operator=(const GLC_World& world)
 {
-	if (this != &world)
+    if ((this != &world) && (this->m_pWorldHandle != world.m_pWorldHandle))
 	{
-		// Decrement the number of world
-		m_pWorldHandle->decrement();
-		if (m_pWorldHandle->isOrphan())
-		{
-			// this is the last World, delete the root product and collection
-			//m_pWorldHandle->collection()->clear(); // Clear collection first (performance)
-			delete m_pRoot;
-			delete m_pWorldHandle;
-		}
-		m_pRoot= world.m_pRoot;
-		m_pWorldHandle= world.m_pWorldHandle;
-		m_pWorldHandle->increment();
-	}
-	return *this;
+        // Decrement the number of world
+        m_pWorldHandle->decrement();
+        if (m_pWorldHandle->isOrphan())
+        {
+            delete m_pRoot;
+            delete m_pWorldHandle;
+        }
+        m_pRoot= world.m_pRoot;
+        m_pWorldHandle= world.m_pWorldHandle;
+        m_pWorldHandle->increment();
+    }
+    return *this;
+}
+
+bool GLC_World::operator ==(const GLC_World &other) const
+{
+    bool subject= this == &other;
+    subject= (subject || (this->m_pWorldHandle == other.m_pWorldHandle));
+
+    return subject;
 }

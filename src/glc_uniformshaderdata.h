@@ -44,11 +44,17 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set Light values from the given light
-	void setLightValues(const GLC_Light& light);
+    //! Set color material state
+    void setColorMaterialState(bool enable);
 
-	//! Set lighting enbale state
+    //! Set lighting enable state
 	void setLightingState(bool enable);
+
+    //! Set two sided lighting
+    void setTwoSidedLight(GLint twoSided);
+
+    //! Set lights enable state
+    void setLightsEnableState(QVector<int> &lightsEnableState);
 
 	//! Set the model view matrix
 	void setModelViewProjectionMatrix(const GLC_Matrix4x4& modelView, const GLC_Matrix4x4& projection);

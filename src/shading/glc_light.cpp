@@ -211,13 +211,16 @@ void GLC_Light::disable()
 {
 	if (NULL != m_pContext)
 	{
-		glDisable(m_LightID);
+        GLC_Context::current()->glcDisableLight(m_LightID);
 	}
 }
 
 
 void GLC_Light::glExecute()
 {
+
+    GLC_Context* pCurrentContext= GLC_Context::current();
+    Q_ASSERT(NULL != pCurrentContext);
 	if (NULL == m_pContext)
 	{
 		m_pContext= const_cast<QGLContext*>(QGLContext::currentContext());
@@ -225,12 +228,12 @@ void GLC_Light::glExecute()
 		addNewLight();
 	}
 
-	GLC_Context::current()->glcEnableLighting(true);
-	glEnable(m_LightID);
+    pCurrentContext->glcEnableLighting(true);
+    pCurrentContext->glcEnableLight(m_LightID);
 
-	if (m_pContext != QGLContext::currentContext())
+    if (m_pContext != pCurrentContext)
 	{
-		Q_ASSERT(QGLContext::areSharing(m_pContext, QGLContext::currentContext()));
+        Q_ASSERT(QGLContext::areSharing(m_pContext, pCurrentContext));
 		m_IsValid= false;
 	}
 	Q_ASSERT(m_pContext->isValid());
@@ -257,14 +260,7 @@ void GLC_Light::glExecute()
 	if (!m_IsValid)
 	{
 		// Set the lighting model
-		if (m_TwoSided)
-		{
-			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-		}
-		else
-		{
-			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
-		}
+        pCurrentContext->glcSetTwoSidedLight(m_TwoSided);
 
 		// Color
 		setArray[0]= static_cast<GLfloat>(m_AmbientColor.redF());

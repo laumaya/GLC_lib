@@ -203,6 +203,7 @@ void GLC_Texture::glLoadTexture(QGLContext* pContext)
 		{
 			m_pQGLContext= pContext;
 		}
+        Q_ASSERT(NULL != m_pQGLContext);
 
 		// Test image size
 		if ((m_textureImage.height() > m_MaxTextureSize.height())

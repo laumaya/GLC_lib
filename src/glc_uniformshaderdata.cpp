@@ -31,7 +31,6 @@
 GLC_UniformShaderData::GLC_UniformShaderData()
 {
 
-
 }
 
 GLC_UniformShaderData::~GLC_UniformShaderData()
@@ -42,15 +41,41 @@ GLC_UniformShaderData::~GLC_UniformShaderData()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-void GLC_UniformShaderData::setLightValues(const GLC_Light& light)
-{
 
+void GLC_UniformShaderData::setColorMaterialState(bool enable)
+{
+    qDebug() << "GLC_UniformShaderData::setColorMaterialState";
+    GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
+    Q_ASSERT(NULL != pCurrentShader);
+    pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->colorMaterialStateId(), enable);
 }
 
 void GLC_UniformShaderData::setLightingState(bool enable)
 {
+    qDebug() << "GLC_UniformShaderData::setLightingState";
 	GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
-	pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->enableLightingId(), enable);
+    Q_ASSERT(NULL != pCurrentShader);
+    pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->enableLightingId(), enable);
+}
+
+void GLC_UniformShaderData::setTwoSidedLight(GLint twoSided)
+{
+    qDebug() << "GLC_UniformShaderData::setTwoSidedLight";
+    GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
+    Q_ASSERT(NULL != pCurrentShader);
+    pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->twoSidedLightingStateId(), twoSided);
+}
+
+void GLC_UniformShaderData::setLightsEnableState(QVector<int> &lightsEnableState)
+{
+    qDebug() << "GLC_UniformShaderData::setLightsEnableState";
+    Q_ASSERT(lightsEnableState.count() == GLC_Light::maxLightCount());
+    int* enableStateArray= lightsEnableState.data();
+
+    GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
+    Q_ASSERT(NULL != pCurrentShader);
+    pCurrentShader->programShaderHandle()->setUniformValueArray(pCurrentShader->lightsEnableStateId()
+                                                                , enableStateArray, lightsEnableState.count());
 }
 
 void GLC_UniformShaderData::setModelViewProjectionMatrix(const GLC_Matrix4x4& modelView, const GLC_Matrix4x4& projection)
@@ -98,4 +123,9 @@ void GLC_UniformShaderData::updateAll(const GLC_Context* pContext)
 {
 	setModelViewProjectionMatrix(pContext->modelViewMatrix(), pContext->projectionMatrix());
 	setLightingState(pContext->lightingIsEnable());
+    setColorMaterialState(pContext->colorMaterialIsEnable());
+    setTwoSidedLight(pContext->twoSidedIsEnable());
+
+    QVector<int> enableLightState= pContext->enableLights();
+    setLightsEnableState(enableLightState);
 }

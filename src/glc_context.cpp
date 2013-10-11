@@ -30,28 +30,17 @@
 GLC_Context* GLC_Context::m_pCurrentContext= NULL;
 
 GLC_Context::GLC_Context(const QGLFormat& format)
-: QGLContext(format)
-, m_CurrentMatrixMode()
-, m_MatrixStackHash()
-, m_ContextSharedData()
-, m_UniformShaderData()
-, m_LightingIsEnable()
+    : QGLContext(format)
+    , m_ContextSharedData()
 {
-	qDebug() << "GLC_Context::GLC_Context";
-	GLC_ContextManager::instance()->addContext(this);
-	init();
+    qDebug() << "GLC_Context::GLC_Context";
+    GLC_ContextManager::instance()->addContext(this);
 }
 
 GLC_Context::~GLC_Context()
 {
-	qDebug() << "GLC_Context::~GLC_Context()";
-	GLC_ContextManager::instance()->remove(this);
-	QHash<GLenum, QStack<GLC_Matrix4x4>* >::iterator iStack= m_MatrixStackHash.begin();
-	while (iStack != m_MatrixStackHash.end())
-	{
-		delete iStack.value();
-		++iStack;
-	}
+    qDebug() << "GLC_Context::~GLC_Context()";
+    GLC_ContextManager::instance()->remove(this);
 }
 
 
@@ -61,171 +50,194 @@ GLC_Context::~GLC_Context()
 
 GLC_Context* GLC_Context::current()
 {
-	return m_pCurrentContext;
+    return m_pCurrentContext;
+}
+
+void GLC_Context::glcUseVertexPointer(const GLvoid *pointer)
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    const GLuint location= pShader->positionAttributeId();
+    glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, pointer);
+    glEnableVertexAttribArray(location);
+#else
+    if ((NULL != pShader) && (pShader->positionAttributeId() != -1))
+    {
+        const GLuint location= pShader->positionAttributeId();
+        glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, pointer);
+        glEnableVertexAttribArray(location);
+    }
+    else
+    {
+        glVertexPointer(3, GL_FLOAT, 0, pointer);
+        glEnableClientState(GL_VERTEX_ARRAY);
+    }
+#endif
+}
+
+void GLC_Context::glcDisableVertexClientState()
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    glDisableVertexAttribArray(pShader->positionAttributeId());
+#else
+    if ((NULL != pShader) && (pShader->positionAttributeId() != -1))
+    {
+        glDisableVertexAttribArray(pShader->positionAttributeId());
+    }
+    else
+    {
+        glDisableClientState(GL_VERTEX_ARRAY);
+    }
+#endif
+}
+
+void GLC_Context::glcUseNormalPointer(const GLvoid *pointer)
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    const GLuint location= pShader->normalAttributeId();
+    glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, pointer);
+    glEnableVertexAttribArray(location);
+#else
+    if ((NULL != pShader) && (pShader->positionAttributeId() != -1))
+    {
+        const GLuint location= pShader->normalAttributeId();
+        glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, pointer);
+        glEnableVertexAttribArray(location);
+    }
+    else
+    {
+        glNormalPointer(GL_FLOAT, 0, pointer);
+        glEnableClientState(GL_NORMAL_ARRAY);
+    }
+#endif
+}
+
+void GLC_Context::glcDisableNormalClientState()
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    glDisableVertexAttribArray(pShader->normalAttributeId());
+#else
+    if ((NULL != pShader) && (pShader->normalAttributeId() != -1))
+    {
+        glDisableVertexAttribArray(pShader->normalAttributeId());
+    }
+    else
+    {
+        glDisableClientState(GL_NORMAL_ARRAY);
+    }
+#endif
+}
+
+void GLC_Context::glcUseTexturePointer(const GLvoid *pointer)
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    const GLuint location= pShader->textureAttributeId();
+    glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, pointer);
+    glEnableVertexAttribArray(location);
+#else
+    if ((NULL != pShader) && (pShader->textureAttributeId() != -1))
+    {
+        const GLuint location= pShader->textureAttributeId();
+        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, pointer);
+        glEnableVertexAttribArray(location);
+    }
+    else
+    {
+        glTexCoordPointer(2, GL_FLOAT, 0, pointer);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+#endif
+}
+
+void GLC_Context::glcDisableTextureClientState()
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    glDisableVertexAttribArray(pShader->textureAttributeId());
+#else
+    if ((NULL != pShader) && (pShader->textureAttributeId() != -1))
+    {
+        glDisableVertexAttribArray(pShader->textureAttributeId());
+    }
+    else
+    {
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+#endif
+}
+
+void GLC_Context::glcUseColorPointer(const GLvoid *pointer)
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    const GLuint location= pShader->colorAttributeId();
+    glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, 0, pointer);
+    glEnableVertexAttribArray(location);
+#else
+    if ((NULL != pShader) && (pShader->colorAttributeId() != -1))
+    {
+        const GLuint location= pShader->colorAttributeId();
+        glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, 0, pointer);
+        glEnableVertexAttribArray(location);
+    }
+    else
+    {
+        glColorPointer(4, GL_FLOAT, 0, pointer);
+        glEnableClientState(GL_COLOR_ARRAY);
+    }
+#endif
+}
+
+void GLC_Context::glcDisableColorClientState()
+{
+    Q_ASSERT(this == m_pCurrentContext);
+
+    GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
+#ifdef GLC_OPENGL_ES_2
+    Q_ASSERT(NULL != pShader);
+    glDisableVertexAttribArray(pShader->colorAttributeId());
+#else
+    if ((NULL != pShader) && (pShader->colorAttributeId() != -1))
+    {
+        glDisableVertexAttribArray(pShader->colorAttributeId());
+    }
+    else
+    {
+        glDisableClientState(GL_COLOR_ARRAY);
+    }
+#endif
+
 }
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
-void GLC_Context::glcMatrixMode(GLenum mode)
-{
-	Q_ASSERT(QGLContext::isValid());
-	Q_ASSERT((mode == GL_MODELVIEW) || (mode == GL_PROJECTION));
 
-	m_CurrentMatrixMode= mode;
-#ifdef GLC_OPENGL_ES_2
-
-#else
-	glMatrixMode(m_CurrentMatrixMode);
-#endif
-
-}
-
-void GLC_Context::glcLoadIdentity()
-{
-	Q_ASSERT(QGLContext::isValid());
-	m_MatrixStackHash.value(m_CurrentMatrixMode)->top().setToIdentity();
-
-#ifdef GLC_OPENGL_ES_2
-	m_UniformShaderData.setModelViewProjectionMatrix(m_MatrixStackHash.value(GL_MODELVIEW)->top(), m_MatrixStackHash.value(GL_PROJECTION)->top());
-#else
-	if (GLC_Shader::hasActiveShader())
-	{
-		m_UniformShaderData.setModelViewProjectionMatrix(m_MatrixStackHash.value(GL_MODELVIEW)->top(), m_MatrixStackHash.value(GL_PROJECTION)->top());
-	}
-	glLoadIdentity();
-#endif
-
-}
-
-void GLC_Context::glcPushMatrix()
-{
-	Q_ASSERT(QGLContext::isValid());
-	m_MatrixStackHash.value(m_CurrentMatrixMode)->push(m_MatrixStackHash.value(m_CurrentMatrixMode)->top());
-
-#ifndef GLC_OPENGL_ES_2
-	glPushMatrix();
-#endif
-
-}
-
-void GLC_Context::glcPopMatrix()
-{
-	Q_ASSERT(QGLContext::isValid());
-	m_MatrixStackHash.value(m_CurrentMatrixMode)->pop();
-
-#ifdef GLC_OPENGL_ES_2
-	this->glcLoadMatrix(m_MatrixStackHash.value(m_CurrentMatrixMode)->top());
-#else
-	if (GLC_Shader::hasActiveShader())
-	{
-		this->glcLoadMatrix(m_MatrixStackHash.value(m_CurrentMatrixMode)->top());
-	}
-	glPopMatrix();
-#endif
-
-}
-
-
-void GLC_Context::glcLoadMatrix(const GLC_Matrix4x4& matrix)
-{
-	m_MatrixStackHash.value(m_CurrentMatrixMode)->top()= matrix;
-
-#ifdef GLC_OPENGL_ES_2
-	m_UniformShaderData.setModelViewProjectionMatrix(m_MatrixStackHash.value(GL_MODELVIEW)->top(), m_MatrixStackHash.value(GL_PROJECTION)->top());
-#else
-	if (GLC_Shader::hasActiveShader())
-	{
-		m_UniformShaderData.setModelViewProjectionMatrix(m_MatrixStackHash.value(GL_MODELVIEW)->top(), m_MatrixStackHash.value(GL_PROJECTION)->top());
-	}
-	::glLoadMatrixd(matrix.getData());
-#endif
-
-}
-
-void GLC_Context::glcMultMatrix(const GLC_Matrix4x4& matrix)
-{
-	const GLC_Matrix4x4 current= m_MatrixStackHash.value(m_CurrentMatrixMode)->top();
-	m_MatrixStackHash.value(m_CurrentMatrixMode)->top()= m_MatrixStackHash.value(m_CurrentMatrixMode)->top() * matrix;
-#ifdef GLC_OPENGL_ES_2
-	m_UniformShaderData.setModelViewProjectionMatrix(m_MatrixStackHash.value(GL_MODELVIEW)->top(), m_MatrixStackHash.value(GL_PROJECTION)->top());
-#else
-	if (GLC_Shader::hasActiveShader())
-	{
-		m_UniformShaderData.setModelViewProjectionMatrix(m_MatrixStackHash.value(GL_MODELVIEW)->top(), m_MatrixStackHash.value(GL_PROJECTION)->top());
-	}
-	::glMultMatrixd(matrix.getData());
-#endif
-
-}
-
-void GLC_Context::glcScaled(double x, double y, double z)
-{
-	GLC_Matrix4x4 scale;
-	scale.setMatScaling(x, y, z);
-	glcMultMatrix(scale);
-}
-
-void GLC_Context::glcOrtho(double left, double right, double bottom, double top, double nearVal, double farVal)
-{
-	GLC_Matrix4x4 orthoMatrix;
-	double* m= orthoMatrix.setData();
-
-	const double tx= - (right + left) / (right - left);
-	const double ty= - (top + bottom) / (top - bottom);
-	const double tz= - (farVal + nearVal) / (farVal - nearVal);
-	m[0]= 2.0 / (right - left);
-	m[5]= 2.0 / (top - bottom);
-	m[10]= -2.0 / (farVal - nearVal);
-	m[12]= tx;
-	m[13]= ty;
-	m[14]= tz;
-
-	glcMultMatrix(orthoMatrix);
-}
-
-void GLC_Context::glcFrustum(double left, double right, double bottom, double top, double nearVal, double farVal)
-{
-	GLC_Matrix4x4 perspMatrix;
-	double* m= perspMatrix.setData();
-
-	const double a= (right + left) / (right - left);
-	const double b= (top + bottom) / (top - bottom);
-	const double c= - (farVal + nearVal) / (farVal - nearVal);
-	const double d= - (2.0 * farVal * nearVal) / (farVal - nearVal);
-
-	m[0]= (2.0 * nearVal) / (right - left);
-	m[5]= (2.0 * nearVal) / (top - bottom);
-	m[8]= a;
-	m[9]= b;
-	m[10]= c;
-	m[11]= -1.0;
-	m[14]= d;
-	m[15]= 0.0;
-
-	glcMultMatrix(perspMatrix);
-}
-
-void GLC_Context::glcEnableLighting(bool enable)
-{
-	if (enable != m_LightingIsEnable.top())
-	{
-		m_LightingIsEnable.top()= enable;
-
-#ifdef GLC_OPENGL_ES_2
-
-		m_UniformShaderData.setLightingState(m_LightingIsEnable);
-#else
-		if (GLC_Shader::hasActiveShader())
-		{
-			m_UniformShaderData.setLightingState(m_LightingIsEnable.top());
-		}
-		if (m_LightingIsEnable.top()) ::glEnable(GL_LIGHTING);
-		else ::glDisable(GL_LIGHTING);
-#endif
-
-	}
-}
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
@@ -233,57 +245,51 @@ void GLC_Context::glcEnableLighting(bool enable)
 
 void GLC_Context::makeCurrent()
 {
-	QGLContext::makeCurrent();
-	if (!GLC_State::isValid())
-	{
-		GLC_State::init();
-	}
-	GLC_ContextManager::instance()->setCurrent(this);
-	m_pCurrentContext= this;
+    QGLContext::makeCurrent();
+    GLC_State::init();
+    m_ContextSharedData->init();
+    GLC_ContextManager::instance()->setCurrent(this);
+    m_pCurrentContext= this;
 }
 
 void GLC_Context::doneCurrent()
 {
-	QGLContext::doneCurrent();
-	GLC_ContextManager::instance()->setCurrent(NULL);
-	m_pCurrentContext= NULL;
+    QGLContext::doneCurrent();
+    GLC_ContextManager::instance()->setCurrent(NULL);
+    m_pCurrentContext= NULL;
+}
+
+void GLC_Context::useDefaultShader()
+{
+    Q_ASSERT(m_pCurrentContext == this);
+    m_ContextSharedData->useDefaultShader();
+}
+
+void GLC_Context::unuseDefaultShader()
+{
+    Q_ASSERT(m_pCurrentContext == this);
+    m_ContextSharedData->unuseDefaultShader();
 }
 
 bool GLC_Context::chooseContext(const QGLContext* shareContext)
 {
-	qDebug() << "GLC_Context::chooseContext";
-	const bool success= QGLContext::chooseContext(shareContext);
-	if (!success)
-	{
-		qDebug() << "enable to create context " << this;
-	}
-	else if (NULL != shareContext)
-	{
-		GLC_Context* pContext= const_cast<GLC_Context*>(dynamic_cast<const GLC_Context*>(shareContext));
-		Q_ASSERT(NULL != pContext);
-		m_ContextSharedData= pContext->m_ContextSharedData;
-	}
-	else
-	{
-		m_ContextSharedData= QSharedPointer<GLC_ContextSharedData>(new GLC_ContextSharedData());
-	}
+    qDebug() << "GLC_Context::chooseContext";
+    const bool success= QGLContext::chooseContext(shareContext);
+    if (!success)
+    {
+        qDebug() << "enable to create context " << this;
+    }
+    else if (NULL != shareContext)
+    {
+        GLC_Context* pContext= const_cast<GLC_Context*>(dynamic_cast<const GLC_Context*>(shareContext));
+        Q_ASSERT(NULL != pContext);
+        m_ContextSharedData= pContext->m_ContextSharedData;
+    }
+    else
+    {
+        m_ContextSharedData= QSharedPointer<GLC_ContextSharedData>(new GLC_ContextSharedData());
+    }
 
-	return success;
-}
-
-//////////////////////////////////////////////////////////////////////
-// Private services Functions
-//////////////////////////////////////////////////////////////////////
-void GLC_Context::init()
-{
-	QStack<GLC_Matrix4x4>* pStack1= new QStack<GLC_Matrix4x4>();
-	pStack1->push(GLC_Matrix4x4());
-	m_MatrixStackHash.insert(GL_MODELVIEW, pStack1);
-
-	QStack<GLC_Matrix4x4>* pStack2= new QStack<GLC_Matrix4x4>();
-	pStack2->push(GLC_Matrix4x4());
-	m_MatrixStackHash.insert(GL_PROJECTION, pStack2);
-
-	m_LightingIsEnable.push(false);
+    return success;
 }
 

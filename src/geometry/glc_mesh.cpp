@@ -24,7 +24,6 @@
 
 #include "glc_mesh.h"
 #include "../glc_renderstatistics.h"
-#include "../glc_context.h"
 
 // Class chunk id
 quint32 GLC_Mesh::m_ChunkId= 0xA701;
@@ -944,7 +943,8 @@ void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 {
-
+    GLC_Context* pContext= GLC_Context::current();
+    Q_ASSERT(NULL != pContext);
 	Q_ASSERT(m_GeometryIsValid || !m_MeshData.positionSizeIsSet());
 
 	const bool vboIsUsed= GLC_Geometry::vboIsUsed()  && GLC_State::vboSupported();
@@ -1048,18 +1048,17 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		}
 	}
 
-
 	// Restore client state
 
 	if (m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode())
 	{
-		glDisableClientState(GL_COLOR_ARRAY);
-		glDisable(GL_COLOR_MATERIAL);
+        pContext->glcDisableColorClientState();
+        pContext->glcEnableColorMaterial(false);
 	}
 
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    pContext->glcDisableVertexClientState();
+    pContext->glcDisableNormalClientState();
+    pContext->glcDisableTextureClientState();
 
 	if (vboIsUsed)
 	{

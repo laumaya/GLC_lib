@@ -78,52 +78,116 @@ public:
 
 	//! Return the model view matrix
 	inline GLC_Matrix4x4 modelViewMatrix() const
-	{Q_ASSERT(m_MatrixStackHash.contains(GL_MODELVIEW)); return m_MatrixStackHash.value(GL_MODELVIEW)->top();}
+    {return m_ContextSharedData->modelViewMatrix();}
 
 	//! Return the projection matrix
 	inline GLC_Matrix4x4 projectionMatrix() const
-	{Q_ASSERT(m_MatrixStackHash.contains(GL_PROJECTION)); return m_MatrixStackHash.value(GL_PROJECTION)->top();}
+    {return m_ContextSharedData->projectionMatrix();}
 
 	//! Return lighting enable state
 	inline bool lightingIsEnable() const
-	{return m_LightingIsEnable.top();}
+    {return m_ContextSharedData->lightingIsEnable();}
+
+    //! Return two sided lighting enable state
+    inline bool twoSidedIsEnable() const
+    {return m_ContextSharedData->twoSidedIsEnable();}
+
+    //! Return color material enable state
+    inline bool colorMaterialIsEnable() const
+    {return m_ContextSharedData->colorMaterialIsEnable();}
+
+    //! Return the vector of enable light
+    inline QVector<int> enableLights() const
+    {return m_ContextSharedData->enableLights();}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Set the matrix mode
-	void glcMatrixMode(GLenum mode);
+    //! Set the matrix mode
+    inline void glcMatrixMode(GLenum mode)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcMatrixMode(mode);}
 
-	//! Replace the current matrix with the identity
-	void glcLoadIdentity();
+    //! Replace the current matrix with the identity
+    inline void glcLoadIdentity()
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcLoadIdentity();}
 
 	//! push and pop the current matrix stack
-	void glcPushMatrix();
-	void glcPopMatrix();
+    inline void glcPushMatrix()
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcPushMatrix();}
+
+    inline void glcPopMatrix()
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcPopMatrix();}
 
 	//! Replace the current matrix with the specified matrix
-	void glcLoadMatrix(const GLC_Matrix4x4& matrix);
+    inline void glcLoadMatrix(const GLC_Matrix4x4& matrix)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcLoadMatrix(matrix);}
 
 	//! Multiply the current matrix with the specified matrix
-	void glcMultMatrix(const GLC_Matrix4x4& matrix);
+    inline void glcMultMatrix(const GLC_Matrix4x4& matrix)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcMultMatrix(matrix);}
 
 	//! Multiply the current matrix by a translation matrix
 	inline void glcTranslated(double x, double y, double z)
 	{glcMultMatrix(GLC_Matrix4x4(x, y, z));}
 
 	//! Multiply the current matrix by a general scaling matrix
-	void glcScaled(double x, double y, double z);
+    inline void glcScaled(double x, double y, double z)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcScaled(x, y, z);}
 
 	//! Multiply the current matrix with an orthographic matrix
-	void glcOrtho(double left, double right, double bottom, double top, double nearVal, double farVal);
+    inline void glcOrtho(double left, double right, double bottom, double top, double nearVal, double farVal)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcOrtho(left, right, bottom, top, nearVal, farVal);}
 
 	//! Multiply the current matrix by a perspective matrix
-	void glcFrustum(double left, double right, double bottom, double top, double nearVal, double farVal);
+    inline void glcFrustum(double left, double right, double bottom, double top, double nearVal, double farVal)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcFrustum(left, right, bottom, top, nearVal, farVal);}
+
+    //! Enable color material
+    inline void glcEnableColorMaterial(bool enable)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcEnableColorMaterial(enable);}
 
 	//! Enable lighting
-	void glcEnableLighting(bool enable);
+    inline void glcEnableLighting(bool enable)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcEnableLighting(enable);}
+
+    //! Enable the given light
+    inline void glcEnableLight(GLenum lightId)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcEnableLight(lightId);}
+
+    //! Enable the given light
+    inline void glcDisableLight(GLenum lightId)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcDisableLight(lightId);}
+
+    //! Set two sided light parameter
+    inline void glcSetTwoSidedLight(GLint twoSided)
+    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcSetTwoSidedLight(twoSided);}
+
+    //! Use vertex array pointer and enable it
+    void glcUseVertexPointer(const GLvoid* pointer);
+
+    //! Disable the vertex client state
+    void glcDisableVertexClientState();
+
+    //! Use Normal array pointer and enable it
+    void glcUseNormalPointer(const GLvoid* pointer);
+
+    //! Disable the normal client state
+    void glcDisableNormalClientState();
+
+    //! Use Texture array pointer and enable it
+    void glcUseTexturePointer(const GLvoid* pointer);
+
+    //! Disable the normal client state
+    void glcDisableTextureClientState();
+
+    //! Use Color array pointer and enable it
+    void glcUseColorPointer(const GLvoid* pointer);
+
+    //! Disable the color client state
+    void glcDisableColorClientState();
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -140,7 +204,13 @@ public:
 
 	//! Update uniform variable
 	inline void updateUniformVariables()
-	{m_UniformShaderData.updateAll(this);}
+    {m_ContextSharedData->updateUniformVariables(this);}
+
+    //! Use the default shader
+    void useDefaultShader();
+
+    //! UnUse the default shader
+    inline void unuseDefaultShader();
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -154,43 +224,15 @@ protected:
 //@}
 
 //////////////////////////////////////////////////////////////////////
-/*! \name Private services Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-private:
-//@{
-
-	//! Init this context state
-	void init();
-//@}
-
-
-//////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! The current matrix mode
-	GLenum m_CurrentMatrixMode;
-
-	//! Mapping between matrixMode and matrix stack
-	QHash<GLenum, QStack<GLC_Matrix4x4>* > m_MatrixStackHash;
-
 	//! The context shared data
 	QSharedPointer<GLC_ContextSharedData> m_ContextSharedData;
 
-	//! The uniform data of the current shader
-	GLC_UniformShaderData m_UniformShaderData;
-
-	//! The current context
-	static GLC_Context* m_pCurrentContext;
-
-	//! Enable lighting state
-	QStack<bool> m_LightingIsEnable;
-
-	//! Lights enable state
-	QHash<GLenum, bool> m_LightsEnableState;
-
+    //! The current context
+    static GLC_Context* m_pCurrentContext;
 };
 
 #endif /* GLC_CONTEXT_H_ */

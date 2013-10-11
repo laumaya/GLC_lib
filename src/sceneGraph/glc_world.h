@@ -261,6 +261,10 @@ public:
 public:
 	//! Assignement operator
 	GLC_World& operator=(const GLC_World&);
+
+    //! Return true if this world is the same than the given world
+    bool operator==(const GLC_World& other) const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -287,5 +291,7 @@ private:
 	//! The root of the structure
 	GLC_StructOccurence* m_pRoot;
 };
+
+Q_DECLARE_METATYPE(GLC_World)
 
 #endif /*GLC_WORLD_H_*/

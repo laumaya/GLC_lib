@@ -49,7 +49,9 @@ GLC_Shader::GLC_Shader()
 , m_MvpLocationId(-1)
 , m_InvModelViewLocationId(-1)
 , m_EnableLightingId(-1)
+, m_TwosidedEnableStateId(-1)
 , m_LightsEnableStateId(-1)
+, m_ColorMaterialStateId(-1)
 , m_LightsPositionId()
 , m_LightsAmbientColorId()
 , m_LightsDiffuseColorId()
@@ -64,7 +66,7 @@ GLC_Shader::GLC_Shader()
 	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
 }
 
-GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
+GLC_Shader::GLC_Shader(QFile& vertexShaderFile, QFile& fragmentShaderFile)
 : m_VertexShader(QGLShader::Vertex)
 , m_FragmentShader(QGLShader::Fragment)
 , m_ProgramShader()
@@ -78,6 +80,7 @@ GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 , m_MvpLocationId(-1)
 , m_InvModelViewLocationId(-1)
 , m_EnableLightingId(-1)
+, m_TwosidedEnableStateId(-1)
 , m_LightsEnableStateId(-1)
 , m_LightsPositionId()
 , m_LightsAmbientColorId()
@@ -91,7 +94,7 @@ GLC_Shader::GLC_Shader(QFile& vertex, QFile& fragment)
 {
 	initLightsUniformId();
 	m_ShaderProgramHash.insert(m_ProgramShaderId, this);
-	setVertexAndFragmentShader(vertex, fragment);
+    setVertexAndFragmentShader(vertexShaderFile, fragmentShaderFile);
 }
 
 GLC_Shader::GLC_Shader(const GLC_Shader& shader)
@@ -108,6 +111,7 @@ GLC_Shader::GLC_Shader(const GLC_Shader& shader)
 , m_MvpLocationId(-1)
 , m_InvModelViewLocationId(-1)
 , m_EnableLightingId(-1)
+, m_TwosidedEnableStateId(-1)
 , m_LightsEnableStateId(-1)
 , m_LightsPositionId()
 , m_LightsAmbientColorId()
@@ -269,8 +273,12 @@ void GLC_Shader::createAndCompileProgrammShader()
 		//qDebug() << "m_InvModelViewLocationId " << m_InvModelViewLocationId;
 		m_EnableLightingId= m_ProgramShader.uniformLocation("enable_lighting");
 		//qDebug() << "m_EnableLightingId " << m_EnableLightingId;
+        m_TwosidedEnableStateId= m_ProgramShader.uniformLocation("light_model_two_sided");
+        //qDebug() << "m_TwosidedEnableStateId " << m_TwosidedEnableStateId;
 		m_LightsEnableStateId= m_ProgramShader.uniformLocation("light_enable_state");
 		//qDebug() << "m_LightsEnableStateId " << m_LightsEnableStateId;
+        m_ColorMaterialStateId= m_ProgramShader.uniformLocation("enable_color_material");
+        //qDebug() << "m_ColorMaterialStateId " << m_ColorMaterialStateId;
 		const int size= GLC_Light::maxLightCount();
 		for (int i= (GL_LIGHT0); i < (size + GL_LIGHT0); ++i)
 		{
@@ -292,8 +300,6 @@ void GLC_Shader::createAndCompileProgrammShader()
 			//qDebug() << "m_LightsSpotCutoffAngleId " << m_LightsSpotCutoffAngleId.value(i);
 			m_LightsComputeDistanceAttenuationId[i]= m_ProgramShader.uniformLocation("light_state[" + QString::number(i) + "].compute_distance_attenuation");
 			//qDebug() << "m_LightsComputeDistanceAttenuationId " << m_LightsComputeDistanceAttenuationId.value(i);
-
-
 		}
 	}
 }
@@ -306,6 +312,7 @@ void GLC_Shader::deleteShader()
 		if (m_CurrentShadingGroupId == m_ProgramShaderId)
 		{
 			qDebug() << "Warning deleting current shader";
+            unuse();
 		}
 		//removing shader id from the stack
 		if (m_ShadingGroupStack.contains(m_ProgramShaderId))
@@ -327,16 +334,16 @@ void GLC_Shader::deleteShader()
 //////////////////////////////////////////////////////////////////////
 
 
-void GLC_Shader::setVertexAndFragmentShader(QFile& vertexFile, QFile& fragmentFile)
+void GLC_Shader::setVertexAndFragmentShader(QFile& vertexShaderFile, QFile& fragmentShaderFile)
 {
-	m_Name= QFileInfo(vertexFile).baseName();
-	vertexFile.open(QIODevice::ReadOnly);
-	m_VertexShader.compileSourceCode(vertexFile.readAll());
-	vertexFile.close();
+    m_Name= QFileInfo(vertexShaderFile).baseName();
+    vertexShaderFile.open(QIODevice::ReadOnly);
+    m_VertexShader.compileSourceCode(vertexShaderFile.readAll());
+    vertexShaderFile.close();
 
-	fragmentFile.open(QIODevice::ReadOnly);
-	m_FragmentShader.compileSourceCode(fragmentFile.readAll());
-	fragmentFile.close();
+    fragmentShaderFile.open(QIODevice::ReadOnly);
+    m_FragmentShader.compileSourceCode(fragmentShaderFile.readAll());
+    fragmentShaderFile.close();
 }
 
 

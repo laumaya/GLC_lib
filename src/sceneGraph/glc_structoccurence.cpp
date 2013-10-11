@@ -207,18 +207,8 @@ GLC_StructOccurence::GLC_StructOccurence(GLC_WorldHandle* pWorldHandle, const GL
 
 GLC_StructOccurence::~GLC_StructOccurence()
 {
-    if (NULL != m_pParent)
-    {
-        makeOrphan();
-    }
-
 	//qDebug() << "Delete " << id();
 	Q_ASSERT(m_pNumberOfOccurence != NULL);
-	// Remove from the GLC_WorldHandle
-	if (NULL != m_pWorldHandle)
-	{
-		m_pWorldHandle->removeOccurence(this);
-	}
 
 	// Remove Childs
 	const int size= m_Childs.size();
@@ -228,6 +218,9 @@ GLC_StructOccurence::~GLC_StructOccurence()
 		removeChild(pChild);
 		delete pChild;
 	}
+
+    makeOrphan();
+
 	// Update number of occurence and instance
 	if ((--(*m_pNumberOfOccurence)) == 0)
 	{
@@ -643,7 +636,6 @@ void GLC_StructOccurence::makeOrphan()
 bool GLC_StructOccurence::removeChild(GLC_StructOccurence* pChild)
 {
 	Q_ASSERT(pChild->m_pParent == this);
-	Q_ASSERT(m_Childs.contains(pChild));
 	pChild->m_pParent= NULL;
 	pChild->detach();
 
@@ -836,8 +828,9 @@ void GLC_StructOccurence::removeEmptyChildren()
 	{
 		if (!((*iChild)->hasChild()) && !((*iChild)->hasRepresentation()))
 		{
-			delete *iChild;
-			iChild= m_Childs.erase(iChild);
+            GLC_StructOccurence* pOcc= *iChild;
+            iChild= m_Childs.erase(iChild);
+            delete pOcc;
 		}
 		else
 		{
