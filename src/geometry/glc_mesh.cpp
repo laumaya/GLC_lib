@@ -1517,7 +1517,7 @@ void GLC_Mesh::outlineSilhouetteRenderLoop(const GLC_RenderProperties& renderPro
 
 			// Encode silhouette information in RGBA color
 			GLubyte colorId[4];
-			int uid = pCurrentGroup->id() + (id() << 16);
+			static int uid = 0;
 			int uid_flags = 0;
 			if (renderProperties.isSelected()) {
 				uid_flags = uid_flags | 0x800000; //Selection flag
@@ -1528,7 +1528,7 @@ void GLC_Mesh::outlineSilhouetteRenderLoop(const GLC_RenderProperties& renderPro
 			glCullFace(GL_BACK);
 
 	   		// Draw front faces
-			glc::encodeRgbId(((uid) & 0x7FFFFF) | uid_flags,colorId);
+			glc::encodeRgbId(((uid++) & 0x7FFFFF) | uid_flags,colorId);
 			glColor4ubv(colorId);
 			glFrontFace(GL_CCW);
 			if (vboIsUsed)
@@ -1541,7 +1541,7 @@ void GLC_Mesh::outlineSilhouetteRenderLoop(const GLC_RenderProperties& renderPro
 			}
 
 			// Draw back faces
-			glc::encodeRgbId(((~uid) & 0x7FFFFF) | uid_flags,colorId);
+			glc::encodeRgbId(((uid++) & 0x7FFFFF) | uid_flags,colorId);
 			glColor4ubv(colorId);
 			glFrontFace(GL_CW);
 			if (vboIsUsed)

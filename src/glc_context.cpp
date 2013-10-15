@@ -56,6 +56,7 @@ GLC_Context* GLC_Context::current()
 void GLC_Context::glcUseVertexPointer(const GLvoid *pointer)
 {
     Q_ASSERT(this == m_pCurrentContext);
+	QGLFunctions glFunctions(this);
 
     GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
 #ifdef GLC_OPENGL_ES_2
@@ -67,8 +68,8 @@ void GLC_Context::glcUseVertexPointer(const GLvoid *pointer)
     if ((NULL != pShader) && (pShader->positionAttributeId() != -1))
     {
         const GLuint location= pShader->positionAttributeId();
-        glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, pointer);
-        glEnableVertexAttribArray(location);
+		glFunctions.glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, pointer);
+        glFunctions.glEnableVertexAttribArray(location);
     }
     else
     {
@@ -81,6 +82,7 @@ void GLC_Context::glcUseVertexPointer(const GLvoid *pointer)
 void GLC_Context::glcDisableVertexClientState()
 {
     Q_ASSERT(this == m_pCurrentContext);
+	QGLFunctions glFunctions(this);
 
     GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
 #ifdef GLC_OPENGL_ES_2
@@ -89,7 +91,7 @@ void GLC_Context::glcDisableVertexClientState()
 #else
     if ((NULL != pShader) && (pShader->positionAttributeId() != -1))
     {
-        glDisableVertexAttribArray(pShader->positionAttributeId());
+        glFunctions.glDisableVertexAttribArray(pShader->positionAttributeId());
     }
     else
     {
@@ -101,6 +103,7 @@ void GLC_Context::glcDisableVertexClientState()
 void GLC_Context::glcUseNormalPointer(const GLvoid *pointer)
 {
     Q_ASSERT(this == m_pCurrentContext);
+	QGLFunctions glFunctions(this);
 
     GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
 #ifdef GLC_OPENGL_ES_2
@@ -112,8 +115,8 @@ void GLC_Context::glcUseNormalPointer(const GLvoid *pointer)
     if ((NULL != pShader) && (pShader->positionAttributeId() != -1))
     {
         const GLuint location= pShader->normalAttributeId();
-        glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, pointer);
-        glEnableVertexAttribArray(location);
+        glFunctions.glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, pointer);
+        glFunctions.glEnableVertexAttribArray(location);
     }
     else
     {
@@ -126,6 +129,7 @@ void GLC_Context::glcUseNormalPointer(const GLvoid *pointer)
 void GLC_Context::glcDisableNormalClientState()
 {
     Q_ASSERT(this == m_pCurrentContext);
+	QGLFunctions glFunctions(this);
 
     GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
 #ifdef GLC_OPENGL_ES_2
@@ -134,7 +138,7 @@ void GLC_Context::glcDisableNormalClientState()
 #else
     if ((NULL != pShader) && (pShader->normalAttributeId() != -1))
     {
-        glDisableVertexAttribArray(pShader->normalAttributeId());
+        glFunctions.glDisableVertexAttribArray(pShader->normalAttributeId());
     }
     else
     {
@@ -146,6 +150,7 @@ void GLC_Context::glcDisableNormalClientState()
 void GLC_Context::glcUseTexturePointer(const GLvoid *pointer)
 {
     Q_ASSERT(this == m_pCurrentContext);
+	QGLFunctions glFunctions(this);
 
     GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
 #ifdef GLC_OPENGL_ES_2
@@ -157,8 +162,8 @@ void GLC_Context::glcUseTexturePointer(const GLvoid *pointer)
     if ((NULL != pShader) && (pShader->textureAttributeId() != -1))
     {
         const GLuint location= pShader->textureAttributeId();
-        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, pointer);
-        glEnableVertexAttribArray(location);
+        glFunctions.glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, pointer);
+        glFunctions.glEnableVertexAttribArray(location);
     }
     else
     {
@@ -171,6 +176,7 @@ void GLC_Context::glcUseTexturePointer(const GLvoid *pointer)
 void GLC_Context::glcDisableTextureClientState()
 {
     Q_ASSERT(this == m_pCurrentContext);
+	QGLFunctions glFunctions(this);
 
     GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
 #ifdef GLC_OPENGL_ES_2
@@ -179,7 +185,7 @@ void GLC_Context::glcDisableTextureClientState()
 #else
     if ((NULL != pShader) && (pShader->textureAttributeId() != -1))
     {
-        glDisableVertexAttribArray(pShader->textureAttributeId());
+        glFunctions.glDisableVertexAttribArray(pShader->textureAttributeId());
     }
     else
     {
@@ -191,6 +197,7 @@ void GLC_Context::glcDisableTextureClientState()
 void GLC_Context::glcUseColorPointer(const GLvoid *pointer)
 {
     Q_ASSERT(this == m_pCurrentContext);
+	QGLFunctions glFunctions(this);
 
     GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
 #ifdef GLC_OPENGL_ES_2
@@ -202,8 +209,8 @@ void GLC_Context::glcUseColorPointer(const GLvoid *pointer)
     if ((NULL != pShader) && (pShader->colorAttributeId() != -1))
     {
         const GLuint location= pShader->colorAttributeId();
-        glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, 0, pointer);
-        glEnableVertexAttribArray(location);
+        glFunctions.glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, 0, pointer);
+        glFunctions.glEnableVertexAttribArray(location);
     }
     else
     {
@@ -216,6 +223,7 @@ void GLC_Context::glcUseColorPointer(const GLvoid *pointer)
 void GLC_Context::glcDisableColorClientState()
 {
     Q_ASSERT(this == m_pCurrentContext);
+	QGLFunctions glFunctions(this);
 
     GLC_Shader* pShader= GLC_Shader::currentShaderHandle();
 #ifdef GLC_OPENGL_ES_2
@@ -224,7 +232,7 @@ void GLC_Context::glcDisableColorClientState()
 #else
     if ((NULL != pShader) && (pShader->colorAttributeId() != -1))
     {
-        glDisableVertexAttribArray(pShader->colorAttributeId());
+        glFunctions.glDisableVertexAttribArray(pShader->colorAttributeId());
     }
     else
     {

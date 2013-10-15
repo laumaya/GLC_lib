@@ -34,7 +34,7 @@ GLC_WorldToObj::~GLC_WorldToObj()
 
 bool GLC_WorldToObj::exportToFile(const QString &fileName)
 {
-
+	return false;
 }
 
 void GLC_WorldToObj::saveWorld()
