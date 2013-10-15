@@ -246,10 +246,11 @@ void GLC_Context::glcDisableColorClientState()
 void GLC_Context::makeCurrent()
 {
     QGLContext::makeCurrent();
-    GLC_State::init();
-    m_ContextSharedData->init();
     GLC_ContextManager::instance()->setCurrent(this);
     m_pCurrentContext= this;
+
+    GLC_State::init();
+    m_ContextSharedData->init();
 }
 
 void GLC_Context::doneCurrent()
