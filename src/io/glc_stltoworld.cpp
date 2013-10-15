@@ -90,11 +90,17 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 
 	//////////////////////////////////////////////////////////////////
 	// Count the number of lines of the STL file
+    // And test if the STL file is ASCII
 	//////////////////////////////////////////////////////////////////
+    bool stlIsAscii= false;
 	while (!m_StlStream.atEnd())
 	{
 		++numberOfLine;
-		m_StlStream.readLine();
+        const QString currentLine= m_StlStream.readLine();
+        if (!stlIsAscii)
+        {
+            stlIsAscii= currentLine.contains("facet", Qt::CaseInsensitive);
+        }
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -114,10 +120,17 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 	++m_CurrentLineNumber;
 	lineBuff= m_StlStream.readLine();
 	lineBuff= lineBuff.trimmed().toLower();
-	if (!lineBuff.startsWith("solid"))
+    if (!stlIsAscii)
 	{
 		// The STL File is not ASCII trying to load Binary STL File
 		m_pCurrentMesh= new GLC_Mesh();
+        if (lineBuff.startsWith("solid"))
+        {
+            lineBuff.remove(0, 5);
+            lineBuff= lineBuff.trimmed();
+            m_pCurrentMesh->setName(lineBuff);
+        }
+
 		file.reset();
 		LoadBinariStl(file);
 		m_pCurrentMesh->addTriangles(NULL, m_CurrentFace);
@@ -134,11 +147,14 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 	else
 	{
 		// The STL File is ASCII
-		lineBuff.remove(0, 5);
-		lineBuff= lineBuff.trimmed();
 		m_pCurrentMesh= new GLC_Mesh();
-		m_pCurrentMesh->setName(lineBuff);
-		// Read the mesh facet
+        if (lineBuff.startsWith("solid"))
+        {
+            lineBuff.remove(0, 5);
+            lineBuff= lineBuff.trimmed();
+            m_pCurrentMesh->setName(lineBuff);
+        }
+        // Read the mesh facet
 		while (!m_StlStream.atEnd())
 		{
 			scanFacet();
