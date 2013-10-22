@@ -31,7 +31,7 @@
 #include <QGLFramebufferObject>
 
 bool GLC_State::m_VboSupported= false;
-bool GLC_State::m_UseVbo= true;
+bool GLC_State::m_UseVbo= false;
 bool GLC_State::m_GlslSupported= false;
 bool GLC_State::m_PointSpriteSupported= false;
 bool GLC_State::m_UseShader= true;
@@ -65,7 +65,6 @@ bool GLC_State::vboSupported()
 
 bool GLC_State::vboUsed()
 {
-    Q_ASSERT(m_IsValid);
     return m_UseVbo;
 }
 
@@ -143,31 +142,26 @@ bool GLC_State::isPixelCullingActivated()
 
 bool GLC_State::cacheIsUsed()
 {
-    Q_ASSERT(m_IsValid);
     return m_UseCache;
 }
 
 GLC_CacheManager& GLC_State::currentCacheManager()
 {
-    Q_ASSERT(m_IsValid);
     return m_CacheManager;
 }
 
 bool GLC_State::isSpacePartitionningActivated()
 {
-    Q_ASSERT(m_IsValid);
     return m_IsSpacePartitionningActivated;
 }
 
 int GLC_State::defaultOctreeDepth()
 {
-    Q_ASSERT(m_IsValid);
     return GLC_Octree::defaultDepth();
 }
 
 bool GLC_State::isFrustumCullingActivated()
 {
-    Q_ASSERT(m_IsValid);
     return m_IsFrustumCullingActivated;
 }
 
