@@ -231,7 +231,6 @@ void GLC_3DRep::clean()
 	{
 		if ((*iGeomList)->VertexCount() == 0)
 		{
-			qDebug() << "Delete empty geom--------------------";
 			delete (*iGeomList);
 			iGeomList= m_pGeomList->erase(iGeomList);
 		}
