@@ -136,7 +136,7 @@ public:
 	GLC_World createWorldStructureFrom3dxml(QFile &file, bool GetExtRefName= false) const;
 
 	//! Create 3DRep from 3dxml or 3DRep file
-	GLC_3DRep create3DRepFromFile(const QString&) const;
+    GLC_3DRep create3DRepFromFile(const QString&, bool useZipMutex= true) const;
 
 	//! Create a GLC_FileLoader
 	GLC_FileLoader* createFileLoader() const;

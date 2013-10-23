@@ -244,7 +244,7 @@ GLC_World GLC_Factory::createWorldStructureFrom3dxml(QFile &file, bool GetExtRef
 	return resulWorld;
 }
 
-GLC_3DRep GLC_Factory::create3DRepFromFile(const QString& fileName) const
+GLC_3DRep GLC_Factory::create3DRepFromFile(const QString& fileName, bool useZipMutex) const
 {
 	GLC_3DRep rep;
 
@@ -252,7 +252,7 @@ GLC_3DRep GLC_Factory::create3DRepFromFile(const QString& fileName) const
 	{
 		GLC_3dxmlToWorld d3dxmlToWorld;
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
-		rep= d3dxmlToWorld.create3DrepFrom3dxmlRep(fileName);
+        rep= d3dxmlToWorld.create3DrepFrom3dxmlRep(fileName, useZipMutex);
 	}
 
 	return rep;

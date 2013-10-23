@@ -165,6 +165,8 @@ GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnl
 // Create 3DRep from an 3DXML rep
 GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName, bool useZipMutex)
 {
+    m_UseZipMutex= useZipMutex;
+
 	GLC_3DRep resultRep;
 	if (glc::isArchiveString(fileName))
 	{
