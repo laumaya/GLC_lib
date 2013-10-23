@@ -151,7 +151,7 @@ public:
 	GLC_World* createWorldFrom3dxml(QFile &, bool StructureOnly, bool getExternalRef= false);
 
 	//! Create 3DRep from an 3DXML rep
-	GLC_3DRep create3DrepFrom3dxmlRep(const QString&);
+    GLC_3DRep create3DrepFrom3dxmlRep(const QString&, bool useZipMutex= true);
 
 	//! Get the list of attached files
 	inline QStringList listOfAttachedFileName() const
@@ -403,6 +403,9 @@ private:
 
 	//! Flag to know if the 3DXML is in version 3.x
 	bool m_IsVersion3;
+
+    //! Flag to know if zip mutex must be used
+    bool m_UseZipMutex;
 
 };
 

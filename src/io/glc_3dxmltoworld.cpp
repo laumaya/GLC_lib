@@ -76,6 +76,7 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld()
 , m_GetExternalRef3DName(false)
 , m_ByteArrayList()
 , m_IsVersion3(false)
+, m_UseZipMutex(true)
 {
 
 }
@@ -162,7 +163,7 @@ GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnl
 }
 
 // Create 3DRep from an 3DXML rep
-GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
+GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName, bool useZipMutex)
 {
 	GLC_3DRep resultRep;
 	if (glc::isArchiveString(fileName))
@@ -170,7 +171,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 		m_FileName= glc::archiveFileName(fileName);
 
 		// Create the 3dxml Zip archive
-		m_ZipMutex.lock();
+        if (m_UseZipMutex) m_ZipMutex.lock();
 		m_p3dxmlArchive= new QuaZip(m_FileName);
 		// Trying to load archive
 		if(!m_p3dxmlArchive->open(QuaZip::mdUnzip))
@@ -184,7 +185,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 			// Set the file Name Codec
 			//m_p3dxmlArchive->setFileNameCodec("IBM866");
 		}
-		m_ZipMutex.unlock();
+        if (m_UseZipMutex) m_ZipMutex.unlock();
 		m_CurrentFileName= glc::archiveEntryFileName(fileName);
 
 		// Get the 3DXML time stamp
@@ -1406,7 +1407,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 	m_CurrentFileName= fileName;
 	if (m_IsInArchive)
 	{
-		QMutexLocker locker(&m_ZipMutex);
+        if (m_UseZipMutex) m_ZipMutex.lock();
 		m_ByteArrayList.clear();
 		// Create QuaZip File
 		QuaZipFile* p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
@@ -1453,6 +1454,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		}
 		m_pStreamReader= new QXmlStreamReader(m_ByteArrayList.takeFirst());
 		delete p3dxmlFile;
+        if (m_UseZipMutex) m_ZipMutex.unlock();
 	}
 	else
 	{
