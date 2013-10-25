@@ -29,7 +29,6 @@
 #include <QGLFormat>
 #include <QSharedPointer>
 #include <QtDebug>
-#include <QGLFunctions>
 
 #include "glc_config.h"
 #include "maths/glc_matrix4x4.h"
@@ -231,8 +230,6 @@ private:
 
 	//! The context shared data
 	QSharedPointer<GLC_ContextSharedData> m_ContextSharedData;
-
-    QGLFunctions m_GlFunctions;
 
     //! The current context
     static GLC_Context* m_pCurrentContext;
