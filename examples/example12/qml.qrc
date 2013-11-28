@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>GLC_Quick.qml</file>
+    </qresource>
+</RCC>
