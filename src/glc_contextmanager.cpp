@@ -22,15 +22,19 @@
 //! \file glc_contextmanager.cpp implementation of the GLC_ContextManager class.
 
 #include <QtDebug>
+#include <QOpenGLContext>
+#include <QOpenGLContextGroup>
+#include <QGLContext>
 
 #include "glc_contextmanager.h"
 #include "glc_state.h"
+#include "glc_context.h"
 
 GLC_ContextManager* GLC_ContextManager::m_pContextManager= NULL;
 
 GLC_ContextManager::GLC_ContextManager()
-: m_pCurrentContext(NULL)
-, m_SetOfContext()
+    : m_GLCContextToOpenGLCOntext()
+    , m_OpenGLContextToGLCContext()
 {
 
 
@@ -54,35 +58,71 @@ GLC_ContextManager* GLC_ContextManager::instance()
 	return m_pContextManager;
 }
 
-GLC_Context* GLC_ContextManager::currentContext() const
+GLC_Context* GLC_ContextManager::currentContext()
 {
-	return m_pCurrentContext;
+    QOpenGLContext* pFromContext= QOpenGLContext::currentContext();
+    GLC_Context* pSubject= NULL;
+    if (NULL != pFromContext)
+    {
+        if (m_OpenGLContextToGLCContext.contains(pFromContext))
+        {
+            pSubject= m_OpenGLContextToGLCContext.value(pFromContext);
+        }
+        else
+        {
+            pSubject= createContext(pFromContext);
+        }
+        pSubject->setCurrent();
+    }
+
+    return pSubject;
+}
+
+void GLC_ContextManager::addContext(GLC_Context *pContext)
+{
+    Q_ASSERT(!m_GLCContextToOpenGLCOntext.contains(pContext));
+    QOpenGLContext* pOpenGLContext= pContext->contextHandle();
+    Q_ASSERT(!m_OpenGLContextToGLCContext.contains(pOpenGLContext));
+
+    m_GLCContextToOpenGLCOntext.insert(pContext, pOpenGLContext);
+    m_OpenGLContextToGLCContext.insert(pOpenGLContext, pContext);
+    connect(pContext, SIGNAL(destroyed(GLC_Context*)), this, SLOT(contextDestroyed(GLC_Context*)), Qt::DirectConnection);
+}
+
+void GLC_ContextManager::contextDestroyed(GLC_Context* pContext)
+{
+    Q_ASSERT(m_GLCContextToOpenGLCOntext.contains(pContext));
+    QOpenGLContext* pOpenGLContext= pContext->contextHandle();
+
+    Q_ASSERT(m_OpenGLContextToGLCContext.contains(pOpenGLContext));
+
+    m_GLCContextToOpenGLCOntext.remove(pContext);
+    m_OpenGLContextToGLCContext.remove(pOpenGLContext);
+    delete pContext;
+}
+
+GLC_Context *GLC_ContextManager::createContext(QOpenGLContext *pFromContext)
+{
+    GLC_Context* pContext= new GLC_Context(pFromContext);
+    QOpenGLContextGroup* pSharedGroup= pFromContext->shareGroup();
+    QList<QOpenGLContext*> sharedContextList= pSharedGroup->shares();
+    const int count= sharedContextList.count();
+    for (int i= 0; i < count; ++i)
+    {
+        QOpenGLContext* pOpenGLSharedContext= sharedContextList.at(i);
+        if (m_OpenGLContextToGLCContext.contains(pOpenGLSharedContext))
+        {
+            GLC_Context* pSharedContext= m_OpenGLContextToGLCContext.value(pOpenGLSharedContext);
+            pContext->shareWith(pSharedContext);
+            break;
+        }
+    }
+
+    return pContext;
 }
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-void GLC_ContextManager::addContext(GLC_Context* pContext)
-{
-	Q_ASSERT(!m_SetOfContext.contains(pContext));
-	m_SetOfContext.insert(pContext);
-}
-
-void GLC_ContextManager::remove(GLC_Context* pContext)
-{
-	Q_ASSERT(m_SetOfContext.contains(pContext));
-	m_SetOfContext.remove(pContext);
-	if (m_pCurrentContext == pContext)
-	{
-		m_pCurrentContext= NULL;
-	}
-}
-
-void GLC_ContextManager::setCurrent(GLC_Context* pContext)
-{
-
-	Q_ASSERT((NULL == pContext) || m_SetOfContext.contains(pContext));
-	m_pCurrentContext= pContext;
-}
 
 

@@ -159,13 +159,15 @@ void GLC_RepTrackBallMover::glDraw()
 	// orbit circle must be shown
 	glDisable(GL_DEPTH_TEST);
 
-	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
-	GLC_Context::current()->glcPushMatrix();
-	GLC_Context::current()->glcLoadIdentity();
-	GLC_Context::current()->glcOrtho(aspectRatio * -1.0 ,aspectRatio * 1.0 ,-1.0 ,1.0 ,-1.0 ,1.0);
-	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
-	GLC_Context::current()->glcPushMatrix();
-	GLC_Context::current()->glcLoadIdentity();
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
+
+    pContext->glcMatrixMode(GL_PROJECTION);
+    pContext->glcPushMatrix();
+    pContext->glcLoadIdentity();
+    pContext->glcOrtho(aspectRatio * -1.0 ,aspectRatio * 1.0 ,-1.0 ,1.0 ,-1.0 ,1.0);
+    pContext->glcMatrixMode(GL_MODELVIEW);
+    pContext->glcPushMatrix();
+    pContext->glcLoadIdentity();
 
 	glDisable(GL_BLEND);
 	m_RenderProperties.setRenderingFlag(glc::WireRenderFlag);
@@ -184,10 +186,10 @@ void GLC_RepTrackBallMover::glDraw()
 	// Display base class (Main circle)
 	m_MainCircle.render(m_RenderProperties);
 
-	GLC_Context::current()->glcPopMatrix();
-	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
-	GLC_Context::current()->glcPopMatrix();
-	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+    pContext->glcPopMatrix();
+    pContext->glcMatrixMode(GL_PROJECTION);
+    pContext->glcPopMatrix();
+    pContext->glcMatrixMode(GL_MODELVIEW);
 
 }
 

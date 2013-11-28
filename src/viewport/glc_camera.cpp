@@ -25,6 +25,7 @@
 
 #include "glc_camera.h"
 #include "../glc_context.h"
+#include "../glc_contextmanager.h"
 
 #include <QtDebug>
 
@@ -432,7 +433,7 @@ GLC_Camera GLC_Camera::isoView() const
 //////////////////////////////////////////////////////////////////////
 void GLC_Camera::glExecute()
 {
-	GLC_Context::current()->glcMultMatrix(modelViewMatrix());
+    GLC_ContextManager::instance()->currentContext()->glcMultMatrix(modelViewMatrix());
 }
 
 //////////////////////////////////////////////////////////////////////

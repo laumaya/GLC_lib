@@ -21,6 +21,7 @@
 *****************************************************************************/
 
 #include <QtDebug>
+#include <QGLContext>
 
 #include <GLC_UserInput>
 #include <GLC_Context>
@@ -29,7 +30,7 @@
 
 
 GLWidget::GLWidget(QWidget *pParent)
-: QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers)), pParent)
+: QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)), pParent)
 , m_Circle(GLC_Factory::instance()->createCircle(0.3))	// Circle radius
 , m_GlView()
 , m_MoverController()
@@ -58,7 +59,6 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
-
 	// Clear screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

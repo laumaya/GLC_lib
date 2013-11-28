@@ -21,6 +21,8 @@
 *****************************************************************************/
 
 #include <QtDebug>
+#include <QGLContext>
+
 #include "glwidget.h"
 
 #include <GLC_UserInput>
@@ -35,7 +37,7 @@
 #endif
 
 GLWidget::GLWidget(QWidget *p_parent)
-: QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers)),p_parent)
+: QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)),p_parent)
 , m_Cylinder(GLC_Factory::instance()->createCylinder(1.0, 2.0))	// Cylinder definition.
 , m_Collection()
 , m_light()
@@ -84,7 +86,7 @@ void GLWidget::paintGL()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Load identity matrix
-	GLC_Context::current()->glcLoadIdentity();
+    GLC_Context::current()->glcLoadIdentity();
 	try
 	{
 		// Set the opengl clipping plane

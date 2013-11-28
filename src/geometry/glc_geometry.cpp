@@ -26,6 +26,8 @@
 #include "../glc_openglexception.h"
 #include "../glc_state.h"
 #include "../glc_context.h"
+#include "../glc_contextmanager.h"
+
 #include "glc_geometry.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -307,12 +309,13 @@ void GLC_Geometry::render(const GLC_RenderProperties& renderProperties)
 // Virtual interface for OpenGL Geometry properties.
 void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 {
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
 	glLineWidth(lineWidth());
 
 	if(m_IsWire)
 	{
 		glLineWidth(m_LineWidth);
-		GLC_Context::current()->glcEnableLighting(false);;
+        pContext->glcEnableLighting(false);;
 		if (!renderProperties.isSelected())
 		{
 			// Set polyline colors
@@ -333,13 +336,13 @@ void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 		GLC_Material* pCurrentMaterial= m_MaterialHash.begin().value();
 		if (pCurrentMaterial->hasTexture())
 		{
-			GLC_Context::current()->glcEnableLighting(true);
+            pContext->glcEnableLighting(true);
 			pCurrentMaterial->glExecute();
 			if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 		}
 		else
 		{
-			GLC_Context::current()->glcEnableLighting(true);
+            pContext->glcEnableLighting(true);
 			if (renderProperties.isSelected()) GLC_SelectionMaterial::glExecute();
 			else pCurrentMaterial->glExecute();
 		}

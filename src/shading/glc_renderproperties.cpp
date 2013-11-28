@@ -383,7 +383,7 @@ void GLC_RenderProperties::clearOverwritePrimitiveMaterials()
 	delete m_pOverwritePrimitiveMaterialMaps;
 	m_pOverwritePrimitiveMaterialMaps= NULL;
 
-	if ((m_SavedRenderMode == glc::OverwritePrimitiveMaterial))
+    if (m_SavedRenderMode == glc::OverwritePrimitiveMaterial)
 	{
 		m_SavedRenderMode= glc::NormalRenderMode;
 	}

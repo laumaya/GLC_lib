@@ -16,14 +16,15 @@
  http://www.gnu.org/copyleft/gpl.html.
 *****************************************************************************/
 
-#include <GLC_Context>
+#include <QGLContext>
+#include <QResizeEvent>
 
 #include "GLCGraphicsView.h"
 
 GLCGraphicsView::GLCGraphicsView()
     : QGraphicsView()
 {
-    setViewport(new QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers)), this));
+    setViewport(new QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)), this));
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 

@@ -372,7 +372,7 @@ QString GLC_ObjMtlLoader::getTextureName(QTextStream &inputStream, const QString
 		}
 		else
 		{
-			m_LoadStatus== "GLC_ObjToMesh2::extractString : Error occur when trying to decode map option";
+            m_LoadStatus= "GLC_ObjToMesh2::extractString : Error occur when trying to decode map option";
 			GLC_FileFormatException fileFormatException(m_LoadStatus, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			throw(fileFormatException);
 		}

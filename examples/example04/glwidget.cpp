@@ -21,6 +21,7 @@
 *****************************************************************************/
 
 #include <QtDebug>
+#include <QGLContext>
 
 #include <GLC_UserInput>
 #include <GLC_Exception>
@@ -34,7 +35,7 @@
 #endif
 
 GLWidget::GLWidget(QWidget *p_parent)
-: QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers)),p_parent)
+: QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)),p_parent)
 , m_Light()
 , m_Collection()
 , m_GlView()

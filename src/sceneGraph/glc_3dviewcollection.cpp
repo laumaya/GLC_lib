@@ -31,6 +31,8 @@
 #include "../shading/glc_shader.h"
 #include "../viewport/glc_viewport.h"
 #include "glc_spacepartitioning.h"
+#include "../glc_context.h"
+#include "../glc_contextmanager.h"
 
 #include <QtDebug>
 
@@ -621,6 +623,7 @@ int GLC_3DViewCollection::numberOfUsedShadingGroup() const
 
 void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 {
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
 	if (!isEmpty() && m_IsViewable)
 	{
 		if (renderFlag == glc::WireRenderFlag)
@@ -631,12 +634,12 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 		if (GLC_State::isInSelectionMode())
 		{
 			glDisable(GL_BLEND);
-			GLC_Context::current()->glcEnableLighting(false);
+            pContext->glcEnableLighting(false);
 			glDisable(GL_TEXTURE_2D);
 		}
 		else
 		{
-			GLC_Context::current()->glcEnableLighting(true);
+            pContext->glcEnableLighting(true);
 		}
 		glDraw(groupId, renderFlag);
 
@@ -653,7 +656,7 @@ void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 		if (GLC_State::isInSelectionMode())
 		{
 			glDisable(GL_BLEND);
-			GLC_Context::current()->glcEnableLighting(false);
+            GLC_ContextManager::instance()->currentContext()->glcEnableLighting(false);
 			glDisable(GL_TEXTURE_2D);
 		}
 

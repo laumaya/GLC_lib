@@ -37,6 +37,7 @@
 #include "../glc_state.h"
 #include "../shading/glc_selectionmaterial.h"
 #include "../glc_context.h"
+#include "../glc_contextmanager.h"
 
 #include "../glc_config.h"
 
@@ -1083,7 +1084,7 @@ void GLC_Mesh::vertexArrayDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCur
 // Activate mesh VBOs and IBO of the current LOD
 void GLC_Mesh::activateVboAndIbo()
 {
-    GLC_Context* pContext= GLC_Context::current();
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
 
 	// Activate Vertices VBO
 	m_MeshData.useVBO(true, GLC_MeshData::GLC_Vertex);
@@ -1113,7 +1114,7 @@ void GLC_Mesh::activateVboAndIbo()
 // Activate vertex Array
 void GLC_Mesh::activateVertexArray()
 {
-    GLC_Context* pContext= GLC_Context::current();
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
 
 	// Use Vertex Array
     pContext->glcUseVertexPointer(m_MeshData.positionVectorHandle()->data());

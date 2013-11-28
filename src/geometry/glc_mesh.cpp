@@ -24,6 +24,8 @@
 
 #include "glc_mesh.h"
 #include "../glc_renderstatistics.h"
+#include "../glc_context.h"
+#include "../glc_contextmanager.h"
 
 // Class chunk id
 quint32 GLC_Mesh::m_ChunkId= 0xA701;
@@ -943,7 +945,7 @@ void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 // Virtual interface for OpenGL Geometry set up.
 void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 {
-    GLC_Context* pContext= GLC_Context::current();
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
     Q_ASSERT(NULL != pContext);
 	Q_ASSERT(m_GeometryIsValid || !m_MeshData.positionSizeIsSet());
 
@@ -978,7 +980,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	}
 
 	if (renderProperties.renderingFlag() == glc::OutlineSilhouetteRenderFlag) {
-		GLC_Context::current()->glcEnableLighting(false);
+        pContext->glcEnableLighting(false);
 		outlineSilhouetteRenderLoop(renderProperties, vboIsUsed);
 	} 
 	else if (GLC_State::isInSelectionMode())
@@ -1071,7 +1073,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	{
 		if (!GLC_State::isInSelectionMode())
 		{
-			GLC_Context::current()->glcEnableLighting(false);
+            pContext->glcEnableLighting(false);
 			// Set polyline colors
 			GLfloat color[4]= {static_cast<float>(m_WireColor.redF()),
 									static_cast<float>(m_WireColor.greenF()),
@@ -1080,7 +1082,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 
 			glColor4fv(color);
 			m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
-			GLC_Context::current()->glcEnableLighting(true);
+            pContext->glcEnableLighting(true);
 		}
 		else
 		{

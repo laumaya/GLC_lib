@@ -22,6 +22,7 @@
 
 #include <QtDebug>
 #include <QFile>
+#include <QGLContext>
 
 #include <GLC_UserInput>
 #include <GLC_Context>
@@ -34,7 +35,7 @@
 #endif
 
 GLWidget::GLWidget(QWidget *p_parent)
-: QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers)), p_parent)
+: QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)), p_parent)
 , m_Light()
 , m_GlView()
 , m_MoverController()

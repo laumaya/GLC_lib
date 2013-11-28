@@ -482,7 +482,6 @@ void GLC_WorldTo3ds::setNodePosition(Lib3dsNode* pNode, const GLC_Matrix4x4& mat
 
 	Lib3dsQuatKey* pQuatKey= lib3ds_quat_key_new();
 
-	QQuaternion quaternion= matrix.quaternion();
 	QPair<GLC_Vector3d, double> pair= matrix.rotationVectorAndAngle();
 
 	pQuatKey->angle= static_cast<float>(pair.second);

@@ -25,24 +25,28 @@
 #define GLC_CONTEXTMANAGER_H_
 
 #include <QSet>
+#include <QHash>
+#include <QObject>
 
 #include "glc_config.h"
 
-
+class QOpenGLContext;
+class QGLContext;
 class GLC_Context;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ContextManager
 /*! \brief GLC_ContextManager : Manager a set of GLC_Context*/
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_ContextManager
+class GLC_LIB_EXPORT GLC_ContextManager : public QObject
 {
+    Q_OBJECT
 private:
 	GLC_ContextManager();
 public:
 	virtual ~GLC_ContextManager();
 
-//@}
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
 //@{
@@ -52,15 +56,7 @@ public:
 	static GLC_ContextManager* instance();
 
 	//! Return the current context
-	GLC_Context* currentContext() const;
-
-	//! Return true if there is a current context
-	inline bool currentContextExists() const
-	{return (NULL != m_pCurrentContext);}
-
-	//! Return true if this manager has context
-	inline bool hasContext() const
-	{return !m_SetOfContext.isEmpty();}
+    GLC_Context* currentContext();
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -68,21 +64,17 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Add the given context
-	void addContext(GLC_Context* pContext);
-
-	//! Remove the given context
-	void remove(GLC_Context* pContext);
-
-	//! Set the current the given context
-	void setCurrent(GLC_Context* pContext);
+    //! Add the given context
+    void addContext(GLC_Context* pContext);
+//@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Private services Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-private:
-//@{
+private slots:
+    void contextDestroyed(GLC_Context *pContext);
+    GLC_Context* createContext(QOpenGLContext* pFromContext);
 
 //@}
 
@@ -94,11 +86,11 @@ private:
 	//! The unique instance of the context manager
 	static GLC_ContextManager* m_pContextManager;
 
-	//! The current context
-	GLC_Context* m_pCurrentContext;
+    //! GLC_Context to OpenGL context map
+    QHash<GLC_Context*, QOpenGLContext*> m_GLCContextToOpenGLCOntext;
 
-	//! The Set of context to manage
-	QSet<GLC_Context*> m_SetOfContext;
+    //! Opengl context to GLC_Context map
+    QHash<QOpenGLContext*, GLC_Context*> m_OpenGLContextToGLCContext;
 };
 
 #endif /* GLC_CONTEXTMANAGER_H_ */

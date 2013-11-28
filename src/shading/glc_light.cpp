@@ -28,14 +28,15 @@
 #include "glc_light.h"
 #include "../glc_openglexception.h"
 #include "../glc_context.h"
+#include "../glc_contextmanager.h"
 
 GLint GLC_Light::m_MaxLight= 8;
-QHash<const QGLContext*, QSet<GLenum> > GLC_Light::m_ContextToFreeLightSet;
+QHash<GLC_Context*, QSet<GLenum> > GLC_Light::m_ContextToFreeLightSet;
 
 //////////////////////////////////////////////////////////////////////
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
-GLC_Light::GLC_Light(const QGLContext* pContext, const QColor& color)
+GLC_Light::GLC_Light(GLC_Context *pContext, const QColor& color)
 :GLC_Object("Light")
 , m_LightID(-1)
 , m_LightType(LightPosition)
@@ -50,13 +51,13 @@ GLC_Light::GLC_Light(const QGLContext* pContext, const QColor& color)
 , m_LinearAttenuation(0.0f)
 , m_QuadraticAttenuation(0.0f)
 , m_TwoSided(false)
-, m_pContext(const_cast<QGLContext*>(pContext))
+, m_pContext(pContext)
 , m_IsValid(false)
 {
 	addNewLight();
 }
 
-GLC_Light::GLC_Light(LightType lightType, const QGLContext* pContext, const QColor& color)
+GLC_Light::GLC_Light(LightType lightType, GLC_Context *pContext, const QColor& color)
 :GLC_Object("Light")
 , m_LightID(-1)
 , m_LightType(lightType)
@@ -71,7 +72,7 @@ GLC_Light::GLC_Light(LightType lightType, const QGLContext* pContext, const QCol
 , m_LinearAttenuation(0.0f)
 , m_QuadraticAttenuation(0.0f)
 , m_TwoSided(false)
-, m_pContext(const_cast<QGLContext*>(pContext))
+, m_pContext(pContext)
 , m_IsValid(false)
 {
 	addNewLight();
@@ -112,7 +113,7 @@ int GLC_Light::maxLightCount()
 	return m_MaxLight;
 }
 
-int GLC_Light::builtAbleLightCount(QGLContext* pContext)
+int GLC_Light::builtAbleLightCount(GLC_Context* pContext)
 {
 	if (m_ContextToFreeLightSet.contains(pContext))
 	{
@@ -211,7 +212,7 @@ void GLC_Light::disable()
 {
 	if (NULL != m_pContext)
 	{
-        GLC_Context::current()->glcDisableLight(m_LightID);
+        GLC_ContextManager::instance()->currentContext()->glcDisableLight(m_LightID);
 	}
 }
 
@@ -219,12 +220,11 @@ void GLC_Light::disable()
 void GLC_Light::glExecute()
 {
 
-    GLC_Context* pCurrentContext= GLC_Context::current();
+    GLC_Context* pCurrentContext= GLC_ContextManager::instance()->currentContext();
     Q_ASSERT(NULL != pCurrentContext);
 	if (NULL == m_pContext)
 	{
-		m_pContext= const_cast<QGLContext*>(QGLContext::currentContext());
-		Q_ASSERT(NULL != m_pContext);
+        m_pContext= pCurrentContext;
 		addNewLight();
 	}
 
@@ -233,10 +233,10 @@ void GLC_Light::glExecute()
 
     if (m_pContext != pCurrentContext)
 	{
-        Q_ASSERT(QGLContext::areSharing(m_pContext, pCurrentContext));
+        Q_ASSERT(QOpenGLContext::areSharing(m_pContext->contextHandle(), pCurrentContext->contextHandle()));
 		m_IsValid= false;
 	}
-	Q_ASSERT(m_pContext->isValid());
+    Q_ASSERT(m_pContext->contextHandle()->isValid());
 
 	GLfloat setArray[4];
 

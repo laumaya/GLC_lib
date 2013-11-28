@@ -328,7 +328,8 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 	m_RenderProperties.setRenderingFlag(renderFlag);
 
 	// Save current OpenGL Matrix
-	GLC_Context::current()->glcPushMatrix();
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
+    pContext->glcPushMatrix();
 	OpenglVisProperties();
 
 	// Change front face orientation if this instance absolute matrix is indirect
@@ -379,7 +380,7 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 		}
 	}
 	// Restore OpenGL Matrix
-	GLC_Context::current()->glcPopMatrix();
+    pContext->glcPopMatrix();
 
 	// Restore front face orientation if this instance absolute matrix is indirect
 	if (m_AbsoluteMatrix.type() == GLC_Matrix4x4::Indirect)
@@ -400,7 +401,8 @@ void GLC_3DViewInstance::renderForBodySelection()
 	m_RenderProperties.setRenderingMode(glc::BodySelection);
 
 	// Save current OpenGL Matrix
-	GLC_Context::current()->glcPushMatrix();
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
+    pContext->glcPushMatrix();
 	OpenglVisProperties();
 
 	GLubyte colorId[4];
@@ -418,7 +420,7 @@ void GLC_3DViewInstance::renderForBodySelection()
 	// Restore rendering mode
 	m_RenderProperties.setRenderingMode(previousRenderMode);
 	// Restore OpenGL Matrix
-	GLC_Context::current()->glcPopMatrix();
+    pContext->glcPopMatrix();
 }
 
 // Display the instance in Primitive selection mode and return the body index
@@ -431,7 +433,8 @@ int GLC_3DViewInstance::renderForPrimitiveSelection(GLC_uint bodyId)
 	m_RenderProperties.setRenderingMode(glc::PrimitiveSelection);
 
 	// Save current OpenGL Matrix
-	GLC_Context::current()->glcPushMatrix();
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
+    pContext->glcPushMatrix();
 	OpenglVisProperties();
 
 	const int size= m_3DRep.numberOfBody();
@@ -452,7 +455,7 @@ int GLC_3DViewInstance::renderForPrimitiveSelection(GLC_uint bodyId)
 	m_RenderProperties.setRenderingMode(previousRenderMode);
 
 	// Restore OpenGL Matrix
-	GLC_Context::current()->glcPopMatrix();
+    pContext->glcPopMatrix();
 
 	return i;
 }

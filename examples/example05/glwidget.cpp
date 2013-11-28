@@ -21,6 +21,7 @@
 *****************************************************************************/
 
 #include <QtDebug>
+#include <QGLContext>
 
 #include <GLC_Context>
 #include <GLC_Polylines>
@@ -33,7 +34,7 @@
 #endif
 
 GLWidget::GLWidget(QWidget *p_parent)
-: QGLWidget(new GLC_Context(QGLFormat()), p_parent)
+: QGLWidget(new QGLContext(QGLFormat()), p_parent)
 , m_Light()
 , m_DefaultColor()
 , m_World()

@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     f.setSampleBuffers(true);
 
     // QDeclarativeView view;
-    GLC_DeclarativeView view;
+    GLC_QuickView view;
 
     QFile file1(":model/Democles.dae");
     GLC_World world1= GLC_Factory::instance()->createWorldFromFile(file1);

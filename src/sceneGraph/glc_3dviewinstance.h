@@ -33,6 +33,7 @@
 #include "../geometry/glc_3drep.h"
 #include "../shading/glc_renderproperties.h"
 #include "../glc_context.h"
+#include "../glc_contextmanager.h"
 
 #include <QMutex>
 
@@ -305,7 +306,7 @@ private:
 		// Polygons display mode
 		glPolygonMode(m_RenderProperties.polyFaceMode(), m_RenderProperties.polygonMode());
 		// Change the current matrix
-		GLC_Context::current()->glcMultMatrix(m_AbsoluteMatrix);
+        GLC_ContextManager::instance()->currentContext()->glcMultMatrix(m_AbsoluteMatrix);
 	}
 
 

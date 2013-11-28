@@ -28,6 +28,8 @@
 #include "../glc_exception.h"
 #include "../glc_state.h"
 #include "../glc_context.h"
+#include "../glc_contextmanager.h"
+
 #include "glc_light.h"
 
 // Static member initialization
@@ -193,7 +195,7 @@ void GLC_Shader::use()
 	{
 		m_CurrentShadingGroupId= m_ProgramShaderId;
 		m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.bind();
-		GLC_Context::current()->updateUniformVariables();
+        GLC_ContextManager::instance()->currentContext()->updateUniformVariables();
 	}
 
 }
@@ -211,7 +213,7 @@ bool GLC_Shader::use(GLC_uint shaderId)
 		{
 			m_CurrentShadingGroupId= shaderId;
 			m_ShaderProgramHash.value(m_CurrentShadingGroupId)->m_ProgramShader.bind();
-			GLC_Context::current()->updateUniformVariables();
+            GLC_ContextManager::instance()->currentContext()->updateUniformVariables();
 		}
 
 		return true;

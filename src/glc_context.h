@@ -25,7 +25,6 @@
 #define GLC_CONTEXT_H_
 
 #include <QtOpenGL>
-#include <QGLContext>
 #include <QGLFormat>
 #include <QSharedPointer>
 #include <QtDebug>
@@ -36,6 +35,8 @@
 #include "glc_uniformshaderdata.h"
 
 class GLC_ContextSharedData;
+class QOpenGLContext;
+class QSurface;
 
 // OpenGL ES define
 #if defined(QT_OPENGL_ES_2)
@@ -56,25 +57,30 @@ class GLC_ContextSharedData;
  * This class is also used to simplified OpenGL and OpenGL-ES interoperability
  */
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_Context : public QGLContext
+class GLC_LIB_EXPORT GLC_Context : public QObject
 {
+    Q_OBJECT
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 
 public:
-	GLC_Context(const QGLFormat& format);
+    GLC_Context(QOpenGLContext *pOpenGLContext);
 	virtual ~GLC_Context();
 
 //@}
+
+signals:
+    void destroyed(GLC_Context* pContext);
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the current context
-	static GLC_Context* current();
+
+    static GLC_Context* current();
 
 	//! Return the model view matrix
 	inline GLC_Matrix4x4 modelViewMatrix() const
@@ -100,6 +106,10 @@ public:
     inline QVector<int> enableLights() const
     {return m_ContextSharedData->enableLights();}
 
+    //! Return the OpenGLContext handle of this GLC_Context
+    inline QOpenGLContext* contextHandle() const
+    {return m_pOpenGLContext;}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
@@ -108,26 +118,26 @@ public:
 public:
     //! Set the matrix mode
     inline void glcMatrixMode(GLenum mode)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcMatrixMode(mode);}
+    {m_ContextSharedData->glcMatrixMode(mode);}
 
     //! Replace the current matrix with the identity
     inline void glcLoadIdentity()
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcLoadIdentity();}
+    {m_ContextSharedData->glcLoadIdentity();}
 
 	//! push and pop the current matrix stack
     inline void glcPushMatrix()
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcPushMatrix();}
+    {m_ContextSharedData->glcPushMatrix();}
 
     inline void glcPopMatrix()
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcPopMatrix();}
+    {m_ContextSharedData->glcPopMatrix();}
 
 	//! Replace the current matrix with the specified matrix
     inline void glcLoadMatrix(const GLC_Matrix4x4& matrix)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcLoadMatrix(matrix);}
+    {m_ContextSharedData->glcLoadMatrix(matrix);}
 
 	//! Multiply the current matrix with the specified matrix
     inline void glcMultMatrix(const GLC_Matrix4x4& matrix)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcMultMatrix(matrix);}
+    {m_ContextSharedData->glcMultMatrix(matrix);}
 
 	//! Multiply the current matrix by a translation matrix
 	inline void glcTranslated(double x, double y, double z)
@@ -135,35 +145,35 @@ public:
 
 	//! Multiply the current matrix by a general scaling matrix
     inline void glcScaled(double x, double y, double z)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcScaled(x, y, z);}
+    {m_ContextSharedData->glcScaled(x, y, z);}
 
 	//! Multiply the current matrix with an orthographic matrix
     inline void glcOrtho(double left, double right, double bottom, double top, double nearVal, double farVal)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcOrtho(left, right, bottom, top, nearVal, farVal);}
+    {m_ContextSharedData->glcOrtho(left, right, bottom, top, nearVal, farVal);}
 
 	//! Multiply the current matrix by a perspective matrix
     inline void glcFrustum(double left, double right, double bottom, double top, double nearVal, double farVal)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcFrustum(left, right, bottom, top, nearVal, farVal);}
+    {m_ContextSharedData->glcFrustum(left, right, bottom, top, nearVal, farVal);}
 
     //! Enable color material
     inline void glcEnableColorMaterial(bool enable)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcEnableColorMaterial(enable);}
+    {m_ContextSharedData->glcEnableColorMaterial(enable);}
 
 	//! Enable lighting
     inline void glcEnableLighting(bool enable)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcEnableLighting(enable);}
+    {m_ContextSharedData->glcEnableLighting(enable);}
 
     //! Enable the given light
     inline void glcEnableLight(GLenum lightId)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcEnableLight(lightId);}
+    {m_ContextSharedData->glcEnableLight(lightId);}
 
     //! Enable the given light
     inline void glcDisableLight(GLenum lightId)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcDisableLight(lightId);}
+    {m_ContextSharedData->glcDisableLight(lightId);}
 
     //! Set two sided light parameter
     inline void glcSetTwoSidedLight(GLint twoSided)
-    {Q_ASSERT(QGLContext::isValid()); m_ContextSharedData->glcSetTwoSidedLight(twoSided);}
+    {m_ContextSharedData->glcSetTwoSidedLight(twoSided);}
 
     //! Use vertex array pointer and enable it
     void glcUseVertexPointer(const GLvoid* pointer);
@@ -196,11 +206,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-	//! Make this context the current one
-	virtual void makeCurrent();
-
-	//! Make no context to be the current one
-	virtual void doneCurrent();
+    //! Set this context the current one
+    void setCurrent();
 
 	//! Update uniform variable
 	inline void updateUniformVariables()
@@ -212,15 +219,16 @@ public:
     //! UnUse the default shader
     inline void unuseDefaultShader();
 
-//@}
+    inline void shareWith(GLC_Context *pContext= 0)
+    {m_ContextSharedData= pContext->m_ContextSharedData;}
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Private services Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-protected:
+private slots:
 //@{
-
-	virtual bool chooseContext(const QGLContext* shareContext= 0);
+    void openGLContextDestroyed();
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -228,11 +236,11 @@ protected:
 //////////////////////////////////////////////////////////////////////
 private:
 
+    QOpenGLContext* m_pOpenGLContext;
+    QSurface* m_pSurface;
+
 	//! The context shared data
 	QSharedPointer<GLC_ContextSharedData> m_ContextSharedData;
-
-    //! The current context
-    static GLC_Context* m_pCurrentContext;
 };
 
 #endif /* GLC_CONTEXT_H_ */

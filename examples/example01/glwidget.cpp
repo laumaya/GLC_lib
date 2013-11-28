@@ -21,6 +21,7 @@
 *****************************************************************************/
 
 #include <QtDebug>
+#include <QGLContext>
 
 #include <GLC_Context>
 
@@ -32,7 +33,7 @@
 #endif
 
 GLWidget::GLWidget(QWidget *pParent)
-: QGLWidget(new GLC_Context(QGLFormat(QGL::SampleBuffers)), pParent)
+: QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)), pParent)
 , m_Circle(GLC_Factory::instance()->createCircle(0.2))  // Circle radius
 , m_GlView()
 {

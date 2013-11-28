@@ -109,16 +109,18 @@ void GLC_RepFlyMover::glDraw()
 	const double vRatio= static_cast<double>(m_pViewport->viewVSize()) / calibre;
 
 	glDisable(GL_TEXTURE_2D);
-	GLC_Context::current()->glcEnableLighting(false);
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
+
+    pContext->glcEnableLighting(false);
 	glDisable(GL_DEPTH_TEST);
 
-	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
-	GLC_Context::current()->glcPushMatrix();
-	GLC_Context::current()->glcLoadIdentity();
-	GLC_Context::current()->glcOrtho(hRatio * -1.0 ,hRatio * 1.0 ,vRatio * -1.0 ,vRatio * 1.0 ,-1.0 ,1.0);
-	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
-	GLC_Context::current()->glcPushMatrix();
-	GLC_Context::current()->glcLoadIdentity();
+    pContext->glcMatrixMode(GL_PROJECTION);
+    pContext->glcPushMatrix();
+    pContext->glcLoadIdentity();
+    pContext->glcOrtho(hRatio * -1.0 ,hRatio * 1.0 ,vRatio * -1.0 ,vRatio * 1.0 ,-1.0 ,1.0);
+    pContext->glcMatrixMode(GL_MODELVIEW);
+    pContext->glcPushMatrix();
+    pContext->glcLoadIdentity();
 
 	m_CenterCircle.render(glc::WireRenderFlag);
 	m_Hud.render(glc::WireRenderFlag);
@@ -142,10 +144,10 @@ void GLC_RepFlyMover::glDraw()
 	m_pViewport->qGLWidgetHandle()->renderText(- m_HudOffset.getX(), m_HudOffset.getY() - posy, 0.0, velocity, myFont);
 	*/
 
-	GLC_Context::current()->glcPopMatrix();
-	GLC_Context::current()->glcMatrixMode(GL_PROJECTION);
-	GLC_Context::current()->glcPopMatrix();
-	GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+    pContext->glcPopMatrix();
+    pContext->glcMatrixMode(GL_PROJECTION);
+    pContext->glcPopMatrix();
+    pContext->glcMatrixMode(GL_MODELVIEW);
 
 	glEnable(GL_DEPTH_TEST);
 }
