@@ -74,7 +74,7 @@ public:
 
 	//! Return the root of the world
 	inline GLC_StructOccurence* rootOccurence() const
-	{return m_pRoot;}
+    {return m_pWorldHandle->rootOccurence();}
 
 	//! Return the world collection
 	inline GLC_3DViewCollection* collection()
@@ -86,23 +86,23 @@ public:
 
 	//! Return true if the world is empty
 	inline bool isEmpty() const
-	{return  m_pWorldHandle->collection()->isEmpty() && !m_pRoot->hasChild();}
+    {return  m_pWorldHandle->collection()->isEmpty() && !rootOccurence()->hasChild();}
 
 	//! Return number of faces
 	inline int numberOfFaces() const
-	{return m_pRoot->numberOfFaces();}
+    {return rootOccurence()->numberOfFaces();}
 
 	//! Return number of vertex
 	inline int numberOfVertex() const
-	{return m_pRoot->numberOfVertex();}
+    {return rootOccurence()->numberOfVertex();}
 
 	//! Return the number of materials
 	inline int numberOfMaterials() const
-	{return m_pRoot->numberOfMaterials();}
+    {return rootOccurence()->numberOfMaterials();}
 
 	//! Return the list of material
 	inline QList<GLC_Material*> listOfMaterials() const
-	{return m_pRoot->materialSet().toList();}
+    {return rootOccurence()->materialSet().toList();}
 
 	//! Return list of world's instances
 	inline QList<GLC_3DViewInstance*> instancesHandle() const
@@ -197,14 +197,14 @@ public:
 	void mergeWithAnotherWorld(GLC_World &);
 
 	//! Reverse worlds part normal
-	inline void reversePartNormal() {m_pRoot->reverseNormals();}
+    inline void reversePartNormal() {rootOccurence()->reverseNormals();}
 
 	//! Clear this world
 	GLC_World& clear() {return *this= GLC_World();}
 
 	//! Set the World root Name
 	inline void setRootName(const QString& name)
-	{m_pRoot->setName(name);}
+    {rootOccurence()->setName(name);}
 
 	//! Set the world Up Vector
 	inline void setUpVector(const GLC_Vector3d& vect)
@@ -287,9 +287,6 @@ public:
 private:
 	//! The World Handle
 	GLC_WorldHandle* m_pWorldHandle;
-
-	//! The root of the structure
-	GLC_StructOccurence* m_pRoot;
 };
 
 Q_DECLARE_METATYPE(GLC_World)

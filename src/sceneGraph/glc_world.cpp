@@ -28,21 +28,18 @@
 
 GLC_World::GLC_World()
 : m_pWorldHandle(new GLC_WorldHandle())
-, m_pRoot(new GLC_StructOccurence())
 {
-	m_pRoot->setWorldHandle(m_pWorldHandle);
+
 }
 
 GLC_World::GLC_World(GLC_StructOccurence* pOcc)
-: m_pWorldHandle(new GLC_WorldHandle())
-, m_pRoot(pOcc)
+: m_pWorldHandle(new GLC_WorldHandle(pOcc))
 {
-	m_pRoot->setWorldHandle(m_pWorldHandle);
+
 }
 
 GLC_World::GLC_World(const GLC_World& world)
 : m_pWorldHandle(world.m_pWorldHandle)
-, m_pRoot(world.m_pRoot)
 {
 	//qDebug() << "GLC_World::GLC_World() : " << (*m_pNumberOfWorld) << " " << this;
 	// Increment the number of world
@@ -56,7 +53,6 @@ GLC_World::~GLC_World()
 	m_pWorldHandle->decrement();
 	if (m_pWorldHandle->isOrphan())
 	{
-		delete m_pRoot;
 		delete m_pWorldHandle;
     }
 }
@@ -89,39 +85,31 @@ QList<GLC_StructOccurence *> GLC_World::minimumSelectedOccurenceList() const
 
 GLC_StructOccurence* GLC_World::takeRootOccurrence()
 {
-	GLC_StructOccurence* pSubject= m_pRoot;
-	pSubject->makeOrphan();
-
-	m_pRoot= new GLC_StructOccurence();
-	m_pRoot->setWorldHandle(m_pWorldHandle);
-
-	return pSubject;
+    return m_pWorldHandle->takeRootOccurrence();
 }
 
 void GLC_World::replaceRootOccurrence(GLC_StructOccurence* pOcc)
 {
-	Q_ASSERT(pOcc->isOrphan());
-	delete m_pRoot;
-	m_pRoot= pOcc;
-	m_pRoot->setWorldHandle(m_pWorldHandle);
+    m_pWorldHandle->replaceRootOccurrence(pOcc);
 }
 
 void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 {
 	GLC_StructOccurence* pAnotherRoot= anotherWorld.rootOccurence();
+    GLC_StructOccurence* pRoot= rootOccurence();
 	if (pAnotherRoot->childCount() > 0)
 	{
 		QList<GLC_StructOccurence*> childs= pAnotherRoot->children();
 		const int size= childs.size();
 		for (int i= 0; i < size; ++i)
 		{
-			m_pRoot->addChild(childs.at(i)->clone(m_pWorldHandle, false));
+            pRoot->addChild(childs.at(i)->clone(m_pWorldHandle, false));
 		}
-		m_pRoot->updateChildrenAbsoluteMatrix();
+        pRoot->updateChildrenAbsoluteMatrix();
 	}
 	else
 	{
-		m_pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pWorldHandle, false));
+        pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pWorldHandle, false));
 	}
 }
 
@@ -133,10 +121,8 @@ GLC_World& GLC_World::operator=(const GLC_World& world)
         m_pWorldHandle->decrement();
         if (m_pWorldHandle->isOrphan())
         {
-            delete m_pRoot;
             delete m_pWorldHandle;
         }
-        m_pRoot= world.m_pRoot;
         m_pWorldHandle= world.m_pWorldHandle;
         m_pWorldHandle->increment();
     }

@@ -48,6 +48,10 @@ GLC_ContextSharedData::GLC_ContextSharedData()
     pStack2->push(GLC_Matrix4x4());
     m_MatrixStackHash.insert(GL_PROJECTION, pStack2);
 
+    QStack<GLC_Matrix4x4>* pStack3= new QStack<GLC_Matrix4x4>();
+    pStack3->push(GLC_Matrix4x4());
+    m_MatrixStackHash.insert(GL_TEXTURE, pStack3);
+
     m_ColorMaterialIsEnable.push(false);
     m_LightingIsEnable.push(false);
     m_TwoSidedLighting.push(false);
@@ -99,7 +103,7 @@ void GLC_ContextSharedData::unuseDefaultShader()
 
 void GLC_ContextSharedData::glcMatrixMode(GLenum mode)
 {
-    Q_ASSERT((mode == GL_MODELVIEW) || (mode == GL_PROJECTION));
+    Q_ASSERT((mode == GL_MODELVIEW) || (mode == GL_PROJECTION) || (mode == GL_TEXTURE));
 
     m_CurrentMatrixMode= mode;
 #ifdef GLC_OPENGL_ES_2
@@ -227,23 +231,20 @@ void GLC_ContextSharedData::glcFrustum(double left, double right, double bottom,
 
 void GLC_ContextSharedData::glcEnableColorMaterial(bool enable)
 {
-    if (enable != m_ColorMaterialIsEnable.top())
-    {
-        m_ColorMaterialIsEnable.top()= enable;
+    m_ColorMaterialIsEnable.top()= enable;
 
 #ifdef GLC_OPENGL_ES_2
 
-        m_UniformShaderData.setColorMaterialState(m_ColorMaterialIsEnable.top());
+    m_UniformShaderData.setColorMaterialState(m_ColorMaterialIsEnable.top());
 #else
-        if (GLC_Shader::hasActiveShader())
-        {
-            m_UniformShaderData.setColorMaterialState(m_ColorMaterialIsEnable.top());
-        }
-        if (m_ColorMaterialIsEnable.top()) ::glEnable(GL_COLOR_MATERIAL);
-        else ::glDisable(GL_COLOR_MATERIAL);
+    if (GLC_Shader::hasActiveShader())
+    {
+        m_UniformShaderData.setColorMaterialState(m_ColorMaterialIsEnable.top());
+    }
+    if (m_ColorMaterialIsEnable.top()) ::glEnable(GL_COLOR_MATERIAL);
+    else ::glDisable(GL_COLOR_MATERIAL);
 #endif
 
-    }
 }
 
 void GLC_ContextSharedData::glcEnableLighting(bool enable)
@@ -251,40 +252,37 @@ void GLC_ContextSharedData::glcEnableLighting(bool enable)
     if (enable != m_LightingIsEnable.top())
     {
         m_LightingIsEnable.top()= enable;
+    }
 
 #ifdef GLC_OPENGL_ES_2
 
-        m_UniformShaderData.setLightingState(m_LightingIsEnable.top());
+        m_UniformShaderData.setLightingState(enable);
 #else
         if (GLC_Shader::hasActiveShader())
         {
-            m_UniformShaderData.setLightingState(m_LightingIsEnable.top());
+            m_UniformShaderData.setLightingState(enable);
         }
-        if (m_LightingIsEnable.top()) ::glEnable(GL_LIGHTING);
+        if (enable) ::glEnable(GL_LIGHTING);
         else ::glDisable(GL_LIGHTING);
 #endif
 
-    }
 }
 
 void GLC_ContextSharedData::glcSetTwoSidedLight(GLint twoSided)
 {
-    if (twoSided != m_TwoSidedLighting.top())
-    {
-        m_TwoSidedLighting.top()= twoSided;
+    m_TwoSidedLighting.top()= twoSided;
 
 #ifdef GLC_OPENGL_ES_2
 
-        m_UniformShaderData.setTwoSidedLight(m_TwoSidedLighting.top());
+    m_UniformShaderData.setTwoSidedLight(m_TwoSidedLighting.top());
 #else
-        if (GLC_Shader::hasActiveShader())
-        {
-            m_UniformShaderData.setTwoSidedLight(m_TwoSidedLighting.top());
-        }
-        glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, m_TwoSidedLighting.top());
+    if (GLC_Shader::hasActiveShader())
+    {
+        m_UniformShaderData.setTwoSidedLight(m_TwoSidedLighting.top());
+    }
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, m_TwoSidedLighting.top());
 
 #endif
-    }
 
 }
 
@@ -292,48 +290,42 @@ void GLC_ContextSharedData::glcEnableLight(GLenum lightId)
 {
     Q_ASSERT(m_LightsEnableState.contains(lightId));
 
-    if (!m_LightsEnableState.value(lightId))
-    {
-        m_LightsEnableState[lightId]= true;
+    m_LightsEnableState[lightId]= true;
 
 #ifdef GLC_OPENGL_ES_2
 
-        m_UniformShaderData.setLightsEnableState(enableLights());
+    m_UniformShaderData.setLightsEnableState(enableLights());
 #else
-        if (GLC_Shader::hasActiveShader())
-        {
-            QVector<int> enableLightState= enableLights();
-            m_UniformShaderData.setLightsEnableState(enableLightState);
-        }
+    if (GLC_Shader::hasActiveShader())
+    {
+        QVector<int> enableLightState= enableLights();
+        m_UniformShaderData.setLightsEnableState(enableLightState);
+    }
 
-        ::glEnable(lightId);
+    ::glEnable(lightId);
 #endif
 
-    }
 }
 
 void GLC_ContextSharedData::glcDisableLight(GLenum lightId)
 {
     Q_ASSERT(m_LightsEnableState.contains(lightId));
 
-    if (!m_LightsEnableState.value(lightId))
-    {
-        m_LightsEnableState[lightId]= false;
+    m_LightsEnableState[lightId]= false;
 
 #ifdef GLC_OPENGL_ES_2
 
-        m_UniformShaderData.setLightsEnableState(m_LightsEnableState.values().toVector());
+    m_UniformShaderData.setLightsEnableState(m_LightsEnableState.values().toVector());
 #else
-        if (GLC_Shader::hasActiveShader())
-        {
-            QVector<int> enableVect= m_LightsEnableState.values().toVector();
-            m_UniformShaderData.setLightsEnableState(enableVect);
-        }
+    if (GLC_Shader::hasActiveShader())
+    {
+        QVector<int> enableVect= m_LightsEnableState.values().toVector();
+        m_UniformShaderData.setLightsEnableState(enableVect);
+    }
 
-        ::glDisable(lightId);
+    ::glDisable(lightId);
 #endif
 
-    }
 }
 
 void GLC_ContextSharedData::initDefaultShader()

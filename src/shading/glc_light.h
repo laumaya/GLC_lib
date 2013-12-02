@@ -265,9 +265,6 @@ private:
     //! The context of this light
     GLC_Context* m_pContext;
 
-	//! Flag to know if this light is valid
-	bool m_IsValid;
-
 	//! Mapping between context and light set
     static QHash<GLC_Context*, QSet<GLenum> > m_ContextToFreeLightSet;
 };

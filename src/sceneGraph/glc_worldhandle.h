@@ -45,6 +45,9 @@ public:
 	//! The default constructor
 	GLC_WorldHandle();
 
+    //! Create a worldHandle and set the root occurrence to the given occurrence
+    explicit GLC_WorldHandle(GLC_StructOccurence* pOcc);
+
 	//! The default destructor
 	~GLC_WorldHandle();
 //@}
@@ -57,6 +60,10 @@ public:
 	//! Return the collection
 	inline GLC_3DViewCollection* collection()
 	{return &m_Collection;}
+
+    //! Return the root of the world
+    inline GLC_StructOccurence* rootOccurence() const
+    {return m_pRoot;}
 
 	//! Return the number of world associated with this handle
 	inline int numberOfWorld() const
@@ -113,6 +120,12 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+    //! Replace the root occurrence of this world by the given occurrence
+    void replaceRootOccurrence(GLC_StructOccurence* pOcc);
+
+    //! Take the root occurence of this world
+    GLC_StructOccurence* takeRootOccurrence();
+
 	//! Increment the number of world
 	inline void increment()
 	{++m_NumberOfWorld;}
@@ -167,6 +180,9 @@ public:
 private:
 	//! The Collection
 	GLC_3DViewCollection m_Collection;
+
+    //! The root of the structure
+    GLC_StructOccurence* m_pRoot;
 
 	//! Number of this world
 	int m_NumberOfWorld;

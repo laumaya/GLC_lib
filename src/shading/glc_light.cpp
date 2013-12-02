@@ -37,71 +37,68 @@ QHash<GLC_Context*, QSet<GLenum> > GLC_Light::m_ContextToFreeLightSet;
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_Light::GLC_Light(GLC_Context *pContext, const QColor& color)
-:GLC_Object("Light")
-, m_LightID(-1)
-, m_LightType(LightPosition)
-, m_AmbientColor(Qt::black)
-, m_DiffuseColor(color)
-, m_SpecularColor(Qt::white)
-, m_Position()
-, m_SpotDirection(0.0, 0.0, -1.0)
-, m_SpotExponent(0.0f)
-, m_SpotCutoffAngle(180.0f)
-, m_ConstantAttenuation(1.0f)
-, m_LinearAttenuation(0.0f)
-, m_QuadraticAttenuation(0.0f)
-, m_TwoSided(false)
-, m_pContext(pContext)
-, m_IsValid(false)
+    : GLC_Object("Light")
+    , m_LightID(-1)
+    , m_LightType(LightPosition)
+    , m_AmbientColor(Qt::black)
+    , m_DiffuseColor(color)
+    , m_SpecularColor(Qt::white)
+    , m_Position()
+    , m_SpotDirection(0.0, 0.0, -1.0)
+    , m_SpotExponent(0.0f)
+    , m_SpotCutoffAngle(180.0f)
+    , m_ConstantAttenuation(1.0f)
+    , m_LinearAttenuation(0.0f)
+    , m_QuadraticAttenuation(0.0f)
+    , m_TwoSided(false)
+    , m_pContext(pContext)
 {
-	addNewLight();
+    addNewLight();
 }
 
 GLC_Light::GLC_Light(LightType lightType, GLC_Context *pContext, const QColor& color)
-:GLC_Object("Light")
-, m_LightID(-1)
-, m_LightType(lightType)
-, m_AmbientColor(Qt::black)
-, m_DiffuseColor(color)
-, m_SpecularColor(Qt::white)
-, m_Position()
-, m_SpotDirection(0.0, 0.0, -1.0)
-, m_SpotExponent(0.0f)
-, m_SpotCutoffAngle(180.0f)
-, m_ConstantAttenuation(1.0f)
-, m_LinearAttenuation(0.0f)
-, m_QuadraticAttenuation(0.0f)
-, m_TwoSided(false)
-, m_pContext(pContext)
-, m_IsValid(false)
+    :GLC_Object("Light")
+    , m_LightID(-1)
+    , m_LightType(lightType)
+    , m_AmbientColor(Qt::black)
+    , m_DiffuseColor(color)
+    , m_SpecularColor(Qt::white)
+    , m_Position()
+    , m_SpotDirection(0.0, 0.0, -1.0)
+    , m_SpotExponent(0.0f)
+    , m_SpotCutoffAngle(180.0f)
+    , m_ConstantAttenuation(1.0f)
+    , m_LinearAttenuation(0.0f)
+    , m_QuadraticAttenuation(0.0f)
+    , m_TwoSided(false)
+    , m_pContext(pContext)
 {
-	addNewLight();
+    addNewLight();
 }
 
 GLC_Light::GLC_Light(const GLC_Light& light)
-:GLC_Object(light)
-, m_LightID(-1)
-, m_LightType(light.m_LightType)
-, m_AmbientColor(light.m_AmbientColor)
-, m_DiffuseColor(light.m_DiffuseColor)
-, m_SpecularColor(light.m_SpecularColor)
-, m_Position(light.m_Position)
-, m_SpotDirection(light.m_SpotDirection)
-, m_SpotExponent(light.m_SpotExponent)
-, m_SpotCutoffAngle(light.m_SpotCutoffAngle)
-, m_ConstantAttenuation(light.m_ConstantAttenuation)
-, m_LinearAttenuation(light.m_LinearAttenuation)
-, m_QuadraticAttenuation(light.m_QuadraticAttenuation)
-, m_TwoSided(light.m_TwoSided)
-, m_pContext(light.m_pContext)
-, m_IsValid(false)
+    :GLC_Object(light)
+    , m_LightID(-1)
+    , m_LightType(light.m_LightType)
+    , m_AmbientColor(light.m_AmbientColor)
+    , m_DiffuseColor(light.m_DiffuseColor)
+    , m_SpecularColor(light.m_SpecularColor)
+    , m_Position(light.m_Position)
+    , m_SpotDirection(light.m_SpotDirection)
+    , m_SpotExponent(light.m_SpotExponent)
+    , m_SpotCutoffAngle(light.m_SpotCutoffAngle)
+    , m_ConstantAttenuation(light.m_ConstantAttenuation)
+    , m_LinearAttenuation(light.m_LinearAttenuation)
+    , m_QuadraticAttenuation(light.m_QuadraticAttenuation)
+    , m_TwoSided(light.m_TwoSided)
+    , m_pContext(light.m_pContext)
 {
-	addNewLight();
+    addNewLight();
 }
 
 GLC_Light::~GLC_Light(void)
 {
-	removeThisLight();
+    removeThisLight();
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -110,16 +107,16 @@ GLC_Light::~GLC_Light(void)
 
 int GLC_Light::maxLightCount()
 {
-	return m_MaxLight;
+    return m_MaxLight;
 }
 
 int GLC_Light::builtAbleLightCount(GLC_Context* pContext)
 {
-	if (m_ContextToFreeLightSet.contains(pContext))
-	{
-		return m_ContextToFreeLightSet.value(pContext).size();
-	}
-	else return m_MaxLight;
+    if (m_ContextToFreeLightSet.contains(pContext))
+    {
+        return m_ContextToFreeLightSet.value(pContext).size();
+    }
+    else return m_MaxLight;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -127,80 +124,70 @@ int GLC_Light::builtAbleLightCount(GLC_Context* pContext)
 //////////////////////////////////////////////////////////////////////
 void GLC_Light::initForThisContext()
 {
-	for (int i= 0; i < m_MaxLight; ++i)
-	{
-		m_ContextToFreeLightSet[m_pContext].insert(GL_LIGHT0 + i);
-	}
+    for (int i= 0; i < m_MaxLight; ++i)
+    {
+        m_ContextToFreeLightSet[m_pContext].insert(GL_LIGHT0 + i);
+    }
 }
 
 void GLC_Light::setPosition(const GLC_Point3d &pos)
 {
-	m_Position= pos;
+    m_Position= pos;
 }
 
 void GLC_Light::setPosition(GLfloat x, GLfloat y, GLfloat z)
 {
-	m_Position.setVect(static_cast<double>(x), static_cast<double>(y), static_cast<double>(z));
+    m_Position.setVect(static_cast<double>(x), static_cast<double>(y), static_cast<double>(z));
 }
 
 void GLC_Light::setAmbientColor(const QColor& color)
 {
-	m_AmbientColor= color;
-	m_IsValid= false;
+    m_AmbientColor= color;
 }
 
 void GLC_Light::setDiffuseColor(const QColor& color)
 {
-	m_DiffuseColor= color;
-	m_IsValid= false;
+    m_DiffuseColor= color;
 }
 
 void GLC_Light::setSpecularColor(const QColor& color)
 {
-	m_SpecularColor= color;
-	m_IsValid= false;
+    m_SpecularColor= color;
 }
 
 void GLC_Light::setTwoSided(const bool mode)
 {
-	m_TwoSided= mode;
-	m_IsValid= false;
+    m_TwoSided= mode;
 }
 
 void GLC_Light::setConstantAttenuation(GLfloat constantAttenuation)
 {
-	m_ConstantAttenuation= constantAttenuation;
-	m_IsValid= false;
+    m_ConstantAttenuation= constantAttenuation;
 }
 
 void GLC_Light::setLinearAttenuation(GLfloat linearAttenuation)
 {
-	m_LinearAttenuation= linearAttenuation;
-	m_IsValid= false;
+    m_LinearAttenuation= linearAttenuation;
 }
 
 void GLC_Light::setQuadraticAttenuation(GLfloat quadraticAttenuation)
 {
-	m_QuadraticAttenuation= quadraticAttenuation;
-	m_IsValid= false;
+    m_QuadraticAttenuation= quadraticAttenuation;
 }
 
 void GLC_Light::setSpotDirection(const GLC_Vector3d& direction)
 {
-	m_SpotDirection= direction;
-	m_IsValid= false;
+    m_SpotDirection= direction;
 }
 
 void GLC_Light::setSpotCutoffAngle(GLfloat cutoffAngle)
 {
-	m_SpotCutoffAngle= cutoffAngle;
-	m_IsValid= false;
+    m_SpotCutoffAngle= cutoffAngle;
 }
 
 void GLC_Light::setSpotEponent(GLfloat exponent)
 {
-	m_SpotExponent= exponent;
-	m_IsValid= false;
+    m_SpotExponent= exponent;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -210,10 +197,10 @@ void GLC_Light::setSpotEponent(GLfloat exponent)
 
 void GLC_Light::disable()
 {
-	if (NULL != m_pContext)
-	{
+    if (NULL != m_pContext)
+    {
         GLC_ContextManager::instance()->currentContext()->glcDisableLight(m_LightID);
-	}
+    }
 }
 
 
@@ -222,94 +209,89 @@ void GLC_Light::glExecute()
 
     GLC_Context* pCurrentContext= GLC_ContextManager::instance()->currentContext();
     Q_ASSERT(NULL != pCurrentContext);
-	if (NULL == m_pContext)
-	{
+    if (NULL == m_pContext)
+    {
         m_pContext= pCurrentContext;
-		addNewLight();
-	}
+        addNewLight();
+    }
 
     pCurrentContext->glcEnableLighting(true);
     pCurrentContext->glcEnableLight(m_LightID);
 
     if (m_pContext != pCurrentContext)
-	{
+    {
         Q_ASSERT(QOpenGLContext::areSharing(m_pContext->contextHandle(), pCurrentContext->contextHandle()));
-		m_IsValid= false;
-	}
+    }
     Q_ASSERT(m_pContext->contextHandle()->isValid());
 
-	GLfloat setArray[4];
+    GLfloat setArray[4];
 
-	// Position
-	setArray[0]= static_cast<GLfloat>(m_Position.x());
-	setArray[1]= static_cast<GLfloat>(m_Position.y());
-	setArray[2]= static_cast<GLfloat>(m_Position.z());
+    // Position
+    setArray[0]= static_cast<GLfloat>(m_Position.x());
+    setArray[1]= static_cast<GLfloat>(m_Position.y());
+    setArray[2]= static_cast<GLfloat>(m_Position.z());
 
-	if (LightDirection == m_LightType)
-	{
-		setArray[3]= 0.0f;
-		glLightfv(m_LightID, GL_POSITION, setArray);	// Direction of the Light
-	}
-	else
-	{
-		setArray[3]= 1.0f;
-		glLightfv(m_LightID, GL_POSITION, setArray);	// Position of the Light
-	}
-
-
-	if (!m_IsValid)
-	{
-		// Set the lighting model
-        pCurrentContext->glcSetTwoSidedLight(m_TwoSided);
-
-		// Color
-		setArray[0]= static_cast<GLfloat>(m_AmbientColor.redF());
-		setArray[1]= static_cast<GLfloat>(m_AmbientColor.greenF());
-		setArray[2]= static_cast<GLfloat>(m_AmbientColor.blueF());
-		setArray[3]= static_cast<GLfloat>(m_AmbientColor.alphaF());
-		glLightfv(m_LightID, GL_AMBIENT, setArray);		// Setup The Ambient Light
-
-		setArray[0]= static_cast<GLfloat>(m_DiffuseColor.redF());
-		setArray[1]= static_cast<GLfloat>(m_DiffuseColor.greenF());
-		setArray[2]= static_cast<GLfloat>(m_DiffuseColor.blueF());
-		setArray[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());
-		glLightfv(m_LightID, GL_DIFFUSE, setArray);		// Setup The Diffuse Light
+    if (LightDirection == m_LightType)
+    {
+        setArray[3]= 0.0f;
+        glLightfv(m_LightID, GL_POSITION, setArray);	// Direction of the Light
+    }
+    else
+    {
+        setArray[3]= 1.0f;
+        glLightfv(m_LightID, GL_POSITION, setArray);	// Position of the Light
+    }
 
 
-		setArray[0]= static_cast<GLfloat>(m_SpecularColor.redF());
-		setArray[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
-		setArray[2]= static_cast<GLfloat>(m_SpecularColor.blueF());
-		setArray[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());
-		glLightfv(m_LightID, GL_SPECULAR, setArray);	// Setup The specular Light
+    // Set the lighting model
+    pCurrentContext->glcSetTwoSidedLight(m_TwoSided);
 
-		if (LightDirection != m_LightType)
-			glLightf(m_LightID, GL_CONSTANT_ATTENUATION, m_ConstantAttenuation);
-			glLightf(m_LightID, GL_LINEAR_ATTENUATION, m_LinearAttenuation);
-			glLightf(m_LightID, GL_QUADRATIC_ATTENUATION, m_QuadraticAttenuation);
+    // Color
+    setArray[0]= static_cast<GLfloat>(m_AmbientColor.redF());
+    setArray[1]= static_cast<GLfloat>(m_AmbientColor.greenF());
+    setArray[2]= static_cast<GLfloat>(m_AmbientColor.blueF());
+    setArray[3]= static_cast<GLfloat>(m_AmbientColor.alphaF());
+    glLightfv(m_LightID, GL_AMBIENT, setArray);		// Setup The Ambient Light
 
-		// Spot light parameters
-		if (LightSpot == m_LightType)
-		{
-			// Spot Direction
-			setArray[0]= static_cast<GLfloat>(m_SpotDirection.x());
-			setArray[1]= static_cast<GLfloat>(m_SpotDirection.y());
-			setArray[2]= static_cast<GLfloat>(m_SpotDirection.z());
-			glLightfv(m_LightID, GL_SPOT_DIRECTION, setArray);
-			glLightf(m_LightID, GL_SPOT_EXPONENT, m_SpotExponent);
-			glLightf(m_LightID, GL_SPOT_CUTOFF, m_SpotCutoffAngle);
-		}
+    setArray[0]= static_cast<GLfloat>(m_DiffuseColor.redF());
+    setArray[1]= static_cast<GLfloat>(m_DiffuseColor.greenF());
+    setArray[2]= static_cast<GLfloat>(m_DiffuseColor.blueF());
+    setArray[3]= static_cast<GLfloat>(m_DiffuseColor.alphaF());
+    glLightfv(m_LightID, GL_DIFFUSE, setArray);		// Setup The Diffuse Light
 
-		m_IsValid= true;
-	}
 
-	// OpenGL error handler
-	GLenum error= glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		qDebug() << "GLC_Light::glExecute Exception, id= " << m_LightID;
-		GLC_OpenGlException OpenGlException("GLC_Light::glExecute ", error);
-		throw(OpenGlException);
-	}
+    setArray[0]= static_cast<GLfloat>(m_SpecularColor.redF());
+    setArray[1]= static_cast<GLfloat>(m_SpecularColor.greenF());
+    setArray[2]= static_cast<GLfloat>(m_SpecularColor.blueF());
+    setArray[3]= static_cast<GLfloat>(m_SpecularColor.alphaF());
+    glLightfv(m_LightID, GL_SPECULAR, setArray);	// Setup The specular Light
+
+    if (LightDirection != m_LightType)
+        glLightf(m_LightID, GL_CONSTANT_ATTENUATION, m_ConstantAttenuation);
+    glLightf(m_LightID, GL_LINEAR_ATTENUATION, m_LinearAttenuation);
+    glLightf(m_LightID, GL_QUADRATIC_ATTENUATION, m_QuadraticAttenuation);
+
+    // Spot light parameters
+    if (LightSpot == m_LightType)
+    {
+        // Spot Direction
+        setArray[0]= static_cast<GLfloat>(m_SpotDirection.x());
+        setArray[1]= static_cast<GLfloat>(m_SpotDirection.y());
+        setArray[2]= static_cast<GLfloat>(m_SpotDirection.z());
+        glLightfv(m_LightID, GL_SPOT_DIRECTION, setArray);
+        glLightf(m_LightID, GL_SPOT_EXPONENT, m_SpotExponent);
+        glLightf(m_LightID, GL_SPOT_CUTOFF, m_SpotCutoffAngle);
+    }
+
+
+    // OpenGL error handler
+    GLenum error= glGetError();
+    if (error != GL_NO_ERROR)
+    {
+        qDebug() << "GLC_Light::glExecute Exception, id= " << m_LightID;
+        GLC_OpenGlException OpenGlException("GLC_Light::glExecute ", error);
+        throw(OpenGlException);
+    }
 
 }
 
@@ -323,38 +305,39 @@ void GLC_Light::glExecute()
 //////////////////////////////////////////////////////////////////////
 void GLC_Light::addNewLight()
 {
-	if (NULL != m_pContext)
-	{
-		if (!m_ContextToFreeLightSet.contains(m_pContext))
-		{
-			m_ContextToFreeLightSet.insert(m_pContext, QSet<GLenum>());
-			initForThisContext();
-		}
+    qDebug() << "GLC_Light::addNewLight() " << m_pContext;
+    if (NULL != m_pContext)
+    {
+        if (!m_ContextToFreeLightSet.contains(m_pContext))
+        {
+            m_ContextToFreeLightSet.insert(m_pContext, QSet<GLenum>());
+            initForThisContext();
+        }
 
-		// Some OpenGL driver support only Light0 ???
-		if (m_ContextToFreeLightSet.value(m_pContext).size() == m_MaxLight)
-		{
-			m_LightID= GL_LIGHT0;
-		}
-		else
-		{
-			m_LightID= *(m_ContextToFreeLightSet[m_pContext].constBegin());
-		}
+        // Some OpenGL driver support only Light0 ???
+        if (m_ContextToFreeLightSet.value(m_pContext).size() == m_MaxLight)
+        {
+            m_LightID= GL_LIGHT0;
+        }
+        else
+        {
+            m_LightID= *(m_ContextToFreeLightSet[m_pContext].constBegin());
+        }
 
-		m_ContextToFreeLightSet[m_pContext].remove(m_LightID);
-	}
+        m_ContextToFreeLightSet[m_pContext].remove(m_LightID);
+    }
 }
 
 void GLC_Light::removeThisLight()
 {
-	if (NULL != m_pContext)
-	{
-		Q_ASSERT(m_ContextToFreeLightSet.contains(m_pContext));
-		Q_ASSERT(!m_ContextToFreeLightSet[m_pContext].contains(m_LightID));
-		m_ContextToFreeLightSet[m_pContext].insert(m_LightID);
-		if (m_ContextToFreeLightSet[m_pContext].size() == m_MaxLight)
-		{
-			m_ContextToFreeLightSet.remove(m_pContext);
-		}
-	}
+    if (NULL != m_pContext)
+    {
+        Q_ASSERT(m_ContextToFreeLightSet.contains(m_pContext));
+        Q_ASSERT(!m_ContextToFreeLightSet[m_pContext].contains(m_LightID));
+        m_ContextToFreeLightSet[m_pContext].insert(m_LightID);
+        if (m_ContextToFreeLightSet[m_pContext].size() == m_MaxLight)
+        {
+            m_ContextToFreeLightSet.remove(m_pContext);
+        }
+    }
 }

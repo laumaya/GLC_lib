@@ -25,13 +25,9 @@ unix {
 }
 
 
-SOURCES += main.cpp \
-    glc_quickitem.cpp \
-    glc_quickview.cpp
+SOURCES += main.cpp
 
-HEADERS += \
-    glc_quickitem.h \
-    glc_quickview.h
+HEADERS +=
 
 OTHER_FILES += \
     GLC_Quick.qml

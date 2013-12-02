@@ -3,12 +3,11 @@
 #include <QFile>
 #include <QVariant>
 #include <QQmlContext>
+#include <QQuickView>
 
 #include <GLC_World>
 #include <GLC_Factory>
-
-#include "glc_quickview.h"
-#include "glc_quickitem.h"
+#include <GLC_QuickItem>
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +17,7 @@ int main(int argc, char *argv[])
     QGLFormat f = QGLFormat::defaultFormat();
     f.setSampleBuffers(true);
 
-    GLC_QuickView view;
+    QQuickView view;
 
     QFile file1(":model/Democles.dae");
     GLC_World world1= GLC_Factory::instance()->createWorldFromFile(file1);

@@ -1,6 +1,6 @@
 # GLC_lib qmake configuration
 TEMPLATE = lib
-QT += opengl core
+QT += core opengl quick
 
 
 CONFIG += exceptions warn_on
@@ -193,7 +193,8 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 
 HEADERS_GLC_GLU +=	glu/glc_glu.h
 
-HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
+HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO} \
+    qml/glc_quickitem.h
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
 		   
@@ -207,7 +208,8 @@ SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/inftrees.c \
            3rdparty/zlib/trees.c \
            3rdparty/zlib/uncompr.c \
-           3rdparty/zlib/zutil.c
+           3rdparty/zlib/zutil.c \
+    qml/glc_quickitem.cpp
 
 SOURCES += 3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/qioapi.cpp \
@@ -501,3 +503,6 @@ INSTALLS += include_glc_3dwidget include_glc_glu
 
 INSTALLS += target
 INSTALLS += include
+
+OTHER_FILES += \
+    GLC_QuickItem

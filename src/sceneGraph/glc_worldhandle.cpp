@@ -26,17 +26,30 @@
 
 GLC_WorldHandle::GLC_WorldHandle()
 : m_Collection()
+, m_pRoot(new GLC_StructOccurence())
 , m_NumberOfWorld(1)
 , m_OccurenceHash()
 , m_UpVector(glc::Z_AXIS)
 , m_SelectionSet(this)
 {
+    m_pRoot->setWorldHandle(this);
+}
 
+GLC_WorldHandle::GLC_WorldHandle(GLC_StructOccurence *pOcc)
+    : m_Collection()
+    , m_pRoot(pOcc)
+    , m_NumberOfWorld(1)
+    , m_OccurenceHash()
+    , m_UpVector(glc::Z_AXIS)
+    , m_SelectionSet(this)
+{
+    Q_ASSERT(pOcc->isOrphan());
+    pOcc->setWorldHandle(this);
 }
 
 GLC_WorldHandle::~GLC_WorldHandle()
 {
-
+    delete m_pRoot;
 }
 
 // Return the list of instance
@@ -89,6 +102,25 @@ int GLC_WorldHandle::representationCount() const
 	}
 	return count;
 
+}
+
+void GLC_WorldHandle::replaceRootOccurrence(GLC_StructOccurence *pOcc)
+{
+    Q_ASSERT(pOcc->isOrphan());
+    delete m_pRoot;
+    m_pRoot= pOcc;
+    m_pRoot->setWorldHandle(this);
+}
+
+GLC_StructOccurence *GLC_WorldHandle::takeRootOccurrence()
+{
+    GLC_StructOccurence* pSubject= m_pRoot;
+    pSubject->makeOrphan();
+
+    m_pRoot= new GLC_StructOccurence();
+    m_pRoot->setWorldHandle(this);
+
+    return pSubject;
 }
 
 // An Occurence has been added

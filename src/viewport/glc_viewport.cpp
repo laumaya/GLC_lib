@@ -159,13 +159,18 @@ void GLC_Viewport::initGl()
 {
 	glClearColor(m_BackgroundColor.redF(), m_BackgroundColor.greenF(), m_BackgroundColor.blueF(), 1.0f);
 	glClearDepth(1.0f);                                   // Depth Buffer Setup
-	glShadeModel(GL_SMOOTH);                              // Enable Smooth Shading
-	glEnable(GL_DEPTH_TEST);                              // Enables Depth Testing
-	glDepthFunc(GL_LEQUAL);                               // The Type Of Depth Testing To Do
+    glShadeModel(GL_SMOOTH);                              // Enable Smooth Shading
+
+    // Depth test
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glPolygonOffset (1.0f, 1.0f);
+    glEnable(GL_NORMALIZE);
 }
 
 void GLC_Viewport::glExecuteCam(void)
