@@ -194,7 +194,9 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 HEADERS_GLC_GLU +=	glu/glc_glu.h
 
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO} \
-    qml/glc_quickitem.h
+    qml/glc_quickitem.h \
+    viewport/glc_viewhandlerdata.h \
+    viewport/glc_viewhandler.h
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
 		   
@@ -209,7 +211,9 @@ SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/trees.c \
            3rdparty/zlib/uncompr.c \
            3rdparty/zlib/zutil.c \
-    qml/glc_quickitem.cpp
+    qml/glc_quickitem.cpp \
+    viewport/glc_viewhandlerdata.cpp \
+    viewport/glc_viewhandler.cpp
 
 SOURCES += 3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/qioapi.cpp \
@@ -505,4 +509,5 @@ INSTALLS += target
 INSTALLS += include
 
 OTHER_FILES += \
-    GLC_QuickItem
+    GLC_QuickItem \
+    GLC_ViewHandler

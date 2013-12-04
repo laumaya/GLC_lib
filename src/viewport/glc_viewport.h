@@ -305,8 +305,13 @@ public:
 	inline void add3DWidget(GLC_3DViewInstance& widget)
 	{m_3DWidgetCollection.add(widget);}
 
-	//! Clear the background color with the specified color
-	void clearBackground(const QColor& color) const;
+    //! Set the clear background color with the stored color
+    void clearBackground() const;
+
+    //! Set the clear background color with the specified color
+    void clearBackground(const QColor& color) const;
+
+    //! Clear
 
 	//! Set othographic usage to the given flag
 	void setToOrtho(bool useOrtho);

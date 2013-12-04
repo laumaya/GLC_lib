@@ -17,7 +17,7 @@ Rectangle {
             y: 10
             width: parent.width / 2 - 20
             height: parent.height - 20
-            world: worldVariant1
+            viewHandler: viewHandler1
         }
         GLCView{
             anchors.left: view1.right
@@ -25,7 +25,7 @@ Rectangle {
             anchors.leftMargin: 10
             width: view1.width
             height: view1.height
-            world: worldVariant2
+            viewHandler: viewHandler2
         }
 
     }

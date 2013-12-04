@@ -712,7 +712,6 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 void GLC_Viewport::setBackgroundColor(QColor setColor)
 {
 	m_BackgroundColor= setColor;
-	glClearColor(m_BackgroundColor.redF(), m_BackgroundColor.greenF(), m_BackgroundColor.blueF(), 1.0f);
 }
 
 void GLC_Viewport::addClipPlane(GLenum planeGlEnum,GLC_Plane* pPlane)
@@ -775,4 +774,9 @@ void GLC_Viewport::useClipPlane(bool flag)
 		}
 	}
 
+}
+
+void GLC_Viewport::clearBackground() const
+{
+    glClearColor(m_BackgroundColor.redF(), m_BackgroundColor.greenF(), m_BackgroundColor.blueF(), 1.0f);
 }

@@ -1796,10 +1796,10 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 		if (!m_LoadStructureOnly && setStreamReaderToFile(m_CurrentFileName))
 		{
 			GLC_3DRep representation;
-			if (GLC_State::cacheIsUsed() && GLC_State::currentCacheManager().isUsable(m_CurrentDateTime, QFileInfo(m_FileName).baseName(), m_CurrentFileName))
+            if (GLC_State::cacheIsUsed() && GLC_State::currentCacheManager().isUsable(m_CurrentDateTime, QFileInfo(m_FileName).baseName(), QFileInfo(m_CurrentFileName).fileName()))
 			{
 				GLC_CacheManager cacheManager= GLC_State::currentCacheManager();
-				GLC_BSRep binaryRep= cacheManager.binary3DRep(QFileInfo(m_FileName).baseName(), m_CurrentFileName);
+                GLC_BSRep binaryRep= cacheManager.binary3DRep(QFileInfo(m_FileName).baseName(), QFileInfo(m_CurrentFileName).fileName());
 				representation= binaryRep.loadRep();
 				setRepresentationFileName(&representation);
 			}

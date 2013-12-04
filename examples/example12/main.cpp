@@ -8,6 +8,8 @@
 #include <GLC_World>
 #include <GLC_Factory>
 #include <GLC_QuickItem>
+#include <GLC_ViewHandler>
+
 
 int main(int argc, char *argv[])
 {
@@ -19,17 +21,35 @@ int main(int argc, char *argv[])
 
     QQuickView view;
 
+    GLC_CacheManager cacheManager("/Users/laumaya/testCache");
+    GLC_State::setCurrentCacheManager(cacheManager);
+    GLC_State::setCacheUsage(true);
+
+    // Set some GLC_lib state in order to render heavy scene
+    GLC_State::setDefaultOctreeDepth(4);
+    GLC_State::setPixelCullingUsage(true);
+    GLC_State::setSpacePartionningUsage(true);
+
     QFile file1(":model/Democles.dae");
     GLC_World world1= GLC_Factory::instance()->createWorldFromFile(file1);
-    QVariant variantWorld1;
-    variantWorld1.setValue(world1);
-    view.rootContext()->setContextProperty("worldVariant1", variantWorld1);
+    GLC_ViewHandler viewHandler1;
+    viewHandler1.setWorld(world1);
+    viewHandler1.viewportHandle()->setBackgroundColor(Qt::white);
 
+    QVariant variantViewHandler1;
+    variantViewHandler1.setValue(viewHandler1);
+    view.rootContext()->setContextProperty("viewHandler1", variantViewHandler1);
+
+    //QFile file2("/Users/laumaya/Documents/Tests VrooM/did/TEA132_EPC567/StructBM.3dxml");
     QFile file2(":model/man.obj");
     GLC_World world2= GLC_Factory::instance()->createWorldFromFile(file2);
-    QVariant variantWorld2;
-    variantWorld2.setValue(world2);
-    view.rootContext()->setContextProperty("worldVariant2", variantWorld2);
+
+    GLC_ViewHandler viewHandler2;
+    viewHandler2.setWorld(world2);
+
+    QVariant variantViewHandler2;
+    variantViewHandler2.setValue(viewHandler2);
+    view.rootContext()->setContextProperty("viewHandler2", variantViewHandler2);
 
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.setSource(QUrl("qrc:/GLC_Quick.qml"));

@@ -34,6 +34,8 @@
 #include "../sceneGraph/glc_world.h"
 #include "../viewport/glc_movercontroller.h"
 
+#include "../viewport/glc_viewhandler.h"
+
 #include "../glc_config.h"
 
 class QSGSimpleTextureNode;
@@ -52,21 +54,17 @@ class GLC_LIB_EXPORT GLC_QuickItem : public QQuickItem
     Q_OBJECT
 
     //! The world to render into this QQuickItem
-    Q_PROPERTY(QVariant world READ worldVariant WRITE setWorld)
+    Q_PROPERTY(QVariant viewHandler READ viewHandler WRITE setViewhandler)
 
 public:
     explicit GLC_QuickItem(GLC_QuickItem* pParent= NULL);
     virtual ~GLC_QuickItem();
 
-    //! Return the used GLC_World as a QVariant
-    QVariant worldVariant() const;
-
-    //! Returned the used GLC_World
-    inline GLC_World world() const
-    {return m_World;}
+    //! Return the used GLC_ViewHandler as a QVariant
+    QVariant viewHandler() const;
 
 public slots:
-    void setWorld(QVariant worldVariant);
+    void setViewhandler(QVariant viewHandler);
 
 protected:
     virtual void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
@@ -83,21 +81,18 @@ protected:
     void defaultRenderWorld();
     void setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode);
     void setupSelectionFbo(int width, int height);
-    void pushOpenGLState();
-    void popOpenGLState();
+    void pushOpenGLMatrix();
+    void popOpenGLMatrix();
     void select(qreal x, qreal y);
 
 protected:
-    GLC_Viewport m_Viewport;
-    GLC_World m_World;
-    GLC_Light m_Light;
-    GLC_MoverController m_MoverController;
-    bool m_FirstRender;
+    GLC_ViewHandler m_Anchor;
     QOpenGLFramebufferObject* m_pSourceFbo;
     QOpenGLFramebufferObject* m_pTargetFbo;
     QOpenGLFramebufferObject* m_pSelectionFbo;
     GLC_Vector2d m_CurrentPos;
-    bool m_IsinSelectionMode;
+    bool m_IsInSelectionMode;
+    bool m_SelectionBufferIsDirty;
 };
 
 #endif // GLC_QUICKITEM_H
