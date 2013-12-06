@@ -100,6 +100,9 @@ public:
     inline void setSamples(int samples)
     {m_Data.data()->setSamples(samples);}
 
+    inline void setSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning)
+    {m_Data.data()->setSpacePartitioning(pSpacePartitioning);}
+
     inline void setNextSelection(int x, int y, GLC_SelectionEvent::Mode mode)
     {m_Data.data()->setNextSelection(x, y, mode);}
 

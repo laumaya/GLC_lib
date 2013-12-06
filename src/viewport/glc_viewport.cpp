@@ -589,7 +589,7 @@ void GLC_Viewport::deleteBackGroundImage()
 
 void GLC_Viewport::clearBackground(const QColor& color) const
 {
-	glClearColor(color.redF(), color.greenF(), color.blueF(), 1.0f);
+    glClearColor(color.redF(), color.greenF(), color.blueF(), 0.0f);
 }
 
 void GLC_Viewport::setToOrtho(bool useOrtho)
@@ -778,5 +778,5 @@ void GLC_Viewport::useClipPlane(bool flag)
 
 void GLC_Viewport::clearBackground() const
 {
-    glClearColor(m_BackgroundColor.redF(), m_BackgroundColor.greenF(), m_BackgroundColor.blueF(), 1.0f);
+    glClearColor(m_BackgroundColor.redF(), m_BackgroundColor.greenF(), m_BackgroundColor.blueF(), 0.0f);
 }

@@ -78,6 +78,11 @@ void GLC_ViewHandlerData::setWorld(const GLC_World &world)
     if (NULL != m_pSpacePartitioning)
     {
         m_World.collection()->bindSpacePartitioning(m_pSpacePartitioning);
+        m_World.collection()->setSpacePartitionningUsage(true);
+    }
+    else
+    {
+        m_World.collection()->setSpacePartitionningUsage(false);
     }
 
     m_pViewport->reframe(m_World.boundingBox());
@@ -98,6 +103,7 @@ void GLC_ViewHandlerData::setSpacePartitioning(GLC_SpacePartitioning *pSpacePart
 {
     m_pSpacePartitioning= pSpacePartitioning;
     m_World.collection()->bindSpacePartitioning(m_pSpacePartitioning);
+    m_World.collection()->setSpacePartitionningUsage(true);
 }
 
 void GLC_ViewHandlerData::setNextSelection(int x, int y, GLC_SelectionEvent::Mode mode)

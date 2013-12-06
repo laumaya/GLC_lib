@@ -32,7 +32,6 @@ GLC_DefaultEventInterpreter::GLC_DefaultEventInterpreter(GLC_ViewHandlerData *pV
 {
 }
 
-
 bool GLC_DefaultEventInterpreter::processMousePressEvent(QMouseEvent *e)
 {
     bool subject= false;

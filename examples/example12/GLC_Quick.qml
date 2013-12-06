@@ -19,14 +19,20 @@ Rectangle {
             height: parent.height - 20
             viewHandler: viewHandler1
         }
-        GLCView{
+        Item{
             anchors.left: view1.right
             anchors.top: view1.top
             anchors.leftMargin: 10
             width: view1.width
             height: view1.height
-            viewHandler: viewHandler2
+
+            GLCView{
+                anchors.fill: parent
+                viewHandler: viewHandler2
+            }
         }
+
+
 
     }
 }

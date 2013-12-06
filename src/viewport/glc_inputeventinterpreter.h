@@ -40,6 +40,7 @@ class GLC_InputEventInterpreter
 {
 public:
     explicit GLC_InputEventInterpreter(GLC_ViewHandlerData* pViewHandler);
+    virtual ~GLC_InputEventInterpreter();
 
 public:
     inline bool lodIsUse() const

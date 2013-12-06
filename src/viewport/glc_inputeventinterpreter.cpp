@@ -37,6 +37,11 @@ GLC_InputEventInterpreter::GLC_InputEventInterpreter(GLC_ViewHandlerData* pViewH
     Q_ASSERT(NULL != m_pViewHandlerData);
 }
 
+GLC_InputEventInterpreter::~GLC_InputEventInterpreter()
+{
+
+}
+
 void GLC_InputEventInterpreter::setMover(GLC_MoverController::MoverType moverType, const GLC_UserInput &userInputs)
 {
     m_pViewHandlerData->moverControllerHandle()->setActiveMover(moverType, userInputs);

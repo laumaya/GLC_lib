@@ -77,7 +77,7 @@ protected:
 protected:
     void setOpenGLState();
     void render(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData* pData);
-    void renderForSelection(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData *pData);
+    void renderForSelection();
     virtual void doRender();
     void defaultRenderWorld();
     void setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode);

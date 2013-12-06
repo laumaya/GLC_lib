@@ -9,7 +9,7 @@
 #include <GLC_Factory>
 #include <GLC_QuickItem>
 #include <GLC_ViewHandler>
-
+#include <GLC_Octree>
 
 int main(int argc, char *argv[])
 {
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     GLC_World world1= GLC_Factory::instance()->createWorldFromFile(file1);
     GLC_ViewHandler viewHandler1;
     viewHandler1.setWorld(world1);
-    viewHandler1.viewportHandle()->setBackgroundColor(Qt::white);
+    viewHandler1.viewportHandle()->setBackgroundColor(Qt::black);
 
     QVariant variantViewHandler1;
     variantViewHandler1.setValue(viewHandler1);
@@ -46,6 +46,8 @@ int main(int argc, char *argv[])
 
     GLC_ViewHandler viewHandler2;
     viewHandler2.setWorld(world2);
+    viewHandler2.setSpacePartitioning(new GLC_Octree(world2.collection()));
+    viewHandler2.viewportHandle()->setBackgroundColor(Qt::white);
 
     QVariant variantViewHandler2;
     variantViewHandler2.setValue(viewHandler2);
@@ -54,7 +56,9 @@ int main(int argc, char *argv[])
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.setSource(QUrl("qrc:/GLC_Quick.qml"));
 
-    view.show();
+    QWidget* pWidget= QWidget::createWindowContainer(&view);
+    pWidget->show();
+    //view.show();
 
     return app.exec();
 }

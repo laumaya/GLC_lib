@@ -41,8 +41,8 @@ GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton);
     setFlag(QQuickItem::ItemHasContents);
 
-    connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()));
-    connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
+    connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
+    connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
 }
 
 GLC_QuickItem::~GLC_QuickItem()
@@ -67,8 +67,8 @@ void GLC_QuickItem::setViewhandler(QVariant viewHandler)
 
     m_Viewhandler= viewHandler.value<GLC_ViewHandler>();
 
-    connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()));
-    connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
+    connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
+    connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
 }
 
 void GLC_QuickItem::invalidateSelectionBuffer()
@@ -96,18 +96,28 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
     if (!pTextureNode)
         pTextureNode = new QSGSimpleTextureNode();
 
-    GLC_World world= m_Viewhandler.world();
+    const bool widthOk= this->width() > 0.0;
+    const bool heightOk= this->height() > 0.0;
 
-    if (!world.isEmpty() && widthValid() && heightValid() && isComponentComplete())
+    if (widthOk && heightOk)
     {
-        if (m_Viewhandler.isInSelectionMode())
+        GLC_World world= m_Viewhandler.world();
+
+        if (!world.isEmpty() && widthValid() && heightValid() && isComponentComplete())
         {
-            renderForSelection(pTextureNode, pData);
+            if (m_Viewhandler.isInSelectionMode())
+            {
+                renderForSelection();
+            }
+            else
+            {
+                render(pTextureNode, pData);
+            }
         }
-        else
-        {
-            render(pTextureNode, pData);
-        }
+    }
+    else
+    {
+        pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
     }
 
     return pTextureNode;
@@ -135,12 +145,8 @@ void GLC_QuickItem::setOpenGLState()
 
 void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeData *pData)
 {
-    qDebug() << "GLC_QuickItem::render";
-    QTime time;
-    time.start();
-
-    int x = this->x();
-    int y = this->y();
+    const int x = this->x();
+    const int y = this->y();
 
     const int width= this->width();
     const int height= this->height();
@@ -163,18 +169,12 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
 
         m_Viewhandler.viewportHandle()->setWinGLSize(width, height);
 
-        QTime time2;
-        time2.start();
         doRender();
-        qDebug() << "Render time " << time2.elapsed();
 
         m_pSourceFbo->release();
 
         QRect rect(0, 0, width, height);
-        QTime time3;
-        time3.start();
         QOpenGLFramebufferObject::blitFramebuffer(m_pTargetFbo, rect, m_pSourceFbo, rect);
-        qDebug() << "blitFramebuffer time " << time3.elapsed();
         popOpenGLMatrix();
 
     }
@@ -186,39 +186,40 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
         delete m_pTargetFbo;
         m_pTargetFbo= NULL;
     }
-    qDebug() << "GLC_QuickItem::render" << time.elapsed();
 }
 
-void GLC_QuickItem::renderForSelection(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeData* pData)
+void GLC_QuickItem::renderForSelection()
 {
-
-    pushOpenGLMatrix();
     setupSelectionFbo(this->width(), this->height());
 
-    setOpenGLState();
-
-    m_pSelectionFbo->bind();
-
-    if (m_SelectionBufferIsDirty)
+    if (m_pSelectionFbo && m_pSelectionFbo->isValid())
     {
-        qDebug() << "m_SelectionBufferIsDirty";
-        m_Viewhandler.viewportHandle()->setWinGLSize(width(), height());
-        GLC_State::setSelectionMode(true);
-        doRender();
-        GLC_State::setSelectionMode(false);
-        m_SelectionBufferIsDirty= false;
+        pushOpenGLMatrix();
+        setOpenGLState();
+
+        m_pSelectionFbo->bind();
+
+        if (m_SelectionBufferIsDirty)
+        {
+            qDebug() << "m_SelectionBufferIsDirty";
+            m_Viewhandler.viewportHandle()->setWinGLSize(width(), height());
+            GLC_State::setSelectionMode(true);
+            doRender();
+            GLC_State::setSelectionMode(false);
+            m_SelectionBufferIsDirty= false;
+        }
+
+        // Get selection coordinate
+        const int x= m_Viewhandler.selectionPoint().x();
+        const int y= m_Viewhandler.selectionPoint().y();
+
+        GLC_uint selectionId= m_Viewhandler.viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
+
+        m_pSelectionFbo->release();
+        popOpenGLMatrix();
+
+        m_Viewhandler.updateSelection(selectionId);
     }
-
-    // Get selection coordinate
-    const int x= m_Viewhandler.selectionPoint().x();
-    const int y= m_Viewhandler.selectionPoint().y();
-
-    GLC_uint selectionId= m_Viewhandler.viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
-
-    m_pSelectionFbo->release();
-    popOpenGLMatrix();
-
-    m_Viewhandler.updateSelection(selectionId);
 }
 
 void GLC_QuickItem::doRender()
@@ -263,14 +264,11 @@ void GLC_QuickItem::defaultRenderWorld()
 
 void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode)
 {
-    if (width && height)
+    if ((width > 0) && (height > 0))
     {
         if (NULL == m_pSourceFbo)
         {
             Q_ASSERT(NULL == m_pTargetFbo);
-            qDebug() << "About to create render Fbo";
-            QTime time;
-            time.start();
 
             QOpenGLFramebufferObjectFormat sourceFormat;
             sourceFormat.setAttachment(QOpenGLFramebufferObject::Depth);
@@ -278,13 +276,18 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
 
             m_pSourceFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
             m_pTargetFbo= new QOpenGLFramebufferObject(width, height);
-            qDebug() << "render fbo created in " << time.elapsed();
         }
-
-        pTextureNode->setTexture(this->window()->createTextureFromId(m_pTargetFbo->texture(), m_pTargetFbo->size()));
+        QQuickWindow::CreateTextureOptions options= QQuickWindow::TextureHasAlphaChannel;
+        pTextureNode->setTexture(this->window()->createTextureFromId(m_pTargetFbo->texture(), m_pTargetFbo->size(), options));
     }
     else
     {
+        delete m_pSourceFbo;
+        m_pSourceFbo= NULL;
+
+        delete m_pTargetFbo;
+        m_pTargetFbo= NULL;
+
         pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
     }
 
@@ -293,14 +296,18 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
 
 void GLC_QuickItem::setupSelectionFbo(int width, int height)
 {
-    if (NULL == m_pSelectionFbo)
+    if ((width > 0) && (height > 0))
     {
-        qDebug() << "About to create m_pSelectionFbo";
-        QTime time;
-        time.start();
-        m_pSelectionFbo= new QOpenGLFramebufferObject(width, height, QOpenGLFramebufferObject::Depth);
-        qDebug() << "m_pSelectionFbo created in " << time.elapsed();
-        m_SelectionBufferIsDirty= true;
+        if (NULL == m_pSelectionFbo)
+        {
+            m_pSelectionFbo= new QOpenGLFramebufferObject(width, height, QOpenGLFramebufferObject::Depth);
+            m_SelectionBufferIsDirty= true;
+        }
+    }
+    else
+    {
+        delete m_pSelectionFbo;
+        m_pSelectionFbo= NULL;
     }
 }
 
