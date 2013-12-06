@@ -65,6 +65,7 @@ public:
 
 public slots:
     void setViewhandler(QVariant viewHandler);
+    void invalidateSelectionBuffer();
 
 protected:
     virtual void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
@@ -83,15 +84,12 @@ protected:
     void setupSelectionFbo(int width, int height);
     void pushOpenGLMatrix();
     void popOpenGLMatrix();
-    void select(qreal x, qreal y);
 
 protected:
-    GLC_ViewHandler m_Anchor;
+    GLC_ViewHandler m_Viewhandler;
     QOpenGLFramebufferObject* m_pSourceFbo;
     QOpenGLFramebufferObject* m_pTargetFbo;
     QOpenGLFramebufferObject* m_pSelectionFbo;
-    GLC_Vector2d m_CurrentPos;
-    bool m_IsInSelectionMode;
     bool m_SelectionBufferIsDirty;
 };
 

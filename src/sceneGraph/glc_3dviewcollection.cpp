@@ -445,10 +445,10 @@ void GLC_3DViewCollection::hideAll()
 void GLC_3DViewCollection::bindSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning)
 {
 	Q_ASSERT(NULL != pSpacePartitioning);
-	Q_ASSERT(pSpacePartitioning->collectionHandle() == this);
 
 	delete m_pSpacePartitioning;
 	m_pSpacePartitioning= pSpacePartitioning;
+    m_pSpacePartitioning->set3DViewCollection(this);
 }
 
 void GLC_3DViewCollection::unbindSpacePartitioning()

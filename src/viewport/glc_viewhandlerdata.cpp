@@ -22,8 +22,13 @@
 
 #include "glc_viewhandlerdata.h"
 
+#include "glc_viewport.h"
+#include "glc_movercontroller.h"
+
 #include "../glc_factory.h"
 #include "../sceneGraph/glc_octree.h"
+#include "glc_inputeventinterpreter.h"
+#include "glc_defaulteventinterpreter.h"
 
 GLC_ViewHandlerData::GLC_ViewHandlerData()
     : QObject()
@@ -32,6 +37,11 @@ GLC_ViewHandlerData::GLC_ViewHandlerData()
     , m_pViewport(new GLC_Viewport())
     , m_pMoverController(NULL)
     , m_Samples(16)
+    , m_pSpacePartitioning(NULL)
+    , m_pInputEventInterpreter(new GLC_DefaultEventInterpreter(this))
+    , m_RenderInSelectionMode(false)
+    , m_SelectionPoint()
+    , m_SelectionMode(GLC_SelectionEvent::Replace)
 {
     m_pLight->setTwoSided(true);
     m_pLight->setPosition(10.0, 10.0, 10.0);
@@ -48,14 +58,28 @@ GLC_ViewHandlerData::~GLC_ViewHandlerData()
     delete m_pLight;
     delete m_pViewport;
     delete m_pMoverController;
+    delete m_pInputEventInterpreter;
+}
+
+void GLC_ViewHandlerData::updateView()
+{
+    emit isDirty();
 }
 
 void GLC_ViewHandlerData::setWorld(const GLC_World &world)
 {
+    if (NULL != m_pSpacePartitioning)
+    {
+        m_pSpacePartitioning= m_pSpacePartitioning->clone();
+    }
+
     m_World= world;
-    GLC_Octree* pOctree= new GLC_Octree(m_World.collection());
-    pOctree->updateSpacePartitioning();
-    m_World.collection()->bindSpacePartitioning(pOctree);
+
+    if (NULL != m_pSpacePartitioning)
+    {
+        m_World.collection()->bindSpacePartitioning(m_pSpacePartitioning);
+    }
+
     m_pViewport->reframe(m_World.boundingBox());
 
     emit isDirty();
@@ -68,6 +92,103 @@ void GLC_ViewHandlerData::setSamples(int samples)
         m_Samples= samples;
         emit isDirty();
     }
+}
+
+void GLC_ViewHandlerData::setSpacePartitioning(GLC_SpacePartitioning *pSpacePartitioning)
+{
+    m_pSpacePartitioning= pSpacePartitioning;
+    m_World.collection()->bindSpacePartitioning(m_pSpacePartitioning);
+}
+
+void GLC_ViewHandlerData::setNextSelection(int x, int y, GLC_SelectionEvent::Mode mode)
+{
+    m_RenderInSelectionMode= true;
+    m_SelectionPoint.setX(x);
+    m_SelectionPoint.setY(y);
+    m_SelectionMode= mode;
+    emit isDirty();
+}
+
+void GLC_ViewHandlerData::unsetSelection()
+{
+    m_RenderInSelectionMode= false;
+    m_World.unselectAll();
+    emit isDirty();
+}
+
+void GLC_ViewHandlerData::updateSelection(GLC_uint id)
+{
+    m_RenderInSelectionMode= false;
+    const bool contains= m_World.containsOccurence(id);
+    bool selectionChange= false;
+
+    switch (m_SelectionMode) {
+    case GLC_SelectionEvent::Replace:
+        m_World.unselectAll();
+        if (contains)
+        {
+            m_World.select(id);
+        }
+        selectionChange= true;
+        break;
+    case GLC_SelectionEvent::Add:
+        if (contains)
+        {
+            m_World.select(id);
+        }
+        selectionChange= true;
+        break;
+    case GLC_SelectionEvent::Remove:
+        if (contains && (m_World.isSelected(id)))
+        {
+            m_World.unselect(id);
+        }
+        selectionChange= true;
+        break;
+
+    default:
+        break;
+    }
+    if (selectionChange) emit isDirty();
+}
+
+void GLC_ViewHandlerData::processMousePressEvent(QMouseEvent *pMouseEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    m_pInputEventInterpreter->processMousePressEvent(pMouseEvent);
+}
+
+void GLC_ViewHandlerData::processMouseMoveEvent(QMouseEvent *pMouseEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    if (m_pInputEventInterpreter->processMouseMoveEvent(pMouseEvent))
+    {
+        emit invalidateSelectionBuffer();
+    }
+}
+
+void GLC_ViewHandlerData::processMouseReleaseEvent(QMouseEvent *pMouseEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    m_pInputEventInterpreter->processMouseReleaseEvent(pMouseEvent);
+}
+
+void GLC_ViewHandlerData::processMouseDblClickEvent(QMouseEvent *pMouseEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    m_pInputEventInterpreter->processMouseDblClickEvent(pMouseEvent);
+}
+
+void GLC_ViewHandlerData::processWheelEvent(QWheelEvent *pWWheelEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    m_pInputEventInterpreter->processWheelEvent(pWWheelEvent);
+}
+
+void GLC_ViewHandlerData::processTouchEvent(QTouchEvent *pTouchEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    m_pInputEventInterpreter->processTouchEvent(pTouchEvent);
 }
 
 void GLC_ViewHandlerData::updateBackGround()

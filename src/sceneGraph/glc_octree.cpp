@@ -34,7 +34,6 @@ GLC_Octree::GLC_Octree(GLC_3DViewCollection* pCollection)
 , m_OctreeDepth(m_DefaultOctreeDepth)
 {
 
-
 }
 
 GLC_Octree::GLC_Octree(const GLC_Octree& octree)
@@ -42,15 +41,19 @@ GLC_Octree::GLC_Octree(const GLC_Octree& octree)
 , m_pRootNode(NULL)
 , m_OctreeDepth(octree.m_OctreeDepth)
 {
-	if (NULL != octree.m_pRootNode)
-	{
-		m_pRootNode= new GLC_OctreeNode(*(octree.m_pRootNode));
-	}
+
 }
 
 GLC_Octree::~GLC_Octree()
 {
-	delete m_pRootNode;
+    delete m_pRootNode;
+}
+
+GLC_SpacePartitioning *GLC_Octree::clone()
+{
+    GLC_SpacePartitioning* pSubject= new GLC_Octree(*this);
+
+    return pSubject;
 }
 
 int  GLC_Octree::defaultDepth()

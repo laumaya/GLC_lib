@@ -23,8 +23,8 @@
 #ifndef GLC_QUICKITEMANCHOR_H
 #define GLC_QUICKITEMANCHOR_H
 
-#include <QObject>
 #include <QSharedPointer>
+#include <QMetaType>
 
 #include "glc_viewhandlerdata.h"
 
@@ -62,16 +62,53 @@ public:
     GLC_ViewHandlerData* data() const
     {return m_Data.data();}
 
+    inline bool isInSelectionMode() const
+    {return m_Data.data()->isInSelectionMode();}
+
+    inline QPoint selectionPoint() const
+    {return m_Data.data()->selectionPoint();}
+
 
 public:
+
+    inline void processMousePressEvent(QMouseEvent* pMouseEvent)
+    {m_Data.data()->processMousePressEvent(pMouseEvent);}
+
+    inline void processMouseMoveEvent(QMouseEvent* pMouseEvent)
+    {m_Data.data()->processMouseMoveEvent(pMouseEvent);}
+
+    inline void processMouseReleaseEvent(QMouseEvent* pMouseEvent)
+    {m_Data.data()->processMouseReleaseEvent(pMouseEvent);}
+
+    inline void processMouseDblClickEvent(QMouseEvent* pMouseEvent)
+    {m_Data.data()->processMouseDblClickEvent(pMouseEvent);}
+
+    inline void processWheelEvent(QWheelEvent* pWWheelEvent)
+    {m_Data.data()->processWheelEvent(pWWheelEvent);}
+
+    inline void processTouchEvent(QTouchEvent* pTouchEvent)
+    {m_Data.data()->processTouchEvent(pTouchEvent);}
+
+public:
+
     inline void updateQuickItem()
-    {m_Data.data()->updateQuickItem();}
+    {m_Data.data()->updateView();}
 
     inline void setWorld(const GLC_World& world)
     {m_Data.data()->setWorld(world);}
 
     inline void setSamples(int samples)
     {m_Data.data()->setSamples(samples);}
+
+    inline void setNextSelection(int x, int y, GLC_SelectionEvent::Mode mode)
+    {m_Data.data()->setNextSelection(x, y, mode);}
+
+    inline void unsetSelection()
+    {m_Data.data()->unsetSelection();}
+
+    inline void updateSelection(GLC_uint id)
+    {m_Data.data()->updateSelection(id);}
+
 
 private:
     QSharedPointer<GLC_ViewHandlerData> m_Data;

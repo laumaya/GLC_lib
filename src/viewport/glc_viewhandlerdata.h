@@ -25,13 +25,18 @@
 
 #include <QObject>
 #include <QColor>
+#include <QPoint>
 
-#include "glc_viewport.h"
-#include "glc_movercontroller.h"
 #include "../shading/glc_light.h"
 #include "../sceneGraph/glc_world.h"
+#include "../glc_selectionevent.h"
 
 #include "../glc_config.h"
+
+class GLC_Viewport;
+class GLC_MoverController;
+class GLC_SpacePartitioning;
+class GLC_InputEventInterpreter;
 
 class GLC_LIB_EXPORT GLC_ViewHandlerData : public QObject
 {
@@ -42,6 +47,7 @@ public:
 
 signals :
     void isDirty();
+    void invalidateSelectionBuffer();
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
@@ -62,6 +68,13 @@ public:
 
     inline GLC_MoverController* moverControllerHandle() const
     {return m_pMoverController;}
+
+    inline bool isInSelectionMode() const
+    {return m_RenderInSelectionMode;}
+
+    inline QPoint selectionPoint() const
+    {return m_SelectionPoint;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -69,12 +82,35 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    void updateQuickItem();
+    void updateView();
 
     virtual void setWorld(const GLC_World& world);
 
     void setSamples(int samples);
 
+    void setSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning);
+
+    virtual void setNextSelection(int x, int y, GLC_SelectionEvent::Mode mode);
+
+    virtual void unsetSelection();
+
+    virtual void updateSelection(GLC_uint id);
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Event handling Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+    public:
+
+    virtual void processMousePressEvent(QMouseEvent* pMouseEvent);
+    virtual void processMouseMoveEvent(QMouseEvent* pMouseEvent);
+    virtual void processMouseReleaseEvent(QMouseEvent* pMouseEvent);
+    virtual void processMouseDblClickEvent(QMouseEvent* pMouseEvent);
+    virtual void processWheelEvent(QWheelEvent* pWWheelEvent);
+
+    virtual void processTouchEvent(QTouchEvent* pTouchEvent);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -92,6 +128,12 @@ protected:
     GLC_Viewport* m_pViewport;
     GLC_MoverController* m_pMoverController;
     int m_Samples;
+    GLC_SpacePartitioning* m_pSpacePartitioning;
+    GLC_InputEventInterpreter* m_pInputEventInterpreter;
+    bool m_RenderInSelectionMode;
+    QPoint m_SelectionPoint;
+    GLC_SelectionEvent::Mode m_SelectionMode;
+
 };
 
 #endif // GLC_QUICKITEMANCHORSDATA_H

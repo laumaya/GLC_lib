@@ -32,18 +32,17 @@
 
 GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     : QQuickItem(pParent)
-    , m_Anchor()
+    , m_Viewhandler()
     , m_pSourceFbo(NULL)
     , m_pTargetFbo(NULL)
     , m_pSelectionFbo(NULL)
-    , m_CurrentPos()
-    , m_IsInSelectionMode(false)
     , m_SelectionBufferIsDirty(true)
 {
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton);
     setFlag(QQuickItem::ItemHasContents);
 
-    connect(m_Anchor.data(), SIGNAL(isDirty()), this, SLOT(update()));
+    connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()));
+    connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
 }
 
 GLC_QuickItem::~GLC_QuickItem()
@@ -56,16 +55,25 @@ GLC_QuickItem::~GLC_QuickItem()
 QVariant GLC_QuickItem::viewHandler() const
 {
     QVariant subject;
-    subject.setValue(m_Anchor);
+    subject.setValue(m_Viewhandler);
 
     return subject;
 }
 
 void GLC_QuickItem::setViewhandler(QVariant viewHandler)
 {
-    disconnect(m_Anchor.data(), SIGNAL(isDirty()), this, SLOT(update()));
-    m_Anchor= viewHandler.value<GLC_ViewHandler>();
-    connect(m_Anchor.data(), SIGNAL(isDirty()), this, SLOT(update()));
+    disconnect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()));
+    disconnect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
+
+    m_Viewhandler= viewHandler.value<GLC_ViewHandler>();
+
+    connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()));
+    connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
+}
+
+void GLC_QuickItem::invalidateSelectionBuffer()
+{
+    m_SelectionBufferIsDirty= true;
 }
 
 void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
@@ -88,11 +96,11 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
     if (!pTextureNode)
         pTextureNode = new QSGSimpleTextureNode();
 
-    GLC_World world= m_Anchor.world();
+    GLC_World world= m_Viewhandler.world();
 
     if (!world.isEmpty() && widthValid() && heightValid() && isComponentComplete())
     {
-        if (m_IsInSelectionMode)
+        if (m_Viewhandler.isInSelectionMode())
         {
             renderForSelection(pTextureNode, pData);
         }
@@ -107,58 +115,22 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
 
 void GLC_QuickItem::mousePressEvent(QMouseEvent *e)
 {
-    if (!m_Anchor.moverControllerHandle()->hasActiveMover())
-    {
-        switch (e->button())
-        {
-        case (Qt::RightButton):
-            m_Anchor.viewportHandle()->setWinGLSize(width(), height(), false);
-            m_Anchor.moverControllerHandle()->setActiveMover(GLC_MoverController::TrackBall, GLC_UserInput(e->pos().x(), e->pos().y()));
-            m_Anchor.world().collection()->setLodUsage(true, m_Anchor.viewportHandle());
-            update();
-            break;
-        case (Qt::LeftButton):
-            select(e->pos().x(), e->pos().y());
-            break;
-        case (Qt::MidButton):
-            m_Anchor.viewportHandle()->setWinGLSize(width(), height(), false);
-            m_Anchor.moverControllerHandle()->setActiveMover(GLC_MoverController::Zoom, GLC_UserInput(e->pos().x(), e->pos().y()));
-            m_Anchor.world().collection()->setLodUsage(true, m_Anchor.viewportHandle());
-            update();
-            break;
-
-        default:
-            break;
-        }
-    }
+    m_Viewhandler.processMousePressEvent(e);
 }
 
 void GLC_QuickItem::mouseMoveEvent(QMouseEvent *e)
 {
-    if (m_Anchor.moverControllerHandle()->hasActiveMover())
-    {
-        m_Anchor.viewportHandle()->setWinGLSize(width(), height(), false);
-        m_Anchor.moverControllerHandle()->move(GLC_UserInput(e->pos().x(), e->pos().y()));
-        update();
-    }
+    m_Viewhandler.processMouseMoveEvent(e);
 }
 
 void GLC_QuickItem::mouseReleaseEvent(QMouseEvent *e)
 {
-    Q_UNUSED(e);
-
-    if (m_Anchor.moverControllerHandle()->hasActiveMover())
-    {
-        m_Anchor.moverControllerHandle()->setNoMover();
-        m_Anchor.world().collection()->setLodUsage(false, m_Anchor.viewportHandle());
-        m_SelectionBufferIsDirty= true;
-        update();
-    }
+    m_Viewhandler.processMouseReleaseEvent(e);
 }
 
 void GLC_QuickItem::setOpenGLState()
 {
-    m_Anchor.viewportHandle()->initGl();
+    m_Viewhandler.viewportHandle()->initGl();
 }
 
 void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeData *pData)
@@ -189,7 +161,7 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
 
         m_pSourceFbo->bind();
 
-        m_Anchor.viewportHandle()->setWinGLSize(width, height);
+        m_Viewhandler.viewportHandle()->setWinGLSize(width, height);
 
         QTime time2;
         time2.start();
@@ -227,30 +199,26 @@ void GLC_QuickItem::renderForSelection(QSGSimpleTextureNode *pTextureNode, Updat
 
     m_pSelectionFbo->bind();
 
-
     if (m_SelectionBufferIsDirty)
     {
         qDebug() << "m_SelectionBufferIsDirty";
-        m_Anchor.viewportHandle()->setWinGLSize(width(), height());
+        m_Viewhandler.viewportHandle()->setWinGLSize(width(), height());
         GLC_State::setSelectionMode(true);
         doRender();
         GLC_State::setSelectionMode(false);
         m_SelectionBufferIsDirty= false;
     }
-    GLC_uint selectionId= m_Anchor.viewportHandle()->selectOnPreviousRender(m_CurrentPos.x(), m_CurrentPos.y(), GL_COLOR_ATTACHMENT0);
 
-    m_IsInSelectionMode= false;
+    // Get selection coordinate
+    const int x= m_Viewhandler.selectionPoint().x();
+    const int y= m_Viewhandler.selectionPoint().y();
+
+    GLC_uint selectionId= m_Viewhandler.viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
 
     m_pSelectionFbo->release();
     popOpenGLMatrix();
 
-    GLC_World world= m_Anchor.world();
-    world.unselectAll();
-    if (world.containsOccurence(selectionId))
-    {
-        world.select(world.occurence(selectionId));
-    }
-    render(pTextureNode, pData);
+    m_Viewhandler.updateSelection(selectionId);
 }
 
 void GLC_QuickItem::doRender()
@@ -264,8 +232,8 @@ void GLC_QuickItem::defaultRenderWorld()
     {
         QOpenGLContext::currentContext()->functions()->glUseProgram(0);
 
-        GLC_World world= m_Anchor.world();
-        GLC_Viewport* pViewport= m_Anchor.viewportHandle();
+        GLC_World world= m_Viewhandler.world();
+        GLC_Viewport* pViewport= m_Viewhandler.viewportHandle();
 
         // Calculate camera depth of view
         pViewport->setDistMinAndMax(world.boundingBox());
@@ -277,15 +245,15 @@ void GLC_QuickItem::defaultRenderWorld()
         // Load identity matrix
         GLC_Context::current()->glcLoadIdentity();
 
-        m_Anchor.lightHandle()->glExecute();
+        m_Viewhandler.lightHandle()->glExecute();
         pViewport->glExecuteCam();
 
         world.render(0, glc::WireRenderFlag);
         world.render(0, glc::TransparentRenderFlag);
         world.render(1, glc::WireRenderFlag);
-        m_Anchor.lightHandle()->disable();
+        m_Viewhandler.lightHandle()->disable();
 
-        m_Anchor.moverControllerHandle()->drawActiveMoverRep();
+        m_Viewhandler.moverControllerHandle()->drawActiveMoverRep();
     }
     catch (GLC_Exception &e)
     {
@@ -306,7 +274,7 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
 
             QOpenGLFramebufferObjectFormat sourceFormat;
             sourceFormat.setAttachment(QOpenGLFramebufferObject::Depth);
-            sourceFormat.setSamples(m_Anchor.samples());
+            sourceFormat.setSamples(m_Viewhandler.samples());
 
             m_pSourceFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
             m_pTargetFbo= new QOpenGLFramebufferObject(width, height);
@@ -362,11 +330,4 @@ void GLC_QuickItem::popOpenGLMatrix()
 
     pCurrentContext->glcMatrixMode(GL_MODELVIEW);
     pCurrentContext->glcPopMatrix();
-}
-
-void GLC_QuickItem::select(qreal x, qreal y)
-{
-    m_IsInSelectionMode= true;
-    m_CurrentPos.setVect(x, y);
-    update();
 }

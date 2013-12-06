@@ -50,6 +50,8 @@ public:
 
 	//! Destructor
 	virtual ~GLC_SpacePartitioning();
+
+    virtual GLC_SpacePartitioning* clone()= 0;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -80,6 +82,9 @@ public:
 
 	//! Clear the space partionning
 	virtual void clear()= 0;
+
+    //! Set the collection to use
+    void set3DViewCollection(GLC_3DViewCollection* pCollection);
 
 //@}
 

@@ -51,6 +51,8 @@ public:
 	//! Destructor
 	virtual ~GLC_Octree();
 
+    virtual GLC_SpacePartitioning* clone();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

@@ -10,7 +10,7 @@ ios: CONFIG += static
 
 TARGET = GLC_lib
 DESTDIR = ./
-VERSION = 2.5.1
+VERSION = 3.0.0
 
 DEFINES += CREATE_GLC_LIB_DLL
 DEFINES += LIB3DS_EXPORTS
@@ -196,7 +196,10 @@ HEADERS_GLC_GLU +=	glu/glc_glu.h
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO} \
     qml/glc_quickitem.h \
     viewport/glc_viewhandlerdata.h \
-    viewport/glc_viewhandler.h
+    viewport/glc_viewhandler.h \
+    viewport/glc_inputeventinterpreter.h \
+    glc_selectionevent.h \
+    viewport/glc_defaulteventinterpreter.h
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
 		   
@@ -213,7 +216,10 @@ SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/zutil.c \
     qml/glc_quickitem.cpp \
     viewport/glc_viewhandlerdata.cpp \
-    viewport/glc_viewhandler.cpp
+    viewport/glc_viewhandler.cpp \
+    viewport/glc_inputeventinterpreter.cpp \
+    glc_selectionevent.cpp \
+    viewport/glc_defaulteventinterpreter.cpp
 
 SOURCES += 3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/qioapi.cpp \
@@ -467,7 +473,11 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_Context \
                GLC_ContextManager \
                GLC_Renderer \
-               GLC_ExtrudedMesh
+               GLC_ExtrudedMesh \
+               GLC_QuickItem \
+               GLC_ViewHandler \
+               GLC_InputEventInterpreter \
+               GLC_SelectionEvent
 
 include (../install.pri)
 
@@ -508,6 +518,3 @@ INSTALLS += include_glc_3dwidget include_glc_glu
 INSTALLS += target
 INSTALLS += include
 
-OTHER_FILES += \
-    GLC_QuickItem \
-    GLC_ViewHandler

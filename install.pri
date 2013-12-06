@@ -1,6 +1,5 @@
 # Linux and macx install configuration
-
-GLC_LIB_NAME = GLC_lib-2.5
+GLC_LIB_NAME = GLC_lib-3.0
 
 unix {
     # Location of HEADERS and library

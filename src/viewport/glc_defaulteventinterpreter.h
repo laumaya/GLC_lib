@@ -19,38 +19,33 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************************/
-//! \file glc_spacepartitioning.cpp implementation for the GLC_SpacePartitioning class.
 
-#include "glc_spacepartitioning.h"
-#include "glc_3dviewcollection.h"
+#ifndef GLC_DEFAULTEVENTINTERPRETER_H
+#define GLC_DEFAULTEVENTINTERPRETER_H
 
-#include <QtGlobal>
+#include <QPoint>
 
-// Default constructor
-GLC_SpacePartitioning::GLC_SpacePartitioning(GLC_3DViewCollection* pCollection)
-: m_pCollection(pCollection)
+#include "glc_inputeventinterpreter.h"
+
+class GLC_DefaultEventInterpreter : public GLC_InputEventInterpreter
 {
-    Q_ASSERT(NULL != pCollection);
-}
+public:
+    GLC_DefaultEventInterpreter(GLC_ViewHandlerData* pViewHandler);
 
-// Copy constructor
-GLC_SpacePartitioning::GLC_SpacePartitioning(const GLC_SpacePartitioning& spacePartitionning)
-: m_pCollection(spacePartitionning.m_pCollection)
-{
+    // GLC_InputEventInterpreter interface
+public:
+    virtual bool processMousePressEvent(QMouseEvent *e);
+    virtual bool processMouseMoveEvent(QMouseEvent *e);
+    virtual bool processMouseReleaseEvent(QMouseEvent *e);
+    virtual bool processMouseDblClickEvent(QMouseEvent *pMouseEvent);
+    virtual bool processWheelEvent(QWheelEvent *pWWheelEvent);
+    virtual bool processTouchEvent(QTouchEvent *pTouchEvent);
 
-}
+protected:
+    bool m_MovingCamera;
+    QPoint m_StartingPos;
+    Qt::MouseButton m_EventButton;
 
-GLC_SpacePartitioning::~GLC_SpacePartitioning()
-{
+};
 
-}
-
-void GLC_SpacePartitioning::set3DViewCollection(GLC_3DViewCollection *pCollection)
-{
-    Q_ASSERT(NULL != pCollection);
-    if (pCollection != m_pCollection)
-    {
-        clear();
-        m_pCollection= pCollection;
-    }
-}
+#endif // GLC_DEFAULTEVENTINTERPRETER_H
