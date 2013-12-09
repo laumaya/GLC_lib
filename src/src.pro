@@ -160,7 +160,11 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
                         viewport/glc_flymover.h \
                         viewport/glc_repflymover.h \
                         viewport/glc_userinput.h \
-                        viewport/glc_tsrmover.h
+                        viewport/glc_tsrmover.h \
+                        viewport/glc_viewhandlerdata.h \
+                        viewport/glc_viewhandler.h \
+                        viewport/glc_inputeventinterpreter.h \
+                        viewport/glc_defaulteventinterpreter.h
 
 HEADERS_GLC += glc_global.h \
                glc_object.h \
@@ -180,7 +184,8 @@ HEADERS_GLC += glc_global.h \
                glc_context.h \
                glc_contextmanager.h \
                glc_contextshareddata.h \
-               glc_uniformshaderdata.h
+               glc_uniformshaderdata.h \
+               glc_selectionevent.h
            
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
                         3DWidget/glc_cuttingplane.h \
@@ -193,15 +198,12 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 
 HEADERS_GLC_GLU +=	glu/glc_glu.h
 
-HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO} \
-    qml/glc_quickitem.h \
-    viewport/glc_viewhandlerdata.h \
-    viewport/glc_viewhandler.h \
-    viewport/glc_inputeventinterpreter.h \
-    glc_selectionevent.h \
-    viewport/glc_defaulteventinterpreter.h
+HEADERS_GLC_QML             += qml/glc_quickitem.h
+
+HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
+HEADERS += $${HEADERS_GLC_QML}
 		   
 SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/compress.c \
@@ -213,13 +215,7 @@ SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/inftrees.c \
            3rdparty/zlib/trees.c \
            3rdparty/zlib/uncompr.c \
-           3rdparty/zlib/zutil.c \
-    qml/glc_quickitem.cpp \
-    viewport/glc_viewhandlerdata.cpp \
-    viewport/glc_viewhandler.cpp \
-    viewport/glc_inputeventinterpreter.cpp \
-    glc_selectionevent.cpp \
-    viewport/glc_defaulteventinterpreter.cpp
+           3rdparty/zlib/zutil.c
 
 SOURCES += 3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/qioapi.cpp \
@@ -337,7 +333,12 @@ SOURCES +=	viewport/glc_camera.cpp \
                 viewport/glc_flymover.cpp \
                 viewport/glc_repflymover.cpp \
                 viewport/glc_userinput.cpp \
-                viewport/glc_tsrmover.cpp
+                viewport/glc_tsrmover.cpp \
+                viewport/glc_viewhandlerdata.cpp \
+                viewport/glc_viewhandler.cpp \
+                viewport/glc_inputeventinterpreter.cpp \
+                viewport/glc_defaulteventinterpreter.cpp
+
 		
 SOURCES +=	glc_global.cpp \
                 glc_object.cpp \
@@ -357,6 +358,7 @@ SOURCES +=	glc_global.cpp \
                 glc_contextmanager.cpp \
                 glc_contextshareddata.cpp \
                 glc_uniformshaderdata.cpp
+                glc_selectionevent.cpp \
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
                 3DWidget/glc_cuttingplane.cpp \
@@ -368,6 +370,7 @@ SOURCES +=	3DWidget/glc_3dwidget.cpp \
                 3DWidget/glc_axis.cpp
 			
 SOURCES +=	glu/glc_project.cpp
+SOURCES +=      qml/glc_quickitem.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
@@ -493,6 +496,7 @@ include_glc_shading.path = $${INCLUDE_DIR}/shading
 include_glc_viewport.path = $${INCLUDE_DIR}/viewport
 include_glc_3dwidget.path = $${INCLUDE_DIR}/3DWidget
 include_glc_glu.path = $${INCLUDE_DIR}/glu
+include_glc_qml.path = $${INCLUDE_DIR}/qml
 
 include.files = $${HEADERS_GLC} $${HEADERS_INST}
 include_lib3ds.files = $${HEADERS_LIB3DS}
@@ -506,6 +510,7 @@ include_glc_shading.files = $${HEADERS_GLC_SHADING}
 include_glc_viewport.files = $${HEADERS_GLC_VIEWPORT}
 include_glc_3dwidget.files = $${HEADERS_GLC_3DWIDGET}
 include_glc_glu.files = $${HEADERS_GLC_GLU}
+include_glc_qml.files = $${HEADERS_GLC_QML}
 
 # install library
 target.path = $${LIB_DIR}
@@ -513,7 +518,7 @@ target.path = $${LIB_DIR}
 # "make install" configuration options
 INSTALLS += include_lib3ds include_glext include_quazip include_glc_maths include_glc_io
 INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport
-INSTALLS += include_glc_3dwidget include_glc_glu
+INSTALLS += include_glc_3dwidget include_glc_glu include_glc_qml
 
 INSTALLS += target
 INSTALLS += include
