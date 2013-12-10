@@ -32,25 +32,25 @@ int main(int argc, char *argv[])
 
     QFile file1(":model/Democles.dae");
     GLC_World world1= GLC_Factory::instance()->createWorldFromFile(file1);
-    GLC_ViewHandler viewHandler1;
-    viewHandler1.setWorld(world1);
-    viewHandler1.viewportHandle()->setBackgroundColor(Qt::black);
+    GLC_ViewHandler* pViewHandler1= new GLC_ViewHandler();
+    pViewHandler1->setWorld(world1);
+    pViewHandler1->viewportHandle()->setBackgroundColor(Qt::black);
 
     QVariant variantViewHandler1;
-    variantViewHandler1.setValue(viewHandler1);
+    variantViewHandler1.setValue(pViewHandler1);
     view.rootContext()->setContextProperty("viewHandler1", variantViewHandler1);
 
     //QFile file2("/Users/laumaya/Documents/Tests VrooM/did/TEA132_EPC567/StructBM.3dxml");
     QFile file2(":model/man.obj");
     GLC_World world2= GLC_Factory::instance()->createWorldFromFile(file2);
 
-    GLC_ViewHandler viewHandler2;
-    viewHandler2.setWorld(world2);
-    viewHandler2.setSpacePartitioning(new GLC_Octree(world2.collection()));
-    viewHandler2.viewportHandle()->setBackgroundColor(Qt::white);
+    GLC_ViewHandler* pViewHandler2= new GLC_ViewHandler();
+    pViewHandler2->setWorld(world2);
+    pViewHandler2->setSpacePartitioning(new GLC_Octree(world2.collection()));
+    pViewHandler2->viewportHandle()->setBackgroundColor(Qt::white);
 
     QVariant variantViewHandler2;
-    variantViewHandler2.setValue(viewHandler2);
+    variantViewHandler2.setValue(pViewHandler2);
     view.rootContext()->setContextProperty("viewHandler2", variantViewHandler2);
 
     view.setResizeMode(QQuickView::SizeRootObjectToView);

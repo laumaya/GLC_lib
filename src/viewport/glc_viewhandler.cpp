@@ -22,25 +22,182 @@
 
 #include "glc_viewhandler.h"
 
+#include "glc_viewport.h"
+#include "glc_movercontroller.h"
+
+#include "../glc_factory.h"
+#include "../sceneGraph/glc_octree.h"
+#include "glc_inputeventinterpreter.h"
+#include "glc_defaulteventinterpreter.h"
+
 GLC_ViewHandler::GLC_ViewHandler()
-    : m_Data(new GLC_ViewHandlerData())
+    : QObject()
+    , m_World()
+    , m_pLight(new GLC_Light())
+    , m_pViewport(new GLC_Viewport())
+    , m_pMoverController(NULL)
+    , m_Samples(16)
+    , m_pSpacePartitioning(NULL)
+    , m_pInputEventInterpreter(new GLC_DefaultEventInterpreter(this))
+    , m_RenderInSelectionMode(false)
+    , m_SelectionPoint()
+    , m_SelectionMode(GLC_SelectionEvent::Replace)
 {
+    m_pLight->setTwoSided(true);
+    m_pLight->setPosition(10.0, 10.0, 10.0);
 
-}
+    m_pViewport->cameraHandle()->setEyeCam(GLC_Point3d(1.0, 1.0, 1.0));
 
-GLC_ViewHandler::GLC_ViewHandler(const GLC_ViewHandler &other)
-    : m_Data(other.m_Data)
-{
-
-}
-
-GLC_ViewHandler::GLC_ViewHandler(const QSharedPointer<GLC_ViewHandlerData>& sharedData)
-    : m_Data(sharedData)
-{
-
+    QColor repColor;
+    repColor.setRgbF(1.0, 0.11372, 0.11372, 1.0);
+    m_pMoverController= new GLC_MoverController(GLC_Factory::instance()->createDefaultMoverController(repColor, m_pViewport));
 }
 
 GLC_ViewHandler::~GLC_ViewHandler()
 {
+    delete m_pLight;
+    delete m_pViewport;
+    delete m_pMoverController;
+    delete m_pInputEventInterpreter;
+}
 
+void GLC_ViewHandler::updateView()
+{
+    emit isDirty();
+}
+
+void GLC_ViewHandler::setWorld(const GLC_World &world)
+{
+    if (NULL != m_pSpacePartitioning)
+    {
+        m_pSpacePartitioning= m_pSpacePartitioning->clone();
+    }
+
+    m_World= world;
+
+    if (NULL != m_pSpacePartitioning)
+    {
+        m_World.collection()->bindSpacePartitioning(m_pSpacePartitioning);
+        m_World.collection()->setSpacePartitionningUsage(true);
+    }
+    else
+    {
+        m_World.collection()->setSpacePartitionningUsage(false);
+    }
+
+    m_pViewport->reframe(m_World.boundingBox());
+
+    emit isDirty();
+}
+
+void GLC_ViewHandler::setSamples(int samples)
+{
+    if (m_Samples != samples)
+    {
+        m_Samples= samples;
+        emit isDirty();
+    }
+}
+
+void GLC_ViewHandler::setSpacePartitioning(GLC_SpacePartitioning *pSpacePartitioning)
+{
+    m_pSpacePartitioning= pSpacePartitioning;
+    m_World.collection()->bindSpacePartitioning(m_pSpacePartitioning);
+    m_World.collection()->setSpacePartitionningUsage(true);
+}
+
+void GLC_ViewHandler::setNextSelection(int x, int y, GLC_SelectionEvent::Mode mode)
+{
+    m_RenderInSelectionMode= true;
+    m_SelectionPoint.setX(x);
+    m_SelectionPoint.setY(y);
+    m_SelectionMode= mode;
+    emit isDirty();
+}
+
+void GLC_ViewHandler::unsetSelection()
+{
+    m_RenderInSelectionMode= false;
+    m_World.unselectAll();
+    emit isDirty();
+}
+
+void GLC_ViewHandler::updateSelection(GLC_uint id)
+{
+    m_RenderInSelectionMode= false;
+    const bool contains= m_World.containsOccurence(id);
+    bool selectionChange= false;
+
+    switch (m_SelectionMode) {
+    case GLC_SelectionEvent::Replace:
+        m_World.unselectAll();
+        if (contains)
+        {
+            m_World.select(id);
+        }
+        selectionChange= true;
+        break;
+    case GLC_SelectionEvent::Add:
+        if (contains)
+        {
+            m_World.select(id);
+        }
+        selectionChange= true;
+        break;
+    case GLC_SelectionEvent::Remove:
+        if (contains && (m_World.isSelected(id)))
+        {
+            m_World.unselect(id);
+        }
+        selectionChange= true;
+        break;
+
+    default:
+        break;
+    }
+    if (selectionChange) emit isDirty();
+}
+
+void GLC_ViewHandler::processMousePressEvent(QMouseEvent *pMouseEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    m_pInputEventInterpreter->processMousePressEvent(pMouseEvent);
+}
+
+void GLC_ViewHandler::processMouseMoveEvent(QMouseEvent *pMouseEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    if (m_pInputEventInterpreter->processMouseMoveEvent(pMouseEvent))
+    {
+        emit invalidateSelectionBuffer();
+    }
+}
+
+void GLC_ViewHandler::processMouseReleaseEvent(QMouseEvent *pMouseEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    m_pInputEventInterpreter->processMouseReleaseEvent(pMouseEvent);
+}
+
+void GLC_ViewHandler::processMouseDblClickEvent(QMouseEvent *pMouseEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    m_pInputEventInterpreter->processMouseDblClickEvent(pMouseEvent);
+}
+
+void GLC_ViewHandler::processWheelEvent(QWheelEvent *pWWheelEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    m_pInputEventInterpreter->processWheelEvent(pWWheelEvent);
+}
+
+void GLC_ViewHandler::processTouchEvent(QTouchEvent *pTouchEvent)
+{
+    Q_ASSERT(NULL != m_pInputEventInterpreter);
+    m_pInputEventInterpreter->processTouchEvent(pTouchEvent);
+}
+
+void GLC_ViewHandler::updateBackGround()
+{
+    //if (m_pViewport->clearBackground();
 }

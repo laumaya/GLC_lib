@@ -61,10 +61,10 @@ public:
     virtual ~GLC_QuickItem();
 
     //! Return the used GLC_ViewHandler as a QVariant
-    QVariant viewHandler() const;
+    virtual QVariant viewHandler() const;
 
 public slots:
-    void setViewhandler(QVariant viewHandler);
+    virtual void setViewhandler(QVariant viewHandler);
     void invalidateSelectionBuffer();
 
 protected:
@@ -86,7 +86,7 @@ protected:
     void popOpenGLMatrix();
 
 protected:
-    GLC_ViewHandler m_Viewhandler;
+    GLC_ViewHandler* m_pViewhandler;
     QOpenGLFramebufferObject* m_pSourceFbo;
     QOpenGLFramebufferObject* m_pTargetFbo;
     QOpenGLFramebufferObject* m_pSelectionFbo;

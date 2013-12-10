@@ -20,103 +20,121 @@
 
 *****************************************************************************/
 
-#ifndef GLC_QUICKITEMANCHOR_H
-#define GLC_QUICKITEMANCHOR_H
+#ifndef GLC_VIEWHANDLER_H
+#define GLC_VIEWHANDLER_H
 
-#include <QSharedPointer>
-#include <QMetaType>
+#include <QObject>
+#include <QColor>
+#include <QPoint>
 
-#include "glc_viewhandlerdata.h"
-
-#include "glc_viewport.h"
-#include "glc_movercontroller.h"
 #include "../shading/glc_light.h"
 #include "../sceneGraph/glc_world.h"
+#include "../glc_selectionevent.h"
 
 #include "../glc_config.h"
 
-class GLC_LIB_EXPORT GLC_ViewHandler
+class GLC_Viewport;
+class GLC_MoverController;
+class GLC_SpacePartitioning;
+class GLC_InputEventInterpreter;
+
+class GLC_LIB_EXPORT GLC_ViewHandler: public QObject
 {
+    Q_OBJECT
 public:
     GLC_ViewHandler();
-    GLC_ViewHandler(const GLC_ViewHandler& other);
-    GLC_ViewHandler(const QSharedPointer<GLC_ViewHandlerData> &sharedData);
     virtual ~GLC_ViewHandler();
 
+signals :
+    void isDirty();
+    void invalidateSelectionBuffer();
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
 public:
     inline GLC_World world() const
-    {return m_Data.data()->world();}
+    {return m_World;}
 
     inline GLC_Light* lightHandle() const
-    {return m_Data.data()->lightHandle();}
+    {return m_pLight;}
 
     inline GLC_Viewport* viewportHandle() const
-    {return m_Data.data()->viewportHandle();}
+    {return m_pViewport;}
 
     inline int samples() const
-    {return m_Data.data()->samples();}
+    {return m_Samples;}
 
     inline GLC_MoverController* moverControllerHandle() const
-    {return m_Data.data()->moverControllerHandle();}
-
-    GLC_ViewHandlerData* data() const
-    {return m_Data.data();}
+    {return m_pMoverController;}
 
     inline bool isInSelectionMode() const
-    {return m_Data.data()->isInSelectionMode();}
+    {return m_RenderInSelectionMode;}
 
     inline QPoint selectionPoint() const
-    {return m_Data.data()->selectionPoint();}
+    {return m_SelectionPoint;}
 
+//@}
 
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
 public:
+    void updateView();
 
-    inline void processMousePressEvent(QMouseEvent* pMouseEvent)
-    {m_Data.data()->processMousePressEvent(pMouseEvent);}
+    virtual void setWorld(const GLC_World& world);
 
-    inline void processMouseMoveEvent(QMouseEvent* pMouseEvent)
-    {m_Data.data()->processMouseMoveEvent(pMouseEvent);}
+    void setSamples(int samples);
 
-    inline void processMouseReleaseEvent(QMouseEvent* pMouseEvent)
-    {m_Data.data()->processMouseReleaseEvent(pMouseEvent);}
+    void setSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning);
 
-    inline void processMouseDblClickEvent(QMouseEvent* pMouseEvent)
-    {m_Data.data()->processMouseDblClickEvent(pMouseEvent);}
+    virtual void setNextSelection(int x, int y, GLC_SelectionEvent::Mode mode);
 
-    inline void processWheelEvent(QWheelEvent* pWWheelEvent)
-    {m_Data.data()->processWheelEvent(pWWheelEvent);}
+    virtual void unsetSelection();
 
-    inline void processTouchEvent(QTouchEvent* pTouchEvent)
-    {m_Data.data()->processTouchEvent(pTouchEvent);}
+    virtual void updateSelection(GLC_uint id);
 
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Event handling Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+    public:
+
+    virtual void processMousePressEvent(QMouseEvent* pMouseEvent);
+    virtual void processMouseMoveEvent(QMouseEvent* pMouseEvent);
+    virtual void processMouseReleaseEvent(QMouseEvent* pMouseEvent);
+    virtual void processMouseDblClickEvent(QMouseEvent* pMouseEvent);
+    virtual void processWheelEvent(QWheelEvent* pWWheelEvent);
+
+    virtual void processTouchEvent(QTouchEvent* pTouchEvent);
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name OpenGL Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
 public:
+    void updateBackGround();
 
-    inline void updateQuickItem()
-    {m_Data.data()->updateView();}
+//@}
 
-    inline void setWorld(const GLC_World& world)
-    {m_Data.data()->setWorld(world);}
-
-    inline void setSamples(int samples)
-    {m_Data.data()->setSamples(samples);}
-
-    inline void setSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning)
-    {m_Data.data()->setSpacePartitioning(pSpacePartitioning);}
-
-    inline void setNextSelection(int x, int y, GLC_SelectionEvent::Mode mode)
-    {m_Data.data()->setNextSelection(x, y, mode);}
-
-    inline void unsetSelection()
-    {m_Data.data()->unsetSelection();}
-
-    inline void updateSelection(GLC_uint id)
-    {m_Data.data()->updateSelection(id);}
-
-
-private:
-    QSharedPointer<GLC_ViewHandlerData> m_Data;
+protected:
+    GLC_World m_World;
+    GLC_Light* m_pLight;
+    GLC_Viewport* m_pViewport;
+    GLC_MoverController* m_pMoverController;
+    int m_Samples;
+    GLC_SpacePartitioning* m_pSpacePartitioning;
+    GLC_InputEventInterpreter* m_pInputEventInterpreter;
+    bool m_RenderInSelectionMode;
+    QPoint m_SelectionPoint;
+    GLC_SelectionEvent::Mode m_SelectionMode;
 };
 
-Q_DECLARE_METATYPE(GLC_ViewHandler)
+Q_DECLARE_METATYPE(GLC_ViewHandler*)
 
-#endif // GLC_QUICKITEMANCHOR_H
+#endif // GLC_VIEWHANDLER_H

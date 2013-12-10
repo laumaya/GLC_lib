@@ -32,7 +32,7 @@
 
 GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     : QQuickItem(pParent)
-    , m_Viewhandler()
+    , m_pViewhandler()
     , m_pSourceFbo(NULL)
     , m_pTargetFbo(NULL)
     , m_pSelectionFbo(NULL)
@@ -41,8 +41,8 @@ GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton);
     setFlag(QQuickItem::ItemHasContents);
 
-    connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
-    connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
+    connect(m_pViewhandler, SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
+    connect(m_pViewhandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
 }
 
 GLC_QuickItem::~GLC_QuickItem()
@@ -55,20 +55,20 @@ GLC_QuickItem::~GLC_QuickItem()
 QVariant GLC_QuickItem::viewHandler() const
 {
     QVariant subject;
-    subject.setValue(m_Viewhandler);
+    subject.setValue(m_pViewhandler);
 
     return subject;
 }
 
 void GLC_QuickItem::setViewhandler(QVariant viewHandler)
 {
-    disconnect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()));
-    disconnect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
+    disconnect(m_pViewhandler, SIGNAL(isDirty()), this, SLOT(update()));
+    disconnect(m_pViewhandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
 
-    m_Viewhandler= viewHandler.value<GLC_ViewHandler>();
+    m_pViewhandler= viewHandler.value<GLC_ViewHandler*>();
 
-    connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
-    connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
+    connect(m_pViewhandler, SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
+    connect(m_pViewhandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
 }
 
 void GLC_QuickItem::invalidateSelectionBuffer()
@@ -101,11 +101,11 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
 
     if (widthOk && heightOk)
     {
-        GLC_World world= m_Viewhandler.world();
+        GLC_World world= m_pViewhandler->world();
 
         if (!world.isEmpty() && widthValid() && heightValid() && isComponentComplete())
         {
-            if (m_Viewhandler.isInSelectionMode())
+            if (m_pViewhandler->isInSelectionMode())
             {
                 renderForSelection();
             }
@@ -125,22 +125,22 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
 
 void GLC_QuickItem::mousePressEvent(QMouseEvent *e)
 {
-    m_Viewhandler.processMousePressEvent(e);
+    m_pViewhandler->processMousePressEvent(e);
 }
 
 void GLC_QuickItem::mouseMoveEvent(QMouseEvent *e)
 {
-    m_Viewhandler.processMouseMoveEvent(e);
+    m_pViewhandler->processMouseMoveEvent(e);
 }
 
 void GLC_QuickItem::mouseReleaseEvent(QMouseEvent *e)
 {
-    m_Viewhandler.processMouseReleaseEvent(e);
+    m_pViewhandler->processMouseReleaseEvent(e);
 }
 
 void GLC_QuickItem::setOpenGLState()
 {
-    m_Viewhandler.viewportHandle()->initGl();
+    m_pViewhandler->viewportHandle()->initGl();
 }
 
 void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeData *pData)
@@ -167,7 +167,7 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
 
         m_pSourceFbo->bind();
 
-        m_Viewhandler.viewportHandle()->setWinGLSize(width, height);
+        m_pViewhandler->viewportHandle()->setWinGLSize(width, height);
 
         doRender();
 
@@ -202,7 +202,7 @@ void GLC_QuickItem::renderForSelection()
         if (m_SelectionBufferIsDirty)
         {
             qDebug() << "m_SelectionBufferIsDirty";
-            m_Viewhandler.viewportHandle()->setWinGLSize(width(), height());
+            m_pViewhandler->viewportHandle()->setWinGLSize(width(), height());
             GLC_State::setSelectionMode(true);
             doRender();
             GLC_State::setSelectionMode(false);
@@ -210,15 +210,15 @@ void GLC_QuickItem::renderForSelection()
         }
 
         // Get selection coordinate
-        const int x= m_Viewhandler.selectionPoint().x();
-        const int y= m_Viewhandler.selectionPoint().y();
+        const int x= m_pViewhandler->selectionPoint().x();
+        const int y= m_pViewhandler->selectionPoint().y();
 
-        GLC_uint selectionId= m_Viewhandler.viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
+        GLC_uint selectionId= m_pViewhandler->viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
 
         m_pSelectionFbo->release();
         popOpenGLMatrix();
 
-        m_Viewhandler.updateSelection(selectionId);
+        m_pViewhandler->updateSelection(selectionId);
     }
 }
 
@@ -233,8 +233,8 @@ void GLC_QuickItem::defaultRenderWorld()
     {
         QOpenGLContext::currentContext()->functions()->glUseProgram(0);
 
-        GLC_World world= m_Viewhandler.world();
-        GLC_Viewport* pViewport= m_Viewhandler.viewportHandle();
+        GLC_World world= m_pViewhandler->world();
+        GLC_Viewport* pViewport= m_pViewhandler->viewportHandle();
 
         // Calculate camera depth of view
         pViewport->setDistMinAndMax(world.boundingBox());
@@ -246,15 +246,15 @@ void GLC_QuickItem::defaultRenderWorld()
         // Load identity matrix
         GLC_Context::current()->glcLoadIdentity();
 
-        m_Viewhandler.lightHandle()->glExecute();
+        m_pViewhandler->lightHandle()->glExecute();
         pViewport->glExecuteCam();
 
         world.render(0, glc::WireRenderFlag);
         world.render(0, glc::TransparentRenderFlag);
         world.render(1, glc::WireRenderFlag);
-        m_Viewhandler.lightHandle()->disable();
+        m_pViewhandler->lightHandle()->disable();
 
-        m_Viewhandler.moverControllerHandle()->drawActiveMoverRep();
+        m_pViewhandler->moverControllerHandle()->drawActiveMoverRep();
     }
     catch (GLC_Exception &e)
     {
@@ -272,7 +272,7 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
 
             QOpenGLFramebufferObjectFormat sourceFormat;
             sourceFormat.setAttachment(QOpenGLFramebufferObject::Depth);
-            sourceFormat.setSamples(m_Viewhandler.samples());
+            sourceFormat.setSamples(m_pViewhandler->samples());
 
             m_pSourceFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
             m_pTargetFbo= new QOpenGLFramebufferObject(width, height);

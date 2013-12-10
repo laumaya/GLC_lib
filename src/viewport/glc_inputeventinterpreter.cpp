@@ -25,16 +25,16 @@
 
 #include <QtDebug>
 
-#include "glc_viewhandlerdata.h"
+#include "glc_viewhandler.h"
 #include "glc_inputeventinterpreter.h"
 
 
-GLC_InputEventInterpreter::GLC_InputEventInterpreter(GLC_ViewHandlerData* pViewHandler)
-    : m_pViewHandlerData(pViewHandler)
+GLC_InputEventInterpreter::GLC_InputEventInterpreter(GLC_ViewHandler* pViewHandler)
+    : m_pViewHandler(pViewHandler)
     , m_UseLodWhileMoving(true)
     , m_DefaultNavigationType(GLC_MoverController::TrackBall)
 {
-    Q_ASSERT(NULL != m_pViewHandlerData);
+    Q_ASSERT(NULL != m_pViewHandler);
 }
 
 GLC_InputEventInterpreter::~GLC_InputEventInterpreter()
@@ -44,29 +44,29 @@ GLC_InputEventInterpreter::~GLC_InputEventInterpreter()
 
 void GLC_InputEventInterpreter::setMover(GLC_MoverController::MoverType moverType, const GLC_UserInput &userInputs)
 {
-    m_pViewHandlerData->moverControllerHandle()->setActiveMover(moverType, userInputs);
+    m_pViewHandler->moverControllerHandle()->setActiveMover(moverType, userInputs);
     if (m_UseLodWhileMoving) {
-        m_pViewHandlerData->world().collection()->setLodUsage(true, m_pViewHandlerData->viewportHandle());
+        m_pViewHandler->world().collection()->setLodUsage(true, m_pViewHandler->viewportHandle());
     }
-    m_pViewHandlerData->updateView();
+    m_pViewHandler->updateView();
 }
 
 void GLC_InputEventInterpreter::move(const GLC_UserInput &userInputs)
 {
-    m_pViewHandlerData->moverControllerHandle()->move(userInputs);
-    m_pViewHandlerData->updateView();
+    m_pViewHandler->moverControllerHandle()->move(userInputs);
+    m_pViewHandler->updateView();
 }
 
 void GLC_InputEventInterpreter::setNoMover()
 {
-    m_pViewHandlerData->moverControllerHandle()->setNoMover();
+    m_pViewHandler->moverControllerHandle()->setNoMover();
     if (m_UseLodWhileMoving) {
-        m_pViewHandlerData->world().collection()->setLodUsage(false, m_pViewHandlerData->viewportHandle());
+        m_pViewHandler->world().collection()->setLodUsage(false, m_pViewHandler->viewportHandle());
     }
-    m_pViewHandlerData->updateView();
+    m_pViewHandler->updateView();
 }
 
 void GLC_InputEventInterpreter::select(int x, int y, GLC_SelectionEvent::Mode mode)
 {
-    m_pViewHandlerData->setNextSelection(x, y, mode);
+    m_pViewHandler->setNextSelection(x, y, mode);
 }

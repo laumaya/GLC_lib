@@ -21,10 +21,10 @@
  *****************************************************************************/
 
 #include "glc_defaulteventinterpreter.h"
-#include "glc_viewhandlerdata.h"
+#include "glc_viewhandler.h"
 #include "glc_userinput.h"
 
-GLC_DefaultEventInterpreter::GLC_DefaultEventInterpreter(GLC_ViewHandlerData *pViewHandler)
+GLC_DefaultEventInterpreter::GLC_DefaultEventInterpreter(GLC_ViewHandler* pViewHandler)
     : GLC_InputEventInterpreter(pViewHandler)
     , m_MovingCamera(false)
     , m_StartingPos()
@@ -73,7 +73,7 @@ bool GLC_DefaultEventInterpreter::processMouseMoveEvent(QMouseEvent *e)
             m_MovingCamera= subject;
         }
     }
-    else if (m_pViewHandlerData->moverControllerHandle()->hasActiveMover())
+    else if (m_pViewHandler->moverControllerHandle()->hasActiveMover())
     {
         move(GLC_UserInput(e->x(), e->y()));
         subject= true;

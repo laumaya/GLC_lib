@@ -34,12 +34,12 @@ class QHoverEvent;
 class GLC_UserInput;
 class GLC_Viewport;
 
-class GLC_ViewHandlerData;
+class GLC_ViewHandler;
 
 class GLC_InputEventInterpreter
 {
 public:
-    explicit GLC_InputEventInterpreter(GLC_ViewHandlerData* pViewHandler);
+    explicit GLC_InputEventInterpreter(GLC_ViewHandler* pViewHandler);
     virtual ~GLC_InputEventInterpreter();
 
 public:
@@ -72,7 +72,7 @@ protected:
     virtual void select(int x, int y, GLC_SelectionEvent::Mode mode);
 
 protected:
-    GLC_ViewHandlerData* m_pViewHandlerData;
+    GLC_ViewHandler* m_pViewHandler;
     bool m_UseLodWhileMoving;
     GLC_MoverController::MoverType m_DefaultNavigationType;
 };
