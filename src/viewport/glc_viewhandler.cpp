@@ -20,6 +20,8 @@
 
 *****************************************************************************/
 
+#include <QtDebug>
+
 #include "glc_viewhandler.h"
 
 #include "glc_viewport.h"
@@ -27,11 +29,13 @@
 
 #include "../glc_factory.h"
 #include "../sceneGraph/glc_octree.h"
+#include "../glc_exception.h"
+
 #include "glc_inputeventinterpreter.h"
 #include "glc_defaulteventinterpreter.h"
 
-GLC_ViewHandler::GLC_ViewHandler()
-    : QObject()
+GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
+    : QObject(pParent)
     , m_World()
     , m_pLight(new GLC_Light())
     , m_pViewport(new GLC_Viewport())
@@ -61,7 +65,7 @@ GLC_ViewHandler::~GLC_ViewHandler()
     delete m_pInputEventInterpreter;
 }
 
-void GLC_ViewHandler::updateView()
+void GLC_ViewHandler::updateGL()
 {
     emit isDirty();
 }
@@ -200,4 +204,36 @@ void GLC_ViewHandler::processTouchEvent(QTouchEvent *pTouchEvent)
 void GLC_ViewHandler::updateBackGround()
 {
     //if (m_pViewport->clearBackground();
+}
+
+void GLC_ViewHandler::render()
+{
+    try
+    {
+        QOpenGLContext::currentContext()->functions()->glUseProgram(0);
+
+        // Calculate camera depth of view
+        m_pViewport->setDistMinAndMax(m_World.boundingBox());
+        m_World.collection()->updateInstanceViewableState();
+
+        // Clear screen
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Load identity matrix
+        GLC_Context::current()->glcLoadIdentity();
+
+        m_pLight->glExecute();
+        m_pViewport->glExecuteCam();
+
+        m_World.render(0, glc::WireRenderFlag);
+        m_World.render(0, glc::TransparentRenderFlag);
+        m_World.render(1, glc::WireRenderFlag);
+        m_pLight->disable();
+
+        m_pMoverController->drawActiveMoverRep();
+    }
+    catch (GLC_Exception &e)
+    {
+        qDebug() << e.what();
+    }
 }

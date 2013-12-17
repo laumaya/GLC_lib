@@ -332,6 +332,8 @@ public:
 	/*! box shouldn't be empty*/
 	void reframe(const GLC_BoundingBox& box, double coverFactor = 2.2);
 
+    GLC_Camera reframedCamera(const GLC_BoundingBox& box, double coverFactor = 2.2) const;
+
 //@} End Zooming functions
 /////////////////////////////////////////////////////////////////////
 

@@ -32,7 +32,7 @@
 
 GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     : QQuickItem(pParent)
-    , m_pViewhandler()
+    , m_pViewhandler(NULL)
     , m_pSourceFbo(NULL)
     , m_pTargetFbo(NULL)
     , m_pSelectionFbo(NULL)
@@ -40,9 +40,6 @@ GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
 {
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton);
     setFlag(QQuickItem::ItemHasContents);
-
-    connect(m_pViewhandler, SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
-    connect(m_pViewhandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
 }
 
 GLC_QuickItem::~GLC_QuickItem()
@@ -62,8 +59,11 @@ QVariant GLC_QuickItem::viewHandler() const
 
 void GLC_QuickItem::setViewhandler(QVariant viewHandler)
 {
-    disconnect(m_pViewhandler, SIGNAL(isDirty()), this, SLOT(update()));
-    disconnect(m_pViewhandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
+    if (m_pViewhandler)
+    {
+        disconnect(m_pViewhandler, SIGNAL(isDirty()), this, SLOT(update()));
+        disconnect(m_pViewhandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
+    }
 
     m_pViewhandler= viewHandler.value<GLC_ViewHandler*>();
 
@@ -96,14 +96,14 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
     if (!pTextureNode)
         pTextureNode = new QSGSimpleTextureNode();
 
+    pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
+
     const bool widthOk= this->width() > 0.0;
     const bool heightOk= this->height() > 0.0;
 
-    if (widthOk && heightOk)
+    if (m_pViewhandler && widthOk && heightOk)
     {
-        GLC_World world= m_pViewhandler->world();
-
-        if (!world.isEmpty() && widthValid() && heightValid() && isComponentComplete())
+        if (widthValid() && heightValid() && isComponentComplete())
         {
             if (m_pViewhandler->isInSelectionMode())
             {
@@ -114,10 +114,6 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
                 render(pTextureNode, pData);
             }
         }
-    }
-    else
-    {
-        pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
     }
 
     return pTextureNode;
@@ -224,42 +220,7 @@ void GLC_QuickItem::renderForSelection()
 
 void GLC_QuickItem::doRender()
 {
-    defaultRenderWorld();
-}
-
-void GLC_QuickItem::defaultRenderWorld()
-{
-    try
-    {
-        QOpenGLContext::currentContext()->functions()->glUseProgram(0);
-
-        GLC_World world= m_pViewhandler->world();
-        GLC_Viewport* pViewport= m_pViewhandler->viewportHandle();
-
-        // Calculate camera depth of view
-        pViewport->setDistMinAndMax(world.boundingBox());
-        world.collection()->updateInstanceViewableState();
-
-        // Clear screen
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // Load identity matrix
-        GLC_Context::current()->glcLoadIdentity();
-
-        m_pViewhandler->lightHandle()->glExecute();
-        pViewport->glExecuteCam();
-
-        world.render(0, glc::WireRenderFlag);
-        world.render(0, glc::TransparentRenderFlag);
-        world.render(1, glc::WireRenderFlag);
-        m_pViewhandler->lightHandle()->disable();
-
-        m_pViewhandler->moverControllerHandle()->drawActiveMoverRep();
-    }
-    catch (GLC_Exception &e)
-    {
-        qDebug() << e.what();
-    }
+    m_pViewhandler->render();
 }
 
 void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode)

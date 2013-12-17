@@ -79,7 +79,6 @@ protected:
     void render(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData* pData);
     void renderForSelection();
     virtual void doRender();
-    void defaultRenderWorld();
     void setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode);
     void setupSelectionFbo(int width, int height);
     void pushOpenGLMatrix();

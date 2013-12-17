@@ -48,13 +48,13 @@ void GLC_InputEventInterpreter::setMover(GLC_MoverController::MoverType moverTyp
     if (m_UseLodWhileMoving) {
         m_pViewHandler->world().collection()->setLodUsage(true, m_pViewHandler->viewportHandle());
     }
-    m_pViewHandler->updateView();
+    m_pViewHandler->updateGL();
 }
 
 void GLC_InputEventInterpreter::move(const GLC_UserInput &userInputs)
 {
     m_pViewHandler->moverControllerHandle()->move(userInputs);
-    m_pViewHandler->updateView();
+    m_pViewHandler->updateGL();
 }
 
 void GLC_InputEventInterpreter::setNoMover()
@@ -63,7 +63,7 @@ void GLC_InputEventInterpreter::setNoMover()
     if (m_UseLodWhileMoving) {
         m_pViewHandler->world().collection()->setLodUsage(false, m_pViewHandler->viewportHandle());
     }
-    m_pViewHandler->updateView();
+    m_pViewHandler->updateGL();
 }
 
 void GLC_InputEventInterpreter::select(int x, int y, GLC_SelectionEvent::Mode mode)

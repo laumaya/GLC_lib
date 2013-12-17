@@ -42,7 +42,7 @@ class GLC_LIB_EXPORT GLC_ViewHandler: public QObject
 {
     Q_OBJECT
 public:
-    GLC_ViewHandler();
+    GLC_ViewHandler(QObject* pParent= NULL);
     virtual ~GLC_ViewHandler();
 
 signals :
@@ -81,9 +81,11 @@ public:
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-public:
-    void updateView();
 
+public slots:
+    void updateGL();
+
+public:
     virtual void setWorld(const GLC_World& world);
 
     void setSamples(int samples);
@@ -119,6 +121,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
     void updateBackGround();
+    virtual void render();
 
 //@}
 
