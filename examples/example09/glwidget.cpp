@@ -126,7 +126,7 @@ void GLWidget::createScene()
 
     m_ShuttleBoundingBox= m_World.boundingBox();
 
-    GLC_StructOccurence* pRoot= m_World.rootOccurence();
+    GLC_StructOccurrence* pRoot= m_World.rootOccurence();
 
     QImage texture(QString(":particle.png"));
     GLC_3DRep pointSprite;

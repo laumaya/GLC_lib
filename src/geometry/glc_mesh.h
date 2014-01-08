@@ -79,6 +79,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+    //! Return the number of primitive of this mesh
+    virtual int primitiveCount() const;
+
 	//! Return the class Chunk ID
 	static quint32 chunckID();
 

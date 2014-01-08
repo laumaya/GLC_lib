@@ -1929,7 +1929,7 @@ void GLC_ColladaToWorld::createSceneGraph()
 		//qDebug() << "Top level node is : " << pCurrentColladaNode->m_Id;
 		if (NULL != pCurrentColladaNode)
 		{
-			GLC_StructOccurence* pOccurence= createOccurenceFromNode(pCurrentColladaNode);
+			GLC_StructOccurrence* pOccurence= createOccurenceFromNode(pCurrentColladaNode);
 			m_pWorld->rootOccurence()->addChild(pOccurence);
 		}
 	}
@@ -1941,12 +1941,12 @@ void GLC_ColladaToWorld::createSceneGraph()
 }
 
 // Create Occurence tree from node tree
-GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pNode)
+GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pNode)
 {
 	//qDebug() << "GLC_ColladaToWorld::createOccurenceFromNode";
 	Q_ASSERT(NULL != pNode);
 	GLC_StructInstance* pInstance= NULL;
-	GLC_StructOccurence* pOccurence= NULL;
+	GLC_StructOccurrence* pOccurence= NULL;
 	if (!pNode->m_InstanceGeometryIDs.isEmpty())
 	{
 		if (m_StructInstanceHash.contains(pNode->m_Id))
@@ -1954,7 +1954,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 			pInstance= new GLC_StructInstance(m_StructInstanceHash.value(pNode->m_Id));
 			pInstance->move(pNode->m_Matrix);
 			//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
-			pOccurence= new GLC_StructOccurence(pInstance);
+			pOccurence= new GLC_StructOccurrence(pInstance);
 		}
 		else
 		{
@@ -1993,7 +1993,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 
 					pInstance->move(pNode->m_Matrix);
 					//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
-					pOccurence= new GLC_StructOccurence(pInstance);
+					pOccurence= new GLC_StructOccurrence(pInstance);
 				}
 
 			}
@@ -2020,7 +2020,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 			}
 
 			pInstance->move(pNode->m_Matrix);
-			pOccurence= new GLC_StructOccurence(pInstance);
+			pOccurence= new GLC_StructOccurrence(pInstance);
 		}
 
 		const int size= pNode->m_ChildNodes.size();
@@ -2047,7 +2047,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 			}
 
 			pInstance->move(pNode->m_Matrix);
-			pOccurence= new GLC_StructOccurence(pInstance);
+			pOccurence= new GLC_StructOccurrence(pInstance);
 		}
 
 		const int size= pNode->m_InstanceOffNodeIds.size();
@@ -2077,7 +2077,7 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 		}
 
 		pInstance->move(pNode->m_Matrix);
-		pOccurence= new GLC_StructOccurence(pInstance);
+		pOccurence= new GLC_StructOccurrence(pInstance);
 	}
 
 	return pOccurence;

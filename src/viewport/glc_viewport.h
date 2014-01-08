@@ -353,7 +353,7 @@ signals:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Return the meaningful color ID inside a square in screen coordinates
-    GLC_uint meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height, GLenum buffer);
+    GLC_uint meaningfullIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height, GLenum buffer);
 
 	//! Return the Set of ID inside a square in screen coordinate
     QSet<GLC_uint> listOfIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height, GLenum buffer);

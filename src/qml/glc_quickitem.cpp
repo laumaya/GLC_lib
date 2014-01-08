@@ -94,9 +94,10 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
     QSGSimpleTextureNode* pTextureNode = static_cast<QSGSimpleTextureNode*>(pNode);
 
     if (!pTextureNode)
+    {
         pTextureNode = new QSGSimpleTextureNode();
-
-    pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
+        pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
+    }
 
     const bool widthOk= this->width() > 0.0;
     const bool heightOk= this->height() > 0.0;
@@ -114,6 +115,14 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
                 render(pTextureNode, pData);
             }
         }
+        else
+        {
+            pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
+        }
+    }
+    else
+    {
+        pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
     }
 
     return pTextureNode;
@@ -238,8 +247,7 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
             m_pSourceFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
             m_pTargetFbo= new QOpenGLFramebufferObject(width, height);
         }
-        QQuickWindow::CreateTextureOptions options= QQuickWindow::TextureHasAlphaChannel;
-        pTextureNode->setTexture(this->window()->createTextureFromId(m_pTargetFbo->texture(), m_pTargetFbo->size(), options));
+        pTextureNode->setTexture(this->window()->createTextureFromId(m_pTargetFbo->texture(), m_pTargetFbo->size()));
     }
     else
     {

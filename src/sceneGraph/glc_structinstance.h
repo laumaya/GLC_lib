@@ -35,7 +35,7 @@
 #include "../glc_config.h"
 
 class GLC_StructReference;
-class GLC_StructOccurence;
+class GLC_StructOccurrence;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_StructInstance
@@ -78,7 +78,7 @@ public:
 	{return m_ListOfOccurences.size();}
 
 	//! Return first occurence handle
-	inline GLC_StructOccurence* firstOccurenceHandle() const
+	inline GLC_StructOccurrence* firstOccurenceHandle() const
 	{ return m_ListOfOccurences.first();}
 
 	//! Return the relative matrix of this instance
@@ -90,7 +90,7 @@ public:
 	{ return m_pStructReference;}
 
 	//! Return the list off occurence of this instance
-	inline QList<GLC_StructOccurence*> listOfStructOccurences() const
+	inline QList<GLC_StructOccurrence*> listOfStructOccurences() const
 	{ return m_ListOfOccurences;}
 
 	//! Return the instance name
@@ -116,13 +116,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! An occurence of this instance have been created
-	inline void structOccurenceCreated(GLC_StructOccurence* pOccurence)
+	inline void structOccurenceCreated(GLC_StructOccurrence* pOccurence)
 	{
 		Q_ASSERT(!m_ListOfOccurences.contains(pOccurence));
 		m_ListOfOccurences.append(pOccurence);
 	}
 
-	inline void structOccurenceDeleted(GLC_StructOccurence *pOccurence)
+	inline void structOccurenceDeleted(GLC_StructOccurrence *pOccurence)
 	{
 		m_ListOfOccurences.removeOne(pOccurence);
 	}
@@ -189,7 +189,7 @@ private:
 	GLC_StructReference* m_pStructReference;
 
 	//! The list of instance's occurences
-	QList<GLC_StructOccurence*> m_ListOfOccurences;
+	QList<GLC_StructOccurrence*> m_ListOfOccurences;
 
 	//! The relative matrix
 	GLC_Matrix4x4 m_RelativeMatrix;

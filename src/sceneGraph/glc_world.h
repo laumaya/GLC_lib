@@ -26,7 +26,7 @@
 #define GLC_WORLD_H_
 
 #include "glc_3dviewcollection.h"
-#include "glc_structoccurence.h"
+#include "glc_structoccurrence.h"
 #include "glc_structreference.h"
 #include "glc_structinstance.h"
 #include "glc_worldhandle.h"
@@ -54,7 +54,7 @@ public:
 	GLC_World();
 
 	//! Create a world and set the root occurrence to the given occurrence
-	explicit GLC_World(GLC_StructOccurence* pOcc);
+	explicit GLC_World(GLC_StructOccurrence* pOcc);
 
 	//! Copy constructor
 	GLC_World(const GLC_World&);
@@ -73,7 +73,7 @@ public:
 	{ return m_pWorldHandle->collection()->boundingBox();}
 
 	//! Return the root of the world
-	inline GLC_StructOccurence* rootOccurence() const
+	inline GLC_StructOccurrence* rootOccurence() const
     {return m_pWorldHandle->rootOccurence();}
 
 	//! Return the world collection
@@ -124,13 +124,17 @@ public:
 	inline GLC_WorldHandle* worldHandle()
 	{return m_pWorldHandle;}
 
+    //! Return the worldHandle of this world
+    inline const GLC_WorldHandle* worldHandle() const
+    {return m_pWorldHandle;}
+
 	//! Return the occurence specified by an id
 	/*! Id must be a valid identifier*/
-	inline GLC_StructOccurence* occurence(GLC_uint id) const
+	inline GLC_StructOccurrence* occurence(GLC_uint id) const
 	{return m_pWorldHandle->getOccurence(id);}
 
 	//! Return the list off occurences
-	inline QList<GLC_StructOccurence*> listOfOccurence() const
+	inline QList<GLC_StructOccurrence*> listOfOccurence() const
 	{return m_pWorldHandle->occurences();}
 
 	//! Return the number of occurence
@@ -163,10 +167,10 @@ public:
 
 	//! Return the number of selected occurence
 	int selectionSize() const
-	{return m_pWorldHandle->selectionSetHandle()->size();}
+    {return m_pWorldHandle->selectionSetHandle()->size();}
 
 	//! Return true if the given occurence is selected
-	inline bool isSelected(const GLC_StructOccurence* pOccurence) const
+	inline bool isSelected(const GLC_StructOccurrence* pOccurence) const
 	{return m_pWorldHandle->selectionSetHandle()->contains(pOccurence);}
 
 	//! Return true if the given occurence id is selected
@@ -174,14 +178,14 @@ public:
 	{return m_pWorldHandle->selectionSetHandle()->contains(selectionId);}
 
 	//! Return the list of selected occurences
-	inline QList<GLC_StructOccurence*> selectedOccurenceList() const
-	{return m_pWorldHandle->selectionSetHandle()->occurencesList();}
+	inline QList<GLC_StructOccurrence*> selectedOccurenceList() const
+    {return m_pWorldHandle->selectionSetHandle()->occurrencesList();}
 
     //! Return the minimum selected occurences list
-    QList<GLC_StructOccurence*> minimumSelectedOccurenceList() const;
+    QList<GLC_StructOccurrence*> minimumSelectedOccurenceList() const;
 
 	//! Take the root occurence of this world
-	GLC_StructOccurence* takeRootOccurrence();
+	GLC_StructOccurrence* takeRootOccurrence();
 
 //@}
 
@@ -191,7 +195,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Replace the root occurrence of this world by the given occurrence
-	void replaceRootOccurrence(GLC_StructOccurence* pOcc);
+	void replaceRootOccurrence(GLC_StructOccurrence* pOcc);
 
 	//! Merge this world with another world
 	void mergeWithAnotherWorld(GLC_World &);
@@ -216,7 +220,7 @@ public:
 
 	//! Select the given occurence
 	/*! The given occurence must belong to the world handle of this world*/
-	inline void select(const GLC_StructOccurence* pOccurence)
+	inline void select(const GLC_StructOccurrence* pOccurence)
 	{m_pWorldHandle->select(pOccurence->id());}
 
 	//! Select the given occurence id

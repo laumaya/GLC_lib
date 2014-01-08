@@ -102,7 +102,7 @@ HEADERS_GLC_SCENEGRAPH +=   sceneGraph/glc_3dviewcollection.h \
                             sceneGraph/glc_3dviewinstance.h \
                             sceneGraph/glc_structreference.h \
                             sceneGraph/glc_structinstance.h \
-                            sceneGraph/glc_structoccurence.h \
+                            sceneGraph/glc_structoccurrence.h \
                             sceneGraph/glc_world.h \
                             sceneGraph/glc_attributes.h \
                             sceneGraph/glc_worldhandle.h \
@@ -214,7 +214,8 @@ SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/inftrees.c \
            3rdparty/zlib/trees.c \
            3rdparty/zlib/uncompr.c \
-           3rdparty/zlib/zutil.c
+           3rdparty/zlib/zutil.c \
+    sceneGraph/glc_structoccurrence.cpp
 
 SOURCES += 3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/qioapi.cpp \
@@ -273,7 +274,6 @@ SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
                 sceneGraph/glc_3dviewinstance.cpp \
                 sceneGraph/glc_structreference.cpp \
                 sceneGraph/glc_structinstance.cpp \
-                sceneGraph/glc_structoccurence.cpp \
                 sceneGraph/glc_world.cpp \
                 sceneGraph/glc_attributes.cpp \
                 sceneGraph/glc_worldhandle.cpp \
@@ -421,7 +421,7 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_Attributes \
                GLC_Rectangle \
                GLC_Mesh \
-               GLC_StructOccurence \
+               GLC_StructOccurrence \
                GLC_StructInstance \
                GLC_StructReference \
                GLC_Line \

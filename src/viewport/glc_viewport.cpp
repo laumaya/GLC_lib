@@ -168,8 +168,25 @@ void GLC_Viewport::initGl()
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // Really Nice Perspective Calculation
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glPolygonOffset (1.0f, 1.0f);
+    glBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glBlendEquation(GL_FUNC_ADD);
+
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_ALPHA_TEST);
+    glDisable(GL_SCISSOR_TEST);
+    glEnable(GL_DITHER);
+    glDisable(GL_FOG);
+    glDisable(GL_COLOR_MATERIAL);
+    glDisable(GL_INDEX_LOGIC_OP);
+    glDisable(GL_COLOR_LOGIC_OP);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_POLYGON_OFFSET_FILL);
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glDepthMask(GL_TRUE);
+
     glEnable(GL_NORMALIZE);
 }
 
@@ -380,7 +397,7 @@ GLC_uint GLC_Viewport::selectOnPreviousRender(int x, int y, GLenum buffer)
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
-    return meaningfulIdInsideSquare(newX, newY, width, height, buffer);
+    return meaningfullIdInsideSquare(newX, newY, width, height, buffer);
 }
 GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y, GLenum buffer)
 {
@@ -409,7 +426,7 @@ GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y, G
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
-    return meaningfulIdInsideSquare(newX, newY, width, height, buffer);
+    return meaningfullIdInsideSquare(newX, newY, width, height, buffer);
 }
 
 QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance, int x, int y, GLenum buffer)
@@ -441,7 +458,7 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
 
-    GLC_uint bodyId= meaningfulIdInsideSquare(newX, newY, width, height, buffer);
+    GLC_uint bodyId= meaningfullIdInsideSquare(newX, newY, width, height, buffer);
 	if (bodyId == 0)
 	{
 		result.first= -1;
@@ -452,7 +469,7 @@ QPair<int, GLC_uint> GLC_Viewport::selectPrimitive(GLC_3DViewInstance* pInstance
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		result.first= pInstance->renderForPrimitiveSelection(bodyId);
-        result.second= meaningfulIdInsideSquare(newX, newY, width, height, buffer);
+        result.second= meaningfullIdInsideSquare(newX, newY, width, height, buffer);
 	}
 	GLC_State::setSelectionMode(false);
 	return result;
@@ -489,7 +506,7 @@ QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2, 
     return listOfIdInsideSquare(newX, newY, width, height, buffer);
 }
 
-GLC_uint GLC_Viewport::meaningfulIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height, GLenum buffer)
+GLC_uint GLC_Viewport::meaningfullIdInsideSquare(GLint x, GLint y, GLsizei width, GLsizei height, GLenum buffer)
 {
 	const int squareSize= width * height;
 	const GLsizei arraySize= squareSize * 4; // 4 -> R G B A

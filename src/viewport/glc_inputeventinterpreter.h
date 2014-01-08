@@ -26,6 +26,8 @@
 #include "glc_movercontroller.h"
 #include "../glc_selectionevent.h"
 
+#include "../glc_config.h"
+
 class QInputEvent;
 class QMouseEvent;
 class QTouchEvent;
@@ -36,7 +38,7 @@ class GLC_Viewport;
 
 class GLC_ViewHandler;
 
-class GLC_InputEventInterpreter
+class GLC_LIB_EXPORT GLC_InputEventInterpreter
 {
 public:
     explicit GLC_InputEventInterpreter(GLC_ViewHandler* pViewHandler);
@@ -69,7 +71,7 @@ protected:
     virtual void setMover(GLC_MoverController::MoverType moverType, const GLC_UserInput &userInputs);
     virtual void move(const GLC_UserInput& userInputs);
     virtual void setNoMover();
-    virtual void select(int x, int y, GLC_SelectionEvent::Mode mode);
+    virtual void select(int x, int y, GLC_SelectionEvent::Modes modes);
 
 protected:
     GLC_ViewHandler* m_pViewHandler;

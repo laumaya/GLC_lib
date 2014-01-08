@@ -106,7 +106,7 @@ void GLC_WorldTo3ds::saveWorld()
 	}
 
 	// Save node structure
-	GLC_StructOccurence* pRoot= m_World.rootOccurence();
+	GLC_StructOccurrence* pRoot= m_World.rootOccurence();
 	const int childCount= pRoot->childCount();
 	for (int i= 0; i < childCount; ++i)
 	{
@@ -143,7 +143,7 @@ void GLC_WorldTo3ds::saveMeshes()
 	}
 }
 
-void GLC_WorldTo3ds::saveBranch(GLC_StructOccurence* pOcc)
+void GLC_WorldTo3ds::saveBranch(GLC_StructOccurrence* pOcc)
 {
 	createNodeFromOccurrence(pOcc);
 
@@ -154,7 +154,7 @@ void GLC_WorldTo3ds::saveBranch(GLC_StructOccurence* pOcc)
 	}
 }
 
-void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurence* pOcc)
+void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 {
 	Lib3dsNode* p3dsNode = lib3ds_node_new_object();
 	p3dsNode->node_id= m_CurrentNodeId;

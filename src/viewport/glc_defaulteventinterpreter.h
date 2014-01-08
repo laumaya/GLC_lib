@@ -38,7 +38,7 @@ public:
     virtual bool processMouseMoveEvent(QMouseEvent *e);
     virtual bool processMouseReleaseEvent(QMouseEvent *e);
     virtual bool processMouseDblClickEvent(QMouseEvent *pMouseEvent);
-    virtual bool processWheelEvent(QWheelEvent *pWWheelEvent);
+    virtual bool processWheelEvent(QWheelEvent *pWheelEvent);
     virtual bool processTouchEvent(QTouchEvent *pTouchEvent);
 
 protected:

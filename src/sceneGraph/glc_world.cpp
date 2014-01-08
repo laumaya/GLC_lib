@@ -32,7 +32,7 @@ GLC_World::GLC_World()
 
 }
 
-GLC_World::GLC_World(GLC_StructOccurence* pOcc)
+GLC_World::GLC_World(GLC_StructOccurrence* pOcc)
 : m_pWorldHandle(new GLC_WorldHandle(pOcc))
 {
 
@@ -57,14 +57,14 @@ GLC_World::~GLC_World()
     }
 }
 
-QList<GLC_StructOccurence *> GLC_World::minimumSelectedOccurenceList() const
+QList<GLC_StructOccurrence *> GLC_World::minimumSelectedOccurenceList() const
 {
-    QSet<GLC_StructOccurence *> selectedOccSet= QSet<GLC_StructOccurence *>::fromList(m_pWorldHandle->selectionSetHandle()->occurencesList());
-    QList<GLC_StructOccurence *> subject;
-    QSet<GLC_StructOccurence *>::ConstIterator iOcc= selectedOccSet.begin();
+    QSet<GLC_StructOccurrence *> selectedOccSet= QSet<GLC_StructOccurrence *>::fromList(m_pWorldHandle->selectionSetHandle()->occurrencesList());
+    QList<GLC_StructOccurrence *> subject;
+    QSet<GLC_StructOccurrence *>::ConstIterator iOcc= selectedOccSet.begin();
     while (iOcc != selectedOccSet.constEnd())
     {
-        QList<GLC_StructOccurence*> ancestorList= (*iOcc)->ancestorList();
+        QList<GLC_StructOccurrence*> ancestorList= (*iOcc)->ancestorList();
         const int count= ancestorList.count();
         bool addOcc= true;
         for (int i= 0; i < count; ++i)
@@ -83,23 +83,23 @@ QList<GLC_StructOccurence *> GLC_World::minimumSelectedOccurenceList() const
     return subject;
 }
 
-GLC_StructOccurence* GLC_World::takeRootOccurrence()
+GLC_StructOccurrence* GLC_World::takeRootOccurrence()
 {
     return m_pWorldHandle->takeRootOccurrence();
 }
 
-void GLC_World::replaceRootOccurrence(GLC_StructOccurence* pOcc)
+void GLC_World::replaceRootOccurrence(GLC_StructOccurrence* pOcc)
 {
     m_pWorldHandle->replaceRootOccurrence(pOcc);
 }
 
 void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 {
-	GLC_StructOccurence* pAnotherRoot= anotherWorld.rootOccurence();
-    GLC_StructOccurence* pRoot= rootOccurence();
+	GLC_StructOccurrence* pAnotherRoot= anotherWorld.rootOccurence();
+    GLC_StructOccurrence* pRoot= rootOccurence();
 	if (pAnotherRoot->childCount() > 0)
 	{
-		QList<GLC_StructOccurence*> childs= pAnotherRoot->children();
+		QList<GLC_StructOccurrence*> childs= pAnotherRoot->children();
 		const int size= childs.size();
 		for (int i= 0; i < size; ++i)
 		{

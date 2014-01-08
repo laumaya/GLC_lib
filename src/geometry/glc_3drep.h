@@ -77,13 +77,16 @@ public:
 	//! Return the type of representation
 	virtual int type() const;
 
-	//! Get Geometry
+    //! Get Geometry from index
 	inline GLC_Geometry* geomAt(int index) const
 	{
 		Q_ASSERT(NULL != m_pGeomList);
 		Q_ASSERT(m_pGeomList->size() > index);
 		return m_pGeomList->at(index);
 	}
+
+    //! Get geometry from id
+    GLC_Geometry* geomOfId(GLC_uint id);
 
 	//! Return the number of body
 	inline int numberOfBody() const

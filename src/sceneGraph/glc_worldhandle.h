@@ -24,8 +24,10 @@
 #define GLC_WORLDHANDLE_H_
 
 #include "glc_3dviewcollection.h"
-#include "glc_structoccurence.h"
+#include "glc_structoccurrence.h"
 #include "glc_selectionset.h"
+
+#include "../glc_selectionevent.h"
 
 #include <QHash>
 
@@ -46,7 +48,7 @@ public:
 	GLC_WorldHandle();
 
     //! Create a worldHandle and set the root occurrence to the given occurrence
-    explicit GLC_WorldHandle(GLC_StructOccurence* pOcc);
+    explicit GLC_WorldHandle(GLC_StructOccurrence* pOcc);
 
 	//! The default destructor
 	~GLC_WorldHandle();
@@ -62,7 +64,7 @@ public:
 	{return &m_Collection;}
 
     //! Return the root of the world
-    inline GLC_StructOccurence* rootOccurence() const
+    inline GLC_StructOccurrence* rootOccurence() const
     {return m_pRoot;}
 
 	//! Return the number of world associated with this handle
@@ -79,14 +81,14 @@ public:
 
 	//! Return the occurence specified by an id
 	/*! Id must be a valid identifier*/
-	inline GLC_StructOccurence* getOccurence(GLC_uint id) const
+	inline GLC_StructOccurrence* getOccurence(GLC_uint id) const
 	{
 		Q_ASSERT(m_OccurenceHash.contains(id));
 		return m_OccurenceHash.value(id);
 	}
 
 	//! Return the list off occurences
-	inline QList<GLC_StructOccurence*> occurences() const
+	inline QList<GLC_StructOccurrence*> occurences() const
 	{return m_OccurenceHash.values();}
 
 	//! Return the number of occurence
@@ -121,10 +123,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
     //! Replace the root occurrence of this world by the given occurrence
-    void replaceRootOccurrence(GLC_StructOccurence* pOcc);
+    void replaceRootOccurrence(GLC_StructOccurrence* pOcc);
 
     //! Take the root occurence of this world
-    GLC_StructOccurence* takeRootOccurrence();
+    GLC_StructOccurrence* takeRootOccurrence();
 
 	//! Increment the number of world
 	inline void increment()
@@ -135,10 +137,10 @@ public:
 	{--m_NumberOfWorld;}
 
 	//! An Occurence has been added
-	void addOccurence(GLC_StructOccurence* pOccurence, bool isSelected= false, GLuint shaderId= 0);
+	void addOccurence(GLC_StructOccurrence* pOccurence, bool isSelected= false, GLuint shaderId= 0);
 
 	//! An Occurence has been removed
-	void removeOccurence(GLC_StructOccurence* pOccurence);
+	void removeOccurence(GLC_StructOccurrence* pOccurence);
 
 	//! All Occurence has been removed
 	inline void removeAllOccurences()
@@ -155,6 +157,9 @@ public:
 	//! Select the given occurence id
 	/*! The given occurence id must belong to this worldhandle*/
 	void select(GLC_uint occurenceId);
+
+    //! Update the current selection from the given selection event
+    void updateSelection(const GLC_SelectionEvent& selectionEvent);
 
 	//! Unselect the given occurence id
 	/*! The given occurence id must belong to this worldhandle*/
@@ -175,6 +180,15 @@ public:
 //@}
 
 //////////////////////////////////////////////////////////////////////
+/*! \name Private services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+private:
+    void updateSelectedInstanceFromSelectionSet();
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
 // private members
 //////////////////////////////////////////////////////////////////////
 private:
@@ -182,13 +196,13 @@ private:
 	GLC_3DViewCollection m_Collection;
 
     //! The root of the structure
-    GLC_StructOccurence* m_pRoot;
+    GLC_StructOccurrence* m_pRoot;
 
 	//! Number of this world
 	int m_NumberOfWorld;
 
 	//! The hash table containing struct occurence
-	QHash<GLC_uint, GLC_StructOccurence*> m_OccurenceHash;
+	QHash<GLC_uint, GLC_StructOccurrence*> m_OccurenceHash;
 
 	//! This world Up Vector
 	GLC_Vector3d m_UpVector;

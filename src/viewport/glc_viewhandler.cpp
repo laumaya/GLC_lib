@@ -45,12 +45,10 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     , m_pInputEventInterpreter(new GLC_DefaultEventInterpreter(this))
     , m_RenderInSelectionMode(false)
     , m_SelectionPoint()
-    , m_SelectionMode(GLC_SelectionEvent::Replace)
+    , m_SelectionModes(GLC_SelectionEvent::ModeReplace | GLC_SelectionEvent::ModeInstance)
 {
     m_pLight->setTwoSided(true);
-    m_pLight->setPosition(10.0, 10.0, 10.0);
-
-    m_pViewport->cameraHandle()->setEyeCam(GLC_Point3d(1.0, 1.0, 1.0));
+    m_pLight->setPosition(1.0, 1.0, 1.0);
 
     QColor repColor;
     repColor.setRgbF(1.0, 0.11372, 0.11372, 1.0);
@@ -68,6 +66,12 @@ GLC_ViewHandler::~GLC_ViewHandler()
 void GLC_ViewHandler::updateGL()
 {
     emit isDirty();
+}
+
+void GLC_ViewHandler::setInputEventInterpreter(GLC_InputEventInterpreter *pEventInterpreter)
+{
+    delete m_pInputEventInterpreter;
+    m_pInputEventInterpreter= pEventInterpreter;
 }
 
 void GLC_ViewHandler::setWorld(const GLC_World &world)
@@ -91,7 +95,7 @@ void GLC_ViewHandler::setWorld(const GLC_World &world)
 
     m_pViewport->reframe(m_World.boundingBox());
 
-    emit isDirty();
+   updateGL();
 }
 
 void GLC_ViewHandler::setSamples(int samples)
@@ -99,7 +103,7 @@ void GLC_ViewHandler::setSamples(int samples)
     if (m_Samples != samples)
     {
         m_Samples= samples;
-        emit isDirty();
+        updateGL();
     }
 }
 
@@ -110,20 +114,20 @@ void GLC_ViewHandler::setSpacePartitioning(GLC_SpacePartitioning *pSpacePartitio
     m_World.collection()->setSpacePartitionningUsage(true);
 }
 
-void GLC_ViewHandler::setNextSelection(int x, int y, GLC_SelectionEvent::Mode mode)
+void GLC_ViewHandler::setNextSelection(int x, int y, GLC_SelectionEvent::Modes modes)
 {
     m_RenderInSelectionMode= true;
     m_SelectionPoint.setX(x);
     m_SelectionPoint.setY(y);
-    m_SelectionMode= mode;
-    emit isDirty();
+    m_SelectionModes= modes;
+    updateGL();
 }
 
 void GLC_ViewHandler::unsetSelection()
 {
     m_RenderInSelectionMode= false;
     m_World.unselectAll();
-    emit isDirty();
+    updateGL();
 }
 
 void GLC_ViewHandler::updateSelection(GLC_uint id)
@@ -132,34 +136,34 @@ void GLC_ViewHandler::updateSelection(GLC_uint id)
     const bool contains= m_World.containsOccurence(id);
     bool selectionChange= false;
 
-    switch (m_SelectionMode) {
-    case GLC_SelectionEvent::Replace:
-        m_World.unselectAll();
-        if (contains)
-        {
-            m_World.select(id);
-        }
-        selectionChange= true;
-        break;
-    case GLC_SelectionEvent::Add:
-        if (contains)
-        {
-            m_World.select(id);
-        }
-        selectionChange= true;
-        break;
-    case GLC_SelectionEvent::Remove:
-        if (contains && (m_World.isSelected(id)))
-        {
-            m_World.unselect(id);
-        }
-        selectionChange= true;
-        break;
+//    switch (m_SelectionModes) {
+//    case (GLC_SelectionEvent::ModeReplace | GLC_SelectionEvent::ModeInstance):
+//        m_World.unselectAll();
+//        if (contains)
+//        {
+//            m_World.select(id);
+//        }
+//        selectionChange= true;
+//        break;
+//    case GLC_SelectionEvent::Add:
+//        if (contains)
+//        {
+//            m_World.select(id);
+//        }
+//        selectionChange= true;
+//        break;
+//    case GLC_SelectionEvent::Remove:
+//        if (contains && (m_World.isSelected(id)))
+//        {
+//            m_World.unselect(id);
+//        }
+//        selectionChange= true;
+//        break;
 
-    default:
-        break;
-    }
-    if (selectionChange) emit isDirty();
+//    default:
+//        break;
+//    }
+    if (selectionChange) updateGL();
 }
 
 void GLC_ViewHandler::processMousePressEvent(QMouseEvent *pMouseEvent)
@@ -236,4 +240,13 @@ void GLC_ViewHandler::render()
     {
         qDebug() << e.what();
     }
+}
+
+void GLC_ViewHandler::setDefaultUpVector(const GLC_Vector3d &vect)
+{
+    GLC_Camera* pCamera= m_pViewport->cameraHandle();
+
+    pCamera->setUpCam(vect);
+    pCamera->setDefaultUpVector(vect);
+    pCamera->setIsoView();
 }

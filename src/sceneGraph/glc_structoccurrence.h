@@ -22,8 +22,8 @@
 
 //! \file glc_structoccurence.h interface for the GLC_StructOccurence class.
 
-#ifndef GLC_STRUCTOCCURENCE_H_
-#define GLC_STRUCTOCCURENCE_H_
+#ifndef GLC_STRUCTOCCURRENCE_H_
+#define GLC_STRUCTOCCURRENCE_H_
 
 #include "../maths/glc_matrix4x4.h"
 #include "../glc_boundingbox.h"
@@ -40,7 +40,7 @@ class GLC_RenderProperties;
 //! \class GLC_StructOccurence
 /*! \brief GLC_StructOccurence : A scene graph occurence node */
 //////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_StructOccurence
+class GLC_LIB_EXPORT GLC_StructOccurrence
 {
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -49,25 +49,25 @@ class GLC_LIB_EXPORT GLC_StructOccurence
 
 public:
 	//! Default constructor
-	GLC_StructOccurence();
+    GLC_StructOccurrence();
 
 	//! Create Occurence of the specified instance
-	GLC_StructOccurence(GLC_StructInstance* pStructInstance, GLC_WorldHandle* pWorldHandle= NULL, GLuint shaderId=0);
+    GLC_StructOccurrence(GLC_StructInstance* pStructInstance, GLC_WorldHandle* pWorldHandle= NULL, GLuint shaderId=0);
 
 	//! Create Occurence of the specified instance and Uid
-	GLC_StructOccurence(GLC_StructInstance* pStructInstance, GLC_uint id, GLC_WorldHandle* pWorldHandle= NULL, GLuint shaderId=0);
+    GLC_StructOccurrence(GLC_StructInstance* pStructInstance, GLC_uint id, GLC_WorldHandle* pWorldHandle= NULL, GLuint shaderId=0);
 
 	//! Construct Occurence with the specified GLC_3DRep
-	GLC_StructOccurence(GLC_3DRep* pRep);
+    GLC_StructOccurrence(GLC_3DRep* pRep);
 
 	//! Construct Occurence from the given GLC_3DRep and Uid
-	GLC_StructOccurence(GLC_3DRep* pRep, GLC_uint id);
+    GLC_StructOccurrence(GLC_3DRep* pRep, GLC_uint id);
 
 	//! Copy constructor
-	GLC_StructOccurence(GLC_WorldHandle*, const GLC_StructOccurence&, bool shareInstance);
+    GLC_StructOccurrence(GLC_WorldHandle*, const GLC_StructOccurrence&, bool shareInstance);
 
 	//! Destructor
-	virtual ~GLC_StructOccurence();
+    virtual ~GLC_StructOccurrence();
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
@@ -123,26 +123,26 @@ public:
 	{return childCount() > 0;}
 
 	//! Return true if the given occurence can be added to this occurence children
-	bool canBeAddedToChildren(GLC_StructOccurence* pOccurence) const;
+    bool canBeAddedToChildren(GLC_StructOccurrence* pOccurence) const;
 
 	//! Return The parent of this occurence
-	inline GLC_StructOccurence* parent() const
+    inline GLC_StructOccurrence* parent() const
 	{return m_pParent;}
 
     //! Return return all ancestor of this occurrence
-    QList<GLC_StructOccurence*> ancestorList() const;
+    QList<GLC_StructOccurrence*> ancestorList() const;
 
 	//! Return a child of this occurence
 	/*! The index must exist*/
-	inline GLC_StructOccurence* child(const int index) const
+    inline GLC_StructOccurrence* child(const int index) const
 	{return m_Childs.at(index);}
 
 	//! Return the list of children of this occurence
-	inline QList<GLC_StructOccurence*> children() const
+    inline QList<GLC_StructOccurrence*> children() const
 	{return m_Childs;}
 
 	//! Return the list of all accurence under this occurence
-	QList<GLC_StructOccurence*> subOccurenceList() const;
+    QList<GLC_StructOccurrence*> subOccurenceList() const;
 
 	//! Return the number of faces of the representation of this occurence
 	unsigned int numberOfFaces() const;
@@ -157,7 +157,7 @@ public:
 	QSet<GLC_Material*> materialSet() const;
 
 	//! Return a clone this occurence
-	GLC_StructOccurence* clone(GLC_WorldHandle*, bool shareInstance) const;
+    GLC_StructOccurrence* clone(GLC_WorldHandle*, bool shareInstance) const;
 
 	//! Return true if this occurence is visible
 	bool isVisible() const;
@@ -184,7 +184,7 @@ public:
 	QSet<GLC_StructReference*> childrenReferences() const;
 
 	//! Return the set of parents references of the given occurence
-	static QSet<GLC_StructReference*> parentsReferences(const GLC_StructOccurence* pOccurence);
+    static QSet<GLC_StructReference*> parentsReferences(const GLC_StructOccurrence* pOccurence);
 
 	//! Return true if the automatic creation of 3DViewInstance is used
 	inline bool useAutomatic3DViewInstanceCreation() const
@@ -196,10 +196,10 @@ public:
 
 	//! Return the index position of the given occurrence
 	/*! Return -1 if the given occurence is not a child of this occurence*/
-	int indexOf(const GLC_StructOccurence* pOcc) const;
+    int indexOf(const GLC_StructOccurrence* pOcc) const;
 
 	//! Return true if this occurence contains the given occurence has child
-	bool containsChild(const GLC_StructOccurence* pOcc) const;
+    bool containsChild(const GLC_StructOccurrence* pOcc) const;
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -211,31 +211,31 @@ public:
 	inline void setName(const QString name) {m_pStructInstance->setName(name);}
 
 	//! Update the absolute matrix
-	GLC_StructOccurence* updateAbsoluteMatrix();
+    GLC_StructOccurrence* updateAbsoluteMatrix();
 
 	//! Update children obsolute Matrix
-	GLC_StructOccurence* updateChildrenAbsoluteMatrix();
+    GLC_StructOccurrence* updateChildrenAbsoluteMatrix();
 
 	//! Add Child
 	/*! The new child must be orphan*/
-	void addChild(GLC_StructOccurence*);
+    void addChild(GLC_StructOccurrence*);
 
 	//! insert Child at the given position
 	/*! The new child must be orphan and index >= childcount*/
-	void insertChild(int index, GLC_StructOccurence* pChild);
+    void insertChild(int index, GLC_StructOccurrence* pChild);
 
 	//! Add Child instance and returns the newly created occurence
-	GLC_StructOccurence* addChild(GLC_StructInstance*);
+    GLC_StructOccurrence* addChild(GLC_StructInstance*);
 
 	//! Insert Child instance and returns the newly created occurence
-	GLC_StructOccurence* insertChild(int index, GLC_StructInstance* pInstance);
+    GLC_StructOccurrence* insertChild(int index, GLC_StructInstance* pInstance);
 
 	//! make the occurence orphan
 	void makeOrphan();
 
 	//! Remove the specified child
 	/*! The removed child will not be deleted*/
-	bool removeChild(GLC_StructOccurence* pChild);
+    bool removeChild(GLC_StructOccurrence* pChild);
 
 	//! Reverse Normals of this Occurence and childs
 	void reverseNormals();
@@ -316,10 +316,10 @@ private:
 	GLC_StructInstance* m_pStructInstance;
 
 	//! The parent of this occurence
-	GLC_StructOccurence* m_pParent;
+    GLC_StructOccurrence* m_pParent;
 
 	//! The Child of this occurence
-	QList<GLC_StructOccurence*> m_Childs;
+    QList<GLC_StructOccurrence*> m_Childs;
 
 	//! The absolute matrix of the occurence
 	GLC_Matrix4x4 m_AbsoluteMatrix;
@@ -333,7 +333,7 @@ private:
 	//! The occurence rendering properties
 	GLC_RenderProperties* m_pRenderProperties;
 
-	//! Automatique création of 3DViewInstance
+	//! Automatic creation of 3DViewInstance
 	bool m_AutomaticCreationOf3DViewInstance;
 
 	//! The relative matrix of this occurence if this occurence is flexible
@@ -341,4 +341,4 @@ private:
 
 };
 
-#endif /* GLC_STRUCTOCCURENCE_H_ */
+#endif /* GLC_STRUCTOCCURRENCE_H_ */

@@ -26,7 +26,7 @@
 
 GLC_WorldHandle::GLC_WorldHandle()
 : m_Collection()
-, m_pRoot(new GLC_StructOccurence())
+, m_pRoot(new GLC_StructOccurrence())
 , m_NumberOfWorld(1)
 , m_OccurenceHash()
 , m_UpVector(glc::Z_AXIS)
@@ -35,7 +35,7 @@ GLC_WorldHandle::GLC_WorldHandle()
     m_pRoot->setWorldHandle(this);
 }
 
-GLC_WorldHandle::GLC_WorldHandle(GLC_StructOccurence *pOcc)
+GLC_WorldHandle::GLC_WorldHandle(GLC_StructOccurrence *pOcc)
     : m_Collection()
     , m_pRoot(pOcc)
     , m_NumberOfWorld(1)
@@ -56,7 +56,7 @@ GLC_WorldHandle::~GLC_WorldHandle()
 QList<GLC_StructInstance*> GLC_WorldHandle::instances() const
 {
 	QSet<GLC_StructInstance*> instancesSet;
-	QHash<GLC_uint, GLC_StructOccurence*>::const_iterator iOccurence= m_OccurenceHash.constBegin();
+	QHash<GLC_uint, GLC_StructOccurrence*>::const_iterator iOccurence= m_OccurenceHash.constBegin();
 	while (iOccurence != m_OccurenceHash.constEnd())
 	{
 		instancesSet.insert(iOccurence.value()->structInstance());
@@ -69,7 +69,7 @@ QList<GLC_StructInstance*> GLC_WorldHandle::instances() const
 QList<GLC_StructReference*> GLC_WorldHandle::references() const
 {
 	QSet<GLC_StructReference*> referencesSet;
-	QHash<GLC_uint, GLC_StructOccurence*>::const_iterator iOccurence= m_OccurenceHash.constBegin();
+	QHash<GLC_uint, GLC_StructOccurrence*>::const_iterator iOccurence= m_OccurenceHash.constBegin();
 	while (iOccurence != m_OccurenceHash.constEnd())
 	{
 		referencesSet.insert(iOccurence.value()->structReference());
@@ -104,7 +104,7 @@ int GLC_WorldHandle::representationCount() const
 
 }
 
-void GLC_WorldHandle::replaceRootOccurrence(GLC_StructOccurence *pOcc)
+void GLC_WorldHandle::replaceRootOccurrence(GLC_StructOccurrence *pOcc)
 {
     Q_ASSERT(pOcc->isOrphan());
     delete m_pRoot;
@@ -112,19 +112,19 @@ void GLC_WorldHandle::replaceRootOccurrence(GLC_StructOccurence *pOcc)
     m_pRoot->setWorldHandle(this);
 }
 
-GLC_StructOccurence *GLC_WorldHandle::takeRootOccurrence()
+GLC_StructOccurrence *GLC_WorldHandle::takeRootOccurrence()
 {
-    GLC_StructOccurence* pSubject= m_pRoot;
+    GLC_StructOccurrence* pSubject= m_pRoot;
     pSubject->makeOrphan();
 
-    m_pRoot= new GLC_StructOccurence();
+    m_pRoot= new GLC_StructOccurrence();
     m_pRoot->setWorldHandle(this);
 
     return pSubject;
 }
 
 // An Occurence has been added
-void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelected, GLuint shaderId)
+void GLC_WorldHandle::addOccurence(GLC_StructOccurrence* pOccurence, bool isSelected, GLuint shaderId)
 {
 	Q_ASSERT(!m_OccurenceHash.contains(pOccurence->id()));
 	m_OccurenceHash.insert(pOccurence->id(), pOccurence);
@@ -140,7 +140,7 @@ void GLC_WorldHandle::addOccurence(GLC_StructOccurence* pOccurence, bool isSelec
 }
 
 // An Occurence has been removed
-void GLC_WorldHandle::removeOccurence(GLC_StructOccurence* pOccurence)
+void GLC_WorldHandle::removeOccurence(GLC_StructOccurrence* pOccurence)
 {
 	Q_ASSERT(m_OccurenceHash.contains(pOccurence->id()));
 	// Remove the occurence from the selection set
@@ -157,10 +157,10 @@ void GLC_WorldHandle::select(GLC_uint occurenceId)
 	m_SelectionSet.insert(occurenceId);
 	m_Collection.select(occurenceId);
 
-	const GLC_StructOccurence* pSelectedOccurence= m_OccurenceHash.value(occurenceId);
+	const GLC_StructOccurrence* pSelectedOccurence= m_OccurenceHash.value(occurenceId);
 	if (pSelectedOccurence->hasChild())
 	{
-		QList<GLC_StructOccurence*> subOccurenceList= pSelectedOccurence->subOccurenceList();
+		QList<GLC_StructOccurrence*> subOccurenceList= pSelectedOccurence->subOccurenceList();
 		const int subOccurenceCount= subOccurenceList.size();
 		for (int i= 0; i < subOccurenceCount; ++i)
 		{
@@ -170,7 +170,25 @@ void GLC_WorldHandle::select(GLC_uint occurenceId)
 				m_Collection.select(currentOccurenceId);
 			}
 		}
-	}
+    }
+}
+
+void GLC_WorldHandle::updateSelection(const GLC_SelectionEvent &selectionEvent)
+{
+    const GLC_SelectionEvent::Modes selectionModes= selectionEvent.modes();
+
+    if (selectionModes | GLC_SelectionEvent::ModeReplace)
+    {
+        m_SelectionSet= selectionEvent.selectionSet();
+    }
+    else if (selectionModes | GLC_SelectionEvent::ModeSubstract)
+    {
+        m_SelectionSet.substract(selectionEvent.selectionSet());
+    }
+    else if (selectionModes | GLC_SelectionEvent::ModeUnit)
+    {
+        m_SelectionSet.unite(selectionEvent.selectionSet());
+    }
 }
 
 void GLC_WorldHandle::unselect(GLC_uint occurenceId, bool propagate)
@@ -179,15 +197,16 @@ void GLC_WorldHandle::unselect(GLC_uint occurenceId, bool propagate)
 	m_SelectionSet.remove(occurenceId);
 	m_Collection.unselect(occurenceId);
 
-	const GLC_StructOccurence* pSelectedOccurence= m_OccurenceHash.value(occurenceId);
+	const GLC_StructOccurrence* pSelectedOccurence= m_OccurenceHash.value(occurenceId);
 	if (propagate && pSelectedOccurence->hasChild())
 	{
-		QList<GLC_StructOccurence*> subOccurenceList= pSelectedOccurence->subOccurenceList();
+		QList<GLC_StructOccurrence*> subOccurenceList= pSelectedOccurence->subOccurenceList();
 		const int subOccurenceCount= subOccurenceList.size();
 		for (int i= 0; i < subOccurenceCount; ++i)
 		{
 			const GLC_uint currentOccurenceId= subOccurenceList.at(i)->id();
 			m_Collection.unselect(currentOccurenceId);
+            m_SelectionSet.remove(currentOccurenceId);
 		}
 	}
 }
@@ -230,5 +249,11 @@ void GLC_WorldHandle::setSelected3DViewInstanceVisibility(bool isVisible)
 		GLC_3DViewInstance* pCurrentInstance= selected3dviewInstance.at(i);
 		pCurrentInstance->setVisibility(isVisible);
     }
+}
+
+void GLC_WorldHandle::updateSelectedInstanceFromSelectionSet()
+{
+    m_Collection.unselectAll();
+
 }
 

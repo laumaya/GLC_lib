@@ -24,7 +24,7 @@
 
 #include "glc_structinstance.h"
 #include "glc_structreference.h"
-#include "glc_structoccurence.h"
+#include "glc_structoccurrence.h"
 
 // Default constructor
 GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)

@@ -518,7 +518,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 	if (! m_V3OccurenceAttribHash.isEmpty())
 	{
 		//qDebug() << "Not visible occurence= " << m_V3OccurenceAttribHash.size();
-		QList<GLC_StructOccurence*> occurenceList= m_pWorld->listOfOccurence();
+		QList<GLC_StructOccurrence*> occurenceList= m_pWorld->listOfOccurence();
 		const int size= occurenceList.size();
 		for (int i= 0; i < size; ++i)
 		{
@@ -568,11 +568,11 @@ void GLC_3dxmlToWorld::loadProductStructure()
 		}
 		else
 		{
-			QList<GLC_StructOccurence*> occurences= pInstance->listOfStructOccurences();
+			QList<GLC_StructOccurrence*> occurences= pInstance->listOfStructOccurences();
 			const int size= occurences.size();
 			for (int i= 0; i < size; ++i)
 			{
-				const GLC_StructOccurence* pOccurence= occurences.at(i);
+				const GLC_StructOccurrence* pOccurence= occurences.at(i);
 				if (pOccurence->isOrphan())
 				{
 					QStringList stringList(m_FileName);
@@ -1094,7 +1094,7 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 		{
 			if (instanceList.at(i)->hasStructOccurence())
 			{
-				QList<GLC_StructOccurence*> occurenceList= instanceList.at(i)->listOfStructOccurences();
+				QList<GLC_StructOccurrence*> occurenceList= instanceList.at(i)->listOfStructOccurences();
 				const int occurenceNumber= occurenceList.size();
 				for (int j= 0; j < occurenceNumber; ++j)
 				{
@@ -1111,7 +1111,7 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 			}
 			else
 			{
-				GLC_StructOccurence* pOccurence= new GLC_StructOccurence(instanceList.at(i), m_pWorld->worldHandle());
+				GLC_StructOccurrence* pOccurence= new GLC_StructOccurrence(instanceList.at(i), m_pWorld->worldHandle());
 				if (pChildInstance->hasStructOccurence() && pChildInstance->firstOccurenceHandle()->isOrphan())
 				{
 					Q_ASSERT(pChildInstance->listOfStructOccurences().size() == 1);
@@ -1157,11 +1157,11 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 					}
 					else
 					{
-						QList<GLC_StructOccurence*> occurences= pInstance->listOfStructOccurences();
+						QList<GLC_StructOccurrence*> occurences= pInstance->listOfStructOccurences();
 						const int occurencesSize= occurences.size();
 						for (int j= 0; j < occurencesSize; ++j)
 						{
-							GLC_StructOccurence* pOcc= occurences.at(j);
+							GLC_StructOccurrence* pOcc= occurences.at(j);
 							if (pOcc->isOrphan())
 							{
 								QStringList stringList(m_FileName);
@@ -2192,7 +2192,7 @@ void GLC_3dxmlToWorld::checkFileValidity(QIODevice* pIODevice)
 	}
 }
 
-void GLC_3dxmlToWorld::applyV4Attribute(GLC_StructOccurence* pOccurence, V4OccurenceAttrib* pV4OccurenceAttrib, QHash<GLC_StructInstance*, unsigned int>& instanceToIdHash)
+void GLC_3dxmlToWorld::applyV4Attribute(GLC_StructOccurrence* pOccurence, V4OccurenceAttrib* pV4OccurenceAttrib, QHash<GLC_StructInstance*, unsigned int>& instanceToIdHash)
 {
 	Q_ASSERT(pOccurence->hasChild() && !pV4OccurenceAttrib->m_Path.isEmpty());
 	unsigned int id= pV4OccurenceAttrib->m_Path.takeFirst();
@@ -2202,7 +2202,7 @@ void GLC_3dxmlToWorld::applyV4Attribute(GLC_StructOccurence* pOccurence, V4Occur
 	int i= 0;
 	while (!occurenceFound && (i < childCount))
 	{
-		GLC_StructOccurence* pChildOccurence= pOccurence->child(i);
+		GLC_StructOccurrence* pChildOccurence= pOccurence->child(i);
 		if (instanceToIdHash.contains(pChildOccurence->structInstance()) && (instanceToIdHash.value(pChildOccurence->structInstance()) == id))
 		{
 			Q_ASSERT(id == instanceToIdHash.value(pChildOccurence->structInstance()));

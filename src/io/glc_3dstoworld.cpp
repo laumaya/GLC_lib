@@ -33,7 +33,7 @@
 #include "../maths/glc_vector3df.h"
 #include "../sceneGraph/glc_structreference.h"
 #include "../sceneGraph/glc_structinstance.h"
-#include "../sceneGraph/glc_structoccurence.h"
+#include "../sceneGraph/glc_structoccurrence.h"
 
 // Lib3ds Header
 #include "3rdparty/lib3ds/file.h"
@@ -187,9 +187,9 @@ void GLC_3dsToWorld::clear()
 }
 
 // Create meshes from the 3ds File
-void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFatherNode)
+void GLC_3dsToWorld::createMeshes(GLC_StructOccurrence* pProduct, Lib3dsNode* pFatherNode)
 {
-	GLC_StructOccurence* pChildProduct= NULL;
+	GLC_StructOccurrence* pChildProduct= NULL;
 	Lib3dsMesh *pMesh= NULL;
 
 	if (pFatherNode->type == LIB3DS_OBJECT_NODE)
@@ -245,7 +245,7 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurence* pProduct, Lib3dsNode* pFa
 	// If there is a child, create a child product
 	if (NULL != pFatherNode->childs)
 	{
-		pChildProduct= new GLC_StructOccurence();
+		pChildProduct= new GLC_StructOccurrence();
 		pProduct->addChild(pChildProduct);
 
 		pChildProduct->setName(QString("Product") + QString::number(pFatherNode->node_id));

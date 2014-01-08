@@ -66,7 +66,7 @@ void GLC_InputEventInterpreter::setNoMover()
     m_pViewHandler->updateGL();
 }
 
-void GLC_InputEventInterpreter::select(int x, int y, GLC_SelectionEvent::Mode mode)
+void GLC_InputEventInterpreter::select(int x, int y, GLC_SelectionEvent::Modes modes)
 {
-    m_pViewHandler->setNextSelection(x, y, mode);
+    m_pViewHandler->setNextSelection(x, y, modes);
 }

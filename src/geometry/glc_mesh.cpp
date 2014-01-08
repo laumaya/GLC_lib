@@ -135,7 +135,12 @@ GLC_Mesh::~GLC_Mesh()
 		}
 		delete iGroups.value();
 		++iGroups;
-	}
+    }
+}
+
+int GLC_Mesh::primitiveCount() const
+{
+    return m_PrimitiveGroups.count();
 }
 
 //////////////////////////////////////////////////////////////////////

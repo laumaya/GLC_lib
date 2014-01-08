@@ -32,7 +32,7 @@
 #include "../maths/glc_geomtools.h"
 #include "../sceneGraph/glc_structreference.h"
 #include "../sceneGraph/glc_structinstance.h"
-#include "../sceneGraph/glc_structoccurence.h"
+#include "../sceneGraph/glc_structoccurrence.h"
 #include <QTextStream>
 #include <QFileInfo>
 #include <QGLContext>

@@ -35,7 +35,7 @@
 
 #include "../glc_config.h"
 
-class GLC_StructOccurence;
+class GLC_StructOccurrence;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_StructReference
@@ -81,10 +81,10 @@ public:
 	{ return m_SetOfInstance.toList();}
 
 	//! Return the Set of occurence of this reference
-	QSet<GLC_StructOccurence*> setOfStructOccurence() const;
+	QSet<GLC_StructOccurrence*> setOfStructOccurence() const;
 
 	//! Return the list of occurence of this reference
-	inline QList<GLC_StructOccurence*> listOfStructOccurence() const
+	inline QList<GLC_StructOccurrence*> listOfStructOccurence() const
 	{return setOfStructOccurence().toList();}
 
 	//! Return true if this reference has a representation
@@ -212,7 +212,7 @@ public:
 
 	//! Add the given occurence as a child of all occurrences of this reference
 	/*! Return the list of added occurence*/
-	QList<GLC_StructOccurence*> addChild(GLC_StructOccurence* pOccurence);
+	QList<GLC_StructOccurrence*> addChild(GLC_StructOccurrence* pOccurence);
 
 
 //@}

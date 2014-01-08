@@ -348,7 +348,7 @@ void GLC_WorldTo3dxml::exportAssemblyStructure()
 	m_pOutStream->writeEndDocument();
 }
 
-void GLC_WorldTo3dxml::exportAssemblyFromOccurence(const GLC_StructOccurence* pOccurence)
+void GLC_WorldTo3dxml::exportAssemblyFromOccurence(const GLC_StructOccurrence* pOccurence)
 {
 	if (pOccurence->isOrphan())
 	{
@@ -1172,7 +1172,7 @@ void GLC_WorldTo3dxml::writeExtensionAttributes(GLC_Attributes* pAttributes)
 	}
 }
 
-void GLC_WorldTo3dxml::writeOccurenceDefaultViewProperty(const GLC_StructOccurence* pOccurence)
+void GLC_WorldTo3dxml::writeOccurenceDefaultViewProperty(const GLC_StructOccurrence* pOccurence)
 {
 	QList<unsigned int> path= instancePath(pOccurence);
 
@@ -1288,7 +1288,7 @@ QString GLC_WorldTo3dxml::symplifyName(QString name)
 	return name;
 }
 
-QList<unsigned int> GLC_WorldTo3dxml::instancePath(const GLC_StructOccurence* pOccurence)
+QList<unsigned int> GLC_WorldTo3dxml::instancePath(const GLC_StructOccurrence* pOccurence)
 {
 	QList<unsigned int> path;
 	if (!pOccurence->isOrphan())

@@ -42,7 +42,7 @@ class QuaZip;
 class QuaZipFile;
 class GLC_StructReference;
 class GLC_StructInstance;
-class GLC_StructOccurence;
+class GLC_StructOccurrence;
 class GLC_Mesh;
 
 //////////////////////////////////////////////////////////////////////
@@ -302,7 +302,7 @@ private:
 	void checkFileValidity(QIODevice* pIODevice);
 
 	//! Apply the given attribute to the right occurence from the given occurence
-	void applyV4Attribute(GLC_StructOccurence* pOccurence, V4OccurenceAttrib* pV4OccurenceAttrib, QHash<GLC_StructInstance*, unsigned int>& InstanceToIdHash);
+	void applyV4Attribute(GLC_StructOccurrence* pOccurence, V4OccurenceAttrib* pV4OccurenceAttrib, QHash<GLC_StructInstance*, unsigned int>& InstanceToIdHash);
 
 	//! Load representation from 3DRep file
 	void loadRep(GLC_Mesh* pMesh);

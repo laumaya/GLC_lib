@@ -23,33 +23,30 @@
 #include "glc_selectionevent.h"
 
 GLC_SelectionEvent::GLC_SelectionEvent()
-    : m_Mode(GLC_SelectionEvent::Replace)
-    , m_SelectionList()
-    , m_DomainId(0)
+    : m_Modes(GLC_SelectionEvent::ModeDefault)
+    , m_SelectionSet()
 {
 
 }
 
-GLC_SelectionEvent::GLC_SelectionEvent(GLC_SelectionEvent::Mode mode, const QList<GLC_uint> &listOfId)
-    : m_Mode(mode)
-    , m_SelectionList(listOfId)
-    , m_DomainId(0)
+GLC_SelectionEvent::GLC_SelectionEvent(GLC_SelectionEvent::Modes modes, const GLC_SelectionSet &selectionSet)
+    : m_Modes(modes)
+    , m_SelectionSet(selectionSet)
 {
 
 }
 
 GLC_SelectionEvent::GLC_SelectionEvent(const GLC_SelectionEvent &other)
-    : m_Mode(other.m_Mode)
-    , m_SelectionList(other.m_SelectionList)
-    , m_DomainId(other.m_DomainId)
+    : m_Modes(other.m_Modes)
+    , m_SelectionSet(other.m_SelectionSet)
 {
 
 }
 
 bool GLC_SelectionEvent::operator==(const GLC_SelectionEvent &other) const
 {
-    bool subject= (m_Mode == other.m_Mode);
-    subject= subject && (m_SelectionList == other.m_SelectionList);
+    bool subject= (m_Modes == other.m_Modes);
+    subject= subject && (m_SelectionSet == other.m_SelectionSet);
 
     return subject;
 }
@@ -58,8 +55,8 @@ GLC_SelectionEvent &GLC_SelectionEvent::operator=(const GLC_SelectionEvent &othe
 {
     if (this != &other)
     {
-        m_Mode= other.m_Mode;
-        m_SelectionList= other.m_SelectionList;
+        m_Modes= other.m_Modes;
+        m_SelectionSet= other.m_SelectionSet;
     }
 
     return *this;
@@ -67,7 +64,6 @@ GLC_SelectionEvent &GLC_SelectionEvent::operator=(const GLC_SelectionEvent &othe
 
 void GLC_SelectionEvent::clear()
 {
-    m_Mode= GLC_SelectionEvent::Replace;
-    m_SelectionList.clear();
-    m_DomainId= 0;
+    m_Modes= GLC_SelectionEvent::ModeDefault;
+    m_SelectionSet.clear();
 }

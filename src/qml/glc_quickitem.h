@@ -75,7 +75,7 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent * e);
 
 protected:
-    void setOpenGLState();
+    virtual void setOpenGLState();
     void render(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData* pData);
     void renderForSelection();
     virtual void doRender();

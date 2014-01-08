@@ -95,7 +95,7 @@ bool GLC_DefaultEventInterpreter::processMouseReleaseEvent(QMouseEvent *e)
     }
     else if ((e->button() == Qt::LeftButton))
     {
-        select(e->x(), e->y(), GLC_SelectionEvent::Replace);
+        select(e->x(), e->y(), GLC_SelectionEvent::ModeReplace | GLC_SelectionEvent::ModeInstance);
         subject= true;
     }
 
@@ -104,15 +104,18 @@ bool GLC_DefaultEventInterpreter::processMouseReleaseEvent(QMouseEvent *e)
 
 bool GLC_DefaultEventInterpreter::processMouseDblClickEvent(QMouseEvent *pMouseEvent)
 {
+    Q_UNUSED(pMouseEvent);
     return false;
 }
 
-bool GLC_DefaultEventInterpreter::processWheelEvent(QWheelEvent *pWWheelEvent)
+bool GLC_DefaultEventInterpreter::processWheelEvent(QWheelEvent *pWheelEvent)
 {
+    Q_UNUSED(pWheelEvent);
     return false;
 }
 
 bool GLC_DefaultEventInterpreter::processTouchEvent(QTouchEvent *pTouchEvent)
 {
+    Q_UNUSED(pTouchEvent);
     return false;
 }

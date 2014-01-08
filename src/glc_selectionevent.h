@@ -25,34 +25,38 @@
 
 #include <QMetaType>
 #include <QList>
+#include <QFlags>
 
+#include "sceneGraph/glc_selectionset.h"
 #include "glc_global.h"
+#include "glc_config.h"
 
-class GLC_SelectionEvent
+class GLC_LIB_EXPORT GLC_SelectionEvent
 {
 public:
     enum Mode {
-        Replace= 0,
-        Add,
-        Remove
+        ModeReplace=    0x0001,
+        ModeUnit=        0x0002,
+        ModeSubstract=     0x0004,
+        ModeInstance=   0x0020,
+        ModeBody=       0x0040,
+        ModePrimitive=  0x0080,
     };
+    Q_DECLARE_FLAGS(Modes, Mode)
 
 public:
     GLC_SelectionEvent();
-    explicit GLC_SelectionEvent(Mode mode, const QList<GLC_uint>& listOfId);
+    GLC_SelectionEvent(GLC_SelectionEvent::Modes modes, const GLC_SelectionSet& selectionSet);
     GLC_SelectionEvent(const GLC_SelectionEvent& other);
 
 public:
     bool operator==(const GLC_SelectionEvent& other) const;
 
-    inline Mode mode() const
-    {return m_Mode;}
+    inline Modes modes() const
+    {return m_Modes;}
 
-    inline QList<GLC_uint> selectionList() const
-    {return m_SelectionList;}
-
-    inline int domainId() const
-    {return m_DomainId;}
+    inline GLC_SelectionSet selectionSet() const
+    {return m_SelectionSet;}
 
 public:
     GLC_SelectionEvent& operator=(const GLC_SelectionEvent& other);
@@ -60,17 +64,17 @@ public:
     void clear();
 
     inline void setMode(Mode mode)
-    {m_Mode= mode;}
+    {m_Modes= mode;}
 
-    inline void setSelectionList(const QList<GLC_uint>& selectionList)
-    {m_SelectionList= selectionList;}
+    inline void setSelectionSet(const GLC_SelectionSet& selectionSet)
+    {m_SelectionSet= selectionSet;}
 
 private:
-    Mode m_Mode;
-    QList<GLC_uint> m_SelectionList;
-    int m_DomainId;
+    Modes m_Modes;
+    GLC_SelectionSet m_SelectionSet;
 };
 
+Q_DECLARE_OPERATORS_FOR_FLAGS(GLC_SelectionEvent::Modes)
 Q_DECLARE_METATYPE(GLC_SelectionEvent)
 
 #endif // GLC_SELECTIONEVENT_H

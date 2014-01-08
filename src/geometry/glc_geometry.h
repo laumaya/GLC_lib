@@ -85,6 +85,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+    //! Return the number of primitive of this geometry
+    virtual int primitiveCount() const;
+
 	//! Get Object ID
 	inline GLC_uint id() const
 	{return m_Id;}

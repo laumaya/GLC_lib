@@ -33,7 +33,7 @@
 
 #include "../shading/glc_material.h"
 #include "../geometry/glc_mesh.h"
-#include "../sceneGraph/glc_structoccurence.h"
+#include "../sceneGraph/glc_structoccurrence.h"
 
 #include "../glc_config.h"
 
@@ -353,7 +353,7 @@ private:
 	void createSceneGraph();
 
 	//! Create Occurence tree from node tree
-	GLC_StructOccurence* createOccurenceFromNode(ColladaNode*);
+	GLC_StructOccurrence* createOccurenceFromNode(ColladaNode*);
 
 	//! Update progress bar
 	void updateProgressBar();

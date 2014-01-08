@@ -42,7 +42,7 @@ class GLC_LIB_EXPORT GLC_ViewHandler: public QObject
 {
     Q_OBJECT
 public:
-    GLC_ViewHandler(QObject* pParent= NULL);
+    explicit GLC_ViewHandler(QObject* pParent= NULL);
     virtual ~GLC_ViewHandler();
 
 signals :
@@ -75,6 +75,9 @@ public:
     inline QPoint selectionPoint() const
     {return m_SelectionPoint;}
 
+    inline GLC_InputEventInterpreter* eventInterpreter() const
+    {return m_pInputEventInterpreter;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -83,16 +86,18 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 public slots:
-    void updateGL();
+    virtual void updateGL();
 
 public:
+    void setInputEventInterpreter(GLC_InputEventInterpreter* pEventInterpreter);
+
     virtual void setWorld(const GLC_World& world);
 
     void setSamples(int samples);
 
     void setSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning);
 
-    virtual void setNextSelection(int x, int y, GLC_SelectionEvent::Mode mode);
+    virtual void setNextSelection(int x, int y, GLC_SelectionEvent::Modes modes);
 
     virtual void unsetSelection();
 
@@ -104,7 +109,7 @@ public:
 /*! \name Event handling Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-    public:
+public:
 
     virtual void processMousePressEvent(QMouseEvent* pMouseEvent);
     virtual void processMouseMoveEvent(QMouseEvent* pMouseEvent);
@@ -125,6 +130,15 @@ public:
 
 //@}
 
+//////////////////////////////////////////////////////////////////////
+/*! \name Protected services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
+    virtual void setDefaultUpVector(const GLC_Vector3d &vect);
+
+//@}
+
 protected:
     GLC_World m_World;
     GLC_Light* m_pLight;
@@ -135,7 +149,7 @@ protected:
     GLC_InputEventInterpreter* m_pInputEventInterpreter;
     bool m_RenderInSelectionMode;
     QPoint m_SelectionPoint;
-    GLC_SelectionEvent::Mode m_SelectionMode;
+    GLC_SelectionEvent::Modes m_SelectionModes;
 };
 
 Q_DECLARE_METATYPE(GLC_ViewHandler*)

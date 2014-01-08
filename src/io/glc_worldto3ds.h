@@ -39,7 +39,7 @@ struct Lib3dsNode;
 class GLC_StructReference;
 class GLC_3DRep;
 class GLC_Mesh;
-class GLC_StructOccurence;
+class GLC_StructOccurrence;
 class GLC_Matrix4x4;
 
 //////////////////////////////////////////////////////////////////////
@@ -80,10 +80,10 @@ private:
 	void saveMeshes();
 
 	//! Save the branch from the given GLC_StructOccurence
-	void saveBranch(GLC_StructOccurence* pOcc);
+	void saveBranch(GLC_StructOccurrence* pOcc);
 
 	//! Create 3ds node from the given GLC_StructOccurence
-	void createNodeFromOccurrence(GLC_StructOccurence* pOcc);
+	void createNodeFromOccurrence(GLC_StructOccurrence* pOcc);
 
 	//! Return the list of 3ds mesh from the given GLC_3DRep
 	QList<Lib3dsMesh*> createMeshsFrom3DRep(GLC_3DRep* pRep, const QString& name, const GLC_Matrix4x4& matrix= GLC_Matrix4x4());

@@ -120,7 +120,7 @@ void GLWidget::CreateScene()
 
     GLC_Material* pCurrentMat= NULL;
     // Set material properties to the tree
-    QList<GLC_StructOccurence*> occurenceList= m_World.listOfOccurence();
+    QList<GLC_StructOccurrence*> occurenceList= m_World.listOfOccurence();
     for (int i= 0; i < occurenceList.size(); ++i)
     {
         if (occurenceList.at(i)->hasRepresentation())
@@ -139,7 +139,7 @@ void GLWidget::CreateScene()
     // spheres creation
 
     // Create the sphere struct occurence
-    GLC_StructOccurence* pSphereOccurence= new GLC_StructOccurence(new GLC_3DRep(GLC_Factory::instance()->createSphere(3.0)));
+    GLC_StructOccurrence* pSphereOccurence= new GLC_StructOccurrence(new GLC_3DRep(GLC_Factory::instance()->createSphere(3.0)));
 
     // Get the sphere geometry
     GLC_Geometry* pSphereGeometry= dynamic_cast<GLC_3DRep*>(pSphereOccurence->structReference()->representationHandle())->geomAt(0);
@@ -175,7 +175,7 @@ void GLWidget::CreateScene()
         // Copy the sphere material
         pSphereGeometry->replaceMasterMaterial(new GLC_Material(*pCurrentMat));
         // Create new occurence of this sphere geometry
-        pSphereOccurence= new GLC_StructOccurence(new GLC_3DRep(pSphereGeometry));
+        pSphereOccurence= new GLC_StructOccurrence(new GLC_3DRep(pSphereGeometry));
         // translate the sphere
         pSphereOccurence->structInstance()->translate(positionList.at(i));
         // Add the sphere to the world

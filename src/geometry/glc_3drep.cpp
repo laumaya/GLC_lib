@@ -121,7 +121,24 @@ quint32 GLC_3DRep::chunckID()
 
 int GLC_3DRep::type() const
 {
-	return (*m_pType);
+    return (*m_pType);
+}
+
+GLC_Geometry *GLC_3DRep::geomOfId(GLC_uint id)
+{
+    GLC_Geometry* pSubject= NULL;
+    const int count= m_pGeomList->count();
+    for (int i= 0; i < count; ++i)
+    {
+        GLC_Geometry* pCurrentGeom= m_pGeomList->at(i);
+        if (pCurrentGeom->id() == id)
+        {
+            pSubject= pCurrentGeom;
+            break;
+        }
+    }
+
+    return pSubject;
 }
 
 //////////////////////////////////////////////////////////////////////
