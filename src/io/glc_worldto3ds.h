@@ -79,10 +79,10 @@ private:
 	//! Save all meshes into the lib3ds file structure
 	void saveMeshes();
 
-	//! Save the branch from the given GLC_StructOccurence
+	//! Save the branch from the given GLC_StructOccurrence
 	void saveBranch(GLC_StructOccurrence* pOcc);
 
-	//! Create 3ds node from the given GLC_StructOccurence
+	//! Create 3ds node from the given GLC_StructOccurrence
 	void createNodeFromOccurrence(GLC_StructOccurrence* pOcc);
 
 	//! Return the list of 3ds mesh from the given GLC_3DRep
@@ -136,7 +136,7 @@ private:
 	//! The current node id
 	int m_CurrentNodeId;
 
-	//! Occurence id to node id hash
+	//! Occurrence id to node id hash
 	QHash<GLC_uint, int> m_OccIdToNodeId;
 
 	//! The current mesh inde

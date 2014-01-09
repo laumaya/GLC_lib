@@ -108,8 +108,8 @@ private:
 	//! Export the assembly structure from the list of reference
 	void exportAssemblyStructure();
 
-	//! Export assembly from the given occurence
-	void exportAssemblyFromOccurence(const GLC_StructOccurrence* pOccurence);
+	//! Export assembly from the given occurrence
+	void exportAssemblyFromOccurrence(const GLC_StructOccurrence* pOccurrence);
 
 	//! Return the 3DXML string of the given matrix
 	QString matrixString(const GLC_Matrix4x4& matrix);
@@ -171,8 +171,8 @@ private:
 	//! Write extension attributes to 3DXML
 	void writeExtensionAttributes(GLC_Attributes* pAttributes);
 
-	//! Write the default view property of the given occurence
-	void writeOccurenceDefaultViewProperty(const GLC_StructOccurrence* pOccurence);
+	//! Write the default view property of the given occurrence
+	void writeOccurrenceDefaultViewProperty(const GLC_StructOccurrence* pOccurrence);
 
 	//! return true if export must continu
 	bool continu();
@@ -180,8 +180,8 @@ private:
 	//! Return the simplified name of the given name
 	QString symplifyName(QString name);
 
-	//! Return the path of the given occurence
-	QList<unsigned int> instancePath(const GLC_StructOccurrence* pOccurence);
+	//! Return the path of the given occurrence
+	QList<unsigned int> instancePath(const GLC_StructOccurrence* pOccurrence);
 
 //@}
 
@@ -261,8 +261,8 @@ private:
 	//! file name increment
 	unsigned int m_FileNameIncrement;
 
-	//! List of structOccurence with overload properties
-	QList<const GLC_StructOccurrence*> m_ListOfOverLoadedOccurence;
+	//! List of structOccurrence with overload properties
+	QList<const GLC_StructOccurrence*> m_ListOfOverLoadedOccurrence;
 
 	//! Mutex
 	QReadWriteLock* m_pReadWriteLock;

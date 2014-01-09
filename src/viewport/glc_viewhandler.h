@@ -72,6 +72,9 @@ public:
     inline bool isInSelectionMode() const
     {return m_RenderInSelectionMode;}
 
+    inline bool selectionMode() const
+    {return m_SelectionModes;}
+
     inline QPoint selectionPoint() const
     {return m_SelectionPoint;}
 

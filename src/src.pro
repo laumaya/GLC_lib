@@ -355,7 +355,7 @@ SOURCES +=	glc_global.cpp \
                 glc_context.cpp \
                 glc_contextmanager.cpp \
                 glc_contextshareddata.cpp \
-                glc_uniformshaderdata.cpp
+                glc_uniformshaderdata.cpp \
                 glc_selectionevent.cpp \
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \

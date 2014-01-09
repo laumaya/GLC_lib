@@ -142,7 +142,7 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 		m_pCurrentMesh->finish();
 		GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
-		m_pWorld->rootOccurence()->addChild(new GLC_StructOccurrence(pRep));
+		m_pWorld->rootOccurrence()->addChild(new GLC_StructOccurrence(pRep));
 	}
 	else
 	{
@@ -211,7 +211,7 @@ void GLC_StlToWorld::scanFacet()
 		m_pCurrentMesh->finish();
 		GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentMesh);
 		m_pCurrentMesh= NULL;
-		m_pWorld->rootOccurence()->addChild(new GLC_StructOccurrence(pRep));
+		m_pWorld->rootOccurrence()->addChild(new GLC_StructOccurrence(pRep));
 		return;
 	}
 	// Test if this is the start of new solid

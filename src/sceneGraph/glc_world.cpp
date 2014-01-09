@@ -57,7 +57,7 @@ GLC_World::~GLC_World()
     }
 }
 
-QList<GLC_StructOccurrence *> GLC_World::minimumSelectedOccurenceList() const
+QList<GLC_StructOccurrence *> GLC_World::minimumSelectedOccurrenceList() const
 {
     QSet<GLC_StructOccurrence *> selectedOccSet= QSet<GLC_StructOccurrence *>::fromList(m_pWorldHandle->selectionSetHandle()->occurrencesList());
     QList<GLC_StructOccurrence *> subject;
@@ -95,8 +95,8 @@ void GLC_World::replaceRootOccurrence(GLC_StructOccurrence* pOcc)
 
 void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 {
-	GLC_StructOccurrence* pAnotherRoot= anotherWorld.rootOccurence();
-    GLC_StructOccurrence* pRoot= rootOccurence();
+	GLC_StructOccurrence* pAnotherRoot= anotherWorld.rootOccurrence();
+    GLC_StructOccurrence* pRoot= rootOccurrence();
 	if (pAnotherRoot->childCount() > 0)
 	{
 		QList<GLC_StructOccurrence*> childs= pAnotherRoot->children();
@@ -109,7 +109,7 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 	}
 	else
 	{
-        pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pWorldHandle, false));
+        pRoot->addChild(anotherWorld.rootOccurrence()->clone(m_pWorldHandle, false));
 	}
 }
 

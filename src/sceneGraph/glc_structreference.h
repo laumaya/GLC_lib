@@ -80,12 +80,12 @@ public:
 	inline QList<GLC_StructInstance*> listOfStructInstances() const
 	{ return m_SetOfInstance.toList();}
 
-	//! Return the Set of occurence of this reference
-	QSet<GLC_StructOccurrence*> setOfStructOccurence() const;
+	//! Return the Set of occurrence of this reference
+	QSet<GLC_StructOccurrence*> setOfStructOccurrence() const;
 
-	//! Return the list of occurence of this reference
-	inline QList<GLC_StructOccurrence*> listOfStructOccurence() const
-	{return setOfStructOccurence().toList();}
+	//! Return the list of occurrence of this reference
+	inline QList<GLC_StructOccurrence*> listOfStructOccurrence() const
+	{return setOfStructOccurrence().toList();}
 
 	//! Return true if this reference has a representation
 	inline bool hasRepresentation() const
@@ -210,9 +210,9 @@ public:
 	/*! The representation must exists*/
 	bool unloadRepresentation();
 
-	//! Add the given occurence as a child of all occurrences of this reference
-	/*! Return the list of added occurence*/
-	QList<GLC_StructOccurrence*> addChild(GLC_StructOccurrence* pOccurence);
+	//! Add the given occurrence as a child of all occurrences of this reference
+	/*! Return the list of added occurrence*/
+	QList<GLC_StructOccurrence*> addChild(GLC_StructOccurrence* pOccurrence);
 
 
 //@}

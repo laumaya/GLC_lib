@@ -43,7 +43,7 @@ typedef QHash<GLC_uint, BodySelection> OccurrenceSelection;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_SelectionSet
-/*! \brief GLC_SelectionSet : GLC_StructOccurence and primitive selection set */
+/*! \brief GLC_SelectionSet : GLC_StructOccurrence and primitive selection set */
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_SelectionSet
 {
@@ -81,11 +81,11 @@ public:
 	//! Return true if this selection set is empty
 	bool isEmpty() const;
 
-	//! Return the number of occurence in this selection set
+    //! Return the number of occurrence in this selection set
     inline int size() const
 	{return count();}
 
-	//! Return the number of occurence in this selection set
+    //! Return the number of occurrence in this selection set
 	int count() const;
 
     //! Return the number of body in this selection set
@@ -94,25 +94,25 @@ public:
     //! Return the number of primitive of this selection set
     long primitiveCount() const;
 
-    //! Return the occurence selection hash table
+    //! Return the occurrence selection hash table
     inline const OccurrenceSelection& occurrenceSelection() const
     {return m_OccurrenceSelection;}
 
     //! Return the list of selected occurrences
     QList<GLC_StructOccurrence*> occurrencesList() const;
 
-	//! Return true if this selection set contains the given occurence
-	bool contains(const GLC_StructOccurrence* pOccurence) const
-	{return contains(pOccurence->id());}
+    //! Return true if this selection set contains the given occurrence
+    bool contains(const GLC_StructOccurrence* pOccurrence) const
+    {return contains(pOccurrence->id());}
 
-	//! Return true if this selection set contains the given occurence id
-	bool contains(GLC_uint occurenceId) const
-    {return m_OccurrenceSelection.contains(occurenceId);}
+    //! Return true if this selection set contains the given occurrence id
+    bool contains(GLC_uint occurrenceId) const
+    {return m_OccurrenceSelection.contains(occurrenceId);}
 
-    //! Return true if this selection contains the given body id of the given occurence id
+    //! Return true if this selection contains the given body id of the given occurrence id
     bool contains(GLC_uint occId, GLC_uint bodyId);
 
-    //! Return true if this selection contains the given primitive id of the given body id of the given occurence id
+    //! Return true if this selection contains the given primitive id of the given body id of the given occurrence id
     bool contains(GLC_uint occId, GLC_uint bodyId, GLC_uint primitiveId);
 
     //! Returns true if the other selection set is equal to this selection set set; otherwise returns false.
@@ -134,37 +134,37 @@ public:
     //! Assigns the other selection set and return a reference to this selection set
     GLC_SelectionSet& operator=(const GLC_SelectionSet& other);
 
-	//! Insert the given Occurence into the selection set and return true on success
-	/*! The given occurence must belongs to this selection set's world*/
-	bool insert(GLC_StructOccurrence* pOccurence);
+    //! Insert the given Occurrence into the selection set and return true on success
+    /*! The given occurrence must belongs to this selection set's world*/
+    bool insert(GLC_StructOccurrence* pOccurrence);
 
-	//! Insert the given Occurence id into the selection set and return true on success
-	/*! The given occurence id must belongs to this selection set's world*/
-	bool insert(GLC_uint occurenceId);
+    //! Insert the given Occurrence id into the selection set and return true on success
+    /*! The given occurrence id must belongs to this selection set's world*/
+    bool insert(GLC_uint occurrenceId);
 
-    //! Insert the given Body id of the given Occurence id into the selection set and return true on success
-    /*! The given occurence id must belongs to this selection set's world*/
-    bool insert(GLC_uint occurenceId, GLC_uint bodyId);
+    //! Insert the given Body id of the given Occurrence id into the selection set and return true on success
+    /*! The given occurrence id must belongs to this selection set's world*/
+    bool insert(GLC_uint occurrenceId, GLC_uint bodyId);
 
-    //! Insert he given Primitive Id of the given Body id of the given Occurence id into the selection set and return true on success
-    /*! The given occurence id must belongs to this selection set's world*/
-    bool insert(GLC_uint occurenceId, GLC_uint bodyId, GLC_uint primitiveId);
+    //! Insert he given Primitive Id of the given Body id of the given Occurrence id into the selection set and return true on success
+    /*! The given occurrence id must belongs to this selection set's world*/
+    bool insert(GLC_uint occurrenceId, GLC_uint bodyId, GLC_uint primitiveId);
 
-	//! Remove the given occurence from the selection set and return true on success
-	/*! The given occurence must belongs to this selection set's world*/
-	bool remove(GLC_StructOccurrence* pOccurence);
+    //! Remove the given occurrence from the selection set and return true on success
+    /*! The given occurrence must belongs to this selection set's world*/
+    bool remove(GLC_StructOccurrence* pOccurrence);
 
-	//! Remove the given occurence from the selection set and return true on success
-	/*! The given occurence id must belongs to this selection set's world*/
-	bool remove(GLC_uint occurenceId);
+    //! Remove the given occurrence from the selection set and return true on success
+    /*! The given occurrence id must belongs to this selection set's world*/
+    bool remove(GLC_uint occurrenceId);
 
-    //! Remove the given Body id of the given Occurence id into the selection set and return true on success
-    /*! The given occurence must belongs to this selection set's world*/
-    bool remove(GLC_uint occurenceId, GLC_uint bodyId);
+    //! Remove the given Body id of the given Occurrence id into the selection set and return true on success
+    /*! The given occurrence must belongs to this selection set's world*/
+    bool remove(GLC_uint occurrenceId, GLC_uint bodyId);
 
-    //! Remove the given Primitive Id of the given Body id of the given Occurence id into the selection set and return true on success
-    /*! The given occurence must belongs to this selection set's world*/
-    bool remove(GLC_uint occurenceId, GLC_uint bodyId, GLC_uint primitiveId);
+    //! Remove the given Primitive Id of the given Body id of the given Occurrence id into the selection set and return true on success
+    /*! The given occurrence must belongs to this selection set's world*/
+    bool remove(GLC_uint occurrenceId, GLC_uint bodyId, GLC_uint primitiveId);
 
 	//! Clear this selection set
 	void clear();

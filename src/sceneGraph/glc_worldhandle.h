@@ -64,7 +64,7 @@ public:
 	{return &m_Collection;}
 
     //! Return the root of the world
-    inline GLC_StructOccurrence* rootOccurence() const
+    inline GLC_StructOccurrence* rootOccurrence() const
     {return m_pRoot;}
 
 	//! Return the number of world associated with this handle
@@ -75,25 +75,25 @@ public:
 	inline bool isOrphan() const
 	{return m_NumberOfWorld == 0;}
 
-	//! Return true if the specified occurence id is in this world
-	inline bool containsOccurence(GLC_uint id) const
-	{return m_OccurenceHash.contains(id);}
+    //! Return true if the specified occurrence id is in this world
+    inline bool containsOccurrence(GLC_uint id) const
+    {return m_OccurrenceHash.contains(id);}
 
-	//! Return the occurence specified by an id
+    //! Return the occurrence specified by an id
 	/*! Id must be a valid identifier*/
-	inline GLC_StructOccurrence* getOccurence(GLC_uint id) const
+    inline GLC_StructOccurrence* getOccurrence(GLC_uint id) const
 	{
-		Q_ASSERT(m_OccurenceHash.contains(id));
-		return m_OccurenceHash.value(id);
+        Q_ASSERT(m_OccurrenceHash.contains(id));
+        return m_OccurrenceHash.value(id);
 	}
 
-	//! Return the list off occurences
-	inline QList<GLC_StructOccurrence*> occurences() const
-	{return m_OccurenceHash.values();}
+    //! Return the list off occurrences
+    inline QList<GLC_StructOccurrence*> occurrences() const
+    {return m_OccurrenceHash.values();}
 
-	//! Return the number of occurence
-	inline int numberOfOccurence() const
-	{return m_OccurenceHash.size();}
+    //! Return the number of occurrence
+    inline int numberOfOccurrence() const
+    {return m_OccurrenceHash.size();}
 
 	//! Return the list of instance
 	QList<GLC_StructInstance*> instances() const;
@@ -125,7 +125,7 @@ public:
     //! Replace the root occurrence of this world by the given occurrence
     void replaceRootOccurrence(GLC_StructOccurrence* pOcc);
 
-    //! Take the root occurence of this world
+    //! Take the root occurrence of this world
     GLC_StructOccurrence* takeRootOccurrence();
 
 	//! Increment the number of world
@@ -136,15 +136,15 @@ public:
 	inline void decrement()
 	{--m_NumberOfWorld;}
 
-	//! An Occurence has been added
-	void addOccurence(GLC_StructOccurrence* pOccurence, bool isSelected= false, GLuint shaderId= 0);
+    //! An Occurrence has been added
+    void addOccurrence(GLC_StructOccurrence* pOccurrence, bool isSelected= false, GLuint shaderId= 0);
 
-	//! An Occurence has been removed
-	void removeOccurence(GLC_StructOccurrence* pOccurence);
+    //! An Occurrence has been removed
+    void removeOccurrence(GLC_StructOccurrence* pOccurrence);
 
-	//! All Occurence has been removed
-	inline void removeAllOccurences()
-	{m_OccurenceHash.clear();}
+    //! All Occurrence has been removed
+    inline void removeAllOccurrences()
+    {m_OccurrenceHash.clear();}
 
 	//! Set the world Up Vector
 	inline void setUpVector(const GLC_Vector3d& vect)
@@ -154,21 +154,21 @@ public:
 	inline void setAttachedViewport(GLC_Viewport* pViewport)
 	{m_Collection.setAttachedViewport(pViewport);}
 
-	//! Select the given occurence id
-	/*! The given occurence id must belong to this worldhandle*/
-	void select(GLC_uint occurenceId);
+    //! Select the given occurrence id
+    /*! The given occurrence id must belong to this worldhandle*/
+    void select(GLC_uint occurrenceId);
 
     //! Update the current selection from the given selection event
     void updateSelection(const GLC_SelectionEvent& selectionEvent);
 
-	//! Unselect the given occurence id
-	/*! The given occurence id must belong to this worldhandle*/
-	void unselect(GLC_uint occurenceId, bool propagate= true);
+    //! Unselect the given occurrence id
+    /*! The given occurrence id must belong to this worldhandle*/
+    void unselect(GLC_uint occurrenceId, bool propagate= true);
 
-	//! Select all occurence of this world handle
+    //! Select all occurrence of this world handle
 	void selectAllWith3DViewInstance(bool allShowState);
 
-    //! Unselect all occurence of this world handle
+    //! Unselect all occurrence of this world handle
 	void unselectAll();
 
 	//! Show / Hide selected 3DViewInstance
@@ -201,8 +201,8 @@ private:
 	//! Number of this world
 	int m_NumberOfWorld;
 
-	//! The hash table containing struct occurence
-	QHash<GLC_uint, GLC_StructOccurrence*> m_OccurenceHash;
+    //! The hash table containing struct occurrence
+    QHash<GLC_uint, GLC_StructOccurrence*> m_OccurrenceHash;
 
 	//! This world Up Vector
 	GLC_Vector3d m_UpVector;

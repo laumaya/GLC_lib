@@ -79,15 +79,15 @@ class GLC_LIB_EXPORT GLC_3dxmlToWorld : public QObject
 		QString m_AssociatedFile;
 	};
 
-	//! \class V3OccurenceAttrib
-	/*! \brief V3OccurenceAttrib : Specifique occurence attribute */
-	struct V3OccurenceAttrib
+	//! \class V3OccurrenceAttrib
+	/*! \brief V3OccurrenceAttrib : Specifique occurrence attribute */
+	struct V3OccurrenceAttrib
 	{
-		inline V3OccurenceAttrib()
+		inline V3OccurrenceAttrib()
 		: m_IsVisible(true)
 		, m_pRenderProperties(NULL)
 		{}
-		inline ~V3OccurenceAttrib()
+		inline ~V3OccurrenceAttrib()
 		{delete m_pRenderProperties;}
 
 		//! Visibility attribute
@@ -96,17 +96,17 @@ class GLC_LIB_EXPORT GLC_3dxmlToWorld : public QObject
 		GLC_RenderProperties* m_pRenderProperties;
 	};
 
-	//! \class V3OccurenceAttrib
-	/*! \brief V3OccurenceAttrib : Specifique occurence attribute */
-	struct V4OccurenceAttrib
+	//! \class V3OccurrenceAttrib
+	/*! \brief V3OccurrenceAttrib : Specifique occurrence attribute */
+	struct V4OccurrenceAttrib
 	{
-		inline V4OccurenceAttrib()
+		inline V4OccurrenceAttrib()
 		: m_IsVisible(true)
 		, m_pRenderProperties(NULL)
 		, m_pMatrix(NULL)
 		, m_Path()
 		{}
-		inline ~V4OccurenceAttrib()
+		inline ~V4OccurrenceAttrib()
 		{
 			delete m_pRenderProperties;
 			delete m_pMatrix;
@@ -247,11 +247,11 @@ private:
 	//! Load 3DXML V4 default view property
 	void loadV4DefaultViewProperty();
 
-	//! Return the occurence path of the current DefaultViewProperty
-	QList<unsigned int> loadOccurencePath();
+	//! Return the occurrence path of the current DefaultViewProperty
+	QList<unsigned int> loadOccurrencePath();
 
 	//! Load Graphics properties element
-	void loadGraphicProperties(V4OccurenceAttrib* pAttrib);
+	void loadGraphicProperties(V4OccurrenceAttrib* pAttrib);
 
 	//! Load the local representation
 	void loadLocalRepresentations();
@@ -301,8 +301,8 @@ private:
 	//! Check if the given file is binary
 	void checkFileValidity(QIODevice* pIODevice);
 
-	//! Apply the given attribute to the right occurence from the given occurence
-	void applyV4Attribute(GLC_StructOccurrence* pOccurence, V4OccurenceAttrib* pV4OccurenceAttrib, QHash<GLC_StructInstance*, unsigned int>& InstanceToIdHash);
+	//! Apply the given attribute to the right occurrence from the given occurrence
+	void applyV4Attribute(GLC_StructOccurrence* pOccurrence, V4OccurrenceAttrib* pV4OccurrenceAttrib, QHash<GLC_StructInstance*, unsigned int>& InstanceToIdHash);
 
 	//! Load representation from 3DRep file
 	void loadRep(GLC_Mesh* pMesh);
@@ -388,11 +388,11 @@ private:
 	//! The current file time and date
 	QDateTime m_CurrentDateTime;
 
-	//! Hash table of occurence specific attributes for 3DXML V3
-	QHash<unsigned int, V3OccurenceAttrib*> m_V3OccurenceAttribHash;
+	//! Hash table of occurrence specific attributes for 3DXML V3
+	QHash<unsigned int, V3OccurrenceAttrib*> m_V3OccurrenceAttribHash;
 
-	//! List of occurence specific attributes for 3DXML V4
-	QList<V4OccurenceAttrib*> m_V4OccurenceAttribList;
+	//! List of occurrence specific attributes for 3DXML V4
+	QList<V4OccurrenceAttrib*> m_V4OccurrenceAttribList;
 
 	//! bool get external ref 3D name
 	bool m_GetExternalRef3DName;

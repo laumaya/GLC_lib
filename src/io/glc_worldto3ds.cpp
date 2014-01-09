@@ -106,7 +106,7 @@ void GLC_WorldTo3ds::saveWorld()
 	}
 
 	// Save node structure
-	GLC_StructOccurrence* pRoot= m_World.rootOccurence();
+	GLC_StructOccurrence* pRoot= m_World.rootOccurrence();
 	const int childCount= pRoot->childCount();
 	for (int i= 0; i < childCount; ++i)
 	{
@@ -160,7 +160,7 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 	p3dsNode->node_id= m_CurrentNodeId;
 	m_OccIdToNodeId.insert(pOcc->id(), m_CurrentNodeId++);
 
-	if (pOcc->parent() == m_World.rootOccurence())
+	if (pOcc->parent() == m_World.rootOccurrence())
 	{
 		p3dsNode->parent_id= LIB3DS_NO_PARENT;
 	}

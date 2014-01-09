@@ -51,6 +51,6 @@ GLC_World* GLC_BSRepToWorld::CreateWorldFromBSRep(QFile &file)
 	GLC_BSRep bsRep(file.fileName());
 	GLC_3DRep rep(bsRep.loadRep());
 	GLC_World* pWorld= new GLC_World();
-	pWorld->rootOccurence()->addChild(new GLC_StructOccurrence(new GLC_3DRep(rep)));
+	pWorld->rootOccurrence()->addChild(new GLC_StructOccurrence(new GLC_3DRep(rep)));
 	return pWorld;
 }

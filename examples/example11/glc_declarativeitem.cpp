@@ -250,9 +250,9 @@ void GLC_DeclarativeItem::renderForSelection(QPainter *painter)
     painter->endNativePainting();
 
     m_World.unselectAll();
-    if (m_World.containsOccurence(selectionId))
+    if (m_World.containsOccurrence(selectionId))
     {
-        m_World.select(m_World.occurence(selectionId));
+        m_World.select(m_World.occurrence(selectionId));
     }
 
     render(painter);

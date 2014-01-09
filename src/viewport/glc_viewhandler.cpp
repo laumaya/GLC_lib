@@ -133,37 +133,15 @@ void GLC_ViewHandler::unsetSelection()
 void GLC_ViewHandler::updateSelection(GLC_uint id)
 {
     m_RenderInSelectionMode= false;
-    const bool contains= m_World.containsOccurence(id);
-    bool selectionChange= false;
 
-//    switch (m_SelectionModes) {
-//    case (GLC_SelectionEvent::ModeReplace | GLC_SelectionEvent::ModeInstance):
-//        m_World.unselectAll();
-//        if (contains)
-//        {
-//            m_World.select(id);
-//        }
-//        selectionChange= true;
-//        break;
-//    case GLC_SelectionEvent::Add:
-//        if (contains)
-//        {
-//            m_World.select(id);
-//        }
-//        selectionChange= true;
-//        break;
-//    case GLC_SelectionEvent::Remove:
-//        if (contains && (m_World.isSelected(id)))
-//        {
-//            m_World.unselect(id);
-//        }
-//        selectionChange= true;
-//        break;
+    GLC_SelectionSet selectionSet(m_World);
+    selectionSet.insert(id);
 
-//    default:
-//        break;
-//    }
-    if (selectionChange) updateGL();
+    GLC_SelectionEvent selectionEvent(m_SelectionModes, selectionSet);
+
+    m_World.updateSelection(selectionEvent);
+
+    updateGL();
 }
 
 void GLC_ViewHandler::processMousePressEvent(QMouseEvent *pMouseEvent)

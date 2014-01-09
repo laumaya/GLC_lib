@@ -54,12 +54,12 @@ GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world, bool threaded)
 , m_ExportMaterial(true)
 , m_3dxmlFileSet()
 , m_FileNameIncrement(0)
-, m_ListOfOverLoadedOccurence()
+, m_ListOfOverLoadedOccurrence()
 , m_pReadWriteLock(NULL)
 , m_pIsInterupted(NULL)
 , m_IsThreaded(threaded)
 {
-	m_World.rootOccurence()->updateOccurenceNumber(1);
+	m_World.rootOccurrence()->updateOccurrenceNumber(1);
 }
 
 GLC_WorldTo3dxml::~GLC_WorldTo3dxml()
@@ -72,7 +72,7 @@ GLC_WorldTo3dxml::~GLC_WorldTo3dxml()
 bool GLC_WorldTo3dxml::exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial)
 {
 	m_3dxmlFileSet.clear();
-	m_ListOfOverLoadedOccurence.clear();
+	m_ListOfOverLoadedOccurrence.clear();
 	m_FileNameIncrement= 0;
 	m_ExportMaterial= exportMaterial;
 	m_FileName= filename;
@@ -141,7 +141,7 @@ bool GLC_WorldTo3dxml::exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::
 bool GLC_WorldTo3dxml::exportReferenceTo3DRep(const GLC_3DRep* p3DRep, const QString& fullFileName)
 {
 	m_3dxmlFileSet.clear();
-	m_ListOfOverLoadedOccurence.clear();
+	m_ListOfOverLoadedOccurrence.clear();
 	m_FileNameIncrement= 0;
 	m_ExportMaterial= false;
 
@@ -329,16 +329,16 @@ void GLC_WorldTo3dxml::exportAssemblyStructure()
 	// Product Structure
 	m_pOutStream->writeStartElement("ProductStructure");
 	m_pOutStream->writeAttribute("root", "1");
-	exportAssemblyFromOccurence(m_World.rootOccurence());
+	exportAssemblyFromOccurrence(m_World.rootOccurrence());
 	m_pOutStream->writeEndElement(); // ProductStructure
 
-	if (!m_ListOfOverLoadedOccurence.isEmpty())
+	if (!m_ListOfOverLoadedOccurrence.isEmpty())
 	{
 		m_pOutStream->writeStartElement("DefaultView");
-			const int size= m_ListOfOverLoadedOccurence.size();
+			const int size= m_ListOfOverLoadedOccurrence.size();
 			for (int i= 0; i < size; ++i)
 			{
-				writeOccurenceDefaultViewProperty(m_ListOfOverLoadedOccurence.at(i));
+				writeOccurrenceDefaultViewProperty(m_ListOfOverLoadedOccurrence.at(i));
 			}
 		m_pOutStream->writeEndElement(); // DefaultView
 	}
@@ -348,16 +348,16 @@ void GLC_WorldTo3dxml::exportAssemblyStructure()
 	m_pOutStream->writeEndDocument();
 }
 
-void GLC_WorldTo3dxml::exportAssemblyFromOccurence(const GLC_StructOccurrence* pOccurence)
+void GLC_WorldTo3dxml::exportAssemblyFromOccurrence(const GLC_StructOccurrence* pOccurrence)
 {
-	if (pOccurence->isOrphan())
+	if (pOccurrence->isOrphan())
 	{
-		writeReference3D(pOccurence->structReference());
+		writeReference3D(pOccurrence->structReference());
 	}
 	else
 	{
 		// Reference 3D
-		GLC_StructReference* pCurrentRef= pOccurence->structReference();
+		GLC_StructReference* pCurrentRef= pOccurrence->structReference();
 		if (!m_ReferenceToIdHash.contains(pCurrentRef))
 		{
 			writeReference3D(pCurrentRef);
@@ -372,11 +372,11 @@ void GLC_WorldTo3dxml::exportAssemblyFromOccurence(const GLC_StructOccurrence* p
 			}
 		}
 		// Instance 3D and instance rep
-		GLC_StructInstance* pCurrentInstance= pOccurence->structInstance();
+		GLC_StructInstance* pCurrentInstance= pOccurrence->structInstance();
 		if (!m_InstanceToIdHash.contains(pCurrentInstance))
 		{
 			// Instance 3D
-			const unsigned int parentId= m_ReferenceToIdHash.value(pOccurence->parent()->structReference());
+			const unsigned int parentId= m_ReferenceToIdHash.value(pOccurrence->parent()->structReference());
 			writeInstance3D(pCurrentInstance, parentId);
 
 			// Instance Rep
@@ -393,16 +393,16 @@ void GLC_WorldTo3dxml::exportAssemblyFromOccurence(const GLC_StructOccurrence* p
 	}
 
 	// Process children
-	const int childCount= pOccurence->childCount();
+	const int childCount= pOccurrence->childCount();
 	for (int i= 0; i < childCount; ++i)
 	{
-		exportAssemblyFromOccurence(pOccurence->child(i));
+		exportAssemblyFromOccurrence(pOccurrence->child(i));
 	}
 
-	// Add occurence with Overload properties to a list
-	if (m_World.collection()->contains(pOccurence->id()))
+	// Add occurrence with Overload properties to a list
+	if (m_World.collection()->contains(pOccurrence->id()))
 	{
-		GLC_3DViewInstance* pInstance= m_World.collection()->instanceHandle(pOccurence->id());
+		GLC_3DViewInstance* pInstance= m_World.collection()->instanceHandle(pOccurrence->id());
 		Q_ASSERT(NULL != pInstance);
 		const bool isVisible= pInstance->isVisible();
 
@@ -417,10 +417,10 @@ void GLC_WorldTo3dxml::exportAssemblyFromOccurence(const GLC_StructOccurrence* p
 			RenderOverloaded= RenderOverloaded || (pRenderProperties->renderingMode() == glc::OverwriteTransparencyAndMaterial);
 		}
 
-		const bool isOverload= !isVisible || RenderOverloaded || pOccurence->isFlexible();
+		const bool isOverload= !isVisible || RenderOverloaded || pOccurrence->isFlexible();
 		if (isOverload)
 		{
-			m_ListOfOverLoadedOccurence.append(pOccurence);
+			m_ListOfOverLoadedOccurrence.append(pOccurrence);
 		}
 	}
 
@@ -1172,26 +1172,26 @@ void GLC_WorldTo3dxml::writeExtensionAttributes(GLC_Attributes* pAttributes)
 	}
 }
 
-void GLC_WorldTo3dxml::writeOccurenceDefaultViewProperty(const GLC_StructOccurrence* pOccurence)
+void GLC_WorldTo3dxml::writeOccurrenceDefaultViewProperty(const GLC_StructOccurrence* pOccurrence)
 {
-	QList<unsigned int> path= instancePath(pOccurence);
+	QList<unsigned int> path= instancePath(pOccurrence);
 
-	GLC_3DViewInstance* pInstance= m_World.collection()->instanceHandle(pOccurence->id());
+	GLC_3DViewInstance* pInstance= m_World.collection()->instanceHandle(pOccurrence->id());
 	Q_ASSERT(NULL != pInstance);
-	const bool isVisible= pOccurence->isVisible();
+	const bool isVisible= pOccurrence->isVisible();
 	m_pOutStream->writeStartElement("DefaultViewProperty");
-	m_pOutStream->writeStartElement("OccurenceId");
+	m_pOutStream->writeStartElement("OccurrenceId");
 	const QString prefix= "urn:3DXML:" + QFileInfo(m_FileName).fileName() + "#";
 	const int pathSize= path.size();
 	for (int i= 0; i < pathSize; ++i)
 	{
 		m_pOutStream->writeTextElement("id", prefix + QString::number(path.at(i)));
 	}
-	m_pOutStream->writeEndElement(); // OccurenceId
+	m_pOutStream->writeEndElement(); // OccurrenceId
 
-	if (pOccurence->isFlexible())
+	if (pOccurrence->isFlexible())
 	{
-		m_pOutStream->writeTextElement("RelativePosition", matrixString(pOccurence->occurrenceRelativeMatrix()));
+		m_pOutStream->writeTextElement("RelativePosition", matrixString(pOccurrence->occurrenceRelativeMatrix()));
 	}
 
 	if (!isVisible || !pInstance->renderPropertiesHandle()->isDefault())
@@ -1288,15 +1288,15 @@ QString GLC_WorldTo3dxml::symplifyName(QString name)
 	return name;
 }
 
-QList<unsigned int> GLC_WorldTo3dxml::instancePath(const GLC_StructOccurrence* pOccurence)
+QList<unsigned int> GLC_WorldTo3dxml::instancePath(const GLC_StructOccurrence* pOccurrence)
 {
 	QList<unsigned int> path;
-	if (!pOccurence->isOrphan())
+	if (!pOccurrence->isOrphan())
 	{
-		GLC_StructInstance* pInstance= pOccurence->structInstance();
+		GLC_StructInstance* pInstance= pOccurrence->structInstance();
 		Q_ASSERT(m_InstanceToIdHash.contains(pInstance));
 		path.prepend(m_InstanceToIdHash.value(pInstance));
-		QList<unsigned int> subPath(instancePath(pOccurence->parent()));
+		QList<unsigned int> subPath(instancePath(pOccurrence->parent()));
 		subPath.append(path);
 		path= subPath;
 	}

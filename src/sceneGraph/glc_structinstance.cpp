@@ -30,7 +30,7 @@
 GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)
 : m_pNumberOfInstance(NULL)
 , m_pStructReference(pStructReference)
-, m_ListOfOccurences()
+, m_ListOfOccurrences()
 , m_RelativeMatrix()
 , m_Name()
 , m_pAttributes(NULL)
@@ -59,7 +59,7 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructReference* pStructReference)
 GLC_StructInstance::GLC_StructInstance(GLC_Rep* pRep)
 : m_pNumberOfInstance(NULL)
 , m_pStructReference(new GLC_StructReference(pRep))
-, m_ListOfOccurences()
+, m_ListOfOccurrences()
 , m_RelativeMatrix()
 , m_Name(m_pStructReference->name())
 , m_pAttributes(NULL)
@@ -81,7 +81,7 @@ GLC_StructInstance::GLC_StructInstance(GLC_Rep* pRep)
 GLC_StructInstance::GLC_StructInstance(const GLC_StructInstance& structInstance)
 : m_pNumberOfInstance(structInstance.m_pNumberOfInstance)
 , m_pStructReference(structInstance.m_pStructReference)
-, m_ListOfOccurences()
+, m_ListOfOccurrences()
 , m_RelativeMatrix(structInstance.m_RelativeMatrix)
 , m_Name(structInstance.name())
 , m_pAttributes(NULL)
@@ -104,7 +104,7 @@ GLC_StructInstance::GLC_StructInstance(const GLC_StructInstance& structInstance)
 GLC_StructInstance::GLC_StructInstance(GLC_StructInstance* pStructInstance)
 : m_pNumberOfInstance(pStructInstance->m_pNumberOfInstance)
 , m_pStructReference(pStructInstance->m_pStructReference)
-, m_ListOfOccurences()
+, m_ListOfOccurrences()
 , m_RelativeMatrix(pStructInstance->m_RelativeMatrix)
 , m_Name(pStructInstance->name())
 , m_pAttributes(NULL)
@@ -127,7 +127,7 @@ GLC_StructInstance::GLC_StructInstance(GLC_StructInstance* pStructInstance)
 GLC_StructInstance::GLC_StructInstance(const QString& name)
 : m_pNumberOfInstance(NULL)
 , m_pStructReference(NULL)
-, m_ListOfOccurences()
+, m_ListOfOccurrences()
 , m_RelativeMatrix()
 , m_Name(name)
 , m_pAttributes(NULL)
@@ -181,11 +181,11 @@ GLC_StructInstance::~GLC_StructInstance()
 
 }
 
-void GLC_StructInstance::updateOccurencesAbsoluteMatrix()
+void GLC_StructInstance::updateOccurrencesAbsoluteMatrix()
 {
-	const int occurenceCount= m_ListOfOccurences.count();
-	for (int i= 0; i < occurenceCount; ++i)
+	const int occurrenceCount= m_ListOfOccurrences.count();
+	for (int i= 0; i < occurrenceCount; ++i)
 	{
-		m_ListOfOccurences.at(i)->updateChildrenAbsoluteMatrix();
+		m_ListOfOccurrences.at(i)->updateChildrenAbsoluteMatrix();
 	}
 }

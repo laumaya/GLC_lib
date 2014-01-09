@@ -23,7 +23,7 @@
 #include "glc_selectionevent.h"
 
 GLC_SelectionEvent::GLC_SelectionEvent()
-    : m_Modes(GLC_SelectionEvent::ModeDefault)
+    : m_Modes(GLC_SelectionEvent::ModeReplace | GLC_SelectionEvent::ModeInstance)
     , m_SelectionSet()
 {
 
@@ -64,6 +64,6 @@ GLC_SelectionEvent &GLC_SelectionEvent::operator=(const GLC_SelectionEvent &othe
 
 void GLC_SelectionEvent::clear()
 {
-    m_Modes= GLC_SelectionEvent::ModeDefault;
+    m_Modes= (GLC_SelectionEvent::ModeReplace | GLC_SelectionEvent::ModeInstance);
     m_SelectionSet.clear();
 }

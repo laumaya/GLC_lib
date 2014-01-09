@@ -120,12 +120,12 @@ void GLWidget::CreateScene()
 
     GLC_Material* pCurrentMat= NULL;
     // Set material properties to the tree
-    QList<GLC_StructOccurrence*> occurenceList= m_World.listOfOccurence();
-    for (int i= 0; i < occurenceList.size(); ++i)
+    QList<GLC_StructOccurrence*> occurrenceList= m_World.listOfOccurrence();
+    for (int i= 0; i < occurrenceList.size(); ++i)
     {
-        if (occurenceList.at(i)->hasRepresentation())
+        if (occurrenceList.at(i)->hasRepresentation())
         {
-            GLC_StructReference* pRef= occurenceList.at(i)->structReference();
+            GLC_StructReference* pRef= occurrenceList.at(i)->structReference();
             GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pRef->representationHandle());
             if (NULL != pRep)
             {
@@ -133,16 +133,16 @@ void GLWidget::CreateScene()
                 pCurrentMat->setAmbientColor(QColor::fromRgb(22, 134, 33, 255));
                 pCurrentMat->setDiffuseColor(QColor::fromRgb(85, 170, 127, 255));
             }
-            m_TreeId << occurenceList.at(i)->id();
+            m_TreeId << occurrenceList.at(i)->id();
         }
     }
     // spheres creation
 
-    // Create the sphere struct occurence
-    GLC_StructOccurrence* pSphereOccurence= new GLC_StructOccurrence(new GLC_3DRep(GLC_Factory::instance()->createSphere(3.0)));
+    // Create the sphere struct occurrence
+    GLC_StructOccurrence* pSphereOccurrence= new GLC_StructOccurrence(new GLC_3DRep(GLC_Factory::instance()->createSphere(3.0)));
 
     // Get the sphere geometry
-    GLC_Geometry* pSphereGeometry= dynamic_cast<GLC_3DRep*>(pSphereOccurence->structReference()->representationHandle())->geomAt(0);
+    GLC_Geometry* pSphereGeometry= dynamic_cast<GLC_3DRep*>(pSphereOccurrence->structReference()->representationHandle())->geomAt(0);
     // Get the sphere material
     pCurrentMat= new GLC_Material();
     pCurrentMat->setAmbientColor(Qt::red);
@@ -151,9 +151,9 @@ void GLWidget::CreateScene()
     pSphereGeometry->replaceMasterMaterial(pCurrentMat);
 
     // translate the first sphere
-    pSphereOccurence->structInstance()->translate(6.0, 0.0, 71.0);
+    pSphereOccurrence->structInstance()->translate(6.0, 0.0, 71.0);
     // Add the first sphere to the world
-    m_World.rootOccurence()->addChild(pSphereOccurence);
+    m_World.rootOccurrence()->addChild(pSphereOccurrence);
 
     // Create the list of sphere position
     QList<GLC_Point3d> positionList;
@@ -174,12 +174,12 @@ void GLWidget::CreateScene()
         pSphereGeometry= pSphereGeometry->clone();
         // Copy the sphere material
         pSphereGeometry->replaceMasterMaterial(new GLC_Material(*pCurrentMat));
-        // Create new occurence of this sphere geometry
-        pSphereOccurence= new GLC_StructOccurrence(new GLC_3DRep(pSphereGeometry));
+        // Create new occurrence of this sphere geometry
+        pSphereOccurrence= new GLC_StructOccurrence(new GLC_3DRep(pSphereGeometry));
         // translate the sphere
-        pSphereOccurence->structInstance()->translate(positionList.at(i));
+        pSphereOccurrence->structInstance()->translate(positionList.at(i));
         // Add the sphere to the world
-        m_World.rootOccurence()->addChild(pSphereOccurence);
+        m_World.rootOccurrence()->addChild(pSphereOccurrence);
     }
 }
 
@@ -227,7 +227,7 @@ void GLWidget::select(const int x, const int y)
     GLC_uint SelectionID= m_GlView.renderAndSelect(x, y);
     setAutoBufferSwap(true);
 
-    if ((SelectionID != 0) && m_World.containsOccurence(SelectionID))
+    if ((SelectionID != 0) && m_World.containsOccurrence(SelectionID))
     {
         GLC_3DViewInstance instance(*m_World.collection()->instanceHandle(SelectionID));
         if ((!instance.isEmpty()) && (!m_TreeId.contains(instance.id())))

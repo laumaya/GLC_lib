@@ -160,8 +160,8 @@ QList<GLC_StructOccurrence*> GLC_SelectionSet::occurrencesList() const
         while (iOcc != m_OccurrenceSelection.constEnd())
         {
             const GLC_uint id= iOcc.key();
-            Q_ASSERT(m_pWorldHandle->containsOccurence(id));
-            subject.append(m_pWorldHandle->getOccurence(id));
+            Q_ASSERT(m_pWorldHandle->containsOccurrence(id));
+            subject.append(m_pWorldHandle->getOccurrence(id));
         }
     }
 
@@ -215,41 +215,20 @@ GLC_SelectionSet &GLC_SelectionSet::operator=(const GLC_SelectionSet &other)
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-bool GLC_SelectionSet::insert(GLC_StructOccurrence* pOccurence)
+bool GLC_SelectionSet::insert(GLC_StructOccurrence* pOccurrence)
 {
-    return insert(pOccurence->id());
+    return insert(pOccurrence->id());
 }
 
-bool GLC_SelectionSet::insert(GLC_uint occurenceId)
-{
-    Q_ASSERT(m_pWorldHandle->containsOccurence(occurenceId));
-    if (!contains(occurenceId))
-    {
-        Q_ASSERT(!m_OccurrenceSelection.contains(occurenceId));
-        m_OccurrenceSelection.insert(occurenceId, BodySelection());
-        return true;
-    }
-    else return false;
-}
-
-bool GLC_SelectionSet::insert(GLC_uint occurenceId, GLC_uint bodyId)
+bool GLC_SelectionSet::insert(GLC_uint occurrenceId)
 {
     bool subject= false;
-    Q_ASSERT(m_pWorldHandle->containsOccurence(occurenceId));
-    if (!contains(occurenceId))
+    if(m_pWorldHandle && m_pWorldHandle->containsOccurrence(occurrenceId))
     {
-        Q_ASSERT(!m_OccurrenceSelection.contains(occurenceId));
-        BodySelection bodySelection;
-        bodySelection.insert(bodyId, PrimitiveSelection());
-        m_OccurrenceSelection.insert(occurenceId, bodySelection);
-        subject= true;
-    }
-    else
-    {
-        Q_ASSERT(m_OccurrenceSelection.contains(occurenceId));
-        if (!m_OccurrenceSelection.value(occurenceId).contains(bodyId))
+        if (!contains(occurrenceId))
         {
-            m_OccurrenceSelection[occurenceId].insert(bodyId, PrimitiveSelection());
+            Q_ASSERT(!m_OccurrenceSelection.contains(occurrenceId));
+            m_OccurrenceSelection.insert(occurrenceId, BodySelection());
             subject= true;
         }
     }
@@ -257,35 +236,23 @@ bool GLC_SelectionSet::insert(GLC_uint occurenceId, GLC_uint bodyId)
     return subject;
 }
 
-bool GLC_SelectionSet::insert(GLC_uint occurenceId, GLC_uint bodyId, GLC_uint primitiveId)
+bool GLC_SelectionSet::insert(GLC_uint occurrenceId, GLC_uint bodyId)
 {
     bool subject= false;
-    Q_ASSERT(m_pWorldHandle->containsOccurence(occurenceId));
-    if (!contains(occurenceId))
+    if(m_pWorldHandle && m_pWorldHandle->containsOccurrence(occurrenceId))
     {
-        Q_ASSERT(!m_OccurrenceSelection.contains(occurenceId));
-        PrimitiveSelection primitiveSelection;
-        primitiveSelection.insert(primitiveId);
-        BodySelection bodySelection;
-        bodySelection.insert(bodyId, primitiveSelection);
-        m_OccurrenceSelection.insert(occurenceId, bodySelection);
-        subject= true;
-    }
-    else
-    {
-        Q_ASSERT(m_OccurrenceSelection.contains(occurenceId));
-        if (!m_OccurrenceSelection.value(occurenceId).contains(bodyId))
+        if (!contains(occurrenceId))
         {
-            PrimitiveSelection primitiveSelection;
-            primitiveSelection.insert(primitiveId);
-            m_OccurrenceSelection[occurenceId].insert(bodyId, primitiveSelection);
+            BodySelection bodySelection;
+            bodySelection.insert(bodyId, PrimitiveSelection());
+            m_OccurrenceSelection.insert(occurrenceId, bodySelection);
             subject= true;
         }
         else
         {
-            if (!m_OccurrenceSelection.value(occurenceId).value(bodyId).contains(primitiveId))
+            if (!m_OccurrenceSelection.value(occurrenceId).contains(bodyId))
             {
-                (m_OccurrenceSelection[occurenceId])[bodyId].insert(primitiveId);
+                m_OccurrenceSelection[occurrenceId].insert(bodyId, PrimitiveSelection());
                 subject= true;
             }
         }
@@ -294,42 +261,83 @@ bool GLC_SelectionSet::insert(GLC_uint occurenceId, GLC_uint bodyId, GLC_uint pr
     return subject;
 }
 
-bool GLC_SelectionSet::remove(GLC_StructOccurrence* pOccurence)
-{
-    return remove(pOccurence->id());
-}
-
-bool GLC_SelectionSet::remove(GLC_uint occurenceId)
+bool GLC_SelectionSet::insert(GLC_uint occurrenceId, GLC_uint bodyId, GLC_uint primitiveId)
 {
     bool subject= false;
-    Q_ASSERT(m_pWorldHandle->containsOccurence(occurenceId));
-    if (contains(occurenceId))
+    if(m_pWorldHandle && m_pWorldHandle->containsOccurrence(occurrenceId))
     {
-        m_OccurrenceSelection.remove(occurenceId);
-        subject= true;
+        if (!contains(occurrenceId))
+        {
+            PrimitiveSelection primitiveSelection;
+            primitiveSelection.insert(primitiveId);
+            BodySelection bodySelection;
+            bodySelection.insert(bodyId, primitiveSelection);
+            m_OccurrenceSelection.insert(occurrenceId, bodySelection);
+            subject= true;
+        }
+        else
+        {
+            if (!m_OccurrenceSelection.value(occurrenceId).contains(bodyId))
+            {
+                PrimitiveSelection primitiveSelection;
+                primitiveSelection.insert(primitiveId);
+                m_OccurrenceSelection[occurrenceId].insert(bodyId, primitiveSelection);
+                subject= true;
+            }
+            else
+            {
+                if (!m_OccurrenceSelection.value(occurrenceId).value(bodyId).contains(primitiveId))
+                {
+                    (m_OccurrenceSelection[occurrenceId])[bodyId].insert(primitiveId);
+                    subject= true;
+                }
+            }
+        }
     }
 
     return subject;
 }
 
-bool GLC_SelectionSet::remove(GLC_uint occurenceId, GLC_uint bodyId)
+bool GLC_SelectionSet::remove(GLC_StructOccurrence* pOccurrence)
+{
+    return remove(pOccurrence->id());
+}
+
+bool GLC_SelectionSet::remove(GLC_uint occurrenceId)
 {
     bool subject= false;
-    Q_ASSERT(m_pWorldHandle->containsOccurence(occurenceId));
-    if (contains(occurenceId, bodyId))
+    if(m_pWorldHandle && m_pWorldHandle->containsOccurrence(occurrenceId))
     {
-        m_OccurrenceSelection[occurenceId].remove(bodyId);
-        subject= true;
+        if (contains(occurrenceId))
+        {
+            m_OccurrenceSelection.remove(occurrenceId);
+            subject= true;
+        }
+    }
+
+    return subject;
+}
+
+bool GLC_SelectionSet::remove(GLC_uint occurrenceId, GLC_uint bodyId)
+{
+    bool subject= false;
+    if(m_pWorldHandle && m_pWorldHandle->containsOccurrence(occurrenceId))
+    {
+        if (contains(occurrenceId, bodyId))
+        {
+            m_OccurrenceSelection[occurrenceId].remove(bodyId);
+            subject= true;
+        }
     }
     return subject;
 }
 
-bool GLC_SelectionSet::remove(GLC_uint occurenceId, GLC_uint bodyId, GLC_uint primitiveId)
+bool GLC_SelectionSet::remove(GLC_uint occurrenceId, GLC_uint bodyId, GLC_uint primitiveId)
 {
     bool subject= false;
-    if (contains(occurenceId, bodyId, primitiveId))
+    if (contains(occurrenceId, bodyId, primitiveId))
     {
-        (m_OccurrenceSelection[occurenceId])[bodyId].remove(primitiveId);
+        (m_OccurrenceSelection[occurrenceId])[bodyId].remove(primitiveId);
         subject= true;
     }
     return subject;

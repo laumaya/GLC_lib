@@ -69,17 +69,17 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return true if this instance have occurence
-	inline bool hasStructOccurence() const
-	{ return !m_ListOfOccurences.isEmpty();}
+	//! Return true if this instance have occurrence
+	inline bool hasStructOccurrence() const
+	{ return !m_ListOfOccurrences.isEmpty();}
 
-	//! Return the number of occurence
-	inline int numberOfOccurence() const
-	{return m_ListOfOccurences.size();}
+	//! Return the number of occurrence
+	inline int numberOfOccurrence() const
+	{return m_ListOfOccurrences.size();}
 
-	//! Return first occurence handle
-	inline GLC_StructOccurrence* firstOccurenceHandle() const
-	{ return m_ListOfOccurences.first();}
+	//! Return first occurrence handle
+	inline GLC_StructOccurrence* firstOccurrenceHandle() const
+	{ return m_ListOfOccurrences.first();}
 
 	//! Return the relative matrix of this instance
 	inline GLC_Matrix4x4 relativeMatrix() const
@@ -89,9 +89,9 @@ public:
 	inline GLC_StructReference* structReference() const
 	{ return m_pStructReference;}
 
-	//! Return the list off occurence of this instance
-	inline QList<GLC_StructOccurrence*> listOfStructOccurences() const
-	{ return m_ListOfOccurences;}
+	//! Return the list off occurrence of this instance
+	inline QList<GLC_StructOccurrence*> listOfStructOccurrences() const
+	{ return m_ListOfOccurrences;}
 
 	//! Return the instance name
 	inline QString name() const
@@ -115,16 +115,16 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! An occurence of this instance have been created
-	inline void structOccurenceCreated(GLC_StructOccurrence* pOccurence)
+	//! An occurrence of this instance have been created
+	inline void structOccurrenceCreated(GLC_StructOccurrence* pOccurrence)
 	{
-		Q_ASSERT(!m_ListOfOccurences.contains(pOccurence));
-		m_ListOfOccurences.append(pOccurence);
+		Q_ASSERT(!m_ListOfOccurrences.contains(pOccurrence));
+		m_ListOfOccurrences.append(pOccurrence);
 	}
 
-	inline void structOccurenceDeleted(GLC_StructOccurrence *pOccurence)
+	inline void structOccurrenceDeleted(GLC_StructOccurrence *pOccurrence)
 	{
-		m_ListOfOccurences.removeOne(pOccurence);
+		m_ListOfOccurrences.removeOne(pOccurrence);
 	}
 
 	//! Move the instance by specified matrix
@@ -172,8 +172,8 @@ public:
 		m_pAttributes= new GLC_Attributes(attr);
 	}
 
-	//! Update absolute matrix off children and all occurences of this instance
-	void updateOccurencesAbsoluteMatrix();
+	//! Update absolute matrix off children and all occurrences of this instance
+	void updateOccurrencesAbsoluteMatrix();
 
 
 //@}
@@ -188,8 +188,8 @@ private:
 	//! The Struct reference of this instance
 	GLC_StructReference* m_pStructReference;
 
-	//! The list of instance's occurences
-	QList<GLC_StructOccurrence*> m_ListOfOccurences;
+	//! The list of instance's occurrences
+	QList<GLC_StructOccurrence*> m_ListOfOccurrences;
 
 	//! The relative matrix
 	GLC_Matrix4x4 m_RelativeMatrix;

@@ -1929,24 +1929,24 @@ void GLC_ColladaToWorld::createSceneGraph()
 		//qDebug() << "Top level node is : " << pCurrentColladaNode->m_Id;
 		if (NULL != pCurrentColladaNode)
 		{
-			GLC_StructOccurrence* pOccurence= createOccurenceFromNode(pCurrentColladaNode);
-			m_pWorld->rootOccurence()->addChild(pOccurence);
+			GLC_StructOccurrence* pOccurrence= createOccurrenceFromNode(pCurrentColladaNode);
+			m_pWorld->rootOccurrence()->addChild(pOccurrence);
 		}
 	}
 
 	// Update position
-	m_pWorld->rootOccurence()->removeEmptyChildren();
-	m_pWorld->rootOccurence()->updateChildrenAbsoluteMatrix();
+	m_pWorld->rootOccurrence()->removeEmptyChildren();
+	m_pWorld->rootOccurrence()->updateChildrenAbsoluteMatrix();
 
 }
 
-// Create Occurence tree from node tree
-GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pNode)
+// Create Occurrence tree from node tree
+GLC_StructOccurrence* GLC_ColladaToWorld::createOccurrenceFromNode(ColladaNode* pNode)
 {
-	//qDebug() << "GLC_ColladaToWorld::createOccurenceFromNode";
+	//qDebug() << "GLC_ColladaToWorld::createOccurrenceFromNode";
 	Q_ASSERT(NULL != pNode);
 	GLC_StructInstance* pInstance= NULL;
-	GLC_StructOccurrence* pOccurence= NULL;
+	GLC_StructOccurrence* pOccurrence= NULL;
 	if (!pNode->m_InstanceGeometryIDs.isEmpty())
 	{
 		if (m_StructInstanceHash.contains(pNode->m_Id))
@@ -1954,7 +1954,7 @@ GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* p
 			pInstance= new GLC_StructInstance(m_StructInstanceHash.value(pNode->m_Id));
 			pInstance->move(pNode->m_Matrix);
 			//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
-			pOccurence= new GLC_StructOccurrence(pInstance);
+			pOccurrence= new GLC_StructOccurrence(pInstance);
 		}
 		else
 		{
@@ -1993,7 +1993,7 @@ GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* p
 
 					pInstance->move(pNode->m_Matrix);
 					//qDebug() << "Instance move with this matrix :" << pNode->m_Matrix.toString();
-					pOccurence= new GLC_StructOccurrence(pInstance);
+					pOccurrence= new GLC_StructOccurrence(pInstance);
 				}
 
 			}
@@ -2007,7 +2007,7 @@ GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* p
 	}
 	if (!pNode->m_ChildNodes.isEmpty())
 	{
-		if (NULL == pOccurence) //  The node hasn't geometry -> Create an occurence
+		if (NULL == pOccurrence) //  The node hasn't geometry -> Create an occurrence
 		{
 			if (m_StructInstanceHash.contains(pNode->m_Id))
 			{
@@ -2020,7 +2020,7 @@ GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* p
 			}
 
 			pInstance->move(pNode->m_Matrix);
-			pOccurence= new GLC_StructOccurrence(pInstance);
+			pOccurrence= new GLC_StructOccurrence(pInstance);
 		}
 
 		const int size= pNode->m_ChildNodes.size();
@@ -2028,13 +2028,13 @@ GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* p
 		{
 			if (NULL != pNode->m_ChildNodes.at(i))
 			{
-				pOccurence->addChild(createOccurenceFromNode(pNode->m_ChildNodes.at(i)));
+				pOccurrence->addChild(createOccurrenceFromNode(pNode->m_ChildNodes.at(i)));
 			}
 		}
 	}
 	if (!pNode->m_InstanceOffNodeIds.isEmpty())
 	{
-		if (NULL == pOccurence) //  The node hasn't geometry and childs -> Create an occurence
+		if (NULL == pOccurrence) //  The node hasn't geometry and childs -> Create an occurrence
 		{
 			if (m_StructInstanceHash.contains(pNode->m_Id))
 			{
@@ -2047,7 +2047,7 @@ GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* p
 			}
 
 			pInstance->move(pNode->m_Matrix);
-			pOccurence= new GLC_StructOccurrence(pInstance);
+			pOccurrence= new GLC_StructOccurrence(pInstance);
 		}
 
 		const int size= pNode->m_InstanceOffNodeIds.size();
@@ -2055,7 +2055,7 @@ GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* p
 		{
 			if (m_ColladaNodeHash.contains(pNode->m_InstanceOffNodeIds.at(i)))
 			{
-				pOccurence->addChild(createOccurenceFromNode(m_ColladaNodeHash.value(pNode->m_InstanceOffNodeIds.at(i))));
+				pOccurrence->addChild(createOccurrenceFromNode(m_ColladaNodeHash.value(pNode->m_InstanceOffNodeIds.at(i))));
 			}
 			else
 			{
@@ -2064,7 +2064,7 @@ GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* p
 			}
 		}
 	}
-	if (NULL == pOccurence)
+	if (NULL == pOccurrence)
 	{
 		if (m_StructInstanceHash.contains(pNode->m_Id))
 		{
@@ -2077,10 +2077,10 @@ GLC_StructOccurrence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* p
 		}
 
 		pInstance->move(pNode->m_Matrix);
-		pOccurence= new GLC_StructOccurrence(pInstance);
+		pOccurrence= new GLC_StructOccurrence(pInstance);
 	}
 
-	return pOccurence;
+	return pOccurrence;
 }
 
 // Update progress bar

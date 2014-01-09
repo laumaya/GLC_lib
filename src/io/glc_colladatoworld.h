@@ -352,8 +352,8 @@ private:
 	//! Create the scene graph struct
 	void createSceneGraph();
 
-	//! Create Occurence tree from node tree
-	GLC_StructOccurrence* createOccurenceFromNode(ColladaNode*);
+	//! Create Occurrence tree from node tree
+	GLC_StructOccurrence* createOccurrenceFromNode(ColladaNode*);
 
 	//! Update progress bar
 	void updateProgressBar();

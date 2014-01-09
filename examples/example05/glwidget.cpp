@@ -107,7 +107,7 @@ void GLWidget::resizeGL(int width, int height)
 // Create GLC_Object to display
 void GLWidget::CreateScene()
 {
-    GLC_StructOccurrence* pRoot= m_World.rootOccurence();
+    GLC_StructOccurrence* pRoot= m_World.rootOccurrence();
     GLC_StructInstance* pInstance= NULL;
 
     // Create a box at the center of the scene

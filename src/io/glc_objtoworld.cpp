@@ -195,7 +195,7 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	addCurrentObjMeshToWorld();
 
 	//! Test if there is meshes in the world
-	if (m_pWorld->rootOccurence()->childCount() == 0)
+	if (m_pWorld->rootOccurrence()->childCount() == 0)
 	{
 		QString message= "GLC_ObjToWorld::CreateWorldFromObj " + m_FileName + " No mesh found!";
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::NoMeshFound);
@@ -929,7 +929,7 @@ void GLC_ObjToWorld::addCurrentObjMeshToWorld()
 			{
 				m_pCurrentObjMesh->m_pMesh->finish();
 				GLC_3DRep* pRep= new GLC_3DRep(m_pCurrentObjMesh->m_pMesh);
-				m_pWorld->rootOccurence()->addChild((new GLC_StructInstance(pRep)));
+				m_pWorld->rootOccurrence()->addChild((new GLC_StructInstance(pRep)));
 			}
 			else
 			{

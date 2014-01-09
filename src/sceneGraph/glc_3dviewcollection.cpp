@@ -285,37 +285,35 @@ void GLC_3DViewCollection::clear(void)
 
 bool GLC_3DViewCollection::select(GLC_uint key, bool primitive)
 {
-	if (!m_3DViewInstanceHash.contains(key)) return false;
-	//qDebug() << "GLC_Collection::select " << key;
+    bool subject= false;
 
-	GLC_3DViewInstance* pSelectedInstance;
-	ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.find(key);
-	PointerViewInstanceHash::iterator iSelectedNode= m_SelectedInstances.find(key);
+    if (m_3DViewInstanceHash.contains(key))
+    {
+        GLC_3DViewInstance* pSelectedInstance;
+        ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.find(key);
+        PointerViewInstanceHash::iterator iSelectedNode= m_SelectedInstances.find(key);
 
-	if ((iNode != m_3DViewInstanceHash.end()) && (iSelectedNode == m_SelectedInstances.end()))
-	{	// Ok, the key exist and the node is not selected
-		pSelectedInstance= &(iNode.value());
-		m_SelectedInstances.insert(pSelectedInstance->id(), pSelectedInstance);
+        if ((iNode != m_3DViewInstanceHash.end()) && (iSelectedNode == m_SelectedInstances.end()))
+        {	// Ok, the key exist and the node is not selected
+            pSelectedInstance= &(iNode.value());
+            m_SelectedInstances.insert(pSelectedInstance->id(), pSelectedInstance);
 
-		// Remove Selected Node from is previous collection
-		if (isInAShadingGroup(key))
-		{
-			m_ShadedPointerViewInstanceHash.value(shadingGroup(key))->remove(key);
-			//qDebug() << "remove from shader list";
-		}
-		else
-		{
-			m_MainInstances.remove(key);
-		}
-		pSelectedInstance->select(primitive);
+            // Remove Selected Node from is previous collection
+            if (isInAShadingGroup(key))
+            {
+                m_ShadedPointerViewInstanceHash.value(shadingGroup(key))->remove(key);
+            }
+            else
+            {
+                m_MainInstances.remove(key);
+            }
+            pSelectedInstance->select(primitive);
 
-		//qDebug("GLC_3DViewCollection::selectNode : Element succesfuly selected");
-		return true;
-	}
-	else
-	{	// KO, instance allready selected
-		return false;
-	}
+            subject= true;
+        }
+
+    }
+    return subject;
 }
 
 void GLC_3DViewCollection::selectAll(bool allShowState)
@@ -343,7 +341,7 @@ void GLC_3DViewCollection::selectAll(bool allShowState)
 
 bool GLC_3DViewCollection::unselect(GLC_uint key)
 {
-	GLC_3DViewInstance* pSelectedNode;
+    GLC_3DViewInstance* pSelectedNode= NULL;
 
 	PointerViewInstanceHash::iterator iSelectedNode= m_SelectedInstances.find(key);
 
