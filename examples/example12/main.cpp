@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
     GLC_World world1= GLC_Factory::instance()->createWorldFromFile(file1);
     GLC_ViewHandler* pViewHandler1= new GLC_ViewHandler();
     pViewHandler1->setWorld(world1);
+    pViewHandler1->setSpacePartitioning(new GLC_Octree(world1.collection()));
     pViewHandler1->viewportHandle()->setBackgroundColor(Qt::black);
 
     QVariant variantViewHandler1;
