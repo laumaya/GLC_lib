@@ -470,7 +470,9 @@ void GLC_3DViewCollection::updateInstanceViewableState(GLC_Matrix4x4* pMatrix)
 	if ((NULL != m_pViewport) && m_UseSpacePartitioning && (NULL != m_pSpacePartitioning))
 	{
 		if (m_pViewport->updateFrustum(pMatrix))
-			m_pSpacePartitioning->updateViewableInstances(m_pViewport->frustum());
+        {
+            m_pSpacePartitioning->updateViewableInstances(m_pViewport->frustum());
+        }
 	}
 }
 

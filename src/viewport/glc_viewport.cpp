@@ -49,7 +49,7 @@ GLC_Viewport::GLC_Viewport()
 , m_pImagePlane(NULL)			// Background image
 // OpenGL Window size
 , m_Width(0)				// Horizontal OpenGL viewport size
-, m_Height(0)				// Vertical OpenGL viewport size
+, m_Height(1)				// Vertical OpenGL viewport size
 , m_AspectRatio(1.0)
 // the default backgroundColor
 , m_BackgroundColor(Qt::black)
@@ -64,7 +64,7 @@ GLC_Viewport::GLC_Viewport()
 , m_MinimumStaticRatioSize(0.0)
 , m_MinimumDynamicRatioSize(0.0)
 {
-	updateMinimumRatioSize();
+
 }
 
 GLC_Viewport::~GLC_Viewport()
@@ -196,12 +196,8 @@ void GLC_Viewport::glExecuteCam(void)
 	m_pViewCam->glExecute();
 }
 
-void GLC_Viewport::updateProjectionMat(void)
+void GLC_Viewport::updateProjectionMat(bool updateOpenGL)
 {
-    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
-    pContext->glcMatrixMode(GL_PROJECTION);						// select The Projection Matrix
-    pContext->glcLoadIdentity();									// Reset The Projection Matrix
-
 	if (m_UseParallelProjection)
 	{
         const double height= m_pViewCam->distEyeTarget() * m_ViewTangent;
@@ -210,7 +206,21 @@ void GLC_Viewport::updateProjectionMat(void)
 		const double right=  -left;
 		const double bottom= - height * 0.5;
 		const double top= -bottom;
-        pContext->glcOrtho(left, right, bottom, top, m_dDistanceMini, m_DistanceMax);
+        if (updateOpenGL)
+        {
+            GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
+            pContext->glcMatrixMode(GL_PROJECTION);
+            pContext->glcLoadIdentity();
+
+            pContext->glcOrtho(left, right, bottom, top, m_dDistanceMini, m_DistanceMax);
+            m_ProjectionMatrix= pContext->projectionMatrix();
+            pContext->glcMatrixMode(GL_MODELVIEW);
+        }
+        else
+        {
+            m_ProjectionMatrix= GLC_Matrix4x4::orthonormalMatrix(left, right, bottom, top, m_dDistanceMini, m_DistanceMax);
+        }
+
 	}
 	else
 	{
@@ -218,13 +228,21 @@ void GLC_Viewport::updateProjectionMat(void)
 	    const double yMin= -yMax;
 	    const double xMax= yMax * m_AspectRatio;
 	    const double xMin= -xMax;
-        pContext->glcFrustum(xMin, xMax, yMin, yMax, m_dDistanceMini, m_DistanceMax);
+        if (updateOpenGL)
+        {
+            GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
+            pContext->glcMatrixMode(GL_PROJECTION);
+            pContext->glcLoadIdentity();
+
+            pContext->glcFrustum(xMin, xMax, yMin, yMax, m_dDistanceMini, m_DistanceMax);
+            m_ProjectionMatrix= pContext->projectionMatrix();
+            pContext->glcMatrixMode(GL_MODELVIEW);
+        }
+        else
+        {
+            m_ProjectionMatrix= GLC_Matrix4x4::frustumMatrix(xMin, xMax, yMin, yMax, m_dDistanceMini, m_DistanceMax);
+        }
 	}
-
-	// Save the projection matrix
-    m_ProjectionMatrix= pContext->projectionMatrix();
-
-    pContext->glcMatrixMode(GL_MODELVIEW);							// select The Modelview Matrix
 }
 
 void GLC_Viewport::forceAspectRatio(double ratio)
@@ -350,7 +368,7 @@ void GLC_Viewport::render3DWidget()
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Viewport::setWinGLSize(int width, int height, bool updateOGLViewport)
+void GLC_Viewport::setWinGLSize(int width, int height, bool updateOpenGL)
 {
     m_Width= width;
     m_Height= height;
@@ -364,16 +382,16 @@ void GLC_Viewport::setWinGLSize(int width, int height, bool updateOGLViewport)
     updateAspectRatio();
     updateMinimumRatioSize();
 
-    if (updateOGLViewport)
+    if (updateOpenGL)
     {
         glViewport(0,0,m_Width,m_Height);
         updateProjectionMat();
     }
 }
 
-void GLC_Viewport::setWinGLSize(const QSize &size, bool updateOGLViewport)
+void GLC_Viewport::setWinGLSize(const QSize &size, bool updateOpenGL)
 {
-    setWinGLSize(size.width(), size.height(), updateOGLViewport);
+    setWinGLSize(size.width(), size.height(), updateOpenGL);
 }
 
 GLC_uint GLC_Viewport::renderAndSelect(int x, int y, GLenum buffer)
@@ -647,14 +665,14 @@ GLC_Camera GLC_Viewport::reframedCamera(const GLC_BoundingBox &box, double cover
     return subject;
 }
 
-bool GLC_Viewport::setDistMin(double DistMin)
+bool GLC_Viewport::setDistMin(double DistMin, bool updateOpenGL)
 {
 	if (m_UseParallelProjection) DistMin= fabs(DistMin);
 	if (DistMin < m_DistanceMax)
 	{
 		m_dDistanceMini= DistMin;
 
-		updateProjectionMat();	// Update OpenGL projection matrix
+        updateProjectionMat(updateOpenGL);	// Update OpenGL projection matrix
 
 		return true;
 	}
@@ -666,7 +684,7 @@ bool GLC_Viewport::setDistMin(double DistMin)
 
 }
 
-bool GLC_Viewport::setDistMax(double DistMax)
+bool GLC_Viewport::setDistMax(double DistMax, bool updateOpenGL)
 {
 	if (m_UseParallelProjection) DistMax= fabs(DistMax);
 	if (DistMax > m_dDistanceMini)
@@ -674,7 +692,7 @@ bool GLC_Viewport::setDistMax(double DistMax)
 		m_DistanceMax= DistMax;
 
 		// Update OpenGL projection matrix
-		updateProjectionMat();
+        updateProjectionMat(updateOpenGL);
 
 		return true;
 	}
@@ -685,9 +703,9 @@ bool GLC_Viewport::setDistMax(double DistMax)
 	}
 }
 
-void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
+void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox, bool updateOpenGL)
 {
-	if(!bBox.isEmpty())
+    if(!bBox.isEmpty())
 	{
 		// The scene is not empty
 		GLC_Matrix4x4 matComp(m_pViewCam->modelViewMatrix());
@@ -712,16 +730,16 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 			// Outside bounding Sphere
 			m_dDistanceMini= min;
 			m_DistanceMax= max;
-			//qDebug() << "distmin" << m_dDistanceMini;
-			//qDebug() << "distmax" << m_DistanceMax;
+            //qDebug() << "distmin" << m_dDistanceMini;
+            //qDebug() << "distmax" << m_DistanceMax;
 		}
 		else
 		{
 			// Inside bounding Sphere
 			m_dDistanceMini= qMin(0.01 * radius, m_pViewCam->distEyeTarget() / 4.0);
 			m_DistanceMax= max;
-			//qDebug() << "inside distmin" << m_dDistanceMini;
-			//qDebug() << "inside distmax" << m_DistanceMax;
+            //qDebug() << "inside distmin" << m_dDistanceMini;
+            //qDebug() << "inside distmax" << m_DistanceMax;
 		}
 	}
 	else
@@ -731,8 +749,8 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox)
 		m_DistanceMax= m_pViewCam->distEyeTarget();
 	}
 
-	// Update OpenGL projection matrix
-	updateProjectionMat();
+    // Update View projection matrix
+    updateProjectionMat(updateOpenGL);
 }
 
 void GLC_Viewport::setBackgroundColor(QColor setColor)

@@ -25,6 +25,46 @@
 
 #include <QtDebug>
 
+GLC_Matrix4x4 GLC_Matrix4x4::frustumMatrix(double left, double right, double bottom, double top, double nearVal, double farVal)
+{
+    const double a= (right + left) / (right - left);
+    const double b= (top + bottom) / (top - bottom);
+    const double c= - (farVal + nearVal) / (farVal - nearVal);
+    const double d= - (2.0 * farVal * nearVal) / (farVal - nearVal);
+
+    GLC_Matrix4x4 subject;
+
+    subject.m_Matrix[0]= (2.0 * nearVal) / (right - left);
+    subject.m_Matrix[5]= (2.0 * nearVal) / (top - bottom);
+    subject.m_Matrix[8]= a;
+    subject.m_Matrix[9]= b;
+    subject.m_Matrix[10]= c;
+    subject.m_Matrix[11]= -1.0;
+    subject.m_Matrix[14]= d;
+    subject.m_Matrix[15]= 0.0;
+
+    subject.m_Type= General;
+    return subject;
+}
+
+GLC_Matrix4x4 GLC_Matrix4x4::orthonormalMatrix(double left, double right, double bottom, double top, double nearVal, double farVal)
+{
+    const double tx= - (right + left) / (right - left);
+    const double ty= - (top + bottom) / (top - bottom);
+    const double tz= - (farVal + nearVal) / (farVal - nearVal);
+
+    GLC_Matrix4x4 subject;
+    subject.m_Matrix[0]= 2.0 / (right - left);
+    subject.m_Matrix[5]= 2.0 / (top - bottom);
+    subject.m_Matrix[10]= -2.0 / (farVal - nearVal);
+    subject.m_Matrix[12]= tx;
+    subject.m_Matrix[13]= ty;
+    subject.m_Matrix[14]= tz;
+
+    subject.m_Type= General;
+    return subject;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

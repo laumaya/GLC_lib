@@ -181,7 +181,7 @@ public:
 	void glExecuteCam(void);
 
 	//! Update this viewport OpenGL projection matrix
-	void updateProjectionMat(void);
+    void updateProjectionMat(bool updateOpenGL= true);
 
 	//! Force the aspect ratio of this viewport
 	void forceAspectRatio(double);
@@ -228,10 +228,10 @@ public:
 public:
 
     //! Update the OpenGL view size
-    void setWinGLSize(int width, int height, bool updateOGLViewport= true);
+    void setWinGLSize(int width, int height, bool updateOpenGL= true);
 
     //! Update the OpenGL view size
-    void setWinGLSize(const QSize& size, bool updateOGLViewport= true);
+    void setWinGLSize(const QSize& size, bool updateOpenGL= true);
 
 	//! Call the attached QGLWidgetSelect  updateGL function and return the picking id
 	/*! Return UID of the nearest picked object */
@@ -269,14 +269,14 @@ public:
 	}
 
 	//! Set near clipping distance of this viewport
-	bool setDistMin(double DistMin);
+    bool setDistMin(double DistMin, bool updateOpenGL= true);
 
 	//! Set far clipping distance of this viewport
-	bool setDistMax(double DistMax);
+    bool setDistMax(double DistMax, bool updateOpenGL= true);
 
 	//! Set Near and Far clipping distance of this viewport
 	/*! box shouldn't be empty*/
-	void setDistMinAndMax(const GLC_BoundingBox& bBox);
+    void setDistMinAndMax(const GLC_BoundingBox& bBox, bool updateOpenGL= true);
 
 	//! Set the Background color of this viewport
 	void setBackgroundColor(QColor setColor);
@@ -372,7 +372,7 @@ private:
 
 	double m_DistanceMax;		//!< Camera Maximum distance (far clipping plane)
 	double m_dDistanceMini;		//!< Camera Minimum distance (near clipping plane)
-	double m_ViewAngle;		//!< Camera angle of view
+    double m_ViewAngle;         //!< Camera angle of view
 	double m_ViewTangent;		//!< Camera angle tangent
 
 

@@ -62,12 +62,10 @@ GLC_Frustum::Localisation GLC_Frustum::localizeSphere(const GLC_Point3d& center,
 	bool continu= true;
 	while (continu && (i < 6))
 	{
-		//qDebug() << "Localisation of plane " << i;
 		localisationResult= static_cast<GLC_Frustum::Localisation>(localisationResult | localizeSphereToPlane(center, radius, m_PlaneList.at(i)));
-		continu= (localisationResult != GLC_Frustum::OutFrustum);
+        continu= (localisationResult != GLC_Frustum::OutFrustum);
 		++i;
 	}
-
 	return localisationResult;
 }
 
@@ -91,7 +89,6 @@ GLC_Frustum::Localisation GLC_Frustum::localizeSphereToPlane(const GLC_Point3d& 
 
 bool GLC_Frustum::update(const GLC_Matrix4x4& compMatrix)
 {
-
 	// Test if the frustum change
 	if (compMatrix == m_PreviousMatrix)
 	{
@@ -142,6 +139,7 @@ bool GLC_Frustum::update(const GLC_Matrix4x4& compMatrix)
 		m_PlaneList[FarPlane].setC(compMatrix.getData()[11] - compMatrix.getData()[10]);
 		m_PlaneList[FarPlane].setD(compMatrix.getData()[15] - compMatrix.getData()[14]);
 		m_PlaneList[FarPlane].normalize();
-		return true;
+
+        return true;
 	}
 }

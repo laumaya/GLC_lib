@@ -170,7 +170,7 @@ void GLC_ContextSharedData::glcLoadMatrix(const GLC_Matrix4x4 &matrix)
 void GLC_ContextSharedData::glcMultMatrix(const GLC_Matrix4x4 &matrix)
 {
     const GLC_Matrix4x4 current= m_MatrixStackHash.value(m_CurrentMatrixMode)->top();
-    m_MatrixStackHash.value(m_CurrentMatrixMode)->top()= m_MatrixStackHash.value(m_CurrentMatrixMode)->top() * matrix;
+    m_MatrixStackHash.value(m_CurrentMatrixMode)->top()= current * matrix;
 #ifdef GLC_OPENGL_ES_2
     m_UniformShaderData.setModelViewProjectionMatrix(m_MatrixStackHash.value(GL_MODELVIEW)->top(), m_MatrixStackHash.value(GL_PROJECTION)->top());
 #else
@@ -191,40 +191,14 @@ void GLC_ContextSharedData::glcScaled(double x, double y, double z)
 
 void GLC_ContextSharedData::glcOrtho(double left, double right, double bottom, double top, double nearVal, double farVal)
 {
-    GLC_Matrix4x4 orthoMatrix;
-    double* m= orthoMatrix.setData();
-
-    const double tx= - (right + left) / (right - left);
-    const double ty= - (top + bottom) / (top - bottom);
-    const double tz= - (farVal + nearVal) / (farVal - nearVal);
-    m[0]= 2.0 / (right - left);
-    m[5]= 2.0 / (top - bottom);
-    m[10]= -2.0 / (farVal - nearVal);
-    m[12]= tx;
-    m[13]= ty;
-    m[14]= tz;
+    const GLC_Matrix4x4 orthoMatrix(GLC_Matrix4x4::orthonormalMatrix(left, right, bottom, top, nearVal, farVal));
 
     glcMultMatrix(orthoMatrix);
 }
 
 void GLC_ContextSharedData::glcFrustum(double left, double right, double bottom, double top, double nearVal, double farVal)
 {
-    GLC_Matrix4x4 perspMatrix;
-    double* m= perspMatrix.setData();
-
-    const double a= (right + left) / (right - left);
-    const double b= (top + bottom) / (top - bottom);
-    const double c= - (farVal + nearVal) / (farVal - nearVal);
-    const double d= - (2.0 * farVal * nearVal) / (farVal - nearVal);
-
-    m[0]= (2.0 * nearVal) / (right - left);
-    m[5]= (2.0 * nearVal) / (top - bottom);
-    m[8]= a;
-    m[9]= b;
-    m[10]= c;
-    m[11]= -1.0;
-    m[14]= d;
-    m[15]= 0.0;
+    GLC_Matrix4x4 perspMatrix(GLC_Matrix4x4::frustumMatrix(left, right, bottom, top, nearVal, farVal));
 
     glcMultMatrix(perspMatrix);
 }
