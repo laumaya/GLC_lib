@@ -173,6 +173,7 @@ void GLC_ViewHandler::processMouseDblClickEvent(QMouseEvent *pMouseEvent)
 
 void GLC_ViewHandler::processWheelEvent(QWheelEvent *pWWheelEvent)
 {
+    qDebug() << "GLC_ViewHandler::processWheelEvent";
     Q_ASSERT(NULL != m_pInputEventInterpreter);
     m_pInputEventInterpreter->processWheelEvent(pWWheelEvent);
 }

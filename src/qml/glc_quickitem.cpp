@@ -143,6 +143,16 @@ void GLC_QuickItem::mouseReleaseEvent(QMouseEvent *e)
     m_pViewhandler->processMouseReleaseEvent(e);
 }
 
+void GLC_QuickItem::wheelEvent(QWheelEvent *e)
+{
+    m_pViewhandler->processWheelEvent(e);
+}
+
+void GLC_QuickItem::touchEvent(QTouchEvent *e)
+{
+    m_pViewhandler->processTouchEvent(e);
+}
+
 void GLC_QuickItem::setOpenGLState()
 {
     m_pViewhandler->viewportHandle()->initGl();
