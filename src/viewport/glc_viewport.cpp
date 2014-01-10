@@ -632,9 +632,8 @@ void GLC_Viewport::setToOrtho(bool useOrtho)
 	if (m_UseParallelProjection != useOrtho)
 	{
 		m_UseParallelProjection= useOrtho;
-		updateProjectionMat();
+        updateProjectionMat(false); // doesn't update OpenGL
 	}
-
 }
 
 void GLC_Viewport::reframe(const GLC_BoundingBox& box, double coverFactor)

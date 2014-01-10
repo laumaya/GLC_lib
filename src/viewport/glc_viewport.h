@@ -314,7 +314,7 @@ public:
     //! Clear
 
 	//! Set othographic usage to the given flag
-	void setToOrtho(bool useOrtho);
+    void setToOrtho(bool useOrtho);
 
 	//! Set minimum pixel culling size
 	inline void setMinimumPixelCullingSize(int size)
