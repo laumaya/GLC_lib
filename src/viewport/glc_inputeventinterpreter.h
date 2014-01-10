@@ -77,6 +77,7 @@ protected:
     GLC_ViewHandler* m_pViewHandler;
     bool m_UseLodWhileMoving;
     GLC_MoverController::MoverType m_DefaultNavigationType;
+    bool m_DoubleClicking;
 };
 
 #endif // GLC_INPUTEVENTINTERPRETER_H

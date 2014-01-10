@@ -33,6 +33,7 @@ GLC_InputEventInterpreter::GLC_InputEventInterpreter(GLC_ViewHandler* pViewHandl
     : m_pViewHandler(pViewHandler)
     , m_UseLodWhileMoving(true)
     , m_DefaultNavigationType(GLC_MoverController::TrackBall)
+    , m_DoubleClicking(false)
 {
     Q_ASSERT(NULL != m_pViewHandler);
 }

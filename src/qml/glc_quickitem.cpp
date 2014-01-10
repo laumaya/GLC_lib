@@ -143,6 +143,11 @@ void GLC_QuickItem::mouseReleaseEvent(QMouseEvent *e)
     m_pViewhandler->processMouseReleaseEvent(e);
 }
 
+void GLC_QuickItem::mouseDoubleClickEvent(QMouseEvent *e)
+{
+    m_pViewhandler->processMouseDblClickEvent(e);
+}
+
 void GLC_QuickItem::wheelEvent(QWheelEvent *e)
 {
     m_pViewhandler->processWheelEvent(e);
