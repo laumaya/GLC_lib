@@ -46,6 +46,8 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     , m_RenderInSelectionMode(false)
     , m_SelectionPoint()
     , m_SelectionModes(GLC_SelectionEvent::ModeReplace | GLC_SelectionEvent::ModeInstance)
+
+    , m_BlockUpdate(false)
 {
     m_pLight->setTwoSided(true);
     m_pLight->setPosition(1.0, 1.0, 1.0);
@@ -65,7 +67,7 @@ GLC_ViewHandler::~GLC_ViewHandler()
 
 void GLC_ViewHandler::updateGL()
 {
-    emit isDirty();
+    if (!m_BlockUpdate) emit isDirty();
 }
 
 void GLC_ViewHandler::setInputEventInterpreter(GLC_InputEventInterpreter *pEventInterpreter)

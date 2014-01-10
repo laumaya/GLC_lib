@@ -81,6 +81,9 @@ public:
     inline GLC_InputEventInterpreter* eventInterpreter() const
     {return m_pInputEventInterpreter;}
 
+    inline bool updateIsBlocked() const
+    {return m_BlockUpdate;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -105,6 +108,9 @@ public:
     virtual void unsetSelection();
 
     virtual void updateSelection(GLC_uint id);
+
+    inline void blockUpdate(bool blocked)
+    {m_BlockUpdate= blocked;}
 
 //@}
 
@@ -153,6 +159,9 @@ protected:
     bool m_RenderInSelectionMode;
     QPoint m_SelectionPoint;
     GLC_SelectionEvent::Modes m_SelectionModes;
+
+private:
+    bool m_BlockUpdate;
 };
 
 Q_DECLARE_METATYPE(GLC_ViewHandler*)
