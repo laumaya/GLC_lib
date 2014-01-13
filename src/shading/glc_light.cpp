@@ -52,12 +52,13 @@ GLC_Light::GLC_Light(GLC_Context *pContext, const QColor& color)
     , m_QuadraticAttenuation(0.0f)
     , m_TwoSided(false)
     , m_pContext(pContext)
+    , m_Shared(false)
 {
     addNewLight();
 }
 
 GLC_Light::GLC_Light(LightType lightType, GLC_Context *pContext, const QColor& color)
-    :GLC_Object("Light")
+    : GLC_Object("Light")
     , m_LightID(-1)
     , m_LightType(lightType)
     , m_AmbientColor(Qt::black)
@@ -72,12 +73,34 @@ GLC_Light::GLC_Light(LightType lightType, GLC_Context *pContext, const QColor& c
     , m_QuadraticAttenuation(0.0f)
     , m_TwoSided(false)
     , m_pContext(pContext)
+    , m_Shared(false)
 {
     addNewLight();
 }
 
+GLC_Light::GLC_Light(GLC_Light::LightType lightType, GLenum lightID)
+    : GLC_Object("Shared Light")
+    , m_LightID(lightID)
+    , m_LightType(lightType)
+    , m_AmbientColor(Qt::black)
+    , m_DiffuseColor(Qt::white)
+    , m_SpecularColor(Qt::white)
+    , m_Position()
+    , m_SpotDirection(0.0, 0.0, -1.0)
+    , m_SpotExponent(0.0f)
+    , m_SpotCutoffAngle(180.0f)
+    , m_ConstantAttenuation(1.0f)
+    , m_LinearAttenuation(0.0f)
+    , m_QuadraticAttenuation(0.0f)
+    , m_TwoSided(false)
+    , m_pContext(NULL)
+    , m_Shared(true)
+{
+
+}
+
 GLC_Light::GLC_Light(const GLC_Light& light)
-    :GLC_Object(light)
+    : GLC_Object(light)
     , m_LightID(-1)
     , m_LightType(light.m_LightType)
     , m_AmbientColor(light.m_AmbientColor)
@@ -92,6 +115,7 @@ GLC_Light::GLC_Light(const GLC_Light& light)
     , m_QuadraticAttenuation(light.m_QuadraticAttenuation)
     , m_TwoSided(light.m_TwoSided)
     , m_pContext(light.m_pContext)
+    , m_Shared(light.m_Shared)
 {
     addNewLight();
 }
@@ -99,6 +123,7 @@ GLC_Light::GLC_Light(const GLC_Light& light)
 GLC_Light::~GLC_Light(void)
 {
     removeThisLight();
+    disable();
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -197,9 +222,10 @@ void GLC_Light::setSpotEponent(GLfloat exponent)
 
 void GLC_Light::disable()
 {
-    if (NULL != m_pContext)
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
+    if (NULL != pContext)
     {
-        GLC_ContextManager::instance()->currentContext()->glcDisableLight(m_LightID);
+        pContext->glcDisableLight(m_LightID);
     }
 }
 
@@ -305,8 +331,7 @@ void GLC_Light::glExecute()
 //////////////////////////////////////////////////////////////////////
 void GLC_Light::addNewLight()
 {
-    qDebug() << "GLC_Light::addNewLight() " << m_pContext;
-    if (NULL != m_pContext)
+    if (!m_Shared && (NULL != m_pContext))
     {
         if (!m_ContextToFreeLightSet.contains(m_pContext))
         {
@@ -330,7 +355,7 @@ void GLC_Light::addNewLight()
 
 void GLC_Light::removeThisLight()
 {
-    if (NULL != m_pContext)
+    if (!m_Shared && (NULL != m_pContext))
     {
         Q_ASSERT(m_ContextToFreeLightSet.contains(m_pContext));
         Q_ASSERT(!m_ContextToFreeLightSet[m_pContext].contains(m_LightID));
