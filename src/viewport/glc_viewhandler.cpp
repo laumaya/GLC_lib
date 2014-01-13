@@ -37,7 +37,7 @@
 GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     : QObject(pParent)
     , m_World()
-    , m_pLight(new GLC_Light())
+    , m_pLight(new GLC_Light(GLC_Light::LightPosition, GL_LIGHT0))
     , m_pViewport(new GLC_Viewport())
     , m_pMoverController(NULL)
     , m_Samples(16)
@@ -145,6 +145,13 @@ void GLC_ViewHandler::updateSelection(GLC_uint id)
     m_World.updateSelection(selectionEvent);
 
     updateGL();
+}
+
+void GLC_ViewHandler::setLight(GLC_Light *pLight)
+{
+    Q_ASSERT(NULL != pLight);
+    delete m_pLight;
+    m_pLight= pLight;
 }
 
 void GLC_ViewHandler::processMousePressEvent(QMouseEvent *pMouseEvent)

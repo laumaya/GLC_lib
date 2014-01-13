@@ -112,6 +112,8 @@ public:
     inline void blockUpdate(bool blocked)
     {m_BlockUpdate= blocked;}
 
+    void setLight(GLC_Light* pLight);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
