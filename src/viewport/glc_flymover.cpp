@@ -71,9 +71,7 @@ GLC_Mover* GLC_FlyMover::clone() const
 void GLC_FlyMover::init(const GLC_UserInput& userInput)
 {
 	m_PreviousVector= mapForFlying(static_cast<double>(userInput.x()), static_cast<double>(userInput.y()));
-	GLC_Point3d point= m_pViewport->unProject(userInput.x(), userInput.y());
-	const double distance= (point - m_pViewport->cameraHandle()->eye()).length();
-	m_pViewport->cameraHandle()->setDistTargetEye(distance);
+    const double distance= m_pViewport->cameraHandle()->distEyeTarget();
 	// 5 secondes to travel
 	m_Velocity= distance / 5000;
 
@@ -86,9 +84,6 @@ void GLC_FlyMover::init(const GLC_UserInput& userInput)
 bool GLC_FlyMover::move(const GLC_UserInput& userInput)
 {
 	m_PreviousVector= mapForFlying(static_cast<double>(userInput.x()), static_cast<double>(userInput.y()));
-	GLC_Point3d point= m_pViewport->unProject(userInput.x(), userInput.y());
-	const double distance= (point - m_pViewport->cameraHandle()->eye()).length();
-	m_pViewport->cameraHandle()->setDistTargetEye(distance);
 
 	return false;
 }

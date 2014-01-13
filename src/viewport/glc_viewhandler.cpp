@@ -55,6 +55,7 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     QColor repColor;
     repColor.setRgbF(1.0, 0.11372, 0.11372, 1.0);
     m_pMoverController= new GLC_MoverController(GLC_Factory::instance()->createDefaultMoverController(repColor, m_pViewport));
+    connect(m_pMoverController, SIGNAL(repaintNeeded()), this, SLOT(updateGL()));
 }
 
 GLC_ViewHandler::~GLC_ViewHandler()

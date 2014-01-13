@@ -69,7 +69,7 @@ public:
 
 protected:
     virtual void setMover(GLC_MoverController::MoverType moverType, const GLC_UserInput &userInputs);
-    virtual void move(const GLC_UserInput& userInputs);
+    virtual bool move(const GLC_UserInput& userInputs);
     virtual void setNoMover();
     virtual void select(int x, int y, GLC_SelectionEvent::Modes modes);
 

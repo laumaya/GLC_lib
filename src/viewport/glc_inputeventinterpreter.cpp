@@ -52,10 +52,15 @@ void GLC_InputEventInterpreter::setMover(GLC_MoverController::MoverType moverTyp
     m_pViewHandler->updateGL();
 }
 
-void GLC_InputEventInterpreter::move(const GLC_UserInput &userInputs)
+bool GLC_InputEventInterpreter::move(const GLC_UserInput &userInputs)
 {
-    m_pViewHandler->moverControllerHandle()->move(userInputs);
-    m_pViewHandler->updateGL();
+    bool subject= m_pViewHandler->moverControllerHandle()->move(userInputs);
+    if (subject)
+    {
+        m_pViewHandler->updateGL();
+    }
+
+    return subject;
 }
 
 void GLC_InputEventInterpreter::setNoMover()
