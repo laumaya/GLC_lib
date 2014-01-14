@@ -25,7 +25,10 @@
 #ifndef GLC_USERINPUT_H_
 #define GLC_USERINPUT_H_
 
+#include <QMetaType>
+
 #include "../maths/glc_vector2d.h"
+#include "../maths/glc_vector3d.h"
 
 #include "../glc_config.h"
 
@@ -33,6 +36,7 @@ class GLC_LIB_EXPORT GLC_UserInput
 {
 public:
 	GLC_UserInput(int x= 0, int y= 0);
+    GLC_UserInput(const GLC_UserInput& other);
 	virtual ~GLC_UserInput();
 
 
@@ -72,6 +76,11 @@ public:
 	//! Return true if the transformation has been set
 	inline bool transformationIsSet() const
 	{return m_TransformationIsSet;}
+
+    //! Return the unprojected point of this userinput
+    /*! The unprojected point must be set before*/
+    inline GLC_Point3d unprojectedPoint() const
+    {return m_UnprojectedPoint;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -99,6 +108,10 @@ public:
 	//! Set scaling
 	inline void setScaleFactor(double scaleFactor)
 	{m_ScaleFactor= scaleFactor;}
+
+    //! Set unprojectedPoint
+    inline void setUnprojectedPoint(const GLC_Point3d& point)
+    {m_UnprojectedPoint= point;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -128,6 +141,10 @@ private:
 	//! Flag to know if a transformation has been set
 	bool m_TransformationIsSet;
 
+    GLC_Point3d m_UnprojectedPoint;
+
 };
+
+Q_DECLARE_METATYPE(GLC_UserInput)
 
 #endif /* GLC_USERINPUT_H_ */

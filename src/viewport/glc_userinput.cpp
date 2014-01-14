@@ -24,6 +24,8 @@
 
 #include "glc_userinput.h"
 
+
+
 GLC_UserInput::GLC_UserInput(int x, int y)
 : m_X(x)
 , m_Y(y)
@@ -33,6 +35,21 @@ GLC_UserInput::GLC_UserInput(int x, int y)
 , m_Rotation(0.0)
 , m_ScaleFactor(1.0)
 , m_TransformationIsSet(false)
+, m_UnprojectedPoint()
+{
+    qRegisterMetaType<GLC_UserInput>();
+}
+
+GLC_UserInput::GLC_UserInput(const GLC_UserInput &other)
+    : m_X(other.m_X)
+    , m_Y(other.m_Y)
+    , m_NormalyzeX(other.m_NormalyzeX)
+    , m_NormalyzeY(other.m_NormalyzeY)
+    , m_Translation(other.m_Translation)
+    , m_Rotation(other.m_Rotation)
+    , m_ScaleFactor(other.m_ScaleFactor)
+    , m_TransformationIsSet(other.m_TransformationIsSet)
+    , m_UnprojectedPoint(other.m_UnprojectedPoint)
 {
 
 }
