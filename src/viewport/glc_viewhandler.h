@@ -30,6 +30,9 @@
 #include "../shading/glc_light.h"
 #include "../sceneGraph/glc_world.h"
 #include "../glc_selectionevent.h"
+#include "../maths/glc_vector3d.h"
+
+#include "glc_userinput.h"
 
 #include "../glc_config.h"
 
@@ -41,6 +44,14 @@ class GLC_InputEventInterpreter;
 class GLC_LIB_EXPORT GLC_ViewHandler: public QObject
 {
     Q_OBJECT
+
+public:
+    enum RenderingMode {
+        normalRenderMode,
+        selectRenderMode,
+        unprojectRenderMode
+    };
+
 public:
     explicit GLC_ViewHandler(QObject* pParent= NULL);
     virtual ~GLC_ViewHandler();
@@ -48,6 +59,7 @@ public:
 signals :
     void isDirty();
     void invalidateSelectionBuffer();
+    void userInputUpdated(const GLC_UserInput& userInput);
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
@@ -69,14 +81,14 @@ public:
     inline GLC_MoverController* moverControllerHandle() const
     {return m_pMoverController;}
 
-    inline bool isInSelectionMode() const
-    {return m_RenderInSelectionMode;}
+    inline GLC_ViewHandler::RenderingMode renderingMode() const
+    {return (m_RenderingMode);}
 
     inline bool selectionMode() const
     {return m_SelectionModes;}
 
-    inline QPoint selectionPoint() const
-    {return m_SelectionPoint;}
+    inline QPoint pointerPosition() const
+    {return m_PointerPosition;}
 
     inline GLC_InputEventInterpreter* eventInterpreter() const
     {return m_pInputEventInterpreter;}
@@ -109,10 +121,14 @@ public:
 
     virtual void updateSelection(GLC_uint id);
 
+    virtual void setUnprojectedPoint(const GLC_Point3d& point);
+
     inline void blockUpdate(bool blocked)
     {m_BlockUpdate= blocked;}
 
     void setLight(GLC_Light* pLight);
+
+    void schedulesUnprojectePoint(int x, int y);
 
 //@}
 
@@ -158,9 +174,10 @@ protected:
     int m_Samples;
     GLC_SpacePartitioning* m_pSpacePartitioning;
     GLC_InputEventInterpreter* m_pInputEventInterpreter;
-    bool m_RenderInSelectionMode;
-    QPoint m_SelectionPoint;
+    GLC_ViewHandler::RenderingMode m_RenderingMode;
+    QPoint m_PointerPosition;
     GLC_SelectionEvent::Modes m_SelectionModes;
+    GLC_Point3d m_UnprojectedPoint;
 
 private:
     bool m_BlockUpdate;

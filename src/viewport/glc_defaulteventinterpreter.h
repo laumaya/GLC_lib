@@ -29,8 +29,11 @@
 
 class GLC_DefaultEventInterpreter : public GLC_InputEventInterpreter
 {
+    Q_OBJECT
+
 public:
     GLC_DefaultEventInterpreter(GLC_ViewHandler* pViewHandler);
+    ~GLC_DefaultEventInterpreter();
 
     // GLC_InputEventInterpreter interface
 public:

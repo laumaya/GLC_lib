@@ -43,9 +43,10 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     , m_Samples(16)
     , m_pSpacePartitioning(NULL)
     , m_pInputEventInterpreter(new GLC_DefaultEventInterpreter(this))
-    , m_RenderInSelectionMode(false)
-    , m_SelectionPoint()
+    , m_RenderingMode(normalRenderMode)
+    , m_PointerPosition()
     , m_SelectionModes(GLC_SelectionEvent::ModeReplace | GLC_SelectionEvent::ModeInstance)
+    , m_UnprojectedPoint()
 
     , m_BlockUpdate(false)
 {
@@ -55,7 +56,9 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     QColor repColor;
     repColor.setRgbF(1.0, 0.11372, 0.11372, 1.0);
     m_pMoverController= new GLC_MoverController(GLC_Factory::instance()->createDefaultMoverController(repColor, m_pViewport));
+
     connect(m_pMoverController, SIGNAL(repaintNeeded()), this, SLOT(updateGL()));
+    connect(this, SIGNAL(userInputUpdated(GLC_UserInput)), m_pInputEventInterpreter, SLOT(userInputChanged(GLC_UserInput)));
 }
 
 GLC_ViewHandler::~GLC_ViewHandler()
@@ -75,6 +78,8 @@ void GLC_ViewHandler::setInputEventInterpreter(GLC_InputEventInterpreter *pEvent
 {
     delete m_pInputEventInterpreter;
     m_pInputEventInterpreter= pEventInterpreter;
+
+    connect(this, SIGNAL(userInputUpdated(GLC_UserInput)), m_pInputEventInterpreter, SLOT(userInputChanged(GLC_UserInput)));
 }
 
 void GLC_ViewHandler::setWorld(const GLC_World &world)
@@ -119,23 +124,23 @@ void GLC_ViewHandler::setSpacePartitioning(GLC_SpacePartitioning *pSpacePartitio
 
 void GLC_ViewHandler::setNextSelection(int x, int y, GLC_SelectionEvent::Modes modes)
 {
-    m_RenderInSelectionMode= true;
-    m_SelectionPoint.setX(x);
-    m_SelectionPoint.setY(y);
+    m_RenderingMode= GLC_ViewHandler::selectRenderMode;
+    m_PointerPosition.setX(x);
+    m_PointerPosition.setY(y);
     m_SelectionModes= modes;
     updateGL();
 }
 
 void GLC_ViewHandler::unsetSelection()
 {
-    m_RenderInSelectionMode= false;
+    m_RenderingMode= GLC_ViewHandler::normalRenderMode;
     m_World.unselectAll();
     updateGL();
 }
 
 void GLC_ViewHandler::updateSelection(GLC_uint id)
 {
-    m_RenderInSelectionMode= false;
+    m_RenderingMode= GLC_ViewHandler::normalRenderMode;
 
     GLC_SelectionSet selectionSet(m_World);
     selectionSet.insert(id);
@@ -147,11 +152,26 @@ void GLC_ViewHandler::updateSelection(GLC_uint id)
     updateGL();
 }
 
+void GLC_ViewHandler::setUnprojectedPoint(const GLC_Point3d &point)
+{
+    m_RenderingMode= GLC_ViewHandler::normalRenderMode;
+    m_UnprojectedPoint= point;
+}
+
 void GLC_ViewHandler::setLight(GLC_Light *pLight)
 {
     Q_ASSERT(NULL != pLight);
     delete m_pLight;
     m_pLight= pLight;
+}
+
+void GLC_ViewHandler::schedulesUnprojectePoint(int x, int y)
+{
+    m_UnprojectedPoint= GLC_Point3d();
+    m_RenderingMode= GLC_ViewHandler::unprojectRenderMode;
+    m_PointerPosition.setX(x);
+    m_PointerPosition.setY(y);
+    updateGL(); // Execute OpenGL to get unprojected point
 }
 
 void GLC_ViewHandler::processMousePressEvent(QMouseEvent *pMouseEvent)

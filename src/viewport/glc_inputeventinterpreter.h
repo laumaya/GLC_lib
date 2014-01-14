@@ -38,8 +38,10 @@ class GLC_Viewport;
 
 class GLC_ViewHandler;
 
-class GLC_LIB_EXPORT GLC_InputEventInterpreter
+class GLC_LIB_EXPORT GLC_InputEventInterpreter : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit GLC_InputEventInterpreter(GLC_ViewHandler* pViewHandler);
     virtual ~GLC_InputEventInterpreter();
@@ -66,6 +68,10 @@ public:
     virtual bool processWheelEvent(QWheelEvent* pWWheelEvent)= 0;
 
     virtual bool processTouchEvent(QTouchEvent* pTouchEvent)= 0;
+
+public slots:
+
+    virtual void userInputChanged(const GLC_UserInput& userInput);
 
 protected:
     virtual void setMover(GLC_MoverController::MoverType moverType, const GLC_UserInput &userInputs);

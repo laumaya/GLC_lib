@@ -293,24 +293,30 @@ GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
 	return selectionFrustum;
 }
 
-GLC_Point3d GLC_Viewport::unProject(int x, int y, GLenum buffer) const
+GLC_Point3d GLC_Viewport::unProject(int x, int y, GLenum buffer, bool onGeometry) const
 {
+    GLC_Point3d subject;
+
 	// Z Buffer component of the given coordinate is between 0 and 1
 	GLfloat Depth;
 	// read selected point
     glReadBuffer(buffer);
     glReadPixels(x, m_Height - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
-	// The current viewport opengl definition
-	GLint Viewport[4];
-	glGetIntegerv(GL_VIEWPORT, Viewport);
+    // if on geometry mode and the point is not on geometry return null point
+    if (!qFuzzyCompare(Depth, 1.0f) || !onGeometry)
+    {
+        // The current viewport opengl definition
+        GLint viewport[4]= {0, 0, m_Width, m_Height};
 
-	// OpenGL ccordinate of selected point
-	GLdouble pX, pY, pZ;
-    glc::gluUnProject((GLdouble) x, (GLdouble) (m_Height - y) , Depth
-		, m_pViewCam->modelViewMatrix().getData(), m_ProjectionMatrix.getData(), Viewport, &pX, &pY, &pZ);
+        // OpenGL ccordinate of selected point
+        GLdouble pX, pY, pZ;
+        glc::gluUnProject((GLdouble) x, (GLdouble) (m_Height - y) , Depth
+            , m_pViewCam->modelViewMatrix().getData(), m_ProjectionMatrix.getData(), viewport, &pX, &pY, &pZ);
 
-	return GLC_Point3d(pX, pY, pZ);
+        subject.setVect(pX, pY, pZ);
+    }
+    return subject;
 }
 
 QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list, GLenum buffer)const
@@ -319,8 +325,7 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list, GLenum buffer
 	Q_ASSERT((size % 2) == 0);
 
 	// The current viewport opengl definition
-	GLint Viewport[4];
-	glGetIntegerv(GL_VIEWPORT, Viewport);
+    GLint viewport[4]= {0, 0, m_Width, m_Height};
 
 	// Z Buffer component of the given coordinate is between 0 and 1
 	GLfloat Depth;
@@ -336,7 +341,7 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list, GLenum buffer
 		glReadPixels(x, y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
 		glc::gluUnProject(static_cast<GLdouble>(x), static_cast<GLdouble>(y) , Depth , m_pViewCam->modelViewMatrix().getData()
-				, m_ProjectionMatrix.getData(), Viewport, &pX, &pY, &pZ);
+                , m_ProjectionMatrix.getData(), viewport, &pX, &pY, &pZ);
 		unprojectedPoints.append(GLC_Point3d(pX, pY, pZ));
 	}
 

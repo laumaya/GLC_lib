@@ -30,6 +30,12 @@ GLC_DefaultEventInterpreter::GLC_DefaultEventInterpreter(GLC_ViewHandler* pViewH
     , m_StartingPos()
     , m_EventButton(Qt::NoButton)
 {
+
+}
+
+GLC_DefaultEventInterpreter::~GLC_DefaultEventInterpreter()
+{
+
 }
 
 bool GLC_DefaultEventInterpreter::processMousePressEvent(QMouseEvent *e)

@@ -33,8 +33,8 @@
 #include "../shading/glc_light.h"
 #include "../sceneGraph/glc_world.h"
 #include "../viewport/glc_movercontroller.h"
-
 #include "../viewport/glc_viewhandler.h"
+#include "../maths/glc_vector3d.h"
 
 #include "../glc_config.h"
 
@@ -80,10 +80,10 @@ protected:
 protected:
     virtual void setOpenGLState();
     void render(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData* pData);
-    void renderForSelection();
+    void renderForSelectionOrUnproject();
     virtual void doRender();
     void setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode);
-    void setupSelectionFbo(int width, int height);
+    void setupAuxFbo(int width, int height);
     void pushOpenGLMatrix();
     void popOpenGLMatrix();
 
@@ -91,8 +91,9 @@ protected:
     GLC_ViewHandler* m_pViewhandler;
     QOpenGLFramebufferObject* m_pSourceFbo;
     QOpenGLFramebufferObject* m_pTargetFbo;
-    QOpenGLFramebufferObject* m_pSelectionFbo;
+    QOpenGLFramebufferObject* m_pAuxFbo;
     bool m_SelectionBufferIsDirty;
+    GLC_Point3d m_UnprojectedPoint;
 };
 
 #endif // GLC_QUICKITEM_H

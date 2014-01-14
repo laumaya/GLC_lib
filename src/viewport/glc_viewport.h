@@ -197,7 +197,7 @@ public:
 	GLC_Frustum selectionFrustum(int, int) const;
 
 	//! Return the world 3d point from the given screen coordinate
-    GLC_Point3d unProject(int, int, GLenum buffer= GL_FRONT) const;
+    GLC_Point3d unProject(int, int, GLenum buffer= GL_FRONT, bool onGeometry= false) const;
 
 	//! Return the list af world 3d point form the givne list af screen coordinates
 	/*! The size of the given list must be a multiple of 2*/

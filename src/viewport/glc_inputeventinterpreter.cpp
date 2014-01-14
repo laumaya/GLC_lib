@@ -30,7 +30,8 @@
 
 
 GLC_InputEventInterpreter::GLC_InputEventInterpreter(GLC_ViewHandler* pViewHandler)
-    : m_pViewHandler(pViewHandler)
+    : QObject()
+    , m_pViewHandler(pViewHandler)
     , m_UseLodWhileMoving(true)
     , m_DefaultNavigationType(GLC_MoverController::TrackBall)
     , m_DoubleClicking(false)
@@ -41,6 +42,11 @@ GLC_InputEventInterpreter::GLC_InputEventInterpreter(GLC_ViewHandler* pViewHandl
 GLC_InputEventInterpreter::~GLC_InputEventInterpreter()
 {
 
+}
+
+void GLC_InputEventInterpreter::userInputChanged(const GLC_UserInput &userInput)
+{
+    Q_UNUSED(userInput);
 }
 
 void GLC_InputEventInterpreter::setMover(GLC_MoverController::MoverType moverType, const GLC_UserInput &userInputs)

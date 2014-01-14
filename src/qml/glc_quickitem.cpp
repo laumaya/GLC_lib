@@ -35,8 +35,9 @@ GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     , m_pViewhandler(NULL)
     , m_pSourceFbo(NULL)
     , m_pTargetFbo(NULL)
-    , m_pSelectionFbo(NULL)
+    , m_pAuxFbo(NULL)
     , m_SelectionBufferIsDirty(true)
+    , m_UnprojectedPoint()
 {
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton);
     setFlag(QQuickItem::ItemHasContents);
@@ -46,7 +47,7 @@ GLC_QuickItem::~GLC_QuickItem()
 {
     delete m_pSourceFbo;
     delete m_pTargetFbo;
-    delete m_pSelectionFbo;
+    delete m_pAuxFbo;
 }
 
 QVariant GLC_QuickItem::viewHandler() const
@@ -84,8 +85,8 @@ void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &old
     delete m_pTargetFbo;
     m_pTargetFbo= NULL;
 
-    delete m_pSelectionFbo;
-    m_pSelectionFbo= NULL;
+    delete m_pAuxFbo;
+    m_pAuxFbo= NULL;
     QQuickItem::geometryChanged(newGeometry, oldGeometry);
 }
 
@@ -106,13 +107,13 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
     {
         if (widthValid() && heightValid() && isComponentComplete())
         {
-            if (m_pViewhandler->isInSelectionMode())
+            if (m_pViewhandler->renderingMode() == GLC_ViewHandler::normalRenderMode)
             {
-                renderForSelection();
+                render(pTextureNode, pData);
             }
             else
             {
-                render(pTextureNode, pData);
+                renderForSelectionOrUnproject();
             }
         }
         else
@@ -208,16 +209,16 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
     }
 }
 
-void GLC_QuickItem::renderForSelection()
+void GLC_QuickItem::renderForSelectionOrUnproject()
 {
-    setupSelectionFbo(this->width(), this->height());
+    setupAuxFbo(this->width(), this->height());
 
-    if (m_pSelectionFbo && m_pSelectionFbo->isValid())
+    if (m_pAuxFbo && m_pAuxFbo->isValid())
     {
         pushOpenGLMatrix();
         setOpenGLState();
 
-        m_pSelectionFbo->bind();
+        m_pAuxFbo->bind();
 
         if (m_SelectionBufferIsDirty)
         {
@@ -230,15 +231,27 @@ void GLC_QuickItem::renderForSelection()
         }
 
         // Get selection coordinate
-        const int x= m_pViewhandler->selectionPoint().x();
-        const int y= m_pViewhandler->selectionPoint().y();
+        const int x= m_pViewhandler->pointerPosition().x();
+        const int y= m_pViewhandler->pointerPosition().y();
 
-        GLC_uint selectionId= m_pViewhandler->viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
+        GLC_uint selectionId= 0;
+        if (m_pViewhandler->renderingMode() == GLC_ViewHandler::selectRenderMode)
+        {
+            selectionId= m_pViewhandler->viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
 
-        m_pSelectionFbo->release();
-        popOpenGLMatrix();
+            m_pAuxFbo->release();
+            popOpenGLMatrix();
 
-        m_pViewhandler->updateSelection(selectionId);
+            m_pViewhandler->updateSelection(selectionId);
+        }
+        else
+        {
+            m_UnprojectedPoint= m_pViewhandler->viewportHandle()->unProject(x, y, GL_COLOR_ATTACHMENT0, true);
+            m_pAuxFbo->release();
+            popOpenGLMatrix();
+
+            m_pViewhandler->setUnprojectedPoint(m_UnprojectedPoint);
+        }
     }
 }
 
@@ -278,20 +291,20 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
     pTextureNode->setRect(this->boundingRect());
 }
 
-void GLC_QuickItem::setupSelectionFbo(int width, int height)
+void GLC_QuickItem::setupAuxFbo(int width, int height)
 {
     if ((width > 0) && (height > 0))
     {
-        if (NULL == m_pSelectionFbo)
+        if (NULL == m_pAuxFbo)
         {
-            m_pSelectionFbo= new QOpenGLFramebufferObject(width, height, QOpenGLFramebufferObject::Depth);
+            m_pAuxFbo= new QOpenGLFramebufferObject(width, height, QOpenGLFramebufferObject::Depth);
             m_SelectionBufferIsDirty= true;
         }
     }
     else
     {
-        delete m_pSelectionFbo;
-        m_pSelectionFbo= NULL;
+        delete m_pAuxFbo;
+        m_pAuxFbo= NULL;
     }
 }
 
