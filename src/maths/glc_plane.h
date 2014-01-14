@@ -24,6 +24,8 @@
 #ifndef GLC_PLANE_H_
 #define GLC_PLANE_H_
 
+#include <QMetaType>
+
 #include "glc_vector3d.h"
 
 #include "../glc_config.h"
@@ -156,5 +158,7 @@ private:
 	//! Plane is define by equation : Ax + By + Cz + D= 0
 	double m_Eq[4];
 };
+
+Q_DECLARE_METATYPE(GLC_Plane)
 
 #endif /* GLC_PLANE_H_ */

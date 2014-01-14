@@ -24,6 +24,8 @@
 #ifndef GLC_LINE3D_H_
 #define GLC_LINE3D_H_
 
+#include <QMetaType>
+
 #include "glc_vector3d.h"
 
 #include "../glc_config.h"
@@ -94,5 +96,7 @@ private:
 	GLC_Vector3d m_Vector;
 
 };
+
+Q_DECLARE_METATYPE(GLC_Line3d)
 
 #endif /* GLC_LINE3D_H_ */

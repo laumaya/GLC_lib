@@ -27,6 +27,7 @@
 
 #include <QString>
 #include <QPointF>
+#include <QMetaType>
 
 #include "glc_utils_maths.h"
 #include "glc_vector2df.h"
@@ -287,6 +288,8 @@ private:
 
 //! Define GLC_Point2D
 typedef GLC_Vector2d GLC_Point2d;
+
+Q_DECLARE_METATYPE(GLC_Vector2d)
 
 inline GLC_Vector2d& GLC_Vector2d::setLength(double lenght)
 {

@@ -28,6 +28,7 @@
 #include <QVector>
 #include <QQuaternion>
 #include <QPair>
+#include <QMetaType>
 
 #include "glc_vector3d.h"
 
@@ -300,6 +301,7 @@ the matrix :
 
 };
 
+Q_DECLARE_METATYPE(GLC_Matrix4x4)
 
 //////////////////////////////////////////////////////////////////////
 // Constructor/Destructor

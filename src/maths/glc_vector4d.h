@@ -27,6 +27,7 @@
 
 #include <QVector>
 #include <QDataStream>
+#include <QMetaType>
 
 #include "glc_utils_maths.h"
 #include "glc_vector2d.h"
@@ -383,8 +384,7 @@ private:
 
 }; //class GLC_Vector4d
 
-//! Define GLC_Point4D
-//typedef GLC_Vector4d GLC_Point4d;
+Q_DECLARE_METATYPE(GLC_Vector4d)
 
 //! Non-member stream operator
 QDataStream &operator<<(QDataStream &, const GLC_Vector4d &);

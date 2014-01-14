@@ -26,6 +26,7 @@
 #define GLC_VECTOR3D_H_
 
 #include <QDataStream>
+#include <QMetaType>
 
 #include "glc_utils_maths.h"
 #include "glc_vector3df.h"
@@ -259,6 +260,11 @@ private:
 
 }; //class GLC_Vector3d
 
+//! Define GLC_Point3D
+typedef GLC_Vector3d GLC_Point3d;
+
+Q_DECLARE_METATYPE(GLC_Vector3d)
+
 // Vector constant in glc namespace
 namespace glc
 {
@@ -274,10 +280,7 @@ namespace glc
 	/*! \var Z_AXIS
 	 *  \brief Z axis Vector*/
 	const GLC_Vector3d Z_AXIS(0.0, 0.0, 1.0);
-};
-
-//! Define GLC_Point3D
-typedef GLC_Vector3d GLC_Point3d;
+}
 
 //! Write the vector to stream
 inline QDataStream &operator<<(QDataStream & stream, const GLC_Vector3d & vector)
