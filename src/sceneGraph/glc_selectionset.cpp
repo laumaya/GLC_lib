@@ -162,6 +162,7 @@ QList<GLC_StructOccurrence*> GLC_SelectionSet::occurrencesList() const
             const GLC_uint id= iOcc.key();
             Q_ASSERT(m_pWorldHandle->containsOccurrence(id));
             subject.append(m_pWorldHandle->getOccurrence(id));
+            ++iOcc;
         }
     }
 
