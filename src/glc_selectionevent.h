@@ -35,12 +35,12 @@ class GLC_LIB_EXPORT GLC_SelectionEvent
 {
 public:
     enum Mode {
-        ModeReplace=    0x0001,
-        ModeUnit=        0x0002,
-        ModeSubstract=     0x0004,
-        ModeInstance=   0x0020,
-        ModeBody=       0x0040,
-        ModePrimitive=  0x0080,
+        ModeReplace=        0x0001,
+        ModeExclusiveUnit=  0x0002,
+        ModeSubstract=      0x0004,
+        ModeInstance=       0x0020,
+        ModeBody=           0x0040,
+        ModePrimitive=      0x0080,
     };
     Q_DECLARE_FLAGS(Modes, Mode)
 

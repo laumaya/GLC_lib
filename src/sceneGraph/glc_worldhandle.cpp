@@ -177,17 +177,17 @@ void GLC_WorldHandle::updateSelection(const GLC_SelectionEvent &selectionEvent)
 {
     const GLC_SelectionEvent::Modes selectionModes= selectionEvent.modes();
 
-    if (selectionModes | GLC_SelectionEvent::ModeReplace)
+    if (selectionModes & GLC_SelectionEvent::ModeReplace)
     {
         m_SelectionSet= selectionEvent.selectionSet();
     }
-    else if (selectionModes | GLC_SelectionEvent::ModeSubstract)
+    else if (selectionModes & GLC_SelectionEvent::ModeSubstract)
     {
         m_SelectionSet.substract(selectionEvent.selectionSet());
     }
-    else if (selectionModes | GLC_SelectionEvent::ModeUnit)
+    else if (selectionModes & GLC_SelectionEvent::ModeExclusiveUnit)
     {
-        m_SelectionSet.unite(selectionEvent.selectionSet());
+        m_SelectionSet.exclusiveUnite(selectionEvent.selectionSet());
     }
 
     updateSelectedInstanceFromSelectionSet();
