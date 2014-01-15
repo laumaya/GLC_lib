@@ -173,6 +173,11 @@ public:
     /*! A reference to this set is returned.*/
     GLC_SelectionSet& unite(const GLC_SelectionSet& other);
 
+    //! Each item in the other selection set that isn't already in this selectionset is inserted into this set.
+    /*! Each item present int this and other selection set are removed from  this selection set
+     * A reference to this set is returned.*/
+    GLC_SelectionSet& exclusiveUnite(const GLC_SelectionSet& other);
+
     //! Removes all items from this selection set that are contained in the other selection set. Returns a reference to this set.
     GLC_SelectionSet& substract(const GLC_SelectionSet& other);
 

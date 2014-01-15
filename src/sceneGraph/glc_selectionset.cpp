@@ -394,6 +394,73 @@ GLC_SelectionSet &GLC_SelectionSet::unite(const GLC_SelectionSet &other)
     return *this;
 }
 
+GLC_SelectionSet &GLC_SelectionSet::exclusiveUnite(const GLC_SelectionSet &other)
+{
+    Q_ASSERT(m_pWorldHandle == other.m_pWorldHandle);
+    OccurrenceSelection::const_iterator iOcc= other.m_OccurrenceSelection.constBegin();
+    while (iOcc != other.m_OccurrenceSelection.constEnd())
+    {
+        const GLC_uint occId= iOcc.key();
+        if (!contains(occId))
+        {
+            m_OccurrenceSelection.insert(occId, other.m_OccurrenceSelection.value(occId));
+        }
+        else
+        {
+            const BodySelection bodySelection= iOcc.value();
+            if (!bodySelection.isEmpty())
+            {
+                BodySelection::const_iterator iBody= bodySelection.constBegin();
+                while (iBody != bodySelection.constEnd())
+                {
+                    const GLC_uint bodyId= iBody.key();
+                    if (!contains(occId, bodyId))
+                    {
+                        m_OccurrenceSelection[occId].insert(bodyId, other.m_OccurrenceSelection.value(occId).value(bodyId));
+                    }
+                    else
+                    {
+                        const PrimitiveSelection primitiveSelection= iBody.value();
+                        if (!primitiveSelection.isEmpty())
+                        {
+                            PrimitiveSelection::const_iterator iPrim= primitiveSelection.constBegin();
+                            while (iPrim != primitiveSelection.constEnd())
+                            {
+                                const GLC_uint primId= *iPrim;
+                                if (!contains(occId, bodyId, primId))
+                                {
+                                    (m_OccurrenceSelection[occId])[bodyId].insert(primId);
+                                }
+                                else
+                                {
+                                    (m_OccurrenceSelection[occId])[bodyId].remove(primId);
+                                    if (m_OccurrenceSelection.value(occId).value(bodyId).isEmpty())
+                                    {
+                                        m_OccurrenceSelection[occId].remove(bodyId);
+                                    }
+                                    if (m_OccurrenceSelection.value(occId).isEmpty()) m_OccurrenceSelection.remove(occId);
+                                }
+                                ++iPrim;
+                            }
+                        }
+                        else
+                        {
+                            m_OccurrenceSelection[occId].remove(bodyId);
+                            if (m_OccurrenceSelection.value(occId).isEmpty()) m_OccurrenceSelection.remove(occId);
+                        }
+                    }
+                    ++iBody;
+                }
+            }
+            else m_OccurrenceSelection.remove(occId);
+        }
+        ++iOcc;
+    }
+
+    return *this;
+
+}
+
 GLC_SelectionSet &GLC_SelectionSet::substract(const GLC_SelectionSet &other)
 {
     Q_ASSERT(m_pWorldHandle == other.m_pWorldHandle);
