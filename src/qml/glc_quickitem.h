@@ -28,6 +28,7 @@
 #include <QtOpenGL>
 #include <QUrl>
 #include <QOpenGLFramebufferObject>
+#include <QPair>
 
 #include "../viewport/glc_viewport.h"
 #include "../shading/glc_light.h"
@@ -80,7 +81,11 @@ protected:
 protected:
     virtual void setOpenGLState();
     void render(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData* pData);
+
     void renderForSelectionOrUnproject();
+    GLC_uint selectBody(GLC_uint instanceId, int x, int y);
+    QPair<GLC_uint, GLC_uint> selectPrimitive(GLC_uint instanceId, int x, int y);
+
     virtual void doRender();
     void setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode);
     void setupAuxFbo(int width, int height);

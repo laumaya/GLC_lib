@@ -138,18 +138,12 @@ void GLC_ViewHandler::unsetSelection()
     updateGL();
 }
 
-void GLC_ViewHandler::updateSelection(GLC_uint id)
+void GLC_ViewHandler::updateSelection(const GLC_SelectionSet& selectionSet)
 {
     m_RenderingMode= GLC_ViewHandler::normalRenderMode;
-
-    GLC_SelectionSet selectionSet(m_World);
-    selectionSet.insert(id);
-
     GLC_SelectionEvent selectionEvent(m_SelectionModes, selectionSet);
 
-    m_World.updateSelection(selectionEvent);
-
-    updateGL();
+    selectionUpdated(selectionEvent);
 }
 
 void GLC_ViewHandler::setUnprojectedPoint(const GLC_Point3d &point)
@@ -258,4 +252,10 @@ void GLC_ViewHandler::setDefaultUpVector(const GLC_Vector3d &vect)
     pCamera->setUpCam(vect);
     pCamera->setDefaultUpVector(vect);
     pCamera->setIsoView();
+}
+
+void GLC_ViewHandler::selectionUpdated(const GLC_SelectionEvent &selectionEvent)
+{
+    m_World.updateSelection(selectionEvent);
+    updateGL();
 }

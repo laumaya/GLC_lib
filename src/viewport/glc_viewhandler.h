@@ -84,7 +84,7 @@ public:
     inline GLC_ViewHandler::RenderingMode renderingMode() const
     {return (m_RenderingMode);}
 
-    inline bool selectionMode() const
+    inline GLC_SelectionEvent::Modes selectionMode() const
     {return m_SelectionModes;}
 
     inline QPoint pointerPosition() const
@@ -119,7 +119,7 @@ public:
 
     virtual void unsetSelection();
 
-    virtual void updateSelection(GLC_uint id);
+    void updateSelection(const GLC_SelectionSet &selectionSet);
 
     virtual void setUnprojectedPoint(const GLC_Point3d& point);
 
@@ -161,8 +161,9 @@ public:
 /*! \name Protected services Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
-public:
+protected:
     virtual void setDefaultUpVector(const GLC_Vector3d &vect);
+    virtual void selectionUpdated(const GLC_SelectionEvent& selectionEvent);
 
 //@}
 
