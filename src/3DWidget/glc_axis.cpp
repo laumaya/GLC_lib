@@ -138,47 +138,34 @@ glc::WidgetEventFlag GLC_Axis::select(const GLC_Point3d& pos, GLC_uint id)
 	return glc::BlockedEvent;
 }
 
-glc::WidgetEventFlag GLC_Axis::mousePressed(const GLC_Point3d& pos, Qt::MouseButton button, GLC_uint id)
+glc::WidgetEventFlag GLC_Axis::pressed(const GLC_Point3d& pos, GLC_uint id)
 {
-	//qDebug() << "GLC_Axis::mousePressed";
-	glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
-	if (button == Qt::LeftButton)
-	{
-		returnFlag= select(pos, id);
-	}
+    glc::WidgetEventFlag returnFlag= select(pos, id);
 
 	return returnFlag;
 }
 
-glc::WidgetEventFlag GLC_Axis::mouseReleased(Qt::MouseButton button)
+glc::WidgetEventFlag GLC_Axis::released()
 {
-	//qDebug() << "GLC_Axis::mouseReleased";
-	glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
-	if (button == Qt::LeftButton)
-	{
+    // get selected instance index
+    if (m_CurrentManipulator == X_AxisManipulator)
+    {
+        GLC_3DWidget::instanceHandle(0)->geomAt(0)->firstMaterial()->setDiffuseColor(Qt::red);
+    }
+    else if (m_CurrentManipulator == Y_AxisManipulator)
+    {
+        GLC_3DWidget::instanceHandle(2)->geomAt(0)->firstMaterial()->setDiffuseColor(Qt::green);
+    }
+    else if (m_CurrentManipulator == Z_AxisManipulator)
+    {
+        GLC_3DWidget::instanceHandle(4)->geomAt(0)->firstMaterial()->setDiffuseColor(Qt::blue);
+    }
 
-		// get selected instance index
+    m_CurrentManipulator= NoneManipulator;
+    delete m_pCurrentManipulator;
+    m_pCurrentManipulator= NULL;
 
-		if (m_CurrentManipulator == X_AxisManipulator)
-		{
-			GLC_3DWidget::instanceHandle(0)->geomAt(0)->firstMaterial()->setDiffuseColor(Qt::red);
-		}
-		else if (m_CurrentManipulator == Y_AxisManipulator)
-		{
-			GLC_3DWidget::instanceHandle(2)->geomAt(0)->firstMaterial()->setDiffuseColor(Qt::green);
-		}
-		else if (m_CurrentManipulator == Z_AxisManipulator)
-		{
-			GLC_3DWidget::instanceHandle(4)->geomAt(0)->firstMaterial()->setDiffuseColor(Qt::blue);
-		}
-
-		m_CurrentManipulator= NoneManipulator;
-		delete m_pCurrentManipulator;
-		m_pCurrentManipulator= NULL;
-
-		returnFlag= glc::BlockedEvent;
-	}
-	return returnFlag;
+    return glc::BlockedEvent;;
 }
 
 glc::WidgetEventFlag GLC_Axis::unselect(const GLC_Point3d&, GLC_uint)
@@ -192,30 +179,27 @@ glc::WidgetEventFlag GLC_Axis::unselect(const GLC_Point3d&, GLC_uint)
 	return glc::AcceptEvent;
 }
 
-glc::WidgetEventFlag GLC_Axis::mouseMove(const GLC_Point3d& pos, Qt::MouseButtons button, GLC_uint)
+glc::WidgetEventFlag GLC_Axis::move(const GLC_Point3d& pos, GLC_uint)
 {
-	glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
-	if (button & Qt::LeftButton)
-	{
-		if (NULL != m_pCurrentManipulator)
-		{
-			GLC_Matrix4x4 moveMatrix(m_pCurrentManipulator->manipulate(pos));
-			m_Center= moveMatrix * m_Center;
-			// Update the instance
-			for (int i= 0; i < 6; ++i)
-			{
-				GLC_3DWidget::instanceHandle(i)->multMatrix(moveMatrix);
-			}
+    glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
+    if (NULL != m_pCurrentManipulator)
+    {
+        GLC_Matrix4x4 moveMatrix(m_pCurrentManipulator->manipulate(pos));
+        m_Center= moveMatrix * m_Center;
+        // Update the instance
+        for (int i= 0; i < 6; ++i)
+        {
+            GLC_3DWidget::instanceHandle(i)->multMatrix(moveMatrix);
+        }
 
-			// Plane throw intersection and plane normal and camera up vector
-			m_pCurrentManipulator->enterManipulateState(m_pCurrentManipulator->previousPosition());
+        // Plane throw intersection and plane normal and camera up vector
+        m_pCurrentManipulator->enterManipulateState(m_pCurrentManipulator->previousPosition());
 
-			emit asChanged();
-			returnFlag= glc::AcceptEvent;
-		}
-	}
+        emit asChanged();
+        returnFlag= glc::AcceptEvent;
+    }
 
-	return returnFlag;
+    return returnFlag;
 }
 void GLC_Axis::create3DviewInstance()
 {

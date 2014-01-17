@@ -100,21 +100,17 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Recieve Mouse double click event with the given instance id Return true if the event is catch
-	inline glc::WidgetEventFlag mouseDoubleClickEvent(QMouseEvent * pEvent)
-	{return m_pWidgetManagerHandle->mouseDoubleClickEvent(pEvent);}
-
 	//! Recieve Mouse move event with the given instance id Return true if the event is catch
-	inline glc::WidgetEventFlag mouseMoveEvent(QMouseEvent * pEvent)
-	{return m_pWidgetManagerHandle->mouseMoveEvent(pEvent);}
+    inline glc::WidgetEventFlag moveEvent(GLC_uint selectedId, const GLC_Point3d &pos)
+    {return m_pWidgetManagerHandle->moveEvent(selectedId, pos);}
 
 	//! Recieve Mouse press event with the given instance id Return true if the event is catch
-	inline glc::WidgetEventFlag mousePressEvent(QMouseEvent * pEvent)
-	{return m_pWidgetManagerHandle->mousePressEvent(pEvent);}
+    inline glc::WidgetEventFlag pressEvent(GLC_uint id, const GLC_Point3d &pos)
+    {return m_pWidgetManagerHandle->pressEvent(id, pos);}
 
 	//! Recieve Mouse release event with the given instance id Return true if the event is catch
-	inline glc::WidgetEventFlag mouseReleaseEvent(QMouseEvent * pEvent)
-	{return m_pWidgetManagerHandle->mouseReleaseEvent(pEvent);}
+    inline glc::WidgetEventFlag releaseEvent()
+    {return m_pWidgetManagerHandle->releaseEvent();}
 
 //@}
 

@@ -26,11 +26,13 @@
 #include <QObject>
 #include <QColor>
 #include <QPoint>
+#include <QMutex>
 
 #include "../shading/glc_light.h"
 #include "../sceneGraph/glc_world.h"
 #include "../glc_selectionevent.h"
 #include "../maths/glc_vector3d.h"
+#include "../3DWidget/glc_3dwidgetmanager.h"
 
 #include "glc_userinput.h"
 
@@ -48,6 +50,7 @@ class GLC_LIB_EXPORT GLC_ViewHandler: public QObject
 public:
     enum RenderingMode {
         normalRenderMode,
+        widget3DRenderMode,
         selectRenderMode,
         unprojectRenderMode
     };
@@ -59,7 +62,6 @@ public:
 signals :
     void isDirty();
     void invalidateSelectionBuffer();
-    void userInputUpdated(const GLC_UserInput& userInput);
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
@@ -104,7 +106,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 public slots:
-    virtual void updateGL();
+    virtual void updateGL(bool synchrone= false);
 
 public:
     void setInputEventInterpreter(GLC_InputEventInterpreter* pEventInterpreter);
@@ -115,11 +117,15 @@ public:
 
     void setSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning);
 
-    virtual void setNextSelection(int x, int y, GLC_SelectionEvent::Modes modes);
+    virtual GLC_SelectionSet selectFrom3d(int x, int y, GLC_SelectionEvent::Modes modes);
+
+    virtual QPair<GLC_uint, GLC_Point3d> select3DWidget(int x, int y);
 
     virtual void unsetSelection();
 
     void updateSelection(const GLC_SelectionSet &selectionSet);
+
+    void setSelected3DWidgetIdAndPoint(GLC_uint id, const GLC_Point3d& point);
 
     virtual void setUnprojectedPoint(const GLC_Point3d& point);
 
@@ -128,7 +134,7 @@ public:
 
     void setLight(GLC_Light* pLight);
 
-    void schedulesUnprojectePoint(int x, int y);
+    GLC_Point3d unprojectPoint(int x, int y);
 
 //@}
 
@@ -145,6 +151,10 @@ public:
     virtual void processWheelEvent(QWheelEvent* pWWheelEvent);
 
     virtual void processTouchEvent(QTouchEvent* pTouchEvent);
+
+    inline void renderingFinished()
+    {m_isRendering= false;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -154,6 +164,7 @@ public:
 public:
     void updateBackGround();
     virtual void render();
+    virtual void renderOnly3DWidget();
 
 //@}
 
@@ -163,7 +174,6 @@ public:
 //////////////////////////////////////////////////////////////////////
 protected:
     virtual void setDefaultUpVector(const GLC_Vector3d &vect);
-    virtual void selectionUpdated(const GLC_SelectionEvent& selectionEvent);
 
 //@}
 
@@ -178,7 +188,11 @@ protected:
     GLC_ViewHandler::RenderingMode m_RenderingMode;
     QPoint m_PointerPosition;
     GLC_SelectionEvent::Modes m_SelectionModes;
+    GLC_SelectionSet m_CurrentSelectionSet;
     GLC_Point3d m_UnprojectedPoint;
+    GLC_3DWidgetManager m_3DWidgetManager;
+    GLC_uint m_Selected3DWidgetId;
+    bool m_isRendering;
 
 private:
     bool m_BlockUpdate;

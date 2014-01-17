@@ -69,10 +69,6 @@ public:
 
     virtual bool processTouchEvent(QTouchEvent* pTouchEvent)= 0;
 
-public slots:
-
-    virtual void userInputChanged(const GLC_UserInput& userInput);
-
 protected:
     virtual void setMover(GLC_MoverController::MoverType moverType, const GLC_UserInput &userInputs);
     virtual bool move(const GLC_UserInput& userInputs);

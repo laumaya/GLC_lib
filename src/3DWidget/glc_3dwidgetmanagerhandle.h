@@ -139,17 +139,14 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Recieve Mouse double click event with the given instance id Return true if the event is catch
-	glc::WidgetEventFlag mouseDoubleClickEvent(QMouseEvent * pEvent);
-
 	//! Recieve Mouse move event with the given instance id Return true if the event is catch
-	glc::WidgetEventFlag mouseMoveEvent(QMouseEvent * pEvent);
+    glc::WidgetEventFlag moveEvent(GLC_uint selectedId, const GLC_Point3d &pos);
 
 	//! Recieve Mouse press event with the given instance id Return true if the event is catch
-	glc::WidgetEventFlag mousePressEvent(QMouseEvent * pEvent);
+    glc::WidgetEventFlag pressEvent(GLC_uint selectedId, const GLC_Point3d &pos);
 
 	//! Recieve Mouse release event with the given instance id Return true if the event is catch
-	glc::WidgetEventFlag mouseReleaseEvent(QMouseEvent * pEvent);
+    glc::WidgetEventFlag releaseEvent();
 
 //@}
 
@@ -167,8 +164,6 @@ public:
 // Private services function
 //////////////////////////////////////////////////////////////////////
 private:
-	//! Make selection according to the given mouse event
-	QPair<GLC_uint, GLC_Point3d> select(QMouseEvent* event);
 
 //////////////////////////////////////////////////////////////////////
 // Private Member

@@ -44,11 +44,6 @@ GLC_InputEventInterpreter::~GLC_InputEventInterpreter()
 
 }
 
-void GLC_InputEventInterpreter::userInputChanged(const GLC_UserInput &userInput)
-{
-    Q_UNUSED(userInput);
-}
-
 void GLC_InputEventInterpreter::setMover(GLC_MoverController::MoverType moverType, const GLC_UserInput &userInputs)
 {
     m_pViewHandler->moverControllerHandle()->setActiveMover(moverType, userInputs);
@@ -80,5 +75,8 @@ void GLC_InputEventInterpreter::setNoMover()
 
 void GLC_InputEventInterpreter::select(int x, int y, GLC_SelectionEvent::Modes modes)
 {
-    m_pViewHandler->setNextSelection(x, y, modes);
+    GLC_SelectionSet selectionSet= m_pViewHandler->selectFrom3d(x, y, modes);
+    GLC_SelectionEvent selectionEvent(modes, selectionSet);
+    m_pViewHandler->world().updateSelection(selectionEvent);
+    m_pViewHandler->updateGL();
 }

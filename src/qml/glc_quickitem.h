@@ -83,10 +83,13 @@ protected:
     void render(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData* pData);
 
     void renderForSelectionOrUnproject();
+    void renderFor3dwidgetSelectionAndUnproject();
+
     GLC_uint selectBody(GLC_uint instanceId, int x, int y);
     QPair<GLC_uint, GLC_uint> selectPrimitive(GLC_uint instanceId, int x, int y);
 
     virtual void doRender();
+    virtual void do3DWidgetRender();
     void setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode);
     void setupAuxFbo(int width, int height);
     void pushOpenGLMatrix();

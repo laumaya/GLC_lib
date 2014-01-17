@@ -106,13 +106,13 @@ public:
 	virtual glc::WidgetEventFlag unselect(const GLC_Point3d&, GLC_uint id);
 
 	//! The mouse is over this widget and a mousse button is pressed
-	virtual glc::WidgetEventFlag mousePressed(const GLC_Point3d&, Qt::MouseButton, GLC_uint id);
+    virtual glc::WidgetEventFlag pressed(const GLC_Point3d&, GLC_uint id);
 
 	//! The mouse is over this widget and a mousse button is released
-	virtual glc::WidgetEventFlag mouseReleased(Qt::MouseButton);
+    virtual glc::WidgetEventFlag released();
 
 	//! This widget is selected and the mousse move with a pressed buttons
-	virtual glc::WidgetEventFlag mouseMove(const GLC_Point3d&, Qt::MouseButtons, GLC_uint id);
+    virtual glc::WidgetEventFlag move(const GLC_Point3d&, GLC_uint id);
 
 //@}
 

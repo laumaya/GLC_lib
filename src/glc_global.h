@@ -89,6 +89,15 @@ namespace glc
 		BlockedEvent
 	};
 
+    enum WidgetEvenType
+    {
+        WidgetNoneEvent,
+        WidgetPressEvent,
+        WidgetMoveEvent,
+        WidgetReleaseEvent,
+        WidgetOverEvent
+    };
+
 	//! Return GLC_lib Archive prefix string
 	GLC_LIB_EXPORT const QString archivePrefix();
 

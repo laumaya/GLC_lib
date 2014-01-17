@@ -120,22 +120,22 @@ glc::WidgetEventFlag GLC_3DWidget::unselect(const GLC_Point3d&, GLC_uint)
 	return glc::IgnoreEvent;
 }
 
-glc::WidgetEventFlag GLC_3DWidget::mouseOver(const GLC_Point3d&, GLC_uint)
+glc::WidgetEventFlag GLC_3DWidget::over(const GLC_Point3d&, GLC_uint)
 {
 	return glc::IgnoreEvent;
 }
 
-glc::WidgetEventFlag GLC_3DWidget::mousePressed(const GLC_Point3d&, Qt::MouseButton, GLC_uint)
+glc::WidgetEventFlag GLC_3DWidget::pressed(const GLC_Point3d&, GLC_uint)
 {
 	return glc::IgnoreEvent;
 }
 
-glc::WidgetEventFlag GLC_3DWidget::mouseReleased(Qt::MouseButton)
+glc::WidgetEventFlag GLC_3DWidget::released()
 {
 	return glc::IgnoreEvent;
 }
 
-glc::WidgetEventFlag GLC_3DWidget::mouseMove(const GLC_Point3d&, Qt::MouseButtons, GLC_uint)
+glc::WidgetEventFlag GLC_3DWidget::move(const GLC_Point3d&, GLC_uint)
 {
 	return glc::IgnoreEvent;
 }

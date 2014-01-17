@@ -46,7 +46,11 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     , m_RenderingMode(normalRenderMode)
     , m_PointerPosition()
     , m_SelectionModes(GLC_SelectionEvent::ModeReplace | GLC_SelectionEvent::ModeInstance)
+    , m_CurrentSelectionSet()
     , m_UnprojectedPoint()
+    , m_3DWidgetManager(m_pViewport)
+    , m_Selected3DWidgetId(0)
+    , m_isRendering()
 
     , m_BlockUpdate(false)
 {
@@ -69,9 +73,17 @@ GLC_ViewHandler::~GLC_ViewHandler()
     delete m_pInputEventInterpreter;
 }
 
-void GLC_ViewHandler::updateGL()
+void GLC_ViewHandler::updateGL(bool synchrone)
 {
-    if (!m_BlockUpdate) emit isDirty();
+    if (!m_BlockUpdate)
+    {
+        m_isRendering= synchrone;
+        emit isDirty();
+        while (m_isRendering)
+        {
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        }
+    }
 }
 
 void GLC_ViewHandler::setInputEventInterpreter(GLC_InputEventInterpreter *pEventInterpreter)
@@ -122,13 +134,28 @@ void GLC_ViewHandler::setSpacePartitioning(GLC_SpacePartitioning *pSpacePartitio
     m_World.collection()->setSpacePartitionningUsage(true);
 }
 
-void GLC_ViewHandler::setNextSelection(int x, int y, GLC_SelectionEvent::Modes modes)
+GLC_SelectionSet GLC_ViewHandler::selectFrom3d(int x, int y, GLC_SelectionEvent::Modes modes)
 {
     m_RenderingMode= GLC_ViewHandler::selectRenderMode;
     m_PointerPosition.setX(x);
     m_PointerPosition.setY(y);
+    m_CurrentSelectionSet.clear();
     m_SelectionModes= modes;
-    updateGL();
+    updateGL(true); // Execute OpenGL synchronously to get selection Set
+    return m_CurrentSelectionSet;
+}
+
+QPair<GLC_uint, GLC_Point3d> GLC_ViewHandler::select3DWidget(int x, int y)
+{
+    m_RenderingMode= GLC_ViewHandler::widget3DRenderMode;
+    m_PointerPosition.setX(x);
+    m_PointerPosition.setY(y);
+    m_UnprojectedPoint.setVect(0.0, 0.0, 0.0);
+    m_Selected3DWidgetId= 0;
+    updateGL(true); // Execute OpenGL synchronously to get selection Set
+    QPair<GLC_uint, GLC_Point3d> subject(m_Selected3DWidgetId, m_UnprojectedPoint);
+
+    return subject;
 }
 
 void GLC_ViewHandler::unsetSelection()
@@ -141,9 +168,15 @@ void GLC_ViewHandler::unsetSelection()
 void GLC_ViewHandler::updateSelection(const GLC_SelectionSet& selectionSet)
 {
     m_RenderingMode= GLC_ViewHandler::normalRenderMode;
-    GLC_SelectionEvent selectionEvent(m_SelectionModes, selectionSet);
+    m_CurrentSelectionSet= selectionSet;
+}
 
-    selectionUpdated(selectionEvent);
+void GLC_ViewHandler::setSelected3DWidgetIdAndPoint(GLC_uint id, const GLC_Point3d &point)
+{
+    m_RenderingMode= GLC_ViewHandler::normalRenderMode;
+
+    m_Selected3DWidgetId= id;
+    m_UnprojectedPoint= point;
 }
 
 void GLC_ViewHandler::setUnprojectedPoint(const GLC_Point3d &point)
@@ -159,13 +192,14 @@ void GLC_ViewHandler::setLight(GLC_Light *pLight)
     m_pLight= pLight;
 }
 
-void GLC_ViewHandler::schedulesUnprojectePoint(int x, int y)
+GLC_Point3d GLC_ViewHandler::unprojectPoint(int x, int y)
 {
     m_UnprojectedPoint= GLC_Point3d();
     m_RenderingMode= GLC_ViewHandler::unprojectRenderMode;
     m_PointerPosition.setX(x);
     m_PointerPosition.setY(y);
-    updateGL(); // Execute OpenGL to get unprojected point
+    updateGL(true); // Execute OpenGL synchronously to get unprojected point
+    return m_UnprojectedPoint;
 }
 
 void GLC_ViewHandler::processMousePressEvent(QMouseEvent *pMouseEvent)
@@ -235,14 +269,45 @@ void GLC_ViewHandler::render()
         m_World.render(0, glc::WireRenderFlag);
         m_World.render(0, glc::TransparentRenderFlag);
         m_World.render(1, glc::WireRenderFlag);
-        m_pLight->disable();
 
-        m_pMoverController->drawActiveMoverRep();
+        if (!GLC_State::isInSelectionMode())
+        {
+            m_pMoverController->drawActiveMoverRep();
+        }
+
+        m_3DWidgetManager.render();
     }
     catch (GLC_Exception &e)
     {
         qDebug() << e.what();
     }
+}
+
+void GLC_ViewHandler::renderOnly3DWidget()
+{
+    try
+    {
+        QOpenGLContext::currentContext()->functions()->glUseProgram(0);
+
+        // Calculate camera depth of view
+        m_pViewport->setDistMinAndMax(m_World.boundingBox());
+
+        // Clear screen
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Load identity matrix
+        GLC_Context::current()->glcLoadIdentity();
+
+        m_pLight->glExecute();
+        m_pViewport->glExecuteCam();
+
+        m_3DWidgetManager.render();
+    }
+    catch (GLC_Exception &e)
+    {
+        qDebug() << e.what();
+    }
+
 }
 
 void GLC_ViewHandler::setDefaultUpVector(const GLC_Vector3d &vect)
@@ -252,10 +317,4 @@ void GLC_ViewHandler::setDefaultUpVector(const GLC_Vector3d &vect)
     pCamera->setUpCam(vect);
     pCamera->setDefaultUpVector(vect);
     pCamera->setIsoView();
-}
-
-void GLC_ViewHandler::selectionUpdated(const GLC_SelectionEvent &selectionEvent)
-{
-    m_World.updateSelection(selectionEvent);
-    updateGL();
 }

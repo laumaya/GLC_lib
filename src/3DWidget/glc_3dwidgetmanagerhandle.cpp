@@ -110,28 +110,14 @@ void GLC_3DWidgetManagerHandle::setWidgetVisible(GLC_uint id, bool visible)
 	m_3DWidgetHash.value(id)->setVisible(visible);
 }
 
-glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseDoubleClickEvent(QMouseEvent *)
-{
-
-	if (hasAnActiveWidget())
-	{
-
-	}
-	return glc::IgnoreEvent;
-}
-
-glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseMoveEvent(QMouseEvent * pEvent)
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::moveEvent(GLC_uint selectedId, const GLC_Point3d &pos)
 {
 	glc::WidgetEventFlag eventFlag= glc::IgnoreEvent;
-	// Get the 3D cursor position and the id under
-	QPair<GLC_uint, GLC_Point3d> cursorInfo= select(pEvent);
-	const GLC_uint selectedId= cursorInfo.first;
-	const GLC_Point3d pos(cursorInfo.second);
 
 	if (hasAnActiveWidget())
 	{
 		GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
-		eventFlag= pActiveWidget->mouseMove(pos, pEvent->buttons(), selectedId);
+        eventFlag= pActiveWidget->move(pos, selectedId);
 	}
 	else
 	{
@@ -143,7 +129,7 @@ glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseMoveEvent(QMouseEvent * pEv
 			{
 				m_Preselected3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
 				GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Preselected3DWidgetId);
-				eventFlag= pActiveWidget->mouseOver(pos, selectedId);
+                eventFlag= pActiveWidget->over(pos, selectedId);
 			}
 			else if (0 != m_Preselected3DWidgetId && (m_Preselected3DWidgetId != select3DWidgetId))
 			{
@@ -160,64 +146,56 @@ glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseMoveEvent(QMouseEvent * pEv
 	return eventFlag;
 }
 
-glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mousePressEvent(QMouseEvent * pEvent)
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::pressEvent(GLC_uint selectedId, const GLC_Point3d& pos)
 {
 	glc::WidgetEventFlag eventFlag= glc::IgnoreEvent;
 
-	if (pEvent->button() == Qt::LeftButton)
-	{
-		// Get the 3D cursor position and the id under
-		QPair<GLC_uint, GLC_Point3d> cursorInfo= select(pEvent);
-		const GLC_uint selectedId= cursorInfo.first;
-		const GLC_Point3d pos(cursorInfo.second);
+    if (hasAnActiveWidget())
+    {
+        GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+        const bool activeWidgetUnderMouse= pActiveWidget->instanceBelongTo(selectedId);
+        if (activeWidgetUnderMouse)
+        {
+            eventFlag= pActiveWidget->pressed(pos, selectedId);
+        }
+        else
+        {
+            eventFlag= pActiveWidget->unselect(pos, selectedId);
+            if (m_MapBetweenInstanceWidget.contains(selectedId))
+            {
+                m_Active3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
+                pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+                eventFlag= pActiveWidget->select(pos, selectedId);
+            }
+            else
+            {
+                m_Active3DWidgetId= 0;
+            }
+        }
 
-		if (hasAnActiveWidget())
-		{
-			GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
-			const bool activeWidgetUnderMouse= pActiveWidget->instanceBelongTo(selectedId);
-			if (activeWidgetUnderMouse)
-			{
-				eventFlag= pActiveWidget->mousePressed(pos, pEvent->button(), selectedId);
-			}
-			else
-			{
-				eventFlag= pActiveWidget->unselect(pos, selectedId);
-				if (m_MapBetweenInstanceWidget.contains(selectedId))
-				{
-					m_Active3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
-					pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
-					eventFlag= pActiveWidget->select(pos, selectedId);
-				}
-				else
-				{
-					m_Active3DWidgetId= 0;
-				}
-			}
-
-		}
-		else
-		{
-			if (m_MapBetweenInstanceWidget.contains(selectedId))
-			{
-				m_Active3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
-				GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
-				eventFlag= pActiveWidget->select(pos, selectedId);
-			}
-		}
-	}
+    }
+    else
+    {
+        if (m_MapBetweenInstanceWidget.contains(selectedId))
+        {
+            m_Active3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
+            GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+            eventFlag= pActiveWidget->select(pos, selectedId);
+        }
+    }
 
 	return eventFlag;
 }
 
-glc::WidgetEventFlag GLC_3DWidgetManagerHandle::mouseReleaseEvent(QMouseEvent * pEvent)
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::releaseEvent()
 {
 	glc::WidgetEventFlag eventFlag= glc::IgnoreEvent;
-	if (hasAnActiveWidget() && (pEvent->button() == Qt::LeftButton))
+    if (hasAnActiveWidget())
 	{
 
 		GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
 
-		eventFlag= pActiveWidget->mouseReleased(pEvent->button());
+        eventFlag= pActiveWidget->released();
 	}
 	return eventFlag;
 }
@@ -241,17 +219,4 @@ void GLC_3DWidgetManagerHandle::render()
 		m_Collection.renderShaderGroup(glc::WireRenderFlag);
 		m_Collection.renderShaderGroup(glc::TransparentRenderFlag);
 	}
-}
-
-QPair<GLC_uint, GLC_Point3d> GLC_3DWidgetManagerHandle::select(QMouseEvent* event)
-{
-
-	GLC_uint selectionId= m_pViewport->selectOnPreviousRender(event->x(), event->y());
-	const GLC_Point3d selectedPoint(m_pViewport->unProject(event->x(), event->y()));
-
-	QPair<GLC_uint, GLC_Point3d> selection;
-	selection.first= selectionId;
-	selection.second= selectedPoint;
-
-	return selection;
 }

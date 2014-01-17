@@ -111,6 +111,10 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
             {
                 render(pTextureNode, pData);
             }
+            else if (m_pViewhandler->renderingMode() == GLC_ViewHandler::widget3DRenderMode)
+            {
+                renderFor3dwidgetSelectionAndUnproject();
+            }
             else
             {
                 renderForSelectionOrUnproject();
@@ -125,6 +129,8 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
     {
         pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
     }
+
+    m_pViewhandler->renderingFinished();
 
     return pTextureNode;
 }
@@ -264,19 +270,48 @@ void GLC_QuickItem::renderForSelectionOrUnproject()
                     }
                 }
             }
-            m_pAuxFbo->release();
-            popOpenGLMatrix();
 
             m_pViewhandler->updateSelection(selectionSet);
         }
         else
         {
             m_UnprojectedPoint= m_pViewhandler->viewportHandle()->unProject(x, y, GL_COLOR_ATTACHMENT0, true);
-            m_pAuxFbo->release();
-            popOpenGLMatrix();
-
             m_pViewhandler->setUnprojectedPoint(m_UnprojectedPoint);
         }
+
+        m_pAuxFbo->release();
+        popOpenGLMatrix();
+    }
+}
+
+void GLC_QuickItem::renderFor3dwidgetSelectionAndUnproject()
+{
+    setupAuxFbo(this->width(), this->height());
+
+    if (m_pAuxFbo && m_pAuxFbo->isValid())
+    {
+        pushOpenGLMatrix();
+        setOpenGLState();
+
+        m_pAuxFbo->bind();
+
+        m_SelectionBufferIsDirty= true;
+        m_pViewhandler->viewportHandle()->setWinGLSize(width(), height());
+        GLC_State::setSelectionMode(true);
+        do3DWidgetRender();
+        GLC_State::setSelectionMode(false);
+
+        // Get selection coordinate
+        const int x= m_pViewhandler->pointerPosition().x();
+        const int y= m_pViewhandler->pointerPosition().y();
+
+        const GLC_uint instanceId= m_pViewhandler->viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
+        m_UnprojectedPoint= m_pViewhandler->viewportHandle()->unProject(x, y, GL_COLOR_ATTACHMENT0);
+
+        m_pAuxFbo->release();
+        popOpenGLMatrix();
+
+        m_pViewhandler->setSelected3DWidgetIdAndPoint(instanceId, m_UnprojectedPoint);
     }
 }
 
@@ -317,6 +352,11 @@ QPair<GLC_uint, GLC_uint> GLC_QuickItem::selectPrimitive(GLC_uint instanceId, in
 void GLC_QuickItem::doRender()
 {
     m_pViewhandler->render();
+}
+
+void GLC_QuickItem::do3DWidgetRender()
+{
+    m_pViewhandler->renderOnly3DWidget();
 }
 
 void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode)
