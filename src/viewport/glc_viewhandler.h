@@ -50,7 +50,6 @@ class GLC_LIB_EXPORT GLC_ViewHandler: public QObject
 public:
     enum RenderingMode {
         normalRenderMode,
-        widget3DRenderMode,
         selectRenderMode,
         unprojectRenderMode
     };
@@ -86,7 +85,7 @@ public:
     inline GLC_ViewHandler::RenderingMode renderingMode() const
     {return (m_RenderingMode);}
 
-    inline GLC_SelectionEvent::Modes selectionMode() const
+    inline GLC_SelectionEvent::Modes selectionModes() const
     {return m_SelectionModes;}
 
     inline QPoint pointerPosition() const
@@ -98,6 +97,12 @@ public:
     inline bool updateIsBlocked() const
     {return m_BlockUpdate;}
 
+    inline bool hasVisibleWidget() const
+    {return m_3DWidgetManager.hasVisibleWidget();}
+
+    inline GLC_3DWidgetManager get3DWidgetManager() const
+    {return m_3DWidgetManager;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -107,6 +112,7 @@ public:
 
 public slots:
     virtual void updateGL(bool synchrone= false);
+    virtual void clearSelectionBuffer();
 
 public:
     void setInputEventInterpreter(GLC_InputEventInterpreter* pEventInterpreter);
@@ -117,24 +123,16 @@ public:
 
     void setSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning);
 
-    virtual GLC_SelectionSet selectFrom3d(int x, int y, GLC_SelectionEvent::Modes modes);
-
-    virtual QPair<GLC_uint, GLC_Point3d> select3DWidget(int x, int y);
+    virtual QPair<GLC_SelectionSet, GLC_Point3d> selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes);
 
     virtual void unsetSelection();
 
-    void updateSelection(const GLC_SelectionSet &selectionSet);
-
-    void setSelected3DWidgetIdAndPoint(GLC_uint id, const GLC_Point3d& point);
-
-    virtual void setUnprojectedPoint(const GLC_Point3d& point);
+    void updateSelection(const GLC_SelectionSet &selectionSet, const GLC_Point3d& point);
 
     inline void blockUpdate(bool blocked)
     {m_BlockUpdate= blocked;}
 
     void setLight(GLC_Light* pLight);
-
-    GLC_Point3d unprojectPoint(int x, int y);
 
 //@}
 
@@ -191,7 +189,6 @@ protected:
     GLC_SelectionSet m_CurrentSelectionSet;
     GLC_Point3d m_UnprojectedPoint;
     GLC_3DWidgetManager m_3DWidgetManager;
-    GLC_uint m_Selected3DWidgetId;
     bool m_isRendering;
 
 private:

@@ -146,40 +146,37 @@ glc::WidgetEventFlag GLC_CuttingPlane::select(const GLC_Point3d& pos, GLC_uint)
 	return glc::BlockedEvent;
 }
 
-glc::WidgetEventFlag GLC_CuttingPlane::pressed(const GLC_Point3d& pos, Qt::MouseButton button, GLC_uint id)
+glc::WidgetEventFlag GLC_CuttingPlane::pressed(const GLC_Point3d& pos, GLC_uint id)
 {
 	glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
-	if (button == Qt::LeftButton)
-	{
-		const int selectedInstanceIndex= GLC_3DWidget::indexOfIntsanceId(id);
-		if (selectedInstanceIndex > 0)
-		{
-			m_SelectionIndex= selectedInstanceIndex;
-			if (m_CurrentManipulator == RotationManipulator)
-			{
-				delete m_pCurrentManipulator;
-				m_pCurrentManipulator= rotationNavigator(selectedInstanceIndex);
-			}
-			m_pCurrentManipulator->enterManipulateState(pos);
-		}
-		else
-		{
-			if (NULL != m_pCurrentManipulator)
-			{
-				if (m_CurrentManipulator == RotationManipulator)
-				{
-					delete m_pCurrentManipulator;
-					m_pCurrentManipulator= NULL;
-				}
-				else
-				{
-					m_pCurrentManipulator->enterManipulateState(pos);
-				}
+    const int selectedInstanceIndex= GLC_3DWidget::indexOfIntsanceId(id);
+    if (selectedInstanceIndex > 0)
+    {
+        m_SelectionIndex= selectedInstanceIndex;
+        if (m_CurrentManipulator == RotationManipulator)
+        {
+            delete m_pCurrentManipulator;
+            m_pCurrentManipulator= rotationNavigator(selectedInstanceIndex);
+        }
+        m_pCurrentManipulator->enterManipulateState(pos);
+    }
+    else
+    {
+        if (NULL != m_pCurrentManipulator)
+        {
+            if (m_CurrentManipulator == RotationManipulator)
+            {
+                delete m_pCurrentManipulator;
+                m_pCurrentManipulator= NULL;
+            }
+            else
+            {
+                m_pCurrentManipulator->enterManipulateState(pos);
+            }
 
-			}
-			m_CurrentNavigatorPosition= pos;
-			updateWidgetRep();
-		}
+        }
+        m_CurrentNavigatorPosition= pos;
+        updateWidgetRep();
 
 		returnFlag= glc::BlockedEvent;
 	}

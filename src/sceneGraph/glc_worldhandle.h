@@ -27,11 +27,11 @@
 #include "glc_structoccurrence.h"
 #include "glc_selectionset.h"
 
-#include "../glc_selectionevent.h"
-
 #include <QHash>
 
 #include "../glc_config.h"
+
+class GLC_SelectionEvent;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_WorldHandle

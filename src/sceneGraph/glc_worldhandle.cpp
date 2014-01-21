@@ -20,9 +20,11 @@
 
  *****************************************************************************/
 
+#include <QSet>
+
 #include "glc_worldhandle.h"
 #include "glc_structreference.h"
-#include <QSet>
+#include "../glc_selectionevent.h"
 
 GLC_WorldHandle::GLC_WorldHandle()
 : m_Collection()

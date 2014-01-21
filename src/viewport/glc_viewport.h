@@ -101,13 +101,13 @@ public:
     { return static_cast<double>(m_Width) / static_cast<double>(m_Height);}
 
 	//! Return the normalyse mouse position from screen coordinate
-	GLC_Point2d normalyseMousePosition(int x, int y);
+    GLC_Point2d normalyseMousePosition(int x, int y) const;
 
 	//! Map screen position to OpenGL screen position
-	GLC_Point2d mapToOpenGLScreen(int x, int y);
+    GLC_Point2d mapToOpenGLScreen(int x, int y) const;
 
 	//! Map normalyze screen position to OpenGL screen position
-	GLC_Point2d mapNormalyzeToOpenGLScreen(double x, double y);
+    GLC_Point2d mapNormalyzeToOpenGLScreen(double x, double y) const;
 
 	//! Map Screen position to OpenGL position (On image Plane) according to this viewport
 	GLC_Vector3d mapPosMouse( GLdouble Posx, GLdouble Posy) const;
@@ -197,7 +197,10 @@ public:
 	GLC_Frustum selectionFrustum(int, int) const;
 
 	//! Return the world 3d point from the given screen coordinate
-    GLC_Point3d unProject(int, int, GLenum buffer= GL_FRONT, bool onGeometry= false) const;
+    GLC_Point3d unproject(int, int, GLenum buffer= GL_FRONT, bool onGeometry= false) const;
+
+    //! Return the world 3d point of given Z from the given screen coordinate
+    GLC_Point3d fuzzyUnproject(int x, int y, double z) const;
 
 	//! Return the list af world 3d point form the givne list af screen coordinates
 	/*! The size of the given list must be a multiple of 2*/

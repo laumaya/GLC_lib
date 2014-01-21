@@ -31,6 +31,7 @@
 #include "../shading/glc_selectionmaterial.h"
 #include "../glc_state.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
+#include "../geometry/glc_point.h"
 
 #include <QtDebug>
 
@@ -91,7 +92,7 @@ QSize GLC_Viewport::size() const
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////
-GLC_Point2d  GLC_Viewport::normalyseMousePosition(int x, int y)
+GLC_Point2d  GLC_Viewport::normalyseMousePosition(int x, int y) const
 {
 	double nX= 0.0;
 	double nY= 0.0;
@@ -108,14 +109,14 @@ GLC_Point2d  GLC_Viewport::normalyseMousePosition(int x, int y)
 	return GLC_Point2d(nX, nY);
 }
 
-GLC_Point2d GLC_Viewport::mapToOpenGLScreen(int x, int y)
+GLC_Point2d GLC_Viewport::mapToOpenGLScreen(int x, int y) const
 {
 	GLC_Point2d nPos= normalyseMousePosition(x, y);
 
 	return mapNormalyzeToOpenGLScreen(nPos.x(), nPos.y());
 }
 
-GLC_Point2d GLC_Viewport::mapNormalyzeToOpenGLScreen(double x, double y)
+GLC_Point2d GLC_Viewport::mapNormalyzeToOpenGLScreen(double x, double y) const
 {
 	GLC_Point2d pos(x, y);
 	pos= pos * 2.0;
@@ -293,7 +294,7 @@ GLC_Frustum GLC_Viewport::selectionFrustum(int x, int y) const
 	return selectionFrustum;
 }
 
-GLC_Point3d GLC_Viewport::unProject(int x, int y, GLenum buffer, bool onGeometry) const
+GLC_Point3d GLC_Viewport::unproject(int x, int y, GLenum buffer, bool onGeometry) const
 {
     GLC_Point3d subject;
 
@@ -316,6 +317,15 @@ GLC_Point3d GLC_Viewport::unProject(int x, int y, GLenum buffer, bool onGeometry
 
         subject.setVect(pX, pY, pZ);
     }
+    return subject;
+}
+
+GLC_Point3d GLC_Viewport::fuzzyUnproject(int x, int y, double z) const
+{
+    const GLC_Point2d position= mapToOpenGLScreen(x, y);
+    const GLC_Point3d position3d(position.x(), position.y(), z);
+    const GLC_Point3d subject= compositionMatrix().inverted() * position3d;
+
     return subject;
 }
 

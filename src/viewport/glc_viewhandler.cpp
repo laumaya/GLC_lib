@@ -49,7 +49,6 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     , m_CurrentSelectionSet()
     , m_UnprojectedPoint()
     , m_3DWidgetManager(m_pViewport)
-    , m_Selected3DWidgetId(0)
     , m_isRendering()
 
     , m_BlockUpdate(false)
@@ -84,6 +83,11 @@ void GLC_ViewHandler::updateGL(bool synchrone)
             QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         }
     }
+}
+
+void GLC_ViewHandler::clearSelectionBuffer()
+{
+    emit invalidateSelectionBuffer();
 }
 
 void GLC_ViewHandler::setInputEventInterpreter(GLC_InputEventInterpreter *pEventInterpreter)
@@ -134,54 +138,32 @@ void GLC_ViewHandler::setSpacePartitioning(GLC_SpacePartitioning *pSpacePartitio
     m_World.collection()->setSpacePartitionningUsage(true);
 }
 
-GLC_SelectionSet GLC_ViewHandler::selectFrom3d(int x, int y, GLC_SelectionEvent::Modes modes)
+QPair<GLC_SelectionSet, GLC_Point3d> GLC_ViewHandler::selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes)
 {
     m_RenderingMode= GLC_ViewHandler::selectRenderMode;
     m_PointerPosition.setX(x);
     m_PointerPosition.setY(y);
     m_CurrentSelectionSet.clear();
+    m_UnprojectedPoint.setVect(0.0, 0.0, 0.0);
     m_SelectionModes= modes;
     updateGL(true); // Execute OpenGL synchronously to get selection Set
-    return m_CurrentSelectionSet;
-}
-
-QPair<GLC_uint, GLC_Point3d> GLC_ViewHandler::select3DWidget(int x, int y)
-{
-    m_RenderingMode= GLC_ViewHandler::widget3DRenderMode;
-    m_PointerPosition.setX(x);
-    m_PointerPosition.setY(y);
-    m_UnprojectedPoint.setVect(0.0, 0.0, 0.0);
-    m_Selected3DWidgetId= 0;
-    updateGL(true); // Execute OpenGL synchronously to get selection Set
-    QPair<GLC_uint, GLC_Point3d> subject(m_Selected3DWidgetId, m_UnprojectedPoint);
-
+    QPair<GLC_SelectionSet, GLC_Point3d> subject(m_CurrentSelectionSet, m_UnprojectedPoint);
     return subject;
 }
 
 void GLC_ViewHandler::unsetSelection()
 {
     m_RenderingMode= GLC_ViewHandler::normalRenderMode;
+    m_CurrentSelectionSet.clear();
+    m_UnprojectedPoint.setVect(0.0, 0.0, 0.0);
     m_World.unselectAll();
     updateGL();
 }
 
-void GLC_ViewHandler::updateSelection(const GLC_SelectionSet& selectionSet)
+void GLC_ViewHandler::updateSelection(const GLC_SelectionSet& selectionSet, const GLC_Point3d &point)
 {
     m_RenderingMode= GLC_ViewHandler::normalRenderMode;
     m_CurrentSelectionSet= selectionSet;
-}
-
-void GLC_ViewHandler::setSelected3DWidgetIdAndPoint(GLC_uint id, const GLC_Point3d &point)
-{
-    m_RenderingMode= GLC_ViewHandler::normalRenderMode;
-
-    m_Selected3DWidgetId= id;
-    m_UnprojectedPoint= point;
-}
-
-void GLC_ViewHandler::setUnprojectedPoint(const GLC_Point3d &point)
-{
-    m_RenderingMode= GLC_ViewHandler::normalRenderMode;
     m_UnprojectedPoint= point;
 }
 
@@ -190,16 +172,6 @@ void GLC_ViewHandler::setLight(GLC_Light *pLight)
     Q_ASSERT(NULL != pLight);
     delete m_pLight;
     m_pLight= pLight;
-}
-
-GLC_Point3d GLC_ViewHandler::unprojectPoint(int x, int y)
-{
-    m_UnprojectedPoint= GLC_Point3d();
-    m_RenderingMode= GLC_ViewHandler::unprojectRenderMode;
-    m_PointerPosition.setX(x);
-    m_PointerPosition.setY(y);
-    updateGL(true); // Execute OpenGL synchronously to get unprojected point
-    return m_UnprojectedPoint;
 }
 
 void GLC_ViewHandler::processMousePressEvent(QMouseEvent *pMouseEvent)
@@ -211,10 +183,7 @@ void GLC_ViewHandler::processMousePressEvent(QMouseEvent *pMouseEvent)
 void GLC_ViewHandler::processMouseMoveEvent(QMouseEvent *pMouseEvent)
 {
     Q_ASSERT(NULL != m_pInputEventInterpreter);
-    if (m_pInputEventInterpreter->processMouseMoveEvent(pMouseEvent))
-    {
-        emit invalidateSelectionBuffer();
-    }
+    m_pInputEventInterpreter->processMouseMoveEvent(pMouseEvent);
 }
 
 void GLC_ViewHandler::processMouseReleaseEvent(QMouseEvent *pMouseEvent)
@@ -231,7 +200,6 @@ void GLC_ViewHandler::processMouseDblClickEvent(QMouseEvent *pMouseEvent)
 
 void GLC_ViewHandler::processWheelEvent(QWheelEvent *pWWheelEvent)
 {
-    qDebug() << "GLC_ViewHandler::processWheelEvent";
     Q_ASSERT(NULL != m_pInputEventInterpreter);
     m_pInputEventInterpreter->processWheelEvent(pWWheelEvent);
 }

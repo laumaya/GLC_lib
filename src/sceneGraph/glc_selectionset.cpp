@@ -151,6 +151,24 @@ long GLC_SelectionSet::primitiveCount() const
     return subject;
 }
 
+QList<GLC_uint> GLC_SelectionSet::idList() const
+{
+    QList<GLC_uint> subject= m_OccurrenceSelection.keys();
+
+    return subject;
+}
+
+GLC_uint GLC_SelectionSet::firstId() const
+{
+    GLC_uint subject= 0;
+    QList<GLC_uint> idList= m_OccurrenceSelection.keys();
+    if (!idList.isEmpty())
+    {
+        subject= idList.first();
+    }
+    return subject;
+}
+
 QList<GLC_StructOccurrence*> GLC_SelectionSet::occurrencesList() const
 {
     QList<GLC_StructOccurrence*> subject;
@@ -160,8 +178,11 @@ QList<GLC_StructOccurrence*> GLC_SelectionSet::occurrencesList() const
         while (iOcc != m_OccurrenceSelection.constEnd())
         {
             const GLC_uint id= iOcc.key();
-            Q_ASSERT(m_pWorldHandle->containsOccurrence(id));
-            subject.append(m_pWorldHandle->getOccurrence(id));
+            if(m_pWorldHandle->containsOccurrence(id))
+            {
+                subject.append(m_pWorldHandle->getOccurrence(id));
+            }
+
             ++iOcc;
         }
     }
@@ -195,10 +216,10 @@ bool GLC_SelectionSet::operator==(const GLC_SelectionSet &other) const
     return subject;
 }
 
-void GLC_SelectionSet::setAttachedWorld(GLC_World &world)
+void GLC_SelectionSet::setAttachedWorld(GLC_World world)
 {
-    clear();
     m_pWorldHandle= world.worldHandle();
+    clean();
 }
 
 GLC_SelectionSet &GLC_SelectionSet::operator=(const GLC_SelectionSet &other)
@@ -207,6 +228,7 @@ GLC_SelectionSet &GLC_SelectionSet::operator=(const GLC_SelectionSet &other)
     {
         m_pWorldHandle= other.m_pWorldHandle;
         m_OccurrenceSelection= other.m_OccurrenceSelection;
+        clean();
     }
 
     return *this;
@@ -224,14 +246,10 @@ bool GLC_SelectionSet::insert(GLC_StructOccurrence* pOccurrence)
 bool GLC_SelectionSet::insert(GLC_uint occurrenceId)
 {
     bool subject= false;
-    if(m_pWorldHandle && m_pWorldHandle->containsOccurrence(occurrenceId))
+    if (!contains(occurrenceId))
     {
-        if (!contains(occurrenceId))
-        {
-            Q_ASSERT(!m_OccurrenceSelection.contains(occurrenceId));
-            m_OccurrenceSelection.insert(occurrenceId, BodySelection());
-            subject= true;
-        }
+        m_OccurrenceSelection.insert(occurrenceId, BodySelection());
+        subject= true;
     }
 
     return subject;
@@ -307,13 +325,10 @@ bool GLC_SelectionSet::remove(GLC_StructOccurrence* pOccurrence)
 bool GLC_SelectionSet::remove(GLC_uint occurrenceId)
 {
     bool subject= false;
-    if(m_pWorldHandle && m_pWorldHandle->containsOccurrence(occurrenceId))
+    if(contains(occurrenceId))
     {
-        if (contains(occurrenceId))
-        {
-            m_OccurrenceSelection.remove(occurrenceId);
-            subject= true;
-        }
+        m_OccurrenceSelection.remove(occurrenceId);
+        subject= true;
     }
 
     return subject;
@@ -347,6 +362,26 @@ bool GLC_SelectionSet::remove(GLC_uint occurrenceId, GLC_uint bodyId, GLC_uint p
 void GLC_SelectionSet::clear()
 {
     m_OccurrenceSelection.clear();
+}
+
+void GLC_SelectionSet::clean()
+{
+    if (NULL != m_pWorldHandle)
+    {
+        OccurrenceSelection::iterator iOcc= m_OccurrenceSelection.begin();
+        while (iOcc != m_OccurrenceSelection.end())
+        {
+            const GLC_uint id= iOcc.key();
+            if (!m_pWorldHandle->containsOccurrence(id))
+            {
+                iOcc= m_OccurrenceSelection.erase(iOcc);
+            }
+            else
+            {
+                ++iOcc;
+            }
+        }
+    }
 }
 
 GLC_SelectionSet &GLC_SelectionSet::unite(const GLC_SelectionSet &other)

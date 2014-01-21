@@ -58,6 +58,7 @@ bool GLC_InputEventInterpreter::move(const GLC_UserInput &userInputs)
     bool subject= m_pViewHandler->moverControllerHandle()->move(userInputs);
     if (subject)
     {
+        m_pViewHandler->clearSelectionBuffer();
         m_pViewHandler->updateGL();
     }
 
@@ -75,8 +76,8 @@ void GLC_InputEventInterpreter::setNoMover()
 
 void GLC_InputEventInterpreter::select(int x, int y, GLC_SelectionEvent::Modes modes)
 {
-    GLC_SelectionSet selectionSet= m_pViewHandler->selectFrom3d(x, y, modes);
-    GLC_SelectionEvent selectionEvent(modes, selectionSet);
+    QPair<GLC_SelectionSet, GLC_Point3d> selection= m_pViewHandler->selectAndUnproject(x, y, modes);
+    GLC_SelectionEvent selectionEvent(modes, selection.first);
     m_pViewHandler->world().updateSelection(selectionEvent);
     m_pViewHandler->updateGL();
 }

@@ -43,7 +43,7 @@ typedef QHash<GLC_uint, BodySelection> OccurrenceSelection;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_SelectionSet
-/*! \brief GLC_SelectionSet : GLC_StructOccurrence and primitive selection set */
+/*! \brief GLC_SelectionSet : Occurrence id, Body id and primitive id selection set */
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_SelectionSet
 {
@@ -98,6 +98,13 @@ public:
     inline const OccurrenceSelection& occurrenceSelection() const
     {return m_OccurrenceSelection;}
 
+    //! Return the list of selected View instance id
+    QList<GLC_uint> idList() const;
+
+    //! Return the first id of this selection set
+    /*! If selection set is empty, return 0*/
+    GLC_uint firstId() const;
+
     //! Return the list of selected occurrences
     QList<GLC_StructOccurrence*> occurrencesList() const;
 
@@ -129,7 +136,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
     //! Set the attached world to this selection set
-    void setAttachedWorld(GLC_World& world);
+    void setAttachedWorld(GLC_World world);
 
     //! Assigns the other selection set and return a reference to this selection set
     GLC_SelectionSet& operator=(const GLC_SelectionSet& other);
@@ -168,6 +175,9 @@ public:
 
 	//! Clear this selection set
 	void clear();
+
+    //! if current wordHandle is not NULL, remove id that are not present in current worlHandle
+    void clean();
 
     //! Each item in the other selection set that isn't already in this selectionset is inserted into this set.
     /*! A reference to this set is returned.*/
