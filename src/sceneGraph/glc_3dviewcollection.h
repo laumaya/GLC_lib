@@ -97,6 +97,9 @@ public:
 	//! Return all visible GLC_3DViewInstance from the collection
 	QList<GLC_3DViewInstance*> visibleInstancesHandle();
 
+    //! Return true if this collection contains visible instance
+    bool hasVisibleInstance() const;
+
 	//! Return all viewable GLC_3DViewInstance from the collection
 	QList<GLC_3DViewInstance*> viewableInstancesHandle();
 

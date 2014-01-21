@@ -535,6 +535,18 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::visibleInstancesHandle()
 
 }
 
+bool GLC_3DViewCollection::hasVisibleInstance() const
+{
+    bool subject= false;
+    ViewInstancesHash::const_iterator iEntry= m_3DViewInstanceHash.constBegin();
+    while (!subject && (iEntry != m_3DViewInstanceHash.constEnd()))
+    {
+        subject= iEntry.value().isVisible();
+        iEntry++;
+    }
+    return subject;
+}
+
 QList<GLC_3DViewInstance*> GLC_3DViewCollection::viewableInstancesHandle()
 {
 	QList<GLC_3DViewInstance*> instancesList;
