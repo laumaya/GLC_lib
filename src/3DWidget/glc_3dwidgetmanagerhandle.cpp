@@ -47,7 +47,7 @@ GLC_3DWidgetManagerHandle::~GLC_3DWidgetManagerHandle()
 	{
 		delete iWidget.value();
 		++iWidget;
-	}
+    }
 }
 
 void GLC_3DWidgetManagerHandle::add3DWidget(GLC_3DWidget* p3DWidget)

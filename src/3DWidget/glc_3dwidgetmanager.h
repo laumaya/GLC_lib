@@ -62,6 +62,10 @@ public:
 	inline bool contains3DWidget(GLC_uint id) const
 	{return m_pWidgetManagerHandle->contains3DWidget(id);}
 
+    //! Return true if this 3DWidget manager has visible widget
+    inline bool hasVisibleWidget() const
+    {return m_pWidgetManagerHandle->hasVisibleWidget();}
+
 	//! Return the 3DWidget of the given widget id
 	inline GLC_3DWidget* widget(GLC_uint id) const
 	{return m_pWidgetManagerHandle->widget(id);}
@@ -69,6 +73,10 @@ public:
 	//! Return true if this 3DWidget manager is empty
 	inline bool isEmpty() const
 	{return m_pWidgetManagerHandle->isEmpty();}
+
+    //! Return true if this 3DWidget manager has active widget
+    inline bool hasAnActiveWidget() const
+    {return m_pWidgetManagerHandle->hasAnActiveWidget();}
 
 //@}
 

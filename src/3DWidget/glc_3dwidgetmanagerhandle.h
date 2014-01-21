@@ -63,6 +63,10 @@ public:
 	inline bool hasAnActiveWidget() const
 	{return 0 != m_Active3DWidgetId;}
 
+    //! Return true if this 3DWidget manager has visible widget
+    inline bool hasVisibleWidget() const
+    {return m_Collection.hasVisibleInstance();}
+
 	//! Return an handle to the camera of the viewport of this manager
 	inline const GLC_Camera* cameraHandle() const
 	{return m_pViewport->cameraHandle();}
