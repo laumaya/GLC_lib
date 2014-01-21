@@ -26,6 +26,8 @@
 #include "glc_structinstance.h"
 #include "glc_structreference.h"
 
+#include "../glc_selectionevent.h"
+
 GLC_World::GLC_World()
 : m_pWorldHandle(new GLC_WorldHandle())
 {
@@ -110,7 +112,14 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 	else
 	{
         pRoot->addChild(anotherWorld.rootOccurrence()->clone(m_pWorldHandle, false));
-	}
+    }
+}
+
+void GLC_World::updateSelection(const GLC_SelectionEvent &selectionEvent)
+{
+    GLC_SelectionEvent selectionCopy(selectionEvent);
+    selectionCopy.setAttachedWorld(*this);
+    m_pWorldHandle->updateSelection(selectionCopy);
 }
 
 GLC_World& GLC_World::operator=(const GLC_World& world)

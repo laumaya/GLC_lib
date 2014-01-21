@@ -33,6 +33,8 @@
 
 #include "../glc_config.h"
 
+class GLC_SelectionEvent;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_World
 /*! \brief GLC_World : The Root of GLC_Lib Scene Graph*/
@@ -229,8 +231,7 @@ public:
 	{m_pWorldHandle->select(occurrenceId);}
 
     //! Update the current selection from the given selection event
-    inline void updateSelection(const GLC_SelectionEvent& selectionEvent)
-    {m_pWorldHandle->updateSelection(selectionEvent);}
+    void updateSelection(const GLC_SelectionEvent& selectionEvent);
 
 	//! Unselect the given occurrence id
 	/*! The given occurrence id must belong to the world handle of this world*/
