@@ -82,8 +82,7 @@ protected:
     virtual void setOpenGLState();
     void render(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData* pData);
 
-    void renderForSelectionOrUnproject();
-    void renderFor3dwidgetSelectionAndUnproject();
+    void renderForSelection();
 
     GLC_uint selectBody(GLC_uint instanceId, int x, int y);
     QPair<GLC_uint, GLC_uint> selectPrimitive(GLC_uint instanceId, int x, int y);

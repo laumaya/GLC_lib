@@ -111,13 +111,9 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
             {
                 render(pTextureNode, pData);
             }
-            else if (m_pViewhandler->renderingMode() == GLC_ViewHandler::widget3DRenderMode)
-            {
-                renderFor3dwidgetSelectionAndUnproject();
-            }
             else
             {
-                renderForSelectionOrUnproject();
+                renderForSelection();
             }
         }
         else
@@ -215,7 +211,7 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
     }
 }
 
-void GLC_QuickItem::renderForSelectionOrUnproject()
+void GLC_QuickItem::renderForSelection()
 {
     setupAuxFbo(this->width(), this->height());
 
@@ -241,78 +237,42 @@ void GLC_QuickItem::renderForSelectionOrUnproject()
         const int y= m_pViewhandler->pointerPosition().y();
 
         GLC_World world= m_pViewhandler->world();
-        GLC_SelectionSet selectionSet(world);
-
-        if (m_pViewhandler->renderingMode() == GLC_ViewHandler::selectRenderMode)
-        {
-            const GLC_uint instanceId= m_pViewhandler->viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
-            GLC_3DViewCollection* pCollection= m_pViewhandler->world().collection();
-            if (pCollection->contains(instanceId))
-            {
-                if (m_pViewhandler->selectionMode() && GLC_SelectionEvent::ModeInstance)
-                {
-                    selectionSet.insert(instanceId);
-                }
-                else if (m_pViewhandler->selectionMode() && GLC_SelectionEvent::ModeBody)
-                {
-                    GLC_uint bodyId= selectBody(instanceId, x, y);
-                    if (bodyId)
-                    {
-                        selectionSet.insert(instanceId, bodyId);
-                    }
-                }
-                else if (m_pViewhandler->selectionMode() && GLC_SelectionEvent::ModePrimitive)
-                {
-                    QPair<GLC_uint, GLC_uint> primitive= selectPrimitive(instanceId, x, y);
-                    if (primitive.first && primitive.second)
-                    {
-                        selectionSet.insert(instanceId, primitive.first, primitive.second);
-                    }
-                }
-            }
-
-            m_pViewhandler->updateSelection(selectionSet);
-        }
-        else
-        {
-            m_UnprojectedPoint= m_pViewhandler->viewportHandle()->unProject(x, y, GL_COLOR_ATTACHMENT0, true);
-            m_pViewhandler->setUnprojectedPoint(m_UnprojectedPoint);
-        }
-
-        m_pAuxFbo->release();
-        popOpenGLMatrix();
-    }
-}
-
-void GLC_QuickItem::renderFor3dwidgetSelectionAndUnproject()
-{
-    setupAuxFbo(this->width(), this->height());
-
-    if (m_pAuxFbo && m_pAuxFbo->isValid())
-    {
-        pushOpenGLMatrix();
-        setOpenGLState();
-
-        m_pAuxFbo->bind();
-
-        m_SelectionBufferIsDirty= true;
-        m_pViewhandler->viewportHandle()->setWinGLSize(width(), height());
-        GLC_State::setSelectionMode(true);
-        do3DWidgetRender();
-        GLC_State::setSelectionMode(false);
-
-        // Get selection coordinate
-        const int x= m_pViewhandler->pointerPosition().x();
-        const int y= m_pViewhandler->pointerPosition().y();
+        GLC_SelectionSet selectionSet;
 
         const GLC_uint instanceId= m_pViewhandler->viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
-        m_UnprojectedPoint= m_pViewhandler->viewportHandle()->unProject(x, y, GL_COLOR_ATTACHMENT0);
+        m_UnprojectedPoint= m_pViewhandler->viewportHandle()->unproject(x, y, GL_COLOR_ATTACHMENT0);
 
-        m_pAuxFbo->release();
-        popOpenGLMatrix();
+        GLC_3DViewCollection* pCollection= world.collection();
+        const bool contains= pCollection->contains(instanceId);
 
-        m_pViewhandler->setSelected3DWidgetIdAndPoint(instanceId, m_UnprojectedPoint);
+        if (instanceId && (m_pViewhandler->selectionModes() & GLC_SelectionEvent::ModeInstance))
+        {
+            selectionSet.insert(instanceId);
+        }
+        else if (contains && (m_pViewhandler->selectionModes() & GLC_SelectionEvent::ModeBody))
+        {
+            selectionSet.setAttachedWorld(world);
+            GLC_uint bodyId= selectBody(instanceId, x, y);
+            if (bodyId)
+            {
+                selectionSet.insert(instanceId, bodyId);
+            }
+        }
+        else if (contains && (m_pViewhandler->selectionModes() & GLC_SelectionEvent::ModePrimitive))
+        {
+            selectionSet.setAttachedWorld(world);
+            QPair<GLC_uint, GLC_uint> primitive= selectPrimitive(instanceId, x, y);
+            if (primitive.first && primitive.second)
+            {
+                selectionSet.insert(instanceId, primitive.first, primitive.second);
+            }
+        }
+
+        m_pViewhandler->updateSelection(selectionSet, m_UnprojectedPoint);
     }
+
+    m_pAuxFbo->release();
+    popOpenGLMatrix();
 }
 
 GLC_uint GLC_QuickItem::selectBody(GLC_uint instanceId, int x, int y)
