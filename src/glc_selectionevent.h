@@ -28,6 +28,8 @@
 #include <QFlags>
 
 #include "sceneGraph/glc_selectionset.h"
+#include "sceneGraph/glc_world.h"
+
 #include "glc_global.h"
 #include "glc_config.h"
 
@@ -68,6 +70,9 @@ public:
 
     inline void setSelectionSet(const GLC_SelectionSet& selectionSet)
     {m_SelectionSet= selectionSet;}
+
+    inline void setAttachedWorld(const GLC_World& world)
+    {m_SelectionSet.setAttachedWorld(world);}
 
 private:
     Modes m_Modes;
