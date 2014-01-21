@@ -87,6 +87,8 @@ public:
 	inline bool useOrtho() const
 	{return m_pWidgetManagerHandle->useOrtho();}
 
+    //! Return true if the 3DViewInstance of this widget is visible
+    bool isVisible() const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -101,9 +103,10 @@ public:
 	void setWidgetManager(GLC_3DWidgetManagerHandle* pWidgetManagerHandle);
 
 	//! Update widget representation
-	virtual void updateWidgetRep(){};
+    virtual void updateWidgetRep(){}
 
 	//! Set the visibility of 3DView Instance of this widget
+    /*! This method must be called from GLC_3DWidgetManagerHandle*/
 	void setVisible(bool visible);
 //@}
 

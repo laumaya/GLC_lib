@@ -57,7 +57,23 @@ GLC_3DWidget::~GLC_3DWidget()
 
 bool GLC_3DWidget::operator==(const GLC_3DWidget& widget) const
 {
-	return this == &widget;
+    return this == &widget;
+}
+
+bool GLC_3DWidget::isVisible() const
+{
+    bool isVisible= false;
+    if (NULL != m_pWidgetManagerHandle)
+    {
+        const int instanceCount= m_InstanceIdList.size();
+        for (int i= 0; i < instanceCount; ++i)
+        {
+            isVisible= m_pWidgetManagerHandle->instanceHandle(m_InstanceIdList.at(i))->isVisible();
+            if (isVisible) break;
+        }
+    }
+
+    return isVisible;
 }
 
 GLC_3DWidget& GLC_3DWidget::operator=(const GLC_3DWidget& widget)
