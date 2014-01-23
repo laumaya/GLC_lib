@@ -43,7 +43,6 @@
 #include "3rdparty/lib3ds/material.h"
 
 #include <QFileInfo>
-#include <QGLContext>
 
 GLC_3dsToWorld::GLC_3dsToWorld()
 : m_pWorld(NULL)

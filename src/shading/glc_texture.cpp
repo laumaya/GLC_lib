@@ -47,9 +47,8 @@ QHash<GLuint, int> GLC_Texture::m_TextureIdUsage;
 
 //! Default constructor
 GLC_Texture::GLC_Texture()
-: m_pQGLContext(NULL)
+: m_pQOpenGLTexture(NULL)
 , m_FileName()
-, m_GlTextureID(0)
 , m_textureImage()
 , m_TextureSize()
 , m_HasAlphaChannel(false)
@@ -59,9 +58,8 @@ GLC_Texture::GLC_Texture()
 
 // Constructor with fileName
 GLC_Texture::GLC_Texture(const QString &Filename)
-: m_pQGLContext(NULL)
+: m_pQOpenGLTexture(NULL)
 , m_FileName(Filename)
-, m_GlTextureID(0)
 , m_textureImage(loadFromFile(m_FileName))
 , m_TextureSize()
 , m_HasAlphaChannel(m_textureImage.hasAlphaChannel())
@@ -77,9 +75,8 @@ GLC_Texture::GLC_Texture(const QString &Filename)
 }
 // Constructor with QFile
 GLC_Texture::GLC_Texture(const QFile &file)
-: m_pQGLContext(NULL)
+: m_pQOpenGLTexture(NULL)
 , m_FileName(file.fileName())
-, m_GlTextureID(0)
 , m_textureImage()
 , m_TextureSize()
 , m_HasAlphaChannel(m_textureImage.hasAlphaChannel())
@@ -97,9 +94,8 @@ GLC_Texture::GLC_Texture(const QFile &file)
 
 // Constructor with QImage
 GLC_Texture::GLC_Texture(const QImage& image, const QString& fileName)
-: m_pQGLContext(NULL)
+: m_pQOpenGLTexture(NULL)
 , m_FileName(fileName)
-, m_GlTextureID(0)
 , m_textureImage(image)
 , m_TextureSize()
 , m_HasAlphaChannel(m_textureImage.hasAlphaChannel())
@@ -108,9 +104,8 @@ GLC_Texture::GLC_Texture(const QImage& image, const QString& fileName)
 }
 
 GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
-: m_pQGLContext(TextureToCopy.m_pQGLContext)
+: m_pQOpenGLTexture(NULL)
 , m_FileName(TextureToCopy.m_FileName)
-, m_GlTextureID(TextureToCopy.m_GlTextureID)
 , m_textureImage(TextureToCopy.m_textureImage)
 , m_TextureSize(TextureToCopy.m_TextureSize)
 , m_HasAlphaChannel(m_textureImage.hasAlphaChannel())
@@ -123,8 +118,6 @@ GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 		GLC_Exception e(ErrorMess);
 		throw(e);
 	}
-	addThisOpenGLTextureId();
-
 }
 
 // Overload "=" operator
@@ -132,11 +125,9 @@ GLC_Texture& GLC_Texture::operator=(const GLC_Texture& texture)
 {
 	if (!(*this == texture))
 	{
-		removeThisOpenGLTextureId();
-		m_pQGLContext= texture.m_pQGLContext;
+        delete m_pQOpenGLTexture;
+        m_pQOpenGLTexture= NULL;
 		m_FileName= texture.m_FileName;
-		m_GlTextureID= texture.m_GlTextureID;
-		addThisOpenGLTextureId();
 		m_textureImage= texture.m_textureImage;
 		m_TextureSize= texture.m_TextureSize;
 		m_HasAlphaChannel= m_textureImage.hasAlphaChannel();
@@ -147,8 +138,18 @@ GLC_Texture& GLC_Texture::operator=(const GLC_Texture& texture)
 
 GLC_Texture::~GLC_Texture()
 {
-	//qDebug() << "GLC_Texture::~GLC_Texture Texture ID : " << m_GlTextureID;
-	removeThisOpenGLTextureId();
+    delete m_pQOpenGLTexture;
+}
+
+GLuint GLC_Texture::textureId() const
+{
+    GLuint subject= 0;
+    if (m_pQOpenGLTexture)
+    {
+        subject= m_pQOpenGLTexture->textureId();
+    }
+
+    return subject;
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -191,20 +192,10 @@ void GLC_Texture::setMaxTextureSize(const QSize& size)
 // Private OpenGL functions
 //////////////////////////////////////////////////////////////////////
 // Load the texture
-void GLC_Texture::glLoadTexture(QGLContext* pContext)
+void GLC_Texture::glLoadTexture()
 {
-	if (m_GlTextureID == 0)
+    if (NULL == m_pQOpenGLTexture)
 	{
-		if (NULL == pContext)
-		{
-			m_pQGLContext= const_cast<QGLContext*>(QGLContext::currentContext());
-		}
-		else
-		{
-			m_pQGLContext= pContext;
-		}
-        Q_ASSERT(NULL != m_pQGLContext);
-
 		// Test image size
 		if ((m_textureImage.height() > m_MaxTextureSize.height())
 				|| (m_textureImage.width() > m_MaxTextureSize.width()))
@@ -225,21 +216,18 @@ void GLC_Texture::glLoadTexture(QGLContext* pContext)
 		{
 			m_TextureSize= m_textureImage.size();
 		}
-		m_GlTextureID= m_pQGLContext->bindTexture(m_textureImage);
-		addThisOpenGLTextureId();
-
-		//qDebug() << "GLC_Texture::glcBindTexture Texture ID = " << m_GlTextureID;
+        m_pQOpenGLTexture= new QOpenGLTexture(m_textureImage.mirrored());
 	}
 }
 
 // Bind texture in 2D mode
 void GLC_Texture::glcBindTexture(void)
 {
-	if (m_GlTextureID == 0)
+    if (NULL == m_pQOpenGLTexture)
 	{
 		glLoadTexture();
 	}
-	glBindTexture(GL_TEXTURE_2D, m_GlTextureID);
+    m_pQOpenGLTexture->bind();
 }
 
 QImage GLC_Texture::loadFromFile(const QString& fileName)
@@ -292,36 +280,6 @@ QImage GLC_Texture::loadFromFile(const QString& fileName)
 	}
 
 	return resultImage;
-}
-
-void GLC_Texture::removeThisOpenGLTextureId()
-{
-	if ( 0 != m_GlTextureID)
-	{
-		Q_ASSERT(m_TextureIdUsage.contains(m_GlTextureID));
-		--m_TextureIdUsage[m_GlTextureID];
-		if (m_TextureIdUsage.value(m_GlTextureID) == 0)
-		{
-			m_pQGLContext->deleteTexture(m_GlTextureID);
-			m_TextureIdUsage.remove(m_GlTextureID);
-			m_GlTextureID= 0;
-		}
-	}
-}
-
-void GLC_Texture::addThisOpenGLTextureId()
-{
-	if (0 != m_GlTextureID)
-	{
-		if (m_TextureIdUsage.contains(m_GlTextureID))
-		{
-			++m_TextureIdUsage[m_GlTextureID];
-		}
-		else
-		{
-			m_TextureIdUsage.insert(m_GlTextureID, 1);
-		}
-	}
 }
 
 // Non-member stream operator

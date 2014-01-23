@@ -25,7 +25,7 @@
 #define GLC_WIREDATA_H_
 
 #include <QColor>
-#include <QGLBuffer>
+#include <QOpenGLBuffer>
 
 #include "../glc_global.h"
 #include "../glc_boundingbox.h"
@@ -170,7 +170,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! VBO ID
-	QGLBuffer m_VerticeBuffer;
+	QOpenGLBuffer m_VerticeBuffer;
 
 	//! The next primitive local id
 	GLC_uint m_NextPrimitiveLocalId;
@@ -179,13 +179,13 @@ private:
 	GLfloatVector m_Positions;
 
 	//! Color Buffer
-	QGLBuffer m_ColorBuffer;
+	QOpenGLBuffer m_ColorBuffer;
 
 	//! Color index
 	GLfloatVector m_Colors;
 
 	//! The Index Buffer
-	QGLBuffer m_IndexBuffer;
+	QOpenGLBuffer m_IndexBuffer;
 
 	//! The Index Vector
 	QVector<GLuint> m_IndexVector;

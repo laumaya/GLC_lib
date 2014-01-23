@@ -32,7 +32,6 @@
 
 #include <QTextStream>
 #include <QFileInfo>
-#include <QGLContext>
 
 GLC_OffToWorld::GLC_OffToWorld()
 : m_pWorld(NULL)

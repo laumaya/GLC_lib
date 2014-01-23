@@ -61,5 +61,9 @@ int main(int argc, char *argv[])
     pWidget->show();
     //view.show();
 
-    return app.exec();
+    const int returnCode= app.exec();
+    delete pViewHandler1;
+    delete pViewHandler2;
+
+    return returnCode;
 }

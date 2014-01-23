@@ -34,7 +34,6 @@
 
 #include "../glc_config.h"
 
-class QGLContext;
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ObjMtlLoader
 /*! \brief GLC_ObjMtlLoader : Load the mtl file associated to a OBJ File */

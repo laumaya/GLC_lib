@@ -26,7 +26,6 @@
 #include "glc_viewport.h"
 #include "../glc_factory.h"
 #include "../glc_context.h"
-#include <QGLContext>
 
 using namespace glc;
 //! The angle of arcs

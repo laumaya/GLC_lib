@@ -35,7 +35,6 @@
 #include "../sceneGraph/glc_structoccurrence.h"
 #include <QTextStream>
 #include <QFileInfo>
-#include <QGLContext>
 
 //////////////////////////////////////////////////////////////////////
 // Constructor

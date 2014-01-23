@@ -1,7 +1,7 @@
 /****************************************************************************
 
  This file is part of the GLC-lib library.
- Copyright (C) 2011 JŽr™me Forrissier
+ Copyright (C) 2011 Jerome Forrissier
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
  http://glc-lib.sourceforge.net
 
@@ -36,7 +36,6 @@
 #include "../glc_config.h"
 
 class GLC_World;
-class QGLContext;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_FileLoader

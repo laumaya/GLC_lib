@@ -26,7 +26,7 @@
 #define GLC_LOD_H_
 
 #include <QVector>
-#include <QGLBuffer>
+#include <QOpenGLBuffer>
 
 #include "../glc_ext.h"
 
@@ -161,7 +161,7 @@ private:
 	double m_Accuracy;
 
 	//! The Index Buffer
-	QGLBuffer m_IndexBuffer;
+	QOpenGLBuffer m_IndexBuffer;
 
 	//! The Index Vector
 	QVector<GLuint> m_IndexVector;

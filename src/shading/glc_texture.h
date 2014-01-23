@@ -27,6 +27,7 @@
 
 #include <QFile>
 #include <QtOpenGL>
+#include <QOpenGLTexture>
 
 #include "../glc_config.h"
 
@@ -73,21 +74,16 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return the QGLContext of the texture
-	inline QGLContext* context() const
-	{return m_pQGLContext;}
-
 	//! Return the texture File Name
 	inline QString fileName() const
 	{return m_FileName;}
 
 	//! Return OpenGL Texture Id
-	inline GLuint GL_ID() const
-	{return m_GlTextureID;}
+    GLuint textureId() const;
 
 	//! Return true if the texture is loaded
 	inline bool isLoaded() const
-	{return (m_GlTextureID != 0);}
+    {return (m_pQOpenGLTexture != NULL);}
 
 	//! Return the texture size
 	inline QSize size() const
@@ -126,7 +122,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Load the texture
-	void glLoadTexture(QGLContext* pContext= NULL);
+    void glLoadTexture();
 	//! Bind texture in 2D mode
 	void glcBindTexture(void);
 
@@ -139,12 +135,6 @@ private:
 	//! Load the image of this texture from the given fileName and return resutling image
 	QImage loadFromFile(const QString& fileName);
 
-	//! Remove this Opengl texture id
-	void removeThisOpenGLTextureId();
-
-	//! Add this Opengl texture id
-	void addThisOpenGLTextureId();
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -153,13 +143,10 @@ private:
 
 private:
 	//! OpenGL Context
-	QGLContext *m_pQGLContext;
+    QOpenGLTexture *m_pQOpenGLTexture;
 
 	//! Texture Name
 	QString m_FileName;
-
-	//! OpenGL Texture ID
-	GLuint	m_GlTextureID;
 
 	//! QImage off the texture
 	QImage m_textureImage;

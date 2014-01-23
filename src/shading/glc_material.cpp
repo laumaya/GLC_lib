@@ -204,7 +204,7 @@ GLuint GLC_Material::textureID() const
 {
 	if (m_pTexture != NULL)
 	{
-		return m_pTexture->GL_ID();
+        return m_pTexture->textureId();
 	}
 	else
 	{
@@ -450,11 +450,11 @@ void GLC_Material::setOpacity(const qreal alpha)
 //////////////////////////////////////////////////////////////////////
 
 // Load the texture
-void GLC_Material::glLoadTexture(QGLContext* pContext)
+void GLC_Material::glLoadTexture()
 {
 	if (m_pTexture != NULL)
 	{
-		m_pTexture->glLoadTexture(pContext);
+        m_pTexture->glLoadTexture();
 	}
 	else
 	{

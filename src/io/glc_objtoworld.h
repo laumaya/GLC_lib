@@ -52,7 +52,6 @@ enum FaceType
 
 class GLC_World;
 class GLC_ObjMtlLoader;
-class QGLContext;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ObjToWorld

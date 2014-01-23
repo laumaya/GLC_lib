@@ -954,7 +954,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
     Q_ASSERT(NULL != pContext);
 	Q_ASSERT(m_GeometryIsValid || !m_MeshData.positionSizeIsSet());
 
-	const bool vboIsUsed= GLC_Geometry::vboIsUsed()  && GLC_State::vboSupported();
+    const bool vboIsUsed= GLC_Geometry::vboIsUsed();
 
 	if (m_IsSelected && (renderProperties.renderingMode() == glc::PrimitiveSelected) && !GLC_State::isInSelectionMode()
 	&& !renderProperties.setOfSelectedPrimitiveIdIsEmpty())
@@ -1069,8 +1069,8 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 
 	if (vboIsUsed)
 	{
-		QGLBuffer::release(QGLBuffer::IndexBuffer);
-		QGLBuffer::release(QGLBuffer::VertexBuffer);
+		QOpenGLBuffer::release(QOpenGLBuffer::IndexBuffer);
+		QOpenGLBuffer::release(QOpenGLBuffer::VertexBuffer);
 	}
 
 	// Draw mesh's wire if necessary

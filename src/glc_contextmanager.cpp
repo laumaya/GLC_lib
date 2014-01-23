@@ -24,7 +24,6 @@
 #include <QtDebug>
 #include <QOpenGLContext>
 #include <QOpenGLContextGroup>
-#include <QGLContext>
 
 #include "glc_contextmanager.h"
 #include "glc_state.h"

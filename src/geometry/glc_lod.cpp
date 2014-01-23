@@ -31,7 +31,7 @@ quint32 GLC_Lod::m_ChunkId= 0xA708;
 
 GLC_Lod::GLC_Lod()
 : m_Accuracy(0.0)
-, m_IndexBuffer(QGLBuffer::IndexBuffer)
+, m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
 , m_IndexVector()
 , m_IndexSize(0)
 , m_TrianglesCount(0)
@@ -42,7 +42,7 @@ GLC_Lod::GLC_Lod()
 
 GLC_Lod::GLC_Lod(double accuracy)
 : m_Accuracy(accuracy)
-, m_IndexBuffer(QGLBuffer::IndexBuffer)
+, m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
 , m_IndexVector()
 , m_IndexSize(0)
 , m_TrianglesCount(0)
@@ -53,7 +53,7 @@ GLC_Lod::GLC_Lod(double accuracy)
 
 GLC_Lod::GLC_Lod(const GLC_Lod& lod)
 : m_Accuracy(lod.m_Accuracy)
-, m_IndexBuffer(QGLBuffer::IndexBuffer)
+, m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
 , m_IndexVector(lod.indexVector())
 , m_IndexSize(lod.m_IndexSize)
 , m_TrianglesCount(lod.m_TrianglesCount)
@@ -101,11 +101,11 @@ QVector<GLuint> GLC_Lod::indexVector() const
 		const GLsizeiptr dataSize= sizeOfIbo * sizeof(GLuint);
 		QVector<GLuint> indexVector(sizeOfIbo);
 
-		const_cast<QGLBuffer&>(m_IndexBuffer).bind();
-		GLvoid* pIbo = const_cast<QGLBuffer&>(m_IndexBuffer).map(QGLBuffer::ReadOnly);
+		const_cast<QOpenGLBuffer&>(m_IndexBuffer).bind();
+		GLvoid* pIbo = const_cast<QOpenGLBuffer&>(m_IndexBuffer).map(QOpenGLBuffer::ReadOnly);
 		memcpy(indexVector.data(), pIbo, dataSize);
-		const_cast<QGLBuffer&>(m_IndexBuffer).unmap();
-		const_cast<QGLBuffer&>(m_IndexBuffer).release();
+		const_cast<QOpenGLBuffer&>(m_IndexBuffer).unmap();
+		const_cast<QOpenGLBuffer&>(m_IndexBuffer).release();
 		return indexVector;
 	}
 	else
@@ -170,7 +170,7 @@ void GLC_Lod::setIboUsage(bool usage)
 void GLC_Lod::useIBO() const
 {
 	Q_ASSERT(m_IndexBuffer.isCreated());
-	if (!const_cast<QGLBuffer&>(m_IndexBuffer).bind())
+	if (!const_cast<QOpenGLBuffer&>(m_IndexBuffer).bind())
 	{
 		GLC_Exception exception("GLC_Lod::useIBO  Failed to bind index buffer");
 		throw(exception);

@@ -47,7 +47,7 @@ GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 , m_TransparentMaterialNumber(0)
 , m_Id(glc::GLC_GenGeomID())
 , m_Name(name)
-, m_UseVbo(false)
+, m_UseVbo(GLC_State::vboUsed())
 {
 
 }
@@ -250,10 +250,7 @@ void GLC_Geometry::releaseVboClientSide(bool update)
 void GLC_Geometry::setVboUsage(bool usage)
 {
 	m_UseVbo= usage;
-	if (!usage || (usage && GLC_State::vboSupported()))
-	{
-		m_WireData.setVboUsage(m_UseVbo);
-	}
+    m_WireData.setVboUsage(m_UseVbo);
 }
 
 //////////////////////////////////////////////////////////////////////

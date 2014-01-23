@@ -30,7 +30,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QtDebug>
-#include <QGLContext>
 
 GLC_ObjMtlLoader::GLC_ObjMtlLoader(const QString& fileName)
 : m_FileName(fileName)

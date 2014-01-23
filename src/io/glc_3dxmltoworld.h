@@ -37,7 +37,6 @@
 #include "../glc_config.h"
 
 class GLC_World;
-class QGLContext;
 class QuaZip;
 class QuaZipFile;
 class GLC_StructReference;

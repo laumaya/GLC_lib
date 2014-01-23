@@ -39,7 +39,7 @@ GLC_WireData::GLC_WireData()
 , m_Positions()
 , m_ColorBuffer()
 , m_Colors()
-, m_IndexBuffer(QGLBuffer::IndexBuffer)
+, m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
 , m_IndexVector()
 , m_PositionSize(0)
 , m_ColorSize(0)
@@ -61,7 +61,7 @@ GLC_WireData::GLC_WireData(const GLC_WireData& data)
 , m_Positions(data.positionVector())
 , m_ColorBuffer()
 , m_Colors(data.colorVector())
-, m_IndexBuffer(QGLBuffer::IndexBuffer)
+, m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
 , m_IndexVector(data.indexVector())
 , m_PositionSize(data.m_PositionSize)
 , m_ColorSize(data.m_ColorSize)
@@ -124,17 +124,17 @@ GLfloatVector GLC_WireData::positionVector() const
 {
 	if (m_VerticeBuffer.isCreated())
 	{
-		Q_ASSERT((NULL != QGLContext::currentContext()) &&  QGLContext::currentContext()->isValid());
+        Q_ASSERT((NULL != QOpenGLContext::currentContext()) &&  QOpenGLContext::currentContext()->isValid());
 		// VBO created get data from VBO
 		const int sizeOfVbo= m_PositionSize;
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
 		GLfloatVector positionVector(sizeOfVbo);
 
-		const_cast<QGLBuffer&>(m_VerticeBuffer).bind();
-		GLvoid* pVbo = const_cast<QGLBuffer&>(m_VerticeBuffer).map(QGLBuffer::ReadOnly);
+		const_cast<QOpenGLBuffer&>(m_VerticeBuffer).bind();
+		GLvoid* pVbo = const_cast<QOpenGLBuffer&>(m_VerticeBuffer).map(QOpenGLBuffer::ReadOnly);
 		memcpy(positionVector.data(), pVbo, dataSize);
-		const_cast<QGLBuffer&>(m_VerticeBuffer).unmap();
-		const_cast<QGLBuffer&>(m_VerticeBuffer).release();
+		const_cast<QOpenGLBuffer&>(m_VerticeBuffer).unmap();
+		const_cast<QOpenGLBuffer&>(m_VerticeBuffer).release();
 		return positionVector;
 	}
 	else
@@ -153,11 +153,11 @@ GLfloatVector GLC_WireData::colorVector() const
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLfloat);
 		GLfloatVector normalVector(sizeOfVbo);
 
-		const_cast<QGLBuffer&>(m_ColorBuffer).bind();
-		GLvoid* pVbo = const_cast<QGLBuffer&>(m_ColorBuffer).map(QGLBuffer::ReadOnly);
+		const_cast<QOpenGLBuffer&>(m_ColorBuffer).bind();
+		GLvoid* pVbo = const_cast<QOpenGLBuffer&>(m_ColorBuffer).map(QOpenGLBuffer::ReadOnly);
 		memcpy(normalVector.data(), pVbo, dataSize);
-		const_cast<QGLBuffer&>(m_ColorBuffer).unmap();
-		const_cast<QGLBuffer&>(m_ColorBuffer).release();
+		const_cast<QOpenGLBuffer&>(m_ColorBuffer).unmap();
+		const_cast<QOpenGLBuffer&>(m_ColorBuffer).release();
 		return normalVector;
 	}
 	else
@@ -175,11 +175,11 @@ QVector<GLuint> GLC_WireData::indexVector() const
 		const GLsizeiptr dataSize= sizeOfIbo * sizeof(GLuint);
 		QVector<GLuint> indexVector(sizeOfIbo);
 
-		const_cast<QGLBuffer&>(m_IndexBuffer).bind();
-		GLvoid* pIbo = const_cast<QGLBuffer&>(m_IndexBuffer).map(QGLBuffer::ReadOnly);
+		const_cast<QOpenGLBuffer&>(m_IndexBuffer).bind();
+		GLvoid* pIbo = const_cast<QOpenGLBuffer&>(m_IndexBuffer).map(QOpenGLBuffer::ReadOnly);
 		memcpy(indexVector.data(), pIbo, dataSize);
-		const_cast<QGLBuffer&>(m_IndexBuffer).unmap();
-		const_cast<QGLBuffer&>(m_IndexBuffer).release();
+		const_cast<QOpenGLBuffer&>(m_IndexBuffer).unmap();
+		const_cast<QOpenGLBuffer&>(m_IndexBuffer).release();
 		return indexVector;
 	}
 	else
@@ -320,7 +320,7 @@ void GLC_WireData::setVboUsage(bool usage)
 
 void GLC_WireData::finishVbo()
 {
-	Q_ASSERT((NULL != QGLContext::currentContext()) &&  QGLContext::currentContext()->isValid());
+    Q_ASSERT((NULL != QOpenGLContext::currentContext()) &&  QOpenGLContext::currentContext()->isValid());
 	if (!m_VerticeBuffer.isCreated())
 	{
 		m_VerticeBuffer.create();
@@ -381,17 +381,17 @@ void GLC_WireData::useVBO(GLC_WireData::VboType type, bool use)
 	}
 	else
 	{
-		QGLBuffer::release(QGLBuffer::VertexBuffer);
-		QGLBuffer::release(QGLBuffer::IndexBuffer);
+		QOpenGLBuffer::release(QOpenGLBuffer::VertexBuffer);
+		QOpenGLBuffer::release(QOpenGLBuffer::IndexBuffer);
 	}
 }
 
 void GLC_WireData::glDraw(const GLC_RenderProperties&, GLenum mode)
 {
-	Q_ASSERT((NULL != QGLContext::currentContext()) &&  QGLContext::currentContext()->isValid());
+    Q_ASSERT((NULL != QOpenGLContext::currentContext()) &&  QOpenGLContext::currentContext()->isValid());
 	Q_ASSERT(!isEmpty());
 
-	const bool vboIsUsed= m_UseVbo  && GLC_State::vboSupported();
+    const bool vboIsUsed= m_UseVbo;
 
 	if (vboIsUsed && ((m_PositionSize == 0) || !m_VerticeBuffer.isCreated()))
 	{
@@ -453,8 +453,8 @@ void GLC_WireData::glDraw(const GLC_RenderProperties&, GLenum mode)
 
 	if (vboIsUsed)
 	{
-		QGLBuffer::release(QGLBuffer::IndexBuffer);
-		QGLBuffer::release(QGLBuffer::VertexBuffer);
+		QOpenGLBuffer::release(QOpenGLBuffer::IndexBuffer);
+		QOpenGLBuffer::release(QOpenGLBuffer::VertexBuffer);
 	}
 }
 

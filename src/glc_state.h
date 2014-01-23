@@ -50,14 +50,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return true if VBO is supported
-	static bool vboSupported();
-
 	//! Return true if VBO is used
 	static bool vboUsed();
-
-	//! Return true if GLSL is supported
-	static bool glslSupported();
 
 	//! Return true if frameBuffer is supported
 	static bool frameBufferSupported();
@@ -119,14 +113,8 @@ public:
 	//! Intialize the state
 	static void init();
 
-	//! Set VBO support
-	static void setVboSupport();
-
 	//! Set VBO usage
 	static void setVboUsage(const bool);
-
-	//! Set GLSL support
-	static void setGlslSupport();
 
 	//! Set Point Sprite support
 	static void setPointSpriteSupport();
@@ -170,14 +158,8 @@ public:
 //Private attributes
 //////////////////////////////////////////////////////////////////////
 private:
-	//! VBO supported flag
-	static bool m_VboSupported;
-
 	//! VBO used
 	static bool m_UseVbo;
-
-	//! GLSL supported flag
-	static bool m_GlslSupported;
 
 	//! Point Sprite supported flag
 	static bool m_PointSpriteSupported;
@@ -223,7 +205,6 @@ private:
 
 	//! State valid flag
 	static bool m_IsValid;
-
 };
 
 #endif /*GLC_STATE_H_*/

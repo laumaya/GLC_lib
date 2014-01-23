@@ -31,9 +31,7 @@
 #include <QOpenGLFramebufferObject>
 #include <QOpenGLContext>
 
-bool GLC_State::m_VboSupported= false;
-bool GLC_State::m_UseVbo= false;
-bool GLC_State::m_GlslSupported= false;
+bool GLC_State::m_UseVbo= true;
 bool GLC_State::m_PointSpriteSupported= false;
 bool GLC_State::m_UseShader= true;
 bool GLC_State::m_UseSelectionShader= false;
@@ -58,21 +56,9 @@ GLC_State::~GLC_State()
 {
 }
 
-bool GLC_State::vboSupported()
-{
-    Q_ASSERT(m_IsValid);
-    return m_VboSupported;
-}
-
 bool GLC_State::vboUsed()
 {
     return m_UseVbo;
-}
-
-bool GLC_State::glslSupported()
-{
-    Q_ASSERT(m_IsValid);
-    return m_GlslSupported;
 }
 
 bool GLC_State::frameBufferSupported()
@@ -90,7 +76,7 @@ bool GLC_State::frameBufferBlitSupported()
 bool GLC_State::glslUsed()
 {
     Q_ASSERT(m_IsValid);
-    return m_UseShader && m_GlslSupported;
+    return m_UseShader;
 }
 
 bool GLC_State::pointSpriteSupported()
@@ -171,10 +157,9 @@ void GLC_State::init()
     if (!m_IsValid)
     {
         Q_ASSERT((NULL != QOpenGLContext::currentContext()) &&  QOpenGLContext::currentContext()->isValid());
-        setVboSupport();
-        setGlslSupport();
         setPointSpriteSupport();
         setFrameBufferSupport();
+        setFrameBufferBlitSupport();
         m_Version= (char *) glGetString(GL_VERSION);
         m_Vendor= (char *) glGetString(GL_VENDOR);
         m_Renderer= (char *) glGetString(GL_RENDERER);
@@ -188,21 +173,9 @@ bool GLC_State::isValid()
     return m_IsValid;
 }
 
-void GLC_State::setVboSupport()
-{
-    m_VboSupported= glc::extensionIsSupported("ARB_vertex_buffer_object") && glc::loadVboExtension();
-    setVboUsage(m_UseVbo);
-}
-
 void GLC_State::setVboUsage(const bool vboUsed)
 {
-    m_UseVbo= m_VboSupported && vboUsed;
-}
-
-void GLC_State::setGlslSupport()
-{
-    m_GlslSupported= glc::extensionIsSupported("GL_ARB_shading_language_100") && glc::loadGlSlExtension();
-    setGlslUsage(m_UseShader);
+    m_UseVbo= vboUsed;
 }
 
 void GLC_State::setPointSpriteSupport()
@@ -222,12 +195,12 @@ void GLC_State::setFrameBufferBlitSupport()
 
 void GLC_State::setGlslUsage(const bool glslUsage)
 {
-    m_UseShader= m_GlslSupported && glslUsage;
+    m_UseShader= glslUsage;
 }
 
 void GLC_State::setSelectionShaderUsage(const bool shaderUsed)
 {
-    m_UseSelectionShader= shaderUsed && m_GlslSupported;
+    m_UseSelectionShader= shaderUsed;
 }
 
 void GLC_State::setSelectionMode(const bool mode)

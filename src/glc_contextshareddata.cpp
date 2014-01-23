@@ -305,17 +305,14 @@ void GLC_ContextSharedData::glcDisableLight(GLenum lightId)
 void GLC_ContextSharedData::initDefaultShader()
 {
     qDebug() << "GLC_ContextSharedData::initDefaultShader()";
-    if (GLC_State::glslSupported())
-    {
-        QFile vertexShader(":/GLC_lib_Shaders/default_vert");
-        Q_ASSERT(vertexShader.exists());
+    QFile vertexShader(":/GLC_lib_Shaders/default_vert");
+    Q_ASSERT(vertexShader.exists());
 
-        QFile fragmentShader(":/GLC_lib_Shaders/default_frag");
-        Q_ASSERT(fragmentShader.exists());
+    QFile fragmentShader(":/GLC_lib_Shaders/default_frag");
+    Q_ASSERT(fragmentShader.exists());
 
-        m_pDefaultShader= new GLC_Shader(vertexShader, fragmentShader);
-        m_pDefaultShader->createAndCompileProgrammShader();
-    }
+    m_pDefaultShader= new GLC_Shader(vertexShader, fragmentShader);
+    m_pDefaultShader->createAndCompileProgrammShader();
 }
 
 void GLC_ContextSharedData::initLightEnableState()

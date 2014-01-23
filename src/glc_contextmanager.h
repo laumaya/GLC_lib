@@ -31,7 +31,6 @@
 #include "glc_config.h"
 
 class QOpenGLContext;
-class QGLContext;
 class GLC_Context;
 
 //////////////////////////////////////////////////////////////////////

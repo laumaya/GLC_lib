@@ -123,15 +123,15 @@ GLfloatVector GLC_MeshData::positionVector() const
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
 		GLfloatVector positionVector(sizeOfVbo);
 
-		if (!const_cast<QGLBuffer&>(m_VertexBuffer).bind())
+		if (!const_cast<QOpenGLBuffer&>(m_VertexBuffer).bind())
 		{
 			GLC_Exception exception("GLC_MeshData::positionVector()  Failed to bind vertex buffer");
 			throw(exception);
 		}
-		GLvoid* pVbo = const_cast<QGLBuffer&>(m_VertexBuffer).map(QGLBuffer::ReadOnly);
+		GLvoid* pVbo = const_cast<QOpenGLBuffer&>(m_VertexBuffer).map(QOpenGLBuffer::ReadOnly);
 		memcpy(positionVector.data(), pVbo, dataSize);
-		const_cast<QGLBuffer&>(m_VertexBuffer).unmap();
-		const_cast<QGLBuffer&>(m_VertexBuffer).release();
+		const_cast<QOpenGLBuffer&>(m_VertexBuffer).unmap();
+		const_cast<QOpenGLBuffer&>(m_VertexBuffer).release();
 		return positionVector;
 	}
 	else
@@ -150,11 +150,11 @@ GLfloatVector GLC_MeshData::normalVector() const
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLfloat);
 		GLfloatVector normalVector(sizeOfVbo);
 
-		const_cast<QGLBuffer&>(m_NormalBuffer).bind();
-		GLvoid* pVbo = const_cast<QGLBuffer&>(m_NormalBuffer).map(QGLBuffer::ReadOnly);
+		const_cast<QOpenGLBuffer&>(m_NormalBuffer).bind();
+		GLvoid* pVbo = const_cast<QOpenGLBuffer&>(m_NormalBuffer).map(QOpenGLBuffer::ReadOnly);
 		memcpy(normalVector.data(), pVbo, dataSize);
-		const_cast<QGLBuffer&>(m_NormalBuffer).unmap();
-		const_cast<QGLBuffer&>(m_NormalBuffer).release();
+		const_cast<QOpenGLBuffer&>(m_NormalBuffer).unmap();
+		const_cast<QOpenGLBuffer&>(m_NormalBuffer).release();
 		return normalVector;
 	}
 	else
@@ -173,11 +173,11 @@ GLfloatVector GLC_MeshData::texelVector() const
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLfloat);
 		GLfloatVector texelVector(sizeOfVbo);
 
-		const_cast<QGLBuffer&>(m_TexelBuffer).bind();
-		GLvoid* pVbo = const_cast<QGLBuffer&>(m_TexelBuffer).map(QGLBuffer::ReadOnly);
+		const_cast<QOpenGLBuffer&>(m_TexelBuffer).bind();
+		GLvoid* pVbo = const_cast<QOpenGLBuffer&>(m_TexelBuffer).map(QOpenGLBuffer::ReadOnly);
 		memcpy(texelVector.data(), pVbo, dataSize);
-		const_cast<QGLBuffer&>(m_TexelBuffer).unmap();
-		const_cast<QGLBuffer&>(m_TexelBuffer).release();
+		const_cast<QOpenGLBuffer&>(m_TexelBuffer).unmap();
+		const_cast<QOpenGLBuffer&>(m_TexelBuffer).release();
 		return texelVector;
 	}
 	else
@@ -196,11 +196,11 @@ GLfloatVector GLC_MeshData::colorVector() const
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLfloat);
 		GLfloatVector normalVector(sizeOfVbo);
 
-		const_cast<QGLBuffer&>(m_ColorBuffer).bind();
-		GLvoid* pVbo = const_cast<QGLBuffer&>(m_ColorBuffer).map(QGLBuffer::ReadOnly);
+		const_cast<QOpenGLBuffer&>(m_ColorBuffer).bind();
+		GLvoid* pVbo = const_cast<QOpenGLBuffer&>(m_ColorBuffer).map(QOpenGLBuffer::ReadOnly);
 		memcpy(normalVector.data(), pVbo, dataSize);
-		const_cast<QGLBuffer&>(m_ColorBuffer).unmap();
-		const_cast<QGLBuffer&>(m_ColorBuffer).release();
+		const_cast<QOpenGLBuffer&>(m_ColorBuffer).unmap();
+		const_cast<QOpenGLBuffer&>(m_ColorBuffer).release();
 		return normalVector;
 	}
 	else
@@ -370,7 +370,7 @@ void GLC_MeshData::createVBOs()
 	// Create position VBO
 	if (!m_VertexBuffer.isCreated())
 	{
-		Q_ASSERT((NULL != QGLContext::currentContext()) &&  QGLContext::currentContext()->isValid());
+        Q_ASSERT((NULL != QOpenGLContext::currentContext()) &&  QOpenGLContext::currentContext()->isValid());
 
 		m_VertexBuffer.create();
 		m_NormalBuffer.create();
@@ -440,7 +440,7 @@ bool GLC_MeshData::useVBO(bool use, GLC_MeshData::VboType type)
 	else
 	{
 		// Unbind VBO
-		QGLBuffer::release(QGLBuffer::VertexBuffer);
+		QOpenGLBuffer::release(QOpenGLBuffer::VertexBuffer);
 	}
 	return result;
 }

@@ -34,7 +34,6 @@
 #include "../3rdparty/quazip/quazipfile.h"
 
 #include <QString>
-#include <QGLContext>
 #include <QFileInfo>
 #include <QSet>
 #include <QMutexLocker>

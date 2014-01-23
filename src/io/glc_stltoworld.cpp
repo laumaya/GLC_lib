@@ -31,7 +31,6 @@
 
 #include <QTextStream>
 #include <QFileInfo>
-#include <QGLContext>
 #include <QDataStream>
 
 GLC_StlToWorld::GLC_StlToWorld()
