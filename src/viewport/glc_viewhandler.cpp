@@ -51,7 +51,14 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     , m_3DWidgetManager(m_pViewport)
     , m_isRendering()
 
+    , m_ScreenShotMode(false)
+    , m_ScreenshotSettings()
+    , m_ScreenShotImage()
+
+    , m_RenderFlag(glc::ShadingFlag)
+
     , m_BlockUpdate(false)
+
 {
     m_pLight->setTwoSided(true);
     m_pLight->setPosition(1.0, 1.0, 1.0);
@@ -61,7 +68,6 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     m_pMoverController= new GLC_MoverController(GLC_Factory::instance()->createDefaultMoverController(repColor, m_pViewport));
 
     connect(m_pMoverController, SIGNAL(repaintNeeded()), this, SLOT(updateGL()));
-    connect(this, SIGNAL(userInputUpdated(GLC_UserInput)), m_pInputEventInterpreter, SLOT(userInputChanged(GLC_UserInput)));
 }
 
 GLC_ViewHandler::~GLC_ViewHandler()
@@ -83,6 +89,11 @@ void GLC_ViewHandler::updateGL(bool synchrone)
             QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         }
     }
+}
+
+void GLC_ViewHandler::updateSynchronized()
+{
+    updateGL(true);
 }
 
 void GLC_ViewHandler::clearSelectionBuffer()
@@ -160,6 +171,14 @@ void GLC_ViewHandler::unsetSelection()
     updateGL();
 }
 
+QImage GLC_ViewHandler::takeScreenshot(const GLC_ScreenShotSettings &screenShotSettings)
+{
+    m_ScreenshotSettings= screenShotSettings;
+    m_ScreenShotMode= true;
+    updateGL(true);  // Execute OpenGL synchronously to get screenshot image
+    return m_ScreenShotImage;
+}
+
 void GLC_ViewHandler::updateSelection(const GLC_SelectionSet& selectionSet, const GLC_Point3d &point)
 {
     m_RenderingMode= GLC_ViewHandler::normalRenderMode;
@@ -172,6 +191,12 @@ void GLC_ViewHandler::setLight(GLC_Light *pLight)
     Q_ASSERT(NULL != pLight);
     delete m_pLight;
     m_pLight= pLight;
+}
+
+void GLC_ViewHandler::setScreenShotImage(const QImage &image)
+{
+    m_ScreenShotMode= false;
+    m_ScreenShotImage= image;
 }
 
 void GLC_ViewHandler::processMousePressEvent(QMouseEvent *pMouseEvent)
@@ -210,9 +235,18 @@ void GLC_ViewHandler::processTouchEvent(QTouchEvent *pTouchEvent)
     m_pInputEventInterpreter->processTouchEvent(pTouchEvent);
 }
 
-void GLC_ViewHandler::updateBackGround()
+void GLC_ViewHandler::renderBackGround()
 {
-    //if (m_pViewport->clearBackground();
+    if (m_ScreenShotMode && (m_ScreenshotSettings.mode() == GLC_ScreenShotSettings::Color))
+    {
+        m_pViewport->clearBackground(m_ScreenshotSettings.backgroundColor());
+    }
+    else
+    {
+        m_pViewport->clearBackground();
+    }
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void GLC_ViewHandler::render()
@@ -225,18 +259,24 @@ void GLC_ViewHandler::render()
         m_pViewport->setDistMinAndMax(m_World.boundingBox());
         m_World.collection()->updateInstanceViewableState();
 
-        // Clear screen
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        renderBackGround();
 
         // Load identity matrix
         GLC_Context::current()->glcLoadIdentity();
 
         m_pLight->glExecute();
-        m_pViewport->glExecuteCam();
+        if (m_ScreenShotMode && (m_ScreenshotSettings.mode() == GLC_ScreenShotSettings::Image))
+        {
+            m_pViewport->glExecuteCam(m_ScreenshotSettings.backgroundImage());
+        }
+        else
+        {
+            m_pViewport->glExecuteCam();
+        }
 
-        m_World.render(0, glc::WireRenderFlag);
+        m_World.render(0, m_RenderFlag);
         m_World.render(0, glc::TransparentRenderFlag);
-        m_World.render(1, glc::WireRenderFlag);
+        m_World.render(1, m_RenderFlag);
 
         if (!GLC_State::isInSelectionMode())
         {
@@ -251,32 +291,6 @@ void GLC_ViewHandler::render()
     }
 }
 
-void GLC_ViewHandler::renderOnly3DWidget()
-{
-    try
-    {
-        QOpenGLContext::currentContext()->functions()->glUseProgram(0);
-
-        // Calculate camera depth of view
-        m_pViewport->setDistMinAndMax(m_World.boundingBox());
-
-        // Clear screen
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // Load identity matrix
-        GLC_Context::current()->glcLoadIdentity();
-
-        m_pLight->glExecute();
-        m_pViewport->glExecuteCam();
-
-        m_3DWidgetManager.render();
-    }
-    catch (GLC_Exception &e)
-    {
-        qDebug() << e.what();
-    }
-
-}
 
 void GLC_ViewHandler::setDefaultUpVector(const GLC_Vector3d &vect)
 {

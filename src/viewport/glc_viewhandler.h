@@ -33,7 +33,7 @@
 #include "../glc_selectionevent.h"
 #include "../maths/glc_vector3d.h"
 #include "../3DWidget/glc_3dwidgetmanager.h"
-
+#include "glc_screenshotsettings.h"
 #include "glc_userinput.h"
 
 #include "../glc_config.h"
@@ -103,6 +103,17 @@ public:
     inline GLC_3DWidgetManager get3DWidgetManager() const
     {return m_3DWidgetManager;}
 
+    inline bool screenShotModeIsOn() const
+    {return m_ScreenShotMode;}
+
+    inline QImage screenShotImage() const
+    {return m_ScreenShotImage;}
+
+    inline const GLC_ScreenShotSettings& screenShotSettings() const
+    {return m_ScreenshotSettings;}
+
+    inline glc::RenderFlag currentRenderFlag() const
+    {return m_RenderFlag;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -112,6 +123,7 @@ public:
 
 public slots:
     virtual void updateGL(bool synchrone= false);
+    void updateSynchronized();
     virtual void clearSelectionBuffer();
 
 public:
@@ -127,12 +139,20 @@ public:
 
     virtual void unsetSelection();
 
+    virtual QImage takeScreenshot(const GLC_ScreenShotSettings& screenShotSettings);
+
     void updateSelection(const GLC_SelectionSet &selectionSet, const GLC_Point3d& point);
 
     inline void blockUpdate(bool blocked)
     {m_BlockUpdate= blocked;}
 
     void setLight(GLC_Light* pLight);
+
+    void setScreenShotImage(const QImage& image);
+
+    inline void setCurrentRenderFlag(glc::RenderFlag renderFlag)
+    {m_RenderFlag= renderFlag;}
+
 
 //@}
 
@@ -160,9 +180,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    void updateBackGround();
+    virtual void renderBackGround();
     virtual void render();
-    virtual void renderOnly3DWidget();
 
 //@}
 
@@ -190,6 +209,12 @@ protected:
     GLC_Point3d m_UnprojectedPoint;
     GLC_3DWidgetManager m_3DWidgetManager;
     bool m_isRendering;
+
+    bool m_ScreenShotMode;
+    GLC_ScreenShotSettings m_ScreenshotSettings;
+    QImage m_ScreenShotImage;
+
+    glc::RenderFlag m_RenderFlag;
 
 private:
     bool m_BlockUpdate;

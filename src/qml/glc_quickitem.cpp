@@ -36,6 +36,7 @@ GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     , m_pSourceFbo(NULL)
     , m_pTargetFbo(NULL)
     , m_pAuxFbo(NULL)
+    , m_pScreenShotFbo(NULL)
     , m_SelectionBufferIsDirty(true)
     , m_UnprojectedPoint()
 {
@@ -79,11 +80,7 @@ void GLC_QuickItem::invalidateSelectionBuffer()
 
 void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
-    delete m_pSourceFbo;
-    m_pSourceFbo= NULL;
-
-    delete m_pTargetFbo;
-    m_pTargetFbo= NULL;
+    deleteViewBuffers();
 
     delete m_pAuxFbo;
     m_pAuxFbo= NULL;
@@ -100,14 +97,27 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
         pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
     }
 
-    const bool widthOk= this->width() > 0.0;
-    const bool heightOk= this->height() > 0.0;
+    bool widthOk= this->width() > 0.0;
+    bool heightOk= this->height() > 0.0;
+
+    if (m_pViewhandler->screenShotModeIsOn())
+    {
+        GLC_ScreenShotSettings screenShotSettings= m_pViewhandler->screenShotSettings();
+        QSize size= screenShotSettings.size();
+
+        widthOk= size.width() > 0.0;
+        heightOk= size.height() > 0.0;
+    }
 
     if (m_pViewhandler && widthOk && heightOk)
     {
         if (widthValid() && heightValid() && isComponentComplete())
         {
-            if (m_pViewhandler->renderingMode() == GLC_ViewHandler::normalRenderMode)
+            if (m_pViewhandler->screenShotModeIsOn())
+            {
+                renderForScreenShot();
+            }
+            else if (m_pViewhandler->renderingMode() == GLC_ViewHandler::normalRenderMode)
             {
                 render(pTextureNode, pData);
             }
@@ -116,14 +126,6 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
                 renderForSelection();
             }
         }
-        else
-        {
-            pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
-        }
-    }
-    else
-    {
-        pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
     }
 
     m_pViewhandler->renderingFinished();
@@ -171,8 +173,8 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
     const int x = this->x();
     const int y = this->y();
 
-    const int width= this->width();
-    const int height= this->height();
+    int width= this->width();
+    int height= this->height();
 
     setupFbo(width, height, pTextureNode);
 
@@ -199,7 +201,6 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
         QRect rect(0, 0, width, height);
         QOpenGLFramebufferObject::blitFramebuffer(m_pTargetFbo, rect, m_pSourceFbo, rect);
         popOpenGLMatrix();
-
     }
     else
     {
@@ -275,6 +276,36 @@ void GLC_QuickItem::renderForSelection()
     popOpenGLMatrix();
 }
 
+void GLC_QuickItem::renderForScreenShot()
+{
+    GLC_ScreenShotSettings screenShotSettings= m_pViewhandler->screenShotSettings();
+    const int width= screenShotSettings.size().width();
+    const int height= screenShotSettings.size().height();
+
+    setupScreenShotFbo(width, height);
+
+    if (m_pScreenShotFbo && m_pScreenShotFbo->isValid())
+    {
+        pushOpenGLMatrix();
+        setOpenGLState();
+
+        m_pScreenShotFbo->bind();
+
+        m_pViewhandler->viewportHandle()->setWinGLSize(width, height);
+        doRender();
+
+        m_pScreenShotFbo->release();
+        popOpenGLMatrix();
+    }
+
+    QImage screenShot= m_pScreenShotFbo->toImage();
+
+    delete m_pScreenShotFbo;
+    m_pScreenShotFbo= NULL;
+
+    m_pViewhandler->setScreenShotImage(screenShot);
+}
+
 GLC_uint GLC_QuickItem::selectBody(GLC_uint instanceId, int x, int y)
 {
     GLC_uint subject= 0;
@@ -314,11 +345,6 @@ void GLC_QuickItem::doRender()
     m_pViewhandler->render();
 }
 
-void GLC_QuickItem::do3DWidgetRender()
-{
-    m_pViewhandler->renderOnly3DWidget();
-}
-
 void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode)
 {
     if ((width > 0) && (height > 0))
@@ -333,8 +359,9 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
 
             m_pSourceFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
             m_pTargetFbo= new QOpenGLFramebufferObject(width, height);
+            pTextureNode->setTexture(this->window()->createTextureFromId(m_pTargetFbo->texture(), m_pTargetFbo->size()));
+            pTextureNode->setRect(this->boundingRect());
         }
-        pTextureNode->setTexture(this->window()->createTextureFromId(m_pTargetFbo->texture(), m_pTargetFbo->size()));
     }
     else
     {
@@ -345,9 +372,10 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
         m_pTargetFbo= NULL;
 
         pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
+        pTextureNode->setRect(this->boundingRect());
     }
 
-    pTextureNode->setRect(this->boundingRect());
+
 }
 
 void GLC_QuickItem::setupAuxFbo(int width, int height)
@@ -365,6 +393,17 @@ void GLC_QuickItem::setupAuxFbo(int width, int height)
         delete m_pAuxFbo;
         m_pAuxFbo= NULL;
     }
+}
+
+void GLC_QuickItem::setupScreenShotFbo(int width, int height)
+{
+    Q_ASSERT(NULL == m_pScreenShotFbo);
+
+    QOpenGLFramebufferObjectFormat sourceFormat;
+    sourceFormat.setAttachment(QOpenGLFramebufferObject::Depth);
+    sourceFormat.setSamples(m_pViewhandler->samples());
+
+    m_pScreenShotFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
 }
 
 void GLC_QuickItem::pushOpenGLMatrix()
@@ -393,4 +432,13 @@ void GLC_QuickItem::popOpenGLMatrix()
 
     pCurrentContext->glcMatrixMode(GL_MODELVIEW);
     pCurrentContext->glcPopMatrix();
+}
+
+void GLC_QuickItem::deleteViewBuffers()
+{
+    delete m_pSourceFbo;
+    m_pSourceFbo= NULL;
+
+    delete m_pTargetFbo;
+    m_pTargetFbo= NULL;
 }

@@ -191,9 +191,20 @@ void GLC_Viewport::initGl()
     glEnable(GL_NORMALIZE);
 }
 
-void GLC_Viewport::glExecuteCam(void)
+void GLC_Viewport::glExecuteCam(const QImage& image)
 {
-	renderImagePlane();
+    if (!image.isNull())
+    {
+        GLC_ImagePlane* pOldImagePlane= m_pImagePlane;
+        m_pImagePlane= new GLC_ImagePlane(image);
+        renderImagePlane();
+        delete m_pImagePlane;
+        m_pImagePlane= pOldImagePlane;
+    }
+    else
+    {
+        renderImagePlane();
+    }
 	m_pViewCam->glExecute();
 }
 
@@ -364,11 +375,13 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list, GLenum buffer
 
 void GLC_Viewport::renderImagePlane()
 {
-
+    qDebug() << "GLC_Viewport::renderImagePlane()";
 	if(!GLC_State::isInSelectionMode())
 	{
+        qDebug() << "if(!GLC_State::isInSelectionMode())";
 		if (m_pImagePlane != NULL)
 		{
+            qDebug() << "if (m_pImagePlane != NULL)";
 			m_pImagePlane->render();
 		}
 	}
@@ -639,7 +652,7 @@ void GLC_Viewport::deleteBackGroundImage()
 
 void GLC_Viewport::clearBackground(const QColor& color) const
 {
-    glClearColor(color.redF(), color.greenF(), color.blueF(), 0.0f);
+    glClearColor(color.redF(), color.greenF(), color.blueF(), 1.0f);
 }
 
 void GLC_Viewport::setToOrtho(bool useOrtho)
@@ -836,5 +849,5 @@ void GLC_Viewport::useClipPlane(bool flag)
 
 void GLC_Viewport::clearBackground() const
 {
-    glClearColor(m_BackgroundColor.redF(), m_BackgroundColor.greenF(), m_BackgroundColor.blueF(), 0.0f);
+    glClearColor(m_BackgroundColor.redF(), m_BackgroundColor.greenF(), m_BackgroundColor.blueF(), 1.0f);
 }

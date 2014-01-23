@@ -178,7 +178,7 @@ public:
 	void initGl();
 
 	//! Load camera's transformation Matrix and display image if necessary
-	void glExecuteCam(void);
+    void glExecuteCam(const QImage &image= QImage());
 
 	//! Update this viewport OpenGL projection matrix
     void updateProjectionMat(bool updateOpenGL= true);

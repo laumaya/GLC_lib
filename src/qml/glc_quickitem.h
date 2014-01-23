@@ -80,25 +80,29 @@ protected:
 
 protected:
     virtual void setOpenGLState();
-    void render(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData* pData);
 
+    void render(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData* pData);
     void renderForSelection();
+    void renderForScreenShot();
 
     GLC_uint selectBody(GLC_uint instanceId, int x, int y);
     QPair<GLC_uint, GLC_uint> selectPrimitive(GLC_uint instanceId, int x, int y);
 
     virtual void doRender();
-    virtual void do3DWidgetRender();
     void setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode);
     void setupAuxFbo(int width, int height);
+    void setupScreenShotFbo(int width, int height);
+
     void pushOpenGLMatrix();
     void popOpenGLMatrix();
+    void deleteViewBuffers();
 
 protected:
     GLC_ViewHandler* m_pViewhandler;
     QOpenGLFramebufferObject* m_pSourceFbo;
     QOpenGLFramebufferObject* m_pTargetFbo;
     QOpenGLFramebufferObject* m_pAuxFbo;
+    QOpenGLFramebufferObject* m_pScreenShotFbo;
     bool m_SelectionBufferIsDirty;
     GLC_Point3d m_UnprojectedPoint;
 };

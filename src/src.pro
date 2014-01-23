@@ -163,7 +163,8 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
                         viewport/glc_tsrmover.h \
                         viewport/glc_viewhandler.h \
                         viewport/glc_inputeventinterpreter.h \
-                        viewport/glc_defaulteventinterpreter.h
+                        viewport/glc_defaulteventinterpreter.h \
+                        viewport/glc_screenshotsettings.h
 
 HEADERS_GLC += glc_global.h \
                glc_object.h \
@@ -214,8 +215,7 @@ SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/inftrees.c \
            3rdparty/zlib/trees.c \
            3rdparty/zlib/uncompr.c \
-           3rdparty/zlib/zutil.c \
-    sceneGraph/glc_structoccurrence.cpp
+           3rdparty/zlib/zutil.c
 
 SOURCES += 3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/qioapi.cpp \
@@ -280,7 +280,8 @@ SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
                 sceneGraph/glc_spacepartitioning.cpp \
                 sceneGraph/glc_octree.cpp \
                 sceneGraph/glc_octreenode.cpp \
-                sceneGraph/glc_selectionset.cpp
+                sceneGraph/glc_selectionset.cpp \
+                sceneGraph/glc_structoccurrence.cpp
 
 SOURCES +=	geometry/glc_geometry.cpp \
                 geometry/glc_circle.cpp \
@@ -335,7 +336,8 @@ SOURCES +=	viewport/glc_camera.cpp \
                 viewport/glc_tsrmover.cpp \
                 viewport/glc_viewhandler.cpp \
                 viewport/glc_inputeventinterpreter.cpp \
-                viewport/glc_defaulteventinterpreter.cpp
+                viewport/glc_defaulteventinterpreter.cpp \
+                viewport/glc_screenshotsettings.cpp
 
 		
 SOURCES +=	glc_global.cpp \
@@ -356,7 +358,7 @@ SOURCES +=	glc_global.cpp \
                 glc_contextmanager.cpp \
                 glc_contextshareddata.cpp \
                 glc_uniformshaderdata.cpp \
-                glc_selectionevent.cpp \
+                glc_selectionevent.cpp
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
                 3DWidget/glc_cuttingplane.cpp \
@@ -478,7 +480,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_QuickItem \
                GLC_ViewHandler \
                GLC_InputEventInterpreter \
-               GLC_SelectionEvent
+               GLC_SelectionEvent \
+               GLC_ScreenShotSettings
 
 include (../install.pri)
 
