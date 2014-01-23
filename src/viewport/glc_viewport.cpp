@@ -375,13 +375,10 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list, GLenum buffer
 
 void GLC_Viewport::renderImagePlane()
 {
-    qDebug() << "GLC_Viewport::renderImagePlane()";
 	if(!GLC_State::isInSelectionMode())
 	{
-        qDebug() << "if(!GLC_State::isInSelectionMode())";
 		if (m_pImagePlane != NULL)
 		{
-            qDebug() << "if (m_pImagePlane != NULL)";
 			m_pImagePlane->render();
 		}
 	}

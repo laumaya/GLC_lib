@@ -28,7 +28,7 @@
 #include "../sceneGraph/glc_3dviewcollection.h"
 #include "../viewport/glc_viewport.h"
 
-class GLC_3DVIewInstance;
+class GLC_3DViewInstance;
 class GLC_3DWidget;
 
 class GLC_LIB_EXPORT GLC_3DWidgetManagerHandle
