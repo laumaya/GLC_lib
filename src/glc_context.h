@@ -206,6 +206,9 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+    //! Make the attached QOpenGL the current one
+    bool makeCurrent();
+
     //! Set this context the current one
     void setCurrent();
 

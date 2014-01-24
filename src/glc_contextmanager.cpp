@@ -77,6 +77,27 @@ GLC_Context* GLC_ContextManager::currentContext()
     return pSubject;
 }
 
+bool GLC_ContextManager::makeCurrent(GLC_Context *pContext)
+{
+    Q_ASSERT(m_GLCContextToOpenGLCOntext.contains(pContext));
+    bool subject= pContext->makeCurrent();
+    if (subject)
+    {
+        pContext->setCurrent();
+    }
+
+    return subject;
+}
+
+bool GLC_ContextManager::areShared(GLC_Context *pContext1, GLC_Context *pContext2)
+{
+    Q_ASSERT(m_GLCContextToOpenGLCOntext.contains(pContext1));
+    Q_ASSERT(m_GLCContextToOpenGLCOntext.contains(pContext2));
+
+    QOpenGLContextGroup* pGroup= pContext1->contextHandle()->shareGroup();
+    return pGroup->shares().contains(pContext2->contextHandle());
+}
+
 void GLC_ContextManager::addContext(GLC_Context *pContext)
 {
     Q_ASSERT(!m_GLCContextToOpenGLCOntext.contains(pContext));
@@ -103,6 +124,7 @@ void GLC_ContextManager::contextDestroyed(GLC_Context* pContext)
 GLC_Context *GLC_ContextManager::createContext(QOpenGLContext *pFromContext)
 {
     GLC_Context* pContext= new GLC_Context(pFromContext);
+    addContext(pContext);
     QOpenGLContextGroup* pSharedGroup= pFromContext->shareGroup();
     QList<QOpenGLContext*> sharedContextList= pSharedGroup->shares();
     const int count= sharedContextList.count();

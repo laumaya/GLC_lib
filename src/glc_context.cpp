@@ -37,8 +37,6 @@ GLC_Context::GLC_Context(QOpenGLContext *pOpenGLContext)
 {
     qDebug() << "GLC_Context::GLC_Context";
     connect(m_pOpenGLContext, SIGNAL(aboutToBeDestroyed()), this, SLOT(openGLContextDestroyed()), Qt::DirectConnection);
-
-    GLC_ContextManager::instance()->addContext(this);
 }
 
 GLC_Context::~GLC_Context()
@@ -246,6 +244,12 @@ void GLC_Context::glcDisableColorClientState()
 
 }
 
+bool GLC_Context::makeCurrent()
+{
+    Q_ASSERT(m_pOpenGLContext && m_pSurface);
+    return m_pOpenGLContext->makeCurrent(m_pSurface);
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
@@ -281,8 +285,7 @@ void GLC_Context::unuseDefaultShader()
 void GLC_Context::openGLContextDestroyed()
 {
     qDebug() << "GLC_Context::openGLContextDestroyed()";
-    Q_ASSERT(NULL != m_pSurface);
-    m_pOpenGLContext->makeCurrent(m_pSurface);
+    makeCurrent();
     m_ContextSharedData.clear();
     emit destroyed(this);
 }

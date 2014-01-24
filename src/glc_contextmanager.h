@@ -57,20 +57,32 @@ public:
 	//! Return the current context
     GLC_Context* currentContext();
 
+    //! Make the given context the current one. Return true on success
+    bool makeCurrent(GLC_Context* pContext);
+
+    //! Return true if this context manager contains the given context
+    inline bool contains(GLC_Context* pContext) const
+    {return m_GLCContextToOpenGLCOntext.contains(pContext);}
+
+    //! Return true if the given context are shared context
+    bool areShared(GLC_Context* pContext1, GLC_Context* pContext2);
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    //! Add the given context
-    void addContext(GLC_Context* pContext);
 //@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Private services Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
+private:
+    //! Add the given context
+    void addContext(GLC_Context* pContext);
+
 private slots:
     void contextDestroyed(GLC_Context *pContext);
     GLC_Context* createContext(QOpenGLContext* pFromContext);
