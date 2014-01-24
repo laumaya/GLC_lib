@@ -719,7 +719,7 @@ void GLC_Mesh::reverseNormals()
 	if (vboIsUsed())
 	{
 		m_MeshData.fillVbo(GLC_MeshData::GLC_Normal);
-		m_MeshData.useVBO(false, GLC_MeshData::GLC_Normal);
+        QOpenGLBuffer::release(QOpenGLBuffer::VertexBuffer);
 	}
 }
 

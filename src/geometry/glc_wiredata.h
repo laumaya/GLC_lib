@@ -144,7 +144,7 @@ public:
 	void finishVbo();
 
 	//! Set vbo usage of this wire data
-	void useVBO(GLC_WireData::VboType type, bool usage);
+    void useVBO(GLC_WireData::VboType type);
 
 	//! Render this wire data using Opengl
 	/*! The mode can be : GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP GL_LINES*/
@@ -163,6 +163,7 @@ private:
 
 	//! Finish offset
 	void finishOffset();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

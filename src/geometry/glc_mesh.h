@@ -1090,21 +1090,21 @@ void GLC_Mesh::activateVboAndIbo()
     GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
 
 	// Activate Vertices VBO
-	m_MeshData.useVBO(true, GLC_MeshData::GLC_Vertex);
+    m_MeshData.useVBO(GLC_MeshData::GLC_Vertex);
     pContext->glcUseVertexPointer(0);
 
 	// Activate Normals VBO
-	m_MeshData.useVBO(true, GLC_MeshData::GLC_Normal);
+    m_MeshData.useVBO(GLC_MeshData::GLC_Normal);
     pContext->glcUseNormalPointer(0);
 
 	// Activate texel VBO if needed
-	if (m_MeshData.useVBO(true, GLC_MeshData::GLC_Texel))
+    if (m_MeshData.useVBO(GLC_MeshData::GLC_Texel))
 	{
         pContext->glcUseTexturePointer(0);
 	}
 
 	// Activate Color VBO if needed
-	if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && m_MeshData.useVBO(true, GLC_MeshData::GLC_Color))
+    if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && m_MeshData.useVBO(GLC_MeshData::GLC_Color))
 	{
         pContext->glcEnableColorMaterial(true);
 		glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);

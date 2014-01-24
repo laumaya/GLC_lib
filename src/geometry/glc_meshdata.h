@@ -204,11 +204,11 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Vbo creation
-	void createVBOs();
+    //! Create mesh data VBO in the current context. Return true on success
+    bool createVBOs();
 
 	//! Ibo Usage
-	bool useVBO(bool, GLC_MeshData::VboType);
+    bool useVBO(GLC_MeshData::VboType vboType);
 
 	//! Ibo Usage
 	inline void useIBO(bool use, const int currentLod= 0)
