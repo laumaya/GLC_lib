@@ -22,6 +22,7 @@
 
 #include <QString>
 #include <QDateTime>
+#include <QAtomicInt>
 
 #include "../glc_config.h"
 
@@ -70,12 +71,12 @@ public:
 public:
 	//! Return true if the representation is the last
 	inline bool isTheLast() const
-	{return 1 == (*m_pNumberOfRepresentation);}
+    {return 1 == m_pRef->load();}
 
 	//! Return true if representations are equals
 	inline bool operator==(const GLC_Rep& rep)
 	{
-		return (rep.m_pNumberOfRepresentation == m_pNumberOfRepresentation);
+        return (rep.m_pRef == m_pRef);
 	}
 
 	//! Return the representation file name
@@ -148,8 +149,8 @@ protected:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! Number of this representation
-	int* m_pNumberOfRepresentation;
+    //! Reference counting
+    QAtomicInt* m_pRef;
 
 	//! The File Name of this representation
 	QString* m_pFileName;

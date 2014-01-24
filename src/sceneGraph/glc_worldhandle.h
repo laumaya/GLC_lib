@@ -23,11 +23,14 @@
 #ifndef GLC_WORLDHANDLE_H_
 #define GLC_WORLDHANDLE_H_
 
+#include <QHash>
+#include <QAtomicInt>
+
 #include "glc_3dviewcollection.h"
 #include "glc_structoccurrence.h"
 #include "glc_selectionset.h"
 
-#include <QHash>
+
 
 #include "../glc_config.h"
 
@@ -69,11 +72,7 @@ public:
 
 	//! Return the number of world associated with this handle
 	inline int numberOfWorld() const
-	{return m_NumberOfWorld;}
-
-	//! Return true if there is only one world associated with this handle
-	inline bool isOrphan() const
-	{return m_NumberOfWorld == 0;}
+    {return m_Ref.load();}
 
     //! Return true if the specified occurrence id is in this world
     inline bool containsOccurrence(GLC_uint id) const
@@ -129,12 +128,12 @@ public:
     GLC_StructOccurrence* takeRootOccurrence();
 
 	//! Increment the number of world
-	inline void increment()
-	{++m_NumberOfWorld;}
+    inline bool ref()
+    {return m_Ref.ref();}
 
 	//! Decrement the number of world
-	inline void decrement()
-	{--m_NumberOfWorld;}
+    inline bool deref()
+    {return m_Ref.deref();}
 
     //! An Occurrence has been added
     void addOccurrence(GLC_StructOccurrence* pOccurrence, bool isSelected= false, GLuint shaderId= 0);
@@ -198,8 +197,8 @@ private:
     //! The root of the structure
     GLC_StructOccurrence* m_pRoot;
 
-	//! Number of this world
-	int m_NumberOfWorld;
+    //! World reference counting
+    QAtomicInt m_Ref;
 
     //! The hash table containing struct occurrence
     QHash<GLC_uint, GLC_StructOccurrence*> m_OccurrenceHash;

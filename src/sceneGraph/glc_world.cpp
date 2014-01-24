@@ -45,15 +45,13 @@ GLC_World::GLC_World(const GLC_World& world)
 {
 	//qDebug() << "GLC_World::GLC_World() : " << (*m_pNumberOfWorld) << " " << this;
 	// Increment the number of world
-	m_pWorldHandle->increment();
+	m_pWorldHandle->ref();
 
 }
 
 GLC_World::~GLC_World()
 {
-	// Decrement the number of world
-	m_pWorldHandle->decrement();
-	if (m_pWorldHandle->isOrphan())
+    if (!m_pWorldHandle->deref())
 	{
 		delete m_pWorldHandle;
     }
@@ -127,13 +125,12 @@ GLC_World& GLC_World::operator=(const GLC_World& world)
     if ((this != &world) && (this->m_pWorldHandle != world.m_pWorldHandle))
 	{
         // Decrement the number of world
-        m_pWorldHandle->decrement();
-        if (m_pWorldHandle->isOrphan())
+        if (!m_pWorldHandle->deref())
         {
             delete m_pWorldHandle;
         }
         m_pWorldHandle= world.m_pWorldHandle;
-        m_pWorldHandle->increment();
+        m_pWorldHandle->ref();
     }
     return *this;
 }

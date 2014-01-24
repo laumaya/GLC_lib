@@ -26,7 +26,7 @@
 // Default constructor
 GLC_Rep::GLC_Rep()
 : m_pIsLoaded(new bool(false))
-, m_pNumberOfRepresentation(new int(1))
+, m_pRef(new QAtomicInt(1))
 , m_pFileName(new QString())
 , m_pName(new QString())
 , m_pDateTime(new QDateTime)
@@ -37,12 +37,12 @@ GLC_Rep::GLC_Rep()
 // Copy Constructor
 GLC_Rep::GLC_Rep(const GLC_Rep& rep)
 : m_pIsLoaded(rep.m_pIsLoaded)
-, m_pNumberOfRepresentation(rep.m_pNumberOfRepresentation)
+, m_pRef(rep.m_pRef)
 , m_pFileName(rep.m_pFileName)
 , m_pName(rep.m_pName)
 , m_pDateTime(rep.m_pDateTime)
 {
-	++(*m_pNumberOfRepresentation);
+    m_pRef->ref();
 }
 
 // Assignement operator
@@ -53,8 +53,8 @@ GLC_Rep& GLC_Rep::operator=(const GLC_Rep& rep)
 		// Clear this representation
 		clear();
 		m_pIsLoaded= rep.m_pIsLoaded;
-		m_pNumberOfRepresentation= rep.m_pNumberOfRepresentation;
-		++(*m_pNumberOfRepresentation);
+        m_pRef= rep.m_pRef;
+        m_pRef->ref();
 		m_pFileName= rep.m_pFileName;
 		m_pName= rep.m_pName;
 		m_pDateTime= rep.m_pDateTime;
@@ -77,13 +77,13 @@ GLC_Rep::~GLC_Rep()
 // Clear current representation
 void GLC_Rep::clear()
 {
-	Q_ASSERT(NULL != m_pNumberOfRepresentation);
-	if ((--(*m_pNumberOfRepresentation)) == 0)
+    Q_ASSERT(NULL != m_pRef);
+    if (!m_pRef->deref())
 	{
 		delete m_pIsLoaded;
 		m_pIsLoaded= NULL;
-		delete m_pNumberOfRepresentation;
-		m_pNumberOfRepresentation= NULL;
+        delete m_pRef;
+        m_pRef= NULL;
 		delete m_pFileName;
 		m_pFileName= NULL;
 		delete m_pName;
