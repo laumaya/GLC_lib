@@ -62,13 +62,13 @@ GLC_3DRep& GLC_3DRep::operator=(const GLC_Rep& rep)
 	{
         if (isTheLast())
         {
-            GLC_Rep::operator=(rep);
             clear3DRepGeom();
             delete m_pGeomList;
             m_pGeomList= NULL;
             delete m_pType;
             m_pType= NULL;
         }
+        GLC_Rep::operator=(rep);
 
 		m_pGeomList= p3DRep->m_pGeomList;
 		m_pType= p3DRep->m_pType;        
