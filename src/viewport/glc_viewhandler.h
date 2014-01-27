@@ -42,6 +42,7 @@ class GLC_Viewport;
 class GLC_MoverController;
 class GLC_SpacePartitioning;
 class GLC_InputEventInterpreter;
+class GLC_QuickView;
 
 class GLC_LIB_EXPORT GLC_ViewHandler: public QObject
 {
@@ -152,7 +153,6 @@ public:
 
     inline void setCurrentRenderFlag(glc::RenderFlag renderFlag)
     {m_RenderFlag= renderFlag;}
-
 
 //@}
 

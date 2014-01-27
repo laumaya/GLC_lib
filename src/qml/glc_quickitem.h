@@ -46,9 +46,7 @@ class QGLFramebufferObject;
 //! \class GLC_QuickItem
 /*! \brief GLC_QuickItem : Provide a way to use GLC_lib into a QQuickItem*/
 
-/*! The GLC_QuickItem make it possible to render a GLC_World int a QML scene Graph
-*/
-
+/*! The GLC_QuickItem make it possible to render a GLC_World int a QML scene Graph*/
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_QuickItem : public QQuickItem
 {
@@ -57,17 +55,38 @@ class GLC_LIB_EXPORT GLC_QuickItem : public QQuickItem
     //! The world to render into this QQuickItem
     Q_PROPERTY(QVariant viewHandler READ viewHandler WRITE setViewhandler)
 
+//////////////////////////////////////////////////////////////////////
+/*! @name Constructor / Destructor */
+//@{
+//////////////////////////////////////////////////////////////////////
+
 public:
     explicit GLC_QuickItem(GLC_QuickItem* pParent= NULL);
     virtual ~GLC_QuickItem();
+//@}
 
+//////////////////////////////////////////////////////////////////////
+/*! \name Get Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+public:
     //! Return the used GLC_ViewHandler as a QVariant
     virtual QVariant viewHandler() const;
+//@}
 
+//////////////////////////////////////////////////////////////////////
+/*! \name Set Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
 public slots:
     virtual void setViewhandler(QVariant viewHandler);
     void invalidateSelectionBuffer();
+//@}
 
+//////////////////////////////////////////////////////////////////////
+/*! \name QQuickItem interface*/
+//@{
+//////////////////////////////////////////////////////////////////////
 protected:
     virtual void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
     virtual QSGNode* updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pData);
@@ -78,6 +97,11 @@ protected:
     virtual void wheelEvent(QWheelEvent * e);
     virtual void touchEvent(QTouchEvent * e);
 
+//@}
+
+//////////////////////////////////////////////////////////////////////
+// Protected services functions
+//////////////////////////////////////////////////////////////////////
 protected:
     virtual void setOpenGLState();
 
@@ -97,6 +121,9 @@ protected:
     void popOpenGLMatrix();
     void deleteViewBuffers();
 
+//////////////////////////////////////////////////////////////////////
+// Protected Members
+//////////////////////////////////////////////////////////////////////
 protected:
     GLC_ViewHandler* m_pViewhandler;
     QOpenGLFramebufferObject* m_pSourceFbo;

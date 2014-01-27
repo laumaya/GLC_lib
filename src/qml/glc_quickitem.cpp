@@ -19,6 +19,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 *****************************************************************************/
+//! \file glc_quickitem.cpp implementation of the GLC_QuickItem class.
 
 #include <QSGSimpleTextureNode>
 #include <QQuickWindow>

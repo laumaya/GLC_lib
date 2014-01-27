@@ -32,6 +32,7 @@
 
 class QOpenGLContext;
 class GLC_Context;
+class QSurface;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_ContextManager
@@ -73,6 +74,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+    GLC_Context* createContext(QOpenGLContext* pFromContext, QSurface* pSurface);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -85,7 +87,6 @@ private:
 
 private slots:
     void contextDestroyed(GLC_Context *pContext);
-    GLC_Context* createContext(QOpenGLContext* pFromContext);
 
 //@}
 

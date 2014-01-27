@@ -198,7 +198,8 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 
 HEADERS_GLC_GLU +=	glu/glc_glu.h
 
-HEADERS_GLC_QML             += qml/glc_quickitem.h
+HEADERS_GLC_QML +=      qml/glc_quickitem.h \
+                        qml/glc_quickview.h
 
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
@@ -370,7 +371,9 @@ SOURCES +=	3DWidget/glc_3dwidget.cpp \
                 3DWidget/glc_axis.cpp
 			
 SOURCES +=	glu/glc_project.cpp
-SOURCES +=      qml/glc_quickitem.cpp
+
+SOURCES +=      qml/glc_quickitem.cpp \
+                qml/glc_quickview.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
@@ -481,7 +484,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_ViewHandler \
                GLC_InputEventInterpreter \
                GLC_SelectionEvent \
-               GLC_ScreenShotSettings
+               GLC_ScreenShotSettings \
+               GLC_QuickView
 
 include (../install.pri)
 
@@ -523,4 +527,5 @@ INSTALLS += include_glc_3dwidget include_glc_glu include_glc_qml
 
 INSTALLS += target
 INSTALLS += include
+
 

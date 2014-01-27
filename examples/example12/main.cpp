@@ -10,6 +10,7 @@
 #include <GLC_QuickItem>
 #include <GLC_ViewHandler>
 #include <GLC_Octree>
+#include <GLC_QuickView>
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
     QGLFormat f = QGLFormat::defaultFormat();
     f.setSampleBuffers(true);
 
-    QQuickView view;
+    GLC_QuickView view;
 
     GLC_CacheManager cacheManager("/Users/laumaya/testCache");
     GLC_State::setCurrentCacheManager(cacheManager);

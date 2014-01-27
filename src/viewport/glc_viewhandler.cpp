@@ -21,6 +21,7 @@
 *****************************************************************************/
 
 #include <QtDebug>
+#include <QOffscreenSurface>
 
 #include "glc_viewhandler.h"
 
@@ -30,6 +31,8 @@
 #include "../glc_factory.h"
 #include "../sceneGraph/glc_octree.h"
 #include "../glc_exception.h"
+
+#include "../qml/glc_quickview.h"
 
 #include "glc_inputeventinterpreter.h"
 #include "glc_defaulteventinterpreter.h"

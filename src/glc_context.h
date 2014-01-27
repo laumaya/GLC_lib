@@ -66,7 +66,7 @@ class GLC_LIB_EXPORT GLC_Context : public QObject
 //////////////////////////////////////////////////////////////////////
 
 public:
-    GLC_Context(QOpenGLContext *pOpenGLContext);
+    GLC_Context(QOpenGLContext *pOpenGLContext, QSurface* pSurface);
 	virtual ~GLC_Context();
 
 //@}

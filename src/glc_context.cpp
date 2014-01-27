@@ -29,10 +29,10 @@
 
 #include "glc_state.h"
 
-GLC_Context::GLC_Context(QOpenGLContext *pOpenGLContext)
+GLC_Context::GLC_Context(QOpenGLContext *pOpenGLContext, QSurface *pSurface)
     : QObject()
     , m_pOpenGLContext(pOpenGLContext)
-    , m_pSurface(m_pOpenGLContext->surface())
+    , m_pSurface(pSurface)
     , m_ContextSharedData()
 {
     qDebug() << "GLC_Context::GLC_Context";
@@ -247,7 +247,17 @@ void GLC_Context::glcDisableColorClientState()
 bool GLC_Context::makeCurrent()
 {
     Q_ASSERT(m_pOpenGLContext && m_pSurface);
-    return m_pOpenGLContext->makeCurrent(m_pSurface);
+    const bool subject= m_pOpenGLContext->makeCurrent(m_pSurface);
+    if (subject)
+    {
+        setCurrent();
+    }
+    else
+    {
+        qDebug() << "GLC_Context::makeCurrent() failed";
+    }
+
+    return subject;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -285,7 +295,6 @@ void GLC_Context::unuseDefaultShader()
 void GLC_Context::openGLContextDestroyed()
 {
     qDebug() << "GLC_Context::openGLContextDestroyed()";
-    makeCurrent();
     m_ContextSharedData.clear();
     emit destroyed(this);
 }
