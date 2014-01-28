@@ -26,6 +26,7 @@
 #include <GLC_UserInput>
 #include <io/glc_colladatoworld.h>
 #include <GLC_Context>
+#include <GLC_Exception>
 
 #include "glwidget.h"
 
@@ -91,24 +92,32 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
-    // Clear screen
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    try
+    {
+        // Clear screen
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Load identity matrix
-    GLC_Context::current()->glcLoadIdentity();
+        // Load identity matrix
+        GLC_Context::current()->glcLoadIdentity();
 
-    // Calculate camera depth of view
-    m_GlView.setDistMinAndMax(m_World.boundingBox());
+        // Calculate camera depth of view
+        m_GlView.setDistMinAndMax(m_World.boundingBox());
 
 
-    // define view matrix
-    m_GlView.glExecuteCam();
-    m_Light.glExecute();
+        // define view matrix
+        m_GlView.glExecuteCam();
+        m_Light.glExecute();
 
-    m_World.render(0 ,glc::ShadingFlag);
+        m_World.render(0 ,glc::ShadingFlag);
 
-    // Display UI Info (orbit circle)
-    m_MoverController.drawActiveMoverRep();
+        // Display UI Info (orbit circle)
+        m_MoverController.drawActiveMoverRep();
+    }
+    catch (GLC_Exception &e)
+    {
+        qDebug() << e.what();
+    }
+
 
 }
 

@@ -108,8 +108,6 @@ void GLC_ViewHandler::setInputEventInterpreter(GLC_InputEventInterpreter *pEvent
 {
     delete m_pInputEventInterpreter;
     m_pInputEventInterpreter= pEventInterpreter;
-
-    connect(this, SIGNAL(userInputUpdated(GLC_UserInput)), m_pInputEventInterpreter, SLOT(userInputChanged(GLC_UserInput)));
 }
 
 void GLC_ViewHandler::setWorld(const GLC_World &world)
