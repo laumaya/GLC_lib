@@ -164,7 +164,8 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
                         viewport/glc_viewhandler.h \
                         viewport/glc_inputeventinterpreter.h \
                         viewport/glc_defaulteventinterpreter.h \
-                        viewport/glc_screenshotsettings.h
+                        viewport/glc_screenshotsettings.h \
+                        viewport/glc_text.h
 
 HEADERS_GLC += glc_global.h \
                glc_object.h \
@@ -338,7 +339,8 @@ SOURCES +=	viewport/glc_camera.cpp \
                 viewport/glc_viewhandler.cpp \
                 viewport/glc_inputeventinterpreter.cpp \
                 viewport/glc_defaulteventinterpreter.cpp \
-                viewport/glc_screenshotsettings.cpp
+                viewport/glc_screenshotsettings.cpp \
+                viewport/glc_text.cpp
 
 		
 SOURCES +=	glc_global.cpp \
@@ -485,7 +487,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_InputEventInterpreter \
                GLC_SelectionEvent \
                GLC_ScreenShotSettings \
-               GLC_QuickView
+               GLC_QuickView \
+               GLC_Text
 
 include (../install.pri)
 
