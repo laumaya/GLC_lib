@@ -86,7 +86,7 @@ public:
 	}
 
     //! Get geometry from id
-    GLC_Geometry* geomOfId(GLC_uint id);
+    GLC_Geometry* geomOfId(GLC_uint id) const;
 
 	//! Return the number of body
 	inline int numberOfBody() const

@@ -124,7 +124,7 @@ int GLC_3DRep::type() const
     return (*m_pType);
 }
 
-GLC_Geometry *GLC_3DRep::geomOfId(GLC_uint id)
+GLC_Geometry *GLC_3DRep::geomOfId(GLC_uint id) const
 {
     GLC_Geometry* pSubject= NULL;
     const int count= m_pGeomList->count();

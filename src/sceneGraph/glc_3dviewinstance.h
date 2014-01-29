@@ -124,6 +124,13 @@ public:
 		else return NULL;
 	}
 
+    //! Get geometry from id
+    inline GLC_Geometry* geomOfId(GLC_uint id) const
+    {
+        if (!m_3DRep.isEmpty()) return m_3DRep.geomOfId(id);
+        else return NULL;
+    }
+
 	//! Get the bounding box
 	GLC_BoundingBox boundingBox();
 
