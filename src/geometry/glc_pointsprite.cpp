@@ -98,6 +98,9 @@ void GLC_PointSprite::setPointDistanceAttenuation(QVector<float> parameters)
 // Specific glExecute method
 void GLC_PointSprite::render(const GLC_RenderProperties& renderProperties)
 {
+	// Check if extension GL_ARB_point_parameters is present
+	if (!GLC_State::pointSpriteSupported()) return;
+
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
 	if (!GLC_State::isInSelectionMode())

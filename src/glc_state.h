@@ -62,6 +62,9 @@ public:
 	//! Return true if GLSL is used
 	static bool glslUsed();
 
+	//! Return true if Point Sprite is supported
+	static bool pointSpriteSupported();
+
 	//! Return true if selection shader is used
 	static bool selectionShaderUsed();
 
@@ -113,6 +116,9 @@ public:
 	//! Set VBO usage
 	static void setVboUsage(const bool);
 
+	//! Set Point Sprite support
+	static void setPointSpriteSupport();
+
 	//! Set the frame buffer support
 	static void setFrameBufferSupport();
 
@@ -154,6 +160,9 @@ public:
 private:
 	//! VBO used
 	static bool m_UseVbo;
+
+	//! Point Sprite supported flag
+	static bool m_PointSpriteSupported;
 
 	//! Use shader
 	static bool m_UseShader;
