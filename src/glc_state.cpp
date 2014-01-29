@@ -32,7 +32,7 @@
 #include <QOpenGLContext>
 
 bool GLC_State::m_UseVbo= true;
-bool GLC_State::m_PointSpriteSupported= false;
+bool GLC_State::m_PointSpriteSupported= true;
 bool GLC_State::m_UseShader= true;
 bool GLC_State::m_UseSelectionShader= false;
 bool GLC_State::m_IsInSelectionMode= false;
@@ -81,7 +81,6 @@ bool GLC_State::glslUsed()
 
 bool GLC_State::pointSpriteSupported()
 {
-    Q_ASSERT(m_IsValid);
     return m_PointSpriteSupported;
 }
 
@@ -181,6 +180,7 @@ void GLC_State::setVboUsage(const bool vboUsed)
 void GLC_State::setPointSpriteSupport()
 {
     m_PointSpriteSupported= glc::extensionIsSupported("GL_ARB_point_parameters") && glc::loadPointSpriteExtension();
+    Q_ASSERT(m_PointSpriteSupported);
 }
 
 void GLC_State::setFrameBufferSupport()
