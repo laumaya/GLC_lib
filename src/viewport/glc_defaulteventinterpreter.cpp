@@ -101,7 +101,7 @@ bool GLC_DefaultEventInterpreter::processMouseReleaseEvent(QMouseEvent *e)
     }
     else if ((e->button() == Qt::LeftButton))
     {
-        select(e->x(), e->y(), GLC_SelectionEvent::ModeReplace | GLC_SelectionEvent::ModeInstance);
+        select(e->x(), e->y(), GLC_SelectionEvent::ModeReplace | m_pViewHandler->selectionMode());
         subject= true;
     }
 

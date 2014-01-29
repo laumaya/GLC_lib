@@ -89,6 +89,9 @@ public:
     inline GLC_SelectionEvent::Modes selectionModes() const
     {return m_SelectionModes;}
 
+    inline GLC_SelectionEvent::Mode selectionMode() const
+    {return m_SelectionMode;}
+
     inline QPoint pointerPosition() const
     {return m_PointerPosition;}
 
@@ -154,6 +157,8 @@ public:
     inline void setCurrentRenderFlag(glc::RenderFlag renderFlag)
     {m_RenderFlag= renderFlag;}
 
+    inline void setSelectionMode(GLC_SelectionEvent::Mode mode)
+    {m_SelectionMode= mode;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -204,6 +209,7 @@ protected:
     GLC_InputEventInterpreter* m_pInputEventInterpreter;
     GLC_ViewHandler::RenderingMode m_RenderingMode;
     QPoint m_PointerPosition;
+    GLC_SelectionEvent::Mode m_SelectionMode;
     GLC_SelectionEvent::Modes m_SelectionModes;
     GLC_SelectionSet m_CurrentSelectionSet;
     GLC_Point3d m_UnprojectedPoint;
