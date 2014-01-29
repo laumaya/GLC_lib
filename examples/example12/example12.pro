@@ -1,6 +1,6 @@
 TEMPLATE = app
 CONFIG += warn_on
-TARGET = glc_declarative
+TARGET = glc_quick
 VERSION = 1.0
 
 unix:OBJECTS_DIR = ./Build
