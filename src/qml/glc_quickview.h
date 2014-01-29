@@ -26,6 +26,8 @@
 
 #include <QQuickView>
 
+#include "../glc_config.h"
+
 class GLC_Context;
 class QWindow;
 class QUrl;
@@ -38,7 +40,7 @@ class QQmlEngine;
 
 /*! The GLC_QuickItem make it possible to render a GLC_World int a QML scene Graph*/
 //////////////////////////////////////////////////////////////////////
-class GLC_QuickView : public QQuickView
+class GLC_LIB_EXPORT GLC_QuickView : public QQuickView
 {
     Q_OBJECT
 public:
