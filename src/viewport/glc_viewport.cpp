@@ -158,6 +158,8 @@ GLC_Vector3d GLC_Viewport::mapNormalyzePosMouse(double Posx, double Posy) const
 
 void GLC_Viewport::initGl()
 {
+    QOpenGLFunctions glFuncts(QOpenGLContext::currentContext());
+
 	glClearColor(m_BackgroundColor.redF(), m_BackgroundColor.greenF(), m_BackgroundColor.blueF(), 1.0f);
 	glClearDepth(1.0f);                                   // Depth Buffer Setup
     glShadeModel(GL_SMOOTH);                              // Enable Smooth Shading
@@ -171,8 +173,8 @@ void GLC_Viewport::initGl()
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glBlendEquation(GL_FUNC_ADD);
+    glFuncts.glBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glFuncts.glBlendEquation(GL_FUNC_ADD);
 
     glDisable(GL_STENCIL_TEST);
     glDisable(GL_ALPHA_TEST);
