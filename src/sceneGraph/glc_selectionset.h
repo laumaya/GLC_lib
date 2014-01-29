@@ -129,6 +129,12 @@ public:
     inline bool operator!=(const GLC_SelectionSet& other) const
     {return !(this->operator ==(other));}
 
+    //! Return the list of selected bodies id of the given occurrence id
+    QList<GLC_uint> selectedBodies(GLC_uint occurrenceId) const;
+
+    //! Return the list of selected primitive of the given occurrence id and body id
+    QList<GLC_uint> selectedPrimitive(GLC_uint occId, GLC_uint bodyId);
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/

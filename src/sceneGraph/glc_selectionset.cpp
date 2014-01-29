@@ -216,6 +216,26 @@ bool GLC_SelectionSet::operator==(const GLC_SelectionSet &other) const
     return subject;
 }
 
+QList<GLC_uint> GLC_SelectionSet::selectedBodies(GLC_uint occurrenceId) const
+{
+    QList<GLC_uint> subject;
+    if (contains(occurrenceId))
+    {
+        subject= m_OccurrenceSelection.value(occurrenceId).keys();
+    }
+    return subject;
+}
+
+QList<GLC_uint> GLC_SelectionSet::selectedPrimitive(GLC_uint occId, GLC_uint bodyId)
+{
+    QList<GLC_uint> subject;
+    if (contains(occId, bodyId))
+    {
+        subject= m_OccurrenceSelection.value(occId).value(bodyId).values();
+    }
+    return subject;
+}
+
 void GLC_SelectionSet::setAttachedWorld(GLC_World world)
 {
     m_pWorldHandle= world.worldHandle();
