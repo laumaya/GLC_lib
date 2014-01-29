@@ -114,6 +114,11 @@ public:
 	inline GLC_SelectionSet* selectionSetHandle()
 	{return &m_SelectionSet;}
 
+    //! Return a copy of the selection set
+    inline GLC_SelectionSet selectionSet()
+    {return m_SelectionSet;}
+
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

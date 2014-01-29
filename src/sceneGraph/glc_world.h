@@ -30,6 +30,7 @@
 #include "glc_structreference.h"
 #include "glc_structinstance.h"
 #include "glc_worldhandle.h"
+#include "glc_selectionset.h"
 
 #include "../glc_config.h"
 
@@ -188,6 +189,11 @@ public:
 
 	//! Take the root occurrence of this world
 	GLC_StructOccurrence* takeRootOccurrence();
+
+    //! Return a copy of the selection set
+    inline GLC_SelectionSet selectionSet()
+    {return m_pWorldHandle->selectionSet();}
+
 
 //@}
 
