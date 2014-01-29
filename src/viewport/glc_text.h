@@ -46,7 +46,7 @@ private:
 
 
 private:
-    GLC_Text* m_pTextInstance;
+    static GLC_Text* m_pTextInstance;
 };
 
 #endif // GLC_TEXT_H
