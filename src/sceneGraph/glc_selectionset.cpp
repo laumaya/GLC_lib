@@ -91,13 +91,6 @@ long GLC_SelectionSet::bodyCount() const
         {
             subject+= iOcc.value().count();
         }
-        else
-        {
-            const GLC_uint currentId= iOcc.key();
-            Q_ASSERT(m_pWorldHandle->collection()->contains(currentId));
-            GLC_3DViewInstance* pInstance= m_pWorldHandle->collection()->instanceHandle(currentId);
-            subject+= pInstance->numberOfBody();
-        }
         ++iOcc;
     }
 
@@ -133,18 +126,6 @@ long GLC_SelectionSet::primitiveCount() const
                 ++iBody;
             }
         }
-        else
-        {
-            const GLC_uint currentId= iOcc.key();
-            Q_ASSERT(m_pWorldHandle->collection()->contains(currentId));
-            GLC_3DViewInstance* pInstance= m_pWorldHandle->collection()->instanceHandle(currentId);
-            const int bodyCount= pInstance->numberOfBody();
-            for (int i= 0; i < bodyCount; ++i)
-            {
-                subject+= pInstance->geomAt(i)->primitiveCount();
-            }
-        }
-
         ++iOcc;
     }
 
