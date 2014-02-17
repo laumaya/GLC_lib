@@ -21,7 +21,9 @@
 
 #include <QGraphicsView>
 
+QT_BEGIN_NAMESPACE
 class QResizeEvent;
+QT_END_NAMESPACE
 
 class GLCGraphicsView : public QGraphicsView
 {

@@ -34,7 +34,9 @@
 
 #include "../glc_config.h"
 
+QT_BEGIN_NAMESPACE
 class QGLContext;
+QT_END_NAMESPACE
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Light

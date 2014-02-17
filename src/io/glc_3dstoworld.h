@@ -38,7 +38,9 @@
 #include "../glc_config.h"
 
 class GLC_World;
+QT_BEGIN_NAMESPACE
 class QGLContext;
+QT_END_NAMESPACE
 class GLC_Mesh;
 class GLC_StructOccurence;
 class GLC_Material;
