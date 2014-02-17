@@ -42,6 +42,8 @@ public:
 	virtual GLC_WorldReaderHandler* readerHandler()= 0;
 };
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GLC_WorldReaderPlugin, "com.GLC_lib.GLC_WorldReaderPlugin")
+QT_END_NAMESPACE
 
 #endif /* GLC_WORLDREADERPLUGIN_H_ */

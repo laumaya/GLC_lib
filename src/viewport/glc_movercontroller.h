@@ -33,7 +33,9 @@
 #include "../glc_config.h"
 #include "glc_userinput.h"
 
+QT_BEGIN_NAMESPACE
 class QGLWidget;
+QT_END_NAMESPACE
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_MoverController

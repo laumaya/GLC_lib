@@ -17,7 +17,9 @@
 #include <GLC_World>
 #include <GLC_MoverController>
 
+QT_BEGIN_NAMESPACE
 class QGLFramebufferObject;
+QT_END_NAMESPACE
 
 class GLC_DeclarativeItem : public QDeclarativeItem
 {

@@ -27,6 +27,8 @@
 
 #include "glc_state.h"
 
+QT_USE_NAMESPACE
+
 GLC_Context* GLC_Context::m_pCurrentContext= NULL;
 
 GLC_Context::GLC_Context(const QGLFormat& format)
