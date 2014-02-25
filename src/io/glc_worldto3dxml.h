@@ -32,7 +32,9 @@
 
 class QuaZip;
 class QuaZipFile;
+QT_BEGIN_NAMESPACE
 class QFile;
+QT_END_NAMESPACE
 class GLC_Mesh;
 
 //////////////////////////////////////////////////////////////////////

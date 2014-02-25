@@ -25,7 +25,9 @@
 #ifndef GLC_WORLDREADERHANDLER_H_
 #define GLC_WORLDREADERHANDLER_H_
 
+QT_BEGIN_NAMESPACE
 class QFile;
+QT_END_NAMESPACE
 #include <QStringList>
 
 #include "../sceneGraph/glc_world.h"

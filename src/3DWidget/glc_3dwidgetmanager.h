@@ -28,7 +28,9 @@
 
 #include "../glc_config.h"
 
+QT_BEGIN_NAMESPACE
 class QMouseEvent;
+QT_END_NAMESPACE
 
 class GLC_LIB_EXPORT GLC_3DWidgetManager
 {
