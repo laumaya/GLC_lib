@@ -73,11 +73,11 @@ public:
 	//! Execute OpenGL Material
 	static void glExecute();
 	//! Init shader
-	static void initShader(const QGLContext* pContext);
+    static void initShader(QOpenGLContext* pContext);
 	//! delete shader
-	static void deleteShader(const QGLContext* pContext);
+    static void deleteShader(QOpenGLContext* pContext);
 	//! Set shader
-	static void setShaders(QFile& vertex, QFile& fragment, const QGLContext* pContext);
+    static void setShaders(QFile& vertex, QFile& fragment, QOpenGLContext* pContext);
 	//! Use shader
 	static void useShader();
 	//! Unused shader
@@ -90,7 +90,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Return the sharing context of the given context
-	static QGLContext* sharingContext(const QGLContext* pContext);
+    static QOpenGLContext* sharingContext(QOpenGLContext* pContext);
 
 //////////////////////////////////////////////////////////////////////
 // Private members
@@ -98,7 +98,7 @@ private:
 
 private:
 		//! Selection Shader
-		static QHash<const QGLContext*, GLC_Shader*> m_SelectionShaderHash;
+        static QHash<QOpenGLContext*, GLC_Shader*> m_SelectionShaderHash;
 
 		//! Selection material id
 		static GLC_uint m_SelectionMaterialId;

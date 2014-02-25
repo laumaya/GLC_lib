@@ -27,7 +27,7 @@
 #include "glc_material.h"
 
 
-QHash<const QGLContext*, GLC_Shader*> GLC_SelectionMaterial::m_SelectionShaderHash;
+QHash<QOpenGLContext*, GLC_Shader*> GLC_SelectionMaterial::m_SelectionShaderHash;
 GLC_uint GLC_SelectionMaterial::m_SelectionMaterialId= 0;
 GLC_Material* GLC_SelectionMaterial::m_pMaterial= NULL;
 bool GLC_SelectionMaterial::m_NoSelectionMaterial = false;
@@ -107,13 +107,13 @@ void GLC_SelectionMaterial::glExecute()
 	}
 }
 
-void GLC_SelectionMaterial::initShader(const QGLContext* pContext)
+void GLC_SelectionMaterial::initShader(QOpenGLContext *pContext)
 {
 	Q_ASSERT(m_SelectionShaderHash.contains(pContext));
 	m_SelectionShaderHash.value(pContext)->createAndCompileProgrammShader();
 }
 
-void GLC_SelectionMaterial::setShaders(QFile& vertex, QFile& fragment, const QGLContext* pContext)
+void GLC_SelectionMaterial::setShaders(QFile& vertex, QFile& fragment, QOpenGLContext *pContext)
 {
 	if (m_SelectionShaderHash.contains(pContext))
 	{
@@ -128,12 +128,11 @@ void GLC_SelectionMaterial::setShaders(QFile& vertex, QFile& fragment, const QGL
 
 void GLC_SelectionMaterial::useShader()
 {
-	QGLContext* pContext= const_cast<QGLContext*>(QGLContext::currentContext());
+    QOpenGLContext* pContext= QOpenGLContext::currentContext();
 	Q_ASSERT(NULL != pContext);
 	Q_ASSERT(pContext->isValid());
 	if(!m_SelectionShaderHash.contains(pContext))
 	{
-		Q_ASSERT(pContext->isSharing());
 		pContext= sharingContext(pContext);
 		Q_ASSERT(NULL != pContext);
 	}
@@ -143,12 +142,11 @@ void GLC_SelectionMaterial::useShader()
 
 void GLC_SelectionMaterial::unUseShader()
 {
-	QGLContext* pContext= const_cast<QGLContext*>(QGLContext::currentContext());
+    QOpenGLContext* pContext= QOpenGLContext::currentContext();
 	Q_ASSERT(NULL != pContext);
 	Q_ASSERT(pContext->isValid());
 	if(!m_SelectionShaderHash.contains(pContext))
 	{
-		Q_ASSERT(pContext->isSharing());
 		pContext= sharingContext(pContext);
 		Q_ASSERT(NULL != pContext);
 	}
@@ -159,17 +157,17 @@ void GLC_SelectionMaterial::unUseShader()
 //////////////////////////////////////////////////////////////////////
 // Private services fonction
 //////////////////////////////////////////////////////////////////////
-QGLContext* GLC_SelectionMaterial::sharingContext(const QGLContext* pContext)
+QOpenGLContext *GLC_SelectionMaterial::sharingContext(QOpenGLContext *pContext)
 {
-	QGLContext* pSharingContext= NULL;
-	QHash<const QGLContext*, GLC_Shader*>::const_iterator iContext= m_SelectionShaderHash.constBegin();
+    QOpenGLContext* pSharingContext= NULL;
+    QHash<QOpenGLContext*, GLC_Shader*>::const_iterator iContext= m_SelectionShaderHash.constBegin();
 
 	while ((NULL == pSharingContext) && (iContext != m_SelectionShaderHash.constEnd()))
 	{
-		const QGLContext* pCurrentContext= iContext.key();
-		if (QGLContext::areSharing(pContext, pCurrentContext))
+        QOpenGLContext* pCurrentContext= iContext.key();
+        if (QOpenGLContext::areSharing(pContext, pCurrentContext))
 		{
-			pSharingContext= const_cast<QGLContext*>(pCurrentContext);
+            pSharingContext= pCurrentContext;
 		}
 		++iContext;
 	}
@@ -178,7 +176,7 @@ QGLContext* GLC_SelectionMaterial::sharingContext(const QGLContext* pContext)
 }
 
 //! delete shader
-void GLC_SelectionMaterial::deleteShader(const QGLContext* pContext)
+void GLC_SelectionMaterial::deleteShader(QOpenGLContext *pContext)
 {
 	Q_ASSERT(m_SelectionShaderHash.contains(pContext));
 	GLC_Shader* pShader= m_SelectionShaderHash.value(pContext);

@@ -375,8 +375,6 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
         pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
         pTextureNode->setRect(this->boundingRect());
     }
-
-
 }
 
 void GLC_QuickItem::setupAuxFbo(int width, int height)

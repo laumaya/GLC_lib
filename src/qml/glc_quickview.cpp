@@ -79,6 +79,7 @@ void GLC_QuickView::sceneGraphInitializedDone()
 
     m_pContext= GLC_ContextManager::instance()->createContext(pOpenGLContext, pFakeSurface);
     m_pContext->makeCurrent();
+    initializeGL();
 }
 
 void GLC_QuickView::initConnection()

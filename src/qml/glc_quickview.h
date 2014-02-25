@@ -52,13 +52,16 @@ public:
 public:
     GLC_Context* guiThreadContext() const;
 
+protected:
+    virtual void initializeGL(){}
+
 private slots:
     void sceneGraphInitializedDone();
 
 private:
     void initConnection();
 
-private:
+protected:
 
     //! The shared context of the guiThread
     GLC_Context* m_pContext;
