@@ -32,6 +32,7 @@
 #include "../glc_state.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 #include "../geometry/glc_point.h"
+#include "../glc_factory.h"
 
 #include <QtDebug>
 
@@ -41,29 +42,29 @@ using namespace glc;
 //////////////////////////////////////////////////////////////////////
 
 GLC_Viewport::GLC_Viewport()
-// Camera definition
-: m_pViewCam(new GLC_Camera())				// Camera
-, m_DistanceMax(500.0)			// Camera Maximum distance
-, m_dDistanceMini(0.01)			// Camera Minimum distance
-, m_ViewAngle(35)					// Camera angle of view
-, m_ViewTangent(tan(glc::toRadian(m_ViewAngle)))
-, m_pImagePlane(NULL)			// Background image
-// OpenGL Window size
-, m_Width(0)				// Horizontal OpenGL viewport size
-, m_Height(1)				// Vertical OpenGL viewport size
-, m_AspectRatio(1.0)
-// the default backgroundColor
-, m_BackgroundColor(Qt::black)
-, m_SelectionSquareSize(4)
-, m_ProjectionMatrix()
-, m_Frustum()
-, m_ClipPlanesHash()
-, m_UseClipPlane(false)
-, m_3DWidgetCollection()
-, m_UseParallelProjection(false)
-, m_MinimumStaticPixelSize(10)
-, m_MinimumStaticRatioSize(0.0)
-, m_MinimumDynamicRatioSize(0.0)
+    : m_pViewCam(new GLC_Camera())				// Camera
+    , m_DistanceMax(500.0)			// Camera Maximum distance
+    , m_dDistanceMini(0.01)			// Camera Minimum distance
+    , m_ViewAngle(35)					// Camera angle of view
+    , m_ViewTangent(tan(glc::toRadian(m_ViewAngle)))
+    , m_pImagePlane(NULL)			// Background image
+    // OpenGL Window size
+    , m_Width(0)				// Horizontal OpenGL viewport size
+    , m_Height(1)				// Vertical OpenGL viewport size
+    , m_AspectRatio(1.0)
+    // the default backgroundColor
+    , m_BackgroundColor(Qt::black)
+    , m_SelectionSquareSize(4)
+    , m_ProjectionMatrix()
+    , m_Frustum()
+    , m_ClipPlanesHash()
+    , m_UseClipPlane(false)
+    , m_3DWidgetCollection()
+    , m_UseParallelProjection(false)
+    , m_MinimumStaticPixelSize(10)
+    , m_MinimumStaticRatioSize(0.0)
+    , m_MinimumDynamicRatioSize(0.0)
+    , m_TextRenderingCollection()
 {
 
 }
@@ -368,7 +369,37 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list, GLenum buffer
 		unprojectedPoints.append(GLC_Point3d(pX, pY, pZ));
 	}
 
-	return unprojectedPoints;
+    return unprojectedPoints;
+}
+
+void GLC_Viewport::renderText(int x, int y, const QString &text, const QColor &color, const QFont &font)
+{
+    if (!text.isEmpty())
+    {
+        QFontMetrics fontMetrics(font);
+        const int width= fontMetrics.width(text);
+        const int height= fontMetrics.height();
+        QPixmap pixmap(width, height);
+        pixmap.fill(Qt::transparent);
+        QPainter painter;
+
+        painter.begin(&pixmap);
+        painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::TextAntialiasing);
+        painter.setFont(font);
+        painter.setPen(color);
+        painter.drawText(0, fontMetrics.ascent(), text);
+        painter.end();
+
+        QImage image= pixmap.toImage();
+
+        GLC_Texture *pTexture= new GLC_Texture(image);
+        GLC_Material* pMaterial= new GLC_Material(pTexture);
+
+        GLC_3DViewInstance rectangle= GLC_Factory::instance()->createRectangle(width, height);
+        rectangle.geomAt(0)->addMaterial(pMaterial);
+        m_TextRenderingCollection.add(rectangle);
+        m_TextRenderingCollection.render(0, glc::ShadingFlag);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////

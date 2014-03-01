@@ -206,6 +206,10 @@ public:
 	/*! The size of the given list must be a multiple of 2*/
     QList<GLC_Point3d> unproject(const QList<int>& list, GLenum buffer= GL_FRONT)const;
 
+    //! Render the given string into the current OpenGL context
+    /*! x and y are specified in window coordinates*/
+    void renderText(int x, int y, const QString& text, const QColor& color= Qt::white, const QFont& font= QFont());
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -421,6 +425,9 @@ private:
 
 	//! The minimum dynamic size ratio
 	double m_MinimumDynamicRatioSize;
+
+    //! Text rendering collection
+    GLC_3DViewCollection m_TextRenderingCollection;
 };
 
 GLC_Matrix4x4 GLC_Viewport::compositionMatrix() const
