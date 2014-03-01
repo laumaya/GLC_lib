@@ -78,6 +78,8 @@ void GLWidget::initializeGL()
 	m_GlView.initGl();
 	// Reframe to the cylinder bounding Box
     m_GlView.reframe(m_Collection.boundingBox());
+    m_GlView.clearBackground(Qt::white);
+    m_light.setTwoSided(true);
 }
 
 void GLWidget::paintGL()
@@ -99,10 +101,13 @@ void GLWidget::paintGL()
 		m_GlView.glExecuteCam();
 
 		// Display the cylinder
-        m_Collection.render(0, glc::ShadingFlag);
+        //m_Collection.render(0, glc::ShadingFlag);
 
-		// Display UI Info (orbit circle)
-		m_MoverController.drawActiveMoverRep();
+        m_light.disable();
+        m_GlView.renderText(0, 0, "Hello Qt", Qt::blue);
+
+        // Display UI Info (orbit circle)
+        m_MoverController.drawActiveMoverRep();
 	}
 	catch (GLC_Exception &e)
 	{

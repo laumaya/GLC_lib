@@ -374,6 +374,7 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list, GLenum buffer
 
 void GLC_Viewport::renderText(int x, int y, const QString &text, const QColor &color, const QFont &font)
 {
+    m_TextRenderingCollection.clear();
     if (!text.isEmpty())
     {
         QFontMetrics fontMetrics(font);
@@ -393,12 +394,20 @@ void GLC_Viewport::renderText(int x, int y, const QString &text, const QColor &c
         QImage image= pixmap.toImage();
 
         GLC_Texture *pTexture= new GLC_Texture(image);
-        GLC_Material* pMaterial= new GLC_Material(pTexture);
+        GLC_Material* pMaterial= new GLC_Material(Qt::black);
+        pMaterial->setTexture(pTexture);
+        //pMaterial->setDiffuseColor(Qt::white);
+        pMaterial->setOpacity(0.99);
 
         GLC_3DViewInstance rectangle= GLC_Factory::instance()->createRectangle(width, height);
+        //rectangle.setMatrix(GLC_Matrix4x4(m_pViewCam->eye()));
         rectangle.geomAt(0)->addMaterial(pMaterial);
         m_TextRenderingCollection.add(rectangle);
-        m_TextRenderingCollection.render(0, glc::ShadingFlag);
+        GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
+
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+        m_TextRenderingCollection.render(0, glc::TransparentRenderFlag);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     }
 }
 
