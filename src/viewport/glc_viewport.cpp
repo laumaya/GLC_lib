@@ -400,13 +400,17 @@ void GLC_Viewport::renderText(int x, int y, const QString &text, const QColor &c
         pMaterial->setOpacity(0.99);
 
         GLC_3DViewInstance rectangle= GLC_Factory::instance()->createRectangle(width, height);
-        //rectangle.setMatrix(GLC_Matrix4x4(m_pViewCam->eye()));
+        //
+        rectangle.setMatrix(m_pViewCam->viewMatrix().inverted());
+        rectangle.multMatrix(GLC_Matrix4x4(m_pViewCam->target()));
         rectangle.geomAt(0)->addMaterial(pMaterial);
         m_TextRenderingCollection.add(rectangle);
         GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
 
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+        glDisable(GL_DEPTH_TEST);
         m_TextRenderingCollection.render(0, glc::TransparentRenderFlag);
+        glEnable(GL_DEPTH_TEST);
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     }
 }

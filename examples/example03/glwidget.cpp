@@ -101,7 +101,7 @@ void GLWidget::paintGL()
 		m_GlView.glExecuteCam();
 
 		// Display the cylinder
-        //m_Collection.render(0, glc::ShadingFlag);
+        m_Collection.render(0, glc::ShadingFlag);
 
         m_light.disable();
         m_GlView.renderText(0, 0, "Hello Qt", Qt::blue);
