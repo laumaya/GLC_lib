@@ -372,14 +372,15 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list, GLenum buffer
     return unprojectedPoints;
 }
 
-void GLC_Viewport::renderText(int x, int y, const QString &text, const QColor &color, const QFont &font)
+void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, const QColor &color, const QFont &font)
 {
     m_TextRenderingCollection.clear();
     if (!text.isEmpty())
     {
         QFontMetrics fontMetrics(font);
-        const int width= fontMetrics.width(text);
-        const int height= fontMetrics.height();
+        const double width= fontMetrics.width(text);
+        const double height= fontMetrics.height();
+
         QPixmap pixmap(width, height);
         pixmap.fill(Qt::transparent);
         QPainter painter;
@@ -396,16 +397,25 @@ void GLC_Viewport::renderText(int x, int y, const QString &text, const QColor &c
         GLC_Texture *pTexture= new GLC_Texture(image);
         GLC_Material* pMaterial= new GLC_Material(Qt::black);
         pMaterial->setTexture(pTexture);
-        //pMaterial->setDiffuseColor(Qt::white);
         pMaterial->setOpacity(0.99);
 
+        const GLC_Point3d eye(m_pViewCam->eye());
+        const double distanceToNormal= (point - eye).length();
+        const double viewWidth= distanceToNormal * m_ViewTangent * m_AspectRatio;
+        const double viewheight= (static_cast<double>(m_Height) / static_cast<double>(m_Width)) * viewWidth;
+        const double fontRatio= static_cast<double>(height) / static_cast<double>(m_Height);
+        const double newHeight= fontRatio * viewheight;
+        const double sizeRatio= newHeight / height;
+
         GLC_3DViewInstance rectangle= GLC_Factory::instance()->createRectangle(width, height);
-        //
-        rectangle.setMatrix(m_pViewCam->viewMatrix().inverted());
-        rectangle.multMatrix(GLC_Matrix4x4(m_pViewCam->target()));
+
+        GLC_Matrix4x4 scaleMatrix;
+        scaleMatrix.setMatScaling(sizeRatio, sizeRatio, sizeRatio);
+        rectangle.setMatrix(scaleMatrix);
+        rectangle.multMatrix(m_pViewCam->viewMatrix().inverted());
+        rectangle.multMatrix(GLC_Matrix4x4(point));
         rectangle.geomAt(0)->addMaterial(pMaterial);
         m_TextRenderingCollection.add(rectangle);
-        GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
 
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
         glDisable(GL_DEPTH_TEST);
