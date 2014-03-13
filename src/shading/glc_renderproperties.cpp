@@ -166,7 +166,29 @@ GLC_RenderProperties& GLC_RenderProperties::operator=(const GLC_RenderProperties
 // Destructor
 GLC_RenderProperties::~GLC_RenderProperties()
 {
-	clear();
+    clear();
+}
+
+bool GLC_RenderProperties::operator==(const GLC_RenderProperties &other) const
+{
+    bool subject= (this == &other);
+
+    if (!subject)
+    {
+        subject= subject && (m_IsSelected == other.m_IsSelected);
+        subject= subject && (m_PolyFace == other.m_PolyFace);
+        subject= subject && (m_PolyMode == other.m_PolyMode);
+        subject= subject && (m_RenderMode == other.m_RenderMode);
+        subject= subject && (m_SavedRenderMode == other.m_SavedRenderMode);
+        subject= subject && (m_pOverwriteMaterial == other.m_pOverwriteMaterial);
+        subject= subject && (m_OverwriteOpacity == other.m_OverwriteOpacity);
+        subject= subject && (m_pBodySelectedPrimitvesId == other.m_pBodySelectedPrimitvesId);
+        subject= subject && (m_pOverwritePrimitiveMaterialMaps == other.m_pOverwritePrimitiveMaterialMaps);
+        subject= subject && (m_RenderingFlag == other.m_RenderingFlag);
+        subject= subject && (m_CurrentBody == other.m_CurrentBody);
+    }
+
+    return subject;
 }
 
 // Return true if rendering properties needs to render with transparency

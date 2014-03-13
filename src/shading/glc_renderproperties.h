@@ -89,6 +89,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+    //! Return true if this render properties is equal to the given one
+    bool operator==(const GLC_RenderProperties& other) const;
+
 	//! Return true if it is selected
 	inline bool isSelected() const
 	{return m_IsSelected;}
