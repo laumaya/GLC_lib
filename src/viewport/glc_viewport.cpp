@@ -33,6 +33,7 @@
 #include "../sceneGraph/glc_3dviewinstance.h"
 #include "../geometry/glc_point.h"
 #include "../glc_factory.h"
+#include "../glc_context.h"
 
 #include <QtDebug>
 
@@ -239,7 +240,7 @@ void GLC_Viewport::updateProjectionMat(bool updateOpenGL)
 	}
 	else
 	{
-	    const double yMax= m_dDistanceMini * tan(m_ViewAngle * glc::PI / 360.0);
+        const double yMax= m_dDistanceMini * tan(m_ViewAngle * glc::PI / 360.0);
 	    const double yMin= -yMax;
 	    const double xMax= yMax * m_AspectRatio;
 	    const double xMin= -xMax;
@@ -334,6 +335,25 @@ GLC_Point3d GLC_Viewport::unproject(int x, int y, GLenum buffer, bool onGeometry
     return subject;
 }
 
+GLC_Vector2d GLC_Viewport::project(const GLC_Point3d &point) const
+{
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
+    GLC_Matrix4x4 modelView(pContext->modelViewMatrix());
+    GLC_Matrix4x4 projection(pContext->projectionMatrix());
+
+    GLint viewport[4]= {0, 0, m_Width, m_Height};
+    double x;
+    double y;
+    double z;
+    glc::gluProject(point.x(), point.y(), point.z(), modelView.getData(), projection.getData(), viewport, &x, &y, &z);
+
+    GLC_Vector2d subject;
+    subject.setX(x);
+    subject.setY(y);
+
+    return subject;
+}
+
 GLC_Point3d GLC_Viewport::fuzzyUnproject(int x, int y, double z) const
 {
     const GLC_Point2d position= mapToOpenGLScreen(x, y);
@@ -381,6 +401,13 @@ void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, con
         const double width= fontMetrics.width(text);
         const double height= fontMetrics.height();
 
+        GLC_Vector2d projectedPoint1= project(point);
+        GLC_Vector3d vector(0.0, height, 0.0);
+        GLC_Vector2d projectedPoint2= project(point + vector);
+
+        double ratio= height / (projectedPoint2 - projectedPoint1).length();
+        qDebug() << " ratio " << ratio;
+
         QPixmap pixmap(width, height);
         pixmap.fill(Qt::transparent);
         QPainter painter;
@@ -406,6 +433,7 @@ void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, con
         const double fontRatio= static_cast<double>(height) / static_cast<double>(m_Height);
         const double newHeight= fontRatio * viewheight;
         const double sizeRatio= newHeight / height;
+        qDebug() << "sizeRatio " << sizeRatio;
 
         GLC_3DViewInstance rectangle= GLC_Factory::instance()->createRectangle(width, height);
 

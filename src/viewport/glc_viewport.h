@@ -199,6 +199,9 @@ public:
 	//! Return the world 3d point from the given screen coordinate
     GLC_Point3d unproject(int, int, GLenum buffer= GL_FRONT, bool onGeometry= false) const;
 
+    //! Return the screen coordinate from the world 3D point
+    GLC_Vector2d project(const GLC_Point3d& point) const;
+
     //! Return the world 3d point of given Z from the given screen coordinate
     GLC_Point3d fuzzyUnproject(int x, int y, double z) const;
 
