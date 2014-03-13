@@ -95,8 +95,12 @@ public:
 	inline GLC_Matrix4x4 viewMatrix(void) const
 	{return m_ModelViewMatrix;}
 
-	//! equality operator
-	bool operator==(const GLC_Camera&) const;
+    //! Equality operator
+    bool operator==(const GLC_Camera& other) const;
+
+    //! Not equality operator
+    inline bool operator!=(const GLC_Camera& other) const
+    {return !(this->operator ==(other));}
 
     //! almost equality (Bauer Laurent)
     bool isAlmostEqualTo(const GLC_Camera&, const double distanceAccuracy=0.05) const;

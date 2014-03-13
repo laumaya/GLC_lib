@@ -73,10 +73,10 @@ GLC_Camera::GLC_Camera(const GLC_Camera& cam)
 /////////////////////////////////////////////////////////////////////
 
 // equality operator
-bool GLC_Camera::operator==(const GLC_Camera& cam) const
+bool GLC_Camera::operator==(const GLC_Camera& other) const
 {
-	return (m_Eye == cam.m_Eye) && (m_Target == cam.m_Target)
-			&& (m_VectUp == cam.m_VectUp) && (m_DefaultVectUp == cam.m_DefaultVectUp);
+    return (m_Eye == other.m_Eye) && (m_Target == other.m_Target)
+            && (m_VectUp == other.m_VectUp) && (m_DefaultVectUp == other.m_DefaultVectUp);
 }
 
 
