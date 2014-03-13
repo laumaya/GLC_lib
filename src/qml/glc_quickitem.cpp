@@ -332,7 +332,7 @@ QPair<GLC_uint, GLC_uint> GLC_QuickItem::selectPrimitive(GLC_uint instanceId, in
         QPair<int, GLC_uint> primitive= pView->selectPrimitive(pInstance, x, y, GL_COLOR_ATTACHMENT0);
         if (primitive.first > -1)
         {
-            GLC_uint bodyId= pInstance->geomAt(subject.first)->id();
+            GLC_uint bodyId= pInstance->geomAt(primitive.first)->id();
             subject.first= bodyId;
             subject.second= primitive.second;
         }
