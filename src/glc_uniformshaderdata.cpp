@@ -44,7 +44,7 @@ GLC_UniformShaderData::~GLC_UniformShaderData()
 
 void GLC_UniformShaderData::setColorMaterialState(bool enable)
 {
-    qDebug() << "GLC_UniformShaderData::setColorMaterialState";
+    //qDebug() << "GLC_UniformShaderData::setColorMaterialState";
     GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
     Q_ASSERT(NULL != pCurrentShader);
     pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->colorMaterialStateId(), enable);
@@ -52,7 +52,7 @@ void GLC_UniformShaderData::setColorMaterialState(bool enable)
 
 void GLC_UniformShaderData::setLightingState(bool enable)
 {
-    qDebug() << "GLC_UniformShaderData::setLightingState";
+    //qDebug() << "GLC_UniformShaderData::setLightingState";
 	GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
     Q_ASSERT(NULL != pCurrentShader);
     pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->enableLightingId(), enable);
@@ -60,7 +60,7 @@ void GLC_UniformShaderData::setLightingState(bool enable)
 
 void GLC_UniformShaderData::setTwoSidedLight(GLint twoSided)
 {
-    qDebug() << "GLC_UniformShaderData::setTwoSidedLight";
+    //qDebug() << "GLC_UniformShaderData::setTwoSidedLight";
     GLC_Shader* pCurrentShader= GLC_Shader::currentShaderHandle();
     Q_ASSERT(NULL != pCurrentShader);
     pCurrentShader->programShaderHandle()->setUniformValue(pCurrentShader->twoSidedLightingStateId(), twoSided);
@@ -68,7 +68,7 @@ void GLC_UniformShaderData::setTwoSidedLight(GLint twoSided)
 
 void GLC_UniformShaderData::setLightsEnableState(QVector<int> &lightsEnableState)
 {
-    qDebug() << "GLC_UniformShaderData::setLightsEnableState";
+    //qDebug() << "GLC_UniformShaderData::setLightsEnableState";
     Q_ASSERT(lightsEnableState.count() == GLC_Light::maxLightCount());
     int* enableStateArray= lightsEnableState.data();
 
