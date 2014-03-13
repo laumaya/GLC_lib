@@ -65,7 +65,28 @@ bool GLC_Renderer::instanceRenderPropertiesIsAvailable(GLC_uint id) const
 const GLC_RenderProperties& GLC_Renderer::renderPropertiesOfInstance(GLC_uint id) const
 {
 	Q_ASSERT(m_IdToRenderProperties.contains(id));
-	return m_IdToRenderProperties.find(id).value();
+    return m_IdToRenderProperties.find(id).value();
+}
+
+bool GLC_Renderer::operator==(const GLC_Renderer &other) const
+{
+    bool subject= (this == &other);
+    if (!subject)
+    {
+        subject= subject && (m_pCollection == other.m_pCollection);
+        subject= subject && (m_IdToRenderProperties == other.m_IdToRenderProperties);
+
+        // Current flag is not tested
+    }
+
+    return subject;
+}
+
+bool GLC_Renderer::isEmpty() const
+{
+    bool subject= m_IdToRenderProperties.isEmpty();
+
+    return subject;
 }
 
 void GLC_Renderer::clear()

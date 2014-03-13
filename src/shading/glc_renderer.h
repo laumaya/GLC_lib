@@ -77,6 +77,16 @@ public:
     inline bool isCurrent() const
     {return m_IsCurrent;}
 
+    //! Return true if this rendrer is equal to the given render
+    bool operator==(const GLC_Renderer& other) const;
+
+    //! Return true if this rendrer is not equal to the given render
+    inline bool operator!=(const GLC_Renderer& other) const
+    {return !this->operator ==(other);}
+
+    //! Return true if this render is empty
+    bool isEmpty() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
