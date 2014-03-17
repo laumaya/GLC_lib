@@ -31,7 +31,6 @@
 GLC_Renderer::GLC_Renderer()
 : m_pCollection(NULL)
 , m_IdToRenderProperties()
-, m_IsCurrent(false)
 {
 
 }
@@ -39,7 +38,6 @@ GLC_Renderer::GLC_Renderer()
 GLC_Renderer::GLC_Renderer(GLC_3DViewCollection* pCollection)
 : m_pCollection(pCollection)
 , m_IdToRenderProperties()
-, m_IsCurrent(false)
 {
 
 }
@@ -47,7 +45,6 @@ GLC_Renderer::GLC_Renderer(GLC_3DViewCollection* pCollection)
 GLC_Renderer::GLC_Renderer(const GLC_Renderer& other)
 : m_pCollection(other.m_pCollection)
 , m_IdToRenderProperties(other.m_IdToRenderProperties)
-, m_IsCurrent(false)
 {
 
 }
@@ -116,12 +113,10 @@ void GLC_Renderer::setCollection(GLC_3DViewCollection* pCollection)
 	}
 }
 
-void GLC_Renderer::setCurrent()
+void GLC_Renderer::apply()
 {
 	if (NULL != m_pCollection)
 	{
-        Q_ASSERT(!m_IsCurrent);
-        m_IsCurrent= true;
 		QHash<GLC_uint, GLC_RenderProperties>::const_iterator iRender= m_IdToRenderProperties.constBegin();
 		while (iRender != m_IdToRenderProperties.constEnd())
 		{
@@ -131,17 +126,14 @@ void GLC_Renderer::setCurrent()
 			}
 			++iRender;
 		}
-		m_IdToRenderProperties.clear();
 	}
 }
 
-void GLC_Renderer::unSetCurrent()
+void GLC_Renderer::save()
 {
 	if (NULL != m_pCollection)
 	{
-        Q_ASSERT(m_IdToRenderProperties.isEmpty());
-        Q_ASSERT(m_IsCurrent);
-        m_IsCurrent= false;
+        m_IdToRenderProperties.clear();
 		QList<GLC_3DViewInstance*> instances= m_pCollection->instancesHandle();
 		const int count= instances.count();
 		for (int i= 0; i < count; ++i)

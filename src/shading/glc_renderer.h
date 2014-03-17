@@ -73,10 +73,6 @@ public:
 	//! Return the renderProperties of the given instance id
 	const GLC_RenderProperties& renderPropertiesOfInstance(GLC_uint id) const;
 
-    //! Return true if this renderer is current
-    inline bool isCurrent() const
-    {return m_IsCurrent;}
-
     //! Return true if this rendrer is equal to the given render
     bool operator==(const GLC_Renderer& other) const;
 
@@ -103,13 +99,11 @@ public:
 	//! Set the collection to use
 	void setCollection(GLC_3DViewCollection* pCollection);
 
-	//! Set this renderer the current renderer
-	/*! Apply stored renderProperties to the attached collection*/
-	void setCurrent();
+    //! Apply stored renderProperties to the attached collection
+    void apply();
 
-	//! Unset this rendere the current rendere
-	/*! Save the render properties of all instance of the scene*/
-	void unSetCurrent();
+    //! Save the render properties of all instance of the scene
+    void save();
 
 	//! Add the renderProperties of the given instance id
 	void addRenderPropertiesOfInstanceId(GLC_uint id);
@@ -128,8 +122,6 @@ private:
 	GLC_3DViewCollection* m_pCollection;
 
 	QHash<GLC_uint, GLC_RenderProperties> m_IdToRenderProperties;
-
-    bool m_IsCurrent;
 
 };
 
