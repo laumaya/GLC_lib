@@ -36,6 +36,8 @@ class GLC_WorldHandle;
 class GLC_Material;
 class GLC_RenderProperties;
 
+typedef QList<QPair<QString, uint> > GLC_OccurencePath;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_StructOccurrence
 /*! \brief GLC_StructOccurrence : A scene graph occurrence node */
@@ -200,6 +202,13 @@ public:
 
 	//! Return true if this occurrence contains the given occurrence has child
     bool containsChild(const GLC_StructOccurrence* pOcc) const;
+
+    //! Return the occurrence path (Instance Name, Instance index) from root exluded
+    GLC_OccurencePath path() const;
+
+    //! Return the occurence of the given path
+    GLC_StructOccurrence* occurrenceFromPath(GLC_OccurencePath path) const;
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -285,8 +294,9 @@ public:
 	void makeRigid();
 
 	//! Exchange the occurrence at index position i with the occurrence at index position j
-	/*!This function assumes that both i and j are at least 0 but less than childCount().*/
+    /*! This function assumes that both i and j are at least 0 but less than childCount().*/
 	void swap(int i, int j);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

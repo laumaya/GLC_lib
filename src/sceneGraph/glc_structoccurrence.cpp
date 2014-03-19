@@ -520,8 +520,52 @@ int GLC_StructOccurrence::indexOf(const GLC_StructOccurrence* pOcc) const
 
 bool GLC_StructOccurrence::containsChild(const GLC_StructOccurrence* pOcc) const
 {
-	return pOcc->parent() == this;
+    return pOcc->parent() == this;
 }
+
+GLC_OccurencePath GLC_StructOccurrence::path() const
+{
+    GLC_OccurencePath subject;
+    QList<GLC_StructOccurrence*> listOfAncestor= ancestorList();
+    listOfAncestor.prepend(const_cast<GLC_StructOccurrence*>(this));
+
+    const int count= listOfAncestor.count();
+    for (int i= (count - 2); i >= 0; --i) // Exclude root
+    {
+        GLC_StructOccurrence* pOcc= listOfAncestor.at(i);
+        QPair<QString, uint> currentPathNode(pOcc->structReference()->name(), pOcc->parent()->indexOf(pOcc));
+        subject.append(currentPathNode);
+    }
+
+    return subject;
+}
+
+GLC_StructOccurrence *GLC_StructOccurrence::occurrenceFromPath(GLC_OccurencePath path) const
+{
+    GLC_StructOccurrence* pSubject= NULL;
+
+    QPair<QString, uint> firstNode= path.takeFirst();
+    const int index= static_cast<int>(firstNode.second);
+    const QString name= firstNode.first;
+    if (m_Childs.count() > index)
+    {
+        GLC_StructOccurrence* pChild= m_Childs.at(index);
+        if (pChild->name() == name)
+        {
+            if (path.isEmpty())
+            {
+                pSubject= pChild;
+            }
+            else
+            {
+                pSubject= pChild->occurrenceFromPath(path);
+            }
+        }
+    }
+
+    return pSubject;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
