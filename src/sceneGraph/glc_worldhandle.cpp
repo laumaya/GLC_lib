@@ -106,6 +106,11 @@ int GLC_WorldHandle::representationCount() const
 
 }
 
+GLC_StructOccurrence *GLC_WorldHandle::occurrenceFromPath(GLC_OccurencePath path) const
+{
+    return m_pRoot->occurrenceFromPath(path);
+}
+
 void GLC_WorldHandle::replaceRootOccurrence(GLC_StructOccurrence *pOcc)
 {
     Q_ASSERT(pOcc->isOrphan());

@@ -30,8 +30,6 @@
 #include "glc_structoccurrence.h"
 #include "glc_selectionset.h"
 
-
-
 #include "../glc_config.h"
 
 class GLC_SelectionEvent;
@@ -118,6 +116,8 @@ public:
     inline GLC_SelectionSet selectionSet()
     {return m_SelectionSet;}
 
+    //! Return the occurence of the given path
+    GLC_StructOccurrence* occurrenceFromPath(GLC_OccurencePath path) const;
 
 //@}
 
