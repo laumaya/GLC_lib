@@ -387,46 +387,53 @@ void GLC_SelectionSet::clean()
 
 GLC_SelectionSet &GLC_SelectionSet::unite(const GLC_SelectionSet &other)
 {
-    Q_ASSERT(m_pWorldHandle == other.m_pWorldHandle);
-    OccurrenceSelection::const_iterator iOcc= other.m_OccurrenceSelection.constBegin();
-    while (iOcc != other.m_OccurrenceSelection.constEnd())
+    if (!other.isEmpty())
     {
-        const GLC_uint occId= iOcc.key();
-        if (!contains(occId))
+        if (isEmpty())
         {
-            m_OccurrenceSelection.insert(occId, other.m_OccurrenceSelection.value(occId));
+            m_pWorldHandle= other.m_pWorldHandle;
         }
-        else
-        {
-            const BodySelection bodySelection= iOcc.value();
-            BodySelection::const_iterator iBody= bodySelection.constBegin();
-            while (iBody != bodySelection.constEnd())
-            {
-                const GLC_uint bodyId= iBody.key();
-                if (!contains(occId, bodyId))
-                {
-                    m_OccurrenceSelection[occId].insert(bodyId, other.m_OccurrenceSelection.value(occId).value(bodyId));
-                }
-                else
-                {
-                    const PrimitiveSelection primitiveSelection= iBody.value();
-                    PrimitiveSelection::const_iterator iPrim= primitiveSelection.constBegin();
-                    while (iPrim != primitiveSelection.constEnd())
-                    {
-                        const GLC_uint primId= *iPrim;
-                        if (!contains(occId, bodyId, primId))
-                        {
-                            (m_OccurrenceSelection[occId])[bodyId].insert(primId);
-                        }
-                        ++iPrim;
-                    }
-                }
-                ++iBody;
-            }
-        }
-        ++iOcc;
-    }
 
+        Q_ASSERT(m_pWorldHandle == other.m_pWorldHandle);
+        OccurrenceSelection::const_iterator iOcc= other.m_OccurrenceSelection.constBegin();
+        while (iOcc != other.m_OccurrenceSelection.constEnd())
+        {
+            const GLC_uint occId= iOcc.key();
+            if (!contains(occId))
+            {
+                m_OccurrenceSelection.insert(occId, other.m_OccurrenceSelection.value(occId));
+            }
+            else
+            {
+                const BodySelection bodySelection= iOcc.value();
+                BodySelection::const_iterator iBody= bodySelection.constBegin();
+                while (iBody != bodySelection.constEnd())
+                {
+                    const GLC_uint bodyId= iBody.key();
+                    if (!contains(occId, bodyId))
+                    {
+                        m_OccurrenceSelection[occId].insert(bodyId, other.m_OccurrenceSelection.value(occId).value(bodyId));
+                    }
+                    else
+                    {
+                        const PrimitiveSelection primitiveSelection= iBody.value();
+                        PrimitiveSelection::const_iterator iPrim= primitiveSelection.constBegin();
+                        while (iPrim != primitiveSelection.constEnd())
+                        {
+                            const GLC_uint primId= *iPrim;
+                            if (!contains(occId, bodyId, primId))
+                            {
+                                (m_OccurrenceSelection[occId])[bodyId].insert(primId);
+                            }
+                            ++iPrim;
+                        }
+                    }
+                    ++iBody;
+                }
+            }
+            ++iOcc;
+        }
+    }
     return *this;
 }
 
