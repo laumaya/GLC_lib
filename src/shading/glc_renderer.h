@@ -83,6 +83,10 @@ public:
     //! Return true if this render is empty
     bool isEmpty() const;
 
+    //! Return defined render properties
+    inline QHash<GLC_uint, GLC_RenderProperties> definedRenderProperties() const
+    {return m_IdToRenderProperties;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -107,6 +111,9 @@ public:
 
 	//! Add the renderProperties of the given instance id
 	void addRenderPropertiesOfInstanceId(GLC_uint id);
+
+    //! Set the given renderProperties to the given instance id
+    void setRenderProperties(GLC_uint id, const GLC_RenderProperties& renderProperies);
 //@}
 
 //////////////////////////////////////////////////////////////////////

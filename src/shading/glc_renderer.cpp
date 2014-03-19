@@ -148,5 +148,10 @@ void GLC_Renderer::addRenderPropertiesOfInstanceId(GLC_uint id)
 {
 	Q_ASSERT(NULL != m_pCollection);
 	Q_ASSERT(m_pCollection->contains(id));
-	m_IdToRenderProperties.insert(id, *(m_pCollection->instanceHandle(id)->renderPropertiesHandle()));
+    m_IdToRenderProperties.insert(id, *(m_pCollection->instanceHandle(id)->renderPropertiesHandle()));
+}
+
+void GLC_Renderer::setRenderProperties(GLC_uint id, const GLC_RenderProperties &renderProperies)
+{
+    m_IdToRenderProperties.insert(id, renderProperies);
 }
