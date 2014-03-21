@@ -92,7 +92,7 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
 {
     QSGSimpleTextureNode* pTextureNode = static_cast<QSGSimpleTextureNode*>(pNode);
 
-    if (!pTextureNode)
+    if (pTextureNode == NULL)
     {
         pTextureNode = new QSGSimpleTextureNode();
         pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
