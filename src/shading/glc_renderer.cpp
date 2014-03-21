@@ -139,16 +139,39 @@ void GLC_Renderer::save()
 		for (int i= 0; i < count; ++i)
 		{
 			GLC_3DViewInstance* pInstance= instances.at(i);
-			m_IdToRenderProperties.insert(pInstance->id(), *(pInstance->renderPropertiesHandle()));
+            GLC_RenderProperties renderProperties= *(pInstance->renderPropertiesHandle());
+            renderProperties.unselect();
+            m_IdToRenderProperties.insert(pInstance->id(), renderProperties);
 		}
-	}
+    }
+}
+
+void GLC_Renderer::updateMissingInstances()
+{
+    if (NULL != m_pCollection)
+    {
+        QList<GLC_3DViewInstance*> instances= m_pCollection->instancesHandle();
+        const int count= instances.count();
+        for (int i= 0; i < count; ++i)
+        {
+            GLC_3DViewInstance* pInstance= instances.at(i);
+            if (m_IdToRenderProperties.contains(pInstance->id()))
+            {
+                GLC_RenderProperties renderProperties= *(pInstance->renderPropertiesHandle());
+                renderProperties.unselect();
+                m_IdToRenderProperties.insert(pInstance->id(), renderProperties);
+            }
+        }
+    }
 }
 
 void GLC_Renderer::addRenderPropertiesOfInstanceId(GLC_uint id)
 {
 	Q_ASSERT(NULL != m_pCollection);
 	Q_ASSERT(m_pCollection->contains(id));
-    m_IdToRenderProperties.insert(id, *(m_pCollection->instanceHandle(id)->renderPropertiesHandle()));
+    GLC_RenderProperties renderProperties= *(m_pCollection->instanceHandle(id)->renderPropertiesHandle());
+    renderProperties.unselect();
+    m_IdToRenderProperties.insert(id, renderProperties);
 }
 
 void GLC_Renderer::setRenderProperties(GLC_uint id, const GLC_RenderProperties &renderProperies)

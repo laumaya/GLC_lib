@@ -109,6 +109,9 @@ public:
     //! Save the render properties of all instance of the scene
     void save();
 
+    //! Update the render properties of missing instance
+    void updateMissingInstances();
+
 	//! Add the renderProperties of the given instance id
 	void addRenderPropertiesOfInstanceId(GLC_uint id);
 
