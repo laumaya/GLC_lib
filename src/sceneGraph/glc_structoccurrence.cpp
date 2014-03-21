@@ -542,6 +542,7 @@ GLC_OccurencePath GLC_StructOccurrence::path() const
 
 GLC_StructOccurrence *GLC_StructOccurrence::occurrenceFromPath(GLC_OccurencePath path) const
 {
+    Q_ASSERT(!path.isEmpty());
     GLC_StructOccurrence* pSubject= NULL;
 
     QPair<QString, uint> firstNode= path.takeFirst();
