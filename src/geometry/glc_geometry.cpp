@@ -317,7 +317,8 @@ void GLC_Geometry::glPropGeom(const GLC_RenderProperties& renderProperties)
 	if(m_IsWire)
 	{
 		glLineWidth(m_LineWidth);
-        pContext->glcEnableLighting(false);;
+        pContext->glcEnableLighting(false);
+        glDisable(GL_TEXTURE_2D);
 		if (!renderProperties.isSelected())
 		{
 			// Set polyline colors
