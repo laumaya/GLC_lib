@@ -90,12 +90,6 @@ void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &old
 
 QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pData)
 {
-    delete m_pSourceFbo;
-    m_pSourceFbo= NULL;
-
-    delete m_pTargetFbo;
-    m_pTargetFbo= NULL;
-
     QSGSimpleTextureNode* pTextureNode = static_cast<QSGSimpleTextureNode*>(pNode);
 
     if (pTextureNode == NULL)
@@ -356,11 +350,14 @@ void GLC_QuickItem::doRender()
 
 void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode)
 {
+    delete m_pSourceFbo;
+    m_pSourceFbo= NULL;
+
+    delete m_pTargetFbo;
+    m_pTargetFbo= NULL;
+
     if ((width > 0) && (height > 0))
     {
-        Q_ASSERT(NULL == m_pSourceFbo);
-        Q_ASSERT(NULL == m_pTargetFbo);
-
         QOpenGLFramebufferObjectFormat sourceFormat;
         sourceFormat.setAttachment(QOpenGLFramebufferObject::Depth);
         sourceFormat.setSamples(m_pViewhandler->samples());
