@@ -90,6 +90,12 @@ void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &old
 
 QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pData)
 {
+    delete m_pSourceFbo;
+    m_pSourceFbo= NULL;
+
+    delete m_pTargetFbo;
+    m_pTargetFbo= NULL;
+
     QSGSimpleTextureNode* pTextureNode = static_cast<QSGSimpleTextureNode*>(pNode);
 
     if (pTextureNode == NULL)
@@ -147,6 +153,8 @@ void GLC_QuickItem::mouseMoveEvent(QMouseEvent *e)
 void GLC_QuickItem::mouseReleaseEvent(QMouseEvent *e)
 {
     m_pViewhandler->processMouseReleaseEvent(e);
+
+    forceActiveFocus();
 }
 
 void GLC_QuickItem::mouseDoubleClickEvent(QMouseEvent *e)
@@ -350,28 +358,20 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
 {
     if ((width > 0) && (height > 0))
     {
-        if (NULL == m_pSourceFbo)
-        {
-            Q_ASSERT(NULL == m_pTargetFbo);
+        Q_ASSERT(NULL == m_pSourceFbo);
+        Q_ASSERT(NULL == m_pTargetFbo);
 
-            QOpenGLFramebufferObjectFormat sourceFormat;
-            sourceFormat.setAttachment(QOpenGLFramebufferObject::Depth);
-            sourceFormat.setSamples(m_pViewhandler->samples());
+        QOpenGLFramebufferObjectFormat sourceFormat;
+        sourceFormat.setAttachment(QOpenGLFramebufferObject::Depth);
+        sourceFormat.setSamples(m_pViewhandler->samples());
 
-            m_pSourceFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
-            m_pTargetFbo= new QOpenGLFramebufferObject(width, height);
-            pTextureNode->setTexture(this->window()->createTextureFromId(m_pTargetFbo->texture(), m_pTargetFbo->size()));
-            pTextureNode->setRect(this->boundingRect());
-        }
+        m_pSourceFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
+        m_pTargetFbo= new QOpenGLFramebufferObject(width, height);
+        pTextureNode->setTexture(this->window()->createTextureFromId(m_pTargetFbo->texture(), m_pTargetFbo->size()));
+        pTextureNode->setRect(this->boundingRect());
     }
     else
     {
-        delete m_pSourceFbo;
-        m_pSourceFbo= NULL;
-
-        delete m_pTargetFbo;
-        m_pTargetFbo= NULL;
-
         pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
         pTextureNode->setRect(this->boundingRect());
     }
