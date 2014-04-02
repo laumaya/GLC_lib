@@ -178,7 +178,13 @@ QImage GLC_ViewHandler::takeScreenshot(const GLC_ScreenShotSettings &screenShotS
     m_ScreenshotSettings= screenShotSettings;
     m_ScreenShotMode= true;
     updateGL(true);  // Execute OpenGL synchronously to get screenshot image
+    m_ScreenShotMode= false;
     return m_ScreenShotImage;
+}
+
+void GLC_ViewHandler::setSize(int width, int height)
+{
+    m_pViewport->setWinGLSize(width, height);
 }
 
 void GLC_ViewHandler::updateSelection(const GLC_SelectionSet& selectionSet, const GLC_Point3d &point)
@@ -197,7 +203,6 @@ void GLC_ViewHandler::setLight(GLC_Light *pLight)
 
 void GLC_ViewHandler::setScreenShotImage(const QImage &image)
 {
-    m_ScreenShotMode= false;
     m_ScreenShotImage= image;
 }
 

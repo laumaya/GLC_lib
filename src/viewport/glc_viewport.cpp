@@ -335,21 +335,41 @@ GLC_Point3d GLC_Viewport::unproject(int x, int y, GLenum buffer, bool onGeometry
     return subject;
 }
 
-GLC_Vector2d GLC_Viewport::project(const GLC_Point3d &point) const
+GLC_Point2d GLC_Viewport::project(const GLC_Point3d &point) const
 {
-    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
-    GLC_Matrix4x4 modelView(pContext->modelViewMatrix());
-    GLC_Matrix4x4 projection(pContext->projectionMatrix());
+    GLC_Matrix4x4 modelView(m_pViewCam->modelViewMatrix());
 
     GLint viewport[4]= {0, 0, m_Width, m_Height};
     double x;
     double y;
     double z;
-    glc::gluProject(point.x(), point.y(), point.z(), modelView.getData(), projection.getData(), viewport, &x, &y, &z);
+    glc::gluProject(point.x(), point.y(), point.z(), modelView.getData(), m_ProjectionMatrix.getData(), viewport, &x, &y, &z);
 
     GLC_Vector2d subject;
     subject.setX(x);
     subject.setY(y);
+
+    return subject;
+}
+
+QList<GLC_Point2d> GLC_Viewport::project(const QList<GLC_Point3d> &points) const
+{
+    QList<GLC_Point2d> subject;
+
+    GLC_Matrix4x4 modelView(m_pViewCam->modelViewMatrix());
+
+    GLint viewport[4]= {0, 0, m_Width, m_Height};
+    double x;
+    double y;
+    double z;
+
+    const int count= points.count();
+    for (int i= 0; i < count; ++i)
+    {
+        const GLC_Point3d point= points.at(i);
+        glc::gluProject(point.x(), point.y(), point.z(), modelView.getData(), m_ProjectionMatrix.getData(), viewport, &x, &y, &z);
+        subject.append(GLC_Point2d(x, y));
+    }
 
     return subject;
 }

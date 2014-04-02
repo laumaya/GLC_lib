@@ -195,7 +195,7 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
 
         m_pSourceFbo->bind();
 
-        m_pViewhandler->viewportHandle()->setWinGLSize(width, height);
+        m_pViewhandler->setSize(width, height);
 
         doRender();
 
@@ -229,7 +229,7 @@ void GLC_QuickItem::renderForSelection()
         if (m_SelectionBufferIsDirty)
         {
             qDebug() << "m_SelectionBufferIsDirty";
-            m_pViewhandler->viewportHandle()->setWinGLSize(width(), height());
+            m_pViewhandler->setSize(width(), height());
             GLC_State::setSelectionMode(true);
             doRender();
             GLC_State::setSelectionMode(false);
@@ -294,7 +294,7 @@ void GLC_QuickItem::renderForScreenShot()
 
         m_pScreenShotFbo->bind();
 
-        m_pViewhandler->viewportHandle()->setWinGLSize(width, height);
+        m_pViewhandler->setSize(width, height);
         doRender();
 
         m_pScreenShotFbo->release();

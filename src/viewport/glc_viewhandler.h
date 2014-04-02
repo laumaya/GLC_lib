@@ -145,6 +145,8 @@ public:
 
     virtual QImage takeScreenshot(const GLC_ScreenShotSettings& screenShotSettings);
 
+    virtual void setSize(int width, int height);
+
     void updateSelection(const GLC_SelectionSet &selectionSet, const GLC_Point3d& point);
 
     inline void blockUpdate(bool blocked)
