@@ -115,6 +115,7 @@ void GLC_Renderer::setCollection(GLC_3DViewCollection* pCollection)
 
 void GLC_Renderer::apply()
 {
+    qDebug() << "GLC_Renderer::apply()";
 	if (NULL != m_pCollection)
 	{
 		QHash<GLC_uint, GLC_RenderProperties>::const_iterator iRender= m_IdToRenderProperties.constBegin();
@@ -155,7 +156,7 @@ void GLC_Renderer::updateMissingInstances()
         for (int i= 0; i < count; ++i)
         {
             GLC_3DViewInstance* pInstance= instances.at(i);
-            if (m_IdToRenderProperties.contains(pInstance->id()))
+            if (!m_IdToRenderProperties.contains(pInstance->id()))
             {
                 GLC_RenderProperties renderProperties= *(pInstance->renderPropertiesHandle());
                 renderProperties.unselect();
