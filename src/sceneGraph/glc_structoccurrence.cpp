@@ -551,7 +551,7 @@ GLC_StructOccurrence *GLC_StructOccurrence::occurrenceFromPath(GLC_OccurencePath
     if (m_Childs.count() > index)
     {
         GLC_StructOccurrence* pChild= m_Childs.at(index);
-        if (pChild->name() == name)
+        if (pChild->structReference()->name() == name)
         {
             if (path.isEmpty())
             {
