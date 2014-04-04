@@ -90,6 +90,8 @@ void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &old
 
 QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pData)
 {
+    glFlush();
+
     QSGSimpleTextureNode* pTextureNode = static_cast<QSGSimpleTextureNode*>(pNode);
 
     if (pTextureNode == NULL)
@@ -131,6 +133,7 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
 
     m_pViewhandler->renderingFinished();
 
+    glFlush();
     return pTextureNode;
 }
 
