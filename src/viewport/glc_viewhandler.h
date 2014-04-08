@@ -62,6 +62,7 @@ public:
 signals :
     void isDirty();
     void invalidateSelectionBuffer();
+    void acceptHoverEvent(bool track);
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
@@ -147,6 +148,8 @@ public:
 
     virtual void setSize(int width, int height);
 
+    virtual void setMouseTracking(bool track);
+
     void updateSelection(const GLC_SelectionSet &selectionSet, const GLC_Point3d& point);
 
     inline void blockUpdate(bool blocked)
@@ -176,6 +179,7 @@ public:
     virtual void processWheelEvent(QWheelEvent* pWWheelEvent);
 
     virtual void processTouchEvent(QTouchEvent* pTouchEvent);
+    virtual void processHoverMoveEvent(QHoverEvent* pHoverEvent);
 
     inline void renderingFinished()
     {m_isRendering= false;}

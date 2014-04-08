@@ -187,6 +187,11 @@ void GLC_ViewHandler::setSize(int width, int height)
     m_pViewport->setWinGLSize(width, height);
 }
 
+void GLC_ViewHandler::setMouseTracking(bool track)
+{
+    emit acceptHoverEvent(track);
+}
+
 void GLC_ViewHandler::updateSelection(const GLC_SelectionSet& selectionSet, const GLC_Point3d &point)
 {
     m_RenderingMode= GLC_ViewHandler::normalRenderMode;
@@ -240,6 +245,11 @@ void GLC_ViewHandler::processTouchEvent(QTouchEvent *pTouchEvent)
 {
     Q_ASSERT(NULL != m_pInputEventInterpreter);
     m_pInputEventInterpreter->processTouchEvent(pTouchEvent);
+}
+
+void GLC_ViewHandler::processHoverMoveEvent(QHoverEvent *pHoverEvent)
+{
+    Q_UNUSED(pHoverEvent);
 }
 
 void GLC_ViewHandler::renderBackGround()

@@ -81,6 +81,7 @@ public:
 public slots:
     virtual void setViewhandler(QVariant viewHandler);
     void invalidateSelectionBuffer();
+    void setMouseTracking(bool track);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -96,7 +97,7 @@ protected:
     virtual void mouseDoubleClickEvent(QMouseEvent * e);
     virtual void wheelEvent(QWheelEvent * e);
     virtual void touchEvent(QTouchEvent * e);
-
+    virtual void hoverMoveEvent(QHoverEvent *event);
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -132,6 +133,12 @@ protected:
     QOpenGLFramebufferObject* m_pScreenShotFbo;
     bool m_SelectionBufferIsDirty;
     GLC_Point3d m_UnprojectedPoint;
+
+
+    // QQmlParserStatus interface
+public:
+    virtual void classBegin();
+    virtual void componentComplete();
 };
 
 #endif // GLC_QUICKITEM_H

@@ -66,17 +66,25 @@ void GLC_QuickItem::setViewhandler(QVariant viewHandler)
     {
         disconnect(m_pViewhandler, SIGNAL(isDirty()), this, SLOT(update()));
         disconnect(m_pViewhandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
+        disconnect(m_pViewhandler, SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
     }
 
     m_pViewhandler= viewHandler.value<GLC_ViewHandler*>();
 
     connect(m_pViewhandler, SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
     connect(m_pViewhandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
+    connect(m_pViewhandler, SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
 }
 
 void GLC_QuickItem::invalidateSelectionBuffer()
 {
     m_SelectionBufferIsDirty= true;
+}
+
+void GLC_QuickItem::setMouseTracking(bool track)
+{
+    qDebug() << "GLC_QuickItem::setMouseTracking(bool track) " << track;
+    setAcceptHoverEvents(track);
 }
 
 void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
@@ -167,6 +175,11 @@ void GLC_QuickItem::wheelEvent(QWheelEvent *e)
 void GLC_QuickItem::touchEvent(QTouchEvent *e)
 {
     m_pViewhandler->processTouchEvent(e);
+}
+
+void GLC_QuickItem::hoverMoveEvent(QHoverEvent *event)
+{
+    m_pViewhandler->processHoverMoveEvent(event);
 }
 
 void GLC_QuickItem::setOpenGLState()
@@ -440,4 +453,13 @@ void GLC_QuickItem::deleteViewBuffers()
 
     delete m_pTargetFbo;
     m_pTargetFbo= NULL;
+}
+
+
+void GLC_QuickItem::classBegin()
+{
+}
+
+void GLC_QuickItem::componentComplete()
+{
 }
