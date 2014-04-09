@@ -69,6 +69,12 @@ public:
 
     virtual bool processTouchEvent(QTouchEvent* pTouchEvent)= 0;
 
+    inline void setUserState(int state)
+    {m_UserState= state;}
+
+    inline int userState() const
+    {return m_UserState;}
+
 protected:
     virtual void setMover(GLC_MoverController::MoverType moverType, const GLC_UserInput &userInputs);
     virtual bool move(const GLC_UserInput& userInputs);
@@ -80,6 +86,7 @@ protected:
     bool m_UseLodWhileMoving;
     GLC_MoverController::MoverType m_DefaultNavigationType;
     bool m_DoubleClicking;
+    int m_UserState;
 };
 
 #endif // GLC_INPUTEVENTINTERPRETER_H
