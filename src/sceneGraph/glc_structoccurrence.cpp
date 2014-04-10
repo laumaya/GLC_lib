@@ -794,25 +794,33 @@ bool GLC_StructOccurrence::unloadRepresentation()
 	if (hasRepresentation())
 	{
 		GLC_StructReference* pRef= this->structReference();
-		if (pRef->representationIsLoaded())
+        if (pRef->representationIsLoaded() && has3DViewInstance())
 		{
-			if (this->has3DViewInstance())
-			{
-				unloadResult= m_pWorldHandle->collection()->remove(m_Uid);
-                QSet<GLC_StructOccurrence*> occurrenceSet= pRef->setOfStructOccurrence();
-                QSet<GLC_StructOccurrence*>::const_iterator iOcc= occurrenceSet.constBegin();
-				bool unloadReferenceRep= true;
-				while (occurrenceSet.constEnd() != iOcc)
-				{
-					unloadReferenceRep= unloadReferenceRep && !(*iOcc)->has3DViewInstance();
-					++iOcc;
-				}
-				if (unloadReferenceRep)
-				{
-					pRef->unloadRepresentation();
-				}
-			}
-		}
+            // Save rendering properties of the 3DView instance of this occurrence
+            GLC_RenderProperties savedRenderingProperties(*(m_pWorldHandle->collection()->instanceHandle(m_Uid)->renderPropertiesHandle()));
+            savedRenderingProperties.unselect();
+
+            // Remove this occurence 3DVIew instance
+            unloadResult= m_pWorldHandle->collection()->remove(m_Uid);
+
+            // Check if there is another Occurrence with the same representation
+            QSet<GLC_StructOccurrence*> occurrenceSet= pRef->setOfStructOccurrence();
+            QSet<GLC_StructOccurrence*>::const_iterator iOcc= occurrenceSet.constBegin();
+            bool unloadReferenceRep= true;
+            while (occurrenceSet.constEnd() != iOcc)
+            {
+                unloadReferenceRep= unloadReferenceRep && !(*iOcc)->has3DViewInstance();
+                ++iOcc;
+            }
+
+            if (unloadReferenceRep)
+            {
+                pRef->unloadRepresentation();
+            }
+
+            // Assign the rendering properties of the instance to this Occurrence
+            this->setRenderProperties(savedRenderingProperties, false);
+        }
 	}
 	return unloadResult;
 }
@@ -842,7 +850,7 @@ void GLC_StructOccurrence::setVisibility(bool visibility)
 	}
 }
 
-void GLC_StructOccurrence::setRenderProperties(const GLC_RenderProperties& renderProperties)
+void GLC_StructOccurrence::setRenderProperties(const GLC_RenderProperties& renderProperties, bool propagate)
 {
 	qDebug() << "GLC_StructOccurrence::setRenderProperties";
 	delete m_pRenderProperties;
@@ -852,7 +860,7 @@ void GLC_StructOccurrence::setRenderProperties(const GLC_RenderProperties& rende
 		m_pWorldHandle->collection()->instanceHandle(m_Uid)->setRenderProperties(renderProperties);
 	}
 
-	if (hasChild())
+    if (propagate && hasChild())
 	{
 		const int childCount= m_Childs.size();
 		for (int i= 0; i < childCount; ++i)

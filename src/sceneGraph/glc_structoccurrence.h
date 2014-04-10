@@ -275,7 +275,7 @@ public:
 	void setVisibility(bool visibility);
 
 	//! set the renderProperties of this occurrence
-	void setRenderProperties(const GLC_RenderProperties& renderProperties);
+    void setRenderProperties(const GLC_RenderProperties& renderProperties, bool propagate= true);
 
 	//! Remove empty children
 	void removeEmptyChildren();
