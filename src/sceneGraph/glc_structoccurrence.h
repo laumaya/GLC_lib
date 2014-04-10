@@ -277,6 +277,9 @@ public:
 	//! set the renderProperties of this occurrence
     void setRenderProperties(const GLC_RenderProperties& renderProperties, bool propagate= true);
 
+    //! Remove renderProperties of this occurrence
+    void removeRenderProperties();
+
 	//! Remove empty children
 	void removeEmptyChildren();
 

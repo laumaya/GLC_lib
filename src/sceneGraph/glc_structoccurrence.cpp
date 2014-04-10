@@ -871,7 +871,13 @@ void GLC_StructOccurrence::setRenderProperties(const GLC_RenderProperties& rende
 	else if (!has3DViewInstance())
 	{
 		m_pRenderProperties= new GLC_RenderProperties(renderProperties);
-	}
+    }
+}
+
+void GLC_StructOccurrence::removeRenderProperties()
+{
+    delete m_pRenderProperties;
+    m_pRenderProperties= NULL;
 }
 
 void GLC_StructOccurrence::removeEmptyChildren()

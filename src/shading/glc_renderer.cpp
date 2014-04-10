@@ -187,6 +187,7 @@ void GLC_Renderer::bind(GLC_World &world)
                     if (pOcc->renderPropertiesHandle() != NULL)
                     {
                         apply= pOcc->renderPropertiesHandle()->fuzzyEquals(renderProperties);
+                        if (apply) pOcc->removeRenderProperties();
                     }
 
                     propagateRenderProperties(pOcc, renderProperties, apply);
