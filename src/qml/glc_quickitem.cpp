@@ -219,6 +219,7 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
 
         QRect rect(0, 0, width, height);
         QOpenGLFramebufferObject::blitFramebuffer(m_pTargetFbo, rect, m_pSourceFbo, rect);
+        glFlush();
         popOpenGLMatrix();
     }
     else
@@ -361,7 +362,9 @@ QPair<GLC_uint, GLC_uint> GLC_QuickItem::selectPrimitive(GLC_uint instanceId, in
 
 void GLC_QuickItem::doRender()
 {
+    glFlush();
     m_pViewhandler->render();
+    glFlush();
 }
 
 void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode)
