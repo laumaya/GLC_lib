@@ -32,6 +32,8 @@
 #include "../glc_config.h"
 
 class GLC_3DViewCollection;
+class GLC_World;
+class GLC_StructOccurrence;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Renderer
@@ -112,6 +114,9 @@ public:
     //! Update the render properties of missing instance
     void updateMissingInstances();
 
+    //! Bind with world
+    void bind(GLC_World &world);
+
 	//! Add the renderProperties of the given instance id
 	void addRenderPropertiesOfInstanceId(GLC_uint id);
 
@@ -123,6 +128,8 @@ public:
 // Private services fonction
 //////////////////////////////////////////////////////////////////////
 private:
+    //! Propagate the render properties to chid occurrences with 3DViewInstances
+    void propagateRenderProperties(GLC_StructOccurrence* pOcc, const GLC_RenderProperties& properties, bool );
 
 //////////////////////////////////////////////////////////////////////
 // Private Members

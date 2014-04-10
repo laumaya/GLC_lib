@@ -25,6 +25,8 @@
 #include <QtDebug>
 
 #include "../sceneGraph/glc_3dviewcollection.h"
+#include "../sceneGraph/glc_world.h"
+#include "../sceneGraph/glc_structoccurrence.h"
 
 #include "glc_renderer.h"
 
@@ -108,7 +110,7 @@ void GLC_Renderer::setCollection(GLC_3DViewCollection* pCollection)
 {
 	if (pCollection != m_pCollection)
 	{
-		clear();
+        if (m_pCollection != NULL) clear();
 		m_pCollection= pCollection;
 	}
 }
@@ -166,6 +168,38 @@ void GLC_Renderer::updateMissingInstances()
     }
 }
 
+void GLC_Renderer::bind(GLC_World &world)
+{
+    if (m_pCollection == world.collection())
+    {
+        QList<GLC_uint> idList= m_IdToRenderProperties.keys();
+        const int count= idList.count();
+        for (int i= 0; i < count; ++i)
+        {
+            const GLC_uint id= idList.at(i);
+            if (world.containsOccurrence(id))
+            {
+                GLC_StructOccurrence* pOcc= world.occurrence(id);
+                if (!pOcc->has3DViewInstance())
+                {
+                    const GLC_RenderProperties renderProperties= m_IdToRenderProperties.value(id);
+                    bool apply= false;
+                    if (pOcc->renderPropertiesHandle() != NULL)
+                    {
+                        apply= pOcc->renderPropertiesHandle()->fuzzyEquals(renderProperties);
+                    }
+
+                    propagateRenderProperties(pOcc, renderProperties, apply);
+                }
+            }
+            else
+            {
+                m_IdToRenderProperties.remove(id);
+            }
+        }
+    }
+}
+
 void GLC_Renderer::addRenderPropertiesOfInstanceId(GLC_uint id)
 {
 	Q_ASSERT(NULL != m_pCollection);
@@ -178,4 +212,24 @@ void GLC_Renderer::addRenderPropertiesOfInstanceId(GLC_uint id)
 void GLC_Renderer::setRenderProperties(GLC_uint id, const GLC_RenderProperties &renderProperies)
 {
     m_IdToRenderProperties.insert(id, renderProperies);
+}
+
+void GLC_Renderer::propagateRenderProperties(GLC_StructOccurrence *pOcc, const GLC_RenderProperties &properties, bool apply)
+{
+    if (pOcc->has3DViewInstance())
+    {
+        m_IdToRenderProperties.insert(pOcc->id(), properties);
+        if (apply)
+        {
+            pOcc->worldHandle()->collection()->instanceHandle(pOcc->id())->setRenderProperties(properties);
+        }
+    }
+    else if (pOcc->hasChild())
+    {
+        const int count= pOcc->childCount();
+        for (int i= 0; i < count; ++i)
+        {
+            propagateRenderProperties(pOcc->child(i), properties, apply);
+        }
+    }
 }
