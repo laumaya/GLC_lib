@@ -100,68 +100,6 @@ GLC_RenderProperties::GLC_RenderProperties(const GLC_RenderProperties& renderPro
 	}
 }
 
-// Assignement operator
-GLC_RenderProperties& GLC_RenderProperties::operator=(const GLC_RenderProperties& renderProperties)
-{
-	if (this != &renderProperties)
-	{
-		clear();
-		m_IsSelected= renderProperties.m_IsSelected;
-		m_PolyFace= renderProperties.m_PolyFace;
-		m_PolyMode= renderProperties.m_PolyMode;
-		m_RenderMode= renderProperties.m_RenderMode;
-		m_SavedRenderMode= renderProperties.m_SavedRenderMode;
-		m_pOverwriteMaterial= renderProperties.m_pOverwriteMaterial;
-		m_OverwriteOpacity= renderProperties.m_OverwriteOpacity;
-		m_pBodySelectedPrimitvesId= NULL;
-		m_pOverwritePrimitiveMaterialMaps= NULL;
-		m_RenderingFlag= renderProperties.m_RenderingFlag;
-		m_CurrentBody= renderProperties.m_CurrentBody;
-
-		// Update overwrite material usage
-		if (NULL != m_pOverwriteMaterial)
-		{
-			m_pOverwriteMaterial->addUsage(m_Uid);
-		}
-
-		// Copy the Hash of set of id of selected primitives
-		if (NULL != renderProperties.m_pBodySelectedPrimitvesId)
-		{
-			m_pBodySelectedPrimitvesId= new QHash<int, QSet<GLC_uint>* >();
-			QHash<int, QSet<GLC_uint>* >::const_iterator iSet= renderProperties.m_pBodySelectedPrimitvesId->constBegin();
-			while (renderProperties.m_pBodySelectedPrimitvesId->constEnd() != iSet)
-			{
-				// Copy the current body set of id of selected primitive
-				m_pBodySelectedPrimitvesId->insert(iSet.key(), new QSet<GLC_uint>(*(iSet.value())));
-				++iSet;
-			}
-		}
-
-		// Update primitive overwrite material usage
-		if (NULL != renderProperties.m_pOverwritePrimitiveMaterialMaps)
-		{
-			// Copy the hash table of overwrite materials
-			m_pOverwritePrimitiveMaterialMaps= new QHash<int, QHash<GLC_uint, GLC_Material*>* >;
-			QHash<int, QHash<GLC_uint, GLC_Material*>* >::const_iterator iMatMaps= renderProperties.m_pOverwritePrimitiveMaterialMaps->constBegin();
-			while (renderProperties.m_pOverwritePrimitiveMaterialMaps->constEnd() != iMatMaps)
-			{
-				QHash<GLC_uint, GLC_Material*>* pBodyMatMap= new QHash<GLC_uint, GLC_Material*>(*(iMatMaps.value()));
-				m_pOverwritePrimitiveMaterialMaps->insert(iMatMaps.key(), pBodyMatMap);
-
-				QHash<GLC_uint, GLC_Material*>::iterator iMatMap= pBodyMatMap->begin();
-				while (pBodyMatMap->constEnd() != iMatMap)
-				{
-					iMatMap.value()->addUsage(m_Uid);
-					++iMatMap;
-				}
-
-				++iMatMaps;
-			}
-		}
-	}
-
-	return *this;
-}
 
 // Destructor
 GLC_RenderProperties::~GLC_RenderProperties()
@@ -175,8 +113,21 @@ bool GLC_RenderProperties::operator==(const GLC_RenderProperties &other) const
 
     if (!subject)
     {
-        subject= subject && (m_IsSelected == other.m_IsSelected);
-        subject= subject && (m_PolyFace == other.m_PolyFace);
+        subject= (m_IsSelected == other.m_IsSelected);
+        subject= subject && (m_CurrentBody == other.m_CurrentBody);
+        subject= subject && fuzzyEquals(other);
+    }
+
+    return subject;
+}
+
+bool GLC_RenderProperties::fuzzyEquals(const GLC_RenderProperties &other) const
+{
+    bool subject= (this == &other);
+
+    if (!subject)
+    {
+        subject= (m_PolyFace == other.m_PolyFace);
         subject= subject && (m_PolyMode == other.m_PolyMode);
         subject= subject && (m_RenderMode == other.m_RenderMode);
         subject= subject && (m_SavedRenderMode == other.m_SavedRenderMode);
@@ -184,8 +135,7 @@ bool GLC_RenderProperties::operator==(const GLC_RenderProperties &other) const
         subject= subject && (m_OverwriteOpacity == other.m_OverwriteOpacity);
         subject= subject && (m_pBodySelectedPrimitvesId == other.m_pBodySelectedPrimitvesId);
         subject= subject && (m_pOverwritePrimitiveMaterialMaps == other.m_pOverwritePrimitiveMaterialMaps);
-        subject= subject && (m_RenderingFlag == other.m_RenderingFlag);
-        subject= subject && (m_CurrentBody == other.m_CurrentBody);
+        subject= subject && (m_RenderingFlag == other.m_RenderingFlag);        
     }
 
     return subject;
@@ -237,7 +187,79 @@ bool GLC_RenderProperties::isDefault() const
 	return isDefault;
 }
 
-// Clear the content of the render properties and update materials usage
+GLC_RenderProperties& GLC_RenderProperties::operator=(const GLC_RenderProperties& renderProperties)
+{
+    if (this != &renderProperties)
+    {
+        fuzzyAssignement(renderProperties);
+        m_IsSelected= renderProperties.m_IsSelected;
+        m_CurrentBody= renderProperties.m_CurrentBody;
+    }
+
+    return *this;
+}
+
+GLC_RenderProperties &GLC_RenderProperties::fuzzyAssignement(const GLC_RenderProperties &other)
+{
+    if (this != &other)
+    {
+        clear();
+        m_PolyFace= other.m_PolyFace;
+        m_PolyMode= other.m_PolyMode;
+        m_RenderMode= other.m_RenderMode;
+        m_SavedRenderMode= other.m_SavedRenderMode;
+        m_pOverwriteMaterial= other.m_pOverwriteMaterial;
+        m_OverwriteOpacity= other.m_OverwriteOpacity;
+        m_pBodySelectedPrimitvesId= NULL;
+        m_pOverwritePrimitiveMaterialMaps= NULL;
+        m_RenderingFlag= other.m_RenderingFlag;
+
+        // Update overwrite material usage
+        if (NULL != m_pOverwriteMaterial)
+        {
+            m_pOverwriteMaterial->addUsage(m_Uid);
+        }
+
+        // Copy the Hash of set of id of selected primitives
+        if (NULL != other.m_pBodySelectedPrimitvesId)
+        {
+            m_pBodySelectedPrimitvesId= new QHash<int, QSet<GLC_uint>* >();
+            QHash<int, QSet<GLC_uint>* >::const_iterator iSet= other.m_pBodySelectedPrimitvesId->constBegin();
+            while (other.m_pBodySelectedPrimitvesId->constEnd() != iSet)
+            {
+                // Copy the current body set of id of selected primitive
+                m_pBodySelectedPrimitvesId->insert(iSet.key(), new QSet<GLC_uint>(*(iSet.value())));
+                ++iSet;
+            }
+        }
+
+        // Update primitive overwrite material usage
+        if (NULL != other.m_pOverwritePrimitiveMaterialMaps)
+        {
+            // Copy the hash table of overwrite materials
+            m_pOverwritePrimitiveMaterialMaps= new QHash<int, QHash<GLC_uint, GLC_Material*>* >;
+            QHash<int, QHash<GLC_uint, GLC_Material*>* >::const_iterator iMatMaps= other.m_pOverwritePrimitiveMaterialMaps->constBegin();
+            while (other.m_pOverwritePrimitiveMaterialMaps->constEnd() != iMatMaps)
+            {
+                QHash<GLC_uint, GLC_Material*>* pBodyMatMap= new QHash<GLC_uint, GLC_Material*>(*(iMatMaps.value()));
+                m_pOverwritePrimitiveMaterialMaps->insert(iMatMaps.key(), pBodyMatMap);
+
+                QHash<GLC_uint, GLC_Material*>::iterator iMatMap= pBodyMatMap->begin();
+                while (pBodyMatMap->constEnd() != iMatMap)
+                {
+                    iMatMap.value()->addUsage(m_Uid);
+                    ++iMatMap;
+                }
+
+                ++iMatMaps;
+            }
+        }
+    }
+
+    return *this;
+
+}
+
 void GLC_RenderProperties::clear()
 {
 	if (NULL != m_pOverwriteMaterial)

@@ -78,9 +78,6 @@ public:
 	//! Copy constructor
 	GLC_RenderProperties(const GLC_RenderProperties&);
 
-	//! Assignement operator
-	GLC_RenderProperties &operator=(const GLC_RenderProperties&);
-
 	//! Destructor
 	virtual ~GLC_RenderProperties();
 //@}
@@ -91,6 +88,10 @@ public:
 public:
     //! Return true if this render properties is equal to the given one
     bool operator==(const GLC_RenderProperties& other) const;
+
+    //! Return true if this render properties is fuzzy equal to the given one
+    /*! Same than == operator except selection*/
+    bool fuzzyEquals(const GLC_RenderProperties& other) const;
 
 	//! Return true if it is selected
 	inline bool isSelected() const
@@ -173,15 +174,16 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+    //! Assignement operator
+    GLC_RenderProperties &operator=(const GLC_RenderProperties&);
+
+    //! Fuzzy assignement operator
+    GLC_RenderProperties& fuzzyAssignement(const GLC_RenderProperties& other);
+
 	//! Clear the content of the render properties and update materials usage
 	void clear();
-//@}
-//////////////////////////////////////////////////////////////////////
-/*! \name Set Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-public:
-	//! Select the instance
+
+    //! Select the instance
 	inline void select(bool primitive);
 
 	//! Unselect the instance
