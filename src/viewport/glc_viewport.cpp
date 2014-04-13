@@ -335,15 +335,28 @@ GLC_Point3d GLC_Viewport::unproject(int x, int y, GLenum buffer, bool onGeometry
     return subject;
 }
 
-GLC_Point2d GLC_Viewport::project(const GLC_Point3d &point) const
+GLC_Point2d GLC_Viewport::project(const GLC_Point3d &point, bool useCameraMatrix) const
 {
-    GLC_Matrix4x4 modelView(m_pViewCam->modelViewMatrix());
+    GLC_Matrix4x4 modelView;
+    GLC_Matrix4x4 projectionMatrix;
 
     GLint viewport[4]= {0, 0, m_Width, m_Height};
+    if (useCameraMatrix)
+    {
+        modelView= m_pViewCam->modelViewMatrix();
+        projectionMatrix= m_ProjectionMatrix;
+    }
+    else
+    {
+        modelView= GLC_Context::current()->modelViewMatrix();
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        projectionMatrix= GLC_Context::current()->projectionMatrix();
+    }
+
     double x;
     double y;
     double z;
-    glc::gluProject(point.x(), point.y(), point.z(), modelView.getData(), m_ProjectionMatrix.getData(), viewport, &x, &y, &z);
+    glc::gluProject(point.x(), point.y(), point.z(), modelView.getData(), projectionMatrix.getData(), viewport, &x, &y, &z);
 
     GLC_Vector2d subject;
     subject.setX(x);
@@ -352,13 +365,26 @@ GLC_Point2d GLC_Viewport::project(const GLC_Point3d &point) const
     return subject;
 }
 
-QList<GLC_Point2d> GLC_Viewport::project(const QList<GLC_Point3d> &points) const
+QList<GLC_Point2d> GLC_Viewport::project(const QList<GLC_Point3d> &points, bool useCameraMatrix) const
 {
     QList<GLC_Point2d> subject;
 
-    GLC_Matrix4x4 modelView(m_pViewCam->modelViewMatrix());
+    GLC_Matrix4x4 modelView;
+    GLC_Matrix4x4 projectionMatrix;
 
     GLint viewport[4]= {0, 0, m_Width, m_Height};
+    if (useCameraMatrix)
+    {
+        modelView= m_pViewCam->modelViewMatrix();
+        projectionMatrix= m_ProjectionMatrix;
+    }
+    else
+    {
+        modelView= GLC_Context::current()->modelViewMatrix();
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        projectionMatrix= GLC_Context::current()->projectionMatrix();
+    }
+
     double x;
     double y;
     double z;
@@ -367,7 +393,7 @@ QList<GLC_Point2d> GLC_Viewport::project(const QList<GLC_Point3d> &points) const
     for (int i= 0; i < count; ++i)
     {
         const GLC_Point3d point= points.at(i);
-        glc::gluProject(point.x(), point.y(), point.z(), modelView.getData(), m_ProjectionMatrix.getData(), viewport, &x, &y, &z);
+        glc::gluProject(point.x(), point.y(), point.z(), modelView.getData(), projectionMatrix.getData(), viewport, &x, &y, &z);
         subject.append(GLC_Point2d(x, y));
     }
 
@@ -421,12 +447,12 @@ void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, con
         const double width= fontMetrics.width(text);
         const double height= fontMetrics.height();
 
-        GLC_Vector2d projectedPoint1= project(point);
-        GLC_Vector3d vector(0.0, height, 0.0);
-        GLC_Vector2d projectedPoint2= project(point + vector);
-
-        double ratio= height / (projectedPoint2 - projectedPoint1).length();
-        qDebug() << " ratio " << ratio;
+        // Compute the ratio betwwen screen and world
+        const GLC_Matrix4x4 invertedViewMatrix(GLC_Context::current()->modelViewMatrix().rotationMatrix().invert());
+        const GLC_Vector2d projectedPoint1(project(point, false));
+        const GLC_Vector3d vector(invertedViewMatrix * GLC_Vector3d(0.0, height, 0.0));
+        const GLC_Vector2d projectedPoint2(project((point + vector), false));
+        const double ratio= height / (projectedPoint2 - projectedPoint1).length();
 
         QPixmap pixmap(width, height);
         pixmap.fill(Qt::transparent);
@@ -446,21 +472,12 @@ void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, con
         pMaterial->setTexture(pTexture);
         pMaterial->setOpacity(0.99);
 
-        const GLC_Point3d eye(m_pViewCam->eye());
-        const double distanceToNormal= (point - eye).length();
-        const double viewWidth= distanceToNormal * m_ViewTangent * m_AspectRatio;
-        const double viewheight= (static_cast<double>(m_Height) / static_cast<double>(m_Width)) * viewWidth;
-        const double fontRatio= static_cast<double>(height) / static_cast<double>(m_Height);
-        const double newHeight= fontRatio * viewheight;
-        const double sizeRatio= newHeight / height;
-        qDebug() << "sizeRatio " << sizeRatio;
-
         GLC_3DViewInstance rectangle= GLC_Factory::instance()->createRectangle(width, height);
 
         GLC_Matrix4x4 scaleMatrix;
-        scaleMatrix.setMatScaling(sizeRatio, sizeRatio, sizeRatio);
+        scaleMatrix.setMatScaling(ratio, ratio, ratio);
         rectangle.setMatrix(scaleMatrix);
-        rectangle.multMatrix(m_pViewCam->viewMatrix().inverted());
+        rectangle.multMatrix(invertedViewMatrix);
         rectangle.multMatrix(GLC_Matrix4x4(point));
         rectangle.geomAt(0)->addMaterial(pMaterial);
         m_TextRenderingCollection.add(rectangle);
