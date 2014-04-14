@@ -98,7 +98,7 @@ void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &old
 
 QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pData)
 {
-    glFlush();
+    glFinish();
 
     QSGSimpleTextureNode* pTextureNode = static_cast<QSGSimpleTextureNode*>(pNode);
 
@@ -141,7 +141,7 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
 
     m_pViewhandler->renderingFinished();
 
-    glFlush();
+    glFinish();
     return pTextureNode;
 }
 
@@ -219,7 +219,7 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
 
         QRect rect(0, 0, width, height);
         QOpenGLFramebufferObject::blitFramebuffer(m_pTargetFbo, rect, m_pSourceFbo, rect);
-        glFlush();
+        glFinish();
         popOpenGLMatrix();
     }
     else
@@ -362,9 +362,9 @@ QPair<GLC_uint, GLC_uint> GLC_QuickItem::selectPrimitive(GLC_uint instanceId, in
 
 void GLC_QuickItem::doRender()
 {
-    glFlush();
+    glFinish();
     m_pViewhandler->render();
-    glFlush();
+    glFinish();
 }
 
 void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode)
