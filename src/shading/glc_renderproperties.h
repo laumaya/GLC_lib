@@ -50,7 +50,7 @@ namespace glc
         PrimitiveSelection
 	};
 
-	//! Geometry rendring flag enumaration
+    //! Geometry rendering flag enumaration
 	enum RenderFlag
 	{
 		ShadingFlag= 800,

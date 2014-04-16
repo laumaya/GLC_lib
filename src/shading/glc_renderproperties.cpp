@@ -115,6 +115,8 @@ bool GLC_RenderProperties::operator==(const GLC_RenderProperties &other) const
     {
         subject= (m_IsSelected == other.m_IsSelected);
         subject= subject && (m_CurrentBody == other.m_CurrentBody);
+        subject= subject && (m_RenderingFlag == other.m_RenderingFlag);
+        subject= subject && (m_RenderMode == other.m_RenderMode);
         subject= subject && fuzzyEquals(other);
     }
 
@@ -129,13 +131,11 @@ bool GLC_RenderProperties::fuzzyEquals(const GLC_RenderProperties &other) const
     {
         subject= (m_PolyFace == other.m_PolyFace);
         subject= subject && (m_PolyMode == other.m_PolyMode);
-        subject= subject && (m_RenderMode == other.m_RenderMode);
         subject= subject && (m_SavedRenderMode == other.m_SavedRenderMode);
         subject= subject && (m_pOverwriteMaterial == other.m_pOverwriteMaterial);
         subject= subject && (m_OverwriteOpacity == other.m_OverwriteOpacity);
         subject= subject && (m_pBodySelectedPrimitvesId == other.m_pBodySelectedPrimitvesId);
-        subject= subject && (m_pOverwritePrimitiveMaterialMaps == other.m_pOverwritePrimitiveMaterialMaps);
-        subject= subject && (m_RenderingFlag == other.m_RenderingFlag);        
+        subject= subject && (m_pOverwritePrimitiveMaterialMaps == other.m_pOverwritePrimitiveMaterialMaps);        
     }
 
     return subject;
