@@ -38,8 +38,6 @@ GLC_ContextSharedData::GLC_ContextSharedData()
     , m_TwoSidedLighting()
     , m_LightsEnableState()
 {
-    qDebug() << "GLC_ContextSharedData::GLC_ContextSharedData()";
-
     QStack<GLC_Matrix4x4>* pStack1= new QStack<GLC_Matrix4x4>();
     pStack1->push(GLC_Matrix4x4());
     m_MatrixStackHash.insert(GL_MODELVIEW, pStack1);
@@ -61,8 +59,6 @@ GLC_ContextSharedData::GLC_ContextSharedData()
 
 GLC_ContextSharedData::~GLC_ContextSharedData()
 {
-    qDebug() << "GLC_ContextSharedData::~GLC_ContextSharedData()";
-
     QHash<GLenum, QStack<GLC_Matrix4x4>* >::iterator iStack= m_MatrixStackHash.begin();
     while (iStack != m_MatrixStackHash.end())
     {
@@ -304,7 +300,6 @@ void GLC_ContextSharedData::glcDisableLight(GLenum lightId)
 
 void GLC_ContextSharedData::initDefaultShader()
 {
-    qDebug() << "GLC_ContextSharedData::initDefaultShader()";
     QFile vertexShader(":/GLC_lib_Shaders/default_vert");
     Q_ASSERT(vertexShader.exists());
 

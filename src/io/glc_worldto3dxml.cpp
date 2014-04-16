@@ -1196,7 +1196,6 @@ void GLC_WorldTo3dxml::writeOccurrenceDefaultViewProperty(const GLC_StructOccurr
 
 	if (!isVisible || !pInstance->renderPropertiesHandle()->isDefault())
 	{
-		qDebug() << "(!isVisible || !pInstance->renderPropertiesHandle()->isDefault())";
 		m_pOutStream->writeStartElement("GraphicProperties");
 		m_pOutStream->writeAttribute("xsi:type", "GraphicPropertiesType");
 		if (! isVisible)

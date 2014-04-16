@@ -67,7 +67,6 @@ GLC_Mover::~GLC_Mover()
 // Set the mover representation list
 void GLC_Mover::setRepresentationsList(const QList<GLC_RepMover*>& listOfRep)
 {
-	qDebug() << "GLC_Mover::setRepresentationsList";
 	clearMoverRepresentation();
 	m_RepMoverList= listOfRep;
 	const int size= m_RepMoverList.size();

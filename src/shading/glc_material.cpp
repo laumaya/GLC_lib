@@ -284,7 +284,6 @@ uint GLC_Material::hashCode() const
 	}
 	else if (NULL != m_pTexture)
 	{
-		qDebug() << "Delete texture";
 		delete m_pTexture;
 		m_pTexture= NULL;
 	}

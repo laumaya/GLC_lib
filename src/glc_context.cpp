@@ -35,13 +35,11 @@ GLC_Context::GLC_Context(QOpenGLContext *pOpenGLContext, QSurface *pSurface)
     , m_pSurface(pSurface)
     , m_ContextSharedData()
 {
-    qDebug() << "GLC_Context::GLC_Context";
     connect(m_pOpenGLContext, SIGNAL(aboutToBeDestroyed()), this, SLOT(openGLContextDestroyed()), Qt::DirectConnection);
 }
 
 GLC_Context::~GLC_Context()
 {
-    qDebug() << "GLC_Context::~GLC_Context()";
 
 }
 

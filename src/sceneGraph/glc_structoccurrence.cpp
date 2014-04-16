@@ -852,8 +852,7 @@ void GLC_StructOccurrence::setVisibility(bool visibility)
 
 void GLC_StructOccurrence::setRenderProperties(const GLC_RenderProperties& renderProperties, bool propagate)
 {
-	qDebug() << "GLC_StructOccurrence::setRenderProperties";
-	delete m_pRenderProperties;
+    delete m_pRenderProperties;
 	m_pRenderProperties= NULL;
 	if (has3DViewInstance())
 	{

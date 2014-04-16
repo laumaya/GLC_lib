@@ -246,7 +246,7 @@ void GLC_Shader::unuse()
 
 void GLC_Shader::createAndCompileProgrammShader()
 {
-	qDebug() << "GLC_Shader::createAndCompileProgrammShader()";
+    //qDebug() << "GLC_Shader::createAndCompileProgrammShader()";
 	m_ProgramShader.addShader(&m_VertexShader);
 	m_ProgramShader.addShader(&m_FragmentShader);
 

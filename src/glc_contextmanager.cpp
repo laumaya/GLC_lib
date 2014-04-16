@@ -100,7 +100,6 @@ bool GLC_ContextManager::areShared(GLC_Context *pContext1, GLC_Context *pContext
 
 GLC_Context *GLC_ContextManager::createContext(QOpenGLContext *pFromContext, QSurface *pSurface)
 {
-    qDebug() << "GLC_ContextManager::createContext";
     GLC_Context* pContext= new GLC_Context(pFromContext, pSurface);
     addContext(pContext);
     QOpenGLContextGroup* pSharedGroup= pFromContext->shareGroup();
@@ -113,7 +112,6 @@ GLC_Context *GLC_ContextManager::createContext(QOpenGLContext *pFromContext, QSu
         {
             if (m_OpenGLContextToGLCContext.contains(pOpenGLSharedContext))
             {
-                qDebug() << "Shared context";
                 GLC_Context* pSharedContext= m_OpenGLContextToGLCContext.value(pOpenGLSharedContext);
                 pContext->shareWith(pSharedContext);
                 break;

@@ -117,7 +117,6 @@ void GLC_Renderer::setCollection(GLC_3DViewCollection* pCollection)
 
 void GLC_Renderer::apply()
 {
-    qDebug() << "GLC_Renderer::apply()";
 	if (NULL != m_pCollection)
 	{
 		QHash<GLC_uint, GLC_RenderProperties>::const_iterator iRender= m_IdToRenderProperties.constBegin();
