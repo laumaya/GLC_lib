@@ -487,6 +487,7 @@ void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, con
         m_TextRenderingCollection.render(0, glc::TransparentRenderFlag);
         glEnable(GL_DEPTH_TEST);
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        m_TextRenderingCollection.clear();
     }
 }
 
