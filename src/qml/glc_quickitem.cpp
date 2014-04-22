@@ -83,7 +83,6 @@ void GLC_QuickItem::invalidateSelectionBuffer()
 
 void GLC_QuickItem::setMouseTracking(bool track)
 {
-    qDebug() << "GLC_QuickItem::setMouseTracking(bool track) " << track;
     setAcceptHoverEvents(track);
 }
 
@@ -189,7 +188,6 @@ void GLC_QuickItem::setOpenGLState()
 
 void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeData *pData)
 {
-    qDebug() << "Begin GLC_QuickItem::render";
     const int x = this->x();
     const int y = this->y();
 
@@ -220,7 +218,10 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
 
         QRect rect(0, 0, width, height);
         QOpenGLFramebufferObject::blitFramebuffer(m_pTargetFbo, rect, m_pSourceFbo, rect);
+
         glFinish();
+        delete m_pSourceFbo;
+        m_pSourceFbo= NULL;
         popOpenGLMatrix();
     }
     else
@@ -231,7 +232,6 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
         delete m_pTargetFbo;
         m_pTargetFbo= NULL;
     }
-    qDebug() << "End GLC_QuickItem::render";
 }
 
 void GLC_QuickItem::renderForSelection()
@@ -247,7 +247,6 @@ void GLC_QuickItem::renderForSelection()
 
         if (m_SelectionBufferIsDirty)
         {
-            qDebug() << "m_SelectionBufferIsDirty";
             m_pViewhandler->setSize(width(), height());
             GLC_State::setSelectionMode(true);
             doRender();
@@ -364,16 +363,13 @@ QPair<GLC_uint, GLC_uint> GLC_QuickItem::selectPrimitive(GLC_uint instanceId, in
 
 void GLC_QuickItem::doRender()
 {
-    qDebug() << "Begin GLC_QuickItem::doRender()";
     glFinish();
     m_pViewhandler->render();
     glFinish();
-    qDebug() << "End GLC_QuickItem::doRender()";
 }
 
 void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode)
 {
-    qDebug() << "Begin GLC_QuickItem::setupFbo";
     delete m_pSourceFbo;
     m_pSourceFbo= NULL;
 
@@ -396,12 +392,10 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
         pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
         pTextureNode->setRect(this->boundingRect());
     }
-    qDebug() << "End GLC_QuickItem::setupFbo";
 }
 
 void GLC_QuickItem::setupAuxFbo(int width, int height)
 {
-    qDebug() << "Begin GLC_QuickItem::setupAuxFbo";
 
     if ((width > 0) && (height > 0))
     {
@@ -416,12 +410,10 @@ void GLC_QuickItem::setupAuxFbo(int width, int height)
         delete m_pAuxFbo;
         m_pAuxFbo= NULL;
     }
-     qDebug() << "End GLC_QuickItem::setupAuxFbo";
 }
 
 void GLC_QuickItem::setupScreenShotFbo(int width, int height)
 {
-    qDebug() << "Begin GLC_QuickItem::setupScreenShotFbo";
     Q_ASSERT(NULL == m_pScreenShotFbo);
 
     QOpenGLFramebufferObjectFormat sourceFormat;
@@ -429,12 +421,10 @@ void GLC_QuickItem::setupScreenShotFbo(int width, int height)
     sourceFormat.setSamples(m_pViewhandler->samples());
 
     m_pScreenShotFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
-    qDebug() << "End GLC_QuickItem::setupScreenShotFbo";
 }
 
 void GLC_QuickItem::pushOpenGLMatrix()
 {
-    qDebug() << "Begin GLC_QuickItem::pushOpenGLMatrix()";
     GLC_Context* pCurrentContext= GLC_Context::current();
 
     pCurrentContext->glcMatrixMode(GL_TEXTURE);
@@ -446,12 +436,10 @@ void GLC_QuickItem::pushOpenGLMatrix()
 
     pCurrentContext->glcMatrixMode(GL_MODELVIEW);
     pCurrentContext->glcPushMatrix();
-    qDebug() << "End GLC_QuickItem::pushOpenGLMatrix()";
 }
 
 void GLC_QuickItem::popOpenGLMatrix()
 {
-    qDebug() << "Begin GLC_QuickItem::popOpenGLMatrix()";
     GLC_Context* pCurrentContext= GLC_Context::current();
     pCurrentContext->glcMatrixMode(GL_TEXTURE);
     pCurrentContext->glcPopMatrix();
@@ -461,7 +449,6 @@ void GLC_QuickItem::popOpenGLMatrix()
 
     pCurrentContext->glcMatrixMode(GL_MODELVIEW);
     pCurrentContext->glcPopMatrix();
-    qDebug() << "End GLC_QuickItem::popOpenGLMatrix()";
 }
 
 void GLC_QuickItem::deleteViewBuffers()
