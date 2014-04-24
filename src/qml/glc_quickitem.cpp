@@ -98,7 +98,6 @@ void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &old
 QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pData)
 {
     glFinish();
-
     QSGSimpleTextureNode* pTextureNode = static_cast<QSGSimpleTextureNode*>(pNode);
 
     if (pTextureNode == NULL)
@@ -107,40 +106,50 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
         pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
     }
 
-    bool widthOk= this->width() > 0.0;
-    bool heightOk= this->height() > 0.0;
-
-    if (m_pViewhandler->screenShotModeIsOn())
+    if (m_pViewhandler->isEnable())
     {
-        GLC_ScreenShotSettings screenShotSettings= m_pViewhandler->screenShotSettings();
-        QSize size= screenShotSettings.size();
+        bool widthOk= this->width() > 0.0;
+        bool heightOk= this->height() > 0.0;
 
-        widthOk= size.width() > 0.0;
-        heightOk= size.height() > 0.0;
-    }
-
-    if (m_pViewhandler && widthOk && heightOk)
-    {
-        if (widthValid() && heightValid() && isComponentComplete())
+        if (m_pViewhandler->screenShotModeIsOn())
         {
-            if (m_pViewhandler->screenShotModeIsOn())
+            GLC_ScreenShotSettings screenShotSettings= m_pViewhandler->screenShotSettings();
+            QSize size= screenShotSettings.size();
+
+            widthOk= size.width() > 0.0;
+            heightOk= size.height() > 0.0;
+        }
+
+        if (m_pViewhandler && widthOk && heightOk)
+        {
+            if (widthValid() && heightValid() && isComponentComplete())
             {
-                renderForScreenShot();
-            }
-            else if (m_pViewhandler->renderingMode() == GLC_ViewHandler::normalRenderMode)
-            {
-                render(pTextureNode, pData);
-            }
-            else
-            {
-                renderForSelection();
+                if (m_pViewhandler->screenShotModeIsOn())
+                {
+                    renderForScreenShot();
+                }
+                else if (m_pViewhandler->renderingMode() == GLC_ViewHandler::normalRenderMode)
+                {
+                    render(pTextureNode, pData);
+                }
+                else
+                {
+                    renderForSelection();
+                }
             }
         }
+        else
+        {
+            deleteViewBuffers();
+            delete m_pAuxFbo;
+            m_pAuxFbo= NULL;
+        }
+
+        m_pViewhandler->renderingFinished();
+
+        glFinish();
     }
 
-    m_pViewhandler->renderingFinished();
-
-    glFinish();
     return pTextureNode;
 }
 

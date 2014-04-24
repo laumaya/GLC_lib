@@ -61,7 +61,7 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
 
     , m_RenderFlag(glc::ShadingFlag)
 
-    , m_BlockUpdate(false)
+    , m_Enabled(true)
 
 {
     m_pLight->setTwoSided(true);
@@ -84,14 +84,11 @@ GLC_ViewHandler::~GLC_ViewHandler()
 
 void GLC_ViewHandler::updateGL(bool synchrone)
 {
-    if (!m_BlockUpdate)
+    m_isRendering= synchrone;
+    emit isDirty();
+    while (m_Enabled && m_isRendering)
     {
-        m_isRendering= synchrone;
-        emit isDirty();
-        while (m_isRendering)
-        {
-            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-        }
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
 }
 

@@ -99,8 +99,8 @@ public:
     inline GLC_InputEventInterpreter* eventInterpreter() const
     {return m_pInputEventInterpreter;}
 
-    inline bool updateIsBlocked() const
-    {return m_BlockUpdate;}
+    inline bool isEnable() const
+    {return m_Enabled;}
 
     inline bool hasVisibleWidget() const
     {return m_3DWidgetManager.hasVisibleWidget();}
@@ -152,8 +152,8 @@ public:
 
     void updateSelection(const GLC_SelectionSet &selectionSet, const GLC_Point3d& point);
 
-    inline void blockUpdate(bool blocked)
-    {m_BlockUpdate= blocked;}
+    inline void setEnable(bool enabled)
+    {m_Enabled= enabled;}
 
     void setLight(GLC_Light* pLight);
 
@@ -229,7 +229,7 @@ protected:
     glc::RenderFlag m_RenderFlag;
 
 private:
-    bool m_BlockUpdate;
+    bool m_Enabled;
 };
 
 Q_DECLARE_METATYPE(GLC_ViewHandler*)
