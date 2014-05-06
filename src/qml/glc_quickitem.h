@@ -29,6 +29,7 @@
 #include <QUrl>
 #include <QOpenGLFramebufferObject>
 #include <QPair>
+#include <QSharedPointer>
 
 #include "../viewport/glc_viewport.h"
 #include "../shading/glc_light.h"
@@ -36,6 +37,7 @@
 #include "../viewport/glc_movercontroller.h"
 #include "../viewport/glc_viewhandler.h"
 #include "../maths/glc_vector3d.h"
+#include "glc_qmlcamera.h"
 
 #include "../glc_config.h"
 
@@ -52,8 +54,18 @@ class GLC_LIB_EXPORT GLC_QuickItem : public QQuickItem
 {
     Q_OBJECT
 
-    //! The world to render into this QQuickItem
+    //! The view handler of this GLC_QuickItem
     Q_PROPERTY(QVariant viewHandler READ viewHandler WRITE setViewhandler)
+
+    //! The source 3D file name to load
+    Q_PROPERTY(QString source READ source WRITE setSource NOTIFY sourceChanged)
+
+    //! Space partitionning usage
+    Q_PROPERTY(bool spacePartitionningEnabled READ spacePartitionningEnabled WRITE setSpacePartitionningEnabled NOTIFY spacePartitionningEnabledChanged)
+
+    //! Camera of this view
+    Q_PROPERTY(GLC_QMLCamera* camera READ camera)
+
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -72,22 +84,40 @@ public:
 public:
     //! Return the used GLC_ViewHandler as a QVariant
     virtual QVariant viewHandler() const;
+
+    inline QString source() const
+    {return m_Source;}
+
+    bool spacePartitionningEnabled() const;
+
+    GLC_QMLCamera* camera() const
+    {return m_pCamera;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
+
 public slots:
     virtual void setViewhandler(QVariant viewHandler);
-    void invalidateSelectionBuffer();
-    void setMouseTracking(bool track);
+    virtual void invalidateSelectionBuffer();
+    virtual void setMouseTracking(bool track);
+    virtual void setSource(QString arg);
+    virtual void setSpacePartitionningEnabled(bool enabled);    
+
 //@}
+
+signals:
+    void sourceChanged(QString arg);
+    void spacePartitionningEnabledChanged(bool arg);
 
 //////////////////////////////////////////////////////////////////////
 /*! \name QQuickItem interface*/
 //@{
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+
 protected:
     virtual void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
     virtual QSGNode* updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pData);
@@ -105,6 +135,7 @@ protected:
 //////////////////////////////////////////////////////////////////////
 protected:
     virtual void setOpenGLState();
+    virtual void initConnections();
 
     void render(QSGSimpleTextureNode* pTextureNode, UpdatePaintNodeData* pData);
     void renderForSelection();
@@ -126,7 +157,7 @@ protected:
 // Protected Members
 //////////////////////////////////////////////////////////////////////
 protected:
-    GLC_ViewHandler* m_pViewhandler;
+    QSharedPointer<GLC_ViewHandler> m_Viewhandler;
     QOpenGLFramebufferObject* m_pSourceFbo;
     QOpenGLFramebufferObject* m_pTargetFbo;
     QOpenGLFramebufferObject* m_pAuxFbo;
@@ -134,11 +165,9 @@ protected:
     bool m_SelectionBufferIsDirty;
     GLC_Point3d m_UnprojectedPoint;
 
+    GLC_QMLCamera* m_pCamera;
 
-    // QQmlParserStatus interface
-public:
-    virtual void classBegin();
-    virtual void componentComplete();
+    QString m_Source;
 };
 
 #endif // GLC_QUICKITEM_H

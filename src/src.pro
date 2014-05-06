@@ -199,7 +199,8 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 HEADERS_GLC_GLU +=	glu/glc_glu.h
 
 HEADERS_GLC_QML +=      qml/glc_quickitem.h \
-                        qml/glc_quickview.h
+                        qml/glc_quickview.h \
+                        qml/glc_qmlcamera.h
 
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
@@ -373,7 +374,8 @@ SOURCES +=	3DWidget/glc_3dwidget.cpp \
 SOURCES +=	glu/glc_project.cpp
 
 SOURCES +=      qml/glc_quickitem.cpp \
-                qml/glc_quickview.cpp
+                qml/glc_quickview.cpp \
+                qml/glc_qmlcamera.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll

@@ -27,6 +27,7 @@
 
 #include <QDataStream>
 #include <QMetaType>
+#include <QVector3D>
 
 #include "glc_utils_maths.h"
 #include "glc_vector3df.h"
@@ -80,6 +81,9 @@ public:
 	//! Construct a 3d vector from a 2d float vector
 	inline GLC_Vector3d(const GLC_Vector2d &vector);
 
+    //! Construct a 3d vector from a QVector3D
+    inline GLC_Vector3d(const QVector3D& qVector);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -128,6 +132,9 @@ public:
 	//! Return the string of this vector
 	inline QString toString() const;
 
+    //! Return the QVector3D of this vector
+    inline QVector3D toQVector3D() const;
+
 	//! Return the inverted vector of this vector
 	inline GLC_Vector3d inverted() const
 	{return GLC_Vector3d(*this).invert();}
@@ -152,6 +159,9 @@ public:
 
 	//! Copy the given float vector to this vector and return a reference to this vector
 	inline GLC_Vector3d& operator = (const GLC_Vector3df &);
+
+    //! Copy the given QVector3D to this vector and return a reference to this vector
+    inline GLC_Vector3d& operator = (const QVector3D& qVector);
 
 	//! Add this vector to the given vector and return a reference to this vector
 	inline GLC_Vector3d& operator += (const GLC_Vector3d &vector)
@@ -339,7 +349,14 @@ GLC_Vector3d::GLC_Vector3d(const GLC_Vector2d &vector)
 {
     m_Vector[0]= vector.x();
     m_Vector[1]= vector.y();
-	m_Vector[2]= 0.0;
+    m_Vector[2]= 0.0;
+}
+
+GLC_Vector3d::GLC_Vector3d(const QVector3D &qVector)
+{
+    m_Vector[0]= qVector.x();
+    m_Vector[1]= qVector.y();
+    m_Vector[2]= qVector.z();
 }
 
 GLC_Vector3d& GLC_Vector3d::operator = (const GLC_Vector3df &Vect)
@@ -348,7 +365,16 @@ GLC_Vector3d& GLC_Vector3d::operator = (const GLC_Vector3df &Vect)
 	m_Vector[1]= static_cast<double>(Vect.m_Vector[1]);
 	m_Vector[2]= static_cast<double>(Vect.m_Vector[2]);
 
-	return *this;
+    return *this;
+}
+
+GLC_Vector3d &GLC_Vector3d::operator =(const QVector3D &qVector)
+{
+    m_Vector[0]= static_cast<double>(qVector.x());
+    m_Vector[1]= static_cast<double>(qVector.y());
+    m_Vector[2]= static_cast<double>(qVector.z());
+
+    return *this;
 }
 
 GLC_Vector3d GLC_Vector3d::operator ^ (const GLC_Vector3d &vector) const
@@ -497,7 +523,14 @@ QString GLC_Vector3d::toString() const
 	result+= QString::number(m_Vector[1]) + QString(" , ");
 	result+= QString::number(m_Vector[2]) + QString("]");
 
-	return result;
+    return result;
+}
+
+QVector3D GLC_Vector3d::toQVector3D() const
+{
+    QVector3D subject(static_cast<float>(m_Vector[0]), static_cast<float>(m_Vector[1]), static_cast<float>(m_Vector[2]));
+
+    return subject;
 }
 
 #endif /*GLC_VECTOR3D_H_*/

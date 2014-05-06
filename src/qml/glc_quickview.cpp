@@ -26,13 +26,20 @@
 
 #include "glc_quickview.h"
 
+#include "glc_quickitem.h"
+#include "glc_qmlcamera.h"
+
 #include "../glc_context.h"
 #include "../glc_contextmanager.h"
 
 GLC_QuickView::GLC_QuickView(QWindow *pParent)
     : QQuickView(pParent)
     , m_pContext(NULL)
+    , m_pQOpenGLContext(NULL)
 {
+    qmlRegisterType<GLC_QuickItem>("glcview", 1, 0, "GLCView");
+    qmlRegisterType<GLC_QMLCamera>();
+
     initConnection();
 }
 
@@ -52,7 +59,7 @@ GLC_QuickView::GLC_QuickView(const QUrl &source, QWindow *pParent)
 
 GLC_QuickView::~GLC_QuickView()
 {
-    delete m_pContext;
+    delete m_pQOpenGLContext;
 }
 
 GLC_Context *GLC_QuickView::guiThreadContext() const
@@ -67,18 +74,19 @@ void GLC_QuickView::sceneGraphInitializedDone()
     QOpenGLContext* pContext= openglContext();
     Q_ASSERT(pContext);
 
-    QOpenGLContext* pOpenGLContext= new QOpenGLContext();
-    pOpenGLContext->setShareContext(pContext);
-    pOpenGLContext->setFormat(pContext->format());
-    pOpenGLContext->create();
-    Q_ASSERT(pOpenGLContext->isValid());
+    m_pQOpenGLContext= new QOpenGLContext();
+    m_pQOpenGLContext->setShareContext(pContext);
+    m_pQOpenGLContext->setFormat(pContext->format());
+    m_pQOpenGLContext->create();
+    Q_ASSERT(m_pQOpenGLContext->isValid());
 
     QOffscreenSurface* pFakeSurface = new QOffscreenSurface();
     pFakeSurface->setFormat(pContext->format());
     pFakeSurface->create();
 
-    m_pContext= GLC_ContextManager::instance()->createContext(pOpenGLContext, pFakeSurface);
+    m_pContext= GLC_ContextManager::instance()->createContext(m_pQOpenGLContext, pFakeSurface);
     m_pContext->makeCurrent();
+    qDebug() << m_pContext;
     initializeGL();
 }
 

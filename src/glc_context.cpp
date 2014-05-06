@@ -292,7 +292,6 @@ void GLC_Context::unuseDefaultShader()
 
 void GLC_Context::openGLContextDestroyed()
 {
-    qDebug() << "GLC_Context::openGLContextDestroyed()";
     m_ContextSharedData.clear();
     emit destroyed(this);
 }

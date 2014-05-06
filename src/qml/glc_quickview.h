@@ -32,6 +32,7 @@ class GLC_Context;
 class QWindow;
 class QUrl;
 class QQmlEngine;
+class QOpenGLContext;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_QuickView
@@ -65,6 +66,7 @@ protected:
 
     //! The shared context of the guiThread
     GLC_Context* m_pContext;
+    QOpenGLContext* m_pQOpenGLContext;
 };
 
 #endif // GLC_QUICKVIEW_H

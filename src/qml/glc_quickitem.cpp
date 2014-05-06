@@ -29,24 +29,36 @@
 #include "../glc_factory.h"
 
 #include "glc_quickitem.h"
+
 #include "../viewport/glc_viewhandler.h"
+#include "../sceneGraph/glc_octree.h"
 
 GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     : QQuickItem(pParent)
-    , m_pViewhandler(NULL)
+    , m_Viewhandler(NULL)
     , m_pSourceFbo(NULL)
     , m_pTargetFbo(NULL)
     , m_pAuxFbo(NULL)
     , m_pScreenShotFbo(NULL)
     , m_SelectionBufferIsDirty(true)
     , m_UnprojectedPoint()
+    , m_pCamera(new GLC_QMLCamera(this))
+    , m_Source()
 {
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton);
     setFlag(QQuickItem::ItemHasContents);
+
+    // Set the initial viewHandler
+    QSharedPointer<GLC_ViewHandler> viewHandlerPointer(new GLC_ViewHandler);
+    QVariant viewHandler;
+    viewHandler.setValue(viewHandlerPointer);
+    setViewhandler(viewHandler);
+    initConnections();
 }
 
 GLC_QuickItem::~GLC_QuickItem()
 {
+    qDebug() << "GLC_QuickItem::~GLC_QuickItem() " << m_Source;
     delete m_pSourceFbo;
     delete m_pTargetFbo;
     delete m_pAuxFbo;
@@ -55,25 +67,40 @@ GLC_QuickItem::~GLC_QuickItem()
 QVariant GLC_QuickItem::viewHandler() const
 {
     QVariant subject;
-    subject.setValue(m_pViewhandler);
+    subject.setValue(m_Viewhandler);
 
     return subject;
 }
 
-void GLC_QuickItem::setViewhandler(QVariant viewHandler)
+bool GLC_QuickItem::spacePartitionningEnabled() const
 {
-    if (m_pViewhandler)
+    bool subject= false;
+    if (NULL != m_Viewhandler)
     {
-        disconnect(m_pViewhandler, SIGNAL(isDirty()), this, SLOT(update()));
-        disconnect(m_pViewhandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
-        disconnect(m_pViewhandler, SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
+        subject= m_Viewhandler->world().collection()->spacePartitioningIsUsed();
     }
 
-    m_pViewhandler= viewHandler.value<GLC_ViewHandler*>();
+    return subject;
+}
 
-    connect(m_pViewhandler, SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
-    connect(m_pViewhandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
-    connect(m_pViewhandler, SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
+
+void GLC_QuickItem::setViewhandler(QVariant viewHandler)
+{
+    if (NULL != m_Viewhandler)
+    {
+        disconnect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()));
+        disconnect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
+        disconnect(m_Viewhandler.data(), SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
+    }
+
+    m_Viewhandler= viewHandler.value<QSharedPointer<GLC_ViewHandler> >();
+    Q_ASSERT(!m_Viewhandler.isNull());
+
+    connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
+    connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
+    connect(m_Viewhandler.data(), SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
+
+    m_pCamera->setCamera(m_Viewhandler->viewportHandle()->cameraHandle());
 }
 
 void GLC_QuickItem::invalidateSelectionBuffer()
@@ -84,6 +111,44 @@ void GLC_QuickItem::invalidateSelectionBuffer()
 void GLC_QuickItem::setMouseTracking(bool track)
 {
     setAcceptHoverEvents(track);
+}
+
+void GLC_QuickItem::setSource(QString arg)
+{
+    if (m_Source != arg)
+    {
+        try
+        {
+            QFile file(arg);
+            GLC_World world= GLC_Factory::instance()->createWorldFromFile(file);
+            m_Viewhandler->setWorld(world);
+            emit sourceChanged(arg);
+            m_Source = arg;
+        }
+        catch (GLC_Exception& e)
+        {
+            qWarning() << e.what();
+        }
+
+    }
+}
+
+void GLC_QuickItem::setSpacePartitionningEnabled(bool enabled)
+{
+    if ((enabled != spacePartitionningEnabled()) && !m_Viewhandler.isNull())
+    {
+        if (enabled)
+        {
+            GLC_3DViewCollection* pCollection= m_Viewhandler->world().collection();
+            m_Viewhandler->setSpacePartitioning(new GLC_Octree(pCollection));
+        }
+        else
+        {
+            m_Viewhandler->unSetSpacePartitionning();
+        }
+
+        emit spacePartitionningEnabledChanged(enabled);
+    }
 }
 
 void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
@@ -106,29 +171,29 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
         pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
     }
 
-    if (m_pViewhandler->isEnable())
+    if ((NULL != m_Viewhandler) && m_Viewhandler->isEnable())
     {
         bool widthOk= this->width() > 0.0;
         bool heightOk= this->height() > 0.0;
 
-        if (m_pViewhandler->screenShotModeIsOn())
+        if (m_Viewhandler->screenShotModeIsOn())
         {
-            GLC_ScreenShotSettings screenShotSettings= m_pViewhandler->screenShotSettings();
+            GLC_ScreenShotSettings screenShotSettings= m_Viewhandler->screenShotSettings();
             QSize size= screenShotSettings.size();
 
             widthOk= size.width() > 0.0;
             heightOk= size.height() > 0.0;
         }
 
-        if (m_pViewhandler && widthOk && heightOk)
+        if (m_Viewhandler && widthOk && heightOk)
         {
             if (widthValid() && heightValid() && isComponentComplete())
             {
-                if (m_pViewhandler->screenShotModeIsOn())
+                if (m_Viewhandler->screenShotModeIsOn())
                 {
                     renderForScreenShot();
                 }
-                else if (m_pViewhandler->renderingMode() == GLC_ViewHandler::normalRenderMode)
+                else if (m_Viewhandler->renderingMode() == GLC_ViewHandler::normalRenderMode)
                 {
                     render(pTextureNode, pData);
                 }
@@ -145,7 +210,7 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
             m_pAuxFbo= NULL;
         }
 
-        m_pViewhandler->renderingFinished();
+        m_Viewhandler->renderingFinished();
 
         glFinish();
     }
@@ -155,48 +220,79 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
 
 void GLC_QuickItem::mousePressEvent(QMouseEvent *e)
 {
-    m_pViewhandler->processMousePressEvent(e);
+    if (NULL != m_Viewhandler)
+    {
+        m_Viewhandler->processMousePressEvent(e);
+    }
 }
 
 void GLC_QuickItem::mouseMoveEvent(QMouseEvent *e)
 {
-    m_pViewhandler->processMouseMoveEvent(e);
+    if (NULL != m_Viewhandler)
+    {
+        m_Viewhandler->processMouseMoveEvent(e);
+    }
 }
 
 void GLC_QuickItem::mouseReleaseEvent(QMouseEvent *e)
 {
-    m_pViewhandler->processMouseReleaseEvent(e);
+    if (NULL != m_Viewhandler)
+    {
+        m_Viewhandler->processMouseReleaseEvent(e);
+    }
 
     forceActiveFocus();
 }
 
 void GLC_QuickItem::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    m_pViewhandler->processMouseDblClickEvent(e);
+    if (NULL != m_Viewhandler)
+    {
+        m_Viewhandler->processMouseDblClickEvent(e);
+    }
 }
 
 void GLC_QuickItem::wheelEvent(QWheelEvent *e)
 {
-    m_pViewhandler->processWheelEvent(e);
+    if (NULL != m_Viewhandler)
+    {
+        m_Viewhandler->processWheelEvent(e);
+    }
 }
 
 void GLC_QuickItem::touchEvent(QTouchEvent *e)
 {
-    m_pViewhandler->processTouchEvent(e);
+    if (NULL != m_Viewhandler)
+    {
+        m_Viewhandler->processTouchEvent(e);
+    }
 }
 
 void GLC_QuickItem::hoverMoveEvent(QHoverEvent *event)
 {
-    m_pViewhandler->processHoverMoveEvent(event);
+    if (NULL != m_Viewhandler)
+    {
+        m_Viewhandler->processHoverMoveEvent(event);
+    }
 }
 
 void GLC_QuickItem::setOpenGLState()
 {
-    m_pViewhandler->viewportHandle()->initGl();
+    if (NULL != m_Viewhandler)
+    {
+        m_Viewhandler->viewportHandle()->initGl();
+    }
+}
+
+void GLC_QuickItem::initConnections()
+{
+    connect(m_pCamera, SIGNAL(updateView()), this, SLOT(update()));
 }
 
 void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeData *pData)
 {
+    Q_ASSERT(NULL != m_Viewhandler);
+
     const int x = this->x();
     const int y = this->y();
 
@@ -219,7 +315,7 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
 
         m_pSourceFbo->bind();
 
-        m_pViewhandler->setSize(width, height);
+        m_Viewhandler->setSize(width, height);
 
         doRender();
 
@@ -245,6 +341,7 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
 
 void GLC_QuickItem::renderForSelection()
 {
+    Q_ASSERT(NULL != m_Viewhandler);
     setupAuxFbo(this->width(), this->height());
 
     if (m_pAuxFbo && m_pAuxFbo->isValid())
@@ -256,7 +353,7 @@ void GLC_QuickItem::renderForSelection()
 
         if (m_SelectionBufferIsDirty)
         {
-            m_pViewhandler->setSize(width(), height());
+            m_Viewhandler->setSize(width(), height());
             GLC_State::setSelectionMode(true);
             doRender();
             GLC_State::setSelectionMode(false);
@@ -264,23 +361,23 @@ void GLC_QuickItem::renderForSelection()
         }
 
         // Get selection coordinate
-        const int x= m_pViewhandler->pointerPosition().x();
-        const int y= m_pViewhandler->pointerPosition().y();
+        const int x= m_Viewhandler->pointerPosition().x();
+        const int y= m_Viewhandler->pointerPosition().y();
 
-        GLC_World world= m_pViewhandler->world();
+        GLC_World world= m_Viewhandler->world();
         GLC_SelectionSet selectionSet;
 
-        const GLC_uint instanceId= m_pViewhandler->viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
-        m_UnprojectedPoint= m_pViewhandler->viewportHandle()->unproject(x, y, GL_COLOR_ATTACHMENT0);
+        const GLC_uint instanceId= m_Viewhandler->viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
+        m_UnprojectedPoint= m_Viewhandler->viewportHandle()->unproject(x, y, GL_COLOR_ATTACHMENT0);
 
         GLC_3DViewCollection* pCollection= world.collection();
         const bool contains= pCollection->contains(instanceId);
 
-        if (instanceId && (m_pViewhandler->selectionModes() & GLC_SelectionEvent::ModeInstance))
+        if (instanceId && (m_Viewhandler->selectionModes() & GLC_SelectionEvent::ModeInstance))
         {
             selectionSet.insert(instanceId);
         }
-        else if (contains && (m_pViewhandler->selectionModes() & GLC_SelectionEvent::ModeBody))
+        else if (contains && (m_Viewhandler->selectionModes() & GLC_SelectionEvent::ModeBody))
         {
             selectionSet.setAttachedWorld(world);
             GLC_uint bodyId= selectBody(instanceId, x, y);
@@ -289,7 +386,7 @@ void GLC_QuickItem::renderForSelection()
                 selectionSet.insert(instanceId, bodyId);
             }
         }
-        else if (contains && (m_pViewhandler->selectionModes() & GLC_SelectionEvent::ModePrimitive))
+        else if (contains && (m_Viewhandler->selectionModes() & GLC_SelectionEvent::ModePrimitive))
         {
             selectionSet.setAttachedWorld(world);
             QPair<GLC_uint, GLC_uint> primitive= selectPrimitive(instanceId, x, y);
@@ -299,7 +396,7 @@ void GLC_QuickItem::renderForSelection()
             }
         }
 
-        m_pViewhandler->updateSelection(selectionSet, m_UnprojectedPoint);
+        m_Viewhandler->updateSelection(selectionSet, m_UnprojectedPoint);
     }
 
     m_pAuxFbo->release();
@@ -308,7 +405,8 @@ void GLC_QuickItem::renderForSelection()
 
 void GLC_QuickItem::renderForScreenShot()
 {
-    GLC_ScreenShotSettings screenShotSettings= m_pViewhandler->screenShotSettings();
+    Q_ASSERT(NULL != m_Viewhandler);
+    GLC_ScreenShotSettings screenShotSettings= m_Viewhandler->screenShotSettings();
     const int width= screenShotSettings.size().width();
     const int height= screenShotSettings.size().height();
 
@@ -321,7 +419,7 @@ void GLC_QuickItem::renderForScreenShot()
 
         m_pScreenShotFbo->bind();
 
-        m_pViewhandler->setSize(width, height);
+        m_Viewhandler->setSize(width, height);
         doRender();
 
         m_pScreenShotFbo->release();
@@ -333,16 +431,17 @@ void GLC_QuickItem::renderForScreenShot()
     delete m_pScreenShotFbo;
     m_pScreenShotFbo= NULL;
 
-    m_pViewhandler->setScreenShotImage(screenShot);
+    m_Viewhandler->setScreenShotImage(screenShot);
 }
 
 GLC_uint GLC_QuickItem::selectBody(GLC_uint instanceId, int x, int y)
 {
+    Q_ASSERT(NULL != m_Viewhandler);
     GLC_uint subject= 0;
-    GLC_3DViewCollection* pCollection= m_pViewhandler->world().collection();
+    GLC_3DViewCollection* pCollection= m_Viewhandler->world().collection();
     if (pCollection->contains(instanceId))
     {
-        GLC_Viewport* pView= m_pViewhandler->viewportHandle();
+        GLC_Viewport* pView= m_Viewhandler->viewportHandle();
         GLC_3DViewInstance* pInstance= pCollection->instanceHandle(instanceId);
         subject= pView->selectBody(pInstance, x, y, GL_COLOR_ATTACHMENT0);
         m_SelectionBufferIsDirty= true;
@@ -352,11 +451,12 @@ GLC_uint GLC_QuickItem::selectBody(GLC_uint instanceId, int x, int y)
 
 QPair<GLC_uint, GLC_uint> GLC_QuickItem::selectPrimitive(GLC_uint instanceId, int x, int y)
 {
+    Q_ASSERT(NULL != m_Viewhandler);
     QPair<GLC_uint, GLC_uint> subject;
-    GLC_3DViewCollection* pCollection= m_pViewhandler->world().collection();
+    GLC_3DViewCollection* pCollection= m_Viewhandler->world().collection();
     if (pCollection->contains(instanceId))
     {
-        GLC_Viewport* pView= m_pViewhandler->viewportHandle();
+        GLC_Viewport* pView= m_Viewhandler->viewportHandle();
         GLC_3DViewInstance* pInstance= pCollection->instanceHandle(instanceId);
         QPair<int, GLC_uint> primitive= pView->selectPrimitive(pInstance, x, y, GL_COLOR_ATTACHMENT0);
         if (primitive.first > -1)
@@ -373,12 +473,13 @@ QPair<GLC_uint, GLC_uint> GLC_QuickItem::selectPrimitive(GLC_uint instanceId, in
 void GLC_QuickItem::doRender()
 {
     glFinish();
-    m_pViewhandler->render();
+    m_Viewhandler->render();
     glFinish();
 }
 
 void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextureNode)
 {
+    Q_ASSERT(NULL != m_Viewhandler);
     delete m_pSourceFbo;
     m_pSourceFbo= NULL;
 
@@ -389,7 +490,7 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
     {
         QOpenGLFramebufferObjectFormat sourceFormat;
         sourceFormat.setAttachment(QOpenGLFramebufferObject::Depth);
-        sourceFormat.setSamples(m_pViewhandler->samples());
+        sourceFormat.setSamples(m_Viewhandler->samples());
 
         m_pSourceFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
         m_pTargetFbo= new QOpenGLFramebufferObject(width, height);
@@ -405,6 +506,7 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
 
 void GLC_QuickItem::setupAuxFbo(int width, int height)
 {
+    Q_ASSERT(NULL != m_Viewhandler);
 
     if ((width > 0) && (height > 0))
     {
@@ -423,11 +525,12 @@ void GLC_QuickItem::setupAuxFbo(int width, int height)
 
 void GLC_QuickItem::setupScreenShotFbo(int width, int height)
 {
+    Q_ASSERT(NULL != m_Viewhandler);
     Q_ASSERT(NULL == m_pScreenShotFbo);
 
     QOpenGLFramebufferObjectFormat sourceFormat;
     sourceFormat.setAttachment(QOpenGLFramebufferObject::Depth);
-    sourceFormat.setSamples(m_pViewhandler->samples());
+    sourceFormat.setSamples(m_Viewhandler->samples());
 
     m_pScreenShotFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
 }
@@ -467,13 +570,4 @@ void GLC_QuickItem::deleteViewBuffers()
 
     delete m_pTargetFbo;
     m_pTargetFbo= NULL;
-}
-
-
-void GLC_QuickItem::classBegin()
-{
-}
-
-void GLC_QuickItem::componentComplete()
-{
 }

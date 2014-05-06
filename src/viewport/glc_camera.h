@@ -26,7 +26,8 @@
 #ifndef GLC_CAMERA_H_
 #define GLC_CAMERA_H_
 
-#include "../glc_object.h"
+#include <QObject>
+
 #include "../maths/glc_vector3d.h"
 #include "../maths/glc_matrix4x4.h"
 
@@ -40,9 +41,9 @@
  * of an OpenGL perpective camera*/
 //////////////////////////////////////////////////////////////////////
 
-class GLC_LIB_EXPORT GLC_Camera :
-	public GLC_Object
+class GLC_LIB_EXPORT GLC_Camera : public QObject
 {
+    Q_OBJECT
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -61,6 +62,9 @@ public:
    //! Copy constructor
    GLC_Camera(const GLC_Camera&);
 //@}
+
+signals:
+   void changed();
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
@@ -109,25 +113,28 @@ public:
 	inline GLC_Vector3d defaultUpVector() const
 	{return m_DefaultVectUp;}
 
-	//! Return the standard front view form this camera
+    //! Return the name of the default up vector
+    QString defaultUpVectorName() const;
+
+    //! Return the standard front view of this camera
 	GLC_Camera frontView() const;
 
-	//! Return the standard rear view form this camera
+    //! Return the standard rear view of this camera
 	GLC_Camera rearView() const;
 
-	//! Return the standard right view form this camera
+    //! Return the standard right view of this camera
 	GLC_Camera rightView() const;
 
-	//! Return the standard left view form this camera
+    //! Return the standard left view of this camera
 	GLC_Camera leftView() const;
 
-	//! Return the standard top view form this camera
+    //! Return the standard top view of this camera
 	GLC_Camera topView() const;
 
-	//! Return the standard bottom view form this camera
+    //! Return the standard bottom view of this camera
 	GLC_Camera bottomView() const;
 
-	//! Return the standard isoview from his camera
+    //! Return the standard isoview of his camera
 	/*! Iso View is at the front top left*/
 	GLC_Camera isoView() const;
 
@@ -147,88 +154,91 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Camera orbiting
-	GLC_Camera& orbit(GLC_Vector3d VectOldPoss, GLC_Vector3d VectCurPoss);
+    void orbit(GLC_Vector3d VectOldPoss, GLC_Vector3d VectCurPoss);
 
 	//! panoramic movement
-	GLC_Camera& pan(GLC_Vector3d VectDep);
+    void pan(GLC_Vector3d VectDep);
 
 	//! move camera's eye along camera vector (eye -> target)
 	/*! Factor must be > 0*/
-	GLC_Camera& zoom(double factor);
+    void zoom(double factor);
 
 	//! Move camera
-	GLC_Camera& move(const GLC_Matrix4x4 &MatMove);
+    void move(const GLC_Matrix4x4 &MatMove);
 
 	//! Rotate around an axis
-	GLC_Camera& rotateAround(const GLC_Vector3d&, const double&, const GLC_Point3d&);
+    void rotateAround(const GLC_Vector3d&, const double&, const GLC_Point3d&);
 
 	//! Rotate around camera target
-	GLC_Camera& rotateAroundTarget(const GLC_Vector3d&, const double&);
+    void rotateAroundTarget(const GLC_Vector3d&, const double&);
 
  	//! Camera translation
-	GLC_Camera& translate(const GLC_Vector3d &VectTrans);
+    void translate(const GLC_Vector3d &VectTrans);
 
 	//! Set the camera
 	/* VectUp and VectCam could not be parallel
 	 * VectUp could not be NULL
 	 * VectCam could not be NULL */
-	GLC_Camera& setCam(GLC_Point3d Eye, GLC_Point3d Target, GLC_Vector3d Up);
+    void setCam(GLC_Point3d Eye, GLC_Point3d Target, GLC_Vector3d Up);
 
 	//! Set the camera by copying another camera
-	GLC_Camera& setCam(const GLC_Camera&);
+    void setCam(const GLC_Camera&);
 
    //! Set camera's eye coordinate vector
-	GLC_Camera& setEyeCam(const GLC_Point3d &Eye);
+    void setEyeCam(const GLC_Point3d &Eye);
 
 	//! Set camera's target coordinate vector
-	GLC_Camera& setTargetCam(const GLC_Point3d &Target);
+    void setTargetCam(const GLC_Point3d &Target);
 
 	//! Set camera's Up vector
-	GLC_Camera& setUpCam(const GLC_Vector3d &Up);
+    void setUpCam(const GLC_Vector3d &Up);
 
 	//! Set the distance between eye and target (move eye)
-	GLC_Camera& setDistEyeTarget(double Longueur);
+    void setDistEyeTarget(double Longueur);
 
 	//! Set the distance between target and eye (move target)
-	GLC_Camera& setDistTargetEye(double Longueur);
+    void setDistTargetEye(double Longueur);
 
 	//! Assignement operator
 	GLC_Camera& operator=(const GLC_Camera&);
 
 	//! Set the default Up vector
 	/*! Must Be X, Y or Z Axis*/
-	inline GLC_Camera& setDefaultUpVector(const GLC_Vector3d& up)
+    inline void setDefaultUpVector(const GLC_Vector3d& up)
 	{
 		Q_ASSERT((up == glc::X_AXIS) || (up == glc::Y_AXIS) || (up == glc::Z_AXIS));
 		m_DefaultVectUp= up;
-		return *this;
+        emit changed();
 	}
 
-	//! Set the standard front view form this camera
+    //! Set the default Up vector by the given name
+    void setDefaultUpVectorByName(const QString& vectorName);
+
+    //! Set the standard front view of this camera
 	inline void setFrontView()
 	{setCam(frontView());}
 
-	//! Set the standard rear view form this camera
+    //! Set the standard rear view of this camera
 	inline void setRearView()
 	{setCam(rearView());}
 
-	//! Set the standard right view form this camera
+    //! Set the standard right view of this camera
 	inline void setRightView()
 	{setCam(rightView());}
 
-	//! Set the standard left view form this camera
+    //! Set the standard left view of this camera
 	inline void setLeftView()
 	{setCam(leftView());}
 
-	//! Set the standard top view form this camera
+    //! Set the standard top view of this camera
 	inline void setTopView()
 	{setCam(topView());}
 
-	//! Set the standard bottom view form this camera
+    //! Set the standard bottom view of this camera
 	inline void setBottomView()
 	{setCam(bottomView());}
 
-	//! Set the standard isoview from his camera
+    //! Set the standard isoview of his camera
 	/*! Iso View is at the front top left*/
 	inline void setIsoView()
 	{setCam(isoView());}

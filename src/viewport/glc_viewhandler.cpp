@@ -76,6 +76,7 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
 
 GLC_ViewHandler::~GLC_ViewHandler()
 {
+    qDebug() << "GLC_ViewHandler::~GLC_ViewHandler()";
     delete m_pLight;
     delete m_pViewport;
     delete m_pMoverController;
@@ -146,6 +147,12 @@ void GLC_ViewHandler::setSpacePartitioning(GLC_SpacePartitioning *pSpacePartitio
     m_pSpacePartitioning= pSpacePartitioning;
     m_World.collection()->bindSpacePartitioning(m_pSpacePartitioning);
     m_World.collection()->setSpacePartitionningUsage(true);
+}
+
+void GLC_ViewHandler::unSetSpacePartitionning()
+{
+    m_pSpacePartitioning= NULL;
+    m_World.collection()->unbindSpacePartitioning();
 }
 
 QPair<GLC_SelectionSet, GLC_Point3d> GLC_ViewHandler::selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes)

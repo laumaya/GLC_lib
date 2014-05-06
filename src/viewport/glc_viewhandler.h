@@ -140,6 +140,8 @@ public:
 
     void setSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning);
 
+    void unSetSpacePartitionning();
+
     virtual QPair<GLC_SelectionSet, GLC_Point3d> selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes);
 
     virtual void unsetSelection();

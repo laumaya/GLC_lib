@@ -2185,10 +2185,11 @@ void GLC_3dxmlToWorld::checkFileValidity(QIODevice* pIODevice)
 		clear();
 		throw(fileFormatException);
 	}
-	else
-	{
-		pIODevice->seek(0);
-	}
+    else
+    {
+        pIODevice->close();
+        pIODevice->open(QIODevice::ReadOnly);
+    }
 }
 
 void GLC_3dxmlToWorld::applyV4Attribute(GLC_StructOccurrence* pOccurrence, V4OccurrenceAttrib* pV4OccurrenceAttrib, QHash<GLC_StructInstance*, unsigned int>& instanceToIdHash)

@@ -24,10 +24,13 @@
 #include <QtDebug>
 #include <QOpenGLContext>
 #include <QOpenGLContextGroup>
+#include <QMutexLocker>
 
 #include "glc_contextmanager.h"
 #include "glc_state.h"
 #include "glc_context.h"
+
+QMutex GLC_ContextManager::m_Mutex;
 
 GLC_ContextManager* GLC_ContextManager::m_pContextManager= NULL;
 
@@ -49,6 +52,8 @@ GLC_ContextManager::~GLC_ContextManager()
 //////////////////////////////////////////////////////////////////////
 GLC_ContextManager* GLC_ContextManager::instance()
 {
+    QMutexLocker locker(&m_Mutex);
+
 	if (NULL == m_pContextManager)
 	{
 		m_pContextManager= new GLC_ContextManager();
@@ -58,7 +63,7 @@ GLC_ContextManager* GLC_ContextManager::instance()
 }
 
 GLC_Context* GLC_ContextManager::currentContext()
-{
+{   
     QOpenGLContext* pFromContext= QOpenGLContext::currentContext();
     GLC_Context* pSubject= NULL;
     if (NULL != pFromContext)
@@ -79,6 +84,8 @@ GLC_Context* GLC_ContextManager::currentContext()
 
 bool GLC_ContextManager::makeCurrent(GLC_Context *pContext)
 {
+    QMutexLocker locker(&m_Mutex);
+
     Q_ASSERT(m_GLCContextToOpenGLCOntext.contains(pContext));
     bool subject= pContext->makeCurrent();
     if (subject)
@@ -89,7 +96,7 @@ bool GLC_ContextManager::makeCurrent(GLC_Context *pContext)
     return subject;
 }
 
-bool GLC_ContextManager::areShared(GLC_Context *pContext1, GLC_Context *pContext2)
+bool GLC_ContextManager::areShared(GLC_Context *pContext1, GLC_Context *pContext2) const
 {
     Q_ASSERT(m_GLCContextToOpenGLCOntext.contains(pContext1));
     Q_ASSERT(m_GLCContextToOpenGLCOntext.contains(pContext2));
@@ -124,6 +131,7 @@ GLC_Context *GLC_ContextManager::createContext(QOpenGLContext *pFromContext, QSu
 
 void GLC_ContextManager::addContext(GLC_Context *pContext)
 {
+    QMutexLocker locker(&m_Mutex);
     Q_ASSERT(!m_GLCContextToOpenGLCOntext.contains(pContext));
     QOpenGLContext* pOpenGLContext= pContext->contextHandle();
     Q_ASSERT(!m_OpenGLContextToGLCContext.contains(pOpenGLContext));
@@ -135,6 +143,7 @@ void GLC_ContextManager::addContext(GLC_Context *pContext)
 
 void GLC_ContextManager::contextDestroyed(GLC_Context* pContext)
 {
+    QMutexLocker locker(&m_Mutex);
     Q_ASSERT(m_GLCContextToOpenGLCOntext.contains(pContext));
     QOpenGLContext* pOpenGLContext= pContext->contextHandle();
 

@@ -17,19 +17,18 @@ Rectangle {
             y: 10
             width: parent.width / 2 - 20
             height: parent.height - 20
-            viewHandler: viewHandler1
+            source: ":model/Democles.dae"
+            spacePartitionningEnabled: true
+            camera.defaultUpVector : Qt.vector3d(1, 0, 0)
+            camera.upVector: camera.defaultUpVector
         }
-        Item{
+        GLCView{
             anchors.left: view1.right
             anchors.top: view1.top
             anchors.leftMargin: 10
             width: view1.width
             height: view1.height
-
-            GLCView{
-                anchors.fill: parent
-                viewHandler: viewHandler2
-            }
+            viewHandler: viewHandler2
         }
 
 

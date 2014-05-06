@@ -27,6 +27,7 @@
 #include <QSet>
 #include <QHash>
 #include <QObject>
+#include <QMutex>
 
 #include "glc_config.h"
 
@@ -66,7 +67,7 @@ public:
     {return m_GLCContextToOpenGLCOntext.contains(pContext);}
 
     //! Return true if the given context are shared context
-    bool areShared(GLC_Context* pContext1, GLC_Context* pContext2);
+    bool areShared(GLC_Context* pContext1, GLC_Context* pContext2) const;
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -103,6 +104,8 @@ private:
 
     //! Opengl context to GLC_Context map
     QHash<QOpenGLContext*, GLC_Context*> m_OpenGLContextToGLCContext;
+
+    static QMutex m_Mutex;
 };
 
 #endif /* GLC_CONTEXTMANAGER_H_ */
