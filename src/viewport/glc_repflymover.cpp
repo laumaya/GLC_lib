@@ -139,8 +139,10 @@ void GLC_RepFlyMover::glDraw()
     myFont.setBold(true);
     QFontMetrics fontmetrics(myFont);
     int txtHeight= fontmetrics.boundingRect(velocity).height();
+    int textWidth= fontmetrics.width(velocity);
     double posy= 2.0 * static_cast<double>(txtHeight) / calibre;
-    m_pViewport->renderText(GLC_Point3d(- m_HudOffset.x(), m_HudOffset.y() - posy, 0.0), velocity, m_MainColor, myFont);
+    double posx= 2.0 * static_cast<double>(textWidth / 2) / calibre + 0.02;
+    m_pViewport->renderText(GLC_Point3d(- m_HudOffset.x() + posx, m_HudOffset.y() - posy, 0.0), velocity, m_MainColor, myFont);
 
     pContext->glcPopMatrix();
     pContext->glcMatrixMode(GL_PROJECTION);
