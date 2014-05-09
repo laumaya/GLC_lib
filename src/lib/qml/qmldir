@@ -1,0 +1,3 @@
+module GLC_lib
+plugin GLC_libQuickPlugin
+
