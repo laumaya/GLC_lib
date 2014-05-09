@@ -16,4 +16,4 @@ greaterThan(QT_MAJOR_VERSION, 4){
 cache()
 }
 
-SUBDIRS += src examples
+SUBDIRS += src/lib src/examples
