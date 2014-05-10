@@ -10,7 +10,7 @@ MOC_DIR = ./Build
 UI_DIR = ./Build
 RCC_DIR = ./Build
 
-include(../examples.pri)
+include(../../../glc_lib.pri)
 
 # Input
 HEADERS += glwidget.h mainwindow.h

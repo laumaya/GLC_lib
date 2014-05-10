@@ -530,4 +530,7 @@ INSTALLS += include_glc_3dwidget include_glc_glu include_glc_qml
 INSTALLS += target
 INSTALLS += include
 
+OTHER_FILES += \
+    GLC_QMLCamera
+
 

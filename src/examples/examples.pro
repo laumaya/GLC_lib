@@ -11,10 +11,5 @@ SUBDIRS +=  example01 \
             example09 \
             example10 \
             example11
-
-greaterThan(QT_MAJOR_VERSION, 4){
-SUBDIRS +=  example12
 }
-}
-
 

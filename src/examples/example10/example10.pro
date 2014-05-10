@@ -8,7 +8,7 @@ unix:MOC_DIR = ./Build
 unix:UI_DIR = ./Build
 unix:RCC_DIR = ./Build
 
-include(../examples.pri)
+include(../../../glc_lib.pri)
 
 QT += core \
     gui \
