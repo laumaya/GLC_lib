@@ -7,30 +7,30 @@
 
 #include <QtDebug>
 
-#include "glc_qmlcamera.h"
+#include "glc_quickcamera.h"
 
 #include "../viewport/glc_camera.h"
 #include "../maths/glc_vector3d.h"
 
 
-GLC_QMLCamera::GLC_QMLCamera(QObject *parent)
+GLC_QuickCamera::GLC_QuickCamera(QObject *parent)
     : QObject(parent)
     , m_Camera(NULL)
 {
 
 }
 
-QVector3D GLC_QMLCamera::upVector() const
+QVector3D GLC_QuickCamera::upVector() const
 {
     return m_Camera->upVector().toQVector3D();
 }
 
-QVector3D GLC_QMLCamera::defaultUpVector() const
+QVector3D GLC_QuickCamera::defaultUpVector() const
 {
     return m_Camera->defaultUpVector().toQVector3D();
 }
 
-void GLC_QMLCamera::setCamera(GLC_Camera *pCamera)
+void GLC_QuickCamera::setCamera(GLC_Camera *pCamera)
 {
     Q_ASSERT(NULL != pCamera);
 
@@ -43,7 +43,7 @@ void GLC_QMLCamera::setCamera(GLC_Camera *pCamera)
     connect(m_Camera, SIGNAL(changed()), this, SIGNAL(changed()));
 }
 
-void GLC_QMLCamera::setUpVector(const QVector3D &arg)
+void GLC_QuickCamera::setUpVector(const QVector3D &arg)
 {
     if (m_Camera->upVector().toQVector3D() != arg)
     {
@@ -53,11 +53,12 @@ void GLC_QMLCamera::setUpVector(const QVector3D &arg)
     }
 }
 
-void GLC_QMLCamera::setDefaultUpVector(const QVector3D &arg)
+void GLC_QuickCamera::setDefaultUpVector(const QVector3D &arg)
 {
     if (m_Camera->defaultUpVector().toQVector3D() != arg)
     {
         m_Camera->setDefaultUpVector(arg);
+        m_Camera->setUpCam(arg);
         emit updateView();
     }
 }

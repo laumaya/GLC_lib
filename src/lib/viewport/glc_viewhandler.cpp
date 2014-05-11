@@ -103,6 +103,17 @@ void GLC_ViewHandler::clearSelectionBuffer()
     emit invalidateSelectionBuffer();
 }
 
+void GLC_ViewHandler::setDefaultUpVector(const GLC_Vector3d &vect)
+{
+    GLC_Camera* pCamera= m_pViewport->cameraHandle();
+
+    pCamera->setUpCam(vect);
+    pCamera->setDefaultUpVector(vect);
+    pCamera->setIsoView();
+    emit invalidateSelectionBuffer();
+}
+
+
 void GLC_ViewHandler::setInputEventInterpreter(GLC_InputEventInterpreter *pEventInterpreter)
 {
     delete m_pInputEventInterpreter;
@@ -310,14 +321,4 @@ void GLC_ViewHandler::render()
     {
         qDebug() << e.what();
     }
-}
-
-
-void GLC_ViewHandler::setDefaultUpVector(const GLC_Vector3d &vect)
-{
-    GLC_Camera* pCamera= m_pViewport->cameraHandle();
-
-    pCamera->setUpCam(vect);
-    pCamera->setDefaultUpVector(vect);
-    pCamera->setIsoView();
 }

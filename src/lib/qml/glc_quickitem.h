@@ -37,7 +37,7 @@
 #include "../viewport/glc_movercontroller.h"
 #include "../viewport/glc_viewhandler.h"
 #include "../maths/glc_vector3d.h"
-#include "glc_qmlcamera.h"
+#include "glc_quickcamera.h"
 
 #include "../glc_config.h"
 
@@ -64,7 +64,10 @@ class GLC_LIB_EXPORT GLC_QuickItem : public QQuickItem
     Q_PROPERTY(bool spacePartitionningEnabled READ spacePartitionningEnabled WRITE setSpacePartitionningEnabled NOTIFY spacePartitionningEnabledChanged)
 
     //! Camera of this view
-    Q_PROPERTY(GLC_QMLCamera* camera READ camera)
+    Q_PROPERTY(GLC_QuickCamera* camera READ camera)
+
+    //! Default up vector
+    Q_PROPERTY(QVector3D defaultUpVector READ defaultUpVector WRITE setDefaultUpVector)
 
 
 //////////////////////////////////////////////////////////////////////
@@ -90,8 +93,10 @@ public:
 
     bool spacePartitionningEnabled() const;
 
-    GLC_QMLCamera* camera() const
+    GLC_QuickCamera* camera() const
     {return m_pCamera;}
+
+    QVector3D defaultUpVector() const;
 
 //@}
 
@@ -105,13 +110,15 @@ public slots:
     virtual void invalidateSelectionBuffer();
     virtual void setMouseTracking(bool track);
     virtual void setSource(QString arg);
-    virtual void setSpacePartitionningEnabled(bool enabled);    
+    virtual void setSpacePartitionningEnabled(bool enabled);
+    virtual void setDefaultUpVector(const QVector3D &vect);
 
 //@}
 
 signals:
     void sourceChanged(QString arg);
     void spacePartitionningEnabledChanged(bool arg);
+    void selectionChanged();
 
 //////////////////////////////////////////////////////////////////////
 /*! \name QQuickItem interface*/
@@ -165,7 +172,7 @@ protected:
     bool m_SelectionBufferIsDirty;
     GLC_Point3d m_UnprojectedPoint;
 
-    GLC_QMLCamera* m_pCamera;
+    GLC_QuickCamera* m_pCamera;
 
     QString m_Source;
 };

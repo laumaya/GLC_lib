@@ -132,6 +132,8 @@ public slots:
     virtual void clearSelectionBuffer();
 
 public:
+    virtual void setDefaultUpVector(const GLC_Vector3d &vect);
+
     void setInputEventInterpreter(GLC_InputEventInterpreter* pEventInterpreter);
 
     virtual void setWorld(const GLC_World& world);
@@ -203,7 +205,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 protected:
-    virtual void setDefaultUpVector(const GLC_Vector3d &vect);
+
 
 //@}
 

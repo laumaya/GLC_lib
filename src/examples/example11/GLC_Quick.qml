@@ -6,10 +6,12 @@ Rectangle {
     height: 250
 
     Rectangle{
+        id: frame
         color: "#9ac4ea"
         border.color: "#000000"
         anchors.fill: parent
         anchors.margins : 10
+
 
         GLC_QuickView{
             id : view1
@@ -21,6 +23,13 @@ Rectangle {
             spacePartitionningEnabled: true
             camera.defaultUpVector : Qt.vector3d(1, 0, 0)
             camera.upVector: camera.defaultUpVector
+            onSelectionChanged : {
+                if (frame.color == "#9ac4ea"){
+                    frame.color= "#9014ea";
+                }else{
+                    frame.color= "#9ac4ea";
+                }
+            }
         }
         GLC_QuickView{
             anchors.left: view1.right

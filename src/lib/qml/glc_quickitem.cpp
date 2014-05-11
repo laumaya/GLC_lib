@@ -42,7 +42,7 @@ GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     , m_pScreenShotFbo(NULL)
     , m_SelectionBufferIsDirty(true)
     , m_UnprojectedPoint()
-    , m_pCamera(new GLC_QMLCamera(this))
+    , m_pCamera(new GLC_QuickCamera(this))
     , m_Source()
 {
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton);
@@ -81,6 +81,11 @@ bool GLC_QuickItem::spacePartitionningEnabled() const
     }
 
     return subject;
+}
+
+QVector3D GLC_QuickItem::defaultUpVector() const
+{
+    return m_Viewhandler->viewportHandle()->cameraHandle()->defaultUpVector().toQVector3D();
 }
 
 
@@ -148,6 +153,15 @@ void GLC_QuickItem::setSpacePartitionningEnabled(bool enabled)
         }
 
         emit spacePartitionningEnabledChanged(enabled);
+    }
+}
+
+void GLC_QuickItem::setDefaultUpVector(const QVector3D &vect)
+{
+    if (!m_Viewhandler.isNull() && (defaultUpVector() != vect))
+    {
+        m_Viewhandler->setDefaultUpVector(GLC_Vector3d(vect));
+        update();
     }
 }
 
@@ -397,6 +411,7 @@ void GLC_QuickItem::renderForSelection()
         }
 
         m_Viewhandler->updateSelection(selectionSet, m_UnprojectedPoint);
+        emit selectionChanged();
     }
 
     m_pAuxFbo->release();
