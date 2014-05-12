@@ -32,4 +32,10 @@ unix {
     target.path = $$installPath
     INSTALLS += target qmldir
 }
+win32 {
+    installPath = ../../../qmlplugin/$$uri
+    qmldir.path = $$installPath
+    target.path = $$installPath
+    INSTALLS += target qmldir
+}
 

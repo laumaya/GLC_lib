@@ -39,8 +39,5 @@ Rectangle {
             height: view1.height
             viewHandler: viewHandler2
         }
-
-
-
     }
 }
