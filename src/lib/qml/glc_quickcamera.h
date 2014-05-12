@@ -12,9 +12,11 @@
 #include <QPointer>
 #include <QVector3D>
 
+#include "../glc_config.h"
+
 class GLC_Camera;
 
-class GLC_QuickCamera : public QObject
+class GLC_LIB_EXPORT GLC_QuickCamera : public QObject
 {
     Q_OBJECT
 
