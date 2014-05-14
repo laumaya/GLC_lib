@@ -28,17 +28,6 @@ int main(int argc, char *argv[])
     GLC_State::setPixelCullingUsage(true);
     GLC_State::setSpacePartionningUsage(true);
 
-//    QFile file1(":model/Democles.dae");
-//    GLC_World world1= GLC_Factory::instance()->createWorldFromFile(file1);
-//    QPointer<GLC_ViewHandler> pViewHandler1= new GLC_ViewHandler();
-//    pViewHandler1->setWorld(world1);
-//    pViewHandler1->setSpacePartitioning(new GLC_Octree(world1.collection()));
-//    pViewHandler1->viewportHandle()->setBackgroundColor(Qt::black);
-
-//    QVariant variantViewHandler1;
-//    variantViewHandler1.setValue(pViewHandler1);
-//    view.rootContext()->setContextProperty("viewHandler1", variantViewHandler1);
-
     //QFile file2("/Users/laumaya/Documents/Tests VrooM/did/TEA132_EPC567/StructBM.3dxml");
 
     QFile file2(":model/man.obj");

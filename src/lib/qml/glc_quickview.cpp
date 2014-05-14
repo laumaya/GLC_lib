@@ -26,8 +26,6 @@
 
 #include "glc_quickview.h"
 
-#include "glc_quickitem.h"
-
 #include "../glc_context.h"
 #include "../glc_contextmanager.h"
 
@@ -36,9 +34,6 @@ GLC_QuickView::GLC_QuickView(QWindow *pParent)
     , m_pContext(NULL)
     , m_pQOpenGLContext(NULL)
 {
-    qmlRegisterType<GLC_QuickItem>("glcview", 1, 0, "GLCView");
-    qmlRegisterType<GLC_QuickCamera>();
-
     initConnection();
 }
 

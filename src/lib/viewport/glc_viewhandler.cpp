@@ -76,7 +76,6 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
 
 GLC_ViewHandler::~GLC_ViewHandler()
 {
-    qDebug() << "GLC_ViewHandler::~GLC_ViewHandler()";
     delete m_pLight;
     delete m_pViewport;
     delete m_pMoverController;
@@ -185,6 +184,14 @@ void GLC_ViewHandler::unsetSelection()
     m_CurrentSelectionSet.clear();
     m_UnprojectedPoint.setVect(0.0, 0.0, 0.0);
     m_World.unselectAll();
+    emit selectionChanged();
+    updateGL();
+}
+
+void GLC_ViewHandler::selectionUpdated(const GLC_SelectionEvent &selectionEvent)
+{
+    m_World.updateSelection(selectionEvent);
+    emit selectionChanged();
     updateGL();
 }
 
@@ -207,7 +214,7 @@ void GLC_ViewHandler::setMouseTracking(bool track)
     emit acceptHoverEvent(track);
 }
 
-void GLC_ViewHandler::updateSelection(const GLC_SelectionSet& selectionSet, const GLC_Point3d &point)
+void GLC_ViewHandler::updateCurrentSelectionSet(const GLC_SelectionSet& selectionSet, const GLC_Point3d &point)
 {
     m_RenderingMode= GLC_ViewHandler::normalRenderMode;
     m_CurrentSelectionSet= selectionSet;

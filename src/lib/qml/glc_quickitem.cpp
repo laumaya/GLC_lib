@@ -44,6 +44,7 @@ GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     , m_UnprojectedPoint()
     , m_pCamera(new GLC_QuickCamera(this))
     , m_Source()
+    , m_pQuickSelection(new GLC_QuickSelection(this))
 {
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton);
     setFlag(QQuickItem::ItemHasContents);
@@ -85,9 +86,14 @@ bool GLC_QuickItem::spacePartitionningEnabled() const
 
 QVector3D GLC_QuickItem::defaultUpVector() const
 {
-    return m_Viewhandler->viewportHandle()->cameraHandle()->defaultUpVector().toQVector3D();
-}
+    QVector3D subject;
+    if (!m_Viewhandler.isNull())
+    {
+        subject= m_Viewhandler->viewportHandle()->cameraHandle()->defaultUpVector().toQVector3D();
+    }
 
+    return subject;
+}
 
 void GLC_QuickItem::setViewhandler(QVariant viewHandler)
 {
@@ -96,6 +102,8 @@ void GLC_QuickItem::setViewhandler(QVariant viewHandler)
         disconnect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()));
         disconnect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
         disconnect(m_Viewhandler.data(), SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
+        disconnect(m_Viewhandler.data(), SIGNAL(selectionChanged()), m_pQuickSelection, SLOT(update()));
+        disconnect(m_pQuickSelection, SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
     }
 
     m_Viewhandler= viewHandler.value<QSharedPointer<GLC_ViewHandler> >();
@@ -104,8 +112,11 @@ void GLC_QuickItem::setViewhandler(QVariant viewHandler)
     connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
     connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
     connect(m_Viewhandler.data(), SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
+    connect(m_Viewhandler.data(), SIGNAL(selectionChanged()), m_pQuickSelection, SLOT(update()));
+    connect(m_pQuickSelection, SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
 
     m_pCamera->setCamera(m_Viewhandler->viewportHandle()->cameraHandle());
+    m_pQuickSelection->setWorld(m_Viewhandler->world());
 }
 
 void GLC_QuickItem::invalidateSelectionBuffer()
@@ -120,6 +131,12 @@ void GLC_QuickItem::setMouseTracking(bool track)
 
 void GLC_QuickItem::setSource(QString arg)
 {
+    QUrl url(arg);
+    if (url.isLocalFile())
+    {
+        arg= QUrl(arg).toLocalFile();
+    }
+
     if (m_Source != arg)
     {
         try
@@ -127,6 +144,7 @@ void GLC_QuickItem::setSource(QString arg)
             QFile file(arg);
             GLC_World world= GLC_Factory::instance()->createWorldFromFile(file);
             m_Viewhandler->setWorld(world);
+            m_pQuickSelection->setWorld(world);
             emit sourceChanged(arg);
             m_Source = arg;
         }
@@ -410,8 +428,7 @@ void GLC_QuickItem::renderForSelection()
             }
         }
 
-        m_Viewhandler->updateSelection(selectionSet, m_UnprojectedPoint);
-        emit selectionChanged();
+        m_Viewhandler->updateCurrentSelectionSet(selectionSet, m_UnprojectedPoint);
     }
 
     m_pAuxFbo->release();

@@ -79,6 +79,5 @@ void GLC_InputEventInterpreter::select(int x, int y, GLC_SelectionEvent::Modes m
 {
     QPair<GLC_SelectionSet, GLC_Point3d> selection= m_pViewHandler->selectAndUnproject(x, y, modes);
     GLC_SelectionEvent selectionEvent(modes, selection.first);
-    m_pViewHandler->world().updateSelection(selectionEvent);
-    m_pViewHandler->updateGL();
+    m_pViewHandler->selectionUpdated(selectionEvent);
 }

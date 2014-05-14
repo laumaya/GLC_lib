@@ -12,32 +12,55 @@ Rectangle {
         anchors.fill: parent
         anchors.margins : 10
 
+        Item {
+            id: view1Container
+            width: parent.width / 2
+            height: parent.height
 
-        GLC_QuickView{
-            id : view1
-            x: 10
-            y: 10
-            width: parent.width / 2 - 20
-            height: parent.height - 20
-            source: ":model/Democles.dae"
-            spacePartitionningEnabled: true
-            camera.defaultUpVector : Qt.vector3d(1, 0, 0)
-            camera.upVector: camera.defaultUpVector
-            onSelectionChanged : {
-                if (frame.color == "#9ac4ea"){
-                    frame.color= "#9014ea";
-                }else{
-                    frame.color= "#9ac4ea";
+            GLC_QuickItem{
+                id : view1
+                anchors.fill: parent
+                anchors.leftMargin: 5
+                anchors.rightMargin: 5
+                anchors.topMargin: 20
+                anchors.bottomMargin: 5
+                source: ":model/Democles.dae"
+                spacePartitionningEnabled: true
+                camera.defaultUpVector : Qt.vector3d(1, 0, 0)
+                camera.upVector: camera.defaultUpVector
+                onSelectionChanged : {
+                    if (!view1.selection.isEmpty)
+                    {
+                        selectionInfo.text= view1.selection.first.referenceName;
+                    }
+                    else
+                    {
+                        selectionInfo.text= "None";
+                    }
                 }
             }
+            Text {
+                id : selectionInfo
+                text: "None"
+            }
+
         }
-        GLC_QuickView{
-            anchors.left: view1.right
-            anchors.top: view1.top
-            anchors.leftMargin: 10
-            width: view1.width
-            height: view1.height
-            viewHandler: viewHandler2
+
+        Item {
+            id: view2Container
+            anchors.left: view1Container.right
+            anchors.top: view1Container.top
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            GLC_QuickItem{
+                anchors.fill: parent
+                anchors.leftMargin: 5
+                anchors.rightMargin: 5
+                anchors.topMargin: 20
+                anchors.bottomMargin: 5
+                viewHandler: viewHandler2
+            }
         }
     }
 }

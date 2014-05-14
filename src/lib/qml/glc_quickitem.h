@@ -30,6 +30,7 @@
 #include <QOpenGLFramebufferObject>
 #include <QPair>
 #include <QSharedPointer>
+#include <QList>
 
 #include "../viewport/glc_viewport.h"
 #include "../shading/glc_light.h"
@@ -38,6 +39,7 @@
 #include "../viewport/glc_viewhandler.h"
 #include "../maths/glc_vector3d.h"
 #include "glc_quickcamera.h"
+#include "glc_quickselection.h"
 
 #include "../glc_config.h"
 
@@ -69,6 +71,9 @@ class GLC_LIB_EXPORT GLC_QuickItem : public QQuickItem
     //! Default up vector
     Q_PROPERTY(QVector3D defaultUpVector READ defaultUpVector WRITE setDefaultUpVector)
 
+    //! Current selection
+    Q_PROPERTY(GLC_QuickSelection* selection READ selection NOTIFY selectionChanged)
+
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -97,6 +102,9 @@ public:
     {return m_pCamera;}
 
     QVector3D defaultUpVector() const;
+
+    GLC_QuickSelection* selection() const
+    {return m_pQuickSelection;}
 
 //@}
 
@@ -175,6 +183,8 @@ protected:
     GLC_QuickCamera* m_pCamera;
 
     QString m_Source;
+
+    GLC_QuickSelection* m_pQuickSelection;
 };
 
 #endif // GLC_QUICKITEM_H

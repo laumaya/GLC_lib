@@ -63,6 +63,7 @@ signals :
     void isDirty();
     void invalidateSelectionBuffer();
     void acceptHoverEvent(bool track);
+    void selectionChanged();
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
@@ -148,13 +149,15 @@ public:
 
     virtual void unsetSelection();
 
+    virtual void selectionUpdated(const GLC_SelectionEvent &selectionEvent);
+
     virtual QImage takeScreenshot(const GLC_ScreenShotSettings& screenShotSettings);
 
     virtual void setSize(int width, int height);
 
     virtual void setMouseTracking(bool track);
 
-    void updateSelection(const GLC_SelectionSet &selectionSet, const GLC_Point3d& point);
+    void updateCurrentSelectionSet(const GLC_SelectionSet &selectionSet, const GLC_Point3d& point);
 
     inline void setEnable(bool enabled)
     {m_Enabled= enabled;}
