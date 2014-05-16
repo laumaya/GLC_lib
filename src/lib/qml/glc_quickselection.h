@@ -10,7 +10,7 @@
 
 #include <QObject>
 
-#include <GLC_QuickOccurrence>
+#include "glc_quickoccurrence.h"
 
 #include "../glc_config.h"
 #include "../sceneGraph/glc_world.h"
@@ -34,10 +34,10 @@ public:
     int count() const
     {return m_Occurrences.count();}
 
-    GLC_QuickOccurrence* first()
+    GLC_QuickOccurrence* first() const
     {return m_Occurrences.first();}
 
-    Q_INVOKABLE GLC_QuickOccurrence* at(int i)
+    Q_INVOKABLE GLC_QuickOccurrence* at(int i) const
     {return m_Occurrences.at(i);}
 
     void setWorld(const GLC_World& world);
