@@ -34,7 +34,7 @@ unix {
 }
 win32 {
     include(../../../install.pri)
-    installPath = .$${GLC_LIB_DIR}/qmlplugin/$${uri}
+    installPath = $${GLC_LIB_DIR}/qmlplugin/$${uri}
     qmldir.path = $$installPath
     target.path = $$installPath
     INSTALLS += target qmldir
