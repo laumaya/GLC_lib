@@ -26,17 +26,19 @@ Rectangle {
                 anchors.bottomMargin: 5
                 source: ":model/Democles.dae"
                 spacePartitionningEnabled: true
-                camera.defaultUpVector : Qt.vector3d(1, 0, 0)
-                camera.upVector: camera.defaultUpVector
                 onSelectionChanged : {
                     if (!view1.selection.isEmpty)
                     {
-                        selectionInfo.text= view1.selection.first.referenceName;
+                        selectionInfo.text= view1.selection.first.id;
                     }
                     else
                     {
                         selectionInfo.text= "None";
                     }
+                }
+                Component.onCompleted:{
+                    camera.defaultUpVector= Qt.vector3d(1, 0, 0);
+                    camera.upVector= camera.defaultUpVector;
                 }
             }
             Text {

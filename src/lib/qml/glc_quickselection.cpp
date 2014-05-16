@@ -28,11 +28,9 @@ void GLC_QuickSelection::setWorld(const GLC_World &world)
 
 void GLC_QuickSelection::update()
 {
-    qDebug() << "GLC_QuickSelection::update() " << m_World.worldHandle();
     clear();
     QList<GLC_StructOccurrence*> occurrences= m_World.selectedOccurrenceList();
     const int count= occurrences.count();
-    qDebug() << "count " << count;
     for (int i= 0; i < count; ++i)
     {
         GLC_QuickOccurrence* pQuickOcc= new GLC_QuickOccurrence(occurrences.at(i));

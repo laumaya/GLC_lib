@@ -121,12 +121,16 @@ public slots:
     virtual void setSpacePartitionningEnabled(bool enabled);
     virtual void setDefaultUpVector(const QVector3D &vect);
 
+    void select(uint id);
+
 //@}
 
 signals:
     void sourceChanged(QString arg);
     void spacePartitionningEnabledChanged(bool arg);
     void selectionChanged();
+    void frameBufferCreationFailed();
+    void frameBufferBindingFailed();
 
 //////////////////////////////////////////////////////////////////////
 /*! \name QQuickItem interface*/

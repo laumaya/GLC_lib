@@ -99,21 +99,27 @@ void GLC_QuickItem::setViewhandler(QVariant viewHandler)
 {
     if (NULL != m_Viewhandler)
     {
-        disconnect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()));
-        disconnect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
-        disconnect(m_Viewhandler.data(), SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
-        disconnect(m_Viewhandler.data(), SIGNAL(selectionChanged()), m_pQuickSelection, SLOT(update()));
+        GLC_ViewHandler* pViewHandler= m_Viewhandler.data();
+        disconnect(pViewHandler, SIGNAL(isDirty()), this, SLOT(update()));
+        disconnect(pViewHandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
+        disconnect(pViewHandler, SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
+        disconnect(pViewHandler, SIGNAL(selectionChanged()), m_pQuickSelection, SLOT(update()));
         disconnect(m_pQuickSelection, SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
+        disconnect(this, SIGNAL(frameBufferCreationFailed()), pViewHandler, SIGNAL(frameBufferCreationFailed()));
+        disconnect(this, SIGNAL(frameBufferBindingFailed()), pViewHandler, SIGNAL(frameBufferBindingFailed()));
     }
 
     m_Viewhandler= viewHandler.value<QSharedPointer<GLC_ViewHandler> >();
     Q_ASSERT(!m_Viewhandler.isNull());
+    GLC_ViewHandler* pViewHandler= m_Viewhandler.data();
 
-    connect(m_Viewhandler.data(), SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
-    connect(m_Viewhandler.data(), SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
-    connect(m_Viewhandler.data(), SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
-    connect(m_Viewhandler.data(), SIGNAL(selectionChanged()), m_pQuickSelection, SLOT(update()));
+    connect(pViewHandler, SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
+    connect(pViewHandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);
+    connect(pViewHandler, SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
+    connect(pViewHandler, SIGNAL(selectionChanged()), m_pQuickSelection, SLOT(update()));
     connect(m_pQuickSelection, SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
+    connect(this, SIGNAL(frameBufferCreationFailed()), pViewHandler, SIGNAL(frameBufferCreationFailed()));
+    connect(this, SIGNAL(frameBufferBindingFailed()), pViewHandler, SIGNAL(frameBufferBindingFailed()));
 
     m_pCamera->setCamera(m_Viewhandler->viewportHandle()->cameraHandle());
     m_pQuickSelection->setWorld(m_Viewhandler->world());
@@ -180,6 +186,17 @@ void GLC_QuickItem::setDefaultUpVector(const QVector3D &vect)
     {
         m_Viewhandler->setDefaultUpVector(GLC_Vector3d(vect));
         update();
+    }
+}
+
+void GLC_QuickItem::select(uint id)
+{
+    if (!m_Viewhandler.isNull())
+    {
+        GLC_World world= m_Viewhandler->world();
+        world.unselectAll();
+        world.select(id);
+        m_pQuickSelection->update();
     }
 }
 
@@ -345,7 +362,7 @@ void GLC_QuickItem::render(QSGSimpleTextureNode *pTextureNode, UpdatePaintNodeDa
         pushOpenGLMatrix();
         setOpenGLState();
 
-        m_pSourceFbo->bind();
+        if (!m_pSourceFbo->bind()) emit frameBufferBindingFailed();
 
         m_Viewhandler->setSize(width, height);
 
@@ -381,7 +398,7 @@ void GLC_QuickItem::renderForSelection()
         pushOpenGLMatrix();
         setOpenGLState();
 
-        m_pAuxFbo->bind();
+        if (!m_pAuxFbo->bind()) emit frameBufferBindingFailed();
 
         if (m_SelectionBufferIsDirty)
         {
@@ -449,7 +466,7 @@ void GLC_QuickItem::renderForScreenShot()
         pushOpenGLMatrix();
         setOpenGLState();
 
-        m_pScreenShotFbo->bind();
+        if (!m_pScreenShotFbo->bind()) emit frameBufferBindingFailed();
 
         m_Viewhandler->setSize(width, height);
         doRender();
@@ -528,6 +545,10 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
         m_pTargetFbo= new QOpenGLFramebufferObject(width, height);
         pTextureNode->setTexture(this->window()->createTextureFromId(m_pTargetFbo->texture(), m_pTargetFbo->size()));
         pTextureNode->setRect(this->boundingRect());
+
+        // Test frame buffer validity
+        const bool isValid= (m_pSourceFbo->isValid() && m_pTargetFbo->isValid());
+        if (!isValid) emit frameBufferCreationFailed();
     }
     else
     {
@@ -546,6 +567,10 @@ void GLC_QuickItem::setupAuxFbo(int width, int height)
         {
             m_pAuxFbo= new QOpenGLFramebufferObject(width, height, QOpenGLFramebufferObject::Depth);
             m_SelectionBufferIsDirty= true;
+
+            // Test frame buffer validity
+            const bool isValid= m_pAuxFbo->isValid();
+            if (!isValid) emit frameBufferCreationFailed();
         }
     }
     else
@@ -565,6 +590,10 @@ void GLC_QuickItem::setupScreenShotFbo(int width, int height)
     sourceFormat.setSamples(m_Viewhandler->samples());
 
     m_pScreenShotFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
+
+    // Test frame buffer validity
+    const bool isValid= m_pScreenShotFbo->isValid();
+    if (!isValid) emit frameBufferCreationFailed();
 }
 
 void GLC_QuickItem::pushOpenGLMatrix()

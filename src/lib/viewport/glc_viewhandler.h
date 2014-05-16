@@ -65,6 +65,11 @@ signals :
     void acceptHoverEvent(bool track);
     void selectionChanged();
 
+    // Error signals
+    void frameBufferCreationFailed();
+    void frameBufferBindingFailed();
+
+
 //////////////////////////////////////////////////////////////////////
 /*! \name Get Functions*/
 //@{
