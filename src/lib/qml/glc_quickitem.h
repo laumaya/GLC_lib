@@ -72,7 +72,7 @@ class GLC_LIB_EXPORT GLC_QuickItem : public QQuickItem
     Q_PROPERTY(QVector3D defaultUpVector READ defaultUpVector WRITE setDefaultUpVector)
 
     //! Current selection
-    Q_PROPERTY(GLC_QuickSelection* selection READ selection NOTIFY selectionChanged)
+    Q_PROPERTY(GLC_QuickSelection* selection READ selection)
 
 
 //////////////////////////////////////////////////////////////////////

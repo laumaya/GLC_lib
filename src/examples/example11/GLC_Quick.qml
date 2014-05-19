@@ -27,9 +27,9 @@ Rectangle {
                 source: ":model/Democles.dae"
                 spacePartitionningEnabled: true
                 onSelectionChanged : {
-                    if (!view1.selection.isEmpty)
+                    if (!view1.selection.isEmpty())
                     {
-                        selectionInfo.text= view1.selection.first.id;
+                        selectionInfo.text= view1.selection.first().id;
                     }
                     else
                     {

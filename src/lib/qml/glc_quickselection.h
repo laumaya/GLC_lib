@@ -18,23 +18,16 @@
 class GLC_LIB_EXPORT GLC_QuickSelection : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QList<GLC_QuickOccurrence*> occurrences READ occurrences)
-    Q_PROPERTY(int count READ count)
-    Q_PROPERTY(GLC_QuickOccurrence* first READ first)
-    Q_PROPERTY(bool isEmpty READ isEmpty)
 
 public:
     explicit GLC_QuickSelection(QObject *parent = 0);
     virtual ~GLC_QuickSelection();
 
 public:
-    QList<GLC_QuickOccurrence*> occurrences() const
-    {return m_Occurrences;}
-
-    int count() const
+    Q_INVOKABLE int count() const
     {return m_Occurrences.count();}
 
-    GLC_QuickOccurrence* first() const
+    Q_INVOKABLE GLC_QuickOccurrence* first() const
     {return m_Occurrences.first();}
 
     Q_INVOKABLE GLC_QuickOccurrence* at(int i) const
@@ -42,7 +35,7 @@ public:
 
     void setWorld(const GLC_World& world);
 
-    bool isEmpty()
+    Q_INVOKABLE bool isEmpty() const
     {return m_Occurrences.isEmpty();}
 
 signals:
