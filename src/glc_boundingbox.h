@@ -166,17 +166,26 @@ GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_BoundingBox &);
 // Return true if the given bounding box intersect this bounding box
 bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox) const
 {
+    bool subject= false;
 	// Distance between bounding box center
-	GLC_Vector3d thisCenter= center();
-	GLC_Vector3d otherCenter= boundingBox.center();
-	const double distanceX= fabs(thisCenter.x() - otherCenter.x());
-	const double distanceY= fabs(thisCenter.y() - otherCenter.y());
-	const double distanceZ= fabs(thisCenter.z() - otherCenter.z());
+    const GLC_Point3d thisCenter= center();
+    const GLC_Point3d otherCenter= boundingBox.center();
 
-	bool intersect= distanceX < ((xLength() + boundingBox.xLength()) * 0.5);
-	intersect= intersect && (distanceY < ((yLength() + boundingBox.yLength()) * 0.5));
-	intersect= intersect && (distanceZ < ((zLength() + boundingBox.zLength()) * 0.5));
-	return intersect;
+    if (this->intersect(otherCenter) || (boundingBox.intersect(thisCenter)))
+    {
+        subject= true;
+    }
+    else
+    {
+        const double distanceX= fabs(thisCenter.x() - otherCenter.x());
+        const double distanceY= fabs(thisCenter.y() - otherCenter.y());
+        const double distanceZ= fabs(thisCenter.z() - otherCenter.z());
+
+        subject= distanceX < ((xLength() + boundingBox.xLength()) * 0.5);
+        subject= subject && (distanceY < ((yLength() + boundingBox.yLength()) * 0.5));
+        subject= subject && (distanceZ < ((zLength() + boundingBox.zLength()) * 0.5));
+    }
+    return subject;
 }
 
 bool GLC_BoundingBox::operator == (const GLC_BoundingBox& box)
