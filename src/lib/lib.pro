@@ -539,4 +539,7 @@ INSTALLS += include
 OTHER_FILES += \
     GLC_QuickSelection
 
+DISTFILES += \
+    ../../sonar-project.properties
+
 
