@@ -9,6 +9,6 @@ mac {
 }
 
 unix {
-     LIBS += -L"../../lib" -l:GLC_lib.so.3
+     LIBS += -L"../../lib" -l:libGLC_lib.so.3
      INCLUDEPATH += "../../lib/"
 }
