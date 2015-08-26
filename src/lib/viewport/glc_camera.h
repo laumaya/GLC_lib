@@ -154,7 +154,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Camera orbiting
-    void orbit(GLC_Vector3d VectOldPoss, GLC_Vector3d VectCurPoss);
+    void orbit(GLC_Vector3d vectOldPoss, GLC_Vector3d vectCurPoss);
 
 	//! panoramic movement
     void pan(GLC_Vector3d VectDep);

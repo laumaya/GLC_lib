@@ -80,19 +80,21 @@ void GLC_TrackBallMover::init(const GLC_UserInput& userInput)
 // Move the camera
 bool GLC_TrackBallMover::move(const GLC_UserInput& userInput)
 {
-	const GLC_Vector3d VectCurOrbit(mapForTracking(static_cast<double>(userInput.x()), static_cast<double>(userInput.y())));
+    const double x= static_cast<double>(userInput.x());
+    const double y= static_cast<double>(userInput.y());
+
+    const GLC_Vector3d vectCurOrbit(mapForTracking(x, y));
 
 	// Update camera position (orbit)
-	GLC_Mover::m_pViewport->cameraHandle()->orbit(GLC_Mover::m_PreviousVector, VectCurOrbit);
+    GLC_Mover::m_pViewport->cameraHandle()->orbit(GLC_Mover::m_PreviousVector, vectCurOrbit);
 
 	// Update arcs of circle's positionning matrix
-	const GLC_Matrix4x4 MatRot(GLC_Mover::m_PreviousVector, VectCurOrbit);
-
-	GLC_Mover::m_MoverInfo.m_MatrixInfo.first()= MatRot;
+    const GLC_Matrix4x4 matRot(GLC_Mover::m_PreviousVector, vectCurOrbit);
+    GLC_Mover::m_MoverInfo.m_MatrixInfo.first()= matRot;
 	updateRepresentation();
 
 	// Previous vector become current vector
-	GLC_Mover::m_PreviousVector = VectCurOrbit;
+    GLC_Mover::m_PreviousVector = vectCurOrbit;
 
 	return true;
 }

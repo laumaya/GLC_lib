@@ -82,25 +82,20 @@ bool GLC_Camera::operator==(const GLC_Camera& other) const
 /////////////////////////////////////////////////////////////////////
 // Set Functions
 /////////////////////////////////////////////////////////////////////
-void GLC_Camera::orbit(GLC_Vector3d VectOldPoss, GLC_Vector3d VectCurPoss)
+void GLC_Camera::orbit(GLC_Vector3d vectOldPoss, GLC_Vector3d vectCurPoss)
 {
-	// Map Vectors
-	GLC_Matrix4x4 invMat(m_ModelViewMatrix);
-	invMat.invert();
-	VectOldPoss= invMat * VectOldPoss;
-	VectCurPoss= invMat * VectCurPoss;
-
 	// Compute rotation matrix
-	const GLC_Vector3d VectAxeRot(VectCurPoss ^ VectOldPoss);
-	// Check if rotation vector is not null
-	if (!VectAxeRot.isNull())
-	{  // Ok, is not null
-		const double Angle= acos(VectCurPoss * VectOldPoss);
-		const GLC_Matrix4x4 MatOrbit(VectAxeRot, Angle);
+    const GLC_Vector3d rotationAxis(vectCurPoss ^ vectOldPoss);
+    // Check if rotation axis is not null
+    if (!rotationAxis.isNull())
+    {
+        const double angle= acos(vectCurPoss * vectOldPoss);
+        const GLC_Matrix4x4 invMat(m_ModelViewMatrix.inverted());
+        const GLC_Matrix4x4 orbitMatrix(invMat * rotationAxis, angle);
 
 		// Camera transformation
-		m_Eye= (MatOrbit * (m_Eye - m_Target)) + m_Target;
-		m_VectUp= MatOrbit * m_VectUp;
+        m_Eye= (orbitMatrix * (m_Eye - m_Target)) + m_Target;
+        m_VectUp= orbitMatrix * m_VectUp;
 		createMatComp();
 	}
 
