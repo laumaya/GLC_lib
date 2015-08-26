@@ -3,12 +3,12 @@ win32 {
     INCLUDEPATH += "../../lib"
 }
 
-mac {
+macx {
      LIBS += -L"../../lib" -lGLC_lib.3
      INCLUDEPATH += "../../lib/"
 }
 
-unix {
+unix:!macx {
      LIBS += -L"../../lib" -l:libGLC_lib.so.3
      INCLUDEPATH += "../../lib/"
 }
