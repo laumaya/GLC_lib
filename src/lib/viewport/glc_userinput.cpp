@@ -74,7 +74,7 @@ void GLC_UserInput::setNormalyzeTouchCenterPosition(double x, double y)
 	m_NormalyzeY= y;
 }
 
-void GLC_UserInput::setTransformation(const GLC_Vector2d& translation, double rotation, double scaleFactor)
+void GLC_UserInput::setTransformation(const GLC_Vector3d &translation, double rotation, double scaleFactor)
 {
 	m_Translation= translation;
 	m_Rotation= rotation;

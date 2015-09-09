@@ -62,7 +62,7 @@ public:
 	{return m_NormalyzeX;}
 
 	//! Return the translation
-	inline GLC_Vector2d translation() const
+    inline GLC_Vector3d translation() const
 	{return m_Translation;}
 
 	//! Return the rotation angle
@@ -95,10 +95,10 @@ public:
 	void setNormalyzeTouchCenterPosition(double x, double y);
 
 	//! Set the transformation
-	void setTransformation(const GLC_Vector2d& translation, double rotation= 0.0, double scaleFactor= 1.0);
+    void setTransformation(const GLC_Vector3d& translation, double rotation= 0.0, double scaleFactor= 1.0);
 
 	//! Set translation
-	inline void setTranslation(const GLC_Vector2d& translation)
+    inline void setTranslation(const GLC_Vector3d& translation)
 	{m_Translation= translation;}
 
 	//! Set rotation
@@ -130,7 +130,7 @@ private:
 
 	// Transformation data
 	//! Translation vector
-	GLC_Vector2d m_Translation;
+    GLC_Vector3d m_Translation;
 
 	//! Rotation angle
 	double m_Rotation;

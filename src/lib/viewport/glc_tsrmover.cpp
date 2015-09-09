@@ -124,20 +124,8 @@ bool GLC_TsrMover::move(const GLC_UserInput& userInput)
 
 	if (!userInput.translation().isNull())
 	{
-		double transX= userInput.translation().x() * m_pViewport->viewHSize();
-		double transY= userInput.translation().y() * m_pViewport->viewVSize();
-
-		GLC_Vector3d mappedTranslation(-transX, -transY, 0.0);
-		// Compute the length of camera's field of view
-		const double ChampsVision = m_pViewport->cameraHandle()->distEyeTarget() *  m_pViewport->viewTangent();
-
-		// the side of camera's square is mapped on Vertical length of window
-		// Ratio OpenGL/Pixel = dimend GL / dimens Pixel
-		const double Ratio= ChampsVision / static_cast<double>(m_pViewport->viewVSize());
-
-		mappedTranslation= mappedTranslation * Ratio;
-		m_pViewport->cameraHandle()->pan(mappedTranslation);
-	}
+        m_pViewport->cameraHandle()->translate(userInput.translation());
+    }
 
 	return true;
 }
