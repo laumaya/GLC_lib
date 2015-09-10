@@ -811,6 +811,26 @@ GLC_Camera GLC_Viewport::reframedCamera(const GLC_BoundingBox &box, double cover
     return subject;
 }
 
+bool GLC_Viewport::reframeFromDeltaCover(double deltaCover)
+{
+    bool subject= false;
+    const double cameraCover = m_pViewCam->distEyeTarget() *  m_ViewTangent;
+    const double newCover= cameraCover+ deltaCover;
+
+    if (!qFuzzyCompare(newCover, cameraCover))
+    {
+        // Compute Camera distance
+        const double distance = newCover / m_ViewTangent;
+
+        // Update Camera position
+        m_pViewCam->setDistEyeTarget(distance);
+
+        subject= true;
+    }
+
+    return subject;
+}
+
 bool GLC_Viewport::setDistMin(double DistMin, bool updateOpenGL)
 {
 	if (m_UseParallelProjection) DistMin= fabs(DistMin);

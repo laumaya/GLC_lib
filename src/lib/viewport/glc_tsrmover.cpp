@@ -80,7 +80,7 @@ bool GLC_TsrMover::move(const GLC_UserInput& userInput)
     pCamera->pan(-VectPan);
 
     // Zoom
-    pCamera->zoom(userInput.scaleFactor());
+    m_pViewport->reframeFromDeltaCover(userInput.scaleFactor());
 
     // Rotation
     if (!qFuzzyCompare(userInput.rotationAngle(), 0.0))

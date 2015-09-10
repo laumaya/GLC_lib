@@ -347,6 +347,10 @@ public:
 
     GLC_Camera reframedCamera(const GLC_BoundingBox& box, double coverFactor = 2.2) const;
 
+    //! Set the viewport's camera in order to match new cover
+    /*! Return true on success*/
+    bool reframeFromDeltaCover(double deltaCover);
+
 //@} End Zooming functions
 /////////////////////////////////////////////////////////////////////
 
