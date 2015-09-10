@@ -65,68 +65,35 @@ GLC_Mover* GLC_TsrMover::clone() const
 // Initialized the mover
 void GLC_TsrMover::init(const GLC_UserInput& userInput)
 {
-	m_PreviousVector= GLC_Point3d(userInput.normalyzeXTouchCenter(), userInput.normalyzeYTouchCenter(), 0.0);
+    m_PreviousVector= m_pViewport->mapPosMouse(static_cast<double>(userInput.x()), static_cast<double>(userInput.y()));
 }
 
 // Move the camera
 bool GLC_TsrMover::move(const GLC_UserInput& userInput)
 {
-	if (!(userInput.normalyzeXTouchCenter() < 0.0) && !(userInput.normalyzeYTouchCenter() < 0.0))
-	{
-		m_PreviousVector= GLC_Point3d(userInput.normalyzeXTouchCenter(), userInput.normalyzeYTouchCenter(), 0.0);
-	}
-	else
-	{
-		qDebug() << "Pas cool";
-		if (!userInput.translation().isNull())
-		{
-			m_PreviousVector= GLC_Vector3d(userInput.translation().x(), userInput.translation().y(), 0.0) + m_PreviousVector;			
-		}
-	}
-	
-	const double x= m_PreviousVector.x();
-	const double y= m_PreviousVector.y();
-	//GLC_Point3d center2= m_pViewport->unProject(x * m_pViewport->viewHSize(), y * m_pViewport->viewVSize());
-	
-	//qDebug() << "touch center= " << x << " , " << y;
+    const GLC_Vector3d VectCur(m_pViewport->mapPosMouse(static_cast<double>(userInput.x()), static_cast<double>(userInput.y())));
+    const GLC_Vector3d VectPan= VectCur - m_PreviousVector;	// moving Vector
 
-	
-	if (!qFuzzyCompare(userInput.scaleFactor(), 0))
-	{
-		GLC_Point dummy(m_pViewport->cameraHandle()->target());
-		m_pViewport->setDistMinAndMax(dummy.boundingBox());
+    GLC_Camera* pCamera= m_pViewport->cameraHandle();
 
-		GLC_Point2d nPos= m_pViewport->mapNormalyzeToOpenGLScreen(x, y);
-		GLC_Point3d nPos3D(nPos.x(), nPos.y(), 1.0);
-		GLC_Point3d projected= m_pViewport->compositionMatrix().inverted() * nPos3D;
+    // Pan the camera
+    pCamera->pan(-VectPan);
 
-		m_pViewport->cameraHandle()->zoom(userInput.scaleFactor());
+    // Zoom
+    pCamera->zoom(userInput.scaleFactor());
 
-		m_pViewport->setDistMinAndMax(dummy.boundingBox());
-		GLC_Point3d projected2= m_pViewport->compositionMatrix().inverted() * nPos3D;
-		GLC_Vector3d delta= projected - projected2;
-		m_pViewport->cameraHandle()->translate(delta);
-	}
+    // Rotation
+    if (!qFuzzyCompare(userInput.rotationAngle(), 0.0))
+    {
+        GLC_Point3d unProjectedPoint= userInput.unprojectedPoint();
 
-	if (!qFuzzyCompare(userInput.rotationAngle(), 0))
-	{
-		GLC_Point dummy(m_pViewport->cameraHandle()->target());
-		m_pViewport->setDistMinAndMax(dummy.boundingBox());
-
-		GLC_Point2d nPos= m_pViewport->mapNormalyzeToOpenGLScreen(x, y);
-		GLC_Point3d nPos3D(nPos.x(), nPos.y(), 1.0);
-		GLC_Point3d center= m_pViewport->compositionMatrix().inverted() * nPos3D;
-
-		GLC_Vector3d axis= m_pViewport->cameraHandle()->forward();
-
-		m_pViewport->cameraHandle()->rotateAround(axis, userInput.rotationAngle(), center);
-	}
-
-	if (!userInput.translation().isNull())
-	{
-        m_pViewport->cameraHandle()->translate(userInput.translation());
+        const GLC_Vector3d offset= (unProjectedPoint - pCamera->target());
+        pCamera->translate(offset);
+        pCamera->rotateAroundTarget(pCamera->forward(), userInput.rotationAngle());
+        pCamera->translate(-offset);
     }
 
-	return true;
+    m_PreviousVector= VectCur;
+    return true;
 }
 
