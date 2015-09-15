@@ -64,6 +64,9 @@ public:
 
 	//! Move the camera
 	virtual bool move(const GLC_UserInput& userInput);
+
+private:
+    void zoom(double zoomFactor);
 //@}
 };
 #endif /* GLC_TSRMOVER_H_ */

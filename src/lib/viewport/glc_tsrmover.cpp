@@ -80,20 +80,35 @@ bool GLC_TsrMover::move(const GLC_UserInput& userInput)
     pCamera->pan(-VectPan);
 
     // Zoom
-    m_pViewport->reframeFromDeltaCover(userInput.scaleFactor());
+    //m_pViewport->reframeFromDeltaCover(userInput.scaleFactor());
+    zoom(userInput.scaleFactor());
 
     // Rotation
     if (!qFuzzyCompare(userInput.rotationAngle(), 0.0))
     {
         GLC_Point3d unProjectedPoint= userInput.unprojectedPoint();
 
-        const GLC_Vector3d offset= (unProjectedPoint - pCamera->target());
-        pCamera->translate(offset);
-        pCamera->rotateAroundTarget(pCamera->forward(), userInput.rotationAngle());
-        pCamera->translate(-offset);
+        pCamera->rotateAround(pCamera->forward(), userInput.rotationAngle(), unProjectedPoint);
     }
 
     m_PreviousVector= VectCur;
     return true;
+}
+
+void GLC_TsrMover::zoom(double zoomFactor)
+{
+    const double maxZoomFactor= 3.0;
+
+    if (zoomFactor > 0)
+    {
+        zoomFactor= (maxZoomFactor - 1.0) * zoomFactor + 1.0;
+    }
+    else
+    {
+        zoomFactor= 1.0 / ( (maxZoomFactor - 1.0) * fabs(zoomFactor) + 1.0 );
+    }
+
+    m_pViewport->cameraHandle()->zoom(zoomFactor);
+
 }
 
