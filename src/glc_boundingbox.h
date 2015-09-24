@@ -46,7 +46,7 @@ class GLC_LIB_EXPORT GLC_BoundingBox
 	friend GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_BoundingBox &);
 
 //////////////////////////////////////////////////////////////////////
-/*! @name Constructor */
+/*! @name Constructor / Destructor */
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
@@ -58,6 +58,8 @@ public:
 
 	//! Construct a bounding box from the given 3d point
 	GLC_BoundingBox(const GLC_Point3d& lower, const GLC_Point3d& upper);
+
+    virtual ~GLC_BoundingBox();
 
 //@}
 //////////////////////////////////////////////////////////////////////

@@ -501,3 +501,6 @@ INSTALLS += include_glc_3dwidget include_glc_glu
 
 INSTALLS += target
 INSTALLS += include
+
+OTHER_FILES += \
+    ../sonar-project.properties

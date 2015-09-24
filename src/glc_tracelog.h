@@ -38,7 +38,7 @@ class GLC_LIB_EXPORT GLC_TraceLog : public GLC_Log
 /*! @name Constructor */
 //@{
 //////////////////////////////////////////////////////////////////////
-private:
+protected:
 	//! Private constructor
 	GLC_TraceLog(const QString& fullLogFileName);
 public:
@@ -90,7 +90,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
-private:
+protected:
 	//! The unique trace log instance
 	static GLC_TraceLog* m_pTraceLog;
 
