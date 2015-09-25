@@ -104,7 +104,7 @@ public:
 	{return GLC_Vector3d(m_Lower - m_Upper).length() / 2.0;}
 
 	//! Return true if this bounding box is equal of the given bounding box
-	inline bool operator == (const GLC_BoundingBox& boundingBox);
+    inline bool operator == (const GLC_BoundingBox& other) const;
 
 	//! Return true if this bounding box is not equal of the given bounding box
 	inline bool operator != (const GLC_BoundingBox& boundingBox)
@@ -190,9 +190,15 @@ bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox) const
     return subject;
 }
 
-bool GLC_BoundingBox::operator == (const GLC_BoundingBox& box)
+bool GLC_BoundingBox::operator == (const GLC_BoundingBox& other) const
 {
-	return (m_Lower == box.m_Lower) && (m_Upper == box.m_Upper);
+    bool subject= true;
+    if (this != &other)
+    {
+        subject= (m_Lower == other.m_Lower) && (m_Upper == other.m_Upper);
+    }
+
+    return subject;
 }
 
 GLC_Point3d GLC_BoundingBox::center(void) const
