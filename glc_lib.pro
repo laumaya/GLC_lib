@@ -1,5 +1,6 @@
 TEMPLATE = subdirs
 CONFIG += ordered
+QMAKE_MAC_SDK = macosx10.11
 
 # We need opengl, minimum es2 or desktop
 !contains(QT_CONFIG, opengl) {
