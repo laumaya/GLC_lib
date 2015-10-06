@@ -279,23 +279,23 @@ void GLC_ContextSharedData::glcEnableLight(GLenum lightId)
 
 void GLC_ContextSharedData::glcDisableLight(GLenum lightId)
 {
-    Q_ASSERT(m_LightsEnableState.contains(lightId));
+   if(m_LightsEnableState.contains(lightId))
+   {
+       m_LightsEnableState[lightId]= false;
 
-    m_LightsEnableState[lightId]= false;
+   #ifdef GLC_OPENGL_ES_2
 
-#ifdef GLC_OPENGL_ES_2
+       m_UniformShaderData.setLightsEnableState(m_LightsEnableState.values().toVector());
+   #else
+       if (GLC_Shader::hasActiveShader())
+       {
+           QVector<int> enableVect= m_LightsEnableState.values().toVector();
+           m_UniformShaderData.setLightsEnableState(enableVect);
+       }
 
-    m_UniformShaderData.setLightsEnableState(m_LightsEnableState.values().toVector());
-#else
-    if (GLC_Shader::hasActiveShader())
-    {
-        QVector<int> enableVect= m_LightsEnableState.values().toVector();
-        m_UniformShaderData.setLightsEnableState(enableVect);
-    }
-
-    ::glDisable(lightId);
-#endif
-
+       ::glDisable(lightId);
+   #endif
+   }
 }
 
 void GLC_ContextSharedData::initDefaultShader()
