@@ -24,6 +24,7 @@
 #include <QGLContext>
 
 #include <GLC_Context>
+#include <QOpenGLFunctions>
 
 #include "glwidget.h"
 
@@ -59,11 +60,13 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
-	// Clear screen
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
+    // Clear screen
+    f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Load identity matrix
-	glLoadIdentity();
+    //glLoadIdentity();
+    GLC_Context::current()->glcLoadIdentity();
 
 //////////////////////////// GLC specific///////////////////////////////////////
 	// define view matrix

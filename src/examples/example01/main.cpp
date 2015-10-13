@@ -26,6 +26,7 @@
 int main(int argc, char **argv)
 {	
 	QApplication app(argc, argv);	
+    app.setAttribute(Qt::AA_UseDesktopOpenGL);
 	MainWindow mainWin;
 	mainWin.resize(600, 400);
 	mainWin.show();	

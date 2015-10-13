@@ -22,6 +22,7 @@
 
 #include <QtDebug>
 #include <QGLContext>
+#include <QOpenGLFunctions>
 
 #include <GLC_UserInput>
 #include <io/glc_colladatoworld.h>
@@ -83,7 +84,7 @@ void GLWidget::initializeGL()
     // Reframe the scene
     m_GlView.reframe(m_ShuttleBoundingBox);
 
-    glEnable(GL_NORMALIZE);
+    QOpenGLContext::currentContext()->functions()->glEnable(GL_NORMALIZE);
 
     m_MotionTimer.start(60);
 
@@ -92,6 +93,9 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
+    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
+    // Clear screen
+  //  f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     try
     {
         // Clear screen
@@ -99,6 +103,8 @@ void GLWidget::paintGL()
 
         // Load identity matrix
         GLC_Context::current()->glcLoadIdentity();
+
+
 
         // Calculate camera depth of view
         m_GlView.setDistMinAndMax(m_World.boundingBox());
@@ -108,8 +114,10 @@ void GLWidget::paintGL()
         m_GlView.glExecuteCam();
         m_Light.glExecute();
 
+    
         m_World.render(0 ,glc::ShadingFlag);
 
+    
         // Display UI Info (orbit circle)
         m_MoverController.drawActiveMoverRep();
     }
@@ -134,6 +142,7 @@ void GLWidget::createScene()
     m_World= GLC_Factory::instance()->createWorldFromFile(democles);
 
     m_ShuttleBoundingBox= m_World.boundingBox();
+
 
     GLC_StructOccurrence* pRoot= m_World.rootOccurrence();
 
