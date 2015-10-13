@@ -22,6 +22,7 @@
 
 #include <QtDebug>
 #include <QFile>
+#include <QOpenGLFunctions>
 #include <GLC_Context>
 
 #include "glwidget.h"
@@ -80,8 +81,9 @@ void GLWidget::initializeGL()
 void GLWidget::paintGL()
 {
 
+    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
     // Clear screen
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Load identity matrix
     GLC_Context::current()->glcLoadIdentity();

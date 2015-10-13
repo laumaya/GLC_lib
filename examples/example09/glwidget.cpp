@@ -21,6 +21,7 @@
 *****************************************************************************/
 
 #include <QtDebug>
+#include <QOpenGLFunctions>
 
 #include <GLC_UserInput>
 #include <io/glc_colladatoworld.h>
@@ -81,7 +82,7 @@ void GLWidget::initializeGL()
     // Reframe the scene
     m_GlView.reframe(m_ShuttleBoundingBox);
 
-    glEnable(GL_NORMALIZE);
+    QOpenGLContext::currentContext()->functions()->glEnable(GL_NORMALIZE);
 
     m_MotionTimer.start(60);
 
@@ -90,8 +91,9 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
+    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
     // Clear screen
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Load identity matrix
     GLC_Context::current()->glcLoadIdentity();

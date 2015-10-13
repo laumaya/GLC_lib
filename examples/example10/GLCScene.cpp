@@ -17,7 +17,7 @@
 *****************************************************************************/
 
 #include <QLabel>
-
+#include <QOpenGLFunctions>
 #include <QStringList>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -303,7 +303,8 @@ void GLCScene::initGl()
 #endif
 
     m_Viewport.initGl();
-    glEnable(GL_NORMALIZE);
+
+    QOpenGLContext::currentContext()->functions()->glEnable(GL_NORMALIZE);
     try
     {
         m_Viewport.loadBackGroundImage(":background.png");
@@ -320,8 +321,9 @@ void GLCScene::renderWorld()
     {
         m_Viewport.setWinGLSize(static_cast<int>(width()), static_cast<int>(height()));
 
+        QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
         // Clear screen
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Load identity matrix
         GLC_Context::current()->glcLoadIdentity();
@@ -334,10 +336,10 @@ void GLCScene::renderWorld()
         m_Light.glExecute();
         m_Viewport.glExecuteCam();
 
-        glEnable(GL_MULTISAMPLE);
+        f->glEnable(GL_MULTISAMPLE);
         m_World.render(0, glc::ShadingFlag);
         m_World.render(0, glc::TransparentRenderFlag);
-        glDisable(GL_MULTISAMPLE);
+        f->glDisable(GL_MULTISAMPLE);
 
     }
     catch (GLC_Exception &e)
