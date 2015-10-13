@@ -65,7 +65,6 @@ void GLWidget::paintGL()
     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Load identity matrix
-    //glLoadIdentity();
     GLC_Context::current()->glcLoadIdentity();
 
 //////////////////////////// GLC specific///////////////////////////////////////

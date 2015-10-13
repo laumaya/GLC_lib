@@ -16,7 +16,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
+    app.setAttribute(Qt::AA_UseDesktopOpenGL);
     GLC_QuickView view;
 
     GLC_CacheManager cacheManager("/Users/laumaya/testCache");

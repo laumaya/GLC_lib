@@ -83,7 +83,6 @@ void GLWidget::paintGL()
 
 	// Load identity matrix
     GLC_Context::current()->glcLoadIdentity();
-
 	try
 	{
 		// Set Opengl clipping planes
