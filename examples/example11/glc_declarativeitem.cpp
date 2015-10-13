@@ -6,7 +6,8 @@
  */
 
 #include <QGLFramebufferObject>
-
+#include <QOpenGLFunctions>
+#include <QOpenGLFunctions_1_0>
 #include <GLC_Context>
 #include <GLC_Exception>
 #include <GLC_Factory>
@@ -170,7 +171,7 @@ void GLC_DeclarativeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 void GLC_DeclarativeItem::initGl()
 {
     m_Viewport.initGl();
-    glEnable(GL_NORMALIZE);
+    QOpenGLContext::currentContext()->functions()->glEnable(GL_NORMALIZE);
 
     m_FirstRender= false;
 }
@@ -197,16 +198,26 @@ void GLC_DeclarativeItem::render(QPainter *painter)
         m_Viewport.setWinGLSize(painter->device()->width(), painter->device()->height());
         popMatrix();
 
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_TEXTURE_2D);
-        glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+        QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
+        f->glDisable(GL_DEPTH_TEST);
+        f->glEnable(GL_TEXTURE_2D);
 
-        QRect rect(0, 0, width(), height());
-        QGLFramebufferObject::blitFramebuffer(m_pTargetFbo, rect, m_pSourceFbo, rect);
+        QOpenGLFunctions_1_0 *glFuncs_1_0 = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_1_0 >();
+        if (!glFuncs_1_0)
+        {
+            qWarning() << "Could not obtain required OpenGL context version";
+            exit(1);
+        }
+        else
+        {
+            glFuncs_1_0->glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
-        m_pTargetFbo->drawTexture(QRectF(0.0, 0.0, width(), height()), m_pTargetFbo->texture());
-        glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+            QRect rect(0, 0, width(), height());
+            QGLFramebufferObject::blitFramebuffer(m_pTargetFbo, rect, m_pSourceFbo, rect);
 
+            m_pTargetFbo->drawTexture(QRectF(0.0, 0.0, width(), height()), m_pTargetFbo->texture());
+            glFuncs_1_0->glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        }
     }
     else
     {
@@ -245,7 +256,7 @@ void GLC_DeclarativeItem::renderForSelection(QPainter *painter)
     m_Viewport.setWinGLSize(painter->device()->width(), painter->device()->height());
     popMatrix();
 
-    glDisable(GL_DEPTH_TEST);
+    QOpenGLContext::currentContext()->functions()->glDisable(GL_DEPTH_TEST);
 
     painter->endNativePainting();
 
@@ -262,8 +273,9 @@ void GLC_DeclarativeItem::renderWorld()
 {
     try
     {
+        QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
         // Clear screen
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Load identity matrix
         GLC_Context::current()->glcLoadIdentity();

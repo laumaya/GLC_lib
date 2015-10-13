@@ -22,7 +22,7 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-
+    app.setAttribute(Qt::AA_UseDesktopOpenGL);
     GLCGraphicsView view;
     view.setScene(new GLCScene());
     view.show();

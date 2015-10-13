@@ -13,6 +13,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseDesktopOpenGL);
     qmlRegisterType<GLC_DeclarativeItem>("glcview", 1, 0, "GLCView");
 
     QGLFormat f = QGLFormat::defaultFormat();
