@@ -4,6 +4,6 @@ win32 {
 }
 
 unix {
-     LIBS += -L"../../lib" -lGLC_lib.3
+     LIBS += -L"../../lib" -lGLC_lib
      INCLUDEPATH += "../../lib/"
 }
