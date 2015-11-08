@@ -65,6 +65,8 @@ public:
 	/*! if a selection material is used, unused it*/
 	static void useDefautSelectionColor();
 
+    static void useSelectionColor(const QColor& color);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -99,17 +101,26 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 private:
-		//! Selection Shader
-        static QHash<QOpenGLContext*, GLC_Shader*> m_SelectionShaderHash;
+    //! Selection Shader
+    static QHash<QOpenGLContext*, GLC_Shader*> m_SelectionShaderHash;
 
-		//! Selection material id
-		static GLC_uint m_SelectionMaterialId;
+    //! Selection material id
+    static GLC_uint m_SelectionMaterialId;
 
-		//! Material of this selection material
-		static GLC_Material* m_pMaterial;
+    //! Material of this selection material
+    static GLC_Material* m_pMaterial;
 
-		//! Don't use selection material
-		static bool m_NoSelectionMaterial;
+    //! Don't use selection material
+    static bool m_NoSelectionMaterial;
+
+    //! Selection Color
+    static GLfloat m_DefaultRedComponent;
+    static GLfloat m_DefaultGreenComponent;
+    static GLfloat m_DefaultBlueComponent;
+
+    static GLfloat m_RedComponent;
+    static GLfloat m_GreenComponent;
+    static GLfloat m_BlueComponent;
 
 };
 

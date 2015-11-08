@@ -21,7 +21,8 @@
 *****************************************************************************/
 //! \file glc_selectionmaterial.cpp implementation of the GLC_SelectionMaterial class.
 
-#include <QGLContext>
+#include <QOpenGLContext>
+#include <QColor>
 
 #include "glc_selectionmaterial.h"
 #include "glc_material.h"
@@ -31,6 +32,14 @@ QHash<QOpenGLContext*, GLC_Shader*> GLC_SelectionMaterial::m_SelectionShaderHash
 GLC_uint GLC_SelectionMaterial::m_SelectionMaterialId= 0;
 GLC_Material* GLC_SelectionMaterial::m_pMaterial= NULL;
 bool GLC_SelectionMaterial::m_NoSelectionMaterial = false;
+
+GLfloat GLC_SelectionMaterial::m_DefaultRedComponent= 1.0f;
+GLfloat GLC_SelectionMaterial::m_DefaultGreenComponent= 0.376f;
+GLfloat GLC_SelectionMaterial::m_DefaultBlueComponent= 0.223f;
+
+GLfloat GLC_SelectionMaterial::m_RedComponent= GLC_SelectionMaterial::m_DefaultRedComponent;
+GLfloat GLC_SelectionMaterial::m_GreenComponent= GLC_SelectionMaterial::m_DefaultGreenComponent;
+GLfloat GLC_SelectionMaterial::m_BlueComponent= GLC_SelectionMaterial::m_DefaultBlueComponent;
 
 GLC_SelectionMaterial::GLC_SelectionMaterial()
 {
@@ -66,7 +75,18 @@ void GLC_SelectionMaterial::useDefautSelectionColor()
 			delete m_pMaterial;
 		}
 		m_pMaterial= NULL;
-	}
+    }
+    m_RedComponent= m_DefaultRedComponent;
+    m_GreenComponent= m_DefaultGreenComponent;
+    m_BlueComponent= m_DefaultBlueComponent;
+
+}
+
+void GLC_SelectionMaterial::useSelectionColor(const QColor &color)
+{
+    m_RedComponent= static_cast<GLfloat>(color.redF());
+    m_GreenComponent= static_cast<GLfloat>(color.greenF());
+    m_BlueComponent= static_cast<GLfloat>(color.blueF());
 }
 
 // Use selection material?
@@ -87,11 +107,11 @@ void GLC_SelectionMaterial::glExecute()
 	else
 	{
 		// Use default selection color
-		static GLfloat pAmbientColor[4]= {1.0f, 0.376f, 0.223f, 1.0f};
+        static GLfloat pAmbientColor[4]= {m_RedComponent, m_GreenComponent, m_BlueComponent, 1.0f};
 
-		static GLfloat pDiffuseColor[4]= {1.0f, 0.376f, 0.223f, 1.0f};
+        static GLfloat pDiffuseColor[4]= {m_RedComponent, m_GreenComponent, m_BlueComponent, 1.0f};
 
-		static GLfloat pSpecularColor[4]= {1.0f, 1.0f, 1.0f, 1.0f};
+        static GLfloat pSpecularColor[4]= {1.0f, 1.0f, 1.0f, 1.0f};
 
 		static GLfloat pLightEmission[4]= {0.0f, 0.0f, 0.0f, 1.0f};
 

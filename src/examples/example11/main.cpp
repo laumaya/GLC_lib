@@ -28,8 +28,6 @@ int main(int argc, char *argv[])
     GLC_State::setPixelCullingUsage(true);
     GLC_State::setSpacePartionningUsage(true);
 
-    //QFile file2("/Users/laumaya/Documents/Tests VrooM/did/TEA132_EPC567/StructBM.3dxml");
-
     QFile file2(":model/man.obj");
     GLC_World world2= GLC_Factory::instance()->createWorldFromFile(file2);
     QSharedPointer<GLC_ViewHandler> viewHandler(new GLC_ViewHandler());
