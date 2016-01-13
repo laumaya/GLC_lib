@@ -1,6 +1,7 @@
 win32 {
     LIBS += -L"../../lib" -lGLC_lib3
     INCLUDEPATH += "../../lib"
+    LIBS += -lopengl32
 }
 
 macx {
