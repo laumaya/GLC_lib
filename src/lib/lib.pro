@@ -2,6 +2,10 @@
 TEMPLATE = lib
 QT += core opengl quick
 
+win32 {
+    LIBS += -lopengl32
+}
+
 
 CONFIG += exceptions warn_on
 
