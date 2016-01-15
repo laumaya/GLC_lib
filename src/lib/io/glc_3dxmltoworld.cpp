@@ -144,10 +144,10 @@ GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnl
 	if (!m_LoadStructureOnly)
 	{
 		// Trying to Load CATRepImage file
-		loadCatRepImage();
+        loadCatRepImage();
 
 		// Trying to Load CATRefMaterial File
-		loadCatMaterialRef();
+        loadCatMaterialRef();
 	}
 
 	// Read the header
@@ -1423,7 +1423,11 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 				clear();
 				throw(fileFormatException);
 			}
-			else return false;
+            else
+            {
+                if (m_UseZipMutex) m_ZipMutex.unlock();
+                return false;
+            }
 		}
 
 		// Open the file of the 3dxml
@@ -2418,7 +2422,7 @@ void GLC_3dxmlToWorld::loadVertexBuffer(GLC_Mesh* pMesh)
 				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 				clear();
 				throw(fileFormatException);
-			}
+            }
 		}
 		readNext();
 	}
