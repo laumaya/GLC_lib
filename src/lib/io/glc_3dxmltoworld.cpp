@@ -2418,10 +2418,6 @@ void GLC_3dxmlToWorld::loadVertexBuffer(GLC_Mesh* pMesh)
 
 				QStringList stringList(message);
 				GLC_ErrorLog::addError(stringList);
-
-				GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
-				clear();
-				throw(fileFormatException);
             }
 		}
 		readNext();
