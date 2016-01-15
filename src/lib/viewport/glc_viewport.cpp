@@ -195,12 +195,12 @@ void GLC_Viewport::initGl()
     glEnable(GL_NORMALIZE);
 }
 
-void GLC_Viewport::glExecuteCam(const QImage& image)
+void GLC_Viewport::glExecuteCam(const QImage& image, bool preserveRatio)
 {
     if (!image.isNull())
     {
         GLC_ImagePlane* pOldImagePlane= m_pImagePlane;
-        m_pImagePlane= new GLC_ImagePlane(image);
+        m_pImagePlane= new GLC_ImagePlane(image, preserveRatio);
         renderImagePlane();
         delete m_pImagePlane;
         m_pImagePlane= pOldImagePlane;
@@ -501,7 +501,7 @@ void GLC_Viewport::renderImagePlane()
 	{
 		if (m_pImagePlane != NULL)
 		{
-			m_pImagePlane->render();
+            m_pImagePlane->render(m_AspectRatio);
 		}
 	}
 }
@@ -751,16 +751,16 @@ void GLC_Viewport::updateMinimumRatioSize()
 	m_MinimumDynamicRatioSize= m_MinimumStaticRatioSize * 2.0;
 }
 
-void GLC_Viewport::loadBackGroundImage(const QString& ImageFile)
+void GLC_Viewport::loadBackGroundImage(const QString& ImageFile, bool preserveRatio)
 {
 	delete m_pImagePlane;
-	m_pImagePlane= new GLC_ImagePlane(ImageFile);
+    m_pImagePlane= new GLC_ImagePlane(ImageFile, preserveRatio);
 }
 
-void GLC_Viewport::loadBackGroundImage(const QImage& image)
+void GLC_Viewport::loadBackGroundImage(const QImage& image, bool preserveRatio)
 {
 	delete m_pImagePlane;
-	m_pImagePlane= new GLC_ImagePlane(image);
+    m_pImagePlane= new GLC_ImagePlane(image, preserveRatio);
 }
 
 void GLC_Viewport::deleteBackGroundImage()

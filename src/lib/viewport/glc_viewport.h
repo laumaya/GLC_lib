@@ -98,7 +98,7 @@ public:
 
 	//! Get this viewport ratio
 	inline double aspectRatio() const
-    { return static_cast<double>(m_Width) / static_cast<double>(m_Height);}
+    {return m_AspectRatio;}
 
 	//! Return the normalyse mouse position from screen coordinate
     GLC_Point2d normalyseMousePosition(int x, int y) const;
@@ -178,7 +178,7 @@ public:
 	void initGl();
 
 	//! Load camera's transformation Matrix and display image if necessary
-    void glExecuteCam(const QImage &image= QImage());
+    void glExecuteCam(const QImage &image= QImage(), bool preserveRatio= true);
 
 	//! Update this viewport OpenGL projection matrix
     void updateProjectionMat(bool updateOpenGL= true);
@@ -265,10 +265,10 @@ public:
     QSet<GLC_uint> selectInsideSquare(int x1, int y1, int x2, int y2, GLenum buffer= GL_BACK);
 
 	//! load background image from file in this viewport
-	void loadBackGroundImage(const QString& imageFile);
+    void loadBackGroundImage(const QString& imageFile, bool preserveRatio= false);
 
 	//! load background image in this viewport
-	void loadBackGroundImage(const QImage& image);
+    void loadBackGroundImage(const QImage& image, bool preserveRatio= false);
 
 	//! delete background image of this viewport
 	void deleteBackGroundImage();

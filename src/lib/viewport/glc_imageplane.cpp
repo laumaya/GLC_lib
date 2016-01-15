@@ -34,45 +34,96 @@
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 
-GLC_ImagePlane::GLC_ImagePlane(const QString& ImageName)
-: m_Representation(GLC_Factory::instance()->createRectangle(2.0, 2.0))
+GLC_ImagePlane::GLC_ImagePlane(const QString& ImageName, bool ratioPreserved)
+    : m_pRepresentation(NULL)
+    , m_Size()
+    , m_RatioIsPreserved(ratioPreserved)
 {
 	GLC_Texture* pImgTexture= GLC_Factory::instance()->createTexture(ImageName);
 	pImgTexture->setMaxTextureSize(pImgTexture->imageOfTexture().size());
-	m_Representation.geomAt(0)->addMaterial(new GLC_Material(pImgTexture));
+    m_Size= pImgTexture->size();
+
+    m_pRepresentation= new GLC_3DViewInstance(GLC_Factory::instance()->createRectangle(m_Size.width(), m_Size.height()));
+    m_pRepresentation->geomAt(0)->addMaterial(new GLC_Material(pImgTexture));
 }
 
-GLC_ImagePlane::GLC_ImagePlane(const QImage& image)
-: m_Representation(GLC_Factory::instance()->createRectangle(2.0, 2.0))
+GLC_ImagePlane::GLC_ImagePlane(const QImage& image, bool ratioPreserved)
+    : m_pRepresentation(NULL)
+    , m_Size()
+    , m_RatioIsPreserved(ratioPreserved)
 {
 	GLC_Texture* pImgTexture= GLC_Factory::instance()->createTexture(image);
 	pImgTexture->setMaxTextureSize(image.size());
-	m_Representation.geomAt(0)->addMaterial(new GLC_Material(pImgTexture));
+    m_Size= pImgTexture->size();
+
+    m_pRepresentation= new GLC_3DViewInstance(GLC_Factory::instance()->createRectangle(m_Size.width(), m_Size.height()));
+    m_pRepresentation->geomAt(0)->addMaterial(new GLC_Material(pImgTexture));
 }
 
 GLC_ImagePlane::~GLC_ImagePlane()
 {
-
+    delete m_pRepresentation;
 }
 
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_ImagePlane::render()
+void GLC_ImagePlane::render(double screenRatio)
 {
+    double width;
+    double height;
+
+    if (m_RatioIsPreserved)
+    {
+        const double imageRatio= m_Size.width() / m_Size.height();
+        if (screenRatio > imageRatio)
+        {
+            double usedSize;
+            if (imageRatio > 1.0)
+            {
+                usedSize= qMax(m_Size.width(), m_Size.height());
+            }
+            else
+            {
+                usedSize= qMin(m_Size.width(), m_Size.height());
+            }
+            width= (usedSize) / 2.0;
+            height= (usedSize / screenRatio) / 2.0;
+        }
+        else
+        {
+            double usedSize;
+            if (imageRatio > 1.0)
+            {
+                usedSize= qMin(m_Size.width(), m_Size.height());
+            }
+            else
+            {
+                usedSize= qMax(m_Size.width(), m_Size.height());
+            }
+            width= (usedSize * screenRatio) / 2.0;
+            height= (usedSize) / 2.0;
+        }
+    }
+    else
+    {
+        width= m_Size.width() / 2.0;
+        height= m_Size.height() / 2.0;
+    }
+
     GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
     pContext->glcMatrixMode(GL_PROJECTION);
     pContext->glcPushMatrix();
     pContext->glcLoadIdentity();
-    pContext->glcOrtho(-1,1,-1,1,-1,1);
+    pContext->glcOrtho(-width, width, -height, height, -1.0, 1.0);
     pContext->glcMatrixMode(GL_MODELVIEW);
 
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
-	m_Representation.render();
+    m_pRepresentation->render();
 
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glEnable(GL_DEPTH_TEST);
