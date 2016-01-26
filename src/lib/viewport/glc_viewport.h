@@ -24,7 +24,6 @@
 
 #ifndef GLC_VIEWPORT_H_
 #define GLC_VIEWPORT_H_
-#include <QGLWidget>
 #include <QPair>
 #include <QHash>
 #include <QObject>

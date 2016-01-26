@@ -114,12 +114,6 @@ QString GLC_State::renderer()
     return m_Renderer;
 }
 
-bool GLC_State::vendorIsNvidia()
-{
-    Q_ASSERT(m_IsValid);
-    return m_Vendor.contains("NVIDIA");
-}
-
 bool GLC_State::isPixelCullingActivated()
 {
     Q_ASSERT(m_IsValid);

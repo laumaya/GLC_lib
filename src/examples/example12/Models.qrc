@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/Models">
+        <file alias="logo.obj">Resource/glc_lib.obj</file>
+    </qresource>
+</RCC>

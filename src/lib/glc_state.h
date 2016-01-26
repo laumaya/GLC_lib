@@ -80,9 +80,6 @@ public:
 	//! Return the Opengl renderer
 	static QString renderer();
 
-	//! Return true if OpenGL Vendor is NVIDIA
-	static bool vendorIsNvidia();
-
 	//! Return true if pixel culling is activate
 	static bool isPixelCullingActivated();
 

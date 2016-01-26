@@ -1,7 +1,7 @@
 /****************************************************************************
 
  This file is part of the GLC-lib library.
- Copyright (C) 2011 JŽr™me Forrissier
+ Copyright (C) 2011 JÃ©rome Forrissier
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
  http://glc-lib.sourceforge.net
 

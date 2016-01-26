@@ -2,7 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Copyright (C) 2011 JŽr™me Forrissier
+ Copyright (C) 2011 JÃ©rome Forrissier
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
