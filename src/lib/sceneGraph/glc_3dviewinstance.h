@@ -368,7 +368,7 @@ private:
 	QVector<bool> m_ViewableGeomFlag;
 
 	//! A Mutex
-	static QMutex m_Mutex;
+    static QMutex m_3DViewInstanceMutex;
 
 	//! The global default LOD
 	static int m_GlobalDefaultLOD;

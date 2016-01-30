@@ -222,7 +222,7 @@ public:
     //! UnUse the default shader
     inline void unuseDefaultShader();
 
-    inline void shareWith(GLC_Context *pContext= 0)
+    inline void shareWith(GLC_Context *pContext)
     {m_ContextSharedData= pContext->m_ContextSharedData;}
 
 //////////////////////////////////////////////////////////////////////

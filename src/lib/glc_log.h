@@ -43,6 +43,7 @@ class GLC_LIB_EXPORT GLC_Log
 protected:
 	//! Construct a log of the given base fileName
 	GLC_Log(const QString& baseLogFileName);
+
 public:
 	//! Destructor
 	virtual ~GLC_Log();
@@ -89,6 +90,8 @@ protected:
 
 	//! This log textStream
 	QTextStream m_TextStream;
+
+    Q_DISABLE_COPY(GLC_Log)
 
 };
 

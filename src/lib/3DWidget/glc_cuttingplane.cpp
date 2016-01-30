@@ -81,23 +81,26 @@ GLC_CuttingPlane::~GLC_CuttingPlane()
 	delete m_pCurrentManipulator;
 }
 
-GLC_CuttingPlane& GLC_CuttingPlane::operator=(const GLC_CuttingPlane& cuttingPlane)
+GLC_CuttingPlane& GLC_CuttingPlane::operator=(const GLC_CuttingPlane& other)
 {
-	GLC_3DWidget::operator=(cuttingPlane);
+    if (this != &other)
+    {
+        GLC_3DWidget::operator=(other);
 
-	m_Center= cuttingPlane.m_Center;
-	m_Normal= cuttingPlane.m_Normal;
-	m_CompMatrix= cuttingPlane.m_CompMatrix;
-	m_L1= cuttingPlane.m_L1;
-	m_L2= cuttingPlane.m_L2;
-	m_Color= cuttingPlane.m_Color;
-	m_Opacity= cuttingPlane.m_Opacity;
-	m_CurrentNavigatorPosition= cuttingPlane.m_CurrentNavigatorPosition;
-	delete m_pCurrentManipulator;
-	if (NULL != cuttingPlane.m_pCurrentManipulator)
-	{
-		m_pCurrentManipulator= cuttingPlane.m_pCurrentManipulator->clone();
-	}
+        m_Center= other.m_Center;
+        m_Normal= other.m_Normal;
+        m_CompMatrix= other.m_CompMatrix;
+        m_L1= other.m_L1;
+        m_L2= other.m_L2;
+        m_Color= other.m_Color;
+        m_Opacity= other.m_Opacity;
+        m_CurrentNavigatorPosition= other.m_CurrentNavigatorPosition;
+        delete m_pCurrentManipulator;
+        if (NULL != other.m_pCurrentManipulator)
+        {
+            m_pCurrentManipulator= other.m_pCurrentManipulator->clone();
+        }
+    }
 
 	return *this;
 }

@@ -29,7 +29,7 @@
 #include "../glc_state.h"
 
 //! A Mutex
-QMutex GLC_3DViewInstance::m_Mutex;
+QMutex GLC_3DViewInstance::m_3DViewInstanceMutex;
 
 //! The global default LOD
 int GLC_3DViewInstance::m_GlobalDefaultLOD= 10;
@@ -211,7 +211,7 @@ GLC_BoundingBox GLC_3DViewInstance::boundingBox(void)
 //! Set the global default LOD value
 void GLC_3DViewInstance::setGlobalDefaultLod(int lod)
 {
-	QMutexLocker locker(&m_Mutex);
+    QMutexLocker locker(&m_3DViewInstanceMutex);
 	m_GlobalDefaultLOD= lod;
 }
 

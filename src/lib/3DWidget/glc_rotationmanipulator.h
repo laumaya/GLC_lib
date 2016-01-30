@@ -74,7 +74,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set the rotation line of this rotation manipulator
-	void setRotationLine(const GLC_Line3d line)
+    void setRotationLine(const GLC_Line3d& line)
 	{m_RotationLine= line;}
 
 //@}

@@ -63,14 +63,17 @@ GLC_Axis::~GLC_Axis()
 
 GLC_Axis& GLC_Axis::operator=(const GLC_Axis& axis)
 {
-	GLC_3DWidget::operator=(axis);
+    if (this != &axis)
+    {
+        GLC_3DWidget::operator=(axis);
 
-	m_Center= axis.m_Center;
-	delete m_pCurrentManipulator;
-	if (NULL != axis.m_pCurrentManipulator)
-	{
-		m_pCurrentManipulator= axis.m_pCurrentManipulator->clone();
-	}
+        m_Center= axis.m_Center;
+        delete m_pCurrentManipulator;
+        if (NULL != axis.m_pCurrentManipulator)
+        {
+            m_pCurrentManipulator= axis.m_pCurrentManipulator->clone();
+        }
+    }
 
 	return *this;
 }

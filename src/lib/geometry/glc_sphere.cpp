@@ -129,7 +129,6 @@ void GLC_Sphere::glDraw(const GLC_RenderProperties& renderProperties)
 
 void GLC_Sphere::createMesh()
 {
-
 	Q_ASSERT(GLC_Mesh::isEmpty());
 
 	GLfloatVector verticeFloat;
@@ -138,32 +137,27 @@ void GLC_Sphere::createMesh()
 
 	int currentIndex=0;
 
-	float wishedThetaStep= glc::PI / m_Discret;
-	float thetaRange= m_ThetaMax-m_ThetaMin;
-	int nbThetaSteps= (int) (thetaRange / wishedThetaStep) + 1 ;
-	float thetaStep= thetaRange / nbThetaSteps;
+    // Theta
+    const double wishedThetaStep= glc::PI / static_cast<double>(m_Discret);
+    const double thetaRange= m_ThetaMax - m_ThetaMin;
+    const int nbThetaSteps= static_cast<int>(thetaRange / wishedThetaStep) + 1 ;
+    const double thetaStep= thetaRange / static_cast<double>(nbThetaSteps);
 
-	float wishedPhiStep= wishedThetaStep;
-	float phiRange= m_PhiMax-m_PhiMin;
-	int nbPhiSteps= (int) (phiRange / wishedPhiStep) + 1 ;
-	float phiStep= phiRange / nbPhiSteps;
+    // Phi
+    const double wishedPhiStep= wishedThetaStep;
+    const double phiRange= m_PhiMax - m_PhiMin;
+    const int nbPhiSteps= static_cast<int>(phiRange / wishedPhiStep) + 1 ;
+    const double phiStep= phiRange / nbPhiSteps;
+    double phi= m_PhiMin;
 
-	float cost, sint, cosp, sinp, cospp, sinpp;
-	float xi, yi, zi, xf, yf, zf;
-	float theta= m_ThetaMin;
-	float phi= m_PhiMin;
-
-	GLfloatVector thetaMinWire;
-	GLfloatVector thetaMaxWire;
-	GLfloatVector phiMinWire;
-	GLfloatVector phiMaxWire;
-
+    // Set sphere material
 	GLC_Material* pMaterial;
 	if (hasMaterial())
 		pMaterial= this->firstMaterial();
 	else
 		pMaterial= new GLC_Material();
 
+    // Set center delta
 	const double dx= m_Center.x();
 	const double dy= m_Center.y();
 	const double dz= m_Center.z();
@@ -171,38 +165,42 @@ void GLC_Sphere::createMesh()
 	// shaded face
 	for (int p= 0; p < nbPhiSteps; ++p)
 	{
-		cosp= cos (phi);
-		sinp= sin (phi);
-		cospp= cos (phi + phiStep);
-		sinpp= sin (phi + phiStep);
+        const double cosp= cos (phi);
+        const double sinp= sin (phi);
+        const double cospp= cos (phi + phiStep);
+        const double sinpp= sin (phi + phiStep);
 
-		zi = m_Radius * sinp;
-		zf = m_Radius * sinpp;
+        const double zi = m_Radius * sinp;
+        const double zf = m_Radius * sinpp;
 
 		IndexList indexFace;
 
-		theta = m_ThetaMin;
+        float theta = m_ThetaMin;
 		int t;
 		for (t= 0; t <= nbThetaSteps; ++t)
 		{
-			cost= cos( theta );
-			sint= sin( theta );
+            const double cost= cos( theta );
+            const double sint= sin( theta );
 
-			xi= m_Radius * cost * cosp;
-			yi= m_Radius * sint * cosp;
-			xf= m_Radius * cost * cospp;
-			yf= m_Radius * sint * cospp;
+            const double xi= m_Radius * cost * cosp;
+            const double yi= m_Radius * sint * cosp;
+            const double xf= m_Radius * cost * cospp;
+            const double yf= m_Radius * sint * cospp;
 
-			verticeFloat << (xf + dx) << (yf + dy) << (zf + dz) << (xi + dx) << (yi + dy) << (zi + dz);
-			normalsFloat << cost * cospp << sint * cospp << sinpp << cost * cosp << sint * cosp << sinp;
- 			texelVector << static_cast<double>(t) * 1.0 / static_cast<double>(nbThetaSteps)
-						<< static_cast<double>(p) * 1.0 / static_cast<double>(nbPhiSteps)
-						<< static_cast<double>(t) * 1.0 / static_cast<double>(nbThetaSteps)
-						<< static_cast<double>(p+1) * 1.0 / static_cast<double>(nbPhiSteps);
+            verticeFloat << static_cast<float>(xf + dx) << static_cast<float>(yf + dy) << static_cast<float>(zf + dz);
+            verticeFloat << static_cast<float>(xi + dx) << static_cast<float>(yi + dy) << static_cast<float>(zi + dz);
 
-			indexFace << currentIndex + 2 * t << currentIndex + 2 * t + 1 ;
+            normalsFloat << static_cast<float>(cost * cospp) << static_cast<float>(sint * cospp) << static_cast<float>(sinpp);
+            normalsFloat << static_cast<float>(cost * cosp) << static_cast<float>(sint * cosp) << static_cast<float>(sinp);
+
+            texelVector << static_cast<float>(t) * 1.0f / static_cast<float>(nbThetaSteps);
+            texelVector << static_cast<float>(p) * 1.0f / static_cast<float>(nbPhiSteps);
+            texelVector << static_cast<float>(t) * 1.0f / static_cast<float>(nbThetaSteps);
+            texelVector << static_cast<float>(p+1) * 1.0f / static_cast<float>(nbPhiSteps);
+
+            indexFace << (currentIndex + 2 * t) << (currentIndex + 2 * t + 1);
+
 			theta+= thetaStep;
-
 		}
 
 		currentIndex+= 2 * t;
