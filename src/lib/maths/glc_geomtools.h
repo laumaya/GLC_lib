@@ -96,7 +96,7 @@ namespace glc
 	GLC_LIB_EXPORT GLC_Point3d project(const GLC_Point3d& point, const GLC_Line3d& line);
 
 	//! Return the midpoint of the two given points
-	inline GLC_Point3d midPoint(const GLC_Point3d& point1, const GLC_Point3d point2)
+    inline GLC_Point3d midPoint(const GLC_Point3d& point1, const GLC_Point3d& point2)
 	{return point1 + (point2 - point1) * 0.5;}
 
 	//! Return the perpendicular 2D vector of the given 2D vector

@@ -289,13 +289,12 @@ bool GLC_3DViewCollection::select(GLC_uint key, bool primitive)
 
     if (m_3DViewInstanceHash.contains(key))
     {
-        GLC_3DViewInstance* pSelectedInstance;
         ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.find(key);
         PointerViewInstanceHash::iterator iSelectedNode= m_SelectedInstances.find(key);
 
         if ((iNode != m_3DViewInstanceHash.end()) && (iSelectedNode == m_SelectedInstances.end()))
         {	// Ok, the key exist and the node is not selected
-            pSelectedInstance= &(iNode.value());
+            GLC_3DViewInstance* pSelectedInstance= &(iNode.value());
             m_SelectedInstances.insert(pSelectedInstance->id(), pSelectedInstance);
 
             // Remove Selected Node from is previous collection
@@ -335,21 +334,19 @@ void GLC_3DViewCollection::selectAll(bool allShowState)
 				m_ShadedPointerViewInstanceHash.value(shadingGroup(instanceId))->remove(instanceId);
 			}
 		}
-		iNode++;
+        ++iNode;
 	}
 }
 
 bool GLC_3DViewCollection::unselect(GLC_uint key)
 {
-    GLC_3DViewInstance* pSelectedNode= NULL;
-
 	PointerViewInstanceHash::iterator iSelectedNode= m_SelectedInstances.find(key);
 
 	if (iSelectedNode != m_SelectedInstances.end())
 	{	// Ok, the key exist and the node is selected
 		iSelectedNode.value()->unselect();
 
-		pSelectedNode= iSelectedNode.value();
+        GLC_3DViewInstance* pSelectedNode= iSelectedNode.value();
 		m_SelectedInstances.remove(key);
 
 		// Insert Selected Node to the right collection
@@ -403,7 +400,7 @@ void GLC_3DViewCollection::setPolygonModeForAll(GLenum face, GLenum mode)
     while (iEntry != m_3DViewInstanceHash.constEnd())
     {
     	iEntry.value().setPolygonMode(face, mode);
-    	iEntry++;
+        ++iEntry;
     }
 
 }
@@ -424,7 +421,7 @@ void GLC_3DViewCollection::showAll()
     while (iEntry != m_3DViewInstanceHash.constEnd())
     {
      	iEntry.value().setVisibility(true);
-    	iEntry++;
+        ++iEntry;
     }
 }
 
@@ -435,7 +432,7 @@ void GLC_3DViewCollection::hideAll()
     while (iEntry != m_3DViewInstanceHash.constEnd())
     {
     	iEntry.value().setVisibility(false);
-    	iEntry++;
+        ++iEntry;
     }
 
 }
@@ -460,7 +457,7 @@ void GLC_3DViewCollection::unbindSpacePartitioning()
     {
     	// Update Instance viewable flag
     	iEntry.value().setViewable(GLC_3DViewInstance::FullViewable);
-    	iEntry++;
+        ++iEntry;
     }
 
 }
@@ -499,7 +496,7 @@ void GLC_3DViewCollection::setVboUsage(bool usage)
     while (iEntry != m_3DViewInstanceHash.constEnd())
     {
     	iEntry.value().setVboUsage(usage);
-    	iEntry++;
+        ++iEntry;
     }
 }
 
@@ -512,7 +509,7 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::instancesHandle()
     while (iEntry != m_3DViewInstanceHash.constEnd())
     {
     	instancesList.append(&(iEntry.value()));
-    	iEntry++;
+        ++iEntry;
     }
 	return instancesList;
 }
@@ -529,7 +526,7 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::visibleInstancesHandle()
     	{
         	instancesList.append(&(iEntry.value()));
     	}
-    	iEntry++;
+        ++iEntry;
     }
 	return instancesList;
 
@@ -542,7 +539,7 @@ bool GLC_3DViewCollection::hasVisibleInstance() const
     while (!subject && (iEntry != m_3DViewInstanceHash.constEnd()))
     {
         subject= iEntry.value().isVisible();
-        iEntry++;
+        ++iEntry;
     }
     return subject;
 }
@@ -559,7 +556,7 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::viewableInstancesHandle()
     	{
         	instancesList.append(&(iEntry.value()));
     	}
-    	iEntry++;
+        ++iEntry;
     }
 	return instancesList;
 }

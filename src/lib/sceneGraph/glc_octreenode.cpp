@@ -195,10 +195,9 @@ void GLC_OctreeNode::addInstance(GLC_3DViewInstance* pInstance, int depth)
 			}
 			QVector<bool> childIntersect(8);
 			bool allIntersect= true;
-			bool currentIntersect= false;
 			for (int i= 0; i < 8; ++i)
 			{
-				currentIntersect= m_Children.at(i)->intersect(instanceBox);
+                const bool currentIntersect= m_Children.at(i)->intersect(instanceBox);
 				allIntersect= allIntersect && currentIntersect;
 				childIntersect[i]= currentIntersect;
 			}

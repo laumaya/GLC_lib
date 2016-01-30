@@ -47,10 +47,10 @@ class GLC_OctreeNode
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct a octree node from the given bounding box within the given octree node
-	GLC_OctreeNode(const GLC_BoundingBox&, GLC_OctreeNode* pParent= NULL);
+    explicit GLC_OctreeNode(const GLC_BoundingBox&, GLC_OctreeNode* pParent= NULL);
 
 	//! Construct a octree node from the first given octree node within the second given octree node
-	GLC_OctreeNode(const GLC_OctreeNode&, GLC_OctreeNode* pParent= NULL);
+    explicit GLC_OctreeNode(const GLC_OctreeNode&, GLC_OctreeNode* pParent= NULL);
 
 	//! Destructor
 	virtual ~GLC_OctreeNode();

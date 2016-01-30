@@ -202,10 +202,13 @@ public:
 	void replaceShader(const GLC_Shader&);
 
 	//! Assignement operator which use replace shader method
-	inline GLC_Shader& operator=(const GLC_Shader& shader)
+    inline GLC_Shader& operator=(const GLC_Shader& other)
 	{
-		replaceShader(shader);
-		return *this;
+        if (this != &other)
+        {
+            replaceShader(other);
+            return *this;
+        }
 	}
 
 	//! Set the Shader Name

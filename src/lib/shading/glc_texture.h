@@ -96,6 +96,10 @@ public:
 	//! Return true if texture are the same
 	bool operator==(const GLC_Texture&) const;
 
+    //! Return false if texture are the same
+    bool operator!=(const GLC_Texture& other) const
+    {return !this->operator ==(other);}
+
 	//! Return true if the texture has alpha channel
 	inline bool hasAlphaChannel() const
 	{ return m_HasAlphaChannel;}

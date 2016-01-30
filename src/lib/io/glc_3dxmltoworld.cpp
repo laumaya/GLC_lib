@@ -227,11 +227,9 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName, boo
 			if (setStreamReaderToFile(m_CurrentFileName, true))
 			{
 				GLC_StructReference* pStructRef = createReferenceRep(QString(), NULL);
-				GLC_3DRep* pRep = NULL;
 				if ((NULL != pStructRef) && pStructRef->hasRepresentation())
 				{
-					pRep= dynamic_cast<GLC_3DRep*> (pStructRef->representationHandle());
-
+                    GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*> (pStructRef->representationHandle());
 					if (NULL != pRep)
 					{
 						resultRep = GLC_3DRep(*pRep);

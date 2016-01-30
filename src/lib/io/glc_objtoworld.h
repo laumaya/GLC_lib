@@ -41,15 +41,6 @@
 
 #include "../glc_config.h"
 
-enum FaceType
-{
-	notSet,
-	coordinate,
-	coordinateAndTexture,
-	coordinateAndNormal,
-	coordinateAndTextureAndNormal
-};
-
 class GLC_World;
 class GLC_ObjMtlLoader;
 
@@ -68,6 +59,15 @@ class GLC_ObjMtlLoader;
 class GLC_LIB_EXPORT GLC_ObjToWorld : public QObject
 {
 	Q_OBJECT
+private:
+    enum FaceType
+    {
+        notSet,
+        coordinate,
+        coordinateAndTexture,
+        coordinateAndNormal,
+        coordinateAndTextureAndNormal
+    };
 
 public:
 	// OBJ Vertice (Position index, Normal index and TexCoord index)
@@ -103,8 +103,9 @@ public:
 	};
 
 	// Current OBJ Mesh
-	struct CurrentObjMesh
+    class CurrentObjMesh
 	{
+    public:
 		CurrentObjMesh(const QString materialName)
 		: m_pMesh(new GLC_Mesh())
 		, m_Positions()
@@ -118,6 +119,7 @@ public:
 		{
 			m_Materials.insert(materialName, m_pLastOffsetSize);
 		}
+
 		~CurrentObjMesh()
 		{
 			QHash<QString, MatOffsetSize*>::iterator i= m_Materials.begin();
@@ -127,6 +129,7 @@ public:
 				++i;
 			}
 		}
+    public:
 		GLC_Mesh* m_pMesh;
 		QList<float> m_Positions;
 		QList<float> m_Normals;
@@ -141,6 +144,8 @@ public:
 		int m_NextFreeIndex;
 		//! The Hash table of obj vertice mapping to index
 		QHash<ObjVertice, GLuint> m_ObjVerticeIndexMap;
+    private:
+        Q_DISABLE_COPY(CurrentObjMesh)
 	};
 
 //////////////////////////////////////////////////////////////////////

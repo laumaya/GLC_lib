@@ -359,10 +359,6 @@ void GLC_ObjToWorld::changeGroup(QString line)
 // Extract a Vector from a string
 QList<float> GLC_ObjToWorld::extract3dVect(QString &line)
 {
-	float x=0.0f;
-	float y=0.0f;
-	float z=0.0f;
-
 	QList<float> vectResult;
 	QTextStream stringVecteur(&line);
 
@@ -371,9 +367,9 @@ QList<float> GLC_ObjToWorld::extract3dVect(QString &line)
 	if (((stringVecteur >> xString >> yString >> zString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk, zOk;
-		x= xString.toFloat(&xOk);
-		y= yString.toFloat(&yOk);
-		z= zString.toFloat(&zOk);
+        const float x= xString.toFloat(&xOk);
+        const float y= yString.toFloat(&yOk);
+        const float z= zString.toFloat(&zOk);
 		if (!(xOk && yOk && zOk))
 		{
 			QString message= "GLC_ObjToWorld::extract3dVect " + m_FileName + " failed to convert vector component to float";
@@ -394,14 +390,11 @@ QList<float> GLC_ObjToWorld::extract3dVect(QString &line)
 	}
 
 	return vectResult;
-
 }
 
 // Extract a Vector from a string
 QList<float> GLC_ObjToWorld::extract2dVect(QString &line)
 {
-	float x=0.0f;
-	float y=0.0f;
 	QList<float> vectResult;
 	QTextStream stringVecteur(&line);
 
@@ -410,8 +403,8 @@ QList<float> GLC_ObjToWorld::extract2dVect(QString &line)
 	if (((stringVecteur >> xString >> yString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk;
-		x= xString.toFloat(&xOk);
-		y= yString.toFloat(&yOk);
+        const float x= xString.toFloat(&xOk);
+        const float y= yString.toFloat(&yOk);
 		if (!(xOk && yOk))
 		{
 			QString message= "GLC_ObjToWorld::extract2dVect " + m_FileName + " failed to convert vector component to double";

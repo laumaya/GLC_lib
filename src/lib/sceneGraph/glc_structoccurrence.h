@@ -352,6 +352,7 @@ private:
 	//! The relative matrix of this occurrence if this occurrence is flexible
 	GLC_Matrix4x4* m_pRelativeMatrix;
 
+   Q_DISABLE_COPY(GLC_StructOccurrence)
 };
 
 #endif /* GLC_STRUCTOCCURRENCE_H_ */

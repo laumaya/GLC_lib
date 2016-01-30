@@ -35,7 +35,7 @@
 //////////////////////////////////////////////////////////////////////
 
 GLC_ImagePlane::GLC_ImagePlane(const QString& ImageName, bool ratioPreserved)
-    : m_pRepresentation(NULL)
+    : m_p3DViewInstance(NULL)
     , m_Size()
     , m_RatioIsPreserved(ratioPreserved)
 {
@@ -43,12 +43,12 @@ GLC_ImagePlane::GLC_ImagePlane(const QString& ImageName, bool ratioPreserved)
 	pImgTexture->setMaxTextureSize(pImgTexture->imageOfTexture().size());
     m_Size= pImgTexture->size();
 
-    m_pRepresentation= new GLC_3DViewInstance(GLC_Factory::instance()->createRectangle(m_Size.width(), m_Size.height()));
-    m_pRepresentation->geomAt(0)->addMaterial(new GLC_Material(pImgTexture));
+    m_p3DViewInstance= new GLC_3DViewInstance(GLC_Factory::instance()->createRectangle(m_Size.width(), m_Size.height()));
+    m_p3DViewInstance->geomAt(0)->addMaterial(new GLC_Material(pImgTexture));
 }
 
 GLC_ImagePlane::GLC_ImagePlane(const QImage& image, bool ratioPreserved)
-    : m_pRepresentation(NULL)
+    : m_p3DViewInstance(NULL)
     , m_Size()
     , m_RatioIsPreserved(ratioPreserved)
 {
@@ -56,13 +56,21 @@ GLC_ImagePlane::GLC_ImagePlane(const QImage& image, bool ratioPreserved)
 	pImgTexture->setMaxTextureSize(image.size());
     m_Size= pImgTexture->size();
 
-    m_pRepresentation= new GLC_3DViewInstance(GLC_Factory::instance()->createRectangle(m_Size.width(), m_Size.height()));
-    m_pRepresentation->geomAt(0)->addMaterial(new GLC_Material(pImgTexture));
+    m_p3DViewInstance= new GLC_3DViewInstance(GLC_Factory::instance()->createRectangle(m_Size.width(), m_Size.height()));
+    m_p3DViewInstance->geomAt(0)->addMaterial(new GLC_Material(pImgTexture));
+}
+
+GLC_ImagePlane::GLC_ImagePlane(const GLC_ImagePlane &other)
+    : m_p3DViewInstance(new GLC_3DViewInstance(*(other.m_p3DViewInstance)))
+    , m_Size(other.m_Size)
+    , m_RatioIsPreserved(other.m_RatioIsPreserved)
+{
+
 }
 
 GLC_ImagePlane::~GLC_ImagePlane()
 {
-    delete m_pRepresentation;
+    delete m_p3DViewInstance;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -123,7 +131,7 @@ void GLC_ImagePlane::render(double screenRatio)
 	glDisable(GL_DEPTH_TEST);
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
-    m_pRepresentation->render();
+    m_p3DViewInstance->render();
 
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glEnable(GL_DEPTH_TEST);

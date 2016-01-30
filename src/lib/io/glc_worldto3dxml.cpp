@@ -411,7 +411,6 @@ void GLC_WorldTo3dxml::exportAssemblyFromOccurrence(const GLC_StructOccurrence* 
 		bool RenderOverloaded= !pRenderProperties->isDefault();
 		if (RenderOverloaded)
 		{
-			RenderOverloaded= false;
 			RenderOverloaded= (pRenderProperties->renderingMode() == glc::OverwriteMaterial);
 			RenderOverloaded= RenderOverloaded || (pRenderProperties->renderingMode() == glc::OverwriteTransparency);
 			RenderOverloaded= RenderOverloaded || (pRenderProperties->renderingMode() == glc::OverwriteTransparencyAndMaterial);

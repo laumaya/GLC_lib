@@ -129,15 +129,15 @@ GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 }
 
 // Overload "=" operator
-GLC_Texture& GLC_Texture::operator=(const GLC_Texture& texture)
+GLC_Texture& GLC_Texture::operator=(const GLC_Texture& other)
 {
-	if (!(*this == texture))
+    if (this->operator !=(other))
 	{
         delete m_pQOpenGLTexture;
         m_pQOpenGLTexture= NULL;
-		m_FileName= texture.m_FileName;
-        m_TextureImage= texture.m_TextureImage;
-		m_TextureSize= texture.m_TextureSize;
+        m_FileName= other.m_FileName;
+        m_TextureImage= other.m_TextureImage;
+        m_TextureSize= other.m_TextureSize;
         m_HasAlphaChannel= m_TextureImage.hasAlphaChannel();
 	}
 

@@ -78,7 +78,6 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
 
 	// Create Working variables
 	int currentQuantumValue= 0;
-	int previousQuantumValue= 0;
 	int numberOfLine= 0;
 
 	// Attach the stream to the file
@@ -154,6 +153,8 @@ GLC_World* GLC_StlToWorld::CreateWorldFromStl(QFile &file)
             m_pCurrentMesh->setName(lineBuff);
         }
         // Read the mesh facet
+        int previousQuantumValue= 0;
+
 		while (!m_StlStream.atEnd())
 		{
 			scanFacet();
@@ -324,10 +325,6 @@ void GLC_StlToWorld::scanFacet()
 // Extract a Vector from a string
 GLC_Vector3df GLC_StlToWorld::extract3dVect(QString &line)
 {
-	float x=0.0f;
-	float y=0.0f;
-	float z=0.0f;
-
 	GLC_Vector3df vectResult;
 	QTextStream stringVecteur(&line);
 
@@ -336,9 +333,9 @@ GLC_Vector3df GLC_StlToWorld::extract3dVect(QString &line)
 	if (((stringVecteur >> xString >> yString >> zString).status() == QTextStream::Ok))
 	{
 		bool xOk, yOk, zOk;
-		x= xString.toFloat(&xOk);
-		y= yString.toFloat(&yOk);
-		z= zString.toFloat(&zOk);
+        const float x= xString.toFloat(&xOk);
+        const float y= yString.toFloat(&yOk);
+        const float z= zString.toFloat(&zOk);
 		if (!(xOk && yOk && zOk))
 		{
 			QString message= "GLC_StlToWorld::extract3dVect : failed to convert vector component to float";
@@ -361,7 +358,6 @@ GLC_Vector3df GLC_StlToWorld::extract3dVect(QString &line)
 void GLC_StlToWorld::LoadBinariStl(QFile &file)
 {
 	// Create Working variables
-	int currentQuantumValue= 0;
 	int previousQuantumValue= 0;
 
 	QDataStream stlBinFile(&file);
@@ -428,7 +424,7 @@ void GLC_StlToWorld::LoadBinariStl(QFile &file)
 			m_CurrentFace.append(m_CurrentIndex);
 			++m_CurrentIndex;
 		}
-		currentQuantumValue = static_cast<int>((static_cast<double>(i + 1) / numberOfFacet) * 100);
+        const int currentQuantumValue = static_cast<int>((static_cast<double>(i + 1) / numberOfFacet) * 100);
 		if (currentQuantumValue > previousQuantumValue)
 		{
 			emit currentQuantum(currentQuantumValue);

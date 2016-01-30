@@ -247,18 +247,6 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! Return true if the index (argument) is in the diagonal of this matrix
-	inline bool isInDiagonal(const int index) const
-	{
-		if ((index == 0) || (index == 5) || (index == 10) || (index == 15))
-			return true;
-		else
-			return false;
-	}
-
-	//! Return the determinant of this matrix cell given from 2 int
-	inline double getDeterminantLC(const int, const int) const;
-
 	//! Compute Sub 3X3 matrix given by 2 int and set the given double pointeur
 	inline void getSubMat(const int, const int, double *) const;
 
@@ -391,20 +379,19 @@ GLC_Matrix4x4& GLC_Matrix4x4::operator = (const GLC_Matrix4x4 &matrix)
 
 GLC_Vector3d GLC_Matrix4x4::operator * (const GLC_Vector3d &Vect) const
 {
-	double ValInt;
 	int i;
 	GLC_Vector3d VectResult;
 	double mat[4];
 
 	for (int Index= 0; Index < DIMMAT4X4; Index++)
 	{
-		ValInt= 0.0;
+        double valInt= 0.0;
 		for (i= 0; i < DIMMAT4X4 - 1; i++)
 		{
-			ValInt+= m_Matrix[(i * DIMMAT4X4) + Index] * Vect.m_Vector[i];
+            valInt+= m_Matrix[(i * DIMMAT4X4) + Index] * Vect.m_Vector[i];
 		}
-		ValInt+= m_Matrix[(3 * DIMMAT4X4) + Index];
-		mat[Index]= ValInt;
+        valInt+= m_Matrix[(3 * DIMMAT4X4) + Index];
+        mat[Index]= valInt;
 	}
 
 	double invW= 1.0;
@@ -686,21 +673,6 @@ double GLC_Matrix4x4::determinant(void) const
 
 	return Determinant;
 
-}
-
-double GLC_Matrix4x4::getDeterminantLC(const int Ligne, const int Colonne) const
-{
-	double Mat3x3[9];
-	double Determinant;
-
-	getSubMat(Ligne, Colonne, Mat3x3);
-
-	if ( 0 == ((Ligne + Colonne) % 2)) // Even number
-		Determinant= m_Matrix[(Colonne + DIMMAT4X4) + Ligne] * getDeterminant3x3(Mat3x3);
-	else
-		Determinant= - m_Matrix[(Colonne + DIMMAT4X4) + Ligne] * getDeterminant3x3(Mat3x3);
-
-	return Determinant;
 }
 
 void GLC_Matrix4x4::getSubMat(const int Ligne, const int Colonne, double *ResultMat) const

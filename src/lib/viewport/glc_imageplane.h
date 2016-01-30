@@ -52,6 +52,9 @@ public:
     //! Construct image plane from the given image
     GLC_ImagePlane(const QImage& image, bool ratioPreserved);
 
+    //! Copy constructor
+    GLC_ImagePlane(const GLC_ImagePlane& other);
+
 	~GLC_ImagePlane();
 //@}
 
@@ -79,7 +82,7 @@ public:
 private:
 
 	//! The image representation
-    GLC_3DViewInstance* m_pRepresentation;
+    GLC_3DViewInstance* m_p3DViewInstance;
 
     //! Used image size
     QSizeF m_Size;
