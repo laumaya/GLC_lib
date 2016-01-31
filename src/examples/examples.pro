@@ -13,6 +13,6 @@ SUBDIRS +=  example01 \
             example11
 }
 
-SUBDIRS += \
-    example12
+#SUBDIRS += \
+#    example12
 
