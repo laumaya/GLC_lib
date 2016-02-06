@@ -19,7 +19,6 @@ OpenGLView::OpenGLView(QWidget *parent)
     , m_Light()
     , m_World()
 {
-    qDebug() << "OpenGLView::OpenGLView";
     connect(&m_GlView, SIGNAL(updateOpenGL()), this, SLOT(update()));
 
     // Set up mover controller
@@ -42,7 +41,9 @@ void OpenGLView::setWorld(const GLC_World &world)
 void OpenGLView::initializeGL()
 {
     // OpenGL initialisation
+    GLC_State::init();
     m_GlView.initGl();
+    qDebug() << GLC_State::version();
 }
 
 void OpenGLView::paintGL()

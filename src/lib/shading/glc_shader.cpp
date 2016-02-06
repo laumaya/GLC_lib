@@ -38,8 +38,8 @@ GLuint GLC_Shader::m_CurrentShadingGroupId= 0;
 QHash<GLC_uint, GLC_Shader*> GLC_Shader::m_ShaderProgramHash;
 
 GLC_Shader::GLC_Shader()
-: m_VertexShader(QGLShader::Vertex)
-, m_FragmentShader(QGLShader::Fragment)
+: m_VertexShader(QOpenGLShader::Vertex)
+, m_FragmentShader(QOpenGLShader::Fragment)
 , m_ProgramShader()
 , m_ProgramShaderId(glc::GLC_GenShaderGroupID())
 , m_Name("Empty Shader")
@@ -69,8 +69,8 @@ GLC_Shader::GLC_Shader()
 }
 
 GLC_Shader::GLC_Shader(QFile& vertexShaderFile, QFile& fragmentShaderFile)
-: m_VertexShader(QGLShader::Vertex)
-, m_FragmentShader(QGLShader::Fragment)
+: m_VertexShader(QOpenGLShader::Vertex)
+, m_FragmentShader(QOpenGLShader::Fragment)
 , m_ProgramShader()
 , m_ProgramShaderId(glc::GLC_GenShaderGroupID())
 , m_Name("Empty Shader")
@@ -100,8 +100,8 @@ GLC_Shader::GLC_Shader(QFile& vertexShaderFile, QFile& fragmentShaderFile)
 }
 
 GLC_Shader::GLC_Shader(const GLC_Shader& shader)
-: m_VertexShader(QGLShader::Vertex)
-, m_FragmentShader(QGLShader::Fragment)
+: m_VertexShader(QOpenGLShader::Vertex)
+, m_FragmentShader(QOpenGLShader::Fragment)
 , m_ProgramShader()
 , m_ProgramShaderId(glc::GLC_GenShaderGroupID())
 , m_Name(shader.m_Name)
