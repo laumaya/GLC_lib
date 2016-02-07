@@ -12,7 +12,7 @@
 #include <QOpenGLFramebufferObject>
 #include <QSharedPointer>
 
-#include "glc_openglViewhandler.h"
+#include "glc_openglviewhandler.h"
 
 #include "../glc_config.h"
 
