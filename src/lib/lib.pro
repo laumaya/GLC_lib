@@ -166,7 +166,7 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
                         viewport/glc_userinput.h \
                         viewport/glc_tsrmover.h \
                         viewport/glc_viewhandler.h \
-                        viewport/glc_openglViewhandler.h \
+                        viewport/glc_openglviewhandler.h \
                         viewport/glc_inputeventinterpreter.h \
                         viewport/glc_defaulteventinterpreter.h \
                         viewport/glc_screenshotsettings.h \
@@ -346,7 +346,7 @@ SOURCES +=	viewport/glc_camera.cpp \
                 viewport/glc_userinput.cpp \
                 viewport/glc_tsrmover.cpp \
                 viewport/glc_viewhandler.cpp \
-                viewport/glc_openglViewhandler.cpp \
+                viewport/glc_openglviewhandler.cpp \
                 viewport/glc_inputeventinterpreter.cpp \
                 viewport/glc_defaulteventinterpreter.cpp \
                 viewport/glc_screenshotsettings.cpp \
