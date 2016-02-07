@@ -166,9 +166,11 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
                         viewport/glc_userinput.h \
                         viewport/glc_tsrmover.h \
                         viewport/glc_viewhandler.h \
+                        viewport/glc_openglViewhandler.h \
                         viewport/glc_inputeventinterpreter.h \
                         viewport/glc_defaulteventinterpreter.h \
-                        viewport/glc_screenshotsettings.h
+                        viewport/glc_screenshotsettings.h \
+                        viewport/glc_openglviewwidget.h
 
 HEADERS_GLC += glc_global.h \
                glc_object.h \
@@ -206,7 +208,8 @@ HEADERS_GLC_QML +=      qml/glc_quickitem.h \
                         qml/glc_quickview.h \
                         qml/glc_quickcamera.h \
                         qml/glc_quickoccurrence.h \
-                        qml/glc_quickselection.h
+                        qml/glc_quickselection.h \
+                        qml/glc_quickviewhandler.h
 
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
@@ -343,9 +346,11 @@ SOURCES +=	viewport/glc_camera.cpp \
                 viewport/glc_userinput.cpp \
                 viewport/glc_tsrmover.cpp \
                 viewport/glc_viewhandler.cpp \
+                viewport/glc_openglViewhandler.cpp \
                 viewport/glc_inputeventinterpreter.cpp \
                 viewport/glc_defaulteventinterpreter.cpp \
-                viewport/glc_screenshotsettings.cpp
+                viewport/glc_screenshotsettings.cpp \
+                viewport/glc_openglviewwidget.cpp
 
 		
 SOURCES +=	glc_global.cpp \
@@ -383,7 +388,8 @@ SOURCES +=      qml/glc_quickitem.cpp \
                 qml/glc_quickview.cpp \
                 qml/glc_quickcamera.cpp \
                 qml/glc_quickoccurrence.cpp \
-                qml/glc_quickselection.cpp
+                qml/glc_quickselection.cpp \
+                qml/glc_quickviewhandler.cpp
 
 # Windows compilation configuration
 win32:CONFIG *= dll
@@ -497,7 +503,11 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_ScreenShotSettings \
                GLC_QuickView \
                GLC_QuickCamera \
-               GLC_QuickOccurrence
+               GLC_QuickOccurrence \
+               GLC_QuickViewHandler \
+               GLC_OpenGLViewHandler \
+               GLC_QuickSelection \
+               GLC_OpenGLViewWidget
 
 include (../../install.pri)
 
@@ -540,8 +550,6 @@ INSTALLS += include_glc_3dwidget include_glc_glu include_glc_qml
 INSTALLS += target
 INSTALLS += include
 
-OTHER_FILES += \
-    GLC_QuickSelection
 
 DISTFILES += \
     ../../sonar-project.properties

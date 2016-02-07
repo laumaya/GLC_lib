@@ -36,10 +36,10 @@
 #include "../shading/glc_light.h"
 #include "../sceneGraph/glc_world.h"
 #include "../viewport/glc_movercontroller.h"
-#include "../viewport/glc_viewhandler.h"
 #include "../maths/glc_vector3d.h"
 #include "glc_quickcamera.h"
 #include "glc_quickselection.h"
+#include "GLC_QuickViewHandler"
 
 #include "../glc_config.h"
 
@@ -90,7 +90,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    //! Return the used GLC_ViewHandler as a QVariant
+    //! Return the used GLC_QuickViewHandler as a QVariant
     virtual QVariant viewHandler() const;
 
     inline QString source() const
@@ -176,7 +176,7 @@ protected:
 // Protected Members
 //////////////////////////////////////////////////////////////////////
 protected:
-    QSharedPointer<GLC_ViewHandler> m_Viewhandler;
+    QSharedPointer<GLC_QuickViewHandler> m_Viewhandler;
     QOpenGLFramebufferObject* m_pSourceFbo;
     QOpenGLFramebufferObject* m_pTargetFbo;
     QOpenGLFramebufferObject* m_pAuxFbo;

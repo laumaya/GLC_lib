@@ -30,7 +30,7 @@
 
 #include "glc_quickitem.h"
 
-#include "../viewport/glc_viewhandler.h"
+
 #include "../sceneGraph/glc_octree.h"
 
 GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
@@ -50,7 +50,7 @@ GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     setFlag(QQuickItem::ItemHasContents);
 
     // Set the initial viewHandler
-    QSharedPointer<GLC_ViewHandler> viewHandlerPointer(new GLC_ViewHandler);
+    QSharedPointer<GLC_QuickViewHandler> viewHandlerPointer(new GLC_QuickViewHandler);
     QVariant viewHandler;
     viewHandler.setValue(viewHandlerPointer);
     setViewhandler(viewHandler);
@@ -99,7 +99,7 @@ void GLC_QuickItem::setViewhandler(QVariant viewHandler)
 {
     if (NULL != m_Viewhandler)
     {
-        GLC_ViewHandler* pViewHandler= m_Viewhandler.data();
+        GLC_QuickViewHandler* pViewHandler= m_Viewhandler.data();
         disconnect(pViewHandler, SIGNAL(isDirty()), this, SLOT(update()));
         disconnect(pViewHandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()));
         disconnect(pViewHandler, SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
@@ -109,9 +109,9 @@ void GLC_QuickItem::setViewhandler(QVariant viewHandler)
         disconnect(this, SIGNAL(frameBufferBindingFailed()), pViewHandler, SIGNAL(frameBufferBindingFailed()));
     }
 
-    m_Viewhandler= viewHandler.value<QSharedPointer<GLC_ViewHandler> >();
+    m_Viewhandler= viewHandler.value<QSharedPointer<GLC_QuickViewHandler> >();
     Q_ASSERT(!m_Viewhandler.isNull());
-    GLC_ViewHandler* pViewHandler= m_Viewhandler.data();
+    GLC_QuickViewHandler* pViewHandler= m_Viewhandler.data();
 
     connect(pViewHandler, SIGNAL(isDirty()), this, SLOT(update()), Qt::DirectConnection);
     connect(pViewHandler, SIGNAL(invalidateSelectionBuffer()), this, SLOT(invalidateSelectionBuffer()), Qt::DirectConnection);

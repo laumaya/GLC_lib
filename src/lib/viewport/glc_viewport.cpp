@@ -546,8 +546,10 @@ GLC_uint GLC_Viewport::renderAndSelect(int x, int y, GLenum buffer)
 	const QColor clearColor(Qt::black);
 	glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), 1.0f);
 	GLC_State::setSelectionMode(true);
+    qDebug() << "Before emit";
 	// Draw the scene
 	emit updateOpenGL();
+    qDebug() << "After emit";
 	GLC_State::setSelectionMode(false);
 
     return selectOnPreviousRender(x, y, buffer);

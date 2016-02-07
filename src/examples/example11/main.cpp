@@ -9,7 +9,7 @@
 #include <GLC_World>
 #include <GLC_Factory>
 #include <GLC_QuickItem>
-#include <GLC_ViewHandler>
+#include <GLC_QuickViewHandler>
 #include <GLC_Octree>
 #include <GLC_QuickView>
 
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     QFile file2(":model/man.obj");
     GLC_World world2= GLC_Factory::instance()->createWorldFromFile(file2);
-    QSharedPointer<GLC_ViewHandler> viewHandler(new GLC_ViewHandler());
+    QSharedPointer<GLC_QuickViewHandler> viewHandler(new GLC_QuickViewHandler());
     viewHandler->setWorld(world2);
     viewHandler->setSpacePartitioning(new GLC_Octree(world2.collection()));
     viewHandler->viewportHandle()->setBackgroundColor(Qt::white);

@@ -53,7 +53,6 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     , m_CurrentSelectionSet()
     , m_UnprojectedPoint()
     , m_3DWidgetManager(m_pViewport)
-    , m_isRendering()
 
     , m_ScreenShotMode(false)
     , m_ScreenshotSettings()
@@ -84,17 +83,8 @@ GLC_ViewHandler::~GLC_ViewHandler()
 
 void GLC_ViewHandler::updateGL(bool synchrone)
 {
-    m_isRendering= synchrone;
+    Q_UNUSED(synchrone);
     emit isDirty();
-    while (m_Enabled && m_isRendering)
-    {
-        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-    }
-}
-
-void GLC_ViewHandler::updateSynchronized()
-{
-    updateGL(true);
 }
 
 void GLC_ViewHandler::clearSelectionBuffer()
@@ -167,13 +157,11 @@ void GLC_ViewHandler::unSetSpacePartitionning()
 
 QPair<GLC_SelectionSet, GLC_Point3d> GLC_ViewHandler::selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes)
 {
-    m_RenderingMode= GLC_ViewHandler::selectRenderMode;
     m_PointerPosition.setX(x);
     m_PointerPosition.setY(y);
     m_CurrentSelectionSet.clear();
     m_UnprojectedPoint.setVect(0.0, 0.0, 0.0);
-    m_SelectionModes= modes;
-    updateGL(true); // Execute OpenGL synchronously to get selection Set
+    // Todo ...
     QPair<GLC_SelectionSet, GLC_Point3d> subject(m_CurrentSelectionSet, m_UnprojectedPoint);
     return subject;
 }

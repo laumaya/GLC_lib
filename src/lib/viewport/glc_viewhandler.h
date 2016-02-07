@@ -134,10 +134,12 @@ public:
 
 public slots:
     virtual void updateGL(bool synchrone= false);
-    void updateSynchronized();
+
     virtual void clearSelectionBuffer();
 
 public:
+    virtual void renderingFinished(){}
+
     virtual void setDefaultUpVector(const GLC_Vector3d &vect);
 
     void setInputEventInterpreter(GLC_InputEventInterpreter* pEventInterpreter);
@@ -193,9 +195,6 @@ public:
     virtual void processTouchEvent(QTouchEvent* pTouchEvent);
     virtual void processHoverMoveEvent(QHoverEvent* pHoverEvent);
 
-    inline void renderingFinished()
-    {m_isRendering= false;}
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -232,7 +231,6 @@ protected:
     GLC_SelectionSet m_CurrentSelectionSet;
     GLC_Point3d m_UnprojectedPoint;
     GLC_3DWidgetManager m_3DWidgetManager;
-    bool m_isRendering;
 
     bool m_ScreenShotMode;
     GLC_ScreenShotSettings m_ScreenshotSettings;
