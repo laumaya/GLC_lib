@@ -4,7 +4,7 @@
  *  Created on: 07/02/2016
  *      Author: Laurent Ribon
  */
-#include "glc_openglViewhandler.h"
+#include "glc_openglviewhandler.h"
 
 GLC_OpenGLViewHandler::GLC_OpenGLViewHandler()
     : GLC_ViewHandler()
