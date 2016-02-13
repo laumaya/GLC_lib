@@ -546,10 +546,8 @@ GLC_uint GLC_Viewport::renderAndSelect(int x, int y, GLenum buffer)
 	const QColor clearColor(Qt::black);
 	glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), 1.0f);
 	GLC_State::setSelectionMode(true);
-    qDebug() << "Before emit";
 	// Draw the scene
 	emit updateOpenGL();
-    qDebug() << "After emit";
 	GLC_State::setSelectionMode(false);
 
     return selectOnPreviousRender(x, y, buffer);
@@ -563,7 +561,6 @@ GLC_uint GLC_Viewport::selectOnPreviousRender(int x, int y, GLenum buffer)
     GLint newY= (m_Height - y) - height / 2;
 	if (newX < 0) newX= 0;
 	if (newY < 0) newY= 0;
-
     return meaningfullIdInsideSquare(newX, newY, width, height, buffer);
 }
 GLC_uint GLC_Viewport::selectBody(GLC_3DViewInstance* pInstance, int x, int y, GLenum buffer)

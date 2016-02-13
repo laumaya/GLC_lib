@@ -26,9 +26,14 @@ public:
     //! Return the used GLC_ViewHandler as a QVariant
     virtual QVariant viewHandler() const;
 
+public slots:
+    virtual void setViewhandler(QVariant viewHandler);
+    virtual void setMouseTracking(bool track);
+    void updateSelection();
+    void select(uint id);
+    QImage takeScreenShot();
+
 signals:
-    void spacePartitionningEnabledChanged(bool arg);
-    void selectionChanged();
     void frameBufferCreationFailed();
     void frameBufferBindingFailed();
 
@@ -46,10 +51,7 @@ protected:
     virtual void touchEvent(QTouchEvent * e);
     virtual void hoverMoveEvent(QHoverEvent *event);
 
-    virtual void initConnections();
-
     void renderForSelection();
-    void renderForScreenShot();
 
     GLC_uint selectBody(GLC_uint instanceId, int x, int y);
     QPair<GLC_uint, GLC_uint> selectPrimitive(GLC_uint instanceId, int x, int y);
@@ -58,21 +60,11 @@ protected:
     void setupAuxFbo(int width, int height);
     void setupScreenShotFbo(int width, int height);
 
-public slots:
-    virtual void setViewhandler(QVariant viewHandler);
-    virtual void invalidateSelectionBuffer();
-    virtual void setMouseTracking(bool track);
-    virtual void setSpacePartitionningEnabled(bool enabled);
-    virtual void setDefaultUpVector(const QVector3D &vect);
-
-    void select(uint id);
-
-private:
-
 private:
     QOpenGLFramebufferObject* m_pAuxFbo;
     QOpenGLFramebufferObject* m_pScreenShotFbo;
     QSharedPointer<GLC_OpenGLViewHandler> m_Viewhandler;
+    GLC_Point3d m_UnprojectedPoint;
 };
 
 #endif // GLC_OPENGLVIEWWIDGET_H

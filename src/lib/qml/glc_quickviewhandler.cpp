@@ -9,6 +9,7 @@
 GLC_QuickViewHandler::GLC_QuickViewHandler()
     : GLC_ViewHandler()
     , m_isRendering(false)
+    , m_ScreenShotImage()
 {
 
 }
@@ -33,6 +34,15 @@ void GLC_QuickViewHandler::updateGL(bool synchrone)
     }
 }
 
+QImage GLC_QuickViewHandler::takeScreenshot(const GLC_ScreenShotSettings &screenShotSettings)
+{
+    m_ScreenshotSettings= screenShotSettings;
+    m_ScreenShotMode= true;
+    updateGL(true);  // Execute OpenGL synchronously to get screenshot image
+    m_ScreenShotMode= false;
+    return m_ScreenShotImage;
+}
+
 QPair<GLC_SelectionSet, GLC_Point3d> GLC_QuickViewHandler::selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes)
 {
     m_RenderingMode= GLC_ViewHandler::selectRenderMode;
@@ -49,4 +59,9 @@ QPair<GLC_SelectionSet, GLC_Point3d> GLC_QuickViewHandler::selectAndUnproject(in
 void GLC_QuickViewHandler::updateSynchronized()
 {
     updateGL(true);
+}
+
+void GLC_QuickViewHandler::setScreenShotImage(const QImage &image)
+{
+    m_ScreenShotImage= image;
 }

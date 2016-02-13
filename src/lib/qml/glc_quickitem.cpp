@@ -78,7 +78,7 @@ bool GLC_QuickItem::spacePartitionningEnabled() const
     bool subject= false;
     if (NULL != m_Viewhandler)
     {
-        subject= m_Viewhandler->world().collection()->spacePartitioningIsUsed();
+        subject= m_Viewhandler->spacePartitionningEnabled();
     }
 
     return subject;
@@ -164,18 +164,9 @@ void GLC_QuickItem::setSource(QString arg)
 
 void GLC_QuickItem::setSpacePartitionningEnabled(bool enabled)
 {
-    if ((enabled != spacePartitionningEnabled()) && !m_Viewhandler.isNull())
+    if (!m_Viewhandler.isNull() && (enabled != m_Viewhandler->spacePartitionningEnabled()))
     {
-        if (enabled)
-        {
-            GLC_3DViewCollection* pCollection= m_Viewhandler->world().collection();
-            m_Viewhandler->setSpacePartitioning(new GLC_Octree(pCollection));
-        }
-        else
-        {
-            m_Viewhandler->unSetSpacePartitionning();
-        }
-
+        m_Viewhandler->setSpacePartitionningEnabled(enabled);
         emit spacePartitionningEnabledChanged(enabled);
     }
 }

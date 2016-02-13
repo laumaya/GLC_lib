@@ -28,6 +28,8 @@ public:
 
 //@}
 
+signals:
+    void isDirty();
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -35,7 +37,9 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 public slots:
-    virtual void updateGL(bool synchrone= false);
+    virtual void updateGL(bool synchrone);
+
+    virtual QImage takeScreenshot(const GLC_ScreenShotSettings& screenShotSettings);
 
     virtual QPair<GLC_SelectionSet, GLC_Point3d> selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes);
 
@@ -43,9 +47,15 @@ public slots:
 
 //@}
 
+public:
+    inline QImage screenShotImage() const
+    {return m_ScreenShotImage;}
+
+     void setScreenShotImage(const QImage& image);
 
 protected:
     bool m_isRendering;
+    QImage m_ScreenShotImage;
 };
 
 Q_DECLARE_METATYPE(GLC_QuickViewHandler*)
