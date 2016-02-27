@@ -240,6 +240,9 @@ public:
 public:
 
     //! Update the OpenGL view size
+    void setWinGLSize(int width, int height, int devicePixelRatio, bool updateOpenGL= true);
+
+    //! Update the OpenGL view size
     void setWinGLSize(int width, int height, bool updateOpenGL= true);
 
     //! Update the OpenGL view size

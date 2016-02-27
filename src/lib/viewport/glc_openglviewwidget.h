@@ -40,7 +40,6 @@ signals:
 protected:
     virtual void initializeGL();
     virtual void paintGL();
-    virtual void resizeGL(int width, int height);
 
 protected:
     virtual void mousePressEvent(QMouseEvent * e);
@@ -57,11 +56,11 @@ protected:
     QPair<GLC_uint, GLC_uint> selectPrimitive(GLC_uint instanceId, int x, int y);
 
     virtual void doRender();
-    void setupAuxFbo(int width, int height);
+    void setupSelectionFbo(int width, int height);
     void setupScreenShotFbo(int width, int height);
 
 private:
-    QOpenGLFramebufferObject* m_pAuxFbo;
+    QOpenGLFramebufferObject* m_pSelectionFbo;
     QOpenGLFramebufferObject* m_pScreenShotFbo;
     QSharedPointer<GLC_OpenGLViewHandler> m_Viewhandler;
     GLC_Point3d m_UnprojectedPoint;

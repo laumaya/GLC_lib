@@ -8,7 +8,7 @@
 
 GLC_OpenGLViewWidget::GLC_OpenGLViewWidget(QWidget *parent)
     : QOpenGLWidget(parent)
-    , m_pAuxFbo(NULL)
+    , m_pSelectionFbo(NULL)
     , m_pScreenShotFbo(NULL)
     , m_Viewhandler(NULL)
     , m_UnprojectedPoint()
@@ -23,7 +23,7 @@ GLC_OpenGLViewWidget::GLC_OpenGLViewWidget(QWidget *parent)
 
 GLC_OpenGLViewWidget::~GLC_OpenGLViewWidget()
 {
-    delete m_pAuxFbo;
+    delete m_pSelectionFbo;
     delete m_pScreenShotFbo;
 }
 
@@ -63,14 +63,12 @@ void GLC_OpenGLViewWidget::setMouseTracking(bool track)
 
 void GLC_OpenGLViewWidget::updateSelection()
 {
-    qDebug() << "GLC_OpenGLViewWidget::updateSelection()";
-
     makeCurrent();
     Q_ASSERT(NULL != m_Viewhandler);
 
-    if (m_pAuxFbo && m_pAuxFbo->isValid())
+    if (m_pSelectionFbo && m_pSelectionFbo->isValid())
     {
-        if (!m_pAuxFbo->bind()) emit frameBufferBindingFailed();
+        if (!m_pSelectionFbo->bind()) emit frameBufferBindingFailed();
 
         // Get selection coordinate
         const int x= m_Viewhandler->pointerPosition().x();
@@ -80,7 +78,6 @@ void GLC_OpenGLViewWidget::updateSelection()
         GLC_SelectionSet selectionSet;
 
         const GLC_uint instanceId= m_Viewhandler->viewportHandle()->selectOnPreviousRender(x, y, GL_COLOR_ATTACHMENT0);
-        qDebug() << "instanceId " << instanceId;
         m_UnprojectedPoint= m_Viewhandler->viewportHandle()->unproject(x, y, GL_COLOR_ATTACHMENT0);
 
         GLC_3DViewCollection* pCollection= world.collection();
@@ -110,7 +107,7 @@ void GLC_OpenGLViewWidget::updateSelection()
         }
 
         m_Viewhandler->updateCurrentSelectionSet(selectionSet, m_UnprojectedPoint);
-        m_pAuxFbo->release();
+        m_pSelectionFbo->release();
     }
 
  }
@@ -177,18 +174,16 @@ void GLC_OpenGLViewWidget::initializeGL()
 
 void GLC_OpenGLViewWidget::paintGL()
 {
-    Q_ASSERT(NULL != m_Viewhandler);
-    renderForSelection();
-    doRender();
-}
+    // Resize int paintgl to handle to screen with different pixel ratio (Retina)
+    const int width= this->width();
+    const int height= this->height();
+    setupSelectionFbo(width, height);
 
-void GLC_OpenGLViewWidget::resizeGL(int width, int height)
-{
-    if (NULL != m_Viewhandler)
-    {
-        m_Viewhandler->setSize(width, height);
-        setupAuxFbo(width, height);
-    }
+    Q_ASSERT(NULL != m_Viewhandler);
+    m_Viewhandler->setSize(width, height);
+    renderForSelection();
+    m_Viewhandler->setSize(width, height, devicePixelRatio());
+    doRender();
 }
 
 void GLC_OpenGLViewWidget::mousePressEvent(QMouseEvent *e)
@@ -251,16 +246,18 @@ void GLC_OpenGLViewWidget::renderForSelection()
 {
     Q_ASSERT(NULL != m_Viewhandler);
 
-    if ((NULL != m_pAuxFbo) && m_pAuxFbo->isValid())
+    if ((NULL != m_pSelectionFbo) && m_pSelectionFbo->isValid())
     {
-        if (!m_pAuxFbo->bind()) emit frameBufferBindingFailed();
+        if (!m_pSelectionFbo->bind()) emit frameBufferBindingFailed();
 
         GLC_State::setSelectionMode(true);
         doRender();
         GLC_State::setSelectionMode(false);
     }
 
-    m_pAuxFbo->release();
+    m_pSelectionFbo->release();
+    //QImage image= m_pSelectionFbo->toImage();
+    //image.save("/Users/laumaya/fbo.png");
 }
 
 QPair<GLC_uint, GLC_uint> GLC_OpenGLViewWidget::selectPrimitive(GLC_uint instanceId, int x, int y)
@@ -289,19 +286,19 @@ void GLC_OpenGLViewWidget::doRender()
     m_Viewhandler->render();
 }
 
-void GLC_OpenGLViewWidget::setupAuxFbo(int width, int height)
+void GLC_OpenGLViewWidget::setupSelectionFbo(int width, int height)
 {
     Q_ASSERT(NULL != m_Viewhandler);
 
     if ((width > 0) && (height > 0))
     {
-        delete m_pAuxFbo;
-        m_pAuxFbo= new QOpenGLFramebufferObject(width, height, QOpenGLFramebufferObject::Depth);
+        delete m_pSelectionFbo;
+        m_pSelectionFbo= new QOpenGLFramebufferObject(width, height, QOpenGLFramebufferObject::Depth);
     }
     else
     {
-        delete m_pAuxFbo;
-        m_pAuxFbo= NULL;
+        delete m_pSelectionFbo;
+        m_pSelectionFbo= NULL;
     }
 }
 

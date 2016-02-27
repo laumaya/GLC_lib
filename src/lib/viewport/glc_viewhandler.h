@@ -158,7 +158,7 @@ public:
 
     virtual void selectionUpdated(const GLC_SelectionEvent &selectionEvent);
 
-    virtual void setSize(int width, int height);
+    virtual void setSize(int width, int height, int devicePixelRatio= 1);
 
     virtual void setMouseTracking(bool track);
 
