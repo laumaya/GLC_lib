@@ -956,33 +956,13 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 
     const bool vboIsUsed= GLC_Geometry::vboIsUsed();
 
-	if (m_IsSelected && (renderProperties.renderingMode() == glc::PrimitiveSelected) && !GLC_State::isInSelectionMode()
+    if (m_IsSelected && (renderProperties.renderingMode() == glc::PrimitiveSelected) && !pContext->isInSelectionMode()
 	&& !renderProperties.setOfSelectedPrimitiveIdIsEmpty())
 	{
 		m_CurrentLod= 0;
 	}
 
-	if (vboIsUsed)
-	{
-		m_MeshData.createVBOs();
-
-		// Create VBO and IBO
-		if (!m_GeometryIsValid && !m_MeshData.positionSizeIsSet())
-		{
-			fillVbosAndIbos();
-		}
-
-		// Activate mesh VBOs and IBO of the current LOD
-		activateVboAndIbo();
-	}
-	else
-	{
-		if (!m_GeometryIsValid)
-		{
-			m_MeshData.initPositionSize();
-		}
-		activateVertexArray();
-	}
+    setClientState();
 
 	if (renderProperties.renderingFlag() == glc::OutlineSilhouetteRenderFlag) {
         pContext->glcEnableLighting(false);
@@ -1056,48 +1036,82 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	}
 
 	// Restore client state
+    restoreClientState(pContext);
 
-	if (m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode())
+	// Draw mesh's wire if necessary
+	if ((renderProperties.renderingFlag() == glc::WireRenderFlag) && !m_WireData.isEmpty() && !GLC_Geometry::typeIsWire())
 	{
+        drawMeshWire(renderProperties, pContext);
+	}
+
+	// Update statistics
+	GLC_RenderStatistics::addBodies(1);
+    GLC_RenderStatistics::addTriangles(m_MeshData.trianglesCount(m_CurrentLod));
+}
+
+void GLC_Mesh::setClientState()
+{
+    if (GLC_Geometry::vboIsUsed())
+    {
+        m_MeshData.createVBOs();
+
+        // Create VBO and IBO
+        if (!m_GeometryIsValid && !m_MeshData.positionSizeIsSet())
+        {
+            fillVbosAndIbos();
+        }
+
+        // Activate mesh VBOs and IBO of the current LOD
+        activateVboAndIbo();
+    }
+    else
+    {
+        if (!m_GeometryIsValid)
+        {
+            m_MeshData.initPositionSize();
+        }
+        activateVertexArray();
+    }
+}
+
+void GLC_Mesh::restoreClientState(GLC_Context *pContext)
+{
+    if (m_ColorPearVertex && !m_IsSelected && !GLC_Context::current()->isInSelectionMode())
+    {
         pContext->glcDisableColorClientState();
         pContext->glcEnableColorMaterial(false);
-	}
+    }
 
     pContext->glcDisableVertexClientState();
     pContext->glcDisableNormalClientState();
     pContext->glcDisableTextureClientState();
 
-	if (vboIsUsed)
-	{
-		QOpenGLBuffer::release(QOpenGLBuffer::IndexBuffer);
-		QOpenGLBuffer::release(QOpenGLBuffer::VertexBuffer);
-	}
+    if (GLC_Geometry::vboIsUsed())
+    {
+        QOpenGLBuffer::release(QOpenGLBuffer::IndexBuffer);
+        QOpenGLBuffer::release(QOpenGLBuffer::VertexBuffer);
+    }
+}
 
-	// Draw mesh's wire if necessary
-	if ((renderProperties.renderingFlag() == glc::WireRenderFlag) && !m_WireData.isEmpty() && !GLC_Geometry::typeIsWire())
-	{
-		if (!GLC_State::isInSelectionMode())
-		{
-            pContext->glcEnableLighting(false);
-			// Set polyline colors
-			GLfloat color[4]= {static_cast<float>(m_WireColor.redF()),
-									static_cast<float>(m_WireColor.greenF()),
-									static_cast<float>(m_WireColor.blueF()),
-									static_cast<float>(m_WireColor.alphaF())};
+void GLC_Mesh::drawMeshWire(const GLC_RenderProperties& renderProperties, GLC_Context *pContext)
+{
+    if (!GLC_Context::current()->isInSelectionMode())
+    {
+        pContext->glcEnableLighting(false);
+        // Set polyline colors
+        GLfloat color[4]= {static_cast<float>(m_WireColor.redF()),
+                                static_cast<float>(m_WireColor.greenF()),
+                                static_cast<float>(m_WireColor.blueF()),
+                                static_cast<float>(m_WireColor.alphaF())};
 
-			glColor4fv(color);
-			m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
-            pContext->glcEnableLighting(true);
-		}
-		else
-		{
-			m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
-		}
-	}
-
-	// Update statistics
-	GLC_RenderStatistics::addBodies(1);
-	GLC_RenderStatistics::addTriangles(m_MeshData.trianglesCount(m_CurrentLod));
+        glColor4fv(color);
+        m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
+        pContext->glcEnableLighting(true);
+    }
+    else
+    {
+        m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1276,8 +1290,9 @@ void GLC_Mesh::moveIndexToMeshDataLod()
 // The normal display loop
 void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
+    const bool isInSelectionMode= GLC_Context::current()->isInSelectionMode();
 	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
-	if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
+    if ((!m_IsSelected || !isTransparent) || GLC_Context::current()->isInSelectionMode())
 	{
 		LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
@@ -1289,7 +1304,7 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
 			bool materialIsrenderable = (pCurrentMaterial->isTransparent() == isTransparent);
 
 			// Choose the material to render
-	   		if ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode())
+            if ((materialIsrenderable || m_IsSelected) && !isInSelectionMode)
 	    	{
 				// Execute current material
 				pCurrentMaterial->glExecute();
@@ -1298,7 +1313,7 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
 			}
 
 	   		// Choose the primitives to render
-			if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
+            if (m_IsSelected || isInSelectionMode || materialIsrenderable)
 			{
 
 				if (vboIsUsed)
