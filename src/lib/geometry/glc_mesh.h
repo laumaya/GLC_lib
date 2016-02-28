@@ -1108,7 +1108,7 @@ void GLC_Mesh::activateVboAndIbo()
 	}
 
 	// Activate Color VBO if needed
-    if ((m_ColorPearVertex && !m_IsSelected && !pContext->isInSelectionMode()) && m_MeshData.useVBO(GLC_MeshData::GLC_Color))
+    if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && m_MeshData.useVBO(GLC_MeshData::GLC_Color))
 	{
         pContext->glcEnableColorMaterial(true);
 		glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
@@ -1135,7 +1135,7 @@ void GLC_Mesh::activateVertexArray()
 	}
 
 	// Activate Color array if needed
-    if ((m_ColorPearVertex && !m_IsSelected && !pContext->isInSelectionMode()) && !m_MeshData.colorVectorHandle()->isEmpty())
+    if ((m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode()) && !m_MeshData.colorVectorHandle()->isEmpty())
 	{
         pContext->glcEnableColorMaterial(true);
 		glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);

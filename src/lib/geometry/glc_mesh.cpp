@@ -956,7 +956,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 
     const bool vboIsUsed= GLC_Geometry::vboIsUsed();
 
-    if (m_IsSelected && (renderProperties.renderingMode() == glc::PrimitiveSelected) && !pContext->isInSelectionMode()
+    if (m_IsSelected && (renderProperties.renderingMode() == glc::PrimitiveSelected) && !GLC_State::isInSelectionMode()
 	&& !renderProperties.setOfSelectedPrimitiveIdIsEmpty())
 	{
 		m_CurrentLod= 0;
@@ -1076,7 +1076,7 @@ void GLC_Mesh::setClientState()
 
 void GLC_Mesh::restoreClientState(GLC_Context *pContext)
 {
-    if (m_ColorPearVertex && !m_IsSelected && !GLC_Context::current()->isInSelectionMode())
+    if (m_ColorPearVertex && !m_IsSelected && !GLC_State::isInSelectionMode())
     {
         pContext->glcDisableColorClientState();
         pContext->glcEnableColorMaterial(false);
@@ -1095,7 +1095,7 @@ void GLC_Mesh::restoreClientState(GLC_Context *pContext)
 
 void GLC_Mesh::drawMeshWire(const GLC_RenderProperties& renderProperties, GLC_Context *pContext)
 {
-    if (!GLC_Context::current()->isInSelectionMode())
+    if (!GLC_State::isInSelectionMode())
     {
         pContext->glcEnableLighting(false);
         // Set polyline colors
@@ -1290,9 +1290,8 @@ void GLC_Mesh::moveIndexToMeshDataLod()
 // The normal display loop
 void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
-    const bool isInSelectionMode= GLC_Context::current()->isInSelectionMode();
 	const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
-    if ((!m_IsSelected || !isTransparent) || GLC_Context::current()->isInSelectionMode())
+    if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
 	{
 		LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
@@ -1304,7 +1303,7 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
 			bool materialIsrenderable = (pCurrentMaterial->isTransparent() == isTransparent);
 
 			// Choose the material to render
-            if ((materialIsrenderable || m_IsSelected) && !isInSelectionMode)
+            if ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode())
 	    	{
 				// Execute current material
 				pCurrentMaterial->glExecute();
@@ -1313,7 +1312,7 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
 			}
 
 	   		// Choose the primitives to render
-            if (m_IsSelected || isInSelectionMode || materialIsrenderable)
+            if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
 			{
 
 				if (vboIsUsed)
