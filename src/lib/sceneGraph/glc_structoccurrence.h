@@ -298,7 +298,7 @@ public:
 
 	//! Exchange the occurrence at index position i with the occurrence at index position j
     /*! This function assumes that both i and j are at least 0 but less than childCount().*/
-	void swap(int i, int j);
+    void swap(int oldPos, int newPos);
 
 //@}
 

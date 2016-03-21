@@ -954,9 +954,9 @@ void GLC_StructOccurrence::makeRigid()
 	updateChildrenAbsoluteMatrix();
 }
 
-void GLC_StructOccurrence::swap(int i, int j)
+void GLC_StructOccurrence::swap(int oldPos, int newPos)
 {
-	Q_ASSERT(i != j);
+    Q_ASSERT(oldPos != newPos);
 
 	GLC_StructReference* pRef= this->structReference();
     QList<GLC_StructOccurrence*> occurrences= pRef->listOfStructOccurrence();
@@ -964,11 +964,10 @@ void GLC_StructOccurrence::swap(int i, int j)
 	for (int i= 0; i < count; ++i)
 	{
         GLC_StructOccurrence* pOcc= occurrences.at(i);
-		Q_ASSERT(i <= pOcc->m_Childs.count());
-		Q_ASSERT(j <= pOcc->m_Childs.count());
-		pOcc->m_Childs.swap(i, j);
+        Q_ASSERT(oldPos <= pOcc->m_Childs.count());
+        Q_ASSERT(newPos <= pOcc->m_Childs.count());
+        pOcc->m_Childs.swap(oldPos, newPos);
 	}
-
 }
 
 //////////////////////////////////////////////////////////////////////
