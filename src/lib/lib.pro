@@ -74,6 +74,16 @@ HEADERS_LIB3DS +=   3rdparty/lib3ds/atmosphere.h \
            
 HEADERS_GLEXT += 3rdparty/glext/glext.h
 
+HEADERS_CLIP2TR +=  3rdparty/clip2tri/clip2tri/clip2tri.h \
+                    3rdparty/clip2tri/clipper/clipper.hpp \
+                    3rdparty/clip2tri/poly2tri/common/shapes.h \
+                    3rdparty/clip2tri/poly2tri/common/utils.h \
+                    3rdparty/clip2tri/poly2tri/sweep/advancing_front.h \
+                    3rdparty/clip2tri/poly2tri/sweep/cdt.h \
+                    3rdparty/clip2tri/poly2tri/sweep/sweep.h \
+                    3rdparty/clip2tri/poly2tri/sweep/sweep_context.h \
+                    3rdparty/clip2tri/poly2tri/poly2tri.h
+
 HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
                         maths/glc_vector2d.h \
                         maths/glc_vector2df.h \
@@ -214,7 +224,7 @@ HEADERS_GLC_QML +=      qml/glc_quickitem.h \
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
-HEADERS += $${HEADERS_GLC_QML}
+HEADERS += $${HEADERS_GLC_QML} $${HEADERS_CLIP2TR}
 		   
 SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/compress.c \
@@ -261,6 +271,15 @@ SOURCES += 3rdparty/lib3ds/atmosphere.c \
            3rdparty/lib3ds/vector.c \
            3rdparty/lib3ds/viewport.c
    
+
+SOURCES += 3rdparty/clip2tri/clip2tri/clip2tri.cpp \
+            3rdparty/clip2tri/clipper/clipper.cpp \
+            3rdparty/clip2tri/poly2tri/common/shapes.cc \
+            3rdparty/clip2tri/poly2tri/sweep/advancing_front.cc \
+            3rdparty/clip2tri/poly2tri/sweep/cdt.cc \
+            3rdparty/clip2tri/poly2tri/sweep/sweep.cc \
+            3rdparty/clip2tri/poly2tri/sweep/sweep_context.cc
+
 SOURCES +=	maths/glc_matrix4x4.cpp \
                 maths/glc_vector4d.cpp \
                 maths/glc_interpolator.cpp \

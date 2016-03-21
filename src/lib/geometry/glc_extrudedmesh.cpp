@@ -161,14 +161,14 @@ void GLC_ExtrudedMesh::createMesh()
         GLfloatVector face1Normals= baseFaceNormals();
         IndexList face1Index;
         const GLuint count= m_Points.count();
-        for (GLuint i= 0; i < (count + 1); ++i)
+        for (GLuint i= 0; i < count; ++i)
         {
-            face1Index.append(i % count);
+            face1Index.append(i);
         }
         vertices+= face1Vertices;
         normals+= face1Normals;
         Q_ASSERT(vertices.size() == normals.size());
-        glc::triangulatePolygon(&face1Index, vertices.toList());
+        glc::triangulatePolygonClip2TRi(&face1Index, vertices.toList());
         addTriangles(pMaterial, face1Index);
     }
 
@@ -179,14 +179,14 @@ void GLC_ExtrudedMesh::createMesh()
         IndexList face2Index;
         const int offset= vertices.size() / 3;
         const GLuint count= m_Points.count();
-        for (GLuint i= 0; i < (count + 1); ++i)
+        for (GLuint i= 0; i < count; ++i)
         {
-            face2Index.append(offset + (i % count));
+            face2Index.append(offset + i);
         }
         vertices+= face2Vertices;
         normals+= face2Normals;
         Q_ASSERT(vertices.size() == normals.size());
-        glc::triangulatePolygon(&face2Index, vertices.toList());
+        glc::triangulatePolygonClip2TRi(&face2Index, vertices.toList());
         addTriangles(pMaterial, face2Index);
     }
 

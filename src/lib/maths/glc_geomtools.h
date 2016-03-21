@@ -83,9 +83,19 @@ namespace glc
 	//! Return true if the polygon is couterclockwise ordered
 	GLC_LIB_EXPORT bool isCounterclockwiseOrdered(const QList<GLC_Point2d>&);
 
-	//! Triangulate a polygon return true if the polygon is convex
+    //! Triangulate a polygon
 	/*! If the polygon is convex the returned index is a fan*/
 	GLC_LIB_EXPORT void triangulatePolygon(QList<GLuint>*, const QList<float>&);
+
+    //! Triangulate a polygon and return the computed normal of triangles
+    /*! If the polygon is convex the returned index is a fan*/
+    GLC_LIB_EXPORT GLC_Vector3d triangulatePolygonClip2TRi(QList<GLuint>*, const QList<float>&);
+
+    GLC_LIB_EXPORT bool triangleIsCCW(const GLC_Point3d &p1, const GLC_Point3d &p2, const GLC_Point3d &p3, const GLC_Vector3d& normal);
+
+    GLC_LIB_EXPORT GLC_Vector3d triangleNormal(const GLC_Point3d &p1, const GLC_Point3d &p2, const GLC_Point3d &p3);
+
+    GLC_LIB_EXPORT QList<GLC_uint> reverseTriangleIndexWindingOrder(const QList<GLC_uint>& index);
 
 	//! Return true if the given 3d line is intersected with the given plane
 	/*! If there is an intersection point is set to the given 3d point

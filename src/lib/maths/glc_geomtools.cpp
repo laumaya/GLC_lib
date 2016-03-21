@@ -24,6 +24,7 @@
 
 #include "glc_geomtools.h"
 #include "glc_matrix4x4.h"
+#include "../3rdparty/clip2tri/clip2tri/clip2tri.h"
 
 #include <QtGlobal>
 
@@ -781,6 +782,116 @@ QList<GLC_Point2d> glc::normalyzePolygon(const QList<GLC_Point2d>& polygon)
 
         const GLC_Point2d result(temp.x() / range.x(), temp.y() / range.y());
         subject.append(result);
+    }
+
+    return subject;
+}
+
+GLC_Vector3d glc::triangulatePolygonClip2TRi(QList<GLuint> *pIndexList, const QList<float> &bulkList)
+{
+    // Get the polygon vertice
+    QList<GLC_Point3d> originPoints;
+    const int size= pIndexList->size();
+    for (int i= 0; i < size; ++i)
+    {
+        const int currentIndex= pIndexList->at(i);
+        const GLC_Point3d currentPoint= GLC_Point3d(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
+        originPoints.append(currentPoint);
+    }
+
+    //-------------- Change frame to mach polygon plane
+    // Compute face normal
+    const GLC_Point3d p1(originPoints[0]);
+    const GLC_Point3d p2(originPoints[1]);
+    const GLC_Point3d p3(originPoints[2]);
+
+    GLC_Vector3d normal(triangleNormal(p1, p2, p3));
+
+    // Create the transformation matrix
+    GLC_Matrix4x4 transformation;
+
+    GLC_Vector3d rotationAxis(normal ^ glc::Z_AXIS);
+    if (!rotationAxis.isNull())
+    {
+        const double angle= acos(normal * glc::Z_AXIS);
+        transformation.setMatRot(rotationAxis, angle);
+    }
+    else if (glc::compare(Z_AXIS.inverted(), normal))
+    {
+        transformation.setMatRot(glc::X_AXIS, glc::PI);
+    }
+
+    QList<GLC_Point2d> polygon;
+    vector<c2t::Point> boundingPolygon(size);
+    // Transform polygon vertexs
+    for (int i=0; i < size; ++i)
+    {
+        originPoints[i]= transformation * originPoints[i];
+        // Create 2d vector
+
+        GLC_Point2d currentPoint= originPoints[i].toVector2d(Z_AXIS);
+        polygon.append(currentPoint);
+        c2t::Point point;
+        point.x= currentPoint.x();
+        point.y= currentPoint.y();
+        boundingPolygon[i]= point;
+    }
+
+    vector<vector<c2t::Point> > inputPolygons;
+    vector<c2t::Point> outputTriangles;  // Every 3 points is a triangle
+
+    c2t::clip2tri clip2tri;
+    clip2tri.triangulate(inputPolygons, outputTriangles, boundingPolygon);
+
+    QList<GLuint> oldIndex(*pIndexList);
+    pIndexList->clear();
+    const int count= outputTriangles.size();
+    for (int i= 0; i < count; ++i)
+    {
+        const GLC_Point2d point(outputTriangles.at(i).x, outputTriangles.at(i).y);
+        for (int j= 0; j < size ; ++j)
+        {
+            if (glc::compare(point, (polygon.at(j))))
+            {
+                pIndexList->append(oldIndex.at(j));
+                break;
+            }
+        }
+    }
+    Q_ASSERT(pIndexList->size() == count);
+
+    return normal;
+}
+
+bool glc::triangleIsCCW(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3, const GLC_Vector3d& normal)
+{
+    const GLC_Vector3d computedNormal(triangleNormal(p1, p2, p3));
+
+    bool subject= glc::compare(computedNormal, normal);
+
+    return subject;
+}
+
+GLC_Vector3d glc::triangleNormal(const GLC_Point3d &p1, const GLC_Point3d &p2, const GLC_Point3d &p3)
+{
+    const GLC_Vector3d edge1(p2 - p1);
+    const GLC_Vector3d edge2(p3 - p2);
+
+    GLC_Vector3d subject(edge1 ^ edge2);
+    subject.normalize();
+
+    return subject;
+}
+
+QList<GLC_uint> glc::reverseTriangleIndexWindingOrder(const QList<GLC_uint>& index)
+{
+    QList<GLC_uint> subject;
+    const int count= index.count();
+    for (int i= 0; i < count; i+=3)
+    {
+        subject.append(index.at(i));
+        subject.append(index.at(i + 2));
+        subject.append(index.at(i + 1));
     }
 
     return subject;

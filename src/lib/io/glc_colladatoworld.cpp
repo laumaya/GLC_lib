@@ -1153,7 +1153,7 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 		// Triangulate the current polygon if the polygon as more than 3 vertice
 		if (polygonSize > 3)
 		{
-			glc::triangulatePolygon(&onePolygonIndex, m_pMeshInfo->m_Datas.at(VERTEX));
+            glc::triangulatePolygonClip2TRi(&onePolygonIndex, m_pMeshInfo->m_Datas.at(VERTEX));
 		}
 		// Add index to the mesh info
 		//Q_ASSERT(not onePolygonIndex.isEmpty());
