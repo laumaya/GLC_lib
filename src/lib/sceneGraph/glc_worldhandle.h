@@ -84,9 +84,13 @@ public:
         return m_OccurrenceHash.value(id);
 	}
 
-    //! Return the list off occurrences
+    //! Return the list of occurrences
     inline QList<GLC_StructOccurrence*> occurrences() const
     {return m_OccurrenceHash.values();}
+
+    //! Return the list of occurrences id
+    inline QList<GLC_uint> occurrencesId() const
+    {return m_OccurrenceHash.keys();}
 
     //! Return the number of occurrence
     inline int numberOfOccurrence() const

@@ -140,6 +140,10 @@ public:
 	inline QList<GLC_StructOccurrence*> listOfOccurrence() const
 	{return m_pWorldHandle->occurrences();}
 
+    //! Return the list of occurrences id
+    inline QList<GLC_uint> occurrencesId() const
+    {return m_pWorldHandle->occurrencesId();}
+
 	//! Return the number of occurrence
 	inline int numberOfOccurrence() const
 	{return m_pWorldHandle->numberOfOccurrence();}

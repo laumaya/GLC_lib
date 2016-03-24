@@ -938,20 +938,20 @@ void GLC_StructOccurrence::setReference(GLC_StructReference* pRef)
 	m_pStructInstance->setReference(pRef);
 }
 
-void GLC_StructOccurrence::makeFlexible(const GLC_Matrix4x4& relativeMatrix)
+void GLC_StructOccurrence::makeFlexible(const GLC_Matrix4x4& relativeMatrix, bool update)
 {
 	delete m_pRelativeMatrix;
 	m_pRelativeMatrix= new GLC_Matrix4x4(relativeMatrix);
 
-	updateChildrenAbsoluteMatrix();
+    if (update) updateChildrenAbsoluteMatrix();
 }
 
-void GLC_StructOccurrence::makeRigid()
+void GLC_StructOccurrence::makeRigid(bool update)
 {
 	delete m_pRelativeMatrix;
 	m_pRelativeMatrix= NULL;
 
-	updateChildrenAbsoluteMatrix();
+    if (update) updateChildrenAbsoluteMatrix();
 }
 
 void GLC_StructOccurrence::swap(int oldPos, int newPos)
