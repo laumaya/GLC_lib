@@ -39,6 +39,7 @@ public:
 	GLWidget(QWidget *p_parent);
 	~GLWidget();
 
+    void doRender();
 private:
 	void initializeGL();
 	void paintGL();

@@ -123,8 +123,14 @@ public:
 	//!Create a GLC_Rectangle
 	GLC_3DRep createRectangle(double, double);
 
+    //!Create a GLC_Rectangle
+    GLC_3DRep createDisc(double radius);
+
 	//! Create a GLC_Rectangle from the given 3d point, normal and the given lenght
 	GLC_3DViewInstance createRectangle(const GLC_Point3d& point, const GLC_Vector3d& normal, double l1, double l2);
+
+    //! Create a GLC_Rectangle from the given 3d point, normal and the given lenght
+    GLC_3DViewInstance createDisc(const GLC_Point3d& point, const GLC_Vector3d& normal, double radius);
 
 	//! Create the representation of a cutting from the given 3d point, normal, lenght and material
 	GLC_3DViewInstance createCuttingPlane(const GLC_Point3d& point, const GLC_Vector3d& normal, double l1, double l2, GLC_Material* pMat);

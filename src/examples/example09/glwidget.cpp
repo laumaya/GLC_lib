@@ -70,6 +70,14 @@ GLWidget::~GLWidget()
 
 }
 
+void GLWidget::doRender()
+{
+    if (!m_MotionTimer.isActive())
+    {
+        updateGL();
+    }
+}
+
 void GLWidget::initializeGL()
 {
     // For VSYNC problem under Mac OS X

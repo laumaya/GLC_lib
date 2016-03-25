@@ -103,7 +103,7 @@ void GLWidget::paintGL()
 		// Display the cylinder
         m_Collection.render(0, glc::ShadingFlag);
 
-        m_GlView.renderText(m_Cylinder.boundingBox().center(), "Hello Qt I'm Laumaya", Qt::blue);
+        m_GlView.renderText(m_Cylinder.boundingBox().center(), "Hello Qt I'm Laumaya", Qt::black, QFont(), devicePixelRatio());
 
         // Display UI Info (orbit circle)
         m_MoverController.drawActiveMoverRep();

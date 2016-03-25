@@ -30,7 +30,7 @@ GLC_Disc::GLC_Disc(double radius, double angle, int discretization)
 , m_Angle(angle)
 , m_Step(0)
 {
-	createMeshAndWire();
+
 }
 
 GLC_Disc::GLC_Disc(const GLC_Disc& disc)
@@ -40,7 +40,7 @@ GLC_Disc::GLC_Disc(const GLC_Disc& disc)
 , m_Angle(disc.m_Angle)
 , m_Step(disc.m_Step)
 {
-	createMeshAndWire();
+
 }
 
 GLC_Disc::~GLC_Disc()
@@ -167,8 +167,8 @@ void GLC_Disc::createMeshAndWire()
 		normalsVector[3 * i + 1]= 0.0f;
 		normalsVector[3 * i + 2]= 1.0f;
 
-		texelVector[2 * i]= texelVector[i];
-		texelVector[2 * i + 1]= 0.0f;
+        texelVector[2 * i]= (cosArray[i] / m_Radius) * 0.5 + 0.5;
+        texelVector[2 * i + 1]= (sinArray[i] / m_Radius) * 0.5 + 0.5;
 
 		wireData[3 * i]= cosArray[i];
 		wireData[3 * i + 1]= sinArray[i];

@@ -438,7 +438,7 @@ QList<GLC_Point3d> GLC_Viewport::unproject(const QList<int>& list, GLenum buffer
     return unprojectedPoints;
 }
 
-void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, const QColor &color, const QFont &font)
+void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, const QColor &color, const QFont &font, int deviceRatio)
 {
     m_TextRenderingCollection.clear();
     if (!text.isEmpty())
@@ -475,7 +475,7 @@ void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, con
         GLC_3DViewInstance rectangle= GLC_Factory::instance()->createRectangle(width, height);
 
         GLC_Matrix4x4 scaleMatrix;
-        scaleMatrix.setMatScaling(ratio, ratio, ratio);
+        scaleMatrix.setMatScaling(ratio * deviceRatio, ratio * deviceRatio, ratio * deviceRatio);
         rectangle.setMatrix(scaleMatrix);
         rectangle.multMatrix(invertedViewMatrix);
         rectangle.multMatrix(GLC_Matrix4x4(point));

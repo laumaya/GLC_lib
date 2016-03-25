@@ -213,7 +213,7 @@ public:
 
     //! Render the given string into the current OpenGL context
     /*! x and y are specified in window coordinates*/
-    void renderText(const GLC_Point3d &point, const QString& text, const QColor& color= Qt::white, const QFont& font= QFont());
+    void renderText(const GLC_Point3d &point, const QString& text, const QColor& color= Qt::white, const QFont& font= QFont(), int deviceRatio= 1);
 
 //@}
 

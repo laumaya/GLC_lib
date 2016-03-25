@@ -406,6 +406,8 @@ private:
     //! Flag to know if zip mutex must be used
     bool m_UseZipMutex;
 
+	unsigned int m_productGroupRootId;
+
 };
 
 QXmlStreamReader::TokenType GLC_3dxmlToWorld::readNext()
