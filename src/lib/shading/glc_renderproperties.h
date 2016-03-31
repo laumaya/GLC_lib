@@ -166,6 +166,8 @@ public:
 	//! Return true if this rendering properties has defaut value
 	bool isDefault() const;
 
+    bool selectable() const
+    {return m_Selectable;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -238,7 +240,8 @@ public:
 	//! Unused the specified material
 	inline void unUseMaterial(GLC_Material*);
 
-
+    void setSelectable(bool selectable)
+    {m_Selectable= selectable;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -282,6 +285,7 @@ private:
 	//! The Hash table of overwrite primitive maped to the number of usages in this render properties
 	QHash<GLC_Material*, int> m_MaterialsUsage;
 
+    bool m_Selectable;
 };
 
 // Select the instance

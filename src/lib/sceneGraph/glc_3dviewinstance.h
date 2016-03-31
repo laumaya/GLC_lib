@@ -40,6 +40,7 @@
 #include "../glc_config.h"
 
 class GLC_Viewport;
+class GLC_RenderState;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_3DViewInstance
@@ -289,6 +290,9 @@ public:
 	//! Set VBO usage
 	void setVboUsage(bool usage);
 
+    //! set this instance rendering state (instance take owner)
+    void setRenderState(GLC_RenderState* pRenderState)
+    {m_pRenderState= pRenderState;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -367,13 +371,14 @@ private:
 	//! vector of Flag to know if geometies of this instance are viewable
 	QVector<bool> m_ViewableGeomFlag;
 
+    //! This instance rendering state
+    GLC_RenderState* m_pRenderState;
+
 	//! A Mutex
     static QMutex m_3DViewInstanceMutex;
 
 	//! The global default LOD
 	static int m_GlobalDefaultLOD;
-
-
 };
 
 // Return true if the all instance's mesh are transparent

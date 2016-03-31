@@ -56,6 +56,8 @@
 
 class GLC_WorldReaderHandler;
 class GLC_WorldReaderPlugin;
+class QColor;
+class QFont;
 
 #include "glc_config.h"
 //////////////////////////////////////////////////////////////////////
@@ -125,6 +127,9 @@ public:
 
     //!Create a GLC_Rectangle
     GLC_3DRep createDisc(double radius);
+
+    //! Create a GLC_Text
+    GLC_3DRep createText(const QString& text, const QColor &color= Qt::black, const QFont &font= QFont());
 
 	//! Create a GLC_Rectangle from the given 3d point, normal and the given lenght
 	GLC_3DViewInstance createRectangle(const GLC_Point3d& point, const GLC_Vector3d& normal, double l1, double l2);

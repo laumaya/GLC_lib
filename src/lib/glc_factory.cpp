@@ -23,6 +23,10 @@
 
 //! \file glc_factory.cpp implementation of the GLC_Factory class.
 
+
+#include <QColor>
+#include <QFont>
+
 #include "geometry/glc_disc.h"
 
 #include "glc_factory.h"
@@ -42,6 +46,8 @@
 #include "viewport/glc_tsrmover.h"
 #include "maths/glc_line3d.h"
 #include "maths/glc_geomtools.h"
+
+#include "geometry/glc_text.h"
 
 #include "glc_fileformatexception.h"
 
@@ -185,6 +191,12 @@ GLC_3DRep GLC_Factory::createRectangle(double l1, double l2)
 GLC_3DRep GLC_Factory::createDisc(double radius)
 {
     GLC_3DRep subject(new GLC_Disc(radius));
+    return subject;
+}
+
+GLC_3DRep GLC_Factory::createText(const QString &text, const QColor& color, const QFont& font)
+{
+    GLC_3DRep subject(new GLC_Text(text, color, font));
     return subject;
 }
 

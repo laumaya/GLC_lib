@@ -444,7 +444,6 @@ void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, con
     if (!text.isEmpty())
     {
         QFontMetrics fontMetrics(font);
-        const double width= fontMetrics.width(text);
         const double height= fontMetrics.height();
 
         // Compute the ratio betwwen screen and world
@@ -454,39 +453,18 @@ void GLC_Viewport::renderText(const GLC_Point3d& point, const QString &text, con
         const GLC_Vector2d projectedPoint2(project((point + vector), false));
         const double ratio= height / (projectedPoint2 - projectedPoint1).length();
 
-        QPixmap pixmap(width, height);
-        pixmap.fill(Qt::transparent);
-        QPainter painter;
+        GLC_3DViewInstance textInstance= GLC_Factory::instance()->createText(text, color, font);
 
-        painter.begin(&pixmap);
-        painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::TextAntialiasing);
-        painter.setFont(font);
-        painter.setPen(color);
-        painter.drawText(0, fontMetrics.ascent(), text);
-        painter.end();
+        GLC_Matrix4x4 matrix;
+        matrix.setMatScaling(ratio * deviceRatio, ratio * deviceRatio, ratio * deviceRatio);
+        matrix= GLC_Matrix4x4(point) * invertedViewMatrix * matrix;
+        textInstance.setMatrix(matrix);
+        m_TextRenderingCollection.add(textInstance);
 
-        QImage image= pixmap.toImage();
-
-        GLC_Texture *pTexture= new GLC_Texture(image);
-        GLC_Material* pMaterial= new GLC_Material(Qt::black);
-        pMaterial->setTexture(pTexture);
-        pMaterial->setOpacity(0.99);
-
-        GLC_3DViewInstance rectangle= GLC_Factory::instance()->createRectangle(width, height);
-
-        GLC_Matrix4x4 scaleMatrix;
-        scaleMatrix.setMatScaling(ratio * deviceRatio, ratio * deviceRatio, ratio * deviceRatio);
-        rectangle.setMatrix(scaleMatrix);
-        rectangle.multMatrix(invertedViewMatrix);
-        rectangle.multMatrix(GLC_Matrix4x4(point));
-        rectangle.geomAt(0)->addMaterial(pMaterial);
-        m_TextRenderingCollection.add(rectangle);
-
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
         glDisable(GL_DEPTH_TEST);
         m_TextRenderingCollection.render(0, glc::TransparentRenderFlag);
         glEnable(GL_DEPTH_TEST);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
         m_TextRenderingCollection.clear();
     }
 }

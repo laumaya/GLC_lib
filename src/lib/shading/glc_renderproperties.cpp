@@ -25,38 +25,40 @@
 
 // Default constructor
 GLC_RenderProperties::GLC_RenderProperties()
-: m_Uid(glc::GLC_GenUserID())
-, m_IsSelected(false)
-, m_PolyFace(GL_FRONT_AND_BACK)
-, m_PolyMode(GL_FILL)
-, m_RenderMode(glc::NormalRenderMode)
-, m_SavedRenderMode(m_RenderMode)
-, m_pOverwriteMaterial(NULL)
-, m_OverwriteOpacity(-1.0f)
-, m_pBodySelectedPrimitvesId(NULL)
-, m_pOverwritePrimitiveMaterialMaps(NULL)
-, m_RenderingFlag(glc::ShadingFlag)
-, m_CurrentBody(0)
-, m_MaterialsUsage()
+    : m_Uid(glc::GLC_GenUserID())
+    , m_IsSelected(false)
+    , m_PolyFace(GL_FRONT_AND_BACK)
+    , m_PolyMode(GL_FILL)
+    , m_RenderMode(glc::NormalRenderMode)
+    , m_SavedRenderMode(m_RenderMode)
+    , m_pOverwriteMaterial(NULL)
+    , m_OverwriteOpacity(-1.0f)
+    , m_pBodySelectedPrimitvesId(NULL)
+    , m_pOverwritePrimitiveMaterialMaps(NULL)
+    , m_RenderingFlag(glc::ShadingFlag)
+    , m_CurrentBody(0)
+    , m_MaterialsUsage()
+    , m_Selectable(true)
 {
 
 }
 
 // Copy constructor
 GLC_RenderProperties::GLC_RenderProperties(const GLC_RenderProperties& renderProperties)
-: m_Uid(glc::GLC_GenUserID())
-, m_IsSelected(renderProperties.m_IsSelected)
-, m_PolyFace(renderProperties.m_PolyFace)
-, m_PolyMode(renderProperties.m_PolyMode)
-, m_RenderMode(renderProperties.m_RenderMode)
-, m_SavedRenderMode(renderProperties.m_SavedRenderMode)
-, m_pOverwriteMaterial(renderProperties.m_pOverwriteMaterial)
-, m_OverwriteOpacity(renderProperties.m_OverwriteOpacity)
-, m_pBodySelectedPrimitvesId(NULL)
-, m_pOverwritePrimitiveMaterialMaps(NULL)
-, m_RenderingFlag(renderProperties.m_RenderingFlag)
-, m_CurrentBody(renderProperties.m_CurrentBody)
-, m_MaterialsUsage(renderProperties.m_MaterialsUsage)
+    : m_Uid(glc::GLC_GenUserID())
+    , m_IsSelected(renderProperties.m_IsSelected)
+    , m_PolyFace(renderProperties.m_PolyFace)
+    , m_PolyMode(renderProperties.m_PolyMode)
+    , m_RenderMode(renderProperties.m_RenderMode)
+    , m_SavedRenderMode(renderProperties.m_SavedRenderMode)
+    , m_pOverwriteMaterial(renderProperties.m_pOverwriteMaterial)
+    , m_OverwriteOpacity(renderProperties.m_OverwriteOpacity)
+    , m_pBodySelectedPrimitvesId(NULL)
+    , m_pOverwritePrimitiveMaterialMaps(NULL)
+    , m_RenderingFlag(renderProperties.m_RenderingFlag)
+    , m_CurrentBody(renderProperties.m_CurrentBody)
+    , m_MaterialsUsage(renderProperties.m_MaterialsUsage)
+    , m_Selectable(renderProperties.m_Selectable)
 {
 	// Update overwrite material usage
 	if (NULL != m_pOverwriteMaterial)
@@ -117,6 +119,7 @@ bool GLC_RenderProperties::operator==(const GLC_RenderProperties &other) const
         subject= subject && (m_CurrentBody == other.m_CurrentBody);
         subject= subject && (m_RenderingFlag == other.m_RenderingFlag);
         subject= subject && (m_RenderMode == other.m_RenderMode);
+        subject= subject && (m_Selectable == other.m_Selectable);
         subject= subject && fuzzyEquals(other);
     }
 
@@ -135,7 +138,8 @@ bool GLC_RenderProperties::fuzzyEquals(const GLC_RenderProperties &other) const
         subject= subject && (m_pOverwriteMaterial == other.m_pOverwriteMaterial);
         subject= subject && (m_OverwriteOpacity == other.m_OverwriteOpacity);
         subject= subject && (m_pBodySelectedPrimitvesId == other.m_pBodySelectedPrimitvesId);
-        subject= subject && (m_pOverwritePrimitiveMaterialMaps == other.m_pOverwritePrimitiveMaterialMaps);        
+        subject= subject && (m_pOverwritePrimitiveMaterialMaps == other.m_pOverwritePrimitiveMaterialMaps);
+        subject= subject && (m_Selectable == other.m_Selectable);
     }
 
     return subject;
@@ -255,6 +259,8 @@ GLC_RenderProperties &GLC_RenderProperties::fuzzyAssignement(const GLC_RenderPro
             }
         }
     }
+
+    m_Selectable= other.m_Selectable;
 
     return *this;
 

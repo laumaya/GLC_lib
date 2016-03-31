@@ -147,7 +147,8 @@ HEADERS_GLC_GEOMETRY += geometry/glc_geometry.h \
                         geometry/glc_cone.h \
                         geometry/glc_sphere.h \
                         geometry/glc_pointcloud.h \
-                        geometry/glc_extrudedmesh.h
+                        geometry/glc_extrudedmesh.h \
+                        geometry/glc_text.h
 
 HEADERS_GLC_SHADING +=  shading/glc_material.h \
                         shading/glc_texture.h \
@@ -201,7 +202,8 @@ HEADERS_GLC += glc_global.h \
                glc_contextmanager.h \
                glc_contextshareddata.h \
                glc_uniformshaderdata.h \
-               glc_selectionevent.h
+               glc_selectionevent.h \
+               glc_renderstate.h
            
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
                         3DWidget/glc_cuttingplane.h \
@@ -210,6 +212,7 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
                         3DWidget/glc_abstractmanipulator.h \
                         3DWidget/glc_pullmanipulator.h \
                         3DWidget/glc_rotationmanipulator.h \
+                        3DWidget/glc_planemanipulator.h \
                         3DWidget/glc_axis.h
 
 HEADERS_GLC_GLU +=	glu/glc_glu.h
@@ -335,7 +338,8 @@ SOURCES +=	geometry/glc_geometry.cpp \
                 geometry/glc_cone.cpp \
                 geometry/glc_sphere.cpp \
                 geometry/glc_pointcloud.cpp \
-                geometry/glc_extrudedmesh.cpp
+                geometry/glc_extrudedmesh.cpp \
+                geometry/glc_text.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -390,7 +394,8 @@ SOURCES +=	glc_global.cpp \
                 glc_contextmanager.cpp \
                 glc_contextshareddata.cpp \
                 glc_uniformshaderdata.cpp \
-                glc_selectionevent.cpp
+                glc_selectionevent.cpp \
+                glc_renderstate.cpp
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
                 3DWidget/glc_cuttingplane.cpp \
@@ -399,6 +404,7 @@ SOURCES +=	3DWidget/glc_3dwidget.cpp \
                 3DWidget/glc_abstractmanipulator.cpp \
                 3DWidget/glc_pullmanipulator.cpp \
                 3DWidget/glc_rotationmanipulator.cpp \
+                3DWidget/glc_planemanipulator.cpp \
                 3DWidget/glc_axis.cpp
 			
 SOURCES +=	glu/glc_project.cpp
@@ -526,7 +532,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_QuickViewHandler \
                GLC_OpenGLViewHandler \
                GLC_QuickSelection \
-               GLC_OpenGLViewWidget
+               GLC_OpenGLViewWidget \
+               GLC_Text
 
 include (../../install.pri)
 
@@ -571,6 +578,7 @@ INSTALLS += include
 
 
 DISTFILES += \
-    ../../sonar-project.properties
+    ../../sonar-project.properties \
+    GLC_Text
 
 
