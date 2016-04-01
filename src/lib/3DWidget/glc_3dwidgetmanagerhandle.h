@@ -137,6 +137,8 @@ public:
 	//! Set the visibility of the given 3D widget id
 	void setWidgetVisible(GLC_uint id, bool visible);
 
+    //! Update all 3dwidget
+    void update();
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Interaction Functions*/

@@ -107,7 +107,17 @@ void GLC_3DWidgetManagerHandle::setWidgetVisible(GLC_uint id, bool visible)
 {
 	if (id == m_Active3DWidgetId) m_Active3DWidgetId= 0;
 	Q_ASSERT(m_3DWidgetHash.contains(id));
-	m_3DWidgetHash.value(id)->setVisible(visible);
+    m_3DWidgetHash.value(id)->setVisible(visible);
+}
+
+void GLC_3DWidgetManagerHandle::update()
+{
+    QHash<GLC_uint, GLC_3DWidget*>::iterator iWidget= m_3DWidgetHash.begin();
+    while (m_3DWidgetHash.constEnd() != iWidget)
+    {
+        iWidget.value()->updateWidgetRep();
+        ++iWidget;
+    }
 }
 
 glc::WidgetEventFlag GLC_3DWidgetManagerHandle::moveEvent(GLC_uint selectedId, const GLC_Point3d &pos)

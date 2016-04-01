@@ -533,7 +533,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_OpenGLViewHandler \
                GLC_QuickSelection \
                GLC_OpenGLViewWidget \
-               GLC_Text
+               GLC_Text \
+               GLC_PlaneManipulator
 
 include (../../install.pri)
 
@@ -578,7 +579,7 @@ INSTALLS += include
 
 
 DISTFILES += \
-    ../../sonar-project.properties \
-    GLC_Text
+    ../../sonar-project.properties
+
 
 

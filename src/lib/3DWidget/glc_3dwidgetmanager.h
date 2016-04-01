@@ -104,6 +104,10 @@ public:
 	inline void setWidgetVisible(GLC_uint id, bool visible)
 	{m_pWidgetManagerHandle->setWidgetVisible(id, visible);}
 
+    //! Update all 3dwidget
+    void update()
+    {m_pWidgetManagerHandle->update();}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Interaction Functions*/

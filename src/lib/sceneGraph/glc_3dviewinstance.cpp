@@ -345,6 +345,7 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
         GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
         pContext->glcPushMatrix();
         OpenglVisProperties();
+        m_pRenderState->modifyOpenGLState();
 
         // Change front face orientation if this instance absolute matrix is indirect
         if (m_AbsoluteMatrix.type() == GLC_Matrix4x4::Indirect)
@@ -355,10 +356,8 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
         {
             glColor3ubv(m_colorId); // D'ont use Alpha component
         }
-        else
-        {
-            m_pRenderState->modifyOpenGLState();
-        }
+
+
 
         if (useLod && (NULL != pView))
         {
@@ -406,10 +405,7 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
             glFrontFace(GL_CCW);
         }
 
-        if (!GLC_State::isInSelectionMode())
-        {
-            m_pRenderState->restoreOpenGLState();
-        }
+        m_pRenderState->restoreOpenGLState();
     }
 }
 
@@ -419,6 +415,7 @@ void GLC_3DViewInstance::renderForBodySelection()
 	Q_ASSERT(GLC_State::isInSelectionMode());
     if (m_RenderProperties.selectable())
     {
+        m_pRenderState->modifyOpenGLState();
         if (m_3DRep.isEmpty()) return;
 
         // Save previous rendering mode and set the rendering mode to BodySelection
@@ -446,6 +443,7 @@ void GLC_3DViewInstance::renderForBodySelection()
         m_RenderProperties.setRenderingMode(previousRenderMode);
         // Restore OpenGL Matrix
         pContext->glcPopMatrix();
+        m_pRenderState->restoreOpenGLState();
     }
 }
 
@@ -455,6 +453,7 @@ int GLC_3DViewInstance::renderForPrimitiveSelection(GLC_uint bodyId)
 	Q_ASSERT(GLC_State::isInSelectionMode());
     if (m_RenderProperties.selectable())
     {
+        m_pRenderState->modifyOpenGLState();
         if (m_3DRep.isEmpty()) return -1;
         // Save previous rendering mode and set the rendering mode to BodySelection
         glc::RenderMode previousRenderMode= m_RenderProperties.renderingMode();
@@ -484,6 +483,7 @@ int GLC_3DViewInstance::renderForPrimitiveSelection(GLC_uint bodyId)
 
         // Restore OpenGL Matrix
         pContext->glcPopMatrix();
+        m_pRenderState->restoreOpenGLState();
 
         return i;
     }
