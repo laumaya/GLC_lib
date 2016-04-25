@@ -32,6 +32,8 @@ INCLUDEPATH += ./3rdparty/zlib
 
 RESOURCES += glc_lib.qrc
 
+include (3rdparty/assimp/assimp.pri)
+
 # Input					
 
 HEADERS_QUAZIP +=   3rdparty/quazip/crypt.h \
@@ -48,7 +50,7 @@ HEADERS_QUAZIP +=   3rdparty/quazip/crypt.h \
                     3rdparty/quazip/quazipfile.h \
                     3rdparty/quazip/quazipfileinfo.h \
                     3rdparty/quazip/quazipnewinfo.h \
-                    3rdparty/quazip/unzip.h \
+                    3rdparty/quazip/qua_unzip.h \
                     3rdparty/quazip/zip.h
 
 HEADERS_LIB3DS +=   3rdparty/lib3ds/atmosphere.h \
@@ -75,14 +77,14 @@ HEADERS_LIB3DS +=   3rdparty/lib3ds/atmosphere.h \
 HEADERS_GLEXT += 3rdparty/glext/glext.h
 
 HEADERS_CLIP2TR +=  3rdparty/clip2tri/clip2tri/clip2tri.h \
-                    3rdparty/clip2tri/clipper/clipper.hpp \
-                    3rdparty/clip2tri/poly2tri/common/shapes.h \
-                    3rdparty/clip2tri/poly2tri/common/utils.h \
-                    3rdparty/clip2tri/poly2tri/sweep/advancing_front.h \
-                    3rdparty/clip2tri/poly2tri/sweep/cdt.h \
-                    3rdparty/clip2tri/poly2tri/sweep/sweep.h \
-                    3rdparty/clip2tri/poly2tri/sweep/sweep_context.h \
-                    3rdparty/clip2tri/poly2tri/poly2tri.h
+                    3rdparty/clip2tri/clipper/clip_clipper.hpp \
+                    3rdparty/clip2tri/poly2tri/common/clip_shapes.h \
+                    3rdparty/clip2tri/poly2tri/common/clip_utils.h \
+                    3rdparty/clip2tri/poly2tri/sweep/clip_advancing_front.h \
+                    3rdparty/clip2tri/poly2tri/sweep/clip_cdt.h \
+                    3rdparty/clip2tri/poly2tri/sweep/clip_sweep.h \
+                    3rdparty/clip2tri/poly2tri/sweep/clip_sweep_context.h \
+                    3rdparty/clip2tri/poly2tri/clip_poly2tri.h
 
 HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
                         maths/glc_vector2d.h \
@@ -252,7 +254,7 @@ SOURCES += 3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/quazipfile.cpp \
            3rdparty/quazip/quazipfileinfo.cpp \
            3rdparty/quazip/quazipnewinfo.cpp \
-           3rdparty/quazip/unzip.c \
+           3rdparty/quazip/qua_unzip.c \
            3rdparty/quazip/zip.c
 
 SOURCES += 3rdparty/lib3ds/atmosphere.c \
@@ -276,12 +278,12 @@ SOURCES += 3rdparty/lib3ds/atmosphere.c \
    
 
 SOURCES += 3rdparty/clip2tri/clip2tri/clip2tri.cpp \
-            3rdparty/clip2tri/clipper/clipper.cpp \
-            3rdparty/clip2tri/poly2tri/common/shapes.cc \
-            3rdparty/clip2tri/poly2tri/sweep/advancing_front.cc \
-            3rdparty/clip2tri/poly2tri/sweep/cdt.cc \
-            3rdparty/clip2tri/poly2tri/sweep/sweep.cc \
-            3rdparty/clip2tri/poly2tri/sweep/sweep_context.cc
+            3rdparty/clip2tri/clipper/clip_clipper.cpp \
+            3rdparty/clip2tri/poly2tri/common/clip_shapes.cc \
+            3rdparty/clip2tri/poly2tri/sweep/clip_advancing_front.cc \
+            3rdparty/clip2tri/poly2tri/sweep/clip_cdt.cc \
+            3rdparty/clip2tri/poly2tri/sweep/clip_sweep.cc \
+            3rdparty/clip2tri/poly2tri/sweep/clip_sweep_context.cc
 
 SOURCES +=	maths/glc_matrix4x4.cpp \
                 maths/glc_vector4d.cpp \

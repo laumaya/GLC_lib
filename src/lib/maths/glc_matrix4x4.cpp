@@ -23,7 +23,11 @@
 
 #include "glc_matrix4x4.h"
 
+#include <cmath>
+
 #include <QtDebug>
+
+using namespace std;
 
 GLC_Matrix4x4 GLC_Matrix4x4::frustumMatrix(double left, double right, double bottom, double top, double nearVal, double farVal)
 {
@@ -180,7 +184,7 @@ QQuaternion GLC_Matrix4x4::quaternion() const
 		}
 		else
 		{
-			if ((abs(rotMat.m_Matrix[0]) > abs(rotMat.m_Matrix[5])) &&  (abs(rotMat.m_Matrix[0]) > abs(rotMat.m_Matrix[15])))
+            if ((abs(rotMat.m_Matrix[0]) > abs(rotMat.m_Matrix[5])) &&  (abs(rotMat.m_Matrix[0]) > abs(rotMat.m_Matrix[15])))
 			{	// column 0 greater
 		        s= sqrt(1.0 + rotMat.m_Matrix[0] - rotMat.m_Matrix[5] - rotMat.m_Matrix[10]) * 2.0;
 

@@ -259,7 +259,7 @@ bool QuaZipFile::open(OpenMode mode, int *method, int *level, bool raw, const ch
         return false;
       }
     }
-    p->setZipError(unzOpenCurrentFile3(p->zip->getUnzFile(), method, level, (int)raw, password));
+    p->setZipError(qua_unzOpenCurrentFile3(p->zip->getUnzFile(), method, level, (int)raw, password));
     if(p->zipError==UNZ_OK) {
       setOpenMode(mode);
       p->raw=raw;
@@ -350,7 +350,7 @@ qint64 QuaZipFile::pos()const
       // QIODevice::pos() is broken for sequential devices,
       // but thankfully bytesAvailable() returns the number of
       // bytes buffered, so we know how far ahead we are.
-    return unztell(p->zip->getUnzFile()) - QIODevice::bytesAvailable();
+    return qua_unztell(p->zip->getUnzFile()) - QIODevice::bytesAvailable();
   else
     return p->writePos;
 }
@@ -368,7 +368,7 @@ bool QuaZipFile::atEnd()const
   if(openMode()&ReadOnly)
       // the same problem as with pos()
     return QIODevice::bytesAvailable() == 0
-        && unzeof(p->zip->getUnzFile())==1;
+        && qua_unzeof(p->zip->getUnzFile())==1;
   else
     return true;
 }
@@ -390,7 +390,7 @@ qint64 QuaZipFile::csize()const
   unz_file_info info_z;
   p->setZipError(UNZ_OK);
   if(p->zip==NULL||p->zip->getMode()!=QuaZip::mdUnzip) return -1;
-  p->setZipError(unzGetCurrentFileInfo(p->zip->getUnzFile(), &info_z, NULL, 0, NULL, 0, NULL, 0));
+  p->setZipError(qua_unzGetCurrentFileInfo(p->zip->getUnzFile(), &info_z, NULL, 0, NULL, 0, NULL, 0));
   if(p->zipError!=UNZ_OK)
     return -1;
   return info_z.compressed_size;
@@ -401,7 +401,7 @@ qint64 QuaZipFile::usize()const
   unz_file_info info_z;
   p->setZipError(UNZ_OK);
   if(p->zip==NULL||p->zip->getMode()!=QuaZip::mdUnzip) return -1;
-  p->setZipError(unzGetCurrentFileInfo(p->zip->getUnzFile(), &info_z, NULL, 0, NULL, 0, NULL, 0));
+  p->setZipError(qua_unzGetCurrentFileInfo(p->zip->getUnzFile(), &info_z, NULL, 0, NULL, 0, NULL, 0));
   if(p->zipError!=UNZ_OK)
     return -1;
   return info_z.uncompressed_size;
@@ -424,7 +424,7 @@ void QuaZipFile::close()
     return;
   }
   if(openMode()&ReadOnly)
-    p->setZipError(unzCloseCurrentFile(p->zip->getUnzFile()));
+    p->setZipError(qua_unzCloseCurrentFile(p->zip->getUnzFile()));
   else if(openMode()&WriteOnly)
     if(isRaw()) p->setZipError(zipCloseFileInZipRaw(p->zip->getZipFile(), p->uncompressedSize, p->crc));
     else p->setZipError(zipCloseFileInZip(p->zip->getZipFile()));
@@ -443,7 +443,7 @@ void QuaZipFile::close()
 qint64 QuaZipFile::readData(char *data, qint64 maxSize)
 {
   p->setZipError(UNZ_OK);
-  qint64 bytesRead=unzReadCurrentFile(p->zip->getUnzFile(), data, (unsigned)maxSize);
+  qint64 bytesRead=qua_unzReadCurrentFile(p->zip->getUnzFile(), data, (unsigned)maxSize);
   if (bytesRead < 0) {
     p->setZipError((int) bytesRead);
     return -1;

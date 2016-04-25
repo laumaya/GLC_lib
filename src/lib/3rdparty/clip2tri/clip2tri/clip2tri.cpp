@@ -7,12 +7,12 @@
  */
 
 #include "clip2tri.h"
-#include "../poly2tri/poly2tri.h"
+#include "../poly2tri/clip_poly2tri.h"
 
 #include <cstdio>
 
 
-using namespace p2t;
+using namespace p2tC2t;
 
 namespace c2t
 {
@@ -138,7 +138,7 @@ bool clip2tri::mergePolysToPolyTree(const vector<vector<Point> > &inputPolygons,
 
 
 // Delete all poly2tri points from a vector and clear the vector
-static void deleteAndClear(vector<p2t::Point*> &vec)
+static void deleteAndClear(vector<p2tC2t::Point*> &vec)
 {
    for(U32 i = 0; i < vec.size(); i++)
       delete vec[i];
@@ -187,9 +187,9 @@ bool clip2tri::triangulateComplex(vector<Point> &outputTriangles, const Path &ou
       const PolyTree &polyTree, bool ignoreFills, bool ignoreHoles)
 {
    // Keep track of memory for all the poly2tri objects we create
-   vector<p2t::CDT*> cdtRegistry;
-   vector<vector<p2t::Point*> > holesRegistry;
-   vector<vector<p2t::Point*> > polylinesRegistry;
+   vector<p2tC2t::CDT*> cdtRegistry;
+   vector<vector<p2tC2t::Point*> > holesRegistry;
+   vector<vector<p2tC2t::Point*> > polylinesRegistry;
 
 
    // Let's be tricky and add our outline to the root node (it should have none), it'll be
@@ -214,14 +214,14 @@ bool clip2tri::triangulateComplex(vector<Point> &outputTriangles, const Path &ou
          (!ignoreFills && !currentNode->IsHole()))
       {
          // Build up this polyline in poly2tri's format (downscale Clipper points)
-         vector<p2t::Point*> polyline;
+         vector<p2tC2t::Point*> polyline;
          for(U32 j = 0; j < currentNode->Contour.size(); j++)
-            polyline.push_back(new p2t::Point(F64(currentNode->Contour[j].X), F64(currentNode->Contour[j].Y)));
+            polyline.push_back(new p2tC2t::Point(F64(currentNode->Contour[j].X), F64(currentNode->Contour[j].Y)));
 
          polylinesRegistry.push_back(polyline);  // Memory
 
          // Set our polyline in poly2tri
-         p2t::CDT* cdt = new p2t::CDT(polyline);
+         p2tC2t::CDT* cdt = new p2tC2t::CDT(polyline);
          cdtRegistry.push_back(cdt);
 
          for(U32 j = 0; j < currentNode->Childs.size(); j++)
@@ -231,9 +231,9 @@ bool clip2tri::triangulateComplex(vector<Point> &outputTriangles, const Path &ou
             // Slightly modify the polygon to guarantee no duplicate points
             edgeShrink(childNode->Contour);
 
-            vector<p2t::Point*> hole;
+            vector<p2tC2t::Point*> hole;
             for(U32 k = 0; k < childNode->Contour.size(); k++)
-               hole.push_back(new p2t::Point(F64(childNode->Contour[k].X), F64(childNode->Contour[k].Y)));
+               hole.push_back(new p2tC2t::Point(F64(childNode->Contour[k].X), F64(childNode->Contour[k].Y)));
 
             holesRegistry.push_back(hole);  // Memory
 
@@ -244,10 +244,10 @@ bool clip2tri::triangulateComplex(vector<Point> &outputTriangles, const Path &ou
          cdt->Triangulate();
 
          // Add current output triangles to our total
-         vector<p2t::Triangle*> currentOutput = cdt->GetTriangles();
+         vector<p2tC2t::Triangle*> currentOutput = cdt->GetTriangles();
 
          // Copy our data to TNL::Point and to our output Vector
-         p2t::Triangle *currentTriangle;
+         p2tC2t::Triangle *currentTriangle;
          for(U32 j = 0; j < currentOutput.size(); j++)
          {
             currentTriangle = currentOutput[j];
@@ -270,14 +270,14 @@ bool clip2tri::triangulateComplex(vector<Point> &outputTriangles, const Path &ou
    // Free the polylines
    for(S32 i = 0; i < polylinesRegistry.size(); i++)
    {
-      vector<p2t::Point*> polyline = polylinesRegistry[i];
+      vector<p2tC2t::Point*> polyline = polylinesRegistry[i];
       deleteAndClear(polyline);
    }
 
    // Free the holes
    for(S32 i = 0; i < holesRegistry.size(); i++)
    {
-      vector<p2t::Point*> hole = holesRegistry[i];
+      vector<p2tC2t::Point*> hole = holesRegistry[i];
       deleteAndClear(hole);
    }
 

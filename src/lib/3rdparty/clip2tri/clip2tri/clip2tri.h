@@ -11,10 +11,10 @@
 
 #include <vector>
 
-#include "../clipper/clipper.hpp"
+#include "../clipper/clip_clipper.hpp"
 
 using namespace std;
-using namespace ClipperLib;
+using namespace ClipperLibC2t;
 
 namespace c2t
 {

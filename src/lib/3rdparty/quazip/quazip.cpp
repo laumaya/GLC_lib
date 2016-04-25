@@ -139,7 +139,7 @@ bool QuaZip::open(Mode mode, zlib_filefunc_def* ioApi)
   }
   switch(mode) {
     case mdUnzip:
-      p->unzFile_f=unzOpen2(ioDevice, ioApi);
+      p->unzFile_f=qua_unzOpen2(ioDevice, ioApi);
       if(p->unzFile_f!=NULL) {
         p->mode=mode;
         p->ioDevice = ioDevice;
@@ -186,7 +186,7 @@ void QuaZip::close()
       qWarning("QuaZip::close(): ZIP is not open");
       return;
     case mdUnzip:
-      p->zipError=unzClose(p->unzFile_f);
+      p->zipError=qua_unzClose(p->unzFile_f);
       break;
     case mdCreate:
     case mdAppend:
@@ -237,7 +237,7 @@ int QuaZip::getEntriesCount()const
     return -1;
   }
   unz_global_info globalInfo;
-  if((fakeThis->p->zipError=unzGetGlobalInfo(p->unzFile_f, &globalInfo))!=UNZ_OK)
+  if((fakeThis->p->zipError=qua_unzGetGlobalInfo(p->unzFile_f, &globalInfo))!=UNZ_OK)
     return p->zipError;
   return (int)globalInfo.number_entry;
 }
@@ -252,10 +252,10 @@ QString QuaZip::getComment()const
   }
   unz_global_info globalInfo;
   QByteArray comment;
-  if((fakeThis->p->zipError=unzGetGlobalInfo(p->unzFile_f, &globalInfo))!=UNZ_OK)
+  if((fakeThis->p->zipError=qua_unzGetGlobalInfo(p->unzFile_f, &globalInfo))!=UNZ_OK)
     return QString();
   comment.resize(globalInfo.size_comment);
-  if((fakeThis->p->zipError=unzGetGlobalComment(p->unzFile_f, comment.data(), comment.size())) < 0)
+  if((fakeThis->p->zipError=qua_unzGetGlobalComment(p->unzFile_f, comment.data(), comment.size())) < 0)
     return QString();
   fakeThis->p->zipError = UNZ_OK;
   return p->commentCodec->toUnicode(comment);
@@ -304,7 +304,7 @@ bool QuaZip::goToFirstFile()
     qWarning("QuaZip::goToFirstFile(): ZIP is not open in mdUnzip mode");
     return false;
   }
-  p->zipError=unzGoToFirstFile(p->unzFile_f);
+  p->zipError=qua_unzGoToFirstFile(p->unzFile_f);
   p->hasCurrentFile_f=p->zipError==UNZ_OK;
   return p->hasCurrentFile_f;
 }
@@ -316,7 +316,7 @@ bool QuaZip::goToNextFile()
     qWarning("QuaZip::goToFirstFile(): ZIP is not open in mdUnzip mode");
     return false;
   }
-  p->zipError=unzGoToNextFile(p->unzFile_f);
+  p->zipError=qua_unzGoToNextFile(p->unzFile_f);
   p->hasCurrentFile_f=p->zipError==UNZ_OK;
   if(p->zipError==UNZ_END_OF_LIST_OF_FILE)
     p->zipError=UNZ_OK;
@@ -337,12 +337,12 @@ bool QuaZip::getCurrentFileInfo(QuaZipFileInfo *info)const
   QByteArray comment;
   if(info==NULL) return false;
   if(!isOpen()||!hasCurrentFile()) return false;
-  if((fakeThis->p->zipError=unzGetCurrentFileInfo(p->unzFile_f, &info_z, NULL, 0, NULL, 0, NULL, 0))!=UNZ_OK)
+  if((fakeThis->p->zipError=qua_unzGetCurrentFileInfo(p->unzFile_f, &info_z, NULL, 0, NULL, 0, NULL, 0))!=UNZ_OK)
     return false;
   fileName.resize(info_z.size_filename);
   extra.resize(info_z.size_file_extra);
   comment.resize(info_z.size_file_comment);
-  if((fakeThis->p->zipError=unzGetCurrentFileInfo(p->unzFile_f, NULL,
+  if((fakeThis->p->zipError=qua_unzGetCurrentFileInfo(p->unzFile_f, NULL,
       fileName.data(), fileName.size(),
       extra.data(), extra.size(),
       comment.data(), comment.size()))!=UNZ_OK)
@@ -376,7 +376,7 @@ QString QuaZip::getCurrentFileName()const
   }
   if(!isOpen()||!hasCurrentFile()) return QString();
   QByteArray fileName(MAX_FILE_NAME_LENGTH, 0);
-  if((fakeThis->p->zipError=unzGetCurrentFileInfo(p->unzFile_f, NULL, fileName.data(), fileName.size(),
+  if((fakeThis->p->zipError=qua_unzGetCurrentFileInfo(p->unzFile_f, NULL, fileName.data(), fileName.size(),
       NULL, 0, NULL, 0))!=UNZ_OK)
     return QString();
   return p->fileNameCodec->toUnicode(fileName.constData());
