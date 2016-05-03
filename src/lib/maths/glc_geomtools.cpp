@@ -854,11 +854,17 @@ GLC_Vector3d glc::triangulatePolygonClip2TRi(QList<GLuint> *pIndexList, const QL
             if (glc::compare(point, (polygon.at(j))))
             {
                 pIndexList->append(oldIndex.at(j));
-                break;
             }
         }
     }
-    Q_ASSERT(pIndexList->size() == count);
+    if(pIndexList->size() != count)
+    {
+        qWarning() << "glc::triangulatePolygonClip2TRi failed";
+        // Somethings got wrong => non planar polygon
+        // Use the old method wich preserve index integrety
+        pIndexList->operator =(oldIndex);
+        triangulatePolygon(pIndexList, bulkList);
+    }
 
     return normal;
 }
