@@ -10,13 +10,6 @@ CONFIG -= precompile_header
 
 win32:DEFINES+=_CRT_SECURE_NO_WARNINGS
 
-contains(QT_CONFIG, system-zlib):!if(cross_compile:host_build) {
-    if (unix|mingw):         LIBS += -lz
-    else:                    LIBS += zdll.lib
-} else {
-    QT_PRIVATE += zlib-private
-}
-
 DEFINES += ASSIMP_BUILD_NO_OWN_ZLIB ASSIMP_BUILD_NO_COMPRESSED_IFC ASSIMP_BUILD_NO_Q3BSP_IMPORTER
 
 # Stop compiler complaining about ignored qualifiers on return types
