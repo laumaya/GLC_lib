@@ -98,6 +98,8 @@ GLC_Matrix4x4& GLC_Matrix4x4::fromEuler(const double angle_x, const double angle
     m_Matrix[12]=  0.0; m_Matrix[13]= 0.0; m_Matrix[14]= 0.0; m_Matrix[3]= 0.0; m_Matrix[7]= 0.0; m_Matrix[11] = 0.0;
     m_Matrix[15] =  1.0;
 
+    m_Type= Direct;
+
 	return *this;
 }
 
