@@ -156,6 +156,12 @@ void GLC_WorldHandle::removeOccurrence(GLC_StructOccurrence* pOccurrence)
     m_OccurrenceHash.remove(pOccurrence->id());
 	// Remove instance representation from the collection
     m_Collection.remove(pOccurrence->id());
+
+    if (pOccurrence == m_pRoot)
+    {
+        m_pRoot= new GLC_StructOccurrence;
+        m_pRoot->setWorldHandle(this);
+    }
 }
 
 void GLC_WorldHandle::select(GLC_uint occurrenceId)
