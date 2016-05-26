@@ -95,10 +95,10 @@ private:
 	Lib3dsMaterial* get3dsMaterialFromGLC_Material(GLC_Material* pMat);
 
 	//! Create and return the 3ds material from the given GLC_Material and name
-	Lib3dsMaterial* create3dsMaterialFromGLC_Material(GLC_Material* pMat, const QString& materialName);
+    Lib3dsMaterial* create3dsMaterialFromGLC_Material(GLC_Material* pMat);
 
-	//! Return the material name of the given material
-	QString materialName(GLC_Material* pMat) const;
+    //! Return a 3ds compatible name
+    QString to3dsName(const QString& name, unsigned int id) const;
 
 	//! Set the object data position from the given matrix
 	void setNodePosition(Lib3dsNode* pNode, const GLC_Matrix4x4& matrix);
@@ -127,26 +127,31 @@ private:
 	//! Reference to 3ds mesh hash table
 	QHash<GLC_StructReference*, Lib3dsMesh*> m_ReferenceToMesh;
 
-	//! Name to 3ds material hash table
-	QHash<QString, Lib3dsMaterial*> m_NameToMaterial;
+    QHash<GLC_Material*, Lib3dsMaterial*> m_WorldMaterialTo3dsMaterial;
 
 	//! The root lib3ds node
 	Lib3dsNode* m_pRootLib3dsNode;
 
 	//! The current node id
-	int m_CurrentNodeId;
+    unsigned int m_CurrentNodeId;
 
 	//! Occurrence id to node id hash
 	QHash<GLC_uint, int> m_OccIdToNodeId;
 
-	//! The current mesh inde
+    //! The current mesh index
 	int m_CurrentMeshIndex;
+
+    //! The current material index
+    int m_CurrentMaterialIndex;
+
+    //! The current Texture index
+    int m_CurrentTextureIndex;
 
 	//! Use absolute position (meshes are duplicated)
 	bool m_UseAbsolutePosition;
 
 	//! GLC_Texture to fileName hash table
-	QHash<GLC_Texture*, QString> m_TextureToFileName;
+    QHash<QString, QString> m_TextureToFileName;
 };
 
 #endif /* GLC_WORLDTO3DS_H_ */

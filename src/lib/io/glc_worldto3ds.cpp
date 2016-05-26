@@ -39,17 +39,21 @@
 
 #include "glc_worldto3ds.h"
 
+static const int maxNameLength= 12;
+
 GLC_WorldTo3ds::GLC_WorldTo3ds(const GLC_World& world)
 : QObject()
 , m_World(world)
 , m_pLib3dsFile(NULL)
 , m_FileName()
 , m_ReferenceToMesh()
-, m_NameToMaterial()
+, m_WorldMaterialTo3dsMaterial()
 , m_pRootLib3dsNode(NULL)
 , m_CurrentNodeId(0)
 , m_OccIdToNodeId()
 , m_CurrentMeshIndex(0)
+, m_CurrentMaterialIndex(0)
+, m_CurrentTextureIndex(0)
 , m_UseAbsolutePosition(false)
 , m_TextureToFileName()
 {
@@ -68,7 +72,7 @@ GLC_WorldTo3ds::~GLC_WorldTo3ds()
 bool GLC_WorldTo3ds::exportToFile(const QString& fileName, bool useAbsolutePosition)
 {
 	m_ReferenceToMesh.clear();
-	m_NameToMaterial.clear();
+    m_WorldMaterialTo3dsMaterial.clear();
 	m_pRootLib3dsNode= NULL;
 	m_CurrentNodeId= 0;
 	m_OccIdToNodeId.clear();
@@ -128,8 +132,7 @@ void GLC_WorldTo3ds::saveMeshes()
 			if (NULL != pRep)
 			{
 				// This reference has a mesh
-				const QString meshName= pRef->name() + '_' + QString::number(++m_CurrentMeshIndex);
-				QList<Lib3dsMesh*> meshes= createMeshsFrom3DRep(pRep, meshName);
+                QList<Lib3dsMesh*> meshes= createMeshsFrom3DRep(pRep, "MESH");
 				{
 					const int count= meshes.count();
 					for (int i= 0; i < count; ++i)
@@ -145,7 +148,10 @@ void GLC_WorldTo3ds::saveMeshes()
 
 void GLC_WorldTo3ds::saveBranch(GLC_StructOccurrence* pOcc)
 {
-	createNodeFromOccurrence(pOcc);
+    if (pOcc->structReference()->hasRepresentation() || !m_UseAbsolutePosition)
+    {
+        createNodeFromOccurrence(pOcc);
+    }
 
 	const int childCount= pOcc->childCount();
 	for (int i= 0; i < childCount; ++i)
@@ -160,7 +166,7 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 	p3dsNode->node_id= m_CurrentNodeId;
 	m_OccIdToNodeId.insert(pOcc->id(), m_CurrentNodeId++);
 
-	if (pOcc->parent() == m_World.rootOccurrence())
+    if (m_UseAbsolutePosition || (pOcc->parent() == m_World.rootOccurrence()))
 	{
 		p3dsNode->parent_id= LIB3DS_NO_PARENT;
 	}
@@ -169,8 +175,6 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 		Q_ASSERT(m_OccIdToNodeId.contains(pOcc->parent()->id()));
 		p3dsNode->parent_id= m_OccIdToNodeId.value(pOcc->parent()->id());
 	}
-
-	lib3ds_file_insert_node(m_pLib3dsFile, p3dsNode);
 
 	GLC_StructReference* pRef= pOcc->structReference();
 	if (m_UseAbsolutePosition)
@@ -182,8 +186,7 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 			{
 				// This reference has a mesh
 				const GLC_Matrix4x4 matrix= pOcc->absoluteMatrix();
-				const QString meshName= pRef->name() + '_' + QString::number(++m_CurrentMeshIndex);
-				QList<Lib3dsMesh*> meshes= createMeshsFrom3DRep(pRep, meshName, matrix);
+                QList<Lib3dsMesh*> meshes= createMeshsFrom3DRep(pRep, "MESH", matrix);
 
 				const int meshCount= meshes.count();
 				for (int i= 0; i < meshCount; ++i)
@@ -207,7 +210,12 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 				else if (!meshes.isEmpty())
 				{
 					strcpy(p3dsNode->name, meshes.first()->name);
+                    lib3ds_file_insert_node(m_pLib3dsFile, p3dsNode);
 				}
+                else
+                {
+                    delete p3dsNode;
+                }
 			}
 		}
 	}
@@ -216,6 +224,7 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 		// Node matrix
 		const GLC_Matrix4x4 matrix= pOcc->structInstance()->relativeMatrix();
 		setNodePosition(p3dsNode, matrix);
+        lib3ds_file_insert_node(m_pLib3dsFile, p3dsNode);
 
 		// Set mesh name if necessary
 		if (m_ReferenceToMesh.contains(pRef))
@@ -248,8 +257,6 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 QList<Lib3dsMesh*> GLC_WorldTo3ds::createMeshsFrom3DRep(GLC_3DRep* pRep, const QString& name, const GLC_Matrix4x4& matrix)
 {
 	QList<Lib3dsMesh*> subject;
-	int bodyIndex= 0;
-
 	const int bodyCount= pRep->numberOfBody();
 	for (int i= 0; i < bodyCount; ++i)
 	{
@@ -263,7 +270,7 @@ QList<Lib3dsMesh*> GLC_WorldTo3ds::createMeshsFrom3DRep(GLC_3DRep* pRep, const Q
 				pCurrentMesh= pCurrentMesh->createMeshOfGivenLod(0);
 				deleteCurrentMesh= true;
 			}
-			const QString bodyMeshName= name + '_' + QString::number(bodyIndex++);
+            const QString bodyMeshName= to3dsName(name, ++m_CurrentMeshIndex);
 			if (matrix.type() != GLC_Matrix4x4::Identity)
 			{
 				if (!deleteCurrentMesh)
@@ -274,7 +281,7 @@ QList<Lib3dsMesh*> GLC_WorldTo3ds::createMeshsFrom3DRep(GLC_3DRep* pRep, const Q
 				pCurrentMesh->transformVertice(matrix);
 				Q_ASSERT(!pCurrentMesh->isEmpty());
 			}
-			Lib3dsMesh* p3dsMesh= create3dsMeshFromGLC_Mesh(pCurrentMesh, bodyMeshName);
+            Lib3dsMesh* p3dsMesh= create3dsMeshFromGLC_Mesh(pCurrentMesh, bodyMeshName);
 
 			if (deleteCurrentMesh) delete pCurrentMesh;
 			subject.append(p3dsMesh);
@@ -353,21 +360,22 @@ Lib3dsMesh* GLC_WorldTo3ds::create3dsMeshFromGLC_Mesh(GLC_Mesh* pMesh, const QSt
 Lib3dsMaterial* GLC_WorldTo3ds::get3dsMaterialFromGLC_Material(GLC_Material* pMat)
 {
 	Lib3dsMaterial* pSubject= NULL;
-	const QString matName= materialName(pMat);
-	if (m_NameToMaterial.contains(matName))
+
+    if (m_WorldMaterialTo3dsMaterial.contains(pMat))
 	{
-		pSubject= m_NameToMaterial.value(matName);
+        pSubject= m_WorldMaterialTo3dsMaterial.value(pMat);
 	}
 	else
 	{
-		pSubject= create3dsMaterialFromGLC_Material(pMat, matName);
+        pSubject= create3dsMaterialFromGLC_Material(pMat);
 	}
 
 	return pSubject;
 }
 
-Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* pMat, const QString& matName)
+Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* pMat)
 {
+    const QString matName= to3dsName("MAT", ++m_CurrentMaterialIndex);
 	Lib3dsMaterial* pSubject= lib3ds_material_new();
     strcpy(pSubject->name, matName.toLatin1().data());
 
@@ -402,56 +410,75 @@ Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* 
 	pSubject->transparency= 1.0f - static_cast<float>(pMat->opacity());
 
 	// Texture
-	if (pMat->hasTexture())
+    if (pMat->hasTexture())
 	{
-		if (!m_TextureToFileName.contains(pMat->textureHandle()))
+        GLC_Texture* pTexture= pMat->textureHandle();
+        QString sourceTextureKey= pTexture->fileName();
+        QString targetTextureFileName= "TEX" + QString::number(++m_CurrentTextureIndex);
+
+        if (sourceTextureKey.isEmpty())
+        {
+            sourceTextureKey= targetTextureFileName;
+        }
+
+        if (!m_TextureToFileName.contains(sourceTextureKey))
 		{
 			QString filePath= QFileInfo(m_FileName).absolutePath();
-			QString textureName= matName;
-			QImage textureImage= pMat->textureHandle()->imageOfTexture();
-			if (!pMat->textureFileName().isEmpty())
-			{
-                textureName= QFileInfo(pMat->textureFileName()).fileName();
-                if (QFileInfo(pMat->textureFileName()).exists())
-                {
-                    textureImage.load(pMat->textureFileName());
-                }
-			}
-			else
-			{
-				textureName= textureName + ".jpg";
-			}
-			textureName= textureName.right(63);
+            QImage textureImage;
+            if (QFileInfo(pTexture->fileName()).exists())
+            {
+                textureImage.load(pTexture->fileName());
+            }
+            else
+            {
+                textureImage= pMat->textureHandle()->imageOfTexture();
+            }
+
+            targetTextureFileName= targetTextureFileName + ".jpg";
+            targetTextureFileName= targetTextureFileName.right(maxNameLength);
 
 			if (!textureImage.isNull())
 			{
-				const QString type(QFileInfo(textureName).suffix());
-                QString newTextureFile= filePath + '/' + textureName;
+                const QString type(QFileInfo(targetTextureFileName).suffix());
+                QString newTextureFile= filePath + '/' + targetTextureFileName;
 				textureImage.save(newTextureFile, type.toUpper().toLatin1().data());
-                strcpy(pSubject->texture1_map.name, textureName.toLatin1().data());
-				m_TextureToFileName.insert(pMat->textureHandle(), textureName);
+                strcpy(pSubject->texture1_map.name, targetTextureFileName.toLatin1().data());
+                m_TextureToFileName.insert(sourceTextureKey, targetTextureFileName);
 			}
 		}
 		else
 		{
-			QString textureName= m_TextureToFileName.value(pMat->textureHandle());
+            QString textureName= m_TextureToFileName.value(sourceTextureKey);
             strcpy(pSubject->texture1_map.name, textureName.toLatin1().data());
 		}
 
 	}
 
 	lib3ds_file_insert_material(m_pLib3dsFile, pSubject);
-	m_NameToMaterial.insert(matName, pSubject);
+    m_WorldMaterialTo3dsMaterial.insert(pMat, pSubject);
 
 	return pSubject;
 }
 
-QString GLC_WorldTo3ds::materialName(GLC_Material* pMat) const
+QString GLC_WorldTo3ds::to3dsName(const QString &name, unsigned int id) const
 {
-	QString subject= pMat->name() + '_' + QString::number(pMat->id());
-	subject= subject.right(63);
+    QString subject;
+    const QString idString(QString::number(id));
+    if ((name.length() + idString.length()) > maxNameLength)
+    {
+        const int newSize= maxNameLength - idString.length();
+        const QString baseName(name.left(newSize));
+        subject= baseName + idString;
+        Q_ASSERT(subject.length() == maxNameLength);
+    }
+    else
+    {
+        subject= name + idString;
+    }
 
-	return subject;
+    subject.replace(" ", "_");
+
+    return subject;
 }
 
 void GLC_WorldTo3ds::setNodePosition(Lib3dsNode* pNode, const GLC_Matrix4x4& matrix)
