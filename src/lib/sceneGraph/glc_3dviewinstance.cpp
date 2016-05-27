@@ -544,7 +544,9 @@ int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewpor
 		pixelCullingRatio= pView->minimumStaticPixelCullingRatio();
 	}
 
-	const double diameter= boundingBox.boundingSphereRadius() * 2.0 * m_AbsoluteMatrix.scalingX();
+    double scaling= qMax(m_AbsoluteMatrix.scalingX(), m_AbsoluteMatrix.scalingY());
+    scaling= qMax(scaling, m_AbsoluteMatrix.scalingZ());
+    const double diameter= boundingBox.boundingSphereRadius() * 2.0 * scaling;
 	GLC_Vector3d center(m_AbsoluteMatrix * boundingBox.center());
 
 	const double dist= (center - pView->cameraHandle()->eye()).length();
