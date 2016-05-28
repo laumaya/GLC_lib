@@ -165,6 +165,7 @@ namespace glc
     //! Return 2D polygon with normalyze coordinate
     GLC_LIB_EXPORT QList<GLC_Point2d> normalyzePolygon(const QList<GLC_Point2d>& polygon);
 
+    GLC_LIB_EXPORT bool polygonCompatibleWithClip2TRi(const QList<GLC_Point2d> polygon);
 //@}
 
 }
