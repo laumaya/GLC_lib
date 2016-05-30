@@ -160,7 +160,23 @@ GLC_3DViewInstance GLC_Factory::createBox(const GLC_BoundingBox& boundingBox) co
 	GLC_3DViewInstance newBox(pBox);
 	newBox.translate(boundingBox.center().x(), boundingBox.center().y()
 					, boundingBox.center().z());
-	return newBox;
+    return newBox;
+}
+
+GLC_StructInstance* GLC_Factory::createBox(const GLC_BoundingBox &boundingBox, const QString name, GLC_Material *pMaterial) const
+{
+    const double lx= boundingBox.upperCorner().x() - boundingBox.lowerCorner().x();
+    const double ly= boundingBox.upperCorner().y() - boundingBox.lowerCorner().y();
+    const double lz= boundingBox.upperCorner().z() - boundingBox.lowerCorner().z();
+    GLC_Box* pBox= new GLC_Box(lx, ly, lz);
+    pBox->addMaterial(pMaterial);
+    pBox->boundingBox();
+    GLC_StructReference* pStructRef= new GLC_StructReference(new GLC_3DRep(pBox));
+    pStructRef->setName(name);
+
+    GLC_StructInstance* pSubject= new GLC_StructInstance(pStructRef);
+    pSubject->translate(boundingBox.center().x(), boundingBox.center().y(), boundingBox.center().z());
+    return pSubject;
 }
 
 GLC_3DRep GLC_Factory::createCylinder(double radius, double length) const

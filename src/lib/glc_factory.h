@@ -113,6 +113,8 @@ public:
 
 	GLC_3DViewInstance createBox(const GLC_BoundingBox& boundingBox) const;
 
+    GLC_StructInstance *createBox(const GLC_BoundingBox& boundingBox, const QString name, GLC_Material* pMaterial) const;
+
 	//! Create a GLC_Cylinder
 	GLC_3DRep createCylinder(double radius, double length) const;
 
