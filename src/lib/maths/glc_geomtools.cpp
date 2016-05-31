@@ -881,7 +881,7 @@ GLC_Vector3d glc::triangulatePolygonClip2TRi(QList<GLuint> *pIndexList, const QL
         }
         else
         {
-            qWarning() << "Non planar polygon found glc::triangulatePolygonClip2TRi failed";
+            qWarning() << "Polygon with NULL edge found glc::triangulatePolygonClip2TRi failed";
             qWarning() << "Use old method";
             triangulatePolygon(pIndexList, bulkList);
         }
@@ -942,7 +942,7 @@ bool glc::polygonCompatibleWithClip2TRi(const QList<GLC_Point2d> polygon)
         while (subject && (j < count))
         {
             GLC_Point2d p2= polygon.at(j);
-            subject= p1 != p2;
+            subject= !glc::compare(p1, p2, glc::EPSILON);
             ++j;
         }
         ++i;
