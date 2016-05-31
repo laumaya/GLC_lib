@@ -179,18 +179,18 @@ public:
     }
 
 	/*! Overload equality "==" operator*/
-	inline bool operator == (const GLC_Vector2d &Vect) const
+    inline bool operator == (const GLC_Vector2d &other) const
 	{
-        bool bResult= (qAbs(m_Vector[0]) - qAbs(Vect.m_Vector[0])) < glc::EPSILON;
-        bResult= bResult && ((qAbs(m_Vector[1]) - qAbs(Vect.m_Vector[1])) < glc::EPSILON);
+        bool subject= qFuzzyCompare(m_Vector[0], other.m_Vector[0]);
+        subject= subject && qFuzzyCompare(m_Vector[1], other.m_Vector[1]);
 
-		return bResult;
+        return subject;
 	}
 
 	/*! Overload "!=" operator*/
-	inline bool operator != (const GLC_Vector2d &Vect) const
+    inline bool operator != (const GLC_Vector2d &other) const
 	{
-		return !(*this == Vect);
+        return !(this->operator==(other));
 	}
 
 //@}
