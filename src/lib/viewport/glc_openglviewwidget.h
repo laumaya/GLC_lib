@@ -21,7 +21,7 @@ class GLC_LIB_EXPORT GLC_OpenGLViewWidget : public QOpenGLWidget
     Q_OBJECT
 public:
     GLC_OpenGLViewWidget(QWidget *parent = 0);
-    ~GLC_OpenGLViewWidget();
+    virtual ~GLC_OpenGLViewWidget();
 public:
     //! Return the used GLC_ViewHandler as a QVariant
     virtual QVariant viewHandler() const;

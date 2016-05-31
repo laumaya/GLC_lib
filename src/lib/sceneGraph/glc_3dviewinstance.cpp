@@ -487,6 +487,10 @@ int GLC_3DViewInstance::renderForPrimitiveSelection(GLC_uint bodyId)
 
         return i;
     }
+    else
+    {
+        return 0;
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
