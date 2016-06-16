@@ -950,3 +950,62 @@ bool glc::polygonCompatibleWithClip2TRi(const QList<GLC_Point2d> polygon)
 
     return subject;
 }
+
+QList<GLC_Point3d> glc::AddCorner(const QList<GLC_Point3d> &segments, double radius, int count)
+{
+    Q_ASSERT(segments.count() == 3);
+    Q_ASSERT(radius > 0.0);
+    Q_ASSERT(count > 1);
+
+    QList<GLC_Point3d> subject;
+
+    // Compute face normal to compute angle between segments
+    const GLC_Point3d p0(segments[0]);
+    const GLC_Point3d p1(segments[1]);
+    const GLC_Point3d p2(segments[2]);
+
+    const GLC_Vector3d edge0(p1 - p0);
+    const GLC_Vector3d edge1(p1 - p2);
+
+    GLC_Vector3d direction(edge1 ^ edge0);
+    direction.normalize();
+
+    const double angle = (edge1.signedAngleWithVect(edge0, direction));
+    const double deltaLength= radius * (cos(angle / 2.0) / sin(angle / 2.0));
+
+    // Compute new segment end before corner
+    GLC_Vector3d p1OffsetOnEdge0(p0 - p1);
+    p1OffsetOnEdge0.setLength(deltaLength);
+    GLC_Point3d newP1OnEdge0= p1 + p1OffsetOnEdge0;
+
+    GLC_Vector3d p1OffsetOnEdge1(p2 - p1);
+    p1OffsetOnEdge1.setLength(deltaLength);
+    GLC_Point3d newP1OnEdge1= p1 + p1OffsetOnEdge1;
+
+
+    // Compute corner axis position
+    GLC_Matrix4x4 m1(p1OffsetOnEdge0, glc::PI / 2.0);
+    GLC_Vector3d centerOffset= m1 * direction;
+    centerOffset.setLength(radius);
+    GLC_Point3d axisPos= newP1OnEdge0 + centerOffset;
+
+    // Add first segment
+    subject << p0 << newP1OnEdge0;
+
+    const double deltaAngle= (glc::PI - angle) / count; // Complementary angle
+
+    // Add Corner
+    const GLC_Point3d relativeStartingPoint(newP1OnEdge0 - axisPos);
+    for (int i= 1; i < count; ++i)
+    {
+        const double currentAngle= deltaAngle * i;
+        const GLC_Matrix4x4 transformation(direction, currentAngle);
+        const GLC_Point3d currentPoint(transformation * relativeStartingPoint);
+        subject.append(currentPoint + axisPos);
+    }
+
+    // Add last segment
+    subject << newP1OnEdge1 << p2;
+
+    return subject;
+}

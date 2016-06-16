@@ -105,6 +105,8 @@ public:
     //! Set the mesh extruded lenght
     void setExtrudedLenght(double lenght);
 
+    //! Set Smothing index
+    void setSmothingIndex(const QList<int>& smothingIndex);
 
 //@}
 
@@ -186,6 +188,9 @@ private:
 private:
     //! The list of point which define the face to extrude
     QList<GLC_Point3d> m_Points;
+
+    //! The list of index of smoothing points
+    QList<int> m_SmothingPoints;
 
     //! The direction of extrusion
     GLC_Vector3d m_ExtrusionVector;
