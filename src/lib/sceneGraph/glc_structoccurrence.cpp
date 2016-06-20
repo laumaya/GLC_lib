@@ -616,15 +616,18 @@ void GLC_StructOccurrence::addChild(GLC_StructOccurrence* pChild)
 	Q_ASSERT(pChild->isOrphan());
 	Q_ASSERT((NULL == pChild->m_pWorldHandle) || (m_pWorldHandle == pChild->m_pWorldHandle));
 
-	//qDebug() << "Add Child " << pChild->name() << "id=" << pChild->id() << " to " << name() << " id=" << id();
-	// Add the child to the list of child
-	// Get occurrence reference
 	m_Childs.append(pChild);
 	pChild->m_pParent= this;
 	if (NULL == pChild->m_pWorldHandle)
 	{
 		pChild->setWorldHandle(m_pWorldHandle);
 	}
+
+    if ((NULL != m_pWorldHandle) && m_pWorldHandle->selectionSetHandle()->contains(this))
+    {
+        m_pWorldHandle->select(pChild->id());
+    }
+
 	pChild->updateChildrenAbsoluteMatrix();
 }
 
@@ -643,6 +646,12 @@ void GLC_StructOccurrence::insertChild(int index, GLC_StructOccurrence* pChild)
 	{
 		pChild->setWorldHandle(m_pWorldHandle);
 	}
+
+    if ((NULL != m_pWorldHandle) && m_pWorldHandle->selectionSetHandle()->contains(this))
+    {
+        m_pWorldHandle->select(pChild->id());
+    }
+
 	pChild->updateChildrenAbsoluteMatrix();
 }
 
