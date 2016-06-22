@@ -70,12 +70,21 @@ const GLC_BoundingBox& GLC_Rectangle::boundingBox()
 	{
 		createMeshAndWire();
 	}
-	return GLC_Mesh::boundingBox();
+    return GLC_Mesh::boundingBox();
 }
+
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+
+void GLC_Rectangle::update()
+{
+    if (GLC_Mesh::isEmpty())
+    {
+        createMeshAndWire();
+    }
+}
 
 GLC_Rectangle& GLC_Rectangle::setRectangle(double l1, double l2)
 {

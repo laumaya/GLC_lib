@@ -72,12 +72,20 @@ const GLC_BoundingBox& GLC_Cone::boundingBox()
 	{
 		createMeshAndWire();
 	}
-	return GLC_Mesh::boundingBox();
+    return GLC_Mesh::boundingBox();
 }
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+
+void GLC_Cone::update()
+{
+    if (GLC_Mesh::isEmpty())
+    {
+        createMeshAndWire();
+    }
+}
 
 void GLC_Cone::setLength(double Length)
 {

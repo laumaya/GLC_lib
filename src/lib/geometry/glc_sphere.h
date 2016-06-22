@@ -87,6 +87,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+
+    virtual void update();
+
 	//! Set Sphere radius
 	/*! Radius must be > 0*/
 	void setRadius(double Radius);

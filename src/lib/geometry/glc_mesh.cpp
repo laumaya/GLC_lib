@@ -540,7 +540,7 @@ GLC_Mesh& GLC_Mesh::transformVertice(const GLC_Matrix4x4& matrix)
 double GLC_Mesh::volume()
 {
 	double resultVolume= 0.0;
-
+    update();
 	if (!m_MeshData.isEmpty())
 	{
 		IndexList triangleIndex;

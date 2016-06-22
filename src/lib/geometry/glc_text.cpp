@@ -77,6 +77,14 @@ GLC_Geometry *GLC_Text::clone() const
     return new GLC_Text(*this);
 }
 
+void GLC_Text::update()
+{
+    if (GLC_Mesh::isEmpty())
+    {
+        createText();
+    }
+}
+
 void GLC_Text::setText(const QString &text)
 {
     m_Text= text;
@@ -189,7 +197,6 @@ void GLC_Text::createMesh()
     GLC_Mesh::addTrianglesStrip(pMaterial, index);
 
     GLC_Mesh::finish();
-
 }
 
 void GLC_Text::createText()

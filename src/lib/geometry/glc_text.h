@@ -72,6 +72,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+    virtual void update();
     void setText(const QString& text);
     void setColor(const QColor& color);
     void setFont(const QFont& font);

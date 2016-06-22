@@ -95,6 +95,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+    virtual void update();
+
 	//! Set Cylinder length
 	/*! Length must be > 0*/
 	void setLength(double Length);

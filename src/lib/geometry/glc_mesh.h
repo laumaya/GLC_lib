@@ -210,6 +210,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+    virtual void update(){}
+
 	//! Clear the content of the mesh and super class and makes them empty
 	virtual void clear();
 

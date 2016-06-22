@@ -63,12 +63,20 @@ const GLC_BoundingBox& GLC_Disc::boundingBox()
 
 GLC_Geometry* GLC_Disc::clone() const
 {
-	return new GLC_Disc(*this);
+    return new GLC_Disc(*this);
 }
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+void GLC_Disc::update()
+{
+    if (GLC_Mesh::isEmpty())
+    {
+        createMeshAndWire();
+    }
+}
+
 GLC_Disc& GLC_Disc::operator=(const GLC_Disc& disc)
 {
 	if (this != &disc)

@@ -69,13 +69,20 @@ const GLC_BoundingBox& GLC_Box::boundingBox(void)
 // Return a copy of the current geometry
 GLC_Geometry* GLC_Box::clone() const
 {
-	return new GLC_Box(*this);
+    return new GLC_Box(*this);
 }
-
 
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
+
+void GLC_Box::update()
+{
+    if (GLC_Mesh::isEmpty())
+    {
+        createMeshAndWire();
+    }
+}
 
 // Set X length
 void GLC_Box::setLgX(double LgX)

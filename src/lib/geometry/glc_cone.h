@@ -88,6 +88,8 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+    virtual void update();
+
 	//! Set Cone length
 	/*! Length must be > 0*/
 	void setLength(double Length);

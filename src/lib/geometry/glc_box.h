@@ -90,6 +90,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+    virtual void update();
+
 	//! Set X length
 	/*! This Function invalid OpenGL display list
 	 * LgX must be > 0*/

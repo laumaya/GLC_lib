@@ -81,6 +81,14 @@ const GLC_BoundingBox &GLC_ExtrudedMesh::boundingBox()
     return GLC_Mesh::boundingBox();
 }
 
+void GLC_ExtrudedMesh::update()
+{
+    if (GLC_Mesh::isEmpty())
+    {
+        createMeshAndWire();
+    }
+}
+
 GLC_ExtrudedMesh &GLC_ExtrudedMesh::operator =(const GLC_ExtrudedMesh &other)
 {
     if (this != &other)
