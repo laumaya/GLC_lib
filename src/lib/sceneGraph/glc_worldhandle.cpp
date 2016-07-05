@@ -178,10 +178,8 @@ void GLC_WorldHandle::select(GLC_uint occurrenceId)
         for (int i= 0; i < subOccurrenceCount; ++i)
 		{
             const GLC_uint currentOccurrenceId= subOccurrenceList.at(i)->id();
-            if (m_Collection.contains(currentOccurrenceId))
-			{
-                m_Collection.select(currentOccurrenceId);
-			}
+            m_SelectionSet.insert(currentOccurrenceId);
+            m_Collection.select(currentOccurrenceId);
 		}
     }
 }
