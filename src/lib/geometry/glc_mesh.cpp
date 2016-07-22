@@ -234,7 +234,7 @@ QVector<GLuint> GLC_Mesh::getTrianglesIndex(int lod, GLC_uint materialId) const
 	return resultIndex;
 }
 
-IndexList GLC_Mesh::getEquivalentTrianglesStripsFansIndex(int lod, GLC_uint materialId)
+IndexList GLC_Mesh::getEquivalentTrianglesStripsFansIndex(int lod, GLC_uint materialId) const
 {
 	IndexList subject;
 	if (containsTriangles(lod, materialId))
@@ -1722,7 +1722,7 @@ void GLC_Mesh::copyBulkData(GLC_Mesh* pLodMesh, const QHash<GLuint, GLuint>& tag
 	}
 }
 
-IndexList GLC_Mesh::equivalentTrianglesIndexOfstripsIndex(int lodIndex, GLC_uint materialId)
+IndexList GLC_Mesh::equivalentTrianglesIndexOfstripsIndex(int lodIndex, GLC_uint materialId) const
 {
 	IndexList trianglesIndex;
 	if (containsStrips(lodIndex, materialId))
@@ -1757,7 +1757,7 @@ IndexList GLC_Mesh::equivalentTrianglesIndexOfstripsIndex(int lodIndex, GLC_uint
 	return trianglesIndex;
 }
 
-IndexList GLC_Mesh::equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint materialId)
+IndexList GLC_Mesh::equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint materialId) const
 {
 	IndexList trianglesIndex;
 	if (containsFans(lodIndex, materialId))

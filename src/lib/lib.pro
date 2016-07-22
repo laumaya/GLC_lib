@@ -112,7 +112,8 @@ HEADERS_GLC_IO +=   io/glc_objmtlloader.h \
                     io/glc_fileloader.h \
                     io/glc_worldreaderplugin.h \
                     io/glc_worldreaderhandler.h \
-                    io/glc_worldtoobj.h
+                    io/glc_worldtoobj.h \
+                    io/glc_assimptoworld.h
 
 HEADERS_GLC_SCENEGRAPH +=   sceneGraph/glc_3dviewcollection.h \
                             sceneGraph/glc_3dviewinstance.h \
@@ -150,7 +151,8 @@ HEADERS_GLC_GEOMETRY += geometry/glc_geometry.h \
                         geometry/glc_sphere.h \
                         geometry/glc_pointcloud.h \
                         geometry/glc_extrudedmesh.h \
-                        geometry/glc_text.h
+                        geometry/glc_text.h \
+                        geometry/glc_csghelper.h
 
 HEADERS_GLC_SHADING +=  shading/glc_material.h \
                         shading/glc_texture.h \
@@ -226,10 +228,12 @@ HEADERS_GLC_QML +=      qml/glc_quickitem.h \
                         qml/glc_quickselection.h \
                         qml/glc_quickviewhandler.h
 
+HEADERS_GLC_CSGJS += 3rdparty/csgjs/csgjs.h
+
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
-HEADERS += $${HEADERS_GLC_QML} $${HEADERS_CLIP2TR}
+HEADERS += $${HEADERS_GLC_QML} $${HEADERS_CLIP2TR} $${HEADERS_GLC_CSGJS}
 		   
 SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/compress.c \
@@ -285,6 +289,8 @@ SOURCES += 3rdparty/clip2tri/clip2tri/clip2tri.cpp \
             3rdparty/clip2tri/poly2tri/sweep/clip_sweep.cc \
             3rdparty/clip2tri/poly2tri/sweep/clip_sweep_context.cc
 
+SOURCES +=      3rdparty/csgjs/csgjs.cpp
+
 SOURCES +=	maths/glc_matrix4x4.cpp \
                 maths/glc_vector4d.cpp \
                 maths/glc_interpolator.cpp \
@@ -303,7 +309,8 @@ SOURCES +=	io/glc_objmtlloader.cpp \
                 io/glc_worldto3ds.cpp \
                 io/glc_bsreptoworld.cpp \
                 io/glc_fileloader.cpp \
-                io/glc_worldtoobj.cpp
+                io/glc_worldtoobj.cpp \
+                io/glc_assimptoworld.cpp
 
 SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
                 sceneGraph/glc_3dviewinstance.cpp \
@@ -341,7 +348,8 @@ SOURCES +=	geometry/glc_geometry.cpp \
                 geometry/glc_sphere.cpp \
                 geometry/glc_pointcloud.cpp \
                 geometry/glc_extrudedmesh.cpp \
-                geometry/glc_text.cpp
+                geometry/glc_text.cpp \
+                geometry/glc_csghelper.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -536,7 +544,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_QuickSelection \
                GLC_OpenGLViewWidget \
                GLC_Text \
-               GLC_PlaneManipulator
+               GLC_PlaneManipulator \
+               GLC_CsgHelper
 
 include (../../install.pri)
 

@@ -616,6 +616,7 @@ void GLC_StructOccurrence::addChild(GLC_StructOccurrence* pChild)
 	Q_ASSERT(pChild->isOrphan());
 	Q_ASSERT((NULL == pChild->m_pWorldHandle) || (m_pWorldHandle == pChild->m_pWorldHandle));
 
+    pChild->setVisibility(this->isVisible());
 	m_Childs.append(pChild);
 	pChild->m_pParent= this;
 	if (NULL == pChild->m_pWorldHandle)
@@ -636,6 +637,8 @@ void GLC_StructOccurrence::insertChild(int index, GLC_StructOccurrence* pChild)
 	Q_ASSERT(pChild->isOrphan());
 	Q_ASSERT((NULL == pChild->m_pWorldHandle) || (m_pWorldHandle == pChild->m_pWorldHandle));
 	Q_ASSERT(m_Childs.count() >= index);
+
+    pChild->setVisibility(this->isVisible());
 
 	//qDebug() << "Add Child " << pChild->name() << "id=" << pChild->id() << " to " << name() << " id=" << id();
 	// Add the child to the list of child

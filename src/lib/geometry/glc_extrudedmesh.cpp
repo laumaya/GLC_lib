@@ -39,11 +39,7 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_V
     , m_ExtrusionLenght(lenght)
     , m_GivenFaceNormal()
 {
-    Q_ASSERT(m_Points.size() > 2);
-    Q_ASSERT(pointsLieOnAPlane());
-    Q_ASSERT(!glc::compare(m_Points.first(), m_Points.last(), glc::EPSILON));
 
-    computeGivenFaceNormal();
 }
 
 GLC_ExtrudedMesh::GLC_ExtrudedMesh(const GLC_ExtrudedMesh &other)
@@ -148,6 +144,12 @@ void GLC_ExtrudedMesh::createMeshAndWire()
 {
     Q_ASSERT(GLC_Mesh::isEmpty());
     Q_ASSERT(m_WireData.isEmpty());
+
+    Q_ASSERT(m_Points.size() > 2);
+    Q_ASSERT(pointsLieOnAPlane());
+    Q_ASSERT(!glc::compare(m_Points.first(), m_Points.last(), glc::EPSILON));
+
+    computeGivenFaceNormal();
 
     createMesh();
     createWire();

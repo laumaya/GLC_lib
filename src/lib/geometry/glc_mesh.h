@@ -129,7 +129,7 @@ public:
 	QVector<GLuint> getTrianglesIndex(int lod, GLC_uint materialId) const;
 
 	//! Return the equivalent triangle index of (triangle, strip and fan)
-	IndexList getEquivalentTrianglesStripsFansIndex(int lod, GLC_uint materialId);
+    IndexList getEquivalentTrianglesStripsFansIndex(int lod, GLC_uint materialId) const;
 
 	//! Return the number of triangles in the specified LOD
 	int numberOfTriangles(int lod, GLC_uint materialId) const;
@@ -407,10 +407,10 @@ private:
 	void copyBulkData(GLC_Mesh* pLodMesh, const QHash<GLuint, GLuint>& tagetToSourceIndexMap, int maxIndex);
 
 	//! Return the equivalent triangles index of the strips index of given LOD and material ID
-	IndexList equivalentTrianglesIndexOfstripsIndex(int lodIndex, GLC_uint materialId);
+    IndexList equivalentTrianglesIndexOfstripsIndex(int lodIndex, GLC_uint materialId) const;
 
 	//! Return the equivalent triangles index of the fan index of given LOD and material ID
-	IndexList equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint materialId);
+    IndexList equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint materialId) const;
 
 
 //@}
