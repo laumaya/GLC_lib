@@ -11,5 +11,6 @@ SUBDIRS += \
     example09 \
     example10 \
     example11 \
-    example12
+    example12 \
+    example13
 

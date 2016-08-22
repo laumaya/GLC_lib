@@ -6,8 +6,10 @@
  */
 #include "glc_csghelper.h"
 
-
 #include "../3rdparty/csgjs/csgjs.h"
+
+#include "../maths/glc_matrix4x4.h"
+#include "../maths/glc_vector3d.h"
 
 #include "glc_mesh.h"
 
@@ -16,14 +18,14 @@ GLC_CsgHelper::GLC_CsgHelper()
 
 }
 
-GLC_Mesh *GLC_CsgHelper::soustract(const GLC_Mesh *pMesh1, const GLC_Mesh *pMesh2)
+GLC_Mesh *GLC_CsgHelper::soustract(const GLC_Mesh *pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh *pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
 {
-    csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1);
-    csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2);
+    csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
+    csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
 
     csgjs_model result= csgjs_difference(*pCsgModel1, *pCsgModel2);
 
-    GLC_Mesh* pSubject= meshFromCsgModel(result, new GLC_Material);
+    GLC_Mesh* pSubject= meshFromCsgModel(result, pMaterial);
 
     delete pCsgModel1;
     delete pCsgModel2;
@@ -31,7 +33,20 @@ GLC_Mesh *GLC_CsgHelper::soustract(const GLC_Mesh *pMesh1, const GLC_Mesh *pMesh
     return pSubject;
 }
 
-csgjs_model *GLC_CsgHelper::csgModelFromMesh(const GLC_Mesh *pMesh)
+void GLC_CsgHelper::soustract(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+{
+    csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
+    csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
+
+    csgjs_model result= csgjs_difference(*pCsgModel1, *pCsgModel2);
+
+    meshFromCsgModel(result, pMaterial, pResultMesh);
+
+    delete pCsgModel1;
+    delete pCsgModel2;
+}
+
+csgjs_model *GLC_CsgHelper::csgModelFromMesh(const GLC_Mesh *pMesh, const GLC_Matrix4x4& matrix)
 {
     csgjs_model* pSubject= new csgjs_model;
 
@@ -49,14 +64,23 @@ csgjs_model *GLC_CsgHelper::csgModelFromMesh(const GLC_Mesh *pMesh)
         for (int i= 0; i < count; ++i)
         {
             const int index= indexList.at(i);
-            csgjs_vertex vertex;
-            vertex.pos.x= positionVector.at(index * 3);
-            vertex.pos.y= positionVector.at((index * 3) + 1);
-            vertex.pos.z= positionVector.at((index * 3) + 2);
+            GLC_Vector3d vectPos(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
+            GLC_Vector3d vectNormal(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
+            if (matrix.type() != GLC_Matrix4x4::Identity)
+            {
+                vectPos= matrix * vectPos;
+                const GLC_Matrix4x4 rotationMatrix= matrix.rotationMatrix().optimise();
+                vectNormal= rotationMatrix * vectNormal;
+            }
 
-            vertex.normal.x= normalVector.at(index * 3);
-            vertex.normal.y= normalVector.at((index * 3) + 1);
-            vertex.normal.z= normalVector.at((index * 3) + 2);
+            csgjs_vertex vertex;
+            vertex.pos.x= static_cast<float>(vectPos.x());
+            vertex.pos.y= static_cast<float>(vectPos.y());
+            vertex.pos.z= static_cast<float>(vectPos.z());
+
+            vertex.normal.x= static_cast<float>(vectNormal.x());
+            vertex.normal.y= static_cast<float>(vectNormal.y());
+            vertex.normal.z= static_cast<float>(vectNormal.z());
 
             if (!texelVector.isEmpty())
             {
@@ -75,7 +99,15 @@ csgjs_model *GLC_CsgHelper::csgModelFromMesh(const GLC_Mesh *pMesh)
 GLC_Mesh *GLC_CsgHelper::meshFromCsgModel(const csgjs_model &model, GLC_Material* pMaterial)
 {
     GLC_Mesh* pSubject= new GLC_Mesh;
+    meshFromCsgModel(model, pMaterial, pSubject);
 
+    return pSubject;
+}
+
+void GLC_CsgHelper::meshFromCsgModel(const csgjs_model& model, GLC_Material* pMaterial, GLC_Mesh* pMesh)
+{
+    Q_ASSERT(NULL != pMesh);
+    pMesh->clear();
     GLfloatVector positionVector;
     GLfloatVector normalVector;
     GLfloatVector texelVector;
@@ -88,9 +120,9 @@ GLC_Mesh *GLC_CsgHelper::meshFromCsgModel(const csgjs_model &model, GLC_Material
         normalVector << vertex.normal.x << vertex.normal.y << vertex.normal.z;
         texelVector << vertex.uv.x << vertex.uv.y;
     }
-    pSubject->addVertice(positionVector);
-    pSubject->addNormals(normalVector);
-    pSubject->addTexels(texelVector);
+    pMesh->addVertice(positionVector);
+    pMesh->addNormals(normalVector);
+    pMesh->addTexels(texelVector);
 
     IndexList indexList;
     const size_t indexCount= model.indices.size();
@@ -98,8 +130,6 @@ GLC_Mesh *GLC_CsgHelper::meshFromCsgModel(const csgjs_model &model, GLC_Material
     {
         indexList.append(model.indices.at(i));
     }
-    pSubject->addTriangles(pMaterial, indexList);
-    pSubject->finish();
-
-    return pSubject;
+    pMesh->addTriangles(pMaterial, indexList);
+    pMesh->finish();
 }

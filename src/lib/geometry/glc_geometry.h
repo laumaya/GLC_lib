@@ -209,6 +209,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
+    virtual void update(){}
+
 	//! Clear the content of the geometry and makes it empty
 	virtual void clear();
 

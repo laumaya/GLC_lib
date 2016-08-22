@@ -152,7 +152,11 @@ HEADERS_GLC_GEOMETRY += geometry/glc_geometry.h \
                         geometry/glc_pointcloud.h \
                         geometry/glc_extrudedmesh.h \
                         geometry/glc_text.h \
-                        geometry/glc_csghelper.h
+                        geometry/glc_csghelper.h \
+                        geometry/glc_csgnode.h \
+                        geometry/glc_csgoperatornode.h \
+                        geometry/glc_csgleafnode.h
+
 
 HEADERS_GLC_SHADING +=  shading/glc_material.h \
                         shading/glc_texture.h \
@@ -349,7 +353,11 @@ SOURCES +=	geometry/glc_geometry.cpp \
                 geometry/glc_pointcloud.cpp \
                 geometry/glc_extrudedmesh.cpp \
                 geometry/glc_text.cpp \
-                geometry/glc_csghelper.cpp
+                geometry/glc_csghelper.cpp \
+                geometry/glc_csgnode.cpp \
+                geometry/glc_csgoperatornode.cpp \
+                geometry/glc_csgleafnode.cpp
+
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -545,7 +553,11 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_OpenGLViewWidget \
                GLC_Text \
                GLC_PlaneManipulator \
-               GLC_CsgHelper
+               GLC_CsgHelper \
+               GLC_CsgNode \
+               GLC_CsgOperatorNode \
+               GLC_CsgLeafNode
+
 
 include (../../install.pri)
 
