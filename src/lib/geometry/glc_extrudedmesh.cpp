@@ -150,6 +150,12 @@ void GLC_ExtrudedMesh::createMeshAndWire()
     Q_ASSERT(!glc::compare(m_Points.first(), m_Points.last(), glc::EPSILON));
 
     computeGivenFaceNormal();
+    if (glc::compare(m_GivenFaceNormal, m_ExtrusionVector) || (m_GivenFaceNormal.angleWithVect(m_ExtrusionVector) > (glc::PI / 2.0)))
+    {
+        std::reverse(m_Points.begin(), m_Points.end());
+        std::reverse(m_SmothingPoints.begin(), m_SmothingPoints.end());
+        m_GivenFaceNormal.invert();
+    }
 
     createMesh();
     createWire();

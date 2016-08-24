@@ -46,7 +46,6 @@ class GLC_LIB_EXPORT GLC_ExtrudedMesh : public GLC_Mesh
 
 public:
     //! Default constructor
-    /*! The points list must be in counterclockwise order*/
     GLC_ExtrudedMesh(const QList<GLC_Point3d>& points, const GLC_Vector3d& dir, double lenght);
 
     //! Copy constructor
