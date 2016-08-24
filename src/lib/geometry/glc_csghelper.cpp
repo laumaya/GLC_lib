@@ -56,6 +56,7 @@ csgjs_model *GLC_CsgHelper::csgModelFromMesh(const GLC_Mesh *pMesh, const GLC_Ma
 
     QList<GLC_uint> materialIdList= pMesh->materialIds();
     const int materialCount= materialIdList.count();
+    int newIndex= 0;
     for (int iMat= 0; iMat < materialCount; ++iMat)
     {
         const GLC_uint materialId= materialIdList.at(iMat);
@@ -89,7 +90,7 @@ csgjs_model *GLC_CsgHelper::csgModelFromMesh(const GLC_Mesh *pMesh, const GLC_Ma
             }
 
             pSubject->vertices.push_back(vertex);
-            pSubject->indices.push_back(i);
+            pSubject->indices.push_back(newIndex++);
         }
     }
 
