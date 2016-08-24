@@ -167,7 +167,7 @@ namespace glc
 
     GLC_LIB_EXPORT bool polygonCompatibleWithClip2TRi(const QList<GLC_Point2d> polygon);
 
-    //! Segments composed of 3 point in counterclockwize
+    //! Segments composed of 3 points
     GLC_LIB_EXPORT QList<GLC_Point3d> AddCorner(const QList<GLC_Point3d>& segments, double radius, int count);
 
 //@}

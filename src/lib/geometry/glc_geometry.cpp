@@ -196,7 +196,12 @@ void GLC_Geometry::updateTransparentMaterialNumber()
 	if (m_WireColor.alpha() != 255)
 	{
 		++m_TransparentMaterialNumber;
-	}
+    }
+}
+
+void GLC_Geometry::addVerticeGroups(const GLC_Geometry& other, const GLC_Matrix4x4& matrix)
+{
+    m_WireData.add(other.m_WireData, matrix);
 }
 
 // Add material to mesh

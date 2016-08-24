@@ -42,6 +42,9 @@ void GLC_CsgHelper::soustract(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, con
 
     meshFromCsgModel(result, pMaterial, pResultMesh);
 
+    pResultMesh->addVerticeGroups(*pMesh1, m1);
+    pResultMesh->addVerticeGroups(*pMesh2, m2);
+
     delete pCsgModel1;
     delete pCsgModel2;
 }

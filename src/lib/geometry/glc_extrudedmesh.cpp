@@ -254,16 +254,17 @@ void GLC_ExtrudedMesh::createWire()
     const int count= m_Points.count();
     for (int i= 0; i < count; ++i)
     {
-        if (!m_SmothingPoints.contains(i) || !m_SmothingPoints.contains((i - 1) % count) || !m_SmothingPoints.contains((i + 1) % count))
+        const int prev= (((i - 1) >= 0) ? (i - 1) : (count - 1));
+        if (!m_SmothingPoints.contains(i) || !m_SmothingPoints.contains(prev) || !m_SmothingPoints.contains((i + 1) % count))
         {
             GLfloatVector edge(6); // the edge is a line
             edge[0]= baseFaceWire.at(i * 3);
             edge[1]= baseFaceWire.at(i * 3 + 1);
             edge[2]= baseFaceWire.at(i * 3 + 2);
 
-            edge[3]= createdFaceWire.at(((count - i) % count) * 3);
-            edge[4]= createdFaceWire.at(((count - i) % count) * 3 + 1);
-            edge[5]= createdFaceWire.at(((count - i) % count) * 3 + 2);
+            edge[3]= createdFaceWire.at(prev * 3);
+            edge[4]= createdFaceWire.at(prev * 3 + 1);
+            edge[5]= createdFaceWire.at(prev * 3 + 2);
 
             GLC_Geometry::addVerticeGroup(edge);
         }
@@ -315,7 +316,8 @@ GLfloatVector GLC_ExtrudedMesh::baseOutlineNormals() const
 
         if (m_SmothingPoints.contains(i))
         {
-            GLC_Vector3d prevVect(m_Points.at(i) - m_Points.at((i - 1) % count));
+            const int prevIndex= ((i - 1) >= 0) ? (i - 1) : (count - 1);
+            GLC_Vector3d prevVect(m_Points.at(i) - m_Points.at(prevIndex));
             GLC_Vector3d prevNormal= GLC_Vector3d(m_ExtrusionVector ^ prevVect).normalize();
             normal1= (normal + prevNormal).normalize();
         }
@@ -356,7 +358,8 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineNormals() const
     int index= 0.0;
     for (int i= count; i > 0; --i)
     {
-        GLC_Vector3d vect(m_Points.at(i % count) - m_Points.at(i - 1));
+        const int prevIndex= ((i - 1) >= 0) ? (i - 1) : (count - 1);
+        GLC_Vector3d vect(m_Points.at(i % count) - m_Points.at(prevIndex));
         GLC_Vector3d normal= GLC_Vector3d(m_ExtrusionVector ^ vect).normalize();
 
         GLC_Vector3d normal1;
@@ -375,7 +378,8 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineNormals() const
 
         if (m_SmothingPoints.contains((i - 1) % count))
         {
-            GLC_Vector3d prevVect(m_Points.at((i - 1) % count) - m_Points.at((i - 2) % count));
+            const int prevPrevIndex= ((i - 2) >= 0) ? (i - 2) : (count - 2);
+            GLC_Vector3d prevVect(m_Points.at(prevIndex) - m_Points.at(prevPrevIndex));
             GLC_Vector3d prevNormal= GLC_Vector3d(m_ExtrusionVector ^ prevVect).normalize();
             normal2= (normal + prevNormal).normalize();
         }

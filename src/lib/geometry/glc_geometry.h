@@ -252,6 +252,8 @@ public:
 	inline GLC_uint addVerticeGroup(const GLfloatVector& vector)
 	{return m_WireData.addVerticeGroup(vector);}
 
+    void addVerticeGroups(const GLC_Geometry& other, const GLC_Matrix4x4& matrix);
+
 	//! Set Line width
 	inline void setLineWidth(GLfloat lineWidth)
 	{m_LineWidth= lineWidth;}

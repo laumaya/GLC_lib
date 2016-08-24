@@ -133,6 +133,8 @@ public:
 	//! Set VBO usage
 	void setVboUsage(bool usage);
 
+    void add(const GLC_WireData& other, const GLC_Matrix4x4& matrix);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

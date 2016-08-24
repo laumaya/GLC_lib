@@ -328,7 +328,35 @@ void GLC_WireData::setVboUsage(bool usage)
 			m_IndexVector= indexVector();
 			m_IndexBuffer.destroy();
 		}
-	}
+    }
+}
+
+void GLC_WireData::add(const GLC_WireData& other, const GLC_Matrix4x4& matrix)
+{
+    GLfloatVector position= other.positionVector();
+    const int verticeGroupCount= other.verticeGroupCount();
+
+    int startIndex= 0;
+    for (int iGroup= 0; iGroup < verticeGroupCount; ++iGroup)
+    {
+        GLsizei verticeGroupSize= other.verticeGroupSize(iGroup);
+        int size= 3 * static_cast<int>(verticeGroupSize);
+
+        GLfloatVector currentPosition;
+
+        for (int i= startIndex; i < (startIndex + size); i+=3)
+        {
+            GLC_Vector3d vect(static_cast<double>(position.at(i))
+                              , static_cast<double>(position.at(i + 1))
+                              , static_cast<double>(position.at(i + 2)));
+            vect= matrix * vect;
+            currentPosition.append(static_cast<float>(vect.x()));
+            currentPosition.append(static_cast<float>(vect.y()));
+            currentPosition.append(static_cast<float>(vect.z()));
+        }
+        startIndex+= size;
+        addVerticeGroup(currentPosition);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
