@@ -5,6 +5,10 @@
 // C++ port by Tomasz Dabrowski (http://28byteslater.com), under the MIT license.
 // GitHub: https://github.com/dabroz/csgjs-cpp/
 //
+// Using double instead of float
+// Laurent Ribon (http://glc-lib.sourceforge.net)
+// GitHub: https://github.com/laumaya/GLC_lib/
+//
 // Constructive Solid Geometry (CSG) is a modeling technique that uses Boolean
 // operations like union and intersection to combine 3D solids. This library
 // implements CSG operations on meshes elegantly and concisely using BSP trees,
@@ -23,10 +27,10 @@
 
 struct csgjs_vector
 {
-    float x, y, z;
+    double x, y, z;
 
     csgjs_vector() : x(0.0f), y(0.0f), z(0.0f) {}
-    explicit csgjs_vector(float x, float y, float z) : x(x), y(y), z(z) {}
+    explicit csgjs_vector(double x, double y, double z) : x(x), y(y), z(z) {}
 };
 
 struct csgjs_vertex
