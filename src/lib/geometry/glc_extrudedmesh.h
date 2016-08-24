@@ -109,6 +109,8 @@ public:
     //! Set Smothing index
     void setSmothingIndex(const QList<int>& smothingIndex);
 
+    void setInvisibleEdgeIndex(const QList<int>& invisibleEdgeIndex);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -192,6 +194,8 @@ private:
 
     //! The list of index of smoothing points
     QList<int> m_SmothingPoints;
+
+    QList<int> m_InvisibleEdgeIndex;
 
     //! The direction of extrusion
     GLC_Vector3d m_ExtrusionVector;
