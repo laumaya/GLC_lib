@@ -32,9 +32,17 @@
 class GLC_LIB_EXPORT GLC_CsgOperatorNode : public GLC_CsgNode
 {
 public:
+    enum OperationType
+    {
+        CsgUnion,
+        CsgDifference,
+        CsgIntersection
+    };
+
+public:
     GLC_CsgOperatorNode();
-    GLC_CsgOperatorNode(const GLC_Matrix4x4& matrix, const GLC_3DRep& rep);
-    GLC_CsgOperatorNode(const GLC_CsgOperatorNode& other);
+    explicit GLC_CsgOperatorNode(const GLC_Matrix4x4& matrix, const GLC_3DRep& rep, OperationType operationType);
+    explicit GLC_CsgOperatorNode(const GLC_CsgOperatorNode& other, OperationType operationType);
 
     virtual ~GLC_CsgOperatorNode();
 
@@ -44,8 +52,11 @@ public:
 
 public:
     void setChildNodes(GLC_CsgNode* pNode1, GLC_CsgNode* pNode2);
+    void setOperationType(OperationType operationType)
+    {m_OperationType= operationType;}
 
 private:
+    OperationType m_OperationType;
     GLC_CsgNode* m_pOpe1Node;
     GLC_CsgNode* m_pOpe2Node;
 };

@@ -18,6 +18,68 @@ GLC_CsgHelper::GLC_CsgHelper()
 
 }
 
+GLC_Mesh*GLC_CsgHelper::intersection(const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+{
+    csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
+    csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
+
+    csgjs_model result= csgjs_intersection(*pCsgModel1, *pCsgModel2);
+
+    GLC_Mesh* pSubject= meshFromCsgModel(result, pMaterial);
+
+    delete pCsgModel1;
+    delete pCsgModel2;
+
+    return pSubject;
+}
+
+void GLC_CsgHelper::intersection(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+{
+    csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
+    csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
+
+    csgjs_model result= csgjs_intersection(*pCsgModel1, *pCsgModel2);
+
+    meshFromCsgModel(result, pMaterial, pResultMesh);
+
+    pResultMesh->addVerticeGroups(*pMesh1, m1);
+    pResultMesh->addVerticeGroups(*pMesh2, m2);
+
+    delete pCsgModel1;
+    delete pCsgModel2;
+}
+
+GLC_Mesh*GLC_CsgHelper::add(const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+{
+    csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
+    csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
+
+    csgjs_model result= csgjs_union(*pCsgModel1, *pCsgModel2);
+
+    GLC_Mesh* pSubject= meshFromCsgModel(result, pMaterial);
+
+    delete pCsgModel1;
+    delete pCsgModel2;
+
+    return pSubject;
+}
+
+void GLC_CsgHelper::add(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+{
+    csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
+    csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
+
+    csgjs_model result= csgjs_union(*pCsgModel1, *pCsgModel2);
+
+    meshFromCsgModel(result, pMaterial, pResultMesh);
+
+    pResultMesh->addVerticeGroups(*pMesh1, m1);
+    pResultMesh->addVerticeGroups(*pMesh2, m2);
+
+    delete pCsgModel1;
+    delete pCsgModel2;
+}
+
 GLC_Mesh *GLC_CsgHelper::soustract(const GLC_Mesh *pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh *pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
 {
     csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);

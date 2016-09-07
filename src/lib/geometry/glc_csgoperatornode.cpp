@@ -29,22 +29,25 @@
 
 GLC_CsgOperatorNode::GLC_CsgOperatorNode()
     : GLC_CsgNode()
+    , m_OperationType(CsgUnion)
     , m_pOpe1Node(NULL)
     , m_pOpe2Node(NULL)
 {
 
 }
 
-GLC_CsgOperatorNode::GLC_CsgOperatorNode(const GLC_Matrix4x4& matrix, const GLC_3DRep& rep)
+GLC_CsgOperatorNode::GLC_CsgOperatorNode(const GLC_Matrix4x4& matrix, const GLC_3DRep& rep, GLC_CsgOperatorNode::OperationType operationType)
     : GLC_CsgNode(matrix, rep)
+    , m_OperationType(operationType)
     , m_pOpe1Node(NULL)
     , m_pOpe2Node(NULL)
 {
 
 }
 
-GLC_CsgOperatorNode::GLC_CsgOperatorNode(const GLC_CsgOperatorNode& other)
+GLC_CsgOperatorNode::GLC_CsgOperatorNode(const GLC_CsgOperatorNode& other, OperationType operationType)
     : GLC_CsgNode(other)
+    , m_OperationType(operationType)
     , m_pOpe1Node(other.m_pOpe1Node)
     , m_pOpe2Node(other.m_pOpe2Node)
 {
@@ -87,7 +90,18 @@ void GLC_CsgOperatorNode::update()
     Q_ASSERT(NULL != pOperatorMesh);
 
     pOperatorMesh->clear();
-    GLC_CsgHelper::soustract(pOperatorMesh, pMesh1, m_pOpe1Node->matrix(), pMesh2, m_pOpe2Node->matrix(), m_pMaterial);
+    if (m_OperationType == CsgDifference)
+    {
+        GLC_CsgHelper::soustract(pOperatorMesh, pMesh1, m_pOpe1Node->matrix(), pMesh2, m_pOpe2Node->matrix(), m_pMaterial);
+    }
+    else if (m_OperationType == CsgIntersection)
+    {
+        GLC_CsgHelper::intersection(pOperatorMesh, pMesh1, m_pOpe1Node->matrix(), pMesh2, m_pOpe2Node->matrix(), m_pMaterial);
+    }
+    else
+    {
+        GLC_CsgHelper::add(pOperatorMesh, pMesh1, m_pOpe1Node->matrix(), pMesh2, m_pOpe2Node->matrix(), m_pMaterial);
+    }
 }
 
 void GLC_CsgOperatorNode::setChildNodes(GLC_CsgNode* pNode1, GLC_CsgNode* pNode2)
