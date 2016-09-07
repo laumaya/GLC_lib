@@ -154,6 +154,7 @@ void GLC_ExtrudedMesh::setInvisibleEdgeIndex(const QList<int>& invisibleEdgeInde
 
 void GLC_ExtrudedMesh::createMeshAndWire()
 {
+    qDebug() << "GLC_ExtrudedMesh::createMeshAndWire()";
     Q_ASSERT(GLC_Mesh::isEmpty());
     Q_ASSERT(m_WireData.isEmpty());
 
@@ -291,6 +292,7 @@ void GLC_ExtrudedMesh::computeGivenFaceNormal()
     const GLC_Vector3d edge2(GLC_Vector3d(m_Points.at(2) - m_Points.at(1)).normalize());
 
     m_GivenFaceNormal= edge1 ^ edge2;
+    m_GivenFaceNormal.normalize();
 }
 
 bool GLC_ExtrudedMesh::pointsLieOnAPlane() const
