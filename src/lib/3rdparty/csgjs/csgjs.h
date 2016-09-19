@@ -21,9 +21,10 @@
 #ifndef CSGJS_H
 #define CSGJS_H
 
-#include <vector>
 #include <algorithm>
 #include <math.h>
+
+#include <QList>
 
 struct csgjs_vector
 {
@@ -42,8 +43,8 @@ struct csgjs_vertex
 
 struct csgjs_model
 {
-    std::vector<csgjs_vertex> vertices;
-    std::vector<int> indices;
+    QList<csgjs_vertex> vertices;
+    QList<int> indices;
 };
 
 // public interface - not super efficient, if you use multiple CSG operations you should
