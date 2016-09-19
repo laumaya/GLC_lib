@@ -69,12 +69,20 @@ GLC_Geometry* GLC_Disc::clone() const
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-void GLC_Disc::update()
+bool GLC_Disc::update()
 {
+    bool subject;
     if (GLC_Mesh::isEmpty())
     {
         createMeshAndWire();
+        subject= true;
     }
+    else
+    {
+        subject= false;
+    }
+
+    return subject;
 }
 
 GLC_Disc& GLC_Disc::operator=(const GLC_Disc& disc)

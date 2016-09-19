@@ -76,12 +76,20 @@ GLC_Geometry* GLC_Box::clone() const
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Box::update()
+bool GLC_Box::update()
 {
+    bool subject;
     if (GLC_Mesh::isEmpty())
     {
         createMeshAndWire();
+        subject= true;
     }
+    else
+    {
+        subject= false;
+    }
+
+    return subject;
 }
 
 // Set X length

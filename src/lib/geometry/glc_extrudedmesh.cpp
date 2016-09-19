@@ -79,12 +79,20 @@ const GLC_BoundingBox &GLC_ExtrudedMesh::boundingBox()
     return GLC_Mesh::boundingBox();
 }
 
-void GLC_ExtrudedMesh::update()
+bool GLC_ExtrudedMesh::update()
 {
+    bool subject;
     if (GLC_Mesh::isEmpty())
     {
         createMeshAndWire();
+        subject= true;
     }
+    else
+    {
+        subject= false;
+    }
+
+    return subject;
 }
 
 GLC_ExtrudedMesh &GLC_ExtrudedMesh::operator =(const GLC_ExtrudedMesh &other)
@@ -154,7 +162,6 @@ void GLC_ExtrudedMesh::setInvisibleEdgeIndex(const QList<int>& invisibleEdgeInde
 
 void GLC_ExtrudedMesh::createMeshAndWire()
 {
-    qDebug() << "GLC_ExtrudedMesh::createMeshAndWire()";
     Q_ASSERT(GLC_Mesh::isEmpty());
     Q_ASSERT(m_WireData.isEmpty());
 

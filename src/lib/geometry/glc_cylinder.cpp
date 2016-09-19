@@ -91,12 +91,20 @@ const GLC_BoundingBox& GLC_Cylinder::boundingBox()
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
-void GLC_Cylinder::update()
+bool GLC_Cylinder::update()
 {
+    bool subject;
     if (GLC_Mesh::isEmpty())
     {
         createMeshAndWire();
+        subject= true;
     }
+    else
+    {
+        subject= false;
+    }
+
+    return subject;
 }
 
 void GLC_Cylinder::setLength(double Length)

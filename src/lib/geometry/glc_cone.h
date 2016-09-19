@@ -88,7 +88,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    virtual void update();
+    virtual bool update();
 
 	//! Set Cone length
 	/*! Length must be > 0*/

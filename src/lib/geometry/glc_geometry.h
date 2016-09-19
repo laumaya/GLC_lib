@@ -201,6 +201,9 @@ public:
 	inline bool vboIsUsed() const
 	{return m_UseVbo;}
 
+    const GLC_WireData& wireData() const
+    {return m_WireData;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -209,7 +212,9 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-    virtual void update(){}
+    //! return true if update process modify geometry
+    virtual bool update()
+    {return false;}
 
 	//! Clear the content of the geometry and makes it empty
 	virtual void clear();
@@ -253,6 +258,8 @@ public:
 	{return m_WireData.addVerticeGroup(vector);}
 
     void addVerticeGroups(const GLC_Geometry& other, const GLC_Matrix4x4& matrix);
+
+    void addVerticeGroups(const GLC_WireData& wireData, const GLC_Matrix4x4& matrix);
 
 	//! Set Line width
 	inline void setLineWidth(GLfloat lineWidth)

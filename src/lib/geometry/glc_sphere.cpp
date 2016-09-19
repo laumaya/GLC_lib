@@ -86,12 +86,20 @@ const GLC_BoundingBox& GLC_Sphere::boundingBox()
     return GLC_Mesh::boundingBox();
 }
 
-void GLC_Sphere::update()
+bool GLC_Sphere::update()
 {
+    bool subject;
     if ( GLC_Mesh::isEmpty() )
     {
         createMesh();
+        subject= true;
     }
+    else
+    {
+        subject= false;
+    }
+
+    return subject;
 }
 
 void GLC_Sphere::setRadius(double Radius)

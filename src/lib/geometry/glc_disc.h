@@ -81,7 +81,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    virtual void update();
+    virtual bool update();
 
 	//! Set this disc from the given disc and return a reference of this disc
 	GLC_Disc& operator=(const GLC_Disc& disc);

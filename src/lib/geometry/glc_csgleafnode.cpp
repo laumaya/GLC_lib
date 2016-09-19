@@ -22,6 +22,11 @@
 
 //! \file glc_csgleafnode.cpp Implementation for the GLC_CsgLeafNode class.
 
+#include "../3rdparty/csgjs/csgjs.h"
+
+#include "glc_mesh.h"
+#include "glc_csghelper.h"
+
 #include "glc_csgleafnode.h"
 
 GLC_CsgLeafNode::GLC_CsgLeafNode()
@@ -42,6 +47,14 @@ GLC_CsgLeafNode::GLC_CsgLeafNode(const GLC_CsgLeafNode& other)
 
 }
 
+const GLC_WireData& GLC_CsgLeafNode::wireData() const
+{
+    Q_ASSERT(!m_3DRep.isEmpty());
+    Q_ASSERT(m_3DRep.numberOfBody() == 1);
+
+    return m_3DRep.geomAt(0)->wireData();
+}
+
 GLC_CsgNode*GLC_CsgLeafNode::clone() const
 {
     return new GLC_CsgLeafNode(*this);
@@ -52,5 +65,12 @@ void GLC_CsgLeafNode::update()
     Q_ASSERT(!m_3DRep.isEmpty());
     Q_ASSERT(m_3DRep.numberOfBody() == 1);
 
-    m_3DRep.geomAt(0)->update();
+    const bool geomChange= m_3DRep.geomAt(0)->update();
+    if (geomChange || (m_pResultCsgModel == NULL))
+    {
+        delete m_pResultCsgModel;
+        GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(m_3DRep.geomAt(0));
+        Q_ASSERT(NULL != pMesh);
+        m_pResultCsgModel= GLC_CsgHelper::csgModelFromMesh(pMesh, m_Matrix);
+    }
 }

@@ -80,7 +80,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    virtual void update();
+    virtual bool update();
 
 	//! Set this rectangle with the given lenght
 	GLC_Rectangle& setRectangle(double l1, double l2);

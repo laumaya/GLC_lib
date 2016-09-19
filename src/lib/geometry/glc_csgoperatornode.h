@@ -29,6 +29,8 @@
 
 #include "../glc_config.h"
 
+class GLC_WireData;
+
 class GLC_LIB_EXPORT GLC_CsgOperatorNode : public GLC_CsgNode
 {
 public:
@@ -47,8 +49,12 @@ public:
     virtual ~GLC_CsgOperatorNode();
 
 public:
+    const GLC_WireData& wireData() const
+    {return m_WireData;}
+
     virtual GLC_CsgNode* clone() const;
     virtual void update();
+    virtual void createMesh();
 
 public:
     void setChildNodes(GLC_CsgNode* pNode1, GLC_CsgNode* pNode2);
@@ -59,6 +65,8 @@ private:
     OperationType m_OperationType;
     GLC_CsgNode* m_pOpe1Node;
     GLC_CsgNode* m_pOpe2Node;
+
+    GLC_WireData m_WireData;
 };
 
 #endif // GLC_CSGOPERATORNODE_H

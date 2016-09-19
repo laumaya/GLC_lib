@@ -129,7 +129,11 @@ void GLC_ViewHandler::setWorld(const GLC_World &world)
         m_World.collection()->setSpacePartitionningUsage(false);
     }
 
-    m_pViewport->reframe(m_World.boundingBox());
+    const GLC_BoundingBox bBox= m_World.boundingBox();
+    if (!bBox.isEmpty())
+    {
+        m_pViewport->reframe(m_World.boundingBox());
+    }
 
    updateGL();
 }

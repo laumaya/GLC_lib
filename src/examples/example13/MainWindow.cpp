@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     viewHandlerPointer->setWorld(m_Model.world());
     viewHandlerPointer->viewportHandle()->cameraHandle()->setDefaultUpVector(glc::Z_AXIS);
     viewHandlerPointer->viewportHandle()->cameraHandle()->setIsoView();
+    viewHandlerPointer->setCurrentRenderFlag(glc::WireRenderFlag);
     QVariant viewHandler;
     viewHandler.setValue(viewHandlerPointer);
     m_pOpenGLView->setViewhandler(viewHandler);

@@ -90,7 +90,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 
-    virtual void update();
+    virtual bool update();
 
 	//! Set X length
 	/*! This Function invalid OpenGL display list

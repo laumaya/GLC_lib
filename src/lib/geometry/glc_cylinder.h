@@ -95,7 +95,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    virtual void update();
+    virtual bool update();
 
 	//! Set Cylinder length
 	/*! Length must be > 0*/

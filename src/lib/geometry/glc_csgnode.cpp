@@ -23,8 +23,10 @@
 //! \file glc_csgnode.cpp Implementation for the GLC_CsgNode class.
 
 #include <QtDebug>
-
+#include "../3rdparty/csgjs/csgjs.h"
 #include "../shading/glc_material.h"
+#include "../maths/glc_geomtools.h"
+
 #include "glc_mesh.h"
 
 #include "glc_csgnode.h"
@@ -34,6 +36,8 @@ GLC_CsgNode::GLC_CsgNode()
     , m_Matrix()
     , m_3DRep()
     , m_pMaterial(new GLC_Material)
+
+    , m_pResultCsgModel(NULL)
 {
     m_pMaterial->addUsage(m_Id);
     m_3DRep.addGeom(new GLC_Mesh);
@@ -44,6 +48,8 @@ GLC_CsgNode::GLC_CsgNode(const GLC_Matrix4x4& matrix, const GLC_3DRep& rep)
     , m_Matrix(matrix)
     , m_3DRep(rep)
     , m_pMaterial(new GLC_Material)
+
+    , m_pResultCsgModel(NULL)
 {
     m_pMaterial->addUsage(m_Id);
 }
@@ -53,6 +59,8 @@ GLC_CsgNode::GLC_CsgNode(const GLC_CsgNode& other)
     , m_Matrix(other.m_Matrix)
     , m_3DRep(other.m_3DRep)
     , m_pMaterial(other.m_pMaterial)
+
+    , m_pResultCsgModel(new csgjs_model(*(other.m_pResultCsgModel)))
 {
     m_pMaterial->addUsage(m_Id);
 }
@@ -64,11 +72,22 @@ GLC_CsgNode::~GLC_CsgNode()
     {
         delete m_pMaterial;
     }
+    delete m_pResultCsgModel;
+}
+
+void GLC_CsgNode::setMatrix(const GLC_Matrix4x4& matrix)
+{
+    if (m_Matrix != matrix)
+    {
+        m_Matrix= matrix;
+        delete m_pResultCsgModel;
+        m_pResultCsgModel= NULL;
+    }
 }
 
 void GLC_CsgNode::update(const GLC_Matrix4x4& matrix)
 {
-    m_Matrix= matrix;
+    setMatrix(matrix);
     update();
 }
 

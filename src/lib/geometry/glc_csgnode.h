@@ -29,9 +29,11 @@
 #include "../maths/glc_matrix4x4.h"
 
 #include "glc_3drep.h"
+#include "glc_wiredata.h"
 
 #include "../glc_config.h"
 
+struct csgjs_model;
 class GLC_Material;
 
 //////////////////////////////////////////////////////////////////////
@@ -53,6 +55,7 @@ public:
 public:
     virtual GLC_CsgNode* clone() const= 0;
     virtual void update()= 0;
+    virtual void createMesh()= 0;
 
 public:
     GLC_3DRep get3DRep() const
@@ -64,9 +67,13 @@ public:
     GLC_Material* material() const
     {return m_pMaterial;}
 
+    csgjs_model* csgjsModel() const
+    {return m_pResultCsgModel;}
+
+    virtual const GLC_WireData& wireData() const= 0;
+
 public:
-    void setMatrix(const GLC_Matrix4x4& matrix)
-    {m_Matrix= matrix;}
+    void setMatrix(const GLC_Matrix4x4& matrix);
 
     void update(const GLC_Matrix4x4& matrix);
 
@@ -80,6 +87,8 @@ protected:
     GLC_Matrix4x4 m_Matrix;
     GLC_3DRep m_3DRep;
     GLC_Material* m_pMaterial;
+
+    csgjs_model* m_pResultCsgModel;
 };
 
 #endif // GLC_CSGNODE_H

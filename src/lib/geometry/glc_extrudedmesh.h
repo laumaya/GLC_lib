@@ -89,7 +89,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    virtual void update();
+    virtual bool update();
 
     //! Assignement operator overload
     GLC_ExtrudedMesh& operator=(const GLC_ExtrudedMesh& other);

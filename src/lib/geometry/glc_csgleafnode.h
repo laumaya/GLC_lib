@@ -37,8 +37,11 @@ public:
     GLC_CsgLeafNode(const GLC_CsgLeafNode& other);
 
 public:
+    const GLC_WireData& wireData() const;
     virtual GLC_CsgNode* clone() const;
     virtual void update();
+    virtual void createMesh(){}
+
 
 };
 

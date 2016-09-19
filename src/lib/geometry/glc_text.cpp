@@ -77,11 +77,17 @@ GLC_Geometry *GLC_Text::clone() const
     return new GLC_Text(*this);
 }
 
-void GLC_Text::update()
+bool GLC_Text::update()
 {
+    bool subject;
     if (GLC_Mesh::isEmpty())
     {
         createText();
+        subject= true;
+    }
+    else
+    {
+        subject= false;
     }
 }
 

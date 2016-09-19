@@ -204,6 +204,11 @@ void GLC_Geometry::addVerticeGroups(const GLC_Geometry& other, const GLC_Matrix4
     m_WireData.add(other.m_WireData, matrix);
 }
 
+void GLC_Geometry::addVerticeGroups(const GLC_WireData& wireData, const GLC_Matrix4x4& matrix)
+{
+    m_WireData.add(wireData, matrix);
+}
+
 // Add material to mesh
 void GLC_Geometry::addMaterial(GLC_Material* pMaterial)
 {
