@@ -278,9 +278,6 @@ public:
 	inline void setWireColor(const QColor& color)
 	{m_WireColor= color;}
 
-	//! Copy VBO to the Client Side
-	virtual void copyVboToClientSide();
-
 	//! Release client VBO
 	virtual void releaseVboClientSide(bool update);
 

@@ -53,8 +53,9 @@ public:
     {return m_WireData;}
 
     virtual GLC_CsgNode* clone() const;
-    virtual void update();
+    virtual bool update();
     virtual void createMesh();
+    virtual QList<GLC_CsgNode*> chrildren() const;
 
 public:
     void setChildNodes(GLC_CsgNode* pNode1, GLC_CsgNode* pNode2);
@@ -68,5 +69,7 @@ private:
 
     GLC_WireData m_WireData;
 };
+
+
 
 #endif // GLC_CSGOPERATORNODE_H

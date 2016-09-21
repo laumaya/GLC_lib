@@ -450,7 +450,6 @@ GLC_Mesh* GLC_Mesh::createMeshOfGivenLod(int lodIndex)
 {
 	Q_ASSERT(m_MeshData.lodCount() > lodIndex);
 
-	copyVboToClientSide();
 	GLC_Mesh* pLodMesh= new GLC_Mesh;
 	pLodMesh->setName(this->name() + "-LOD-" + QString::number(lodIndex));
 	QHash<GLuint, GLuint> sourceToTargetIndexMap;
@@ -474,7 +473,6 @@ GLC_Mesh* GLC_Mesh::createMeshFromGivenLod(int lodIndex)
 	const int lodCount= m_MeshData.lodCount();
 	Q_ASSERT(lodCount > lodIndex);
 
-	copyVboToClientSide();
 	GLC_Mesh* pLodMesh= new GLC_Mesh;
 	pLodMesh->setName(this->name() + "-LOD-" + QString::number(lodIndex));
 	QHash<GLuint, GLuint> sourceToTargetIndexMap;
@@ -511,7 +509,6 @@ GLC_Mesh& GLC_Mesh::transformVertice(const GLC_Matrix4x4& matrix)
 	{
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
-		copyVboToClientSide();
 		const int stride= 3;
 		GLfloatVector* pVectPos= m_MeshData.positionVectorHandle();
 		const GLC_Matrix4x4 rotationMatrix= matrix.rotationMatrix();
@@ -818,12 +815,6 @@ void GLC_Mesh::replaceMaterial(const GLC_uint oldId, GLC_Material* pMat)
 		addMaterial(pMat);
 	}
 
-}
-
-void GLC_Mesh::copyVboToClientSide()
-{
-	m_MeshData.copyVboToClientSide();
-	GLC_Geometry::copyVboToClientSide();
 }
 
 void GLC_Mesh::releaseVboClientSide(bool update)

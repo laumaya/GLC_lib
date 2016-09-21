@@ -23,6 +23,8 @@
 //! \file glc_csgnode.cpp Implementation for the GLC_CsgNode class.
 
 #include <QtDebug>
+#include <QtConcurrent>
+
 #include "../3rdparty/csgjs/csgjs.h"
 #include "../shading/glc_material.h"
 #include "../maths/glc_geomtools.h"
@@ -38,6 +40,8 @@ GLC_CsgNode::GLC_CsgNode()
     , m_pMaterial(new GLC_Material)
 
     , m_pResultCsgModel(NULL)
+
+    , m_Level(0)
 {
     m_pMaterial->addUsage(m_Id);
     m_3DRep.addGeom(new GLC_Mesh);
@@ -50,6 +54,8 @@ GLC_CsgNode::GLC_CsgNode(const GLC_Matrix4x4& matrix, const GLC_3DRep& rep)
     , m_pMaterial(new GLC_Material)
 
     , m_pResultCsgModel(NULL)
+
+    , m_Level(0)
 {
     m_pMaterial->addUsage(m_Id);
 }
@@ -61,6 +67,8 @@ GLC_CsgNode::GLC_CsgNode(const GLC_CsgNode& other)
     , m_pMaterial(other.m_pMaterial)
 
     , m_pResultCsgModel(new csgjs_model(*(other.m_pResultCsgModel)))
+
+    , m_Level(other.m_Level)
 {
     m_pMaterial->addUsage(m_Id);
 }
@@ -105,4 +113,57 @@ void GLC_CsgNode::setMaterial(GLC_Material* pMaterial)
         m_pMaterial= pMaterial;
         m_pMaterial->addUsage(m_Id);
     }
+}
+
+QList<QList<GLC_CsgNode*> > GLC_CsgNode::LevelList() const
+{
+    QList<QList<GLC_CsgNode*> > subject;
+    QList<GLC_CsgNode*> firstLevel;
+    firstLevel.append(const_cast<GLC_CsgNode*>(this));
+    subject.append(firstLevel);
+    int currentLevel= 1;
+
+    createLvlList(&subject, currentLevel);
+
+
+    return subject;
+}
+
+void GLC_CsgNode::multiThreadedUpdate()
+{
+    QList<QList<GLC_CsgNode*> > levelList= this->LevelList();
+    std::reverse(levelList.begin(), levelList.end());
+    const int count= levelList.count();
+    for (int i= 0; i < count; ++i)
+    {
+        QList<GLC_CsgNode*> currentList= levelList.at(i);
+        QtConcurrent::blockingMapped(currentList, mappedFutureFct);
+    }
+}
+
+void GLC_CsgNode::createLvlList(QList<QList<GLC_CsgNode*> >* lvlList, int currentLevel) const
+{
+    QList<GLC_CsgNode*> children= this->chrildren();
+    if (!children.isEmpty())
+    {
+        if (lvlList->count() <= currentLevel)
+        {
+            lvlList->append(QList<GLC_CsgNode*>());
+        }
+
+        QList<GLC_CsgNode*>& currentList= lvlList->operator [](currentLevel);
+        currentList.append(children);
+        ++currentLevel;
+        const int count= children.count();
+        for (int i= 0; i < count; ++i)
+        {
+            children.at(i)->createLvlList(lvlList, currentLevel);
+        }
+    }
+}
+
+GLC_CsgNode*GLC_CsgNode::mappedFutureFct(GLC_CsgNode* pNode)
+{
+    pNode->update();
+    return pNode;
 }

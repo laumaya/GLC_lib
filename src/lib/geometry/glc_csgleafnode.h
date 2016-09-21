@@ -39,8 +39,10 @@ public:
 public:
     const GLC_WireData& wireData() const;
     virtual GLC_CsgNode* clone() const;
-    virtual void update();
+    virtual bool update();
     virtual void createMesh(){}
+    virtual QList<GLC_CsgNode*> chrildren() const
+    {return QList<GLC_CsgNode*>();}
 
 
 };

@@ -171,9 +171,6 @@ public:
 	//! Take the geometry of another 3DRep
 	void take(GLC_3DRep* pSource);
 
-	//! Copy VBO to the Client Side
-	void copyVboToClientSide();
-
 	//! Release client VBO
 	void releaseVboClientSide(bool update= false);
 

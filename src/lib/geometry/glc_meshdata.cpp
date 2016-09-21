@@ -114,102 +114,6 @@ quint32 GLC_MeshData::chunckID()
 	return m_ChunkId;
 }
 
-// Return the Position Vector
-GLfloatVector GLC_MeshData::positionVector() const
-{
-	if (m_VertexBuffer.isCreated())
-	{
-		// VBO created get data from VBO
-		const int sizeOfVbo= m_PositionSize;
-		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
-		GLfloatVector positionVector(sizeOfVbo);
-
-		if (!const_cast<QOpenGLBuffer&>(m_VertexBuffer).bind())
-		{
-			GLC_Exception exception("GLC_MeshData::positionVector()  Failed to bind vertex buffer");
-			throw(exception);
-		}
-		GLvoid* pVbo = const_cast<QOpenGLBuffer&>(m_VertexBuffer).map(QOpenGLBuffer::ReadOnly);
-		memcpy(positionVector.data(), pVbo, dataSize);
-		const_cast<QOpenGLBuffer&>(m_VertexBuffer).unmap();
-		const_cast<QOpenGLBuffer&>(m_VertexBuffer).release();
-		return positionVector;
-	}
-	else
-	{
-		return m_Positions;
-	}
-}
-
-// Return the normal Vector
-GLfloatVector GLC_MeshData::normalVector() const
-{
-	if (m_NormalBuffer.isCreated())
-	{
-		// VBO created get data from VBO
-		const int sizeOfVbo= m_PositionSize;
-		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLfloat);
-		GLfloatVector normalVector(sizeOfVbo);
-
-		const_cast<QOpenGLBuffer&>(m_NormalBuffer).bind();
-		GLvoid* pVbo = const_cast<QOpenGLBuffer&>(m_NormalBuffer).map(QOpenGLBuffer::ReadOnly);
-		memcpy(normalVector.data(), pVbo, dataSize);
-		const_cast<QOpenGLBuffer&>(m_NormalBuffer).unmap();
-		const_cast<QOpenGLBuffer&>(m_NormalBuffer).release();
-		return normalVector;
-	}
-	else
-	{
-		return m_Normals;
-	}
-}
-
-// Return the texel Vector
-GLfloatVector GLC_MeshData::texelVector() const
-{
-	if (m_TexelBuffer.isCreated())
-	{
-		// VBO created get data from VBO
-		const int sizeOfVbo= m_TexelsSize;
-		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLfloat);
-		GLfloatVector texelVector(sizeOfVbo);
-
-		const_cast<QOpenGLBuffer&>(m_TexelBuffer).bind();
-		GLvoid* pVbo = const_cast<QOpenGLBuffer&>(m_TexelBuffer).map(QOpenGLBuffer::ReadOnly);
-		memcpy(texelVector.data(), pVbo, dataSize);
-		const_cast<QOpenGLBuffer&>(m_TexelBuffer).unmap();
-		const_cast<QOpenGLBuffer&>(m_TexelBuffer).release();
-		return texelVector;
-	}
-	else
-	{
-		return m_Texels;
-	}
-}
-
-// Return the color Vector
-GLfloatVector GLC_MeshData::colorVector() const
-{
-	if (m_ColorBuffer.isCreated())
-	{
-		// VBO created get data from VBO
-		const int sizeOfVbo= m_ColorSize;
-		const GLsizeiptr dataSize= sizeOfVbo * sizeof(GLfloat);
-		GLfloatVector normalVector(sizeOfVbo);
-
-		const_cast<QOpenGLBuffer&>(m_ColorBuffer).bind();
-		GLvoid* pVbo = const_cast<QOpenGLBuffer&>(m_ColorBuffer).map(QOpenGLBuffer::ReadOnly);
-		memcpy(normalVector.data(), pVbo, dataSize);
-		const_cast<QOpenGLBuffer&>(m_ColorBuffer).unmap();
-		const_cast<QOpenGLBuffer&>(m_ColorBuffer).release();
-		return normalVector;
-	}
-	else
-	{
-		return m_Colors;
-	}
-}
-
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -269,24 +173,6 @@ void GLC_MeshData::clear()
 	m_LodList.clear();
 }
 
-void GLC_MeshData::copyVboToClientSide()
-{
-	if (m_VertexBuffer.isCreated() && m_Positions.isEmpty())
-	{
-		Q_ASSERT(m_NormalBuffer.isCreated());
-		m_Positions= positionVector();
-		m_Normals= normalVector();
-		if (m_TexelBuffer.isCreated())
-		{
-			m_Texels= texelVector();
-		}
-		if (m_ColorBuffer.isCreated())
-		{
-			m_Colors= colorVector();
-		}
-	}
-}
-
 void GLC_MeshData::releaseVboClientSide(bool update)
 {
 	if (m_VertexBuffer.isCreated() && !m_Positions.isEmpty())
@@ -300,12 +186,8 @@ void GLC_MeshData::releaseVboClientSide(bool update)
             QOpenGLBuffer::release(QOpenGLBuffer::VertexBuffer);
 		}
 		m_PositionSize= m_Positions.size();
-		m_Positions.clear();
-		m_Normals.clear();
 		m_TexelsSize= m_Texels.size();
-		m_Texels.clear();
 		m_ColorSize= m_Colors.size();
-		m_Colors.clear();
 	}
 }
 
@@ -453,7 +335,6 @@ void GLC_MeshData::fillVbo(GLC_MeshData::VboType type)
 		m_VertexBuffer.allocate(m_Positions.data(), dataSize);
 
 		m_PositionSize= m_Positions.size();
-		m_Positions.clear();
 	}
 	else if (type == GLC_MeshData::GLC_Normal)
 	{
@@ -461,8 +342,6 @@ void GLC_MeshData::fillVbo(GLC_MeshData::VboType type)
 		const GLsizei dataNbr= static_cast<GLsizei>(m_Normals.size());
 		const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
 		m_NormalBuffer.allocate(m_Normals.data(), dataSize);
-
-		m_Normals.clear();
 	}
 	else if ((type == GLC_MeshData::GLC_Texel) && m_TexelBuffer.isCreated())
 	{
@@ -472,7 +351,6 @@ void GLC_MeshData::fillVbo(GLC_MeshData::VboType type)
 		m_TexelBuffer.allocate(m_Texels.data(), dataSize);
 
 		m_TexelsSize= m_Texels.size();
-		m_Texels.clear();
 	}
 	else if ((type == GLC_MeshData::GLC_Color) && m_ColorBuffer.isCreated())
 	{
@@ -482,7 +360,6 @@ void GLC_MeshData::fillVbo(GLC_MeshData::VboType type)
 		m_ColorBuffer.allocate(m_Colors.data(), dataSize);
 
 		m_ColorSize= m_Colors.size();
-		m_Colors.clear();
     }
 }
 

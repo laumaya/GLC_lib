@@ -92,27 +92,7 @@ quint32 GLC_Lod::chunckID()
 }
 
 
-QVector<GLuint> GLC_Lod::indexVector() const
-{
-	if (m_IndexBuffer.isCreated())
-	{
-		// VBO created get data from VBO
-		const int sizeOfIbo= m_IndexSize;
-		const GLsizeiptr dataSize= sizeOfIbo * sizeof(GLuint);
-		QVector<GLuint> indexVector(sizeOfIbo);
 
-		const_cast<QOpenGLBuffer&>(m_IndexBuffer).bind();
-		GLvoid* pIbo = const_cast<QOpenGLBuffer&>(m_IndexBuffer).map(QOpenGLBuffer::ReadOnly);
-		memcpy(indexVector.data(), pIbo, dataSize);
-		const_cast<QOpenGLBuffer&>(m_IndexBuffer).unmap();
-		const_cast<QOpenGLBuffer&>(m_IndexBuffer).release();
-		return indexVector;
-	}
-	else
-	{
-		return m_IndexVector;
-	}
-}
 
 
 void GLC_Lod::copyIboToClientSide()
@@ -139,7 +119,6 @@ void GLC_Lod::releaseIboClientSide(bool update)
 			m_IndexBuffer.release();
 		}
 		m_IndexSize= m_IndexVector.size();
-		m_IndexVector.clear();
 	}
 }
 
@@ -157,8 +136,6 @@ void GLC_Lod::setIboUsage(bool usage)
 		m_IndexBuffer.release();
 
 		m_IndexSize= m_IndexVector.size();
-		m_IndexVector.clear();
-
 	}
 	else if (!usage && m_IndexBuffer.isCreated())
 	{
@@ -184,7 +161,7 @@ QDataStream &operator<<(QDataStream &stream, const GLC_Lod &lod)
 	stream << chunckId;
 
 	stream << lod.m_Accuracy;
-	stream << lod.indexVector();
+    stream << lod.m_IndexVector;
 	stream << lod.m_TrianglesCount;
 
 	return stream;

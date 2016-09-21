@@ -60,8 +60,9 @@ GLC_CsgNode*GLC_CsgLeafNode::clone() const
     return new GLC_CsgLeafNode(*this);
 }
 
-void GLC_CsgLeafNode::update()
+bool GLC_CsgLeafNode::update()
 {
+    bool subject= false;
     Q_ASSERT(!m_3DRep.isEmpty());
     Q_ASSERT(m_3DRep.numberOfBody() == 1);
 
@@ -72,5 +73,8 @@ void GLC_CsgLeafNode::update()
         GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(m_3DRep.geomAt(0));
         Q_ASSERT(NULL != pMesh);
         m_pResultCsgModel= GLC_CsgHelper::csgModelFromMesh(pMesh, m_Matrix);
+        subject= true;
     }
+
+    return subject;
 }

@@ -81,7 +81,8 @@ public:
 	 * - Triangles Strips index
 	 * - Triangles Fans index
 	 */
-	QVector<GLuint> indexVector() const;
+    QVector<GLuint> indexVector() const
+    {return m_IndexVector;}
 
 	//! Return The unique index Vector handle which contains :
 	/*!

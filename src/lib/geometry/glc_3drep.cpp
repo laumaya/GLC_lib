@@ -379,16 +379,6 @@ void GLC_3DRep::take(GLC_3DRep* pSource)
 	pSource->m_pGeomList->clear();
 }
 
-void GLC_3DRep::copyVboToClientSide()
-{
-	// Get the number of geometry of pRep
-	const int pRepSize= m_pGeomList->size();
-	for (int i= 0; i < pRepSize; ++i)
-	{
-		geomAt(i)->copyVboToClientSide();
-	}
-}
-
 void GLC_3DRep::releaseVboClientSide(bool update)
 {
 	// Get the number of geometry of pRep

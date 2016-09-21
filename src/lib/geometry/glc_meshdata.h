@@ -86,16 +86,20 @@ public:
 	{return m_LodList.size();}
 
 	//! Return the Position Vector
-	GLfloatVector positionVector() const;
+    GLfloatVector positionVector() const
+    {return m_Positions;}
 
 	//! Return the normal Vector
-	GLfloatVector normalVector() const;
+    GLfloatVector normalVector() const
+    {return m_Normals;}
 
 	//! Return the texel Vector
-	GLfloatVector texelVector() const;
+    GLfloatVector texelVector() const
+    {return m_Texels;}
 
 	//! Return the color Vector
-	GLfloatVector colorVector() const;
+    GLfloatVector colorVector() const
+    {return m_Colors;}
 
 	//! Return the Position Vector handle
 	inline GLfloatVector* positionVectorHandle()
@@ -175,9 +179,6 @@ public:
 
 	//! Clear the content of the meshData and makes it empty
 	void clear();
-
-	//! Copy VBO to the Client Side
-	void copyVboToClientSide();
 
 	//! Release client VBO
 	void releaseVboClientSide(bool update= false);

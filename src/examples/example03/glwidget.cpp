@@ -27,6 +27,7 @@
 
 #include <GLC_UserInput>
 #include <GLC_Context>
+#include <GLC_CsgHelper>
 
 // GLC_Lib Exception
 #include <GLC_Exception>
@@ -50,7 +51,14 @@ GLWidget::GLWidget(QWidget *p_parent)
 	matBlue.setRgbF(0.5, 0.8, 1.0, 1.0);
 	m_Cylinder.geomAt(0)->addMaterial(new GLC_Material(matBlue));
 
-    m_Collection.add(m_Cylinder);
+    //m_Collection.add(m_Cylinder);
+
+    GLC_Mesh* pMesh1= new GLC_Cylinder(2.0, 2.0);
+    GLC_Mesh* pMesh2= new GLC_Cylinder(1.0, 3.0);
+    GLC_Mesh* pMesh3= GLC_CsgHelper::soustract(pMesh1, GLC_Matrix4x4(), pMesh2, GLC_Matrix4x4(), new GLC_Material(matBlue));
+
+    GLC_3DViewInstance instance(pMesh3);
+    m_Collection.add(instance);
 
 	// Set up mover controller
 	QColor repColor;

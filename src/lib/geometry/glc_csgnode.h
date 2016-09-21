@@ -54,8 +54,9 @@ public:
 
 public:
     virtual GLC_CsgNode* clone() const= 0;
-    virtual void update()= 0;
+    virtual bool update()= 0;
     virtual void createMesh()= 0;
+    virtual QList<GLC_CsgNode*> chrildren() const= 0;
 
 public:
     GLC_3DRep get3DRep() const
@@ -82,6 +83,14 @@ public:
     void set3DRep(const GLC_3DRep& rep)
     {m_3DRep= rep;}
 
+    QList<QList<GLC_CsgNode*> > LevelList() const;
+
+    void multiThreadedUpdate();
+
+protected:
+    void createLvlList(QList<QList<GLC_CsgNode*> >* lvlList, int currentLevel) const;
+    static GLC_CsgNode* mappedFutureFct(GLC_CsgNode* pNode);
+
 protected:
     const GLC_uint m_Id;
     GLC_Matrix4x4 m_Matrix;
@@ -89,6 +98,8 @@ protected:
     GLC_Material* m_pMaterial;
 
     csgjs_model* m_pResultCsgModel;
+
+    int m_Level;
 };
 
 #endif // GLC_CSGNODE_H

@@ -21,6 +21,13 @@
 *****************************************************************************/
 
 #include <QtGui>
+#include <QList>
+#include <QtDebug>
+
+#include <GLC_GeomTools>
+#include <GLC_Vector3d>
+
+
 #include "mainwindow.h"
 #include "glwidget.h"
 
@@ -29,5 +36,23 @@ MainWindow::MainWindow()
 {
 	p_GLWidget= new GLWidget(this);
 	setCentralWidget(p_GLWidget);
+
+
+    // Test
+    const GLC_Point3d p0(100.0, 89.0, 0.0);
+    const GLC_Point3d p1(43.0, 80.0, 0.0);
+    const GLC_Point3d p2(60.0, 15.0, 0.0);
+
+    QList<GLC_Point3d> segments;
+    segments << p0 << p1 << p2;
+
+    QList<GLC_Point3d> segmentsAndArc= glc::AddCorner(segments, 18.0, 2);
+
+    const int count= segmentsAndArc.count();
+    for (int i= 0; i < count; ++i)
+    {
+        qDebug() << "Point " << i << " = " << segmentsAndArc.at(i).toString();
+    }
+
 }
 

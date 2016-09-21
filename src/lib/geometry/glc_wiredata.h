@@ -77,13 +77,16 @@ public:
 	static quint32 chunckID();
 
 	//! Return this wire data Position Vector
-	GLfloatVector positionVector() const;
+    GLfloatVector positionVector() const
+    {return m_Positions;}
 
 	//! Return the color Vector
-	GLfloatVector colorVector() const;
+    GLfloatVector colorVector() const
+    {return m_Colors; }
 
 	//! Return the unique index vector
-	QVector<GLuint> indexVector() const;
+    QVector<GLuint> indexVector() const
+    {return m_IndexVector;}
 
 	//! Return true if this wire data is empty
 	inline bool isEmpty() const
@@ -123,9 +126,6 @@ public:
 
 	//! Clear the content of this wire Data and makes it empty
 	void clear();
-
-	//! Copy VBO to the Client Side
-	void copyVboToClientSide();
 
 	//! Release client VBO
 	void releaseVboClientSide(bool update= false);

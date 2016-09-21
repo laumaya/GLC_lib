@@ -22,6 +22,7 @@
 
 //! \file glc_csgoperatornode.cpp Implementation for the GLC_CsgOperatorNode class.
 
+
 #include "../3rdparty/csgjs/csgjs.h"
 
 #include "glc_mesh.h"
@@ -74,63 +75,69 @@ GLC_CsgNode* GLC_CsgOperatorNode::clone() const
     return new GLC_CsgOperatorNode(*this);
 }
 
-void GLC_CsgOperatorNode::update()
+bool GLC_CsgOperatorNode::update()
 {
     qDebug() << "GLC_CsgOperatorNode::update()";
-    QTime time;
-    time.start();
 
     Q_ASSERT((NULL != m_pOpe1Node) && (NULL != m_pOpe2Node));
-    m_pOpe1Node->update();
-    m_pOpe2Node->update();
 
-    GLC_3DRep ope1Rep(m_pOpe1Node->get3DRep());
-    GLC_3DRep ope2Rep(m_pOpe2Node->get3DRep());
+//    QList<GLC_CsgNode*> nodes;
+//    nodes << m_pOpe1Node << m_pOpe2Node;
+//    QtConcurrent::blockingMapped(nodes, mappedFutureFct);
 
-    Q_ASSERT(!ope1Rep.isEmpty());
-    Q_ASSERT(!ope2Rep.isEmpty());
+    const bool updateNeededByOpe1= m_pOpe1Node->update();
+    const bool updateNeededByOpe2= m_pOpe2Node->update();
 
-    Q_ASSERT(ope1Rep.numberOfBody() == 1);
-    Q_ASSERT(ope1Rep.numberOfBody() == 1);
-
-    csgjs_model* pModel1= m_pOpe1Node->csgjsModel();
-    csgjs_model* pModel2= m_pOpe2Node->csgjsModel();
-
-    Q_ASSERT(NULL != pModel1);
-    Q_ASSERT(NULL != pModel2);
-
-    delete m_pResultCsgModel;
-    m_pResultCsgModel= NULL;
-
-    if (m_OperationType == CsgDifference)
+    bool subject= (updateNeededByOpe1 || updateNeededByOpe2 || (m_pResultCsgModel == NULL));
+    if (subject)
     {
-        m_pResultCsgModel= new csgjs_model(csgjs_difference(*pModel1, *pModel2));
-    }
-    else if (m_OperationType == CsgIntersection)
-    {
-        m_pResultCsgModel= new csgjs_model(csgjs_intersection(*pModel1, *pModel2));
-    }
-    else
-    {
-        m_pResultCsgModel= new csgjs_model(csgjs_union(*pModel1, *pModel2));
+        csgjs_model* pModel1= m_pOpe1Node->csgjsModel();
+        csgjs_model* pModel2= m_pOpe2Node->csgjsModel();
+
+        Q_ASSERT(NULL != pModel1);
+        Q_ASSERT(NULL != pModel2);
+
+        delete m_pResultCsgModel;
+        m_pResultCsgModel= NULL;
+
+        if (m_OperationType == CsgDifference)
+        {
+            m_pResultCsgModel= new csgjs_model(csgjs_difference(*pModel1, *pModel2));
+        }
+        else if (m_OperationType == CsgIntersection)
+        {
+            m_pResultCsgModel= new csgjs_model(csgjs_intersection(*pModel1, *pModel2));
+        }
+        else
+        {
+            m_pResultCsgModel= new csgjs_model(csgjs_union(*pModel1, *pModel2));
+        }
+
+        m_WireData.clear();
+        m_WireData.add(m_pOpe1Node->wireData(), m_pOpe1Node->matrix());
+        m_WireData.add(m_pOpe2Node->wireData(), m_pOpe2Node->matrix());
     }
 
-    m_WireData.clear();
-    m_WireData.add(m_pOpe1Node->wireData(), m_pOpe1Node->matrix());
-    m_WireData.add(m_pOpe2Node->wireData(), m_pOpe2Node->matrix());
-
-    const int elapsed= time.elapsed();
-    qDebug() << "CSG computation time :" << elapsed;
-
+    return subject;
 }
 
 void GLC_CsgOperatorNode::createMesh()
 {
+    qDebug() << "GLC_CsgOperatorNode::createMesh()";
     Q_ASSERT(NULL != m_pResultCsgModel);
     GLC_Mesh* pMesh= GLC_CsgHelper::meshFromCsgModel(*m_pResultCsgModel, m_pMaterial);
     pMesh->addVerticeGroups(m_WireData, m_Matrix);
     m_3DRep.clear();
     m_3DRep.addGeom(pMesh);
+    qDebug() << "End of GLC_CsgOperatorNode::createMesh()";
+}
+
+QList<GLC_CsgNode*> GLC_CsgOperatorNode::chrildren() const
+{
+    QList<GLC_CsgNode*> subject;
+    subject << m_pOpe1Node << m_pOpe2Node;
+
+    return subject;
 }
 
 void GLC_CsgOperatorNode::setChildNodes(GLC_CsgNode* pNode1, GLC_CsgNode* pNode2)
