@@ -1089,14 +1089,6 @@ void GLC_Mesh::drawMeshWire(const GLC_RenderProperties& renderProperties, GLC_Co
     if (!GLC_State::isInSelectionMode())
     {
         pContext->glcEnableLighting(false);
-        const bool hasActiveShader= GLC_Shader::hasActiveShader();
-        GLC_Shader* pActiveShader= GLC_Shader::currentShaderHandle();
-        if (hasActiveShader)
-        {
-            GLC_Shader::unuse();
-            QOpenGLContext::currentContext()->functions()->glUseProgram(0);
-        }
-
         // Set polyline colors
         GLfloat color[4]= {static_cast<float>(m_WireColor.redF()),
                                 static_cast<float>(m_WireColor.greenF()),
@@ -1106,11 +1098,6 @@ void GLC_Mesh::drawMeshWire(const GLC_RenderProperties& renderProperties, GLC_Co
         glColor4fv(color);
         m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
         pContext->glcEnableLighting(true);
-        if (hasActiveShader)
-        {
-
-            pActiveShader->use();
-        }
     }
     else
     {
