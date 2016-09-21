@@ -77,13 +77,7 @@ GLC_CsgNode* GLC_CsgOperatorNode::clone() const
 
 bool GLC_CsgOperatorNode::update()
 {
-    qDebug() << "GLC_CsgOperatorNode::update()";
-
     Q_ASSERT((NULL != m_pOpe1Node) && (NULL != m_pOpe2Node));
-
-//    QList<GLC_CsgNode*> nodes;
-//    nodes << m_pOpe1Node << m_pOpe2Node;
-//    QtConcurrent::blockingMapped(nodes, mappedFutureFct);
 
     const bool updateNeededByOpe1= m_pOpe1Node->update();
     const bool updateNeededByOpe2= m_pOpe2Node->update();
@@ -123,13 +117,11 @@ bool GLC_CsgOperatorNode::update()
 
 void GLC_CsgOperatorNode::createMesh()
 {
-    qDebug() << "GLC_CsgOperatorNode::createMesh()";
     Q_ASSERT(NULL != m_pResultCsgModel);
     GLC_Mesh* pMesh= GLC_CsgHelper::meshFromCsgModel(*m_pResultCsgModel, m_pMaterial);
     pMesh->addVerticeGroups(m_WireData, m_Matrix);
     m_3DRep.clear();
     m_3DRep.addGeom(pMesh);
-    qDebug() << "End of GLC_CsgOperatorNode::createMesh()";
 }
 
 QList<GLC_CsgNode*> GLC_CsgOperatorNode::chrildren() const
