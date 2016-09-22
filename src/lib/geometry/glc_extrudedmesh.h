@@ -104,7 +104,7 @@ public:
     void setExtrudedVector(const GLC_Vector3d& extrudedVector);
 
     //! Set the mesh extruded lenght
-    void setExtrudedLenght(double lenght);
+    void setExtrudedLenght(double length);
 
     //! Set Smothing index
     void setSmothingIndex(const QList<int>& smothingIndex);

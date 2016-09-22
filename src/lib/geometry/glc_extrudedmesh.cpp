@@ -125,39 +125,95 @@ void GLC_ExtrudedMesh::setGeometry(const QList<GLC_Point3d> &points, const GLC_V
 
 void GLC_ExtrudedMesh::setPoints(const QList<GLC_Point3d> &points)
 {
-    m_Points= points;
-    m_SmothingPoints.clear();
-    m_InvisibleEdgeIndex.clear();
+    const int count= points.count();
+    bool isEqual;
+    if (count == m_Points.count())
+    {
+        isEqual= true;
+        for (int i= 0; i < count; ++i)
+        {
+            isEqual= glc::compare(points.at(i), m_Points.at(i));
+            if (!isEqual) break;
+        }
+    }
+    else
+    {
+        isEqual= false;
+    }
+    if (!isEqual)
+    {
+        m_Points= points;
+        m_SmothingPoints.clear();
+        m_InvisibleEdgeIndex.clear();
 
-    GLC_Mesh::clearMeshWireAndBoundingBox();
+        GLC_Mesh::clearMeshWireAndBoundingBox();
+    }
 }
 
 void GLC_ExtrudedMesh::setExtrudedVector(const GLC_Vector3d &extrudedVector)
 {
-    m_ExtrusionVector= extrudedVector;
-
-    GLC_Mesh::clearMeshWireAndBoundingBox();
+    if (!glc::compare(extrudedVector, m_ExtrusionVector))
+    {
+        m_ExtrusionVector= extrudedVector;
+        GLC_Mesh::clearMeshWireAndBoundingBox();
+    }
 }
 
-void GLC_ExtrudedMesh::setExtrudedLenght(double lenght)
+void GLC_ExtrudedMesh::setExtrudedLenght(double length)
 {
-    m_ExtrusionLenght= lenght;
-
-    GLC_Mesh::clearMeshWireAndBoundingBox();
+    if (!glc::compare(length, m_ExtrusionLenght))
+    {
+        m_ExtrusionLenght= length;
+        GLC_Mesh::clearMeshWireAndBoundingBox();
+    }
 }
 
 void GLC_ExtrudedMesh::setSmothingIndex(const QList<int> &smothingIndex)
 {
-    m_SmothingPoints= smothingIndex;
+    const int count= smothingIndex.count();
+    bool isEqual;
+    if (count == m_SmothingPoints.count())
+    {
+        for (int i= 0; i < count; ++i)
+        {
+            isEqual= smothingIndex.at(i) == m_SmothingPoints.at(i);
+            if (!isEqual) break;
+        }
+    }
+    else
+    {
+        isEqual= false;
+    }
 
-    GLC_Mesh::clearMeshWireAndBoundingBox();
+    if (!isEqual)
+    {
+        m_SmothingPoints= smothingIndex;
+        GLC_Mesh::clearMeshWireAndBoundingBox();
+    }
 }
 
 void GLC_ExtrudedMesh::setInvisibleEdgeIndex(const QList<int>& invisibleEdgeIndex)
 {
-    m_InvisibleEdgeIndex= invisibleEdgeIndex;
+    const int count= invisibleEdgeIndex.count();
+    bool isEqual;
+    if (count == m_InvisibleEdgeIndex.count())
+    {
+        for (int i= 0; i < count; ++i)
+        {
+            isEqual= invisibleEdgeIndex.at(i) == m_InvisibleEdgeIndex.at(i);
+            if (!isEqual) break;
+        }
+    }
+    else
+    {
+        isEqual= false;
+    }
 
-    GLC_Mesh::clearMeshWireAndBoundingBox();
+    if (!isEqual)
+    {
+        m_InvisibleEdgeIndex= invisibleEdgeIndex;
+        GLC_Mesh::clearMeshWireAndBoundingBox();
+    }
 }
 
 void GLC_ExtrudedMesh::createMeshAndWire()
