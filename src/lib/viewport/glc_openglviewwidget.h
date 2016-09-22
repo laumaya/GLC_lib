@@ -26,6 +26,9 @@ public:
     //! Return the used GLC_ViewHandler as a QVariant
     virtual QVariant viewHandler() const;
 
+    QSharedPointer<GLC_OpenGLViewHandler> sharedViewHandler()
+    {return m_Viewhandler;}
+
 public slots:
     virtual void setViewhandler(QVariant viewHandler);
     virtual void setMouseTracking(bool track);
