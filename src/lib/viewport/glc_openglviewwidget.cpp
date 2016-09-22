@@ -136,7 +136,10 @@ QImage GLC_OpenGLViewWidget::takeScreenShot()
     {
         if (!m_pScreenShotFbo->bind()) emit frameBufferBindingFailed();
 
+        m_Viewhandler->setScreenShotMode(true);
+        m_Viewhandler->setSize(width, height);
         doRender();
+        m_Viewhandler->setScreenShotMode(false);
 
         m_pScreenShotFbo->release();
     }

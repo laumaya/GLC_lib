@@ -174,6 +174,9 @@ public:
 
     inline void setSelectionMode(GLC_SelectionEvent::Mode mode)
     {m_SelectionMode= mode;}
+
+    void setScreenShotMode(bool mode)
+    {m_ScreenShotMode= mode;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
