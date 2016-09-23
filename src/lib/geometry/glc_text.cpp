@@ -89,6 +89,8 @@ bool GLC_Text::update()
     {
         subject= false;
     }
+
+    return subject;
 }
 
 void GLC_Text::setText(const QString &text)
