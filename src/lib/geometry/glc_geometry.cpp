@@ -41,7 +41,7 @@ GLC_Geometry::GLC_Geometry(const QString& name, const bool typeIsWire)
 , m_UseColorPerVertex(false)
 , m_IsSelected(false)
 , m_WireData()
-, m_WireColor(Qt::black)
+, m_WireColor(60, 60, 60)
 , m_LineWidth(1.0f)
 , m_IsWire(typeIsWire)		// the geometry type
 , m_TransparentMaterialNumber(0)
