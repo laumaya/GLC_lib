@@ -124,6 +124,7 @@ void GLC_OpenGLViewWidget::select(uint id)
 
 QImage GLC_OpenGLViewWidget::takeScreenShot()
 {
+    makeCurrent();
     QImage subject;
     Q_ASSERT(NULL != m_Viewhandler);
     GLC_ScreenShotSettings screenShotSettings= m_Viewhandler->screenShotSettings();
@@ -142,9 +143,8 @@ QImage GLC_OpenGLViewWidget::takeScreenShot()
         m_Viewhandler->setScreenShotMode(false);
 
         m_pScreenShotFbo->release();
+        subject= m_pScreenShotFbo->toImage();
     }
-
-    subject= m_pScreenShotFbo->toImage();
 
     delete m_pScreenShotFbo;
     m_pScreenShotFbo= NULL;
