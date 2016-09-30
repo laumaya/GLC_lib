@@ -91,6 +91,9 @@ public:
 	//! Set Axis center
 	void setCenter(const GLC_Point3d& newCenter);
 
+    //! Set Axis orientation
+    void setOrientation(const GLC_Matrix4x4& matrix);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -139,6 +142,9 @@ private:
 private:
 	//! The axis center
 	GLC_Point3d m_Center;
+
+    //! The axis orientation matrix
+    GLC_Matrix4x4 m_OrientationMatrix;
 
 	//! The manipulator scale factor
 	double m_ScaleFactor;
