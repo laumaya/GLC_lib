@@ -96,6 +96,13 @@ bool GLC_BoundingBox::intersectBoundingSphere(const GLC_BoundingBox& boundingSph
     return distance < (boundingSphereRadius() + boundingSphere.boundingSphereRadius());
 }
 
+GLC_Vector3d GLC_BoundingBox::size() const
+{
+    GLC_Vector3d subject(xLength(), yLength(), zLength());
+
+    return subject;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

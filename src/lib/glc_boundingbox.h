@@ -110,17 +110,20 @@ public:
     inline bool operator != (const GLC_BoundingBox& boundingBox)
     {return !(*this == boundingBox);}
 
-    //! Return the length off this bounding box on x axis
+    //! Return the length of this bounding box on x axis
     inline double xLength() const
     {return fabs(m_Upper.x() - m_Lower.x());}
 
-    //! Return the length off this bounding box on y axis
+    //! Return the length of this bounding box on y axis
     inline double yLength() const
     {return fabs(m_Upper.y() - m_Lower.y());}
 
-    //! Return the length off this bounding box on z axis
+    //! Return the length of this bounding box on z axis
     inline double zLength() const
     {return fabs(m_Upper.z() - m_Lower.z());}
+
+    //! Return the size of this bounding box
+    GLC_Vector3d size() const;
 
 
 //@}
