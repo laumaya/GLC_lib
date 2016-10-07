@@ -100,6 +100,10 @@ public:
 	inline void clear()
 	{m_pWidgetManagerHandle->clear();}
 
+    //! Remove all 3D view instance of the given type from this manager
+    inline void clear(int type)
+    {m_pWidgetManagerHandle->clear(type);}
+
 	//! Set the visibility of the given 3D widget id
 	inline void setWidgetVisible(GLC_uint id, bool visible)
 	{m_pWidgetManagerHandle->setWidgetVisible(id, visible);}

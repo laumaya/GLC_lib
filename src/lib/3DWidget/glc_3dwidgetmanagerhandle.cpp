@@ -100,7 +100,26 @@ void GLC_3DWidgetManagerHandle::clear()
 	}
 	m_3DWidgetHash.clear();
 	m_Collection.clear();
-	m_MapBetweenInstanceWidget.clear();
+    m_MapBetweenInstanceWidget.clear();
+}
+
+void GLC_3DWidgetManagerHandle::clear(int type)
+{
+    QHash<GLC_uint, GLC_3DWidget*>::iterator iWidget= m_3DWidgetHash.begin();
+    while (m_3DWidgetHash.constEnd() != iWidget)
+    {
+        GLC_3DWidget* pCurrent= iWidget.value();
+        if (pCurrent->type() == type)
+        {
+            if (m_Active3DWidgetId == pCurrent->id()) m_Active3DWidgetId= 0;
+            delete pCurrent;
+            iWidget= m_3DWidgetHash.erase(iWidget);
+        }
+        else
+        {
+            ++iWidget;
+        }
+    }
 }
 
 void GLC_3DWidgetManagerHandle::setWidgetVisible(GLC_uint id, bool visible)

@@ -25,19 +25,21 @@
 
 
 GLC_3DWidget::GLC_3DWidget(GLC_3DWidgetManagerHandle*  pWidgetManagerHandle)
-: QObject()
-, m_Uid(glc::GLC_Gen3DWidgetID())
-, m_pWidgetManagerHandle(pWidgetManagerHandle)
-, m_InstanceIdList()
+    : QObject()
+    , m_Uid(glc::GLC_Gen3DWidgetID())
+    , m_pWidgetManagerHandle(pWidgetManagerHandle)
+    , m_InstanceIdList()
+    , m_Type(0)
 {
 
 }
 
 GLC_3DWidget::GLC_3DWidget(const GLC_3DWidget& widget)
-: QObject()
-, m_Uid(glc::GLC_Gen3DWidgetID())
-, m_pWidgetManagerHandle(widget.m_pWidgetManagerHandle)
-, m_InstanceIdList()
+    : QObject()
+    , m_Uid(glc::GLC_Gen3DWidgetID())
+    , m_pWidgetManagerHandle(widget.m_pWidgetManagerHandle)
+    , m_InstanceIdList()
+    , m_Type(widget.m_Type)
 {
 	// Copy the 3Dview instance of the widget
 	const int size= widget.m_InstanceIdList.size();
@@ -85,6 +87,7 @@ GLC_3DWidget& GLC_3DWidget::operator=(const GLC_3DWidget& widget)
 		m_Uid= widget.m_Uid;
 		m_pWidgetManagerHandle= widget.m_pWidgetManagerHandle;
 		m_InstanceIdList= widget.m_InstanceIdList;
+        m_Type= widget.m_Type;
 
 		// Copy the 3Dview instance of the widget
 		const int size= widget.m_InstanceIdList.size();

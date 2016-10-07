@@ -89,6 +89,11 @@ public:
 
     //! Return true if the 3DViewInstance of this widget is visible
     bool isVisible() const;
+
+    //! Return this 3DWidget type
+    int type() const
+    {return m_Type;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -108,6 +113,10 @@ public:
 	//! Set the visibility of 3DView Instance of this widget
     /*! This method must be called from GLC_3DWidgetManagerHandle*/
 	void setVisible(bool visible);
+
+    //! Set this 3DWidget type
+    void setType(int type)
+    {m_Type= type;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -189,6 +198,9 @@ private:
 
 	//! The List of this widget instance id
 	QList<GLC_uint> m_InstanceIdList;
+
+    //! The type of this 3DWidget
+    int m_Type;
 
 };
 

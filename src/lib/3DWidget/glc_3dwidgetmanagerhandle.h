@@ -134,6 +134,9 @@ public:
 	//! Remove all 3D view instance from this manager
 	void clear();
 
+    //! Remove all 3D view instance of the given type from this manager
+    void clear(int type);
+
 	//! Set the visibility of the given 3D widget id
 	void setWidgetVisible(GLC_uint id, bool visible);
 
