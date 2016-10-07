@@ -172,11 +172,7 @@ const GLC_BoundingBox& GLC_Mesh::boundingBox()
 		//qDebug() << "GLC_Mesh2::boundingBox create boundingBox";
 		m_pBoundingBox= new GLC_BoundingBox();
 
-		if (m_MeshData.positionVectorHandle()->isEmpty())
-		{
-			qDebug() << "GLC_Mesh::boundingBox empty m_Positions";
-		}
-		else
+        if (!m_MeshData.positionVectorHandle()->isEmpty())
 		{
 			GLfloatVector* pVertexVector= m_MeshData.positionVectorHandle();
 			const int max= pVertexVector->size();
