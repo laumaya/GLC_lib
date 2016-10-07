@@ -37,7 +37,8 @@ GLC_Axis::GLC_Axis(const GLC_Point3d& center, GLC_3DWidgetManagerHandle*  pWidge
     , m_CurrentManipulator(NoneManipulator)
     , m_pCurrentManipulator(NULL)
     , m_AxisLength(1.0)
-    , m_AxisRadiusRatio(0.03)
+    , m_AxisRadiusRatio(0.02)
+    , m_MoveStep(0.0)
 {
 
 }
@@ -51,6 +52,7 @@ GLC_Axis::GLC_Axis(const GLC_Axis& axis)
     , m_pCurrentManipulator(NULL)
     , m_AxisLength(axis.m_AxisLength)
     , m_AxisRadiusRatio(axis.m_AxisRadiusRatio)
+    , m_MoveStep(0.0)
 {
 	if (NULL != axis.m_pCurrentManipulator)
 	{
@@ -99,7 +101,17 @@ void GLC_Axis::setAxisLength(double length)
 	{
 		GLC_3DWidget::remove3DViewInstance();
 		create3DviewInstance();
-	}
+    }
+}
+
+void GLC_Axis::setAxisRadiusLengthRatio(double value)
+{
+    m_AxisRadiusRatio= value;
+    if (!GLC_3DWidget::isEmpty())
+    {
+        GLC_3DWidget::remove3DViewInstance();
+        create3DviewInstance();
+    }
 }
 
 void GLC_Axis::setCenter(const GLC_Point3d& newCenter)
@@ -193,21 +205,30 @@ glc::WidgetEventFlag GLC_Axis::unselect(const GLC_Point3d&, GLC_uint)
 
 glc::WidgetEventFlag GLC_Axis::move(const GLC_Point3d& pos, GLC_uint)
 {
+    Q_ASSERT(m_MoveStep >= 0.0);
+
     glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
     if (NULL != m_pCurrentManipulator)
     {
         GLC_Matrix4x4 moveMatrix(m_pCurrentManipulator->manipulate(pos));
-        m_Center= moveMatrix * m_Center;
-        // Update the instance
-        for (int i= 0; i < 6; ++i)
+        const GLC_Point3d newPos= moveMatrix * m_Center;
+        GLC_Vector3d delta(newPos - m_Center);
+        if (delta.length() >= m_MoveStep)
         {
-            GLC_3DWidget::instanceHandle(i)->multMatrix(moveMatrix);
+            const double newLenght= glc::round(delta.length(), m_MoveStep);
+            delta.setLength(newLenght);
+            m_Center= m_Center + delta;
+            // Update the instance
+            for (int i= 0; i < 6; ++i)
+            {
+                GLC_3DWidget::instanceHandle(i)->multMatrix(moveMatrix);
+            }
+
+            // Plane throw intersection and plane normal and camera up vector
+            m_pCurrentManipulator->enterManipulateState(m_pCurrentManipulator->previousPosition());
+
+            emit asChanged();
         }
-
-        // Plane throw intersection and plane normal and camera up vector
-        m_pCurrentManipulator->enterManipulateState(m_pCurrentManipulator->previousPosition());
-
-        emit asChanged();
         returnFlag= glc::AcceptEvent;
     }
 
@@ -218,7 +239,7 @@ void GLC_Axis::create3DviewInstance()
 	Q_ASSERT(GLC_3DWidget::isEmpty());
 	const double axisRadius= m_AxisLength * m_AxisRadiusRatio;
 	const double arrowLength= m_AxisLength * 0.3;
-	const double arrowFactor= 2.5;
+    const double arrowFactor= 3.0;
 
 	{ // Create X axis
 		// The X axis material
