@@ -278,6 +278,7 @@ void GLC_Geometry::glLoadTexture(void)
 // Geometry display
 void GLC_Geometry::render(const GLC_RenderProperties& renderProperties)
 {
+    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
 	Q_ASSERT(!m_IsWire || (m_IsWire && m_MaterialHash.isEmpty()));
 	bool renderWire= (renderProperties.renderingFlag() == glc::TransparentRenderFlag) && isTransparent();
 	renderWire= renderWire || ((renderProperties.renderingFlag() != glc::TransparentRenderFlag) && !isTransparent());
@@ -292,13 +293,31 @@ void GLC_Geometry::render(const GLC_RenderProperties& renderProperties)
 
 		m_IsSelected= renderProperties.isSelected();
 
+        const bool hasActiveShader= GLC_Shader::hasActiveShader();
+        GLC_Shader* pActiveShader= GLC_Shader::currentShaderHandle();
+
 		// Define Geometry's property
 		if(!GLC_State::isInSelectionMode())
 		{
 			glPropGeom(renderProperties);
+            if (m_IsWire)
+            {
+                if (hasActiveShader)
+                {
+                    GLC_Shader::unuse();
+                    QOpenGLContext::currentContext()->functions()->glUseProgram(0);
+                }
+            }
 		}
 
 		glDraw(renderProperties);
+        if (!GLC_State::isInSelectionMode() && m_IsWire)
+        {
+            if (hasActiveShader)
+            {
+                pActiveShader->use();
+            }
+        }
 
 		m_IsSelected= false;
 		m_GeometryIsValid= true;
