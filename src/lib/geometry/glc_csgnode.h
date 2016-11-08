@@ -57,6 +57,13 @@ public:
     virtual bool update()= 0;
     virtual void createMesh()= 0;
     virtual QList<GLC_CsgNode*> chrildren() const= 0;
+    virtual bool isRootNode() const= 0;
+    virtual void setRoot(bool isRoot)= 0;
+
+public:
+    static double edgeDetectionAccuracy();
+
+    static double edgeDetectionAngleThreshold();
 
 public:
     GLC_3DRep get3DRep() const
@@ -71,7 +78,10 @@ public:
     csgjs_model* csgjsModel() const
     {return m_pResultCsgModel;}
 
-    virtual const GLC_WireData& wireData() const= 0;
+public:
+    static void setEdgeDetectionAccuracy(double value);
+
+    static void setEdgeDetectionAngleThresold(double value);
 
 public:
     void setMatrix(const GLC_Matrix4x4& matrix);
@@ -100,6 +110,9 @@ protected:
     csgjs_model* m_pResultCsgModel;
 
     int m_Level;
+
+    static double m_EdgeDetectionAccuracy;
+    static double m_EdgeDetectionAngleThreshold;
 };
 
 #endif // GLC_CSGNODE_H

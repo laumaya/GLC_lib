@@ -47,14 +47,6 @@ GLC_CsgLeafNode::GLC_CsgLeafNode(const GLC_CsgLeafNode& other)
 
 }
 
-const GLC_WireData& GLC_CsgLeafNode::wireData() const
-{
-    Q_ASSERT(!m_3DRep.isEmpty());
-    Q_ASSERT(m_3DRep.numberOfBody() == 1);
-
-    return m_3DRep.geomAt(0)->wireData();
-}
-
 GLC_CsgNode*GLC_CsgLeafNode::clone() const
 {
     return new GLC_CsgLeafNode(*this);

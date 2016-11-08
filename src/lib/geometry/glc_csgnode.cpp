@@ -33,6 +33,9 @@
 
 #include "glc_csgnode.h"
 
+double GLC_CsgNode::m_EdgeDetectionAccuracy= 0.0001;
+double GLC_CsgNode::m_EdgeDetectionAngleThreshold= 3.0;
+
 GLC_CsgNode::GLC_CsgNode()
     : m_Id(glc::GLC_GenUserID())
     , m_Matrix()
@@ -81,6 +84,26 @@ GLC_CsgNode::~GLC_CsgNode()
         delete m_pMaterial;
     }
     delete m_pResultCsgModel;
+}
+
+double GLC_CsgNode::edgeDetectionAccuracy()
+{
+    return m_EdgeDetectionAccuracy;
+}
+
+double GLC_CsgNode::edgeDetectionAngleThreshold()
+{
+    return m_EdgeDetectionAngleThreshold;
+}
+
+void GLC_CsgNode::setEdgeDetectionAccuracy(double value)
+{
+    m_EdgeDetectionAccuracy= value;
+}
+
+void GLC_CsgNode::setEdgeDetectionAngleThresold(double value)
+{
+    m_EdgeDetectionAngleThreshold= value;
 }
 
 void GLC_CsgNode::setMatrix(const GLC_Matrix4x4& matrix)

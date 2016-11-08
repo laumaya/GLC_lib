@@ -39,7 +39,7 @@
 
 namespace glc
 {
-	const double defaultPrecision= 0.01;
+    const double defaultPrecision= 0.01;
 	GLC_LIB_EXPORT extern double comparedPrecision;
 //////////////////////////////////////////////////////////////////////
 /*! \name Tools Functions*/
@@ -118,6 +118,14 @@ namespace glc
 
 	//! Return true if the given 3 points are collinear
 	GLC_LIB_EXPORT bool pointsAreCollinear(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3);
+
+    //! Return true if the given 3 points are collinear and p3 is on ]p1 p2[ segment
+    GLC_LIB_EXPORT bool pointIsIncludeInSegment(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3);
+
+    //! Return true if the given 3 points are collinear and p3 is on [p1 p2] segment
+    GLC_LIB_EXPORT bool pointIsOnSegment(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3);
+
+    GLC_LIB_EXPORT bool segmentsOverlap(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3, const GLC_Point3d& p4);
 
 	GLC_LIB_EXPORT bool compare(double p1, double p2);
 

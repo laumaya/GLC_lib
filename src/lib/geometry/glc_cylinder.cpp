@@ -223,8 +223,8 @@ void GLC_Cylinder::createMeshAndWire()
 		verticeVector[3 * i + 1]= sinArray[i];
 		verticeVector[3 * i + 2]= 0.0f;
 
-		normalsVector[3 * i]= cosNormalArray[i];
-		normalsVector[3 * i + 1]= sinNormalArray[i];
+        normalsVector[3 * i]= cosNormalArray[i];
+        normalsVector[3 * i + 1]= sinNormalArray[i];
 		normalsVector[3 * i + 2]= 0.0f;
 
 		texelVector[2 * i]= static_cast<float>(i) / static_cast<float>(m_Discret);
@@ -240,8 +240,8 @@ void GLC_Cylinder::createMeshAndWire()
 		verticeVector[3 * i + 1 + 3 * vertexNumber]= sinArray[i];
 		verticeVector[3 * i + 2 + 3 * vertexNumber]= static_cast<float>(m_Length);
 
-		normalsVector[3 * i + 3 * vertexNumber]= cosNormalArray[i];
-		normalsVector[3 * i + 1 + 3 * vertexNumber]= sinNormalArray[i];
+        normalsVector[3 * i + 3 * vertexNumber]= cosNormalArray[i];
+        normalsVector[3 * i + 1 + 3 * vertexNumber]= sinNormalArray[i];
 		normalsVector[3 * i + 2 + 3 * vertexNumber]= 0.0f;
 
 		texelVector[2 * i + 2 * vertexNumber]= texelVector[2 * i];
@@ -304,8 +304,8 @@ void GLC_Cylinder::createMeshAndWire()
 	// Create the index
 	for (int i= 0; i < vertexNumber; ++i)
 	{
-		circumferenceStrips.append(i + vertexNumber);
-		circumferenceStrips.append(i);
+        circumferenceStrips.append(i + vertexNumber);
+        circumferenceStrips.append(i);
 	}
 	addTrianglesStrip(pCylinderMaterial, circumferenceStrips);
 

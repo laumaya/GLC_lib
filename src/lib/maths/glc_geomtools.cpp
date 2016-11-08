@@ -554,6 +554,71 @@ bool glc::pointsAreCollinear(const GLC_Point3d& p1, const GLC_Point3d& p2, const
 	return subject;
 }
 
+bool glc::pointIsIncludeInSegment(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3)
+{
+    bool subject= false;
+    const GLC_Vector3d p1p2((p2 - p1).setLength(1.0));
+    const GLC_Vector3d p2p3((p3 - p2).setLength(1.0));
+    if (compare(p1p2, p2p3)  || compare(p1p2, p2p3.inverted()))
+    {
+        const double p1p2Length= (p1 -p2).length();
+        const double p1p3Length= (p1 -p3).length();
+        if ((p1p2Length > p1p3Length) && !glc::compare(p1p2Length, p1p3Length))
+        {
+            const double p2p3Length= (p2 -p3).length();
+            subject= (p1p2Length > p2p3Length) && !glc::compare(p1p2Length, p2p3Length);
+        }
+    }
+    return subject;
+}
+
+bool glc::pointIsOnSegment(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3)
+{
+    bool subject= false;
+    const bool p1EqualP3= compare(p1, p3);
+    const bool p2EqualP3= compare(p2, p3);
+    if (p1EqualP3 || p2EqualP3)
+    {
+        subject= true;
+    }
+    else
+    {
+        const GLC_Vector3d p1p2((p2 - p1).setLength(1.0));
+        const GLC_Vector3d p2p3((p3 - p2).setLength(1.0));
+        if (compare(p1p2, p2p3)  || compare(p1p2, p2p3.inverted()))
+        {
+            const double p1p2Length= (p1 -p2).length();
+            const double p1p3Length= (p1 -p3).length();
+            if (p1p2Length > p1p3Length)
+            {
+                const double p2p3Length= (p2 -p3).length();
+                subject= (p1p2Length > p2p3Length);
+            }
+        }
+    }
+    return subject;
+}
+
+bool glc::segmentsOverlap(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3, const GLC_Point3d& p4)
+{
+    bool subject= false;
+    const bool p1EqualP3= compare(p1, p3);
+    const bool p2EqualP3= compare(p2, p3);
+    const bool p1EqualP4= compare(p1, p4);
+    const bool p2EqualP4= compare(p2, p4);
+    if ((p1EqualP3 && p2EqualP4) || (p2EqualP3 && p1EqualP4))
+    {
+        subject= true;
+    }
+    else if (glc::pointsAreCollinear(p1, p2, p3) && glc::pointsAreCollinear(p1, p2, p4))
+    {
+        subject= pointIsIncludeInSegment(p1, p2, p3) || pointIsIncludeInSegment(p1, p2, p4);
+        subject= subject || pointIsIncludeInSegment(p3, p4, p1) || pointIsIncludeInSegment(p3, p4, p2);
+    }
+    return subject;
+}
+
+
 bool glc::compare(double p1, double p2)
 {
 	return qAbs(p1 - p2) <= comparedPrecision;

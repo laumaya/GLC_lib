@@ -27,6 +27,8 @@
 #include "../glc_context.h"
 #include "../glc_contextmanager.h"
 
+#include "../maths/glc_geomtools.h"
+
 // Class chunk id
 quint32 GLC_Mesh::m_ChunkId= 0xA701;
 
@@ -825,7 +827,84 @@ void GLC_Mesh::setVboUsage(bool usage)
 	{
 		GLC_Geometry::setVboUsage(usage);
 		m_MeshData.setVboUsage(usage);
-	}
+    }
+}
+
+void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
+{
+    const double savedPrecision= glc::comparedPrecision;
+    glc::comparedPrecision= precision;
+
+    m_WireData.clear();
+    const GLfloatVector positionVector= this->positionVector();
+    const GLfloatVector normalVector= this->normalVector();
+
+    QList<GLC_uint> materialIdList= this->materialIds();
+    const int materialCount= materialIdList.count();
+    for (int iMat= 0; iMat < materialCount; ++iMat)
+    {
+        const GLC_uint materialId= materialIdList.at(iMat);
+        const IndexList indexList= this->getEquivalentTrianglesStripsFansIndex(0, materialId);
+        const int count= indexList.count();
+        for (int tri1Index= 0; tri1Index < count; tri1Index+=3)
+        {
+            int index= indexList.at(tri1Index);
+            GLC_Vector3d tri1Vert1(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
+            GLC_Vector3d tri1Norm1(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
+            index= indexList.at(tri1Index + 1);
+            GLC_Vector3d tri1Vert2(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
+            GLC_Vector3d tri1Norm2(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
+            index= indexList.at(tri1Index + 2);
+            GLC_Vector3d tri1Vert3(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
+            GLC_Vector3d tri1Norm3(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
+
+            QList<GLC_Point3d> tri1Vert;
+            QList<GLC_Vector3d> tri1Norm;
+            tri1Vert << tri1Vert1 << tri1Vert2 << tri1Vert3;
+            tri1Norm << tri1Norm1 << tri1Norm2 << tri1Norm3;
+
+            for (int tri2Index= (tri1Index + 3); tri2Index < count; tri2Index+=3)
+            {
+                int index= indexList.at(tri2Index);
+                GLC_Vector3d tri2Vert1(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
+                GLC_Vector3d tri2Norm1(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
+                index= indexList.at(tri2Index + 1);
+                GLC_Vector3d tri2Vert2(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
+                GLC_Vector3d tri2Norm2(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
+                index= indexList.at(tri2Index + 2);
+                GLC_Vector3d tri2Vert3(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
+                GLC_Vector3d tri2Norm3(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
+
+                QList<GLC_Point3d> tri2Vert;
+                QList<GLC_Vector3d> tri2Norm;
+                tri2Vert << tri2Vert1 << tri2Vert2 << tri2Vert3;
+                tri2Norm << tri2Norm1 << tri2Norm2 << tri2Norm3;
+
+                QList<GLC_Point3d> edge= sharpEdge(tri1Vert, tri1Norm, tri2Vert, tri2Norm, angleThreshold);
+                if (!edge.isEmpty())
+                {
+                    QList<GLC_Vector3d> edgeNormal;
+                    edgeNormal << tri1Norm1 << tri2Norm1;
+                    edge= filterEdge(edge, edgeNormal, positionVector, normalVector, materialId, tri1Index, tri2Index, angleThreshold);
+                    GLfloatVector edgeVector(6);
+                    const GLC_Point3d& vertex1(edge.first());
+                    const GLC_Point3d& vertex2(edge.last());
+                    edgeVector[0]= static_cast<float>(vertex1.x());
+                    edgeVector[1]= static_cast<float>(vertex1.y());
+                    edgeVector[2]= static_cast<float>(vertex1.z());
+
+                    edgeVector[3]= static_cast<float>(vertex2.x());
+                    edgeVector[4]= static_cast<float>(vertex2.y());
+                    edgeVector[5]= static_cast<float>(vertex2.z());
+
+                    m_WireData.addVerticeGroup(edgeVector);
+                }
+            }
+
+        }
+    }
+
+    glc::comparedPrecision= savedPrecision;
 }
 
 // Load the mesh from binary data stream
@@ -1776,6 +1855,158 @@ IndexList GLC_Mesh::equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint m
 			}
 		}
 	}
-	return trianglesIndex;
+    return trianglesIndex;
+}
+
+QList<GLC_Point3d> GLC_Mesh::sharpEdge(const QList<GLC_Point3d>& tri1Vert, const QList<GLC_Vector3d>& tri1Norm
+                                       , const QList<GLC_Point3d>& tri2Vert, const QList<GLC_Vector3d>& tri2Norm
+                                       , double angleThreshold)
+{
+    QList<GLC_Point3d> subject;
+    for (int i= 0; (i < 3) && subject.isEmpty(); ++i)
+    {
+        const GLC_Point3d& tri1V1(tri1Vert.at(i));
+        const GLC_Point3d& tri1N1(tri1Norm.at(i));
+
+        const GLC_Point3d& tri1V2(tri1Vert.at((i + 1) % 3));
+        const GLC_Point3d& tri1N2(tri1Norm.at((i + 1) % 3));
+        for (int j= 0; (j < 3) && subject.isEmpty(); ++j)
+        {
+            const GLC_Point3d& tri2V1(tri2Vert.at(j));
+            const GLC_Point3d& tri2N1(tri2Norm.at(j));
+
+            const GLC_Point3d& tri2V2(tri2Vert.at((j + 1) % 3));
+            const GLC_Point3d& tri2N2(tri2Norm.at((j + 1) % 3));
+
+            const double delta1= (tri1V1 - tri2V1).length();
+            const double delta2= (tri1V1 - tri2V2).length();
+            const double delta3= (tri1V2 - tri2V1).length();
+            const double delta4= (tri1V2 - tri2V2).length();
+
+            double angle= 0;
+            if (glc::compare(delta1, 0.0) || ((delta1 < delta2) && (delta1 < delta3) && (delta1 < delta4)))
+            {
+                angle= tri1N1.angleWithVect(tri2N1);
+            }
+            else if (glc::compare(delta2, 0.0) || ((delta2 < delta1) && (delta2 < delta3) && (delta2 < delta4)))
+            {
+                angle= tri1N1.angleWithVect(tri2N2);
+            }
+            else if (glc::compare(delta3, 0.0) || ((delta3 < delta1) && (delta3 < delta2) && (delta3 < delta4)))
+            {
+                angle= tri1N2.angleWithVect(tri2N1);
+            }
+            else
+            {
+                angle= tri1N2.angleWithVect(tri2N2);
+            }
+
+            bool doCompare = !(glc::toDegrees(angle) < angleThreshold);
+
+            if (doCompare)
+            {
+                bool edgeFound= glc::segmentsOverlap(tri1V1, tri1V2, tri2V1, tri2V2);
+                if (edgeFound)
+                {
+                    subject << tri1V1 << tri1V2;
+                    subject << tri2V1 << tri2V2;
+                }
+            }
+        }
+    }
+
+    return subject;
+}
+
+QList<GLC_Point3d> GLC_Mesh::filterEdge(const QList<GLC_Point3d>& edge, const QList<GLC_Vector3d>& normals
+                                        , const GLfloatVector& positionVector, const GLfloatVector& normalVector
+                                        , GLC_uint matId, int index1, int index2, double angleThreshold)
+{
+    Q_ASSERT(edge.count() == 4);
+    Q_ASSERT(normals.count() == 2);
+
+    QList<GLC_Point3d> subject= edge;
+    QList<GLC_uint> materialIdList= this->materialIds();
+    const int materialCount= materialIdList.count();
+    for (int iMat= 0; iMat < materialCount; ++iMat)
+    {
+        const GLC_uint materialId= materialIdList.at(iMat);
+        const IndexList indexList= this->getEquivalentTrianglesStripsFansIndex(0, materialId);
+        const int count= indexList.count();
+        for (int tri1Index= 0; tri1Index < count; tri1Index+=3)
+        {
+            int index= indexList.at(tri1Index);
+            GLC_Vector3d tri1Vert1(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
+            GLC_Vector3d tri1Norm1(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
+            index= indexList.at(tri1Index + 1);
+            GLC_Vector3d tri1Vert2(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
+            GLC_Vector3d tri1Norm2(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
+            index= indexList.at(tri1Index + 2);
+            GLC_Vector3d tri1Vert3(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
+            GLC_Vector3d tri1Norm3(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
+
+            QList<GLC_Point3d> tri1Vert;
+            QList<GLC_Vector3d> tri1Norm;
+            tri1Vert << tri1Vert1 << tri1Vert2 << tri1Vert3;
+            tri1Norm << tri1Norm1 << tri1Norm2 << tri1Norm3;
+
+            for (int i= 0; (i < 3) && (subject.count() == 4); ++i)
+            {
+                const GLC_Point3d& tri1V1(tri1Vert[i]);
+                const GLC_Point3d& tri1V2(tri1Vert[(i + 1) % 3]);
+
+                const GLC_Vector3d& tri1N1(tri1Norm[i]);
+                const GLC_Vector3d& tri1N2(tri1Norm[(i + 1) % 3]);
+
+                const double angle= glc::toDegrees(tri1N1.angleWithVect(tri1N2));
+
+                if (angle < angleThreshold)
+                {
+                    int edgeIndex= 0;
+                    for (int j= 0; (j < 4) && (subject.count() == 4); j+=2)
+                    {
+                        const GLC_Vector3d& edgeNormal(normals[edgeIndex]);
+                        const double angle= glc::toDegrees(tri1N1.angleWithVect(edgeNormal));
+                        if (angle < angleThreshold)
+                        {
+                            const GLC_Point3d& tri2V1(edge[j]);
+                            const GLC_Point3d& tri2V2(edge[j + 1]);
+                            const bool edgeFound= glc::segmentsOverlap(tri1V1, tri1V2, tri2V1, tri2V2);
+                            if (edgeFound)
+                            {
+                                if (!((matId == materialId) && (((j == 0) && (index1 == tri1Index)) || ((j == 2) && (index2 == tri1Index)))))
+                                {
+                                    // Remove the two edge vertice
+                                    subject.removeAt(j);
+                                    subject.removeAt(j);
+                                }
+                            }
+                        }
+                        ++edgeIndex;
+                    }
+                }
+            }
+        }
+    }
+
+    if (subject.count() == 4)
+    {
+        // Filter on edge size
+        const double edge1Length= (edge[0] - edge[1]).length();
+        const double edge2Length= (edge[2] - edge[3]).length();
+        // Filter smaller edge
+        if (edge1Length < edge2Length)
+        {
+            subject.removeFirst();
+            subject.removeFirst();
+        }
+        else
+        {
+            subject.removeLast();
+            subject.removeLast();
+        }
+    }
+
+    return subject;
 }
 

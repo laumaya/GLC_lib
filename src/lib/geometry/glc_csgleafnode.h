@@ -37,12 +37,14 @@ public:
     GLC_CsgLeafNode(const GLC_CsgLeafNode& other);
 
 public:
-    const GLC_WireData& wireData() const;
-    virtual GLC_CsgNode* clone() const;
-    virtual bool update();
-    virtual void createMesh(){}
-    virtual QList<GLC_CsgNode*> chrildren() const
+    GLC_CsgNode* clone() const override;
+    bool update() override;
+    void createMesh() override {}
+    QList<GLC_CsgNode*> chrildren() const override
     {return QList<GLC_CsgNode*>();}
+    bool isRootNode() const override
+    {return false;}
+    void setRoot(bool) override {}
 
 
 };

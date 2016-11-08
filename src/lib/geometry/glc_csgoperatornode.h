@@ -49,13 +49,17 @@ public:
     virtual ~GLC_CsgOperatorNode();
 
 public:
-    const GLC_WireData& wireData() const
-    {return m_WireData;}
 
-    virtual GLC_CsgNode* clone() const;
-    virtual bool update();
-    virtual void createMesh();
-    virtual QList<GLC_CsgNode*> chrildren() const;
+    GLC_CsgNode* clone() const override;
+    bool update() override;
+    void createMesh() override;
+    QList<GLC_CsgNode*> chrildren() const override;
+
+    bool isRootNode() const override
+    {return m_IsRoot;}
+
+    void setRoot(bool isRoot) override;
+
 
 public:
     void setChildNodes(GLC_CsgNode* pNode1, GLC_CsgNode* pNode2);
@@ -67,7 +71,7 @@ private:
     GLC_CsgNode* m_pOpe1Node;
     GLC_CsgNode* m_pOpe2Node;
 
-    GLC_WireData m_WireData;
+    bool m_IsRoot;
 };
 
 

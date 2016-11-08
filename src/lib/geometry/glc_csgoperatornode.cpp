@@ -37,7 +37,7 @@ GLC_CsgOperatorNode::GLC_CsgOperatorNode()
     , m_pOpe1Node(NULL)
     , m_pOpe2Node(NULL)
 
-    , m_WireData()
+    , m_IsRoot(true)
 {
 
 }
@@ -48,7 +48,7 @@ GLC_CsgOperatorNode::GLC_CsgOperatorNode(const GLC_Matrix4x4& matrix, const GLC_
     , m_pOpe1Node(NULL)
     , m_pOpe2Node(NULL)
 
-    , m_WireData()
+    , m_IsRoot(true)
 {
 
 }
@@ -59,7 +59,7 @@ GLC_CsgOperatorNode::GLC_CsgOperatorNode(const GLC_CsgOperatorNode& other, Opera
     , m_pOpe1Node(other.m_pOpe1Node)
     , m_pOpe2Node(other.m_pOpe2Node)
 
-    , m_WireData(other.m_WireData)
+    ,m_IsRoot(other.m_IsRoot)
 {
 
 }
@@ -107,9 +107,6 @@ bool GLC_CsgOperatorNode::update()
             m_pResultCsgModel= new csgjs_model(csgjs_union(*pModel1, *pModel2));
         }
 
-        m_WireData.clear();
-        m_WireData.add(m_pOpe1Node->wireData(), m_pOpe1Node->matrix());
-        m_WireData.add(m_pOpe2Node->wireData(), m_pOpe2Node->matrix());
     }
 
     return subject;
@@ -119,7 +116,10 @@ void GLC_CsgOperatorNode::createMesh()
 {
     Q_ASSERT(NULL != m_pResultCsgModel);
     GLC_Mesh* pMesh= GLC_CsgHelper::meshFromCsgModel(*m_pResultCsgModel, m_pMaterial);
-    pMesh->addVerticeGroups(m_WireData, m_Matrix);
+   if (m_IsRoot)
+   {
+       pMesh->createSharpEdges(m_EdgeDetectionAccuracy, m_EdgeDetectionAngleThreshold);
+   }
     m_3DRep.clear();
     m_3DRep.addGeom(pMesh);
 }
@@ -130,6 +130,11 @@ QList<GLC_CsgNode*> GLC_CsgOperatorNode::chrildren() const
     subject << m_pOpe1Node << m_pOpe2Node;
 
     return subject;
+}
+
+void GLC_CsgOperatorNode::setRoot(bool isRoot)
+{
+    m_IsRoot= isRoot;
 }
 
 void GLC_CsgOperatorNode::setChildNodes(GLC_CsgNode* pNode1, GLC_CsgNode* pNode2)
@@ -149,4 +154,7 @@ void GLC_CsgOperatorNode::setChildNodes(GLC_CsgNode* pNode1, GLC_CsgNode* pNode2
 
     m_pOpe1Node= pNode1;
     m_pOpe2Node= pNode2;
+
+    m_pOpe1Node->setRoot(false);
+    m_pOpe2Node->setRoot(false);
 }

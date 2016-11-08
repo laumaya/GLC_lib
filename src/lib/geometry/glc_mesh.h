@@ -284,6 +284,8 @@ public:
 	//! Set VBO usage
 	virtual void setVboUsage(bool usage);
 
+    void createSharpEdges(double precision, double angleThreshold);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -406,6 +408,15 @@ private:
 
 	//! Return the equivalent triangles index of the fan index of given LOD and material ID
     IndexList equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint materialId) const;
+
+    // If there is sharp edge between the given triangles, return two overlap triangle edge
+    QList<GLC_Point3d> sharpEdge(const QList<GLC_Point3d>& tri1Vert, const QList<GLC_Vector3d>& tri1Norm
+                                 , const QList<GLC_Point3d>& tri2Vert, const QList<GLC_Vector3d>& tri2Norm, double angleThreshold);
+
+    // Filter edge with overlap with edge of triangle with same normal. Edge is not sharp
+    QList<GLC_Point3d> filterEdge(const QList<GLC_Point3d>& edge, const QList<GLC_Vector3d>& normals
+                                  , const GLfloatVector& positionVector, const GLfloatVector& normalVector
+                                  , GLC_uint matId, int index1, int index2, double angleThreshold);
 
 
 //@}
