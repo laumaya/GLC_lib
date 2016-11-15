@@ -186,7 +186,7 @@ QQuaternion GLC_Matrix4x4::quaternion() const
 		}
 		else
 		{
-            if ((abs(rotMat.m_Matrix[0]) > abs(rotMat.m_Matrix[5])) &&  (abs(rotMat.m_Matrix[0]) > abs(rotMat.m_Matrix[15])))
+            if ((rotMat.m_Matrix[0] >= rotMat.m_Matrix[5]) &&  (rotMat.m_Matrix[0] >= rotMat.m_Matrix[15]))
 			{	// column 0 greater
 		        s= sqrt(1.0 + rotMat.m_Matrix[0] - rotMat.m_Matrix[5] - rotMat.m_Matrix[10]) * 2.0;
 
@@ -195,7 +195,7 @@ QQuaternion GLC_Matrix4x4::quaternion() const
 		        y= (rotMat.m_Matrix[1] + rotMat.m_Matrix[4] ) / s;
 		        z= (rotMat.m_Matrix[2] + rotMat.m_Matrix[8] ) / s;
 			}
-			else if ((abs(rotMat.m_Matrix[5]) > abs(rotMat.m_Matrix[0])) &&  (abs(rotMat.m_Matrix[5]) > abs(rotMat.m_Matrix[15])))
+            else if ((rotMat.m_Matrix[5] >= rotMat.m_Matrix[0]) &&  (rotMat.m_Matrix[5] >= rotMat.m_Matrix[15]))
 			{	// column 1 greater
 		        s= sqrt(1.0 + rotMat.m_Matrix[5] - rotMat.m_Matrix[0] - rotMat.m_Matrix[10]) * 2.0;
 
@@ -222,9 +222,9 @@ QQuaternion GLC_Matrix4x4::quaternion() const
 
 QPair<GLC_Vector3d, double> GLC_Matrix4x4::rotationVectorAndAngle() const
 {
-	QPair<GLC_Vector3d, double> subject(GLC_Vector3d(), 0.0);
-	if (GLC_Matrix4x4(*this).optimise().type() != GLC_Matrix4x4::Identity)
-	{
+    QPair<GLC_Vector3d, double> subject(GLC_Vector3d(), 0.0);
+    if (GLC_Matrix4x4(*this).optimise().type() != GLC_Matrix4x4::Identity)
+    {
 		QQuaternion quaternion= this->quaternion();
 		quaternion.normalize();
 
