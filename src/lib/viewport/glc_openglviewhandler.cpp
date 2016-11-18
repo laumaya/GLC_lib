@@ -22,10 +22,17 @@ GLC_OpenGLViewHandler::~GLC_OpenGLViewHandler()
 
 void GLC_OpenGLViewHandler::updateGL(bool synchrone)
 {
-    Q_UNUSED(synchrone);
     if (NULL != m_pViewWidget)
     {
-        m_pViewWidget->update();
+
+        if (synchrone)
+        {
+            m_pViewWidget->repaint();
+        }
+        else
+        {
+            m_pViewWidget->update();
+        }
     }
 }
 
