@@ -60,9 +60,9 @@ GLC_MeshData::GLC_MeshData(const GLC_MeshData& meshData)
     , m_TexelBuffer()
     , m_ColorBuffer()
     , m_LodList()
-    , m_PositionSize(meshData.m_PositionSize)
-    , m_TexelsSize(meshData.m_TexelsSize)
-    , m_ColorSize(meshData.m_ColorSize)
+    , m_PositionSize(-1)
+    , m_TexelsSize(-1)
+    , m_ColorSize(-1)
     , m_UseVbo(meshData.m_UseVbo)
 {
 	// Copy meshData LOD list
