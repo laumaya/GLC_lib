@@ -242,6 +242,38 @@ QPair<GLC_Vector3d, double> GLC_Matrix4x4::rotationVectorAndAngle() const
 	    subject.second= angle * 2.0;
 	}
 
-	return subject;
+    return subject;
+}
+
+GLC_Vector3d GLC_Matrix4x4::getXvector() const
+{
+    const int index= 0 * 4;
+    GLC_Vector3d subject(m_Matrix[index], m_Matrix[index + 1], m_Matrix[index + 2]);
+
+    return subject;
+}
+
+GLC_Vector3d GLC_Matrix4x4::getYvector() const
+{
+    const int index= 1 * 4;
+    GLC_Vector3d subject(m_Matrix[index], m_Matrix[index + 1], m_Matrix[index + 2]);
+
+    return subject;
+}
+
+GLC_Vector3d GLC_Matrix4x4::getZvector() const
+{
+    const int index= 2 * 4;
+    GLC_Vector3d subject(m_Matrix[index], m_Matrix[index + 1], m_Matrix[index + 2]);
+
+    return subject;
+}
+
+GLC_Vector3d GLC_Matrix4x4::getWvector() const
+{
+    const int index= 3 * 4;
+    GLC_Vector3d subject(m_Matrix[index], m_Matrix[index + 1], m_Matrix[index + 2]);
+
+    return subject;
 }
 

@@ -200,6 +200,11 @@ public:
 	//! Return the rotation vector and angle of this matrix
 	QPair<GLC_Vector3d, double> rotationVectorAndAngle() const;
 
+    GLC_Vector3d getXvector() const;
+    GLC_Vector3d getYvector() const;
+    GLC_Vector3d getZvector() const;
+    GLC_Vector3d getWvector() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
