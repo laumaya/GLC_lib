@@ -31,7 +31,7 @@
 // Class chunk id
 quint32 GLC_ExtrudedMesh::m_ChunkId= 0xA712;
 
-GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_Vector3d &dir, double lenght)
+GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_Vector3d &dir, double lenght, bool mirroredExtend)
     :GLC_Mesh()
     , m_Points(points)
     , m_SmothingPoints()
@@ -39,6 +39,7 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_V
     , m_ExtrusionVector(GLC_Vector3d(dir).normalize())
     , m_ExtrusionLenght(lenght)
     , m_GivenFaceNormal()
+    , m_MirroredExtend(mirroredExtend)
 {
 
 }
@@ -51,6 +52,7 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const GLC_ExtrudedMesh &other)
     , m_ExtrusionVector(other.m_ExtrusionVector)
     , m_ExtrusionLenght(other.m_ExtrusionLenght)
     , m_GivenFaceNormal(other.m_GivenFaceNormal)
+    , m_MirroredExtend(other.m_MirroredExtend)
 {
 
 }
@@ -106,6 +108,7 @@ GLC_ExtrudedMesh &GLC_ExtrudedMesh::operator =(const GLC_ExtrudedMesh &other)
         m_ExtrusionVector= other.m_ExtrusionVector;
         m_ExtrusionLenght= other.m_ExtrusionLenght;
         m_GivenFaceNormal= other.m_GivenFaceNormal;
+        m_MirroredExtend= other.m_MirroredExtend;
     }
 
     return *this;
@@ -481,11 +484,12 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineNormals() const
 
 GLfloatVector GLC_ExtrudedMesh::baseFaceVertices() const
 {
-    const int count= m_Points.count();
+    QList<GLC_Point3d> points= baseFacePoints();
+    const int count= points.count();
     GLfloatVector subject(count * 3); // 3 components pear vertice
     for (int i= 0; i < count; ++i)
     {
-        GLC_Point3d point= m_Points.at(i);
+        GLC_Point3d point= points.at(i);
         subject[(3 * i)]= static_cast<GLfloat>(point.x());
         subject[(3 * i) + 1]= static_cast<GLfloat>(point.y());
         subject[(3 * i) + 2]= static_cast<GLfloat>(point.z());
@@ -496,10 +500,11 @@ GLfloatVector GLC_ExtrudedMesh::baseFaceVertices() const
 
 GLfloatVector GLC_ExtrudedMesh::baseFaceTexels() const
 {
-    const int count= m_Points.count();
+    QList<GLC_Point3d> points= baseFacePoints();
+    const int count= points.count();
     GLfloatVector subject(count * 2);
 
-    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(m_Points);
+    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(points);
     QList<GLC_Point2d> normalizePolygon= glc::normalyzePolygon(baseFace2DPolygon);
 
     for (int i= 0; i < count; ++i)
@@ -514,16 +519,17 @@ GLfloatVector GLC_ExtrudedMesh::baseFaceTexels() const
 
 GLfloatVector GLC_ExtrudedMesh::baseOutlineFacesVertices() const
 {
-    const int count= m_Points.count();
+    QList<GLC_Point3d> points= baseFacePoints();
+    const int count= points.count();
     GLfloatVector subject(count * 6); // 3 components pear vertice * 2
     for (int i= 0; i < count; ++i)
     {
-        GLC_Point3d point1= m_Points.at(i);
+        GLC_Point3d point1= points.at(i);
         subject[(6 * i)]= static_cast<GLfloat>(point1.x());
         subject[(6 * i) + 1]= static_cast<GLfloat>(point1.y());
         subject[(6 * i) + 2]= static_cast<GLfloat>(point1.z());
 
-        GLC_Point3d point2= m_Points.at((i + 1) % count);
+        GLC_Point3d point2= points.at((i + 1) % count);
         subject[(6 * i) + 3]= static_cast<GLfloat>(point2.x());
         subject[(6 * i) + 4]= static_cast<GLfloat>(point2.y());
         subject[(6 * i) + 5]= static_cast<GLfloat>(point2.z());
@@ -534,10 +540,11 @@ GLfloatVector GLC_ExtrudedMesh::baseOutlineFacesVertices() const
 
 GLfloatVector GLC_ExtrudedMesh::basedOutlineFacesTexels() const
 {
-    const int count= m_Points.count();
+    QList<GLC_Point3d> points= baseFacePoints();
+    const int count= points.count();
     GLfloatVector subject(count * 4);
 
-    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(m_Points);
+    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(points);
     QList<GLC_Point2d> normalizePolygon= glc::normalyzePolygon(baseFace2DPolygon);
 
     for (int i= 0; i < count; ++i)
@@ -568,10 +575,43 @@ GLfloatVector GLC_ExtrudedMesh::baseFaceNormals() const
     return subject;
 }
 
+QList<GLC_Point3d> GLC_ExtrudedMesh::baseFacePoints() const
+{
+    double offsetLength;
+    if (m_MirroredExtend)
+    {
+        offsetLength= -(m_ExtrusionLenght / 2.0);
+    }
+    else
+    {
+        offsetLength= 0.0;
+    }
+    const GLC_Vector3d offset(m_ExtrusionVector * offsetLength);
+    const int count= m_Points.count();
+    QList<GLC_Point3d> subject;
+    for (int i= 0; i < count; ++i)
+    {
+        subject.append(m_Points.at(i) + offset);
+    }
+
+    return subject;
+}
+
 QList<GLC_Point3d> GLC_ExtrudedMesh::createdFacePoints() const
 {
     // The order is inverted to preserve face counterclockwise order
-    const GLC_Vector3d offset(m_ExtrusionVector * m_ExtrusionLenght);
+
+    double offsetLength;
+    if (m_MirroredExtend)
+    {
+        offsetLength= (m_ExtrusionLenght / 2.0);
+    }
+    else
+    {
+        offsetLength= m_ExtrusionLenght;
+    }
+
+    const GLC_Vector3d offset(m_ExtrusionVector * offsetLength);
     const int count= m_Points.count();
     QList<GLC_Point3d> subject;
     for (int i= 0; i < count; ++i)

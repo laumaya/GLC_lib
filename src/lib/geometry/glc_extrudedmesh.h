@@ -46,7 +46,7 @@ class GLC_LIB_EXPORT GLC_ExtrudedMesh : public GLC_Mesh
 
 public:
     //! Default constructor
-    GLC_ExtrudedMesh(const QList<GLC_Point3d>& points, const GLC_Vector3d& dir, double lenght);
+    GLC_ExtrudedMesh(const QList<GLC_Point3d>& points, const GLC_Vector3d& dir, double lenght, bool mirroredExtend= false);
 
     //! Copy constructor
     GLC_ExtrudedMesh(const GLC_ExtrudedMesh& other);
@@ -165,6 +165,9 @@ private:
     //! Return the base face normals
     GLfloatVector baseFaceNormals() const;
 
+    //! Return the list of points of the base face
+    QList<GLC_Point3d> baseFacePoints() const;
+
     //! Return the list of points of the created face
     QList<GLC_Point3d> createdFacePoints() const;
 
@@ -206,8 +209,11 @@ private:
     //! The normal of the given face
     GLC_Vector3d m_GivenFaceNormal;
 
+    bool m_MirroredExtend;
+
     //! Class chunk id
     static quint32 m_ChunkId;
+
 };
 
 #endif // GLC_EXTRUDEDMESH_H
