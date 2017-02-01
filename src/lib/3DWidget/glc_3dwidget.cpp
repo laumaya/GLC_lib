@@ -179,6 +179,7 @@ void GLC_3DWidget::remove3DViewInstance()
 		{
 			m_pWidgetManagerHandle->remove3DViewInstance(m_InstanceIdList.at(i));
 		}
+        m_InstanceIdList.clear();
 	}
 }
 
