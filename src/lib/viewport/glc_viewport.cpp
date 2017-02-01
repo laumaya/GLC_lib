@@ -66,6 +66,7 @@ GLC_Viewport::GLC_Viewport()
     , m_MinimumStaticRatioSize(0.0)
     , m_MinimumDynamicRatioSize(0.0)
     , m_TextRenderingCollection()
+    , m_DevicePixelRatio(1)
 {
 
 }
@@ -492,6 +493,7 @@ void GLC_Viewport::render3DWidget()
 
 void GLC_Viewport::setWinGLSize(int width, int height, int devicePixelRatio, bool updateOpenGL)
 {
+    m_DevicePixelRatio= devicePixelRatio;
     m_Width= width;
     m_Height= height;
 
