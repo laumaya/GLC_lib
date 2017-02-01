@@ -81,7 +81,7 @@ public:
 
 	//! Return true if this widget has a 3DWidgetManager
 	inline bool has3DWidgetManager() const
-	{return (NULL == m_pWidgetManagerHandle);}
+	{return (NULL != m_pWidgetManagerHandle);}
 
 	//! Return true if otho is used
 	inline bool useOrtho() const
