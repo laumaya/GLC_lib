@@ -170,7 +170,7 @@ QString GLC_Matrix4x4::toString() const
 QQuaternion GLC_Matrix4x4::quaternion() const
 {
 	QQuaternion subject;
-	GLC_Matrix4x4 rotMat= rotationMatrix();
+    GLC_Matrix4x4 rotMat= rotationMatrix();
 	if ((this->type() != GLC_Matrix4x4::Identity) && (rotMat != GLC_Matrix4x4()))
 	{
 		const double matrixTrace= rotMat.trace();
@@ -186,32 +186,38 @@ QQuaternion GLC_Matrix4x4::quaternion() const
 		}
 		else
 		{
-            if ((rotMat.m_Matrix[0] >= rotMat.m_Matrix[5]) &&  (rotMat.m_Matrix[0] >= rotMat.m_Matrix[15]))
+            if ((rotMat.m_Matrix[0] > rotMat.m_Matrix[5]) &&  (rotMat.m_Matrix[0] > rotMat.m_Matrix[10]))
 			{	// column 0 greater
-		        s= sqrt(1.0 + rotMat.m_Matrix[0] - rotMat.m_Matrix[5] - rotMat.m_Matrix[10]) * 2.0;
+                s= 2.0 * sqrt( 1.0 + rotMat.m_Matrix[0] - rotMat.m_Matrix[5] - rotMat.m_Matrix[10]);
+                w= (rotMat.m_Matrix[9] - rotMat.m_Matrix[6] ) / s;
+                x= 0.25 * s;
+                y= (rotMat.m_Matrix[1] + rotMat.m_Matrix[4] ) / s;
+                z= (rotMat.m_Matrix[2] + rotMat.m_Matrix[8] ) / s;
 
-		        w= (rotMat.m_Matrix[6] + rotMat.m_Matrix[9] ) / s;
-		        x= 0.5 / s;
-		        y= (rotMat.m_Matrix[1] + rotMat.m_Matrix[4] ) / s;
-		        z= (rotMat.m_Matrix[2] + rotMat.m_Matrix[8] ) / s;
 			}
-            else if ((rotMat.m_Matrix[5] >= rotMat.m_Matrix[0]) &&  (rotMat.m_Matrix[5] >= rotMat.m_Matrix[15]))
+            else if (rotMat.m_Matrix[5] > rotMat.m_Matrix[10])
 			{	// column 1 greater
-		        s= sqrt(1.0 + rotMat.m_Matrix[5] - rotMat.m_Matrix[0] - rotMat.m_Matrix[10]) * 2.0;
+                s= 2.0 * sqrt( 1.0 + rotMat.m_Matrix[5] - rotMat.m_Matrix[0] - rotMat.m_Matrix[10]);
+                w= (rotMat.m_Matrix[2] - rotMat.m_Matrix[8] ) / s;
+                x= (rotMat.m_Matrix[1] + rotMat.m_Matrix[4] ) / s;
+                y= 0.25 * s;
+                z= (rotMat.m_Matrix[6] + rotMat.m_Matrix[9] ) / s;
 
-		        w= (rotMat.m_Matrix[2] + rotMat.m_Matrix[8]) / s;
-		        x= (rotMat.m_Matrix[1] + rotMat.m_Matrix[4]) / s;
-		        y= 0.5 / s;
-		        z= (rotMat.m_Matrix[6] + rotMat.m_Matrix[9]) / s;
 			}
 			else
-			{	// column 3 greater
-		        s= sqrt(1.0 + rotMat.m_Matrix[10] - rotMat.m_Matrix[0] - rotMat.m_Matrix[5]) * 2.0;
+            {	// column 2 greater
 
+		        s= sqrt(1.0 + rotMat.m_Matrix[10] - rotMat.m_Matrix[0] - rotMat.m_Matrix[5]) * 2.0;
 		        w = (rotMat.m_Matrix[1] + rotMat.m_Matrix[4]) / s;
 		        x = (rotMat.m_Matrix[2] + rotMat.m_Matrix[8]) / s;
 		        y = (rotMat.m_Matrix[6] + rotMat.m_Matrix[9]) / s;
-		        z = 0.5 / s;
+                z = 0.25 / s;
+
+                s= 2.0 * sqrt( 1.0 + rotMat.m_Matrix[10] - rotMat.m_Matrix[0] - rotMat.m_Matrix[5] );
+                w= (rotMat.m_Matrix[4] - rotMat.m_Matrix[1] ) / s;
+                x= (rotMat.m_Matrix[2] + rotMat.m_Matrix[8] ) / s;
+                y= (rotMat.m_Matrix[6] + rotMat.m_Matrix[9] ) / s;
+                z= 0.25 * s;
 			}
 		}
 		subject= QQuaternion(w, x, y, z);
