@@ -416,7 +416,7 @@ private:
     // Filter edge with overlap with edge of triangle with same normal. Edge is not sharp
     QList<GLC_Point3d> filterEdge(const QList<GLC_Point3d>& edge, const QList<GLC_Vector3d>& normals
                                   , const GLfloatVector& positionVector, const GLfloatVector& normalVector
-                                  , GLC_uint matId, int index1, int index2, double angleThreshold);
+                                  , int index1, int index2, double angleThreshold, IndexList indexList);
 
 
 //@}
