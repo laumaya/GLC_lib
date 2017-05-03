@@ -40,13 +40,12 @@ GLC_CsgNode::GLC_CsgNode()
     : m_Id(glc::GLC_GenUserID())
     , m_Matrix()
     , m_3DRep()
-    , m_pMaterial(new GLC_Material)
+    , m_MaterialHash()
 
     , m_pResultCsgModel(NULL)
 
     , m_Level(0)
 {
-    m_pMaterial->addUsage(m_Id);
     m_3DRep.addGeom(new GLC_Mesh);
 }
 
@@ -54,35 +53,31 @@ GLC_CsgNode::GLC_CsgNode(const GLC_Matrix4x4& matrix, const GLC_3DRep& rep)
     : m_Id(glc::GLC_GenUserID())
     , m_Matrix(matrix)
     , m_3DRep(rep)
-    , m_pMaterial(new GLC_Material)
+    , m_MaterialHash()
 
     , m_pResultCsgModel(NULL)
 
     , m_Level(0)
 {
-    m_pMaterial->addUsage(m_Id);
+
 }
 
 GLC_CsgNode::GLC_CsgNode(const GLC_CsgNode& other)
     : m_Id(glc::GLC_GenUserID())
     , m_Matrix(other.m_Matrix)
     , m_3DRep(other.m_3DRep)
-    , m_pMaterial(other.m_pMaterial)
+    , m_MaterialHash(other.m_MaterialHash)
 
     , m_pResultCsgModel(new csgjs_model(*(other.m_pResultCsgModel)))
 
     , m_Level(other.m_Level)
 {
-    m_pMaterial->addUsage(m_Id);
+
 }
 
 GLC_CsgNode::~GLC_CsgNode()
 {
-    m_pMaterial->delUsage(m_Id);
-    if (m_pMaterial->isUnused())
-    {
-        delete m_pMaterial;
-    }
+    clearMaterialHash();
     delete m_pResultCsgModel;
 }
 
@@ -120,22 +115,6 @@ void GLC_CsgNode::update(const GLC_Matrix4x4& matrix)
 {
     setMatrix(matrix);
     update();
-}
-
-void GLC_CsgNode::setMaterial(GLC_Material* pMaterial)
-{
-    Q_ASSERT(NULL != pMaterial);
-    if (pMaterial != m_pMaterial)
-    {
-        m_pMaterial->delUsage(m_Id);
-        if (m_pMaterial->isUnused())
-        {
-            delete m_pMaterial;
-        }
-
-        m_pMaterial= pMaterial;
-        m_pMaterial->addUsage(m_Id);
-    }
 }
 
 QList<QList<GLC_CsgNode*> > GLC_CsgNode::LevelList() const
@@ -183,6 +162,23 @@ void GLC_CsgNode::createLvlList(QList<QList<GLC_CsgNode*> >* lvlList, int curren
             children.at(i)->createLvlList(lvlList, currentLevel);
         }
     }
+}
+
+void GLC_CsgNode::clearMaterialHash()
+{
+    QHash<GLC_uint, GLC_Material*>::iterator iMaterial= m_MaterialHash.begin();
+    while (iMaterial != m_MaterialHash.end())
+    {
+        GLC_Material* pMaterial= iMaterial.value();
+        pMaterial->delUsage(m_Id);
+        if (pMaterial->isUnused())
+        {
+            delete pMaterial;
+        }
+        ++iMaterial;
+    }
+
+    m_MaterialHash.clear();
 }
 
 GLC_CsgNode*GLC_CsgNode::mappedFutureFct(GLC_CsgNode* pNode)

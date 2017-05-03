@@ -43,8 +43,7 @@ public:
 
 public:
     GLC_CsgOperatorNode();
-    explicit GLC_CsgOperatorNode(const GLC_Matrix4x4& matrix, const GLC_3DRep& rep, OperationType operationType);
-    explicit GLC_CsgOperatorNode(const GLC_CsgOperatorNode& other, OperationType operationType);
+    explicit GLC_CsgOperatorNode(const GLC_CsgOperatorNode& other);
 
     virtual ~GLC_CsgOperatorNode();
 
@@ -65,6 +64,9 @@ public:
     void setChildNodes(GLC_CsgNode* pNode1, GLC_CsgNode* pNode2);
     void setOperationType(OperationType operationType)
     {m_OperationType= operationType;}
+
+protected:
+    void updateMaterialHash() override;
 
 private:
     OperationType m_OperationType;

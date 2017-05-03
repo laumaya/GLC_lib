@@ -54,8 +54,13 @@ void Model::init()
     QList<GLC_Point3d> list2;
     list2 << p5 << p6 << p7 << p8;
 
-    GLC_3DRep geom1(new GLC_Box(40, 40, 2));
-    GLC_3DRep geom2(new GLC_ExtrudedMesh(list2, glc::Z_AXIS, 2.0));
+    GLC_Mesh* pBox= new GLC_Box(40, 40, 2);
+    pBox->addMaterial(new GLC_Material(Qt::red));
+    GLC_3DRep geom1(pBox);
+
+    GLC_Mesh* pExtruded= new GLC_ExtrudedMesh(list2, glc::Z_AXIS, 2.0);
+    pExtruded->addMaterial(new GLC_Material(Qt::green));
+    GLC_3DRep geom2(pExtruded);
 
     GLC_CsgLeafNode* pNode1= new GLC_CsgLeafNode(GLC_Matrix4x4(0.0, 0.0, 1.0), geom1);
     m_pChild2Node= new GLC_CsgLeafNode(GLC_Matrix4x4(0.0, 0.0, 0.0), geom2);

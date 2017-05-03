@@ -39,6 +39,7 @@ struct csgjs_vertex
     csgjs_vector pos;
     csgjs_vector normal;
     csgjs_vector uv;
+    uint matId;
 };
 
 struct csgjs_model

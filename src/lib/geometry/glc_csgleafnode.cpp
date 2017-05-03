@@ -27,6 +27,8 @@
 #include "glc_mesh.h"
 #include "glc_csghelper.h"
 
+#include "shading/glc_material.h"
+
 #include "glc_csgleafnode.h"
 
 GLC_CsgLeafNode::GLC_CsgLeafNode()
@@ -65,8 +67,24 @@ bool GLC_CsgLeafNode::update()
         GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(m_3DRep.geomAt(0));
         Q_ASSERT(NULL != pMesh);
         m_pResultCsgModel= GLC_CsgHelper::csgModelFromMesh(pMesh, m_Matrix);
+        updateMaterialHash();
         subject= true;
     }
 
     return subject;
+}
+
+void GLC_CsgLeafNode::updateMaterialHash()
+{
+    clearMaterialHash();
+    m_MaterialHash= m_3DRep.geomAt(0)->materialHash();
+
+    QHash<GLC_uint, GLC_Material*>::ConstIterator iMat= m_MaterialHash.constBegin();
+    while (iMat != m_MaterialHash.constEnd())
+    {
+        GLC_Material* pMat= iMat.value();
+        pMat->addUsage(m_Id);
+
+        ++iMat;
+    }
 }

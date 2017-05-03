@@ -18,14 +18,14 @@ GLC_CsgHelper::GLC_CsgHelper()
 
 }
 
-GLC_Mesh*GLC_CsgHelper::intersection(const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+GLC_Mesh*GLC_CsgHelper::intersection(const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2)
 {
     csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
     csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
 
     csgjs_model result= csgjs_intersection(*pCsgModel1, *pCsgModel2);
 
-    GLC_Mesh* pSubject= meshFromCsgModel(result, pMaterial);
+    GLC_Mesh* pSubject= meshFromCsgModel(result, materialHash(pMesh1, pMesh2));
 
     delete pCsgModel1;
     delete pCsgModel2;
@@ -33,14 +33,14 @@ GLC_Mesh*GLC_CsgHelper::intersection(const GLC_Mesh* pMesh1, const GLC_Matrix4x4
     return pSubject;
 }
 
-void GLC_CsgHelper::intersection(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+void GLC_CsgHelper::intersection(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2)
 {
     csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
     csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
 
     csgjs_model result= csgjs_intersection(*pCsgModel1, *pCsgModel2);
 
-    meshFromCsgModel(result, pMaterial, pResultMesh);
+    meshFromCsgModel(result, materialHash(pMesh1, pMesh2), pResultMesh);
 
     pResultMesh->addVerticeGroups(*pMesh1, m1);
     pResultMesh->addVerticeGroups(*pMesh2, m2);
@@ -49,14 +49,14 @@ void GLC_CsgHelper::intersection(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, 
     delete pCsgModel2;
 }
 
-GLC_Mesh*GLC_CsgHelper::add(const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+GLC_Mesh*GLC_CsgHelper::add(const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2)
 {
     csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
     csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
 
     csgjs_model result= csgjs_union(*pCsgModel1, *pCsgModel2);
 
-    GLC_Mesh* pSubject= meshFromCsgModel(result, pMaterial);
+    GLC_Mesh* pSubject= meshFromCsgModel(result, materialHash(pMesh1, pMesh2));
 
     delete pCsgModel1;
     delete pCsgModel2;
@@ -64,14 +64,14 @@ GLC_Mesh*GLC_CsgHelper::add(const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, con
     return pSubject;
 }
 
-void GLC_CsgHelper::add(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+void GLC_CsgHelper::add(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2)
 {
     csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
     csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
 
     csgjs_model result= csgjs_union(*pCsgModel1, *pCsgModel2);
 
-    meshFromCsgModel(result, pMaterial, pResultMesh);
+    meshFromCsgModel(result, materialHash(pMesh1, pMesh2), pResultMesh);
 
     pResultMesh->addVerticeGroups(*pMesh1, m1);
     pResultMesh->addVerticeGroups(*pMesh2, m2);
@@ -80,14 +80,14 @@ void GLC_CsgHelper::add(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, const GLC
     delete pCsgModel2;
 }
 
-GLC_Mesh *GLC_CsgHelper::soustract(const GLC_Mesh *pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh *pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+GLC_Mesh *GLC_CsgHelper::soustract(const GLC_Mesh *pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh *pMesh2, const GLC_Matrix4x4& m2)
 {
     csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
     csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
 
     csgjs_model result= csgjs_difference(*pCsgModel1, *pCsgModel2);
 
-    GLC_Mesh* pSubject= meshFromCsgModel(result, pMaterial);
+    GLC_Mesh* pSubject= meshFromCsgModel(result, materialHash(pMesh1, pMesh2));
 
     delete pCsgModel1;
     delete pCsgModel2;
@@ -95,14 +95,14 @@ GLC_Mesh *GLC_CsgHelper::soustract(const GLC_Mesh *pMesh1, const GLC_Matrix4x4& 
     return pSubject;
 }
 
-void GLC_CsgHelper::soustract(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2, GLC_Material* pMaterial)
+void GLC_CsgHelper::soustract(GLC_Mesh* pResultMesh, const GLC_Mesh* pMesh1, const GLC_Matrix4x4& m1, const GLC_Mesh* pMesh2, const GLC_Matrix4x4& m2)
 {
     csgjs_model* pCsgModel1= csgModelFromMesh(pMesh1, m1);
     csgjs_model* pCsgModel2= csgModelFromMesh(pMesh2, m2);
 
     csgjs_model result= csgjs_difference(*pCsgModel1, *pCsgModel2);
 
-    meshFromCsgModel(result, pMaterial, pResultMesh);
+    meshFromCsgModel(result, materialHash(pMesh1, pMesh2), pResultMesh);
 
     pResultMesh->addVerticeGroups(*pMesh1, m1);
     pResultMesh->addVerticeGroups(*pMesh2, m2);
@@ -148,6 +148,8 @@ csgjs_model *GLC_CsgHelper::csgModelFromMesh(const GLC_Mesh *pMesh, const GLC_Ma
             vertex.normal.y= static_cast<float>(vectNormal.y());
             vertex.normal.z= static_cast<float>(vectNormal.z());
 
+            vertex.matId= materialId;
+
             if (!texelVector.isEmpty())
             {
                 vertex.uv.x= texelVector.at(index * 2);
@@ -162,18 +164,48 @@ csgjs_model *GLC_CsgHelper::csgModelFromMesh(const GLC_Mesh *pMesh, const GLC_Ma
     return pSubject;
 }
 
-GLC_Mesh *GLC_CsgHelper::meshFromCsgModel(const csgjs_model &model, GLC_Material* pMaterial)
+GLC_Mesh *GLC_CsgHelper::meshFromCsgModel(const csgjs_model& model, const QHash<GLC_uint, GLC_Material*>& materialHash)
 {
     GLC_Mesh* pSubject= new GLC_Mesh;
-    meshFromCsgModel(model, pMaterial, pSubject);
+    meshFromCsgModel(model, materialHash, pSubject);
 
     return pSubject;
 }
 
-void GLC_CsgHelper::meshFromCsgModel(const csgjs_model& model, GLC_Material* pMaterial, GLC_Mesh* pMesh)
+void GLC_CsgHelper::meshFromCsgModel(const csgjs_model& model, const QHash<GLC_uint, GLC_Material*>& materialHash, GLC_Mesh* pMesh)
 {
     Q_ASSERT(NULL != pMesh);
     pMesh->clear();
+    QHash<GLC_uint, GLC_Material*>::ConstIterator iMat= materialHash.constBegin();
+    QList<int> indices= model.indices;
+
+    while (iMat != materialHash.constEnd())
+    {
+        IndexList indexList;
+        const GLC_uint& matId= iMat.key();
+        QList<int>::iterator iIndice= indices.begin();
+        while (iIndice != indices.end())
+        {
+            if (model.vertices.at(*iIndice).matId == matId)
+            {
+                indexList.append(*iIndice);
+                iIndice= indices.erase(iIndice);
+            }
+            else
+            {
+                ++iIndice;
+            }
+        }
+        if (!indexList.isEmpty())
+        {
+            pMesh->addTriangles(iMat.value(), indexList);
+        }
+
+        ++iMat;
+    }
+
+    Q_ASSERT(indices.isEmpty());
+
     GLfloatVector positionVector;
     GLfloatVector normalVector;
     GLfloatVector texelVector;
@@ -190,12 +222,23 @@ void GLC_CsgHelper::meshFromCsgModel(const csgjs_model& model, GLC_Material* pMa
     pMesh->addNormals(normalVector);
     pMesh->addTexels(texelVector);
 
-    IndexList indexList;
-    const size_t indexCount= model.indices.size();
-    for (size_t i= 0; i < indexCount; ++i)
-    {
-        indexList.append(model.indices.at(i));
-    }
-    pMesh->addTriangles(pMaterial, indexList);
     pMesh->finish();
+}
+
+QHash<GLC_uint, GLC_Material*> GLC_CsgHelper::materialHash(const GLC_Mesh* pMesh1, const GLC_Mesh* pMesh2)
+{
+    QHash<GLC_uint, GLC_Material*> mesh1Hash(pMesh1->materialHash());
+    QHash<GLC_uint, GLC_Material*> subject(pMesh2->materialHash());
+
+    QHash<GLC_uint, GLC_Material*>::ConstIterator iMatMesh1= mesh1Hash.constBegin();
+    while(iMatMesh1 != mesh1Hash.constEnd())
+    {
+        if (!subject.contains(iMatMesh1.key()))
+        {
+            subject.insert(iMatMesh1.key(), iMatMesh1.value());
+        }
+        ++iMatMesh1;
+    }
+
+    return subject;
 }

@@ -122,6 +122,9 @@ public:
 	inline GLC_Material* material(const GLC_uint key) const
 	{return m_MaterialHash[key];}
 
+    MaterialHash materialHash() const
+    { return m_MaterialHash;}
+
 	//! Get materials Set
 	inline QSet<GLC_Material*> materialSet() const
 	{return m_MaterialHash.values().toSet();}

@@ -46,6 +46,8 @@ public:
     {return false;}
     void setRoot(bool) override {}
 
+protected:
+    void updateMaterialHash() override;
 
 };
 

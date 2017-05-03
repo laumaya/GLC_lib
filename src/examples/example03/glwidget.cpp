@@ -55,7 +55,7 @@ GLWidget::GLWidget(QWidget *p_parent)
 
     GLC_Mesh* pMesh1= new GLC_Cylinder(2.0, 2.0);
     GLC_Mesh* pMesh2= new GLC_Cylinder(1.0, 3.0);
-    GLC_Mesh* pMesh3= GLC_CsgHelper::soustract(pMesh1, GLC_Matrix4x4(), pMesh2, GLC_Matrix4x4(), new GLC_Material(matBlue));
+    GLC_Mesh* pMesh3= GLC_CsgHelper::soustract(pMesh1, GLC_Matrix4x4(), pMesh2, GLC_Matrix4x4());
 
     GLC_3DViewInstance instance(pMesh3);
     m_Collection.add(instance);

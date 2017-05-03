@@ -52,7 +52,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateMotion()
 {
-    static double offset= 0.1;
+    static double offset= 0.2;
     static double length= offset;
 
     GLC_Matrix4x4 matrix(offset, 0.0, 0.0);
@@ -60,7 +60,9 @@ void MainWindow::updateMotion()
     m_Model.update();
     m_pOpenGLView->update();
 
-    if ((length > 5) || (length < -5))
+    const int max= 15;
+
+    if ((length > max) || (length < -max))
     {
         offset= -offset;
     }

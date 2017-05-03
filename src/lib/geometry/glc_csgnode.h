@@ -25,6 +25,8 @@
 #ifndef GLC_CSGNODE_H
 #define GLC_CSGNODE_H
 
+#include <QHash>
+
 #include "../glc_global.h"
 #include "../maths/glc_matrix4x4.h"
 
@@ -72,11 +74,11 @@ public:
     const GLC_Matrix4x4& matrix() const
     {return m_Matrix;}
 
-    GLC_Material* material() const
-    {return m_pMaterial;}
-
     csgjs_model* csgjsModel() const
     {return m_pResultCsgModel;}
+
+    QHash<GLC_uint, GLC_Material*> materialHash() const
+    {return m_MaterialHash;}
 
 public:
     static void setEdgeDetectionAccuracy(double value);
@@ -88,24 +90,22 @@ public:
 
     void update(const GLC_Matrix4x4& matrix);
 
-    void setMaterial(GLC_Material* pMaterial);
-
-    void set3DRep(const GLC_3DRep& rep)
-    {m_3DRep= rep;}
-
     QList<QList<GLC_CsgNode*> > LevelList() const;
 
     void multiThreadedUpdate();
 
 protected:
     void createLvlList(QList<QList<GLC_CsgNode*> >* lvlList, int currentLevel) const;
+    void clearMaterialHash();
+    virtual void updateMaterialHash()= 0;
+
     static GLC_CsgNode* mappedFutureFct(GLC_CsgNode* pNode);
 
 protected:
     const GLC_uint m_Id;
     GLC_Matrix4x4 m_Matrix;
     GLC_3DRep m_3DRep;
-    GLC_Material* m_pMaterial;
+    QHash<GLC_uint, GLC_Material*> m_MaterialHash;
 
     csgjs_model* m_pResultCsgModel;
 

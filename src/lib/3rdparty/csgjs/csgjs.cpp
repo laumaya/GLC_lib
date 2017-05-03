@@ -115,6 +115,7 @@ inline static csgjs_vertex interpolate(const csgjs_vertex & a, const csgjs_verte
     ret.pos = lerp(a.pos, b.pos, t);
     ret.normal = lerp(a.normal, b.normal, t);
     ret.uv = lerp(a.uv, b.uv, t);
+    ret.matId= (a.matId < 0.5) ? a.matId : b.matId;
     return ret;
 }
 

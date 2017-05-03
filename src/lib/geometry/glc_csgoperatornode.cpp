@@ -42,20 +42,9 @@ GLC_CsgOperatorNode::GLC_CsgOperatorNode()
 
 }
 
-GLC_CsgOperatorNode::GLC_CsgOperatorNode(const GLC_Matrix4x4& matrix, const GLC_3DRep& rep, GLC_CsgOperatorNode::OperationType operationType)
-    : GLC_CsgNode(matrix, rep)
-    , m_OperationType(operationType)
-    , m_pOpe1Node(NULL)
-    , m_pOpe2Node(NULL)
-
-    , m_IsRoot(true)
-{
-
-}
-
-GLC_CsgOperatorNode::GLC_CsgOperatorNode(const GLC_CsgOperatorNode& other, OperationType operationType)
+GLC_CsgOperatorNode::GLC_CsgOperatorNode(const GLC_CsgOperatorNode& other)
     : GLC_CsgNode(other)
-    , m_OperationType(operationType)
+    , m_OperationType(other.m_OperationType)
     , m_pOpe1Node(other.m_pOpe1Node)
     , m_pOpe2Node(other.m_pOpe2Node)
 
@@ -106,6 +95,7 @@ bool GLC_CsgOperatorNode::update()
         {
             m_pResultCsgModel= new csgjs_model(csgjs_union(*pModel1, *pModel2));
         }
+        updateMaterialHash();
 
     }
 
@@ -115,11 +105,11 @@ bool GLC_CsgOperatorNode::update()
 void GLC_CsgOperatorNode::createMesh()
 {
     Q_ASSERT(NULL != m_pResultCsgModel);
-    GLC_Mesh* pMesh= GLC_CsgHelper::meshFromCsgModel(*m_pResultCsgModel, m_pMaterial);
-   if (m_IsRoot)
-   {
-       pMesh->createSharpEdges(m_EdgeDetectionAccuracy, m_EdgeDetectionAngleThreshold);
-   }
+    GLC_Mesh* pMesh= GLC_CsgHelper::meshFromCsgModel(*m_pResultCsgModel, m_MaterialHash);
+    if (m_IsRoot)
+    {
+        pMesh->createSharpEdges(m_EdgeDetectionAccuracy, m_EdgeDetectionAngleThreshold);
+    }
     m_3DRep.clear();
     m_3DRep.addGeom(pMesh);
 }
@@ -157,4 +147,28 @@ void GLC_CsgOperatorNode::setChildNodes(GLC_CsgNode* pNode1, GLC_CsgNode* pNode2
 
     m_pOpe1Node->setRoot(false);
     m_pOpe2Node->setRoot(false);
+}
+
+void GLC_CsgOperatorNode::updateMaterialHash()
+{
+    clearMaterialHash();
+    QHash<GLC_uint, GLC_Material*> node1Hash= m_pOpe1Node->materialHash();
+    m_MaterialHash= m_pOpe2Node->materialHash();
+    QHash<GLC_uint, GLC_Material*>::ConstIterator iMat= node1Hash.constBegin();
+    while (iMat != node1Hash.constEnd())
+    {
+        if (!m_MaterialHash.contains(iMat.key()))
+        {
+            m_MaterialHash.insert(iMat.key(), iMat.value());
+        }
+        ++iMat;
+    }
+
+    iMat= m_MaterialHash.constBegin();
+    while (iMat != m_MaterialHash.constEnd())
+    {
+        GLC_Material* pMat= iMat.value();
+        pMat->addUsage(m_Id);
+        ++iMat;
+    }
 }
