@@ -44,7 +44,6 @@ GLC_Cylinder::GLC_Cylinder(double dRadius, double dLength, int discretization)
 , m_EndedIsCaped(true)			// Cylinder ended are closed
 {
 	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0));
-	createMeshAndWire();
 }
 
 GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
@@ -54,8 +53,7 @@ GLC_Cylinder::GLC_Cylinder(const GLC_Cylinder& sourceCylinder)
 , m_Discret(sourceCylinder.m_Discret)
 , m_EndedIsCaped(sourceCylinder.m_EndedIsCaped)
 {
-	Q_ASSERT((m_Radius > 0.0) && (m_Length > 0.0) && (m_Discret > 0));
-    if (isEmpty()) createMeshAndWire();
+
 }
 
 GLC_Cylinder::~GLC_Cylinder()
