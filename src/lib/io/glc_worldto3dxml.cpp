@@ -350,47 +350,43 @@ void GLC_WorldTo3dxml::exportAssemblyStructure()
 
 void GLC_WorldTo3dxml::exportAssemblyFromOccurrence(const GLC_StructOccurrence* pOccurrence)
 {
-	if (pOccurrence->isOrphan())
-	{
-		writeReference3D(pOccurrence->structReference());
-	}
-	else
-	{
-		// Reference 3D
-		GLC_StructReference* pCurrentRef= pOccurrence->structReference();
-		if (!m_ReferenceToIdHash.contains(pCurrentRef))
-		{
-			writeReference3D(pCurrentRef);
-			// Reference Rep
-			if (pCurrentRef->hasRepresentation())
-			{
-				GLC_3DRep* pCurrentRep= dynamic_cast<GLC_3DRep*>(pCurrentRef->representationHandle());
-				if (NULL != pCurrentRep && !m_ReferenceRepToIdHash.contains(pCurrentRep))
-				{
-					writeReferenceRep(pCurrentRep);
-				}
-			}
-		}
-		// Instance 3D and instance rep
-		GLC_StructInstance* pCurrentInstance= pOccurrence->structInstance();
-		if (!m_InstanceToIdHash.contains(pCurrentInstance))
-		{
-			// Instance 3D
-			const unsigned int parentId= m_ReferenceToIdHash.value(pOccurrence->parent()->structReference());
-			writeInstance3D(pCurrentInstance, parentId);
+    // Reference 3D
+    GLC_StructReference* pCurrentRef= pOccurrence->structReference();
+    if (!m_ReferenceToIdHash.contains(pCurrentRef))
+    {
+        writeReference3D(pCurrentRef);
+        // Reference Rep
+        if (pCurrentRef->hasRepresentation())
+        {
+            GLC_3DRep* pCurrentRep= dynamic_cast<GLC_3DRep*>(pCurrentRef->representationHandle());
+            if (NULL != pCurrentRep && !m_ReferenceRepToIdHash.contains(pCurrentRep))
+            {
+                writeReferenceRep(pCurrentRep);
+            }
+        }
+    }
+    // Instance 3D and instance rep
+    GLC_StructInstance* pCurrentInstance= pOccurrence->structInstance();
+    if (!m_InstanceToIdHash.contains(pCurrentInstance))
+    {
+        // Instance 3D
+        if (!pOccurrence->isOrphan())
+        {
+            const unsigned int parentId= m_ReferenceToIdHash.value(pOccurrence->parent()->structReference());
+            writeInstance3D(pCurrentInstance, parentId);
+        }
 
-			// Instance Rep
-			if (pCurrentRef->hasRepresentation())
-			{
-				GLC_3DRep* pCurrentRep= dynamic_cast<GLC_3DRep*>(pCurrentRef->representationHandle());
-				const unsigned int parentId= m_ReferenceToIdHash.value(pCurrentRef);
-				if (NULL != pCurrentRep && !m_InstanceRep.contains(parentId))
-				{
-					writeInstanceRep(pCurrentRep, parentId);
-				}
-			}
-		}
-	}
+        // Instance Rep
+        if (pCurrentRef->hasRepresentation())
+        {
+            GLC_3DRep* pCurrentRep= dynamic_cast<GLC_3DRep*>(pCurrentRef->representationHandle());
+            const unsigned int parentId= m_ReferenceToIdHash.value(pCurrentRef);
+            if (NULL != pCurrentRep && !m_InstanceRep.contains(parentId))
+            {
+                writeInstanceRep(pCurrentRep, parentId);
+            }
+        }
+    }
 
 	// Process children
 	const int childCount= pOccurrence->childCount();
