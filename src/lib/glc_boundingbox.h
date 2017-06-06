@@ -82,11 +82,13 @@ public:
     //! Return true if the given bounding box intersect this bounding box
     inline bool intersect(const GLC_BoundingBox& boundingBox) const;
 
+    inline bool fuzzyIntersect(const GLC_BoundingBox& boundingBox) const;
+
     //! Return true if the given 3d point intersect this bounding sphere of bounding box
-    bool intersectBoundingSphere(const GLC_Point3d&) const;
+    inline bool intersectBoundingSphere(const GLC_Point3d& point) const;
 
     //! Return true if the given bounding sphere of bounding box intersect the bounding sphere of box bounding box
-    bool intersectBoundingSphere(const GLC_BoundingBox&) const;
+    inline bool intersectBoundingSphere(const GLC_BoundingBox& boundingSphere) const;
 
     //! Return the lower corner of this bounding box
     inline const GLC_Point3d& lowerCorner() const
@@ -191,6 +193,46 @@ bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox) const
         subject= subject && (distanceZ < ((zLength() + boundingBox.zLength()) * 0.5));
     }
     return subject;
+}
+
+bool GLC_BoundingBox::fuzzyIntersect(const GLC_BoundingBox& boundingBox) const
+{
+    bool subject= false;
+    // Distance between bounding box center
+    const GLC_Point3d thisCenter= center();
+    const GLC_Point3d otherCenter= boundingBox.center();
+
+    if (this->intersect(otherCenter) || (boundingBox.intersect(thisCenter)))
+    {
+        subject= true;
+    }
+    else
+    {
+        const double distanceX= fabs(thisCenter.x() - otherCenter.x());
+        const double distanceY= fabs(thisCenter.y() - otherCenter.y());
+        const double distanceZ= fabs(thisCenter.z() - otherCenter.z());
+
+        const double deltaX= ((xLength() + boundingBox.xLength()) * 0.5);
+        const double deltaY= ((yLength() + boundingBox.yLength()) * 0.5);
+        const double deltaZ= ((zLength() + boundingBox.zLength()) * 0.5);
+
+        subject= (distanceX < deltaX) || qFuzzyCompare(distanceX, deltaX);
+        subject= subject && ((distanceY < deltaY) || qFuzzyCompare(distanceY, deltaY));
+        subject= subject && ((distanceZ < deltaZ) || qFuzzyCompare(distanceZ, deltaZ));
+    }
+    return subject;
+}
+
+bool GLC_BoundingBox::intersectBoundingSphere(const GLC_Point3d& point) const
+{
+    const double distance= (center() - point).length();
+    return distance < boundingSphereRadius();
+}
+
+bool GLC_BoundingBox::intersectBoundingSphere(const GLC_BoundingBox& boundingSphere) const
+{
+    const double distance= (center() - boundingSphere.center()).length();
+    return distance < (boundingSphereRadius() + boundingSphere.boundingSphereRadius());
 }
 
 bool GLC_BoundingBox::operator == (const GLC_BoundingBox& other) const

@@ -832,6 +832,7 @@ void GLC_Mesh::setVboUsage(bool usage)
 
 void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
 {
+    angleThreshold= glc::toRadian(angleThreshold);
     const double savedPrecision= glc::comparedPrecision;
     glc::comparedPrecision= precision;
 
@@ -883,7 +884,7 @@ void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
             tri2Bbox.combine(tri2Vert2);
             tri2Bbox.combine(tri2Vert3);
 
-            if (tri1Bbox.intersectBoundingSphere(tri2Bbox))
+            if (tri1Bbox.fuzzyIntersect(tri2Bbox))
             {
                 QList<GLC_Point3d> tri1Vert;
                 QList<GLC_Vector3d> tri1Norm;
@@ -1917,7 +1918,7 @@ QList<GLC_Point3d> GLC_Mesh::sharpEdge(const QList<GLC_Point3d>& tri1Vert, const
                 angle= tri1N2.angleWithVect(tri2N2);
             }
 
-            bool doCompare = !(glc::toDegrees(angle) < angleThreshold);
+            bool doCompare = !(angle < angleThreshold);
 
             if (doCompare)
             {
@@ -1972,7 +1973,7 @@ QList<GLC_Point3d> GLC_Mesh::filterEdge(const QList<GLC_Point3d>& edge, const QL
         triangleBbox.combine(tri1Vert2);
         triangleBbox.combine(tri1Vert3);
 
-        bool doCompare= triangleBbox.intersectBoundingSphere(edgeBbox);
+        bool doCompare= triangleBbox.fuzzyIntersect(edgeBbox);
 
         for (int i= 0; doCompare && (i < 3) && (subject.count() == 4); ++i)
         {
@@ -1982,7 +1983,7 @@ QList<GLC_Point3d> GLC_Mesh::filterEdge(const QList<GLC_Point3d>& edge, const QL
             const GLC_Vector3d& tri1N1(tri1Norm[i]);
             const GLC_Vector3d& tri1N2(tri1Norm[(i + 1) % 3]);
 
-            const double angle= glc::toDegrees(tri1N1.angleWithVect(tri1N2));
+            const double angle= tri1N1.angleWithVect(tri1N2);
 
             if (angle < angleThreshold)
             {
@@ -1992,7 +1993,7 @@ QList<GLC_Point3d> GLC_Mesh::filterEdge(const QList<GLC_Point3d>& edge, const QL
                     if (!((((j == 0) && (index1 == tri1Index)) || ((j == 2) && (index2 == tri1Index)))))
                     {
                         const GLC_Vector3d& edgeNormal(normals[edgeIndex]);
-                        const double angle= glc::toDegrees(tri1N1.angleWithVect(edgeNormal));
+                        const double angle= tri1N1.angleWithVect(edgeNormal);
                         if (angle < angleThreshold)
                         {
                             const GLC_Point3d& tri2V1(edge[j]);

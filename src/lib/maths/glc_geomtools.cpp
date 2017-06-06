@@ -612,70 +612,23 @@ bool glc::segmentsOverlap(const GLC_Point3d& p1, const GLC_Point3d& p2, const GL
     }
     else if (glc::pointsAreCollinear(p1, p2, p3) && glc::pointsAreCollinear(p1, p2, p4))
     {
-        subject= pointIsIncludeInSegment(p1, p2, p3) || pointIsIncludeInSegment(p1, p2, p4);
-        subject= subject || pointIsIncludeInSegment(p3, p4, p1) || pointIsIncludeInSegment(p3, p4, p2);
+        const double length1= GLC_Vector3d(p1 - p2).length();
+        const double length2= GLC_Vector3d(p3 - p4).length();
+        if (length1 > length2)
+        {
+            subject= (pointIsIncludeInSegment(p1, p2, p3) || pointIsIncludeInSegment(p1, p2, p4));
+        }
+        else
+        {
+            subject= (pointIsIncludeInSegment(p3, p4, p1) || pointIsIncludeInSegment(p3, p4, p2));
+        }
     }
     return subject;
 }
 
 
-bool glc::compare(double p1, double p2)
-{
-	return qAbs(p1 - p2) <= comparedPrecision;
-}
 
-bool glc::compare(double p1, double p2, double accuracy)
-{
-    return qAbs(p1 - p2) <= accuracy;
-}
 
-bool glc::compareAngle(double p1, double p2)
-{
-	const double anglePrecision= toRadian(comparedPrecision);
-	return qAbs(p1 - p2) <= anglePrecision;
-}
-
-bool glc::compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2)
-{
-	bool compareResult= (qAbs(v1.x() - v2.x()) <= comparedPrecision);
-	compareResult= compareResult && (qAbs(v1.y() - v2.y()) <= comparedPrecision);
-	compareResult= compareResult && (qAbs(v1.z() - v2.z()) <= comparedPrecision);
-
-	return compareResult;
-}
-
-bool glc::compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2, double accuracy)
-{
-    bool compareResult= (qAbs(v1.x() - v2.x()) <= accuracy);
-    compareResult= compareResult && (qAbs(v1.y() - v2.y()) <= accuracy);
-    compareResult= compareResult && (qAbs(v1.z() - v2.z()) <= accuracy);
-
-    return compareResult;
-}
-
-bool glc::compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2)
-{
-	bool compareResult= (qAbs(v1.x() - v2.x()) <= comparedPrecision);
-	return compareResult && (qAbs(v1.y() - v2.y()) <= comparedPrecision);
-}
-
-bool glc::compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2, double accuracy)
-{
-    bool compareResult= (qAbs(v1.x() - v2.x()) <= accuracy);
-    return compareResult && (qAbs(v1.y() - v2.y()) <= accuracy);
-}
-
-bool glc::compare(const QPointF& v1, const QPointF& v2)
-{
-	bool compareResult= (qAbs(v1.x() - v2.x()) <= comparedPrecision);
-	return compareResult && (qAbs(v1.y() - v2.y()) <= comparedPrecision);
-}
-
-bool glc::compare(const QPointF& v1, const QPointF& v2, double accuracy)
-{
-    bool compareResult= (qAbs(v1.x() - v2.x()) <= accuracy);
-    return compareResult && (qAbs(v1.y() - v2.y()) <= accuracy);
-}
 
 double glc::round(double value)
 {
@@ -1074,3 +1027,5 @@ QList<GLC_Point3d> glc::AddCorner(const QList<GLC_Point3d> &segments, double rad
 
     return subject;
 }
+
+
