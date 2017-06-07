@@ -41,6 +41,8 @@
 
 #include "../glc_config.h"
 
+class GLC_Triangle;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Mesh
 /*! \brief GLC_Mesh : OpenGL 3D Mesh*/
@@ -410,8 +412,8 @@ private:
     IndexList equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint materialId) const;
 
     // If there is sharp edge between the given triangles, return two overlap triangle edge
-    QList<GLC_Point3d> sharpEdge(const QList<GLC_Point3d>& tri1Vert, const QList<GLC_Vector3d>& tri1Norm
-                                 , const QList<GLC_Point3d>& tri2Vert, const QList<GLC_Vector3d>& tri2Norm, double angleThreshold);
+    QList<GLC_Point3d> sharpEdge(const GLC_Triangle& t1, const GLC_Triangle& t2
+                                 , double angleThreshold);
 
     // Filter edge with overlap with edge of triangle with same normal. Edge is not sharp
     QList<GLC_Point3d> filterEdge(const QList<GLC_Point3d>& edge, const QList<GLC_Vector3d>& normals

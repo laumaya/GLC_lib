@@ -17,3 +17,6 @@ win32 {
     LIB_DIR = $${GLC_LIB_DIR}/lib
     INCLUDE_DIR = $${GLC_LIB_DIR}/include
 }
+
+DISTFILES += \
+    $$PWD/GLC_Triangle

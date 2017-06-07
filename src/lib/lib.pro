@@ -96,7 +96,8 @@ HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
                         maths/glc_interpolator.h \
                         maths/glc_plane.h \
                         maths/glc_geomtools.h \
-                        maths/glc_line3d.h
+                        maths/glc_line3d.h \
+                        maths/glc_triangle.h
 						
 HEADERS_GLC_IO +=   io/glc_objmtlloader.h \
                     io/glc_objtoworld.h \
@@ -300,7 +301,8 @@ SOURCES +=	maths/glc_matrix4x4.cpp \
                 maths/glc_interpolator.cpp \
                 maths/glc_plane.cpp \
                 maths/glc_geomtools.cpp \
-                maths/glc_line3d.cpp
+                maths/glc_line3d.cpp \
+                maths/glc_triangle.cpp
 
 SOURCES +=	io/glc_objmtlloader.cpp \
                 io/glc_objtoworld.cpp \
@@ -556,7 +558,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_CsgHelper \
                GLC_CsgNode \
                GLC_CsgOperatorNode \
-               GLC_CsgLeafNode
+               GLC_CsgLeafNode \
+               GLC_Triangle
 
 
 include (../../install.pri)
