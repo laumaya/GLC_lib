@@ -22,6 +22,8 @@
 
 //! \file glc_mesh.cpp Implementation for the GLC_Mesh class.
 
+#include <QtConcurrent>
+
 #include "glc_mesh.h"
 #include "../glc_renderstatistics.h"
 #include "../glc_context.h"
@@ -32,6 +34,22 @@
 
 // Class chunk id
 quint32 GLC_Mesh::m_ChunkId= 0xA701;
+
+class SharpEdgeContainer
+{
+public:
+    SharpEdgeContainer(GLC_Triangle* pTriangle, QList<GLC_Triangle>* pTriangleList, double angleThresold, int index)
+        : m_pTriangle(pTriangle)
+        , m_pTriangleList(pTriangleList)
+        , m_AngleThresold(angleThresold)
+        , m_Index(index)
+    {}
+
+    GLC_Triangle* m_pTriangle;
+    QList<GLC_Triangle>* m_pTriangleList;
+    double m_AngleThresold;
+    int m_Index;
+};
 
 GLC_Mesh::GLC_Mesh()
 :GLC_Geometry("Mesh", false)
@@ -853,6 +871,8 @@ void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
     const int indexCount= indexList.count();
 
     QList<GLC_Triangle> triangles;
+    QList<SharpEdgeContainer*> sharpEdgeContainerList;
+
     for (int tri1Index= 0; tri1Index < indexCount; tri1Index+=3)
     {
         int index= indexList.at(tri1Index);
@@ -867,19 +887,16 @@ void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
 
         GLC_Triangle triangle(p1, p2, p3, n1, n2, n3);
         triangles.append(triangle);
+
+        SharpEdgeContainer* pSharpEdgeContainer= new SharpEdgeContainer(&(triangles.last()), &triangles, angleThreshold, triangles.count() - 1);
+        sharpEdgeContainerList.append(pSharpEdgeContainer);
     }
+
+    // Multi thread edge computing
+    QtConcurrent::blockingMapped(sharpEdgeContainerList, computeSharEdgeMappedFunction);
+    qDeleteAll(sharpEdgeContainerList);
 
     const int count= triangles.count();
-    for (int tri1= 0; tri1 < count; ++tri1)
-    {
-        GLC_Triangle& triangle1= triangles[tri1];
-        for (int tri2= (tri1 + 1); tri2 < count; ++tri2)
-        {
-            GLC_Triangle& triangle2= triangles[tri2];
-            triangle1.setSharpEdge(&triangle2, angleThreshold);
-        }
-    }
-
     for (int i= 0; i < count; ++i)
     {
         GLC_Triangle& triangle= triangles[i];
@@ -1856,160 +1873,16 @@ IndexList GLC_Mesh::equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint m
     return trianglesIndex;
 }
 
-QList<GLC_Point3d> GLC_Mesh::sharpEdge(const GLC_Triangle& t1, const GLC_Triangle& t2, double angleThreshold)
+SharpEdgeContainer* GLC_Mesh::computeSharEdgeMappedFunction(SharpEdgeContainer* pContainer)
 {
-    QList<GLC_Point3d> subject;
-    for (int i= 0; (i < 3) && subject.isEmpty(); ++i)
+    const int count= pContainer->m_pTriangleList->count();
+    const int startIndex= pContainer->m_Index + 1;
+    for (int i= startIndex; i < count; ++i)
     {
-        const GLC_Point3d& tri1V1(t1.point(i));
-        const GLC_Point3d& tri1N1(t1.normal(i));
-
-        const GLC_Point3d& tri1V2(t1.point((i + 1) % 3));
-        const GLC_Point3d& tri1N2(t1.normal((i + 1) % 3));
-        for (int j= 0; (j < 3) && subject.isEmpty(); ++j)
-        {
-            const GLC_Point3d& tri2V1(t2.point(j));
-            const GLC_Point3d& tri2N1(t2.normal(j));
-
-            const GLC_Point3d& tri2V2(t2.point((j + 1) % 3));
-            const GLC_Point3d& tri2N2(t2.normal((j + 1) % 3));
-
-            const double delta1= (tri1V1 - tri2V1).length();
-            const double delta2= (tri1V1 - tri2V2).length();
-            const double delta3= (tri1V2 - tri2V1).length();
-            const double delta4= (tri1V2 - tri2V2).length();
-
-            double angle= 0;
-            if (glc::compare(delta1, 0.0) || ((delta1 < delta2) && (delta1 < delta3) && (delta1 < delta4)))
-            {
-                angle= tri1N1.angleWithVect(tri2N1);
-            }
-            else if (glc::compare(delta2, 0.0) || ((delta2 < delta1) && (delta2 < delta3) && (delta2 < delta4)))
-            {
-                angle= tri1N1.angleWithVect(tri2N2);
-            }
-            else if (glc::compare(delta3, 0.0) || ((delta3 < delta1) && (delta3 < delta2) && (delta3 < delta4)))
-            {
-                angle= tri1N2.angleWithVect(tri2N1);
-            }
-            else
-            {
-                angle= tri1N2.angleWithVect(tri2N2);
-            }
-
-            bool doCompare = !(angle < angleThreshold);
-
-            if (doCompare)
-            {
-                bool edgeFound= glc::segmentsOverlap(tri1V1, tri1V2, tri2V1, tri2V2);
-                if (edgeFound)
-                {
-                    subject << tri1V1 << tri1V2;
-                    subject << tri2V1 << tri2V2;
-                }
-            }
-        }
+        GLC_Triangle& triangle2= pContainer->m_pTriangleList->operator [](i);
+        pContainer->m_pTriangle->setSharpEdge(&triangle2, pContainer->m_AngleThresold);
     }
 
-    return subject;
-}
-
-QList<GLC_Point3d> GLC_Mesh::filterEdge(const QList<GLC_Point3d>& edge, const QList<GLC_Vector3d>& normals
-                                        , const GLfloatVector& positionVector, const GLfloatVector& normalVector
-                                        , int index1, int index2, double angleThreshold, IndexList indexList)
-{
-    Q_ASSERT(edge.count() == 4);
-    Q_ASSERT(normals.count() == 2);
-
-    GLC_BoundingBox edgeBbox;
-    edgeBbox.combine(edge[0]);
-    edgeBbox.combine(edge[1]);
-    edgeBbox.combine(edge[2]);
-    edgeBbox.combine(edge[3]);
-
-    QList<GLC_Point3d> subject= edge;
-
-    const int count= indexList.count();
-    for (int tri1Index= 0; tri1Index < count; tri1Index+=3)
-    {
-        int index= indexList.at(tri1Index);
-        GLC_Vector3d tri1Vert1(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
-        GLC_Vector3d tri1Norm1(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
-        index= indexList.at(tri1Index + 1);
-        GLC_Vector3d tri1Vert2(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
-        GLC_Vector3d tri1Norm2(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
-        index= indexList.at(tri1Index + 2);
-        GLC_Vector3d tri1Vert3(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
-        GLC_Vector3d tri1Norm3(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
-
-        QList<GLC_Point3d> tri1Vert;
-        QList<GLC_Vector3d> tri1Norm;
-        tri1Vert << tri1Vert1 << tri1Vert2 << tri1Vert3;
-        tri1Norm << tri1Norm1 << tri1Norm2 << tri1Norm3;
-
-        GLC_BoundingBox triangleBbox;
-        triangleBbox.combine(tri1Vert1);
-        triangleBbox.combine(tri1Vert2);
-        triangleBbox.combine(tri1Vert3);
-
-        bool doCompare= triangleBbox.fuzzyIntersect(edgeBbox);
-
-        for (int i= 0; doCompare && (i < 3) && (subject.count() == 4); ++i)
-        {
-            const GLC_Point3d& tri1V1(tri1Vert[i]);
-            const GLC_Point3d& tri1V2(tri1Vert[(i + 1) % 3]);
-
-            const GLC_Vector3d& tri1N1(tri1Norm[i]);
-            const GLC_Vector3d& tri1N2(tri1Norm[(i + 1) % 3]);
-
-            const double angle= tri1N1.angleWithVect(tri1N2);
-
-            if (angle < angleThreshold)
-            {
-                int edgeIndex= 0;
-                for (int j= 0; (j < 4) && (subject.count() == 4); j+=2)
-                {
-                    if (!((((j == 0) && (index1 == tri1Index)) || ((j == 2) && (index2 == tri1Index)))))
-                    {
-                        const GLC_Vector3d& edgeNormal(normals[edgeIndex]);
-                        const double angle= tri1N1.angleWithVect(edgeNormal);
-                        if (angle < angleThreshold)
-                        {
-                            const GLC_Point3d& tri2V1(edge[j]);
-                            const GLC_Point3d& tri2V2(edge[j + 1]);
-                            const bool edgeFound= glc::segmentsOverlap(tri1V1, tri1V2, tri2V1, tri2V2);
-                            if (edgeFound)
-                            {
-                                // Remove the two edge vertice
-                                subject.removeAt(j);
-                                subject.removeAt(j);
-                            }
-                        }
-                    }
-                    ++edgeIndex;
-                }
-            }
-        }
-    }
-
-    if (subject.count() == 4)
-    {
-        // Filter on edge size
-        const double edge1Length= (edge[0] - edge[1]).length();
-        const double edge2Length= (edge[2] - edge[3]).length();
-        // Filter smaller edge
-        if (edge1Length < edge2Length)
-        {
-            subject.removeFirst();
-            subject.removeFirst();
-        }
-        else
-        {
-            subject.removeLast();
-            subject.removeLast();
-        }
-    }
-
-    return subject;
+    return pContainer;
 }
 

@@ -42,6 +42,7 @@
 #include "../glc_config.h"
 
 class GLC_Triangle;
+class SharpEdgeContainer;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Mesh
@@ -411,15 +412,7 @@ private:
 	//! Return the equivalent triangles index of the fan index of given LOD and material ID
     IndexList equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint materialId) const;
 
-    // If there is sharp edge between the given triangles, return two overlap triangle edge
-    QList<GLC_Point3d> sharpEdge(const GLC_Triangle& t1, const GLC_Triangle& t2
-                                 , double angleThreshold);
-
-    // Filter edge with overlap with edge of triangle with same normal. Edge is not sharp
-    QList<GLC_Point3d> filterEdge(const QList<GLC_Point3d>& edge, const QList<GLC_Vector3d>& normals
-                                  , const GLfloatVector& positionVector, const GLfloatVector& normalVector
-                                  , int index1, int index2, double angleThreshold, IndexList indexList);
-
+    static SharpEdgeContainer* computeSharEdgeMappedFunction(SharpEdgeContainer* pContainer);
 
 //@}
 
