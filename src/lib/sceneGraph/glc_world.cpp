@@ -27,6 +27,7 @@
 #include "glc_structreference.h"
 
 #include "../glc_selectionevent.h"
+#include "../geometry/glc_mesh.h"
 
 GLC_World::GLC_World()
 : m_pWorldHandle(new GLC_WorldHandle())
@@ -118,6 +119,32 @@ void GLC_World::updateSelection(const GLC_SelectionEvent &selectionEvent)
     GLC_SelectionEvent selectionCopy(selectionEvent);
     selectionCopy.setAttachedWorld(*this);
     m_pWorldHandle->updateSelection(selectionCopy);
+}
+
+void GLC_World::createSharpEdges(double precision, double angleThreshold)
+{
+    angleThreshold= glc::toRadian(angleThreshold);
+    QList<GLC_StructReference*> referenceList= references();
+    const int count= referenceList.count();
+    for (int i= 0; i < count; ++i)
+    {
+        GLC_StructReference* pRef= referenceList.at(i);
+        if (pRef->hasRepresentation())
+        {
+            GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pRef->representationHandle());
+            if (NULL != pRep)
+            {
+                for (int j= 0; j < pRep->numberOfBody(); ++j)
+                {
+                    GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(pRep->geomAt(j));
+                    if (NULL != pMesh)
+                    {
+                        pMesh->createSharpEdges(precision, angleThreshold);
+                    }
+                }
+            }
+        }
+    }
 }
 
 GLC_World& GLC_World::operator=(const GLC_World& world)

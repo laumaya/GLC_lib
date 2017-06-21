@@ -22,8 +22,8 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_Triangle
 {
-    friend bool compare(const GLC_Triangle& t1, const GLC_Triangle& t2);
-    friend bool compare(const GLC_Triangle& t1, const GLC_Triangle& t2, double accuracy);
+    friend GLC_LIB_EXPORT bool compare(const GLC_Triangle& t1, const GLC_Triangle& t2);
+    friend GLC_LIB_EXPORT bool compare(const GLC_Triangle& t1, const GLC_Triangle& t2, double accuracy);
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */

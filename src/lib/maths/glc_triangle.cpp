@@ -81,9 +81,16 @@ QList<GLC_Point3d> GLC_Triangle::sharpEdges() const
     QList<GLC_Point3d> subject;
     if (m_SharpEdge[0] == 1)
     {
-        subject << m_Points[0] << m_Points[1];
-        if (m_SharpEdge[1] == 1) subject << m_Points[2];
-        if (m_SharpEdge[2] == 1) subject << m_Points[0];
+        if ((m_SharpEdge[1] == 0) && (m_SharpEdge[2] == 1))
+        {
+            subject << m_Points[2] << m_Points[0] << m_Points[1];
+        }
+        else
+        {
+            subject << m_Points[0] << m_Points[1];
+            if (m_SharpEdge[1] == 1) subject << m_Points[2];
+            if (m_SharpEdge[2] == 1) subject << m_Points[0];
+        }
     }
     else if (m_SharpEdge[1] == 1)
     {
@@ -112,6 +119,7 @@ GLC_Triangle& GLC_Triangle::operator =(const GLC_Triangle& other)
 
 void GLC_Triangle::setSharpEdge(GLC_Triangle* pOther, double angleThreshold)
 {
+    Q_ASSERT(this != pOther);
     if (boundingBox().fuzzyIntersect(pOther->boundingBox()))
     {
         bool edgeFound= false;
@@ -172,11 +180,11 @@ void GLC_Triangle::setSharpEdge(int index, bool sharp)
 {
     if (m_SharpEdge[index] == -1)
     {
-        m_SharpEdge[index]= (sharp) ? 1 : 0;
+        m_SharpEdge[index]= ((sharp) ? 1 : 0);
     }
     else
     {
-        m_SharpEdge[index]= (sharp && (m_SharpEdge[index] == 1)) ? 1 : 0;
+        m_SharpEdge[index]= ((sharp && (m_SharpEdge[index] == 1)) ? 1 : 0);
     }
 }
 

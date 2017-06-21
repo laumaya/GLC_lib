@@ -274,6 +274,8 @@ public:
 	//! Hide selected 3DViewInstance
 	inline void hideSelected3DViewInstance()
 	{m_pWorldHandle->setSelected3DViewInstanceVisibility(false);}
+
+    void createSharpEdges(double precision, double angleThreshold);
 //@}
 
 //////////////////////////////////////////////////////////////////////
