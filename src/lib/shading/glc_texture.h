@@ -29,6 +29,8 @@
 #include <QtOpenGL>
 #include <QOpenGLTexture>
 
+#include "../maths/glc_matrix4x4.h"
+
 #include "../glc_config.h"
 
 /////////////////////////////////////////////////////////////////////
@@ -108,7 +110,11 @@ public:
 	inline QImage imageOfTexture() const
     { return m_TextureImage;}
 
+    GLC_Matrix4x4 matrix() const
+    {return m_Matrix;}
 
+    bool hasTransformationMatrix() const
+    {return m_Matrix.type() != GLC_Matrix4x4::Identity;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -118,6 +124,9 @@ public:
 public:
 	// Set the maximum texture size
 	static void setMaxTextureSize(const QSize&);
+
+    void setMatrix(const GLC_Matrix4x4& matrix)
+    {m_Matrix= matrix;}
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -160,6 +169,8 @@ private:
 
 	//! Flag to know if the texture has alpha channel
 	bool m_HasAlphaChannel;
+
+    GLC_Matrix4x4 m_Matrix;
 
 	//! Static member used to check texture size
 	static QSize m_MaxTextureSize;

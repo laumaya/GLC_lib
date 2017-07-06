@@ -1396,18 +1396,26 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
 			// Test if the current material is renderable
 			bool materialIsrenderable = (pCurrentMaterial->isTransparent() == isTransparent);
 
-			// Choose the material to render
-            if ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode())
-	    	{
-				// Execute current material
-				pCurrentMaterial->glExecute();
-
-				if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-			}
-
 	   		// Choose the primitives to render
             if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
 			{
+                // Choose the material to render
+                const bool useCurrentMaterial= ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode());
+                if (useCurrentMaterial)
+                {
+                    // Execute current material
+                    pCurrentMaterial->glExecute();
+
+                    if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+                }
+
+                const bool useTextureMatrix= useCurrentMaterial && pCurrentMaterial->hasTexture() && pCurrentMaterial->textureHandle()->hasTransformationMatrix();
+                if (useTextureMatrix)
+                {
+                    GLC_Context::current()->glcMatrixMode(GL_TEXTURE);
+                    GLC_Context::current()->glcLoadMatrix(pCurrentMaterial->textureHandle()->matrix());
+                    GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+                }
 
 				if (vboIsUsed)
 				{
@@ -1417,6 +1425,13 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
 				{
 					vertexArrayDrawPrimitivesOf(pCurrentGroup);
 				}
+
+                if (useTextureMatrix)
+                {
+                    GLC_Context::current()->glcMatrixMode(GL_TEXTURE);
+                    GLC_Context::current()->glcLoadIdentity();
+                    GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+                }
 			}
 
 			++iGroup;
@@ -1445,10 +1460,24 @@ void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderPro
 		if (m_IsSelected || materialIsrenderable)
 		{
 
-			if (vboIsUsed)
-				vboDrawPrimitivesOf(pCurrentGroup);
-			else
-				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+            const bool useTextureMatrix= pOverwriteMaterial->hasTexture() && pOverwriteMaterial->textureHandle()->hasTransformationMatrix();
+            if (useTextureMatrix)
+            {
+                GLC_Context::current()->glcMatrixMode(GL_TEXTURE);
+                GLC_Context::current()->glcLoadMatrix(pOverwriteMaterial->textureHandle()->matrix());
+                GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+            }
+
+            if (vboIsUsed) vboDrawPrimitivesOf(pCurrentGroup);
+            else vertexArrayDrawPrimitivesOf(pCurrentGroup);
+
+
+            if (useTextureMatrix)
+            {
+                GLC_Context::current()->glcMatrixMode(GL_TEXTURE);
+                GLC_Context::current()->glcLoadIdentity();
+                GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+            }
 		}
 
 		++iGroup;
@@ -1469,22 +1498,35 @@ void GLC_Mesh::OverwriteTransparencyRenderLoop(const GLC_RenderProperties& rende
 		LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
 		while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
 		{
-			GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
-			GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
-
-			// Execute current material
-			pCurrentMaterial->glExecute(alpha);
-
-			if (m_IsSelected) GLC_SelectionMaterial::glExecute();
-
 	   		// Choose the primitives to render
 			if (m_IsSelected || materialIsrenderable)
 			{
+                GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+                GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
 
-				if (vboIsUsed)
-					vboDrawPrimitivesOf(pCurrentGroup);
-				else
-					vertexArrayDrawPrimitivesOf(pCurrentGroup);
+                // Execute current material
+                pCurrentMaterial->glExecute(alpha);
+
+                if (m_IsSelected) GLC_SelectionMaterial::glExecute();
+
+                const bool useTextureMatrix= pCurrentMaterial->hasTexture() && pCurrentMaterial->textureHandle()->hasTransformationMatrix();
+                if (useTextureMatrix)
+                {
+                    GLC_Context::current()->glcMatrixMode(GL_TEXTURE);
+                    GLC_Context::current()->glcLoadMatrix(pCurrentMaterial->textureHandle()->matrix());
+                    GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+                }
+
+                if (vboIsUsed) vboDrawPrimitivesOf(pCurrentGroup);
+                else vertexArrayDrawPrimitivesOf(pCurrentGroup);
+
+                if (useTextureMatrix)
+                {
+                    GLC_Context::current()->glcMatrixMode(GL_TEXTURE);
+                    GLC_Context::current()->glcLoadIdentity();
+                    GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+                }
+
 			}
 			++iGroup;
 		}
@@ -1514,11 +1556,23 @@ void GLC_Mesh::OverwriteTransparencyAndMaterialRenderLoop(const GLC_RenderProper
    		// Choose the primitives to render
 		if (m_IsSelected || materialIsrenderable)
 		{
+            const bool useTextureMatrix= pOverwriteMaterial->hasTexture() && pOverwriteMaterial->textureHandle()->hasTransformationMatrix();
+            if (useTextureMatrix)
+            {
+                GLC_Context::current()->glcMatrixMode(GL_TEXTURE);
+                GLC_Context::current()->glcLoadMatrix(pOverwriteMaterial->textureHandle()->matrix());
+                GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+            }
 
-			if (vboIsUsed)
-				vboDrawPrimitivesOf(pCurrentGroup);
-			else
-				vertexArrayDrawPrimitivesOf(pCurrentGroup);
+            if (vboIsUsed) vboDrawPrimitivesOf(pCurrentGroup);
+            else vertexArrayDrawPrimitivesOf(pCurrentGroup);
+
+            if (useTextureMatrix)
+            {
+                GLC_Context::current()->glcMatrixMode(GL_TEXTURE);
+                GLC_Context::current()->glcLoadIdentity();
+                GLC_Context::current()->glcMatrixMode(GL_MODELVIEW);
+            }
 		}
 
 		++iGroup;

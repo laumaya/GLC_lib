@@ -52,6 +52,7 @@ GLC_Texture::GLC_Texture()
 , m_TextureImage()
 , m_TextureSize()
 , m_HasAlphaChannel(false)
+, m_Matrix()
 {
 
 }
@@ -63,6 +64,7 @@ GLC_Texture::GLC_Texture(const QString &Filename)
 , m_TextureImage(loadFromFile(m_FileName))
 , m_TextureSize()
 , m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
+, m_Matrix()
 {
     if (m_TextureImage.isNull())
 	{
@@ -84,6 +86,7 @@ GLC_Texture::GLC_Texture(const QFile &file)
 , m_TextureImage()
 , m_TextureSize()
 , m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
+, m_Matrix()
 {
     m_TextureImage.load(const_cast<QFile*>(&file), QFileInfo(m_FileName).suffix().toLocal8Bit());
     if (m_TextureImage.isNull())
@@ -107,6 +110,7 @@ GLC_Texture::GLC_Texture(const QImage& image, const QString& fileName)
 , m_TextureImage(image)
 , m_TextureSize(m_TextureImage.size())
 , m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
+, m_Matrix()
 {
     Q_ASSERT(!m_TextureImage.isNull());
 }
@@ -117,6 +121,7 @@ GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
 , m_TextureImage(TextureToCopy.m_TextureImage)
 , m_TextureSize(TextureToCopy.m_TextureSize)
 , m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
+, m_Matrix(TextureToCopy.m_Matrix)
 {
     if (m_TextureImage.isNull())
 	{
@@ -139,6 +144,7 @@ GLC_Texture& GLC_Texture::operator=(const GLC_Texture& other)
         m_TextureImage= other.m_TextureImage;
         m_TextureSize= other.m_TextureSize;
         m_HasAlphaChannel= m_TextureImage.hasAlphaChannel();
+        m_Matrix= other.m_Matrix;
 	}
 
 	return *this;
@@ -174,6 +180,7 @@ bool GLC_Texture::operator==(const GLC_Texture& texture) const
 	else
 	{
         result= (m_FileName == texture.m_FileName) && (m_TextureImage == texture.m_TextureImage);
+        result= result && (m_Matrix == texture.m_Matrix);
 	}
 	return result;
 }
