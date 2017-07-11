@@ -188,9 +188,13 @@ bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox) const
         const double distanceY= fabs(thisCenter.y() - otherCenter.y());
         const double distanceZ= fabs(thisCenter.z() - otherCenter.z());
 
-        subject= distanceX < ((xLength() + boundingBox.xLength()) * 0.5);
-        subject= subject && (distanceY < ((yLength() + boundingBox.yLength()) * 0.5));
-        subject= subject && (distanceZ < ((zLength() + boundingBox.zLength()) * 0.5));
+        const double deltaX= ((xLength() + boundingBox.xLength()) * 0.5);
+        const double deltaY= ((yLength() + boundingBox.yLength()) * 0.5);
+        const double deltaZ= ((zLength() + boundingBox.zLength()) * 0.5);
+
+        subject= (distanceX < deltaX) && !qFuzzyCompare(distanceX, deltaX);
+        subject= subject && ((distanceY < deltaY) && !qFuzzyCompare(distanceY, deltaY));
+        subject= subject && ((distanceZ < deltaZ) && !qFuzzyCompare(distanceZ, deltaZ));
     }
     return subject;
 }
