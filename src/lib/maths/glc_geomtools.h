@@ -127,31 +127,31 @@ namespace glc
 
     GLC_LIB_EXPORT bool segmentsOverlap(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3, const GLC_Point3d& p4);
 
-    inline bool compare(double p1, double p2)
+    GLC_LIB_EXPORT inline bool compare(double p1, double p2)
     {return qAbs(p1 - p2) <= comparedPrecision;}
 
-    inline bool compare(double p1, double p2, double accuracy)
+    GLC_LIB_EXPORT inline bool compare(double p1, double p2, double accuracy)
     {return qAbs(p1 - p2) <= accuracy;}
 
-    inline bool compareAngle(double p1, double p2)
+    GLC_LIB_EXPORT inline bool compareAngle(double p1, double p2)
     {return qAbs(p1 - p2) <= toRadian(comparedPrecision);}
 
-    inline bool compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2)
+    GLC_LIB_EXPORT inline bool compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2)
     {return compare(v1.x(), v2.x()) && compare(v1.y(), v2.y()) && compare(v1.z(), v2.z());}
 
-    inline bool compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2, double accuracy)
+    GLC_LIB_EXPORT inline bool compare(const GLC_Vector3d& v1, const GLC_Vector3d& v2, double accuracy)
     {return compare(v1.x(), v2.x(), accuracy) && compare(v1.y(), v2.y(), accuracy) && compare(v1.z(), v2.z(), accuracy);}
 
-    inline bool compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2)
+    GLC_LIB_EXPORT inline bool compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2)
     {return compare(v1.x(), v2.x()) && compare(v1.y(), v2.y());}
 
-    inline bool compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2, double accuracy)
+    GLC_LIB_EXPORT inline bool compare(const GLC_Vector2d& v1, const GLC_Vector2d& v2, double accuracy)
     {return compare(v1.x(), v2.x(), accuracy) && compare(v1.y(), v2.y(), accuracy);}
 
-    inline bool compare(const QPointF& v1, const QPointF& v2)
+    GLC_LIB_EXPORT inline bool compare(const QPointF& v1, const QPointF& v2)
     {return compare(v1.x(), v2.x()) && compare(v1.y(), v2.y());}
 
-    inline bool compare(const QPointF& v1, const QPointF& v2, double accuracy)
+    GLC_LIB_EXPORT inline bool compare(const QPointF& v1, const QPointF& v2, double accuracy)
     {return compare(v1.x(), v2.x(), accuracy) && compare(v1.y(), v2.y(), accuracy);}
 
 	GLC_LIB_EXPORT double round(double value);
