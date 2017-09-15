@@ -80,6 +80,9 @@ public:
     inline bool hasAnActiveWidget() const
     {return m_pWidgetManagerHandle->hasAnActiveWidget();}
 
+    bool useOrderRendering() const
+    {return m_pWidgetManagerHandle->useOrderRendering();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -111,6 +114,9 @@ public:
     //! Update all 3dwidget
     void update()
     {m_pWidgetManagerHandle->update();}
+
+    void setOrderRenderingUsage(bool use)
+    {m_pWidgetManagerHandle->setOrderRenderingUsage(use);}
 
 //@}
 //////////////////////////////////////////////////////////////////////

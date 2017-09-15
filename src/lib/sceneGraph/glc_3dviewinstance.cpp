@@ -52,6 +52,7 @@ GLC_3DViewInstance::GLC_3DViewInstance()
     , m_ViewableFlag(GLC_3DViewInstance::FullViewable)
     , m_ViewableGeomFlag()
     , m_pRenderState(new GLC_RenderState)
+    , m_OrderWeight(0)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -70,6 +71,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom)
     , m_ViewableFlag(GLC_3DViewInstance::FullViewable)
     , m_ViewableGeomFlag()
     , m_pRenderState(new GLC_RenderState)
+    , m_OrderWeight(0)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -89,6 +91,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom, GLC_uint id)
     , m_ViewableFlag(GLC_3DViewInstance::FullViewable)
     , m_ViewableGeomFlag()
     , m_pRenderState(new GLC_RenderState)
+    , m_OrderWeight(0)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -108,6 +111,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
     , m_ViewableFlag(GLC_3DViewInstance::FullViewable)
     , m_ViewableGeomFlag()
     , m_pRenderState(new GLC_RenderState)
+    , m_OrderWeight(0)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -126,6 +130,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep, GLC_uint id)
     , m_ViewableFlag(GLC_3DViewInstance::FullViewable)
     , m_ViewableGeomFlag()
     , m_pRenderState(new GLC_RenderState)
+    , m_OrderWeight(0)
 {
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
@@ -145,6 +150,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
     , m_ViewableFlag(inputNode.m_ViewableFlag)
     , m_ViewableGeomFlag(inputNode.m_ViewableGeomFlag)
     , m_pRenderState(inputNode.m_pRenderState->clone())
+    , m_OrderWeight(inputNode.m_OrderWeight)
 
 {
 	// Encode Color Id
@@ -183,6 +189,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 
         delete m_pRenderState;
         m_pRenderState= inputNode.m_pRenderState->clone();
+        m_OrderWeight= inputNode.m_OrderWeight;
 
 		//qDebug() << "GLC_3DViewInstance::operator= :ID = " << m_Uid;
 		//qDebug() << "Number of instance" << (*m_pNumberOfInstance);

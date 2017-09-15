@@ -99,6 +99,9 @@ public:
 	inline bool isEmpty() const
 	{return m_3DWidgetHash.isEmpty();}
 
+    bool useOrderRendering() const
+    {return m_Collection.useOrderRendering();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -142,6 +145,10 @@ public:
 
     //! Update all 3dwidget
     void update();
+
+    void setOrderRenderingUsage(bool use)
+    {m_Collection.setOrderRenderingUsage(use);}
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name Interaction Functions*/

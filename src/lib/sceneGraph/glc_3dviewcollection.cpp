@@ -52,6 +52,7 @@ GLC_3DViewCollection::GLC_3DViewCollection()
 , m_pSpacePartitioning(NULL)
 , m_UseSpacePartitioning(false)
 , m_IsViewable(true)
+, m_UseOrderRendering(false)
 {
 }
 

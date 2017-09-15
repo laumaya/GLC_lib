@@ -160,6 +160,9 @@ public:
 	inline bool isViewable() const
 	{return m_IsViewable;}
 
+    bool useOrderRendering() const
+    {return m_UseOrderRendering;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -270,6 +273,9 @@ public:
 	//! Set VBO usage
 	void setVboUsage(bool usage);
 
+    void setOrderRenderingUsage(bool use)
+    {m_UseOrderRendering= use;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -300,6 +306,9 @@ private:
 
 	//! Draw instances of a PointerViewInstanceHash
 	inline void glDrawInstancesOf(PointerViewInstanceHash*, glc::RenderFlag);
+
+    //! Draw orded instances of a PointerViewInstanceHash
+    inline void glDrawOrderedInstancesOf(PointerViewInstanceHash*, glc::RenderFlag);
 
 //@}
 
@@ -340,6 +349,8 @@ private:
 	//! Viewable state
 	bool m_IsViewable;
 
+    bool m_UseOrderRendering;
+
 private:
     Q_DISABLE_COPY(GLC_3DViewCollection)
 };
@@ -368,6 +379,10 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 			++iEntry;
 		}
 	}
+    else if (m_UseOrderRendering)
+    {
+        glDrawOrderedInstancesOf(pHash, renderFlag);
+    }
 	else
 	{
 		if (!(renderFlag == glc::TransparentRenderFlag))
@@ -382,10 +397,8 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 						pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
-
 				++iEntry;
 			}
-
 		}
 		else
 		{
@@ -399,12 +412,49 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 						pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
 					}
 				}
-
 				++iEntry;
 			}
 	   }
-
 	}
+}
+
+// Draw instances of a PointerViewInstanceHash
+void GLC_3DViewCollection::glDrawOrderedInstancesOf(PointerViewInstanceHash* pHash, glc::RenderFlag renderFlag)
+{
+    // The current instance
+    GLC_3DViewInstance* pCurInstance;
+    QList<GLC_3DViewInstance*> instanceList= pHash->values();
+    std::sort(instanceList.begin(), instanceList.end(), GLC_3DViewInstance::firstIsLower);
+    const int count= instanceList.count();
+    if (!(renderFlag == glc::TransparentRenderFlag))
+    {
+        for (int i= 0; i < count; ++i)
+        {
+            pCurInstance= instanceList.at(i);
+            if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
+            {
+                if (!pCurInstance->isTransparent() || pCurInstance->renderPropertiesHandle()->isSelected() || (renderFlag == glc::WireRenderFlag))
+                {
+                    pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
+                }
+            }
+        }
+    }
+    else
+    {
+        for (int i= 0; i < count; ++i)
+        {
+            pCurInstance= instanceList.at(i);
+            if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
+            {
+                if (pCurInstance->hasTransparentMaterials())
+                {
+                    pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
+                }
+            }
+        }
+   }
+
 }
 
 #endif //GLC_3DVIEWCOLLECTION_H_

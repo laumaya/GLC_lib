@@ -204,6 +204,11 @@ public:
 		return m_GlobalDefaultLOD;
 	}
 
+    inline static bool firstIsLower(GLC_3DViewInstance* pInstance1, GLC_3DViewInstance* pInstance2)
+    {return (pInstance1->m_OrderWeight < pInstance2->m_OrderWeight);}
+
+    int orderWeight() const
+    {return m_OrderWeight;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -293,6 +298,9 @@ public:
     //! set this instance rendering state (instance take owner)
     void setRenderState(GLC_RenderState* pRenderState)
     {m_pRenderState= pRenderState;}
+
+    void setOrderWeight(int order)
+    {m_OrderWeight= order;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -373,6 +381,8 @@ private:
 
     //! This instance rendering state
     GLC_RenderState* m_pRenderState;
+
+    int m_OrderWeight;
 
 	//! A Mutex
     static QMutex m_3DViewInstanceMutex;
