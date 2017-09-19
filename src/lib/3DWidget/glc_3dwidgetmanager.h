@@ -83,6 +83,9 @@ public:
     bool useOrderRendering() const
     {return m_pWidgetManagerHandle->useOrderRendering();}
 
+    GLC_uint active3DWidgetId() const
+    {return m_pWidgetManagerHandle->active3DWidgetId();}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

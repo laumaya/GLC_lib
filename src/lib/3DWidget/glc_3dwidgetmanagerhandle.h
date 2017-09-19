@@ -63,6 +63,9 @@ public:
 	inline bool hasAnActiveWidget() const
 	{return 0 != m_Active3DWidgetId;}
 
+    GLC_uint active3DWidgetId() const
+    {return m_Active3DWidgetId;}
+
     //! Return true if this 3DWidget manager has visible widget
     inline bool hasVisibleWidget() const
     {return m_Collection.hasVisibleInstance();}
