@@ -193,6 +193,11 @@ void GLC_ViewHandler::selectionUpdated(const GLC_SelectionEvent &selectionEvent)
     updateGL();
 }
 
+void GLC_ViewHandler::selected3DWidgetChanged(GLC_uint widgetId)
+{
+    emit widgetSelectionChanged(widgetId);
+}
+
 void GLC_ViewHandler::setSize(int width, int height, int devicePixelRatio)
 {
     m_pViewport->setWinGLSize(width, height, devicePixelRatio, true);

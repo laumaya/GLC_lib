@@ -63,6 +63,7 @@ signals :
     void invalidateSelectionBuffer();
     void acceptHoverEvent(bool track);
     void selectionChanged();
+    void widgetSelectionChanged(GLC_uint widgetId);
 
     // Error signals
     void frameBufferCreationFailed();
@@ -74,56 +75,56 @@ signals :
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    inline GLC_World world() const
+    GLC_World world() const
     {return m_World;}
 
-    inline GLC_Light* lightHandle() const
+    GLC_Light* lightHandle() const
     {return m_pLight;}
 
-    inline GLC_Viewport* viewportHandle() const
+    GLC_Viewport* viewportHandle() const
     {return m_pViewport;}
 
-    inline int samples() const
+    int samples() const
     {return m_Samples;}
 
-    inline GLC_MoverController* moverControllerHandle() const
+    GLC_MoverController* moverControllerHandle() const
     {return m_pMoverController;}
 
-    inline GLC_ViewHandler::RenderingMode renderingMode() const
+    GLC_ViewHandler::RenderingMode renderingMode() const
     {return (m_RenderingMode);}
 
-    inline GLC_SelectionEvent::Modes selectionModes() const
+    GLC_SelectionEvent::Modes selectionModes() const
     {return m_SelectionModes;}
 
-    inline GLC_SelectionEvent::Mode selectionMode() const
+    GLC_SelectionEvent::Mode selectionMode() const
     {return m_SelectionMode;}
 
-    inline QPoint pointerPosition() const
+    QPoint pointerPosition() const
     {return m_PointerPosition;}
 
-    inline GLC_InputEventInterpreter* eventInterpreter() const
+    GLC_InputEventInterpreter* eventInterpreter() const
     {return m_pInputEventInterpreter;}
 
-    inline bool isEnable() const
+    bool isEnable() const
     {return m_Enabled;}
 
-    inline bool hasVisibleWidget() const
+    bool hasVisibleWidget() const
     {return m_3DWidgetManager.hasVisibleWidget();}
 
-    inline GLC_3DWidgetManager get3DWidgetManager() const
+    GLC_3DWidgetManager get3DWidgetManager() const
     {return m_3DWidgetManager;}
 
-    inline bool screenShotModeIsOn() const
+    bool screenShotModeIsOn() const
     {return m_ScreenShotMode;}
 
-    inline const GLC_ScreenShotSettings& screenShotSettings() const
+    const GLC_ScreenShotSettings& screenShotSettings() const
     {return m_ScreenshotSettings;}
 
-    inline glc::RenderFlag currentRenderFlag() const
+    glc::RenderFlag currentRenderFlag() const
     {return m_RenderFlag;}
 
     bool spacePartitionningEnabled() const;
-//@}
+    //@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Set Functions*/
@@ -158,26 +159,28 @@ public:
 
     virtual void selectionUpdated(const GLC_SelectionEvent &selectionEvent);
 
+    virtual void selected3DWidgetChanged(GLC_uint widgetId);
+
     virtual void setSize(int width, int height, int devicePixelRatio= 1);
 
     virtual void setMouseTracking(bool track);
 
     void updateCurrentSelectionSet(const GLC_SelectionSet &selectionSet, const GLC_Point3d& point);
 
-    inline void setEnable(bool enabled)
+    void setEnable(bool enabled)
     {m_Enabled= enabled;}
 
     void setLight(GLC_Light* pLight);
 
-    inline void setCurrentRenderFlag(glc::RenderFlag renderFlag)
+    void setCurrentRenderFlag(glc::RenderFlag renderFlag)
     {m_RenderFlag= renderFlag;}
 
-    inline void setSelectionMode(GLC_SelectionEvent::Mode mode)
+    void setSelectionMode(GLC_SelectionEvent::Mode mode)
     {m_SelectionMode= mode;}
 
     void setScreenShotMode(bool mode)
     {m_ScreenShotMode= mode;}
-//@}
+    //@}
 
 //////////////////////////////////////////////////////////////////////
 /*! \name Event handling Functions*/
