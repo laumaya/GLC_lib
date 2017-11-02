@@ -276,6 +276,8 @@ public:
 	{m_pWorldHandle->setSelected3DViewInstanceVisibility(false);}
 
     void createSharpEdges(double precision, double angleThreshold);
+
+    void setUnitFactor(double factor);
 //@}
 
 //////////////////////////////////////////////////////////////////////

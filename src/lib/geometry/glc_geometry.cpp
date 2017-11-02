@@ -258,6 +258,27 @@ void GLC_Geometry::setVboUsage(bool usage)
     m_WireData.setVboUsage(m_UseVbo);
 }
 
+void GLC_Geometry::transformVertice(const GLC_Matrix4x4& matrix)
+{
+    if (matrix.type() != GLC_Matrix4x4::Identity)
+    {
+        delete m_pBoundingBox;
+        m_pBoundingBox= NULL;
+        const int stride= 3;
+        GLfloatVector* pVectPos= m_WireData.positionVectorHandle();
+        const int verticeCount= pVectPos->size() / stride;
+        for (int i= 0; i < verticeCount; ++i)
+        {
+            GLC_Vector3d newPos(pVectPos->at(stride * i), pVectPos->at(stride * i + 1), pVectPos->at(stride * i + 2));
+            newPos= matrix * newPos;
+            pVectPos->operator[](stride * i)= static_cast<GLfloat>(newPos.x());
+            pVectPos->operator[](stride * i + 1)= static_cast<GLfloat>(newPos.y());
+            pVectPos->operator[](stride * i + 2)= static_cast<GLfloat>(newPos.z());
+        }
+        GLC_Geometry::releaseVboClientSide(true);
+    }
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////

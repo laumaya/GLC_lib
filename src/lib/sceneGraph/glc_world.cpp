@@ -147,6 +147,50 @@ void GLC_World::createSharpEdges(double precision, double angleThreshold)
     }
 }
 
+void GLC_World::setUnitFactor(double factor)
+{
+    GLC_Matrix4x4 scaleMatrix;
+    scaleMatrix.setMatScaling(factor, factor, factor);
+
+    { // Update assembly
+        const QList<GLC_StructInstance*> instanceList(m_pWorldHandle->instances());
+        const int count= instanceList.count();
+        for (int i= 0; i < count; ++i)
+        {
+            GLC_StructInstance* pInstance= instanceList.at(i);
+            const GLC_Matrix4x4 baseMatrix(pInstance->relativeMatrix());
+            const GLC_Matrix4x4 rotationMatrix(baseMatrix.rotationMatrix());
+            const GLC_Vector3d translation(scaleMatrix * baseMatrix.getWvector());
+            GLC_Matrix4x4 newMatrix(rotationMatrix);
+            newMatrix.setColumn(3, translation);
+            pInstance->setMatrix(newMatrix);
+        }
+    }
+
+    { // Update mesh
+        const QList<GLC_StructReference*> referenceList(m_pWorldHandle->references());
+        const int count= referenceList.count();
+        for (int i= 0; i < count; ++i)
+        {
+            GLC_StructReference* pRef= referenceList.at(i);
+            if (pRef->hasRepresentation() && !pRef->representationIsEmpty())
+            {
+                GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pRef->representationHandle());
+                if (NULL != pRep)
+                {
+                    const int bodyCount= pRep->numberOfBody();
+                    for (int iBody= 0; iBody < bodyCount; ++iBody)
+                    {
+                        pRep->geomAt(iBody)->transformVertice(scaleMatrix);
+                    }
+                }
+            }
+        }
+    }
+
+    rootOccurrence()->updateChildrenAbsoluteMatrix();
+}
+
 GLC_World& GLC_World::operator=(const GLC_World& world)
 {
     if ((this != &world) && (this->m_pWorldHandle != world.m_pWorldHandle))

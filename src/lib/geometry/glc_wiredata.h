@@ -80,6 +80,9 @@ public:
     GLfloatVector positionVector() const
     {return m_Positions;}
 
+    GLfloatVector* positionVectorHandle()
+    {return &m_Positions;}
+
 	//! Return the color Vector
     GLfloatVector colorVector() const
     {return m_Colors; }

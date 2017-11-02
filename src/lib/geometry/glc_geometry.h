@@ -284,6 +284,9 @@ public:
 		m_pBoundingBox= NULL;
 	}
 
+    //! Transform vertice by the given matrix
+    virtual void transformVertice(const GLC_Matrix4x4& matrix);
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/

@@ -520,10 +520,12 @@ GLC_Mesh* GLC_Mesh::createMeshFromGivenLod(int lodIndex)
 
 	return pLodMesh;
 }
-GLC_Mesh& GLC_Mesh::transformVertice(const GLC_Matrix4x4& matrix)
+void GLC_Mesh::transformVertice(const GLC_Matrix4x4& matrix)
 {
 	if (matrix.type() != GLC_Matrix4x4::Identity)
 	{
+        GLC_Geometry::transformVertice(matrix);
+
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
 		const int stride= 3;
@@ -545,10 +547,8 @@ GLC_Mesh& GLC_Mesh::transformVertice(const GLC_Matrix4x4& matrix)
 			pVectNormal->operator[](stride * i + 1)= static_cast<GLfloat>(newNormal.y());
 			pVectNormal->operator[](stride * i + 2)= static_cast<GLfloat>(newNormal.z());
 		}
-		releaseVboClientSide(true);
+        m_MeshData.releaseVboClientSide(true);
 	}
-
-	return *this;
 }
 
 double GLC_Mesh::volume()

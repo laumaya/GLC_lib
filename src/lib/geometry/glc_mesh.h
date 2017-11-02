@@ -200,8 +200,8 @@ public:
 	//! Create a mesh from the given LOD index
 	GLC_Mesh* createMeshFromGivenLod(int lodIndex);
 
-	//! Transform mesh vertice by the given matrix
-	GLC_Mesh& transformVertice(const GLC_Matrix4x4& matrix);
+    //! Transform vertice by the given matrix
+    void transformVertice(const GLC_Matrix4x4& matrix) override;
 
 	//! Return the volume of this mesh
 	virtual double volume();
