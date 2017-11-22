@@ -313,6 +313,7 @@ void GLC_OpenGLViewWidget::setupScreenShotFbo(int width, int height)
     QOpenGLFramebufferObjectFormat sourceFormat;
     sourceFormat.setAttachment(QOpenGLFramebufferObject::Depth);
     sourceFormat.setSamples(m_Viewhandler->samples());
+    sourceFormat.setInternalTextureFormat(GL_RGB8);
 
     m_pScreenShotFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
 
