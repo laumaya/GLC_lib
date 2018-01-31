@@ -24,6 +24,8 @@ Original ZIP package is copyrighted by Gilles Vollant, see
 quazip/(un)zip.h files for details, basically it's zlib license.
  **/
 
+#include "../../glc_config.h"
+
 #include <QDateTime>
 #include <QString>
 
@@ -35,7 +37,7 @@ quazip/(un)zip.h files for details, basically it's zlib license.
  * passing this structure to
  * QuaZipFile::open(OpenMode,const QuaZipNewInfo&,int,int,bool).
  **/
-struct QuaZipNewInfo {
+struct GLC_LIB_EXPORT QuaZipNewInfo {
   /// File name.
   /** This field holds file name inside archive, including path relative
    * to archive root.
