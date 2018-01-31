@@ -24,6 +24,8 @@ Original ZIP package is copyrighted by Gilles Vollant, see
 quazip/(un)zip.h files for details, basically it's zlib license.
  **/
 
+#include "../../glc_config.h"
+
 #include <QIODevice>
 
 #include "quazip_global.h"
@@ -70,7 +72,7 @@ class QuaZipFilePrivate;
  * this class.
  *
  **/
-class QuaZipFile: public QIODevice {
+class GLC_LIB_EXPORT QuaZipFile: public QIODevice {
   friend class QuaZipFilePrivate;
   Q_OBJECT
   private:

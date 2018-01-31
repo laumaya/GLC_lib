@@ -24,6 +24,8 @@ Original ZIP package is copyrighted by Gilles Vollant, see
 quazip/(un)zip.h files for details, basically it's zlib license.
  **/
 
+#include "../../glc_config.h"
+
 #include <QString>
 #include <QStringList>
 #include <QTextCodec>
@@ -80,7 +82,7 @@ class QuaZipPrivate;
  * detection using locale information. Does anyone know a good way to do
  * it?
  **/
-class QuaZip {
+class GLC_LIB_EXPORT QuaZip {
   friend class QuaZipPrivate;
   public:
     /// Useful constants.
