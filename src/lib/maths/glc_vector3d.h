@@ -447,10 +447,10 @@ GLC_Vector3d& GLC_Vector3d::invert()
 GLC_Vector2d GLC_Vector3d::toVector2d(const GLC_Vector3d& mask) const
 {
 	GLC_Vector2d resultVect;
-	if (mask.m_Vector[0] == 0.0)
+    if (qFuzzyIsNull(mask.m_Vector[0]))
 	{
 		resultVect.setX(m_Vector[0]);
-		if (mask.m_Vector[1] == 0.0) resultVect.setY(m_Vector[1]);
+        if (qFuzzyIsNull(mask.m_Vector[1])) resultVect.setY(m_Vector[1]);
 		else resultVect.setY(m_Vector[2]);
 	}
 	else resultVect.setVect(m_Vector[1], m_Vector[2]);
