@@ -1005,7 +1005,11 @@ QList<GLC_Point3d> glc::AddCorner(const QList<GLC_Point3d> &segments, double rad
     GLC_Point3d axisPos= newP1OnEdge0 + centerOffset;
 
     // Add first segment
-    subject << p0 << newP1OnEdge0;
+    subject << p0;
+    if (p0 != newP1OnEdge0)
+    {
+        subject << newP1OnEdge0;
+    }
 
     const double deltaAngle= (glc::PI - angle) / count; // Complementary angle
 
@@ -1020,7 +1024,11 @@ QList<GLC_Point3d> glc::AddCorner(const QList<GLC_Point3d> &segments, double rad
     }
 
     // Add last segment
-    subject << newP1OnEdge1 << p2;
+    subject << newP1OnEdge1;
+    if (newP1OnEdge1 != p2)
+    {
+        subject << p2;
+    }
 
     return subject;
 }
