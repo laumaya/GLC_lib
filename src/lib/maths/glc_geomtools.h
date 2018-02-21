@@ -187,6 +187,8 @@ namespace glc
     //! Segments composed of 3 points
     GLC_LIB_EXPORT QList<GLC_Point3d> AddCorner(const QList<GLC_Point3d>& segments, double radius, int count);
 
+    GLC_LIB_EXPORT QList<GLC_Point2d> findIntersectionBetwen2Circle(const GLC_Point2d& c0, double r0, GLC_Point2d& c1 , double r1);
+
 //@}
 
 }

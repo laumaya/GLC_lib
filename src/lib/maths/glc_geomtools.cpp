@@ -1033,4 +1033,63 @@ QList<GLC_Point3d> glc::AddCorner(const QList<GLC_Point3d> &segments, double rad
     return subject;
 }
 
+QList<GLC_Point2d> glc::findIntersectionBetwen2Circle(const GLC_Point2d& c0, double r0, GLC_Point2d& c1, double r1)
+{
+    QList<GLC_Point2d> subject;
 
+    const GLC_Vector2d u(c1 - c0);
+    const double uSqrLen= u * u;
+    const double deltaRadius= r0 - r1;
+    if (!qFuzzyIsNull(uSqrLen) || !qFuzzyIsNull(deltaRadius))
+    {
+        const double sQrDeltaRadius= deltaRadius * deltaRadius;
+        if (uSqrLen > sQrDeltaRadius)
+        {
+            const double r0AddR1= r0 + r1;
+            const double sqrR0AddR1= r0AddR1 * r0AddR1;
+            if (uSqrLen < sqrR0AddR1)
+            {
+                if (sQrDeltaRadius < uSqrLen)
+                {
+                    const double invUSqrLen= 1.0 / uSqrLen;
+                    const double s= 0.5 * (((r0 * r0) - (r1 * r1)) * invUSqrLen + 1.0);
+                    const GLC_Vector2d tmp(c0 + (u * s));
+
+                    // In theory, discr is nonnegative.  However, numerical round-off
+                    // errors can make it slightly negative.  Clamp it to zero.
+                    double discr= ((r0 * r0) * invUSqrLen) - (s * s);
+                    if (discr < 0.0)
+                    {
+                        discr= 0.0;
+                    }
+
+                    const double t= sqrt(discr);
+                    const GLC_Vector2d v(u.y(), -u.x());
+
+                    const GLC_Point2d int1(tmp - (v * t));
+                    subject.append(int1);
+
+                    const GLC_Point2d int2(tmp + (v * t));
+                    if (int1 != int2)
+                    {
+                        subject.append(int2);
+                    }
+                }
+                else
+                {
+                    // tangent
+                    GLC_Point2d intersect(c0 + (u * (r0 / deltaRadius)));
+                    subject.append(intersect);
+                }
+            }
+            else
+            {
+                // tangent
+                GLC_Point2d intersect(c0 + (u * (r0 / r0AddR1)));
+                subject.append(intersect);
+            }
+        }
+    }
+
+    return subject;
+}
