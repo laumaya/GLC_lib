@@ -235,10 +235,23 @@ HEADERS_GLC_QML +=      qml/glc_quickitem.h \
 
 HEADERS_GLC_CSGJS += 3rdparty/csgjs/csgjs.h
 
+
+HEADERS_ZLIB    += 3rdparty/zlib/crc32.h \
+                   3rdparty/zlib/deflate.h \
+                   3rdparty/zlib/inffast.h \
+                   3rdparty/zlib/inffixed.h \
+                   3rdparty/zlib/inflate.h \
+                   3rdparty/zlib/inftrees.h \
+                   3rdparty/zlib/trees.h \
+                   3rdparty/zlib/zconf.h \
+                   3rdparty/zlib/zconf.in.h \
+                   3rdparty/zlib/zlib.h \
+                   3rdparty/zlib/zutil.h
+
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
-HEADERS += $${HEADERS_GLC_QML} $${HEADERS_CLIP2TR} $${HEADERS_GLC_CSGJS}
+HEADERS += $${HEADERS_GLC_QML} $${HEADERS_CLIP2TR} $${HEADERS_GLC_CSGJS} ${HEADERS_ZLIB}
 		   
 SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/compress.c \
@@ -583,6 +596,7 @@ include.files = $${HEADERS_GLC} $${HEADERS_INST}
 include_lib3ds.files = $${HEADERS_LIB3DS}
 include_glext.files =$${HEADERS_GLEXT}
 include_quazip.files = $${HEADERS_QUAZIP}
+include_zlib.files = $${HEADERS_ZLIB}
 include_glc_maths.files= $${HEADERS_GLC_MATHS}
 include_glc_io.files= $${HEADERS_GLC_IO}
 include_glc_scengraph.files= $${HEADERS_GLC_SCENEGRAPH}
