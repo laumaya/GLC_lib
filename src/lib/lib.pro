@@ -568,6 +568,7 @@ include.path = $${INCLUDE_DIR}
 include_lib3ds.path = $${INCLUDE_DIR}/3rdparty/lib3ds
 include_glext.path = $${INCLUDE_DIR}/3rdparty/glext
 include_quazip.path = $${INCLUDE_DIR}/3rdparty/quazip
+include_zlib.path = $${INCLUDE_DIR}/3rdparty/zlib
 include_glc_maths.path = $${INCLUDE_DIR}/maths
 include_glc_io.path = $${INCLUDE_DIR}/io
 include_glc_scengraph.path = $${INCLUDE_DIR}/sceneGraph
@@ -596,7 +597,7 @@ include_glc_qml.files = $${HEADERS_GLC_QML}
 target.path = $${LIB_DIR}
    
 # "make install" configuration options
-INSTALLS += include_lib3ds include_glext include_quazip include_glc_maths include_glc_io
+INSTALLS += include_lib3ds include_glext include_quazip include_zlib include_glc_maths include_glc_io
 INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport
 INSTALLS += include_glc_3dwidget include_glc_glu include_glc_qml
 
