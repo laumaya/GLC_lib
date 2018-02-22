@@ -51,10 +51,10 @@ class GLC_LIB_EXPORT GLC_Vector4d
 	friend class GLC_Matrix4x4;
 
 	//! Overload unary "-" operator
-	inline friend GLC_Vector4d operator - (const GLC_Vector4d &Vect)
-	{
-		return GLC_Vector4d(-Vect.vector[0], -Vect.vector[1], -Vect.vector[2]);
-	}
+    inline friend GLC_Vector4d operator - (const GLC_Vector4d &Vect)
+    {
+        return GLC_Vector4d(-Vect.vector[0], -Vect.vector[1], -Vect.vector[2]);
+    }
 
 
 //////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ public:
 	* \n Y =  0.0
 	* \n Z =  0.0
 	* \n W =  1.0*/
-	inline GLC_Vector4d()
+    inline GLC_Vector4d()
 	{
 		vector[0]= 0.0;
 		vector[1]= 0.0;

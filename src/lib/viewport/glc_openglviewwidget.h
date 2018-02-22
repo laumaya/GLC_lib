@@ -31,7 +31,6 @@ public:
 
 public slots:
     virtual void setViewhandler(QVariant viewHandler);
-    virtual void setMouseTracking(bool track);
     void updateSelection();
     void select(uint id);
     QImage takeScreenShot();

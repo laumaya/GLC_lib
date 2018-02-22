@@ -40,7 +40,6 @@ void GLC_OpenGLViewWidget::setViewhandler(QVariant viewHandler)
     if (NULL != m_Viewhandler)
     {
         GLC_OpenGLViewHandler* pViewHandler= m_Viewhandler.data();
-        disconnect(pViewHandler, SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
         disconnect(this, SIGNAL(frameBufferCreationFailed()), pViewHandler, SIGNAL(frameBufferCreationFailed()));
         disconnect(this, SIGNAL(frameBufferBindingFailed()), pViewHandler, SIGNAL(frameBufferBindingFailed()));
     }
@@ -49,16 +48,10 @@ void GLC_OpenGLViewWidget::setViewhandler(QVariant viewHandler)
     Q_ASSERT(!m_Viewhandler.isNull());
     GLC_OpenGLViewHandler* pViewHandler= m_Viewhandler.data();
 
-    connect(pViewHandler, SIGNAL(acceptHoverEvent(bool)), this, SLOT(setMouseTracking(bool)));
     connect(this, SIGNAL(frameBufferCreationFailed()), pViewHandler, SIGNAL(frameBufferCreationFailed()));
     connect(this, SIGNAL(frameBufferBindingFailed()), pViewHandler, SIGNAL(frameBufferBindingFailed()));
 
     pViewHandler->setOpenGLViewWidget(this);
-}
-
-void GLC_OpenGLViewWidget::setMouseTracking(bool track)
-{
-
 }
 
 void GLC_OpenGLViewWidget::updateSelection()

@@ -83,26 +83,26 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
     //! Return the number of primitive of this mesh
-    virtual int primitiveCount() const;
+    int primitiveCount() const override;
 
 	//! Return the class Chunk ID
 	static quint32 chunckID();
 
 	//! Get number of faces
-	virtual unsigned int faceCount(int lod) const;
+    unsigned int faceCount(int lod) const override;
 
 	//! Get number of vertex
-	virtual unsigned int VertexCount() const;
+    unsigned int VertexCount() const override;
 
 	//! Get number of normals
 	inline unsigned int numberOfNormals() const
 	{ return m_NumberOfNormals;}
 
 	//! return the mesh bounding box
-	virtual const GLC_BoundingBox& boundingBox(void);
+    const GLC_BoundingBox& boundingBox(void) override;
 
 	//! Return a copy of the Mesh as GLC_Geometry pointer
-	virtual GLC_Geometry* clone() const;
+    GLC_Geometry* clone() const override;
 
 	//! Return true if color pear vertex is activated
 	inline bool ColorPearVertexIsAcivated() const
@@ -204,7 +204,7 @@ public:
     void transformVertice(const GLC_Matrix4x4& matrix) override;
 
 	//! Return the volume of this mesh
-	virtual double volume();
+    double volume() override;
 
 //@}
 //////////////////////////////////////////////////////////////////////
@@ -214,7 +214,7 @@ public:
 public:
 
 	//! Clear the content of the mesh and super class and makes them empty
-	virtual void clear();
+    void clear() override;
 
 	//! Clear only the content off the mesh and makes it empty
 	void clearMeshWireAndBoundingBox();
@@ -255,7 +255,7 @@ public:
 	GLC_uint addTrianglesFan(GLC_Material*, const IndexList&, const int lod= 0, double accuracy= 0.0);
 
 	//! Reverse mesh normal
-	void reverseNormals();
+    void reverseNormals() override;
 
 	//! Set color per vertex flag to use indexed color
 	inline void setColorPearVertex(bool flag)
@@ -265,10 +265,10 @@ public:
 	void finish();
 
 	//! Set the lod Index
-	virtual void setCurrentLod(const int);
+    void setCurrentLod(const int) override;
 
 	//! Replace the Master material
-	virtual void replaceMasterMaterial(GLC_Material*);
+    void replaceMasterMaterial(GLC_Material*) override;
 
 	//! Replace the material specified by id with another one
 	void replaceMaterial(const GLC_uint, GLC_Material*);
@@ -282,10 +282,10 @@ public:
 	{m_WireColor= color;}
 
 	//! Release client VBO
-	virtual void releaseVboClientSide(bool update);
+    void releaseVboClientSide(bool update) override;
 
 	//! Set VBO usage
-	virtual void setVboUsage(bool usage);
+    void setVboUsage(bool usage) override;
 
     void createSharpEdges(double precision, double angleThreshold);
 
@@ -315,7 +315,7 @@ protected:
 
 	//! Virtual interface for OpenGL Geometry set up.
 	/*! This Virtual function is implemented here.*/
-	virtual void glDraw(const GLC_RenderProperties&);
+    void glDraw(const GLC_RenderProperties&) override;
 
     void setClientState();
     void restoreClientState(GLC_Context *pContext);

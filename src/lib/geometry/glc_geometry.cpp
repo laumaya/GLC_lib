@@ -299,7 +299,6 @@ void GLC_Geometry::glLoadTexture(void)
 // Geometry display
 void GLC_Geometry::render(const GLC_RenderProperties& renderProperties)
 {
-    GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
 	Q_ASSERT(!m_IsWire || (m_IsWire && m_MaterialHash.isEmpty()));
 	bool renderWire= (renderProperties.renderingFlag() == glc::TransparentRenderFlag) && isTransparent();
 	renderWire= renderWire || ((renderProperties.renderingFlag() != glc::TransparentRenderFlag) && !isTransparent());

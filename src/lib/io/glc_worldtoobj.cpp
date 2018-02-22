@@ -25,6 +25,7 @@
 
 GLC_WorldToObj::GLC_WorldToObj(const GLC_World &world)
 {
+    Q_UNUSED(world);
 }
 
 GLC_WorldToObj::~GLC_WorldToObj()
@@ -34,6 +35,7 @@ GLC_WorldToObj::~GLC_WorldToObj()
 
 bool GLC_WorldToObj::exportToFile(const QString &fileName)
 {
+    Q_UNUSED(fileName);
 	return false;
 }
 
