@@ -32,8 +32,6 @@ INCLUDEPATH += ./3rdparty/zlib
 
 RESOURCES += glc_lib.qrc
 
-include (3rdparty/assimp/assimp.pri)
-
 # Input					
 
 HEADERS_QUAZIP +=   3rdparty/quazip/crypt.h \
