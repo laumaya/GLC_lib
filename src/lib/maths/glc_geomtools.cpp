@@ -1033,7 +1033,7 @@ QList<GLC_Point3d> glc::AddCorner(const QList<GLC_Point3d> &segments, double rad
     return subject;
 }
 
-QList<GLC_Point2d> glc::findIntersectionBetwen2Circle(const GLC_Point2d& c0, double r0, GLC_Point2d& c1, double r1)
+QList<GLC_Point2d> glc::findIntersectionBetwen2Circle(const GLC_Point2d& c0, double r0, const GLC_Point2d& c1, double r1)
 {
     QList<GLC_Point2d> subject;
 
@@ -1089,6 +1089,125 @@ QList<GLC_Point2d> glc::findIntersectionBetwen2Circle(const GLC_Point2d& c0, dou
                 subject.append(intersect);
             }
         }
+    }
+
+    return subject;
+}
+
+QList<GLC_Point3d> glc::circleFromCenterAndTwoPoint(const GLC_Point3d& center, const GLC_Point3d& start
+                                                    , const GLC_Point3d& end, int count, const GLC_Vector3d& direction)
+{
+    // Compute face normal to compute angle between segments
+    const GLC_Vector3d edge0(start - center);
+    const GLC_Vector3d edge1(end - center);
+
+    const double angle = (edge0.signedAngleWithVect(edge1, direction));
+
+    QList<GLC_Point3d> subject;
+
+    // Add first segment
+    subject << start;
+
+    const double deltaAngle= (angle) / count;
+
+    // Add Corner
+    const GLC_Point3d relativeStartingPoint(edge0);
+    for (int i= 1; i < count; ++i)
+    {
+        const double currentAngle= deltaAngle * i;
+        const GLC_Matrix4x4 transformation(direction, currentAngle);
+        const GLC_Point3d currentPoint(transformation * relativeStartingPoint);
+        subject.append(currentPoint + center);
+    }
+
+    // Add last segment
+    subject << end;
+
+    return subject;
+}
+
+QList<double> glc::line2DImplicitCoefs(const GLC_Point2d& p, const GLC_Vector2d& v)
+{
+    // Normal vector
+    const GLC_Vector2d n(perpVector(v));
+
+    // Get coeffs
+    double a= n.x();
+    double b= n.y();
+    double c= -(n * p);
+
+    QList<double> subject;
+    subject << a << b << c;
+
+    return subject;
+}
+
+QList<GLC_Point2d> glc::circleCenterTangentToLineAndCircleWithGivenRadius(const GLC_Point2d& linePoint, const GLC_Vector2d& lineVect
+                                                                          , const GLC_Point2d& circleCenter, double circleRadius
+                                                                          , double radius)
+{
+    QList<GLC_Point2d> subject;
+    QList<double> lineCoef= line2DImplicitCoefs(linePoint, lineVect);
+    double a= lineCoef.at(0);
+    double b= lineCoef.at(1);
+    double c= lineCoef.at(2);
+
+    const double normalizeFactor= sqrt((a * a) + (b * b));
+
+    const double circleCenterToLineDistance= qAbs(a * circleCenter.x() + b * circleCenter.y() + c) / normalizeFactor;
+    if (!(circleCenterToLineDistance > ((2.0 * radius) + circleRadius)))
+    {
+        const GLC_Vector2d n(perpVector(lineVect).setLength(radius));
+        const GLC_Point2d& linePointp1= linePoint + n;
+        const GLC_Point2d& linePointp2= linePoint - n;
+        const double radiusPlusCircleRadius= circleRadius + radius;
+        const double radiusSubstCircleRadius= circleRadius - radius;
+        subject.append(line2CircleIntersection(linePointp1, lineVect, circleCenter, radiusPlusCircleRadius));
+        subject.append(line2CircleIntersection(linePointp2, lineVect, circleCenter, radiusPlusCircleRadius));
+        subject.append(line2CircleIntersection(linePointp1, lineVect, circleCenter, radiusSubstCircleRadius));
+        subject.append(line2CircleIntersection(linePointp2, lineVect, circleCenter, radiusSubstCircleRadius));
+    }
+
+    return subject;
+}
+
+QList<GLC_Point2d> glc::removeDuplicate(const QList<GLC_Point2d>& points)
+{
+    QList<GLC_Point2d> subject;
+    const int count= points.count();
+    for (int i= 0; i < count; ++i)
+    {
+        const GLC_Point2d point(points.at(i));
+        const int subjectCount= subject.count();
+        bool duplicateFound= false;
+        for (int j= 0; j < subjectCount; ++j)
+        {
+            duplicateFound= (compare(subject.at(j), point));
+            if (duplicateFound) break;
+        }
+        if (!duplicateFound) subject.append(point);
+    }
+    return subject;
+}
+
+QList<GLC_Point2d> glc::line2CircleIntersection(const GLC_Point2d& lineOrigin, const GLC_Vector2d& lineDir, const GLC_Point2d& circleCenter, double radius)
+{
+    QList<GLC_Point2d> subject;
+    const GLC_Vector2d diff(lineOrigin - circleCenter);
+    const double a0= (diff * diff) - (radius * radius);
+    const double a1= (lineDir * diff);
+    const double discr= (a1 * a1) - a0;
+    if (discr > 0.0)
+    {
+        double root= sqrt(discr);
+        const GLC_Point2d p1(lineOrigin + (lineDir * (-a1 - root)));
+        const GLC_Point2d p2(lineOrigin + (lineDir * (-a1 + root)));
+        subject << p1 << p2;
+    }
+    else if (qFuzzyIsNull(discr))
+    {
+        const GLC_Point2d p(lineOrigin + (lineDir * (-a1)));
+        subject << p;
     }
 
     return subject;

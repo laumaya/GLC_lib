@@ -187,7 +187,22 @@ namespace glc
     //! Segments composed of 3 points
     GLC_LIB_EXPORT QList<GLC_Point3d> AddCorner(const QList<GLC_Point3d>& segments, double radius, int count);
 
-    GLC_LIB_EXPORT QList<GLC_Point2d> findIntersectionBetwen2Circle(const GLC_Point2d& c0, double r0, GLC_Point2d& c1 , double r1);
+    GLC_LIB_EXPORT QList<GLC_Point2d> findIntersectionBetwen2Circle(const GLC_Point2d& c0, double r0, const GLC_Point2d& c1 , double r1);
+
+    GLC_LIB_EXPORT QList<GLC_Point3d> circleFromCenterAndTwoPoint(const GLC_Point3d& center, const GLC_Point3d& start
+                                                                  , const GLC_Point3d& end, int count, const GLC_Vector3d& direction);
+
+    GLC_LIB_EXPORT QList<double> line2DImplicitCoefs(const GLC_Point2d& p, const GLC_Vector2d& v);
+
+    GLC_LIB_EXPORT QList<GLC_Point2d> circleCenterTangentToLineAndCircleWithGivenRadius(const GLC_Point2d& linePoint, const GLC_Vector2d& lineVect
+                                                                                        , const GLC_Point2d& circleCenter, double circleRadius
+                                                                                        , double radius);
+
+    GLC_LIB_EXPORT QList<GLC_Point2d> removeDuplicate(const QList<GLC_Point2d>& points);
+
+    GLC_LIB_EXPORT QList<GLC_Point2d> line2CircleIntersection(const GLC_Point2d& lineOrigin, const GLC_Vector2d& lineDir
+                                                              , const GLC_Point2d& circleCenter, double radius);
+
 
 //@}
 
