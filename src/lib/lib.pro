@@ -6,6 +6,7 @@ win32 {
     LIBS += -lopengl32
 }
 
+LIBS += -lz
 
 CONFIG += exceptions warn_on
 
@@ -28,7 +29,8 @@ RCC_DIR = ./Build
 
 DEPENDPATH += .
 INCLUDEPATH += .
-INCLUDEPATH += ./3rdparty/zlib
+#INCLUDEPATH += ./3rdparty/zlib
+INCLUDEPATH += ./3rdparty
 
 RESOURCES += glc_lib.qrc
 
@@ -234,34 +236,34 @@ HEADERS_GLC_QML +=      qml/glc_quickitem.h \
 HEADERS_GLC_CSGJS += 3rdparty/csgjs/csgjs.h
 
 
-HEADERS_ZLIB    += 3rdparty/zlib/crc32.h \
-                   3rdparty/zlib/deflate.h \
-                   3rdparty/zlib/inffast.h \
-                   3rdparty/zlib/inffixed.h \
-                   3rdparty/zlib/inflate.h \
-                   3rdparty/zlib/inftrees.h \
-                   3rdparty/zlib/trees.h \
-                   3rdparty/zlib/zconf.h \
-                   3rdparty/zlib/zconf.in.h \
-                   3rdparty/zlib/zlib.h \
-                   3rdparty/zlib/zutil.h
+#HEADERS_ZLIB    += 3rdparty/zlib/crc32.h \
+#                   3rdparty/zlib/deflate.h \
+#                   3rdparty/zlib/inffast.h \
+#                   3rdparty/zlib/inffixed.h \
+#                   3rdparty/zlib/inflate.h \
+#                   3rdparty/zlib/inftrees.h \
+#                   3rdparty/zlib/trees.h \
+#                   3rdparty/zlib/zconf.h \
+#                   3rdparty/zlib/zconf.in.h \
+#                   3rdparty/zlib/zlib.h \
+#                   3rdparty/zlib/zutil.h
 
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
-HEADERS += $${HEADERS_GLC_QML} $${HEADERS_CLIP2TR} $${HEADERS_GLC_CSGJS} $${HEADERS_ZLIB}
+HEADERS += $${HEADERS_GLC_QML} $${HEADERS_CLIP2TR} $${HEADERS_GLC_CSGJS} # $${HEADERS_ZLIB}
 		   
-SOURCES += 3rdparty/zlib/adler32.c \
-           3rdparty/zlib/compress.c \
-           3rdparty/zlib/crc32.c \
-           3rdparty/zlib/deflate.c \
-           3rdparty/zlib/gzio.c \
-           3rdparty/zlib/inffast.c \
-           3rdparty/zlib/inflate.c \
-           3rdparty/zlib/inftrees.c \
-           3rdparty/zlib/trees.c \
-           3rdparty/zlib/uncompr.c \
-           3rdparty/zlib/zutil.c
+#SOURCES += 3rdparty/zlib/adler32.c \
+#           3rdparty/zlib/compress.c \
+#           3rdparty/zlib/crc32.c \
+#           3rdparty/zlib/deflate.c \
+#           3rdparty/zlib/gzio.c \
+#           3rdparty/zlib/inffast.c \
+#           3rdparty/zlib/inflate.c \
+#           3rdparty/zlib/inftrees.c \
+#           3rdparty/zlib/trees.c \
+#           3rdparty/zlib/uncompr.c \
+#           3rdparty/zlib/zutil.c
 
 SOURCES += 3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/qioapi.cpp \
@@ -579,7 +581,7 @@ include.path = $${INCLUDE_DIR}
 include_lib3ds.path = $${INCLUDE_DIR}/3rdparty/lib3ds
 include_glext.path = $${INCLUDE_DIR}/3rdparty/glext
 include_quazip.path = $${INCLUDE_DIR}/3rdparty/quazip
-include_zlib.path = $${INCLUDE_DIR}/3rdparty/zlib
+#include_zlib.path = $${INCLUDE_DIR}/3rdparty/zlib
 include_glc_maths.path = $${INCLUDE_DIR}/maths
 include_glc_io.path = $${INCLUDE_DIR}/io
 include_glc_scengraph.path = $${INCLUDE_DIR}/sceneGraph
@@ -594,7 +596,7 @@ include.files = $${HEADERS_GLC} $${HEADERS_INST}
 include_lib3ds.files = $${HEADERS_LIB3DS}
 include_glext.files =$${HEADERS_GLEXT}
 include_quazip.files = $${HEADERS_QUAZIP}
-include_zlib.files = $${HEADERS_ZLIB}
+#include_zlib.files = $${HEADERS_ZLIB}
 include_glc_maths.files= $${HEADERS_GLC_MATHS}
 include_glc_io.files= $${HEADERS_GLC_IO}
 include_glc_scengraph.files= $${HEADERS_GLC_SCENEGRAPH}
@@ -609,7 +611,7 @@ include_glc_qml.files = $${HEADERS_GLC_QML}
 target.path = $${LIB_DIR}
    
 # "make install" configuration options
-INSTALLS += include_lib3ds include_glext include_quazip include_zlib include_glc_maths include_glc_io
+INSTALLS += include_lib3ds include_glext include_quazip include_glc_maths include_glc_io #include_zlib
 INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport
 INSTALLS += include_glc_3dwidget include_glc_glu include_glc_qml
 
