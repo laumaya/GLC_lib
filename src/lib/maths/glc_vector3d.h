@@ -389,9 +389,9 @@ GLC_Vector3d GLC_Vector3d::operator ^ (const GLC_Vector3d &vector) const
 
 bool GLC_Vector3d::operator == (const GLC_Vector3d &vector) const
 {
-	bool bResult= qFuzzyCompare(m_Vector[0], vector.m_Vector[0]);
-	bResult= bResult && qFuzzyCompare(m_Vector[1], vector.m_Vector[1]);
-	bResult= bResult && qFuzzyCompare(m_Vector[2], vector.m_Vector[2]);
+    bool bResult= glc::fuzzyCompare(m_Vector[0], vector.m_Vector[0]);
+    bResult= bResult && glc::fuzzyCompare(m_Vector[1], vector.m_Vector[1]);
+    bResult= bResult && glc::fuzzyCompare(m_Vector[2], vector.m_Vector[2]);
 
 	return bResult;
 }

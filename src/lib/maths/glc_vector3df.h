@@ -163,8 +163,8 @@ public:
 	//! Return true if the vector is null
 	inline bool isNull(void) const
 	{
-		return qFuzzyCompare(m_Vector[0], 0.0f) && qFuzzyCompare(m_Vector[1], 0.0f)
-		&& qFuzzyCompare(m_Vector[2], 0.0f);
+		return glc::fuzzyCompare(m_Vector[0], 0.0f) && glc::fuzzyCompare(m_Vector[1], 0.0f)
+		&& glc::fuzzyCompare(m_Vector[2], 0.0f);
 	}
 
 //@}

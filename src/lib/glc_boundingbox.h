@@ -192,9 +192,9 @@ bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox) const
         const double deltaY= ((yLength() + boundingBox.yLength()) * 0.5);
         const double deltaZ= ((zLength() + boundingBox.zLength()) * 0.5);
 
-        subject= (distanceX < deltaX) && !qFuzzyCompare(distanceX, deltaX);
-        subject= subject && ((distanceY < deltaY) && !qFuzzyCompare(distanceY, deltaY));
-        subject= subject && ((distanceZ < deltaZ) && !qFuzzyCompare(distanceZ, deltaZ));
+        subject= (distanceX < deltaX) && !glc::fuzzyCompare(distanceX, deltaX);
+        subject= subject && ((distanceY < deltaY) && !glc::fuzzyCompare(distanceY, deltaY));
+        subject= subject && ((distanceZ < deltaZ) && !glc::fuzzyCompare(distanceZ, deltaZ));
     }
     return subject;
 }
@@ -220,9 +220,9 @@ bool GLC_BoundingBox::fuzzyIntersect(const GLC_BoundingBox& boundingBox) const
         const double deltaY= ((yLength() + boundingBox.yLength()) * 0.5);
         const double deltaZ= ((zLength() + boundingBox.zLength()) * 0.5);
 
-        subject= (distanceX < deltaX) || qFuzzyCompare(distanceX, deltaX);
-        subject= subject && ((distanceY < deltaY) || qFuzzyCompare(distanceY, deltaY));
-        subject= subject && ((distanceZ < deltaZ) || qFuzzyCompare(distanceZ, deltaZ));
+        subject= (distanceX < deltaX) || glc::fuzzyCompare(distanceX, deltaX);
+        subject= subject && ((distanceY < deltaY) || glc::fuzzyCompare(distanceY, deltaY));
+        subject= subject && ((distanceZ < deltaZ) || glc::fuzzyCompare(distanceZ, deltaZ));
     }
     return subject;
 }

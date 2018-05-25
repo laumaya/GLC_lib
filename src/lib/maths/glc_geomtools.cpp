@@ -506,7 +506,7 @@ bool glc::lineIntersectPlane(const GLC_Line3d& line, const GLC_Plane& plane, GLC
 	const GLC_Vector3d d= line.direction();
 
 	const double denominator= d * n;
-	if (qFuzzyCompare(fabs(denominator), 0.0))
+	if (glc::fuzzyCompare(fabs(denominator), 0.0))
 	{
 		qDebug() << " glc::lineIntersectPlane : Line parallel to the plane";
 		// The line is parallel to the plane
@@ -720,7 +720,7 @@ bool glc::pointInPolygon(const GLC_Point2d& point, const QList<GLC_Point2d>& pol
 
 double glc::zeroTo2PIAngle(double angle)
 {
-	if (qFuzzyCompare(fabs(angle), glc::PI))
+	if (glc::fuzzyCompare(fabs(angle), glc::PI))
 	{
 		angle= glc::PI;
 	}

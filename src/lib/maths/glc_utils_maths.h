@@ -25,6 +25,8 @@
 #ifndef GLC_UTILS_MATHS_H_
 #define GLC_UTILS_MATHS_H_
 
+#include <QtGlobal>
+
 // Standard C math library
 #include <math.h>
 namespace glc
@@ -45,6 +47,16 @@ namespace glc
     //! Convert the given radian angle in degre
     inline double toDegrees(double angleInRadians)
     {return 180.0 * angleInRadians / PI;}
+
+    inline bool fuzzyCompare(double v1, double v2);
+}
+
+bool glc::fuzzyCompare(double v1, double v2)
+{
+    bool subject= qFuzzyCompare(v1, v2);
+    subject= subject || ((qAbs(v1) <= EPSILON) && (qAbs(v2) <= EPSILON));
+
+    return subject;
 }
 
 #endif /*GLC_UTILS_MATHS_H_*/

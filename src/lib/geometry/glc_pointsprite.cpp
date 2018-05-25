@@ -79,7 +79,7 @@ void GLC_PointSprite::setSize(float size)
 	m_GeometryIsValid= false;
 	m_Size= size;
     // Clamp m_Size to m_MaxSize
-    if(qFuzzyCompare(-1.0f, m_MaxSize) && (m_MaxSize < m_Size))
+    if(glc::fuzzyCompare(-1.0f, m_MaxSize) && (m_MaxSize < m_Size))
     {
     	m_Size= m_MaxSize;
     }
@@ -143,7 +143,7 @@ void GLC_PointSprite::render(const GLC_RenderProperties& renderProperties)
 
 
 	// Executed only the first time
-	if (qFuzzyCompare(-1.0f, m_MaxSize))
+	if (glc::fuzzyCompare(-1.0f, m_MaxSize))
 	{
 		 // Query for the max point size supported by the hardware
 		glGetFloatv(GL_POINT_SIZE_MAX, &m_MaxSize);

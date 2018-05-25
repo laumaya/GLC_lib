@@ -108,7 +108,7 @@ void GLC_Arrow::setEndPoint(const GLC_Point3d& endPoint)
 
 void GLC_Arrow::setHeadLength(double headLenght)
 {
-	if (!qFuzzyCompare(m_HeadLenght, headLenght))
+	if (!glc::fuzzyCompare(m_HeadLenght, headLenght))
 	{
 		m_HeadLenght= headLenght;
 		GLC_Geometry::clearWireAndBoundingBox();
@@ -117,7 +117,7 @@ void GLC_Arrow::setHeadLength(double headLenght)
 
 void GLC_Arrow::setHeadAngle(double headAngle)
 {
-	if (!qFuzzyCompare(m_HeadAngle, headAngle))
+	if (!glc::fuzzyCompare(m_HeadAngle, headAngle))
 	{
 		m_HeadAngle= headAngle;
 		GLC_Geometry::clearWireAndBoundingBox();

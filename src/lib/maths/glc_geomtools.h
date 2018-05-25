@@ -34,6 +34,7 @@
 #include "glc_plane.h"
 
 #include "../geometry/glc_mesh.h"
+#include "glc_utils_maths.h"
 
 #include "../glc_config.h"
 

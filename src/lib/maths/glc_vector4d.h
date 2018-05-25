@@ -335,8 +335,8 @@ public:
 	{
 		bool result;
 
-		result= qFuzzyCompare(vector[0], 0.0) && qFuzzyCompare(vector[1], 0.0)
-			&& qFuzzyCompare(vector[2], 0.0);
+		result= glc::fuzzyCompare(vector[0], 0.0) && glc::fuzzyCompare(vector[1], 0.0)
+			&& glc::fuzzyCompare(vector[2], 0.0);
 
 		return result;
 	}

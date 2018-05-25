@@ -636,7 +636,7 @@ void GLC_ColladaToWorld::loadTransparency(const QString& name)
 					alpha= 1.0f - alphaString.toFloat(&stringToFloatOk);
 				}
 				// A material mustn't be invisible (no sense)
-				if (qFuzzyCompare(alpha, 0.0f)) alpha= 1.0f;
+				if (glc::fuzzyCompare(alpha, 0.0f)) alpha= 1.0f;
 
 				m_pCurrentMaterial->setOpacity(alpha);
 				if (!stringToFloatOk) throwException("Error while trying to convert :" + alphaString + " to float");

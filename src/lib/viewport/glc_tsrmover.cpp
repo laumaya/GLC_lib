@@ -84,7 +84,7 @@ bool GLC_TsrMover::move(const GLC_UserInput& userInput)
     zoom(userInput.scaleFactor());
 
     // Rotation
-    if (!qFuzzyCompare(userInput.rotationAngle(), 0.0))
+    if (!glc::fuzzyCompare(userInput.rotationAngle(), 0.0))
     {
         GLC_Point3d unProjectedPoint= userInput.unprojectedPoint();
 

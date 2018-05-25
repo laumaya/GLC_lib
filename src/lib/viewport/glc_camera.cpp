@@ -178,7 +178,7 @@ void GLC_Camera::setEyeCam(const GLC_Point3d &Eye)
 		VectOldCam.setLength(1);
 		VectCam.setLength(1);
 		const double Angle= acos(VectOldCam * VectCam);
-		if ( !qFuzzyCompare(Angle, 0.0) && !qFuzzyCompare(PI - Angle, 0.0))
+		if ( !glc::fuzzyCompare(Angle, 0.0) && !glc::fuzzyCompare(PI - Angle, 0.0))
 		{
 			const GLC_Vector3d VectAxeRot(VectOldCam ^ VectCam);
 			const GLC_Matrix4x4 MatRot(VectAxeRot, Angle);
@@ -186,7 +186,7 @@ void GLC_Camera::setEyeCam(const GLC_Point3d &Eye)
 		}
 		else
 		{
-			if ( qFuzzyCompare(PI - Angle, 0.0))
+			if ( glc::fuzzyCompare(PI - Angle, 0.0))
 			{	// Angle de 180%
 				m_VectUp.invert();
 			}
@@ -207,7 +207,7 @@ void GLC_Camera::setTargetCam(const GLC_Point3d &Target)
 		VectOldCam.setLength(1);
 		VectCam.setLength(1);
 		const double Angle= acos(VectOldCam * VectCam);
-		if ( !qFuzzyCompare(Angle, 0.0) && !qFuzzyCompare(PI - Angle, 0.0))
+		if ( !glc::fuzzyCompare(Angle, 0.0) && !glc::fuzzyCompare(PI - Angle, 0.0))
 		{
 			const GLC_Vector3d VectAxeRot(VectOldCam ^ VectCam);
 			const GLC_Matrix4x4 MatRot(VectAxeRot, Angle);
@@ -215,7 +215,7 @@ void GLC_Camera::setTargetCam(const GLC_Point3d &Target)
 		}
 		else
 		{
-			if ( qFuzzyCompare(PI - Angle, 0.0))
+			if ( glc::fuzzyCompare(PI - Angle, 0.0))
 			{	// Angle of 180%
 				m_VectUp.invert();
 			}
@@ -229,7 +229,7 @@ void GLC_Camera::setUpCam(const GLC_Vector3d &Up)
 {
 	if ( !(m_VectUp - Up).isNull() )
 	{
-		if (!qFuzzyCompare(forward().angleWithVect(Up), 0.0))
+		if (!glc::fuzzyCompare(forward().angleWithVect(Up), 0.0))
 		{
 			setCam(m_Eye, m_Target, Up);
 		}
@@ -248,7 +248,7 @@ void GLC_Camera::setCam(GLC_Point3d Eye, GLC_Point3d Target, GLC_Vector3d Up)
 	 * VectCam could not be NULL */
 	//Q_ASSERT((Angle > EPSILON) && ((PI - Angle) > EPSILON));
 
-	if ( !qFuzzyCompare(Angle - (PI / 2), 0.0))
+	if ( !glc::fuzzyCompare(Angle - (PI / 2), 0.0))
 	{	// Angle not equal to 90
 		const GLC_Vector3d AxeRot(VectCam ^ Up);
 		GLC_Matrix4x4 MatRot(AxeRot, PI / 2);

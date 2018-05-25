@@ -181,8 +181,8 @@ public:
 	/*! Overload equality "==" operator*/
     inline bool operator == (const GLC_Vector2d &other) const
 	{
-        bool subject= qFuzzyCompare(m_Vector[0], other.m_Vector[0]);
-        subject= subject && qFuzzyCompare(m_Vector[1], other.m_Vector[1]);
+        bool subject= glc::fuzzyCompare(m_Vector[0], other.m_Vector[0]);
+        subject= subject && glc::fuzzyCompare(m_Vector[1], other.m_Vector[1]);
 
         return subject;
 	}

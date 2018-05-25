@@ -195,7 +195,7 @@ void GLC_Disc::createMeshAndWire()
 	normalsVector << 0.0f << 0.0f << 1.0f;
 	texelVector << 0.5f << 0.5f;
 
-	if (!qFuzzyCompare(m_Angle, (2.0 * glc::PI)))
+	if (!glc::fuzzyCompare(m_Angle, (2.0 * glc::PI)))
 	{
 		wireData << 0.0f << 0.0f << 0.0f;
 		wireData << wireData[0] << wireData[1] << wireData[2];

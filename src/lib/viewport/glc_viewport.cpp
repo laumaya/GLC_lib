@@ -321,7 +321,7 @@ GLC_Point3d GLC_Viewport::unproject(int x, int y, GLenum buffer, bool onGeometry
     glReadPixels(x, m_Height - y , 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &Depth);
 
     // if on geometry mode and the point is not on geometry return null point
-    if (!qFuzzyCompare(Depth, 1.0f) || !onGeometry)
+    if (!glc::fuzzyCompare(Depth, 1.0f) || !onGeometry)
     {
         // The current viewport opengl definition
         GLint viewport[4]= {0, 0, m_Width, m_Height};
@@ -803,7 +803,7 @@ bool GLC_Viewport::reframeFromDeltaCover(double deltaCover)
     const double cameraCover = m_pViewCam->distEyeTarget() *  m_ViewTangent;
     const double newCover= cameraCover+ deltaCover;
 
-    if (!qFuzzyCompare(newCover, cameraCover))
+    if (!glc::fuzzyCompare(newCover, cameraCover))
     {
         // Compute Camera distance
         const double distance = newCover / m_ViewTangent;

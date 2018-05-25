@@ -85,15 +85,15 @@ GLC_Geometry* GLC_Circle::clone() const
 // Set Circle diameter
 void GLC_Circle::setDiameter(double D)
 {
-	Q_ASSERT(!qFuzzyCompare(D, 0.0));
+	Q_ASSERT(!glc::fuzzyCompare(D, 0.0));
 	setRadius(D / 2);
 }
 
 // Set Circle Radius
 void GLC_Circle::setRadius(double R)
 {
-	Q_ASSERT(!qFuzzyCompare(R, 0.0));
-	if (!qFuzzyCompare(R - m_Radius, 0.0))
+	Q_ASSERT(!glc::fuzzyCompare(R, 0.0));
+	if (!glc::fuzzyCompare(R - m_Radius, 0.0))
 	{	// Radius is changing
 		m_Radius= R;
 
@@ -117,8 +117,8 @@ void GLC_Circle::setDiscretion(int TargetDiscret)
 // Set Circle Angle
 void GLC_Circle::setAngle(double AngleRadians)	// Angle in Radians
 {
-	Q_ASSERT((!qFuzzyCompare(AngleRadians, 0.0)) && (AngleRadians < 2 * PI));
-	if (!qFuzzyCompare(AngleRadians - m_Angle, 0.0))
+	Q_ASSERT((!glc::fuzzyCompare(AngleRadians, 0.0)) && (AngleRadians < 2 * PI));
+	if (!glc::fuzzyCompare(AngleRadians - m_Angle, 0.0))
 	{	// Angle is changing
 			m_Angle= AngleRadians;
 
