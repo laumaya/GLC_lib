@@ -536,7 +536,7 @@ GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &v1, const GLC_Vector
 		{
 			// v1 == -v2
 			GLC_Vector3d otherVector(glc::Z_AXIS);
-			if ((otherVector == v1) || (otherVector == -v2))
+            if ((otherVector == v1) || (otherVector == -v1))
 			{
 				otherVector= glc::Y_AXIS;
 			}
