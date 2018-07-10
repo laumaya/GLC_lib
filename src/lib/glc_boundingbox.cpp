@@ -110,12 +110,18 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3d& point)
         double lowerX= qMin(point.x(), m_Lower.x());
         double lowerY= qMin(point.y(), m_Lower.y());
         double lowerZ= qMin(point.z(), m_Lower.z());
-        m_Lower.setVect(lowerX, lowerY, lowerZ);
+        if (!isnan(lowerX) && !isnan(lowerY) && !isnan(lowerZ))
+        {
+            m_Lower.setVect(lowerX, lowerY, lowerZ);
+        }
 
         double upperX= qMax(point.x(), m_Upper.x());
         double upperY= qMax(point.y(), m_Upper.y());
         double upperZ= qMax(point.z(), m_Upper.z());
-        m_Upper.setVect(upperX, upperY, upperZ);
+        if (!isnan(upperX) && !isnan(upperY) && !isnan(upperZ))
+        {
+            m_Upper.setVect(upperX, upperY, upperZ);
+        }
     }
     return *this;
 }
@@ -134,12 +140,18 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3df& pointf)
         double lowerX= qMin(point.x(), m_Lower.x());
         double lowerY= qMin(point.y(), m_Lower.y());
         double lowerZ= qMin(point.z(), m_Lower.z());
-        m_Lower.setVect(lowerX, lowerY, lowerZ);
+        if (!isnan(lowerX) && !isnan(lowerY) && !isnan(lowerZ))
+        {
+            m_Lower.setVect(lowerX, lowerY, lowerZ);
+        }
 
         double upperX= qMax(point.x(), m_Upper.x());
         double upperY= qMax(point.y(), m_Upper.y());
         double upperZ= qMax(point.z(), m_Upper.z());
-        m_Upper.setVect(upperX, upperY, upperZ);
+        if (!isnan(upperX) && !isnan(upperY) && !isnan(upperZ))
+        {
+            m_Upper.setVect(upperX, upperY, upperZ);
+        }
     }
     return *this;
 }
@@ -157,12 +169,19 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
         double lowerX= qMin(box.m_Lower.x(), m_Lower.x());
         double lowerY= qMin(box.m_Lower.y(), m_Lower.y());
         double lowerZ= qMin(box.m_Lower.z(), m_Lower.z());
-        m_Lower.setVect(lowerX, lowerY, lowerZ);
+        if (!isnan(lowerX) && !isnan(lowerY) && !isnan(lowerZ))
+        {
+            m_Lower.setVect(lowerX, lowerY, lowerZ);
+        }
+
 
         double upperX= qMax(box.m_Upper.x(), m_Upper.x());
         double upperY= qMax(box.m_Upper.y(), m_Upper.y());
         double upperZ= qMax(box.m_Upper.z(), m_Upper.z());
-        m_Upper.setVect(upperX, upperY, upperZ);
+        if (!isnan(upperX) && !isnan(upperY) && !isnan(upperZ))
+        {
+            m_Upper.setVect(upperX, upperY, upperZ);
+        }
     }
 
     return *this;
