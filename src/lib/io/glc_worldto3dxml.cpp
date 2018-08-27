@@ -64,9 +64,9 @@ GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world, bool threaded)
 
 GLC_WorldTo3dxml::~GLC_WorldTo3dxml()
 {
-	delete m_p3dxmlArchive;
+    delete m_pCurrentFile;
 	delete m_pCurrentZipFile;
-	delete m_pCurrentFile;
+    delete m_p3dxmlArchive;
 }
 
 bool GLC_WorldTo3dxml::exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial)
