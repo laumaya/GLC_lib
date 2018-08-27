@@ -180,7 +180,7 @@ bool GLC_Texture::operator==(const GLC_Texture& texture) const
 	else
 	{
         result= (m_FileName == texture.m_FileName) && (m_TextureImage == texture.m_TextureImage);
-        result= result && (m_Matrix == texture.m_Matrix);
+        //result= result && (m_Matrix == texture.m_Matrix);
 	}
 	return result;
 }
