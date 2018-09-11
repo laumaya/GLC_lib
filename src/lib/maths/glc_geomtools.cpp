@@ -655,28 +655,28 @@ QPointF glc::round(const QPointF& point, double accuracy)
     return subject;
 }
 
-GLC_Vector2d round(const GLC_Vector2d& vector)
+GLC_Vector2d glc::round(const GLC_Vector2d& vector)
 {
 	GLC_Vector2d subject(glc::round(vector.x()), glc::round(vector.y()));
 
 	return subject;
 }
 
-GLC_Vector2d round(const GLC_Vector2d& vector, double accuracy)
+GLC_Vector2d glc::round(const GLC_Vector2d& vector, double accuracy)
 {
     GLC_Vector2d subject(glc::round(vector.x(), accuracy), glc::round(vector.y(), accuracy));
 
     return subject;
 }
 
-GLC_Vector3d round(const GLC_Vector3d& vector)
+GLC_Vector3d glc::round(const GLC_Vector3d& vector)
 {
 	GLC_Vector3d subject(glc::round(vector.x()), glc::round(vector.y()), glc::round(vector.z()));
 
 	return subject;
 }
 
-GLC_Vector3d round(const GLC_Vector3d& vector, double accuracy)
+GLC_Vector3d glc::round(const GLC_Vector3d& vector, double accuracy)
 {
     GLC_Vector3d subject(glc::round(vector.x(), accuracy), glc::round(vector.y(), accuracy), glc::round(vector.z(), accuracy));
 
