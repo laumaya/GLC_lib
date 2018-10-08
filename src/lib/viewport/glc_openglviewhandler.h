@@ -23,11 +23,13 @@ public:
     ~GLC_OpenGLViewHandler();
 
 public:
-    virtual void updateGL(bool synchrone);
+    void updateGL(bool synchrone) override;
     void setOpenGLViewWidget(GLC_OpenGLViewWidget* pViewWidget);
+    void updateSelectionBufferOnRender(bool update) override;
+    void updateViewBufferOnRender(bool update) override;
 
 public:
-    virtual QPair<GLC_SelectionSet, GLC_Point3d> selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes);
+    QPair<GLC_SelectionSet, GLC_Point3d> selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes) override;
     virtual QImage takeScreenshot(const GLC_ScreenShotSettings& screenShotSettings);
 
 private:

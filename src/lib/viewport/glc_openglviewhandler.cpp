@@ -41,6 +41,16 @@ void GLC_OpenGLViewHandler::setOpenGLViewWidget(GLC_OpenGLViewWidget *pViewWidge
     m_pViewWidget= pViewWidget;
 }
 
+void GLC_OpenGLViewHandler::updateSelectionBufferOnRender(bool update)
+{
+    m_pViewWidget->updateSelectionBufferOnRender(update);
+}
+
+void GLC_OpenGLViewHandler::updateViewBufferOnRender(bool update)
+{
+    m_pViewWidget->updateViewBufferOnRender(update);
+}
+
 QPair<GLC_SelectionSet, GLC_Point3d> GLC_OpenGLViewHandler::selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes)
 {
     QPair<GLC_SelectionSet, GLC_Point3d> subject;

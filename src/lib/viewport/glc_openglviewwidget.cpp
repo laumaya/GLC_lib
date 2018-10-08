@@ -12,6 +12,8 @@ GLC_OpenGLViewWidget::GLC_OpenGLViewWidget(QWidget *parent)
     , m_pScreenShotFbo(NULL)
     , m_Viewhandler(NULL)
     , m_UnprojectedPoint()
+    , m_UpdateSelectionBuffer(true)
+    , m_UpdateViewBuffer(true)
 {
     // Set the initial viewHandler
     QSharedPointer<GLC_OpenGLViewHandler> viewHandlerPointer(new GLC_OpenGLViewHandler);
@@ -145,6 +147,16 @@ QImage GLC_OpenGLViewWidget::takeScreenShot()
     return subject;
 }
 
+void GLC_OpenGLViewWidget::updateSelectionBufferOnRender(bool update)
+{
+    m_UpdateSelectionBuffer= update;
+}
+
+void GLC_OpenGLViewWidget::updateViewBufferOnRender(bool update)
+{
+    m_UpdateViewBuffer= update;
+}
+
 GLC_uint GLC_OpenGLViewWidget::selectBody(GLC_uint instanceId, int x, int y)
 {
     Q_ASSERT(NULL != m_Viewhandler);
@@ -170,16 +182,23 @@ void GLC_OpenGLViewWidget::initializeGL()
 
 void GLC_OpenGLViewWidget::paintGL()
 {
+    Q_ASSERT(NULL != m_Viewhandler);
+
     // Resize int paintgl to handle to screen with different pixel ratio (Retina)
     const int width= this->width();
     const int height= this->height();
-    setupSelectionFbo(width, height);
 
-    Q_ASSERT(NULL != m_Viewhandler);
-    m_Viewhandler->setSize(width, height);
-    renderForSelection();
-    m_Viewhandler->setSize(width, height, devicePixelRatio());
-    doRender();
+    if (m_UpdateSelectionBuffer)
+    {
+        setupSelectionFbo(width, height);
+        m_Viewhandler->setSize(width, height);
+        renderForSelection();
+    }
+    if (m_UpdateViewBuffer)
+    {
+        m_Viewhandler->setSize(width, height, devicePixelRatio());
+        doRender();
+    }
 }
 
 void GLC_OpenGLViewWidget::mousePressEvent(QMouseEvent *e)

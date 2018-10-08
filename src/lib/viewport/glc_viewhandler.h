@@ -180,6 +180,10 @@ public:
 
     void setScreenShotMode(bool mode)
     {m_ScreenShotMode= mode;}
+
+    virtual void updateSelectionBufferOnRender(bool){}
+    virtual void updateViewBufferOnRender(bool){}
+
     //@}
 
 //////////////////////////////////////////////////////////////////////

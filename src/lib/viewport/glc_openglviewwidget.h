@@ -34,6 +34,8 @@ public slots:
     void updateSelection();
     void select(uint id);
     QImage takeScreenShot();
+    void updateSelectionBufferOnRender(bool update);
+    void updateViewBufferOnRender(bool update);
 
 signals:
     void frameBufferCreationFailed();
@@ -66,6 +68,8 @@ private:
     QOpenGLFramebufferObject* m_pScreenShotFbo;
     QSharedPointer<GLC_OpenGLViewHandler> m_Viewhandler;
     GLC_Point3d m_UnprojectedPoint;
+    bool m_UpdateSelectionBuffer;
+    bool m_UpdateViewBuffer;
 };
 
 #endif // GLC_OPENGLVIEWWIDGET_H
