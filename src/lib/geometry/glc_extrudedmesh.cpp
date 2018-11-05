@@ -57,11 +57,6 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const GLC_ExtrudedMesh &other)
 
 }
 
-GLC_ExtrudedMesh::~GLC_ExtrudedMesh()
-{
-
-}
-
 quint32 GLC_ExtrudedMesh::chunckID()
 {
     return m_ChunkId;

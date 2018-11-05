@@ -51,9 +51,6 @@ public:
     //! Copy constructor
     GLC_ExtrudedMesh(const GLC_ExtrudedMesh& other);
 
-    //! Destructor
-    virtual ~GLC_ExtrudedMesh();
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -65,22 +62,22 @@ public:
     static quint32 chunckID();
 
     //! Return the list of points which defined the face to extrude
-    inline QList<GLC_Point3d> facePoints() const
+    QList<GLC_Point3d> facePoints() const
     {return m_Points;}
 
     //! Return the extrusion vector
-    inline GLC_Vector3d extrusionVector() const
+    GLC_Vector3d extrusionVector() const
     {return m_ExtrusionVector;}
 
     //! Return the extrusion lenght
-    inline double extrusionLenght() const
+    double extrusionLenght() const
     {return m_ExtrusionLenght;}
 
     //! Return a copy of the extruded mesh
-    virtual GLC_Geometry* clone() const;
+    GLC_Geometry* clone() const override;
 
     //! Return the extruded mesh bounding box
-    virtual const GLC_BoundingBox& boundingBox(void);
+    const GLC_BoundingBox& boundingBox(void) override;
 
 //@}
 
@@ -89,7 +86,7 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    virtual bool update();
+    bool update() override;
 
     //! Assignement operator overload
     GLC_ExtrudedMesh& operator=(const GLC_ExtrudedMesh& other);
@@ -120,7 +117,7 @@ public:
 protected:
     //! Virtual interface for OpenGL Geometry set up.
     /*! This Virtual function have to be implemented in concrete class.*/
-    virtual void glDraw(const GLC_RenderProperties& renderProperties);
+    void glDraw(const GLC_RenderProperties& renderProperties) override;
 
 //@}
 

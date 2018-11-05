@@ -154,7 +154,8 @@ HEADERS_GLC_GEOMETRY += geometry/glc_geometry.h \
                         geometry/glc_csghelper.h \
                         geometry/glc_csgnode.h \
                         geometry/glc_csgoperatornode.h \
-                        geometry/glc_csgleafnode.h
+                        geometry/glc_csgleafnode.h \
+                        geometry/glc_lathemesh.h
 
 
 HEADERS_GLC_SHADING +=  shading/glc_material.h \
@@ -246,7 +247,8 @@ HEADERS_ZLIB    += 3rdparty/zlib/crc32.h \
                    3rdparty/zlib/zlib.h \
                    3rdparty/zlib/zutil.h
 
-HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
+HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO} \
+    GLC_LatheMesh
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
 HEADERS += $${HEADERS_GLC_QML} $${HEADERS_CLIP2TR} $${HEADERS_GLC_CSGJS} $${HEADERS_ZLIB}
@@ -369,7 +371,8 @@ SOURCES +=	geometry/glc_geometry.cpp \
                 geometry/glc_csghelper.cpp \
                 geometry/glc_csgnode.cpp \
                 geometry/glc_csgoperatornode.cpp \
-                geometry/glc_csgleafnode.cpp
+                geometry/glc_csgleafnode.cpp \
+                geometry/glc_lathemesh.cpp
 
 
 
@@ -552,6 +555,7 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_ContextManager \
                GLC_Renderer \
                GLC_ExtrudedMesh \
+               GLC_LatheMesh \
                GLC_QuickItem \
                GLC_ViewHandler \
                GLC_InputEventInterpreter \
