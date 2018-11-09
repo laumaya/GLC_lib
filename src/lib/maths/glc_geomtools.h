@@ -29,11 +29,12 @@
 #include <QList>
 #include <QPointF>
 
+#include "../glc_global.h"
+
 #include "glc_vector3d.h"
 #include "glc_line3d.h"
 #include "glc_plane.h"
 
-#include "../geometry/glc_mesh.h"
 #include "glc_utils_maths.h"
 
 #include "../glc_config.h"

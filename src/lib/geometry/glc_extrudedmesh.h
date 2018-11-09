@@ -104,7 +104,7 @@ public:
     void setExtrudedLenght(double length);
 
     //! Set Smothing index
-    void setSmothingIndex(const QList<int>& smothingIndex);
+    void setSmoothingIndex(const QList<int>& smothingIndex);
 
     void setInvisibleEdgeIndex(const QList<int>& invisibleEdgeIndex);
 

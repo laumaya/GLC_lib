@@ -290,7 +290,7 @@ void GLC_LatheMesh::createCircle(int index)
 
     const double angle= m_PhiLength - m_PhiStart;
 
-    m_Step= static_cast<GLuint>(static_cast<double>(m_Discret) * (angle / (2 * glc::PI)));
+    m_Step= static_cast<int>(static_cast<double>(m_Discret) * (angle / (2 * glc::PI)));
     if (m_Step < 2) m_Step= 2;
 
     // Float vector
@@ -301,7 +301,7 @@ void GLC_LatheMesh::createCircle(int index)
     floatVector.resize(size);
     // Fill Vertex Vector
     const double angleOnStep= angle / static_cast<double>(m_Step);
-    for (GLuint i= 0; i <= m_Step; ++i)
+    for (int i= 0; i <= m_Step; ++i)
     {
         floatVector[(i * 3)]= static_cast<float>(radius * cos(static_cast<double>(i) * angleOnStep));
         floatVector[(i * 3) + 1]= static_cast<float>(radius * sin(static_cast<double>(i) * angleOnStep));

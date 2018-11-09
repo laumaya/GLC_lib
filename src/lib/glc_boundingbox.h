@@ -28,6 +28,8 @@
 #include "maths/glc_vector3d.h"
 #include "maths/glc_utils_maths.h"
 #include "maths/glc_matrix4x4.h"
+#include "maths/glc_geomtools.h"
+
 #include <QtDebug>
 #include "glc_config.h"
 
@@ -80,7 +82,7 @@ public:
     bool intersect(const GLC_Point3d& point) const;
 
     //! Return true if the given bounding box intersect this bounding box
-    inline bool intersect(const GLC_BoundingBox& boundingBox) const;
+    inline bool intersect(const GLC_BoundingBox& boundingBox, double epsilon= glc::EPSILON) const;
 
     inline bool fuzzyIntersect(const GLC_BoundingBox& boundingBox) const;
 
@@ -171,7 +173,7 @@ GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_BoundingBox &);
 GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_BoundingBox &);
 
 // Return true if the given bounding box intersect this bounding box
-bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox) const
+bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox, double epsilon) const
 {
     bool subject= false;
     // Distance between bounding box center
@@ -192,9 +194,9 @@ bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox) const
         const double deltaY= ((yLength() + boundingBox.yLength()) * 0.5);
         const double deltaZ= ((zLength() + boundingBox.zLength()) * 0.5);
 
-        subject= (distanceX < deltaX) && !glc::fuzzyCompare(distanceX, deltaX);
-        subject= subject && ((distanceY < deltaY) && !glc::fuzzyCompare(distanceY, deltaY));
-        subject= subject && ((distanceZ < deltaZ) && !glc::fuzzyCompare(distanceZ, deltaZ));
+        subject= (distanceX < deltaX) && !glc::compare(distanceX, deltaX, epsilon);
+        subject= subject && ((distanceY < deltaY) && !glc::compare(distanceY, deltaY, epsilon));
+        subject= subject && ((distanceZ < deltaZ) && !glc::compare(distanceZ, deltaZ, epsilon));
     }
     return subject;
 }

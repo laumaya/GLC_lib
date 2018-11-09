@@ -166,7 +166,7 @@ void GLC_ExtrudedMesh::setExtrudedLenght(double length)
     }
 }
 
-void GLC_ExtrudedMesh::setSmothingIndex(const QList<int> &smothingIndex)
+void GLC_ExtrudedMesh::setSmoothingIndex(const QList<int> &smothingIndex)
 {
     const int count= smothingIndex.count();
     bool isEqual;
