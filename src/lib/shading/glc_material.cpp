@@ -138,13 +138,11 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 , m_pTexture(NULL)
 , m_Opacity(InitMaterial.m_Opacity)
 {
-	//qDebug() << "GLC_Material::GLC_Material copy constructor" << id();
 	if (NULL != InitMaterial.m_pTexture)
 	{
 		m_pTexture= new GLC_Texture(*(InitMaterial.m_pTexture));
 		Q_ASSERT(m_pTexture != NULL);
 	}
-
 }
 
 // Destructor

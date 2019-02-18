@@ -32,7 +32,6 @@
 #include "../glc_config.h"
 
 typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
-typedef QHash<GLC_uint, GLC_uint> MaterialHashMap;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Geometry
@@ -71,7 +70,7 @@ public:
 	GLC_Geometry(const QString &name, const bool type);
 
 	//! Copy constructor
-	GLC_Geometry(const GLC_Geometry& sourceGeom);
+    GLC_Geometry(const GLC_Geometry& other);
 
 	//! Overload "=" operator
 	GLC_Geometry& operator=(const GLC_Geometry& sourceGeom);
@@ -120,7 +119,7 @@ public:
 
 	//! Return the specified mesh sub material
 	inline GLC_Material* material(const GLC_uint key) const
-	{return m_MaterialHash[key];}
+    {return m_MaterialHash.value(key);}
 
     MaterialHash materialHash() const
     { return m_MaterialHash;}
@@ -224,6 +223,11 @@ public:
 
 	//! Replace the Master material
 	virtual void replaceMasterMaterial(GLC_Material*);
+
+    //! Replace the material specified by id with another one
+    virtual void replaceMaterial(const GLC_uint id, GLC_Material* pMat);
+
+    virtual void updateMaterialId(GLC_uint oldId, GLC_uint newId);
 
 	//! Add material to the geometry
 	void addMaterial(GLC_Material *);
@@ -336,6 +340,7 @@ private:
 	//! Clear the content of this object and makes it empty
 	void clearGeometry();
 
+    void innerCopy(const GLC_Geometry& other);
 //@}
 
 //////////////////////////////////////////////////////////////////////

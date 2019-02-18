@@ -40,6 +40,9 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_V
     , m_ExtrusionLenght(lenght)
     , m_GivenFaceNormal()
     , m_MirroredExtend(mirroredExtend)
+    , m_MasterMaterialId(0)
+    , m_EdgeMaterialIdList()
+    , m_EdgeToMaterialIndex()
 {
 
 }
@@ -53,8 +56,11 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const GLC_ExtrudedMesh &other)
     , m_ExtrusionLenght(other.m_ExtrusionLenght)
     , m_GivenFaceNormal(other.m_GivenFaceNormal)
     , m_MirroredExtend(other.m_MirroredExtend)
+    , m_MasterMaterialId(GLC_Mesh::newMaterialIdFromOldMaterialId(other.m_MasterMaterialId))
+    , m_EdgeMaterialIdList()
+    , m_EdgeToMaterialIndex(other.m_EdgeToMaterialIndex)
 {
-
+    copyEdgeMaterialId(other);
 }
 
 quint32 GLC_ExtrudedMesh::chunckID()
@@ -74,6 +80,21 @@ const GLC_BoundingBox &GLC_ExtrudedMesh::boundingBox()
         createMeshAndWire();
     }
     return GLC_Mesh::boundingBox();
+}
+
+GLC_Material* GLC_ExtrudedMesh::masterMaterial() const
+{
+    GLC_Material* pSubject;
+    if (GLC_Mesh::containsMaterial(m_MasterMaterialId))
+    {
+        pSubject= GLC_Mesh::material(m_MasterMaterialId);
+    }
+    else
+    {
+        pSubject= nullptr;
+    }
+
+    return pSubject;
 }
 
 bool GLC_ExtrudedMesh::update()
@@ -104,6 +125,9 @@ GLC_ExtrudedMesh &GLC_ExtrudedMesh::operator =(const GLC_ExtrudedMesh &other)
         m_ExtrusionLenght= other.m_ExtrusionLenght;
         m_GivenFaceNormal= other.m_GivenFaceNormal;
         m_MirroredExtend= other.m_MirroredExtend;
+        m_MasterMaterialId= GLC_Mesh::newMaterialIdFromOldMaterialId(other.m_MasterMaterialId);
+        copyEdgeMaterialId(other);
+        m_EdgeToMaterialIndex= other.m_EdgeToMaterialIndex;
     }
 
     return *this;
@@ -214,6 +238,38 @@ void GLC_ExtrudedMesh::setInvisibleEdgeIndex(const QList<int>& invisibleEdgeInde
     }
 }
 
+void GLC_ExtrudedMesh::setMasterMaterial(GLC_Material* pMaterial)
+{
+    Q_ASSERT(nullptr != pMaterial);
+    Q_ASSERT(m_MasterMaterialId == 0);
+
+    GLC_Material* pMasterMaterial= new GLC_Material(*pMaterial);
+    pMasterMaterial->setId(glc::GLC_GenID());
+    GLC_Mesh::addMaterial(pMasterMaterial);
+    m_MasterMaterialId= pMasterMaterial->id();
+}
+
+void GLC_ExtrudedMesh::setEdgeMaterialAndMapping(int materialCount, const QHash<int, int>& mapping)
+{
+    if (mapping != m_EdgeToMaterialIndex)
+    {
+        GLC_Mesh::clearMeshWireAndBoundingBox();
+        const int count= m_EdgeMaterialIdList.count();
+        for (int i= 0; i < count; ++i)
+        {
+            GLC_Geometry::removeMaterial(m_EdgeMaterialIdList.at(i));
+        }
+        m_EdgeMaterialIdList.clear();
+        m_EdgeToMaterialIndex= mapping;
+        for (int i= 0; i < materialCount; ++i)
+        {
+            GLC_Material* pMaterial= new GLC_Material;
+            GLC_Mesh::addMaterial(pMaterial);
+            m_EdgeMaterialIdList.append(pMaterial->id());
+        }
+    }
+}
+
 void GLC_ExtrudedMesh::createMeshAndWire()
 {
     Q_ASSERT(GLC_Mesh::isEmpty());
@@ -247,9 +303,16 @@ void GLC_ExtrudedMesh::createMesh()
     GLC_Mesh::addTexels(texels);
 
     // Set the material to use
-    GLC_Material* pMaterial;
-    if (hasMaterial()) pMaterial= this->firstMaterial();
-    else pMaterial= new GLC_Material();
+    GLC_Material* pMasterMaterial;
+    if (GLC_Geometry::containsMaterial(m_MasterMaterialId))
+    {
+        pMasterMaterial= GLC_Geometry::material(m_MasterMaterialId);
+    }
+    else
+    {
+        pMasterMaterial= new GLC_Material();
+        m_MasterMaterialId= pMasterMaterial->id();
+    }
 
     {
         // Given face (Face 1)
@@ -265,7 +328,7 @@ void GLC_ExtrudedMesh::createMesh()
         normals+= face1Normals;
         Q_ASSERT(vertices.size() == normals.size());
         glc::triangulatePolygonClip2TRi(&face1Index, vertices.toList());
-        addTriangles(pMaterial, face1Index);
+        addTriangles(pMasterMaterial, face1Index);
     }
 
     {
@@ -283,7 +346,7 @@ void GLC_ExtrudedMesh::createMesh()
         normals+= face2Normals;
         Q_ASSERT(vertices.size() == normals.size());
         glc::triangulatePolygonClip2TRi(&face2Index, vertices.toList());
-        addTriangles(pMaterial, face2Index);
+        addTriangles(pMasterMaterial, face2Index);
     }
 
 
@@ -305,14 +368,13 @@ void GLC_ExtrudedMesh::createMesh()
             GLuint startIndex1= offset1 + (face * 2);
             GLuint startIndex2= offset2 + (indexLenght -1) - (face * 2);
             faceIndex << startIndex1 << startIndex2 << (startIndex1 + 1) << (startIndex2 - 1);
-            addTrianglesStrip(pMaterial, faceIndex);
+            addTrianglesStrip(faceOutlineMaterial(face), faceIndex);
         }
     }
 
     // Add bulk data in to the mesh
     GLC_Mesh::addVertice(vertices);
     GLC_Mesh::addNormals(normals);
-
 }
 
 void GLC_ExtrudedMesh::createWire()
@@ -711,6 +773,36 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesTexels() const
     }
 
     return subject;
+}
+
+void GLC_ExtrudedMesh::copyEdgeMaterialId(const GLC_ExtrudedMesh& other)
+{
+    const int count= other.m_EdgeMaterialIdList.count();
+    for (int i= 0; i < count; ++i)
+    {
+        m_EdgeMaterialIdList.append(GLC_Mesh::newMaterialIdFromOldMaterialId(other.m_EdgeMaterialIdList.at(i)));
+    }
+}
+
+GLC_Material* GLC_ExtrudedMesh::faceOutlineMaterial(int face) const
+{
+    GLC_Material* pSubject;
+    if (!m_EdgeMaterialIdList.isEmpty())
+    {
+        Q_ASSERT(m_EdgeToMaterialIndex.contains(face));
+        int index= m_EdgeToMaterialIndex.value(face);
+        Q_ASSERT(m_EdgeToMaterialIndex.count() > index);
+        GLC_uint materialId= m_EdgeMaterialIdList.at(index);
+        Q_ASSERT(containsMaterial(materialId));
+        pSubject= material(materialId);
+    }
+    else
+    {
+        Q_ASSERT(containsMaterial(m_MasterMaterialId));
+        pSubject= material(m_MasterMaterialId);
+    }
+
+    return pSubject;
 }
 
 void GLC_ExtrudedMesh::glDraw(const GLC_RenderProperties& renderProperties)

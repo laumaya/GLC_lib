@@ -26,6 +26,8 @@
 #define GLC_EXTRUDEDMESH_H
 
 #include <QList>
+#include <QHash>
+
 #include "glc_mesh.h"
 #include "../maths/glc_vector3d.h"
 
@@ -79,6 +81,11 @@ public:
     //! Return the extruded mesh bounding box
     const GLC_BoundingBox& boundingBox(void) override;
 
+    GLC_uint masterMaterialId() const
+    {return m_MasterMaterialId;}
+
+    GLC_Material* masterMaterial() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -107,6 +114,13 @@ public:
     void setSmoothingIndex(const QList<int>& smothingIndex);
 
     void setInvisibleEdgeIndex(const QList<int>& invisibleEdgeIndex);
+
+    void setMasterMaterial(GLC_Material* pMaterial);
+
+    void setEdgeMaterialAndMapping(int materialCount, const QHash<int, int>& mapping);
+
+    QList<GLC_uint> edgeMaterialIdList() const
+    {return m_EdgeMaterialIdList;}
 
 //@}
 
@@ -183,6 +197,10 @@ private:
     //! Return created outline faces texels
     GLfloatVector createdOutlineFacesTexels() const;
 
+    void copyEdgeMaterialId(const GLC_ExtrudedMesh& other);
+
+    GLC_Material* faceOutlineMaterial(int face) const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -210,6 +228,12 @@ private:
 
     //! Class chunk id
     static quint32 m_ChunkId;
+
+    GLC_uint m_MasterMaterialId;
+
+    QList<GLC_uint> m_EdgeMaterialIdList;
+
+    QHash<int, int> m_EdgeToMaterialIndex;
 
 };
 

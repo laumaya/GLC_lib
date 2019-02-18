@@ -69,7 +69,7 @@ public:
 	GLC_Mesh();
 
 	//! Copy constructor
-	GLC_Mesh(const GLC_Mesh&);
+    GLC_Mesh(const GLC_Mesh&other);
 
 	//! Overload "=" operator
 	GLC_Mesh& operator=(const GLC_Mesh&);
@@ -271,7 +271,7 @@ public:
     void replaceMasterMaterial(GLC_Material*) override;
 
 	//! Replace the material specified by id with another one
-	void replaceMaterial(const GLC_uint, GLC_Material*);
+    void replaceMaterial(const GLC_uint, GLC_Material*) override;
 
 	//! Set the mesh next primitive local id
 	inline void setNextPrimitiveLocalId(GLC_uint id)
@@ -320,6 +320,16 @@ protected:
     void setClientState();
     void restoreClientState(GLC_Context *pContext);
     void drawMeshWire(const GLC_RenderProperties &renderProperties, GLC_Context *pContext);
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
+/*! \name Protected services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+protected:
+    GLC_uint newMaterialIdFromOldMaterialId(GLC_uint oldMaterialId) const
+    {return m_OldToNewMaterialId.value(oldMaterialId);}
 
 //@}
 
@@ -414,6 +424,8 @@ private:
 
     static SharpEdgeContainer* computeSharEdgeMappedFunction(SharpEdgeContainer* pContainer);
 
+    void innerCopy(const GLC_Mesh& other);
+
 //@}
 
 
@@ -444,6 +456,8 @@ private:
 
 	//! The current LOD index
 	int m_CurrentLod;
+
+    QHash<GLC_uint, GLC_uint> m_OldToNewMaterialId;
 
 	//! Class chunk id
 	static quint32 m_ChunkId;
