@@ -81,6 +81,7 @@ bool GLC_WorldTo3dxml::exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::
 	if (m_ExportType == Compressed3dxml)
 	{
 		m_p3dxmlArchive= new QuaZip(m_FileName);
+        m_p3dxmlArchive->setFileNameCodec("UTF-8");
 		isExported= m_p3dxmlArchive->open(QuaZip::mdCreate);
 		// Add the manifest
 		addManifest();

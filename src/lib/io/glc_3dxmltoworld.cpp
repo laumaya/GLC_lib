@@ -121,6 +121,7 @@ GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnl
 
 	// Create the 3dxml Zip archive
 	m_p3dxmlArchive= new QuaZip(m_FileName);
+    m_p3dxmlArchive->setFileNameCodec("UTF-8");
 	// Trying to load archive
 	if(!m_p3dxmlArchive->open(QuaZip::mdUnzip))
 	{
@@ -175,6 +176,7 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName, boo
 		// Create the 3dxml Zip archive
         if (m_UseZipMutex) m_ZipMutex.lock();
 		m_p3dxmlArchive= new QuaZip(m_FileName);
+        m_p3dxmlArchive->setFileNameCodec("UTF-8");
 		// Trying to load archive
 		if(!m_p3dxmlArchive->open(QuaZip::mdUnzip))
 		{
