@@ -17,6 +17,8 @@ DESTDIR = ./
 VERSION = 3.0.0
 
 DEFINES += CREATE_GLC_LIB_DLL
+DEFINES += QUAZIP_BUILD
+
 DEFINES += LIB3DS_EXPORTS
 
 DEFINES += _CRT_SECURE_NO_WARNINGS
@@ -29,12 +31,14 @@ RCC_DIR = ./Build
 DEPENDPATH += .
 INCLUDEPATH += .
 INCLUDEPATH += ./3rdparty/zlib
+INCLUDEPATH += ./3rdparty/quazip
 
 RESOURCES += glc_lib.qrc
 
 # Input					
 
-HEADERS_QUAZIP +=   3rdparty/quazip/crypt.h \
+HEADERS_QUAZIP += \
+                    3rdparty/quazip/minizip_crypt.h \
                     3rdparty/quazip/ioapi.h \
                     3rdparty/quazip/JlCompress.h \
                     3rdparty/quazip/quaadler32.h \
@@ -42,14 +46,15 @@ HEADERS_QUAZIP +=   3rdparty/quazip/crypt.h \
                     3rdparty/quazip/quacrc32.h \
                     3rdparty/quazip/quagzipfile.h \
                     3rdparty/quazip/quaziodevice.h \
-                    3rdparty/quazip/quazip.h \
-                    3rdparty/quazip/quazip_global.h \
                     3rdparty/quazip/quazipdir.h \
                     3rdparty/quazip/quazipfile.h \
                     3rdparty/quazip/quazipfileinfo.h \
+                    3rdparty/quazip/quazip_global.h \
+                    3rdparty/quazip/quazip.h \
                     3rdparty/quazip/quazipnewinfo.h \
-                    3rdparty/quazip/qua_unzip.h \
+                    3rdparty/quazip/unzip.h \
                     3rdparty/quazip/zip.h
+
 
 HEADERS_LIB3DS +=   3rdparty/lib3ds/atmosphere.h \
                     3rdparty/lib3ds/background.h \
@@ -265,8 +270,8 @@ SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/uncompr.c \
            3rdparty/zlib/zutil.c
 
-SOURCES += 3rdparty/quazip/JlCompress.cpp \
-           3rdparty/quazip/qioapi.cpp \
+SOURCES += 3rdparty/quazip/qioapi.cpp \
+           3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/quaadler32.cpp \
            3rdparty/quazip/quacrc32.cpp \
            3rdparty/quazip/quagzipfile.cpp \
@@ -276,7 +281,7 @@ SOURCES += 3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/quazipfile.cpp \
            3rdparty/quazip/quazipfileinfo.cpp \
            3rdparty/quazip/quazipnewinfo.cpp \
-           3rdparty/quazip/qua_unzip.c \
+           3rdparty/quazip/unzip.c \
            3rdparty/quazip/zip.c
 
 SOURCES += 3rdparty/lib3ds/atmosphere.c \
