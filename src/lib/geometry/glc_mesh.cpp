@@ -69,8 +69,8 @@ GLC_Mesh::GLC_Mesh()
 GLC_Mesh::GLC_Mesh(const GLC_Mesh& other)
     : GLC_Geometry(other)
     , m_NextPrimitiveLocalId(other.m_NextPrimitiveLocalId)
-    , m_PrimitiveGroups(other.m_PrimitiveGroups)
-    , m_DefaultMaterialId(other.m_DefaultMaterialId)
+    , m_PrimitiveGroups()
+    , m_DefaultMaterialId(0)
     , m_NumberOfVertice(other.m_NumberOfVertice)
     , m_NumberOfNormals(other.m_NumberOfNormals)
     , m_ColorPearVertex(other.m_ColorPearVertex)
@@ -95,7 +95,7 @@ GLC_Mesh& GLC_Mesh::operator=(const GLC_Mesh& mesh)
         // Copy members
         m_NextPrimitiveLocalId= mesh.m_NextPrimitiveLocalId;
         m_PrimitiveGroups= mesh.m_PrimitiveGroups;
-        m_DefaultMaterialId= mesh.m_DefaultMaterialId;
+        //m_DefaultMaterialId= mesh.m_DefaultMaterialId;
         m_NumberOfVertice= mesh.m_NumberOfVertice;
         m_NumberOfNormals= mesh.m_NumberOfNormals;
         m_ColorPearVertex= mesh.m_ColorPearVertex;

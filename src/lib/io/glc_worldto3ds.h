@@ -125,9 +125,9 @@ private:
 	QString m_FileName;
 
 	//! Reference to 3ds mesh hash table
-	QHash<GLC_StructReference*, Lib3dsMesh*> m_ReferenceToMesh;
+    QHash<GLC_StructReference*, Lib3dsMesh*> m_ReferenceToMesh;
 
-    QHash<GLC_Material*, Lib3dsMaterial*> m_WorldMaterialTo3dsMaterial;
+    QHash<GLC_uint, Lib3dsMaterial*> m_WorldMaterialIdTo3dsMaterial;
 
 	//! The root lib3ds node
 	Lib3dsNode* m_pRootLib3dsNode;

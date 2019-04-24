@@ -47,7 +47,7 @@ GLC_WorldTo3ds::GLC_WorldTo3ds(const GLC_World& world)
 , m_pLib3dsFile(NULL)
 , m_FileName()
 , m_ReferenceToMesh()
-, m_WorldMaterialTo3dsMaterial()
+, m_WorldMaterialIdTo3dsMaterial()
 , m_pRootLib3dsNode(NULL)
 , m_CurrentNodeId(0)
 , m_OccIdToNodeId()
@@ -71,8 +71,8 @@ GLC_WorldTo3ds::~GLC_WorldTo3ds()
 //////////////////////////////////////////////////////////////////////
 bool GLC_WorldTo3ds::exportToFile(const QString& fileName, bool useAbsolutePosition)
 {
-	m_ReferenceToMesh.clear();
-    m_WorldMaterialTo3dsMaterial.clear();
+    m_ReferenceToMesh.clear();
+    m_WorldMaterialIdTo3dsMaterial.clear();
 	m_pRootLib3dsNode= NULL;
 	m_CurrentNodeId= 0;
 	m_OccIdToNodeId.clear();
@@ -138,7 +138,7 @@ void GLC_WorldTo3ds::saveMeshes()
 					for (int i= 0; i < count; ++i)
 					{
 						lib3ds_file_insert_mesh(m_pLib3dsFile, meshes.at(i));
-						m_ReferenceToMesh.insertMulti(pRef, meshes.at(i));
+                        m_ReferenceToMesh.insertMulti(pRef, meshes.at(i));
 					}
 				}
 			}
@@ -227,10 +227,10 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
         lib3ds_file_insert_node(m_pLib3dsFile, p3dsNode);
 
 		// Set mesh name if necessary
-		if (m_ReferenceToMesh.contains(pRef))
+        if (m_ReferenceToMesh.contains(pRef))
 		{
 
-			QList<Lib3dsMesh*> meshes= m_ReferenceToMesh.values(pRef);
+            QList<Lib3dsMesh*> meshes= m_ReferenceToMesh.values(pRef);
 			const int meshCount= meshes.count();
 			if (meshCount > 1)
 			{
@@ -247,7 +247,7 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 			}
 			else
 			{
-				strcpy(p3dsNode->name, m_ReferenceToMesh.value(pRef)->name);
+                strcpy(p3dsNode->name, m_ReferenceToMesh.value(pRef)->name);
 			}
 
 		}
@@ -359,11 +359,13 @@ Lib3dsMesh* GLC_WorldTo3ds::create3dsMeshFromGLC_Mesh(GLC_Mesh* pMesh, const QSt
 
 Lib3dsMaterial* GLC_WorldTo3ds::get3dsMaterialFromGLC_Material(GLC_Material* pMat)
 {
+    qDebug() << "GLC_WorldTo3ds::get3dsMaterialFromGLC_Material " << pMat;
 	Lib3dsMaterial* pSubject= NULL;
 
-    if (m_WorldMaterialTo3dsMaterial.contains(pMat))
+    if (m_WorldMaterialIdTo3dsMaterial.contains(pMat->id()))
 	{
-        pSubject= m_WorldMaterialTo3dsMaterial.value(pMat);
+        qDebug() << "Material already exists";
+        pSubject= m_WorldMaterialIdTo3dsMaterial.value(pMat->id());
 	}
 	else
 	{
@@ -376,6 +378,7 @@ Lib3dsMaterial* GLC_WorldTo3ds::get3dsMaterialFromGLC_Material(GLC_Material* pMa
 Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* pMat)
 {
     const QString matName= to3dsName("MAT", ++m_CurrentMaterialIndex);
+    qDebug() << "GLC_WorldTo3ds::create3dsMaterialFromGLC_Material " << matName;
 	Lib3dsMaterial* pSubject= lib3ds_material_new();
     strcpy(pSubject->name, matName.toLatin1().data());
 
@@ -425,13 +428,13 @@ Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* 
 		{
 			QString filePath= QFileInfo(m_FileName).absolutePath();
             QImage textureImage;
-            if (QFileInfo(pTexture->fileName()).exists())
+            if (QFileInfo(sourceTextureKey).exists())
             {
                 textureImage.load(pTexture->fileName());
             }
             else
             {
-                textureImage= pMat->textureHandle()->imageOfTexture();
+                textureImage= pTexture->imageOfTexture();
             }
 
             targetTextureFileName= targetTextureFileName + ".jpg";
@@ -448,6 +451,7 @@ Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* 
 		}
 		else
 		{
+            --m_CurrentTextureIndex;
             QString textureName= m_TextureToFileName.value(sourceTextureKey);
             strcpy(pSubject->texture1_map.name, textureName.toLatin1().data());
 		}
@@ -455,7 +459,7 @@ Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* 
 	}
 
 	lib3ds_file_insert_material(m_pLib3dsFile, pSubject);
-    m_WorldMaterialTo3dsMaterial.insert(pMat, pSubject);
+    m_WorldMaterialIdTo3dsMaterial.insert(pMat->id(), pSubject);
 
 	return pSubject;
 }
