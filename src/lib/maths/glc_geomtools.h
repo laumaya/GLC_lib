@@ -104,6 +104,8 @@ namespace glc
      *  If the line lie on the plane this method return false*/
     GLC_LIB_EXPORT bool lineIntersectPlane(const GLC_Line3d& line, const GLC_Plane& plane, GLC_Point3d* pPoint);
 
+    GLC_LIB_EXPORT bool segmentIntersectPlane(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Plane& plane, GLC_Point3d* pPoint);
+
     //! Return the projected point on the given line form the given point
     GLC_LIB_EXPORT GLC_Point3d project(const GLC_Point3d& point, const GLC_Line3d& line);
 

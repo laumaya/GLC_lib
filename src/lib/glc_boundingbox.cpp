@@ -24,6 +24,7 @@
 
 #include "glc_boundingbox.h"
 #include "maths/glc_matrix4x4.h"
+#include "maths/glc_plane.h"
 
 quint32 GLC_BoundingBox::m_ChunkId= 0xA707;
 
@@ -84,7 +85,34 @@ bool GLC_BoundingBox::intersect(const GLC_Point3d& point) const
     }
 }
 
+bool GLC_BoundingBox::intersect(const GLC_Plane& plane) const
+{
+    const GLC_Point3d p1(m_Lower);
+    const GLC_Point3d p2(m_Upper.x(), p1.y(), p1.z());
+    const GLC_Point3d p3(m_Upper.x(), m_Upper.y(), p1.z());
+    const GLC_Point3d p4(p1.x(), m_Upper.y(), p1.z());
 
+    const GLC_Point3d p5(m_Upper);
+    const GLC_Point3d p6(m_Lower.x(), p5.y(), p5.z());
+    const GLC_Point3d p7(m_Lower.x(), m_Lower.y(), p5.z());
+    const GLC_Point3d p8(p5.x(), m_Lower.y(), p5.z());
+
+    QList<GLC_Point3d> points;
+    points << p1 << p2 << p3 << p4 << p5 << p6 << p7 << p8;
+
+    bool allPositive= true;
+    bool allNegative= true;
+    for (int i= 0; i < 8; ++i)
+    {
+        double distance= plane.distanceToPoint(points.at(i));
+        allPositive= allPositive && (distance > 0.0);
+        allNegative= allNegative && (distance < 0.0);
+    }
+
+    bool subject= !(allPositive || allNegative);
+
+    return subject;
+}
 
 GLC_Vector3d GLC_BoundingBox::size() const
 {

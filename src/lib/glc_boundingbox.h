@@ -33,6 +33,8 @@
 #include <QtDebug>
 #include "glc_config.h"
 
+class GLC_Plane;
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_BoundingBox
 /*! \brief GLC_BoundingBox : Geometry bounding box*/
@@ -80,6 +82,9 @@ public:
 
     //! Return true if the given 3d point intersect this bounding box
     bool intersect(const GLC_Point3d& point) const;
+
+    //! Return true if the given plane intersect this boundingBox
+    bool intersect(const GLC_Plane& plane) const;
 
     //! Return true if the given bounding box intersect this bounding box
     inline bool intersect(const GLC_BoundingBox& boundingBox, double epsilon= glc::EPSILON) const;

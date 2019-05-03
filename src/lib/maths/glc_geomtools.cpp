@@ -522,6 +522,23 @@ bool glc::lineIntersectPlane(const GLC_Line3d& line, const GLC_Plane& plane, GLC
 	}
 }
 
+bool glc::segmentIntersectPlane(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Plane& plane, GLC_Point3d* pPoint)
+{
+    bool subject= false;
+    GLC_Line3d line(p1, p2 - p1);
+    GLC_Point3d intersection;
+    if (lineIntersectPlane(line, plane, &intersection))
+    {
+        if (pointIsOnSegment(p1, p2, intersection))
+        {
+            pPoint->operator =(intersection);
+            subject= true;
+        }
+    }
+
+    return subject;
+}
+
 GLC_Point3d glc::project(const GLC_Point3d& point, const GLC_Line3d& line)
 {
 	const GLC_Vector3d lineDirection(line.direction().normalize());

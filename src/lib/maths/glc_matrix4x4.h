@@ -29,8 +29,10 @@
 #include <QQuaternion>
 #include <QPair>
 #include <QMetaType>
+#include <QMatrix4x4>
 
 #include "glc_vector3d.h"
+#include "glc_plane.h"
 
 #include "../glc_config.h"
 
@@ -126,6 +128,9 @@ public:
 	inline bool operator!=(const GLC_Matrix4x4& mat) const
 	{return !operator==(mat);}
 
+    //! Return the result of transforming the given plane by this matrix
+    GLC_Plane operator *(const GLC_Plane& plane) const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -204,6 +209,8 @@ public:
     GLC_Vector3d getYvector() const;
     GLC_Vector3d getZvector() const;
     GLC_Vector3d getWvector() const;
+
+    inline QMatrix4x4 qMatrix() const;
 
 //@}
 
@@ -474,18 +481,28 @@ GLC_Matrix4x4 GLC_Matrix4x4::isometricMatrix() const
 	return result;
 }
 
+QMatrix4x4 GLC_Matrix4x4::qMatrix() const
+{
+    QMatrix4x4 subject(m_Matrix[0], m_Matrix[4], m_Matrix[8], m_Matrix[12]
+                     , m_Matrix[1], m_Matrix[5], m_Matrix[9], m_Matrix[13]
+                     , m_Matrix[2], m_Matrix[6], m_Matrix[10], m_Matrix[14]
+                     , m_Matrix[3], m_Matrix[7], m_Matrix[11], m_Matrix[15]);
+
+    return subject;
+}
+
 GLC_Matrix4x4& GLC_Matrix4x4::setMatRot(const GLC_Vector3d &Vect, const double &dAngleRad)
 {
-	// Normalize the vector
-	GLC_Vector3d VectRot(Vect);
-	VectRot.normalize();
+    // Normalize the vector
+    GLC_Vector3d VectRot(Vect);
+    VectRot.normalize();
 
-	// Code optimisation
-	const double SinAngleSur2= sin(dAngleRad / 2.0);
+    // Code optimisation
+    const double SinAngleSur2= sin(dAngleRad / 2.0);
 
-	// Quaternion computation
-	const double q0= cos(dAngleRad / 2);
-	const double q1= VectRot.m_Vector[0] * SinAngleSur2;
+    // Quaternion computation
+    const double q0= cos(dAngleRad / 2);
+    const double q1= VectRot.m_Vector[0] * SinAngleSur2;
 	const double q2= VectRot.m_Vector[1] * SinAngleSur2;
 	const double q3= VectRot.m_Vector[2] * SinAngleSur2;
 

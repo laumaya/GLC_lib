@@ -36,7 +36,7 @@ extern PFNGLPOINTPARAMETERFVARBPROC glPointParameterfv;
 #endif
 
 // Buffer offset used by VBO
-#define BUFFER_OFFSET(i) ((char*)NULL + (i))
+#define BUFFER_OFFSET(i) (reinterpret_cast<char *>(i))
 
 
 namespace glc

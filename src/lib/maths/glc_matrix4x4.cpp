@@ -24,6 +24,7 @@
 #include "glc_matrix4x4.h"
 
 #include <cmath>
+#include <QVector4D>
 
 #include <QtDebug>
 
@@ -66,6 +67,18 @@ GLC_Matrix4x4 GLC_Matrix4x4::orthonormalMatrix(double left, double right, double
     subject.m_Matrix[14]= tz;
 
     subject.m_Type= General;
+    return subject;
+}
+
+GLC_Plane GLC_Matrix4x4::operator *(const GLC_Plane& plane) const
+{
+
+    QVector4D planeFactors(plane.coefA(), plane.coefB(), plane.coefC(), plane.coefD());
+    QMatrix4x4 matrix(qMatrix());
+
+    QVector4D newPlaneFactor= matrix.inverted().transposed() * planeFactors;
+    GLC_Plane subject(newPlaneFactor.x(), newPlaneFactor.y(), newPlaneFactor.z(), newPlaneFactor.w());
+
     return subject;
 }
 
@@ -282,4 +295,6 @@ GLC_Vector3d GLC_Matrix4x4::getWvector() const
 
     return subject;
 }
+
+
 
