@@ -117,10 +117,10 @@ public:
 
     void setMasterMaterial(GLC_Material* pMaterial);
 
-    void setEdgeMaterialAndMapping(int materialCount, const QHash<int, int>& mapping);
+    void setEdgeMaterialAndMapping(const QHash<int, int>& mapping);
 
-    QList<GLC_uint> edgeMaterialIdList() const
-    {return m_EdgeMaterialIdList;}
+    QHash<int, GLC_uint> edgeMaterialId() const
+    {return m_EdgeMaterialId;}
 
 //@}
 
@@ -231,7 +231,7 @@ private:
 
     GLC_uint m_MasterMaterialId;
 
-    QList<GLC_uint> m_EdgeMaterialIdList;
+    QHash<int, GLC_uint> m_EdgeMaterialId;
 
     QHash<int, int> m_EdgeToMaterialIndex;
 

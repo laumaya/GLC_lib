@@ -41,7 +41,7 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_V
     , m_GivenFaceNormal()
     , m_MirroredExtend(mirroredExtend)
     , m_MasterMaterialId(0)
-    , m_EdgeMaterialIdList()
+    , m_EdgeMaterialId()
     , m_EdgeToMaterialIndex()
 {
 
@@ -57,7 +57,7 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const GLC_ExtrudedMesh &other)
     , m_GivenFaceNormal(other.m_GivenFaceNormal)
     , m_MirroredExtend(other.m_MirroredExtend)
     , m_MasterMaterialId(GLC_Mesh::newMaterialIdFromOldMaterialId(other.m_MasterMaterialId))
-    , m_EdgeMaterialIdList()
+    , m_EdgeMaterialId()
     , m_EdgeToMaterialIndex(other.m_EdgeToMaterialIndex)
 {
     copyEdgeMaterialId(other);
@@ -249,23 +249,28 @@ void GLC_ExtrudedMesh::setMasterMaterial(GLC_Material* pMaterial)
     m_MasterMaterialId= pMasterMaterial->id();
 }
 
-void GLC_ExtrudedMesh::setEdgeMaterialAndMapping(int materialCount, const QHash<int, int>& mapping)
+void GLC_ExtrudedMesh::setEdgeMaterialAndMapping(const QHash<int, int>& mapping)
 {
     if (mapping != m_EdgeToMaterialIndex)
     {
         GLC_Mesh::clearMeshWireAndBoundingBox();
-        const int count= m_EdgeMaterialIdList.count();
-        for (int i= 0; i < count; ++i)
+        QHash<int, GLC_uint>::iterator iMaterialId= m_EdgeMaterialId.begin();
+        while (iMaterialId != m_EdgeMaterialId.end())
         {
-            GLC_Geometry::removeMaterial(m_EdgeMaterialIdList.at(i));
+
+            GLC_Geometry::removeMaterial(iMaterialId.value());
+            ++iMaterialId;
         }
-        m_EdgeMaterialIdList.clear();
+        m_EdgeMaterialId.clear();
         m_EdgeToMaterialIndex= mapping;
-        for (int i= 0; i < materialCount; ++i)
+        QHash<int, int>::iterator iMaterialIndex= m_EdgeToMaterialIndex.begin();
+        while (iMaterialIndex != m_EdgeToMaterialIndex.end())
         {
             GLC_Material* pMaterial= new GLC_Material;
             GLC_Mesh::addMaterial(pMaterial);
-            m_EdgeMaterialIdList.append(pMaterial->id());
+            m_EdgeMaterialId.insert(iMaterialIndex.value(), pMaterial->id());
+
+            ++iMaterialIndex;
         }
     }
 }
@@ -312,6 +317,7 @@ void GLC_ExtrudedMesh::createMesh()
     {
         pMasterMaterial= new GLC_Material();
         m_MasterMaterialId= pMasterMaterial->id();
+        GLC_Geometry::addMaterial(pMasterMaterial);
     }
 
     {
@@ -328,7 +334,7 @@ void GLC_ExtrudedMesh::createMesh()
         normals+= face1Normals;
         Q_ASSERT(vertices.size() == normals.size());
         glc::triangulatePolygonClip2TRi(&face1Index, vertices.toList());
-        addTriangles(pMasterMaterial, face1Index);
+        addTriangles(faceOutlineMaterial(-2), face1Index);
     }
 
     {
@@ -346,7 +352,7 @@ void GLC_ExtrudedMesh::createMesh()
         normals+= face2Normals;
         Q_ASSERT(vertices.size() == normals.size());
         glc::triangulatePolygonClip2TRi(&face2Index, vertices.toList());
-        addTriangles(pMasterMaterial, face2Index);
+        addTriangles(faceOutlineMaterial(-1), face2Index);
     }
 
 
@@ -777,22 +783,24 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesTexels() const
 
 void GLC_ExtrudedMesh::copyEdgeMaterialId(const GLC_ExtrudedMesh& other)
 {
-    const int count= other.m_EdgeMaterialIdList.count();
-    for (int i= 0; i < count; ++i)
+    QHash<int, GLC_uint>::const_iterator iMaterialId= other.m_EdgeMaterialId.constBegin();
+    while (iMaterialId != other.m_EdgeMaterialId.constEnd())
     {
-        m_EdgeMaterialIdList.append(GLC_Mesh::newMaterialIdFromOldMaterialId(other.m_EdgeMaterialIdList.at(i)));
+        const int key= iMaterialId.key();
+        m_EdgeMaterialId.insert(key, GLC_Mesh::newMaterialIdFromOldMaterialId(other.m_EdgeMaterialId.value(key)));
+        ++iMaterialId;
     }
 }
 
 GLC_Material* GLC_ExtrudedMesh::faceOutlineMaterial(int face) const
 {
     GLC_Material* pSubject;
-    if (!m_EdgeMaterialIdList.isEmpty())
+    if (!m_EdgeMaterialId.isEmpty())
     {
         Q_ASSERT(m_EdgeToMaterialIndex.contains(face));
         int index= m_EdgeToMaterialIndex.value(face);
-        Q_ASSERT(m_EdgeToMaterialIndex.count() > index);
-        GLC_uint materialId= m_EdgeMaterialIdList.at(index);
+        Q_ASSERT(m_EdgeMaterialId.contains(index));
+        GLC_uint materialId= m_EdgeMaterialId.value(index);
         Q_ASSERT(containsMaterial(materialId));
         pSubject= material(materialId);
     }
