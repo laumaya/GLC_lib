@@ -43,6 +43,7 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_V
     , m_MasterMaterialId(0)
     , m_EdgeMaterialId()
     , m_EdgeToMaterialIndex()
+    , m_TextureRangeFactor(1.0f)
 {
 
 }
@@ -59,6 +60,7 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const GLC_ExtrudedMesh &other)
     , m_MasterMaterialId(GLC_Mesh::newMaterialIdFromOldMaterialId(other.m_MasterMaterialId))
     , m_EdgeMaterialId()
     , m_EdgeToMaterialIndex(other.m_EdgeToMaterialIndex)
+    , m_TextureRangeFactor(other.m_TextureRangeFactor)
 {
     copyEdgeMaterialId(other);
 }
@@ -272,6 +274,15 @@ void GLC_ExtrudedMesh::setEdgeMaterialAndMapping(const QHash<int, int>& mapping)
 
             ++iMaterialIndex;
         }
+    }
+}
+
+void GLC_ExtrudedMesh::setTextureRangeFactor(double value)
+{
+    if (!glc::compare(value, m_TextureRangeFactor))
+    {
+        m_TextureRangeFactor= value;
+        GLC_Mesh::clearMeshWireAndBoundingBox();
     }
 }
 
@@ -568,13 +579,12 @@ GLfloatVector GLC_ExtrudedMesh::baseFaceTexels() const
     GLfloatVector subject(count * 2);
 
     QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(points);
-    QList<GLC_Point2d> normalizePolygon= glc::normalyzePolygon(baseFace2DPolygon);
 
     for (int i= 0; i < count; ++i)
     {
-        GLC_Point2d texel= normalizePolygon.at(i);
-        subject[i * 2]= static_cast<GLfloat>(texel.x());
-        subject[i * 2 + 1]= static_cast<GLfloat>(texel.y());
+        GLC_Point2d texel= baseFace2DPolygon.at(i) * m_TextureRangeFactor;
+        subject[i * 2]= static_cast<GLfloat>(texel.y());
+        subject[i * 2 + 1]= static_cast<GLfloat>(texel.x());
     }
 
     return subject;
@@ -607,18 +617,23 @@ GLfloatVector GLC_ExtrudedMesh::basedOutlineFacesTexels() const
     const int count= points.count();
     GLfloatVector subject(count * 4);
 
-    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(points);
-    QList<GLC_Point2d> normalizePolygon= glc::normalyzePolygon(baseFace2DPolygon);
+    QList<double> distances;
+    distances << 0.0;
+    for (int i= 1; i < count; ++i)
+    {
+        distances.append((points.at(i) - points.at(i - 1)).length());
+    }
+    distances.append((points.last() - points.first()).length());
 
     for (int i= 0; i < count; ++i)
     {
-        GLC_Point2d texel1= normalizePolygon.at(i);
-        subject[i * 4]= static_cast<GLfloat>(texel1.x());
-        subject[i * 4 + 1]= static_cast<GLfloat>(texel1.y());
+        double value= distances.at(i) * m_TextureRangeFactor;
+        subject[i * 4]= static_cast<GLfloat>(0.0);
+        subject[i * 4 + 1]= static_cast<GLfloat>(value);
 
-        GLC_Point2d texel2= normalizePolygon.at((i + 1) % count);
-        subject[i * 4 + 2]= static_cast<GLfloat>(texel2.x());
-        subject[i * 4 + 3]= static_cast<GLfloat>(texel2.y());
+        double value2= distances.at(i + 1) * m_TextureRangeFactor;
+        subject[i * 4 + 2]= static_cast<GLfloat>(0.0);
+        subject[i * 4 + 3]= static_cast<GLfloat>(value2);
     }
 
     return subject;
@@ -724,13 +739,12 @@ GLfloatVector GLC_ExtrudedMesh::createdFaceTexels() const
     GLfloatVector subject(count * 2);
 
     QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(createdFacePoints());
-    QList<GLC_Point2d> normalizePolygon= glc::normalyzePolygon(baseFace2DPolygon);
 
     for (int i= 0; i < count; ++i)
     {
-        GLC_Point2d texel= normalizePolygon.at(i);
-        subject[i * 2]= static_cast<GLfloat>(texel.x());
-        subject[i * 2 + 1]= static_cast<GLfloat>(texel.y());
+        GLC_Point2d texel= baseFace2DPolygon.at(i) * m_TextureRangeFactor;
+        subject[i * 2]= static_cast<GLfloat>(texel.y());
+        subject[i * 2 + 1]= static_cast<GLfloat>(texel.x());
     }
 
     return subject;
@@ -761,21 +775,29 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesVertices() const
 
 GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesTexels() const
 {
-    const int count= m_Points.count();
+    QList<GLC_Point3d> points= createdFacePoints();
+    const int count= points.count();
     GLfloatVector subject(count * 4);
 
-    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(createdFacePoints());
-    QList<GLC_Point2d> normalizePolygon= glc::normalyzePolygon(baseFace2DPolygon);
+    QList<double> distances;
+    for (int i= 1; i < count; ++i)
+    {
+        distances.append((points.at(i) - points.at(i - 1)).length());
+    }
+    distances.append((points.last() - points.first()).length());
+    distances.append(0.0);
+
+    //std::reverse(distances.begin(), distances.end()); // Created outline points are reversed.
 
     for (int i= 0; i < count; ++i)
     {
-        GLC_Point2d texel1= normalizePolygon.at(i);
-        subject[i * 4]= static_cast<GLfloat>(texel1.x());
-        subject[i * 4 + 1]= static_cast<GLfloat>(texel1.y());
+        double value= distances.at(i) * m_TextureRangeFactor;
+        subject[i * 4]= static_cast<GLfloat>(m_ExtrusionLenght * m_TextureRangeFactor);
+        subject[i * 4 + 1]= static_cast<GLfloat>(value);
 
-        GLC_Point2d texel2= normalizePolygon.at((i + 1) % count);
-        subject[i * 4 + 2]= static_cast<GLfloat>(texel2.x());
-        subject[i * 4 + 3]= static_cast<GLfloat>(texel2.y());
+        double value2= distances.at(i + 1) * m_TextureRangeFactor;
+        subject[i * 4 + 2]= static_cast<GLfloat>(m_ExtrusionLenght * m_TextureRangeFactor);
+        subject[i * 4 + 3]= static_cast<GLfloat>(value2);
     }
 
     return subject;

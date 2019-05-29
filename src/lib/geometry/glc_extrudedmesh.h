@@ -86,6 +86,9 @@ public:
 
     GLC_Material* masterMaterial() const;
 
+    float textureRangeFactor() const
+    {return m_TextureRangeFactor;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -121,6 +124,8 @@ public:
 
     QHash<int, GLC_uint> edgeMaterialId() const
     {return m_EdgeMaterialId;}
+
+    void setTextureRangeFactor(double value);
 
 //@}
 
@@ -234,6 +239,8 @@ private:
     QHash<int, GLC_uint> m_EdgeMaterialId;
 
     QHash<int, int> m_EdgeToMaterialIndex;
+
+    float m_TextureRangeFactor;
 
 };
 
