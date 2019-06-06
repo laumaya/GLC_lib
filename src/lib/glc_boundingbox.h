@@ -80,6 +80,8 @@ public:
         return m_IsEmpty;
     }
 
+    QList<GLC_Point3d> points() const;
+
     //! Return true if the given 3d point intersect this bounding box
     bool intersect(const GLC_Point3d& point) const;
 
