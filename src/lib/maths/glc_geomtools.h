@@ -106,8 +106,11 @@ namespace glc
 
     GLC_LIB_EXPORT bool segmentIntersectPlane(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Plane& plane, GLC_Point3d* pPoint);
 
-    //! Return the projected point on the given line form the given point
+    //! Return the projected point on the given line from the given point
     GLC_LIB_EXPORT GLC_Point3d project(const GLC_Point3d& point, const GLC_Line3d& line);
+
+    //! Return the projected point on the given normalysed plane from the given point
+    GLC_LIB_EXPORT GLC_Point3d project(const GLC_Point3d& point, const GLC_Plane& plane);
 
     //! Return the midpoint of the two given points
     static inline GLC_Point3d midPoint(const GLC_Point3d& point1, const GLC_Point3d& point2)
@@ -181,7 +184,7 @@ namespace glc
     GLC_LIB_EXPORT double zeroTo2PIAngle(double angle);
 
     //! Return the 2D polygon from the given plane 3D polygon
-    GLC_LIB_EXPORT QList<GLC_Point2d> polygonIn2d(QList<GLC_Point3d> polygon3d);
+    GLC_LIB_EXPORT QList<GLC_Point2d> polygonIn2d(QList<GLC_Point3d> polygon3d, const GLC_Vector3d& xAxis);
 
     //! Return 2D polygon with normalyze coordinate
     GLC_LIB_EXPORT QList<GLC_Point2d> normalyzePolygon(const QList<GLC_Point2d>& polygon);

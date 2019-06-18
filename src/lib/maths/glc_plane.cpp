@@ -121,14 +121,28 @@ bool GLC_Plane::lieOnThisPlane(const GLC_Point3d &p)
 
 QString GLC_Plane::toString() const
 {
-	return QString::number(m_Eq[0]) + "x + " + QString::number(m_Eq[1]) + "y + " + QString::number(m_Eq[2]) + "z + " + QString::number(m_Eq[3]);
+    return QString::number(m_Eq[0]) + "x + " + QString::number(m_Eq[1]) + "y + " + QString::number(m_Eq[2]) + "z + " + QString::number(m_Eq[3]);
 }
+
+bool GLC_Plane::isNull() const
+{
+    bool subject= qFuzzyIsNull(m_Eq[0]) && qFuzzyIsNull(m_Eq[1]) && qFuzzyIsNull(m_Eq[2]) && qFuzzyIsNull(m_Eq[3]);
+
+    return subject;
+}
+
+GLC_Plane GLC_Plane::normalized() const
+{
+    GLC_Plane subject(*this);
+    return subject.normalize();
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
 // Normalize the plane
-void GLC_Plane::normalize()
+GLC_Plane& GLC_Plane::normalize()
 {
 	const double invMag= 1.0 / sqrt(m_Eq[0] * m_Eq[0] + m_Eq[1] * m_Eq[1] + m_Eq[2] * m_Eq[2]);
 
@@ -136,6 +150,8 @@ void GLC_Plane::normalize()
 	m_Eq[1]= m_Eq[1] * invMag;
 	m_Eq[2]= m_Eq[2] * invMag;
 	m_Eq[3]= m_Eq[3] * invMag;
+
+    return *this;
 }
 
 GLC_Plane& GLC_Plane::setPlane(const GLC_Vector3d& normal, const GLC_Point3d& point)

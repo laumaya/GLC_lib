@@ -748,7 +748,7 @@ double glc::zeroTo2PIAngle(double angle)
 	return angle;
 }
 
-QList<GLC_Point2d> glc::polygonIn2d(QList<GLC_Point3d> polygon3d)
+QList<GLC_Point2d> glc::polygonIn2d(QList<GLC_Point3d> polygon3d, const GLC_Vector3d& xAxis)
 {
     const int count= polygon3d.count();
     Q_ASSERT(count > 2);
@@ -774,13 +774,20 @@ QList<GLC_Point2d> glc::polygonIn2d(QList<GLC_Point3d> polygon3d)
         transformation.setMatRot(rotationAxis, angle);
     }
 
-    QList<GLC_Point2d> subject;
-    // Transform polygon vertexs
-    for (int i=0; i < count; ++i)
+    for (GLC_Point3d& point : polygon3d)
     {
-        polygon3d[i]= transformation * polygon3d[i];
-        // Create 2d vector
-        subject << polygon3d[i].toVector2d(Z_AXIS);
+        point= transformation * point;
+    }
+
+    GLC_Vector3d newEdge1(polygon3d[1] - polygon3d[0]);
+    GLC_Matrix4x4 transformation1;
+    transformation1.setMatRot(newEdge1, xAxis);
+
+    QList<GLC_Point2d> subject;
+    for (GLC_Point3d& point : polygon3d)
+    {
+        point= transformation1 * point;
+        subject << point.toVector2d(Z_AXIS);
     }
 
     return subject;
@@ -1226,6 +1233,17 @@ QList<GLC_Point2d> glc::line2CircleIntersection(const GLC_Point2d& lineOrigin, c
         const GLC_Point2d p(lineOrigin + (lineDir * (-a1)));
         subject << p;
     }
+
+    return subject;
+}
+
+GLC_Point3d glc::project(const GLC_Point3d& point, const GLC_Plane& plane)
+{
+    Q_ASSERT(!plane.isNull());
+
+    const GLC_Vector3d normal(plane.normal());
+
+    GLC_Point3d subject(point - (((point * normal) + plane.coefD()) * normal));
 
     return subject;
 }

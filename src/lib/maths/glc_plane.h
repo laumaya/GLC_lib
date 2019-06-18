@@ -77,34 +77,34 @@ public:
 public:
 
 	//! Return A coef
-	inline double coefA() const
+    double coefA() const
 	{return m_Eq[0];}
 
 	//! Return B coef
-	inline double coefB() const
+    double coefB() const
 	{return m_Eq[1];}
 
 	//! Return C coef
-	inline double coefC() const
+    double coefC() const
 	{return m_Eq[2];}
 
 	//! Return D coef
-	inline double coefD() const
+    double coefD() const
 	{return m_Eq[3];}
 
 	//! Return the signed distance to a point
-	inline double distanceToPoint(const GLC_Point3d& p) const
+    double distanceToPoint(const GLC_Point3d& p) const
 	{return m_Eq[0] * p.x() + m_Eq[1] * p.y() + m_Eq[2] * p.z() + m_Eq[3];}
 
 	//! Equality operator
 	bool operator==(GLC_Plane) const;
 
 	//! diff operator
-	inline bool operator!=(const GLC_Plane& p) const
+    bool operator!=(const GLC_Plane& p) const
 	{return !operator==(p);}
 
 	//! Return this plane normal
-	inline GLC_Vector3d normal() const
+    GLC_Vector3d normal() const
 	{return GLC_Vector3d(m_Eq[0], m_Eq[1], m_Eq[2]);}
 
 	//! Return true if the given point is on this plane
@@ -116,6 +116,11 @@ public:
 
 	//! Return the plane data to string
 	QString toString() const;
+
+    bool isNull() const;
+
+    GLC_Plane normalized() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -124,23 +129,23 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Set A coef
-	inline void setA(double a)
+    void setA(double a)
 	{m_Eq[0]= a;}
 
 	//! Set B coef
-	inline void setB(double b)
+    void setB(double b)
 	{m_Eq[1]= b;}
 
 	//! Set C coef
-	inline void setC(double c)
+    void setC(double c)
 	{m_Eq[2]= c;}
 
 	//! Set D coef
-	inline void setD(double d)
+    void setD(double d)
 	{m_Eq[3]= d;}
 
 	//! Normalize the plane
-	void normalize();
+    GLC_Plane& normalize();
 
 	//! Set the plane from the given normal and point and return a reference to this plane
 	GLC_Plane& setPlane(const GLC_Vector3d& normal, const GLC_Point3d& point);
