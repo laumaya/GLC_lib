@@ -748,7 +748,7 @@ double glc::zeroTo2PIAngle(double angle)
 	return angle;
 }
 
-QList<GLC_Point2d> glc::polygonIn2d(QList<GLC_Point3d> polygon3d, const GLC_Vector3d& xAxis)
+QList<GLC_Point2d> glc::polygonIn2d(QList<GLC_Point3d> polygon3d)
 {
     const int count= polygon3d.count();
     Q_ASSERT(count > 2);
@@ -779,9 +779,11 @@ QList<GLC_Point2d> glc::polygonIn2d(QList<GLC_Point3d> polygon3d, const GLC_Vect
         point= transformation * point;
     }
 
-    GLC_Vector3d newEdge1(polygon3d[1] - polygon3d[0]);
     GLC_Matrix4x4 transformation1;
-    transformation1.setMatRot(newEdge1, xAxis);
+    if (!rotationAxis.isNull())
+    {
+        transformation1.setMatRot(rotationAxis, glc::X_AXIS);
+    }
 
     QList<GLC_Point2d> subject;
     for (GLC_Point3d& point : polygon3d)

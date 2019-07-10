@@ -578,7 +578,7 @@ GLfloatVector GLC_ExtrudedMesh::baseFaceTexels() const
     const int count= points.count();
     GLfloatVector subject(count * 2);
 
-    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(points, glc::X_AXIS);
+    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(points);
 
     for (int i= 0; i < count; ++i)
     {
@@ -735,8 +735,7 @@ GLfloatVector GLC_ExtrudedMesh::createdFaceTexels() const
     const int count= m_Points.count();
     GLfloatVector subject(count * 2);
 
-    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(createdFacePoints(), glc::Y_AXIS);
-
+    QList<GLC_Point2d> baseFace2DPolygon= glc::polygonIn2d(createdFacePoints());
     for (int i= 0; i < count; ++i)
     {
         GLC_Point2d texel= baseFace2DPolygon.at(i) * m_TextureRangeFactor;
@@ -745,7 +744,6 @@ GLfloatVector GLC_ExtrudedMesh::createdFaceTexels() const
     }
 
     return subject;
-
 }
 
 GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesVertices() const
