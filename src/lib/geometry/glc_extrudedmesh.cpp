@@ -195,7 +195,7 @@ void GLC_ExtrudedMesh::setExtrudedLenght(double length)
 void GLC_ExtrudedMesh::setSmoothingIndex(const QList<int> &smothingIndex)
 {
     const int count= smothingIndex.count();
-    bool isEqual;
+    bool isEqual= true;
     if (count == m_SmothingPoints.count())
     {
         for (int i= 0; i < count; ++i)
@@ -219,7 +219,7 @@ void GLC_ExtrudedMesh::setSmoothingIndex(const QList<int> &smothingIndex)
 void GLC_ExtrudedMesh::setInvisibleEdgeIndex(const QList<int>& invisibleEdgeIndex)
 {
     const int count= invisibleEdgeIndex.count();
-    bool isEqual;
+    bool isEqual= true;
     if (count == m_InvisibleEdgeIndex.count())
     {
         for (int i= 0; i < count; ++i)
@@ -336,7 +336,7 @@ void GLC_ExtrudedMesh::createMesh()
         GLfloatVector face1Vertices= baseFaceVertices();
         GLfloatVector face1Normals= baseFaceNormals();
         IndexList face1Index;
-        const GLuint count= m_Points.count();
+        const GLuint count= static_cast<GLuint>(m_Points.count());
         for (GLuint i= 0; i < count; ++i)
         {
             face1Index.append(i);
@@ -353,8 +353,8 @@ void GLC_ExtrudedMesh::createMesh()
         GLfloatVector face2Vertices= createdFaceVertices();
         GLfloatVector face2Normals= createdFaceNormals();
         IndexList face2Index;
-        const int offset= vertices.size() / 3;
-        const GLuint count= m_Points.count();
+        const GLuint offset= static_cast<GLuint>(vertices.size() / 3);
+        const GLuint count= static_cast<GLuint>(m_Points.count());
         for (GLuint i= 0; i < count; ++i)
         {
             face2Index.append(offset + i);
@@ -369,10 +369,10 @@ void GLC_ExtrudedMesh::createMesh()
 
     {
         // Add outline faces
-        const GLuint count= m_Points.count();
-        GLuint offset1= vertices.size() / 3;
+        const GLuint count= static_cast<GLuint>(m_Points.count());
+        const GLuint offset1= static_cast<GLuint>(vertices.size() / 3);
         GLfloatVector facesNormals= baseOutlineNormals();
-        GLuint indexLenght= (facesNormals.size() / 3);
+        GLuint indexLenght= static_cast<GLuint>(facesNormals.size() / 3);
         GLuint offset2= offset1 + indexLenght;
         facesNormals= facesNormals + createdOutlineNormals();
         GLfloatVector facesVertices= baseOutlineFacesVertices() + createdOutlineFacesVertices();
@@ -385,7 +385,7 @@ void GLC_ExtrudedMesh::createMesh()
             GLuint startIndex1= offset1 + (face * 2);
             GLuint startIndex2= offset2 + (indexLenght -1) - (face * 2);
             faceIndex << startIndex1 << startIndex2 << (startIndex1 + 1) << (startIndex2 - 1);
-            addTrianglesStrip(faceOutlineMaterial(face), faceIndex);
+            addTrianglesStrip(faceOutlineMaterial(static_cast<int>(face)), faceIndex);
         }
     }
 

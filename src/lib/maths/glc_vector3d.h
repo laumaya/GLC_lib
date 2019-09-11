@@ -427,11 +427,11 @@ inline GLC_Vector3d& GLC_Vector3d::setLength(double lenght)
 
     if (qAbs(currentLenght) > glc::EPSILON)
 	{
-        const double Coef = lenght / currentLenght;
+        const double coef = lenght / currentLenght;
 
-		m_Vector[0] = m_Vector[0] * Coef;
-		m_Vector[1] = m_Vector[1] * Coef;
-		m_Vector[2] = m_Vector[2] * Coef;
+        m_Vector[0] = m_Vector[0] * coef;
+        m_Vector[1] = m_Vector[1] * coef;
+        m_Vector[2] = m_Vector[2] * coef;
 	}
 	return *this;
 }

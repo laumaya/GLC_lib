@@ -167,8 +167,9 @@ void GLC_Triangle::setSharpEdge(GLC_Triangle* pOther, double angleThreshold)
                     const bool isSharp= !(angle < angleThreshold);
 
                     QMutexLocker lock(&m_Mutex);
-                    QMutexLocker otherLock(&(pOther->m_Mutex));
                     setSharpEdge(i, isSharp);
+                    lock.unlock();
+                    QMutexLocker otherLock(&(pOther->m_Mutex));
                     pOther->setSharpEdge(j, isSharp);
                 }
             }

@@ -26,6 +26,7 @@
 #include "../geometry/glc_geometry.h"
 #include "../glc_factory.h"
 #include "../glc_openglexception.h"
+#include "../maths/glc_geomtools.h"
 
 #include <QtDebug>
 
@@ -45,7 +46,7 @@ GLC_Material::GLC_Material()
 , m_Shininess(50.0)		// By default shininess 50
 , m_WhereUsed()
 , m_OtherUsage()
-, m_pTexture(NULL)			// no texture
+, m_pTexture(nullptr)			// no texture
 , m_Opacity(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << id();
@@ -65,7 +66,7 @@ GLC_Material::GLC_Material(const QColor &diffuseColor)
 , m_Shininess(50.0)		// By default shininess 50
 , m_WhereUsed()
 , m_OtherUsage()
-, m_pTexture(NULL)			// no texture
+, m_pTexture(nullptr)			// no texture
 , m_Opacity(1.0)
 {
 	// Others
@@ -82,12 +83,12 @@ GLC_Material::GLC_Material(const QString& name ,const GLfloat *pDiffuseColor)
 , m_Shininess(50.0)		// By default shininess 50
 , m_WhereUsed()
 , m_OtherUsage()
-, m_pTexture(NULL)			// no texture
+, m_pTexture(nullptr)			// no texture
 , m_Opacity(1.0)
 {
 	//qDebug() << "GLC_Material::GLC_Material" << id();
 	// Init Diffuse Color
-	if (pDiffuseColor != 0)
+    if (pDiffuseColor != nullptr)
 	{
 		m_DiffuseColor.setRgbF(static_cast<qreal>(pDiffuseColor[0]),
 								static_cast<qreal>(pDiffuseColor[1]),
@@ -135,13 +136,13 @@ GLC_Material::GLC_Material(const GLC_Material &InitMaterial)
 , m_Shininess(InitMaterial.m_Shininess)
 , m_WhereUsed()
 , m_OtherUsage()
-, m_pTexture(NULL)
+, m_pTexture(nullptr)
 , m_Opacity(InitMaterial.m_Opacity)
 {
-	if (NULL != InitMaterial.m_pTexture)
+    if (nullptr != InitMaterial.m_pTexture)
 	{
 		m_pTexture= new GLC_Texture(*(InitMaterial.m_pTexture));
-		Q_ASSERT(m_pTexture != NULL);
+        Q_ASSERT(m_pTexture != nullptr);
 	}
 }
 
@@ -187,7 +188,7 @@ QColor GLC_Material::emissiveColor() const
 // Get the texture File Name
 QString GLC_Material::textureFileName() const
 {
-	if (m_pTexture != NULL)
+    if (m_pTexture != nullptr)
 	{
 		return m_pTexture->fileName();
 	}
@@ -200,7 +201,7 @@ QString GLC_Material::textureFileName() const
 // Get Texture Id
 GLuint GLC_Material::textureID() const
 {
-	if (m_pTexture != NULL)
+    if (m_pTexture != nullptr)
 	{
         return m_pTexture->textureId();
 	}
@@ -214,7 +215,7 @@ GLuint GLC_Material::textureID() const
 // return true if the texture is loaded
 bool GLC_Material::textureIsLoaded() const
 {
-	if (m_pTexture != NULL)
+    if (m_pTexture != nullptr)
 	{
 		return m_pTexture->isLoaded();
 	}
@@ -237,17 +238,17 @@ bool GLC_Material::operator==(const GLC_Material& mat) const
 		result= m_AmbientColor == mat.m_AmbientColor;
 		result= result && (m_DiffuseColor == mat.m_DiffuseColor);
 		result= result && (m_SpecularColor == mat.m_SpecularColor);
-		result= result && (m_EmissiveColor == mat.m_EmissiveColor);
-		result= result && (m_Shininess == mat.m_Shininess);
-		if ((NULL != m_pTexture) && (NULL != mat.m_pTexture))
+        result= result && (m_EmissiveColor == mat.m_EmissiveColor);
+        result= result && glc::compare(m_Shininess , mat.m_Shininess, glc::EPSILON);
+        if ((nullptr != m_pTexture) && (nullptr != mat.m_pTexture))
 		{
 			result= result && ((*m_pTexture) == (*mat.m_pTexture));
 		}
 		else
 		{
 			result= result && (m_pTexture == mat.m_pTexture);
-		}
-		result= result && (m_Opacity == mat.m_Opacity);
+        }
+        result= result && glc::compare(m_Opacity, mat.m_Opacity, glc::EPSILON);
 	}
 	return result;
 }
@@ -261,7 +262,7 @@ uint GLC_Material::hashCode() const
 	stringKey+= QString::number(m_EmissiveColor.rgba());
 	stringKey+= QString::number(m_Shininess);
 	stringKey+= QString::number(m_Opacity);
-	if (NULL != m_pTexture)
+    if (nullptr != m_pTexture)
 	{
 		stringKey+= m_pTexture->fileName();
 	}
@@ -275,15 +276,15 @@ uint GLC_Material::hashCode() const
 // Set Material properties
  void GLC_Material::setMaterial(const GLC_Material* pMat)
  {
-	if (NULL != pMat->m_pTexture)
+    if (nullptr != pMat->m_pTexture)
 	{
 		GLC_Texture* pTexture= new GLC_Texture(*(pMat->m_pTexture));
 		setTexture(pTexture);
 	}
-	else if (NULL != m_pTexture)
+    else if (nullptr != m_pTexture)
 	{
 		delete m_pTexture;
-		m_pTexture= NULL;
+        m_pTexture= nullptr;
 	}
 	// Ambient Color
 	m_AmbientColor= pMat->m_AmbientColor;
@@ -347,10 +348,10 @@ void GLC_Material::setTexture(GLC_Texture* pTexture)
 // remove Material Texture
 void GLC_Material::removeTexture()
 {
-	if (m_pTexture != NULL)
+    if (m_pTexture != nullptr)
 	{
 		delete m_pTexture;
-		m_pTexture= NULL;
+        m_pTexture= nullptr;
 	}
 }
 
@@ -449,7 +450,7 @@ void GLC_Material::setOpacity(const qreal alpha)
 // Load the texture
 void GLC_Material::glLoadTexture()
 {
-	if (m_pTexture != NULL)
+    if (m_pTexture != nullptr)
 	{
         m_pTexture->glLoadTexture();
 	}
@@ -484,7 +485,7 @@ void GLC_Material::glExecute()
                                 (GLfloat)emissiveColor().alphaF()};
 
 	const bool textureIsEnable= glIsEnabled(GL_TEXTURE_2D);
-	if (m_pTexture != NULL)
+    if (m_pTexture != nullptr)
 	{
 		if (!textureIsEnable) glEnable(GL_TEXTURE_2D);
 		m_pTexture->glcBindTexture();
@@ -558,7 +559,7 @@ void GLC_Material::glExecute(float overwriteTransparency)
 
 	const bool textureIsEnable= glIsEnabled(GL_TEXTURE_2D);
 
-	if (m_pTexture != NULL)
+    if (m_pTexture != nullptr)
 	{
 		if (!textureIsEnable) glEnable(GL_TEXTURE_2D);
 		m_pTexture->glcBindTexture();
