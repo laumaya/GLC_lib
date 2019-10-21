@@ -43,7 +43,7 @@ class GLC_LIB_EXPORT GLC_PlaneManipulator : public GLC_AbstractManipulator
 //////////////////////////////////////////////////////////////////////
 public:
     //! Construct pull manipulator with the given viewport and Plane
-    GLC_PlaneManipulator(GLC_Viewport* pViewport, const GLC_Plane& slidingPlane);
+    GLC_PlaneManipulator(GLC_Viewport* pViewport);
 
     //! Copy constructor
     GLC_PlaneManipulator(const GLC_PlaneManipulator& other);
@@ -57,22 +57,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    //! Return the sliding plane of this pull manipulator
-    inline GLC_Plane slidingPlane() const
-    {return m_SlidingPlane;}
 
     //! Clone the concrete manipulator
     virtual GLC_AbstractManipulator* clone() const;
-//@}
-
-//////////////////////////////////////////////////////////////////////
-/*! \name Set Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-public:
-    //! Set the pulling direction of this manipulator
-    void setSlidingPlane(const GLC_Plane& slidingPlane);
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -81,13 +68,6 @@ public:
 protected:
     //! Manipulate this manipulator and return the moving matrix
     virtual GLC_Matrix4x4 doManipulate(const GLC_Point3d& newPoint, const GLC_Vector3d& projectionDirection);
-
-//////////////////////////////////////////////////////////////////////
-// Private Member
-//////////////////////////////////////////////////////////////////////
-private:
-    //! The sliding plane
-    GLC_Plane m_SlidingPlane;
 
 };
 

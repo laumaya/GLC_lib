@@ -52,7 +52,7 @@ GLC_3DWidgetManagerHandle::~GLC_3DWidgetManagerHandle()
 
 void GLC_3DWidgetManagerHandle::add3DWidget(GLC_3DWidget* p3DWidget)
 {
-	Q_ASSERT(!m_MapBetweenInstanceWidget.contains(p3DWidget->id()));
+    Q_ASSERT(!m_3DWidgetHash.contains(p3DWidget->id()));
 	m_3DWidgetHash.insert(p3DWidget->id(), p3DWidget);
 	p3DWidget->setWidgetManager(this);
 }

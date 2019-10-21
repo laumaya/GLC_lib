@@ -27,16 +27,14 @@
 
 #include "glc_planemanipulator.h"
 
-GLC_PlaneManipulator::GLC_PlaneManipulator(GLC_Viewport* pViewport, const GLC_Plane& slidingPlane)
+GLC_PlaneManipulator::GLC_PlaneManipulator(GLC_Viewport* pViewport)
     : GLC_AbstractManipulator(pViewport)
-    , m_SlidingPlane(slidingPlane)
 {
 
 }
 
 GLC_PlaneManipulator::GLC_PlaneManipulator(const GLC_PlaneManipulator &other)
     : GLC_AbstractManipulator(other)
-    , m_SlidingPlane(other.m_SliddingPlane)
 {
 
 }
@@ -49,12 +47,6 @@ GLC_PlaneManipulator::~GLC_PlaneManipulator()
 GLC_AbstractManipulator *GLC_PlaneManipulator::clone() const
 {
     return new GLC_PlaneManipulator(*this);
-}
-
-void GLC_PlaneManipulator::setSlidingPlane(const GLC_Plane &slidingPlane)
-{
-    Q_ASSERT(!GLC_AbstractManipulator::isInManipulateState());
-    m_SlidingPlane= slidingPlane;
 }
 
 GLC_Matrix4x4 GLC_PlaneManipulator::doManipulate(const GLC_Point3d &newPoint, const GLC_Vector3d &projectionDirection)

@@ -35,28 +35,30 @@ GLC_Axis::GLC_Axis(const GLC_Point3d& center, GLC_3DWidgetManagerHandle*  pWidge
     , m_OrientationMatrix()
     , m_ScaleFactor(1.0)
     , m_CurrentManipulator(NoneManipulator)
-    , m_pCurrentManipulator(NULL)
+    , m_pCurrentManipulator(nullptr)
     , m_AxisLength(1.0)
     , m_AxisRadiusRatio(0.02)
     , m_MoveStep(0.0)
+    , m_Offset()
 {
 
 }
 
-GLC_Axis::GLC_Axis(const GLC_Axis& axis)
-    : GLC_3DWidget(axis)
-    , m_Center(axis.m_Center)
-    , m_OrientationMatrix(axis.m_OrientationMatrix)
-    , m_ScaleFactor(axis.m_ScaleFactor)
-    , m_CurrentManipulator(axis.m_CurrentManipulator)
-    , m_pCurrentManipulator(NULL)
-    , m_AxisLength(axis.m_AxisLength)
-    , m_AxisRadiusRatio(axis.m_AxisRadiusRatio)
+GLC_Axis::GLC_Axis(const GLC_Axis& other)
+    : GLC_3DWidget(other)
+    , m_Center(other.m_Center)
+    , m_OrientationMatrix(other.m_OrientationMatrix)
+    , m_ScaleFactor(other.m_ScaleFactor)
+    , m_CurrentManipulator(other.m_CurrentManipulator)
+    , m_pCurrentManipulator(nullptr)
+    , m_AxisLength(other.m_AxisLength)
+    , m_AxisRadiusRatio(other.m_AxisRadiusRatio)
     , m_MoveStep(0.0)
+    ,  m_Offset(other.m_Offset)
 {
-	if (NULL != axis.m_pCurrentManipulator)
+    if (nullptr != other.m_pCurrentManipulator)
 	{
-		m_pCurrentManipulator= axis.m_pCurrentManipulator->clone();
+        m_pCurrentManipulator= other.m_pCurrentManipulator->clone();
 	}
 }
 
@@ -74,7 +76,7 @@ GLC_Axis& GLC_Axis::operator=(const GLC_Axis& axis)
         m_Center= axis.m_Center;
         m_OrientationMatrix= axis.m_OrientationMatrix;
         delete m_pCurrentManipulator;
-        if (NULL != axis.m_pCurrentManipulator)
+        if (nullptr != axis.m_pCurrentManipulator)
         {
             m_pCurrentManipulator= axis.m_pCurrentManipulator->clone();
         }
@@ -117,6 +119,7 @@ void GLC_Axis::setAxisRadiusLengthRatio(double value)
 void GLC_Axis::setCenter(const GLC_Point3d& newCenter)
 {
 	m_Center= newCenter;
+    m_Offset= GLC_Vector3d();
     moveManipulatorRep(m_Center);
 }
 
@@ -129,7 +132,7 @@ void GLC_Axis::setOrientation(const GLC_Matrix4x4& matrix)
 glc::WidgetEventFlag GLC_Axis::select(const GLC_Point3d& pos, GLC_uint id)
 {
 	//qDebug() << "GLC_Axis::select";
-	Q_ASSERT(NULL == m_pCurrentManipulator);
+    Q_ASSERT(nullptr == m_pCurrentManipulator);
 	Q_ASSERT(NoneManipulator == m_CurrentManipulator);
 
 	const int selectedInstanceIndex= GLC_3DWidget::indexOfIntsanceId(id);
@@ -187,7 +190,7 @@ glc::WidgetEventFlag GLC_Axis::released()
 
     m_CurrentManipulator= NoneManipulator;
     delete m_pCurrentManipulator;
-    m_pCurrentManipulator= NULL;
+    m_pCurrentManipulator= nullptr;
 
     return glc::BlockedEvent;;
 }
@@ -196,7 +199,7 @@ glc::WidgetEventFlag GLC_Axis::unselect(const GLC_Point3d&, GLC_uint)
 {
 	//qDebug() << "GLC_Axis::unselect";
 	delete m_pCurrentManipulator;
-	m_pCurrentManipulator= NULL;
+    m_pCurrentManipulator= nullptr;
 
 	m_CurrentManipulator= NoneManipulator;
 
@@ -208,16 +211,16 @@ glc::WidgetEventFlag GLC_Axis::move(const GLC_Point3d& pos, GLC_uint)
     Q_ASSERT(m_MoveStep >= 0.0);
 
     glc::WidgetEventFlag returnFlag= glc::IgnoreEvent;
-    if (NULL != m_pCurrentManipulator)
+    if (nullptr != m_pCurrentManipulator)
     {
         GLC_Matrix4x4 moveMatrix(m_pCurrentManipulator->manipulate(pos));
         const GLC_Point3d newPos= moveMatrix * m_Center;
-        GLC_Vector3d delta(newPos - m_Center);
-        if (delta.length() >= m_MoveStep)
+        m_Offset= (newPos - m_Center);
+        if (m_Offset.length() >= m_MoveStep)
         {
-            const double newLenght= glc::round(delta.length(), m_MoveStep);
-            delta.setLength(newLenght);
-            m_Center= m_Center + delta;
+            const double newLenght= glc::round(m_Offset.length(), m_MoveStep);
+            m_Offset.setLength(newLenght);
+            m_Center= m_Center + m_Offset;
             // Update the instance
             for (int i= 0; i < 6; ++i)
             {

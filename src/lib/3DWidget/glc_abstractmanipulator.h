@@ -84,6 +84,9 @@ public:
 	//! Put this manipulator in manipulate state
 	void enterManipulateState(const GLC_Point3d& startPoint);
 
+    //! Put this manipulator in manipulate state
+    void enterManipulateState(const GLC_Point3d& startPoint, const GLC_Plane& slidingPlane);
+
 	//! Manipulate this manipulator and return the moving matrix
 	GLC_Matrix4x4 manipulate(const GLC_Point3d& newPoint);
 
@@ -104,6 +107,8 @@ protected:
 	//! Manipulate the concret manipulator and return the moving matrix
 	virtual GLC_Matrix4x4 doManipulate(const GLC_Point3d& newPoint, const GLC_Vector3d& projectionDirection)= 0;
 
+    GLC_Vector3d projectionDirection(const GLC_Point3d& point);
+
 //////////////////////////////////////////////////////////////////////
 // protected Member
 //////////////////////////////////////////////////////////////////////
@@ -111,8 +116,8 @@ protected:
 	//! The viewport associated with this manipulator
 	GLC_Viewport* m_pViewport;
 
-	//! The currentSlidding plane
-	GLC_Plane m_SliddingPlane;
+    //! The currentSliding plane
+    GLC_Plane m_SlidingPlane;
 
 	//! The previous position
 	GLC_Point3d m_PreviousPosition;

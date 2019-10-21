@@ -63,7 +63,7 @@ GLC_Matrix4x4 GLC_PullManipulator::doManipulate(const GLC_Point3d& newPoint, con
 	// Project the given point on the sliding plane with the given direction
 	GLC_Point3d projectedPoint;
 	GLC_Line3d projectionLine(newPoint, projectionDirection);
-	glc::lineIntersectPlane(projectionLine, GLC_AbstractManipulator::m_SliddingPlane, &projectedPoint);
+    glc::lineIntersectPlane(projectionLine, GLC_AbstractManipulator::m_SlidingPlane, &projectedPoint);
 
 	// Project the point on the pulling direction
 	projectedPoint= glc::project(projectedPoint, GLC_Line3d(GLC_AbstractManipulator::previousPosition(), m_PullDirection));

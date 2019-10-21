@@ -28,7 +28,7 @@
 
 GLC_AbstractManipulator::GLC_AbstractManipulator(GLC_Viewport* pViewport)
 : m_pViewport(pViewport)
-, m_SliddingPlane()
+, m_SlidingPlane()
 , m_PreviousPosition()
 , m_IsInManipulateState(false)
 {
@@ -37,7 +37,7 @@ GLC_AbstractManipulator::GLC_AbstractManipulator(GLC_Viewport* pViewport)
 
 GLC_AbstractManipulator::GLC_AbstractManipulator(const GLC_AbstractManipulator& abstractManipulator)
 : m_pViewport(abstractManipulator.m_pViewport)
-, m_SliddingPlane(abstractManipulator.m_SliddingPlane)
+, m_SlidingPlane(abstractManipulator.m_SlidingPlane)
 , m_PreviousPosition(abstractManipulator.m_PreviousPosition)
 , m_IsInManipulateState(abstractManipulator.m_IsInManipulateState)
 {
@@ -50,29 +50,43 @@ GLC_AbstractManipulator::~GLC_AbstractManipulator()
 
 void GLC_AbstractManipulator::enterManipulateState(const GLC_Point3d& startPoint)
 {
-	m_SliddingPlane= GLC_Plane(m_pViewport->cameraHandle()->forward().normalize(), startPoint);
+    m_SlidingPlane= GLC_Plane(projectionDirection(startPoint), startPoint);
 
 	m_PreviousPosition = startPoint;
-	m_IsInManipulateState= true;
+    m_IsInManipulateState= true;
+}
+
+void GLC_AbstractManipulator::enterManipulateState(const GLC_Point3d& startPoint, const GLC_Plane& slidingPlane)
+{
+    m_SlidingPlane= slidingPlane;
+
+    GLC_Line3d projectionLine(startPoint, projectionDirection(startPoint));
+    glc::lineIntersectPlane(projectionLine, m_SlidingPlane, &m_PreviousPosition);
+    m_IsInManipulateState= true;
 }
 
 GLC_Matrix4x4 GLC_AbstractManipulator::manipulate(const GLC_Point3d& newPoint)
 {
 	Q_ASSERT(m_IsInManipulateState);
 
-	// Select the projection direction
-	GLC_Vector3d projectionDirection;
-	if (m_pViewport->useOrtho())
-	{
-		projectionDirection= m_pViewport->cameraHandle()->forward().normalize();
-	}
-	else
-	{
-		projectionDirection= (newPoint - m_pViewport->cameraHandle()->eye());
-	}
+    GLC_Matrix4x4 transformation(doManipulate(newPoint, projectionDirection(newPoint)));
 
-	// Use concrete class to compute matrix
-	GLC_Matrix4x4 transformation(doManipulate(newPoint, projectionDirection));
+    return transformation;
+}
 
-	return transformation;
+GLC_Vector3d GLC_AbstractManipulator::projectionDirection(const GLC_Point3d& point)
+{
+    GLC_Vector3d subject;
+    if (m_pViewport->useOrtho())
+    {
+        subject= m_pViewport->cameraHandle()->forward();
+    }
+    else
+    {
+        subject= (point - m_pViewport->cameraHandle()->eye());
+    }
+
+    subject.normalize();
+
+    return subject;
 }
