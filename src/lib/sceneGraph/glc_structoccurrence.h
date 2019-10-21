@@ -206,8 +206,15 @@ public:
     //! Return the occurrence path (Instance Name, Instance index) from root exluded
     GLC_OccurencePath path() const;
 
+    //! Return the occurrence path (Instance index) from root exluded
+    QList<int> indexPath() const;
+
     //! Return the occurence of the given path
     GLC_StructOccurrence* occurrenceFromPath(GLC_OccurencePath path) const;
+
+    //! Return the occurence of the given index path
+    GLC_StructOccurrence* occurrenceFromIndexPath(QList<int> path) const;
+
 
 //@}
 //////////////////////////////////////////////////////////////////////

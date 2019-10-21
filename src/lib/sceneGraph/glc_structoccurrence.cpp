@@ -30,17 +30,17 @@
 
 GLC_StructOccurrence::GLC_StructOccurrence()
 : m_Uid(glc::GLC_GenID())
-, m_pWorldHandle(NULL)
+, m_pWorldHandle(nullptr)
 , m_pNumberOfOccurrence(new int(1))
 , m_pStructInstance(new GLC_StructInstance())
-, m_pParent(NULL)
+, m_pParent(nullptr)
 , m_Childs()
 , m_AbsoluteMatrix()
 , m_OccurrenceNumber(0)
 , m_IsVisible(true)
-, m_pRenderProperties(NULL)
+, m_pRenderProperties(nullptr)
 , m_AutomaticCreationOf3DViewInstance(true)
-, m_pRelativeMatrix(NULL)
+, m_pRelativeMatrix(nullptr)
 {
 	// Update instance
 	m_pStructInstance->structOccurrenceCreated(this);
@@ -49,16 +49,16 @@ GLC_StructOccurrence::GLC_StructOccurrence()
 GLC_StructOccurrence::GLC_StructOccurrence(GLC_StructInstance* pStructInstance, GLC_WorldHandle* pWorldHandle, GLuint shaderId)
 : m_Uid(glc::GLC_GenID())
 , m_pWorldHandle(pWorldHandle)
-, m_pNumberOfOccurrence(NULL)
+, m_pNumberOfOccurrence(nullptr)
 , m_pStructInstance(pStructInstance)
-, m_pParent(NULL)
+, m_pParent(nullptr)
 , m_Childs()
 , m_AbsoluteMatrix()
 , m_OccurrenceNumber(0)
 , m_IsVisible(true)
-, m_pRenderProperties(NULL)
+, m_pRenderProperties(nullptr)
 , m_AutomaticCreationOf3DViewInstance(true)
-, m_pRelativeMatrix(NULL)
+, m_pRelativeMatrix(nullptr)
 {
 	doCreateOccurrenceFromInstance(shaderId);
 }
@@ -66,33 +66,33 @@ GLC_StructOccurrence::GLC_StructOccurrence(GLC_StructInstance* pStructInstance, 
 GLC_StructOccurrence::GLC_StructOccurrence(GLC_StructInstance* pStructInstance, GLC_uint id, GLC_WorldHandle* pWorldHandle, GLuint shaderId)
 : m_Uid(id)
 , m_pWorldHandle(pWorldHandle)
-, m_pNumberOfOccurrence(NULL)
+, m_pNumberOfOccurrence(nullptr)
 , m_pStructInstance(pStructInstance)
-, m_pParent(NULL)
+, m_pParent(nullptr)
 , m_Childs()
 , m_AbsoluteMatrix()
 , m_OccurrenceNumber(0)
 , m_IsVisible(true)
-, m_pRenderProperties(NULL)
+, m_pRenderProperties(nullptr)
 , m_AutomaticCreationOf3DViewInstance(true)
-, m_pRelativeMatrix(NULL)
+, m_pRelativeMatrix(nullptr)
 {
 	doCreateOccurrenceFromInstance(shaderId);
 }
 
 GLC_StructOccurrence::GLC_StructOccurrence(GLC_3DRep* pRep)
 : m_Uid(glc::GLC_GenID())
-, m_pWorldHandle(NULL)
+, m_pWorldHandle(nullptr)
 , m_pNumberOfOccurrence(new int(1))
-, m_pStructInstance(NULL)
-, m_pParent(NULL)
+, m_pStructInstance(nullptr)
+, m_pParent(nullptr)
 , m_Childs()
 , m_AbsoluteMatrix()
 , m_OccurrenceNumber(0)
 , m_IsVisible(true)
-, m_pRenderProperties(NULL)
+, m_pRenderProperties(nullptr)
 , m_AutomaticCreationOf3DViewInstance(true)
-, m_pRelativeMatrix(NULL)
+, m_pRelativeMatrix(nullptr)
 {
 	m_pStructInstance= new GLC_StructInstance(pRep);
 
@@ -102,17 +102,17 @@ GLC_StructOccurrence::GLC_StructOccurrence(GLC_3DRep* pRep)
 
 GLC_StructOccurrence::GLC_StructOccurrence(GLC_3DRep* pRep, GLC_uint id)
 : m_Uid(id)
-, m_pWorldHandle(NULL)
+, m_pWorldHandle(nullptr)
 , m_pNumberOfOccurrence(new int(1))
-, m_pStructInstance(NULL)
-, m_pParent(NULL)
+, m_pStructInstance(nullptr)
+, m_pParent(nullptr)
 , m_Childs()
 , m_AbsoluteMatrix()
 , m_OccurrenceNumber(0)
 , m_IsVisible(true)
-, m_pRenderProperties(NULL)
+, m_pRenderProperties(nullptr)
 , m_AutomaticCreationOf3DViewInstance(true)
-, m_pRelativeMatrix(NULL)
+, m_pRelativeMatrix(nullptr)
 {
 	m_pStructInstance= new GLC_StructInstance(pRep);
 
@@ -123,16 +123,16 @@ GLC_StructOccurrence::GLC_StructOccurrence(GLC_3DRep* pRep, GLC_uint id)
 GLC_StructOccurrence::GLC_StructOccurrence(GLC_WorldHandle* pWorldHandle, const GLC_StructOccurrence& structOccurrence, bool shareInstance)
 : m_Uid(glc::GLC_GenID())
 , m_pWorldHandle(pWorldHandle)
-, m_pNumberOfOccurrence(NULL)
-, m_pStructInstance(NULL)
-, m_pParent(NULL)
+, m_pNumberOfOccurrence(nullptr)
+, m_pStructInstance(nullptr)
+, m_pParent(nullptr)
 , m_Childs()
 , m_AbsoluteMatrix(structOccurrence.m_AbsoluteMatrix)
 , m_OccurrenceNumber(0)
 , m_IsVisible(structOccurrence.m_IsVisible)
-, m_pRenderProperties(NULL)
+, m_pRenderProperties(nullptr)
 , m_AutomaticCreationOf3DViewInstance(structOccurrence.m_AutomaticCreationOf3DViewInstance)
-, m_pRelativeMatrix(NULL)
+, m_pRelativeMatrix(nullptr)
 {
 	if (shareInstance)
 	{
@@ -150,7 +150,7 @@ GLC_StructOccurrence::GLC_StructOccurrence(GLC_WorldHandle* pWorldHandle, const 
 	// Test if structOccurrence has representation and has a shader
 	GLuint shaderId= 0;
 	bool instanceIsSelected= false;
-	if ((NULL != m_pWorldHandle) && (NULL != structOccurrence.m_pWorldHandle) && structOccurrence.m_pWorldHandle->collection()->contains(structOccurrence.id()))
+    if ((nullptr != m_pWorldHandle) && (nullptr != structOccurrence.m_pWorldHandle) && structOccurrence.m_pWorldHandle->collection()->contains(structOccurrence.id()))
 	{
 		GLC_3DViewInstance* p3DViewInstance= structOccurrence.m_pWorldHandle->collection()->instanceHandle(structOccurrence.id());
 
@@ -166,25 +166,25 @@ GLC_StructOccurrence::GLC_StructOccurrence(GLC_WorldHandle* pWorldHandle, const 
 			m_pRenderProperties= new GLC_RenderProperties(*(p3DViewInstance->renderPropertiesHandle()));
 		}
 	}
-	else if (NULL != structOccurrence.m_pRenderProperties)
+    else if (nullptr != structOccurrence.m_pRenderProperties)
 	{
 		m_pRenderProperties= new GLC_RenderProperties(*(structOccurrence.m_pRenderProperties));
 	}
 
 	// Inform the world Handle
-	if (NULL != m_pWorldHandle)
+    if (nullptr != m_pWorldHandle)
 	{
 		m_pWorldHandle->addOccurrence(this, instanceIsSelected, shaderId);
-		if (NULL != m_pRenderProperties && this->has3DViewInstance())
+        if (nullptr != m_pRenderProperties && this->has3DViewInstance())
 		{
 			m_pWorldHandle->collection()->instanceHandle(id())->setRenderProperties(*m_pRenderProperties);
 			delete m_pRenderProperties;
-			m_pRenderProperties= NULL;
+            m_pRenderProperties= nullptr;
 		}
 	}
 
 	// Check flexibility
-	if (NULL != structOccurrence.m_pRelativeMatrix)
+    if (nullptr != structOccurrence.m_pRelativeMatrix)
 	{
 		m_pRelativeMatrix= new GLC_Matrix4x4(*(structOccurrence.m_pRelativeMatrix));
 	}
@@ -208,7 +208,7 @@ GLC_StructOccurrence::GLC_StructOccurrence(GLC_WorldHandle* pWorldHandle, const 
 GLC_StructOccurrence::~GLC_StructOccurrence()
 {
 	//qDebug() << "Delete " << id();
-	Q_ASSERT(m_pNumberOfOccurrence != NULL);
+    Q_ASSERT(m_pNumberOfOccurrence != nullptr);
 
 	// Remove Childs
 	const int size= m_Childs.size();
@@ -254,7 +254,7 @@ GLC_StructOccurrence::~GLC_StructOccurrence()
 GLC_Matrix4x4 GLC_StructOccurrence::occurrenceRelativeMatrix() const
 {
 	GLC_Matrix4x4 matrix;
-	if (NULL != m_pRelativeMatrix)
+    if (nullptr != m_pRelativeMatrix)
 	{
 		matrix= *m_pRelativeMatrix;
 	}
@@ -263,7 +263,7 @@ GLC_Matrix4x4 GLC_StructOccurrence::occurrenceRelativeMatrix() const
 
 bool GLC_StructOccurrence::hasRepresentation() const
 {
-	if ((NULL != m_pStructInstance) && (m_pStructInstance->structReference() != NULL))
+    if ((nullptr != m_pStructInstance) && (m_pStructInstance->structReference() != nullptr))
 	{
 		return this->structReference()->hasRepresentation();
 	}
@@ -272,7 +272,7 @@ bool GLC_StructOccurrence::hasRepresentation() const
 
 bool GLC_StructOccurrence::has3DViewInstance() const
 {
-	if ( NULL != m_pWorldHandle)
+    if ( nullptr != m_pWorldHandle)
 	{
 		return m_pWorldHandle->collection()->contains(m_Uid);
 	}
@@ -282,7 +282,7 @@ bool GLC_StructOccurrence::has3DViewInstance() const
 bool GLC_StructOccurrence::canBeAddedToChildren(GLC_StructOccurrence* pOccurrence) const
 {
 	bool canBeAdded= false;
-	if ((NULL != m_pStructInstance) && (m_pStructInstance->hasStructOccurrence()) && (NULL != pOccurrence->m_pStructInstance) && (NULL != pOccurrence->structReference()))
+    if ((nullptr != m_pStructInstance) && (m_pStructInstance->hasStructOccurrence()) && (nullptr != pOccurrence->m_pStructInstance) && (nullptr != pOccurrence->structReference()))
 	{
 		if (this->structReference() != pOccurrence->structReference())
 		{
@@ -303,7 +303,7 @@ bool GLC_StructOccurrence::canBeAddedToChildren(GLC_StructOccurrence* pOccurrenc
 QList<GLC_StructOccurrence *> GLC_StructOccurrence::ancestorList() const
 {
     QList<GLC_StructOccurrence *> subject;
-    if (NULL != m_pParent)
+    if (nullptr != m_pParent)
     {
         subject.append(m_pParent);
         subject.append(m_pParent->ancestorList());
@@ -407,7 +407,7 @@ bool GLC_StructOccurrence::isVisible() const
 {
 	bool isHidden= true;
 
-	if ((NULL != m_pWorldHandle) && m_pWorldHandle->collection()->contains(m_Uid))
+    if ((nullptr != m_pWorldHandle) && m_pWorldHandle->collection()->contains(m_Uid))
 	{
 		isHidden= !m_pWorldHandle->collection()->instanceHandle(m_Uid)->isVisible();
 	}
@@ -432,7 +432,7 @@ GLC_BoundingBox GLC_StructOccurrence::boundingBox() const
 {
 	GLC_BoundingBox boundingBox;
 
-	if (NULL != m_pWorldHandle)
+    if (nullptr != m_pWorldHandle)
 	{
 		if (has3DViewInstance())
 		{
@@ -475,7 +475,7 @@ QSet<GLC_StructReference*> GLC_StructOccurrence::childrenReferences() const
 	for (int i= 0; i < childCount; ++i)
 	{
         GLC_StructOccurrence* pCurrentChild= m_Childs.at(i);
-		if ((NULL != pCurrentChild->structInstance()) && (NULL != pCurrentChild->structReference()))
+        if ((nullptr != pCurrentChild->structInstance()) && (nullptr != pCurrentChild->structReference()))
 		{
 			refChildrenSet << pCurrentChild->structReference();
 		}
@@ -488,9 +488,9 @@ QSet<GLC_StructReference*> GLC_StructOccurrence::parentsReferences(const GLC_Str
 {
 	QSet<GLC_StructReference*> parentSet;
     GLC_StructOccurrence* pParent= pOccurrence->parent();
-	if (NULL != pParent)
+    if (nullptr != pParent)
 	{
-		if ((NULL != pParent->structInstance()) && (NULL != pParent->structReference()))
+        if ((nullptr != pParent->structInstance()) && (nullptr != pParent->structReference()))
 		{
 			parentSet << pParent->structReference();
             parentSet.unite(GLC_StructOccurrence::parentsReferences(pParent));
@@ -540,10 +540,27 @@ GLC_OccurencePath GLC_StructOccurrence::path() const
     return subject;
 }
 
+QList<int> GLC_StructOccurrence::indexPath() const
+{
+    QList<int> subject;
+    QList<GLC_StructOccurrence*> listOfAncestor= ancestorList();
+    listOfAncestor.prepend(const_cast<GLC_StructOccurrence*>(this));
+
+    const int count= listOfAncestor.count();
+    for (int i= (count - 2); i >= 0; --i) // Exclude root
+    {
+        GLC_StructOccurrence* pOcc= listOfAncestor.at(i);
+        int index= pOcc->parent()->indexOf(pOcc);
+        subject.append(index);
+    }
+
+    return subject;
+}
+
 GLC_StructOccurrence *GLC_StructOccurrence::occurrenceFromPath(GLC_OccurencePath path) const
 {
     Q_ASSERT(!path.isEmpty());
-    GLC_StructOccurrence* pSubject= NULL;
+    GLC_StructOccurrence* pSubject= nullptr;
 
     QPair<QString, uint> firstNode= path.takeFirst();
     const int index= static_cast<int>(firstNode.second);
@@ -567,6 +584,28 @@ GLC_StructOccurrence *GLC_StructOccurrence::occurrenceFromPath(GLC_OccurencePath
     return pSubject;
 }
 
+GLC_StructOccurrence* GLC_StructOccurrence::occurrenceFromIndexPath(QList<int> path) const
+{
+    Q_ASSERT(!path.isEmpty());
+    GLC_StructOccurrence* pSubject= nullptr;
+
+    const int index= path.takeFirst();
+    if (m_Childs.count() > index)
+    {
+        GLC_StructOccurrence* pChild= m_Childs.at(index);
+        if (path.isEmpty())
+        {
+            pSubject= pChild;
+        }
+        else
+        {
+            pSubject= pChild->occurrenceFromIndexPath(path);
+        }
+    }
+
+    return pSubject;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////
@@ -574,7 +613,7 @@ GLC_StructOccurrence *GLC_StructOccurrence::occurrenceFromPath(GLC_OccurencePath
 GLC_StructOccurrence* GLC_StructOccurrence::updateAbsoluteMatrix()
 {
 	GLC_Matrix4x4 relativeMatrix;
-	if (NULL == m_pRelativeMatrix)
+    if (nullptr == m_pRelativeMatrix)
 	{
 		relativeMatrix= m_pStructInstance->relativeMatrix();
 	}
@@ -583,7 +622,7 @@ GLC_StructOccurrence* GLC_StructOccurrence::updateAbsoluteMatrix()
 		relativeMatrix= *m_pRelativeMatrix;
 	}
 
-	if (NULL != m_pParent)
+    if (nullptr != m_pParent)
 	{
 		m_AbsoluteMatrix= m_pParent->absoluteMatrix() * relativeMatrix;
 	}
@@ -593,7 +632,7 @@ GLC_StructOccurrence* GLC_StructOccurrence::updateAbsoluteMatrix()
 	}
 	// If the occurrence have a representation, update it.
 
-	if ((NULL != m_pWorldHandle) && m_pWorldHandle->collection()->contains(m_Uid))
+    if ((nullptr != m_pWorldHandle) && m_pWorldHandle->collection()->contains(m_Uid))
 	{
 		m_pWorldHandle->collection()->instanceHandle(m_Uid)->setMatrix(m_AbsoluteMatrix);
 	}
@@ -614,17 +653,17 @@ GLC_StructOccurrence* GLC_StructOccurrence::updateChildrenAbsoluteMatrix()
 void GLC_StructOccurrence::addChild(GLC_StructOccurrence* pChild)
 {
 	Q_ASSERT(pChild->isOrphan());
-	Q_ASSERT((NULL == pChild->m_pWorldHandle) || (m_pWorldHandle == pChild->m_pWorldHandle));
+    Q_ASSERT((nullptr == pChild->m_pWorldHandle) || (m_pWorldHandle == pChild->m_pWorldHandle));
 
     pChild->setVisibility(this->isVisible());
 	m_Childs.append(pChild);
 	pChild->m_pParent= this;
-	if (NULL == pChild->m_pWorldHandle)
+    if (nullptr == pChild->m_pWorldHandle)
 	{
 		pChild->setWorldHandle(m_pWorldHandle);
 	}
 
-    if ((NULL != m_pWorldHandle) && m_pWorldHandle->selectionSetHandle()->contains(this))
+    if ((nullptr != m_pWorldHandle) && m_pWorldHandle->selectionSetHandle()->contains(this))
     {
         m_pWorldHandle->select(pChild->id());
     }
@@ -635,7 +674,7 @@ void GLC_StructOccurrence::addChild(GLC_StructOccurrence* pChild)
 void GLC_StructOccurrence::insertChild(int index, GLC_StructOccurrence* pChild)
 {
 	Q_ASSERT(pChild->isOrphan());
-	Q_ASSERT((NULL == pChild->m_pWorldHandle) || (m_pWorldHandle == pChild->m_pWorldHandle));
+    Q_ASSERT((nullptr == pChild->m_pWorldHandle) || (m_pWorldHandle == pChild->m_pWorldHandle));
 	Q_ASSERT(m_Childs.count() >= index);
 
     pChild->setVisibility(this->isVisible());
@@ -645,12 +684,12 @@ void GLC_StructOccurrence::insertChild(int index, GLC_StructOccurrence* pChild)
 	// Get occurrence reference
 	m_Childs.insert(index, pChild);
 	pChild->m_pParent= this;
-	if (NULL == pChild->m_pWorldHandle)
+    if (nullptr == pChild->m_pWorldHandle)
 	{
 		pChild->setWorldHandle(m_pWorldHandle);
 	}
 
-    if ((NULL != m_pWorldHandle) && m_pWorldHandle->selectionSetHandle()->contains(this))
+    if ((nullptr != m_pWorldHandle) && m_pWorldHandle->selectionSetHandle()->contains(this))
     {
         m_pWorldHandle->select(pChild->id());
     }
@@ -693,7 +732,7 @@ void GLC_StructOccurrence::makeOrphan()
 bool GLC_StructOccurrence::removeChild(GLC_StructOccurrence* pChild)
 {
 	Q_ASSERT(pChild->m_pParent == this);
-	pChild->m_pParent= NULL;
+    pChild->m_pParent= nullptr;
 	pChild->detach();
 
 	return m_Childs.removeOne(pChild);
@@ -711,19 +750,19 @@ void GLC_StructOccurrence::reverseNormals()
 bool GLC_StructOccurrence::create3DViewInstance(GLuint shaderId)
 {
 	bool subject= false;
-	if (!has3DViewInstance() && (NULL != m_pWorldHandle) && hasRepresentation())
+    if (!has3DViewInstance() && (nullptr != m_pWorldHandle) && hasRepresentation())
 	{
 		GLC_3DRep* p3DRep= dynamic_cast<GLC_3DRep*>(structReference()->representationHandle());
-		if (NULL != p3DRep)
+        if (nullptr != p3DRep)
 		{
 			GLC_3DViewInstance instance(*p3DRep, m_Uid);
 			instance.setName(name());
 
-			if (NULL != m_pRenderProperties)
+            if (nullptr != m_pRenderProperties)
 			{
 				instance.setRenderProperties(*m_pRenderProperties);
 				delete m_pRenderProperties;
-				m_pRenderProperties= NULL;
+                m_pRenderProperties= nullptr;
 			}
 
 			if (0 != shaderId) m_pWorldHandle->collection()->bindShader(shaderId);
@@ -740,7 +779,7 @@ bool GLC_StructOccurrence::create3DViewInstance(GLuint shaderId)
 
 bool GLC_StructOccurrence::remove3DViewInstance()
 {
-	if (NULL != m_pWorldHandle)
+    if (nullptr != m_pWorldHandle)
 	{
 		return m_pWorldHandle->collection()->remove(m_Uid);
 	}
@@ -753,14 +792,14 @@ void GLC_StructOccurrence::setWorldHandle(GLC_WorldHandle* pWorldHandle)
 	// Check if world handles are equal
 	if (m_pWorldHandle == pWorldHandle) return;
 
-	if (NULL != m_pWorldHandle)
+    if (nullptr != m_pWorldHandle)
 	{
 		m_pWorldHandle->removeOccurrence(this);
 	}
 
 	m_pWorldHandle= pWorldHandle;
 
-	if (NULL != m_pWorldHandle)
+    if (nullptr != m_pWorldHandle)
 	{
 		m_pWorldHandle->addOccurrence(this);
 		m_pWorldHandle->collection()->setVisibility(m_Uid, m_IsVisible);
@@ -865,7 +904,7 @@ void GLC_StructOccurrence::setVisibility(bool visibility)
 void GLC_StructOccurrence::setRenderProperties(const GLC_RenderProperties& renderProperties, bool propagate)
 {
     delete m_pRenderProperties;
-	m_pRenderProperties= NULL;
+    m_pRenderProperties= nullptr;
 	if (has3DViewInstance())
 	{
 		m_pWorldHandle->collection()->instanceHandle(m_Uid)->setRenderProperties(renderProperties);
@@ -888,7 +927,7 @@ void GLC_StructOccurrence::setRenderProperties(const GLC_RenderProperties& rende
 void GLC_StructOccurrence::removeRenderProperties()
 {
     delete m_pRenderProperties;
-    m_pRenderProperties= NULL;
+    m_pRenderProperties= nullptr;
 }
 
 void GLC_StructOccurrence::removeEmptyChildren()
@@ -912,7 +951,7 @@ void GLC_StructOccurrence::removeEmptyChildren()
 
 void GLC_StructOccurrence::setReference(GLC_StructReference* pRef)
 {
-	Q_ASSERT(m_pStructInstance->structReference() == NULL);
+    Q_ASSERT(m_pStructInstance->structReference() == nullptr);
 	Q_ASSERT((*m_pNumberOfOccurrence) == 1);
 
 	if (pRef->hasStructInstance())
@@ -961,7 +1000,7 @@ void GLC_StructOccurrence::makeFlexible(const GLC_Matrix4x4& relativeMatrix, boo
 void GLC_StructOccurrence::makeRigid(bool update)
 {
 	delete m_pRelativeMatrix;
-	m_pRelativeMatrix= NULL;
+    m_pRelativeMatrix= nullptr;
 
     if (update) updateChildrenAbsoluteMatrix();
 }
@@ -988,7 +1027,7 @@ void GLC_StructOccurrence::swap(int oldPos, int newPos)
 
 void GLC_StructOccurrence::detach()
 {
-	if (NULL != m_pWorldHandle)
+    if (nullptr != m_pWorldHandle)
 	{
 		// retrieve renderProperties if needed
 		if (m_pWorldHandle->collection()->contains(m_Uid))
@@ -996,12 +1035,12 @@ void GLC_StructOccurrence::detach()
 			GLC_3DViewInstance* pInstance= m_pWorldHandle->collection()->instanceHandle(m_Uid);
 			if (!pInstance->renderPropertiesHandle()->isDefault())
 			{
-				Q_ASSERT(NULL == m_pRenderProperties);
+                Q_ASSERT(nullptr == m_pRenderProperties);
 				m_pRenderProperties= new GLC_RenderProperties(*(pInstance->renderPropertiesHandle()));
 			}
 		}
 		m_pWorldHandle->removeOccurrence(this);
-		m_pWorldHandle= NULL;
+        m_pWorldHandle= nullptr;
 		if (!m_Childs.isEmpty())
 		{
 			const int size= m_Childs.size();
@@ -1035,7 +1074,7 @@ void GLC_StructOccurrence::doCreateOccurrenceFromInstance(GLuint shaderId)
 	}
 
 	// Inform the world Handle
-	if (NULL != m_pWorldHandle)
+    if (nullptr != m_pWorldHandle)
 	{
 		m_pWorldHandle->addOccurrence(this, shaderId);
 	}
