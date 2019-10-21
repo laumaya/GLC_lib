@@ -640,23 +640,25 @@ bool glc::segmentsOverlap(const GLC_Point3d& p1, const GLC_Point3d& p2, const GL
     return subject;
 }
 
-
-
-
-
 double glc::round(double value)
 {
-	value= value / comparedPrecision;
-	value= (value >= 0.0 ? floor(value + 0.5) : ceil(value - 0.5));
-	value= value * comparedPrecision;
+    if (!qFuzzyIsNull(comparedPrecision))
+    {
+        value= value / comparedPrecision;
+        value= (value >= 0.0 ? floor(value + 0.5) : ceil(value - 0.5));
+        value= value * comparedPrecision;
+    }
 	return value;
 }
 
 double glc::round(double value, double accuracy)
 {
-    value= value / accuracy;
-    value= (value >= 0.0 ? floor(value + 0.5) : ceil(value - 0.5));
-    value= value * accuracy;
+    if (!qFuzzyIsNull(accuracy))
+    {
+        value= value / accuracy;
+        value= (value >= 0.0 ? floor(value + 0.5) : ceil(value - 0.5));
+        value= value * accuracy;
+    }
     return value;
 }
 
