@@ -54,7 +54,7 @@ class GLC_LIB_EXPORT GLC_WorldTo3ds : public QObject
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	GLC_WorldTo3ds(const GLC_World& world);
+    GLC_WorldTo3ds(const GLC_World& world, bool exportAll= true);
 	virtual ~GLC_WorldTo3ds();
 //@}
 
@@ -76,8 +76,7 @@ private:
 	//! Save the world into the lib3ds file structure
 	void saveWorld();
 
-	//! Save all meshes into the lib3ds file structure
-	void saveMeshes();
+    QList<Lib3dsMesh*> saveMeshes(GLC_StructReference* pRef);
 
 	//! Save the branch from the given GLC_StructOccurrence
 	void saveBranch(GLC_StructOccurrence* pOcc);
@@ -98,7 +97,7 @@ private:
     Lib3dsMaterial* create3dsMaterialFromGLC_Material(GLC_Material* pMat);
 
     //! Return a 3ds compatible name
-    QString to3dsName(const QString& name, unsigned int id) const;
+    QString to3dsName(const QString& name, int id) const;
 
 	//! Set the object data position from the given matrix
 	void setNodePosition(Lib3dsNode* pNode, const GLC_Matrix4x4& matrix);
@@ -133,7 +132,7 @@ private:
 	Lib3dsNode* m_pRootLib3dsNode;
 
 	//! The current node id
-    unsigned int m_CurrentNodeId;
+    unsigned short m_CurrentNodeId;
 
 	//! Occurrence id to node id hash
 	QHash<GLC_uint, int> m_OccIdToNodeId;
@@ -152,6 +151,8 @@ private:
 
 	//! GLC_Texture to fileName hash table
     QHash<QString, QString> m_TextureToFileName;
+
+    bool m_ExportAll;
 };
 
 #endif /* GLC_WORLDTO3DS_H_ */

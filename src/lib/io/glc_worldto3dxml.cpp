@@ -1155,7 +1155,7 @@ void GLC_WorldTo3dxml::writeExtensionAttributes(GLC_Attributes* pAttributes)
 	for (int i= 0; i < size; ++i)
 	{
 		const QString name= attributesNames.at(i);
-		QString value= pAttributes->value(name);
+        QString value= pAttributes->value(name).toString();
 		m_pOutStream->writeStartElement("Attribute");
 			m_pOutStream->writeAttribute("name", name);
 			if (name == "FILEPATH")

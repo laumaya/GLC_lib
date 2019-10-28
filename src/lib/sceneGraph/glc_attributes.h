@@ -27,6 +27,7 @@
 #include <QString>
 #include <QList>
 #include <QHash>
+#include <QVariant>
 
 #include "../glc_config.h"
 
@@ -62,11 +63,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return true if attributes is empty
-	inline bool isEmpty() const
+    bool isEmpty() const
 	{return m_AttributesHash.isEmpty();}
 
 	//! Return the size of attributes
-	inline int size() const
+    int size() const
 	{return m_AttributesHash.size();}
 
 	//! Return true if the specified attribute exist
@@ -74,17 +75,17 @@ public:
 	{return m_AttributesHash.contains(name);}
 
 	//! Return the list of attribute name
-	inline QList<QString> names() const
+    QList<QString> names() const
 	{return m_AttributesList;}
 
 	//! Return the value of the specified attributes
 	/*! Return NULL String if attribute doesn't exist*/
-	inline QString value(const QString& name) const
+    QVariant value(const QString& name) const
 	{return m_AttributesHash.value(name);}
 
 	//! Return the name of the specified attributes index
 	/*! Return empty String if attribute doesn't exist*/
-	inline QString name(int at) const
+    QString name(int at) const
 	{return m_AttributesList.value(at);}
 
 //@}
@@ -95,14 +96,14 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Insert an attribute (if the attribute exists, it's updated)
-	inline void insert(const QString& name, const QString& value)
+    void insert(const QString& name, const QVariant& value)
 	{
 		if ((!m_AttributesHash.contains(name))) m_AttributesList.append(name);
 		m_AttributesHash.insert(name, value);
 	}
 
 	//! Remove an attribute
-	inline void remove(const QString& name)
+    void remove(const QString& name)
 	{
 		Q_ASSERT(m_AttributesHash.contains(name));
 		m_AttributesHash.remove(name);
@@ -110,7 +111,7 @@ public:
 	}
 
 	//! Clear the content of this attribute
-	inline void clear()
+    void clear()
 	{
 		m_AttributesHash.clear();
 		m_AttributesList.clear();
@@ -125,7 +126,7 @@ public:
 public:
 
 	//! Equal operator overload
-	inline bool operator==(const GLC_Attributes& attr) const
+    bool operator==(const GLC_Attributes& attr) const
 	{return m_AttributesHash == attr.m_AttributesHash;}
 
 //@}
@@ -134,7 +135,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! Attributes Hash table
-	QHash<QString, QString> m_AttributesHash;
+    QHash<QString, QVariant> m_AttributesHash;
 
 	//! the list of attribute name
 	QList<QString> m_AttributesList;
