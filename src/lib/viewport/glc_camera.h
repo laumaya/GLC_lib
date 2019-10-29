@@ -203,13 +203,7 @@ public:
 	GLC_Camera& operator=(const GLC_Camera&);
 
 	//! Set the default Up vector
-	/*! Must Be X, Y or Z Axis*/
-    inline void setDefaultUpVector(const GLC_Vector3d& up)
-	{
-		Q_ASSERT((up == glc::X_AXIS) || (up == glc::Y_AXIS) || (up == glc::Z_AXIS));
-		m_DefaultVectUp= up;
-        emit changed();
-	}
+    inline void setDefaultUpVector(const GLC_Vector3d& up);
 
     //! Set the default Up vector by the given name
     void setDefaultUpVectorByName(const QString& vectorName);

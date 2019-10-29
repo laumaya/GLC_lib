@@ -67,8 +67,8 @@ void GLC_TurnTableMover::init(const GLC_UserInput& userInput)
 	GLC_Mover::m_PreviousVector.setVect(static_cast<double>(userInput.x()), static_cast<double>(userInput.y()),0.0);
 	GLC_Camera* pCamera= GLC_Mover::m_pViewport->cameraHandle();
 	// Calculate angle sign
-	m_Sign= pCamera->defaultUpVector() * pCamera->upVector();
-	if (m_Sign == 0)
+    m_Sign= pCamera->defaultUpVector() * pCamera->upVector();
+    if (qFuzzyIsNull(m_Sign))
 	{
 		m_Sign= 1;
 	}

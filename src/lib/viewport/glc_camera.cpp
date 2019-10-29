@@ -308,6 +308,12 @@ GLC_Camera &GLC_Camera::operator=(const GLC_Camera& cam)
     return *this;
 }
 
+void GLC_Camera::setDefaultUpVector(const GLC_Vector3d& up)
+{
+    m_DefaultVectUp= up;
+    emit changed();
+}
+
 void GLC_Camera::setDefaultUpVectorByName(const QString &vectorName)
 {
     GLC_Vector3d upVector= m_DefaultVectUp;
