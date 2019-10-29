@@ -50,13 +50,14 @@ namespace glc
         PrimitiveSelection
 	};
 
-    //! Geometry rendering flag enumaration
+    //! Geometry rendering flag enumeration
 	enum RenderFlag
 	{
 		ShadingFlag= 800,
 		WireRenderFlag,
 		TransparentRenderFlag,
-		OutlineSilhouetteRenderFlag
+        OutlineSilhouetteRenderFlag,
+        NoneRenderFlag
 	};
 };
 //////////////////////////////////////////////////////////////////////
@@ -76,7 +77,7 @@ public:
 	GLC_RenderProperties();
 
 	//! Copy constructor
-	GLC_RenderProperties(const GLC_RenderProperties&);
+    GLC_RenderProperties(const GLC_RenderProperties& other);
 
 	//! Destructor
 	virtual ~GLC_RenderProperties();
@@ -94,73 +95,72 @@ public:
     bool fuzzyEquals(const GLC_RenderProperties& other) const;
 
 	//! Return true if it is selected
-	inline bool isSelected() const
+    bool isSelected() const
 	{return m_IsSelected;}
 
 	//! Return the rendering mode
-	inline glc::RenderMode renderingMode() const
+    glc::RenderMode renderingMode() const
 	{return m_RenderMode;}
 
 	//! Return the saved rendering mode
-	inline glc::RenderMode savedRenderingMode() const
+    glc::RenderMode savedRenderingMode() const
 	{return m_SavedRenderMode;}
 
 	//! Return an handle to the overwrite material
-	inline GLC_Material* overwriteMaterial() const
+    GLC_Material* overwriteMaterial() const
 	{return m_pOverwriteMaterial;}
 
 	//! Return the overwrite transparency
-	inline float overwriteTransparency() const
+    float overwriteTransparency() const
 	{return m_OverwriteOpacity;}
 
 	//! Return an handle to the set of selected primitives id of the current body
-	inline QSet<GLC_uint>* setOfSelectedPrimitivesId() const
+    QSet<GLC_uint>* setOfSelectedPrimitivesId() const
 	{
-		Q_ASSERT(NULL != m_pBodySelectedPrimitvesId);
+        Q_ASSERT(nullptr != m_pBodySelectedPrimitvesId);
 		if (m_pBodySelectedPrimitvesId->contains(m_CurrentBody))
 			return m_pBodySelectedPrimitvesId->value(m_CurrentBody);
-		else return NULL;
+        else return nullptr;
 	}
 
 	//! Return true if the set of selected primitive id is empty
-	inline bool setOfSelectedPrimitiveIdIsEmpty() const
-	{return (!((NULL != m_pBodySelectedPrimitvesId) && m_pBodySelectedPrimitvesId->contains(m_CurrentBody)));}
+    bool setOfSelectedPrimitiveIdIsEmpty() const
+    {return (!((nullptr != m_pBodySelectedPrimitvesId) && m_pBodySelectedPrimitvesId->contains(m_CurrentBody)));}
 
 	//! Return true if the specified primitive id of the specified body index is selected
 	bool primitiveIsSelected(int index, GLC_uint id) const;
 
 	//! Return an handle to the overwrite primitive material Hash
-	inline QHash<GLC_uint, GLC_Material*>* hashOfOverwritePrimitiveMaterials() const
+    QHash<GLC_uint, GLC_Material*>* hashOfOverwritePrimitiveMaterials() const
 	{
-		Q_ASSERT(NULL != m_pOverwritePrimitiveMaterialMaps);
+        Q_ASSERT(nullptr != m_pOverwritePrimitiveMaterialMaps);
 		if (m_pOverwritePrimitiveMaterialMaps->contains(m_CurrentBody))
 			return m_pOverwritePrimitiveMaterialMaps->value(m_CurrentBody);
-		else return NULL;
+        else return nullptr;
 	}
 
 	//! Return true if the hash of overwrite primitive material is empty
-	inline bool hashOfOverwritePrimitiveMaterialsIsEmpty() const
-	{return (!((NULL != m_pOverwritePrimitiveMaterialMaps) && m_pOverwritePrimitiveMaterialMaps->contains(m_CurrentBody)));}
+    bool hashOfOverwritePrimitiveMaterialsIsEmpty() const
+    {return (!((nullptr != m_pOverwritePrimitiveMaterialMaps) && m_pOverwritePrimitiveMaterialMaps->contains(m_CurrentBody)));}
 
 	//! Get the PolyFace mode
 	/*! PolyFace Mode can Be : GL_FRONT_AND_BACK, GL_FRONT, or GL_BACK*/
-	inline GLenum polyFaceMode() const
+    GLenum polyFaceMode() const
 	{return m_PolyFace;}
 
 	//! Get the Polygon mode
 	/*! Polygon Mode can Be : GL_POINT, GL_LINE, or GL_FILL*/
-	inline GLenum polygonMode() const
+    GLenum polygonMode() const
 	{return m_PolyMode;}
 
 	//! Return rendering flag render flag
-	inline glc::RenderFlag renderingFlag() const
-	{return m_RenderingFlag;}
+    inline glc::RenderFlag renderingFlag() const;
 
 	//! Return true if rendering properties needs to render with transparency
 	bool needToRenderWithTransparency() const;
 
 	//! Return the current body index
-	inline int currentBodyIndex() const
+    int currentBodyIndex() const
 	{return m_CurrentBody;}
 
 	//! Return true if this rendering properties has defaut value
@@ -168,6 +168,10 @@ public:
 
     bool selectable() const
     {return m_Selectable;}
+
+    glc::RenderFlag overwriteRenderingFlag() const
+    {return m_OverwriteRenderingFlag;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -186,20 +190,20 @@ public:
 	void clear();
 
     //! Select the instance
-	inline void select(bool primitive);
+    inline void select(bool primitive);
 
 	//! Unselect the instance
-	inline void unselect(void);
+    inline void unselect(void);
 
 	//! Set the rendering mode
-	inline void setRenderingMode(glc::RenderMode mode)
+    void setRenderingMode(glc::RenderMode mode)
 	{m_RenderMode= mode;}
 
 	//! Set the overwrite material
 	void setOverwriteMaterial(GLC_Material*);
 
 	//! Set the overwrite transparency
-	inline void setOverwriteTransparency(float alpha)
+    void setOverwriteTransparency(float alpha)
 	{m_OverwriteOpacity= alpha;}
 
 	//! Add the set of selected primitives id of the specified body
@@ -220,18 +224,18 @@ public:
 	//! Polygon's display style
 	/*! Face Polygon Mode can be : GL_FRONT_AND_BACK, GL_FRONT, or GL_BACK
 	 *  mode can be : GL_POINT, GL_LINE, or GL_FILL */
-	inline void setPolygonMode(GLenum Face, GLenum Mode)
+    void setPolygonMode(GLenum Face, GLenum Mode)
 	{
 		m_PolyFace= Face;
 		m_PolyMode= Mode;
 	}
 
 	//! Set the rendering flag
-	inline void setRenderingFlag(glc::RenderFlag flag)
+    void setRenderingFlag(glc::RenderFlag flag)
 	{m_RenderingFlag= flag;}
 
 	//! Set the current body index
-	inline void setCurrentBodyIndex(int index)
+    void setCurrentBodyIndex(int index)
 	{m_CurrentBody= index;}
 
 	//! Used the specified material
@@ -242,6 +246,12 @@ public:
 
     void setSelectable(bool selectable)
     {m_Selectable= selectable;}
+
+    void setOverwriteRenderingFlag(glc::RenderFlag value)
+    {m_OverwriteRenderingFlag= value;}
+
+    void unsetOverwriteRenderingFlag()
+    {m_OverwriteRenderingFlag= glc::NoneRenderFlag;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -286,6 +296,8 @@ private:
 	QHash<GLC_Material*, int> m_MaterialsUsage;
 
     bool m_Selectable;
+
+    glc::RenderFlag m_OverwriteRenderingFlag;
 };
 
 // Select the instance
@@ -337,5 +349,21 @@ void GLC_RenderProperties::unUseMaterial(GLC_Material* pMaterial)
 		m_MaterialsUsage.remove(pMaterial);
 	}
 }
+
+glc::RenderFlag GLC_RenderProperties::renderingFlag() const
+{
+    glc::RenderFlag subject;
+    if (m_OverwriteRenderingFlag != glc::NoneRenderFlag)
+    {
+        subject= m_OverwriteRenderingFlag;
+    }
+    else
+    {
+        subject= m_RenderingFlag;
+    }
+
+    return subject;
+}
+
 
 #endif /* GLC_RENDERPROPERTIES_H_ */
