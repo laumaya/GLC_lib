@@ -163,7 +163,7 @@ bool GLC_RenderProperties::needToRenderWithTransparency() const
 	}
 	else if ((m_RenderMode == glc::OverwriteTransparency) || (m_RenderMode == glc::OverwriteTransparencyAndMaterial))
     {
-        Q_ASSERT(qFuzzyCompare(-1.0f, m_OverwriteOpacity));
+        Q_ASSERT(!qFuzzyCompare(-1.0f, m_OverwriteOpacity));
 		renderWithTransparency= (m_OverwriteOpacity < 1.0f);
 	}
 	else if ((m_RenderMode == glc::OverwritePrimitiveMaterial)

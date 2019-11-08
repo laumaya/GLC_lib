@@ -50,7 +50,7 @@ class GLC_LIB_EXPORT GLC_3DWidget : public QObject
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Construct a 3d widget with the given 3DWidget manager handle
-	GLC_3DWidget(GLC_3DWidgetManagerHandle*  pWidgetManagerHandle= NULL);
+    GLC_3DWidget(GLC_3DWidgetManagerHandle*  pWidgetManagerHandle= nullptr);
 
 	//! Construct a 3d widget form the given 3d widget
 	GLC_3DWidget(const GLC_3DWidget& widget);
@@ -81,7 +81,7 @@ public:
 
 	//! Return true if this widget has a 3DWidgetManager
 	inline bool has3DWidgetManager() const
-	{return (NULL != m_pWidgetManagerHandle);}
+    {return (nullptr != m_pWidgetManagerHandle);}
 
 	//! Return true if otho is used
 	inline bool useOrtho() const
@@ -93,6 +93,9 @@ public:
     //! Return this 3DWidget type
     int type() const
     {return m_Type;}
+
+    int instanceCount() const
+    {return m_InstanceIdList.count();}
 
 //@}
 
