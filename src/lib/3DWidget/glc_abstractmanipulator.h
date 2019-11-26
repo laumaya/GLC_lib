@@ -98,6 +98,8 @@ public:
 	inline void setViewport(GLC_Viewport* pViewport)
 	{m_pViewport= pViewport;}
 
+    GLC_Vector3d projectionDirection(const GLC_Point3d& point) const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -106,8 +108,6 @@ public:
 protected:
 	//! Manipulate the concret manipulator and return the moving matrix
 	virtual GLC_Matrix4x4 doManipulate(const GLC_Point3d& newPoint, const GLC_Vector3d& projectionDirection)= 0;
-
-    GLC_Vector3d projectionDirection(const GLC_Point3d& point);
 
 //////////////////////////////////////////////////////////////////////
 // protected Member

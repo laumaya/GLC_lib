@@ -74,7 +74,7 @@ GLC_Matrix4x4 GLC_AbstractManipulator::manipulate(const GLC_Point3d& newPoint)
     return transformation;
 }
 
-GLC_Vector3d GLC_AbstractManipulator::projectionDirection(const GLC_Point3d& point)
+GLC_Vector3d GLC_AbstractManipulator::projectionDirection(const GLC_Point3d& point) const
 {
     GLC_Vector3d subject;
     if (m_pViewport->useOrtho())
