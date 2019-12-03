@@ -203,7 +203,7 @@ public:
 	GLC_Camera& operator=(const GLC_Camera&);
 
 	//! Set the default Up vector
-    inline void setDefaultUpVector(const GLC_Vector3d& up);
+    void setDefaultUpVector(const GLC_Vector3d& up);
 
     //! Set the default Up vector by the given name
     void setDefaultUpVectorByName(const QString& vectorName);
