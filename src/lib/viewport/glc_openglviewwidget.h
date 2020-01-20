@@ -20,8 +20,8 @@ class GLC_LIB_EXPORT GLC_OpenGLViewWidget : public QOpenGLWidget
 {
     Q_OBJECT
 public:
-    GLC_OpenGLViewWidget(QWidget *parent = 0);
-    virtual ~GLC_OpenGLViewWidget();
+    GLC_OpenGLViewWidget(QWidget *parent = nullptr);
+    ~GLC_OpenGLViewWidget() override;
 public:
     //! Return the used GLC_ViewHandler as a QVariant
     virtual QVariant viewHandler() const;
@@ -42,17 +42,17 @@ signals:
     void frameBufferBindingFailed();
 
 protected:
-    virtual void initializeGL();
-    virtual void paintGL();
+    void initializeGL() override;
+    void paintGL() override;
 
 protected:
-    virtual void mousePressEvent(QMouseEvent * e);
-    virtual void mouseMoveEvent(QMouseEvent * e);
-    virtual void mouseReleaseEvent(QMouseEvent * e);
-    virtual void mouseDoubleClickEvent(QMouseEvent * e);
-    virtual void wheelEvent(QWheelEvent * e);
-    virtual void touchEvent(QTouchEvent * e);
-    virtual void hoverMoveEvent(QHoverEvent *event);
+    void mousePressEvent(QMouseEvent * e) override;
+    void mouseMoveEvent(QMouseEvent * e) override;
+    void mouseReleaseEvent(QMouseEvent * e) override;
+    void mouseDoubleClickEvent(QMouseEvent * e) override;
+    void wheelEvent(QWheelEvent * e) override;
+    void touchEvent(QTouchEvent * e);
+    void hoverMoveEvent(QHoverEvent *event);
 
     void renderForSelection();
 

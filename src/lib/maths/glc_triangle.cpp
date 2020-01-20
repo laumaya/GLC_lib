@@ -141,10 +141,10 @@ void GLC_Triangle::setSharpEdge(GLC_Triangle* pOther, double angleThreshold)
                 edgeFound= glc::segmentsOverlap(tri1V1, tri1V2, tri2V1, tri2V2);
                 if (edgeFound)
                 {
-                    const double delta1= (tri1V1 - tri2V1).length();
-                    const double delta2= (tri1V1 - tri2V2).length();
-                    const double delta3= (tri1V2 - tri2V1).length();
-                    const double delta4= (tri1V2 - tri2V2).length();
+                    const double delta1= (tri1V1 - tri2V1).squaredLength();
+                    const double delta2= (tri1V1 - tri2V2).squaredLength();
+                    const double delta3= (tri1V2 - tri2V1).squaredLength();
+                    const double delta4= (tri1V2 - tri2V2).squaredLength();
 
                     double angle= 0;
                     if (glc::compare(delta1, 0.0) || ((delta1 < delta2) && (delta1 < delta3) && (delta1 < delta4)))

@@ -626,9 +626,9 @@ bool glc::segmentsOverlap(const GLC_Point3d& p1, const GLC_Point3d& p2, const GL
     }
     else if (glc::pointsAreCollinear(p1, p2, p3) && glc::pointsAreCollinear(p1, p2, p4))
     {
-        const double length1= GLC_Vector3d(p1 - p2).length();
-        const double length2= GLC_Vector3d(p3 - p4).length();
-        if (length1 > length2)
+        const double squaredLength1= GLC_Vector3d(p1 - p2).squaredLength();
+        const double squaredLength2= GLC_Vector3d(p3 - p4).squaredLength();
+        if (squaredLength1 > squaredLength2)
         {
             subject= (pointIsIncludeInSegment(p1, p2, p3) || pointIsIncludeInSegment(p1, p2, p4));
         }
