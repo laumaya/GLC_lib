@@ -156,6 +156,8 @@ public:
     //! Transform this bounding Box with the given matrix and return a reference of this bounding box
     GLC_BoundingBox& transform(const GLC_Matrix4x4& matrix);
 
+    virtual void clear();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

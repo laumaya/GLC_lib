@@ -44,6 +44,7 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_V
     , m_EdgeMaterialId()
     , m_EdgeToMaterialIndex()
     , m_TextureRangeFactor(1.0f)
+    , m_Polygons()
 {
 
 }
@@ -61,6 +62,7 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const GLC_ExtrudedMesh &other)
     , m_EdgeMaterialId()
     , m_EdgeToMaterialIndex(other.m_EdgeToMaterialIndex)
     , m_TextureRangeFactor(other.m_TextureRangeFactor)
+    , m_Polygons(other.m_Polygons)
 {
     copyEdgeMaterialId(other);
 }
@@ -97,6 +99,16 @@ GLC_Material* GLC_ExtrudedMesh::masterMaterial() const
     }
 
     return pSubject;
+}
+
+QList<GLC_Polygon> GLC_ExtrudedMesh::polygons() const
+{
+    if (m_Polygons.isEmpty())
+    {
+        const_cast<GLC_ExtrudedMesh*>(this)->createPolygons();
+    }
+
+    return m_Polygons;
 }
 
 bool GLC_ExtrudedMesh::update()
@@ -145,6 +157,7 @@ void GLC_ExtrudedMesh::setGeometry(const QList<GLC_Point3d> &points, const GLC_V
     m_ExtrusionLenght= lenght;
 
     GLC_Mesh::clearMeshWireAndBoundingBox();
+    m_Polygons.clear();
 }
 
 void GLC_ExtrudedMesh::setPoints(const QList<GLC_Point3d> &points)
@@ -171,6 +184,7 @@ void GLC_ExtrudedMesh::setPoints(const QList<GLC_Point3d> &points)
         m_InvisibleEdgeIndex.clear();
 
         GLC_Mesh::clearMeshWireAndBoundingBox();
+        m_Polygons.clear();
     }
 }
 
@@ -180,6 +194,7 @@ void GLC_ExtrudedMesh::setExtrudedVector(const GLC_Vector3d &extrudedVector)
     {
         m_ExtrusionVector= extrudedVector;
         GLC_Mesh::clearMeshWireAndBoundingBox();
+        m_Polygons.clear();
     }
 }
 
@@ -189,6 +204,7 @@ void GLC_ExtrudedMesh::setExtrudedLenght(double length)
     {
         m_ExtrusionLenght= length;
         GLC_Mesh::clearMeshWireAndBoundingBox();
+        m_Polygons.clear();
     }
 }
 
@@ -213,6 +229,7 @@ void GLC_ExtrudedMesh::setSmoothingIndex(const QList<int> &smothingIndex)
     {
         m_SmothingPoints= smothingIndex;
         GLC_Mesh::clearMeshWireAndBoundingBox();
+        m_Polygons.clear();
     }
 }
 
@@ -237,6 +254,7 @@ void GLC_ExtrudedMesh::setInvisibleEdgeIndex(const QList<int>& invisibleEdgeInde
     {
         m_InvisibleEdgeIndex= invisibleEdgeIndex;
         GLC_Mesh::clearMeshWireAndBoundingBox();
+        m_Polygons.clear();
     }
 }
 
@@ -256,6 +274,7 @@ void GLC_ExtrudedMesh::setEdgeMaterialAndMapping(const QHash<int, int>& mapping)
     if (mapping != m_EdgeToMaterialIndex)
     {
         GLC_Mesh::clearMeshWireAndBoundingBox();
+        m_Polygons.clear();
         QHash<int, GLC_uint>::iterator iMaterialId= m_EdgeMaterialId.begin();
         while (iMaterialId != m_EdgeMaterialId.end())
         {
@@ -281,8 +300,9 @@ void GLC_ExtrudedMesh::setTextureRangeFactor(double value)
 {
     if (!glc::compare(value, m_TextureRangeFactor))
     {
-        m_TextureRangeFactor= value;
+        m_TextureRangeFactor= static_cast<float>(value);
         GLC_Mesh::clearMeshWireAndBoundingBox();
+        m_Polygons.clear();
     }
 }
 
@@ -825,6 +845,35 @@ GLC_Material* GLC_ExtrudedMesh::faceOutlineMaterial(int face) const
     }
 
     return pSubject;
+}
+
+void GLC_ExtrudedMesh::createPolygons()
+{
+    Q_ASSERT(m_Polygons.isEmpty());
+
+    const GLC_Polygon baseFacePolygon(baseFacePoints());
+    const GLC_Polygon createdFacePolygon(createdFacePoints());
+
+    m_Polygons.append(baseFacePolygon);
+    m_Polygons.append(createdFacePolygon);
+
+    const GLC_Vector3d offset(m_ExtrusionVector * m_ExtrusionLenght);
+
+    const int count= m_Points.count();
+    for (int i= 0; i < count; ++i)
+    {
+        GLC_Polygon polygon;
+        const GLC_Point3d p1(baseFacePolygon.pointAt(i));
+        const GLC_Point3d p2(p1 + offset);
+        const GLC_Point3d p4(baseFacePolygon.pointAt((i + 1) % count));
+        const GLC_Point3d p3(p4 + offset);
+
+        polygon.addPoint(p1);
+        polygon.addPoint(p2);
+        polygon.addPoint(p3);
+        polygon.addPoint(p4);
+        m_Polygons.append(polygon);
+    }
 }
 
 void GLC_ExtrudedMesh::glDraw(const GLC_RenderProperties& renderProperties)

@@ -100,7 +100,8 @@ HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
                         maths/glc_plane.h \
                         maths/glc_geomtools.h \
                         maths/glc_line3d.h \
-                        maths/glc_triangle.h
+                        maths/glc_triangle.h \
+                        maths/glc_polygon.h
 						
 HEADERS_GLC_IO +=   io/glc_objmtlloader.h \
                     io/glc_objtoworld.h \
@@ -252,8 +253,7 @@ HEADERS_ZLIB    += 3rdparty/zlib/crc32.h \
                    3rdparty/zlib/zlib.h \
                    3rdparty/zlib/zutil.h
 
-HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO} \
-    GLC_LatheMesh
+HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
 HEADERS += $${HEADERS_GLC_QML} $${HEADERS_CLIP2TR} $${HEADERS_GLC_CSGJS} $${HEADERS_ZLIB}
@@ -320,7 +320,8 @@ SOURCES +=	maths/glc_matrix4x4.cpp \
                 maths/glc_plane.cpp \
                 maths/glc_geomtools.cpp \
                 maths/glc_line3d.cpp \
-                maths/glc_triangle.cpp
+                maths/glc_triangle.cpp \
+                maths/glc_polygon.cpp
 
 SOURCES +=	io/glc_objmtlloader.cpp \
                 io/glc_objtoworld.cpp \
@@ -579,7 +580,9 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_CsgNode \
                GLC_CsgOperatorNode \
                GLC_CsgLeafNode \
-               GLC_Triangle
+               GLC_Triangle \
+               GLC_LatheMesh \
+               GLC_Polygon
 
 
 include (../../install.pri)

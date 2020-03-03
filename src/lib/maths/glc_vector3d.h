@@ -461,19 +461,29 @@ GLC_Vector2d GLC_Vector3d::toVector2d(const GLC_Vector3d& mask) const
 	return resultVect;
 }
 
-double GLC_Vector3d::angleWithVect(GLC_Vector3d Vect) const
+double GLC_Vector3d::angleWithVect(GLC_Vector3d other) const
 {
-	GLC_Vector3d ThisVect(*this);
-	ThisVect.normalize();
-	Vect.normalize();
-	// Rotation axis
-	const GLC_Vector3d VectAxeRot(ThisVect ^ Vect);
-	// Check if the rotation axis vector is null
-	if (!VectAxeRot.isNull())
-	{
-		return acos(ThisVect * Vect);
-	}
-	else return 0.0;
+    double subject= 0.0;
+
+    GLC_Vector3d ThisVect(*this);
+    ThisVect.normalize();
+    other.normalize();
+    if (other == ThisVect.inverted())
+    {
+        subject= glc::PI;
+    }
+    else
+    {
+        // Rotation axis
+        const GLC_Vector3d VectAxeRot(ThisVect ^ other);
+        // Check if the rotation axis vector is null
+        if (!VectAxeRot.isNull())
+        {
+            subject= acos(ThisVect * other);
+        }
+    }
+
+    return subject;
 }
 
 double GLC_Vector3d::signedAngleWithVect(GLC_Vector3d Vect, const GLC_Vector3d& dir) const
@@ -509,8 +519,8 @@ double GLC_Vector3d::signedAngleWithVect(GLC_Vector3d Vect, const GLC_Vector3d& 
 
 			double det= getDeterminant3x3(mat3x3);
 
-			double sign= 1.0;
-			if (det != 0) sign= fabs(det) / det;
+            double sign= 1.0;
+            if (!qFuzzyIsNull(det)) sign= fabs(det) / det;
 			angle= acos(ThisVect * Vect) * sign;
 		}
 	}

@@ -466,7 +466,7 @@ QDataStream &operator<<(QDataStream & stream, const GLC_3DRep & rep)
 
 	// Save the list of 3DRep materials
 	QList<GLC_Material> materialsList;
-	QList<GLC_Material*> sourceMaterialsList= rep.materialSet().toList();
+    QList<GLC_Material*> sourceMaterialsList= rep.materialSet().values();
 	const int materialNumber= sourceMaterialsList.size();
 	for (int i= 0; i < materialNumber; ++i)
 	{

@@ -263,6 +263,13 @@ GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
     return *this;
 }
 
+void GLC_BoundingBox::clear()
+{
+    m_Lower= GLC_Point3d();
+    m_Upper= GLC_Point3d();
+    m_IsEmpty= true;
+}
+
 QDataStream &operator<<(QDataStream &stream, const GLC_BoundingBox &bBox)
 {
     quint32 chunckId= GLC_BoundingBox::m_ChunkId;

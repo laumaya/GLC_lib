@@ -30,6 +30,7 @@
 
 #include "glc_mesh.h"
 #include "../maths/glc_vector3d.h"
+#include "../maths/glc_polygon.h"
 
 #include "../glc_config.h"
 
@@ -88,6 +89,8 @@ public:
 
     float textureRangeFactor() const
     {return m_TextureRangeFactor;}
+
+    QList<GLC_Polygon> polygons() const;
 
 //@}
 
@@ -206,6 +209,8 @@ private:
 
     GLC_Material* faceOutlineMaterial(int face) const;
 
+    void createPolygons();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -241,6 +246,8 @@ private:
     QHash<int, int> m_EdgeToMaterialIndex;
 
     float m_TextureRangeFactor;
+
+    QList<GLC_Polygon> m_Polygons;
 
 };
 
