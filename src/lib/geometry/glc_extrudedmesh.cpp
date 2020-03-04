@@ -316,8 +316,14 @@ void GLC_ExtrudedMesh::createMeshAndWire()
     Q_ASSERT(!glc::compare(m_Points.first(), m_Points.last(), glc::EPSILON));
 
     computeGivenFaceNormal();
-    if (glc::compare(m_GivenFaceNormal, m_ExtrusionVector) || (m_GivenFaceNormal.angleWithVect(m_ExtrusionVector) > (glc::PI / 2.0)))
+
+    double angleWithVect= m_GivenFaceNormal.angleWithVect2(m_ExtrusionVector);
+    const bool normalEquals= glc::compare(m_GivenFaceNormal, m_ExtrusionVector);
+    const bool normalsInverted= glc::compare(m_GivenFaceNormal, m_ExtrusionVector.inverted());
+
+    if (normalEquals || (!normalsInverted && (angleWithVect < glc::PI / 2)))
     {
+        qDebug() << "Invert extruded profile";
         std::reverse(m_Points.begin(), m_Points.end());
         std::reverse(m_SmothingPoints.begin(), m_SmothingPoints.end());
         std::reverse(m_InvisibleEdgeIndex.begin(), m_InvisibleEdgeIndex.end());

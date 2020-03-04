@@ -124,7 +124,9 @@ public:
 	inline GLC_Vector2d toVector2d(const GLC_Vector3d& mask) const;
 
 	//! Return the Angle from this vector to the given vector (from 0 to PI)
-	inline double angleWithVect(GLC_Vector3d Vect) const;
+    inline double angleWithVect(GLC_Vector3d other) const;
+
+    inline double angleWithVect2(GLC_Vector3d other) const;
 
 	//! Return the signed angle from this vector to th given vector with the given direction (from 0 to -PI and 0 to PI)
 	inline double signedAngleWithVect(GLC_Vector3d Vect, const GLC_Vector3d& dir) const;
@@ -463,6 +465,21 @@ GLC_Vector2d GLC_Vector3d::toVector2d(const GLC_Vector3d& mask) const
 
 double GLC_Vector3d::angleWithVect(GLC_Vector3d other) const
 {
+	GLC_Vector3d ThisVect(*this);
+	ThisVect.normalize();
+    other.normalize();
+	// Rotation axis
+    const GLC_Vector3d VectAxeRot(ThisVect ^ other);
+	// Check if the rotation axis vector is null
+	if (!VectAxeRot.isNull())
+	{
+        return acos(ThisVect * other);
+	}
+    else return 0.0;
+}
+
+double GLC_Vector3d::angleWithVect2(GLC_Vector3d other) const
+{
     double subject= 0.0;
 
     GLC_Vector3d ThisVect(*this);
@@ -519,8 +536,8 @@ double GLC_Vector3d::signedAngleWithVect(GLC_Vector3d Vect, const GLC_Vector3d& 
 
 			double det= getDeterminant3x3(mat3x3);
 
-            double sign= 1.0;
-            if (!qFuzzyIsNull(det)) sign= fabs(det) / det;
+			double sign= 1.0;
+			if (det != 0) sign= fabs(det) / det;
 			angle= acos(ThisVect * Vect) * sign;
 		}
 	}

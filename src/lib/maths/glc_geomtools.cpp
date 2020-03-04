@@ -75,7 +75,7 @@ bool glc::polygonIsConvex(QList<GLuint>* pIndexList, const QList<float>& bulkLis
 		v0.setVect(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
 		currentIndex= pIndexList->at((i + 1) % size);
 		v1.setVect(bulkList.at(currentIndex * 3), bulkList.at(currentIndex * 3 + 1), bulkList.at(currentIndex * 3 + 2));
-		isConvex= (v0.angleWithVect(v1) < glc::PI);
+        isConvex= (v0.angleWithVect2(v1) < glc::PI);
 		++i;
 	}
 	return isConvex;

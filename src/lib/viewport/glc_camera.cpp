@@ -229,7 +229,7 @@ void GLC_Camera::setUpCam(const GLC_Vector3d &Up)
 {
 	if ( !(m_VectUp - Up).isNull() )
 	{
-		if (!glc::fuzzyCompare(forward().angleWithVect(Up), 0.0))
+        if (!glc::fuzzyCompare(forward().angleWithVect2(Up), 0.0))
 		{
 			setCam(m_Eye, m_Target, Up);
 		}
