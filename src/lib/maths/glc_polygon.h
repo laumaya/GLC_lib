@@ -60,7 +60,9 @@ public:
 
     GLC_Point3d centroid() const;
 
-    GLC_Vector3d normal() const;
+    GLC_Vector3d normalCCW() const;
+
+    GLC_Vector3d normalCW() const;
 
     int count() const
     {return m_Points.count();}

@@ -64,7 +64,7 @@ GLC_Point3d GLC_Polygon::centroid() const
     return subject;
 }
 
-GLC_Vector3d GLC_Polygon::normal() const
+GLC_Vector3d GLC_Polygon::normalCCW() const
 {
     GLC_Vector3d subject;
     if (m_Points.count() >= 3)
@@ -73,6 +73,21 @@ GLC_Vector3d GLC_Polygon::normal() const
         const GLC_Point3d& p1(m_Points.at(1));
         const GLC_Point3d& p2(m_Points.at(2));
         subject= (p2 - p0) ^ (p1 - p0);
+        subject.normalize();
+    }
+
+    return subject;
+}
+
+GLC_Vector3d GLC_Polygon::normalCW() const
+{
+    GLC_Vector3d subject;
+    if (m_Points.count() >= 3)
+    {
+        const GLC_Point3d& p0(m_Points.at(0));
+        const GLC_Point3d& p1(m_Points.at(1));
+        const GLC_Point3d& p2(m_Points.at(2));
+        subject= (p0 - p2) ^ (p1 - p0);
         subject.normalize();
     }
 
