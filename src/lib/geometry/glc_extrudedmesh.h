@@ -26,7 +26,7 @@
 #define GLC_EXTRUDEDMESH_H
 
 #include <QList>
-#include <QHash>
+#include <QMap>
 
 #include "glc_mesh.h"
 #include "../maths/glc_vector3d.h"
@@ -90,7 +90,7 @@ public:
     float textureRangeFactor() const
     {return m_TextureRangeFactor;}
 
-    QList<GLC_Polygon> polygons() const;
+    QMap<int, GLC_Polygon> polygons() const;
 
 //@}
 
@@ -123,10 +123,10 @@ public:
 
     void setMasterMaterial(GLC_Material* pMaterial);
 
-    void setEdgeMaterialAndMapping(const QHash<int, int>& mapping);
+    void setFaceMappingAndMaterial(const QMap<int, int>& mapping);
 
-    QHash<int, GLC_uint> edgeMaterialId() const
-    {return m_EdgeMaterialId;}
+    QMap<int, GLC_uint> edgeMaterialId() const
+    {return m_FaceToMaterialId;}
 
     void setTextureRangeFactor(double value);
 
@@ -211,6 +211,8 @@ private:
 
     void createPolygons();
 
+    int face(int i);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -241,13 +243,13 @@ private:
 
     GLC_uint m_MasterMaterialId;
 
-    QHash<int, GLC_uint> m_EdgeMaterialId;
+    QMap<int, GLC_uint> m_FaceToMaterialId;
 
-    QHash<int, int> m_EdgeToMaterialIndex;
+    QMap<int, int> m_FaceMapping;
 
     float m_TextureRangeFactor;
 
-    QList<GLC_Polygon> m_Polygons;
+    QMap<int, GLC_Polygon> m_FaceToPolygons;
 
 };
 
