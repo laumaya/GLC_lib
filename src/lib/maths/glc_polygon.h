@@ -28,13 +28,15 @@
 
 #include "glc_vector3d.h"
 
+#include "../glc_config.h"
+
 class GLC_Matrix4x4;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_Polygon
 /*! \brief GLC_Polygon : Maths convex and planar polygon */
 //////////////////////////////////////////////////////////////////////
-class GLC_Polygon
+class GLC_LIB_EXPORT GLC_Polygon
 {
 public:
     GLC_Polygon();
