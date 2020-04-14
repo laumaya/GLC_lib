@@ -35,8 +35,6 @@
 #include "../glc_context.h"
 #include "../glc_contextmanager.h"
 
-#include <QMutex>
-
 #include "../glc_config.h"
 
 class GLC_Viewport;
@@ -106,41 +104,41 @@ public:
 	inline bool hasTransparentMaterials() const;
 
 	//! Return true if the instance as no geometry
-	inline bool isEmpty() const
+    bool isEmpty() const
 	{return m_3DRep.isEmpty();}
 
 	//! Return true if the instance is selected
-	inline bool isSelected(void) const
+    bool isSelected(void) const
 	{return m_RenderProperties.isSelected();}
 
 	//! Return the number of geometry
-	inline int numberOfGeometry() const
+    int numberOfGeometry() const
 	{return m_3DRep.numberOfBody();}
 
 
 	//! Return the geometry at the specified position
-	inline GLC_Geometry* geomAt(int index) const
+    GLC_Geometry* geomAt(int index) const
 	{
 		if (!m_3DRep.isEmpty()) return m_3DRep.geomAt(index);
-		else return NULL;
+        else return nullptr;
 	}
 
     //! Get geometry from id
-    inline GLC_Geometry* geomOfId(GLC_uint id) const
+    GLC_Geometry* geomOfId(GLC_uint id) const
     {
         if (!m_3DRep.isEmpty()) return m_3DRep.geomOfId(id);
-        else return NULL;
+        else return nullptr;
     }
 
 	//! Get the bounding box
 	GLC_BoundingBox boundingBox();
 
 	//! Get the validity of the Bounding Box
-	inline bool boundingBoxValidity() const
-	{return (m_pBoundingBox != NULL) && m_IsBoundingBoxValid && m_3DRep.boundingBoxIsValid();}
+    bool boundingBoxValidity() const
+    {return (m_pBoundingBox != nullptr) && m_IsBoundingBoxValid && m_3DRep.boundingBoxIsValid();}
 
 	//! Return transfomation 4x4Matrix
-	inline const GLC_Matrix4x4& matrix() const
+    const GLC_Matrix4x4& matrix() const
 	{return m_AbsoluteMatrix;}
 
 	//! Make a deep copy of the instance
@@ -151,61 +149,57 @@ public:
 
 	//! Get the Polygon mode off the instance
 	/*! Polygon Mode can Be : GL_POINT, GL_LINE, or GL_FILL*/
-	inline GLenum polygonMode() const
+    GLenum polygonMode() const
 	{return m_RenderProperties.polygonMode();}
 
 	//! Return an handle to the renderProperties
-	inline GLC_RenderProperties* renderPropertiesHandle()
+    GLC_RenderProperties* renderPropertiesHandle()
 	{return &m_RenderProperties;}
 
 	//! Get the visibility state of instance
-	inline bool isVisible() const
+    bool isVisible() const
 	{return m_IsVisible;}
 
 	//! Return true if the instance is viewable
-	inline GLC_3DViewInstance::Viewable viewableFlag() const
+    GLC_3DViewInstance::Viewable viewableFlag() const
 	{return m_ViewableFlag;}
 
 	//! Return true if the geom at the index is viewable
-	inline bool isGeomViewable(int index) const
+    bool isGeomViewable(int index) const
 	{return m_ViewableGeomFlag.at(index);}
 
 	//! Get number of faces
-	inline unsigned int numberOfFaces() const
+    unsigned int numberOfFaces() const
 	{return m_3DRep.faceCount();}
 
 	//! Get number of vertex
-	inline unsigned int numberOfVertex() const
+    unsigned int numberOfVertex() const
 	{return m_3DRep.vertexCount();}
 
 	//! Get number of materials
-	inline unsigned int numberOfMaterials() const
+    unsigned int numberOfMaterials() const
 	{return m_3DRep.materialCount();}
 
 	//! Get materials List
-	inline QSet<GLC_Material*> materialSet() const
+    QSet<GLC_Material*> materialSet() const
 	{return m_3DRep.materialSet();}
 
 	//! Return the default LOD Value
-	inline int defaultLodValue() const
+    int defaultLodValue() const
 	{return m_DefaultLOD;}
 
 	//! Return the instance representation
-	inline GLC_3DRep representation() const
+    GLC_3DRep representation() const
 	{return m_3DRep;}
 
 	//! Return the number of body contains in the 3DRep
-	inline int numberOfBody() const
+    int numberOfBody() const
 	{return m_3DRep.numberOfBody();}
 
 	//! Return the global default LOD value
-	inline static int globalDefaultLod()
-	{
-		return m_GlobalDefaultLOD;
-	}
+    static int globalDefaultLod();
 
-    inline static bool firstIsLower(GLC_3DViewInstance* pInstance1, GLC_3DViewInstance* pInstance2)
-    {return (pInstance1->m_OrderWeight < pInstance2->m_OrderWeight);}
+    static bool firstIsLower(GLC_3DViewInstance* pInstance1, GLC_3DViewInstance* pInstance2);
 
     int orderWeight() const
     {return m_OrderWeight;}
@@ -221,21 +215,19 @@ public:
 	bool addGeometry(GLC_Geometry* pGeom);
 
 	//! Remove empty geometries
-	inline void removeEmptyGeometry()
+    void removeEmptyGeometry()
 	{m_3DRep.clean();}
 
 	//! Reverse geometry normals
-	inline void reverseGeometriesNormals()
+    void reverseGeometriesNormals()
 	{m_3DRep.reverseNormals();}
 
 	//! Translate Instance
 	GLC_3DViewInstance& translate(double Tx, double Ty, double Tz);
 
 	//! Translate Instance
-	inline GLC_3DViewInstance& translate(const GLC_Vector3d& v)
-	{
-		return translate(v.x(), v.y(), v.z());
-	}
+    GLC_3DViewInstance& translate(const GLC_Vector3d& v)
+	{return translate(v.x(), v.y(), v.z());}
 
 	//! Move instance with a 4x4Matrix
 	GLC_3DViewInstance& multMatrix(const GLC_Matrix4x4 &MultMat);
@@ -265,31 +257,29 @@ public:
 	{m_IsVisible= visibility;}
 
 	//! Set Instance Id
-	inline void setId(const GLC_uint id)
+    void setId(const GLC_uint id)
 	{
 		GLC_Object::setId(id);
 		glc::encodeRgbId(m_Uid, m_colorId);
 	}
 
 	//! Set the default LOD value
-	inline void setDefaultLodValue(int lod)
-	{
-		m_DefaultLOD= lod;
-	}
+    void setDefaultLodValue(int lod)
+	{m_DefaultLOD= lod;}
 
 	//! Set the viewable flag
-	inline bool setViewable(GLC_3DViewInstance::Viewable flag);
+    inline bool setViewable(GLC_3DViewInstance::Viewable flag);
 
 	//! Set the viewable flag of a geometry
-	inline void setGeomViewable(int index, bool flag)
+    void setGeomViewable(int index, bool flag)
 	{m_ViewableGeomFlag[index]= flag;}
 
 
 	//! Set the global default LOD value
-	static void setGlobalDefaultLod(int);
+    static void setGlobalDefaultLod(int);
 
 	//! Set the renderProperties of this 3DView instance
-	inline void setRenderProperties(const GLC_RenderProperties& renderProperties)
+    void setRenderProperties(const GLC_RenderProperties& renderProperties)
 	{m_RenderProperties= renderProperties;}
 
 	//! Set VBO usage
@@ -309,7 +299,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the instance
-	void render(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLod= false, GLC_Viewport* pView= NULL);
+    void render(glc::RenderFlag renderFlag= glc::ShadingFlag, bool useLod= false, GLC_Viewport* pView= nullptr);
 
 	//! Display the instance in Body selection mode
 	void renderForBodySelection();
@@ -320,7 +310,7 @@ public:
 
 private:
 	//! Set instance visualisation properties
-	inline void OpenglVisProperties()
+    void OpenglVisProperties()
 	{
 		// Polygons display mode
 		glPolygonMode(m_RenderProperties.polyFaceMode(), m_RenderProperties.polygonMode());
@@ -384,9 +374,6 @@ private:
 
     int m_OrderWeight;
 
-	//! A Mutex
-    static QMutex m_3DViewInstanceMutex;
-
 	//! The global default LOD
 	static int m_GlobalDefaultLOD;
 };
@@ -394,37 +381,47 @@ private:
 // Return true if the all instance's mesh are transparent
 bool GLC_3DViewInstance::isTransparent() const
 {
-	if (m_3DRep.isEmpty()) return false;
-	if (m_RenderProperties.renderingMode() == glc::OverwriteTransparency) return true;
-	if (m_RenderProperties.renderingMode() == glc::OverwriteMaterial)
+    bool subject;
+    if (m_3DRep.isEmpty()) subject= false;
+    else if (m_RenderProperties.renderingMode() == glc::OverwriteTransparency) subject= true;
+    else if (m_RenderProperties.renderingMode() == glc::OverwriteMaterial)
 	{
-		return m_RenderProperties.overwriteMaterial()->isTransparent();
+        subject= m_RenderProperties.overwriteMaterial()->isTransparent();
 	}
-	const int size= m_3DRep.numberOfBody();
-	bool result= true;
-	int i= 0;
-	while((i < size) && result)
-	{
-		result= result && m_3DRep.geomAt(i)->isTransparent();
-		++i;
-	}
-	return result && m_RenderProperties.needToRenderWithTransparency();
+    else if (m_RenderProperties.needToRenderWithTransparency())
+    {
+        subject= true;
+        const int size= m_3DRep.numberOfBody();
+        int i= 0;
+        while((i < size) && subject)
+        {
+            subject= subject && m_3DRep.geomAt(i)->isTransparent();
+            ++i;
+        }
+    }
+    else subject= false;
+
+    return subject;
 }
 
 // Return true if the instance contains mesh which contains transparent material
 bool GLC_3DViewInstance::hasTransparentMaterials() const
 {
-	if (m_3DRep.isEmpty()) return false;
-	if (m_RenderProperties.needToRenderWithTransparency()) return true;
-	const int size= m_3DRep.numberOfBody();
-	bool result= false;
-	int i= 0;
-	while ((i < size) && !result)
-	{
-		result= result || m_3DRep.geomAt(i)->hasTransparentMaterials();
-		++i;
-	}
-	return result;
+    bool subject;
+    if (m_3DRep.isEmpty()) subject= false;
+    else if (m_RenderProperties.needToRenderWithTransparency()) subject= true;
+    else
+    {
+        const int size= m_3DRep.numberOfBody();
+        subject= false;
+        int i= 0;
+        while ((i < size) && !subject)
+        {
+            subject= subject || m_3DRep.geomAt(i)->hasTransparentMaterials();
+            ++i;
+        }
+    }
+    return subject;
 }
 //! Set the viewable flag
 bool GLC_3DViewInstance::setViewable(GLC_3DViewInstance::Viewable flag)

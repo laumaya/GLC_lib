@@ -132,12 +132,12 @@ void GLC_World::createSharpEdges(double precision, double angleThreshold)
         if (pRef->hasRepresentation())
         {
             GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pRef->representationHandle());
-            if (NULL != pRep)
+            if (nullptr != pRep)
             {
                 for (int j= 0; j < pRep->numberOfBody(); ++j)
                 {
                     GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(pRep->geomAt(j));
-                    if (NULL != pMesh)
+                    if (nullptr != pMesh)
                     {
                         pMesh->createSharpEdges(precision, angleThreshold);
                     }
@@ -176,7 +176,7 @@ void GLC_World::setUnitFactor(double factor)
             if (pRef->hasRepresentation() && !pRef->representationIsEmpty())
             {
                 GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pRef->representationHandle());
-                if (NULL != pRep)
+                if (nullptr != pRep)
                 {
                     const int bodyCount= pRep->numberOfBody();
                     for (int iBody= 0; iBody < bodyCount; ++iBody)

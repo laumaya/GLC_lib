@@ -22,6 +22,7 @@
 
 //! \file glc_3dviewcollection.cpp implementation of the GLC_3DViewCollection class.
 
+#include <QtDebug>
 
 #include "glc_3dviewcollection.h"
 #include "../shading/glc_material.h"
@@ -33,8 +34,6 @@
 #include "glc_spacepartitioning.h"
 #include "../glc_context.h"
 #include "../glc_contextmanager.h"
-
-#include <QtDebug>
 
 //////////////////////////////////////////////////////////////////////
 // Constructor/Destructor
@@ -48,8 +47,8 @@ GLC_3DViewCollection::GLC_3DViewCollection()
 , m_MainInstances()
 , m_IsInShowSate(true)
 , m_UseLod(false)
-, m_pViewport(NULL)
-, m_pSpacePartitioning(NULL)
+, m_pViewport(nullptr)
+, m_pSpacePartitioning(nullptr)
 , m_UseSpacePartitioning(false)
 , m_IsViewable(true)
 , m_UseOrderRendering(false)
@@ -67,21 +66,23 @@ GLC_3DViewCollection::~GLC_3DViewCollection()
 
 bool GLC_3DViewCollection::bindShader(GLC_uint shaderId)
 {
+    bool subject;
 	if (m_ShadedPointerViewInstanceHash.contains(shaderId))
 	{
-		return false;
+        subject= false;
 	}
 	else
 	{
 		PointerViewInstanceHash* pNodeHash= new PointerViewInstanceHash;
 		m_ShadedPointerViewInstanceHash.insert(shaderId, pNodeHash);
-		return true;
+        subject= true;
 	}
+    return subject;
 }
 
 bool GLC_3DViewCollection::unBindShader(GLC_uint shaderId)
 {
-	bool result= false;
+    bool subject= false;
 	if (m_ShadedPointerViewInstanceHash.contains(shaderId))
 	{
 		// Find node which use the shader
@@ -106,15 +107,15 @@ bool GLC_3DViewCollection::unBindShader(GLC_uint shaderId)
 		}
 		pShaderNodeHash->clear();
 		delete pShaderNodeHash;
-		result= true;
+        subject= true;
 	}
 	Q_ASSERT(!m_ShadedPointerViewInstanceHash.contains(shaderId));
-	return result;
+    return subject;
 }
 
 bool GLC_3DViewCollection::unBindAllShader()
 {
-	bool result= true;
+    bool subject= true;
 	HashList::iterator iEntry= m_ShadedPointerViewInstanceHash.begin();
 	QList<GLuint> shaderList;
     while (iEntry != m_ShadedPointerViewInstanceHash.constEnd())
@@ -125,14 +126,14 @@ bool GLC_3DViewCollection::unBindAllShader()
     const int size= shaderList.size();
     for (int i=0; i < size; ++i)
     {
-    	result= result && unBindShader(shaderList[i]);
+        subject= subject && unBindShader(shaderList[i]);
     }
-    return result;
+    return subject;
 }
 
 bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLC_uint shaderID)
 {
-	bool result= false;
+    bool subject= false;
 	const GLC_uint key= node.id();
 	if (m_3DViewInstanceHash.contains(key))
 	{
@@ -159,21 +160,21 @@ bool GLC_3DViewCollection::add(const GLC_3DViewInstance& node, GLC_uint shaderID
 			{
 				m_ShadedPointerViewInstanceHash.value(shaderID)->insert(key, pInstance);
 			}
-			result=true;
+            subject=true;
 		}
 	}
 	else if (!pInstance->isSelected())
 	{
 		m_MainInstances.insert(key, pInstance);
-		result=true;
+        subject=true;
 	}
 	else
 	{
 		m_SelectedInstances.insert(key, pInstance);
-		result=true;
+        subject=true;
 	}
 
-	return result;
+    return subject;
 }
 
 void GLC_3DViewCollection::changeShadingGroup(GLC_uint instanceId, GLC_uint shaderId)
@@ -183,7 +184,7 @@ void GLC_3DViewCollection::changeShadingGroup(GLC_uint instanceId, GLC_uint shad
 	// Get the instance shading group
 	const GLuint instanceShadingGroup= shadingGroup(instanceId);
 	// Get a pointer to the instance
-	GLC_3DViewInstance* pInstance= NULL;
+    GLC_3DViewInstance* pInstance= nullptr;
 	if (0 == instanceShadingGroup)
 	{
 		// The instance is not in a shading group
@@ -231,32 +232,30 @@ void GLC_3DViewCollection::changeShadingGroup(GLC_uint instanceId, GLC_uint shad
 	}
 }
 
-bool GLC_3DViewCollection::remove(GLC_uint Key)
+bool GLC_3DViewCollection::remove(GLC_uint key)
 {
-	ViewInstancesHash::iterator iNode= m_3DViewInstanceHash.find(Key);
+    bool subject;
 
-	if (iNode != m_3DViewInstanceHash.end())
+    if (m_3DViewInstanceHash.contains(key))
 	{	// Ok, the key exist
 
-		if (selectionSize() > 0)
+        if (m_SelectedInstances.contains(key))
 		{
 			// if the geometry is selected, unselect it
-			unselect(Key);
+            unselect(key);
 		}
 
-		m_MainInstances.remove(Key);
+        m_MainInstances.remove(key);
+        m_3DViewInstanceHash.remove(key);		// Delete the conteneur
 
-		m_3DViewInstanceHash.remove(Key);		// Delete the conteneur
-
-		//qDebug("GLC_3DViewCollection::removeNode : Element succesfuly deleted");
-		return true;
-
+        subject= true;
 	}
 	else
 	{	// KO, key doesn't exist
-		return false;
+        subject= false;
 	}
 
+    return subject;
 }
 
 void GLC_3DViewCollection::clear(void)
@@ -266,15 +265,8 @@ void GLC_3DViewCollection::clear(void)
 	// Clear the not transparent Hash Table
 	m_MainInstances.clear();
 	// Clear Other Node Hash List
-	HashList::iterator iEntry= m_ShadedPointerViewInstanceHash.begin();
-    while (iEntry != m_ShadedPointerViewInstanceHash.constEnd())
-    {
-    	iEntry.value()->clear();
-    	delete iEntry.value();
-    	iEntry= m_ShadedPointerViewInstanceHash.erase(iEntry);
-    }
-
-	m_ShadedPointerViewInstanceHash.clear();
+    qDeleteAll(m_ShadedPointerViewInstanceHash);
+    m_ShadedPointerViewInstanceHash.clear();
 	m_ShaderGroup.clear();
 
 	// Clear main Hash table
@@ -282,6 +274,7 @@ void GLC_3DViewCollection::clear(void)
 
 	// delete the space partitioning
 	delete m_pSpacePartitioning;
+    m_pSpacePartitioning= nullptr;
 }
 
 bool GLC_3DViewCollection::select(GLC_uint key, bool primitive)
@@ -341,6 +334,8 @@ void GLC_3DViewCollection::selectAll(bool allShowState)
 
 bool GLC_3DViewCollection::unselect(GLC_uint key)
 {
+    bool subject;
+
 	PointerViewInstanceHash::iterator iSelectedNode= m_SelectedInstances.find(key);
 
 	if (iSelectedNode != m_SelectedInstances.end())
@@ -360,15 +355,14 @@ bool GLC_3DViewCollection::unselect(GLC_uint key)
 			m_MainInstances.insert(key, pSelectedNode);
 		}
 
-		//qDebug("GLC_3DViewCollection::unselectNode : Node succesfuly unselected");
-		return true;
+        subject= true;
 
 	}
 	else
 	{	// KO, key doesn't exist or node allready selected
-		//qDebug("GLC_3DViewCollection::unselectNode : Node not unselected");
-		return false;
+        subject= false;
 	}
+    return subject;
 }
 
 void GLC_3DViewCollection::unselectAll()
@@ -435,12 +429,11 @@ void GLC_3DViewCollection::hideAll()
     	iEntry.value().setVisibility(false);
         ++iEntry;
     }
-
 }
 
 void GLC_3DViewCollection::bindSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning)
 {
-	Q_ASSERT(NULL != pSpacePartitioning);
+    Q_ASSERT(nullptr != pSpacePartitioning);
 
 	delete m_pSpacePartitioning;
 	m_pSpacePartitioning= pSpacePartitioning;
@@ -450,7 +443,7 @@ void GLC_3DViewCollection::bindSpacePartitioning(GLC_SpacePartitioning* pSpacePa
 void GLC_3DViewCollection::unbindSpacePartitioning()
 {
 	delete m_pSpacePartitioning;
-	m_pSpacePartitioning= NULL;
+    m_pSpacePartitioning= nullptr;
 	m_UseSpacePartitioning= false;
 
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
@@ -460,12 +453,11 @@ void GLC_3DViewCollection::unbindSpacePartitioning()
     	iEntry.value().setViewable(GLC_3DViewInstance::FullViewable);
         ++iEntry;
     }
-
 }
 
 void GLC_3DViewCollection::updateInstanceViewableState(GLC_Matrix4x4* pMatrix)
 {
-	if ((NULL != m_pViewport) && m_UseSpacePartitioning && (NULL != m_pSpacePartitioning))
+    if ((nullptr != m_pViewport) && m_UseSpacePartitioning && (nullptr != m_pSpacePartitioning))
 	{
 		if (m_pViewport->updateFrustum(pMatrix))
         {
@@ -476,7 +468,7 @@ void GLC_3DViewCollection::updateInstanceViewableState(GLC_Matrix4x4* pMatrix)
 
 void GLC_3DViewCollection::updateInstanceViewableState(const GLC_Frustum& frustum)
 {
-    if (NULL != m_pSpacePartitioning)
+    if (nullptr != m_pSpacePartitioning)
     {
         m_pSpacePartitioning->updateViewableInstances(frustum);
     }
@@ -484,7 +476,7 @@ void GLC_3DViewCollection::updateInstanceViewableState(const GLC_Frustum& frustu
 
 void GLC_3DViewCollection::updateSpacePartitionning()
 {
-    if (NULL != m_pSpacePartitioning)
+    if (nullptr != m_pSpacePartitioning)
     {
         m_pSpacePartitioning->updateSpacePartitioning();
     }
@@ -517,7 +509,7 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::instancesHandle()
 
 QList<GLC_3DViewInstance*> GLC_3DViewCollection::visibleInstancesHandle()
 {
-	QList<GLC_3DViewInstance*> instancesList;
+    QList<GLC_3DViewInstance*> subject;
 
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 
@@ -525,11 +517,11 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::visibleInstancesHandle()
     {
     	if (iEntry.value().isVisible())
     	{
-        	instancesList.append(&(iEntry.value()));
+            subject.append(&(iEntry.value()));
     	}
         ++iEntry;
     }
-	return instancesList;
+    return subject;
 
 }
 
@@ -547,7 +539,7 @@ bool GLC_3DViewCollection::hasVisibleInstance() const
 
 QList<GLC_3DViewInstance*> GLC_3DViewCollection::viewableInstancesHandle()
 {
-	QList<GLC_3DViewInstance*> instancesList;
+    QList<GLC_3DViewInstance*> subject;
 
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 
@@ -555,11 +547,11 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::viewableInstancesHandle()
     {
     	if (iEntry.value().isVisible() == m_IsInShowSate)
     	{
-        	instancesList.append(&(iEntry.value()));
+            subject.append(&(iEntry.value()));
     	}
         ++iEntry;
     }
-	return instancesList;
+    return subject;
 }
 
 GLC_3DViewInstance* GLC_3DViewCollection::instanceHandle(GLC_uint Key)
@@ -597,7 +589,6 @@ int GLC_3DViewCollection::drawableObjectsSize() const
 	ViewInstancesHash::const_iterator i= m_3DViewInstanceHash.begin();
 	while (i != m_3DViewInstanceHash.constEnd())
 	{
-		//qDebug() << "transparent";
 		if (i.value().isVisible() == m_IsInShowSate)
 		{
 			++numberOffDrawnHit;

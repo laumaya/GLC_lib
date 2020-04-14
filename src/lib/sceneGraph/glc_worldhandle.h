@@ -61,39 +61,39 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return the collection
-	inline GLC_3DViewCollection* collection()
+    GLC_3DViewCollection* collection()
 	{return &m_Collection;}
 
     //! Return the root of the world
-    inline GLC_StructOccurrence* rootOccurrence() const
+    GLC_StructOccurrence* rootOccurrence() const
     {return m_pRoot;}
 
 	//! Return the number of world associated with this handle
-	inline int numberOfWorld() const
+    int numberOfWorld() const
     {return m_Ref.load();}
 
     //! Return true if the specified occurrence id is in this world
-    inline bool containsOccurrence(GLC_uint id) const
+    bool containsOccurrence(GLC_uint id) const
     {return m_OccurrenceHash.contains(id);}
 
     //! Return the occurrence specified by an id
 	/*! Id must be a valid identifier*/
-    inline GLC_StructOccurrence* getOccurrence(GLC_uint id) const
+    GLC_StructOccurrence* getOccurrence(GLC_uint id) const
 	{
         Q_ASSERT(m_OccurrenceHash.contains(id));
         return m_OccurrenceHash.value(id);
 	}
 
     //! Return the list of occurrences
-    inline QList<GLC_StructOccurrence*> occurrences() const
+    QList<GLC_StructOccurrence*> occurrences() const
     {return m_OccurrenceHash.values();}
 
     //! Return the list of occurrences id
-    inline QList<GLC_uint> occurrencesId() const
+    QList<GLC_uint> occurrencesId() const
     {return m_OccurrenceHash.keys();}
 
     //! Return the number of occurrence
-    inline int numberOfOccurrence() const
+    int numberOfOccurrence() const
     {return m_OccurrenceHash.size();}
 
 	//! Return the list of instance
@@ -109,15 +109,15 @@ public:
 	int representationCount() const;
 
 	//! Return the world Up vector
-	inline GLC_Vector3d upVector() const
+    GLC_Vector3d upVector() const
 	{return m_UpVector;}
 
 	//! Return an handle to the selection set
-	inline GLC_SelectionSet* selectionSetHandle()
+    GLC_SelectionSet* selectionSetHandle()
 	{return &m_SelectionSet;}
 
     //! Return a copy of the selection set
-    inline GLC_SelectionSet selectionSet()
+    GLC_SelectionSet selectionSet()
     {return m_SelectionSet;}
 
     //! Return the occurence of the given path
@@ -137,11 +137,11 @@ public:
     GLC_StructOccurrence* takeRootOccurrence();
 
 	//! Increment the number of world
-    inline bool ref()
+    bool ref()
     {return m_Ref.ref();}
 
 	//! Decrement the number of world
-    inline bool deref()
+    bool deref()
     {return m_Ref.deref();}
 
     //! An Occurrence has been added
@@ -151,15 +151,15 @@ public:
     void removeOccurrence(GLC_StructOccurrence* pOccurrence);
 
     //! All Occurrence has been removed
-    inline void removeAllOccurrences()
+    void removeAllOccurrences()
     {m_OccurrenceHash.clear();}
 
 	//! Set the world Up Vector
-	inline void setUpVector(const GLC_Vector3d& vect)
+    void setUpVector(const GLC_Vector3d& vect)
 	{m_UpVector= vect;}
 
 	//! Set the attached viewport of this world handle
-	inline void setAttachedViewport(GLC_Viewport* pViewport)
+    void setAttachedViewport(GLC_Viewport* pViewport)
 	{m_Collection.setAttachedViewport(pViewport);}
 
     //! Select the given occurrence id

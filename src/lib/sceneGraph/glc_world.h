@@ -72,104 +72,104 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return the entire world Bounding Box
-	inline GLC_BoundingBox boundingBox()
+    GLC_BoundingBox boundingBox()
 	{ return m_pWorldHandle->collection()->boundingBox();}
 
 	//! Return the root of the world
-	inline GLC_StructOccurrence* rootOccurrence() const
+    GLC_StructOccurrence* rootOccurrence() const
     {return m_pWorldHandle->rootOccurrence();}
 
 	//! Return the world collection
-	inline GLC_3DViewCollection* collection()
+    GLC_3DViewCollection* collection()
 	{return m_pWorldHandle->collection();}
 
 	//! Return the size of the world
-	inline int size() const
+    int size() const
 	{return m_pWorldHandle->collection()->size();}
 
 	//! Return true if the world is empty
-	inline bool isEmpty() const
+    bool isEmpty() const
     {return  m_pWorldHandle->collection()->isEmpty() && !rootOccurrence()->hasChild();}
 
 	//! Return number of faces
-	inline int numberOfFaces() const
+    unsigned int numberOfFaces() const
     {return rootOccurrence()->numberOfFaces();}
 
 	//! Return number of vertex
-	inline int numberOfVertex() const
+    unsigned int numberOfVertex() const
     {return rootOccurrence()->numberOfVertex();}
 
 	//! Return the number of materials
-	inline int numberOfMaterials() const
+    unsigned int numberOfMaterials() const
     {return rootOccurrence()->numberOfMaterials();}
 
 	//! Return the list of material
-	inline QList<GLC_Material*> listOfMaterials() const
+    QList<GLC_Material*> listOfMaterials() const
     {return rootOccurrence()->materialSet().toList();}
 
 	//! Return list of world's instances
-	inline QList<GLC_3DViewInstance*> instancesHandle() const
+    QList<GLC_3DViewInstance*> instancesHandle() const
 	{return m_pWorldHandle->collection()->instancesHandle();}
 
 	//! Return all visible GLC_3DViewInstance from the world
-	inline QList<GLC_3DViewInstance*> visibleInstancesHandle() const
+    QList<GLC_3DViewInstance*> visibleInstancesHandle() const
 	{return m_pWorldHandle->collection()->visibleInstancesHandle();}
 
 	//! Return instances name from the specified shading group
-	inline QList<QString> instanceNamesFromShadingGroup(GLuint id) const
+    QList<QString> instanceNamesFromShadingGroup(GLuint id) const
 	{return m_pWorldHandle->collection()->instanceNamesFromShadingGroup(id);}
 
 	//! Return the number of used shading group
-	inline int numberOfUsedShadingGroup() const
+    int numberOfUsedShadingGroup() const
 	{return m_pWorldHandle->collection()->numberOfUsedShadingGroup();}
 
 	//! Return the worldHandle of this world
-	inline GLC_WorldHandle* worldHandle()
+    GLC_WorldHandle* worldHandle()
 	{return m_pWorldHandle;}
 
     //! Return the worldHandle of this world
-    inline const GLC_WorldHandle* worldHandle() const
+    const GLC_WorldHandle* worldHandle() const
     {return m_pWorldHandle;}
 
 	//! Return the occurrence specified by an id
 	/*! Id must be a valid identifier*/
-	inline GLC_StructOccurrence* occurrence(GLC_uint id) const
+    GLC_StructOccurrence* occurrence(GLC_uint id) const
 	{return m_pWorldHandle->getOccurrence(id);}
 
 	//! Return the list off occurrences
-	inline QList<GLC_StructOccurrence*> listOfOccurrence() const
+    QList<GLC_StructOccurrence*> listOfOccurrence() const
 	{return m_pWorldHandle->occurrences();}
 
     //! Return the list of occurrences id
-    inline QList<GLC_uint> occurrencesId() const
+    QList<GLC_uint> occurrencesId() const
     {return m_pWorldHandle->occurrencesId();}
 
 	//! Return the number of occurrence
-	inline int numberOfOccurrence() const
+    int numberOfOccurrence() const
 	{return m_pWorldHandle->numberOfOccurrence();}
 
 	//! Return true if the world contians specified id
-	inline int containsOccurrence(GLC_uint id) const
+    int containsOccurrence(GLC_uint id) const
 	{return m_pWorldHandle->containsOccurrence(id);}
 
 	//! Return the list of instance
-	inline QList<GLC_StructInstance*> instances() const
+    QList<GLC_StructInstance*> instances() const
 	{return m_pWorldHandle->instances();}
 
 	//! Return the list of Reference
-	inline QList<GLC_StructReference*> references() const
+    QList<GLC_StructReference*> references() const
 	{return m_pWorldHandle->references();}
 
 	//! Return the number of body
-	inline int numberOfBody() const
+    int numberOfBody() const
 	{return m_pWorldHandle->numberOfBody();}
 
 	//! Return the number of representation
-	inline int representationCount() const
+    int representationCount() const
 	{return m_pWorldHandle->representationCount();}
 
 	//! Return the world Up vector
-	inline GLC_Vector3d upVector() const
+    GLC_Vector3d upVector() const
 	{return m_pWorldHandle->upVector();}
 
 	//! Return the number of selected occurrence
@@ -177,15 +177,15 @@ public:
     {return m_pWorldHandle->selectionSetHandle()->size();}
 
 	//! Return true if the given occurrence is selected
-	inline bool isSelected(const GLC_StructOccurrence* pOccurrence) const
+    bool isSelected(const GLC_StructOccurrence* pOccurrence) const
 	{return m_pWorldHandle->selectionSetHandle()->contains(pOccurrence);}
 
 	//! Return true if the given occurrence id is selected
-	inline bool isSelected(GLC_uint selectionId) const
+    bool isSelected(GLC_uint selectionId) const
 	{return m_pWorldHandle->selectionSetHandle()->contains(selectionId);}
 
 	//! Return the list of selected occurrences
-	inline QList<GLC_StructOccurrence*> selectedOccurrenceList() const
+    QList<GLC_StructOccurrence*> selectedOccurrenceList() const
     {return m_pWorldHandle->selectionSetHandle()->occurrencesList();}
 
     //! Return the minimum selected occurrences list
@@ -195,11 +195,11 @@ public:
 	GLC_StructOccurrence* takeRootOccurrence();
 
     //! Return a copy of the selection set
-    inline GLC_SelectionSet selectionSet()
+    GLC_SelectionSet selectionSet()
     {return m_pWorldHandle->selectionSet();}
 
     //! Return the occurence of the given path
-    inline GLC_StructOccurrence* occurrenceFromPath(GLC_OccurencePath path) const
+    GLC_StructOccurrence* occurrenceFromPath(GLC_OccurencePath path) const
     {return m_pWorldHandle->occurrenceFromPath(path);}
 
 //@}
@@ -222,25 +222,25 @@ public:
 	GLC_World& clear() {return *this= GLC_World();}
 
 	//! Set the World root Name
-	inline void setRootName(const QString& name)
+    void setRootName(const QString& name)
     {rootOccurrence()->setName(name);}
 
 	//! Set the world Up Vector
-	inline void setUpVector(const GLC_Vector3d& vect)
+    void setUpVector(const GLC_Vector3d& vect)
 	{m_pWorldHandle->setUpVector(vect);}
 
 	//! Set the attached viewport of this world
-	inline void setAttachedViewport(GLC_Viewport* pViewport)
+    void setAttachedViewport(GLC_Viewport* pViewport)
 	{m_pWorldHandle->setAttachedViewport(pViewport);}
 
 	//! Select the given occurrence
 	/*! The given occurrence must belong to the world handle of this world*/
-	inline void select(const GLC_StructOccurrence* pOccurrence)
+    void select(const GLC_StructOccurrence* pOccurrence)
 	{m_pWorldHandle->select(pOccurrence->id());}
 
 	//! Select the given occurrence id
 	/*! The given occurrence id must belong to the world handle of this world*/
-	inline void select(GLC_uint occurrenceId)
+    void select(GLC_uint occurrenceId)
 	{m_pWorldHandle->select(occurrenceId);}
 
     //! Update the current selection from the given selection event
@@ -248,31 +248,31 @@ public:
 
 	//! Unselect the given occurrence id
 	/*! The given occurrence id must belong to the world handle of this world*/
-	inline void unselect(GLC_uint occurrenceId)
+    void unselect(GLC_uint occurrenceId)
 	{m_pWorldHandle->unselect(occurrenceId);}
 
 	//! Select all occurrence of this world with a 3DViewInstance
-	inline void selectAllWith3DViewInstance()
+    void selectAllWith3DViewInstance()
 	{m_pWorldHandle->selectAllWith3DViewInstance(true);}
 
 	//! Select all occurrence of this world with a 3DViewInstance in the current show state
-	inline void selectAllWith3DViewInstanceInCurrentShowState()
+    void selectAllWith3DViewInstanceInCurrentShowState()
 	{m_pWorldHandle->selectAllWith3DViewInstance(false);}
 
 	//! Unselect all occurrence of this world
-	inline void unselectAll()
+    void unselectAll()
 	{m_pWorldHandle->unselectAll();}
 
 	//! Show / Hide selected 3DViewInstance
-	inline void showHideSelected3DViewInstance()
+    void showHideSelected3DViewInstance()
 	{m_pWorldHandle->showHideSelected3DViewInstance();}
 
 	//! Show selected 3DViewInstance
-	inline void showSelected3DViewInstance()
+    void showSelected3DViewInstance()
 	{m_pWorldHandle->setSelected3DViewInstanceVisibility(true);}
 
 	//! Hide selected 3DViewInstance
-	inline void hideSelected3DViewInstance()
+    void hideSelected3DViewInstance()
 	{m_pWorldHandle->setSelected3DViewInstanceVisibility(false);}
 
     void createSharpEdges(double precision, double angleThreshold);
@@ -299,11 +299,11 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Display the world
-	inline void render(GLuint groupId, glc::RenderFlag renderFlag= glc::ShadingFlag)
+    void render(GLuint groupId, glc::RenderFlag renderFlag= glc::ShadingFlag)
 	{m_pWorldHandle->collection()->render(groupId, renderFlag);}
 
 	//! Display the world's shader group
-	inline void renderShaderGroup(glc::RenderFlag renderFlag= glc::ShadingFlag)
+    void renderShaderGroup(glc::RenderFlag renderFlag= glc::ShadingFlag)
 	{m_pWorldHandle->collection()->renderShaderGroup(renderFlag);}
 
 //@}

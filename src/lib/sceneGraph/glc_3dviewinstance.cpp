@@ -25,12 +25,8 @@
 #include "glc_3dviewinstance.h"
 #include "../shading/glc_selectionmaterial.h"
 #include "../viewport/glc_viewport.h"
-#include <QMutexLocker>
 #include "../glc_state.h"
 #include "../glc_renderstate.h"
-
-//! A Mutex
-QMutex GLC_3DViewInstance::m_3DViewInstanceMutex;
 
 //! The global default LOD
 int GLC_3DViewInstance::m_GlobalDefaultLOD= 10;
@@ -43,7 +39,7 @@ int GLC_3DViewInstance::m_GlobalDefaultLOD= 10;
 GLC_3DViewInstance::GLC_3DViewInstance()
     : GLC_Object()
     , m_3DRep()
-    , m_pBoundingBox(NULL)
+    , m_pBoundingBox(nullptr)
     , m_AbsoluteMatrix()
     , m_IsBoundingBoxValid(false)
     , m_RenderProperties()
@@ -62,7 +58,7 @@ GLC_3DViewInstance::GLC_3DViewInstance()
 GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom)
     : GLC_Object()
     , m_3DRep(pGeom)
-    , m_pBoundingBox(NULL)
+    , m_pBoundingBox(nullptr)
     , m_AbsoluteMatrix()
     , m_IsBoundingBoxValid(false)
     , m_RenderProperties()
@@ -82,7 +78,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom)
 GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom, GLC_uint id)
     : GLC_Object(id)
     , m_3DRep(pGeom)
-    , m_pBoundingBox(NULL)
+    , m_pBoundingBox(nullptr)
     , m_AbsoluteMatrix()
     , m_IsBoundingBoxValid(false)
     , m_RenderProperties()
@@ -102,7 +98,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(GLC_Geometry* pGeom, GLC_uint id)
 GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
     : GLC_Object(rep.name())
     , m_3DRep(rep)
-    , m_pBoundingBox(NULL)
+    , m_pBoundingBox(nullptr)
     , m_AbsoluteMatrix()
     , m_IsBoundingBoxValid(false)
     , m_RenderProperties()
@@ -121,7 +117,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep)
 GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep, GLC_uint id)
     : GLC_Object(id, rep.name())
     , m_3DRep(rep)
-    , m_pBoundingBox(NULL)
+    , m_pBoundingBox(nullptr)
     , m_AbsoluteMatrix()
     , m_IsBoundingBoxValid(false)
     , m_RenderProperties()
@@ -141,7 +137,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DRep& rep, GLC_uint id)
 GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
     : GLC_Object(inputNode)
     , m_3DRep(inputNode.m_3DRep)
-    , m_pBoundingBox(NULL)
+    , m_pBoundingBox(nullptr)
     , m_AbsoluteMatrix(inputNode.m_AbsoluteMatrix)
     , m_IsBoundingBoxValid(inputNode.m_IsBoundingBoxValid)
     , m_RenderProperties(inputNode.m_RenderProperties)
@@ -156,7 +152,7 @@ GLC_3DViewInstance::GLC_3DViewInstance(const GLC_3DViewInstance& inputNode)
 	// Encode Color Id
 	glc::encodeRgbId(m_Uid, m_colorId);
 
-	if (NULL != inputNode.m_pBoundingBox)
+    if (nullptr != inputNode.m_pBoundingBox)
 	{
 		m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
 	}
@@ -175,7 +171,7 @@ GLC_3DViewInstance& GLC_3DViewInstance::operator=(const GLC_3DViewInstance& inpu
 		glc::encodeRgbId(m_Uid, m_colorId);
 
 		m_3DRep= inputNode.m_3DRep;
-		if (NULL != inputNode.m_pBoundingBox)
+        if (nullptr != inputNode.m_pBoundingBox)
 		{
 			m_pBoundingBox= new GLC_BoundingBox(*inputNode.m_pBoundingBox);
 		}
@@ -230,7 +226,6 @@ GLC_BoundingBox GLC_3DViewInstance::boundingBox(void)
 //! Set the global default LOD value
 void GLC_3DViewInstance::setGlobalDefaultLod(int lod)
 {
-    QMutexLocker locker(&m_3DViewInstanceMutex);
 	m_GlobalDefaultLOD= lod;
 }
 
@@ -244,12 +239,12 @@ GLC_3DViewInstance GLC_3DViewInstance::deepCopy() const
 {
 
 	GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(m_3DRep.deepCopy());
-	Q_ASSERT(NULL != pRep);
+    Q_ASSERT(nullptr != pRep);
 	GLC_3DRep newRep(*pRep);
 	delete pRep;
 	GLC_3DViewInstance cloneInstance(newRep);
 
-	if (NULL != m_pBoundingBox)
+    if (nullptr != m_pBoundingBox)
 	{
 		cloneInstance.m_pBoundingBox= new GLC_BoundingBox(*m_pBoundingBox);
 	}
@@ -271,6 +266,16 @@ GLC_3DViewInstance GLC_3DViewInstance::instanciate()
 	glc::encodeRgbId(m_Uid, m_colorId);
 
 	return instance;
+}
+
+int GLC_3DViewInstance::globalDefaultLod()
+{
+    return m_GlobalDefaultLOD;
+}
+
+bool GLC_3DViewInstance::firstIsLower(GLC_3DViewInstance* pInstance1, GLC_3DViewInstance* pInstance2)
+{
+    return (pInstance1->m_OrderWeight < pInstance2->m_OrderWeight);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -366,7 +371,7 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 
 
 
-        if (useLod && (NULL != pView))
+        if (useLod && (nullptr != pView))
         {
             for (int i= 0; i < bodyCount; ++i)
             {
@@ -389,7 +394,7 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
                 if (m_ViewableGeomFlag.at(i))
                 {
                     int lodValue= 0;
-                    if (GLC_State::isPixelCullingActivated() && (NULL != pView))
+                    if (GLC_State::isPixelCullingActivated() && (nullptr != pView))
                     {
                         lodValue= choseLod(m_3DRep.geomAt(i)->boundingBox(), pView, useLod);
                     }
@@ -511,10 +516,10 @@ void GLC_3DViewInstance::computeBoundingBox(void)
 {
 	if (m_3DRep.isEmpty()) return;
 
-	if (m_pBoundingBox != NULL)
+    if (m_pBoundingBox != nullptr)
 	{
 		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
+        m_pBoundingBox= nullptr;
 	}
 	m_pBoundingBox= new GLC_BoundingBox();
 	const int size= m_3DRep.numberOfBody();
@@ -531,7 +536,7 @@ void GLC_3DViewInstance::clear()
 {
 
 	delete m_pBoundingBox;
-	m_pBoundingBox= NULL;
+    m_pBoundingBox= nullptr;
 
 	// invalidate the bounding box
 	m_IsBoundingBoxValid= false;
@@ -544,7 +549,7 @@ void GLC_3DViewInstance::clear()
 // Compute LOD
 int GLC_3DViewInstance::choseLod(const GLC_BoundingBox& boundingBox, GLC_Viewport* pView, bool useLod)
 {
-	if (NULL == pView) return 0;
+    if (nullptr == pView) return 0;
 	double pixelCullingRatio= 0.0;
 	if (useLod)
 	{

@@ -84,11 +84,11 @@ public:
 public:
 
 	//! Return true if the collection is empty
-	inline bool isEmpty() const
-	{return m_3DViewInstanceHash.size() == 0;}
+    bool isEmpty() const
+    {return m_3DViewInstanceHash.isEmpty();}
 
 	//! Return the number of Node in the collection
-	inline int size(void) const
+    int size(void) const
 	{return m_3DViewInstanceHash.size();}
 
 	//! Return all GLC_3DViewInstance from collection
@@ -112,34 +112,34 @@ public:
 	GLC_BoundingBox boundingBox(bool allObject= false);
 
 	//! Return the number of Node in the selection Hash
-	inline int selectionSize(void) const
+    int selectionSize(void) const
 	{return m_SelectedInstances.size();}
 
 	//! Get the Hash table of Selected Nodes
-	inline PointerViewInstanceHash* selection()
+    PointerViewInstanceHash* selection()
 	{return &m_SelectedInstances;}
 
 	//! Return true if the Instance Id is in the collection
-	inline bool contains(GLC_uint key) const
+    bool contains(GLC_uint key) const
 	{return m_3DViewInstanceHash.contains(key);}
 
 	//! Return true if the element is selected
-	inline bool isSelected(GLC_uint key) const
+    bool isSelected(GLC_uint key) const
 	{return m_SelectedInstances.contains(key);}
 
 	//! Return the showing state
-	inline bool showState() const
+    bool showState() const
 	{return m_IsInShowSate;}
 
 	//! Return the number of drawable objects
 	int drawableObjectsSize() const;
 
 	//! Return the element shading group
-	inline GLC_uint shadingGroup(GLC_uint key) const
+    GLC_uint shadingGroup(GLC_uint key) const
 	{ return m_ShaderGroup.value(key);}
 
 	//! Return true if the element is in a shading group
-	inline bool isInAShadingGroup(GLC_uint key) const
+    bool isInAShadingGroup(GLC_uint key) const
 	{ return m_ShaderGroup.contains(key);}
 
 	//! Return instances name from the specified shading group
@@ -149,15 +149,15 @@ public:
 	int numberOfUsedShadingGroup() const;
 
 	//! Return true if the space partitioning is used
-	inline bool spacePartitioningIsUsed() const
+    bool spacePartitioningIsUsed() const
 	{return m_UseSpacePartitioning;}
 
 	//! Return an handle to  the space partitioning
-	inline GLC_SpacePartitioning* spacePartitioningHandle()
+    GLC_SpacePartitioning* spacePartitioningHandle()
 	{return m_pSpacePartitioning;}
 
 	//! Return true if the collection is viewable
-	inline bool isViewable() const
+    bool isViewable() const
 	{return m_IsViewable;}
 
     bool useOrderRendering() const
@@ -201,7 +201,7 @@ public:
 	 * 		- Remove the Display list container from collection
 	 * 		- Invalidate the collection
 	 * return true if success false otherwise*/
-	bool remove(GLC_uint instanceId);
+    bool remove(GLC_uint key);
 
 	//! Remove and delete all GLC_Geometry from the collection
 	void clear(void);
@@ -231,11 +231,11 @@ public:
 	void hideAll();
 
 	//! Set the Show or noShow state
-	inline void swapShowState()
+    void swapShowState()
 	{m_IsInShowSate= !m_IsInShowSate;}
 
 	//! Set the LOD usage
-	inline void setLodUsage(const bool usage, GLC_Viewport* pView)
+    void setLodUsage(const bool usage, GLC_Viewport* pView)
 	{
 		m_UseLod= usage;
 		m_pViewport= pView;
@@ -248,13 +248,13 @@ public:
 	void unbindSpacePartitioning();
 
 	//! Use the space partitioning
-	inline void setSpacePartitionningUsage(bool use)
+    void setSpacePartitionningUsage(bool use)
 	{m_UseSpacePartitioning= use;}
 
 	//! Update the instance viewable state
 	/*! Update the frustrum culling from the viewport
 	 * If the specified matrix pointer is not null*/
-	void updateInstanceViewableState(GLC_Matrix4x4* pMatrix= NULL);
+    void updateInstanceViewableState(GLC_Matrix4x4* pMatrix= nullptr);
 
 	//! Update the instance viewable state with the specified frustum
 	void updateInstanceViewableState(const GLC_Frustum&);
@@ -263,11 +263,11 @@ public:
     void updateSpacePartitionning();
 
 	//! Set the attached viewport of this collection
-	inline void setAttachedViewport(GLC_Viewport* pViewport)
+    void setAttachedViewport(GLC_Viewport* pViewport)
 	{m_pViewport= pViewport;}
 
 	//! Set the collection viewable state
-	inline void setViewable(bool viewable)
+    void setViewable(bool viewable)
 	{m_IsViewable= viewable;}
 
 	//! Set VBO usage
