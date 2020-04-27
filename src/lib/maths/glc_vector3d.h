@@ -316,13 +316,13 @@ inline QDataStream &operator>>(QDataStream &stream, GLC_Vector3d &vector)
 //! Return the determinant of the given Matrix 3X3
 inline double getDeterminant3x3(const double *Mat3x3)
 {
-	double Determinant;
+    double subject;
 
-	Determinant= Mat3x3[0] * ( Mat3x3[4] * Mat3x3[8] - Mat3x3[7] * Mat3x3[5]);
-	Determinant+= - Mat3x3[3] * ( Mat3x3[1] * Mat3x3[8] - Mat3x3[7] * Mat3x3[2]);
-	Determinant+= Mat3x3[6] * ( Mat3x3[1] * Mat3x3[5] - Mat3x3[4] * Mat3x3[2]);
+    subject= Mat3x3[0] * ( Mat3x3[4] * Mat3x3[8] - Mat3x3[7] * Mat3x3[5]);
+    subject+= - Mat3x3[3] * ( Mat3x3[1] * Mat3x3[8] - Mat3x3[7] * Mat3x3[2]);
+    subject+= Mat3x3[6] * ( Mat3x3[1] * Mat3x3[5] - Mat3x3[4] * Mat3x3[2]);
 
-	return Determinant;
+    return subject;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -359,9 +359,9 @@ GLC_Vector3d::GLC_Vector3d(const GLC_Vector2d &vector)
 
 GLC_Vector3d::GLC_Vector3d(const QVector3D &qVector)
 {
-    m_Vector[0]= qVector.x();
-    m_Vector[1]= qVector.y();
-    m_Vector[2]= qVector.z();
+    m_Vector[0]= static_cast<double>(qVector.x());
+    m_Vector[1]= static_cast<double>(qVector.y());
+    m_Vector[2]= static_cast<double>(qVector.z());
 }
 
 GLC_Vector3d& GLC_Vector3d::operator = (const GLC_Vector3df &Vect)
@@ -534,10 +534,10 @@ double GLC_Vector3d::signedAngleWithVect(GLC_Vector3d Vect, const GLC_Vector3d& 
 			mat3x3[7]= dir.m_Vector[1];
 			mat3x3[8]= dir.m_Vector[2];
 
-			double det= getDeterminant3x3(mat3x3);
+            const double det= getDeterminant3x3(mat3x3);
 
-			double sign= 1.0;
-			if (det != 0) sign= fabs(det) / det;
+            double sign= 1.0;
+            if (!qFuzzyIsNull(det)) sign= fabs(det) / det;
 			angle= acos(ThisVect * Vect) * sign;
 		}
 	}

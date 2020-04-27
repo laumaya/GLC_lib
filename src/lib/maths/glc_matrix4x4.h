@@ -407,7 +407,7 @@ GLC_Vector3d GLC_Matrix4x4::operator * (const GLC_Vector3d &Vect) const
 	}
 
 	double invW= 1.0;
-	if (fabs(mat[3]) > 0.00001)
+    if (qAbs(mat[3]) > 0.00001)
 	{
 		invW/= mat[3];
 	}
@@ -657,11 +657,11 @@ GLC_Matrix4x4& GLC_Matrix4x4::transpose(void)
 GLC_Matrix4x4& GLC_Matrix4x4::optimise(bool force)
 {
 	if (force || (m_Type == General))
-	{
-		bool identityVal= (m_Matrix[0] == 1.0f) && (m_Matrix[4] == 0.0f) && (m_Matrix[8] ==  0.0f) && (m_Matrix[12] == 0.0f);
-		identityVal= identityVal && (m_Matrix[1] == 0.0f) && (m_Matrix[5] == 1.0f) && (m_Matrix[9] ==  0.0f) && (m_Matrix[13] == 0.0);
-		identityVal= identityVal && (m_Matrix[2] == 0.0f) && (m_Matrix[6] == 0.0f) && (m_Matrix[10] == 1.0f) && (m_Matrix[14] == 0.0);
-		identityVal= identityVal && (m_Matrix[3] == 0.0f) && (m_Matrix[7] == 0.0f) && (m_Matrix[11] == 0.0f) && (m_Matrix[15] == 1.0f);
+    {
+        bool identityVal= qFuzzyCompare(m_Matrix[0], 1.0) && qFuzzyIsNull(m_Matrix[4]) && qFuzzyIsNull(m_Matrix[8]) && qFuzzyIsNull(m_Matrix[12]);
+        identityVal= identityVal && qFuzzyIsNull(m_Matrix[1]) && qFuzzyCompare(m_Matrix[5], 1.0) && qFuzzyIsNull(m_Matrix[9]) && qFuzzyIsNull(m_Matrix[13]);
+        identityVal= identityVal && qFuzzyIsNull(m_Matrix[2]) && qFuzzyIsNull(m_Matrix[6]) && qFuzzyCompare(m_Matrix[10], 1.0) && qFuzzyIsNull(m_Matrix[14]);
+        identityVal= identityVal && qFuzzyIsNull(m_Matrix[3]) && qFuzzyIsNull(m_Matrix[7]) && qFuzzyIsNull(m_Matrix[11]) && qFuzzyCompare(m_Matrix[15], 1.0);
 		if (identityVal)
 		{
 			m_Type= Identity;
