@@ -18,9 +18,7 @@ VERSION = 3.0.0
 
 DEFINES += CREATE_GLC_LIB_DLL
 DEFINES += QUAZIP_BUILD
-
 DEFINES += LIB3DS_EXPORTS
-
 DEFINES += _CRT_SECURE_NO_WARNINGS
 
 OBJECTS_DIR = ./Build
@@ -195,7 +193,8 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
                         viewport/glc_inputeventinterpreter.h \
                         viewport/glc_defaulteventinterpreter.h \
                         viewport/glc_screenshotsettings.h \
-                        viewport/glc_openglviewwidget.h
+                        viewport/glc_openglviewwidget.h \
+                        viewport/glc_openglviewinterface.h
 
 HEADERS_GLC += glc_global.h \
                glc_object.h \
@@ -582,7 +581,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_CsgLeafNode \
                GLC_Triangle \
                GLC_LatheMesh \
-               GLC_Polygon
+               GLC_Polygon \
+               GLC_OpenGLViewInterface
 
 
 include (../../install.pri)

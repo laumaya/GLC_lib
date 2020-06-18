@@ -8,6 +8,7 @@
 
 GLC_OpenGLViewWidget::GLC_OpenGLViewWidget(QWidget *parent)
     : QOpenGLWidget(parent)
+    , GLC_OpenGLViewInterface()
     , m_pSelectionFbo(nullptr)
     , m_pScreenShotFbo(nullptr)
     , m_Viewhandler(nullptr)
@@ -35,6 +36,36 @@ QVariant GLC_OpenGLViewWidget::viewHandler() const
     subject.setValue(m_Viewhandler);
 
     return subject;
+}
+
+QImage GLC_OpenGLViewWidget::interfaceTakeScreenShot()
+{
+    return takeScreenShot();
+}
+
+void GLC_OpenGLViewWidget::interfaceUpdateSelection()
+{
+    updateSelection();
+}
+
+void GLC_OpenGLViewWidget::interfaceUpdateSelectionBufferOnRender(bool update)
+{
+    updateSelectionBufferOnRender(update);
+}
+
+void GLC_OpenGLViewWidget::interfaceUpdateViewBufferOnRender(bool update)
+{
+    updateViewBufferOnRender(update);
+}
+
+void GLC_OpenGLViewWidget::interfaceUpdate()
+{
+    update();
+}
+
+void GLC_OpenGLViewWidget::interfaceRepaint()
+{
+    repaint();
 }
 
 void GLC_OpenGLViewWidget::setViewhandler(QVariant viewHandler)

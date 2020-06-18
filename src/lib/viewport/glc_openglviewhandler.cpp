@@ -5,12 +5,12 @@
  *      Author: Laurent Ribon
  */
 
-#include "glc_openglviewwidget.h"
+#include "glc_openglviewinterface.h"
 #include "glc_openglviewhandler.h"
 
 GLC_OpenGLViewHandler::GLC_OpenGLViewHandler()
     : GLC_ViewHandler()
-    , m_pViewWidget(NULL)
+    , m_pViewInterface(nullptr)
 {
 
 }
@@ -22,46 +22,46 @@ GLC_OpenGLViewHandler::~GLC_OpenGLViewHandler()
 
 void GLC_OpenGLViewHandler::updateGL(bool synchrone)
 {
-    if (NULL != m_pViewWidget)
+    if (nullptr != m_pViewInterface)
     {
 
         if (synchrone)
         {
-            m_pViewWidget->repaint();
+            m_pViewInterface->interfaceRepaint();
         }
         else
         {
-            m_pViewWidget->update();
+            m_pViewInterface->interfaceUpdate();
         }
     }
 }
 
-void GLC_OpenGLViewHandler::setOpenGLViewWidget(GLC_OpenGLViewWidget *pViewWidget)
+void GLC_OpenGLViewHandler::setOpenGLViewWidget(GLC_OpenGLViewInterface* pViewInterface)
 {
-    m_pViewWidget= pViewWidget;
+    m_pViewInterface= pViewInterface;
 }
 
 void GLC_OpenGLViewHandler::updateSelectionBufferOnRender(bool update)
 {
-    m_pViewWidget->updateSelectionBufferOnRender(update);
+    m_pViewInterface->interfaceUpdateSelectionBufferOnRender(update);
 }
 
 void GLC_OpenGLViewHandler::updateViewBufferOnRender(bool update)
 {
-    m_pViewWidget->updateViewBufferOnRender(update);
+    m_pViewInterface->interfaceUpdateViewBufferOnRender(update);
 }
 
 QPair<GLC_SelectionSet, GLC_Point3d> GLC_OpenGLViewHandler::selectAndUnproject(int x, int y, GLC_SelectionEvent::Modes modes)
 {
     QPair<GLC_SelectionSet, GLC_Point3d> subject;
-    if (NULL != m_pViewWidget)
+    if (nullptr != m_pViewInterface)
     {
         m_PointerPosition.setX(x);
         m_PointerPosition.setY(y);
         m_CurrentSelectionSet.clear();
         m_UnprojectedPoint.setVect(0.0, 0.0, 0.0);
         m_SelectionModes= modes;
-        m_pViewWidget->updateSelection();
+        m_pViewInterface->interfaceUpdateSelection();
         subject= QPair<GLC_SelectionSet, GLC_Point3d>(m_CurrentSelectionSet, m_UnprojectedPoint);
     }
     return subject;
@@ -70,10 +70,10 @@ QPair<GLC_SelectionSet, GLC_Point3d> GLC_OpenGLViewHandler::selectAndUnproject(i
 QImage GLC_OpenGLViewHandler::takeScreenshot(const GLC_ScreenShotSettings &screenShotSettings)
 {
     QImage subject;
-    if (NULL != m_pViewWidget)
+    if (nullptr != m_pViewInterface)
     {
         m_ScreenshotSettings= screenShotSettings;
-        subject= m_pViewWidget->takeScreenShot();
+        subject= m_pViewInterface->interfaceTakeScreenShot();
     }
     return subject;
 }

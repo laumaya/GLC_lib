@@ -13,10 +13,11 @@
 #include <QSharedPointer>
 
 #include "glc_openglviewhandler.h"
+#include "glc_openglviewinterface.h"
 
 #include "../glc_config.h"
 
-class GLC_LIB_EXPORT GLC_OpenGLViewWidget : public QOpenGLWidget
+class GLC_LIB_EXPORT GLC_OpenGLViewWidget : public QOpenGLWidget, public GLC_OpenGLViewInterface
 {
     Q_OBJECT
 public:
@@ -28,6 +29,15 @@ public:
 
     QSharedPointer<GLC_OpenGLViewHandler> sharedViewHandler()
     {return m_Viewhandler;}
+
+ // Interface
+public:
+    QImage interfaceTakeScreenShot() override;
+    void interfaceUpdateSelection() override;
+    void interfaceUpdateSelectionBufferOnRender(bool update) override;
+    void interfaceUpdateViewBufferOnRender(bool update) override;
+    void interfaceUpdate() override;
+    void interfaceRepaint() override;
 
 public slots:
     virtual void setViewhandler(QVariant viewHandler);

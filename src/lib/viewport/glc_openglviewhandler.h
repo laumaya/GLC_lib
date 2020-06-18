@@ -12,7 +12,7 @@
 
 #include "../glc_config.h"
 
-class GLC_OpenGLViewWidget;
+class GLC_OpenGLViewInterface;
 
 class GLC_LIB_EXPORT GLC_OpenGLViewHandler : public GLC_ViewHandler
 {
@@ -20,11 +20,11 @@ class GLC_LIB_EXPORT GLC_OpenGLViewHandler : public GLC_ViewHandler
 
 public:
     GLC_OpenGLViewHandler();
-    ~GLC_OpenGLViewHandler();
+    ~GLC_OpenGLViewHandler() override;
 
 public:
     void updateGL(bool synchrone) override;
-    void setOpenGLViewWidget(GLC_OpenGLViewWidget* pViewWidget);
+    void setOpenGLViewWidget(GLC_OpenGLViewInterface* pViewInterface);
     void updateSelectionBufferOnRender(bool update) override;
     void updateViewBufferOnRender(bool update) override;
 
@@ -33,7 +33,7 @@ public:
     virtual QImage takeScreenshot(const GLC_ScreenShotSettings& screenShotSettings);
 
 private:
-    GLC_OpenGLViewWidget* m_pViewWidget;
+    GLC_OpenGLViewInterface* m_pViewInterface;
 };
 
 Q_DECLARE_METATYPE(GLC_OpenGLViewHandler*)
