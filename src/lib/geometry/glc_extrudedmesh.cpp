@@ -423,11 +423,13 @@ void GLC_ExtrudedMesh::createMesh()
 void GLC_ExtrudedMesh::createWire()
 {
     GLfloatVector baseFaceWire= baseFaceVertices();
-    baseFaceWire << baseFaceWire.at(0) << baseFaceWire.at(1) << baseFaceWire.at(2);
+    GLfloat x= baseFaceWire.at(0), y= baseFaceWire.at(1), z= baseFaceWire.at(2);
+    baseFaceWire << x << y << z;
     GLC_Geometry::addVerticeGroup(baseFaceWire);
 
     GLfloatVector createdFaceWire= createdFaceVertices();
-    createdFaceWire << createdFaceWire.at(0) << createdFaceWire.at(1) << createdFaceWire.at(2);
+    x= createdFaceWire.at(0); y= createdFaceWire.at(1); z= createdFaceWire.at(2);
+    createdFaceWire << x << y << z;
     GLC_Geometry::addVerticeGroup(createdFaceWire);
 
     // Outline edges
