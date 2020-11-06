@@ -126,6 +126,8 @@ namespace glc
     //! Return true if the given 3 points are collinear
     GLC_LIB_EXPORT bool pointsAreCollinear(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3);
 
+    GLC_LIB_EXPORT bool pointsAreCollinear(const QPointF& p1, const QPointF& p2, const QPointF& p3, double accuracy);
+
     //! Return true if the given 3 points are collinear and p3 is on ]p1 p2[ segment
     GLC_LIB_EXPORT bool pointIsIncludeInSegment(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3);
 
@@ -209,6 +211,8 @@ namespace glc
 
     GLC_LIB_EXPORT QList<GLC_Point2d> line2CircleIntersection(const GLC_Point2d& lineOrigin, const GLC_Vector2d& lineDir
                                                               , const GLC_Point2d& circleCenter, double radius);
+
+    GLC_LIB_EXPORT double area(const QPolygonF& polygon);
 
 
 //@}

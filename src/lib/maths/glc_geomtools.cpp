@@ -642,22 +642,17 @@ bool glc::segmentsOverlap(const GLC_Point3d& p1, const GLC_Point3d& p2, const GL
 
 double glc::round(double value)
 {
-    if (!qFuzzyIsNull(comparedPrecision))
-    {
-        value= value / comparedPrecision;
-        value= (value >= 0.0 ? floor(value + 0.5) : ceil(value - 0.5));
-        value= value * comparedPrecision;
-    }
-	return value;
+    return round(value, comparedPrecision);
 }
 
 double glc::round(double value, double accuracy)
 {
     if (!qFuzzyIsNull(accuracy))
     {
-        value= value / accuracy;
-        value= (value >= 0.0 ? floor(value + 0.5) : ceil(value - 0.5));
-        value= value * accuracy;
+        const double a= 1.0 / accuracy;
+        value= value * a;
+        value= static_cast<int>(value);
+        value= value / a;
     }
     return value;
 }
@@ -1250,4 +1245,23 @@ GLC_Point3d glc::project(const GLC_Point3d& point, const GLC_Plane& plane)
     GLC_Point3d subject(point - (((point * normal) + plane.coefD()) * normal));
 
     return subject;
+}
+
+bool glc::pointsAreCollinear(const QPointF& p1, const QPointF& p2, const QPointF& p3, double accuracy)
+{
+    return glc::compare(0.0, ((((p2.x() - p1.x()) * (p3.y() - p1.y()) - (p3.x() - p1.x()) * (p2.y() - p1.y())))), accuracy);
+}
+
+double glc::area(const QPolygonF& polygon)
+{
+    double subject= 0;
+    const int count= polygon.count();
+    for (int i= 0; i < count -1; ++i)
+    {
+        int j= (i + 1) % count;
+        subject+= polygon.at(i).x() * polygon.at(j).y();
+        subject-= polygon.at(i).y() * polygon.at(j).x();
+    }
+
+    return qAbs(subject);
 }
