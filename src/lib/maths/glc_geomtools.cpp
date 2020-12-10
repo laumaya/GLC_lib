@@ -649,10 +649,9 @@ double glc::round(double value, double accuracy)
 {
     if (!qFuzzyIsNull(accuracy))
     {
-        const double a= 1.0 / accuracy;
-        value= value * a;
-        value= static_cast<int>(value);
-        value= value / a;
+        value= value / accuracy;
+        value= (value >= 0.0 ? floor(value + 0.5) : ceil(value - 0.5));
+        value= value * accuracy;
     }
     return value;
 }
