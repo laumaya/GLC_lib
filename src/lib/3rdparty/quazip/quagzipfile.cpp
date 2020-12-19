@@ -57,7 +57,7 @@ bool QuaGzipFilePrivate::open(FileId id, QIODevice::OpenMode mode,
     char modeString[2];
     modeString[0] = modeString[1] = '\0';
     if ((mode & QIODevice::Append) != 0) {
-        error = QuaGzipFile::trUtf8("QIODevice::Append is not "
+        error = QuaGzipFile::tr("QIODevice::Append is not "
                 "supported for GZIP");
         return false;
     }

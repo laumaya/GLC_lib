@@ -70,7 +70,7 @@ public:
 
 	//! Return the number of world associated with this handle
     int numberOfWorld() const
-    {return m_Ref.load();}
+    {return m_Ref.loadRelaxed();}
 
     //! Return true if the specified occurrence id is in this world
     bool containsOccurrence(GLC_uint id) const

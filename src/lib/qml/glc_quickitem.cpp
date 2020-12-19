@@ -208,7 +208,7 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
     if (pTextureNode == NULL)
     {
         pTextureNode = new QSGSimpleTextureNode();
-        pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
+        pTextureNode->setTexture(this->window()->createTextureFromNativeObject(QQuickWindow::NativeObjectTexture, nullptr, 0, QSize(0,0)));
     }
 
     if ((NULL != m_Viewhandler) && m_Viewhandler->isEnable())

@@ -125,8 +125,8 @@ public:
     { return m_MaterialHash;}
 
 	//! Get materials Set
-	inline QSet<GLC_Material*> materialSet() const
-	{return m_MaterialHash.values().toSet();}
+    inline QSet<GLC_Material*> materialSet() const
+    {return QSet<GLC_Material*>(m_MaterialHash.begin(), m_MaterialHash.end());}
 
 	//! Get materials ID List
 	inline QList<GLC_uint> materialIds() const

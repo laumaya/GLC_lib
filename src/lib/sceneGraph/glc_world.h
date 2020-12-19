@@ -105,7 +105,7 @@ public:
 
 	//! Return the list of material
     QList<GLC_Material*> listOfMaterials() const
-    {return rootOccurrence()->materialSet().toList();}
+    {return rootOccurrence()->materialSet().values();}
 
 	//! Return list of world's instances
     QList<GLC_3DViewInstance*> instancesHandle() const

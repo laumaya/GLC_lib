@@ -71,7 +71,7 @@ public:
 public:
 	//! Return true if the representation is the last
 	inline bool isTheLast() const
-    {return 1 == m_pRef->load();}
+    {return 1 == m_pRef->loadRelaxed();}
 
 	//! Return true if representations are equals
 	inline bool operator==(const GLC_Rep& rep)

@@ -1017,7 +1017,7 @@ void GLC_StructOccurrence::swap(int oldPos, int newPos)
         GLC_StructOccurrence* pOcc= occurrences.at(i);
         Q_ASSERT(oldPos <= pOcc->m_Childs.count());
         Q_ASSERT(newPos <= pOcc->m_Childs.count());
-        pOcc->m_Childs.swap(oldPos, newPos);
+        pOcc->m_Childs.swapItemsAt(oldPos, newPos);
 	}
 }
 

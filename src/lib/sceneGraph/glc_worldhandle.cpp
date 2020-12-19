@@ -64,7 +64,7 @@ QList<GLC_StructInstance*> GLC_WorldHandle::instances() const
         instancesSet.insert(iOccurrence.value()->structInstance());
         ++iOccurrence;
 	}
-	return instancesSet.toList();
+    return instancesSet.values();
 }
 
 // Return the list of Reference
@@ -77,7 +77,7 @@ QList<GLC_StructReference*> GLC_WorldHandle::references() const
         referencesSet.insert(iOccurrence.value()->structReference());
         ++iOccurrence;
 	}
-	return referencesSet.toList();
+    return referencesSet.values();
 }
 
 // Return the number of body
