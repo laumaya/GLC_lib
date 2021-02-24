@@ -28,6 +28,7 @@
 #include <QList>
 #include <QSet>
 #include <QMetaType>
+#include <QList>
 
 #include "glc_structoccurrence.h"
 #include "../glc_global.h"
@@ -99,11 +100,14 @@ public:
     {return m_OccurrenceSelection;}
 
     //! Return the list of selected View instance id
-    QList<GLC_uint> idList() const;
+    const QList<GLC_uint>& idList() const
+    {return m_OccurenceIdList;}
 
     //! Return the first id of this selection set
     /*! If selection set is empty, return 0*/
     GLC_uint firstId() const;
+
+    GLC_uint lastId() const;
 
     //! Return the list of selected occurrences
     QList<GLC_StructOccurrence*> occurrencesList() const;
@@ -171,6 +175,8 @@ public:
     /*! The given occurrence id must belongs to this selection set's world*/
     bool remove(GLC_uint occurrenceId);
 
+    bool removeLast();
+
     //! Remove the given Body id of the given Occurrence id into the selection set and return true on success
     /*! The given occurrence must belongs to this selection set's world*/
     bool remove(GLC_uint occurrenceId, GLC_uint bodyId);
@@ -208,6 +214,8 @@ private:
 
     //! Selection record (Occurrence, Body and Primitive)
     OccurrenceSelection m_OccurrenceSelection;
+
+    QList<GLC_uint> m_OccurenceIdList;
 };
 
 Q_DECLARE_METATYPE(GLC_SelectionSet)

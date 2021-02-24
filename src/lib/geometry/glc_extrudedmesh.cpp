@@ -323,7 +323,6 @@ void GLC_ExtrudedMesh::createMeshAndWire()
 
     if (normalEquals || (!normalsInverted && (angleWithVect < glc::PI / 2)))
     {
-        qDebug() << "Invert extruded profile";
         std::reverse(m_Points.begin(), m_Points.end());
         std::reverse(m_SmothingPoints.begin(), m_SmothingPoints.end());
         std::reverse(m_InvisibleEdgeIndex.begin(), m_InvisibleEdgeIndex.end());

@@ -73,7 +73,7 @@ public:
 	bool exportReferenceTo3DRep(const GLC_3DRep* p3DRep, const QString& fullFileName);
 
 	//! Set the name of the 3dxml generator default is GLC_LIB
-	inline void setGeneratorName(const QString& generator)
+    void setGeneratorName(const QString& generator)
 	{m_Generator= generator;}
 
 	//! set interrupt flag adress

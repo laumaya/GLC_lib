@@ -28,6 +28,7 @@
 GLC_SelectionSet::GLC_SelectionSet()
     : m_pWorldHandle(NULL)
     , m_OccurrenceSelection()
+    , m_OccurenceIdList()
 {
 
 }
@@ -35,6 +36,7 @@ GLC_SelectionSet::GLC_SelectionSet()
 GLC_SelectionSet::GLC_SelectionSet(GLC_WorldHandle* pWorldHandle)
     : m_pWorldHandle(pWorldHandle)
     , m_OccurrenceSelection()
+    , m_OccurenceIdList()
 {
     Q_ASSERT(0 == m_pWorldHandle->collection()->selectionSize());
 
@@ -43,6 +45,7 @@ GLC_SelectionSet::GLC_SelectionSet(GLC_WorldHandle* pWorldHandle)
 GLC_SelectionSet::GLC_SelectionSet(GLC_World &world)
     : m_pWorldHandle(world.worldHandle())
     , m_OccurrenceSelection()
+    , m_OccurenceIdList()
 {
 
 }
@@ -50,6 +53,7 @@ GLC_SelectionSet::GLC_SelectionSet(GLC_World &world)
 GLC_SelectionSet::GLC_SelectionSet(const GLC_SelectionSet &other)
     : m_pWorldHandle(other.m_pWorldHandle)
     , m_OccurrenceSelection(other.m_OccurrenceSelection)
+    , m_OccurenceIdList(other.m_OccurenceIdList)
 {
 
 }
@@ -132,20 +136,22 @@ long GLC_SelectionSet::primitiveCount() const
     return subject;
 }
 
-QList<GLC_uint> GLC_SelectionSet::idList() const
-{
-    QList<GLC_uint> subject= m_OccurrenceSelection.keys();
-
-    return subject;
-}
-
 GLC_uint GLC_SelectionSet::firstId() const
 {
     GLC_uint subject= 0;
-    QList<GLC_uint> idList= m_OccurrenceSelection.keys();
-    if (!idList.isEmpty())
+    if (!m_OccurenceIdList.isEmpty())
     {
-        subject= idList.first();
+        subject= m_OccurenceIdList.first();
+    }
+    return subject;
+}
+
+GLC_uint GLC_SelectionSet::lastId() const
+{
+    GLC_uint subject= 0;
+    if (!m_OccurenceIdList.isEmpty())
+    {
+        subject= m_OccurenceIdList.last();
     }
     return subject;
 }
@@ -153,18 +159,14 @@ GLC_uint GLC_SelectionSet::firstId() const
 QList<GLC_StructOccurrence*> GLC_SelectionSet::occurrencesList() const
 {
     QList<GLC_StructOccurrence*> subject;
-    if (m_pWorldHandle)
+    if (nullptr != m_pWorldHandle)
     {
-        OccurrenceSelection::const_iterator iOcc= m_OccurrenceSelection.constBegin();
-        while (iOcc != m_OccurrenceSelection.constEnd())
+        for (GLC_uint id : m_OccurenceIdList)
         {
-            const GLC_uint id= iOcc.key();
             if(m_pWorldHandle->containsOccurrence(id))
             {
                 subject.append(m_pWorldHandle->getOccurrence(id));
             }
-
-            ++iOcc;
         }
     }
 
@@ -229,6 +231,7 @@ GLC_SelectionSet &GLC_SelectionSet::operator=(const GLC_SelectionSet &other)
     {
         m_pWorldHandle= other.m_pWorldHandle;
         m_OccurrenceSelection= other.m_OccurrenceSelection;
+        m_OccurenceIdList= other.m_OccurenceIdList;
         clean();
     }
 
@@ -249,6 +252,7 @@ bool GLC_SelectionSet::insert(GLC_uint occurrenceId)
     bool subject= false;
     if (!contains(occurrenceId))
     {
+        m_OccurenceIdList.append(occurrenceId);
         m_OccurrenceSelection.insert(occurrenceId, BodySelection());
         subject= true;
     }
@@ -263,6 +267,7 @@ bool GLC_SelectionSet::insert(GLC_uint occurrenceId, GLC_uint bodyId)
     {
         if (!contains(occurrenceId))
         {
+            m_OccurenceIdList.append(occurrenceId);
             BodySelection bodySelection;
             bodySelection.insert(bodyId, PrimitiveSelection());
             m_OccurrenceSelection.insert(occurrenceId, bodySelection);
@@ -288,6 +293,7 @@ bool GLC_SelectionSet::insert(GLC_uint occurrenceId, GLC_uint bodyId, GLC_uint p
     {
         if (!contains(occurrenceId))
         {
+            m_OccurenceIdList.append(occurrenceId);
             PrimitiveSelection primitiveSelection;
             primitiveSelection.insert(primitiveId);
             BodySelection bodySelection;
@@ -328,8 +334,21 @@ bool GLC_SelectionSet::remove(GLC_uint occurrenceId)
     bool subject= false;
     if(contains(occurrenceId))
     {
+        m_OccurenceIdList.removeOne(occurrenceId);
         m_OccurrenceSelection.remove(occurrenceId);
         subject= true;
+    }
+
+    return subject;
+}
+
+bool GLC_SelectionSet::removeLast()
+{
+    bool subject= false;
+    if (!m_OccurenceIdList.isEmpty())
+    {
+        const GLC_uint id= m_OccurenceIdList.last();
+        subject= remove(id);
     }
 
     return subject;
@@ -362,6 +381,7 @@ bool GLC_SelectionSet::remove(GLC_uint occurrenceId, GLC_uint bodyId, GLC_uint p
 
 void GLC_SelectionSet::clear()
 {
+    m_OccurenceIdList.clear();
     m_OccurrenceSelection.clear();
 }
 
@@ -376,6 +396,7 @@ void GLC_SelectionSet::clean()
             if (!m_pWorldHandle->containsOccurrence(id))
             {
                 iOcc= m_OccurrenceSelection.erase(iOcc);
+                m_OccurenceIdList.removeOne(id);
             }
             else
             {
@@ -401,6 +422,7 @@ GLC_SelectionSet &GLC_SelectionSet::unite(const GLC_SelectionSet &other)
             const GLC_uint occId= iOcc.key();
             if (!contains(occId))
             {
+                m_OccurenceIdList.append(occId);
                 m_OccurrenceSelection.insert(occId, other.m_OccurrenceSelection.value(occId));
             }
             else
@@ -446,6 +468,7 @@ GLC_SelectionSet &GLC_SelectionSet::exclusiveUnite(const GLC_SelectionSet &other
         const GLC_uint occId= iOcc.key();
         if (!contains(occId))
         {
+            m_OccurenceIdList.append(occId);
             m_OccurrenceSelection.insert(occId, other.m_OccurrenceSelection.value(occId));
         }
         else
@@ -488,6 +511,7 @@ GLC_SelectionSet &GLC_SelectionSet::exclusiveUnite(const GLC_SelectionSet &other
                         }
                         else
                         {
+                            m_OccurenceIdList.removeOne(bodyId);
                             m_OccurrenceSelection[occId].remove(bodyId);
                             if (m_OccurrenceSelection.value(occId).isEmpty()) m_OccurrenceSelection.remove(occId);
                         }
@@ -495,7 +519,11 @@ GLC_SelectionSet &GLC_SelectionSet::exclusiveUnite(const GLC_SelectionSet &other
                     ++iBody;
                 }
             }
-            else m_OccurrenceSelection.remove(occId);
+            else
+            {
+                m_OccurenceIdList.removeOne(occId);
+                m_OccurrenceSelection.remove(occId);
+            }
         }
         ++iOcc;
     }
@@ -516,6 +544,7 @@ GLC_SelectionSet &GLC_SelectionSet::substract(const GLC_SelectionSet &other)
             const BodySelection bodySelection= iOcc.value();
             if (bodySelection.isEmpty())
             {
+                m_OccurenceIdList.removeOne(occId);
                 m_OccurrenceSelection.remove(occId);
             }
             else
