@@ -245,6 +245,7 @@ protected:
 
 private:
     bool m_Enabled;
+    bool m_MouseTracking;
 };
 
 Q_DECLARE_METATYPE(GLC_ViewHandler*)

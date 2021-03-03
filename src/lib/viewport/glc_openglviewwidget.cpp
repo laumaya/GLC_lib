@@ -70,7 +70,7 @@ void GLC_OpenGLViewWidget::interfaceRepaint()
 
 void GLC_OpenGLViewWidget::setViewhandler(QVariant viewHandler)
 {
-    if (nullptr != m_Viewhandler)
+    if (!m_Viewhandler.isNull())
     {
         GLC_OpenGLViewHandler* pViewHandler= m_Viewhandler.data();
         disconnect(this, SIGNAL(frameBufferCreationFailed()), pViewHandler, SIGNAL(frameBufferCreationFailed()));
@@ -90,7 +90,7 @@ void GLC_OpenGLViewWidget::setViewhandler(QVariant viewHandler)
 void GLC_OpenGLViewWidget::updateSelection()
 {
     makeCurrent();
-    Q_ASSERT(nullptr != m_Viewhandler);
+    Q_ASSERT(!m_Viewhandler.isNull());
 
     if (m_pSelectionFbo && m_pSelectionFbo->isValid())
     {
@@ -190,7 +190,7 @@ void GLC_OpenGLViewWidget::updateViewBufferOnRender(bool update)
 
 GLC_uint GLC_OpenGLViewWidget::selectBody(GLC_uint instanceId, int x, int y)
 {
-    Q_ASSERT(nullptr != m_Viewhandler);
+    Q_ASSERT(!m_Viewhandler.isNull());
     GLC_uint subject= 0;
     GLC_3DViewCollection* pCollection= m_Viewhandler->world().collection();
     if (pCollection->contains(instanceId))
@@ -205,7 +205,7 @@ GLC_uint GLC_OpenGLViewWidget::selectBody(GLC_uint instanceId, int x, int y)
 void GLC_OpenGLViewWidget::initializeGL()
 {
     GLC_State::init();
-    if (nullptr != m_Viewhandler)
+    if (!m_Viewhandler.isNull())
     {
         m_Viewhandler->viewportHandle()->initGl();
     }
@@ -234,7 +234,7 @@ void GLC_OpenGLViewWidget::paintGL()
 
 void GLC_OpenGLViewWidget::mousePressEvent(QMouseEvent *e)
 {
-    if (nullptr != m_Viewhandler)
+    if (!m_Viewhandler.isNull())
     {
         m_Viewhandler->processMousePressEvent(e);
     }
@@ -242,7 +242,7 @@ void GLC_OpenGLViewWidget::mousePressEvent(QMouseEvent *e)
 
 void GLC_OpenGLViewWidget::mouseMoveEvent(QMouseEvent *e)
 {
-    if (nullptr != m_Viewhandler)
+    if (!m_Viewhandler.isNull())
     {
         m_Viewhandler->processMouseMoveEvent(e);
     }
@@ -250,7 +250,7 @@ void GLC_OpenGLViewWidget::mouseMoveEvent(QMouseEvent *e)
 
 void GLC_OpenGLViewWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-    if (nullptr != m_Viewhandler)
+    if (!m_Viewhandler.isNull())
     {
         m_Viewhandler->processMouseReleaseEvent(e);
     }
@@ -258,7 +258,7 @@ void GLC_OpenGLViewWidget::mouseReleaseEvent(QMouseEvent *e)
 
 void GLC_OpenGLViewWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if (nullptr != m_Viewhandler)
+    if (!m_Viewhandler.isNull())
     {
         m_Viewhandler->processMouseDblClickEvent(e);
     }
@@ -266,7 +266,7 @@ void GLC_OpenGLViewWidget::mouseDoubleClickEvent(QMouseEvent *e)
 
 void GLC_OpenGLViewWidget::wheelEvent(QWheelEvent *e)
 {
-    if (nullptr != m_Viewhandler)
+    if (!m_Viewhandler.isNull())
     {
         m_Viewhandler->processWheelEvent(e);
     }
@@ -274,7 +274,7 @@ void GLC_OpenGLViewWidget::wheelEvent(QWheelEvent *e)
 
 void GLC_OpenGLViewWidget::touchEvent(QTouchEvent *e)
 {
-    if (nullptr != m_Viewhandler)
+    if (!m_Viewhandler.isNull())
     {
         m_Viewhandler->processTouchEvent(e);
     }
@@ -282,7 +282,7 @@ void GLC_OpenGLViewWidget::touchEvent(QTouchEvent *e)
 
 void GLC_OpenGLViewWidget::hoverMoveEvent(QHoverEvent *event)
 {
-    if (nullptr != m_Viewhandler)
+    if (!m_Viewhandler.isNull())
     {
         m_Viewhandler->processHoverMoveEvent(event);
     }
@@ -290,7 +290,7 @@ void GLC_OpenGLViewWidget::hoverMoveEvent(QHoverEvent *event)
 
 void GLC_OpenGLViewWidget::renderForSelection()
 {
-    Q_ASSERT(nullptr != m_Viewhandler);
+    Q_ASSERT(!m_Viewhandler.isNull());
 
     if ((nullptr != m_pSelectionFbo) && m_pSelectionFbo->isValid())
     {
@@ -308,7 +308,7 @@ void GLC_OpenGLViewWidget::renderForSelection()
 
 QPair<GLC_uint, GLC_uint> GLC_OpenGLViewWidget::selectPrimitive(GLC_uint instanceId, int x, int y)
 {
-    Q_ASSERT(nullptr != m_Viewhandler);
+    Q_ASSERT(!m_Viewhandler.isNull());
     QPair<GLC_uint, GLC_uint> subject;
     GLC_3DViewCollection* pCollection= m_Viewhandler->world().collection();
     if (pCollection->contains(instanceId))
@@ -328,13 +328,13 @@ QPair<GLC_uint, GLC_uint> GLC_OpenGLViewWidget::selectPrimitive(GLC_uint instanc
 
 void GLC_OpenGLViewWidget::doRender()
 {
-    Q_ASSERT(nullptr != m_Viewhandler);
+    Q_ASSERT(!m_Viewhandler.isNull());
     m_Viewhandler->render();
 }
 
 void GLC_OpenGLViewWidget::setupSelectionFbo(int width, int height)
 {
-    Q_ASSERT(nullptr != m_Viewhandler);
+    Q_ASSERT(!m_Viewhandler.isNull());
 
     if ((width > 0) && (height > 0))
     {
@@ -350,7 +350,7 @@ void GLC_OpenGLViewWidget::setupSelectionFbo(int width, int height)
 
 void GLC_OpenGLViewWidget::setupScreenShotFbo(int width, int height)
 {
-    Q_ASSERT(nullptr != m_Viewhandler);
+    Q_ASSERT(!m_Viewhandler.isNull());
     Q_ASSERT(nullptr == m_pScreenShotFbo);
 
     QOpenGLFramebufferObjectFormat sourceFormat;

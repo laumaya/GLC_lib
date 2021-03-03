@@ -60,6 +60,7 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     , m_RenderFlag(glc::ShadingFlag)
 
     , m_Enabled(true)
+    , m_MouseTracking(false)
 
 {
     m_pLight->setTwoSided(true);
@@ -205,7 +206,11 @@ void GLC_ViewHandler::setSize(int width, int height, int devicePixelRatio)
 
 void GLC_ViewHandler::setMouseTracking(bool track)
 {
-    emit acceptHoverEvent(track);
+    if (track != m_MouseTracking)
+    {
+        m_MouseTracking= track;
+        emit acceptHoverEvent(m_MouseTracking);
+    }
 }
 
 void GLC_ViewHandler::updateCurrentSelectionSet(const GLC_SelectionSet& selectionSet, const GLC_Point3d &point)
