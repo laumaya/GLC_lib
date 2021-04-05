@@ -857,6 +857,7 @@ bool GLC_Viewport::setDistMax(double DistMax, bool updateOpenGL)
 
 void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox, bool updateOpenGL)
 {
+    qDebug() << "setDistMinAndMax";
     if(!bBox.isEmpty())
 	{
 		// The scene is not empty
@@ -877,21 +878,17 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox, bool updateOpen
 		GLC_Point3d camEye(m_pViewCam->eye());
 		camEye= matComp * camEye;
 
-		if ((min > 0.0) || (m_UseParallelProjection))
+        if ((min > 0.0) && !m_UseParallelProjection)
 		{
 			// Outside bounding Sphere
 			m_dDistanceMini= min;
 			m_DistanceMax= max;
-            //qDebug() << "distmin" << m_dDistanceMini;
-            //qDebug() << "distmax" << m_DistanceMax;
 		}
 		else
 		{
-			// Inside bounding Sphere
+            // Inside bounding Sphere or parallel projection
 			m_dDistanceMini= qMin(0.01 * radius, m_pViewCam->distEyeTarget() / 4.0);
 			m_DistanceMax= max;
-            //qDebug() << "inside distmin" << m_dDistanceMini;
-            //qDebug() << "inside distmax" << m_DistanceMax;
 		}
 	}
 	else
