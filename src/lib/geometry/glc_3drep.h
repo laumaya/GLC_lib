@@ -180,6 +180,8 @@ public:
 	//! Set VBO usage
 	void setVboUsage(bool usage);
 
+    void setMeshWireColorAndLineWidth(const QColor& color, GLfloat lineWidth);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

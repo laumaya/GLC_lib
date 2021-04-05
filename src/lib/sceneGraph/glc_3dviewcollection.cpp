@@ -493,6 +493,17 @@ void GLC_3DViewCollection::setVboUsage(bool usage)
     }
 }
 
+void GLC_3DViewCollection::setMeshWireColorAndLineWidth(const QColor& color, GLfloat lineWidth)
+{
+    ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
+
+    while (iEntry != m_3DViewInstanceHash.constEnd())
+    {
+        iEntry.value().setMeshWireColorAndLineWidth(color, lineWidth);
+        ++iEntry;
+    }
+}
+
 QList<GLC_3DViewInstance*> GLC_3DViewCollection::instancesHandle()
 {
 	QList<GLC_3DViewInstance*> instancesList;

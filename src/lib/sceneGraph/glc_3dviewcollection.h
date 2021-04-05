@@ -276,6 +276,8 @@ public:
     void setOrderRenderingUsage(bool use)
     {m_UseOrderRendering= use;}
 
+    void setMeshWireColorAndLineWidth(const QColor& color, GLfloat lineWidth);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

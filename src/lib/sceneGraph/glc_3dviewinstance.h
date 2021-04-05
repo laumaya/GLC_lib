@@ -203,6 +203,9 @@ public:
 
     int orderWeight() const
     {return m_OrderWeight;}
+
+    void setMeshWireColorAndLineWidth(const QColor& color, GLfloat lineWidth);
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

@@ -278,6 +278,11 @@ bool GLC_3DViewInstance::firstIsLower(GLC_3DViewInstance* pInstance1, GLC_3DView
     return (pInstance1->m_OrderWeight < pInstance2->m_OrderWeight);
 }
 
+void GLC_3DViewInstance::setMeshWireColorAndLineWidth(const QColor& color, GLfloat lineWidth)
+{
+    m_3DRep.setMeshWireColorAndLineWidth(color, lineWidth);
+}
+
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

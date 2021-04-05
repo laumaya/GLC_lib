@@ -405,12 +405,20 @@ void GLC_3DRep::transformSubGeometries(const GLC_Matrix4x4& matrix)
 
 void GLC_3DRep::setVboUsage(bool usage)
 {
-	// Get the number of geometry of pRep
 	const int repCount= m_pGeomList->size();
 	for (int i= 0; i < repCount; ++i)
 	{
 		m_pGeomList->at(i)->setVboUsage(usage);
-	}
+    }
+}
+
+void GLC_3DRep::setMeshWireColorAndLineWidth(const QColor& color, GLfloat lineWidth)
+{
+    for (GLC_Geometry* pGeom : *m_pGeomList)
+    {
+        pGeom->setWireColor(color);
+        pGeom->setLineWidth(lineWidth);
+    }
 }
 
 bool GLC_3DRep::unload()
