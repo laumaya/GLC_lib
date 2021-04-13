@@ -116,7 +116,9 @@ HEADERS_GLC_IO +=   io/glc_objmtlloader.h \
                     io/glc_worldreaderplugin.h \
                     io/glc_worldreaderhandler.h \
                     io/glc_worldtoobj.h \
-                    io/glc_assimptoworld.h
+                    io/glc_assimptoworld.h \
+                    io/glc_colladaxmlelement.h \
+                    io/glc_worldtocollada.h
 
 HEADERS_GLC_SCENEGRAPH +=   sceneGraph/glc_3dviewcollection.h \
                             sceneGraph/glc_3dviewinstance.h \
@@ -269,6 +271,7 @@ SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/uncompr.c \
            3rdparty/zlib/zutil.c
 
+
 SOURCES += 3rdparty/quazip/qioapi.cpp \
            3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/quaadler32.cpp \
@@ -334,7 +337,8 @@ SOURCES +=	io/glc_objmtlloader.cpp \
                 io/glc_bsreptoworld.cpp \
                 io/glc_fileloader.cpp \
                 io/glc_worldtoobj.cpp \
-                io/glc_assimptoworld.cpp
+                io/glc_assimptoworld.cpp \
+                io/glc_worldtocollada.cpp
 
 SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
                 sceneGraph/glc_3dviewinstance.cpp \
@@ -582,7 +586,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_Triangle \
                GLC_LatheMesh \
                GLC_Polygon \
-               GLC_OpenGLViewInterface
+               GLC_OpenGLViewInterface \
+               GLC_WorldToCollada
 
 
 include (../../install.pri)

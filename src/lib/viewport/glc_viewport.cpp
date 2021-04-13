@@ -857,7 +857,6 @@ bool GLC_Viewport::setDistMax(double DistMax, bool updateOpenGL)
 
 void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox, bool updateOpenGL)
 {
-    qDebug() << "setDistMinAndMax";
     if(!bBox.isEmpty())
 	{
 		// The scene is not empty
