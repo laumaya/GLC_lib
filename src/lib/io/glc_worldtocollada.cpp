@@ -56,8 +56,9 @@ bool GLC_WorldToCollada::exportToCollada(const QString& absoluteFileName)
         writeMaterials();
         writeGeometries();
         writeLibraryVisualScenes();
+        writeScene();
 
-        m_Writer.writeEndElement();
+        m_Writer.writeEndElement(); // Collada top element
         m_Writer.writeEndDocument();
         subject= true;
     }
@@ -74,7 +75,8 @@ void GLC_WorldToCollada::writeHeaderAsset()
     m_Writer.writeEndElement(); // contributor
 
     m_Writer.writeTextElement(ColladaElement::createdElement, QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
-    m_Writer.writeEndElement();
+    m_Writer.writeTextElement(ColladaElement::upAxisElement, "Z_UP");
+    m_Writer.writeEndElement(); // asset element
 }
 
 void GLC_WorldToCollada::writeMaterials()
@@ -312,7 +314,7 @@ void GLC_WorldToCollada::writeTextureProfile(GLC_Texture* pTexture)
 void GLC_WorldToCollada::writeMaterialTechnique(GLC_Material* pMat)
 {
     m_Writer.writeStartElement(ColladaElement::techniqueElement);
-    m_Writer.writeAttribute(ColladaElement::sidAttribute, "common");
+    m_Writer.writeAttribute(ColladaElement::sidAttribute, "COMMON");
 
     m_Writer.writeStartElement(ColladaElement::phongElement);
 
@@ -343,8 +345,13 @@ void GLC_WorldToCollada::writeMaterialTechnique(GLC_Material* pMat)
     writeColor(pMat->diffuseColor()); // Use diffuse color for the transparent color
     m_Writer.writeEndElement();
 
-    m_Writer.writeTextElement(ColladaElement::transparencyElement, QString::number(1.0 - pMat->opacity()));
-    m_Writer.writeTextElement(ColladaElement::shininessElement, QString::number(pMat->shininess()));
+    m_Writer.writeStartElement(ColladaElement::transparencyElement);
+    m_Writer.writeTextElement(ColladaElement::floatElement, QString::number(1.0 - pMat->opacity()));
+    m_Writer.writeEndElement();
+
+    m_Writer.writeStartElement(ColladaElement::shininessElement);
+    m_Writer.writeTextElement(ColladaElement::floatElement, QString::number(pMat->shininess()));
+    m_Writer.writeEndElement();
 
     m_Writer.writeEndElement(); // Phong element
     m_Writer.writeEndElement(); // Technique common
@@ -610,6 +617,34 @@ void GLC_WorldToCollada::writeMeshTriangle(const IndexList& index, const QString
     m_Writer.writeEndElement(); // triangles element
 }
 
+void GLC_WorldToCollada::writeLibraryNode()
+{
+    m_Writer.writeStartElement(ColladaElement::libraryNodesElement);
+    QHash<GLC_Mesh*, QString>::const_iterator iMesh= m_MeshIdHash.constBegin();
+    while (iMesh != m_MeshIdHash.constEnd())
+    {
+        GLC_Mesh* pMesh= iMesh.key();
+        const QString meshId(iMesh.value());
+
+        m_Writer.writeStartElement(ColladaElement::nodeElement);
+        const QString id("Node_" + QString::number(pMesh->id()));
+        m_Writer.writeAttribute(ColladaElement::idAttribute, id);
+        m_Writer.writeAttribute(ColladaElement::nameAttribute, pMesh->name());
+        writeMatrix(GLC_Matrix4x4());
+
+        m_Writer.writeStartElement(ColladaElement::instanceGeometryElement);
+        QString url('#' + meshId);
+        m_Writer.writeAttribute(ColladaElement::urlAttribute, url);
+
+        writeBindMaterial(pMesh);
+
+        m_Writer.writeEndElement(); // instance geometry
+
+        m_Writer.writeEndElement(); // node element
+    }
+    m_Writer.writeEndElement(); // Library node
+}
+
 void GLC_WorldToCollada::writeLibraryVisualScenes()
 {
     m_Writer.writeStartElement(ColladaElement::libraryVisualScenesElement);
@@ -619,7 +654,7 @@ void GLC_WorldToCollada::writeLibraryVisualScenes()
 
 void GLC_WorldToCollada::writeVisualScene()
 {
-    m_Writer.writeStartElement(ColladaElement::visualScene);
+    m_Writer.writeStartElement(ColladaElement::visualSceneElement);
     m_Writer.writeAttribute(ColladaElement::idAttribute, "visualScene");
     m_Writer.writeAttribute(ColladaElement::nameAttribute, "visualScene");
     writeNode(m_World.rootOccurrence());
@@ -662,24 +697,24 @@ void GLC_WorldToCollada::writeMatrix(const GLC_Matrix4x4& matrix)
     const QChar spaceChar(' ');
     // Rotation
     subject+= QString::number(matrix.getData()[0], 'g', 16) + spaceChar;
-    subject+= QString::number(matrix.getData()[1], 'g', 16) + spaceChar;
-    subject+= QString::number(matrix.getData()[2], 'g', 16) + spaceChar;
-    subject+= QString::number(matrix.getData()[3], 'g', 16) + spaceChar;
-
     subject+= QString::number(matrix.getData()[4], 'g', 16) + spaceChar;
-    subject+= QString::number(matrix.getData()[5], 'g', 16) + spaceChar;
-    subject+= QString::number(matrix.getData()[6], 'g', 16) + spaceChar;
-    subject+= QString::number(matrix.getData()[7], 'g', 16) + spaceChar;
-
     subject+= QString::number(matrix.getData()[8], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[12], 'g', 16) + spaceChar;
+
+    subject+= QString::number(matrix.getData()[1], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[5], 'g', 16) + spaceChar;
     subject+= QString::number(matrix.getData()[9], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[13], 'g', 16) + spaceChar;
+
+    subject+= QString::number(matrix.getData()[2], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[6], 'g', 16) + spaceChar;
     subject+= QString::number(matrix.getData()[10], 'g', 16) + spaceChar;
-    subject+= QString::number(matrix.getData()[11], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[14], 'g', 16) + spaceChar;
 
     // Translation
-    subject+= QString::number(matrix.getData()[12], 'g', 16) + spaceChar;
-    subject+= QString::number(matrix.getData()[13], 'g', 16) + spaceChar;
-    subject+= QString::number(matrix.getData()[14], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[3], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[7], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[11], 'g', 16) + spaceChar;
     subject+= QString::number(matrix.getData()[15], 'g', 16);
 
 
@@ -745,4 +780,13 @@ void GLC_WorldToCollada::writeInstanceMaterial(GLC_Material* pMat)
         }
         m_Writer.writeEndElement();
     }
+}
+
+void GLC_WorldToCollada::writeScene()
+{
+    m_Writer.writeStartElement(ColladaElement::sceneElement);
+    m_Writer.writeStartElement(ColladaElement::instanceVisualSceneElement);
+    m_Writer.writeAttribute(ColladaElement::urlAttribute, "#visualScene");
+    m_Writer.writeEndElement(); // instance visual scene
+    m_Writer.writeEndElement(); // scene element
 }

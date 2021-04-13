@@ -52,6 +52,7 @@ private:
     void writeMeshTexel(GLC_Mesh* pMesh, const QString& meshId);
     void writeVertices(GLC_Mesh* pMesh, const QString& meshId);
     void writeMeshTriangle(const IndexList& index, const QString& meshId, GLC_Material* pMat);
+    void writeLibraryNode();
     void writeLibraryVisualScenes();
     void writeVisualScene();
     void writeNode(GLC_StructOccurrence* pOcc);
@@ -59,6 +60,7 @@ private:
     void writeMeshesNode(const QList<GLC_Mesh*> meshes);
     void writeBindMaterial(GLC_Mesh* pMesh);
     void writeInstanceMaterial(GLC_Material* pMat);
+    void writeScene();
 
 private:
     GLC_World m_World;
