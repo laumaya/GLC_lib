@@ -55,6 +55,7 @@ bool GLC_WorldToCollada::exportToCollada(const QString& absoluteFileName)
         writeHeaderAsset();
         writeMaterials();
         writeGeometries();
+        writeLibraryNode();
         writeLibraryVisualScenes();
         writeScene();
 
@@ -627,10 +628,8 @@ void GLC_WorldToCollada::writeLibraryNode()
         const QString meshId(iMesh.value());
 
         m_Writer.writeStartElement(ColladaElement::nodeElement);
-        const QString id("Node_" + QString::number(pMesh->id()));
-        m_Writer.writeAttribute(ColladaElement::idAttribute, id);
+        m_Writer.writeAttribute(ColladaElement::idAttribute, meshNodeId(pMesh->id()));
         m_Writer.writeAttribute(ColladaElement::nameAttribute, pMesh->name());
-        writeMatrix(GLC_Matrix4x4());
 
         m_Writer.writeStartElement(ColladaElement::instanceGeometryElement);
         QString url('#' + meshId);
@@ -641,6 +640,8 @@ void GLC_WorldToCollada::writeLibraryNode()
         m_Writer.writeEndElement(); // instance geometry
 
         m_Writer.writeEndElement(); // node element
+
+        ++iMesh;
     }
     m_Writer.writeEndElement(); // Library node
 }
@@ -728,24 +729,15 @@ void GLC_WorldToCollada::writeMeshesNode(const QList<GLC_Mesh*> meshes)
         if (m_MeshIdHash.contains(pMesh))
         {
             m_Writer.writeStartElement(ColladaElement::nodeElement);
-            const QString id("Node_" + QString::number(pMesh->id()));
+            const QString id(meshNodeId(pMesh->id()) + "_1");
             m_Writer.writeAttribute(ColladaElement::idAttribute, id);
-            m_Writer.writeAttribute(ColladaElement::nameAttribute, pMesh->name());
-            writeMatrix(GLC_Matrix4x4());
-
-            m_Writer.writeStartElement(ColladaElement::instanceGeometryElement);
-            QString url('#' + m_MeshIdHash.value(pMesh));
-            m_Writer.writeAttribute(ColladaElement::urlAttribute, url);
-
-            writeBindMaterial(pMesh);
-
-            m_Writer.writeEndElement(); // instance geometry
-
+            m_Writer.writeAttribute(ColladaElement::nameAttribute, id);
+            m_Writer.writeStartElement(ColladaElement::instanceNodeElement);
+            m_Writer.writeAttribute(ColladaElement::urlAttribute, QString('#') + meshNodeId(pMesh->id()));
+            m_Writer.writeEndElement(); // Instance node
             m_Writer.writeEndElement(); // node element
         }
-
     }
-
 }
 
 void GLC_WorldToCollada::writeBindMaterial(GLC_Mesh* pMesh)
@@ -789,4 +781,11 @@ void GLC_WorldToCollada::writeScene()
     m_Writer.writeAttribute(ColladaElement::urlAttribute, "#visualScene");
     m_Writer.writeEndElement(); // instance visual scene
     m_Writer.writeEndElement(); // scene element
+}
+
+QString GLC_WorldToCollada::meshNodeId(GLC_uint id) const
+{
+    const QString subject("Mesh_" + QString::number(id));
+
+    return subject;
 }

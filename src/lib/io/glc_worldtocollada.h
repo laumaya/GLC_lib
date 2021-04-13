@@ -61,6 +61,7 @@ private:
     void writeBindMaterial(GLC_Mesh* pMesh);
     void writeInstanceMaterial(GLC_Material* pMat);
     void writeScene();
+    QString meshNodeId(GLC_uint id) const;
 
 private:
     GLC_World m_World;
