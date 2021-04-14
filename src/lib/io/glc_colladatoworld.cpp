@@ -633,7 +633,7 @@ void GLC_ColladaToWorld::loadTransparency(const QString& name)
 				}
 				else
 				{
-					alpha= 1.0f - alphaString.toFloat(&stringToFloatOk);
+                    alpha= alphaString.toFloat(&stringToFloatOk);
 				}
 				// A material mustn't be invisible (no sense)
 				if (glc::fuzzyCompare(alpha, 0.0f)) alpha= 1.0f;
