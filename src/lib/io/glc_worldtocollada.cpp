@@ -26,7 +26,7 @@ GLC_WorldToCollada::GLC_WorldToCollada(const GLC_World& world)
     , m_AbsoluteFileName()
     , m_Writer()
     , m_ImageIndex(0)
-    , m_ImageFileNameSet()
+    , m_ImageSourceFileNameToTarget()
     , m_MaterialList()
     , m_MaterialToIdHash()
     , m_TextureToImageId()
@@ -147,7 +147,7 @@ QString GLC_WorldToCollada::indexToString(int index)
 void GLC_WorldToCollada::init()
 {
     m_ImageIndex= 0;
-    m_ImageFileNameSet.clear();
+    m_ImageSourceFileNameToTarget.clear();
     m_MaterialToIdHash.clear();
     m_MaterialList.clear();
     m_TextureToImageId.clear();
@@ -167,7 +167,7 @@ void GLC_WorldToCollada::writeLibraryImages()
             GLC_Texture* pTexture= pMat->textureHandle();
             const QString fileName(pTexture->fileName());
             QFile file(fileName);
-            if (!m_ImageFileNameSet.contains(fileName))
+            if (!m_ImageSourceFileNameToTarget.contains(fileName))
             {
                 QString destFileName(filePath + '/' + QFileInfo(fileName).fileName());
                 if (QFileInfo(fileName).isReadable())
@@ -179,8 +179,8 @@ void GLC_WorldToCollada::writeLibraryImages()
                     }
                     if (file.copy(destFileName))
                     {
-                        m_ImageFileNameSet.insert(fileName);
-                        writeImage(pTexture, QDir(filePath).relativeFilePath(destFileName));
+                        const QString targetFileName(writeImage(pTexture, QDir(filePath).relativeFilePath(destFileName)));
+                        m_ImageSourceFileNameToTarget.insert(fileName, targetFileName);
                     }
                     else
                     {
@@ -196,25 +196,31 @@ void GLC_WorldToCollada::writeLibraryImages()
                     QImage textureImage= pTexture->imageOfTexture();
                     if (textureImage.save(destFileName, QFileInfo(destFileName).suffix().toLatin1().data()))
                     {
-                        m_ImageFileNameSet.insert(fileName);
-                        writeImage(pTexture, QFileInfo(destFileName).fileName());
+                        const QString targetFileName(writeImage(pTexture, QFileInfo(destFileName).fileName()));
+                        m_ImageSourceFileNameToTarget.insert(fileName, targetFileName);
                     }
                 }
-           }
+            }
+            else
+            {
+                m_TextureToImageId.insert(pTexture, m_ImageSourceFileNameToTarget.value(fileName));
+            }
         }
     }
     m_Writer.writeEndElement();
 }
 
-void GLC_WorldToCollada::writeImage(GLC_Texture* pTexture, const QString& source)
+QString GLC_WorldToCollada::writeImage(GLC_Texture* pTexture, const QString& source)
 {
     m_Writer.writeStartElement(ColladaElement::imageElement);
-    const QString id(imageId());
-    m_TextureToImageId.insert(pTexture, id);
-    m_Writer.writeAttribute(ColladaElement::idAttribute, id);
-    m_Writer.writeAttribute(ColladaElement::nameAttribute, id);
+    const QString subject(imageId());
+    m_TextureToImageId.insert(pTexture, subject);
+    m_Writer.writeAttribute(ColladaElement::idAttribute, subject);
+    m_Writer.writeAttribute(ColladaElement::nameAttribute, subject);
     m_Writer.writeTextElement(ColladaElement::initFromElement, source);
     m_Writer.writeEndElement();
+
+    return subject;
 }
 
 void GLC_WorldToCollada::writeLibraryMaterials()
@@ -391,7 +397,7 @@ void GLC_WorldToCollada::writeMesh(GLC_Mesh* pMesh)
         writeMeshPosition(pMesh, meshId);
         writeMeshNormal(pMesh, meshId);
         writeMeshTexel(pMesh, meshId);
-        writeVertices(pMesh, meshId);
+        writeVertices(pMesh, meshId, pMesh->vertexCount());
 
         m_Writer.writeEndElement(); // Mesh element
 
@@ -407,7 +413,7 @@ void GLC_WorldToCollada::writeMeshPosition(GLC_Mesh* pMesh, const QString& meshI
     m_Writer.writeAttribute(ColladaElement::nameAttribute, sourceId);
 
     m_Writer.writeStartElement(ColladaElement::floatArrayElement);
-    const GLfloatVector positionVector(pMesh->positionVector());
+    const GLfloatVector positionVector(pMesh->positionVector() + pMesh->wirePositionVector());
 
     const QString arrayId(sourceId + "-array");
     m_Writer.writeAttribute(ColladaElement::idAttribute, arrayId);
@@ -553,7 +559,7 @@ void GLC_WorldToCollada::writeMeshTexel(GLC_Mesh* pMesh, const QString& meshId)
     }
 }
 
-void GLC_WorldToCollada::writeVertices(GLC_Mesh* pMesh, const QString& meshId)
+void GLC_WorldToCollada::writeVertices(GLC_Mesh* pMesh, const QString& meshId, unsigned int wireOffset)
 {
     m_Writer.writeStartElement(ColladaElement::verticesElement);
     const QString verticesId(meshId + "-vertices");
@@ -577,57 +583,84 @@ void GLC_WorldToCollada::writeVertices(GLC_Mesh* pMesh, const QString& meshId)
         }
         ++iMat;
     }
+
+    writeLineStrips(pMesh, meshId, wireOffset);
 }
 
 void GLC_WorldToCollada::writeMeshTriangle(const IndexList& index, const QString& meshId, GLC_Material* pMat)
 {
-    const QString materialId(m_MaterialToIdHash.value(pMat) + "SG");
-    m_Writer.writeStartElement(ColladaElement::trianglesElement);
-    m_Writer.writeAttribute(ColladaElement::countAttribute, QString::number(index.count() / 3));
-    m_Writer.writeAttribute(ColladaElement::materialAttribute, materialId);
-
-    m_Writer.writeStartElement(ColladaElement::inputElement);
-    m_Writer.writeAttribute(ColladaElement::offsetAttribute, "0");
-    m_Writer.writeAttribute(ColladaElement::semanticAttribute, "VERTEX");
-    m_Writer.writeAttribute(ColladaElement::sourceAttribute, QString('#' + meshId + "-vertices"));
-    m_Writer.writeEndElement(); // input element
-
-    m_Writer.writeStartElement(ColladaElement::inputElement);
-    m_Writer.writeAttribute(ColladaElement::offsetAttribute, "1");
-    m_Writer.writeAttribute(ColladaElement::semanticAttribute, "NORMAL");
-    m_Writer.writeAttribute(ColladaElement::sourceAttribute, QString('#' + meshId + "-normals"));
-    m_Writer.writeEndElement(); // input element
-
-    if (pMat->hasTexture())
+    if (!index.isEmpty())
     {
+        // GLC_lib index are not interleaved (VBO index is used)
+        const QString materialId(m_MaterialToIdHash.value(pMat) + "SG");
+        m_Writer.writeStartElement(ColladaElement::trianglesElement);
+        m_Writer.writeAttribute(ColladaElement::countAttribute, QString::number(index.count() / 3));
+        m_Writer.writeAttribute(ColladaElement::materialAttribute, materialId);
+
         m_Writer.writeStartElement(ColladaElement::inputElement);
-        m_Writer.writeAttribute(ColladaElement::offsetAttribute, "2");
-        m_Writer.writeAttribute(ColladaElement::semanticAttribute, "TEXCOORD");
-        m_Writer.writeAttribute(ColladaElement::sourceAttribute, QString('#' + meshId + "-map"));
-        m_Writer.writeAttribute(ColladaElement::setAttribute, "0");
+        m_Writer.writeAttribute(ColladaElement::offsetAttribute, "0");
+        m_Writer.writeAttribute(ColladaElement::semanticAttribute, "VERTEX");
+        m_Writer.writeAttribute(ColladaElement::sourceAttribute, QString('#' + meshId + "-vertices"));
         m_Writer.writeEndElement(); // input element
-    }
 
-    m_Writer.writeStartElement(ColladaElement::primitiveElement);
-    QString indexString;
-    for (GLuint currentIndex : index)
-    {
-        const QString current(QString::number(currentIndex));
-        QString currentInterleaved;
+        m_Writer.writeStartElement(ColladaElement::inputElement);
+        m_Writer.writeAttribute(ColladaElement::offsetAttribute, "0");
+        m_Writer.writeAttribute(ColladaElement::semanticAttribute, "NORMAL");
+        m_Writer.writeAttribute(ColladaElement::sourceAttribute, QString('#' + meshId + "-normals"));
+        m_Writer.writeEndElement(); // input element
+
         if (pMat->hasTexture())
         {
-            indexString.append(current + ' ' + current + ' ' + current + ' ');
-        }
-        else
-        {
-            indexString.append(current + ' ' + current  + ' ');
+            m_Writer.writeStartElement(ColladaElement::inputElement);
+            m_Writer.writeAttribute(ColladaElement::offsetAttribute, "0");
+            m_Writer.writeAttribute(ColladaElement::semanticAttribute, "TEXCOORD");
+            m_Writer.writeAttribute(ColladaElement::sourceAttribute, QString('#' + meshId + "-map"));
+            m_Writer.writeAttribute(ColladaElement::setAttribute, "0");
+            m_Writer.writeEndElement(); // input element
         }
 
+        QString indexString;
+        for (GLuint currentIndex : index)
+        {
+            const QString current(QString::number(currentIndex));
+            indexString.append(current + ' ');
+        }
+        indexString.resize(indexString.size() - 1);
+        m_Writer.writeTextElement(ColladaElement::primitiveElement, indexString);
+        m_Writer.writeEndElement(); // triangles element
     }
-    indexString.resize(indexString.size() - 1);
-    m_Writer.writeCharacters(indexString);
-    m_Writer.writeEndElement(); // primitive
-    m_Writer.writeEndElement(); // triangles element
+}
+
+void GLC_WorldToCollada::writeLineStrips(const GLC_Mesh* pMesh, const QString& meshId, unsigned int offset)
+{
+    if (!pMesh->wireDataIsEmpty())
+    {
+        const GLC_WireData& wireData= pMesh->wireData();
+        m_Writer.writeStartElement(ColladaElement::linestripsElement);
+        const int count= wireData.verticeGroupCount();
+        m_Writer.writeAttribute(ColladaElement::countAttribute, QString::number(count));
+
+        m_Writer.writeStartElement(ColladaElement::inputElement);
+        m_Writer.writeAttribute(ColladaElement::offsetAttribute, "0");
+        m_Writer.writeAttribute(ColladaElement::semanticAttribute, "VERTEX");
+        m_Writer.writeAttribute(ColladaElement::sourceAttribute, QString('#' + meshId + "-vertices"));
+        m_Writer.writeEndElement(); // input element
+
+        QString indexString;
+        for (int i= 0; i < count; ++i)
+        {
+            unsigned int index= wireData.verticeGroupOffset(0) + offset;
+            const int currentSize= wireData.verticeGroupSize(i);
+            for (int j= 0; j < currentSize; ++j)
+            {
+                indexString.append(QString::number(index++) + ' ');
+            }
+        }
+        indexString.resize(indexString.size() - 1);
+        m_Writer.writeTextElement(ColladaElement::primitiveElement, indexString);
+
+        m_Writer.writeEndElement(); // line strips
+    }
 }
 
 void GLC_WorldToCollada::writeLibraryNode()

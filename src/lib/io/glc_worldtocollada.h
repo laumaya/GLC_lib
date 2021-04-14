@@ -10,6 +10,8 @@
 #include <QString>
 #include <QXmlStreamWriter>
 #include <QSet>
+#include <QHash>
+#include <QMultiHash>
 
 #include "../sceneGraph/glc_world.h"
 
@@ -34,7 +36,7 @@ private:
     QString indexToString(int index);
     void init();
     void writeLibraryImages();
-    void writeImage(GLC_Texture* pTexture, const QString& source);
+    QString writeImage(GLC_Texture* pTexture, const QString& source);
     void writeLibraryMaterials();
     void writeMaterial(const QString& materialId);
     QString materialId();
@@ -50,8 +52,9 @@ private:
     void writeMeshPosition(GLC_Mesh* pMesh, const QString& meshId);
     void writeMeshNormal(GLC_Mesh* pMesh, const QString& meshId);
     void writeMeshTexel(GLC_Mesh* pMesh, const QString& meshId);
-    void writeVertices(GLC_Mesh* pMesh, const QString& meshId);
+    void writeVertices(GLC_Mesh* pMesh, const QString& meshId, unsigned int wireOffset);
     void writeMeshTriangle(const IndexList& index, const QString& meshId, GLC_Material* pMat);
+    void writeLineStrips(const GLC_Mesh* pMesh, const QString& meshId, unsigned int offset);
     void writeLibraryNode();
     void writeLibraryVisualScenes();
     void writeVisualScene();
@@ -69,7 +72,7 @@ private:
     QString m_AbsoluteFileName;
     QXmlStreamWriter m_Writer;
     int m_ImageIndex;
-    QSet<QString> m_ImageFileNameSet;
+    QHash<QString, QString> m_ImageSourceFileNameToTarget;
     QList<GLC_Material*> m_MaterialList;
     QHash<GLC_Material*, QString> m_MaterialToIdHash;
     QHash<GLC_Texture*, QString> m_TextureToImageId;
