@@ -75,8 +75,17 @@ void GLC_WorldToCollada::writeHeaderAsset()
     m_Writer.writeTextElement(ColladaElement::authoringToolElement, m_AuthoringTool);
     m_Writer.writeEndElement(); // contributor
 
-    m_Writer.writeTextElement(ColladaElement::createdElement, QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+    const QString date(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+    m_Writer.writeTextElement(ColladaElement::createdElement, date);
+    m_Writer.writeTextElement(ColladaElement::modifiedElement, date);
+
+    m_Writer.writeStartElement(ColladaElement::unitElement);
+    m_Writer.writeAttribute(ColladaElement::nameAttribute, "mm");
+    m_Writer.writeAttribute(ColladaElement::meterAttribute, "0.001");
+    m_Writer.writeEndElement();
+
     m_Writer.writeTextElement(ColladaElement::upAxisElement, "Z_UP");
+
     m_Writer.writeEndElement(); // asset element
 }
 
@@ -342,13 +351,16 @@ void GLC_WorldToCollada::writeMaterialTechnique(GLC_Material* pMat)
     }
     m_Writer.writeEndElement();
 
-    m_Writer.writeStartElement(ColladaElement::transparentElement);
-    writeColor(pMat->diffuseColor()); // Use diffuse color for the transparent color
-    m_Writer.writeEndElement();
+    if (pMat->isTransparent())
+    {
+        m_Writer.writeStartElement(ColladaElement::transparentElement);
+        writeColor(pMat->diffuseColor()); // Use diffuse color for the transparent color
+        m_Writer.writeEndElement();
 
-    m_Writer.writeStartElement(ColladaElement::transparencyElement);
-    m_Writer.writeTextElement(ColladaElement::floatElement, QString::number(1.0 - pMat->opacity()));
-    m_Writer.writeEndElement();
+        m_Writer.writeStartElement(ColladaElement::transparencyElement);
+        m_Writer.writeTextElement(ColladaElement::floatElement, QString::number(pMat->opacity()));
+        m_Writer.writeEndElement();
+   }
 
     m_Writer.writeStartElement(ColladaElement::shininessElement);
     m_Writer.writeTextElement(ColladaElement::floatElement, QString::number(pMat->shininess()));
