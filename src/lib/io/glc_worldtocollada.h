@@ -21,6 +21,7 @@ class GLC_WorldToCollada
 {
 public:
     GLC_WorldToCollada(const GLC_World& world);
+    ~GLC_WorldToCollada();
 
 public:
     void setAuthoringTool(const QString& value)
@@ -28,10 +29,15 @@ public:
 
     bool exportToCollada(const QString& absoluteFileName);
 
+public:
+    void setInstanciationUsage(bool value)
+    {m_UseInstanciation= value;}
+
 private:
     void writeHeaderAsset();
-    void writeMaterials();
-    void writeGeometries();
+    void writeMaterials(const QList<GLC_Material*> materialList);
+    void writeInstanciateGeometries();
+    void writeNotInstanciateGeometries();
     QString imageId();
     QString indexToString(int index);
     void init();
@@ -57,7 +63,8 @@ private:
     void writeLineStrips(const GLC_Mesh* pMesh, const QString& meshId, unsigned int offset);
     void writeLibraryNode();
     void writeLibraryVisualScenes();
-    void writeVisualScene();
+    void writeInstanciateVisualScene();
+    void writeNotInstanciateVisualScene();
     void writeNode(GLC_StructOccurrence* pOcc);
     void writeMatrix(const GLC_Matrix4x4& matrix);
     void writeMeshesNode(const QList<GLC_Mesh*> meshes);
@@ -65,6 +72,7 @@ private:
     void writeInstanceMaterial(GLC_Material* pMat);
     void writeScene();
     QString meshNodeId(GLC_uint id) const;
+    void fillCopiedMeshList();
 
 private:
     GLC_World m_World;
@@ -74,11 +82,13 @@ private:
     int m_ImageIndex;
     QHash<QString, QString> m_ImageSourceFileNameToTarget;
     QList<GLC_Material*> m_MaterialList;
-    QHash<GLC_Material*, QString> m_MaterialToIdHash;
+    QHash<GLC_uint, QString> m_MaterialUidToStringIdHash;
     QHash<GLC_Texture*, QString> m_TextureToImageId;
     QHash<GLC_Mesh*, QString> m_MeshIdHash;
     int m_MaterialIndex;
     int m_MeshIndex;
+    bool m_UseInstanciation;
+    QList<GLC_Mesh*> m_CopiedMesh;
 };
 
 

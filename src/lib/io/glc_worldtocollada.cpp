@@ -28,13 +28,20 @@ GLC_WorldToCollada::GLC_WorldToCollada(const GLC_World& world)
     , m_ImageIndex(0)
     , m_ImageSourceFileNameToTarget()
     , m_MaterialList()
-    , m_MaterialToIdHash()
+    , m_MaterialUidToStringIdHash()
     , m_TextureToImageId()
     , m_MeshIdHash()
     , m_MaterialIndex(0)
     , m_MeshIndex(0)
+    , m_UseInstanciation(true)
+    , m_CopiedMesh()
 {
 
+}
+
+GLC_WorldToCollada::~GLC_WorldToCollada()
+{
+    qDeleteAll(m_CopiedMesh);
 }
 
 bool GLC_WorldToCollada::exportToCollada(const QString& absoluteFileName)
@@ -53,8 +60,23 @@ bool GLC_WorldToCollada::exportToCollada(const QString& absoluteFileName)
         m_Writer.writeAttribute("version", "1.4.1");
 
         writeHeaderAsset();
-        writeMaterials();
-        writeGeometries();
+        if (m_UseInstanciation)
+        {
+            writeMaterials(m_World.listOfMaterials());
+            writeInstanciateGeometries();
+        }
+        else
+        {
+            fillCopiedMeshList();
+            QSet<GLC_Material*> materialSet;
+            for (GLC_Mesh* pMesh : m_CopiedMesh)
+            {
+                materialSet.unite(pMesh->materialSet());
+            }
+            writeMaterials(materialSet.values());
+            writeNotInstanciateGeometries();
+        }
+
         writeLibraryNode();
         writeLibraryVisualScenes();
         writeScene();
@@ -89,15 +111,15 @@ void GLC_WorldToCollada::writeHeaderAsset()
     m_Writer.writeEndElement(); // asset element
 }
 
-void GLC_WorldToCollada::writeMaterials()
+void GLC_WorldToCollada::writeMaterials(const QList<GLC_Material*> materialList)
 {
-    m_MaterialList= (m_World.listOfMaterials());
+    m_MaterialList= materialList;
     writeLibraryImages();
     writeLibraryMaterials();
     writeLibraryEffects();
 }
 
-void GLC_WorldToCollada::writeGeometries()
+void GLC_WorldToCollada::writeInstanciateGeometries()
 {
     m_Writer.writeStartElement(ColladaElement::libraryGeometriesElement);
 
@@ -125,6 +147,17 @@ void GLC_WorldToCollada::writeGeometries()
     m_Writer.writeEndElement();
 }
 
+void GLC_WorldToCollada::writeNotInstanciateGeometries()
+{
+    m_Writer.writeStartElement(ColladaElement::libraryGeometriesElement);
+
+    for (GLC_Mesh* pMesh : m_CopiedMesh)
+    {
+        writeMesh(pMesh);
+    }
+    m_Writer.writeEndElement();
+}
+
 QString GLC_WorldToCollada::imageId()
 {
     const QString subject("image" + indexToString(m_ImageIndex++));
@@ -148,7 +181,7 @@ void GLC_WorldToCollada::init()
 {
     m_ImageIndex= 0;
     m_ImageSourceFileNameToTarget.clear();
-    m_MaterialToIdHash.clear();
+    m_MaterialUidToStringIdHash.clear();
     m_MaterialList.clear();
     m_TextureToImageId.clear();
     m_MeshIdHash.clear();
@@ -229,7 +262,7 @@ void GLC_WorldToCollada::writeLibraryMaterials()
     for (GLC_Material* pMat : m_MaterialList)
     {
         const QString materialId(this->materialId());
-        m_MaterialToIdHash.insert(pMat, materialId);
+        m_MaterialUidToStringIdHash.insert(pMat->id(), materialId);
         writeMaterial(materialId);
     }
 
@@ -285,7 +318,7 @@ void GLC_WorldToCollada::writeLibraryEffects()
 void GLC_WorldToCollada::writeMaterialEffect(GLC_Material* pMat)
 {
     m_Writer.writeStartElement(ColladaElement::effectElement);
-    const QString effectId(m_MaterialToIdHash.value(pMat) + "-fx");
+    const QString effectId(m_MaterialUidToStringIdHash.value(pMat->id()) + "-fx");
     m_Writer.writeAttribute(ColladaElement::idAttribute, effectId);
     writeMaterialProfileCommon(pMat);
     m_Writer.writeEndElement();
@@ -392,7 +425,6 @@ void GLC_WorldToCollada::writeMesh(GLC_Mesh* pMesh)
         m_Writer.writeStartElement(ColladaElement::geometryElement);
         m_Writer.writeAttribute(ColladaElement::idAttribute, meshId);
         m_Writer.writeAttribute(ColladaElement::nameAttribute, meshId);
-
         m_Writer.writeStartElement(ColladaElement::meshElement);
         writeMeshPosition(pMesh, meshId);
         writeMeshNormal(pMesh, meshId);
@@ -576,7 +608,7 @@ void GLC_WorldToCollada::writeVertices(GLC_Mesh* pMesh, const QString& meshId, u
     while (iMat != materialSet.constEnd())
     {
         GLC_Material* pMat= *iMat;
-        if (m_MaterialToIdHash.contains(pMat))
+        if (m_MaterialUidToStringIdHash.contains(pMat->id()))
         {
             const IndexList index(pMesh->getEquivalentTrianglesStripsFansIndex(0, pMat->id()));
             writeMeshTriangle(index, meshId, pMat);
@@ -592,7 +624,7 @@ void GLC_WorldToCollada::writeMeshTriangle(const IndexList& index, const QString
     if (!index.isEmpty())
     {
         // GLC_lib index are not interleaved (VBO index is used)
-        const QString materialId(m_MaterialToIdHash.value(pMat) + "SG");
+        const QString materialId(m_MaterialUidToStringIdHash.value(pMat->id()) + "SG");
         m_Writer.writeStartElement(ColladaElement::trianglesElement);
         m_Writer.writeAttribute(ColladaElement::countAttribute, QString::number(index.count() / 3));
         m_Writer.writeAttribute(ColladaElement::materialAttribute, materialId);
@@ -636,30 +668,30 @@ void GLC_WorldToCollada::writeLineStrips(const GLC_Mesh* pMesh, const QString& m
     if (!pMesh->wireDataIsEmpty())
     {
         const GLC_WireData& wireData= pMesh->wireData();
-        m_Writer.writeStartElement(ColladaElement::linestripsElement);
         const int count= wireData.verticeGroupCount();
-        m_Writer.writeAttribute(ColladaElement::countAttribute, QString::number(count));
-
-        m_Writer.writeStartElement(ColladaElement::inputElement);
-        m_Writer.writeAttribute(ColladaElement::offsetAttribute, "0");
-        m_Writer.writeAttribute(ColladaElement::semanticAttribute, "VERTEX");
-        m_Writer.writeAttribute(ColladaElement::sourceAttribute, QString('#' + meshId + "-vertices"));
-        m_Writer.writeEndElement(); // input element
-
-        QString indexString;
         for (int i= 0; i < count; ++i)
         {
-            unsigned int index= wireData.verticeGroupOffset(0) + offset;
             const int currentSize= wireData.verticeGroupSize(i);
+            m_Writer.writeStartElement(ColladaElement::linestripsElement);
+            m_Writer.writeAttribute(ColladaElement::countAttribute, QString::number(currentSize));
+
+            m_Writer.writeStartElement(ColladaElement::inputElement);
+            m_Writer.writeAttribute(ColladaElement::offsetAttribute, "0");
+            m_Writer.writeAttribute(ColladaElement::semanticAttribute, "VERTEX");
+            m_Writer.writeAttribute(ColladaElement::sourceAttribute, QString('#' + meshId + "-vertices"));
+            m_Writer.writeEndElement(); // input element
+
+            QString indexString;
+            unsigned int index= wireData.verticeGroupOffset(i) + offset;
             for (int j= 0; j < currentSize; ++j)
             {
                 indexString.append(QString::number(index++) + ' ');
             }
-        }
-        indexString.resize(indexString.size() - 1);
-        m_Writer.writeTextElement(ColladaElement::primitiveElement, indexString);
+            indexString.resize(indexString.size() - 1);
+            m_Writer.writeTextElement(ColladaElement::primitiveElement, indexString);
 
-        m_Writer.writeEndElement(); // line strips
+            m_Writer.writeEndElement(); // line strips
+        }
     }
 }
 
@@ -694,16 +726,41 @@ void GLC_WorldToCollada::writeLibraryNode()
 void GLC_WorldToCollada::writeLibraryVisualScenes()
 {
     m_Writer.writeStartElement(ColladaElement::libraryVisualScenesElement);
-    writeVisualScene();
+    if (m_UseInstanciation)
+    {
+        writeInstanciateVisualScene();
+    }
+    else
+    {
+        writeNotInstanciateVisualScene();
+    }
     m_Writer.writeEndElement();
 }
 
-void GLC_WorldToCollada::writeVisualScene()
+void GLC_WorldToCollada::writeInstanciateVisualScene()
 {
     m_Writer.writeStartElement(ColladaElement::visualSceneElement);
     m_Writer.writeAttribute(ColladaElement::idAttribute, "visualScene");
     m_Writer.writeAttribute(ColladaElement::nameAttribute, "visualScene");
-    writeNode(m_World.rootOccurrence());
+    QList<GLC_StructOccurrence*> occurences(m_World.listOfOccurrence());
+    for (GLC_StructOccurrence* pOcc : occurences)
+    {
+        if (pOcc->structReference()->hasRepresentation())
+        {
+            writeNode(pOcc);
+        }
+    }
+    m_Writer.writeEndElement();
+}
+
+void GLC_WorldToCollada::writeNotInstanciateVisualScene()
+{
+    m_Writer.writeStartElement(ColladaElement::visualSceneElement);
+    m_Writer.writeAttribute(ColladaElement::idAttribute, "visualScene");
+    m_Writer.writeAttribute(ColladaElement::nameAttribute, "visualScene");
+
+    writeMeshesNode(m_CopiedMesh);
+
     m_Writer.writeEndElement();
 }
 
@@ -713,7 +770,7 @@ void GLC_WorldToCollada::writeNode(GLC_StructOccurrence* pOcc)
     const QString id("Node_" + QString::number(pOcc->id()));
     m_Writer.writeAttribute(ColladaElement::idAttribute, id);
     m_Writer.writeAttribute(ColladaElement::nameAttribute, pOcc->name());
-    writeMatrix(pOcc->structInstance()->relativeMatrix());
+    writeMatrix(pOcc->absoluteMatrix());
     if (pOcc->structReference()->hasRepresentation())
     {
         GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pOcc->structReference()->representationHandle());
@@ -729,12 +786,7 @@ void GLC_WorldToCollada::writeNode(GLC_StructOccurrence* pOcc)
             writeMeshesNode(meshList);
         }
     }
-    QList<GLC_StructOccurrence*> children(pOcc->children());
-    for (GLC_StructOccurrence* pChild : children)
-    {
-        writeNode(pChild);
-    }
-    m_Writer.writeEndElement();
+    m_Writer.writeEndElement(); // node element
 }
 
 void GLC_WorldToCollada::writeMatrix(const GLC_Matrix4x4& matrix)
@@ -801,10 +853,10 @@ void GLC_WorldToCollada::writeBindMaterial(GLC_Mesh* pMesh)
 
 void GLC_WorldToCollada::writeInstanceMaterial(GLC_Material* pMat)
 {
-    if (m_MaterialToIdHash.contains(pMat))
+    if (m_MaterialUidToStringIdHash.contains(pMat->id()))
     {
         m_Writer.writeStartElement(ColladaElement::instanceMaterialElement);
-        const QString materialId(m_MaterialToIdHash.value(pMat));
+        const QString materialId(m_MaterialUidToStringIdHash.value(pMat->id()));
         m_Writer.writeAttribute(ColladaElement::symbolAttribute, materialId + "SG");
         m_Writer.writeAttribute(ColladaElement::targetAttribute, '#' + materialId);
         if (pMat->hasTexture() && m_TextureToImageId.contains(pMat->textureHandle()))
@@ -833,4 +885,32 @@ QString GLC_WorldToCollada::meshNodeId(GLC_uint id) const
     const QString subject("Mesh_" + QString::number(id));
 
     return subject;
+}
+
+void GLC_WorldToCollada::fillCopiedMeshList()
+{
+    Q_ASSERT(!m_UseInstanciation);
+
+    QList<GLC_StructOccurrence*> occurences(m_World.listOfOccurrence());
+    for (GLC_StructOccurrence* pOcc : occurences)
+    {
+        if (pOcc->hasRepresentation())
+        {
+            GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pOcc->structReference()->representationHandle());
+            if (nullptr != pRep)
+            {
+                const int count= pRep->numberOfBody();
+                for (int i= 0 ; i < count; ++i)
+                {
+                    GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(pRep->geomAt(i));
+                    if (nullptr != pMesh)
+                    {
+                        pMesh= new GLC_Mesh(*(pMesh));
+                        pMesh->transformVertice(pOcc->absoluteMatrix());
+                        m_CopiedMesh.append(pMesh);
+                    }
+                }
+            }
+        }
+    }
 }
