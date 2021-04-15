@@ -107,7 +107,7 @@ private:
 		, m_Datas(3)
 		, m_Mapping()
 		, m_Index()
-		, m_FreeIndex(0)
+        , m_FreeIndex(0)
 		{}
 
 		~MeshInfo() {delete m_pMesh;}
@@ -300,8 +300,12 @@ private:
 	//! Load triangles
 	void loadTriangles();
 
+    void loadLineStrips();
+
 	//! Add the triangles to current mesh
 	void addTrianglesToCurrentMesh(const QList<InputData>&, const QList<int>&, const QString&);
+
+    void addLineStripsToCurrentMesh(const InputData& inputData, const QList<int> lineStripsIndexList);
 
 	//! Load the library nodes
 	void loadLibraryNodes();

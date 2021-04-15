@@ -789,6 +789,7 @@ void GLC_ColladaToWorld::loadMesh()
 			else if (currentElementName == "polylist") loadPolylist();
 			else if (currentElementName == "polygons") loadPolygons();
 			else if (currentElementName == "triangles") loadTriangles();
+            else if (currentElementName == "linestrips") loadLineStrips();
 			//else if (currentElementName == "trifans") loadTriFans();
 			//else if (currentElementName == "tristrips") loadTriStrip();
 		}
@@ -1300,6 +1301,61 @@ void  GLC_ColladaToWorld::loadTriangles()
 
 }
 
+void GLC_ColladaToWorld::loadLineStrips()
+{
+    // Offsets and data source list
+    InputData inputData;
+
+    // triangle index list
+    QList<int> lineStripsIndexList;
+
+    while (endElementNotReached(m_pStreamReader, "linestrips"))
+    {
+        if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+        {
+            const QStringRef currentElementName= m_pStreamReader->name();
+            if ((currentElementName == "input") && lineStripsIndexList.isEmpty())
+            {
+                // Get input data offset
+                inputData.m_Offset= readAttribute("offset", true).toInt();
+                // Get input data semantic
+                const QString semantic= readAttribute("semantic", true);
+                if (semantic == "VERTEX") inputData.m_Semantic= VERTEX;
+                else throwException("Source semantic :" + semantic + "Not supported");
+                // Get input data source id
+                inputData.m_Source= readAttribute("source", true).remove('#');
+
+                // Bypasss vertices indirection
+                if (m_VerticesSourceHash.contains(inputData.m_Source))
+                {
+                    inputData.m_Source= m_VerticesSourceHash.value(inputData.m_Source);
+                }
+            }
+            else if ((currentElementName == "p") && lineStripsIndexList.isEmpty())
+            {
+                { // Fill index List
+                    QString pString= getContent("p");
+                    QStringList pStringList= pString.split(' ');
+                    bool toIntOK;
+                    const int size= pStringList.size();
+                    for (int i= 0; i < size; ++i)
+                    {
+                        lineStripsIndexList.append(pStringList.at(i).toInt(&toIntOK));
+                        if (!toIntOK) throwException("Unable to convert string :" + pStringList.at(i) + " To int");
+                    }
+                }
+
+            }
+        }
+        m_pStreamReader->readNext();
+    }
+
+    addLineStripsToCurrentMesh(inputData, lineStripsIndexList);
+
+    updateProgressBar();
+
+}
+
 // Add the triangles to current mesh
 void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& inputDataList, const QList<int>& trianglesIndexList, const QString& materialId)
 {
@@ -1408,6 +1464,28 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 	matInfo.m_size= m_pMeshInfo->m_Index.size() - indexOffset;
 	m_pMeshInfo->m_Materials.insertMulti(materialId, matInfo);
 
+}
+
+void GLC_ColladaToWorld::addLineStripsToCurrentMesh(const GLC_ColladaToWorld::InputData& inputData, const QList<int> lineStripsIndexList)
+{
+    const int indexCount= lineStripsIndexList.size();
+
+    if ( !m_BulkDataHash.contains(inputData.m_Source))
+    {
+        throwException(" Source : " + inputData.m_Source + " Not found");
+    }
+
+    GLC_Mesh* pMesh= m_pMeshInfo->m_pMesh;
+    BulkDataHash::const_iterator iBulkHash= m_BulkDataHash.find(inputData.m_Source);
+    const int stride= 3;
+    GLfloatVector verticeGroup(indexCount * stride);
+    for (int i= 0; i < indexCount; ++i)
+    {
+        verticeGroup[i * stride]= iBulkHash.value().at(lineStripsIndexList.at(i + inputData.m_Offset) * stride);
+        verticeGroup[i * stride + 1]= iBulkHash.value().at(lineStripsIndexList.at(i + inputData.m_Offset) * stride + 1);
+        verticeGroup[i * stride + 2]= iBulkHash.value().at(lineStripsIndexList.at(i + inputData.m_Offset) * stride + 2);
+    }
+    pMesh->addVerticeGroup(verticeGroup);
 }
 
 // Load the library nodes
