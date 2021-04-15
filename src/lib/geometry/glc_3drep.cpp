@@ -192,7 +192,7 @@ unsigned int GLC_3DRep::vertexCount() const
 		const int size= m_pGeomList->size();
 		for (int i= 0; i < size; ++i)
 		{
-			result+= m_pGeomList->at(i)->VertexCount();
+			result+= m_pGeomList->at(i)->vertexCount();
 		}
 	}
 
@@ -260,7 +260,7 @@ void GLC_3DRep::clean()
 	QList<GLC_Geometry*>::iterator iGeomList= m_pGeomList->begin();
 	while(iGeomList != m_pGeomList->constEnd())
 	{
-		if ((*iGeomList)->VertexCount() == 0)
+		if ((*iGeomList)->vertexCount() == 0)
 		{
 			delete (*iGeomList);
 			iGeomList= m_pGeomList->erase(iGeomList);

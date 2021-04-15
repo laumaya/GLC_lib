@@ -147,7 +147,7 @@ unsigned int GLC_Mesh::faceCount(int lod) const
 }
 
 // Get number of vertex
-unsigned int GLC_Mesh::VertexCount() const
+unsigned int GLC_Mesh::vertexCount() const
 {
     return m_NumberOfVertice;
 }

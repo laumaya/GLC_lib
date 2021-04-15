@@ -92,7 +92,7 @@ public:
     unsigned int faceCount(int lod) const override;
 
 	//! Get number of vertex
-    unsigned int VertexCount() const override;
+    unsigned int vertexCount() const override;
 
 	//! Get number of normals
 	inline unsigned int numberOfNormals() const

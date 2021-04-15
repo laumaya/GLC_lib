@@ -166,7 +166,7 @@ public:
 	virtual unsigned int faceCount(int lod=0) const;
 
 	//! Get the number of vertex
-	virtual unsigned int VertexCount() const;
+    virtual unsigned int vertexCount() const;
 
 	//! Return the line width
 	GLfloat lineWidth() const

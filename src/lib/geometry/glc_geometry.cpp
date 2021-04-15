@@ -125,7 +125,7 @@ unsigned int GLC_Geometry::faceCount(int) const
 }
 
 // Get number of vertex
-unsigned int GLC_Geometry::VertexCount() const
+unsigned int GLC_Geometry::vertexCount() const
 {
     return 0;
 }
