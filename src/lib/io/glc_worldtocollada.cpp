@@ -907,6 +907,31 @@ void GLC_WorldToCollada::fillCopiedMeshList()
                     {
                         pMesh= new GLC_Mesh(*(pMesh));
                         pMesh->transformVertice(pOcc->absoluteMatrix());
+
+                        // Handle overwrite material
+                        GLC_Material* pMaterial= nullptr;
+                        if (pOcc->has3DViewInstance())
+                        {
+                            GLC_3DViewInstance* pViewInstance= m_World.collection()->instanceHandle(pOcc->id());
+                            Q_ASSERT(nullptr != pViewInstance);
+                            if (pViewInstance->renderPropertiesHandle()->renderingMode() == glc::OverwriteMaterial)
+                            {
+                                pMaterial= pViewInstance->renderPropertiesHandle()->overwriteMaterial();
+                            }
+                        }
+                        else if ((pOcc->renderPropertiesHandle() != nullptr) && pOcc->renderPropertiesHandle()->renderingMode() == glc::OverwriteMaterial)
+                        {
+                            pMaterial= pOcc->renderPropertiesHandle()->overwriteMaterial();
+                        }
+                        if (nullptr != pMaterial)
+                        {
+                            QList<GLC_Material*> meshMaterial(pMesh->materialSet().values());
+                            for (GLC_Material* pMat : meshMaterial)
+                            {
+                                pMesh->replaceMaterial(pMat->id(), pMaterial);
+                            }
+                        }
+
                         m_CopiedMesh.append(pMesh);
                     }
                 }
