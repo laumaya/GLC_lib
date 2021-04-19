@@ -15,9 +15,11 @@
 
 #include "../sceneGraph/glc_world.h"
 
+#include "../glc_config.h"
+
 class GLC_Mesh;
 
-class GLC_WorldToCollada
+class GLC_LIB_EXPORT GLC_WorldToCollada
 {
 public:
     GLC_WorldToCollada(const GLC_World& world);
