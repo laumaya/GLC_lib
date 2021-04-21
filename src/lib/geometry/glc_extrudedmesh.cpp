@@ -31,13 +31,13 @@
 // Class chunk id
 quint32 GLC_ExtrudedMesh::m_ChunkId= 0xA712;
 
-GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_Vector3d &dir, double lenght, bool mirroredExtend)
+GLC_ExtrudedMesh::GLC_ExtrudedMesh(const QList<GLC_Point3d> &points, const GLC_Vector3d &dir, double length, bool mirroredExtend)
     :GLC_Mesh()
     , m_Points(points)
     , m_SmothingPoints()
     , m_InvisibleEdgeIndex()
     , m_ExtrusionVector(GLC_Vector3d(dir).normalize())
-    , m_ExtrusionLenght(lenght)
+    , m_ExtrusionLength(length)
     , m_GivenFaceNormal()
     , m_MirroredExtend(mirroredExtend)
     , m_MasterMaterialId(0)
@@ -55,7 +55,7 @@ GLC_ExtrudedMesh::GLC_ExtrudedMesh(const GLC_ExtrudedMesh &other)
     , m_SmothingPoints(other.m_SmothingPoints)
     , m_InvisibleEdgeIndex(other.m_InvisibleEdgeIndex)
     , m_ExtrusionVector(other.m_ExtrusionVector)
-    , m_ExtrusionLenght(other.m_ExtrusionLenght)
+    , m_ExtrusionLength(other.m_ExtrusionLength)
     , m_GivenFaceNormal(other.m_GivenFaceNormal)
     , m_MirroredExtend(other.m_MirroredExtend)
     , m_MasterMaterialId(GLC_Mesh::newMaterialIdFromOldMaterialId(other.m_MasterMaterialId))
@@ -136,7 +136,7 @@ GLC_ExtrudedMesh &GLC_ExtrudedMesh::operator =(const GLC_ExtrudedMesh &other)
         m_SmothingPoints= other.m_SmothingPoints;
         m_InvisibleEdgeIndex= other.m_InvisibleEdgeIndex;
         m_ExtrusionVector= other.m_ExtrusionVector;
-        m_ExtrusionLenght= other.m_ExtrusionLenght;
+        m_ExtrusionLength= other.m_ExtrusionLength;
         m_GivenFaceNormal= other.m_GivenFaceNormal;
         m_MirroredExtend= other.m_MirroredExtend;
         m_MasterMaterialId= GLC_Mesh::newMaterialIdFromOldMaterialId(other.m_MasterMaterialId);
@@ -147,14 +147,14 @@ GLC_ExtrudedMesh &GLC_ExtrudedMesh::operator =(const GLC_ExtrudedMesh &other)
     return *this;
 }
 
-void GLC_ExtrudedMesh::setGeometry(const QList<GLC_Point3d> &points, const GLC_Vector3d &extrudedVector, double lenght)
+void GLC_ExtrudedMesh::setGeometry(const QList<GLC_Point3d> &points, const GLC_Vector3d &extrudedVector, double length)
 {
     m_Points= points;
     m_SmothingPoints.clear();
     m_InvisibleEdgeIndex.clear();
 
     m_ExtrusionVector= extrudedVector;
-    m_ExtrusionLenght= lenght;
+    m_ExtrusionLength= length;
 
     GLC_Mesh::clearMeshWireAndBoundingBox();
     m_FaceToPolygons.clear();
@@ -198,11 +198,11 @@ void GLC_ExtrudedMesh::setExtrudedVector(const GLC_Vector3d &extrudedVector)
     }
 }
 
-void GLC_ExtrudedMesh::setExtrudedLenght(double length)
+void GLC_ExtrudedMesh::setExtrudedLength(double length)
 {
-    if (!glc::compare(length, m_ExtrusionLenght))
+    if (!glc::compare(length, m_ExtrusionLength))
     {
-        m_ExtrusionLenght= length;
+        m_ExtrusionLength= length;
         GLC_Mesh::clearMeshWireAndBoundingBox();
         m_FaceToPolygons.clear();
     }
@@ -397,8 +397,8 @@ void GLC_ExtrudedMesh::createMesh()
         const GLuint count= static_cast<GLuint>(m_Points.count());
         const GLuint offset1= static_cast<GLuint>(vertices.size() / 3);
         GLfloatVector facesNormals= baseOutlineNormals();
-        GLuint indexLenght= static_cast<GLuint>(facesNormals.size() / 3);
-        GLuint offset2= offset1 + indexLenght;
+        GLuint indexLength= static_cast<GLuint>(facesNormals.size() / 3);
+        GLuint offset2= offset1 + indexLength;
         facesNormals= facesNormals + createdOutlineNormals();
         GLfloatVector facesVertices= baseOutlineFacesVertices() + createdOutlineFacesVertices();
         vertices+= facesVertices;
@@ -408,7 +408,7 @@ void GLC_ExtrudedMesh::createMesh()
         {
             IndexList faceIndex;
             GLuint startIndex1= offset1 + (face * 2);
-            GLuint startIndex2= offset2 + (indexLenght -1) - (face * 2);
+            GLuint startIndex2= offset2 + (indexLength -1) - (face * 2);
             faceIndex << startIndex1 << startIndex2 << (startIndex1 + 1) << (startIndex2 - 1);
             addTrianglesStrip(faceOutlineMaterial(static_cast<int>(face)), faceIndex);
         }
@@ -682,7 +682,7 @@ QList<GLC_Point3d> GLC_ExtrudedMesh::baseFacePoints() const
     double offsetLength;
     if (m_MirroredExtend)
     {
-        offsetLength= -(m_ExtrusionLenght / 2.0);
+        offsetLength= -(m_ExtrusionLength / 2.0);
     }
     else
     {
@@ -706,11 +706,11 @@ QList<GLC_Point3d> GLC_ExtrudedMesh::createdFacePoints() const
     double offsetLength;
     if (m_MirroredExtend)
     {
-        offsetLength= (m_ExtrusionLenght / 2.0);
+        offsetLength= (m_ExtrusionLength / 2.0);
     }
     else
     {
-        offsetLength= m_ExtrusionLenght;
+        offsetLength= m_ExtrusionLength;
     }
 
     const GLC_Vector3d offset(m_ExtrusionVector * offsetLength);
@@ -810,10 +810,10 @@ GLfloatVector GLC_ExtrudedMesh::createdOutlineFacesTexels() const
     for (int i= 0; i < count; ++i)
     {
         double value= distances.at(i) * m_TextureRangeFactor;
-        subject[i * 4]= static_cast<GLfloat>(m_ExtrusionLenght * m_TextureRangeFactor);
+        subject[i * 4]= static_cast<GLfloat>(m_ExtrusionLength * m_TextureRangeFactor);
         subject[i * 4 + 1]= static_cast<GLfloat>(value);
 
-        subject[i * 4 + 2]= static_cast<GLfloat>(m_ExtrusionLenght * m_TextureRangeFactor);
+        subject[i * 4 + 2]= static_cast<GLfloat>(m_ExtrusionLength * m_TextureRangeFactor);
         subject[i * 4 + 3]= static_cast<GLfloat>(0.0);
     }
 
@@ -862,7 +862,7 @@ void GLC_ExtrudedMesh::createPolygons()
     m_FaceToPolygons.insert(face(-2), baseFacePolygon);
     m_FaceToPolygons.insert(face(-1), createdFacePolygon);
 
-    const GLC_Vector3d offset(m_ExtrusionVector * m_ExtrusionLenght);
+    const GLC_Vector3d offset(m_ExtrusionVector * m_ExtrusionLength);
 
     const int count= m_Points.count();
     for (int i= 0; i < count; ++i)

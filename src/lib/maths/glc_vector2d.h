@@ -230,7 +230,7 @@ public:
 		return *this;
 	}
 
-	//! Set vector lenght from the given scalar and return a reference of this vector
+	//! Set vector length from the given scalar and return a reference of this vector
 	inline GLC_Vector2d& setLength(double);
 
 	//! Normalize this vector and return a reference to it
@@ -291,13 +291,13 @@ typedef GLC_Vector2d GLC_Point2d;
 
 Q_DECLARE_METATYPE(GLC_Vector2d)
 
-inline GLC_Vector2d& GLC_Vector2d::setLength(double lenght)
+inline GLC_Vector2d& GLC_Vector2d::setLength(double length)
 {
-    const double currentLenght= sqrt( m_Vector[0] * m_Vector[0] + m_Vector[1] * m_Vector[1]);
+    const double currentLength= sqrt( m_Vector[0] * m_Vector[0] + m_Vector[1] * m_Vector[1]);
 
-    if (currentLenght != 0.0f)
+    if (currentLength != 0.0f)
 	{
-        const double Coef = lenght / currentLenght;
+        const double Coef = length / currentLength;
 
 		m_Vector[0] = m_Vector[0] * Coef;
 		m_Vector[1] = m_Vector[1] * Coef;

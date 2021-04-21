@@ -30,7 +30,7 @@ GLC_Arrow::GLC_Arrow(const GLC_Point3d& startPoint, const GLC_Point3d& endPoint,
 : GLC_Geometry("Arrow", true)
 , m_StartPoint(startPoint)
 , m_EndPoint(endPoint)
-, m_HeadLenght((m_EndPoint - m_StartPoint).length() / 10.0)
+, m_HeadLength((m_EndPoint - m_StartPoint).length() / 10.0)
 , m_HeadAngle(glc::toRadian(30.0))
 , m_ViewDir(GLC_Vector3d(viewDir).normalize())
 {
@@ -41,7 +41,7 @@ GLC_Arrow::GLC_Arrow(const GLC_Arrow& arrow)
 : GLC_Geometry(arrow)
 , m_StartPoint(arrow.m_StartPoint)
 , m_EndPoint(arrow.m_EndPoint)
-, m_HeadLenght(arrow.m_HeadLenght)
+, m_HeadLength(arrow.m_HeadLength)
 , m_HeadAngle(arrow.m_HeadAngle)
 , m_ViewDir(arrow.m_ViewDir)
 {
@@ -81,7 +81,7 @@ GLC_Arrow& GLC_Arrow::operator=(const GLC_Arrow& arrow)
 		GLC_Geometry::operator=(arrow);
 		m_StartPoint= arrow.m_StartPoint;
 		m_EndPoint= arrow.m_EndPoint;
-		m_HeadLenght= arrow.m_HeadLenght;
+		m_HeadLength= arrow.m_HeadLength;
 		m_HeadAngle= arrow.m_HeadAngle;
 		m_ViewDir= arrow.m_ViewDir;
 	}
@@ -106,11 +106,11 @@ void GLC_Arrow::setEndPoint(const GLC_Point3d& endPoint)
 	}
 }
 
-void GLC_Arrow::setHeadLength(double headLenght)
+void GLC_Arrow::setHeadLength(double headLength)
 {
-	if (!glc::fuzzyCompare(m_HeadLenght, headLenght))
+	if (!glc::fuzzyCompare(m_HeadLength, headLength))
 	{
-		m_HeadLenght= headLenght;
+		m_HeadLength= headLength;
 		GLC_Geometry::clearWireAndBoundingBox();
 	}
 }
@@ -161,7 +161,7 @@ void GLC_Arrow::createWire()
 	GLC_Geometry::addVerticeGroup(floatVector);
 
 	// Arrow Head
-	GLC_Point3d headPoint1(-m_HeadLenght, m_HeadLenght * tan(m_HeadAngle / 2.0), 0.0);
+	GLC_Point3d headPoint1(-m_HeadLength, m_HeadLength * tan(m_HeadAngle / 2.0), 0.0);
 	GLC_Point3d headPoint2(headPoint1.x(), -(headPoint1.y()), headPoint1.z());
 
 	// Arrow frame

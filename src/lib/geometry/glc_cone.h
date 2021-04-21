@@ -63,7 +63,7 @@ public:
 	//! Return the class Chunk ID
 	static quint32 chunckID();
 
-	//! Get Lenght of the Cone
+	//! Get Length of the Cone
 	inline double length(void) const
 	{return m_Length;}
 

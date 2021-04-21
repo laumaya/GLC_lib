@@ -68,9 +68,9 @@ public:
 	inline GLC_Point3d endPoint() const
 	{return m_EndPoint;}
 
-	//! Return the lenght of the head of this arrow
-	inline double headLenght() const
-	{return m_HeadLenght;}
+	//! Return the length of the head of this arrow
+	inline double headLength() const
+	{return m_HeadLength;}
 
 	//! Return the angle in radians of the head of this arrow
 	inline double headAngle() const
@@ -98,8 +98,8 @@ public:
 	//! Set the end point of this arrow
 	void setEndPoint(const GLC_Point3d& endPoint);
 
-	//! Set the length of the head of this arrow to the given lenght
-	void setHeadLength(double headLenght);
+	//! Set the length of the head of this arrow to the given length
+	void setHeadLength(double headLength);
 
 	//! Set the angle of the head of this arrow to the given angle in radians
 	void setHeadAngle(double headAngle);
@@ -143,8 +143,8 @@ private:
 	//! End point
 	GLC_Point3d m_EndPoint;
 
-	//! Head lenght
-	double m_HeadLenght;
+	//! Head length
+	double m_HeadLength;
 
 	//! Head angle
 	double m_HeadAngle;

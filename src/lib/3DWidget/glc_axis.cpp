@@ -218,8 +218,8 @@ glc::WidgetEventFlag GLC_Axis::move(const GLC_Point3d& pos, GLC_uint)
         m_Offset= (newPos - m_Center);
         if (m_Offset.length() >= m_MoveStep)
         {
-            const double newLenght= glc::round(m_Offset.length(), m_MoveStep);
-            m_Offset.setLength(newLenght);
+            const double newLength= glc::round(m_Offset.length(), m_MoveStep);
+            m_Offset.setLength(newLength);
             m_Center= m_Center + m_Offset;
             // Update the instance
             for (int i= 0; i < 6; ++i)

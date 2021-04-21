@@ -558,11 +558,11 @@ double glc::pointLineDistance(const GLC_Point3d& point, const GLC_Line3d& line)
 bool glc::pointsAreCollinear(const GLC_Point3d& p1, const GLC_Point3d& p2, const GLC_Point3d& p3)
 {
     bool subject= false;
-    const double p1p2Lenght= (p1 - p2).length();
-    const double p1p3Lenght= (p1 - p3).length();
+    const double p1p2Length= (p1 - p2).length();
+    const double p1p3Length= (p1 - p3).length();
     const double p2p3Length= (p2 - p3).length();
     QList<double> lengthList;
-    lengthList << p1p2Lenght << p1p3Lenght << p2p3Length;
+    lengthList << p1p2Length << p1p3Length << p2p3Length;
     std::sort(lengthList.begin(), lengthList.end());
     subject= compare(lengthList.at(2), (lengthList.at(0) + lengthList.at(1)));
     return subject;

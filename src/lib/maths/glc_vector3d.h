@@ -249,8 +249,8 @@ public:
 		return *this;
 	}
 
-	//! Set vector lenght from the given scalar and return a reference of this vector
-    GLC_Vector3d& setLength(double lenght);
+	//! Set vector length from the given scalar and return a reference of this vector
+    GLC_Vector3d& setLength(double length);
 
 	//! Normalize this vector and return a reference to it
     GLC_Vector3d& normalize()
@@ -426,13 +426,13 @@ GLC_Vector3d& GLC_Vector3d::setVect(double x, double y, double z)
 	return *this;
 }
 
-inline GLC_Vector3d& GLC_Vector3d::setLength(double lenght)
+inline GLC_Vector3d& GLC_Vector3d::setLength(double length)
 {
-    const double currentLenght= sqrt( m_Vector[0] * m_Vector[0] + m_Vector[1] * m_Vector[1] + m_Vector[2] * m_Vector[2]);
+    const double currentLength= sqrt( m_Vector[0] * m_Vector[0] + m_Vector[1] * m_Vector[1] + m_Vector[2] * m_Vector[2]);
 
-    if (qAbs(currentLenght) > glc::EPSILON)
+    if (qAbs(currentLength) > glc::EPSILON)
 	{
-        const double coef = lenght / currentLenght;
+        const double coef = length / currentLength;
 
         m_Vector[0] = m_Vector[0] * coef;
         m_Vector[1] = m_Vector[1] * coef;

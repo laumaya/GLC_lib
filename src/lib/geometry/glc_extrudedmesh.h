@@ -49,7 +49,7 @@ class GLC_LIB_EXPORT GLC_ExtrudedMesh : public GLC_Mesh
 
 public:
     //! Default constructor
-    GLC_ExtrudedMesh(const QList<GLC_Point3d>& points, const GLC_Vector3d& dir, double lenght, bool mirroredExtend= false);
+    GLC_ExtrudedMesh(const QList<GLC_Point3d>& points, const GLC_Vector3d& dir, double length, bool mirroredExtend= false);
 
     //! Copy constructor
     GLC_ExtrudedMesh(const GLC_ExtrudedMesh& other);
@@ -72,9 +72,9 @@ public:
     GLC_Vector3d extrusionVector() const
     {return m_ExtrusionVector;}
 
-    //! Return the extrusion lenght
-    double extrusionLenght() const
-    {return m_ExtrusionLenght;}
+    //! Return the extrusion length
+    double extrusionLength() const
+    {return m_ExtrusionLength;}
 
     //! Return a copy of the extruded mesh
     GLC_Geometry* clone() const override;
@@ -104,8 +104,8 @@ public:
     //! Assignement operator overload
     GLC_ExtrudedMesh& operator=(const GLC_ExtrudedMesh& other);
 
-    //! Set the mesh from the given points, vector and lenght
-    void setGeometry(const QList<GLC_Point3d>& points, const GLC_Vector3d& extrudedVector, double lenght);
+    //! Set the mesh from the given points, vector and length
+    void setGeometry(const QList<GLC_Point3d>& points, const GLC_Vector3d& extrudedVector, double length);
 
     //! Set the mesh points list
     void setPoints(const QList<GLC_Point3d>& points);
@@ -113,8 +113,8 @@ public:
     //! Set the mesh extruded vector
     void setExtrudedVector(const GLC_Vector3d& extrudedVector);
 
-    //! Set the mesh extruded lenght
-    void setExtrudedLenght(double length);
+    //! Set the mesh extruded length
+    void setExtrudedLength(double length);
 
     //! Set Smothing index
     void setSmoothingIndex(const QList<int>& smothingIndex);
@@ -230,8 +230,8 @@ private:
     //! The direction of extrusion
     GLC_Vector3d m_ExtrusionVector;
 
-    //! The extrusion lenght
-    double m_ExtrusionLenght;
+    //! The extrusion length
+    double m_ExtrusionLength;
 
     //! The normal of the given face
     GLC_Vector3d m_GivenFaceNormal;

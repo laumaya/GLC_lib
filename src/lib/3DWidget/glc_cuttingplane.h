@@ -88,7 +88,7 @@ public:
 	//! Copy the given cutting plane in this cutting plane and return a reference on this cutting plane
 	virtual GLC_CuttingPlane& operator=(const GLC_CuttingPlane& cuttingPlane);
 
-	//! Update the lenght of this cutting plane
+	//! Update the length of this cutting plane
 	void updateLength(double l1, double l2);
 
 	//! Set this plane color
