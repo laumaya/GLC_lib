@@ -35,6 +35,7 @@ GLC_WorldToCollada::GLC_WorldToCollada(const GLC_World& world)
     , m_MeshIndex(0)
     , m_UseInstanciation(true)
     , m_CopiedMesh()
+    , m_ExportMeshWire(true)
 {
 
 }
@@ -445,8 +446,11 @@ void GLC_WorldToCollada::writeMeshPosition(GLC_Mesh* pMesh, const QString& meshI
     m_Writer.writeAttribute(ColladaElement::nameAttribute, sourceId);
 
     m_Writer.writeStartElement(ColladaElement::floatArrayElement);
-    const GLfloatVector positionVector(pMesh->positionVector() + pMesh->wirePositionVector());
-
+    GLfloatVector positionVector(pMesh->positionVector());
+    if (m_ExportMeshWire)
+    {
+        positionVector= positionVector + pMesh->wirePositionVector();
+    }
     const QString arrayId(sourceId + "-array");
     m_Writer.writeAttribute(ColladaElement::idAttribute, arrayId);
     m_Writer.writeAttribute(ColladaElement::countAttribute, QString::number(positionVector.count()));
@@ -616,7 +620,10 @@ void GLC_WorldToCollada::writeVertices(GLC_Mesh* pMesh, const QString& meshId, u
         ++iMat;
     }
 
-    writeLineStrips(pMesh, meshId, wireOffset);
+    if (m_ExportMeshWire)
+    {
+        writeLineStrips(pMesh, meshId, wireOffset);
+    }
 }
 
 void GLC_WorldToCollada::writeMeshTriangle(const IndexList& index, const QString& meshId, GLC_Material* pMat)

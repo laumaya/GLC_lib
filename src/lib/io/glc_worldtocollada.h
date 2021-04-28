@@ -35,6 +35,9 @@ public:
     void setInstanciationUsage(bool value)
     {m_UseInstanciation= value;}
 
+    void setWireExport(bool value)
+    {m_ExportMeshWire= value;}
+
 private:
     void writeHeaderAsset();
     void writeMaterials(const QList<GLC_Material*> materialList);
@@ -91,6 +94,7 @@ private:
     int m_MeshIndex;
     bool m_UseInstanciation;
     QList<GLC_Mesh*> m_CopiedMesh;
+    bool m_ExportMeshWire;
 };
 
 
