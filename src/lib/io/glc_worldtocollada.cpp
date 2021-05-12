@@ -901,7 +901,7 @@ void GLC_WorldToCollada::fillCopiedMeshList()
     QList<GLC_StructOccurrence*> occurences(m_World.listOfOccurrence());
     for (GLC_StructOccurrence* pOcc : occurences)
     {
-        if (pOcc->hasRepresentation())
+        if (pOcc->hasRepresentation() && pOcc->isVisible())
         {
             GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pOcc->structReference()->representationHandle());
             if (nullptr != pRep)
