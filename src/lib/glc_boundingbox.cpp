@@ -22,9 +22,14 @@
 
 //! \file glc_boundingbox.cpp implementation of the GLC_BoundingBox class.
 
+#include <cmath>
+
 #include "glc_boundingbox.h"
 #include "maths/glc_matrix4x4.h"
 #include "maths/glc_plane.h"
+
+using std::isnan;
+
 
 quint32 GLC_BoundingBox::m_ChunkId= 0xA707;
 
