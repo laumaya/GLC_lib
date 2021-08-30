@@ -60,7 +60,8 @@ GLC_World::~GLC_World()
 
 QList<GLC_StructOccurrence *> GLC_World::minimumSelectedOccurrenceList() const
 {
-    QSet<GLC_StructOccurrence *> selectedOccSet= QSet<GLC_StructOccurrence *>::fromList(m_pWorldHandle->selectionSetHandle()->occurrencesList());
+    const QList<GLC_StructOccurrence*> list(m_pWorldHandle->selectionSetHandle()->occurrencesList());
+    QSet<GLC_StructOccurrence *> selectedOccSet= QSet<GLC_StructOccurrence *>(list.begin(), list.end());
     QList<GLC_StructOccurrence *> subject;
     QSet<GLC_StructOccurrence *>::ConstIterator iOcc= selectedOccSet.begin();
     while (iOcc != selectedOccSet.constEnd())

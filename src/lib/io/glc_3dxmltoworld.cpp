@@ -1075,7 +1075,7 @@ void GLC_3dxmlToWorld::createUnfoldedTree()
 	//qDebug() << "createUnfoldedTree";
 	// Run throw all link in the list of link
 
-	qSort(m_AssyLinkList.begin(), m_AssyLinkList.end());
+    std::sort(m_AssyLinkList.begin(), m_AssyLinkList.end());
 	AssyLinkList::iterator iLink= m_AssyLinkList.begin();
 	while(iLink != m_AssyLinkList.constEnd())
 	{

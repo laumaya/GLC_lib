@@ -177,7 +177,8 @@ bool GLC_RenderProperties::needToRenderWithTransparency() const
 		const int size= hashList.size();
 		for (int i= 0; i < size; ++i)
 		{
-			materialSet.unite(QSet<GLC_Material*>::fromList(hashList.at(i)->values()));
+            const QList<GLC_Material*> materialList(hashList.at(i)->values());
+            materialSet.unite(QSet<GLC_Material*>(materialList.begin(), materialList.end()));
 		}
 
 		QSet<GLC_Material*>::const_iterator iMat= materialSet.constBegin();

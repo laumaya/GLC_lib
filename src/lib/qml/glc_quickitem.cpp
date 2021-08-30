@@ -534,7 +534,8 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
 
         m_pSourceFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
         m_pTargetFbo= new QOpenGLFramebufferObject(width, height);
-        pTextureNode->setTexture(this->window()->createTextureFromId(m_pTargetFbo->texture(), m_pTargetFbo->size()));
+        const GLuint textureId= m_pTargetFbo->texture();
+        pTextureNode->setTexture(this->window()->createTextureFromNativeObject(QQuickWindow::NativeObjectTexture, &textureId, 0, m_pTargetFbo->size()));
         pTextureNode->setRect(this->boundingRect());
 
         // Test frame buffer validity
@@ -543,7 +544,8 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
     }
     else
     {
-        pTextureNode->setTexture(this->window()->createTextureFromId(0, QSize(0,0)));
+        const GLuint textureId= 0;
+        pTextureNode->setTexture(this->window()->createTextureFromNativeObject(QQuickWindow::NativeObjectTexture, &textureId, 0, QSize(0,0)));
         pTextureNode->setRect(this->boundingRect());
     }
 }

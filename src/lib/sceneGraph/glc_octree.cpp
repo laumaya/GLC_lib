@@ -67,7 +67,7 @@ QList<GLC_3DViewInstance*> GLC_Octree::listOfIntersectedInstances(const GLC_Boun
 	{
 		updateSpacePartitioning();
 	}
-	return m_pRootNode->setOfIntersectedInstances(bBox).toList();
+    return m_pRootNode->setOfIntersectedInstances(bBox).values();
 }
 
 void GLC_Octree::updateViewableInstances(const GLC_Frustum& frustum)

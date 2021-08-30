@@ -154,7 +154,7 @@ public:
 
 	//! Get the list of attached files
 	inline QStringList listOfAttachedFileName() const
-	{return m_SetOfAttachedFileName.toList();}
+    {return m_SetOfAttachedFileName.values();}
 
 
 //@}

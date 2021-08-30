@@ -97,7 +97,7 @@ void GLC_Text::setText(const QString &text)
 {
     m_Text= text;
     QFontMetrics fontMetrics(m_Font);
-    m_Width= fontMetrics.width(m_Text);
+    m_Width= fontMetrics.horizontalAdvance(m_Text);
     m_Height= fontMetrics.height();
 
     m_MaterialNeedToBeUpdated= true;
@@ -114,7 +114,7 @@ void GLC_Text::setFont(const QFont &font)
 {
     m_Font= font;
     QFontMetrics fontMetrics(m_Font);
-    m_Width= fontMetrics.width(m_Text);
+    m_Width= fontMetrics.horizontalAdvance(m_Text);
     m_Height= fontMetrics.height();
 
     m_MaterialNeedToBeUpdated= true;
@@ -210,7 +210,7 @@ void GLC_Text::createMesh()
 void GLC_Text::createText()
 {
     QFontMetrics fontMetrics(m_Font);
-    m_Width= fontMetrics.width(m_Text);
+    m_Width= fontMetrics.horizontalAdvance(m_Text);
     m_Height= fontMetrics.height();
 
     m_MaterialNeedToBeUpdated= true;

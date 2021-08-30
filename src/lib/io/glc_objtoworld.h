@@ -31,6 +31,7 @@
 #include <QString>
 #include <QObject>
 #include <QHash>
+#include <QMultiHash>
 #include <QVector>
 #include <QStringList>
 
@@ -139,7 +140,7 @@ public:
 		// Pointer to the last matOffsetSize
 		MatOffsetSize* m_pLastOffsetSize;
 		// QHash containing material id and associated offset and size
-		QHash<QString, MatOffsetSize*> m_Materials;
+        QMultiHash<QString, MatOffsetSize*> m_Materials;
 		//! The next free index
 		int m_NextFreeIndex;
 		//! The Hash table of obj vertice mapping to index

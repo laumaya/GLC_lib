@@ -288,12 +288,12 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	{
         m_ResetIndex= true;
 		// If there is no group or object in the OBJ file
-		if (NULL == m_pCurrentObjMesh)
-			{
-				changeGroup("GLC_Default");
-				//qDebug() << "Default group " << line;
-			}
-		line.remove(0,2); // Remove first 2 char
+        if (nullptr == m_pCurrentObjMesh)
+        {
+            changeGroup("GLC_Default");
+            //qDebug() << "Default group " << line;
+        }
+        line.remove(0,2); // Remove first 2 char
 		extractFaceIndex(line);
 	}
 
@@ -341,7 +341,6 @@ void GLC_ObjToWorld::changeGroup(QString line)
 			addCurrentObjMeshToWorld();
 			m_pCurrentObjMesh= new CurrentObjMesh(m_CurrentMaterialName);
 			m_pCurrentObjMesh->m_pMesh->setName(groupName);
-
 		}
 	}
 	else
@@ -432,21 +431,23 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
     GLC_Vector3d polygonNormal;
 
 	QList<GLuint> currentFaceIndex;
+
+    const bool currentObjMeshIsAlive= (nullptr != m_pCurrentObjMesh);
 	//////////////////////////////////////////////////////////////////
 	// Parse the line containing face index
 	//////////////////////////////////////////////////////////////////
-	QTextStream streamFace(&line);
-	while ((!streamFace.atEnd()))
+    QTextStream streamFace(&line);
+    while ((!streamFace.atEnd()))
 	{
 		streamFace >> buff;
 		extractVertexIndex(buff, coordinateIndex, normalIndex, textureCoordinateIndex);
 
-		ObjVertice currentVertice(coordinateIndex, normalIndex, textureCoordinateIndex);
-		if (m_pCurrentObjMesh->m_ObjVerticeIndexMap.contains(currentVertice))
+        ObjVertice currentVertice(coordinateIndex, normalIndex, textureCoordinateIndex);
+        if (currentObjMeshIsAlive && (m_pCurrentObjMesh->m_ObjVerticeIndexMap.contains(currentVertice)))
 		{
 			currentFaceIndex.append(m_pCurrentObjMesh->m_ObjVerticeIndexMap.value(currentVertice));
-		}
-		else
+        }
+        else if (currentObjMeshIsAlive)
 		{
 			// Add Vertex to the mesh bulk data
 			m_pCurrentObjMesh->m_Positions.append(m_Positions.value(coordinateIndex * 3));
@@ -505,7 +506,7 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 	//////////////////////////////////////////////////////////////////
 	// Add the face to the current mesh
 	//////////////////////////////////////////////////////////////////
-	if ((m_FaceType == coordinateAndNormal) || (m_FaceType == coordinateAndTextureAndNormal))
+    if (currentObjMeshIsAlive && ((m_FaceType == coordinateAndNormal) || (m_FaceType == coordinateAndTextureAndNormal)))
 	{
 		if (size > 3)
 		{
@@ -516,8 +517,8 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
             }
 		}
 		m_pCurrentObjMesh->m_Index.append(currentFaceIndex);
-	}
-	else if (m_FaceType != notSet)
+    }
+    else if (currentObjMeshIsAlive && (m_FaceType != notSet))
 	{
 		if (size > 3)
 		{
@@ -527,9 +528,9 @@ void GLC_ObjToWorld::extractFaceIndex(QString &line)
 		if (currentFaceIndex.size() < 3) return;
 		GLC_Vector3df normal= computeNormal(currentFaceIndex.at(0), currentFaceIndex.at(1), currentFaceIndex.at(2));
 
-		// Add Face normal to bulk data
-		QSet<GLuint> indexSet= currentFaceIndex.toSet();
-		QSet<GLuint>::iterator iIndexSet= indexSet.begin();
+        // Add Face normal to bulk data
+        QSet<GLuint> indexSet= QSet<GLuint>(currentFaceIndex.begin(), currentFaceIndex.end());
+        QSet<GLuint>::const_iterator iIndexSet= indexSet.constBegin();
 		while (indexSet.constEnd() != iIndexSet)
 		{
 			m_pCurrentObjMesh->m_Normals[*iIndexSet * 3]= normal.x();
@@ -570,13 +571,14 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 	//////////////////////////////////////////////////////////////////
 	// Check if the material is already loaded from the current mesh
 	//////////////////////////////////////////////////////////////////
-	if ((NULL != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
+    if ((nullptr != m_pMtlLoader) && m_pMtlLoader->contains(materialName))
 	{
-		if (NULL == m_pCurrentObjMesh)
+        if (nullptr == m_pCurrentObjMesh)
 		{
 			changeGroup("GLC_Default");
 		}
-		Q_ASSERT(NULL != m_pCurrentObjMesh->m_pLastOffsetSize);
+        Q_ASSERT(nullptr != m_pCurrentObjMesh);
+        Q_ASSERT(nullptr != m_pCurrentObjMesh->m_pLastOffsetSize);
 
 		if (m_pCurrentObjMesh->m_Index.size() != m_pCurrentObjMesh->m_pLastOffsetSize->m_Offset)
 		{
@@ -586,7 +588,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 		else
 		{
 			QHash<QString, MatOffsetSize*>::iterator iMat= m_pCurrentObjMesh->m_Materials.begin();
-			while (m_pCurrentObjMesh->m_Materials.constEnd() != iMat)
+            while (m_pCurrentObjMesh->m_Materials.end() != iMat)
 			{
 				if (iMat.value() == m_pCurrentObjMesh->m_pLastOffsetSize)
 				{
@@ -603,7 +605,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 		pMatOffsetSize->m_Offset= m_pCurrentObjMesh->m_Index.size();
 		// Update current Obj mesh
 		m_pCurrentObjMesh->m_pLastOffsetSize= pMatOffsetSize;
-		m_pCurrentObjMesh->m_Materials.insertMulti(materialName, pMatOffsetSize);
+        m_pCurrentObjMesh->m_Materials.insert(materialName, pMatOffsetSize);
 		// Update current material name
 		m_CurrentMaterialName= materialName;
 	}
@@ -894,7 +896,7 @@ void GLC_ObjToWorld::addCurrentObjMeshToWorld()
 				m_pCurrentObjMesh->m_pMesh->addTexels(m_pCurrentObjMesh->m_Texels.toVector());
 				m_pCurrentObjMesh->m_Texels.clear();
 			}
-			QHash<QString, MatOffsetSize*>::iterator iMat= m_pCurrentObjMesh->m_Materials.begin();
+            QHash<QString, MatOffsetSize*>::const_iterator iMat= m_pCurrentObjMesh->m_Materials.constBegin();
 			while (m_pCurrentObjMesh->m_Materials.constEnd() != iMat)
 			{
 				GLC_Material* pCurrentMaterial= NULL;

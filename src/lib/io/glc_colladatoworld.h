@@ -122,7 +122,7 @@ private:
 		// Next index Position
 		GLuint m_FreeIndex;
 		// QHash containing material id and associated offset and size
-		QHash<QString, MatOffsetSize> m_Materials;
+        QMultiHash<QString, MatOffsetSize> m_Materials;
 	};
 
 	// The collada Node
@@ -176,7 +176,7 @@ public:
 
 	//! Get the list of attached files
 	inline QStringList listOfAttachedFileName() const
-	{return m_ListOfAttachedFileName.toList();}
+    {return m_ListOfAttachedFileName.values();}
 
 //@}
 

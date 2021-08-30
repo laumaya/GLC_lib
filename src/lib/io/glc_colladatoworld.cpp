@@ -1462,7 +1462,7 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 	MatOffsetSize matInfo;
 	matInfo.m_Offset= indexOffset;
 	matInfo.m_size= m_pMeshInfo->m_Index.size() - indexOffset;
-	m_pMeshInfo->m_Materials.insertMulti(materialId, matInfo);
+    m_pMeshInfo->m_Materials.insert(materialId, matInfo);
 
 }
 

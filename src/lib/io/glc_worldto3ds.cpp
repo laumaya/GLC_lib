@@ -122,10 +122,10 @@ QList<Lib3dsMesh*> GLC_WorldTo3ds::saveMeshes(GLC_StructReference* pRef)
         {
             // This reference has a mesh
             subject= createMeshsFrom3DRep(pRep, "MESH");
-            for (Lib3dsMesh* pMesh : subject)
+            for (Lib3dsMesh* pMesh : qAsConst(subject))
             {
                 lib3ds_file_insert_mesh(m_pLib3dsFile, pMesh);
-                m_ReferenceToMesh.insertMulti(pRef, pMesh);
+                m_ReferenceToMesh.insert(pRef, pMesh);
             }
         }
     }
@@ -193,13 +193,13 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 						pCurrent3dsNode->node_id= m_CurrentNodeId++;
 						pCurrent3dsNode->parent_id= p3dsNode->node_id;
 
-						strcpy(pCurrent3dsNode->name, meshes.at(i)->name);
+                        strncpy(pCurrent3dsNode->name, meshes.at(i)->name, sizeof (pCurrent3dsNode->name));
 						lib3ds_file_insert_node(m_pLib3dsFile, pCurrent3dsNode);
 					}
 				}
 				else if (!meshes.isEmpty())
 				{
-					strcpy(p3dsNode->name, meshes.first()->name);
+                    strncpy(p3dsNode->name, meshes.first()->name, sizeof (p3dsNode->name));
                     lib3ds_file_insert_node(m_pLib3dsFile, p3dsNode);
 				}
                 else
@@ -237,7 +237,7 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
                 pCurrent3dsNode->node_id= m_CurrentNodeId++;
                 pCurrent3dsNode->parent_id= p3dsNode->node_id;
 
-                strcpy(pCurrent3dsNode->name, meshes.at(i)->name);
+                strncpy(pCurrent3dsNode->name, meshes.at(i)->name, sizeof (pCurrent3dsNode->name));
                 lib3ds_file_insert_node(m_pLib3dsFile, pCurrent3dsNode);
             }
         }
@@ -337,7 +337,7 @@ Lib3dsMesh* GLC_WorldTo3ds::create3dsMeshFromGLC_Mesh(GLC_Mesh* pMesh, const QSt
 		for (int i= 0; i < faceCount; ++i)
 		{
 			Lib3dsFace face;
-			strcpy(face.material, pMaterial->name);
+            strncpy(face.material, pMaterial->name, sizeof (face.material));
 
             face.points[0]= static_cast<unsigned short>(currentTriangleIndex.at(i * 3));
             face.points[1]= static_cast<unsigned short>(currentTriangleIndex.at(i * 3 + 1));
@@ -372,7 +372,7 @@ Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* 
 {
     const QString matName= to3dsName("MAT", ++m_CurrentMaterialIndex);
 	Lib3dsMaterial* pSubject= lib3ds_material_new();
-    strcpy(pSubject->name, matName.toLatin1().data());
+    strlcpy(pSubject->name, matName.toLatin1().data(), sizeof (pSubject->name));
 
 
 	// Ambient Color

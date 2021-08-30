@@ -626,7 +626,8 @@ QList<QString> GLC_3DViewCollection::instanceNamesFromShadingGroup(GLuint shader
 
 int GLC_3DViewCollection::numberOfUsedShadingGroup() const
 {
-	return m_ShaderGroup.values().toSet().size();
+    const QList<GLC_uint> values(m_ShaderGroup.values());
+    return QSet<GLC_uint>(values.begin(), values.end()).size();
 }
 
 //////////////////////////////////////////////////////////////////////

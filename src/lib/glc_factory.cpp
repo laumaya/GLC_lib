@@ -456,7 +456,8 @@ void GLC_Factory::loadPlugins()
 	         if (pWorldReader)
 	         {
 	        	 m_WorldReaderPluginList.append(pWorldReader);
-	        	 m_SupportedExtensionSet.unite(QSet<QString>::fromList(pWorldReader->keys()));
+                 const QList<QString> keys(pWorldReader->keys());
+                 m_SupportedExtensionSet.unite(QSet<QString>(keys.begin(), keys.end()));
 	         }
 		}
 	}

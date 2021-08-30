@@ -468,7 +468,7 @@ void glc::triangulatePolygon(QList<GLuint>* pIndexList, const QList<float>& bulk
 				const int max= size / 2;
 				for (int i= 0; i < max; ++i)
 				{
-					polygon.swap(i, size - 1 -i);
+                    polygon.swapItemsAt(i, size - 1 -i);
 					int temp= face[i];
 					face[i]= face[size - 1 - i];
 					face[size - 1 - i]= temp;

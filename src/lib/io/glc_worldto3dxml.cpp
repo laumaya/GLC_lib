@@ -783,7 +783,7 @@ void GLC_WorldTo3dxml::writeMaterial(const GLC_Material* pMaterial)
 		materialName= symplifyName(pMaterial->name());
 
 		// If the materialName is already uses append material id to the name
-		QSet<QString> materialsName= QSet<QString>::fromList(m_MaterialIdToMaterialName.values());
+        QSet<QString> materialsName= QSet<QString>(m_MaterialIdToMaterialName.begin(), m_MaterialIdToMaterialName.end());
 		while (materialsName.contains(materialName))
 		{
 			materialName= materialName + '_' + QString::number(materialId);

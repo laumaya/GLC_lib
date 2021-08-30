@@ -427,7 +427,7 @@ QSet<GLC_uint> GLC_Mesh::setOfPrimitiveId() const
         }
     }
 
-    return QSet<GLC_uint>::fromList(subject);
+    return QSet<GLC_uint>(subject.begin(), subject.end());
 }
 
 GLC_Mesh* GLC_Mesh::createMeshOfGivenLod(int lodIndex)
@@ -525,7 +525,7 @@ double GLC_Mesh::volume()
     if (!m_MeshData.isEmpty())
     {
         IndexList triangleIndex;
-        QList<GLC_Material*> materials= materialSet().toList();
+        QList<GLC_Material*> materials= materialSet().values();
         const int materialsCount= materials.count();
         for (int i= 0; i < materialsCount; ++i)
         {

@@ -26,6 +26,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QMultiHash>
 
 #include "../sceneGraph/glc_world.h"
 
@@ -124,7 +125,7 @@ private:
 	QString m_FileName;
 
 	//! Reference to 3ds mesh hash table
-    QHash<GLC_StructReference*, Lib3dsMesh*> m_ReferenceToMesh;
+    QMultiHash<GLC_StructReference*, Lib3dsMesh*> m_ReferenceToMesh;
 
     QHash<GLC_uint, Lib3dsMaterial*> m_WorldMaterialIdTo3dsMaterial;
 
