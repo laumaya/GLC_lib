@@ -161,7 +161,8 @@ HEADERS_GLC_GEOMETRY += geometry/glc_geometry.h \
                         geometry/glc_csgnode.h \
                         geometry/glc_csgoperatornode.h \
                         geometry/glc_csgleafnode.h \
-                        geometry/glc_lathemesh.h
+                        geometry/glc_lathemesh.h \
+                        geometry/glc_image.h
 
 
 HEADERS_GLC_SHADING +=  shading/glc_material.h \
@@ -381,7 +382,8 @@ SOURCES +=	geometry/glc_geometry.cpp \
                 geometry/glc_csgnode.cpp \
                 geometry/glc_csgoperatornode.cpp \
                 geometry/glc_csgleafnode.cpp \
-                geometry/glc_lathemesh.cpp
+                geometry/glc_lathemesh.cpp \
+                geometry/glc_image.cpp
 
 
 
@@ -587,7 +589,8 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_LatheMesh \
                GLC_Polygon \
                GLC_OpenGLViewInterface \
-               GLC_WorldToCollada
+               GLC_WorldToCollada \
+               GLC_Image
 
 
 include (../../install.pri)
