@@ -372,7 +372,7 @@ Lib3dsMaterial* GLC_WorldTo3ds::create3dsMaterialFromGLC_Material(GLC_Material* 
 {
     const QString matName= to3dsName("MAT", ++m_CurrentMaterialIndex);
 	Lib3dsMaterial* pSubject= lib3ds_material_new();
-    strlcpy(pSubject->name, matName.toLatin1().data(), sizeof (pSubject->name));
+    strncpy(pSubject->name, matName.toLatin1().data(), sizeof (pSubject->name));
 
 
 	// Ambient Color

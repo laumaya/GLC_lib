@@ -198,7 +198,8 @@ void GLC_Image::createGeometryFromImage()
 void GLC_Image::updateMaterial()
 {
     GLC_Material* pMaterial= this->firstMaterial();
-
-    pMaterial->setTexture(new GLC_Texture(m_Image));
+    GLC_Texture* pTexture= new GLC_Texture(m_Image);
+    pTexture->setByPassMaxSize(true);
+    pMaterial->setTexture(pTexture);
     m_MaterialNeedToBeUpdated= false;
 }

@@ -51,6 +51,8 @@ GLC_AbstractManipulator *GLC_PlaneManipulator::clone() const
 
 GLC_Matrix4x4 GLC_PlaneManipulator::doManipulate(const GLC_Point3d &newPoint, const GLC_Vector3d &projectionDirection)
 {
+    // Update sliding plane
+    m_SlidingPlane= GLC_Plane(projectionDirection, newPoint);
     // Project the given point on the sliding plane with the given direction
     GLC_Point3d projectedPoint;
     GLC_Line3d projectionLine1(GLC_AbstractManipulator::m_PreviousPosition, projectionDirection);

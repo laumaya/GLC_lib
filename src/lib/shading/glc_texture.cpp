@@ -47,24 +47,26 @@ QHash<GLuint, int> GLC_Texture::m_TextureIdUsage;
 
 //! Default constructor
 GLC_Texture::GLC_Texture()
-: m_pQOpenGLTexture(NULL)
-, m_FileName()
-, m_TextureImage()
-, m_TextureSize()
-, m_HasAlphaChannel(false)
-, m_Matrix()
+    : m_pQOpenGLTexture(NULL)
+    , m_FileName()
+    , m_TextureImage()
+    , m_TextureSize()
+    , m_HasAlphaChannel(false)
+    , m_Matrix()
+    , m_BypassMaxSize(false)
 {
 
 }
 
 // Constructor with fileName
 GLC_Texture::GLC_Texture(const QString &Filename)
-: m_pQOpenGLTexture(NULL)
-, m_FileName(Filename)
-, m_TextureImage(loadFromFile(m_FileName))
-, m_TextureSize()
-, m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
-, m_Matrix()
+    : m_pQOpenGLTexture(NULL)
+    , m_FileName(Filename)
+    , m_TextureImage(loadFromFile(m_FileName))
+    , m_TextureSize()
+    , m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
+    , m_Matrix()
+    , m_BypassMaxSize(false)
 {
     if (m_TextureImage.isNull())
 	{
@@ -81,12 +83,13 @@ GLC_Texture::GLC_Texture(const QString &Filename)
 }
 // Constructor with QFile
 GLC_Texture::GLC_Texture(const QFile &file)
-: m_pQOpenGLTexture(NULL)
-, m_FileName(file.fileName())
-, m_TextureImage()
-, m_TextureSize()
-, m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
-, m_Matrix()
+    : m_pQOpenGLTexture(NULL)
+    , m_FileName(file.fileName())
+    , m_TextureImage()
+    , m_TextureSize()
+    , m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
+    , m_Matrix()
+    , m_BypassMaxSize()
 {
     m_TextureImage.load(const_cast<QFile*>(&file), QFileInfo(m_FileName).suffix().toLocal8Bit());
     if (m_TextureImage.isNull())
@@ -105,23 +108,25 @@ GLC_Texture::GLC_Texture(const QFile &file)
 
 // Constructor with QImage
 GLC_Texture::GLC_Texture(const QImage& image, const QString& fileName)
-: m_pQOpenGLTexture(NULL)
-, m_FileName(fileName)
-, m_TextureImage(image)
-, m_TextureSize(m_TextureImage.size())
-, m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
-, m_Matrix()
+    : m_pQOpenGLTexture(NULL)
+    , m_FileName(fileName)
+    , m_TextureImage(image)
+    , m_TextureSize(m_TextureImage.size())
+    , m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
+    , m_Matrix()
+    , m_BypassMaxSize(false)
 {
     Q_ASSERT(!m_TextureImage.isNull());
 }
 
-GLC_Texture::GLC_Texture(const GLC_Texture &TextureToCopy)
-: m_pQOpenGLTexture(NULL)
-, m_FileName(TextureToCopy.m_FileName)
-, m_TextureImage(TextureToCopy.m_TextureImage)
-, m_TextureSize(TextureToCopy.m_TextureSize)
-, m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
-, m_Matrix(TextureToCopy.m_Matrix)
+GLC_Texture::GLC_Texture(const GLC_Texture &other)
+    : m_pQOpenGLTexture(NULL)
+    , m_FileName(other.m_FileName)
+    , m_TextureImage(other.m_TextureImage)
+    , m_TextureSize(other.m_TextureSize)
+    , m_HasAlphaChannel(m_TextureImage.hasAlphaChannel())
+    , m_Matrix(other.m_Matrix)
+    , m_BypassMaxSize(other.m_BypassMaxSize)
 {
     if (m_TextureImage.isNull())
 	{
@@ -145,6 +150,7 @@ GLC_Texture& GLC_Texture::operator=(const GLC_Texture& other)
         m_TextureSize= other.m_TextureSize;
         m_HasAlphaChannel= m_TextureImage.hasAlphaChannel();
         m_Matrix= other.m_Matrix;
+        m_BypassMaxSize= other.m_BypassMaxSize;
 	}
 
 	return *this;
@@ -164,6 +170,16 @@ GLuint GLC_Texture::textureId() const
     }
 
     return subject;
+}
+
+QSize GLC_Texture::maxSize()
+{
+    return m_MaxTextureSize;
+}
+
+QSize GLC_Texture::minSize()
+{
+    return m_MinTextureSize;
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -212,8 +228,8 @@ void GLC_Texture::glLoadTexture()
     if (NULL == m_pQOpenGLTexture)
 	{
 		// Test image size
-        if ((m_TextureImage.height() > m_MaxTextureSize.height())
-                || (m_TextureImage.width() > m_MaxTextureSize.width()))
+        if (!m_BypassMaxSize && ((m_TextureImage.height() > m_MaxTextureSize.height())
+                                 || (m_TextureImage.width() > m_MaxTextureSize.width())))
 		{
 			QImage rescaledImage;
             if(m_TextureImage.height() > m_TextureImage.width())
