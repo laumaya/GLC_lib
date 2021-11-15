@@ -1065,7 +1065,7 @@ QList<GLC_Point2d> glc::findIntersectionBetwen2Circle(const GLC_Point2d& c0, dou
     if (!qFuzzyIsNull(uSqrLen) || !qFuzzyIsNull(deltaRadius))
     {
         const double sQrDeltaRadius= deltaRadius * deltaRadius;
-        if (uSqrLen > sQrDeltaRadius)
+        if (uSqrLen >= sQrDeltaRadius)
         {
             const double r0AddR1= r0 + r1;
             const double sqrR0AddR1= r0AddR1 * r0AddR1;
