@@ -1176,14 +1176,14 @@ void GLC_WorldTo3dxml::writeOccurrenceDefaultViewProperty(const GLC_StructOccurr
 	Q_ASSERT(NULL != pInstance);
 	const bool isVisible= pOccurrence->isVisible();
 	m_pOutStream->writeStartElement("DefaultViewProperty");
-	m_pOutStream->writeStartElement("OccurrenceId");
+	m_pOutStream->writeStartElement("OccurenceId");
 	const QString prefix= "urn:3DXML:" + QFileInfo(m_FileName).fileName() + "#";
 	const int pathSize= path.size();
 	for (int i= 0; i < pathSize; ++i)
 	{
 		m_pOutStream->writeTextElement("id", prefix + QString::number(path.at(i)));
 	}
-	m_pOutStream->writeEndElement(); // OccurrenceId
+	m_pOutStream->writeEndElement(); // OccurenceId
 
 	if (pOccurrence->isFlexible())
 	{

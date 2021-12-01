@@ -1577,8 +1577,8 @@ void GLC_3dxmlToWorld::loadDefaultView()
 
 void GLC_3dxmlToWorld::loadV3DefaultViewProperty()
 {
-	goToElement(m_pStreamReader, "OccurrenceId");
-	unsigned int occurrenceId= getContent(m_pStreamReader, "OccurrenceId").toUInt();
+	goToElement(m_pStreamReader, "OccurenceId");
+	unsigned int occurrenceId= getContent(m_pStreamReader, "OccurenceId").toUInt();
 
 	// Load the graphics properties
 	while(endElementNotReached(m_pStreamReader, "DefaultViewProperty"))
@@ -1660,7 +1660,7 @@ void GLC_3dxmlToWorld::loadV4DefaultViewProperty()
 
 	while(endElementNotReached(m_pStreamReader, "DefaultViewProperty"))
 	{
-		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "OccurrenceId"))
+		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "OccurenceId"))
 		{
 			pV4OccurrenceAttrib->m_Path= loadOccurrencePath();
 		}
@@ -1699,7 +1699,7 @@ void GLC_3dxmlToWorld::loadV4DefaultViewProperty()
 QList<unsigned int> GLC_3dxmlToWorld::loadOccurrencePath()
 {
 	QList<unsigned int> path;
-	while(endElementNotReached(m_pStreamReader, "OccurrenceId"))
+	while(endElementNotReached(m_pStreamReader, "OccurenceId"))
 	{
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "id"))
 		{
