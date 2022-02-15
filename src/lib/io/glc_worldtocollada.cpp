@@ -801,26 +801,26 @@ void GLC_WorldToCollada::writeMatrix(const GLC_Matrix4x4& matrix)
     QString subject;
     const QChar spaceChar(' ');
     // Rotation
-    subject+= QString::number(static_cast<float>(matrix.getData()[0]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[4]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[8]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[12]), 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[0], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[4], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[8], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[12], 'g', 16) + spaceChar;
 
-    subject+= QString::number(static_cast<float>(matrix.getData()[1]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[5]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[9]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[13]), 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[1], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[5], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[9], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[13], 'g', 16) + spaceChar;
 
-    subject+= QString::number(static_cast<float>(matrix.getData()[2]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[6]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[10]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[14]), 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[2], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[6], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[10], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[14], 'g', 16) + spaceChar;
 
     // Translation
-    subject+= QString::number(static_cast<float>(matrix.getData()[3]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[7]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[11]), 'g', 16) + spaceChar;
-    subject+= QString::number(static_cast<float>(matrix.getData()[15]), 'g', 16);
+    subject+= QString::number(matrix.getData()[3], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[7], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[11], 'g', 16) + spaceChar;
+    subject+= QString::number(matrix.getData()[15], 'g', 16);
 
 
     m_Writer.writeTextElement(ColladaElement::matrixElement, subject);
