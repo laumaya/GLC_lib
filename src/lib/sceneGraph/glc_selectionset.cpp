@@ -192,8 +192,7 @@ bool GLC_SelectionSet::contains(GLC_uint occId, GLC_uint bodyId, GLC_uint primit
 
 bool GLC_SelectionSet::operator==(const GLC_SelectionSet &other) const
 {
-    bool subject= this == &other;
-    subject= subject && (m_pWorldHandle == other.m_pWorldHandle);
+    bool subject= m_pWorldHandle == other.m_pWorldHandle;
     subject= subject && (m_OccurrenceSelection == other.m_OccurrenceSelection);
 
     return subject;

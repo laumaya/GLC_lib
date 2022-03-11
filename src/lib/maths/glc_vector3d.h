@@ -129,7 +129,7 @@ public:
     inline double angleWithVect2(GLC_Vector3d other) const;
 
 	//! Return the signed angle from this vector to th given vector with the given direction (from 0 to -PI and 0 to PI)
-	inline double signedAngleWithVect(GLC_Vector3d Vect, const GLC_Vector3d& dir) const;
+    inline double signedAngleWithVect(GLC_Vector3d other, const GLC_Vector3d& dir) const;
 
 	//! Return the float 3D vector from this vector
     GLC_Vector3df toVector3df() const
@@ -465,84 +465,65 @@ GLC_Vector2d GLC_Vector3d::toVector2d(const GLC_Vector3d& mask) const
 
 double GLC_Vector3d::angleWithVect(GLC_Vector3d other) const
 {
-	GLC_Vector3d ThisVect(*this);
-	ThisVect.normalize();
+    double subject= 0.0;
+
+    GLC_Vector3d thisVect(*this);
+    thisVect.normalize();
     other.normalize();
-	// Rotation axis
-    const GLC_Vector3d VectAxeRot(ThisVect ^ other);
-	// Check if the rotation axis vector is null
-	if (!VectAxeRot.isNull())
-	{
-        return acos(ThisVect * other);
-	}
-    else return 0.0;
+
+    // Rotation axis
+    const GLC_Vector3d dir(thisVect ^ other);
+    // Check if the rotation axis vector is null
+    if (!dir.isNull())
+    {
+        subject= atan2((thisVect ^ (other)) * dir, thisVect * (other));
+    }
+
+    return subject;
 }
 
 double GLC_Vector3d::angleWithVect2(GLC_Vector3d other) const
 {
     double subject= 0.0;
 
-    GLC_Vector3d ThisVect(*this);
-    ThisVect.normalize();
+    GLC_Vector3d thisVect(*this);
+    thisVect.normalize();
     other.normalize();
-    if (other == ThisVect.inverted())
+    if (other == thisVect.inverted())
     {
         subject= glc::PI;
     }
-    else
+    else if (other != thisVect)
     {
         // Rotation axis
-        const GLC_Vector3d VectAxeRot(ThisVect ^ other);
+        const GLC_Vector3d dir(thisVect ^ other);
         // Check if the rotation axis vector is null
-        if (!VectAxeRot.isNull())
+        if (!dir.isNull())
         {
-            subject= acos(ThisVect * other);
+            subject= atan2((thisVect ^ (other)) * dir, thisVect * (other));
         }
     }
 
     return subject;
 }
 
-double GLC_Vector3d::signedAngleWithVect(GLC_Vector3d Vect, const GLC_Vector3d& dir) const
+double GLC_Vector3d::signedAngleWithVect(GLC_Vector3d other, const GLC_Vector3d& dir) const
 {
-	double angle= 0.0;
+    double subject= 0.0;
 
-	GLC_Vector3d ThisVect(*this);
-	ThisVect.normalize();
-	Vect.normalize();
-	if (Vect == ThisVect.inverted())
-	{
-		angle= glc::PI;
-	}
-	else if (Vect != ThisVect)
-	{
-		// Rotation axis
-		const GLC_Vector3d VectAxeRot(ThisVect ^ Vect);
-		// Check if the rotation axis vector is null
-		if (!VectAxeRot.isNull())
-		{
-			double mat3x3[9];
-			mat3x3[0]= ThisVect.m_Vector[0];
-			mat3x3[1]= ThisVect.m_Vector[1];
-			mat3x3[2]= ThisVect.m_Vector[2];
+    GLC_Vector3d thisVect(*this);
+    thisVect.normalize();
+    other.normalize();
+    if (other == thisVect.inverted())
+    {
+        subject= glc::PI;
+    }
+    else if (other != thisVect)
+    {
+        subject= atan2((thisVect ^ (other)) * dir, thisVect * (other));
+    }
 
-			mat3x3[3]= Vect.m_Vector[0];
-			mat3x3[4]= Vect.m_Vector[1];
-			mat3x3[5]= Vect.m_Vector[2];
-
-			mat3x3[6]= dir.m_Vector[0];
-			mat3x3[7]= dir.m_Vector[1];
-			mat3x3[8]= dir.m_Vector[2];
-
-            const double det= getDeterminant3x3(mat3x3);
-
-            double sign= 1.0;
-            if (!qFuzzyIsNull(det)) sign= fabs(det) / det;
-			angle= acos(ThisVect * Vect) * sign;
-		}
-	}
-
-	return angle;
+    return subject;
 }
 
 QString GLC_Vector3d::toString() const
