@@ -653,6 +653,8 @@ double glc::round(double value, double accuracy)
         value= (value >= 0.0 ? floor(value + 0.5) : ceil(value - 0.5));
         value= value * accuracy;
     }
+    else value= 0.0;
+
     return value;
 }
 
