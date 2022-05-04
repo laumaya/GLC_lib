@@ -34,36 +34,35 @@ using namespace glc;
 // Constructor Destructor
 //////////////////////////////////////////////////////////////////////
 GLC_Camera::GLC_Camera()
-: QObject()
-, m_Eye(0,0,1)
-, m_Target()
-, m_VectUp(Y_AXIS)
-, m_ModelViewMatrix()
-, m_DefaultVectUp(Y_AXIS)
+    : QObject()
+    , m_Eye(0,0,1)
+    , m_Target()
+    , m_VectUp(Y_AXIS)
+    , m_ModelViewMatrix()
+    , m_DefaultVectUp(Y_AXIS)
 {
 
 }
 
 GLC_Camera::GLC_Camera(const GLC_Point3d &Eye, const GLC_Point3d &Target, const GLC_Vector3d &Up)
-: QObject()
-, m_Eye()
-, m_Target()
-, m_VectUp()
-, m_ModelViewMatrix()
-, m_DefaultVectUp(Y_AXIS)
+    : QObject()
+    , m_Eye()
+    , m_Target()
+    , m_VectUp()
+    , m_ModelViewMatrix()
+    , m_DefaultVectUp(Y_AXIS)
 {
 	setCam(Eye, Target, Up);
-	createMatComp();
 }
 
 // Copy constructor
 GLC_Camera::GLC_Camera(const GLC_Camera& cam)
-: QObject()
-, m_Eye(cam.m_Eye)
-, m_Target(cam.m_Target)
-, m_VectUp(cam.m_VectUp)
-, m_ModelViewMatrix(cam.m_ModelViewMatrix)
-, m_DefaultVectUp(cam.m_DefaultVectUp)
+    : QObject()
+    , m_Eye(cam.m_Eye)
+    , m_Target(cam.m_Target)
+    , m_VectUp(cam.m_VectUp)
+    , m_ModelViewMatrix(cam.m_ModelViewMatrix)
+    , m_DefaultVectUp(cam.m_DefaultVectUp)
 {
 
 }
@@ -144,9 +143,11 @@ void GLC_Camera::move(const GLC_Matrix4x4 &MatMove)
 void GLC_Camera::rotateAround(const GLC_Vector3d& axis, const double& angle, const GLC_Point3d& point)
 {
 	const GLC_Matrix4x4 rotationMatrix(axis, angle);
+    blockSignals(true);
 	translate(-point);
 	move(rotationMatrix);
 	translate(point);
+    blockSignals(false);
 
     emit changed();
 }
@@ -155,8 +156,6 @@ void GLC_Camera::rotateAroundTarget(const GLC_Vector3d& axis, const double& angl
 {
 	GLC_Point3d target(m_Target);
 	rotateAround(axis, angle, target);
-
-    emit changed();
 }
 
 void GLC_Camera::translate(const GLC_Vector3d &VectTrans)
@@ -383,8 +382,8 @@ GLC_Camera GLC_Camera::frontView() const
 
 	GLC_Camera newCam(eye, m_Target, m_DefaultVectUp);
 	newCam.setDistEyeTarget(distEyeTarget());
-	newCam.setDefaultUpVector(m_DefaultVectUp);
-	return newCam;
+    newCam.setDefaultUpVector(m_DefaultVectUp);
+    return newCam;
 }
 
 GLC_Camera GLC_Camera::rearView() const

@@ -819,7 +819,7 @@ bool GLC_Viewport::reframeFromDeltaCover(double deltaCover)
 
 bool GLC_Viewport::setDistMin(double DistMin, bool updateOpenGL)
 {
-	if (m_UseParallelProjection) DistMin= fabs(DistMin);
+    if (!m_UseParallelProjection) DistMin= fabs(DistMin);
 	if (DistMin < m_DistanceMax)
 	{
 		m_dDistanceMini= DistMin;
@@ -838,7 +838,7 @@ bool GLC_Viewport::setDistMin(double DistMin, bool updateOpenGL)
 
 bool GLC_Viewport::setDistMax(double DistMax, bool updateOpenGL)
 {
-	if (m_UseParallelProjection) DistMax= fabs(DistMax);
+    if (!m_UseParallelProjection) DistMax= fabs(DistMax);
 	if (DistMax > m_dDistanceMini)
 	{
 		m_DistanceMax= DistMax;
@@ -869,23 +869,21 @@ void GLC_Viewport::setDistMinAndMax(const GLC_BoundingBox& bBox, bool updateOpen
 		// Increase size of the bounding box
 		const double increaseFactor= 1.1;
 		// Convert box distance in sphere distance
-		const double center= fabs(boundingBox.center().z());
+        const double center= - boundingBox.center().z();
+
 		const double radius= boundingBox.boundingSphereRadius();
 		const double min= center - radius * increaseFactor;
 		const double max= center + radius * increaseFactor;
 
-		GLC_Point3d camEye(m_pViewCam->eye());
-		camEye= matComp * camEye;
-
-        if ((min > 0.0) && !m_UseParallelProjection)
+        if ((min > 0.0) || m_UseParallelProjection)
 		{
-			// Outside bounding Sphere
+            // Outside bounding Sphere or parallel projection
 			m_dDistanceMini= min;
 			m_DistanceMax= max;
 		}
 		else
 		{
-            // Inside bounding Sphere or parallel projection
+            // Inside bounding Sphere
 			m_dDistanceMini= qMin(0.01 * radius, m_pViewCam->distEyeTarget() / 4.0);
 			m_DistanceMax= max;
 		}

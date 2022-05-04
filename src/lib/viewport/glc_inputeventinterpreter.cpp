@@ -47,16 +47,26 @@ GLC_InputEventInterpreter::~GLC_InputEventInterpreter()
 
 void GLC_InputEventInterpreter::setMover(GLC_MoverController::MoverType moverType, const GLC_UserInput &userInputs)
 {
-    m_pViewHandler->moverControllerHandle()->setActiveMover(moverType, userInputs);
+    GLC_MoverController* pController= m_pViewHandler->moverControllerHandle();
+    pController->setActiveMover(moverType, userInputs);
     if (m_UseLodWhileMoving) {
         m_pViewHandler->world().collection()->setLodUsage(true, m_pViewHandler->viewportHandle());
     }
+
+    if ((m_DefaultNavigationType == GLC_MoverController::TurnTable)
+        && (pController->activeMoverId() == GLC_MoverController::Target))
+    {
+        GLC_Mover* pMover= pController->getMover(m_DefaultNavigationType);
+        pMover->init(userInputs);
+    }
+
     m_pViewHandler->updateGL();
 }
 
 bool GLC_InputEventInterpreter::move(const GLC_UserInput &userInputs)
 {
-    bool subject= m_pViewHandler->moverControllerHandle()->move(userInputs);
+    GLC_MoverController* pController= m_pViewHandler->moverControllerHandle();
+    bool subject= pController->move(userInputs);
     if (subject)
     {
         m_pViewHandler->clearSelectionBuffer();

@@ -76,41 +76,41 @@ public:
 	{return (m_Eye - m_Target).length();}
 
 	//! Get camera's eye coordinate point
-	inline GLC_Point3d eye(void) const
+    const GLC_Point3d& eye(void) const
 	{return m_Eye;}
 
 	//! Get camera's target coordinate point
-	inline GLC_Point3d target(void) const
+    const GLC_Point3d& target(void) const
 	{return m_Target;}
 
 	//! Get camera's Up vector
-	inline GLC_Vector3d upVector(void) const
+    const GLC_Vector3d& upVector(void) const
 	{return m_VectUp;}
 
 	//! Get camera's forward vector (from eye to target)
-	inline GLC_Vector3d forward(void) const
+    GLC_Vector3d forward(void) const
 	{return m_Target - m_Eye;}
 
 	//! Side camera vector
-	inline GLC_Vector3d sideVector() const
+    GLC_Vector3d sideVector() const
 	{return ((m_Target - m_Eye).normalize() ^ m_VectUp).normalize();}
 
 	//! Get camera's orbit composition matrix
-	inline GLC_Matrix4x4 viewMatrix(void) const
+    const GLC_Matrix4x4& viewMatrix(void) const
 	{return m_ModelViewMatrix;}
 
     //! Equality operator
     bool operator==(const GLC_Camera& other) const;
 
     //! Not equality operator
-    inline bool operator!=(const GLC_Camera& other) const
+    bool operator!=(const GLC_Camera& other) const
     {return !(this->operator ==(other));}
 
     //! almost equality (Bauer Laurent)
     bool isAlmostEqualTo(const GLC_Camera&, const double distanceAccuracy=0.05) const;
 
 	//! Return the default up vector
-	inline GLC_Vector3d defaultUpVector() const
+    const  GLC_Vector3d& defaultUpVector() const
 	{return m_DefaultVectUp;}
 
     //! Return the name of the default up vector
