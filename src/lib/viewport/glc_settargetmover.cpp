@@ -69,10 +69,10 @@ void GLC_SetTargetMover::init(const GLC_UserInput& userInput)
         if (m_pViewport->useOrtho())
         {
             GLC_Point3d oldTargetPos(pCam->target());
-            GLC_Point3d newTarget(userInput.unprojectedPoint());
+            const GLC_Point3d& newTarget= userInput.unprojectedPoint();
             GLC_Vector3d vectPan(newTarget - oldTargetPos);	// panning vector
 
-            pCam->setTargetCam(newTarget);
+            pCam->setTargetCam(userInput.unprojectedPoint());
             pCam->setEyeCam(pCam->eye() + vectPan);
         }
         else

@@ -146,7 +146,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
     //! Set the attached world to this selection set
-    void setAttachedWorld(GLC_World world);
+    void setAttachedWorld(const GLC_World& world);
 
     //! Assigns the other selection set and return a reference to this selection set
     GLC_SelectionSet& operator=(const GLC_SelectionSet& other);

@@ -84,7 +84,7 @@ GLC_ViewHandler::~GLC_ViewHandler()
 bool GLC_ViewHandler::spacePartitionningEnabled() const
 {
     bool subject= false;
-    subject= this->world().collection()->spacePartitioningIsUsed();
+    subject= const_cast<GLC_ViewHandler*>(this)->m_World.collection()->spacePartitioningIsUsed();
 
     return subject;
 }
@@ -154,7 +154,7 @@ void GLC_ViewHandler::setSpacePartitionningEnabled(bool enabled)
     {
         if (enabled)
         {
-            GLC_3DViewCollection* pCollection= this->world().collection();
+            GLC_3DViewCollection* pCollection= m_World.collection();
             this->setSpacePartitioning(new GLC_Octree(pCollection));
         }
         else

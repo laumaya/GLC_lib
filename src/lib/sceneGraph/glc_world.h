@@ -123,12 +123,8 @@ public:
     int numberOfUsedShadingGroup() const
 	{return m_pWorldHandle->collection()->numberOfUsedShadingGroup();}
 
-	//! Return the worldHandle of this world
-    GLC_WorldHandle* worldHandle()
-	{return m_pWorldHandle;}
-
     //! Return the worldHandle of this world
-    const GLC_WorldHandle* worldHandle() const
+    GLC_WorldHandle* worldHandle() const
     {return m_pWorldHandle;}
 
 	//! Return the occurrence specified by an id

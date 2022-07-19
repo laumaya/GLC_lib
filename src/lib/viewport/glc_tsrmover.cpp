@@ -86,7 +86,7 @@ bool GLC_TsrMover::move(const GLC_UserInput& userInput)
     // Rotation
     if (!glc::fuzzyCompare(userInput.rotationAngle(), 0.0))
     {
-        GLC_Point3d unProjectedPoint= userInput.unprojectedPoint();
+        const GLC_Point3d& unProjectedPoint= userInput.unprojectedPoint();
 
         pCamera->rotateAround(pCamera->forward(), userInput.rotationAngle(), unProjectedPoint);
     }

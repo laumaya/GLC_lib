@@ -218,7 +218,7 @@ QList<GLC_uint> GLC_SelectionSet::selectedPrimitive(GLC_uint occId, GLC_uint bod
     return subject;
 }
 
-void GLC_SelectionSet::setAttachedWorld(GLC_World world)
+void GLC_SelectionSet::setAttachedWorld(const GLC_World& world)
 {
     m_pWorldHandle= world.worldHandle();
     clean();

@@ -75,8 +75,8 @@ signals :
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-    GLC_World world() const
-    {return m_World;}
+    GLC_World& world() const
+    {return const_cast<GLC_ViewHandler*>(this)->m_World;}
 
     GLC_Light* lightHandle() const
     {return m_pLight;}

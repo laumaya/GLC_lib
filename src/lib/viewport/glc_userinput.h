@@ -46,40 +46,40 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! return the x position
-	inline int x() const
+    int x() const
 	{return m_X;}
 
 	//! Return the y position
-	inline int y() const
+    int y() const
 	{return m_Y;}
 
 	//! Return normalyze x touch center
-	inline double normalyzeXTouchCenter() const
+    double normalyzeXTouchCenter() const
 	{return m_NormalyzeX;}
 
 	//! Return normalyze x touch center
-	inline double normalyzeYTouchCenter() const
+    double normalyzeYTouchCenter() const
 	{return m_NormalyzeX;}
 
 	//! Return the translation
-    inline GLC_Vector3d translation() const
+    GLC_Vector3d translation() const
 	{return m_Translation;}
 
 	//! Return the rotation angle
-	inline double rotationAngle() const
+    double rotationAngle() const
 	{return m_Rotation;}
 
 	//! Return the scale factor
-	inline double scaleFactor() const
+    double scaleFactor() const
 	{return m_ScaleFactor;}
 
 	//! Return true if the transformation has been set
-	inline bool transformationIsSet() const
+    bool transformationIsSet() const
 	{return m_TransformationIsSet;}
 
     //! Return the unprojected point of this userinput
     /*! The unprojected point must be set before*/
-    inline GLC_Point3d unprojectedPoint() const
+    const GLC_Point3d& unprojectedPoint() const
     {return m_UnprojectedPoint;}
 //@}
 

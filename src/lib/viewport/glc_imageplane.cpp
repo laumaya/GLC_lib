@@ -39,8 +39,8 @@ GLC_ImagePlane::GLC_ImagePlane(const QString& ImageName, bool ratioPreserved)
     , m_Size()
     , m_RatioIsPreserved(ratioPreserved)
 {
-	GLC_Texture* pImgTexture= GLC_Factory::instance()->createTexture(ImageName);
-	pImgTexture->setMaxTextureSize(pImgTexture->imageOfTexture().size());
+    GLC_Texture* pImgTexture= GLC_Factory::instance()->createTexture(ImageName);
+    pImgTexture->setByPassMaxSize(true);
     m_Size= pImgTexture->size();
 
     m_p3DViewInstance= new GLC_3DViewInstance(GLC_Factory::instance()->createRectangle(m_Size.width(), m_Size.height()));
@@ -52,8 +52,8 @@ GLC_ImagePlane::GLC_ImagePlane(const QImage& image, bool ratioPreserved)
     , m_Size()
     , m_RatioIsPreserved(ratioPreserved)
 {
-	GLC_Texture* pImgTexture= GLC_Factory::instance()->createTexture(image);
-	pImgTexture->setMaxTextureSize(image.size());
+    GLC_Texture* pImgTexture= GLC_Factory::instance()->createTexture(image);
+    pImgTexture->setByPassMaxSize(true);
     m_Size= pImgTexture->size();
 
     m_p3DViewInstance= new GLC_3DViewInstance(GLC_Factory::instance()->createRectangle(m_Size.width(), m_Size.height()));
