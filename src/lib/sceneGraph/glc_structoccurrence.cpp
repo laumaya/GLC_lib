@@ -214,7 +214,7 @@ GLC_StructOccurrence::~GLC_StructOccurrence()
 	const int size= m_Childs.size();
 	for (int i= 0; i < size; ++i)
 	{
-        GLC_StructOccurrence* pChild= m_Childs.first();
+        GLC_StructOccurrence* pChild= m_Childs.constFirst();
 		removeChild(pChild);
 		delete pChild;
 	}

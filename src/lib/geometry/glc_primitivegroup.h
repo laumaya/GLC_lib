@@ -113,11 +113,11 @@ public:
 
 	//! Return the offset of triangles index
 	inline const GLvoid* trianglesIndexOffset() const
-	{return m_TrianglesGroupOffset.first();}
+    {return m_TrianglesGroupOffset.constFirst();}
 
 	//! Return the offset of triangles index
 	inline int trianglesIndexOffseti() const
-	{return m_TrianglesGroupOffseti.first();}
+    {return m_TrianglesGroupOffseti.constFirst();}
 
 	//! Return the offset of triangles index
 	inline const OffsetVector& trianglesGroupOffset() const

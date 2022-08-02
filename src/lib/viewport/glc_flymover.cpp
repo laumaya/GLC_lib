@@ -75,7 +75,7 @@ void GLC_FlyMover::init(const GLC_UserInput& userInput)
 	// 5 secondes to travel
 	m_Velocity= distance / 5000;
 
-	GLC_Mover::m_MoverInfo.m_DoubleInfo.first()= m_Velocity;
+    GLC_Mover::m_MoverInfo.m_DoubleInfo.first()= m_Velocity;
 
 	// Start the timer
 	m_TimerId= QObject::startTimer(m_TimerInterval);
@@ -96,13 +96,13 @@ void GLC_FlyMover::ends()
 void GLC_FlyMover::setFlyingVelocity(double velocity)
 {
 	m_Velocity= velocity;
-	GLC_Mover::m_MoverInfo.m_DoubleInfo.first()= m_Velocity;
+    GLC_Mover::m_MoverInfo.m_DoubleInfo.first()= m_Velocity;
 }
 
 void GLC_FlyMover::increaseVelocity(double factor)
 {
 	m_Velocity*= factor;
-	GLC_Mover::m_MoverInfo.m_DoubleInfo.first()= m_Velocity;
+    GLC_Mover::m_MoverInfo.m_DoubleInfo.first()= m_Velocity;
 }
 
 void GLC_FlyMover::timerEvent(QTimerEvent*)
@@ -144,7 +144,7 @@ GLC_Vector3d GLC_FlyMover::mapForFlying(double x, double y)
 	{
 		pos.normalize();
 	}
-	GLC_Mover::m_MoverInfo.m_VectorInfo.first()= pos;
+    GLC_Mover::m_MoverInfo.m_VectorInfo.first()= pos;
 	GLC_Mover::updateRepresentation();
 
 	double z= -cos(m_TurnRate) / sin(m_TurnRate);

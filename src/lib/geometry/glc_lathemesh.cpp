@@ -387,7 +387,7 @@ QList<GLC_Point3d> GLC_LatheMesh::profileVertices() const
 QList<double> GLC_LatheMesh::profileV()
 {
     QList<double> subject;
-    const double min= m_Profile.first().z();
+    const double min= m_Profile.constFirst().z();
     const double range= m_Profile.last().z() - min;
 
     const int count= m_Profile.count() - 1;

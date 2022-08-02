@@ -141,7 +141,7 @@ GLC_uint GLC_SelectionSet::firstId() const
     GLC_uint subject= 0;
     if (!m_OccurenceIdList.isEmpty())
     {
-        subject= m_OccurenceIdList.first();
+        subject= m_OccurenceIdList.constFirst();
     }
     return subject;
 }

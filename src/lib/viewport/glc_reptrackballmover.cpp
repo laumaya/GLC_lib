@@ -100,7 +100,7 @@ void GLC_RepTrackBallMover::init()
 	Q_ASSERT(!m_pRepMoverInfo->m_VectorInfo.isEmpty());
 	Q_ASSERT(!m_pRepMoverInfo->m_MatrixInfo.isEmpty());
 
-	GLC_Vector3d VectAngle(m_pRepMoverInfo->m_VectorInfo.first());
+    GLC_Vector3d VectAngle(m_pRepMoverInfo->m_VectorInfo.constFirst());
 	VectAngle.setZ(0);
 	VectAngle.setLength(1);
 
@@ -120,7 +120,7 @@ void GLC_RepTrackBallMover::init()
 	}
 
 	// Composition of orientation matrix and mapping matrix
-	MatRot= m_pRepMoverInfo->m_MatrixInfo.first() * MatRot;
+    MatRot= m_pRepMoverInfo->m_MatrixInfo.constFirst() * MatRot;
 
 	m_Arc1.setMatrix(MatRot * m_MatArc1);
 	m_Arc2.setMatrix(MatRot * m_MatArc2);
@@ -131,7 +131,7 @@ void GLC_RepTrackBallMover::update()
 {
 	Q_ASSERT(NULL != m_pRepMoverInfo);
 	Q_ASSERT(!m_pRepMoverInfo->m_MatrixInfo.isEmpty());
-	const GLC_Matrix4x4 matrix(m_pRepMoverInfo->m_MatrixInfo.first());
+    const GLC_Matrix4x4 matrix(m_pRepMoverInfo->m_MatrixInfo.constFirst());
 	m_Arc1.multMatrix(matrix);
 	m_Arc2.multMatrix(matrix);
 }

@@ -1882,7 +1882,7 @@ IndexList GLC_Mesh::equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint m
             const int size= currentFanIndex.size();
             for (int j= 1; j < size - 1; ++j)
             {
-                trianglesIndex.append(currentFanIndex.first());
+                trianglesIndex.append(currentFanIndex.constFirst());
                 trianglesIndex.append(currentFanIndex.at(j));
                 trianglesIndex.append(currentFanIndex.at(j + 1));
             }

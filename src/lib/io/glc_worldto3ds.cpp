@@ -199,7 +199,7 @@ void GLC_WorldTo3ds::createNodeFromOccurrence(GLC_StructOccurrence* pOcc)
 				}
 				else if (!meshes.isEmpty())
 				{
-                    strncpy(p3dsNode->name, meshes.first()->name, sizeof (p3dsNode->name));
+                    strncpy(p3dsNode->name, meshes.constFirst()->name, sizeof (p3dsNode->name));
                     lib3ds_file_insert_node(m_pLib3dsFile, p3dsNode);
 				}
                 else

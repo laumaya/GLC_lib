@@ -68,7 +68,7 @@ void GLC_RepFlyMover::update()
 	Q_ASSERT(!m_pRepMoverInfo->m_VectorInfo.isEmpty());
 	Q_ASSERT(!m_pRepMoverInfo->m_DoubleInfo.isEmpty());
 
-	GLC_Vector3d vector(m_pRepMoverInfo->m_VectorInfo.first());
+    GLC_Vector3d vector(m_pRepMoverInfo->m_VectorInfo.constFirst());
 
 	// Rotation
 	double deltaX= vector.x();
@@ -134,7 +134,7 @@ void GLC_RepFlyMover::glDraw()
 	m_Plane.render(glc::TransparentRenderFlag);
 
 	// Render velocity value + text
-    QString velocity(QChar(' ') + QString::number(static_cast<int>(100.0 * m_pRepMoverInfo->m_DoubleInfo.first())));
+    QString velocity(QChar(' ') + QString::number(static_cast<int>(100.0 * m_pRepMoverInfo->m_DoubleInfo.constFirst())));
     QFont myFont;
     myFont.setBold(true);
     QFontMetrics fontmetrics(myFont);

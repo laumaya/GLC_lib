@@ -79,7 +79,7 @@ public:
 
 	//! Return first occurrence handle
 	inline GLC_StructOccurrence* firstOccurrenceHandle() const
-	{ return m_ListOfOccurrences.first();}
+    { return m_ListOfOccurrences.constFirst();}
 
 	//! Return the relative matrix of this instance
 	inline GLC_Matrix4x4 relativeMatrix() const

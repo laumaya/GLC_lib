@@ -799,7 +799,7 @@ QList<GLC_Point2d> glc::normalyzePolygon(const QList<GLC_Point2d>& polygon)
     const int count= polygon.count();
     Q_ASSERT(count > 2);
 
-    GLC_Point2d minPoint= polygon.first();
+    GLC_Point2d minPoint= polygon.constFirst();
     GLC_Point2d maxPoint= minPoint;
     for (int i= 1; i < count; ++i)
     {

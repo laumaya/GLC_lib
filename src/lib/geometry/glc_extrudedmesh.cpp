@@ -313,7 +313,7 @@ void GLC_ExtrudedMesh::createMeshAndWire()
 
     Q_ASSERT(m_Points.size() > 2);
     Q_ASSERT(pointsLieOnAPlane());
-    Q_ASSERT(!glc::compare(m_Points.first(), m_Points.last(), glc::EPSILON));
+    Q_ASSERT(!glc::compare(m_Points.constFirst(), m_Points.constLast(), glc::EPSILON));
 
     computeGivenFaceNormal();
 

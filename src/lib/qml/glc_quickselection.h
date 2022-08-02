@@ -28,7 +28,7 @@ public:
     {return m_Occurrences.count();}
 
     Q_INVOKABLE GLC_QuickOccurrence* first() const
-    {return m_Occurrences.first();}
+    {return m_Occurrences.constFirst();}
 
     Q_INVOKABLE GLC_QuickOccurrence* at(int i) const
     {return m_Occurrences.at(i);}
