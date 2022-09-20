@@ -123,6 +123,8 @@ public:
 	/*! retrieve component corresponding to mask vector NULL component*/
 	inline GLC_Vector2d toVector2d(const GLC_Vector3d& mask) const;
 
+    inline GLC_Vector3d mask(const GLC_Vector3d& other) const;
+
 	//! Return the Angle from this vector to the given vector (from 0 to PI)
     inline double angleWithVect(GLC_Vector3d other) const;
 
@@ -460,7 +462,17 @@ GLC_Vector2d GLC_Vector3d::toVector2d(const GLC_Vector3d& mask) const
 	}
 	else resultVect.setVect(m_Vector[1], m_Vector[2]);
 
-	return resultVect;
+    return resultVect;
+}
+
+inline GLC_Vector3d GLC_Vector3d::mask(const GLC_Vector3d& other) const
+{
+    GLC_Vector3d subject(*this);
+    subject.m_Vector[0]= subject.m_Vector[0] * other.m_Vector[0];
+    subject.m_Vector[1]= subject.m_Vector[1] * other.m_Vector[1];
+    subject.m_Vector[2]= subject.m_Vector[2] * other.m_Vector[2];
+
+    return subject;
 }
 
 double GLC_Vector3d::angleWithVect(GLC_Vector3d other) const

@@ -371,15 +371,32 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 	GLC_3DViewInstance* pCurInstance;
 	if (forceDisplay)
 	{
-		while (iEntry != pHash->constEnd())
-		{
-			pCurInstance= iEntry.value();
-			if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
-			{
-				pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
-			}
-			++iEntry;
-		}
+        if (m_UseOrderRendering)
+        {
+            QList<GLC_3DViewInstance*> instanceList= pHash->values();
+            std::sort(instanceList.begin(), instanceList.end(), GLC_3DViewInstance::firstIsLower);
+            const int count= instanceList.count();
+            for (int i= 0; i < count; ++i)
+            {
+                pCurInstance= instanceList.at(i);
+                if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
+                {
+                    pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
+                }
+            }
+        }
+        else
+        {
+            while (iEntry != pHash->constEnd())
+            {
+                pCurInstance= iEntry.value();
+                if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
+                {
+                    pCurInstance->render(renderFlag, m_UseLod, m_pViewport);
+                }
+                ++iEntry;
+            }
+        }
 	}
     else if (m_UseOrderRendering)
     {

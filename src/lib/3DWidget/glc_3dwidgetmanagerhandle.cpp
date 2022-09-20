@@ -139,13 +139,14 @@ void GLC_3DWidgetManagerHandle::update()
     }
 }
 
-glc::WidgetEventFlag GLC_3DWidgetManagerHandle::moveEvent(GLC_uint selectedId, const GLC_Point3d &pos)
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::moveEvent(GLC_uint selectedId, const GLC_Point3d &pos, QInputEvent* pInputEvent)
 {
 	glc::WidgetEventFlag eventFlag= glc::IgnoreEvent;
 
 	if (hasAnActiveWidget())
 	{
 		GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+        pActiveWidget->setInputEvent(pInputEvent);
         eventFlag= pActiveWidget->move(pos, selectedId);
 	}
 	else
@@ -158,30 +159,36 @@ glc::WidgetEventFlag GLC_3DWidgetManagerHandle::moveEvent(GLC_uint selectedId, c
 			{
 				m_Preselected3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
 				GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Preselected3DWidgetId);
+                pActiveWidget->setInputEvent(pInputEvent);
                 eventFlag= pActiveWidget->over(pos, selectedId);
 			}
 			else if (0 != m_Preselected3DWidgetId && (m_Preselected3DWidgetId != select3DWidgetId))
 			{
-				eventFlag= m_3DWidgetHash.value(m_Preselected3DWidgetId)->unselect(pos, selectedId);
+                GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Preselected3DWidgetId);
+                pActiveWidget->setInputEvent(pInputEvent);
+                eventFlag= pActiveWidget->unselect(pos, selectedId);
 			}
 
 		}
 		else if (0 != m_Preselected3DWidgetId)
 		{
-			eventFlag= m_3DWidgetHash.value(m_Preselected3DWidgetId)->unselect(pos, selectedId);
+            GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Preselected3DWidgetId);
+            pActiveWidget->setInputEvent(pInputEvent);
+            eventFlag= pActiveWidget->unselect(pos, selectedId);
 			m_Preselected3DWidgetId= 0;
 		}
 	}
 	return eventFlag;
 }
 
-glc::WidgetEventFlag GLC_3DWidgetManagerHandle::pressEvent(GLC_uint selectedId, const GLC_Point3d& pos)
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::pressEvent(GLC_uint selectedId, const GLC_Point3d& pos, QInputEvent* pInputEvent)
 {
 	glc::WidgetEventFlag eventFlag= glc::IgnoreEvent;
 
     if (hasAnActiveWidget())
     {
         GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+        pActiveWidget->setInputEvent(pInputEvent);
         const bool activeWidgetUnderMouse= pActiveWidget->instanceBelongTo(selectedId);
         if (activeWidgetUnderMouse)
         {
@@ -209,6 +216,7 @@ glc::WidgetEventFlag GLC_3DWidgetManagerHandle::pressEvent(GLC_uint selectedId, 
         {
             m_Active3DWidgetId= m_MapBetweenInstanceWidget.value(selectedId);
             GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+            pActiveWidget->setInputEvent(pInputEvent);
             eventFlag= pActiveWidget->select(pos, selectedId);
         }
     }
@@ -216,13 +224,14 @@ glc::WidgetEventFlag GLC_3DWidgetManagerHandle::pressEvent(GLC_uint selectedId, 
 	return eventFlag;
 }
 
-glc::WidgetEventFlag GLC_3DWidgetManagerHandle::releaseEvent()
+glc::WidgetEventFlag GLC_3DWidgetManagerHandle::releaseEvent(QInputEvent* pInputEvent)
 {
 	glc::WidgetEventFlag eventFlag= glc::IgnoreEvent;
     if (hasAnActiveWidget())
 	{
 
 		GLC_3DWidget* pActiveWidget= m_3DWidgetHash.value(m_Active3DWidgetId);
+        pActiveWidget->setInputEvent(pInputEvent);
 
         eventFlag= pActiveWidget->released();
 	}

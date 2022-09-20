@@ -29,6 +29,7 @@
 #include "../glc_global.h"
 #include "glc_3dwidgetmanagerhandle.h"
 
+class QInputEvent;
 class GLC_3DViewInstance;
 
 //////////////////////////////////////////////////////////////////////
@@ -97,6 +98,9 @@ public:
     int instanceCount() const
     {return m_InstanceIdList.count();}
 
+    QInputEvent* inputEvent() const
+    {return m_pInputEvent;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -120,6 +124,9 @@ public:
     //! Set this 3DWidget type
     void setType(int type)
     {m_Type= type;}
+
+    void setInputEvent(QInputEvent* pInputEvent)
+    {m_pInputEvent= pInputEvent;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -204,6 +211,8 @@ private:
 
     //! The type of this 3DWidget
     int m_Type;
+
+    QInputEvent* m_pInputEvent;
 
 };
 

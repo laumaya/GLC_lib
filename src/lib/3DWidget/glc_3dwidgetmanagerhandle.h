@@ -159,13 +159,13 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Recieve Mouse move event with the given instance id Return true if the event is catch
-    glc::WidgetEventFlag moveEvent(GLC_uint selectedId, const GLC_Point3d &pos);
+    glc::WidgetEventFlag moveEvent(GLC_uint selectedId, const GLC_Point3d &pos, QInputEvent* pInputEvent);
 
 	//! Recieve Mouse press event with the given instance id Return true if the event is catch
-    glc::WidgetEventFlag pressEvent(GLC_uint selectedId, const GLC_Point3d &pos);
+    glc::WidgetEventFlag pressEvent(GLC_uint selectedId, const GLC_Point3d &pos, QInputEvent* pInputEvent);
 
 	//! Recieve Mouse release event with the given instance id Return true if the event is catch
-    glc::WidgetEventFlag releaseEvent();
+    glc::WidgetEventFlag releaseEvent(QInputEvent* pInputEvent);
 
 //@}
 

@@ -26,18 +26,19 @@
 
 
 
-GLC_UserInput::GLC_UserInput(int x, int y)
-: m_X(x)
-, m_Y(y)
-, m_NormalyzeX(0.0)
-, m_NormalyzeY(0.0)
-, m_Translation()
-, m_Rotation(0.0)
-, m_ScaleFactor(1.0)
-, m_TransformationIsSet(false)
-, m_UnprojectedPoint()
+GLC_UserInput::GLC_UserInput(int x, int y, QInputEvent* pEvent)
+    : m_X(x)
+    , m_Y(y)
+    , m_NormalyzeX(0.0)
+    , m_NormalyzeY(0.0)
+    , m_Translation()
+    , m_Rotation(0.0)
+    , m_ScaleFactor(1.0)
+    , m_TransformationIsSet(false)
+    , m_UnprojectedPoint()
+    , m_pInputEvent(pEvent)
 {
-    qRegisterMetaType<GLC_UserInput>();
+    //qRegisterMetaType<GLC_UserInput>();
 }
 
 GLC_UserInput::GLC_UserInput(const GLC_UserInput &other)
@@ -50,6 +51,7 @@ GLC_UserInput::GLC_UserInput(const GLC_UserInput &other)
     , m_ScaleFactor(other.m_ScaleFactor)
     , m_TransformationIsSet(other.m_TransformationIsSet)
     , m_UnprojectedPoint(other.m_UnprojectedPoint)
+    , m_pInputEvent(other.m_pInputEvent)
 {
 
 }

@@ -69,14 +69,14 @@ GLC_World GLC_FileLoader::createWorldFromFile(QFile &file, QStringList* pAttache
 	if (GLC_Factory::canBeLoaded(suffix))
 	{
 		GLC_WorldReaderHandler* pReaderHandler= GLC_Factory::loadingHandler(file.fileName());
-		if (NULL != pReaderHandler)
+        if (nullptr != pReaderHandler)
 		{
 			qDebug() << "Use STL plugin";
 			QObject* pObject= dynamic_cast<QObject*>(pReaderHandler);
-			Q_ASSERT(NULL != pObject);
+            Q_ASSERT(nullptr != pObject);
 			connect(pObject, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 			GLC_World resultWorld= pReaderHandler->read(&file);
-			if (NULL != pAttachedFileName)
+            if (nullptr != pAttachedFileName)
 			{
 				(*pAttachedFileName)= pReaderHandler->listOfAttachedFileName();
 			}
@@ -85,13 +85,13 @@ GLC_World GLC_FileLoader::createWorldFromFile(QFile &file, QStringList* pAttache
 			return resultWorld;
 		}
 	}
-	GLC_World* pWorld= NULL;
+    GLC_World* pWorld= nullptr;
 	if (QFileInfo(file).suffix().toLower() == "obj")
 	{
 		GLC_ObjToWorld objToWorld;
 		connect(&objToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= objToWorld.CreateWorldFromObj(file);
-		if (NULL != pAttachedFileName)
+        if (nullptr != pAttachedFileName)
 		{
 			(*pAttachedFileName)= objToWorld.listOfAttachedFileName();
 		}
@@ -113,7 +113,7 @@ GLC_World GLC_FileLoader::createWorldFromFile(QFile &file, QStringList* pAttache
 		GLC_3dsToWorld studioToWorld;
 		connect(&studioToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= studioToWorld.CreateWorldFrom3ds(file);
-		if (NULL != pAttachedFileName)
+        if (nullptr != pAttachedFileName)
 		{
 			(*pAttachedFileName)= studioToWorld.listOfAttachedFileName();
 		}
@@ -123,7 +123,7 @@ GLC_World GLC_FileLoader::createWorldFromFile(QFile &file, QStringList* pAttache
 		GLC_3dxmlToWorld d3dxmlToWorld;
 		connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= d3dxmlToWorld.createWorldFrom3dxml(file, false);
-		if (NULL != pAttachedFileName)
+        if (nullptr != pAttachedFileName)
 		{
 			(*pAttachedFileName)= d3dxmlToWorld.listOfAttachedFileName();
 		}
@@ -133,7 +133,7 @@ GLC_World GLC_FileLoader::createWorldFromFile(QFile &file, QStringList* pAttache
 		GLC_ColladaToWorld colladaToWorld;
 		connect(&colladaToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
 		pWorld= colladaToWorld.CreateWorldFromCollada(file);
-		if (NULL != pAttachedFileName)
+        if (nullptr != pAttachedFileName)
 		{
 			(*pAttachedFileName)= colladaToWorld.listOfAttachedFileName();
 		}
@@ -145,7 +145,7 @@ GLC_World GLC_FileLoader::createWorldFromFile(QFile &file, QStringList* pAttache
 		emit currentQuantum(100);
 	}
 
-	if (NULL == pWorld)
+    if (nullptr == pWorld)
 	{
 		// File extension not recognize or file not loaded
 		QString message(QString("GLC_Factory::createWorldFromFile File ") + file.fileName() + QString(" not loaded"));
@@ -155,5 +155,42 @@ GLC_World GLC_FileLoader::createWorldFromFile(QFile &file, QStringList* pAttache
 	GLC_World resulWorld(*pWorld);
 	delete pWorld;
 
-	return resulWorld;
+    return resulWorld;
+}
+
+GLC_World GLC_FileLoader::createWorldFromIoDevice(QIODevice* pDevice, const QString suffix)
+{
+
+    GLC_World subject;
+#if defined(Q_OS_WIN)
+    // We need to force the connection type on Windows, not sure why:
+    // Qt::DirectConnection should be selected automatically since
+    // source and destination are in the same thread...
+#define connect(snd, sig, rcv, memb) \
+        connect(snd, sig, rcv, memb, Qt::DirectConnection)
+#endif
+
+    GLC_World* pWorld= nullptr;
+    if (suffix.toLower() == "3dxml")
+    {
+        GLC_3dxmlToWorld d3dxmlToWorld;
+        connect(&d3dxmlToWorld, SIGNAL(currentQuantum(int)), this, SIGNAL(currentQuantum(int)));
+        try
+        {
+            pWorld= d3dxmlToWorld.createWorldFrom3dxml(pDevice);
+        }
+        catch (GLC_FileFormatException &e)
+        {
+            delete pWorld;
+            return subject;
+        }
+    }
+
+    if (nullptr != pWorld)
+    {
+        subject= (*pWorld);
+        delete pWorld;
+    }
+
+    return subject;
 }

@@ -486,7 +486,7 @@ bool GLC_Factory::canBeLoaded(const QString& extension)
 
 GLC_WorldReaderHandler* GLC_Factory::loadingHandler(const QString& fileName)
 {
-	if (NULL == m_pFactory)
+    if (nullptr == m_pFactory)
 	{
 		instance();
 	}
@@ -501,8 +501,7 @@ GLC_WorldReaderHandler* GLC_Factory::loadingHandler(const QString& fileName)
 				return pPlugin->readerHandler();
 			}
 		}
-	}
-	return NULL;
+    }
+    return nullptr;
 }
-
 

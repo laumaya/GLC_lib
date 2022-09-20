@@ -59,7 +59,7 @@ public:
 public:
 
     //! Clone the concrete manipulator
-    virtual GLC_AbstractManipulator* clone() const;
+    GLC_AbstractManipulator* clone() const override;
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 protected:
     //! Manipulate this manipulator and return the moving matrix
-    virtual GLC_Matrix4x4 doManipulate(const GLC_Point3d& newPoint, const GLC_Vector3d& projectionDirection);
+    GLC_Matrix4x4 doManipulate(const GLC_Point3d& newPoint, const GLC_Vector3d& projectionDirection) override;
 
 };
 

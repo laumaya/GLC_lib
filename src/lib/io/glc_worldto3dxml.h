@@ -50,7 +50,8 @@ public:
 	{
 		Compressed3dxml,
 		Exploded3dxml,
-		StructureOnly
+        StructureOnly,
+        CompressedNative
 	};
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -68,6 +69,10 @@ public:
 public:
 	//! Save the world to the specified file name
 	bool exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::ExportType exportType, bool exportMaterial= true);
+
+    bool exportTo3dxml(QIODevice* pDevice, const QString& fileName);
+
+    bool exportToNative(QIODevice* pDevice, const QString& fileName);
 
 	//! Save the given 3DRep into the given path name
 	bool exportReferenceTo3DRep(const GLC_3DRep* p3DRep, const QString& fullFileName);
@@ -154,6 +159,8 @@ private:
 
 	//! Write all material related files in the 3dxml
 	void writeAllMaterialRelatedFilesIn3dxml();
+
+    void writeAllMaterialTextureFilesIn3dxml();
 
 	//! Write image file in 3DXML archive or folder
 	void writeImageFileIn3dxml(const QList<GLC_Material*>& materialList);

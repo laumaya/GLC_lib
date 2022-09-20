@@ -512,7 +512,8 @@ QDataStream &operator>>(QDataStream &stream, GLC_WireData &wireData)
 		// New version Data
 		stream >> wireData.m_Colors;
 		stream >> wireData.m_ColorSize;
-	}
+    }
+    wireData.buidIndex();
 
 	return stream;
 }

@@ -27,8 +27,10 @@
 #include "../3rdparty/quazip/quazipfile.h"
 #include "../glc_exception.h"
 #include "../geometry/glc_mesh.h"
+#include "../geometry/glc_3drep.h"
 
 #include <QFileInfo>
+#include <QDataStream>
 
 GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world, bool threaded)
 : QObject()
@@ -135,8 +137,114 @@ bool GLC_WorldTo3dxml::exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::
 		}
 	}
 
-	emit currentQuantum(100);
-	return isExported;
+    emit currentQuantum(100);
+    return isExported;
+}
+
+bool GLC_WorldTo3dxml::exportTo3dxml(QIODevice* pDevice, const QString& fileName)
+{
+    m_3dxmlFileSet.clear();
+    m_ListOfOverLoadedOccurrence.clear();
+    m_FileNameIncrement= 0;
+    m_ExportMaterial= true;
+    m_FileName= fileName;
+    m_ExportType= GLC_WorldTo3dxml::Compressed3dxml;
+    m_p3dxmlArchive= new QuaZip(pDevice);
+    m_p3dxmlArchive->setFileNameCodec("UTF-8");
+    bool subject= m_p3dxmlArchive->open(QuaZip::mdCreate);
+    // Add the manifest
+    addManifest();
+
+    if (subject)
+    {
+        writeAllMaterialRelatedFilesIn3dxml();
+
+        // Export the assembly structure from the list of structure reference
+        exportAssemblyStructure();
+
+        int previousQuantumValue= 0;
+        int currentQuantumValue= 0;
+        emit currentQuantum(currentQuantumValue);
+
+        int currentRepIndex= 0;
+        const int size= m_ReferenceRepTo3dxmlFileName.size();
+        // Export the representation
+        QHash<const GLC_3DRep*, QString>::const_iterator iRep= m_ReferenceRepTo3dxmlFileName.constBegin();
+        while ((m_ReferenceRepTo3dxmlFileName.constEnd() != iRep) && continu())
+        {
+            write3DRep(iRep.key(), iRep.value());
+            ++iRep;
+
+            // Progrees bar indicator
+            ++currentRepIndex;
+            currentQuantumValue = static_cast<int>((static_cast<double>(currentRepIndex) / size) * 100);
+            if (currentQuantumValue > previousQuantumValue)
+            {
+                emit currentQuantum(currentQuantumValue);
+            }
+            previousQuantumValue= currentQuantumValue;
+            if (!m_IsThreaded)
+            {
+                QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+            }
+        }
+    }
+
+    emit currentQuantum(100);
+    return subject;
+}
+
+bool GLC_WorldTo3dxml::exportToNative(QIODevice* pDevice, const QString& fileName)
+{
+    m_3dxmlFileSet.clear();
+    m_ListOfOverLoadedOccurrence.clear();
+    m_FileNameIncrement= 0;
+    m_ExportMaterial= true;
+    m_FileName= fileName;
+    m_ExportType= GLC_WorldTo3dxml::CompressedNative;
+    m_p3dxmlArchive= new QuaZip(pDevice);
+    m_p3dxmlArchive->setFileNameCodec("UTF-8");
+    bool subject= m_p3dxmlArchive->open(QuaZip::mdCreate);
+    // Add the manifest
+    addManifest();
+
+    if (subject)
+    {
+        writeAllMaterialTextureFilesIn3dxml();
+
+        // Export the assembly structure from the list of structure reference
+        exportAssemblyStructure();
+
+        int previousQuantumValue= 0;
+        int currentQuantumValue= 0;
+        emit currentQuantum(currentQuantumValue);
+
+        int currentRepIndex= 0;
+        const int size= m_ReferenceRepTo3dxmlFileName.size();
+        // Export the representation
+        QHash<const GLC_3DRep*, QString>::const_iterator iRep= m_ReferenceRepTo3dxmlFileName.constBegin();
+        while ((m_ReferenceRepTo3dxmlFileName.constEnd() != iRep) && continu())
+        {
+            write3DRep(iRep.key(), iRep.value());
+            ++iRep;
+
+            // Progrees bar indicator
+            ++currentRepIndex;
+            currentQuantumValue = static_cast<int>((static_cast<double>(currentRepIndex) / size) * 100);
+            if (currentQuantumValue > previousQuantumValue)
+            {
+                emit currentQuantum(currentQuantumValue);
+            }
+            previousQuantumValue= currentQuantumValue;
+            if (!m_IsThreaded)
+            {
+                QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+            }
+        }
+    }
+
+    emit currentQuantum(100);
+    return subject;
 }
 
 bool GLC_WorldTo3dxml::exportReferenceTo3DRep(const GLC_3DRep* p3DRep, const QString& fullFileName)
@@ -199,7 +307,14 @@ void GLC_WorldTo3dxml::writeReferenceRep(const GLC_3DRep* p3DRep)
 		m_pOutStream->writeAttribute("xsi:type", "ReferenceRepType");
 		m_pOutStream->writeAttribute("id", id);
 		m_pOutStream->writeAttribute("name", p3DRep->name());
-		m_pOutStream->writeAttribute("format", "TESSELLATED");
+        if (m_ExportType == GLC_WorldTo3dxml::CompressedNative)
+        {
+            m_pOutStream->writeAttribute("format", "GLC");
+        }
+        else
+        {
+            m_pOutStream->writeAttribute("format", "TESSELLATED");
+        }
 		m_pOutStream->writeAttribute("version", "1.2");
 		m_pOutStream->writeAttribute("associatedFile", associateFile);
 		m_pOutStream->writeTextElement("PLM_ExternalID", p3DRep->name());
@@ -449,33 +564,60 @@ QString GLC_WorldTo3dxml::matrixString(const GLC_Matrix4x4& matrix)
 
 void GLC_WorldTo3dxml::write3DRep(const GLC_3DRep* pRep, const QString& fileName)
 {
-	setStreamWriterToFile(fileName);
+    if (m_ExportType == GLC_WorldTo3dxml::CompressedNative)
+    {
+        delete m_pOutStream;
+        m_pOutStream= nullptr;
 
-	m_pOutStream->writeStartDocument();
-	m_pOutStream->writeStartElement("XMLRepresentation");
-	m_pOutStream->writeAttribute("version", "1.2");
-	m_pOutStream->writeAttribute("xmlns", "http://www.3ds.com/xsd/3DXML");
-	m_pOutStream->writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-	m_pOutStream->writeAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-	m_pOutStream->writeAttribute("xsi:schemaLocation", "http://www.3ds.com/xsd/3DXML ./3DXMLMesh.xsd");
+        bool success= false;
+        if (nullptr != m_pCurrentZipFile)
+        {
+            m_pCurrentZipFile->close();
+            delete m_pOutStream;
+            delete m_pCurrentZipFile;
+        }
+        QuaZipNewInfo quazipNewInfo(fileName);
+        m_pCurrentZipFile= new QuaZipFile(m_p3dxmlArchive);
+        success= m_pCurrentZipFile->open(QIODevice::WriteOnly, quazipNewInfo);
+        if (success)
+        {
+            QDataStream dataStream(m_pCurrentZipFile);
+            dataStream << *pRep;
+            m_pCurrentZipFile->close();
+            delete m_pCurrentZipFile;
+            m_pCurrentZipFile= nullptr;
+        }
+    }
+    else
+    {
+        setStreamWriterToFile(fileName);
 
-	m_pOutStream->writeStartElement("Root"); // Root
-	m_pOutStream->writeAttribute("xsi:type", "BagRepType");
-	m_pOutStream->writeAttribute("id", QString::number(++m_CurrentId));
-	const int bodyCount= pRep->numberOfBody();
-	for (int i= 0; i < bodyCount; ++i)
-	{
-		GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(pRep->geomAt(i));
-		if (NULL != pMesh)
-		{
-			writeGeometry(pMesh);
-		}
-	}
-	m_pOutStream->writeEndElement(); // Root
+        m_pOutStream->writeStartDocument();
+        m_pOutStream->writeStartElement("XMLRepresentation");
+        m_pOutStream->writeAttribute("version", "1.2");
+        m_pOutStream->writeAttribute("xmlns", "http://www.3ds.com/xsd/3DXML");
+        m_pOutStream->writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        m_pOutStream->writeAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+        m_pOutStream->writeAttribute("xsi:schemaLocation", "http://www.3ds.com/xsd/3DXML ./3DXMLMesh.xsd");
 
-	m_pOutStream->writeEndElement(); // XMLRepresentation
+        m_pOutStream->writeStartElement("Root"); // Root
+        m_pOutStream->writeAttribute("xsi:type", "BagRepType");
+        m_pOutStream->writeAttribute("id", QString::number(++m_CurrentId));
+        const int bodyCount= pRep->numberOfBody();
+        for (int i= 0; i < bodyCount; ++i)
+        {
+            GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(pRep->geomAt(i));
+            if (NULL != pMesh)
+            {
+                writeGeometry(pMesh);
+            }
+        }
+        m_pOutStream->writeEndElement(); // Root
 
-	m_pOutStream->writeEndDocument();
+        m_pOutStream->writeEndElement(); // XMLRepresentation
+
+        m_pOutStream->writeEndDocument();
+    }
 }
 
 QString GLC_WorldTo3dxml::representationFileName(const GLC_3DRep* pRep)
@@ -970,11 +1112,55 @@ void GLC_WorldTo3dxml::writeAllMaterialRelatedFilesIn3dxml()
 		writeMaterial(materialList.at(i));
 	}
 
-	writeCatMaterialRef(materialList);
-
-
-
+    writeCatMaterialRef(materialList);
 }
+
+void GLC_WorldTo3dxml::writeAllMaterialTextureFilesIn3dxml()
+{
+    m_MaterialIdToMaterialName.clear();
+    m_MaterialIdToMaterialId.clear();
+    m_MaterialIdToTexture3dxmlName.clear();
+    m_MaterialIdTo3dxmlImageId.clear();
+
+    // Get the list of material
+    const QList<GLC_Material*> materialList(m_World.listOfMaterials());
+
+    // Create the list of textured material
+    QList<GLC_Material*> texturedMaterial;
+    const int size= materialList.size();
+    for (int i= 0; i < size; ++i)
+    {
+        if (materialList.at(i)->hasTexture())
+        {
+            texturedMaterial.append(materialList.at(i));
+        }
+    }
+
+    if (!texturedMaterial.isEmpty())
+    {
+        for (GLC_Material* pMat : qAsConst(texturedMaterial))
+        {
+            GLC_Texture* pTexture= pMat->textureHandle();
+            const QString textureFileName(pTexture->fileName());
+            QString imageName;
+            if (!textureFileName.isEmpty())
+            {
+                imageName= QFileInfo(textureFileName).fileName();
+            }
+            else
+            {
+                imageName= QString("Texture_" + QString::number(pMat->id()) + ".jpeg");
+                pTexture->setFileName(imageName);
+            }
+            if (!m_3dxmlFileSet.contains(imageName))
+            {
+                addImageTextureTo3dxml(pTexture->imageOfTexture(), imageName);
+                m_3dxmlFileSet.insert(imageName);
+            }
+        }
+    }
+}
+
 void GLC_WorldTo3dxml::writeImageFileIn3dxml(const QList<GLC_Material*>& materialList)
 {
 	const int size= materialList.size();
@@ -1144,8 +1330,8 @@ QString GLC_WorldTo3dxml::xmlFileName(QString fileName)
 	{
 		newName= QFileInfo(fileName).completeBaseName() + QString::number(++m_FileNameIncrement) + '.' + QFileInfo(fileName).suffix();
 		newName.prepend(prefix);
-	}
-	return newName;
+    }
+    return newName;
 }
 
 void GLC_WorldTo3dxml::writeExtensionAttributes(GLC_Attributes* pAttributes)

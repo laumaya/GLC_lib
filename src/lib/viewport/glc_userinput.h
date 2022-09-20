@@ -32,10 +32,12 @@
 
 #include "../glc_config.h"
 
+class QInputEvent;
+
 class GLC_LIB_EXPORT GLC_UserInput
 {
 public:
-	GLC_UserInput(int x= 0, int y= 0);
+    GLC_UserInput(int x= 0, int y= 0, QInputEvent* pEvent= nullptr);
     GLC_UserInput(const GLC_UserInput& other);
 	virtual ~GLC_UserInput();
 
@@ -81,6 +83,10 @@ public:
     /*! The unprojected point must be set before*/
     const GLC_Point3d& unprojectedPoint() const
     {return m_UnprojectedPoint;}
+
+    QInputEvent* inputEvent() const
+    {return m_pInputEvent;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -142,6 +148,8 @@ private:
 	bool m_TransformationIsSet;
 
     GLC_Point3d m_UnprojectedPoint;
+
+    QInputEvent* m_pInputEvent;
 
 };
 

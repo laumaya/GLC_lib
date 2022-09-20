@@ -65,6 +65,8 @@ public:
 public:
 	//! Create a GLC_World from a file
 	GLC_World createWorldFromFile(QFile &file, QStringList* pAttachedFileName= NULL);
+
+    GLC_World createWorldFromIoDevice(QIODevice* pDevice, const QString suffix);
 //@}
 
 

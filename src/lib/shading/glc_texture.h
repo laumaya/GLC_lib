@@ -77,7 +77,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Return the texture File Name
-    QString fileName() const
+    const QString& fileName() const
 	{return m_FileName;}
 
 	//! Return OpenGL Texture Id
@@ -88,7 +88,7 @@ public:
     {return (m_pQOpenGLTexture != NULL);}
 
 	//! Return the texture size
-    QSize size() const
+    const QSize& size() const
 	{return m_TextureSize;}
 
 	//! Return the maximum texture size
@@ -108,10 +108,10 @@ public:
 	{ return m_HasAlphaChannel;}
 
 	//! Return the an image of the texture
-    QImage imageOfTexture() const
-    { return m_TextureImage;}
+    const QImage& imageOfTexture() const
+    {return m_TextureImage;}
 
-    GLC_Matrix4x4 matrix() const
+    const GLC_Matrix4x4& matrix() const
     {return m_Matrix;}
 
     bool hasTransformationMatrix() const
@@ -134,6 +134,9 @@ public:
 
     void setByPassMaxSize(bool value)
     {m_BypassMaxSize= value;}
+
+    void setFileName(const QString& value)
+    {m_FileName= value;}
 
 //@}
 //////////////////////////////////////////////////////////////////////

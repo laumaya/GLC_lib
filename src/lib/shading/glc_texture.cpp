@@ -68,18 +68,18 @@ GLC_Texture::GLC_Texture(const QString &Filename)
     , m_Matrix()
     , m_BypassMaxSize(false)
 {
-    if (m_TextureImage.isNull())
-	{
-		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
-		ErrorMess.append(m_FileName).append(" Failed");
-		qDebug() << ErrorMess;
-		GLC_Exception e(ErrorMess);
-		throw(e);
-	}
-    else
-    {
+//    if (m_TextureImage.isNull())
+//	{
+//		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
+//		ErrorMess.append(m_FileName).append(" Failed");
+//		qDebug() << ErrorMess;
+//		GLC_Exception e(ErrorMess);
+//		throw(e);
+//	}
+//    else
+//    {
         m_TextureSize= m_TextureImage.size();
-    }
+//    }
 }
 // Constructor with QFile
 GLC_Texture::GLC_Texture(const QFile &file)
@@ -92,18 +92,18 @@ GLC_Texture::GLC_Texture(const QFile &file)
     , m_BypassMaxSize()
 {
     m_TextureImage.load(const_cast<QFile*>(&file), QFileInfo(m_FileName).suffix().toLocal8Bit());
-    if (m_TextureImage.isNull())
-	{
-		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
-		ErrorMess.append(m_FileName).append(" Failed");
-		qDebug() << ErrorMess;
-		GLC_Exception e(ErrorMess);
-		throw(e);
-	}
-    else
-    {
+//    if (m_TextureImage.isNull())
+//	{
+//		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
+//		ErrorMess.append(m_FileName).append(" Failed");
+//		qDebug() << ErrorMess;
+//		GLC_Exception e(ErrorMess);
+//		throw(e);
+//	}
+//    else
+//    {
         m_TextureSize= m_TextureImage.size();
-    }
+//    }
 }
 
 // Constructor with QImage
@@ -128,14 +128,14 @@ GLC_Texture::GLC_Texture(const GLC_Texture &other)
     , m_Matrix(other.m_Matrix)
     , m_BypassMaxSize(other.m_BypassMaxSize)
 {
-    if (m_TextureImage.isNull())
-	{
-		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
-		ErrorMess.append(m_FileName).append(" Failed");
-		qDebug() << ErrorMess;
-		GLC_Exception e(ErrorMess);
-		throw(e);
-	}
+//    if (m_TextureImage.isNull())
+//	{
+//		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
+//		ErrorMess.append(m_FileName).append(" Failed");
+//		qDebug() << ErrorMess;
+//		GLC_Exception e(ErrorMess);
+//		throw(e);
+//	}
 }
 
 // Overload "=" operator
@@ -225,7 +225,7 @@ void GLC_Texture::setMaxTextureSize(const QSize& size)
 // Load the texture
 void GLC_Texture::glLoadTexture()
 {
-    if (NULL == m_pQOpenGLTexture)
+    if (nullptr == m_pQOpenGLTexture)
 	{
 		// Test image size
         if (!m_BypassMaxSize && ((m_TextureImage.height() > m_MaxTextureSize.height())
@@ -254,7 +254,7 @@ void GLC_Texture::glLoadTexture()
 // Bind texture in 2D mode
 void GLC_Texture::glcBindTexture(void)
 {
-    if (NULL == m_pQOpenGLTexture)
+    if (nullptr == m_pQOpenGLTexture)
 	{
 		glLoadTexture();
 	}
@@ -316,15 +316,16 @@ QImage GLC_Texture::loadFromFile(const QString& fileName)
 // Non-member stream operator
 QDataStream &operator<<(QDataStream &stream, const GLC_Texture &texture)
 {
-	stream << texture.fileName();
+    stream << texture.fileName();
 
 	return stream;
 }
 QDataStream &operator>>(QDataStream &stream, GLC_Texture &texture)
 {
-	QString fileName;
-	stream >> fileName;
-	texture= GLC_Texture(fileName);
+    QString fileName;
+    stream >> fileName;
+
+    texture= GLC_Texture(fileName);
 
 	return stream;
 }

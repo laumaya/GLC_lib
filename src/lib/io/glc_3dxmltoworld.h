@@ -149,6 +149,9 @@ public:
 	//! Create an GLC_World from an input 3DXML File
 	GLC_World* createWorldFrom3dxml(QFile &, bool StructureOnly, bool getExternalRef= false);
 
+    //! Create an GLC_World from an input 3DXML File
+    GLC_World* createWorldFrom3dxml(QIODevice* pDevice);
+
 	//! Create 3DRep from an 3DXML rep
     GLC_3DRep create3DrepFrom3dxmlRep(const QString&, bool useZipMutex= true);
 
@@ -407,6 +410,8 @@ private:
     bool m_UseZipMutex;
 
 	unsigned int m_productGroupRootId;
+
+    bool m_UseNative;
 
 };
 
