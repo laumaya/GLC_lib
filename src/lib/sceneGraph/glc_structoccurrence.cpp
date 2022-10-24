@@ -454,7 +454,56 @@ GLC_BoundingBox GLC_StructOccurrence::boundingBox() const
 		}
 	}
 
-	return boundingBox;
+    return boundingBox;
+}
+
+GLC_BoundingBox GLC_StructOccurrence::obbBoundingBox() const
+{
+    GLC_BoundingBox subject;
+
+    if (nullptr != m_pWorldHandle)
+    {
+        if (has3DViewInstance())
+        {
+            Q_ASSERT(m_pWorldHandle->collection()->contains(id()));
+            subject= m_pWorldHandle->collection()->instanceHandle(id())->boundingBox();
+        }
+        else
+        {
+            if (hasChild())
+            {
+                const QList<GLC_StructOccurrence*> childrenList(children());
+
+                const bool changePosition= (m_AbsoluteMatrix != GLC_Matrix4x4());
+                if (changePosition)
+                {
+                    const GLC_Matrix4x4 saveMatrix(m_AbsoluteMatrix);
+                    const_cast<GLC_StructOccurrence*>(this)->m_AbsoluteMatrix.setToIdentity();
+                    for (GLC_StructOccurrence* pOcc : childrenList)
+                    {
+                        pOcc->updateChildrenAbsoluteMatrix();
+                        GLC_BoundingBox childBbox(pOcc->boundingBox());
+                        subject.combine(childBbox);
+                    }
+                    const_cast<GLC_StructOccurrence*>(this)->m_AbsoluteMatrix= saveMatrix;
+                    for (GLC_StructOccurrence* pOcc : childrenList)
+                    {
+                        pOcc->updateChildrenAbsoluteMatrix();
+                    }
+                    subject.transform(m_AbsoluteMatrix);
+                }
+                else
+                {
+                    for (GLC_StructOccurrence* pOcc : childrenList)
+                    {
+                        subject.combine(pOcc->boundingBox());
+                    }
+                }
+            }
+        }
+    }
+
+    return subject;
 }
 
 unsigned int GLC_StructOccurrence::nodeCount() const

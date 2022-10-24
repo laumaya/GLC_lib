@@ -35,11 +35,91 @@
 
 class GLC_Plane;
 
+class GLC_LIB_EXPORT GLC_Obb
+{
+public:
+    bool getCollision(const GLC_Obb& other) const;
+
+public:
+    const GLC_Vector3d& position() const
+    {return m_Position;}
+
+    const GLC_Vector3d& xAxis() const
+    {return m_XAxis;}
+
+    const GLC_Vector3d& yAxis() const
+    {return m_YAxis;}
+
+    const GLC_Vector3d& zAxis() const
+    {return m_ZAxis;}
+
+    const GLC_Vector3d& halfSize() const
+    {return m_HalfSize;}
+
+public:
+    void setPosition(const GLC_Vector3d& value)
+    {m_Position= value;}
+
+    void setXAxis(const GLC_Vector3d& value)
+    {m_XAxis= value;}
+
+    void setYAxis(const GLC_Vector3d& value)
+    {m_YAxis= value;}
+
+    void setZAxis(const GLC_Vector3d& value)
+    {m_ZAxis= value;}
+
+    void setHalfSize(const GLC_Vector3d& value)
+    {m_HalfSize= value;}
+
+private:
+    bool getSeparatingPlane(const GLC_Vector3d& rPos, const GLC_Vector3d& plane, const GLC_Obb& other) const;
+
+private:
+    GLC_Vector3d m_Position;
+    GLC_Vector3d m_XAxis;
+    GLC_Vector3d m_YAxis;
+    GLC_Vector3d m_ZAxis;
+    GLC_Vector3d m_HalfSize;
+};
+
+inline bool GLC_Obb::getCollision(const GLC_Obb& other) const
+{
+    const GLC_Vector3d rPos(other.position() - position());
+
+    return !(getSeparatingPlane(rPos, xAxis(), other) ||
+             getSeparatingPlane(rPos, yAxis(), other) ||
+             getSeparatingPlane(rPos, zAxis(), other) ||
+             getSeparatingPlane(rPos, other.xAxis(), other) ||
+             getSeparatingPlane(rPos, other.yAxis(), other) ||
+             getSeparatingPlane(rPos, other.zAxis(), other) ||
+             getSeparatingPlane(rPos, xAxis() ^ other.xAxis(), other) ||
+             getSeparatingPlane(rPos, xAxis() ^ other.yAxis(), other) ||
+             getSeparatingPlane(rPos, xAxis() ^ other.zAxis(), other) ||
+             getSeparatingPlane(rPos, yAxis() ^ other.xAxis(), other) ||
+             getSeparatingPlane(rPos, yAxis() ^ other.yAxis(), other) ||
+             getSeparatingPlane(rPos, yAxis() ^ other.zAxis(), other) ||
+             getSeparatingPlane(rPos, zAxis() ^ other.xAxis(), other) ||
+             getSeparatingPlane(rPos, zAxis() ^ other.yAxis(), other) ||
+             getSeparatingPlane(rPos, zAxis() ^ other.zAxis(), other));
+}
+
+inline bool GLC_Obb::getSeparatingPlane(const GLC_Vector3d& rPos, const GLC_Vector3d& plane, const GLC_Obb& other) const
+{
+    return (fabs(rPos * plane) >
+            (fabs((xAxis() * halfSize().x()) * plane) +
+             fabs((yAxis() * halfSize().y()) * plane) +
+             fabs((zAxis() * halfSize().z()) * plane) +
+             fabs((other.xAxis() * other.halfSize().x()) * plane) +
+             fabs((other.yAxis() * other.halfSize().y()) * plane) +
+             fabs((other.zAxis() * other.halfSize().z()) * plane)));
+}
+
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_BoundingBox
 /*! \brief GLC_BoundingBox : Geometry bounding box*/
 
-/*! An GLC_BoundingBox is a non oriented bounding box
+/*! An GLC_BoundingBox is a axis oriented bounding box
 */
 
 //////////////////////////////////////////////////////////////////////
@@ -58,7 +138,7 @@ public:
     GLC_BoundingBox();
 
     //! Construct a bounding box from  the given bounding box
-    GLC_BoundingBox(const GLC_BoundingBox& boundingBox);
+    GLC_BoundingBox(const GLC_BoundingBox& other);
 
     //! Construct a bounding box from the given 3d point
     GLC_BoundingBox(const GLC_Point3d& lower, const GLC_Point3d& upper);
@@ -90,6 +170,8 @@ public:
 
     //! Return true if the given bounding box intersect this bounding box
     inline bool intersect(const GLC_BoundingBox& boundingBox, double epsilon= glc::EPSILON) const;
+
+    inline bool intersectObb(const GLC_BoundingBox& other) const;
 
     inline bool fuzzyIntersect(const GLC_BoundingBox& boundingBox) const;
 
@@ -160,6 +242,10 @@ public:
 
 //@}
 
+private:
+    inline void setObb();
+    inline void updateObb(const GLC_Matrix4x4& matrix);
+
 //////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
@@ -172,6 +258,8 @@ private:
 
     //! Flag to know if this bounding box is empty
     bool m_IsEmpty;
+
+    GLC_Obb m_Obb;
 
     //! This class chunk id
     static quint32 m_ChunkId;
@@ -208,6 +296,11 @@ bool GLC_BoundingBox::intersect(const GLC_BoundingBox& boundingBox, double epsil
         subject= subject && ((distanceZ < deltaZ) && !glc::compare(distanceZ, deltaZ, epsilon));
     }
     return subject;
+}
+
+inline bool GLC_BoundingBox::intersectObb(const GLC_BoundingBox& other) const
+{
+    return m_Obb.getCollision(other.m_Obb);
 }
 
 bool GLC_BoundingBox::fuzzyIntersect(const GLC_BoundingBox& boundingBox) const
@@ -260,6 +353,18 @@ bool GLC_BoundingBox::operator == (const GLC_BoundingBox& other) const
 
     return subject;
 }
+
+inline void GLC_BoundingBox::setObb()
+{
+    m_Obb.setPosition(this->center());
+    m_Obb.setXAxis(glc::X_AXIS);
+    m_Obb.setYAxis(glc::Y_AXIS);
+    m_Obb.setZAxis(glc::Z_AXIS);
+    m_Obb.setHalfSize(size() * 0.5);
+
+}
+
+
 
 GLC_Point3d GLC_BoundingBox::center(void) const
 {

@@ -167,6 +167,8 @@ public:
 	//! Return the occurrence Bounding Box
 	GLC_BoundingBox boundingBox() const;
 
+    GLC_BoundingBox obbBoundingBox() const;
+
 	//! Return the occurrence number of this occurrence
 	inline unsigned int occurrenceNumber() const
 	{return m_OccurrenceNumber;}

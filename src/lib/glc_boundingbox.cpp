@@ -33,26 +33,29 @@ quint32 GLC_BoundingBox::m_ChunkId= 0xA707;
 //////////////////////////////////////////////////////////////////////
 
 GLC_BoundingBox::GLC_BoundingBox()
-: m_Lower(0, 0, 0)
-, m_Upper(0, 0, 0)
-, m_IsEmpty(true)
+    : m_Lower(0, 0, 0)
+    , m_Upper(0, 0, 0)
+    , m_IsEmpty(true)
+    , m_Obb()
 {
 
 }
 
-GLC_BoundingBox::GLC_BoundingBox(const GLC_BoundingBox& boundingBox)
-: m_Lower(boundingBox.m_Lower)
-, m_Upper(boundingBox.m_Upper)
-, m_IsEmpty(boundingBox.m_IsEmpty)
+GLC_BoundingBox::GLC_BoundingBox(const GLC_BoundingBox& other)
+    : m_Lower(other.m_Lower)
+    , m_Upper(other.m_Upper)
+    , m_IsEmpty(other.m_IsEmpty)
+    , m_Obb(other.m_Obb)
 {
 }
 
 GLC_BoundingBox::GLC_BoundingBox(const GLC_Point3d& lower, const GLC_Point3d& upper)
-: m_Lower(lower)
-, m_Upper(upper)
-, m_IsEmpty(false)
+    : m_Lower(lower)
+    , m_Upper(upper)
+    , m_IsEmpty(false)
+    , m_Obb()
 {
-
+    setObb();
 }
 
 GLC_BoundingBox::~GLC_BoundingBox()
@@ -121,6 +124,8 @@ bool GLC_BoundingBox::intersect(const GLC_Plane& plane) const
     return subject;
 }
 
+
+
 GLC_Vector3d GLC_BoundingBox::size() const
 {
     GLC_Vector3d subject(xLength(), yLength(), zLength());
@@ -158,6 +163,7 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3d& point)
             m_Upper.setVect(upperX, upperY, upperZ);
         }
     }
+    setObb();
     return *this;
 }
 
@@ -188,6 +194,7 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3df& pointf)
             m_Upper.setVect(upperX, upperY, upperZ);
         }
     }
+    setObb();
     return *this;
 }
 
@@ -218,6 +225,7 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
             m_Upper.setVect(upperX, upperY, upperZ);
         }
     }
+    setObb();
 
     return *this;
 }
@@ -258,6 +266,8 @@ GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
 
         m_Lower= boundingBox.m_Lower;
         m_Upper= boundingBox.m_Upper;
+
+        updateObb(matrix);
     }
 
     return *this;
@@ -268,6 +278,7 @@ void GLC_BoundingBox::clear()
     m_Lower= GLC_Point3d();
     m_Upper= GLC_Point3d();
     m_IsEmpty= true;
+    setObb();
 }
 
 QDataStream &operator<<(QDataStream &stream, const GLC_BoundingBox &bBox)
@@ -295,3 +306,16 @@ QDataStream &operator>>(QDataStream &stream, GLC_BoundingBox &bBox)
     return stream;
 }
 
+void GLC_BoundingBox::updateObb(const GLC_Matrix4x4& matrix)
+{
+    m_Obb.setPosition(matrix  * m_Obb.position());
+    const GLC_Matrix4x4 rotationMatrix(matrix.rotationMatrix());
+    m_Obb.setXAxis(rotationMatrix * m_Obb.xAxis());
+    m_Obb.setYAxis(rotationMatrix * m_Obb.yAxis());
+    m_Obb.setZAxis(rotationMatrix * m_Obb.zAxis());
+    GLC_Vector3d halfSize(m_Obb.halfSize());
+    halfSize.setX(halfSize.x() * matrix.scalingX());
+    halfSize.setY(halfSize.y() * matrix.scalingY());
+    halfSize.setZ(halfSize.z() * matrix.scalingZ());
+    m_Obb.setHalfSize(halfSize);
+}
