@@ -218,6 +218,8 @@ public:
     //! Return the size of this bounding box
     GLC_Vector3d size() const;
 
+    const GLC_Obb& obb() const
+    {return m_Obb;}
 
 //@}
 

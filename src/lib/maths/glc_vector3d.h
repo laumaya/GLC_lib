@@ -484,7 +484,7 @@ double GLC_Vector3d::angleWithVect(GLC_Vector3d other) const
     other.normalize();
 
     // Rotation axis
-    const GLC_Vector3d dir(thisVect ^ other);
+    const GLC_Vector3d dir((thisVect ^ other).normalize());
     // Check if the rotation axis vector is null
     if (!dir.isNull())
     {
@@ -508,7 +508,7 @@ double GLC_Vector3d::angleWithVect2(GLC_Vector3d other) const
     else if (other != thisVect)
     {
         // Rotation axis
-        const GLC_Vector3d dir(thisVect ^ other);
+        const GLC_Vector3d dir((thisVect ^ other).normalize());
         // Check if the rotation axis vector is null
         if (!dir.isNull())
         {
