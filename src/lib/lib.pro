@@ -33,6 +33,10 @@ INCLUDEPATH += ./3rdparty/quazip
 
 RESOURCES += glc_lib.qrc
 
+macx {
+    # make the system find the library in the @rpath
+    QMAKE_LFLAGS_SONAME = -Wl,-install_name,@rpath/
+}
 # Input					
 
 HEADERS_QUAZIP += \
