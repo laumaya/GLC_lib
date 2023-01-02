@@ -113,15 +113,15 @@ public:
 	{return m_MeshData.lodCount();}
 
 	//! Return the Position Vector
-	inline GLfloatVector positionVector() const
+    const GLfloatVector& positionVector() const
 	{return m_MeshData.positionVector();}
 
 	//! Return the normal Vector
-	inline GLfloatVector normalVector() const
+    const GLfloatVector& normalVector() const
 	{return m_MeshData.normalVector();}
 
 	//! Return the texel Vector
-	inline GLfloatVector texelVector() const
+    const GLfloatVector& texelVector() const
 	{return m_MeshData.texelVector();}
 
 	//! Return true if the mesh contains triangles in the specified LOD

@@ -38,15 +38,15 @@ quint32 GLC_Mesh::m_ChunkId= 0xA701;
 class SharpEdgeContainer
 {
 public:
-    SharpEdgeContainer(GLC_Triangle* pTriangle, QList<GLC_Triangle>* pTriangleList, double angleThresold, int index)
+    SharpEdgeContainer(GLC_Triangle* pTriangle, QVector<GLC_Triangle>* pTriangles, double angleThresold, int index)
         : m_pTriangle(pTriangle)
-        , m_pTriangleList(pTriangleList)
+        , m_pTriangles(pTriangles)
         , m_AngleThresold(angleThresold)
         , m_Index(index)
     {}
 
     GLC_Triangle* m_pTriangle;
-    QList<GLC_Triangle>* m_pTriangleList;
+    QVector<GLC_Triangle>* m_pTriangles;
     double m_AngleThresold;
     int m_Index;
 };
@@ -820,8 +820,8 @@ void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
     glc::comparedPrecision= precision;
 
     m_WireData.clear();
-    const GLfloatVector& positionVector= *(m_MeshData.positionVectorHandle());
-    const GLfloatVector& normalVector= *(m_MeshData.normalVectorHandle());
+    const GLfloatVector& positionVector= m_MeshData.positionVector();
+    const GLfloatVector& normalVector= m_MeshData.normalVector();
 
     QList<GLC_uint> materialIdList= this->materialIds();
     const int materialCount= materialIdList.count();
@@ -834,7 +834,7 @@ void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
 
     const int indexCount= indexList.count();
 
-    QList<GLC_Triangle> triangles;
+    QVector<GLC_Triangle> triangles;
     QList<SharpEdgeContainer*> sharpEdgeContainerList;
 
     for (int tri1Index= 0; tri1Index < indexCount; tri1Index+=3)
@@ -1893,11 +1893,11 @@ IndexList GLC_Mesh::equivalentTrianglesIndexOfFansIndex(int lodIndex, GLC_uint m
 
 SharpEdgeContainer* GLC_Mesh::computeSharEdgeMappedFunction(SharpEdgeContainer* pContainer)
 {
-    const int count= pContainer->m_pTriangleList->count();
+    const int count= pContainer->m_pTriangles->count();
     const int startIndex= pContainer->m_Index + 1;
     for (int i= startIndex; i < count; ++i)
     {
-        GLC_Triangle& triangle2= pContainer->m_pTriangleList->operator [](i);
+        GLC_Triangle& triangle2= pContainer->m_pTriangles->operator [](i);
         pContainer->m_pTriangle->setSharpEdge(&triangle2, pContainer->m_AngleThresold);
     }
 

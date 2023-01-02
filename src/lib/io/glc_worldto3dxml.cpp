@@ -711,7 +711,7 @@ void GLC_WorldTo3dxml::writeGeometry(const GLC_Mesh* pMesh)
 	m_pOutStream->writeStartElement("VertexBuffer");
 	{
 		// Get positions
-		GLfloatVector positionVector= pMesh->positionVector();
+        const GLfloatVector& positionVector= pMesh->positionVector();
 		QString positions;
 		const int size= positionVector.size();
 		for (int i= 0; i < size; i+=3)

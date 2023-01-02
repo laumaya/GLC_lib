@@ -293,7 +293,7 @@ Lib3dsMesh* GLC_WorldTo3ds::create3dsMeshFromGLC_Mesh(GLC_Mesh* pMesh, const QSt
 
 	const int stride= 3;
 
-	GLfloatVector vertice= pMesh->positionVector();
+    const GLfloatVector& vertice= pMesh->positionVector();
     const int pointsCount= vertice.count() / stride;
 
     // Add points to the 3DS mesh

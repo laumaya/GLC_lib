@@ -116,7 +116,7 @@ bool GLC_3DViewCollection::unBindShader(GLC_uint shaderId)
 bool GLC_3DViewCollection::unBindAllShader()
 {
     bool subject= true;
-	HashList::iterator iEntry= m_ShadedPointerViewInstanceHash.begin();
+    HashList::const_iterator iEntry= m_ShadedPointerViewInstanceHash.constBegin();
 	QList<GLuint> shaderList;
     while (iEntry != m_ShadedPointerViewInstanceHash.constEnd())
     {

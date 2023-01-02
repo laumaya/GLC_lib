@@ -115,9 +115,9 @@ csgjs_model *GLC_CsgHelper::csgModelFromMesh(const GLC_Mesh *pMesh, const GLC_Ma
 {
     csgjs_model* pSubject= new csgjs_model;
 
-    const GLfloatVector positionVector= pMesh->positionVector();
-    const GLfloatVector normalVector= pMesh->normalVector();
-    const GLfloatVector texelVector= pMesh->texelVector();
+    const GLfloatVector& positionVector= pMesh->positionVector();
+    const GLfloatVector& normalVector= pMesh->normalVector();
+    const GLfloatVector& texelVector= pMesh->texelVector();
 
     QList<GLC_uint> materialIdList= pMesh->materialIds();
     const int materialCount= materialIdList.count();

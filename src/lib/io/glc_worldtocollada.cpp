@@ -456,7 +456,7 @@ void GLC_WorldToCollada::writeMeshPosition(GLC_Mesh* pMesh, const QString& meshI
     m_Writer.writeAttribute(ColladaElement::countAttribute, QString::number(positionVector.count()));
 
     QString positions;
-    for (const GLfloat& value : positionVector)
+    for (const GLfloat& value : qAsConst(positionVector))
     {
         positions.append(QString::number(value) + ' ');
     }

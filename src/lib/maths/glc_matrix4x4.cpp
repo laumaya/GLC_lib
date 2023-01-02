@@ -219,13 +219,6 @@ QQuaternion GLC_Matrix4x4::quaternion() const
 			}
 			else
             {	// column 2 greater
-
-		        s= sqrt(1.0 + rotMat.m_Matrix[10] - rotMat.m_Matrix[0] - rotMat.m_Matrix[5]) * 2.0;
-		        w = (rotMat.m_Matrix[1] + rotMat.m_Matrix[4]) / s;
-		        x = (rotMat.m_Matrix[2] + rotMat.m_Matrix[8]) / s;
-		        y = (rotMat.m_Matrix[6] + rotMat.m_Matrix[9]) / s;
-                z = 0.25 / s;
-
                 s= 2.0 * sqrt( 1.0 + rotMat.m_Matrix[10] - rotMat.m_Matrix[0] - rotMat.m_Matrix[5] );
                 w= (rotMat.m_Matrix[4] - rotMat.m_Matrix[1] ) / s;
                 x= (rotMat.m_Matrix[2] + rotMat.m_Matrix[8] ) / s;

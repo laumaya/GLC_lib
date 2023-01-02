@@ -86,15 +86,15 @@ public:
 	{return m_LodList.size();}
 
 	//! Return the Position Vector
-    GLfloatVector positionVector() const
+    const GLfloatVector& positionVector() const
     {return m_Positions;}
 
 	//! Return the normal Vector
-    GLfloatVector normalVector() const
+    const GLfloatVector& normalVector() const
     {return m_Normals;}
 
 	//! Return the texel Vector
-    GLfloatVector texelVector() const
+    const GLfloatVector& texelVector() const
     {return m_Texels;}
 
 	//! Return the color Vector
