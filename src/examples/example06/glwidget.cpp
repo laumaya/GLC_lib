@@ -29,11 +29,6 @@
 
 #include "glwidget.h"
 
-// For VSYNC problem under Mac OS X
-#if defined(Q_OS_MAC)
-#include <OpenGL.h>
-#endif
-
 GLWidget::GLWidget(QWidget *p_parent)
 : QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)), p_parent)
 , m_Light()
@@ -61,20 +56,11 @@ GLWidget::~GLWidget()
 
 void GLWidget::initializeGL()
 {
-
-	// For VSYNC problem under Mac OS X
-	#if defined(Q_OS_MAC)
-	const GLint swapInterval = 1;
-	CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &swapInterval);
-	#endif
-
 	// OpenGL initialisation
 	m_GlView.initGl();
 
 	// Reframe the scene on the loaded mesh
 	m_GlView.reframe(m_World.boundingBox());
-
-
 }
 
 void GLWidget::paintGL()

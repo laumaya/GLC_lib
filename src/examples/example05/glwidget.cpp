@@ -28,10 +28,6 @@
 
 #include "glwidget.h"
 
-// For VSYNC problem under Mac OS X
-#if defined(Q_OS_MAC)
-#include <OpenGL.h>
-#endif
 
 GLWidget::GLWidget(QWidget *p_parent)
 : QGLWidget(new QGLContext(QGLFormat()), p_parent)
@@ -63,13 +59,6 @@ GLWidget::~GLWidget()
 
 void GLWidget::initializeGL()
 {
-	// For VSYNC problem under Mac OS X
-	#if defined(Q_OS_MAC)
-	const GLint swapInterval = 1;
-	CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &swapInterval);
-	#endif
-
-
 	// OpenGL initialisation from NEHE production
 	m_GlView.initGl();
 

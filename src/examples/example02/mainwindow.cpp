@@ -22,12 +22,40 @@
 
 #include <QtGui>
 
+#include <QtDebug>
+#include <QList>
+#include <GLC_GeomTools>
+#include <GLC_Point2d>
+
+
 #include "mainwindow.h"
 #include "glwidget.h"
 
 MainWindow::MainWindow()
 : p_GLWidget(NULL)
 {	
-	p_GLWidget= new GLWidget(this);
-	setCentralWidget(p_GLWidget);	
+
+    // Circle 1
+    GLC_Point2d p0(150.0, 0.0);
+    GLC_Point2d p1(180, 100.0);
+    double r0= 80.0;
+    double r1= 80.0;
+    QList<GLC_Point2d> intersections= glc::findIntersectionBetwen2Circle(p0, r0, p1, r1);
+    if (intersections.isEmpty())
+    {
+        qDebug() << "No intersection";
+    }
+    else
+    {
+        qDebug() << "Intersection count = " << intersections.count();
+        for (int i= 0; i < intersections.count(); ++i)
+        {
+            qDebug().noquote() << intersections.at(i).toString();
+        }
+    }
+
+
+
+    //p_GLWidget= new GLWidget(this);
+    //setCentralWidget(p_GLWidget);
 }

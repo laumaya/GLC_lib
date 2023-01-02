@@ -27,11 +27,6 @@
 
 #include "glwidget.h"
 
-// For VSYNC problem under Mac OS X
-#if defined(Q_OS_MAC)
-#include <OpenGL.h>
-#endif
-
 GLWidget::GLWidget(QWidget *pParent)
 : QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)), pParent)
 , m_Circle(GLC_Factory::instance()->createCircle(0.2))  // Circle radius
@@ -47,14 +42,7 @@ GLWidget::~GLWidget()
 void GLWidget::initializeGL()
 {
 
-    // For VSYNC problem under Mac OS X
-    #if defined(Q_OS_MAC)
-    const GLint swapInterval = 1;
-    CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &swapInterval);
-    #endif
-
     m_GlView.initGl();
-
 }
 
 void GLWidget::paintGL()

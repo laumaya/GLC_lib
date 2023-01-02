@@ -29,11 +29,6 @@
 
 #include "glwidget.h"
 
-// For VSYNC problem under Mac OS X
-#if defined(Q_OS_MAC)
-#include <OpenGL.h>
-#endif
-
 GLWidget::GLWidget(QWidget *p_parent)
 : QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)), p_parent)
 , m_Light()
@@ -64,12 +59,6 @@ GLWidget::~GLWidget()
 
 void GLWidget::initializeGL()
 {
-	// For VSYNC problem under Mac OS X
-	#if defined(Q_OS_MAC)
-	const GLint swapInterval = 1;
-	CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &swapInterval);
-	#endif
-
 	// OpenGL initialization
 	m_GlView.initGl();
 	// to create texture a rendering context must be present.
@@ -118,7 +107,7 @@ void GLWidget::CreateScene()
     // Load "example07.obj"
     QFile fileEx07(QLatin1String(":example07.obj"));
     m_World= GLC_Factory::instance()->createWorldFromFile(fileEx07);
-    m_World.collection()->instancesHandle().first()->geomAt(0)->firstMaterial()->setTexture(pTexture);
+    m_World.collection()->instancesHandle().constFirst()->geomAt(0)->firstMaterial()->setTexture(pTexture);
 
 }
 

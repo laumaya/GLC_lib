@@ -28,14 +28,10 @@
 #include <GLC_UserInput>
 #include <GLC_Context>
 #include <GLC_CsgHelper>
+#include <GLC_LatheMesh>
 
 // GLC_Lib Exception
 #include <GLC_Exception>
-
-// For VSYNC problem under Mac OS X
-#if defined(Q_OS_MAC)
-#include <OpenGL.h>
-#endif
 
 GLWidget::GLWidget(QWidget *p_parent)
 : QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)),p_parent)
@@ -53,11 +49,35 @@ GLWidget::GLWidget(QWidget *p_parent)
 
     //m_Collection.add(m_Cylinder);
 
-    GLC_Mesh* pMesh1= new GLC_Cylinder(2.0, 2.0);
-    GLC_Mesh* pMesh2= new GLC_Cylinder(1.0, 3.0);
-    GLC_Mesh* pMesh3= GLC_CsgHelper::soustract(pMesh1, GLC_Matrix4x4(), pMesh2, GLC_Matrix4x4());
+//    GLC_Mesh* pMesh1= new GLC_Cylinder(2.0, 2.0);
+//    pMesh1->update();
+//    GLC_Mesh* pMesh2= new GLC_Cylinder(1.0, 3.0);
+//    pMesh2->update();
+//    GLC_Mesh* pMesh3= GLC_CsgHelper::soustract(pMesh1, GLC_Matrix4x4(), pMesh2, GLC_Matrix4x4());
 
-    GLC_3DViewInstance instance(pMesh3);
+//    GLC_3DViewInstance instance(pMesh3);
+//    m_Collection.add(instance);
+
+    QList<GLC_Point3d> profile;
+    GLC_Point3d p1(0.0, 0.0, -3.5);
+    GLC_Point3d p2(47.5, 0.0, -3.5);
+    GLC_Point3d p3(47.5, 0.0, -5.0);
+    GLC_Point3d p4(48.46, 0.0, -5.0);
+    GLC_Point3d p5(50.0, 0.0, -2.8);
+    GLC_Point3d p6(50.0, 0.0, 2.8);
+    GLC_Point3d p7(48.46, 0.0, 5.0);
+    GLC_Point3d p8(47.5, 0.0, 5.0);
+    GLC_Point3d p9(47.5, 0.0, 3.5);
+    GLC_Point3d p10(0.0, 0.0, 3.5);
+
+
+    profile << p1 << p2 << p3 << p4 << p5 << p6 << p7 << p8 << p9 << p10;
+
+    GLC_Mesh* pMesh= new GLC_LatheMesh(profile);
+    GLC_BoundingBox bBox(pMesh->boundingBox());
+    qDebug().noquote() << bBox.lowerCorner().toString();
+    qDebug().noquote() << bBox.upperCorner().toString();
+    GLC_3DViewInstance instance(pMesh);
     m_Collection.add(instance);
 
 	// Set up mover controller
@@ -76,12 +96,6 @@ GLWidget::~GLWidget()
 
 void GLWidget::initializeGL()
 {
-	// For VSYNC problem under Mac OS X
-	#if defined(Q_OS_MAC)
-	const GLint swapInterval = 1;
-	CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &swapInterval);
-	#endif
-
 	// OpenGL initialisation
 	m_GlView.initGl();
 	// Reframe to the cylinder bounding Box
@@ -100,7 +114,7 @@ void GLWidget::paintGL()
 	try
 	{
 		// Set the opengl clipping plane
-		m_GlView.setDistMinAndMax(m_Cylinder.boundingBox());
+        m_GlView.setDistMinAndMax(m_Collection.boundingBox());
 
 		// define the light
 		m_light.glExecute();
@@ -109,7 +123,7 @@ void GLWidget::paintGL()
 		m_GlView.glExecuteCam();
 
 		// Display the cylinder
-        m_Collection.render(0, glc::ShadingFlag);
+        m_Collection.render(0, glc::WireRenderFlag);
 
         m_GlView.renderText(m_Cylinder.boundingBox().center(), "Hello Qt I'm Laumaya", Qt::black, QFont(), devicePixelRatio());
 

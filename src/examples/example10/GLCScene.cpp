@@ -30,11 +30,6 @@
 
 #include "GLCScene.h"
 
-// For VSYNC problem under Mac OS X
-#if defined(Q_OS_MAC)
-#include <OpenGL.h>
-#endif
-
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
 #endif
@@ -296,12 +291,6 @@ void GLCScene::updateLabels(const QString& filePath)
 
 void GLCScene::initGl()
 {
-    // For VSYNC problem under Mac OS X
-#if defined(Q_OS_MAC)
-    const GLint swapInterval = 1;
-    CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &swapInterval);
-#endif
-
     m_Viewport.initGl();
     glEnable(GL_NORMALIZE);
     try
@@ -359,7 +348,7 @@ void GLCScene::loadModel()
     filters.append(tr("Sony Collada(*.dae *.DAE)"));
     filters.append(tr("GLC_lib Binary Serialized Representation(*.BSRep)"));
 
-    QString filePath = QFileDialog::getOpenFileName(views().first(), tr("Open model file"), m_CurrentPath, filters.join("\n"));
+    QString filePath = QFileDialog::getOpenFileName(views().constFirst(), tr("Open model file"), m_CurrentPath, filters.join("\n"));
     if (!filePath.isEmpty())
     {
         m_CurrentFilePath= filePath;
