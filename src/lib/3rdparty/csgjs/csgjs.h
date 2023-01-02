@@ -25,6 +25,7 @@
 #include <math.h>
 
 #include <QList>
+#include <QVector>
 
 struct csgjs_vector
 {
@@ -44,7 +45,7 @@ struct csgjs_vertex
 
 struct csgjs_model
 {
-    QList<csgjs_vertex> vertices;
+    QVector<csgjs_vertex> vertices;
     QList<int> indices;
 };
 

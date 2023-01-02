@@ -38,7 +38,9 @@ struct csgjs_plane
     csgjs_plane(const csgjs_vector & a, const csgjs_vector & b, const csgjs_vector & c);
     bool ok() const;
     void flip();
-    void splitPolygon(const csgjs_polygon & polygon, QList<csgjs_polygon> & coplanarFront, QList<csgjs_polygon> & coplanarBack, QList<csgjs_polygon> & front, QList<csgjs_polygon> & back) const;
+    void splitPolygon(const csgjs_polygon & polygon, QVector<csgjs_polygon>& coplanarFront
+                      , QVector<csgjs_polygon>& coplanarBack, QVector<csgjs_polygon>& front
+                      , QVector<csgjs_polygon>& back) const;
 };
 
 // Represents a convex polygon. The vertices used to initialize a polygon must
@@ -51,12 +53,12 @@ struct csgjs_plane
 // This can be used to define per-polygon properties (such as surface color).
 struct csgjs_polygon
 {
-    QList<csgjs_vertex> vertices;
+    QVector<csgjs_vertex> vertices;
     csgjs_plane plane;
     void flip();
 
     csgjs_polygon();
-    csgjs_polygon(const QList<csgjs_vertex> & list);
+    csgjs_polygon(const QVector<csgjs_vertex>& list);
 };
 
 // Holds a node in a BSP tree. A BSP tree is built from a collection of polygons
@@ -66,21 +68,21 @@ struct csgjs_polygon
 // no distinction between internal and leaf nodes.
 struct csgjs_csgnode
 {
-    QList<csgjs_polygon> polygons;
+    QVector<csgjs_polygon> polygons;
     csgjs_csgnode * front;
     csgjs_csgnode * back;
     csgjs_plane plane;
 
     csgjs_csgnode();
-    csgjs_csgnode(const QList<csgjs_polygon> & list);
+    csgjs_csgnode(const QVector<csgjs_polygon> & polygons);
     ~csgjs_csgnode();
 
     csgjs_csgnode * clone() const;
     void clipTo(const csgjs_csgnode * other);
     void invert();
-    void build(const QList<csgjs_polygon> & polygon);
-    QList<csgjs_polygon> clipPolygons(const QList<csgjs_polygon> & list) const;
-    QList<csgjs_polygon> allPolygons() const;
+    void build(const QVector<csgjs_polygon>& polygon);
+    QVector<csgjs_polygon> clipPolygons(const QVector<csgjs_polygon> & polygons) const;
+    QVector<csgjs_polygon> allPolygons() const;
 };
 
 // Vector implementation
@@ -139,7 +141,7 @@ csgjs_plane::csgjs_plane(const csgjs_vector & a, const csgjs_vector & b, const c
 // `coplanarFront` or `coplanarBack` depending on their orientation with
 // respect to this plane. Polygons in front or in back of this plane go into
 // either `front` or `back`.
-void csgjs_plane::splitPolygon(const csgjs_polygon & polygon, QList<csgjs_polygon> & coplanarFront, QList<csgjs_polygon> & coplanarBack, QList<csgjs_polygon> & front, QList<csgjs_polygon> & back) const
+void csgjs_plane::splitPolygon(const csgjs_polygon & polygon, QVector<csgjs_polygon> & coplanarFront, QVector<csgjs_polygon> & coplanarBack, QVector<csgjs_polygon> & front, QVector<csgjs_polygon> & back) const
 {
     enum
     {
@@ -185,7 +187,7 @@ void csgjs_plane::splitPolygon(const csgjs_polygon & polygon, QList<csgjs_polygo
         }
     case SPANNING:
         {
-            QList<csgjs_vertex> f, b;
+            QVector<csgjs_vertex> f, b;
             for (int i = 0; i < polygon.vertices.size(); i++)
             {
                 int j = (i + 1) % polygon.vertices.size();
@@ -222,7 +224,7 @@ csgjs_polygon::csgjs_polygon()
 {
 }
 
-csgjs_polygon::csgjs_polygon(const QList<csgjs_vertex> & list) : vertices(list), plane(vertices[0].pos, vertices[1].pos, vertices[2].pos)
+csgjs_polygon::csgjs_polygon(const QVector<csgjs_vertex> & list) : vertices(list), plane(vertices[0].pos, vertices[1].pos, vertices[2].pos)
 {
 }
 
@@ -298,20 +300,20 @@ void csgjs_csgnode::invert()
 
 // Recursively remove all polygons in `polygons` that are inside this BSP
 // tree.
-QList<csgjs_polygon> csgjs_csgnode::clipPolygons(const QList<csgjs_polygon> & list) const
+QVector<csgjs_polygon> csgjs_csgnode::clipPolygons(const QVector<csgjs_polygon>& polygons) const
 {
-    if (!this->plane.ok()) return list;
-    QList<csgjs_polygon> list_front, list_back;
-    for (int i = 0; i < list.size(); i++)
+    if (!this->plane.ok()) return polygons;
+    QVector<csgjs_polygon> front, back;
+    for (int i = 0; i < polygons.size(); i++)
     {
-        this->plane.splitPolygon(list[i], list_front, list_back, list_front, list_back);
+        this->plane.splitPolygon(polygons[i], front, back, front, back);
     }
-    if (this->front) list_front = this->front->clipPolygons(list_front);
-    if (this->back) list_back = this->back->clipPolygons(list_back);
-    else list_back.clear();
+    if (this->front) front = this->front->clipPolygons(front);
+    if (this->back) back = this->back->clipPolygons(back);
+    else back.clear();
 
-    list_front.append(list_back);
-    return list_front;
+    front.append(back);
+    return front;
 }
 
 // Remove all polygons in this BSP tree that are inside the other BSP tree
@@ -324,15 +326,15 @@ void csgjs_csgnode::clipTo(const csgjs_csgnode * other)
 }
 
 // Return a list of all polygons in this BSP tree.
-QList<csgjs_polygon> csgjs_csgnode::allPolygons() const
+QVector<csgjs_polygon> csgjs_csgnode::allPolygons() const
 {
-    QList<csgjs_polygon> list = this->polygons;
-    QList<csgjs_polygon> list_front, list_back;
-    if (this->front) list_front = this->front->allPolygons();
-    if (this->back) list_back = this->back->allPolygons();
-    list.append(list_front);
-    list.append(list_back);
-    return list;
+    QVector<csgjs_polygon> polygons = this->polygons;
+    QVector<csgjs_polygon> front, back;
+    if (this->front) front = this->front->allPolygons();
+    if (this->back) back = this->back->allPolygons();
+    polygons.append(front);
+    polygons.append(back);
+    return polygons;
 }
 
 csgjs_csgnode * csgjs_csgnode::clone() const
@@ -349,24 +351,24 @@ csgjs_csgnode * csgjs_csgnode::clone() const
 // new polygons are filtered down to the bottom of the tree and become new
 // nodes there. Each set of polygons is partitioned using the first polygon
 // (no heuristic is used to pick a good split).
-void csgjs_csgnode::build(const QList<csgjs_polygon> & list)
+void csgjs_csgnode::build(const QVector<csgjs_polygon> & list)
 {
     if (!list.size()) return;
     if (!this->plane.ok()) this->plane = list[0].plane;
-    QList<csgjs_polygon> list_front, list_back;
+    QVector<csgjs_polygon> front, back;
     for (int i = 0; i < list.size(); i++)
     {
-        this->plane.splitPolygon(list[i], this->polygons, this->polygons, list_front, list_back);
+        this->plane.splitPolygon(list[i], this->polygons, this->polygons, front, back);
     }
-    if (list_front.size())
+    if (front.size())
     {
         if (!this->front) this->front = new csgjs_csgnode;
-        this->front->build(list_front);
+        this->front->build(front);
     }
-    if (list_back.size())
+    if (back.size())
     {
         if (!this->back) this->back = new csgjs_csgnode;
-        this->back->build(list_back);
+        this->back->build(back);
     }
 }
 
@@ -374,9 +376,9 @@ csgjs_csgnode::csgjs_csgnode() : front(0), back(0)
 {
 }
 
-csgjs_csgnode::csgjs_csgnode(const QList<csgjs_polygon> & list) : front(0), back(0)
+csgjs_csgnode::csgjs_csgnode(const QVector<csgjs_polygon>& polygons) : front(0), back(0)
 {
-    build(list);
+    build(polygons);
 }
 
 csgjs_csgnode::~csgjs_csgnode()
@@ -387,23 +389,23 @@ csgjs_csgnode::~csgjs_csgnode()
 
 // Public interface implementation
 
-inline static QList<csgjs_polygon> csgjs_modelToPolygons(const csgjs_model & model)
+inline static QVector<csgjs_polygon> csgjs_modelToPolygons(const csgjs_model & model)
 {
-    QList<csgjs_polygon> list;
+    QVector<csgjs_polygon> subject;
     for (int i = 0; i < model.indices.size(); i+= 3)
     {
-        QList<csgjs_vertex> triangle;
+        QVector<csgjs_vertex> triangle;
         for (int j = 0; j < 3; j++)
         {
             csgjs_vertex v = model.vertices[model.indices[i + j]];
             triangle.push_back(v);
         }
-        list.push_back(csgjs_polygon(triangle));
+        subject.push_back(csgjs_polygon(triangle));
     }
-    return list;
+    return subject;
 }
 
-inline static csgjs_model csgjs_modelFromPolygons(const QList<csgjs_polygon> & polygons)
+inline static csgjs_model csgjs_modelFromPolygons(const QVector<csgjs_polygon> & polygons)
 {
     csgjs_model model;
     int p = 0;
@@ -427,7 +429,7 @@ inline static csgjs_model csgjs_operation(const csgjs_model & a, const csgjs_mod
     csgjs_csgnode * A = new csgjs_csgnode(csgjs_modelToPolygons(a));
     csgjs_csgnode * B = new csgjs_csgnode(csgjs_modelToPolygons(b));
     csgjs_csgnode * AB = fun(A, B);
-    QList<csgjs_polygon> polygons = AB->allPolygons();
+    QVector<csgjs_polygon> polygons = AB->allPolygons();
     delete A; A = 0;
     delete B; B = 0;
     delete AB; AB = 0;
