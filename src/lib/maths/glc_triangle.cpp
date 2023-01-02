@@ -14,6 +14,7 @@ GLC_Triangle::GLC_Triangle()
     , m_Normals()
     , m_SharpEdge()
     , m_Mutex()
+    , m_Bbox()
 {
     m_SharpEdge[0]= -1;
     m_SharpEdge[1]= -1;
@@ -26,6 +27,7 @@ GLC_Triangle::GLC_Triangle(const GLC_Point3d& p1, const GLC_Point3d& p2, const G
     , m_Normals()
     , m_SharpEdge()
     , m_Mutex()
+    , m_Bbox()
 {
     m_Points[0]= p1;
     m_Points[1]= p2;
@@ -38,6 +40,8 @@ GLC_Triangle::GLC_Triangle(const GLC_Point3d& p1, const GLC_Point3d& p2, const G
     m_SharpEdge[0]= -1;
     m_SharpEdge[1]= -1;
     m_SharpEdge[2]= -1;
+
+    computeBbox();
 }
 
 GLC_Triangle::GLC_Triangle(const GLC_Triangle& other)
@@ -45,6 +49,7 @@ GLC_Triangle::GLC_Triangle(const GLC_Triangle& other)
     , m_Normals()
     , m_SharpEdge()
     , m_Mutex()
+    , m_Bbox(other.m_Bbox)
 {
     memcpy(m_Points, other.m_Points, sizeof(GLC_Point3d) * 3);
     memcpy(m_Normals, other.m_Normals, sizeof(GLC_Vector3d) * 3);
@@ -66,15 +71,7 @@ bool GLC_Triangle::operator ==(const GLC_Triangle& other) const
     return subject;
 }
 
-GLC_BoundingBox GLC_Triangle::boundingBox() const
-{
-    GLC_BoundingBox subject;
-    subject.combine(m_Points[0]);
-    subject.combine(m_Points[1]);
-    subject.combine(m_Points[2]);
 
-    return subject;
-}
 
 QList<GLC_Point3d> GLC_Triangle::sharpEdges() const
 {
@@ -112,6 +109,7 @@ GLC_Triangle& GLC_Triangle::operator =(const GLC_Triangle& other)
         memcpy(m_Points, other.m_Points, sizeof(GLC_Point3d) * 3);
         memcpy(m_Normals, other.m_Normals, sizeof(GLC_Vector3d) * 3);
         memcpy(m_SharpEdge, other.m_SharpEdge, sizeof(int) * 3);
+        m_Bbox= other.m_Bbox;
     }
 
     return *this;
@@ -187,6 +185,14 @@ void GLC_Triangle::setSharpEdge(int index, bool sharp)
     {
         m_SharpEdge[index]= ((sharp && (m_SharpEdge[index] == 1)) ? 1 : 0);
     }
+}
+
+void GLC_Triangle::computeBbox()
+{
+    m_Bbox.clear();
+    m_Bbox.combine(m_Points[0]);
+    m_Bbox.combine(m_Points[1]);
+    m_Bbox.combine(m_Points[2]);
 }
 
 
