@@ -28,8 +28,13 @@
 #include "../glc_global.h"
 
 // Quazip library
-#include "../quazip/quazip.h"
-#include "../quazip/quazipfile.h"
+#if defined(Q_OS_WIN)
+    #include "../quazip/quazip.h"
+    #include "../quazip/quazipfile.h"
+#else
+    #include "quazip5/quazip.h"
+    #include "quazip5/quazipfile.h"
+#endif
 
 #include <QtDebug>
 
