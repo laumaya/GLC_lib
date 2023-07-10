@@ -191,7 +191,7 @@ QString GLC_ColladaToWorld::getContent(const QString& element)
 		}
 	}
 
-	return Content.simplified();
+    return Content;
 }
 
 // Read the specified attribute
@@ -1752,7 +1752,7 @@ void GLC_ColladaToWorld::scaleNode(ColladaNode* pNode)
 	//qDebug() << "Scale Node";
 	Q_ASSERT(NULL != pNode);
 	// Load scale values
-	QStringList scaleStringList= getContent("scale").simplified().split(' ');
+    QStringList scaleStringList= getContent("scale").simplified().split(' ');
 	// A scale must contains 3 string
 	const int size= scaleStringList.size();
 	if (scaleStringList.size() != 3) throwException("Scale element must contains 3 floats and it's contains :" + QString::number(scaleStringList.size()));
@@ -1778,7 +1778,7 @@ void GLC_ColladaToWorld::rotateNode(ColladaNode* pNode)
 	//qDebug() << "Rotate Node";
 	Q_ASSERT(NULL != pNode);
 	// Load rotate values
-	QStringList rotateStringList= getContent("rotate").simplified().split(' ');
+    QStringList rotateStringList= getContent("rotate").simplified().split(' ');
 	// A rotate must contains 4 string (Axis Vector 3 + Angle)
 	const int size= rotateStringList.size();
 	if (rotateStringList.size() != 4) throwException("Rotate element must contains 4 floats and it's contains :" + QString::number(rotateStringList.size()));
@@ -1804,7 +1804,7 @@ void GLC_ColladaToWorld::composeMatrixNode(ColladaNode* pNode)
 	Q_ASSERT(NULL != pNode);
 
 	// Load matrix values
-	QStringList matrixStringList= getContent("matrix").simplified().split(' ');
+    QStringList matrixStringList= getContent("matrix").simplified().split(' ');
 	// A rotate must contains 16 string 4 x 4 Matrix
 	const int size= matrixStringList.size();
 	if (size != 16) throwException("Matrix element must contains 16 floats and it's contains :" + QString::number(size));
@@ -1868,8 +1868,8 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 				&& m_ImageFileHash.contains(m_SurfaceImageHash.value(m_Sampler2DSurfaceHash.value(textureId))))
 		{
 			const QString imageFileName= m_ImageFileHash.value(m_SurfaceImageHash.value(m_Sampler2DSurfaceHash.value(textureId)));
-			QString fullImageFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + imageFileName;
-			if (QFileInfo(fullImageFileName).exists())
+            QString fullImageFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + imageFileName;
+            if (QFileInfo::exists(fullImageFileName))
 			{
 				m_ListOfAttachedFileName << fullImageFileName;
 				GLC_Texture* pTexture= new GLC_Texture(fullImageFileName);
@@ -1878,8 +1878,8 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 			else if (QFileInfo(m_FileName).absolutePath() != QFileInfo(fullImageFileName).absolutePath())
 			{
 				// Trying to find image in collada file path
-				QString fullImageFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(imageFileName).fileName();
-				if (QFileInfo(fullImageFileName).exists())
+                QString fullImageFileName= QFileInfo(m_FileName).absolutePath() + QDir::separator() + QFileInfo(imageFileName).fileName();
+                if (QFileInfo::exists(fullImageFileName))
 				{
 					m_ListOfAttachedFileName << fullImageFileName;
 					GLC_Texture* pTexture= new GLC_Texture(fullImageFileName);

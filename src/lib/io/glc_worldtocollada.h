@@ -31,6 +31,8 @@ public:
 
     bool exportToCollada(const QString& absoluteFileName);
 
+    bool exportToCollada(QIODevice* pIoDevice, const QString& basePath, const QString& basePathPrefix= QString());
+
 public:
     void setInstanciationUsage(bool value)
     {m_UseInstanciation= value;}
@@ -40,13 +42,14 @@ public:
 
 private:
     void writeHeaderAsset();
-    void writeMaterials(const QList<GLC_Material*> materialList);
+    void writeMaterials(const QList<GLC_Material*> materialList, bool writeImage= true);
     void writeInstanciateGeometries();
     void writeNotInstanciateGeometries();
     QString imageId();
     QString indexToString(int index);
     void init();
     void writeLibraryImages();
+    void writeLibraryImagesUrl();
     QString writeImage(GLC_Texture* pTexture, const QString& source);
     void writeLibraryMaterials();
     void writeMaterial(const QString& materialId);
@@ -95,6 +98,8 @@ private:
     bool m_UseInstanciation;
     QList<GLC_Mesh*> m_CopiedMesh;
     bool m_ExportMeshWire;
+    QString m_BasePath;
+    QString m_BasePathPrefix;
 };
 
 
