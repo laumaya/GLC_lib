@@ -57,7 +57,7 @@ public:
 public:
     virtual GLC_CsgNode* clone() const= 0;
     virtual bool update()= 0;
-    virtual void createMesh()= 0;
+    virtual void createMesh(bool createShardEdge= true)= 0;
     virtual QList<GLC_CsgNode*> chrildren() const= 0;
     virtual bool isRootNode() const= 0;
     virtual void setRoot(bool isRoot)= 0;

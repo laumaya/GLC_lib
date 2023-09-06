@@ -74,6 +74,11 @@ bool GLC_CsgLeafNode::update()
     return subject;
 }
 
+void GLC_CsgLeafNode::createMesh(bool createSharpEdge)
+{
+    Q_UNUSED(createSharpEdge)
+}
+
 void GLC_CsgLeafNode::updateMaterialHash()
 {
     clearMaterialHash();

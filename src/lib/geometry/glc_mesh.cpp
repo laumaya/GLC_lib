@@ -757,44 +757,47 @@ void GLC_Mesh::replaceMasterMaterial(GLC_Material* pMat)
 // Replace the material specified by id with another one
 void GLC_Mesh::replaceMaterial(const GLC_uint oldId, GLC_Material* pMat)
 {
-    Q_ASSERT(containsMaterial(oldId));
-    Q_ASSERT(!containsMaterial(pMat->id()) || (pMat->id() == oldId));
+    bool isValid= (containsMaterial(oldId));
+    isValid= isValid && (!containsMaterial(pMat->id()) || (pMat->id() == oldId));
 
-    if (pMat->id() != oldId)
+    if (isValid)
     {
-        // Iterate over Level of detail
-        PrimitiveGroupsHash::const_iterator iGroups= m_PrimitiveGroups.constBegin();
-        while (m_PrimitiveGroups.constEnd() != iGroups)
+        if (pMat->id() != oldId)
         {
-            LodPrimitiveGroups* pPrimitiveGroups= iGroups.value();
-            // Iterate over material group
-            LodPrimitiveGroups::iterator iGroup= pPrimitiveGroups->begin();
-            while (pPrimitiveGroups->constEnd() != iGroup)
+            // Iterate over Level of detail
+            PrimitiveGroupsHash::const_iterator iGroups= m_PrimitiveGroups.constBegin();
+            while (m_PrimitiveGroups.constEnd() != iGroups)
             {
-                if (iGroup.key() == oldId)
+                LodPrimitiveGroups* pPrimitiveGroups= iGroups.value();
+                // Iterate over material group
+                LodPrimitiveGroups::iterator iGroup= pPrimitiveGroups->begin();
+                while (pPrimitiveGroups->constEnd() != iGroup)
                 {
-                    GLC_PrimitiveGroup* pGroup= iGroup.value();
-                    // Erase old group pointer
-                    pPrimitiveGroups->erase(iGroup);
-                    // Change the group ID
-                    pGroup->setId(pMat->id());
-                    // Add the group with  new ID
-                    pPrimitiveGroups->insert(pMat->id(), pGroup);
-                    iGroup= pPrimitiveGroups->end();
+                    if (iGroup.key() == oldId)
+                    {
+                        GLC_PrimitiveGroup* pGroup= iGroup.value();
+                        // Erase old group pointer
+                        pPrimitiveGroups->erase(iGroup);
+                        // Change the group ID
+                        pGroup->setId(pMat->id());
+                        // Add the group with  new ID
+                        pPrimitiveGroups->insert(pMat->id(), pGroup);
+                        iGroup= pPrimitiveGroups->end();
+                    }
+                    else
+                    {
+                        ++iGroup;
+                    }
                 }
-                else
-                {
-                    ++iGroup;
-                }
+                ++iGroups;
             }
-            ++iGroups;
-        }
 
-        GLC_Geometry::replaceMaterial(oldId, pMat);
-    }
-    else if (pMat != m_MaterialHash.value(oldId))
-    {
-        GLC_Geometry::replaceMaterial(oldId, pMat);
+            GLC_Geometry::replaceMaterial(oldId, pMat);
+        }
+        else if (pMat != m_MaterialHash.value(oldId))
+        {
+            GLC_Geometry::replaceMaterial(oldId, pMat);
+        }
     }
 }
 

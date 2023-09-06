@@ -102,11 +102,11 @@ bool GLC_CsgOperatorNode::update()
     return subject;
 }
 
-void GLC_CsgOperatorNode::createMesh()
+void GLC_CsgOperatorNode::createMesh(bool createSharEdge)
 {
     Q_ASSERT(NULL != m_pResultCsgModel);
     GLC_Mesh* pMesh= GLC_CsgHelper::meshFromCsgModel(*m_pResultCsgModel, m_MaterialHash);
-    if (m_IsRoot)
+    if (m_IsRoot && createSharEdge)
     {
         pMesh->createSharpEdges(m_EdgeDetectionAccuracy, m_EdgeDetectionAngleThreshold);
     }

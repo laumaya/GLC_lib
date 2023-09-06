@@ -39,7 +39,7 @@ public:
 public:
     GLC_CsgNode* clone() const override;
     bool update() override;
-    void createMesh() override {}
+    void createMesh(bool createSharpEdge= true) override;
     QList<GLC_CsgNode*> chrildren() const override
     {return QList<GLC_CsgNode*>();}
     bool isRootNode() const override

@@ -51,7 +51,7 @@ public:
 
     GLC_CsgNode* clone() const override;
     bool update() override;
-    void createMesh() override;
+    void createMesh(bool createSharEdge= true) override;
     QList<GLC_CsgNode*> chrildren() const override;
 
     bool isRootNode() const override
