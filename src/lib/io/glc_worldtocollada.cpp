@@ -10,6 +10,7 @@
 #include <QtDebug>
 #include <QFile>
 #include <QDateTime>
+#include <QUrl>
 
 #include "../shading/glc_material.h"
 #include "../sceneGraph/glc_structreference.h"
@@ -38,6 +39,7 @@ GLC_WorldToCollada::GLC_WorldToCollada(const GLC_World& world)
     , m_ExportMeshWire(true)
     , m_BasePath()
     , m_BasePathPrefix()
+    , m_UrlEncoding(false)
 {
 
 }
@@ -248,7 +250,7 @@ void GLC_WorldToCollada::writeLibraryImages()
         if (pMat->hasTexture())
         {
             GLC_Texture* pTexture= pMat->textureHandle();
-            const QString fileName(pTexture->fileName());
+            const QString fileName(newFileName(pTexture->fileName()));
             QFile file(fileName);
             if (!m_ImageSourceFileNameToTarget.contains(fileName))
             {
@@ -305,7 +307,7 @@ void GLC_WorldToCollada::writeLibraryImagesUrl()
         if (pMat->hasTexture())
         {
             GLC_Texture* pTexture= pMat->textureHandle();
-            const QString fileName(pTexture->fileName());
+            const QString fileName(newFileName(pTexture->fileName()));
             QFile file(fileName);
             if (!m_ImageSourceFileNameToTarget.contains(fileName))
             {
@@ -313,6 +315,7 @@ void GLC_WorldToCollada::writeLibraryImagesUrl()
                 const QString& destFileName= m_BasePathPrefix + "/" + relativeFilePath;
                 const QString targetFileName(writeImage(pTexture, destFileName));
                 m_ImageSourceFileNameToTarget.insert(fileName, targetFileName);
+                m_TextureToImageId.insert(pTexture, targetFileName);
              }
             else
             {
@@ -1025,4 +1028,17 @@ void GLC_WorldToCollada::fillCopiedMeshList()
             }
         }
     }
+}
+
+QString GLC_WorldToCollada::newFileName(const QString& value) const
+{
+    QString subject(value);
+
+    if (m_UrlEncoding)
+    {
+        subject.replace(':', '_');
+    }
+
+    return subject;
+
 }

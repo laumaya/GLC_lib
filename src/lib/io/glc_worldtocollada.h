@@ -40,6 +40,9 @@ public:
     void setWireExport(bool value)
     {m_ExportMeshWire= value;}
 
+    void setUrlEncoding(bool value)
+    {m_UrlEncoding= value;}
+
 private:
     void writeHeaderAsset();
     void writeMaterials(const QList<GLC_Material*> materialList, bool writeImage= true);
@@ -81,6 +84,7 @@ private:
     void writeScene();
     QString meshNodeId(GLC_uint id) const;
     void fillCopiedMeshList();
+    QString newFileName(const QString& value) const;
 
 private:
     GLC_World m_World;
@@ -100,6 +104,7 @@ private:
     bool m_ExportMeshWire;
     QString m_BasePath;
     QString m_BasePathPrefix;
+    bool m_UrlEncoding;
 };
 
 

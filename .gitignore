@@ -23,3 +23,5 @@ glc_lib.pro.user.18
 glc_lib.pro.user.3.3-pre1
 moc_predefs.h
 .qtc_clangd/.cache/clangd/index
+compile_commands.json
+qml_qmlcache.qrc
