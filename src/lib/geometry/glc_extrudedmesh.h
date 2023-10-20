@@ -121,7 +121,7 @@ public:
 
     void setInvisibleEdgeIndex(const QList<int>& invisibleEdgeIndex);
 
-    void setMasterMaterial(GLC_Material* pMaterial);
+    void setMasterMaterial(const GLC_Material& material);
 
     void setFaceMappingAndMaterial(const QMap<int, int>& mapping);
 

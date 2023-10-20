@@ -258,12 +258,11 @@ void GLC_ExtrudedMesh::setInvisibleEdgeIndex(const QList<int>& invisibleEdgeInde
     }
 }
 
-void GLC_ExtrudedMesh::setMasterMaterial(GLC_Material* pMaterial)
+void GLC_ExtrudedMesh::setMasterMaterial(const GLC_Material& material)
 {
-    Q_ASSERT(nullptr != pMaterial);
     Q_ASSERT(m_MasterMaterialId == 0);
 
-    GLC_Material* pMasterMaterial= new GLC_Material(*pMaterial);
+    GLC_Material* pMasterMaterial= new GLC_Material(material);
     pMasterMaterial->setId(glc::GLC_GenID());
     GLC_Mesh::addMaterial(pMasterMaterial);
     m_MasterMaterialId= pMasterMaterial->id();
