@@ -218,6 +218,8 @@ private:
 	//! This world selectionSet
 	GLC_SelectionSet m_SelectionSet;
 
+    bool m_DestructorMode;
+
 private:
     Q_DISABLE_COPY(GLC_WorldHandle)
 };

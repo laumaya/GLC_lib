@@ -27,12 +27,13 @@
 #include "../glc_selectionevent.h"
 
 GLC_WorldHandle::GLC_WorldHandle()
-: m_Collection()
-, m_pRoot(new GLC_StructOccurrence())
-, m_Ref(1)
-, m_OccurrenceHash()
-, m_UpVector(glc::Z_AXIS)
-, m_SelectionSet(this)
+    : m_Collection()
+    , m_pRoot(new GLC_StructOccurrence())
+    , m_Ref(1)
+    , m_OccurrenceHash()
+    , m_UpVector(glc::Z_AXIS)
+    , m_SelectionSet(this)
+    , m_DestructorMode(false)
 {
     m_pRoot->setWorldHandle(this);
 }
@@ -44,6 +45,7 @@ GLC_WorldHandle::GLC_WorldHandle(GLC_StructOccurrence *pOcc)
     , m_OccurrenceHash()
     , m_UpVector(glc::Z_AXIS)
     , m_SelectionSet(this)
+    , m_DestructorMode(false)
 {
     Q_ASSERT(pOcc->isOrphan());
     pOcc->setWorldHandle(this);
@@ -51,6 +53,7 @@ GLC_WorldHandle::GLC_WorldHandle(GLC_StructOccurrence *pOcc)
 
 GLC_WorldHandle::~GLC_WorldHandle()
 {
+    m_DestructorMode= true;
     delete m_pRoot;
 }
 
@@ -157,7 +160,7 @@ void GLC_WorldHandle::removeOccurrence(GLC_StructOccurrence* pOccurrence)
 	// Remove instance representation from the collection
     m_Collection.remove(pOccurrence->id());
 
-    if (pOccurrence == m_pRoot)
+    if (!m_DestructorMode && (pOccurrence == m_pRoot))
     {
         m_pRoot= new GLC_StructOccurrence;
         m_pRoot->setWorldHandle(this);

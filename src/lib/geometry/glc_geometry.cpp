@@ -94,7 +94,7 @@ GLC_Geometry::~GLC_Geometry()
 {
     // delete mesh inner material
     {
-        MaterialHash::const_iterator i= m_MaterialHash.begin();
+        MaterialHash::const_iterator i= m_MaterialHash.constBegin();
         while (i != m_MaterialHash.constEnd())
         {
             // delete the material if necessary
@@ -283,7 +283,7 @@ void GLC_Geometry::glLoadTexture(void)
 {
     MaterialHash::iterator iMaterial= m_MaterialHash.begin();
 
-    while (iMaterial != m_MaterialHash.constEnd())
+    while (iMaterial != m_MaterialHash.end())
     {
         // Load texture of mesh materials
         iMaterial.value()->glLoadTexture();
@@ -418,7 +418,7 @@ void  GLC_Geometry::clearGeometry()
 
     // delete mesh inner material
     {
-        MaterialHash::const_iterator i= m_MaterialHash.begin();
+        MaterialHash::const_iterator i= m_MaterialHash.constBegin();
         while (i != m_MaterialHash.constEnd())
         {
             // delete the material if necessary

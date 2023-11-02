@@ -344,11 +344,7 @@ void GLC_ExtrudedMesh::createMesh()
 
     // Set the material to use
     GLC_Material* pMasterMaterial;
-    if (GLC_Geometry::containsMaterial(m_MasterMaterialId))
-    {
-        pMasterMaterial= GLC_Geometry::material(m_MasterMaterialId);
-    }
-    else
+    if (!GLC_Geometry::containsMaterial(m_MasterMaterialId))
     {
         pMasterMaterial= new GLC_Material();
         m_MasterMaterialId= pMasterMaterial->id();
