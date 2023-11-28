@@ -44,6 +44,7 @@ public slots:
     void updateSelection();
     void select(uint id);
     QImage takeScreenShot();
+    void prepareScreenShot();
     void updateSelectionBufferOnRender(bool update);
     void updateViewBufferOnRender(bool update);
 

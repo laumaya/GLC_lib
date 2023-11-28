@@ -348,9 +348,9 @@ public:
 //{@
 	//! Set the viewport's camera in order to reframe on the current scene
 	/*! box shouldn't be empty*/
-	void reframe(const GLC_BoundingBox& box, double coverFactor = 2.2);
+    void reframe(const GLC_BoundingBox& box, double coverFactor = 1);
 
-    GLC_Camera reframedCamera(const GLC_BoundingBox& box, double coverFactor = 2.2) const;
+    GLC_Camera reframedCamera(const GLC_BoundingBox& box, double coverFactor = 1) const;
 
     //! Set the viewport's camera in order to match new cover
     /*! Return true on success*/

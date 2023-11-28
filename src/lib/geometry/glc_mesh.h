@@ -27,8 +27,6 @@
 
 #include <QHash>
 #include <QList>
-#include "../maths/glc_vector2df.h"
-#include "../maths/glc_vector3df.h"
 #include "../glc_global.h"
 #include "../shading/glc_material.h"
 #include "glc_meshdata.h"
@@ -810,8 +808,9 @@ void GLC_Mesh::vertexArrayDrawPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 void GLC_Mesh::vboDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGroup, GLC_Material* pCurrentMaterial, bool materialIsRenderable
 		, bool isTransparent, const GLC_RenderProperties& renderProperties)
 {
+    Q_ASSERT(nullptr != pCurrentMaterial);
 	QSet<GLC_uint>* pSelectedPrimitive= renderProperties.setOfSelectedPrimitivesId();
-	Q_ASSERT(NULL != pSelectedPrimitive);
+    Q_ASSERT(nullptr != pSelectedPrimitive);
 
 	QHash<GLC_uint, GLC_Material*>* pMaterialHash= NULL;
 	if (!renderProperties.hashOfOverwritePrimitiveMaterialsIsEmpty())
@@ -833,7 +832,7 @@ void GLC_Mesh::vboDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 				if (!isTransparent)
 				{
 					GLC_SelectionMaterial::glExecute();
-					pCurrentLocalMaterial= NULL;
+                    pCurrentLocalMaterial= nullptr;
 					glDrawElements(GL_TRIANGLES, pCurrentGroup->trianglesIndexSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->trianglesGroupOffset().at(i));
 				}
 			}
@@ -876,7 +875,7 @@ void GLC_Mesh::vboDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 				if (!isTransparent)
 				{
 					GLC_SelectionMaterial::glExecute();
-					pCurrentLocalMaterial= NULL;
+                    pCurrentLocalMaterial= nullptr;
 					glDrawElements(GL_TRIANGLE_STRIP, pCurrentGroup->stripsSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->stripsOffset().at(i));
 				}
 			}
@@ -919,7 +918,7 @@ void GLC_Mesh::vboDrawSelectedPrimitivesGroupOf(GLC_PrimitiveGroup* pCurrentGrou
 				if (!isTransparent)
 				{
 					GLC_SelectionMaterial::glExecute();
-					pCurrentLocalMaterial= NULL;
+                    pCurrentLocalMaterial= nullptr;
 					glDrawElements(GL_TRIANGLE_FAN, pCurrentGroup->fansSizes().at(i), GL_UNSIGNED_INT, pCurrentGroup->fansOffset().at(i));
 				}
 			}

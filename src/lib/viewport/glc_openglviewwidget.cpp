@@ -178,6 +178,32 @@ QImage GLC_OpenGLViewWidget::takeScreenShot()
     return subject;
 }
 
+void GLC_OpenGLViewWidget::prepareScreenShot()
+{
+    makeCurrent();
+    Q_ASSERT(nullptr != m_Viewhandler);
+    GLC_ScreenShotSettings screenShotSettings= m_Viewhandler->screenShotSettings();
+    const int width= screenShotSettings.size().width();
+    const int height= screenShotSettings.size().height();
+
+    setupScreenShotFbo(width, height);
+
+    if (m_pScreenShotFbo && m_pScreenShotFbo->isValid())
+    {
+        if (!m_pScreenShotFbo->bind()) emit frameBufferBindingFailed();
+
+        m_Viewhandler->setScreenShotMode(true);
+        m_Viewhandler->setSize(width, height);
+        doRender();
+        m_Viewhandler->setScreenShotMode(false);
+
+        m_pScreenShotFbo->release();
+    }
+
+    delete m_pScreenShotFbo;
+    m_pScreenShotFbo= nullptr;
+}
+
 void GLC_OpenGLViewWidget::updateSelectionBufferOnRender(bool update)
 {
     m_UpdateSelectionBuffer= update;

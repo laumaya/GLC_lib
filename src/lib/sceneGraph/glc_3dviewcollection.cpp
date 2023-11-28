@@ -25,8 +25,6 @@
 #include <QtDebug>
 
 #include "glc_3dviewcollection.h"
-#include "../shading/glc_material.h"
-#include "../glc_openglexception.h"
 #include "../shading/glc_selectionmaterial.h"
 #include "../glc_state.h"
 #include "../shading/glc_shader.h"
@@ -40,18 +38,18 @@
 //////////////////////////////////////////////////////////////////////
 
 GLC_3DViewCollection::GLC_3DViewCollection()
-: m_3DViewInstanceHash()
-, m_SelectedInstances()
-, m_ShadedPointerViewInstanceHash()
-, m_ShaderGroup()
-, m_MainInstances()
-, m_IsInShowSate(true)
-, m_UseLod(false)
-, m_pViewport(nullptr)
-, m_pSpacePartitioning(nullptr)
-, m_UseSpacePartitioning(false)
-, m_IsViewable(true)
-, m_UseOrderRendering(false)
+    : m_3DViewInstanceHash()
+    , m_SelectedInstances()
+    , m_ShadedPointerViewInstanceHash()
+    , m_ShaderGroup()
+    , m_MainInstances()
+    , m_IsInShowSate(true)
+    , m_UseLod(false)
+    , m_pViewport(nullptr)
+    , m_pSpacePartitioning(nullptr)
+    , m_UseSpacePartitioning(false)
+    , m_IsViewable(true)
+    , m_UseOrderRendering(false)
 {
 }
 
@@ -86,7 +84,7 @@ bool GLC_3DViewCollection::unBindShader(GLC_uint shaderId)
 	if (m_ShadedPointerViewInstanceHash.contains(shaderId))
 	{
 		// Find node which use the shader
-		QList<GLC_uint> nodeId(m_ShaderGroup.keys(shaderId));
+        const QList<GLC_uint> nodeId(m_ShaderGroup.keys(shaderId));
 
 		// Move these node in the standard hash and remove them from shader group
 		PointerViewInstanceHash* pShaderNodeHash= m_ShadedPointerViewInstanceHash.take(shaderId);
@@ -392,7 +390,7 @@ void GLC_3DViewCollection::setPolygonModeForAll(GLenum face, GLenum mode)
 {
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 
-    while (iEntry != m_3DViewInstanceHash.constEnd())
+    while (iEntry != m_3DViewInstanceHash.end())
     {
     	iEntry.value().setPolygonMode(face, mode);
         ++iEntry;
@@ -413,7 +411,7 @@ void GLC_3DViewCollection::showAll()
 {
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 
-    while (iEntry != m_3DViewInstanceHash.constEnd())
+    while (iEntry != m_3DViewInstanceHash.end())
     {
      	iEntry.value().setVisibility(true);
         ++iEntry;
@@ -424,7 +422,7 @@ void GLC_3DViewCollection::hideAll()
 {
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 
-    while (iEntry != m_3DViewInstanceHash.constEnd())
+    while (iEntry != m_3DViewInstanceHash.end())
     {
     	iEntry.value().setVisibility(false);
         ++iEntry;
@@ -447,7 +445,7 @@ void GLC_3DViewCollection::unbindSpacePartitioning()
 	m_UseSpacePartitioning= false;
 
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
-    while (iEntry != m_3DViewInstanceHash.constEnd())
+    while (iEntry != m_3DViewInstanceHash.end())
     {
     	// Update Instance viewable flag
     	iEntry.value().setViewable(GLC_3DViewInstance::FullViewable);
@@ -486,7 +484,7 @@ void GLC_3DViewCollection::setVboUsage(bool usage)
 {
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 
-    while (iEntry != m_3DViewInstanceHash.constEnd())
+    while (iEntry != m_3DViewInstanceHash.end())
     {
     	iEntry.value().setVboUsage(usage);
         ++iEntry;
@@ -497,7 +495,7 @@ void GLC_3DViewCollection::setMeshWireColorAndLineWidth(const QColor& color, GLf
 {
     ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 
-    while (iEntry != m_3DViewInstanceHash.constEnd())
+    while (iEntry != m_3DViewInstanceHash.end())
     {
         iEntry.value().setMeshWireColorAndLineWidth(color, lineWidth);
         ++iEntry;
@@ -510,7 +508,7 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::instancesHandle()
 
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 
-    while (iEntry != m_3DViewInstanceHash.constEnd())
+    while (iEntry != m_3DViewInstanceHash.end())
     {
     	instancesList.append(&(iEntry.value()));
         ++iEntry;
@@ -524,7 +522,7 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::visibleInstancesHandle()
 
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 
-    while (iEntry != m_3DViewInstanceHash.constEnd())
+    while (iEntry != m_3DViewInstanceHash.end())
     {
     	if (iEntry.value().isVisible())
     	{
@@ -554,7 +552,7 @@ QList<GLC_3DViewInstance*> GLC_3DViewCollection::viewableInstancesHandle()
 
 	ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 
-    while (iEntry != m_3DViewInstanceHash.constEnd())
+    while (iEntry != m_3DViewInstanceHash.end())
     {
     	if (iEntry.value().isVisible() == m_IsInShowSate)
     	{
@@ -578,7 +576,7 @@ GLC_BoundingBox GLC_3DViewCollection::boundingBox(bool allObject)
 	if (!m_3DViewInstanceHash.isEmpty())
 	{
 		ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
-	    while (iEntry != m_3DViewInstanceHash.constEnd())
+        while (iEntry != m_3DViewInstanceHash.end())
 	    {
 	        if(allObject || iEntry.value().isVisible() == m_IsInShowSate)
 	        {
@@ -673,7 +671,7 @@ void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 			glDisable(GL_TEXTURE_2D);
 		}
 
-		HashList::iterator iEntry= m_ShadedPointerViewInstanceHash.begin();
+        HashList::const_iterator iEntry= m_ShadedPointerViewInstanceHash.constBegin();
 	    while (iEntry != m_ShadedPointerViewInstanceHash.constEnd())
 	    {
 	    	glDraw(iEntry.key(), renderFlag);

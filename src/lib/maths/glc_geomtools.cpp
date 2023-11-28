@@ -990,7 +990,7 @@ bool glc::polygonCompatibleWithClip2TRi(const QList<GLC_Point2d> polygon)
     return subject;
 }
 
-QList<GLC_Point3d> glc::AddCorner(const QList<GLC_Point3d> &segments, double radius, int count)
+QList<GLC_Point3d> glc::AddCorner(const QList<GLC_Point3d>& segments, double radius, int count, GLC_Point3d* pAxisPos)
 {
     Q_ASSERT(segments.count() == 3);
     Q_ASSERT(radius > 0.0);
@@ -1015,18 +1015,20 @@ QList<GLC_Point3d> glc::AddCorner(const QList<GLC_Point3d> &segments, double rad
     // Compute new segment end before corner
     GLC_Vector3d p1OffsetOnEdge0(p0 - p1);
     p1OffsetOnEdge0.setLength(deltaLength);
-    GLC_Point3d newP1OnEdge0= p1 + p1OffsetOnEdge0;
+    const GLC_Point3d newP1OnEdge0(p1 + p1OffsetOnEdge0);
 
     GLC_Vector3d p1OffsetOnEdge1(p2 - p1);
     p1OffsetOnEdge1.setLength(deltaLength);
-    GLC_Point3d newP1OnEdge1= p1 + p1OffsetOnEdge1;
+    const GLC_Point3d newP1OnEdge1(p1 + p1OffsetOnEdge1);
 
 
     // Compute corner axis position
-    GLC_Matrix4x4 m1(p1OffsetOnEdge0, glc::PI / 2.0);
+    const GLC_Matrix4x4 m1(p1OffsetOnEdge0, glc::PI / 2.0);
     GLC_Vector3d centerOffset= m1 * direction;
     centerOffset.setLength(radius);
-    GLC_Point3d axisPos= newP1OnEdge0 + centerOffset;
+    const GLC_Point3d axisPos(newP1OnEdge0 + centerOffset);
+
+    if (nullptr != pAxisPos) pAxisPos->operator=(axisPos);
 
     // Add first segment
     subject << p0;

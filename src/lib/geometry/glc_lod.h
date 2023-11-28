@@ -81,7 +81,7 @@ public:
 	 * - Triangles Strips index
 	 * - Triangles Fans index
 	 */
-    QVector<GLuint> indexVector() const
+    const QVector<GLuint>& indexVector() const
     {return m_IndexVector;}
 
 	//! Return The unique index Vector handle which contains :
@@ -90,15 +90,15 @@ public:
 	 * - Triangles Strips index
 	 * - Triangles Fans index
 	 */
-	inline QVector<GLuint>* indexVectorHandle()
+    QVector<GLuint>* indexVectorHandle()
 	{return &m_IndexVector;}
 
 	//! Return the size of the index Vector
-	inline int indexVectorSize() const
+    int indexVectorSize() const
 	{return m_IndexVector.size();}
 
 	//! Return this lod triangle count
-	inline unsigned int trianglesCount() const
+    unsigned int trianglesCount() const
 	{return m_TrianglesCount;}
 
 //@}
@@ -108,25 +108,19 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Copy IBO to the Client Side
-	void copyIboToClientSide();
-
 	//! Release client IBO
 	void releaseIboClientSide(bool update= false);
 
 	//! Set accuracy of the LOD
-	inline void setAccuracy(const double& accuracy)
+    void setAccuracy(const double& accuracy)
 	{m_Accuracy= accuracy;}
 
 	//! Given number of triangles added
-	inline void trianglesAdded(unsigned int count)
-	{
-		m_TrianglesCount+= count;
-	}
+    void trianglesAdded(unsigned int count)
+	{m_TrianglesCount+= count;}
 
 	//! Set IBO usage
 	void setIboUsage(bool usage);
-
 
 //@}
 
@@ -136,7 +130,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! IBO creation
-	inline void createIBO()
+    void createIBO()
 	{
 		if (!m_IndexBuffer.isCreated() && !m_IndexVector.isEmpty())
 		{
@@ -148,7 +142,7 @@ public:
 	void useIBO() const;
 
 	//! Fill IBO
-	inline void fillIbo()
+    void fillIbo()
 	{releaseIboClientSide(true);}
 
 //@}

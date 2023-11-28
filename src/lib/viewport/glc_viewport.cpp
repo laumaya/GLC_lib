@@ -26,12 +26,8 @@
 
 #include "../glu/glc_glu.h"
 #include "glc_viewport.h"
-#include "../glc_openglexception.h"
-#include "../glc_ext.h"
-#include "../shading/glc_selectionmaterial.h"
 #include "../glc_state.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
-#include "../geometry/glc_point.h"
 #include "../glc_factory.h"
 #include "../glc_context.h"
 
@@ -50,8 +46,8 @@ GLC_Viewport::GLC_Viewport()
     , m_ViewTangent(tan(glc::toRadian(m_ViewAngle)))
     , m_pImagePlane(NULL)			// Background image
     // OpenGL Window size
-    , m_Width(0)				// Horizontal OpenGL viewport size
-    , m_Height(1)				// Vertical OpenGL viewport size
+    , m_Width(10)				// Horizontal OpenGL viewport size
+    , m_Height(10)				// Vertical OpenGL viewport size
     , m_AspectRatio(1.0)
     // the default backgroundColor
     , m_BackgroundColor(Qt::black)
@@ -80,7 +76,7 @@ GLC_Viewport::~GLC_Viewport()
 
 	// Delete clip planes
 	QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlanesHash.begin();
-	while (m_ClipPlanesHash.constEnd() != iClip)
+    while (m_ClipPlanesHash.end() != iClip)
 	{
 		delete iClip.value();
 		++iClip;
@@ -644,7 +640,7 @@ QSet<GLC_uint> GLC_Viewport::selectInsideSquare(int x1, int y1, int x2, int y2, 
 	glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), 1.0f);
 	GLC_State::setSelectionMode(true);
 	// Draw the scene
-	updateOpenGL();
+    emit updateOpenGL();
 	GLC_State::setSelectionMode(false);
 
 	GLsizei width= x2 - x1;
@@ -777,6 +773,7 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box, double coverFactor)
 
 GLC_Camera GLC_Viewport::reframedCamera(const GLC_BoundingBox &box, double coverFactor) const
 {
+    qDebug() << "GLC_Viewport::reframedCamera " << coverFactor;
     Q_ASSERT(!box.isEmpty());
     GLC_Camera subject(*m_pViewCam);
 
@@ -784,11 +781,31 @@ GLC_Camera GLC_Viewport::reframedCamera(const GLC_BoundingBox &box, double cover
     const GLC_Vector3d deltaVector(box.center() - m_pViewCam->target());
     subject.translate(deltaVector);
 
-    if (coverFactor > 0.0) {
-        double cameraCover= box.boundingSphereRadius() * coverFactor;
+    if (coverFactor > 0.0)
+    {
+        QList<GLC_Point3d> points(box.points());
+        const GLC_Matrix4x4 matrix(m_pViewCam->modelViewMatrix());
+        GLC_Point3d min(matrix * points.constFirst());
+        min.setZ(0.0);
+        GLC_Point3d max(min);
+        for (GLC_Point3d& point : points)
+        {
+            point= matrix * point;
+            min.setX(qMin(point.x(), min.x()));
+            min.setY(qMin(point.y(), min.y()));
+
+            max.setX(qMax(point.x(), max.x()));
+            max.setY(qMax(point.y(), max.y()));
+        }
+
+        const GLC_Vector3d diff(max - min);
+        const double width = qAbs(diff.x() / m_AspectRatio);
+        const double height= qAbs(diff.y());
+
+        double cameraCover= (qMax(width, height) / 2) * coverFactor;
 
         // Compute Camera distance
-        const double distance = cameraCover / m_ViewTangent;
+        const double distance = cameraCover / (std::tan(glc::toRadian(m_ViewAngle) / 2.0));
 
         // Update Camera position
         subject.setDistEyeTarget(distance);
@@ -930,8 +947,8 @@ void GLC_Viewport::removeClipPlane(GLenum planeGlEnum)
 void GLC_Viewport::removeAllClipPlane()
 {
 	// Delete clip planes
-	QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlanesHash.begin();
-	while (m_ClipPlanesHash.constEnd() != iClip)
+    QHash<GLenum, GLC_Plane*>::const_iterator iClip= m_ClipPlanesHash.constBegin();
+    while (m_ClipPlanesHash.constEnd() != iClip)
 	{
 		delete iClip.value();
 		++iClip;
@@ -943,8 +960,8 @@ void GLC_Viewport::useClipPlane(bool flag)
 	m_UseClipPlane= flag;
 	if (m_UseClipPlane)
 	{
-		QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlanesHash.begin();
-		while (m_ClipPlanesHash.constEnd() != iClip)
+        QHash<GLenum, GLC_Plane*>::const_iterator iClip= m_ClipPlanesHash.constBegin();
+        while (m_ClipPlanesHash.constEnd() != iClip)
 		{
 			GLenum planeKey= iClip.key();
 			GLC_Plane* pPlane= iClip.value();
@@ -956,7 +973,7 @@ void GLC_Viewport::useClipPlane(bool flag)
 	}
 	else
 	{
-		QHash<GLenum, GLC_Plane*>::iterator iClip= m_ClipPlanesHash.begin();
+        QHash<GLenum, GLC_Plane*>::const_iterator iClip= m_ClipPlanesHash.constBegin();
 		while (m_ClipPlanesHash.constEnd() != iClip)
 		{
 			glDisable(iClip.key());

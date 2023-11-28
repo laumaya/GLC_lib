@@ -111,10 +111,10 @@ GLC_Mesh& GLC_Mesh::operator=(const GLC_Mesh& mesh)
 // Destructor
 GLC_Mesh::~GLC_Mesh()
 {
-    PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
+    PrimitiveGroupsHash::const_iterator iGroups= m_PrimitiveGroups.constBegin();
     while (iGroups != m_PrimitiveGroups.constEnd())
     {
-        LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+        LodPrimitiveGroups::const_iterator iGroup= iGroups.value()->constBegin();
         while (iGroup != iGroups.value()->constEnd())
         {
             delete iGroup.value();
@@ -155,7 +155,7 @@ unsigned int GLC_Mesh::vertexCount() const
 // return the mesh bounding box
 const GLC_BoundingBox& GLC_Mesh::boundingBox()
 {
-    if (NULL == m_pBoundingBox)
+    if (nullptr == m_pBoundingBox)
     {
         //qDebug() << "GLC_Mesh2::boundingBox create boundingBox";
         m_pBoundingBox= new GLC_BoundingBox();
@@ -213,7 +213,7 @@ QVector<GLuint> GLC_Mesh::getTrianglesIndex(int lod, GLC_uint materialId) const
 
     QVector<GLuint> resultIndex(size);
 
-    memcpy((void*)resultIndex.data(), &(m_MeshData.indexVector(lod).data())[offset], size * sizeof(GLuint));
+    memcpy((void*)resultIndex.data(), &(m_MeshData.indexVector(lod).constData())[offset], size * sizeof(GLuint));
 
     return resultIndex;
 }
@@ -335,7 +335,7 @@ int GLC_Mesh::numberOfFans(int lod, GLC_uint materialId) const
 
 GLC_Material *GLC_Mesh::MaterialOfPrimitiveId(GLC_uint id, int lod) const
 {
-    GLC_Material* pSubject= NULL;
+    GLC_Material* pSubject= nullptr;
 
     if (!m_PrimitiveGroups.isEmpty())
     {
@@ -494,7 +494,7 @@ void GLC_Mesh::transformVertice(const GLC_Matrix4x4& matrix)
         GLC_Geometry::transformVertice(matrix);
 
         delete m_pBoundingBox;
-        m_pBoundingBox= NULL;
+        m_pBoundingBox= nullptr;
         const int stride= 3;
         GLfloatVector* pVectPos= m_MeshData.positionVectorHandle();
         const GLC_Matrix4x4 rotationMatrix= matrix.rotationMatrix();
@@ -544,7 +544,7 @@ double GLC_Mesh::volume()
             }
         }
 
-        GLfloatVector vertices= m_MeshData.positionVector();
+        const GLfloatVector& vertices= m_MeshData.positionVector();
         Q_ASSERT((triangleIndex.count() % 3) == 0);
         const int triangleCount= triangleIndex.count() / 3;
         for (int i= 0; i < triangleCount; ++i)
@@ -593,10 +593,10 @@ void GLC_Mesh::clearMeshWireAndBoundingBox()
     m_NextPrimitiveLocalId= 1;
 
     // Remove all primitive groups
-    PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
+    PrimitiveGroupsHash::const_iterator iGroups= m_PrimitiveGroups.constBegin();
     while (iGroups != m_PrimitiveGroups.constEnd())
     {
-        LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+        LodPrimitiveGroups::const_iterator iGroup= iGroups.value()->constBegin();
         while (iGroup != iGroups.value()->constEnd())
         {
             delete iGroup.value();
@@ -771,7 +771,7 @@ void GLC_Mesh::replaceMaterial(const GLC_uint oldId, GLC_Material* pMat)
                 LodPrimitiveGroups* pPrimitiveGroups= iGroups.value();
                 // Iterate over material group
                 LodPrimitiveGroups::iterator iGroup= pPrimitiveGroups->begin();
-                while (pPrimitiveGroups->constEnd() != iGroup)
+                while (pPrimitiveGroups->end() != iGroup)
                 {
                     if (iGroup.key() == oldId)
                     {
@@ -999,7 +999,7 @@ void GLC_Mesh::saveToDataStream(QDataStream& stream) const
 void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 {
     GLC_Context* pContext= GLC_ContextManager::instance()->currentContext();
-    Q_ASSERT(NULL != pContext);
+    Q_ASSERT(nullptr != pContext);
     Q_ASSERT(m_GeometryIsValid || !m_MeshData.positionSizeIsSet());
 
     const bool vboIsUsed= GLC_Geometry::vboIsUsed();
@@ -1192,7 +1192,7 @@ GLC_uint GLC_Mesh::setCurrentMaterial(GLC_Material* pMaterial, int lod, double a
     }
 
     GLC_uint returnId;
-    if (NULL == pMaterial)
+    if (nullptr == pMaterial)
     {
         returnId= m_DefaultMaterialId; // Default material id
 
@@ -1255,10 +1255,10 @@ void GLC_Mesh::fillVbosAndIbos()
 // set primitive group offset
 void GLC_Mesh::finishSerialized()
 {
-    PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
+    PrimitiveGroupsHash::const_iterator iGroups= m_PrimitiveGroups.constBegin();
     while (iGroups != m_PrimitiveGroups.constEnd())
     {
-        LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+        LodPrimitiveGroups::const_iterator iGroup= iGroups.value()->constBegin();
         while (iGroup != iGroups.value()->constEnd())
         {
             iGroup.value()->computeVboOffset();
@@ -1267,56 +1267,16 @@ void GLC_Mesh::finishSerialized()
         ++iGroups;
     }
 }
-/*
-// Move Indexs from the primitive groups to the mesh Data LOD and Set IBOs offsets
-void GLC_Mesh::finishVbo()
-{
-    PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
-    while (iGroups != m_PrimitiveGroups.constEnd())
-    {
-        int currentLod= iGroups.key();
-        LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
-        while (iGroup != iGroups.value()->constEnd())
-        {
-            // Add group triangles index to mesh Data LOD triangles index vector
-            if (iGroup.value()->containsTriangles())
-            {
-                iGroup.value()->setTrianglesOffset(BUFFER_OFFSET(m_MeshData.indexVectorSize(currentLod) * sizeof(GLuint)));
-                (*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->trianglesIndex().toVector();
-            }
-
-            // Add group strip index to mesh Data LOD strip index vector
-            if (iGroup.value()->containsStrip())
-            {
-                iGroup.value()->setBaseTrianglesStripOffset(BUFFER_OFFSET(m_MeshData.indexVectorSize(currentLod) * sizeof(GLuint)));
-                (*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->stripsIndex().toVector();
-            }
-
-            // Add group fan index to mesh Data LOD fan index vector
-            if (iGroup.value()->containsFan())
-            {
-                iGroup.value()->setBaseTrianglesFanOffset(BUFFER_OFFSET(m_MeshData.indexVectorSize(currentLod) * sizeof(GLuint)));
-                (*m_MeshData.indexVectorHandle(currentLod))+= iGroup.value()->fansIndex().toVector();
-            }
-
-            iGroup.value()->finish();
-            ++iGroup;
-        }
-        ++iGroups;
-
-    }
-}
-*/
 
 // Move Indexs from the primitive groups to the mesh Data LOD and Set Index offsets
 void GLC_Mesh::moveIndexToMeshDataLod()
 {
     //qDebug() << "GLC_Mesh::moveIndexToMeshDataLod()";
-    PrimitiveGroupsHash::iterator iGroups= m_PrimitiveGroups.begin();
+    PrimitiveGroupsHash::const_iterator iGroups= m_PrimitiveGroups.constBegin();
     while (iGroups != m_PrimitiveGroups.constEnd())
     {
         int currentLod= iGroups.key();
-        LodPrimitiveGroups::iterator iGroup= iGroups.value()->begin();
+        LodPrimitiveGroups::const_iterator iGroup= iGroups.value()->constBegin();
         while (iGroup != iGroups.value()->constEnd())
         {
             // Add group triangles index to mesh Data LOD triangles index vector
@@ -1354,14 +1314,14 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
     const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
     if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
     {
-        LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+        LodPrimitiveGroups::const_iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->constBegin();
         while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
         {
             GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
             GLC_Material* pCurrentMaterial= m_MaterialHash.value(pCurrentGroup->id());
 
             // Test if the current material is renderable
-            bool materialIsrenderable = (pCurrentMaterial->isTransparent() == isTransparent);
+            const bool materialIsrenderable = (pCurrentMaterial->isTransparent() == isTransparent);
 
             // Choose the primitives to render
             if (m_IsSelected || GLC_State::isInSelectionMode() || materialIsrenderable)
@@ -1411,17 +1371,17 @@ void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderPro
 {
     // Get the overwrite material
     GLC_Material* pOverwriteMaterial= renderProperties.overwriteMaterial();
-    Q_ASSERT(NULL != pOverwriteMaterial);
+    Q_ASSERT(nullptr != pOverwriteMaterial);
     pOverwriteMaterial->glExecute();
     if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 
-    LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+    LodPrimitiveGroups::const_iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->constBegin();
     while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
     {
         GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
 
         // Test if the current material is renderable
-        bool materialIsrenderable = (pOverwriteMaterial->isTransparent() == (renderProperties.renderingFlag() == glc::TransparentRenderFlag));
+        const bool materialIsrenderable = (pOverwriteMaterial->isTransparent() == (renderProperties.renderingFlag() == glc::TransparentRenderFlag));
 
         // Choose the primitives to render
         if (m_IsSelected || materialIsrenderable)
@@ -1437,7 +1397,6 @@ void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderPro
 
             if (vboIsUsed) vboDrawPrimitivesOf(pCurrentGroup);
             else vertexArrayDrawPrimitivesOf(pCurrentGroup);
-
 
             if (useTextureMatrix)
             {
@@ -1462,7 +1421,7 @@ void GLC_Mesh::OverwriteTransparencyRenderLoop(const GLC_RenderProperties& rende
 
     if (materialIsrenderable || m_IsSelected)
     {
-        LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+        LodPrimitiveGroups::const_iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->constBegin();
         while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
         {
             // Choose the primitives to render
@@ -1508,17 +1467,17 @@ void GLC_Mesh::OverwriteTransparencyAndMaterialRenderLoop(const GLC_RenderProper
 
     // Get the overwrite material
     GLC_Material* pOverwriteMaterial= renderProperties.overwriteMaterial();
-    Q_ASSERT(NULL != pOverwriteMaterial);
+    Q_ASSERT(nullptr != pOverwriteMaterial);
     pOverwriteMaterial->glExecute(alpha);
     if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 
-    LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+    LodPrimitiveGroups::const_iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->constBegin();
     while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
     {
         GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
 
         // Test if the current material is renderable
-        bool materialIsrenderable = (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
+        const bool materialIsrenderable = (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
 
         // Choose the primitives to render
         if (m_IsSelected || materialIsrenderable)
@@ -1551,7 +1510,7 @@ void GLC_Mesh::bodySelectionRenderLoop(bool vboIsUsed)
 {
     Q_ASSERT(GLC_State::isInSelectionMode());
 
-    LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+    LodPrimitiveGroups::const_iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->constBegin();
     while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
     {
         GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
@@ -1570,7 +1529,7 @@ void GLC_Mesh::primitiveSelectionRenderLoop(bool vboIsUsed)
 {
     Q_ASSERT(GLC_State::isInSelectionMode());
 
-    LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+    LodPrimitiveGroups::const_iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->constBegin();
 
     while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
     {
@@ -1589,7 +1548,7 @@ void GLC_Mesh::primitiveSelectionRenderLoop(bool vboIsUsed)
 void GLC_Mesh::primitiveRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
     const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
-    LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+    LodPrimitiveGroups::const_iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->constBegin();
     while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
     {
         GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
@@ -1615,7 +1574,7 @@ void GLC_Mesh::primitiveRenderLoop(const GLC_RenderProperties& renderProperties,
 void GLC_Mesh::primitiveSelectedRenderLoop(const GLC_RenderProperties& renderProperties, bool vboIsUsed)
 {
     const bool isTransparent= (renderProperties.renderingFlag() == glc::TransparentRenderFlag);
-    LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+    LodPrimitiveGroups::const_iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->constBegin();
     while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
     {
         GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
@@ -1645,7 +1604,7 @@ void GLC_Mesh::outlineSilhouetteRenderLoop(const GLC_RenderProperties& renderPro
     //if ((!m_IsSelected || !isTransparent) || GLC_State::isInSelectionMode())
     if ((!isTransparent) || GLC_State::isInSelectionMode())
     {
-        LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+        LodPrimitiveGroups::const_iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->constBegin();
         while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
         {
             GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();

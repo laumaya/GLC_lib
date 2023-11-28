@@ -27,11 +27,7 @@
 #include "../geometry/glc_mesh.h"
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
-#include "../geometry/glc_circle.h"
 #include "../shading/glc_material.h"
-#include "../maths/glc_vector2df.h"
-#include "../maths/glc_vector3df.h"
-#include "../sceneGraph/glc_structreference.h"
 #include "../sceneGraph/glc_structinstance.h"
 #include "../sceneGraph/glc_structoccurrence.h"
 
@@ -39,7 +35,6 @@
 #include "3rdparty/lib3ds/file.h"
 #include "3rdparty/lib3ds/mesh.h"
 #include "3rdparty/lib3ds/node.h"
-#include "3rdparty/lib3ds/matrix.h"
 #include "3rdparty/lib3ds/material.h"
 
 #include <QFileInfo>
@@ -260,102 +255,113 @@ void GLC_3dsToWorld::createMeshes(GLC_StructOccurrence* pProduct, Lib3dsNode* pF
 //! Create 3DRep from a Lib3dsNode
 GLC_3DRep GLC_3dsToWorld::create3DRep(Lib3dsMesh* p3dsMesh)
 {
-	QString meshName(p3dsMesh->name);
+    GLC_3DRep subject;
+
+    const QString meshName(p3dsMesh->name);
 	if (m_LoadedMeshes.contains(meshName))
 	{
 		// This mesh as been already loaded
-		QList<GLC_3DViewInstance*> instancesList(m_pWorld->collection()->instancesHandle());
-		GLC_3DViewInstance* pCurrentInstance= NULL;
-		int currentIndex= -1;
-		do
-		{
-			pCurrentInstance= instancesList[++currentIndex];
-		} while (pCurrentInstance->name() != meshName);
-		// return an instance.
-		//qDebug() << "instance";
-		return pCurrentInstance->representation();
-	}
-	GLC_Mesh * pMesh= new GLC_Mesh();
-	pMesh->setName(p3dsMesh->name);
-	// The mesh normals
-	const int normalsNumber= p3dsMesh->faces * 3;
-
-	Lib3dsVector *normalL= static_cast<Lib3dsVector*>(malloc(normalsNumber * sizeof(Lib3dsVector)));
-	lib3ds_mesh_calculate_normals(p3dsMesh, normalL);
-
-	// Position vector
-	QVector<float> position(normalsNumber * 3);
-
-	// Normal Vector
-	QVector<float> normal(normalsNumber * 3);
-	memcpy((void*)normal.data(), normalL, normalsNumber * 3 * sizeof(float));
-
-	// Texel Vector
-	QVector<float> texel;
-	if (p3dsMesh->texels > 0)
-	{
-		texel.resize(normalsNumber * 2);
+        const QList<GLC_3DViewInstance*> instancesList(m_pWorld->collection()->instancesHandle());
+        for (GLC_3DViewInstance* pInstance : instancesList)
+        {
+            if (pInstance->name() == meshName)
+            {
+                subject= pInstance->representation();
+                break;
+            }
+        }
 	}
 
-	int normalIndex= 0;
-	for (unsigned int i= 0; i < p3dsMesh->faces; ++i)
-	{
-		IndexList triangleIndex;
-		Lib3dsFace *p3dsFace=&p3dsMesh->faceL[i];
-		for (int i=0; i < 3; ++i)
-		{
-			triangleIndex.append(normalIndex);
-			// Add vertex coordinate
-			memcpy((void*)&(position.data()[normalIndex * 3]), &p3dsMesh->pointL[p3dsFace->points[i]], 3 * sizeof(float));
+    if (subject.isEmpty())
+    {
+        GLC_Mesh * pMesh= new GLC_Mesh();
+        pMesh->setName(p3dsMesh->name);
+        // The mesh normals
+        const int normalsNumber= p3dsMesh->faces * 3;
 
-			// Add texel
-			if (p3dsMesh->texels > 0)
-			{
-				memcpy((void*)&(texel.data()[normalIndex * 2]), &p3dsMesh->texelL[p3dsFace->points[i]], 2 * sizeof(float));
-			}
-			++normalIndex;
-		}
+        Lib3dsVector *normalL= static_cast<Lib3dsVector*>(malloc(normalsNumber * sizeof(Lib3dsVector)));
+        lib3ds_mesh_calculate_normals(p3dsMesh, normalL);
 
-		// Load the material
-		// The material current face index
-		GLC_Material* pCurMaterial= NULL;
-		if (p3dsFace->material[0])
-		{
-			Lib3dsMaterial* p3dsMat=lib3ds_file_material_by_name(m_pLib3dsFile, p3dsFace->material);
-			if (NULL != p3dsMat)
-			{
-				// Check it this material as already been loaded
-				const QString materialName(p3dsFace->material);
+        // Position vector
+        QVector<float> position(normalsNumber * 3);
 
-				if (!m_Materials.contains(materialName))
-				{ // Material not already loaded, load it
-					loadMaterial(p3dsMat);
-				}
-				pCurMaterial= m_Materials.value(materialName);
-			}
-		}
-		pMesh->addTriangles(pCurMaterial, triangleIndex);
-	}
-	pMesh->addVertice(position);
-	pMesh->addNormals(normal);
-	if (p3dsMesh->texels > 0)
-	{
-		pMesh->addTexels(texel);
-	}
+        // Normal Vector
+        QVector<float> normal(normalsNumber * 3);
+        memcpy((void*)normal.data(), normalL, normalsNumber * 3 * sizeof(float));
 
-	// free normal memmory
-    free(normalL);
-	// Compute loading progress
-	++m_CurrentMeshNumber;
-	m_CurrentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentMeshNumber) / m_NumberOfMeshes) * (100 - m_InitQuantumValue)) + m_InitQuantumValue;
-	if (m_CurrentQuantumValue > m_PreviousQuantumValue)
-	{
-		emit currentQuantum(m_CurrentQuantumValue);
-	}
-	m_PreviousQuantumValue= m_CurrentQuantumValue;
+        // Texel Vector
+        QVector<float> texel;
+        if (p3dsMesh->texels > 0)
+        {
+            texel.resize(normalsNumber * 2);
+        }
 
-	pMesh->finish();
-	return GLC_3DRep(pMesh);
+        int normalIndex= 0;
+        for (unsigned int i= 0; i < p3dsMesh->faces; ++i)
+        {
+            IndexList triangleIndex;
+            Lib3dsFace *p3dsFace=&p3dsMesh->faceL[i];
+            for (int i=0; i < 3; ++i)
+            {
+                triangleIndex.append(normalIndex);
+                // Add vertex coordinate
+                memcpy((void*)&(position.data()[normalIndex * 3]), &p3dsMesh->pointL[p3dsFace->points[i]], 3 * sizeof(float));
+
+                // Add texel
+                if (p3dsMesh->texels > 0)
+                {
+                    memcpy((void*)&(texel.data()[normalIndex * 2]), &p3dsMesh->texelL[p3dsFace->points[i]], 2 * sizeof(float));
+                }
+                ++normalIndex;
+            }
+
+            // Load the material
+            // The material current face index
+            GLC_Material* pCurMaterial= nullptr;
+            if (p3dsFace->material[0])
+            {
+                Lib3dsMaterial* p3dsMat=lib3ds_file_material_by_name(m_pLib3dsFile, p3dsFace->material);
+                if (nullptr != p3dsMat)
+                {
+                    // Check it this material as already been loaded
+                    const QString materialName(p3dsFace->material);
+
+                    if (!m_Materials.contains(materialName))
+                    { // Material not already loaded, load it
+                        loadMaterial(p3dsMat);
+                    }
+                    pCurMaterial= m_Materials.value(materialName);
+                }
+            }
+            pMesh->addTriangles(pCurMaterial, triangleIndex);
+        }
+        pMesh->addVertice(position);
+        pMesh->addNormals(normal);
+        if (p3dsMesh->texels > 0)
+        {
+            pMesh->addTexels(texel);
+        }
+
+        // free normal memmory
+        free(normalL);
+        // Compute loading progress
+        ++m_CurrentMeshNumber;
+        m_CurrentQuantumValue = static_cast<int>((static_cast<double>(m_CurrentMeshNumber) / m_NumberOfMeshes) * (100 - m_InitQuantumValue)) + m_InitQuantumValue;
+        if (m_CurrentQuantumValue > m_PreviousQuantumValue)
+        {
+            emit currentQuantum(m_CurrentQuantumValue);
+        }
+        m_PreviousQuantumValue= m_CurrentQuantumValue;
+
+        pMesh->finish();
+        if (!pMesh->isEmpty())
+        {
+            subject.addGeom(pMesh);
+            subject.setName(meshName);
+        }
+    }
+
+    return subject;
 }
 
 // Load Material

@@ -24,7 +24,6 @@
 
 #include "../glc_exception.h"
 #include "glc_meshdata.h"
-#include "../glc_state.h"
 #include "../glc_contextmanager.h"
 
 // Class chunk id
@@ -212,23 +211,15 @@ void GLC_MeshData::setVboUsage(bool usage)
 	}
 	else if (!usage && m_VertexBuffer.isCreated())
 	{
-		m_Positions= positionVector();
-		m_PositionSize= m_Positions.size();
 		m_VertexBuffer.destroy();
-
-		m_Normals= normalVector();
 		m_NormalBuffer.destroy();
 
 		if (m_TexelBuffer.isCreated())
 		{
-			m_Texels= texelVector();
-			m_TexelsSize= m_Texels.size();
 			m_TexelBuffer.destroy();
 		}
 		if (m_ColorBuffer.isCreated())
 		{
-			m_Colors= colorVector();
-			m_ColorSize= m_Colors.size();
 			m_ColorBuffer.destroy();
 		}
 
@@ -402,8 +393,6 @@ QDataStream &operator>>(QDataStream &stream, GLC_MeshData &meshData)
 	Q_ASSERT(chunckId == GLC_MeshData::m_ChunkId);
 
 	meshData.clear();
-
-	GLfloatVector position, normal, texel, color;
 
 	stream >> meshData.m_Positions;
 	stream >> meshData.m_Normals;

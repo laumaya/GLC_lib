@@ -88,19 +88,19 @@ public:
     virtual int primitiveCount() const;
 
 	//! Get Object ID
-	inline GLC_uint id() const
+    GLC_uint id() const
 	{return m_Id;}
 
 	//! Get Object Name
-	inline QString name() const
+    const QString& name() const
 	{return m_Name;}
 
 	//! Return true if the geometry is valid
-	inline bool isValid(void) const
+    bool isValid(void) const
 	{return m_GeometryIsValid;}
 
 	//! Return true if the geometry has material
-	inline bool hasMaterial() const
+    bool hasMaterial() const
 	{return !m_MaterialHash.isEmpty();}
 
 	//! Return first material of geometry
@@ -114,52 +114,52 @@ public:
 	}
 
 	//! Return the number of materials
-	inline int materialCount() const
+    int materialCount() const
 	{return m_MaterialHash.size();}
 
 	//! Return the specified mesh sub material
-	inline GLC_Material* material(const GLC_uint key) const
+    GLC_Material* material(const GLC_uint key) const
     {return m_MaterialHash.value(key);}
 
-    MaterialHash materialHash() const
-    { return m_MaterialHash;}
+    const MaterialHash& materialHash() const
+    {return m_MaterialHash;}
 
 	//! Get materials Set
-    inline QSet<GLC_Material*> materialSet() const
+    QSet<GLC_Material*> materialSet() const
     {return QSet<GLC_Material*>(m_MaterialHash.begin(), m_MaterialHash.end());}
 
 	//! Get materials ID List
-	inline QList<GLC_uint> materialIds() const
+    QList<GLC_uint> materialIds() const
 	{return m_MaterialHash.keys();}
 
 	//! Return true if Material key is in the mesh
-	inline bool containsMaterial(const GLC_uint key) const
+    bool containsMaterial(const GLC_uint key) const
 	{return m_MaterialHash.contains(key);}
 
 	//! Return the geometry bounding box
 	virtual const GLC_BoundingBox& boundingBox(void) = 0;
 
 	//! Return true if the bounding box is valid
-	inline bool boundingBoxIsValid() const
+    bool boundingBoxIsValid() const
 	{return NULL != m_pBoundingBox;}
 
 	//! Clone the geometry
 	virtual GLC_Geometry* clone() const = 0;
 
 	//! Get the geometry transparency
-	inline bool isTransparent() const
+    bool isTransparent() const
 	{return (m_TransparentMaterialNumber >= m_MaterialHash.size()) && hasTransparentMaterials();}
 
 	//! Return true if the geometry contains transparent materials
-	inline bool hasTransparentMaterials() const
+    bool hasTransparentMaterials() const
 	{return m_TransparentMaterialNumber > 0;}
 
 	//! Return true if color per vertex is used
-	inline bool usedColorPerVertex() const
+    bool usedColorPerVertex() const
 	{return m_UseColorPerVertex;}
 
 	//! Return true if the geometry type is wireframe
-	inline bool typeIsWire() const
+    bool typeIsWire() const
 	{return m_IsWire;}
 
 	//! Get the number of faces
@@ -173,7 +173,7 @@ public:
 	{return m_LineWidth;}
 
 	//! Return this geometry wire color
-	inline QColor wireColor() const
+    const QColor& wireColor() const
 	{return m_WireColor;}
 
 	//! Return true if wire data is empty
@@ -181,26 +181,26 @@ public:
 	{return m_WireData.isEmpty();}
 
 	//! Return the wire position vector
-	inline GLfloatVector wirePositionVector() const
+    const GLfloatVector& wirePositionVector() const
 	{return m_WireData.positionVector();}
 
 	//! Return the number of wire polylines
-	inline int wirePolylineCount() const
+    int wirePolylineCount() const
 	{return m_WireData.verticeGroupCount();}
 
 	//! Return the polyline offset from the given index
-	inline GLuint wirePolylineOffset(int index) const
+    GLuint wirePolylineOffset(int index) const
 	{return m_WireData.verticeGroupOffset(index);}
 
 	//! Return the polyline size from the given index
-	inline GLsizei wirePolylineSize(int index) const
+    GLsizei wirePolylineSize(int index) const
 	{return m_WireData.verticeGroupSize(index);}
 
 	//! Return the volume of this geometry
 	virtual double volume();
 
 	//! Return true if this geometry will try to use VBO
-	inline bool vboIsUsed() const
+    bool vboIsUsed() const
 	{return m_UseVbo;}
 
     const GLC_WireData& wireData() const
@@ -233,7 +233,7 @@ public:
 	void addMaterial(GLC_Material *);
 
 	//! Set the color per vertex usage
-	inline void colorPerVertex(const bool colorPerVertex)
+    void colorPerVertex(const bool colorPerVertex)
 	{
 		if (m_UseColorPerVertex != colorPerVertex)
 		{
@@ -257,11 +257,11 @@ public:
 	{m_Id= id;}
 
 	//! Set geometry name
-	inline void setName(const QString name)
-	{m_Name= name;}
+    void setName(const QString& value)
+    {m_Name= value;}
 
 	//! Add a vertice group to the geometry and returns its id
-	inline GLC_uint addVerticeGroup(const GLfloatVector& vector)
+    GLC_uint addVerticeGroup(const GLfloatVector& vector)
 	{return m_WireData.addVerticeGroup(vector);}
 
     void addVerticeGroups(const GLC_Geometry& other, const GLC_Matrix4x4& matrix);
@@ -269,7 +269,7 @@ public:
     void addVerticeGroups(const GLC_WireData& wireData, const GLC_Matrix4x4& matrix);
 
 	//! Set Line width
-	inline void setLineWidth(GLfloat lineWidth)
+    void setLineWidth(GLfloat lineWidth)
 	{m_LineWidth= lineWidth;}
 
 	//! Set this geometry wire color
@@ -282,7 +282,7 @@ public:
 	virtual void setVboUsage(bool usage);
 
 	//! Clear the wire data and the bounding box of this geometry
-	inline void clearBoundingBox()
+    void clearBoundingBox()
 	{
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;
@@ -322,7 +322,7 @@ protected:
 	void removeMaterial(GLC_uint);
 
 	//! Clear the wire data and the bounding box of this geometry
-	inline void clearWireAndBoundingBox()
+    void clearWireAndBoundingBox()
 	{
 		delete m_pBoundingBox;
 		m_pBoundingBox= NULL;

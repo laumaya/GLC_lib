@@ -360,11 +360,7 @@ private:
 // Draw instances of a PointerViewInstanceHash
 void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc::RenderFlag renderFlag)
 {
-	bool forceDisplay= false;
-	if (GLC_State::isInSelectionMode())
-	{
-		forceDisplay= true;
-	}
+    const bool forceDisplay= GLC_State::isInSelectionMode();
 
 	PointerViewInstanceHash::iterator iEntry= pHash->begin();
 	// The current instance
@@ -387,7 +383,7 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
         }
         else
         {
-            while (iEntry != pHash->constEnd())
+            while (iEntry != pHash->end())
             {
                 pCurInstance= iEntry.value();
                 if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
@@ -406,7 +402,7 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 	{
 		if (!(renderFlag == glc::TransparentRenderFlag))
 		{
-			while (iEntry != pHash->constEnd())
+            while (iEntry != pHash->end())
 			{
 				pCurInstance= iEntry.value();
 				if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))
@@ -421,7 +417,7 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 		}
 		else
 		{
-			while (iEntry != pHash->constEnd())
+            while (iEntry != pHash->end())
 			{
 				pCurInstance= iEntry.value();
 				if ((pCurInstance->viewableFlag() != GLC_3DViewInstance::NoViewable) && (pCurInstance->isVisible() == m_IsInShowSate))

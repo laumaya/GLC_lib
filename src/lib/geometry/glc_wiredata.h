@@ -77,41 +77,41 @@ public:
 	static quint32 chunckID();
 
 	//! Return this wire data Position Vector
-    GLfloatVector positionVector() const
+    const GLfloatVector& positionVector() const
     {return m_Positions;}
 
     GLfloatVector* positionVectorHandle()
     {return &m_Positions;}
 
 	//! Return the color Vector
-    GLfloatVector colorVector() const
+    const GLfloatVector& colorVector() const
     {return m_Colors; }
 
 	//! Return the unique index vector
-    QVector<GLuint> indexVector() const
+    const QVector<GLuint>& indexVector() const
     {return m_IndexVector;}
 
 	//! Return true if this wire data is empty
-	inline bool isEmpty() const
+    bool isEmpty() const
 	{return ((m_PositionSize == 0) && m_Positions.isEmpty());}
 
 	//! Return this wire data bounding box
 	GLC_BoundingBox& boundingBox();
 
 	//! Return the number of vertice group
-	inline int verticeGroupCount() const
+    int verticeGroupCount() const
 	{return m_VerticeGroupCount;}
 
 	//! Return the vertice group offset from the given index
-	inline GLuint verticeGroupOffset(int index) const
+    GLuint verticeGroupOffset(int index) const
 	{return m_VerticeGroupOffseti.at(index);}
 
 	//! Return the vertice group size from the given index
-	inline GLsizei verticeGroupSize(int index) const
+    GLsizei verticeGroupSize(int index) const
 	{return m_VerticeGrouprSizes.at(index);}
 
 	//! Return true if this wire data use indexed colors
-	inline bool useIndexdColors() const
+    bool useIndexdColors() const
 	{return (m_ColorSize > 0) || (m_Colors.size() > 0);}
 //@}
 
@@ -124,7 +124,7 @@ public:
 	GLC_uint addVerticeGroup(const GLfloatVector&);
 
 	//! Add Colors
-	inline void addColors(const GLfloatVector& colors)
+    void addColors(const GLfloatVector& colors)
 	{m_Colors+= colors;}
 
 	//! Clear the content of this wire Data and makes it empty

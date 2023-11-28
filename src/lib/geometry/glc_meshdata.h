@@ -102,30 +102,30 @@ public:
     {return m_Colors;}
 
 	//! Return the Position Vector handle
-	inline GLfloatVector* positionVectorHandle()
-	{ return &m_Positions;}
+    GLfloatVector* positionVectorHandle()
+    {return &m_Positions;}
 
 	//! Return the Normal Vector handle
-	inline GLfloatVector* normalVectorHandle()
-	{ return &m_Normals;}
+    GLfloatVector* normalVectorHandle()
+    {return &m_Normals;}
 
 	//! Return the Texel Vector handle
-	inline GLfloatVector* texelVectorHandle()
-	{ return &m_Texels;}
+    GLfloatVector* texelVectorHandle()
+    {return &m_Texels;}
 
 	//! Return the Color Vector handle
-	inline GLfloatVector* colorVectorHandle()
-	{ return &m_Colors;}
+    GLfloatVector* colorVectorHandle()
+    {return &m_Colors;}
 
 	//! Return the Index Vector of the specified LOD
-	inline GLuintVector indexVector(const int i= 0) const
+    const GLuintVector& indexVector(const int i= 0) const
 	{
 		Q_ASSERT(i < m_LodList.size());
 		return m_LodList.at(i)->indexVector();
 	}
 
 	//! Return the Index Vector handle of the specified LOD
-	inline GLuintVector* indexVectorHandle(const int i= 0) const
+    GLuintVector* indexVectorHandle(const int i= 0) const
 	{
 		Q_ASSERT(i < m_LodList.size());
 		return m_LodList.at(i)->indexVectorHandle();

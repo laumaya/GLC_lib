@@ -69,7 +69,7 @@ public:
     {return m_Points;}
 
     //! Return the extrusion vector
-    GLC_Vector3d extrusionVector() const
+    const GLC_Vector3d& extrusionVector() const
     {return m_ExtrusionVector;}
 
     //! Return the extrusion length
@@ -91,6 +91,9 @@ public:
     {return m_TextureRangeFactor;}
 
     QMap<int, GLC_Polygon> polygons() const;
+
+    bool mirrorExtended() const
+    {return m_MirroredExtend;}
 
 //@}
 

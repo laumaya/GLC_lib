@@ -30,33 +30,33 @@ quint32 GLC_Lod::m_ChunkId= 0xA708;
 
 
 GLC_Lod::GLC_Lod()
-: m_Accuracy(0.0)
-, m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
-, m_IndexVector()
-, m_IndexSize(0)
-, m_TrianglesCount(0)
+    : m_Accuracy(0.0)
+    , m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
+    , m_IndexVector()
+    , m_IndexSize(0)
+    , m_TrianglesCount(0)
 {
 
 }
 
 
 GLC_Lod::GLC_Lod(double accuracy)
-: m_Accuracy(accuracy)
-, m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
-, m_IndexVector()
-, m_IndexSize(0)
-, m_TrianglesCount(0)
+    : m_Accuracy(accuracy)
+    , m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
+    , m_IndexVector()
+    , m_IndexSize(0)
+    , m_TrianglesCount(0)
 {
 
 }
 
 
 GLC_Lod::GLC_Lod(const GLC_Lod& lod)
-: m_Accuracy(lod.m_Accuracy)
-, m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
-, m_IndexVector(lod.indexVector())
-, m_IndexSize(lod.m_IndexSize)
-, m_TrianglesCount(lod.m_TrianglesCount)
+    : m_Accuracy(lod.m_Accuracy)
+    , m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
+    , m_IndexVector(lod.indexVector())
+    , m_IndexSize(lod.m_IndexSize)
+    , m_TrianglesCount(lod.m_TrianglesCount)
 {
 
 
@@ -90,19 +90,6 @@ quint32 GLC_Lod::chunckID()
 {
 	return m_ChunkId;
 }
-
-
-
-
-
-void GLC_Lod::copyIboToClientSide()
-{
-	if (m_IndexBuffer.isCreated() && (m_IndexVector.isEmpty()))
-	{
-		m_IndexVector= indexVector();
-	}
-}
-
 
 void GLC_Lod::releaseIboClientSide(bool update)
 {
@@ -139,7 +126,6 @@ void GLC_Lod::setIboUsage(bool usage)
 	}
 	else if (!usage && m_IndexBuffer.isCreated())
 	{
-		m_IndexVector= indexVector();
 		m_IndexBuffer.destroy();
 	}
 }

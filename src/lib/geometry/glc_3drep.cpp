@@ -29,17 +29,17 @@
 quint32 GLC_3DRep::m_ChunkId= 0xA702;
 
 GLC_3DRep::GLC_3DRep()
-: GLC_Rep()
-, m_pGeomList(new QList<GLC_Geometry*>)
-, m_pType(new int(GLC_Rep::GLC_VBOGEOM))
+    : GLC_Rep()
+    , m_pGeomList(new QList<GLC_Geometry*>)
+    , m_pType(new int(GLC_Rep::GLC_VBOGEOM))
 {
 
 }
 
 GLC_3DRep::GLC_3DRep(GLC_Geometry* pGeom)
-: GLC_Rep()
-, m_pGeomList(new QList<GLC_Geometry*>)
-, m_pType(new int(GLC_Rep::GLC_VBOGEOM))
+    : GLC_Rep()
+    , m_pGeomList(new QList<GLC_Geometry*>)
+    , m_pType(new int(GLC_Rep::GLC_VBOGEOM))
 {
 	m_pGeomList->append(pGeom);
 	*m_pIsLoaded= true;
@@ -47,9 +47,9 @@ GLC_3DRep::GLC_3DRep(GLC_Geometry* pGeom)
 }
 
 GLC_3DRep::GLC_3DRep(const GLC_3DRep& rep)
-: GLC_Rep(rep)
-, m_pGeomList(rep.m_pGeomList)
-, m_pType(rep.m_pType)
+    : GLC_Rep(rep)
+    , m_pGeomList(rep.m_pGeomList)
+    , m_pType(rep.m_pType)
 {
 
 }
@@ -258,7 +258,7 @@ void GLC_3DRep::clear()
 void GLC_3DRep::clean()
 {
 	QList<GLC_Geometry*>::iterator iGeomList= m_pGeomList->begin();
-	while(iGeomList != m_pGeomList->constEnd())
+    while(iGeomList != m_pGeomList->end())
 	{
 		if ((*iGeomList)->vertexCount() == 0)
 		{
@@ -414,7 +414,7 @@ void GLC_3DRep::setVboUsage(bool usage)
 
 void GLC_3DRep::setMeshWireColorAndLineWidth(const QColor& color, GLfloat lineWidth)
 {
-    for (GLC_Geometry* pGeom : *m_pGeomList)
+    for (GLC_Geometry* pGeom : qAsConst(*m_pGeomList))
     {
         pGeom->setWireColor(color);
         pGeom->setLineWidth(lineWidth);
@@ -457,7 +457,7 @@ void GLC_3DRep::clear3DRepGeom()
     const int size= m_pGeomList->size();
     for (int i= 0; i < size; ++i)
     {
-        delete (*m_pGeomList)[i];
+        delete m_pGeomList->at(i);
     }
     m_pGeomList->clear();
     *m_pIsLoaded= false;
