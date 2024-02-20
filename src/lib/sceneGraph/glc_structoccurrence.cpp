@@ -424,8 +424,13 @@ bool GLC_StructOccurrence::isVisible() const
 	else
 	{
 		isHidden= !m_IsVisible;
-	}
-	return !isHidden;
+    }
+    return !isHidden;
+}
+
+bool GLC_StructOccurrence::isHidden() const
+{
+    return !m_IsVisible;
 }
 
 GLC_BoundingBox GLC_StructOccurrence::boundingBox() const
