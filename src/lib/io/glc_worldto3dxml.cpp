@@ -1319,17 +1319,22 @@ QString GLC_WorldTo3dxml::xmlFileName(QString fileName)
         fileName= symplifyName(fileName);
     }
 
-	QString newName;
-	if (!m_3dxmlFileSet.contains(prefix + fileName))
+    QString newName;
+    if (!m_3dxmlFileSet.contains(QString(prefix + fileName).toLower()))
 	{
 		fileName.prepend(prefix);
-		m_3dxmlFileSet << fileName;
+        m_3dxmlFileSet << fileName.toLower();
 		newName= fileName;
 	}
 	else
 	{
-		newName= QFileInfo(fileName).completeBaseName() + QString::number(++m_FileNameIncrement) + '.' + QFileInfo(fileName).suffix();
-		newName.prepend(prefix);
+        newName= QString(prefix + fileName);
+        while (m_3dxmlFileSet.contains(newName.toLower()))
+        {
+            newName= QFileInfo(fileName).completeBaseName() + QString::number(++m_FileNameIncrement) + '.' + QFileInfo(fileName).suffix();
+            newName.prepend(prefix);
+        }
+        m_3dxmlFileSet << newName.toLower();
     }
     return newName;
 }
