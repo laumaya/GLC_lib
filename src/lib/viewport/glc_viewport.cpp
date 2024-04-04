@@ -773,7 +773,6 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box, double coverFactor)
 
 GLC_Camera GLC_Viewport::reframedCamera(const GLC_BoundingBox &box, double coverFactor) const
 {
-    qDebug() << "GLC_Viewport::reframedCamera " << coverFactor;
     Q_ASSERT(!box.isEmpty());
     GLC_Camera subject(*m_pViewCam);
 
