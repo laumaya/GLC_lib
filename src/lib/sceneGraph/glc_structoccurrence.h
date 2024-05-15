@@ -164,8 +164,6 @@ public:
 	//! Return true if this occurrence is visible
 	bool isVisible() const;
 
-    bool isHidden() const;
-
 	//! Return the occurrence Bounding Box
 	GLC_BoundingBox boundingBox() const;
 
