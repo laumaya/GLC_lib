@@ -47,7 +47,7 @@ QHash<GLuint, int> GLC_Texture::m_TextureIdUsage;
 
 //! Default constructor
 GLC_Texture::GLC_Texture()
-    : m_pQOpenGLTexture(NULL)
+    : m_pQOpenGLTexture(nullptr)
     , m_FileName()
     , m_TextureImage()
     , m_TextureSize()
@@ -60,7 +60,7 @@ GLC_Texture::GLC_Texture()
 
 // Constructor with fileName
 GLC_Texture::GLC_Texture(const QString &Filename)
-    : m_pQOpenGLTexture(NULL)
+    : m_pQOpenGLTexture(nullptr)
     , m_FileName(Filename)
     , m_TextureImage(loadFromFile(m_FileName))
     , m_TextureSize()
@@ -83,7 +83,7 @@ GLC_Texture::GLC_Texture(const QString &Filename)
 }
 // Constructor with QFile
 GLC_Texture::GLC_Texture(const QFile &file)
-    : m_pQOpenGLTexture(NULL)
+    : m_pQOpenGLTexture(nullptr)
     , m_FileName(file.fileName())
     , m_TextureImage()
     , m_TextureSize()
@@ -108,7 +108,7 @@ GLC_Texture::GLC_Texture(const QFile &file)
 
 // Constructor with QImage
 GLC_Texture::GLC_Texture(const QImage& image, const QString& fileName)
-    : m_pQOpenGLTexture(NULL)
+    : m_pQOpenGLTexture(nullptr)
     , m_FileName(fileName)
     , m_TextureImage(image)
     , m_TextureSize(m_TextureImage.size())
@@ -120,7 +120,7 @@ GLC_Texture::GLC_Texture(const QImage& image, const QString& fileName)
 }
 
 GLC_Texture::GLC_Texture(const GLC_Texture &other)
-    : m_pQOpenGLTexture(NULL)
+    : m_pQOpenGLTexture(nullptr)
     , m_FileName(other.m_FileName)
     , m_TextureImage(other.m_TextureImage)
     , m_TextureSize(other.m_TextureSize)
@@ -144,7 +144,7 @@ GLC_Texture& GLC_Texture::operator=(const GLC_Texture& other)
     if (this->operator !=(other))
 	{
         delete m_pQOpenGLTexture;
-        m_pQOpenGLTexture= NULL;
+        m_pQOpenGLTexture= nullptr;
         m_FileName= other.m_FileName;
         m_TextureImage= other.m_TextureImage;
         m_TextureSize= other.m_TextureSize;
