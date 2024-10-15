@@ -1223,17 +1223,17 @@ QList<GLC_Point2d> glc::line2CircleIntersection(const GLC_Point2d& lineOrigin, c
     const double a0= (diff * diff) - (radius * radius);
     const double a1= (lineDir * diff);
     const double discr= (a1 * a1) - a0;
-    if (discr > 0.0)
+    if (glc::fuzzyCompare(discr, 0.0))
+    {
+        const GLC_Point2d p(lineOrigin + (lineDir * (-a1)));
+        subject << p;
+    }
+    else if (discr > 0.0)
     {
         double root= sqrt(discr);
         const GLC_Point2d p1(lineOrigin + (lineDir * (-a1 - root)));
         const GLC_Point2d p2(lineOrigin + (lineDir * (-a1 + root)));
         subject << p1 << p2;
-    }
-    else if (qFuzzyIsNull(discr))
-    {
-        const GLC_Point2d p(lineOrigin + (lineDir * (-a1)));
-        subject << p;
     }
 
     return subject;
@@ -1268,3 +1268,71 @@ double glc::area(const QPolygonF& polygon)
 
     return qAbs(subject);
 }
+
+QList<GLC_Line2d> glc::linesTangentToTwoCircles(const GLC_Point2d& c1, double r1, const GLC_Point2d& c2, double r2)
+{
+    // Compute the common tangent line of two circles: (x1, y1) - r1 and (x2, y2) - r2
+    const double delta1 = (c1.x() - c2.x()) * (c1.x() - c2.x()) + (c1.y() - c2.y()) * (c1.y() - c2.y()) - (r1 + r2) * (r1 + r2);
+    const double delta2 = (c1.x() - c2.x()) * (c1.x() - c2.x()) + (c1.y() - c2.y()) * (c1.y() - c2.y()) - (r1 - r2) * (r1 - r2);
+    const double p1 = r1 * (c1.x() * c2.x() + c1.y() * c2.y() - c2.x() * c2.x() - c2.y() * c2.y());
+    const double p2 = r2 * (c1.x() * c1.x() + c1.y() * c1.y() - c1.x() * c2.x() - c1.y() * c2.y());
+    const double q = c1.x() * c2.y() - c2.x() * c1.y();
+    QList<GLC_Line2d> subject;
+    if (delta1 >= 0)
+    {
+        {
+            // Line 11
+            const double a= (c2.x() - c1.x()) * (r1 + r2) + (c1.y() - c2.y()) * sqrt(delta1);
+            const double b= (c2.y() - c1.y()) * (r1 + r2) + (c2.x() - c1.x()) * sqrt(delta1);
+            const double c= p1 + p2 + q * sqrt(delta1);
+
+            GLC_Line2d line(lineImplicitToParametric(a, b, c));
+            subject.append(line);
+        }
+
+        {
+            // Line 12
+            const double a= (c2.x() - c1.x()) * (r1 + r2) - (c1.y() - c2.y()) * sqrt(delta1);
+            const double b= (c2.y() - c1.y()) * (r1 + r2) - (c2.x() - c1.x()) * sqrt(delta1);
+            const double c= p1 + p2 - q * sqrt(delta1);
+
+            GLC_Line2d line(lineImplicitToParametric(a, b, c));
+            subject.append(line);
+        }
+    }
+
+    if (delta2 >= 0)
+    {
+        {
+            const double a= (c2.x() - c1.x()) * (r1 - r2) + (c1.y() - c2.y()) * sqrt(delta2);
+            const double b= (c2.y() - c1.y()) * (r1 - r2) + (c2.x() - c1.x()) * sqrt(delta2);
+            const double c= p1 - p2 + q * sqrt(delta2);
+
+            GLC_Line2d line(lineImplicitToParametric(a, b, c));
+            subject.append(line);
+        }
+
+        {
+            const double a= (c2.x() - c1.x()) * (r1 - r2) - (c1.y() - c2.y()) * sqrt(delta2);
+            const double b= (c2.y() - c1.y()) * (r1 - r2) - (c2.x() - c1.x()) * sqrt(delta2);
+            const double c= p1 - p2 - q * sqrt(delta2);
+
+            GLC_Line2d line(lineImplicitToParametric(a, b, c));
+            subject.append(line);
+        }
+   }
+
+    return subject;
+}
+
+ GLC_Line2d glc::lineImplicitToParametric(double a, double b, double c)
+ {
+
+     GLC_Point2d point((-a * c) / (a * a + b * b), (-b * c) / (a * a + b * b));
+     GLC_Vector2d direction(-b, a);
+     GLC_Line2d subject(point, direction.normalize());
+
+     return subject;
+ }
+
+

@@ -33,6 +33,7 @@
 
 #include "glc_vector3d.h"
 #include "glc_line3d.h"
+#include "glc_line2d.h"
 #include "glc_plane.h"
 
 #include "glc_utils_maths.h"
@@ -215,6 +216,10 @@ namespace glc
 
     GLC_LIB_EXPORT double area(const QPolygonF& polygon);
 
+    GLC_LIB_EXPORT QList<GLC_Line2d> linesTangentToTwoCircles(const GLC_Point2d& c1, double r1
+                                                              , const GLC_Point2d& c2, double r2);
+
+    GLC_LIB_EXPORT GLC_Line2d lineImplicitToParametric(double a, double b, double c);
 
 //@}
 

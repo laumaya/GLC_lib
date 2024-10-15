@@ -13,5 +13,5 @@ contains(QT_CONFIG, opengles2) {
 }
 
 SUBDIRS += src/lib \
-           src/plugins #\
-           #src/examples
+           src/plugins \
+           src/examples

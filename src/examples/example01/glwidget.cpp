@@ -24,6 +24,7 @@
 #include <QGLContext>
 
 #include <GLC_Context>
+#include <GLC_GeomTools>
 
 #include "glwidget.h"
 
@@ -41,7 +42,6 @@ GLWidget::~GLWidget()
 }
 void GLWidget::initializeGL()
 {
-
     m_GlView.initGl();
 }
 
@@ -58,7 +58,7 @@ void GLWidget::paintGL()
 	m_GlView.glExecuteCam();
 
 	// Display the circle
-    //m_Circle.render();
+    m_Circle.render();
 //////////////////////////End GLC specific/////////////////////////////////////
 
 }

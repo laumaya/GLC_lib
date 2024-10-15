@@ -98,6 +98,7 @@ HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
                         maths/glc_plane.h \
                         maths/glc_geomtools.h \
                         maths/glc_line3d.h \
+                        maths/glc_line2d.h \
                         maths/glc_triangle.h \
                         maths/glc_polygon.h
 						
@@ -323,6 +324,7 @@ SOURCES +=	maths/glc_matrix4x4.cpp \
                 maths/glc_plane.cpp \
                 maths/glc_geomtools.cpp \
                 maths/glc_line3d.cpp \
+                maths/glc_line2d.cpp \
                 maths/glc_triangle.cpp \
                 maths/glc_polygon.cpp
 
@@ -530,6 +532,7 @@ HEADERS_INST = GLC_BoundingBox \
                GLC_Frustum \
                GLC_GeomTools \
                GLC_Line3d \
+               GLC_Line2d \
                GLC_3DWidget \
                GLC_CuttingPlane \
                GLC_3DWidgetManager \

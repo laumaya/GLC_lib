@@ -25,7 +25,7 @@
 #include <QtDebug>
 
 #include <GLC_GeomTools>
-#include <GLC_Vector3d>
+#include <GLC_Vector2d>
 
 
 #include "mainwindow.h"
@@ -38,20 +38,36 @@ MainWindow::MainWindow()
 	setCentralWidget(p_GLWidget);
 
 
+    const double depth= 22.5;
+    const double radius1= 120;
+    const double radius2= 140;
+    const double flatSideLength= 20;
+    const double length= 300;
+
     // Test
-    const GLC_Point3d p0(100.0, 89.0, 0.0);
-    const GLC_Point3d p1(43.0, 80.0, 0.0);
-    const GLC_Point3d p2(60.0, 15.0, 0.0);
+    GLC_Point2d center0(flatSideLength / 2.0, -depth + radius1);
+    GLC_Point2d center1(length / 2, -radius2);
 
-    QList<GLC_Point3d> segments;
-    segments << p0 << p1 << p2;
+    // GLC_Point2d center0(0.0, 0.0);
+    // GLC_Point2d center1(20, 0.0);
 
-    QList<GLC_Point3d> segmentsAndArc= glc::AddCorner(segments, 18.0, 2);
-
-    const int count= segmentsAndArc.count();
-    for (int i= 0; i < count; ++i)
+    const QList<GLC_Line2d> lines(glc::linesTangentToTwoCircles(center0, radius1, center1, radius2));
+    const int count= lines.count();
+    qDebug() << "Tangent found : " << count;
+    for (const GLC_Line2d& line : lines)
     {
-        qDebug() << "Point " << i << " = " << segmentsAndArc.at(i).toString();
+        const GLC_Point2d startPoint(line.startingPoint());
+        const GLC_Vector2d direction(line.direction());
+        const GLC_Vector2d center(center0);
+
+        const QList<GLC_Point2d> intersection(glc::line2CircleIntersection(startPoint, direction, center, radius1));
+
+        const int intersectionCount= intersection.count();
+        qDebug() << "IntersectionCount : " << intersectionCount;
+        for (const GLC_Point2d& inter : intersection)
+        {
+            qDebug().noquote() << "Intersection : " << inter.toString();
+        }
     }
 
 }
