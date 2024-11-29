@@ -158,6 +158,9 @@ public:
 	inline int minimumPixelCullingSize() const
 	{return m_MinimumStaticPixelSize;}
 
+    inline int minimumDynamicPixelCullingSize() const
+    {return m_MinimumDynamicPixelSize;}
+
 	//! Return the minimum pixel culling ratio
 	inline double minimumStaticPixelCullingRatio() const
 	{return m_MinimumStaticRatioSize;}
@@ -335,11 +338,9 @@ public:
     void setToOrtho(bool useOrtho);
 
 	//! Set minimum pixel culling size
-	inline void setMinimumPixelCullingSize(int size)
-	{
-		m_MinimumStaticPixelSize= size;
-		updateMinimumRatioSize();
-	}
+    void setMinimumPixelCullingSize(int size);
+
+    void setMinimumDynamicPixelCullingSize(int value);
 //@}
 
 
@@ -434,6 +435,8 @@ private:
 
 	//! The minimum static pixel culling size
 	int m_MinimumStaticPixelSize;
+
+    int m_MinimumDynamicPixelSize;
 
 	//! The minimum static size ratio
 	double m_MinimumStaticRatioSize;

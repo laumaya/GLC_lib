@@ -628,6 +628,20 @@ int GLC_3DViewCollection::numberOfUsedShadingGroup() const
     return QSet<GLC_uint>(values.begin(), values.end()).size();
 }
 
+int GLC_3DViewCollection::faceCount() const
+{
+    int subject= 0;
+    ViewInstancesHash::const_iterator iInstance= m_3DViewInstanceHash.constBegin();
+    while (iInstance != m_3DViewInstanceHash.constEnd())
+    {
+        subject+= iInstance.value().numberOfFaces();
+        ++iInstance;
+    }
+
+
+    return subject;
+}
+
 //////////////////////////////////////////////////////////////////////
 // OpenGL Functions
 //////////////////////////////////////////////////////////////////////

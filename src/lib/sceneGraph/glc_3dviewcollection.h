@@ -163,6 +163,8 @@ public:
     bool useOrderRendering() const
     {return m_UseOrderRendering;}
 
+    int faceCount() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

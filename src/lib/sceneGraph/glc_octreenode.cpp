@@ -90,6 +90,19 @@ QSet<GLC_3DViewInstance*> GLC_OctreeNode::setOfIntersectedInstances(const GLC_Bo
 
 	return instanceSet;
 }
+
+int GLC_OctreeNode::viewableInstanceCount() const
+{
+    int subject= 0;
+    QSet<GLC_3DViewInstance*>::const_iterator iInstance= m_3DViewInstanceSet.constBegin();
+    while (iInstance != m_3DViewInstanceSet.constEnd())
+    {
+        if ((*iInstance)->isGeomViewable(0)) ++subject;
+        ++ iInstance;
+    }
+
+    return subject;
+}
 //////////////////////////////////////////////////////////////////////
 // Set Functions
 //////////////////////////////////////////////////////////////////////

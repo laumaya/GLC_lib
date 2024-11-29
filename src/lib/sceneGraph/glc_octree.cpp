@@ -77,6 +77,7 @@ void GLC_Octree::updateViewableInstances(const GLC_Frustum& frustum)
 		updateSpacePartitioning();
 	}
 	m_pRootNode->updateViewableInstances(frustum);
+    //qDebug() << "ViewVable instance count " << m_pRootNode->viewableInstanceCount();
 }
 
 void GLC_Octree::updateSpacePartitioning()

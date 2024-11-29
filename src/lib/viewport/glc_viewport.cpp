@@ -59,6 +59,7 @@ GLC_Viewport::GLC_Viewport()
     , m_3DWidgetCollection()
     , m_UseParallelProjection(false)
     , m_MinimumStaticPixelSize(10)
+    , m_MinimumDynamicPixelSize(0)
     , m_MinimumStaticRatioSize(0.0)
     , m_MinimumDynamicRatioSize(0.0)
     , m_TextRenderingCollection()
@@ -730,7 +731,9 @@ void GLC_Viewport::updateMinimumRatioSize()
 {
     int size= qMax(m_Width, m_Height);
 	m_MinimumStaticRatioSize=  static_cast<double>(m_MinimumStaticPixelSize) / static_cast<double>(size) * 100.0;
-	m_MinimumDynamicRatioSize= m_MinimumStaticRatioSize * 2.0;
+    const double dynamicRatio= static_cast<double>(m_MinimumDynamicPixelSize) / static_cast<double>(size) * 100.0;
+
+    m_MinimumDynamicRatioSize= qMax(m_MinimumStaticRatioSize * 2.0, dynamicRatio);
 }
 
 void GLC_Viewport::loadBackGroundImage(const QString& ImageFile, bool preserveRatio)
@@ -763,6 +766,18 @@ void GLC_Viewport::setToOrtho(bool useOrtho)
 		m_UseParallelProjection= useOrtho;
         updateProjectionMat(false); // doesn't update OpenGL
 	}
+}
+
+void GLC_Viewport::setMinimumPixelCullingSize(int size)
+{
+    m_MinimumStaticPixelSize= size;
+    updateMinimumRatioSize();
+}
+
+void GLC_Viewport::setMinimumDynamicPixelCullingSize(int value)
+{
+    m_MinimumDynamicPixelSize= value;
+    updateMinimumRatioSize();
 }
 
 void GLC_Viewport::reframe(const GLC_BoundingBox& box, double coverFactor)

@@ -99,6 +99,8 @@ public:
 	//! Return the list off instances inside or intersect the given bounding box
 	QSet<GLC_3DViewInstance*> setOfIntersectedInstances(const GLC_BoundingBox& bBox);
 
+    int viewableInstanceCount() const;
+
 
 //@}
 
