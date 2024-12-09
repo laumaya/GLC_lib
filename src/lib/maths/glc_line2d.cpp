@@ -21,7 +21,7 @@
  *****************************************************************************/
 //! \file GLC_Line2d.cpp Implementation of the GLC_Line2d class.
 
-#include "GLC_Line2d.h"
+#include "glc_line2d.h"
 
 GLC_Line2d::GLC_Line2d()
 : m_Point()
