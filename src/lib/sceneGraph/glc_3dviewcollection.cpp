@@ -46,6 +46,7 @@ GLC_3DViewCollection::GLC_3DViewCollection()
     , m_IsInShowSate(true)
     , m_UseLod(false)
     , m_pViewport(nullptr)
+    , m_ViewportChanged(true)
     , m_pSpacePartitioning(nullptr)
     , m_UseSpacePartitioning(false)
     , m_IsViewable(true)
@@ -429,6 +430,16 @@ void GLC_3DViewCollection::hideAll()
     }
 }
 
+void GLC_3DViewCollection::setLodUsage(const bool usage, GLC_Viewport* pView)
+{
+    m_UseLod= usage;
+    if (m_pViewport != pView)
+    {
+        m_ViewportChanged= true;
+        m_pViewport= pView;
+    }
+}
+
 void GLC_3DViewCollection::bindSpacePartitioning(GLC_SpacePartitioning* pSpacePartitioning)
 {
     Q_ASSERT(nullptr != pSpacePartitioning);
@@ -457,9 +468,10 @@ void GLC_3DViewCollection::updateInstanceViewableState(GLC_Matrix4x4* pMatrix)
 {
     if ((nullptr != m_pViewport) && m_UseSpacePartitioning && (nullptr != m_pSpacePartitioning))
 	{
-		if (m_pViewport->updateFrustum(pMatrix))
+        if (m_pViewport->updateFrustum(pMatrix) || m_ViewportChanged)
         {
             m_pSpacePartitioning->updateViewableInstances(m_pViewport->frustum());
+            m_ViewportChanged= false;
         }
 	}
 }
@@ -469,6 +481,7 @@ void GLC_3DViewCollection::updateInstanceViewableState(const GLC_Frustum& frustu
     if (nullptr != m_pSpacePartitioning)
     {
         m_pSpacePartitioning->updateViewableInstances(frustum);
+        m_ViewportChanged= false;
     }
 }
 
@@ -477,6 +490,15 @@ void GLC_3DViewCollection::updateSpacePartitionning()
     if (nullptr != m_pSpacePartitioning)
     {
         m_pSpacePartitioning->updateSpacePartitioning();
+    }
+}
+
+void GLC_3DViewCollection::setAttachedViewport(GLC_Viewport* pViewport)
+{
+    if (m_pViewport != pViewport)
+    {
+        m_ViewportChanged= true;
+        m_pViewport= pViewport;
     }
 }
 

@@ -237,11 +237,7 @@ public:
 	{m_IsInShowSate= !m_IsInShowSate;}
 
 	//! Set the LOD usage
-    void setLodUsage(const bool usage, GLC_Viewport* pView)
-	{
-		m_UseLod= usage;
-		m_pViewport= pView;
-	}
+    void setLodUsage(const bool usage, GLC_Viewport* pView);
 
 	//! Bind the space partitioning
 	void bindSpacePartitioning(GLC_SpacePartitioning*);
@@ -265,8 +261,7 @@ public:
     void updateSpacePartitionning();
 
 	//! Set the attached viewport of this collection
-    void setAttachedViewport(GLC_Viewport* pViewport)
-	{m_pViewport= pViewport;}
+    void setAttachedViewport(GLC_Viewport* pViewport);
 
 	//! Set the collection viewable state
     void setViewable(bool viewable)
@@ -343,6 +338,9 @@ private:
 
 	//! The viewport associted to the collection for LOD Usage
 	GLC_Viewport* m_pViewport;
+
+    //! The viewPort has changed
+    bool m_ViewportChanged;
 
 	//! The space partitioning
 	GLC_SpacePartitioning* m_pSpacePartitioning;
