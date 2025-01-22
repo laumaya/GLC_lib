@@ -279,21 +279,27 @@ void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GL
 				else
 				{
 					pInstanceSet->insert(pCurrentInstance);
-					pCurrentInstance->setViewable(GLC_3DViewInstance::PartialViewable);
-					//Update the geometries viewable property of the instance
-					GLC_Matrix4x4 instanceMat= pCurrentInstance->matrix();
-					const int size= pCurrentInstance->numberOfBody();
-					for (int i= 0; i < size; ++i)
-					{
-						// Get the geometry bounding box
-						GLC_BoundingBox geomBox= pCurrentInstance->geomAt(i)->boundingBox();
-						GLC_Point3d center(instanceMat * geomBox.center());
-                        const double scaling= qMax(qMax(instanceMat.scalingX(), instanceMat.scalingY()), instanceMat.scalingZ());
-                        double radius= geomBox.boundingSphereRadius() * scaling;
-						GLC_Frustum::Localisation geomLocalisation= frustum.localizeSphere(center, radius);
+                    const int size= pCurrentInstance->numberOfBody();
+                    if (size > 1)
+                    {
+                        pCurrentInstance->setViewable(GLC_3DViewInstance::PartialViewable);
+                        //Update the geometries viewable property of the instance
+                        GLC_Matrix4x4 instanceMat= pCurrentInstance->matrix();
+                        for (int i= 0; i < size; ++i)
+                        {
+                            // Get the geometry bounding box
+                            GLC_BoundingBox geomBox= pCurrentInstance->geomAt(i)->boundingBox();
+                            geomBox.transform(instanceMat);
+                            double radius= geomBox.boundingSphereRadius();
+                            GLC_Frustum::Localisation geomLocalisation= frustum.localizeSphere(geomBox.center(), radius);
 
-						pCurrentInstance->setGeomViewable(i, geomLocalisation != GLC_Frustum::OutFrustum);
-					}
+                            pCurrentInstance->setGeomViewable(i, geomLocalisation != GLC_Frustum::OutFrustum);
+                        }
+                    }
+                    else
+                    {
+                        pCurrentInstance->setViewable(GLC_3DViewInstance::FullViewable);
+                    }
 				}
 			}
 
