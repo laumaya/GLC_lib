@@ -257,7 +257,7 @@ void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GL
 	}
 	else // The current node intersect the frustum
 	{
-		QSet<GLC_3DViewInstance*>::iterator iInstance= m_3DViewInstanceSet.begin();
+        QSet<GLC_3DViewInstance*>::const_iterator iInstance= m_3DViewInstanceSet.constBegin();
 		while (m_3DViewInstanceSet.constEnd() != iInstance)
 		{
 			// Test if the instances is in the viewable set
@@ -288,7 +288,8 @@ void GLC_OctreeNode::updateViewableInstances(const GLC_Frustum& frustum, QSet<GL
 						// Get the geometry bounding box
 						GLC_BoundingBox geomBox= pCurrentInstance->geomAt(i)->boundingBox();
 						GLC_Point3d center(instanceMat * geomBox.center());
-						double radius= geomBox.boundingSphereRadius() * instanceMat.scalingX();
+                        const double scaling= qMax(qMax(instanceMat.scalingX(), instanceMat.scalingY()), instanceMat.scalingZ());
+                        double radius= geomBox.boundingSphereRadius() * scaling;
 						GLC_Frustum::Localisation geomLocalisation= frustum.localizeSphere(center, radius);
 
 						pCurrentInstance->setGeomViewable(i, geomLocalisation != GLC_Frustum::OutFrustum);
