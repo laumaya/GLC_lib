@@ -189,7 +189,7 @@ public:
 	{return m_DefaultLOD;}
 
 	//! Return the instance representation
-    GLC_3DRep representation() const
+    const GLC_3DRep& representation() const
 	{return m_3DRep;}
 
 	//! Return the number of body contains in the 3DRep

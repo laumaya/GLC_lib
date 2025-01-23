@@ -71,6 +71,9 @@ public:
 	//! Default constructor
 	GLC_3DViewCollection();
 
+    //! Copy constructor
+    GLC_3DViewCollection(const GLC_3DViewCollection& other);
+
 	//! Destructor
 	/*! Delete all Node in the Hash Table and clear the Hash Table*/
 	virtual ~GLC_3DViewCollection();
@@ -352,9 +355,6 @@ private:
 	bool m_IsViewable;
 
     bool m_UseOrderRendering;
-
-private:
-    Q_DISABLE_COPY(GLC_3DViewCollection)
 };
 
 // Draw instances of a PointerViewInstanceHash

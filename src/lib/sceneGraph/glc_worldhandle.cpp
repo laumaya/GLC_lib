@@ -24,6 +24,8 @@
 
 #include "glc_worldhandle.h"
 #include "glc_structreference.h"
+#include "glc_structinstance.h"
+
 #include "../glc_selectionevent.h"
 
 GLC_WorldHandle::GLC_WorldHandle()
@@ -49,6 +51,28 @@ GLC_WorldHandle::GLC_WorldHandle(GLC_StructOccurrence *pOcc)
 {
     Q_ASSERT(pOcc->isOrphan());
     pOcc->setWorldHandle(this);
+}
+
+GLC_WorldHandle::GLC_WorldHandle(const GLC_3DViewCollection& collection)
+    : m_Collection()
+    , m_pRoot(new GLC_StructOccurrence())
+    , m_Ref(1)
+    , m_OccurrenceHash()
+    , m_UpVector(glc::Z_AXIS)
+    , m_SelectionSet(this)
+    , m_DestructorMode(false)
+{
+    m_pRoot->setWorldHandle(this);
+    const QList<GLC_3DViewInstance*> instances(const_cast<GLC_3DViewCollection&>(collection).instancesHandle());
+    for (GLC_3DViewInstance* pInstance : instances)
+    {
+        GLC_3DRep* pRep= new GLC_3DRep(pInstance->representation());
+        GLC_StructInstance* pStructInstance= new GLC_StructInstance(pRep);
+        pStructInstance->setMatrix(pInstance->matrix());
+        pStructInstance->setName(pInstance->name());
+        GLC_StructOccurrence* pOcc= new GLC_StructOccurrence(pStructInstance, this, collection.shadingGroup(pInstance->id()));
+        m_pRoot->addChild(pOcc);
+    }
 }
 
 GLC_WorldHandle::~GLC_WorldHandle()

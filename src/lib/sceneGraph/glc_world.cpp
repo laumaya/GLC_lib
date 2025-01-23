@@ -50,6 +50,12 @@ GLC_World::GLC_World(const GLC_World& world)
 
 }
 
+GLC_World::GLC_World(const GLC_3DViewCollection& collection)
+: m_pWorldHandle(new GLC_WorldHandle(collection))
+{
+
+}
+
 GLC_World::~GLC_World()
 {
     if (!m_pWorldHandle->deref())

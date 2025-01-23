@@ -62,6 +62,8 @@ public:
 	//! Copy constructor
 	GLC_World(const GLC_World&);
 
+    explicit GLC_World(const GLC_3DViewCollection& collection);
+
 	//! Destructor
 	virtual ~GLC_World();
 //@}

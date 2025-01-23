@@ -51,6 +51,9 @@ public:
     //! Create a worldHandle and set the root occurrence to the given occurrence
     explicit GLC_WorldHandle(GLC_StructOccurrence* pOcc);
 
+    //! Create a worldHandle from the ginven 3D collection
+    explicit GLC_WorldHandle(const GLC_3DViewCollection& collection);
+
 	//! The default destructor
 	~GLC_WorldHandle();
 //@}

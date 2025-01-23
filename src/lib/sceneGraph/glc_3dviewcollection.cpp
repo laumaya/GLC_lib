@@ -54,6 +54,31 @@ GLC_3DViewCollection::GLC_3DViewCollection()
 {
 }
 
+GLC_3DViewCollection::GLC_3DViewCollection(const GLC_3DViewCollection& other)
+    : m_3DViewInstanceHash()
+    , m_SelectedInstances()
+    , m_ShadedPointerViewInstanceHash()
+    , m_ShaderGroup()
+    , m_MainInstances()
+    , m_IsInShowSate(other.m_IsInShowSate)
+    , m_UseLod(other.m_UseLod)
+    , m_pViewport(other.m_pViewport)
+    , m_ViewportChanged(other.m_ViewportChanged)
+    , m_pSpacePartitioning(nullptr)
+    , m_UseSpacePartitioning(false)
+    , m_IsViewable(other.m_IsViewable)
+    , m_UseOrderRendering(other.m_UseOrderRendering)
+{
+    ViewInstancesHash::const_iterator iInstance= other.m_3DViewInstanceHash.constBegin();
+    while (iInstance != other.m_3DViewInstanceHash.constEnd())
+    {
+        GLC_3DViewInstance instance(iInstance.value());
+        const GLC_uint shaderId= other.m_ShaderGroup.value(iInstance.value().id());
+        this->add(instance, shaderId);
+        ++iInstance;
+    }
+}
+
 GLC_3DViewCollection::~GLC_3DViewCollection()
 {
 	// Delete all collection's elements and the collection bounding box
