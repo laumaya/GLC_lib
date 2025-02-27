@@ -1223,7 +1223,7 @@ QList<GLC_Point2d> glc::line2CircleIntersection(const GLC_Point2d& lineOrigin, c
     const double a0= (diff * diff) - (radius * radius);
     const double a1= (lineDir * diff);
     const double discr= (a1 * a1) - a0;
-    if (glc::compare(discr, 0.0), 1e-10)
+    if (glc::compare(discr, 0.0, glc::EPSILON))
     {
         const GLC_Point2d p(lineOrigin + (lineDir * (-a1)));
         subject << p;
@@ -1234,6 +1234,11 @@ QList<GLC_Point2d> glc::line2CircleIntersection(const GLC_Point2d& lineOrigin, c
         const GLC_Point2d p1(lineOrigin + (lineDir * (-a1 - root)));
         const GLC_Point2d p2(lineOrigin + (lineDir * (-a1 + root)));
         subject << p1 << p2;
+    }
+    else if (glc::compare(discr, 0.0, 1e-9))
+    {
+        const GLC_Point2d p(lineOrigin + (lineDir * (-a1)));
+        subject << p;
     }
 
     return subject;
