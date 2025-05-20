@@ -8,6 +8,7 @@
 #define GLC_OPENGLVIEWINTERFACE_H
 
 #include <QImage>
+#include <QMetaType>
 
 #include "../glc_config.h"
 

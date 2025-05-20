@@ -25,7 +25,7 @@
 #include <QString>
 #include <QOpenGLContext>
 #include <QDebug>
-#include <QGLShaderProgram>
+#include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
 
 #if !defined(Q_OS_MAC)
@@ -56,7 +56,7 @@ bool glc::loadVboExtension()
 // Load GLSL extensions
 bool glc::loadGlSlExtension()
 {
-    return QGLShaderProgram::hasOpenGLShaderPrograms();
+    return QOpenGLShaderProgram::hasOpenGLShaderPrograms();
 }
 
 // Load Point Sprite extension

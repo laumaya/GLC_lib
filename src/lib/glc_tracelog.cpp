@@ -23,6 +23,8 @@
 #include "glc_tracelog.h"
 
 #include <QDir>
+#include <QApplication>
+
 #include "glc_global.h"
 #include <QMutexLocker>
 

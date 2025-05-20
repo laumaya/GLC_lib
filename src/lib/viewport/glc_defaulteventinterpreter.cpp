@@ -69,7 +69,7 @@ bool GLC_DefaultEventInterpreter::processMouseMoveEvent(QMouseEvent *e)
                 setMover(GLC_MoverController::Zoom, GLC_UserInput(e->x(), e->y()));
                 subject= true;
                 break;
-            case (Qt::MidButton):
+            case (Qt::MiddleButton):
                 setMover(GLC_MoverController::Pan, GLC_UserInput(e->x(), e->y()));
                 subject= true;
                 break;

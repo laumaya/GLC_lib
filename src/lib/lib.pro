@@ -1,6 +1,6 @@
 # GLC_lib qmake configuration
 TEMPLATE = lib
-QT += core opengl quick concurrent
+QT += core opengl quick concurrent core5compat openglwidgets
 
 win32 {
     LIBS += -lopengl32

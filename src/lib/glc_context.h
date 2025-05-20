@@ -25,7 +25,6 @@
 #define GLC_CONTEXT_H_
 
 #include <QtOpenGL>
-#include <QGLFormat>
 #include <QSharedPointer>
 #include <QtDebug>
 

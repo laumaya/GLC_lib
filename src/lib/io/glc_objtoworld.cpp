@@ -24,6 +24,7 @@
 
 //! \file glc_objToworld.cpp implementation of the GLC_ObjToWorld class.
 
+#include <QRegExp>
 
 #include "glc_objtoworld.h"
 #include "../sceneGraph/glc_world.h"
@@ -587,7 +588,7 @@ void GLC_ObjToWorld::setCurrentMaterial(QString &line)
 		}
 		else
 		{
-			QHash<QString, MatOffsetSize*>::iterator iMat= m_pCurrentObjMesh->m_Materials.begin();
+            QMultiHash<QString, MatOffsetSize*>::iterator iMat= m_pCurrentObjMesh->m_Materials.begin();
             while (m_pCurrentObjMesh->m_Materials.end() != iMat)
 			{
 				if (iMat.value() == m_pCurrentObjMesh->m_pLastOffsetSize)

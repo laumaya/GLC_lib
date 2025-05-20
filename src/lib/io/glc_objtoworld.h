@@ -123,8 +123,8 @@ public:
 
 		~CurrentObjMesh()
 		{
-			QHash<QString, MatOffsetSize*>::iterator i= m_Materials.begin();
-			while (m_Materials.constEnd() != i)
+            QMultiHash<QString, MatOffsetSize*>::iterator i= m_Materials.begin();
+            while (m_Materials.end() != i)
 			{
 				delete i.value();
 				++i;

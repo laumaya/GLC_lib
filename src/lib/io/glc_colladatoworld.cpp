@@ -20,6 +20,8 @@
 
  *****************************************************************************/
 
+#include <QStringRef>
+
 #include "glc_colladatoworld.h"
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
@@ -108,7 +110,7 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "up_axis")
 			{
 				const QString upAxis= getContent("up_axis");
@@ -124,7 +126,7 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "library_images") loadLibraryImage();
 			else if (currentElementName == "library_materials") loadLibraryMaterials();
 			else if (currentElementName == "library_effects") loadLibraryEffects();

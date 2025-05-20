@@ -235,7 +235,7 @@ GLC_Texture *GLC_Text::texture(double width, double height) const
     QPainter painter;
 
     painter.begin(&pixmap);
-    painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::TextAntialiasing);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setFont(m_Font);
     painter.setPen(m_Color);
     QFontMetrics fontMetrics(m_Font);

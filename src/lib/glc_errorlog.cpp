@@ -22,10 +22,12 @@
 
 //! \file glc_errorlog.h implementation of the GLC_ErrorLog class.
 
-#include "glc_errorlog.h"
-#include <QDir>
-#include "glc_global.h"
+#include <QApplication>
 #include <QMutexLocker>
+#include <QDir>
+
+#include "glc_errorlog.h"
+
 
 GLC_ErrorLog* GLC_ErrorLog::m_pErrorLog= NULL;
 QMutex GLC_ErrorLog::m_Mutex;
