@@ -2070,7 +2070,7 @@ void GLC_3dxmlToWorld::loadCatMaterialRef()
 		{
 			if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 			{
-				const QStringRef currentElementName= m_pStreamReader->name();
+                const QStringView currentElementName= m_pStreamReader->name();
 				if (currentElementName == "CATMatReference")
 				{
 					MaterialRef currentMaterial;
@@ -2195,7 +2195,7 @@ void GLC_3dxmlToWorld::loadCatRepImage()
 		{
 			if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 			{
-				const QStringRef currentElementName= m_pStreamReader->name();
+                const QStringView currentElementName= m_pStreamReader->name();
 				if (currentElementName == "CATRepresentationImage")
 				{
 					QString id= readAttribute("id", true);

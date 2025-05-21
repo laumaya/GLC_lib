@@ -319,7 +319,7 @@ void GLC_ColladaToWorld::loadLibraryImage()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "image") loadImage();
 		}
 		m_pStreamReader->readNext();
@@ -341,7 +341,7 @@ void GLC_ColladaToWorld::loadImage()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "init_from")
 			{
 				fileName= getContent("init_from");
@@ -366,7 +366,7 @@ void GLC_ColladaToWorld::loadLibraryMaterials()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "material") loadMaterial();
 		}
 		m_pStreamReader->readNext();
@@ -394,7 +394,7 @@ void GLC_ColladaToWorld::loadMaterial()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "setparam")
 			{
 				qDebug() << "GLC_ColladaToWorld::loadMaterial : setparam found";
@@ -421,7 +421,7 @@ void GLC_ColladaToWorld::loadLibraryEffects()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "effect") loadEffect();
 		}
 		m_pStreamReader->readNext();
@@ -445,7 +445,7 @@ void GLC_ColladaToWorld::loadEffect()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "profile_COMMON") loadProfileCommon();
 		}
 		m_pStreamReader->readNext();
@@ -466,7 +466,7 @@ void GLC_ColladaToWorld::loadProfileCommon()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "image") loadImage();
 			else if (currentElementName == "newparam") loadNewParam();
 			else if (currentElementName == "technique") loadTechnique();
@@ -486,7 +486,7 @@ void GLC_ColladaToWorld::loadNewParam()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "surface") loadSurface(sid);
 			else if (currentElementName == "sampler2D") loadSampler2D(sid);
 		}
@@ -503,7 +503,7 @@ void GLC_ColladaToWorld::loadSurface(const QString& sid)
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "init_from")
 			{
 				const QString imageId= getContent("init_from");
@@ -523,7 +523,7 @@ void GLC_ColladaToWorld::loadSampler2D(const QString& sid)
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "source")
 			{
 				const QString source= m_CurrentId + "::" + getContent("source");
@@ -543,7 +543,7 @@ void GLC_ColladaToWorld::loadTechnique()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "phong") loadMaterialTechnique(currentElementName.toString());
 			if (currentElementName == "lambert") loadMaterialTechnique(currentElementName.toString());
 			if (currentElementName == "blinn") loadMaterialTechnique(currentElementName.toString());
@@ -561,7 +561,7 @@ void GLC_ColladaToWorld::loadMaterialTechnique(const QString& elementName)
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "emission")
 					|| (currentElementName == "ambient")
 					|| (currentElementName == "diffuse")
@@ -586,7 +586,7 @@ void GLC_ColladaToWorld::loadCommonColorOrTexture(const QString& name)
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "color")
 			{
 				if (name == "emission") m_pCurrentMaterial->setEmissiveColor(readXmlColor());
@@ -623,7 +623,7 @@ void GLC_ColladaToWorld::loadTransparency(const QString& name)
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "float")
 			{
 				bool stringToFloatOk= false;
@@ -658,7 +658,7 @@ void GLC_ColladaToWorld::loadShininess(const QString& name)
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "float")
 			{
 				bool stringToFloatOk= false;
@@ -728,7 +728,7 @@ void GLC_ColladaToWorld::loadLibraryGeometries()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "geometry") loadGeometry();
 		}
 
@@ -762,7 +762,7 @@ void GLC_ColladaToWorld::loadGeometry()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "mesh") loadMesh();
 		}
 
@@ -785,7 +785,7 @@ void GLC_ColladaToWorld::loadMesh()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "source") loadVertexBulkData();
 			else if (currentElementName == "vertices") loadVertices();
 			else if (currentElementName == "polylist") loadPolylist();
@@ -814,7 +814,7 @@ void GLC_ColladaToWorld::loadVertexBulkData()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "float_array"))
 			{
 				int count= readAttribute("count", true).toInt();
@@ -847,7 +847,7 @@ void GLC_ColladaToWorld::loadTechniqueCommon()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "accessor")) loadAccessor();
 		}
 
@@ -923,7 +923,7 @@ void GLC_ColladaToWorld::loadPolylist()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "input") && vcountList.isEmpty())
 			{
 				InputData currentInput;
@@ -1001,7 +1001,7 @@ void GLC_ColladaToWorld::loadPolygons()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "input") && vcountList.isEmpty())
 			{
 				++inputCount;
@@ -1255,7 +1255,7 @@ void  GLC_ColladaToWorld::loadTriangles()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "input") && trianglesIndexList.isEmpty())
 			{
 				InputData currentInput;
@@ -1315,7 +1315,7 @@ void GLC_ColladaToWorld::loadLineStrips()
     {
         if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
         {
-            const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
             if ((currentElementName == "input") && lineStripsIndexList.isEmpty())
             {
                 // Get input data offset
@@ -1499,7 +1499,7 @@ void GLC_ColladaToWorld::loadLibraryNodes()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "node"))
 			{
 				GLC_ColladaToWorld::ColladaNode* pNode= loadNode(NULL);
@@ -1526,7 +1526,7 @@ void GLC_ColladaToWorld::loadLibraryContollers()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "controller")) loadController();
 		}
 
@@ -1548,7 +1548,7 @@ void GLC_ColladaToWorld::loadVisualScenes()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if (currentElementName == "node")
 			{
 				GLC_ColladaToWorld::ColladaNode* pNode= loadNode(NULL);
@@ -1578,7 +1578,7 @@ void GLC_ColladaToWorld::loadInstanceGeometry(ColladaNode* pNode)
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "instance_material"))
 			{
 				const QString target= readAttribute("target", true).remove('#');
@@ -1610,7 +1610,7 @@ void GLC_ColladaToWorld::loadInstanceController(ColladaNode* pNode)
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "instance_material"))
 			{
 				const QString target= readAttribute("target", true).remove('#');
@@ -1632,7 +1632,7 @@ void GLC_ColladaToWorld::loadController()
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 			if ((currentElementName == "skin"))
 			{
 				const QString source= readAttribute("source", true).remove('#');
@@ -1675,7 +1675,7 @@ GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pPare
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
-			const QStringRef currentElementName= m_pStreamReader->name();
+            const QStringView currentElementName= m_pStreamReader->name();
 
 			if ((currentElementName == "translate")) translateNode(pNode);
 			else if ((currentElementName == "scale")) scaleNode(pNode);
@@ -1939,7 +1939,7 @@ void GLC_ColladaToWorld::createMesh()
 		}
 
 		// Add face index and material to the mesh
-		QHash<QString, MatOffsetSize>::iterator iMatInfo= pCurrentMeshInfo->m_Materials.begin();
+        QMultiHash<QString, MatOffsetSize>::iterator iMatInfo= pCurrentMeshInfo->m_Materials.begin();
 		while (pCurrentMeshInfo->m_Materials.constEnd() != iMatInfo)
 		{
 			// Trying to find the material

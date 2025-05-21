@@ -897,7 +897,7 @@ void GLC_ObjToWorld::addCurrentObjMeshToWorld()
 				m_pCurrentObjMesh->m_pMesh->addTexels(m_pCurrentObjMesh->m_Texels.toVector());
 				m_pCurrentObjMesh->m_Texels.clear();
 			}
-            QHash<QString, MatOffsetSize*>::const_iterator iMat= m_pCurrentObjMesh->m_Materials.constBegin();
+            QMultiHash<QString, MatOffsetSize*>::const_iterator iMat= m_pCurrentObjMesh->m_Materials.constBegin();
 			while (m_pCurrentObjMesh->m_Materials.constEnd() != iMat)
 			{
 				GLC_Material* pCurrentMaterial= NULL;
