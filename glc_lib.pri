@@ -7,6 +7,7 @@ win32 {
 macx {
      LIBS += -L"../../lib" -lGLC_lib.3
      INCLUDEPATH += "../../lib/"
+     DEFINES += GL_SILENCE_DEPRECATION
 }
 
 unix:!macx {

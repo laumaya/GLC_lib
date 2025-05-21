@@ -12,5 +12,5 @@ contains(QT_CONFIG, opengles2) {
     error(GLC_lib does not support OpenGL ES 2!)
 }
 
-SUBDIRS += src/lib
-           #src/examples
+SUBDIRS += src/lib \
+        src/examples

@@ -23,7 +23,7 @@
 #ifndef GLWIDGET_H_
 #define GLWIDGET_H_
 
-#include <QGLWidget>
+#include <QOpenGLWidget>
 
 //////////////////////////// GLC specific///////////////////////////////////////
 // The factory
@@ -32,7 +32,7 @@
 #include <GLC_Viewport>
 //////////////////////////End GLC specific/////////////////////////////////////
 
-class GLWidget : public QGLWidget
+class GLWidget : public QOpenGLWidget
 {
 
 public:
