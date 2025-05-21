@@ -24,7 +24,7 @@
 
 //! \file glc_objToworld.cpp implementation of the GLC_ObjToWorld class.
 
-#include <QRegExp>
+#include <QRegularExpression>
 
 #include "glc_objtoworld.h"
 #include "../sceneGraph/glc_world.h"
@@ -791,24 +791,24 @@ void GLC_ObjToWorld::extractVertexIndex(QString line, int &Coordinate, int &Norm
 // set the OBJ File type
 void GLC_ObjToWorld::setObjType(QString& ligne)
 {
-    const QRegExp coordinateOnlyRegExp("^[-+]?\\d{1,}$"); // ex. 10
-    const QRegExp coordinateTextureNormalRegExp("^[-+]?\\d{1,}/[-+]?\\d{1,}/[-+]?\\d{1,}$"); // ex. 10/30/54
-    const QRegExp coordinateNormalRegExp("^[-+]?\\d{1,}//[-+]?\\d{1,}$"); // ex. 10//54
-    const QRegExp coordinateTextureRegExp("^[-+]?\\d{1,}/[-+]?\\d{1,}$"); // ex. 10/56
+    const QRegularExpression coordinateOnlyRegExp("^[-+]?\\d{1,}$"); // ex. 10
+    const QRegularExpression coordinateTextureNormalRegExp("^[-+]?\\d{1,}/[-+]?\\d{1,}/[-+]?\\d{1,}$"); // ex. 10/30/54
+    const QRegularExpression coordinateNormalRegExp("^[-+]?\\d{1,}//[-+]?\\d{1,}$"); // ex. 10//54
+    const QRegularExpression coordinateTextureRegExp("^[-+]?\\d{1,}/[-+]?\\d{1,}$"); // ex. 10/56
 
- 	if (coordinateTextureNormalRegExp.exactMatch(ligne))
+    if (coordinateTextureNormalRegExp.match(ligne).hasMatch())
  	{
  		m_FaceType= coordinateAndTextureAndNormal;
  	}
- 	else if (coordinateTextureRegExp.exactMatch(ligne))
+    else if (coordinateTextureRegExp.match(ligne).hasMatch())
  	{
  		m_FaceType= coordinateAndTexture;
  	}
- 	else if (coordinateNormalRegExp.exactMatch(ligne))
+    else if (coordinateNormalRegExp.match(ligne).hasMatch())
  	{
  		m_FaceType= coordinateAndNormal;
  	}
-  	else if (coordinateOnlyRegExp.exactMatch(ligne))
+    else if (coordinateOnlyRegExp.match(ligne).hasMatch())
  	{
  		m_FaceType= coordinate;
  	}

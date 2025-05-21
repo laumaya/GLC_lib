@@ -4,20 +4,20 @@
 /*
 Copyright (C) 2005-2014 Sergey A. Tachenov
 
-This file is part of QuaZIP.
+This file is part of QuaZip.
 
-QuaZIP is free software: you can redistribute it and/or modify
+QuaZip is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
-QuaZIP is distributed in the hope that it will be useful,
+QuaZip is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
-along with QuaZIP.  If not, see <http://www.gnu.org/licenses/>.
+along with QuaZip.  If not, see <http://www.gnu.org/licenses/>.
 
 See COPYING file for the full LGPL text.
 
@@ -25,9 +25,9 @@ Original ZIP package is copyrighted by Gilles Vollant, see
 quazip/(un)zip.h files for details, basically it's zlib license.
  **/
 
-#include <QDateTime>
-#include <QFile>
-#include <QString>
+#include <QtCore/QDateTime>
+#include <QtCore/QFile>
+#include <QtCore/QString>
 
 #include "quazip_global.h"
 
@@ -94,10 +94,18 @@ struct QUAZIP_EXPORT QuaZipNewInfo {
    * is inaccessible (e. g. you do not have read permission for the
    * directory file in), uses current time and zero permissions. Other attributes are
    * initialized with zeros, comment and extra field with null values.
-   * 
    * \sa setFileDateTime()
    **/
   QuaZipNewInfo(const QString& name, const QString& file);
+  /// Constructs QuaZipNewInfo instance.
+  /** Initializes name with \a name and provided timestamp.  Permissions are taken
+   * from the specified file. If the \a file does not exists or
+   * is inaccessible (e. g. you do not have read permission for the
+   * directory file in), uses zero permissions. Other attributes are
+   * initialized with zeros, comment and extra field with null values.
+   * \sa setFileDateTime()
+   **/
+  QuaZipNewInfo(const QString& name, const QString& file, const QDateTime& dateTime);
   /// Initializes the new instance from existing file info.
   /** Mainly used when copying files between archives.
    *
@@ -148,8 +156,9 @@ struct QUAZIP_EXPORT QuaZipNewInfo {
   /**
    * If the file doesn't exist, a warning is printed to the stderr and nothing
    * is done. Otherwise, all three times, as reported by
-   * QFileInfo::lastModified(), QFileInfo::lastRead() and QFileInfo::created(),
-   * are written to the NTFS extra field record.
+   * QFileInfo::lastModified(), QFileInfo::lastRead() and
+   * QFileInfo::birthTime() (>=Qt5.10) or QFileInfo::created(), are written to
+   * the NTFS extra field record.
    *
    * The NTFS record is written to
    * both the local and the global extra fields, updating the existing record

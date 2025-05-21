@@ -20,7 +20,7 @@
 
  *****************************************************************************/
 
-#include <QStringRef>
+#include <QStringView>
 
 #include "glc_colladatoworld.h"
 #include "../sceneGraph/glc_world.h"

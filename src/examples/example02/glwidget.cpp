@@ -21,7 +21,6 @@
 *****************************************************************************/
 
 #include <QtDebug>
-#include <QGLContext>
 
 #include <GLC_UserInput>
 #include <GLC_Context>
@@ -30,12 +29,12 @@
 
 
 GLWidget::GLWidget(QWidget *pParent)
-: QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)), pParent)
+: QOpenGLWidget(pParent)
 , m_Circle(GLC_Factory::instance()->createCircle(0.3))	// Circle radius
 , m_GlView()
 , m_MoverController()
 {
-    connect(&m_GlView, SIGNAL(updateOpenGL()), this, SLOT(updateGL()));
+    connect(&m_GlView, SIGNAL(updateOpenGL()), this, SLOT(update()));
 	m_Circle.geomAt(0)->setWireColor(Qt::white);
 
 	// Color of mover representation (Trackball)
@@ -53,7 +52,6 @@ GLWidget::~GLWidget()
 
 void GLWidget::initializeGL()
 {
-	// OpenGL initialisation from NEHE production
 	m_GlView.initGl();
 }
 
@@ -74,7 +72,7 @@ void GLWidget::paintGL()
 
 // Exemple02 New
 	// Display the active mover representation
-	m_MoverController.drawActiveMoverRep();
+    m_MoverController.drawActiveMoverRep();
 // End Exemple02 New
 
 //////////////////////////End GLC specific/////////////////////////////////////
@@ -96,18 +94,18 @@ void GLWidget::mousePressEvent(QMouseEvent *e)
 	{
 	case (Qt::RightButton):
 		// Set track ball mover
-		m_MoverController.setActiveMover(GLC_MoverController::TrackBall, GLC_UserInput(e->x(), e->y()));
-		updateGL();
+        m_MoverController.setActiveMover(GLC_MoverController::TrackBall, GLC_UserInput(e->position().x(), e->position().y()));
+        update();
 		break;
 	case (Qt::LeftButton):
 		// Set Pan mover
-		m_MoverController.setActiveMover(GLC_MoverController::Pan, GLC_UserInput(e->x(), e->y()));
-		updateGL();
+        m_MoverController.setActiveMover(GLC_MoverController::Pan, GLC_UserInput(e->position().x(), e->position().y()));
+        update();
 		break;
-	case (Qt::MidButton):
+    case (Qt::MiddleButton):
 		// Set Zoom mover
-		m_MoverController.setActiveMover(GLC_MoverController::Zoom, GLC_UserInput(e->x(), e->y()));
-		updateGL();
+        m_MoverController.setActiveMover(GLC_MoverController::Zoom, GLC_UserInput(e->position().x(), e->position().y()));
+        update();
 		break;
 
 	default:
@@ -120,8 +118,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent * e)
 	if (m_MoverController.hasActiveMover())
 	{
 		// Move with the active mover
-		m_MoverController.move(GLC_UserInput(e->x(), e->y()));
-		updateGL();
+        m_MoverController.move(GLC_UserInput(e->position().x(), e->position().y()));
+        update();
 	}
 }
 
@@ -131,7 +129,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent*)
 	{
 		// Set No mover
 		m_MoverController.setNoMover();
-		updateGL();
+        update();
 	}
 }
 // End Exemple02 New

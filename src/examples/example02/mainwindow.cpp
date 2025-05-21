@@ -33,29 +33,7 @@
 
 MainWindow::MainWindow()
 : p_GLWidget(NULL)
-{	
-
-    // Circle 1
-    GLC_Point2d p0(150.0, 0.0);
-    GLC_Point2d p1(180, 100.0);
-    double r0= 80.0;
-    double r1= 80.0;
-    QList<GLC_Point2d> intersections= glc::findIntersectionBetwen2Circle(p0, r0, p1, r1);
-    if (intersections.isEmpty())
-    {
-        qDebug() << "No intersection";
-    }
-    else
-    {
-        qDebug() << "Intersection count = " << intersections.count();
-        for (int i= 0; i < intersections.count(); ++i)
-        {
-            qDebug().noquote() << intersections.at(i).toString();
-        }
-    }
-
-
-
-    //p_GLWidget= new GLWidget(this);
-    //setCentralWidget(p_GLWidget);
+{
+    p_GLWidget= new GLWidget(this);
+    setCentralWidget(p_GLWidget);
 }

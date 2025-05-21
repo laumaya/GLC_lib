@@ -1,6 +1,6 @@
 # GLC_lib qmake configuration
 TEMPLATE = lib
-QT += core opengl quick concurrent core5compat openglwidgets
+QT += core opengl quick concurrent openglwidgets core5compat
 
 win32 {
     LIBS += -lopengl32
@@ -52,6 +52,7 @@ HEADERS_QUAZIP += \
                     3rdparty/quazip/quazipfile.h \
                     3rdparty/quazip/quazipfileinfo.h \
                     3rdparty/quazip/quazip_global.h \
+                    3rdparty/quazip/quazip_qt_compat.h \
                     3rdparty/quazip/quazip.h \
                     3rdparty/quazip/quazipnewinfo.h \
                     3rdparty/quazip/unzip.h \
@@ -243,13 +244,13 @@ HEADERS_GLC_CSGJS += 3rdparty/csgjs/csgjs.h
 
 HEADERS_ZLIB    += 3rdparty/zlib/crc32.h \
                    3rdparty/zlib/deflate.h \
+                   3rdparty/zlib/gzguts.h \
                    3rdparty/zlib/inffast.h \
                    3rdparty/zlib/inffixed.h \
                    3rdparty/zlib/inflate.h \
                    3rdparty/zlib/inftrees.h \
                    3rdparty/zlib/trees.h \
                    3rdparty/zlib/zconf.h \
-                   3rdparty/zlib/zconf.in.h \
                    3rdparty/zlib/zlib.h \
                    3rdparty/zlib/zutil.h
 
@@ -262,7 +263,11 @@ SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/compress.c \
            3rdparty/zlib/crc32.c \
            3rdparty/zlib/deflate.c \
-           3rdparty/zlib/gzio.c \
+           3rdparty/zlib/gzclose.c \
+           3rdparty/zlib/gzlib.c \
+           3rdparty/zlib/gzread.c \
+           3rdparty/zlib/gzwrite.c \
+           3rdparty/zlib/infback.c \
            3rdparty/zlib/inffast.c \
            3rdparty/zlib/inflate.c \
            3rdparty/zlib/inftrees.c \
@@ -274,6 +279,7 @@ SOURCES += 3rdparty/zlib/adler32.c \
 SOURCES += 3rdparty/quazip/qioapi.cpp \
            3rdparty/quazip/JlCompress.cpp \
            3rdparty/quazip/quaadler32.cpp \
+           3rdparty/quazip/quachecksum32.cpp \
            3rdparty/quazip/quacrc32.cpp \
            3rdparty/quazip/quagzipfile.cpp \
            3rdparty/quazip/quaziodevice.cpp \
