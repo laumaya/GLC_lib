@@ -21,7 +21,6 @@
 *****************************************************************************/
 
 #include <QtDebug>
-#include <QGLContext>
 
 #include "glwidget.h"
 
@@ -34,51 +33,29 @@
 #include <GLC_Exception>
 
 GLWidget::GLWidget(QWidget *p_parent)
-: QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)),p_parent)
+: QOpenGLWidget(p_parent)
 , m_Cylinder(GLC_Factory::instance()->createCylinder(1.0, 2.0))	// Cylinder definition.
 , m_Collection()
 , m_light()
 , m_GlView()
 , m_MoverController()
 {
-	connect(&m_GlView, SIGNAL(updateOpenGL()), this, SLOT(updateGL()));
+    connect(&m_GlView, SIGNAL(updateOpenGL()), this, SLOT(update()));
 	// Set cylinder material
 	QColor matBlue;
 	matBlue.setRgbF(0.5, 0.8, 1.0, 1.0);
 	m_Cylinder.geomAt(0)->addMaterial(new GLC_Material(matBlue));
 
-    //m_Collection.add(m_Cylinder);
+    m_Collection.add(m_Cylinder);
 
-//    GLC_Mesh* pMesh1= new GLC_Cylinder(2.0, 2.0);
-//    pMesh1->update();
-//    GLC_Mesh* pMesh2= new GLC_Cylinder(1.0, 3.0);
-//    pMesh2->update();
-//    GLC_Mesh* pMesh3= GLC_CsgHelper::soustract(pMesh1, GLC_Matrix4x4(), pMesh2, GLC_Matrix4x4());
+   GLC_Mesh* pMesh1= new GLC_Cylinder(2.0, 2.0);
+   pMesh1->update();
+   GLC_Mesh* pMesh2= new GLC_Cylinder(1.0, 3.0);
+   pMesh2->update();
+   GLC_Mesh* pMesh3= GLC_CsgHelper::soustract(pMesh1, GLC_Matrix4x4(), pMesh2, GLC_Matrix4x4());
 
-//    GLC_3DViewInstance instance(pMesh3);
-//    m_Collection.add(instance);
-
-    QList<GLC_Point3d> profile;
-    GLC_Point3d p1(0.0, 0.0, -3.5);
-    GLC_Point3d p2(47.5, 0.0, -3.5);
-    GLC_Point3d p3(47.5, 0.0, -5.0);
-    GLC_Point3d p4(48.46, 0.0, -5.0);
-    GLC_Point3d p5(50.0, 0.0, -2.8);
-    GLC_Point3d p6(50.0, 0.0, 2.8);
-    GLC_Point3d p7(48.46, 0.0, 5.0);
-    GLC_Point3d p8(47.5, 0.0, 5.0);
-    GLC_Point3d p9(47.5, 0.0, 3.5);
-    GLC_Point3d p10(0.0, 0.0, 3.5);
-
-
-    profile << p1 << p2 << p3 << p4 << p5 << p6 << p7 << p8 << p9 << p10;
-
-    GLC_Mesh* pMesh= new GLC_LatheMesh(profile);
-    GLC_BoundingBox bBox(pMesh->boundingBox());
-    qDebug().noquote() << bBox.lowerCorner().toString();
-    qDebug().noquote() << bBox.upperCorner().toString();
-    GLC_3DViewInstance instance(pMesh);
-    m_Collection.add(instance);
+   GLC_3DViewInstance instance(pMesh3);
+   m_Collection.add(instance);
 
 	// Set up mover controller
 	QColor repColor;
@@ -147,16 +124,16 @@ void GLWidget::mousePressEvent(QMouseEvent *e)
 	switch (e->button())
 	{
 	case (Qt::RightButton):
-		m_MoverController.setActiveMover(GLC_MoverController::TrackBall, GLC_UserInput(e->x(), e->y()));
-		updateGL();
+        m_MoverController.setActiveMover(GLC_MoverController::TrackBall, GLC_UserInput(e->position().x(), e->position().y()));
+        update();
 		break;
 	case (Qt::LeftButton):
-		m_MoverController.setActiveMover(GLC_MoverController::Pan, GLC_UserInput(e->x(), e->y()));
-		updateGL();
+        m_MoverController.setActiveMover(GLC_MoverController::Pan, GLC_UserInput(e->position().x(), e->position().y()));
+        update();
 		break;
-	case (Qt::MidButton):
-		m_MoverController.setActiveMover(GLC_MoverController::Zoom, GLC_UserInput(e->x(), e->y()));
-		updateGL();
+    case (Qt::MiddleButton):
+        m_MoverController.setActiveMover(GLC_MoverController::Zoom, GLC_UserInput(e->position().x(), e->position().y()));
+        update();
 		break;
 
 	default:
@@ -168,10 +145,10 @@ void GLWidget::mouseMoveEvent(QMouseEvent * e)
 {
 	if (m_MoverController.hasActiveMover())
 	{
-		m_MoverController.move(GLC_UserInput(e->x(), e->y()));
+        m_MoverController.move(GLC_UserInput(e->position().x(), e->position().y()));
 		// Update opengl clipping plane
 		m_GlView.setDistMinAndMax(m_Cylinder.boundingBox());
-		updateGL();
+        update();
 	}
 }
 
@@ -180,6 +157,6 @@ void GLWidget::mouseReleaseEvent(QMouseEvent*)
 	if (m_MoverController.hasActiveMover())
 	{
 		m_MoverController.setNoMover();
-		updateGL();
+        update();
 	}
 }

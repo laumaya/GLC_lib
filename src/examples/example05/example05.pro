@@ -1,7 +1,7 @@
 TARGET = example05
 TEMPLATE = app
 QT += opengl
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets openglwidgets
 
 CONFIG += warn_on
 

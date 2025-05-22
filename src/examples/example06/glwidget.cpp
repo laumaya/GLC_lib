@@ -22,7 +22,6 @@
 
 #include <QtDebug>
 #include <QFile>
-#include <QGLContext>
 
 #include <GLC_UserInput>
 #include <GLC_Context>
@@ -30,13 +29,13 @@
 #include "glwidget.h"
 
 GLWidget::GLWidget(QWidget *p_parent)
-: QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)), p_parent)
+: QOpenGLWidget(p_parent)
 , m_Light()
 , m_GlView()
 , m_MoverController()
 {
 //////////////////////////// GLC specific///////////////////////////////////////
-    connect(&m_GlView, SIGNAL(updateOpenGL()), this, SLOT(updateGL()));
+    connect(&m_GlView, SIGNAL(updateOpenGL()), this, SLOT(update()));
 	m_Light.setPosition(1.0, 1.0, 1.0);
 
 	QColor repColor;
@@ -111,16 +110,16 @@ void GLWidget::mousePressEvent(QMouseEvent *e)
 	switch (e->button())
 	{
 	case (Qt::RightButton):
-		m_MoverController.setActiveMover(GLC_MoverController::TrackBall, GLC_UserInput(e->x(), e->y()));
-		updateGL();
+        m_MoverController.setActiveMover(GLC_MoverController::TrackBall, GLC_UserInput(e->position().x(), e->position().y()));
+        update();
 		break;
 	case (Qt::LeftButton):
-		m_MoverController.setActiveMover(GLC_MoverController::Pan, GLC_UserInput(e->x(), e->y()));
-		updateGL();
+        m_MoverController.setActiveMover(GLC_MoverController::Pan, GLC_UserInput(e->position().x(), e->position().y()));
+        update();
 		break;
-	case (Qt::MidButton):
-		m_MoverController.setActiveMover(GLC_MoverController::Zoom, GLC_UserInput(e->x(), e->y()));
-		updateGL();
+    case (Qt::MiddleButton):
+        m_MoverController.setActiveMover(GLC_MoverController::Zoom, GLC_UserInput(e->position().x(), e->position().y()));
+        update();
 		break;
 
 	default:
@@ -132,9 +131,9 @@ void GLWidget::mouseMoveEvent(QMouseEvent * e)
 {
 	if (m_MoverController.hasActiveMover())
 	{
-		m_MoverController.move(GLC_UserInput(e->x(), e->y()));
+        m_MoverController.move(GLC_UserInput(e->position().x(), e->position().y()));
 		m_GlView.setDistMinAndMax(m_World.boundingBox());
-		updateGL();
+        update();
 	}
 }
 
@@ -143,6 +142,6 @@ void GLWidget::mouseReleaseEvent(QMouseEvent*)
 	if (m_MoverController.hasActiveMover())
 	{
 		m_MoverController.setNoMover();
-		updateGL();
+        update();
 	}
 }
