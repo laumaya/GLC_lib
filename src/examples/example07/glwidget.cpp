@@ -47,8 +47,6 @@ GLWidget::GLWidget(QWidget *p_parent)
 
 	// Create objects to display
 	CreateScene();
-
-
 }
 
 GLWidget::~GLWidget()

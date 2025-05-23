@@ -6,5 +6,7 @@ SUBDIRS += \
     example04 \
     example05 \
     example06 \
-    example07
+    example07 \
+    example08 \
+    example09
 

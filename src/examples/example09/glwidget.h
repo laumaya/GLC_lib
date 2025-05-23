@@ -23,7 +23,7 @@
 #ifndef GLWIDGET_H_
 #define GLWIDGET_H_
 
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QTimer>
 
 #include <GLC_Factory>
@@ -31,7 +31,7 @@
 #include <GLC_MoverController>
 #include <GLC_Light>
 
-class GLWidget : public QGLWidget
+class GLWidget : public QOpenGLWidget
 {
 	Q_OBJECT
 
@@ -52,7 +52,7 @@ private:
 
 	inline double getRandomMinMax( double fMin, double fMax )
 	{
-	    double fRandNum = (double)qrand() / RAND_MAX;
+        double fRandNum = (double)arc4random() / RAND_MAX;
 	    return fMin + (fMax - fMin) * fRandNum;
 	}
 //////////////////////////////////////////////////////////////////////

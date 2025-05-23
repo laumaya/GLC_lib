@@ -183,17 +183,17 @@ void GLC_ColladaToWorld::goToEndElement(const QString& elementName)
 // Return the content of an element
 QString GLC_ColladaToWorld::getContent(const QString& element)
 {
-	QString Content;
+    QString subject;
 	while(endElementNotReached(m_pStreamReader, element))
 	{
 		m_pStreamReader->readNext();
 		if (m_pStreamReader->isCharacters() && !m_pStreamReader->text().isEmpty())
 		{
-			Content+= m_pStreamReader->text().toString();
+            subject+= m_pStreamReader->text().toString();
 		}
 	}
 
-    return Content;
+    return subject.trimmed();
 }
 
 // Read the specified attribute

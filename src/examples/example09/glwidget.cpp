@@ -21,7 +21,6 @@
 *****************************************************************************/
 
 #include <QtDebug>
-#include <QGLContext>
 
 #include <GLC_UserInput>
 #include <io/glc_colladatoworld.h>
@@ -31,7 +30,7 @@
 #include "glwidget.h"
 
 GLWidget::GLWidget(QWidget *p_parent)
-    : QGLWidget(new QGLContext(QGLFormat(QGL::SampleBuffers)), p_parent)
+    : QOpenGLWidget(p_parent)
     , m_Light()
     , m_World()
     , m_GlView()
@@ -39,7 +38,7 @@ GLWidget::GLWidget(QWidget *p_parent)
     , m_ShuttleBoundingBox()
     , m_MotionTimer()
 {
-    connect(&m_GlView, SIGNAL(updateOpenGL()), this, SLOT(updateGL()));
+    connect(&m_GlView, SIGNAL(updateOpenGL()), this, SLOT(update()));
 
     m_Light.setPosition(4000.0, 40000.0, 80000.0);
     //m_GlView.setBackgroundColor(Qt::white);
@@ -69,7 +68,7 @@ void GLWidget::doRender()
 {
     if (!m_MotionTimer.isActive())
     {
-        updateGL();
+        update();
     }
 }
 
@@ -127,11 +126,12 @@ void GLWidget::resizeGL(int width, int height)
 void GLWidget::createScene()
 {
 
-    QFile democles(":Democles.dae");
+    QFile democles("/Users/laumaya/Documents/models 3d/f40.3dxml");
     m_World= GLC_Factory::instance()->createWorldFromFile(democles);
 
     m_ShuttleBoundingBox= m_World.boundingBox();
 
+    return;
     GLC_StructOccurrence* pRoot= m_World.rootOccurrence();
 
     QImage texture(QString(":particle.png"));
@@ -171,8 +171,8 @@ void GLWidget::mousePressEvent(QMouseEvent *e)
     {
     case (Qt::LeftButton):
         m_MotionTimer.stop();
-        m_MoverController.setActiveMover(GLC_MoverController::TurnTable, GLC_UserInput(e->x(), e->y()));
-        updateGL();
+        m_MoverController.setActiveMover(GLC_MoverController::TurnTable, GLC_UserInput(e->position().x(), e->position().y()));
+        update();
         break;
     default:
         break;
@@ -183,9 +183,9 @@ void GLWidget::mouseMoveEvent(QMouseEvent * e)
 {
     if (m_MoverController.hasActiveMover())
     {
-        m_MoverController.move(GLC_UserInput(e->x(), e->y()));
+        m_MoverController.move(GLC_UserInput(e->position().x(), e->position().y()));
         m_GlView.setDistMinAndMax(m_World.boundingBox());
-        updateGL();
+        update();
     }
 }
 
@@ -195,7 +195,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent*)
     {
         m_MoverController.setNoMover();
         m_MotionTimer.start();
-        updateGL();
+        update();
     }
 }
 
@@ -206,6 +206,6 @@ void GLWidget::mouseReleaseEvent(QMouseEvent*)
 void GLWidget::rotateView()
 {
     m_GlView.cameraHandle()->rotateAroundTarget(glc::Z_AXIS, 2.0 * glc::PI / static_cast<double>(200));
-    updateGL();
+    update();
 }
 

@@ -20,8 +20,7 @@ GLC_OpenGLViewWidget::GLC_OpenGLViewWidget(QWidget *parent)
     QSharedPointer<GLC_OpenGLViewHandler> viewHandlerPointer(new GLC_OpenGLViewHandler);
     QVariant viewHandler;
     viewHandler.setValue(viewHandlerPointer);
-    setViewhandler(viewHandler);
-
+    GLC_OpenGLViewWidget::setViewhandler(viewHandler);
 }
 
 GLC_OpenGLViewWidget::~GLC_OpenGLViewWidget()

@@ -364,7 +364,7 @@ void GLC_3DViewCollection::glDrawInstancesOf(PointerViewInstanceHash* pHash, glc
 
 	PointerViewInstanceHash::iterator iEntry= pHash->begin();
 	// The current instance
-	GLC_3DViewInstance* pCurInstance;
+    GLC_3DViewInstance* pCurInstance= nullptr;
 	if (forceDisplay)
 	{
         if (m_UseOrderRendering)
