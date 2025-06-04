@@ -1138,7 +1138,7 @@ void GLC_WorldTo3dxml::writeAllMaterialTextureFilesIn3dxml()
 
     if (!texturedMaterial.isEmpty())
     {
-        for (GLC_Material* pMat : qAsConst(texturedMaterial))
+        for (GLC_Material* pMat : std::as_const(texturedMaterial))
         {
             GLC_Texture* pTexture= pMat->textureHandle();
             const QString textureFileName(pTexture->fileName());

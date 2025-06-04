@@ -74,7 +74,7 @@ bool GLC_WorldToCollada::exportToCollada(const QString& absoluteFileName)
         {
             fillCopiedMeshList();
             QSet<GLC_Material*> materialSet;
-            for (GLC_Mesh* pMesh : qAsConst(m_CopiedMesh))
+            for (GLC_Mesh* pMesh : std::as_const(m_CopiedMesh))
             {
                 materialSet.unite(pMesh->materialSet());
             }
@@ -118,7 +118,7 @@ bool GLC_WorldToCollada::exportToCollada(QIODevice* pIoDevice, const QString& ba
         {
             fillCopiedMeshList();
             QSet<GLC_Material*> materialSet;
-            for (GLC_Mesh* pMesh : qAsConst(m_CopiedMesh))
+            for (GLC_Mesh* pMesh : std::as_const(m_CopiedMesh))
             {
                 materialSet.unite(pMesh->materialSet());
             }
@@ -203,7 +203,7 @@ void GLC_WorldToCollada::writeNotInstanciateGeometries()
 {
     m_Writer.writeStartElement(ColladaElement::libraryGeometriesElement);
 
-    for (GLC_Mesh* pMesh : qAsConst(m_CopiedMesh))
+    for (GLC_Mesh* pMesh : std::as_const(m_CopiedMesh))
     {
         writeMesh(pMesh);
     }
@@ -245,7 +245,7 @@ void GLC_WorldToCollada::writeLibraryImages()
 {
     const QString filePath(QFileInfo(m_AbsoluteFileName).path());
     m_Writer.writeStartElement(ColladaElement::libraryImagesElement);
-    for (GLC_Material* pMat : qAsConst(m_MaterialList))
+    for (GLC_Material* pMat : std::as_const(m_MaterialList))
     {
         if (pMat->hasTexture())
         {
@@ -302,7 +302,7 @@ void GLC_WorldToCollada::writeLibraryImagesUrl()
     QDir baseDir(m_BasePath);
 
     m_Writer.writeStartElement(ColladaElement::libraryImagesElement);
-    for (GLC_Material* pMat : qAsConst(m_MaterialList))
+    for (GLC_Material* pMat : std::as_const(m_MaterialList))
     {
         if (pMat->hasTexture())
         {
@@ -343,7 +343,7 @@ QString GLC_WorldToCollada::writeImage(GLC_Texture* pTexture, const QString& sou
 void GLC_WorldToCollada::writeLibraryMaterials()
 {
     m_Writer.writeStartElement(ColladaElement::libraryMaterialsElement);
-    for (GLC_Material* pMat : qAsConst(m_MaterialList))
+    for (GLC_Material* pMat : std::as_const(m_MaterialList))
     {
         const QString materialId(this->materialId());
         m_MaterialUidToStringIdHash.insert(pMat->id(), materialId);
@@ -391,7 +391,7 @@ QString GLC_WorldToCollada::meshId()
 void GLC_WorldToCollada::writeLibraryEffects()
 {
     m_Writer.writeStartElement(ColladaElement::libraryEffectsElement);
-    for (GLC_Material* pMaterial : qAsConst(m_MaterialList))
+    for (GLC_Material* pMaterial : std::as_const(m_MaterialList))
     {
         writeMaterialEffect(pMaterial);
     }
@@ -539,7 +539,7 @@ void GLC_WorldToCollada::writeMeshPosition(GLC_Mesh* pMesh, const QString& meshI
     m_Writer.writeAttribute(ColladaElement::countAttribute, QString::number(positionVector.count()));
 
     QString positions;
-    for (const GLfloat& value : qAsConst(positionVector))
+    for (const GLfloat& value : std::as_const(positionVector))
     {
         positions.append(QString::number(value) + ' ');
     }

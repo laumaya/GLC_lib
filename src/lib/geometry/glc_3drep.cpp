@@ -414,7 +414,7 @@ void GLC_3DRep::setVboUsage(bool usage)
 
 void GLC_3DRep::setMeshWireColorAndLineWidth(const QColor& color, GLfloat lineWidth)
 {
-    for (GLC_Geometry* pGeom : qAsConst(*m_pGeomList))
+    for (GLC_Geometry* pGeom : std::as_const(*m_pGeomList))
     {
         pGeom->setWireColor(color);
         pGeom->setLineWidth(lineWidth);

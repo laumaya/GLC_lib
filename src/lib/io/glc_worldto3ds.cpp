@@ -122,7 +122,7 @@ QList<Lib3dsMesh*> GLC_WorldTo3ds::saveMeshes(GLC_StructReference* pRef)
         {
             // This reference has a mesh
             subject= createMeshsFrom3DRep(pRep, "MESH");
-            for (Lib3dsMesh* pMesh : qAsConst(subject))
+            for (Lib3dsMesh* pMesh : std::as_const(subject))
             {
                 lib3ds_file_insert_mesh(m_pLib3dsFile, pMesh);
                 m_ReferenceToMesh.insert(pRef, pMesh);
