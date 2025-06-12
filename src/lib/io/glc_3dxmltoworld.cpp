@@ -1793,7 +1793,7 @@ QList<unsigned int> GLC_3dxmlToWorld::loadOccurrencePath()
 	}
 
 	// Check if an error Occur
-	if (m_pStreamReader->hasError() || path.contains(0))
+    if (m_pStreamReader->hasError() || path.contains(static_cast<unsigned int>(0)))
 	{
 		QString message(QString("GLC_3dxmlToWorld::loadOccurrencePath An error occur in ") + m_FileName);
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);

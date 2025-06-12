@@ -76,6 +76,17 @@ public:
 		m_Vector[1]= Vect.m_Vector[1];
 		m_Vector[2]= Vect.m_Vector[2];
 	}
+
+    /*! Overload "=" operator*/
+    inline GLC_Vector3df& operator = (const GLC_Vector3df &Vect)
+    {
+        m_Vector[0]= Vect.m_Vector[0];
+        m_Vector[1]= Vect.m_Vector[1];
+        m_Vector[2]= Vect.m_Vector[2];
+
+        return *this;
+    }
+
 //@}
 
 

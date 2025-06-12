@@ -62,15 +62,15 @@ bool GLC_DefaultEventInterpreter::processMouseMoveEvent(QMouseEvent *e)
             switch (m_EventButton)
             {
             case (Qt::RightButton):
-                setMover(m_DefaultNavigationType, GLC_UserInput(e->x(), e->y()));
+                setMover(m_DefaultNavigationType, GLC_UserInput(e->position().x(), e->position().y()));
                 subject= true;
                 break;
             case (Qt::LeftButton):
-                setMover(GLC_MoverController::Zoom, GLC_UserInput(e->x(), e->y()));
+                setMover(GLC_MoverController::Zoom, GLC_UserInput(e->position().x(), e->position().y()));
                 subject= true;
                 break;
             case (Qt::MiddleButton):
-                setMover(GLC_MoverController::Pan, GLC_UserInput(e->x(), e->y()));
+                setMover(GLC_MoverController::Pan, GLC_UserInput(e->position().x(), e->position().y()));
                 subject= true;
                 break;
             default:
@@ -81,7 +81,7 @@ bool GLC_DefaultEventInterpreter::processMouseMoveEvent(QMouseEvent *e)
     }
     else if (m_pViewHandler->moverControllerHandle()->hasActiveMover())
     {
-        move(GLC_UserInput(e->x(), e->y()));
+        move(GLC_UserInput(e->position().x(), e->position().y()));
         subject= true;
     }
 
@@ -101,7 +101,7 @@ bool GLC_DefaultEventInterpreter::processMouseReleaseEvent(QMouseEvent *e)
     }
     else if ((e->button() == Qt::LeftButton))
     {
-        select(e->x(), e->y(), GLC_SelectionEvent::ModeReplace | m_pViewHandler->selectionMode());
+        select(e->position().x(), e->position().y(), GLC_SelectionEvent::ModeReplace | m_pViewHandler->selectionMode());
         subject= true;
     }
 

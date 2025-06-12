@@ -24,7 +24,6 @@
 
 
 #include "glc_texture.h"
-#include "../glc_exception.h"
 #include "../glc_global.h"
 
 // Quazip library
@@ -247,7 +246,7 @@ void GLC_Texture::glLoadTexture()
 		{
             m_TextureSize= m_TextureImage.size();
 		}
-        m_pQOpenGLTexture= new QOpenGLTexture(m_TextureImage.mirrored());
+        m_pQOpenGLTexture= new QOpenGLTexture(m_TextureImage.flipped());
 	}
 }
 
