@@ -38,9 +38,6 @@ class GLC_Material;
 class GLC_Shader;
 class GLC_Viewport;
 
-//! GLC_3DViewInstance Hash table
-typedef QHash< GLC_uint, GLC_3DViewInstance> ViewInstancesHash;
-
 //! GLC_3DViewInstance pointer Hash table
 typedef QHash<GLC_uint, GLC_3DViewInstance*> PointerViewInstanceHash;
 
@@ -108,7 +105,7 @@ public:
 
 	//! Return a GLC_3DViewInstance from collection
 	/*! If the element is not found in collection a empty node is return*/
-	GLC_3DViewInstance* instanceHandle(GLC_uint Key);
+    GLC_3DViewInstance* instanceHandle(GLC_uint key);
 
 	//! Return the entire collection Bounding Box
 	/*! If all object is set to true, visible and non visible object are used*/
@@ -191,6 +188,8 @@ public:
 	/*! return true if success false otherwise
 	 * If shading group is specified, add instance in desire shading group*/
 	bool add(const GLC_3DViewInstance& ,GLC_uint shaderID=0);
+
+    bool add(GLC_3DViewInstance* pInstance ,GLC_uint shaderID=0);
 
 	//! Change instance shading group
 	/* Move the specified instances into
@@ -319,7 +318,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 private:
 	//! GLC_3DViewInstance Hash Table
-	ViewInstancesHash m_3DViewInstanceHash;
+    PointerViewInstanceHash m_3DViewInstanceHash;
 
 	//! Selected Node Hash Table
 	PointerViewInstanceHash m_SelectedInstances;

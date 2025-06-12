@@ -43,7 +43,7 @@ GLC_3DWidgetManagerHandle::GLC_3DWidgetManagerHandle(GLC_Viewport* pViewport)
 GLC_3DWidgetManagerHandle::~GLC_3DWidgetManagerHandle()
 {
 	QHash<GLC_uint, GLC_3DWidget*>::iterator iWidget= m_3DWidgetHash.begin();
-	while (m_3DWidgetHash.constEnd() != iWidget)
+    while (m_3DWidgetHash.end() != iWidget)
 	{
 		delete iWidget.value();
 		++iWidget;
@@ -93,7 +93,7 @@ void GLC_3DWidgetManagerHandle::clear()
 {
 	m_Active3DWidgetId= 0;
 	QHash<GLC_uint, GLC_3DWidget*>::iterator iWidget= m_3DWidgetHash.begin();
-	while (m_3DWidgetHash.constEnd() != iWidget)
+    while (m_3DWidgetHash.end() != iWidget)
 	{
 		delete iWidget.value();
 		++iWidget;
@@ -106,7 +106,7 @@ void GLC_3DWidgetManagerHandle::clear()
 void GLC_3DWidgetManagerHandle::clear(int type)
 {
     QHash<GLC_uint, GLC_3DWidget*>::iterator iWidget= m_3DWidgetHash.begin();
-    while (m_3DWidgetHash.constEnd() != iWidget)
+    while (m_3DWidgetHash.end() != iWidget)
     {
         GLC_3DWidget* pCurrent= iWidget.value();
         if (pCurrent->type() == type)
@@ -132,7 +132,7 @@ void GLC_3DWidgetManagerHandle::setWidgetVisible(GLC_uint id, bool visible)
 void GLC_3DWidgetManagerHandle::update()
 {
     QHash<GLC_uint, GLC_3DWidget*>::iterator iWidget= m_3DWidgetHash.begin();
-    while (m_3DWidgetHash.constEnd() != iWidget)
+    while (m_3DWidgetHash.end() != iWidget)
     {
         iWidget.value()->updateWidgetRep();
         ++iWidget;
@@ -242,7 +242,7 @@ void GLC_3DWidgetManagerHandle::render()
 {
 	// Signal 3DWidget that the view as changed
 	QHash<GLC_uint, GLC_3DWidget*>::iterator iWidget= m_3DWidgetHash.begin();
-	while (m_3DWidgetHash.constEnd() != iWidget)
+    while (m_3DWidgetHash.end() != iWidget)
 	{
 		iWidget.value()->updateWidgetRep();
 		++iWidget;

@@ -90,6 +90,8 @@ public:
 	//! Destructor
 	~GLC_3DViewInstance();
 
+    GLC_3DViewInstance* clone() const;
+
 //@}
 
 //////////////////////////////////////////////////////////////////////

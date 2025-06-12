@@ -201,6 +201,11 @@ GLC_3DViewInstance::~GLC_3DViewInstance()
     delete m_pRenderState;
 }
 
+GLC_3DViewInstance* GLC_3DViewInstance::clone() const
+{
+    return new GLC_3DViewInstance(*this);
+}
+
 //////////////////////////////////////////////////////////////////////
 // Get Functions
 //////////////////////////////////////////////////////////////////////

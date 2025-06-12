@@ -804,18 +804,18 @@ bool GLC_StructOccurrence::create3DViewInstance(GLuint shaderId)
 		GLC_3DRep* p3DRep= dynamic_cast<GLC_3DRep*>(structReference()->representationHandle());
         if (nullptr != p3DRep)
 		{
-			GLC_3DViewInstance instance(*p3DRep, m_Uid);
-			instance.setName(name());
+            GLC_3DViewInstance* pInstance= new GLC_3DViewInstance(*p3DRep, m_Uid);
+            pInstance->setName(name());
 
             if (nullptr != m_pRenderProperties)
 			{
-				instance.setRenderProperties(*m_pRenderProperties);
+                pInstance->setRenderProperties(*m_pRenderProperties);
 				delete m_pRenderProperties;
                 m_pRenderProperties= nullptr;
 			}
 
 			if (0 != shaderId) m_pWorldHandle->collection()->bindShader(shaderId);
-			subject= m_pWorldHandle->collection()->add(instance, shaderId);
+            subject= m_pWorldHandle->collection()->add(pInstance, shaderId);
 			m_pWorldHandle->collection()->setVisibility(m_Uid, m_IsVisible);
 			if (m_pWorldHandle->selectionSetHandle()->contains(m_Uid))
 			{
