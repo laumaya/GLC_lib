@@ -22,9 +22,10 @@
 
 //! \file glc_mesh.cpp Implementation for the GLC_Mesh class.
 
+#include "glc_mesh.h"
+
 #include <QtConcurrent>
 
-#include "glc_mesh.h"
 #include "../glc_renderstatistics.h"
 #include "../glc_context.h"
 #include "../glc_contextmanager.h"
@@ -38,7 +39,7 @@ quint32 GLC_Mesh::m_ChunkId= 0xA701;
 class SharpEdgeContainer
 {
 public:
-    SharpEdgeContainer(GLC_Triangle* pTriangle, QList<GLC_Triangle>* pTriangleList, double angleThresold, int index)
+    SharpEdgeContainer(GLC_Triangle* pTriangle, QList<GLC_Triangle*>* pTriangleList, double angleThresold, int index)
         : m_pTriangle(pTriangle)
         , m_pTriangleList(pTriangleList)
         , m_AngleThresold(angleThresold)
@@ -46,7 +47,7 @@ public:
     {}
 
     GLC_Triangle* m_pTriangle;
-    QList<GLC_Triangle>* m_pTriangleList;
+    QList<GLC_Triangle*>* m_pTriangleList;
     double m_AngleThresold;
     int m_Index;
 };
@@ -837,7 +838,7 @@ void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
 
     const int indexCount= indexList.count();
 
-    QList<GLC_Triangle> triangles;
+    QList<GLC_Triangle*> triangles;
     QList<SharpEdgeContainer*> sharpEdgeContainerList;
 
     for (int tri1Index= 0; tri1Index < indexCount; tri1Index+=3)
@@ -852,10 +853,10 @@ void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
         const GLC_Point3d p3(positionVector.at(index * 3), positionVector.at((index * 3) + 1), positionVector.at((index * 3) + 2));
         const GLC_Vector3d n3(normalVector.at(index * 3), normalVector.at((index * 3) + 1), normalVector.at((index * 3) + 2));
 
-        GLC_Triangle triangle(p1, p2, p3, n1, n2, n3);
-        triangles.append(triangle);
+        GLC_Triangle* pTriangle= new GLC_Triangle(p1, p2, p3, n1, n2, n3);
+        triangles.append(pTriangle);
 
-        SharpEdgeContainer* pSharpEdgeContainer= new SharpEdgeContainer(&(triangles.last()), &triangles, angleThreshold, triangles.count() - 1);
+        SharpEdgeContainer* pSharpEdgeContainer= new SharpEdgeContainer(triangles.last(), &triangles, angleThreshold, triangles.count() - 1);
         sharpEdgeContainerList.append(pSharpEdgeContainer);
     }
 
@@ -866,10 +867,10 @@ void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
     const int count= triangles.count();
     for (int i= 0; i < count; ++i)
     {
-        GLC_Triangle& triangle= triangles[i];
-        if (triangle.hasSharpEdge())
+        GLC_Triangle* pTriangle= triangles[i];
+        if (pTriangle->hasSharpEdge())
         {
-            QList<GLC_Point3d> edge= triangle.sharpEdges();
+            QList<GLC_Point3d> edge= pTriangle->sharpEdges();
             Q_ASSERT(!edge.isEmpty());
             const int edgeCount= edge.count();
             GLfloatVector edgeVector(edgeCount * 3);
@@ -885,7 +886,7 @@ void GLC_Mesh::createSharpEdges(double precision, double angleThreshold)
             m_WireData.addVerticeGroup(edgeVector);
         }
     }
-
+    qDeleteAll(triangles);
     glc::comparedPrecision= savedPrecision;
 }
 
@@ -1859,8 +1860,8 @@ SharpEdgeContainer* GLC_Mesh::computeSharEdgeMappedFunction(SharpEdgeContainer* 
     const int startIndex= pContainer->m_Index + 1;
     for (int i= startIndex; i < count; ++i)
     {
-        GLC_Triangle& triangle2= pContainer->m_pTriangleList->operator [](i);
-        pContainer->m_pTriangle->setSharpEdge(&triangle2, pContainer->m_AngleThresold);
+        GLC_Triangle* pTriangle2= pContainer->m_pTriangleList->at(i);
+        pContainer->m_pTriangle->setSharpEdge(pTriangle2, pContainer->m_AngleThresold);
     }
 
     return pContainer;
