@@ -193,7 +193,7 @@ void GLC_OpenGLViewWidget::prepareScreenShot()
 
         m_Viewhandler->setScreenShotMode(true);
         m_Viewhandler->setSize(width, height);
-        paintGL();
+        doRender();
         m_Viewhandler->setScreenShotMode(false);
 
         m_pScreenShotFbo->release();

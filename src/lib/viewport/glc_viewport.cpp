@@ -249,7 +249,7 @@ void GLC_Viewport::updateProjectionMat(bool updateOpenGL)
             pContext->glcLoadIdentity();
 
             pContext->glcFrustum(xMin, xMax, yMin, yMax, m_dDistanceMini, m_DistanceMax);
-            m_ProjectionMatrix= pContext->projectionMatrix();
+            m_ProjectionMatrix= GLC_Matrix4x4::frustumMatrix(xMin, xMax, yMin, yMax, m_dDistanceMini, m_DistanceMax);
             pContext->glcMatrixMode(GL_MODELVIEW);
         }
         else
