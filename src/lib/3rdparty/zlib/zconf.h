@@ -480,7 +480,7 @@ typedef unsigned long z_crc_t;
 #  endif
 #endif
 #ifndef Z_SOLO
-#  if defined(Z_HAVE_UNISTD_H)
+#  if defined(Z_HAVE_UNISTD_H) && !defined(_WIN32)
 #    include <unistd.h>         /* for SEEK_*, off_t, and _LFS64_LARGEFILE */
 #    ifdef VMS
 #      include <unixio.h>       /* for off_t */
