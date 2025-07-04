@@ -695,7 +695,7 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 		if (renderFlag == glc::WireRenderFlag)
 		{
 	        glEnable(GL_POLYGON_OFFSET_FILL);
-	        glPolygonOffset (1.0, 1.0);
+            glPolygonOffset (1.0, 10.0);
 		}
 		if (GLC_State::isInSelectionMode())
 		{
