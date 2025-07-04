@@ -52,7 +52,7 @@ private:
 
 	inline double getRandomMinMax( double fMin, double fMax )
 	{
-        double fRandNum = (double)arc4random() / RAND_MAX;
+        double fRandNum = (double)rand() / RAND_MAX;
 	    return fMin + (fMax - fMin) * fRandNum;
 	}
 //////////////////////////////////////////////////////////////////////
