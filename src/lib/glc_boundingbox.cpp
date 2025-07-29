@@ -234,40 +234,34 @@ GLC_BoundingBox& GLC_BoundingBox::transform(const GLC_Matrix4x4& matrix)
 {
     if (!m_IsEmpty)
     {
-        // Compute Transformed BoundingBox Corner
-        GLC_Point3d corner1(m_Lower);
-        GLC_Point3d corner7(m_Upper);
-        GLC_Point3d corner2(corner7.x(), corner1.y(), corner1.z());
-        GLC_Point3d corner3(corner7.x(), corner7.y(), corner1.z());
-        GLC_Point3d corner4(corner1.x(), corner7.y(), corner1.z());
-        GLC_Point3d corner5(corner1.x(), corner1.y(), corner7.z());
-        GLC_Point3d corner6(corner7.x(), corner1.y(), corner7.z());
-        GLC_Point3d corner8(corner1.x(), corner7.y(), corner7.z());
+        updateObb(matrix);
 
-        corner1 = (matrix * corner1);
-        corner2 = (matrix * corner2);
-        corner3 = (matrix * corner3);
-        corner4 = (matrix * corner4);
-        corner5 = (matrix * corner5);
-        corner6 = (matrix * corner6);
-        corner7 = (matrix * corner7);
-        corner8 = (matrix * corner8);
+        const GLC_Vector3d halfX(GLC_Vector3d(m_Obb.xAxis()).setLength(m_Obb.halfSize().x()));
+        const GLC_Vector3d halfY(GLC_Vector3d(m_Obb.yAxis()).setLength(m_Obb.halfSize().y()));
+        const GLC_Vector3d halfZ(GLC_Vector3d(m_Obb.zAxis()).setLength(m_Obb.halfSize().z()));
+
+        const GLC_Point3d p1(m_Obb.position() + (-halfX - halfY - halfZ));
+        const GLC_Point3d p2(m_Obb.position() + (halfX - halfY - halfZ));
+        const GLC_Point3d p3(m_Obb.position() + (halfX + halfY - halfZ));
+        const GLC_Point3d p4(m_Obb.position() + (-halfX + halfY - halfZ));
+        const GLC_Point3d p5(m_Obb.position() + (halfX + halfY + halfZ));
+        const GLC_Point3d p6(m_Obb.position() + (-halfX + halfY + halfZ));
+        const GLC_Point3d p7(m_Obb.position() + (-halfX - halfY + halfZ));
+        const GLC_Point3d p8(m_Obb.position() + (halfX - halfY + halfZ));
 
         // Compute the new BoundingBox
         GLC_BoundingBox boundingBox;
-        boundingBox.combine(corner1);
-        boundingBox.combine(corner2);
-        boundingBox.combine(corner3);
-        boundingBox.combine(corner4);
-        boundingBox.combine(corner5);
-        boundingBox.combine(corner6);
-        boundingBox.combine(corner7);
-        boundingBox.combine(corner8);
+        boundingBox.combine(p1);
+        boundingBox.combine(p2);
+        boundingBox.combine(p3);
+        boundingBox.combine(p4);
+        boundingBox.combine(p5);
+        boundingBox.combine(p6);
+        boundingBox.combine(p7);
+        boundingBox.combine(p8);
 
         m_Lower= boundingBox.m_Lower;
         m_Upper= boundingBox.m_Upper;
-
-        updateObb(matrix);
     }
 
     return *this;
