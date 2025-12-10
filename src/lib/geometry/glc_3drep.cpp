@@ -169,6 +169,11 @@ GLC_BoundingBox GLC_3DRep::boundingBox() const
 	return resultBox;
 }
 
+double GLC_3DRep::bBoxRadius() const
+{
+    return boundingBox().boundingSphereRadius();
+}
+
 unsigned int GLC_3DRep::faceCount() const
 {
 	unsigned int result= 0;

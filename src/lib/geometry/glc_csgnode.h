@@ -71,6 +71,9 @@ public:
     GLC_3DRep get3DRep() const
     {return m_3DRep;}
 
+    double bBoxRadius() const
+    {return m_3DRep.bBoxRadius();}
+
     const GLC_Matrix4x4& matrix() const
     {return m_Matrix;}
 

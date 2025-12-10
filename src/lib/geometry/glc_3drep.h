@@ -108,6 +108,8 @@ public:
 	//! Return the 3DRep bounding Box
 	GLC_BoundingBox boundingBox() const;
 
+    double bBoxRadius() const;
+
 	//! Return true if the 3DRep contains the geometry
 	inline bool contains(GLC_Geometry* pGeom)
 	{return m_pGeomList->contains(pGeom);}
