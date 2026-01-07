@@ -197,9 +197,9 @@ void GLC_ViewHandler::selected3DWidgetChanged(GLC_uint widgetId)
     emit widgetSelectionChanged(widgetId);
 }
 
-void GLC_ViewHandler::setSize(int width, int height, int devicePixelRatio)
+void GLC_ViewHandler::setSize(int width, int height)
 {
-    m_pViewport->setWinGLSize(width, height, devicePixelRatio, true);
+    m_pViewport->setWinGLSize(width, height, true);
 }
 
 void GLC_ViewHandler::setMouseTracking(bool track)

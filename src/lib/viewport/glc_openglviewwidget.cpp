@@ -96,8 +96,9 @@ void GLC_OpenGLViewWidget::updateSelection()
         if (!m_pSelectionFbo->bind()) emit frameBufferBindingFailed();
 
         // Get selection coordinate
-        const int x= m_Viewhandler->pointerPosition().x();
-        const int y= m_Viewhandler->pointerPosition().y();
+        const double pixelRatio= devicePixelRatio();
+        const int x= m_Viewhandler->pointerPosition().x() * pixelRatio;
+        const int y= m_Viewhandler->pointerPosition().y() * pixelRatio;
 
         GLC_World world= m_Viewhandler->world();
         GLC_SelectionSet selectionSet;
@@ -241,8 +242,9 @@ void GLC_OpenGLViewWidget::paintGL()
     Q_ASSERT(nullptr != m_Viewhandler);
 
     // Resize int paintgl to handle to screen with different pixel ratio (Retina)
-    const int width= this->width();
-    const int height= this->height();
+    const double pixelRatio= devicePixelRatio();
+    const int width= this->width() * pixelRatio;
+    const int height= this->height() * pixelRatio;
 
     if (m_UpdateSelectionBuffer)
     {
@@ -252,7 +254,7 @@ void GLC_OpenGLViewWidget::paintGL()
     }
     if (m_UpdateViewBuffer)
     {
-        m_Viewhandler->setSize(width, height, devicePixelRatio());
+        m_Viewhandler->setSize(width, height);
         doRender();
     }
 }

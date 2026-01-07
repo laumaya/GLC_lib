@@ -24,11 +24,12 @@
 
 #include "glc_userinput.h"
 
+#include "glc_state.h"
 
 
 GLC_UserInput::GLC_UserInput(int x, int y, QInputEvent* pEvent)
-    : m_X(x)
-    , m_Y(y)
+    : m_X(x * GLC_State::globalDevicePixelRatio())
+    , m_Y(y * GLC_State::globalDevicePixelRatio())
     , m_NormalyzeX(0.0)
     , m_NormalyzeY(0.0)
     , m_Translation()

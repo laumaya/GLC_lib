@@ -52,6 +52,10 @@ bool GLC_State::m_IsSpacePartitionningActivated= false;
 bool GLC_State::m_IsFrustumCullingActivated= false;
 bool GLC_State::m_IsValid= false;
 
+double GLC_State::m_DevicePixelRatio= 1.0;
+bool GLC_State::m_DevicePixelRatioEnableState= true;
+
+
 GLC_State::~GLC_State()
 {
 }
@@ -166,6 +170,26 @@ bool GLC_State::isValid()
     return m_IsValid;
 }
 
+double GLC_State::globalDevicePixelRatio()
+{
+    double subject;
+    if (m_DevicePixelRatioEnableState)
+    {
+        subject= m_DevicePixelRatio;
+    }
+    else
+    {
+        subject= 1.0;
+    }
+
+    return subject;
+}
+
+bool GLC_State::globalDevicePixelRatioEnableState()
+{
+    return m_DevicePixelRatioEnableState;
+}
+
 void GLC_State::setVboUsage(const bool vboUsed)
 {
     m_UseVbo= vboUsed;
@@ -230,4 +254,14 @@ void GLC_State::setDefaultOctreeDepth(int depth)
 void GLC_State::setFrustumCullingUsage(bool usage)
 {
     m_IsFrustumCullingActivated= usage;
+}
+
+void GLC_State::setGlobalDevicePixelRatio(double value)
+{
+    m_DevicePixelRatio= value;
+}
+
+void GLC_State::setGlobalDevicePixelRatioEnableState(bool value)
+{
+    m_DevicePixelRatioEnableState= value;
 }

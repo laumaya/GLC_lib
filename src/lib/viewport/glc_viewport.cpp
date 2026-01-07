@@ -63,7 +63,6 @@ GLC_Viewport::GLC_Viewport()
     , m_MinimumStaticRatioSize(0.0)
     , m_MinimumDynamicRatioSize(0.0)
     , m_TextRenderingCollection()
-    , m_DevicePixelRatio(1)
 {
 
 }
@@ -488,9 +487,8 @@ void GLC_Viewport::render3DWidget()
     m_3DWidgetCollection.render(0, glc::TransparentRenderFlag);
 }
 
-void GLC_Viewport::setWinGLSize(int width, int height, int devicePixelRatio, bool updateOpenGL)
+void GLC_Viewport::setWinGLSize(int width, int height, bool updateOpenGL)
 {
-    m_DevicePixelRatio= devicePixelRatio;
     m_Width= width;
     m_Height= height;
 
@@ -505,7 +503,7 @@ void GLC_Viewport::setWinGLSize(int width, int height, int devicePixelRatio, boo
 
     if (updateOpenGL)
     {
-        glViewport(0, 0, m_Width * devicePixelRatio, m_Height * devicePixelRatio);
+        glViewport(0, 0, m_Width, m_Height);
         updateProjectionMat();
     }
 
@@ -514,11 +512,6 @@ void GLC_Viewport::setWinGLSize(int width, int height, int devicePixelRatio, boo
 // Set Functions
 //////////////////////////////////////////////////////////////////////
 
-void GLC_Viewport::setWinGLSize(int width, int height, bool updateOpenGL)
-{
-    const int devicePixelRatio= 1;
-    setWinGLSize(width, height, devicePixelRatio, updateOpenGL);
-}
 
 void GLC_Viewport::setWinGLSize(const QSize &size, bool updateOpenGL)
 {

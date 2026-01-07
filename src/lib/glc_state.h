@@ -100,6 +100,11 @@ public:
 
 	//! Return true valid
 	static bool isValid();
+
+    static double globalDevicePixelRatio();
+
+    static bool globalDevicePixelRatioEnableState();
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -148,6 +153,10 @@ public:
 
 	//! Set the frustum culling usage
 	static void setFrustumCullingUsage(bool);
+
+    static void setGlobalDevicePixelRatio(double value);
+
+    static void setGlobalDevicePixelRatioEnableState(bool value);
 
 //@}
 
@@ -202,6 +211,11 @@ private:
 
 	//! State valid flag
 	static bool m_IsValid;
+
+    //! Global device pixel ratio
+    static double m_DevicePixelRatio;
+
+    static bool m_DevicePixelRatioEnableState;
 };
 
 #endif /*GLC_STATE_H_*/

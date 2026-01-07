@@ -161,7 +161,7 @@ public:
 
     virtual void selected3DWidgetChanged(GLC_uint widgetId);
 
-    virtual void setSize(int width, int height, int devicePixelRatio= 1);
+    virtual void setSize(int width, int height);
 
     virtual void setMouseTracking(bool track);
 

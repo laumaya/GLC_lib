@@ -217,10 +217,6 @@ public:
     //! Render the given string into the current OpenGL context
     /*! x and y are specified in window coordinates*/
     void renderText(const GLC_Point3d &point, const QString& text, const QColor& color= Qt::white, const QFont& font= QFont(), int deviceRatio= 1);
-
-    //! Return the device aspect ratio which has been set with size
-    int devicePixelRatio() const
-    {return m_DevicePixelRatio;}
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -244,9 +240,6 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-
-    //! Update the OpenGL view size
-    void setWinGLSize(int width, int height, int devicePixelRatio, bool updateOpenGL= true);
 
     //! Update the OpenGL view size
     void setWinGLSize(int width, int height, bool updateOpenGL= true);
@@ -446,8 +439,6 @@ private:
 
     //! Text rendering collection
     GLC_3DViewCollection m_TextRenderingCollection;
-
-    int m_DevicePixelRatio;
 };
 
 GLC_Matrix4x4 GLC_Viewport::compositionMatrix() const
