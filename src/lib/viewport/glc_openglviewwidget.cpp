@@ -88,7 +88,11 @@ void GLC_OpenGLViewWidget::setViewhandler(QVariant viewHandler)
 
 void GLC_OpenGLViewWidget::updateSelection()
 {
-    makeCurrent();
+    if (isValid())
+    {
+        makeCurrent();
+    }
+
     Q_ASSERT(!m_Viewhandler.isNull());
 
     if (m_pSelectionFbo && m_pSelectionFbo->isValid())
@@ -150,7 +154,10 @@ void GLC_OpenGLViewWidget::select(uint id)
 
 QImage GLC_OpenGLViewWidget::takeScreenShot()
 {
-    makeCurrent();
+    if (isValid())
+    {
+        makeCurrent();
+    }
     QImage subject;
     Q_ASSERT(nullptr != m_Viewhandler);
     GLC_ScreenShotSettings screenShotSettings= m_Viewhandler->screenShotSettings();
@@ -161,7 +168,10 @@ QImage GLC_OpenGLViewWidget::takeScreenShot()
 
     if (m_pScreenShotFbo && m_pScreenShotFbo->isValid())
     {
-        if (!m_pScreenShotFbo->bind()) emit frameBufferBindingFailed();
+        if (!m_pScreenShotFbo->bind())
+        {
+            emit frameBufferBindingFailed();
+        }
 
         m_Viewhandler->setScreenShotMode(true);
         m_Viewhandler->setSize(width, height);
@@ -180,7 +190,10 @@ QImage GLC_OpenGLViewWidget::takeScreenShot()
 
 void GLC_OpenGLViewWidget::prepareScreenShot()
 {
-    makeCurrent();
+    if (isValid())
+    {
+        makeCurrent();
+    }
     Q_ASSERT(nullptr != m_Viewhandler);
     GLC_ScreenShotSettings screenShotSettings= m_Viewhandler->screenShotSettings();
     const int width= screenShotSettings.size().width();
@@ -319,16 +332,21 @@ void GLC_OpenGLViewWidget::renderForSelection()
 {
     Q_ASSERT(!m_Viewhandler.isNull());
 
-    if ((nullptr != m_pSelectionFbo) && m_pSelectionFbo->isValid())
+    if (m_pSelectionFbo && m_pSelectionFbo->isValid())
     {
-        if (!m_pSelectionFbo->bind()) emit frameBufferBindingFailed();
+        if (m_pSelectionFbo->bind())
+        {
+            GLC_State::setSelectionMode(true);
+            doRender();
+            GLC_State::setSelectionMode(false);
+            m_pSelectionFbo->release();
+        }
+        else
+        {
+            emit frameBufferBindingFailed();
+        }
 
-        GLC_State::setSelectionMode(true);
-        doRender();
-        GLC_State::setSelectionMode(false);
     }
-
-    m_pSelectionFbo->release();
     //QImage image= m_pSelectionFbo->toImage();
     //image.save("/Users/laumaya/fbo.png");
 }
@@ -389,5 +407,8 @@ void GLC_OpenGLViewWidget::setupScreenShotFbo(int width, int height)
 
     // Test frame buffer validity
     const bool isValid= m_pScreenShotFbo->isValid();
-    if (!isValid) emit frameBufferCreationFailed();
+    if (!isValid)
+    {
+        emit frameBufferCreationFailed();
+    }
 }
