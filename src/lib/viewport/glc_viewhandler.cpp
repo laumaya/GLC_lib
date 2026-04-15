@@ -199,7 +199,7 @@ void GLC_ViewHandler::selected3DWidgetChanged(GLC_uint widgetId)
 
 void GLC_ViewHandler::setSize(int width, int height)
 {
-    m_pViewport->setWinGLSize(width, height, true);
+    m_pViewport->setWinGLSize(width, height, false);
 }
 
 void GLC_ViewHandler::setMouseTracking(bool track)

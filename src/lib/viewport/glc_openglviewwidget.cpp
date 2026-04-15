@@ -250,6 +250,17 @@ void GLC_OpenGLViewWidget::initializeGL()
     }
 }
 
+void GLC_OpenGLViewWidget::resizeGL(int w, int h)
+{
+    QOpenGLWidget::resizeGL(w, h);
+    // Resize int paintgl to handle to screen with different pixel ratio (Retina)
+    const double pixelRatio= devicePixelRatio();
+    const int width= w * pixelRatio;
+    const int height= h * pixelRatio;
+
+    m_Viewhandler->setSize(width, height);
+}
+
 void GLC_OpenGLViewWidget::paintGL()
 {
     Q_ASSERT(nullptr != m_Viewhandler);
