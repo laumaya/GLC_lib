@@ -121,10 +121,10 @@ public:
     {return m_OccurrenceSelection.contains(occurrenceId);}
 
     //! Return true if this selection contains the given body id of the given occurrence id
-    bool contains(GLC_uint occId, GLC_uint bodyId);
+    bool contains(GLC_uint occId, GLC_uint bodyId) const;
 
     //! Return true if this selection contains the given primitive id of the given body id of the given occurrence id
-    bool contains(GLC_uint occId, GLC_uint bodyId, GLC_uint primitiveId);
+    bool contains(GLC_uint occId, GLC_uint bodyId, GLC_uint primitiveId) const;
 
     //! Returns true if the other selection set is equal to this selection set set; otherwise returns false.
     bool operator==(const GLC_SelectionSet& other) const;
@@ -137,7 +137,10 @@ public:
     QList<GLC_uint> selectedBodies(GLC_uint occurrenceId) const;
 
     //! Return the list of selected primitive of the given occurrence id and body id
-    QList<GLC_uint> selectedPrimitive(GLC_uint occId, GLC_uint bodyId);
+    QList<GLC_uint> selectedPrimitive(GLC_uint occId, GLC_uint bodyId) const;
+
+    GLC_WorldHandle* worldHandle() const
+    {return m_pWorldHandle;}
 
 //@}
 //////////////////////////////////////////////////////////////////////

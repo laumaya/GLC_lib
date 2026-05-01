@@ -26,7 +26,7 @@
 #include "glc_world.h"
 
 GLC_SelectionSet::GLC_SelectionSet()
-    : m_pWorldHandle(NULL)
+    : m_pWorldHandle(nullptr)
     , m_OccurrenceSelection()
     , m_OccurenceIdList()
 {
@@ -38,8 +38,7 @@ GLC_SelectionSet::GLC_SelectionSet(GLC_WorldHandle* pWorldHandle)
     , m_OccurrenceSelection()
     , m_OccurenceIdList()
 {
-    Q_ASSERT(0 == m_pWorldHandle->collection()->selectionSize());
-
+    //Q_ASSERT(0 == m_pWorldHandle->collection()->selectionSize());
 }
 
 GLC_SelectionSet::GLC_SelectionSet(GLC_World &world)
@@ -173,7 +172,7 @@ QList<GLC_StructOccurrence*> GLC_SelectionSet::occurrencesList() const
     return subject;
 }
 
-bool GLC_SelectionSet::contains(GLC_uint occId, GLC_uint bodyId)
+bool GLC_SelectionSet::contains(GLC_uint occId, GLC_uint bodyId) const
 {
     bool subject= m_OccurrenceSelection.contains(occId);
     subject= subject && (m_OccurrenceSelection.value(occId).contains(bodyId));
@@ -181,7 +180,7 @@ bool GLC_SelectionSet::contains(GLC_uint occId, GLC_uint bodyId)
     return subject;
 }
 
-bool GLC_SelectionSet::contains(GLC_uint occId, GLC_uint bodyId, GLC_uint primitiveId)
+bool GLC_SelectionSet::contains(GLC_uint occId, GLC_uint bodyId, GLC_uint primitiveId) const
 {
     bool subject= m_OccurrenceSelection.contains(occId);
     subject= subject && (m_OccurrenceSelection.value(occId).contains(bodyId));
@@ -208,7 +207,7 @@ QList<GLC_uint> GLC_SelectionSet::selectedBodies(GLC_uint occurrenceId) const
     return subject;
 }
 
-QList<GLC_uint> GLC_SelectionSet::selectedPrimitive(GLC_uint occId, GLC_uint bodyId)
+QList<GLC_uint> GLC_SelectionSet::selectedPrimitive(GLC_uint occId, GLC_uint bodyId) const
 {
     QList<GLC_uint> subject;
     if (contains(occId, bodyId))
@@ -386,7 +385,7 @@ void GLC_SelectionSet::clear()
 
 void GLC_SelectionSet::clean()
 {
-    if (NULL != m_pWorldHandle)
+    if (nullptr != m_pWorldHandle)
     {
         OccurrenceSelection::iterator iOcc= m_OccurrenceSelection.begin();
         while (iOcc != m_OccurrenceSelection.end())

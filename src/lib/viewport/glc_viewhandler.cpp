@@ -48,7 +48,7 @@ GLC_ViewHandler::GLC_ViewHandler(QObject *pParent)
     , m_PointerPosition()
     , m_SelectionMode(GLC_SelectionEvent::ModeInstance)
     , m_SelectionModes(GLC_SelectionEvent::ModeReplace | m_SelectionMode)
-    , m_CurrentSelectionSet()
+    , m_CurrentSelectionSet(m_World)
     , m_UnprojectedPoint()
     , m_3DWidgetManager(m_pViewport)
 
@@ -117,6 +117,7 @@ void GLC_ViewHandler::setWorld(const GLC_World &world)
     }
 
     m_World= world;
+    m_CurrentSelectionSet.setAttachedWorld(m_World);
 
     if (NULL != m_pSpacePartitioning)
     {
