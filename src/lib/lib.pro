@@ -236,6 +236,13 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 
 HEADERS_GLC_GLU +=	glu/glc_glu.h
 
+HEADERS_GLC_QML +=      qml/glc_quickitem.h \
+                        qml/glc_quickview.h \
+                        qml/glc_quickcamera.h \
+                        qml/glc_quickoccurrence.h \
+                        qml/glc_quickselection.h \
+                        qml/glc_quickviewhandler.h
+
 HEADERS_GLC_CSGJS += 3rdparty/csgjs/csgjs.h
 
 
@@ -254,7 +261,7 @@ HEADERS_ZLIB    += 3rdparty/zlib/crc32.h \
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
-HEADERS += $${HEADERS_CLIP2TR} $${HEADERS_GLC_CSGJS} $${HEADERS_ZLIB}
+HEADERS += $${HEADERS_GLC_QML} $${HEADERS_CLIP2TR} $${HEADERS_GLC_CSGJS} $${HEADERS_ZLIB}
 		   
 SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/compress.c \
@@ -456,6 +463,13 @@ SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			
 SOURCES +=	glu/glc_project.cpp
 
+SOURCES +=      qml/glc_quickitem.cpp \
+                qml/glc_quickview.cpp \
+                qml/glc_quickcamera.cpp \
+                qml/glc_quickoccurrence.cpp \
+                qml/glc_quickselection.cpp \
+                qml/glc_quickviewhandler.cpp
+
 # Windows compilation configuration
 win32:CONFIG *= dll
 
@@ -613,6 +627,7 @@ include_glc_shading.files = $${HEADERS_GLC_SHADING}
 include_glc_viewport.files = $${HEADERS_GLC_VIEWPORT}
 include_glc_3dwidget.files = $${HEADERS_GLC_3DWIDGET}
 include_glc_glu.files = $${HEADERS_GLC_GLU}
+include_glc_qml.files = $${HEADERS_GLC_QML}
 
 # install library
 target.path = $${LIB_DIR}
@@ -620,7 +635,7 @@ target.path = $${LIB_DIR}
 # "make install" configuration options
 INSTALLS += include_lib3ds include_glext include_quazip include_zlib include_glc_maths include_glc_io
 INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport
-INSTALLS += include_glc_3dwidget include_glc_glu
+INSTALLS += include_glc_3dwidget include_glc_glu include_glc_qml
 
 INSTALLS += target
 INSTALLS += include

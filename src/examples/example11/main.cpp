@@ -4,6 +4,7 @@
 #include <QVariant>
 #include <QQmlContext>
 #include <QQuickView>
+#include <QWidget>
 #include <QSharedPointer>
 
 #include <GLC_World>
@@ -15,6 +16,13 @@
 
 int main(int argc, char *argv[])
 {
+    // Set default OpenGL format before the creation of application
+    QSurfaceFormat format;
+    format.setRenderableType(QSurfaceFormat::OpenGL);
+    format.setSamples(4);
+    QSurfaceFormat::setDefaultFormat(format);
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+
     QApplication app(argc, argv);
 
     GLC_QuickView view;

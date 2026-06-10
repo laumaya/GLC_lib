@@ -11,6 +11,7 @@ unix:RCC_DIR = ./Build
 include(../../../glc_lib.pri)
 
 QT += opengl qml quick
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets openglwidgets
 
 SOURCES += main.cpp
 

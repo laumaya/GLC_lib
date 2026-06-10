@@ -46,7 +46,7 @@ GLC_QuickItem::GLC_QuickItem(GLC_QuickItem *pParent)
     , m_Source()
     , m_pQuickSelection(new GLC_QuickSelection(this))
 {
-    setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton);
+    setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton);
     setFlag(QQuickItem::ItemHasContents);
 
     // Set the initial viewHandler
@@ -191,13 +191,13 @@ void GLC_QuickItem::select(uint id)
     }
 }
 
-void GLC_QuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
+void GLC_QuickItem::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
     deleteViewBuffers();
 
     delete m_pAuxFbo;
     m_pAuxFbo= NULL;
-    QQuickItem::geometryChanged(newGeometry, oldGeometry);
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
 }
 
 QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pData)
@@ -208,7 +208,8 @@ QSGNode* GLC_QuickItem::updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pDa
     if (pTextureNode == NULL)
     {
         pTextureNode = new QSGSimpleTextureNode();
-        pTextureNode->setTexture(this->window()->createTextureFromNativeObject(QQuickWindow::NativeObjectTexture, nullptr, 0, QSize(0,0)));
+        this->window()->createTextureFromImage(QImage());
+        pTextureNode->setTexture(this->window()->createTextureFromImage(QImage()));
     }
 
     if ((NULL != m_Viewhandler) && m_Viewhandler->isEnable())
@@ -534,8 +535,7 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
 
         m_pSourceFbo= new QOpenGLFramebufferObject(width, height, sourceFormat);
         m_pTargetFbo= new QOpenGLFramebufferObject(width, height);
-        const GLuint textureId= m_pTargetFbo->texture();
-        pTextureNode->setTexture(this->window()->createTextureFromNativeObject(QQuickWindow::NativeObjectTexture, &textureId, 0, m_pTargetFbo->size()));
+        pTextureNode->setTexture(this->window()->createTextureFromImage(m_pTargetFbo->toImage()));
         pTextureNode->setRect(this->boundingRect());
 
         // Test frame buffer validity
@@ -545,7 +545,7 @@ void GLC_QuickItem::setupFbo(int width, int height, QSGSimpleTextureNode *pTextu
     else
     {
         const GLuint textureId= 0;
-        pTextureNode->setTexture(this->window()->createTextureFromNativeObject(QQuickWindow::NativeObjectTexture, &textureId, 0, QSize(0,0)));
+        pTextureNode->setTexture(this->window()->createTextureFromImage(QImage()));
         pTextureNode->setRect(this->boundingRect());
     }
 }

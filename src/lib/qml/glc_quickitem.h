@@ -138,15 +138,15 @@ signals:
     //////////////////////////////////////////////////////////////////////
 
 protected:
-    virtual void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
-    virtual QSGNode* updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pData);
-    virtual void mousePressEvent(QMouseEvent * e);
-    virtual void mouseMoveEvent(QMouseEvent * e);
-    virtual void mouseReleaseEvent(QMouseEvent * e);
-    virtual void mouseDoubleClickEvent(QMouseEvent * e);
-    virtual void wheelEvent(QWheelEvent * e);
-    virtual void touchEvent(QTouchEvent * e);
-    virtual void hoverMoveEvent(QHoverEvent *event);
+    void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
+    QSGNode* updatePaintNode(QSGNode* pNode, UpdatePaintNodeData* pData) override;
+    void mousePressEvent(QMouseEvent * e) override;
+    void mouseMoveEvent(QMouseEvent * e) override;
+    void mouseReleaseEvent(QMouseEvent * e) override;
+    void mouseDoubleClickEvent(QMouseEvent * e) override;
+    void wheelEvent(QWheelEvent * e) override;
+    void touchEvent(QTouchEvent * e) override;
+    void hoverMoveEvent(QHoverEvent *event) override;
 //@}
 
 //////////////////////////////////////////////////////////////////////

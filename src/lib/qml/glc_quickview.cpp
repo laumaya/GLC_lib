@@ -65,17 +65,12 @@ void GLC_QuickView::sceneGraphInitializedDone()
 {
     disconnect(this, SIGNAL(sceneGraphInitialized()), this, SLOT(sceneGraphInitializedDone()));
 
-    QOpenGLContext* pContext= openglContext();
-    Q_ASSERT(pContext);
-
     m_pQOpenGLContext= new QOpenGLContext();
-    m_pQOpenGLContext->setShareContext(pContext);
-    m_pQOpenGLContext->setFormat(pContext->format());
     m_pQOpenGLContext->create();
     Q_ASSERT(m_pQOpenGLContext->isValid());
 
     QOffscreenSurface* pFakeSurface = new QOffscreenSurface();
-    pFakeSurface->setFormat(pContext->format());
+    pFakeSurface->setFormat(m_pQOpenGLContext->format());
     pFakeSurface->create();
 
     m_pContext= GLC_ContextManager::instance()->createContext(m_pQOpenGLContext, pFakeSurface);
