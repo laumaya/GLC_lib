@@ -18,6 +18,7 @@ class GLC_StructOccurrence;
 class GLC_LIB_EXPORT GLC_QuickOccurrence : public QObject
 {
     Q_OBJECT
+
     Q_PROPERTY(uint id READ id)
     Q_PROPERTY(QString referenceName READ referenceName)
     Q_PROPERTY(QString instanceName READ instanceName)

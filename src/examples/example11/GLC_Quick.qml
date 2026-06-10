@@ -24,7 +24,7 @@ Rectangle {
                 anchors.rightMargin: 5
                 anchors.topMargin: 20
                 anchors.bottomMargin: 5
-                source: ":model/Democles.dae"
+                source: ":model/man.obj"
                 spacePartitionningEnabled: true
                 onSelectionChanged : {
                     if (!view1.selection.isEmpty())

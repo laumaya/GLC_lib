@@ -44,6 +44,8 @@ class QOpenGLContext;
 class GLC_LIB_EXPORT GLC_QuickView : public QQuickView
 {
     Q_OBJECT
+    QML_ELEMENT
+
 public:
     GLC_QuickView(QWindow* pParent = 0);
     GLC_QuickView(QQmlEngine* pEngine, QWindow* pParent);

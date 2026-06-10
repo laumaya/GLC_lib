@@ -10,9 +10,9 @@ void GLC_ViewerItemPlugin::registerTypes(const char *uri)
 {
     // @uri glclib
     qmlRegisterType<GLC_QuickItem>(uri, 1, 0, "GLC_QuickItem");
-    qmlRegisterType<GLC_QuickCamera>();
-    qmlRegisterType<GLC_QuickOccurrence>();
-    qmlRegisterType<GLC_QuickSelection>();
+    qmlRegisterType<GLC_QuickCamera>(uri, 1, 0, "GLC_QuickCamera");
+    qmlRegisterType<GLC_QuickOccurrence>(uri, 1, 0, "GLC_QuickOccurrence");
+    qmlRegisterType<GLC_QuickSelection>(uri, 1, 0, "GLC_QuickSelection");
 }
 
 

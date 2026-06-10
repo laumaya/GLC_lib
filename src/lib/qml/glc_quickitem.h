@@ -55,6 +55,7 @@ class QGLFramebufferObject;
 class GLC_LIB_EXPORT GLC_QuickItem : public QQuickItem
 {
     Q_OBJECT
+    QML_ELEMENT
 
     //! The view handler of this GLC_QuickItem
     Q_PROPERTY(QVariant viewHandler READ viewHandler WRITE setViewhandler)

@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
     QApplication app(argc, argv);
+    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
 
     GLC_QuickView view;
 
