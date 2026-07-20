@@ -30,6 +30,8 @@
 #include "maths/glc_matrix4x4.h"
 #include "maths/glc_geomtools.h"
 
+#include "glc_global.h"
+
 #include <QtDebug>
 #include "glc_config.h"
 
@@ -55,6 +57,8 @@ public:
 
     const GLC_Vector3d& halfSize() const
     {return m_HalfSize;}
+
+    GLC_Vector3d orientedHalfSize() const;
 
 public:
     void setPosition(const GLC_Vector3d& value)
@@ -143,6 +147,9 @@ public:
     //! Construct a bounding box from the given 3d point
     GLC_BoundingBox(const GLC_Point3d& lower, const GLC_Point3d& upper);
 
+    //! Construct a bounding box from an orinted bounding box
+    GLC_BoundingBox(const GLC_Obb& obb);
+
     virtual ~GLC_BoundingBox();
 
 //@}
@@ -221,6 +228,9 @@ public:
     const GLC_Obb& obb() const
     {return m_Obb;}
 
+    GLC_uint id() const
+    {return m_Id;}
+
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -242,10 +252,16 @@ public:
 
     virtual void clear();
 
+    //! Set this bounding box from the given OBB
+    GLC_BoundingBox& setFromObb(const GLC_Obb& obb);
+
+    void setId(GLC_uint value)
+    {m_Id= value;}
+
 //@}
 
 private:
-    inline void setObb();
+    inline void updateObb();
     inline void updateObb(const GLC_Matrix4x4& matrix);
 
 //////////////////////////////////////////////////////////////////////
@@ -262,6 +278,8 @@ private:
     bool m_IsEmpty;
 
     GLC_Obb m_Obb;
+
+    GLC_uint m_Id;
 
     //! This class chunk id
     static quint32 m_ChunkId;
@@ -356,17 +374,14 @@ bool GLC_BoundingBox::operator == (const GLC_BoundingBox& other) const
     return subject;
 }
 
-inline void GLC_BoundingBox::setObb()
+inline void GLC_BoundingBox::updateObb()
 {
     m_Obb.setPosition(this->center());
     m_Obb.setXAxis(glc::X_AXIS);
     m_Obb.setYAxis(glc::Y_AXIS);
     m_Obb.setZAxis(glc::Z_AXIS);
     m_Obb.setHalfSize(size() * 0.5);
-
 }
-
-
 
 GLC_Point3d GLC_BoundingBox::center(void) const
 {

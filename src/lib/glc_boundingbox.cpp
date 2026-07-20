@@ -37,6 +37,7 @@ GLC_BoundingBox::GLC_BoundingBox()
     , m_Upper(0, 0, 0)
     , m_IsEmpty(true)
     , m_Obb()
+    , m_Id(0)
 {
 
 }
@@ -46,6 +47,7 @@ GLC_BoundingBox::GLC_BoundingBox(const GLC_BoundingBox& other)
     , m_Upper(other.m_Upper)
     , m_IsEmpty(other.m_IsEmpty)
     , m_Obb(other.m_Obb)
+    , m_Id(other.m_Id)
 {
 }
 
@@ -54,8 +56,19 @@ GLC_BoundingBox::GLC_BoundingBox(const GLC_Point3d& lower, const GLC_Point3d& up
     , m_Upper(upper)
     , m_IsEmpty(false)
     , m_Obb()
+    , m_Id(0)
 {
-    setObb();
+    updateObb();
+}
+
+GLC_BoundingBox::GLC_BoundingBox(const GLC_Obb& obb)
+    : m_Lower(0, 0, 0)
+    , m_Upper(0, 0, 0)
+    , m_IsEmpty(true)
+    , m_Obb()
+    , m_Id(0)
+{
+    setFromObb(obb);
 }
 
 GLC_BoundingBox::~GLC_BoundingBox()
@@ -163,7 +176,7 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3d& point)
             m_Upper.setVect(upperX, upperY, upperZ);
         }
     }
-    setObb();
+    updateObb();
     return *this;
 }
 
@@ -194,7 +207,7 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_Point3df& pointf)
             m_Upper.setVect(upperX, upperY, upperZ);
         }
     }
-    setObb();
+    updateObb();
     return *this;
 }
 
@@ -225,7 +238,7 @@ GLC_BoundingBox& GLC_BoundingBox::combine(const GLC_BoundingBox& box)
             m_Upper.setVect(upperX, upperY, upperZ);
         }
     }
-    setObb();
+    updateObb();
 
     return *this;
 }
@@ -272,7 +285,42 @@ void GLC_BoundingBox::clear()
     m_Lower= GLC_Point3d();
     m_Upper= GLC_Point3d();
     m_IsEmpty= true;
-    setObb();
+    updateObb();
+}
+
+GLC_BoundingBox& GLC_BoundingBox::setFromObb(const GLC_Obb& obb)
+{
+    clear();
+    m_Obb= obb;
+
+    const GLC_Vector3d halfX(GLC_Vector3d(m_Obb.xAxis()).setLength(m_Obb.halfSize().x()));
+    const GLC_Vector3d halfY(GLC_Vector3d(m_Obb.yAxis()).setLength(m_Obb.halfSize().y()));
+    const GLC_Vector3d halfZ(GLC_Vector3d(m_Obb.zAxis()).setLength(m_Obb.halfSize().z()));
+
+    const GLC_Point3d p1(m_Obb.position() + (-halfX - halfY - halfZ));
+    const GLC_Point3d p2(m_Obb.position() + (halfX - halfY - halfZ));
+    const GLC_Point3d p3(m_Obb.position() + (halfX + halfY - halfZ));
+    const GLC_Point3d p4(m_Obb.position() + (-halfX + halfY - halfZ));
+    const GLC_Point3d p5(m_Obb.position() + (halfX + halfY + halfZ));
+    const GLC_Point3d p6(m_Obb.position() + (-halfX + halfY + halfZ));
+    const GLC_Point3d p7(m_Obb.position() + (-halfX - halfY + halfZ));
+    const GLC_Point3d p8(m_Obb.position() + (halfX - halfY + halfZ));
+
+    // Compute the new BoundingBox
+    GLC_BoundingBox boundingBox;
+    boundingBox.combine(p1);
+    boundingBox.combine(p2);
+    boundingBox.combine(p3);
+    boundingBox.combine(p4);
+    boundingBox.combine(p5);
+    boundingBox.combine(p6);
+    boundingBox.combine(p7);
+    boundingBox.combine(p8);
+
+    m_Lower= boundingBox.m_Lower;
+    m_Upper= boundingBox.m_Upper;
+
+    return *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const GLC_BoundingBox &bBox)
@@ -312,4 +360,17 @@ void GLC_BoundingBox::updateObb(const GLC_Matrix4x4& matrix)
     halfSize.setY(halfSize.y() * matrix.scalingY());
     halfSize.setZ(halfSize.z() * matrix.scalingZ());
     m_Obb.setHalfSize(halfSize);
+}
+
+GLC_Vector3d GLC_Obb::orientedHalfSize() const
+{
+    GLC_Vector3d subject;
+    GLC_Matrix4x4 matrix;
+    matrix.setColumn(0, m_XAxis);
+    matrix.setColumn(1, m_YAxis);
+    matrix.setColumn(2, m_ZAxis);
+
+    subject= matrix * m_HalfSize;
+
+    return subject;
 }
