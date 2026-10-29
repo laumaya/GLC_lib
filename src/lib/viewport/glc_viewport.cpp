@@ -781,41 +781,42 @@ void GLC_Viewport::reframe(const GLC_BoundingBox& box, double coverFactor)
 
 GLC_Camera GLC_Viewport::reframedCamera(const GLC_BoundingBox &box, double coverFactor) const
 {
-    Q_ASSERT(!box.isEmpty());
     GLC_Camera subject(*m_pViewCam);
-
-    // Center view on the BoundingBox
-    const GLC_Vector3d deltaVector(box.center() - m_pViewCam->target());
-    subject.translate(deltaVector);
-
-    if (coverFactor > 0.0)
+    if (!box.isEmpty() && (coverFactor > 0.0))
     {
-        QList<GLC_Point3d> points(box.points());
-        const GLC_Matrix4x4 matrix(m_pViewCam->modelViewMatrix());
-        GLC_Point3d min(matrix * points.constFirst());
-        min.setZ(0.0);
-        GLC_Point3d max(min);
-        for (GLC_Point3d& point : points)
-        {
-            point= matrix * point;
-            min.setX(qMin(point.x(), min.x()));
-            min.setY(qMin(point.y(), min.y()));
+        const GLC_Vector3d forward(subject.forward().normalize());
+        const GLC_Vector3d up(subject.upVector());
+        const GLC_Vector3d right((forward ^ up).normalize());
+        const GLC_Vector3d camUp(right ^ forward);
 
-            max.setX(qMax(point.x(), max.x()));
-            max.setY(qMax(point.y(), max.y()));
+
+        const double tanY= std::tan(0.5 * glc::toRadian(m_ViewAngle));
+        const double tanX= m_AspectRatio * tanY;
+
+        const GLC_Vector3d center(box.center());
+        double dist= 0.0;
+        double zMin= std::numeric_limits<double>::max();
+        double zMax= -std::numeric_limits<double>::max();
+
+        const QList<GLC_Point3d> corners(box.points());
+        for (const GLC_Vector3d& corner : corners)
+        {
+            const GLC_Vector3d v = corner - center;
+            const double x = v * right;
+            const double y = v * camUp;
+            const double z = v * forward;
+
+            dist = std::max(dist, std::abs(x) / tanX - z);
+            dist = std::max(dist, std::abs(y) / tanY - z);
+            zMin = std::min(zMin, z);
+            zMax = std::max(zMax, z);
         }
 
-        const GLC_Vector3d diff(max - min);
-        const double width = qAbs(diff.x() / m_AspectRatio);
-        const double height= qAbs(diff.y());
+        dist*= coverFactor;
 
-        double cameraCover= (qMax(width, height) / 2) * coverFactor;
-
-        // Compute Camera distance
-        const double distance = cameraCover / (std::tan(glc::toRadian(m_ViewAngle) / 2.0));
-
-        // Update Camera position
-        subject.setDistEyeTarget(distance);
+        subject.setTargetCam(center);
+        subject.setEyeCam(center - (forward * dist));
+        subject.setUpCam(camUp);
     }
 
     return subject;
