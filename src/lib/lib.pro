@@ -236,7 +236,7 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 
 HEADERS_GLC_GLU +=	glu/glc_glu.h
 
-HEADERS_GLC_CSGJS += 3rdparty/csgjs/csgjs.h
+HEADERS_GLC_csg += 3rdparty/csg/csg.h
 
 
 HEADERS_ZLIB    += 3rdparty/zlib/crc32.h \
@@ -251,10 +251,11 @@ HEADERS_ZLIB    += 3rdparty/zlib/crc32.h \
                    3rdparty/zlib/zlib.h \
                    3rdparty/zlib/zutil.h
 
-HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
+HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO} \
+
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET} $${HEADERS_GLC_GLU}
-HEADERS += $${HEADERS_CLIP2TR} $${HEADERS_GLC_CSGJS} $${HEADERS_ZLIB}
+HEADERS += $${HEADERS_CLIP2TR} $${HEADERS_GLC_csg} $${HEADERS_ZLIB}
 		   
 SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/compress.c \
@@ -316,7 +317,7 @@ SOURCES += 3rdparty/clip2tri/clip2tri/clip2tri.cpp \
             3rdparty/clip2tri/poly2tri/sweep/clip_sweep.cc \
             3rdparty/clip2tri/poly2tri/sweep/clip_sweep_context.cc
 
-SOURCES +=      3rdparty/csgjs/csgjs.cpp
+SOURCES +=     
 
 SOURCES +=	maths/glc_matrix4x4.cpp \
                 maths/glc_vector4d.cpp \
@@ -591,6 +592,7 @@ include_lib3ds.path = $${INCLUDE_DIR}/3rdparty/lib3ds
 include_glext.path = $${INCLUDE_DIR}/3rdparty/glext
 include_quazip.path = $${INCLUDE_DIR}/3rdparty/quazip
 include_zlib.path = $${INCLUDE_DIR}/3rdparty/zlib
+include_csg.path= $${INCLUDE_DIR}/3rdparty/csg
 include_glc_maths.path = $${INCLUDE_DIR}/maths
 include_glc_io.path = $${INCLUDE_DIR}/io
 include_glc_scengraph.path = $${INCLUDE_DIR}/sceneGraph
@@ -605,6 +607,7 @@ include_lib3ds.files = $${HEADERS_LIB3DS}
 include_glext.files =$${HEADERS_GLEXT}
 include_quazip.files = $${HEADERS_QUAZIP}
 include_zlib.files = $${HEADERS_ZLIB}
+include_csg.files = $${HEADERS_GLC_csg}
 include_glc_maths.files= $${HEADERS_GLC_MATHS}
 include_glc_io.files= $${HEADERS_GLC_IO}
 include_glc_scengraph.files= $${HEADERS_GLC_SCENEGRAPH}
@@ -618,7 +621,7 @@ include_glc_glu.files = $${HEADERS_GLC_GLU}
 target.path = $${LIB_DIR}
    
 # "make install" configuration options
-INSTALLS += include_lib3ds include_glext include_quazip include_zlib include_glc_maths include_glc_io
+INSTALLS += include_lib3ds include_glext include_quazip include_csg include_zlib include_glc_maths include_glc_io
 INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport
 INSTALLS += include_glc_3dwidget include_glc_glu
 

@@ -22,7 +22,7 @@
 
 //! \file glc_csgleafnode.cpp Implementation for the GLC_CsgLeafNode class.
 
-#include "../3rdparty/csgjs/csgjs.h"
+#include "../3rdparty/csg/csg.h"
 
 #include "glc_mesh.h"
 #include "glc_csghelper.h"
@@ -66,7 +66,7 @@ bool GLC_CsgLeafNode::update()
         delete m_pResultCsgModel;
         GLC_Mesh* pMesh= dynamic_cast<GLC_Mesh*>(m_3DRep.geomAt(0));
         Q_ASSERT(NULL != pMesh);
-        m_pResultCsgModel= GLC_CsgHelper::csgModelFromMesh(pMesh, m_Matrix);
+        m_pResultCsgModel= GLC_CsgHelper::csgMeshFromGLCMesh(pMesh, m_Matrix);
         updateMaterialHash();
         subject= true;
     }

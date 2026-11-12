@@ -23,7 +23,7 @@
 //! \file glc_csgoperatornode.cpp Implementation for the GLC_CsgOperatorNode class.
 
 
-#include "../3rdparty/csgjs/csgjs.h"
+#include "../3rdparty/csg/csg.h"
 
 #include "glc_mesh.h"
 #include "glc_wiredata.h"
@@ -74,8 +74,8 @@ bool GLC_CsgOperatorNode::update()
     bool subject= (updateNeededByOpe1 || updateNeededByOpe2 || (m_pResultCsgModel == NULL));
     if (subject)
     {
-        csgjs_model* pModel1= m_pOpe1Node->csgjsModel();
-        csgjs_model* pModel2= m_pOpe2Node->csgjsModel();
+        csg::Mesh* pModel1= m_pOpe1Node->csgjsModel();
+        csg::Mesh* pModel2= m_pOpe2Node->csgjsModel();
 
         Q_ASSERT(NULL != pModel1);
         Q_ASSERT(NULL != pModel2);
@@ -85,15 +85,15 @@ bool GLC_CsgOperatorNode::update()
 
         if (m_OperationType == CsgDifference)
         {
-            m_pResultCsgModel= new csgjs_model(csgjs_difference(*pModel1, *pModel2));
+            m_pResultCsgModel= new csg::Mesh(csg::subtract(*pModel1, *pModel2));
         }
         else if (m_OperationType == CsgIntersection)
         {
-            m_pResultCsgModel= new csgjs_model(csgjs_intersection(*pModel1, *pModel2));
+            m_pResultCsgModel= new csg::Mesh(csg::intersect(*pModel1, *pModel2));
         }
         else
         {
-            m_pResultCsgModel= new csgjs_model(csgjs_union(*pModel1, *pModel2));
+            m_pResultCsgModel= new csg::Mesh(csg::unionOf(*pModel1, *pModel2));
         }
         updateMaterialHash();
 

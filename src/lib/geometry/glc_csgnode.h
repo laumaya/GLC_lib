@@ -33,9 +33,10 @@
 #include "glc_3drep.h"
 #include "glc_wiredata.h"
 
+#include "../3rdparty/csg/csg.h"
+
 #include "../glc_config.h"
 
-struct csgjs_model;
 class GLC_Material;
 
 //////////////////////////////////////////////////////////////////////
@@ -77,7 +78,7 @@ public:
     const GLC_Matrix4x4& matrix() const
     {return m_Matrix;}
 
-    csgjs_model* csgjsModel() const
+    csg::Mesh* csgjsModel() const
     {return m_pResultCsgModel;}
 
     QHash<GLC_uint, GLC_Material*> materialHash() const
@@ -110,7 +111,7 @@ protected:
     GLC_3DRep m_3DRep;
     QHash<GLC_uint, GLC_Material*> m_MaterialHash;
 
-    csgjs_model* m_pResultCsgModel;
+    csg::Mesh* m_pResultCsgModel;
 
     int m_Level;
 

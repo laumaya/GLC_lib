@@ -25,7 +25,6 @@
 #include <QtDebug>
 #include <QtConcurrent>
 
-#include "../3rdparty/csgjs/csgjs.h"
 #include "../shading/glc_material.h"
 #include "../maths/glc_geomtools.h"
 
@@ -68,7 +67,7 @@ GLC_CsgNode::GLC_CsgNode(const GLC_CsgNode& other)
     , m_3DRep(other.m_3DRep)
     , m_MaterialHash(other.m_MaterialHash)
 
-    , m_pResultCsgModel(new csgjs_model(*(other.m_pResultCsgModel)))
+    , m_pResultCsgModel(new csg::Mesh(*(other.m_pResultCsgModel)))
 
     , m_Level(other.m_Level)
 {
